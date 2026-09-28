@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Amiga-A1012-PCB_Amiga-A1012",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 110355,
+      "sha256": "677ed4b4405226fa72ea5893f9bd6ab2a5980b47f8bbfa68dc54ed0450b1bb77"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 139062,
+      "sha256": "0f78f335d317eb3ddd5cc9e10f45e9beb86fe20c5239912b71f39361a1bbcdd1"
+    },
+    "metadata_json": {
+      "bytes": 479,
+      "sha256": "c5ee45ef962eabef033b306fe999ab848e794892155d71a07bf4132c476fc010"
+    },
+    "final_json": {
+      "bytes": 102846,
+      "sha256": "283f9bfc91cc6b28f137fe7e902770846b5e5ae1075a985791761d10d1659009"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:27:51.013719+00:00"
+  }
+}

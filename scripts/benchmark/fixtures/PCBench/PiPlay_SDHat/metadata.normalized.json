@@ -1,0 +1,67 @@
+{
+  "board_id": "PiPlay_SDHat",
+  "display_name": "PiPlay_SDHat",
+  "pcbench_directory": "PCBs/PiPlay_SDHat",
+  "source": "https://github.com/Ralim/PiPlay",
+  "author": "Ralim",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:48.522010+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 6,
+    "components": 23,
+    "dimensions_mm": {
+      "width": 65.0,
+      "height": 30.0
+    },
+    "area_cm2": 19.5,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 250,
+    "vias": 32,
+    "track_length_mm": 648.06,
+    "kicad_drc_violations": 312,
+    "kicad_drc_breakdown": {
+      "total_violations": 312,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 32,
+        "clearance": 117,
+        "copper_edge_clearance": 11,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 23,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 48,
+        "silk_overlap": 5,
+        "solder_mask_bridge": 72,
+        "starved_thermal": 2
+      },
+      "by_severity": {
+        "error": 235,
+        "warning": 77
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.069356+00:00",
+    "elapsed_seconds": 35.27,
+    "unrouted_nets": 0,
+    "clearance_violations": 64,
+    "quality_score": 775.43
+  }
+}

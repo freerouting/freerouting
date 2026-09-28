@@ -1,0 +1,61 @@
+{
+  "board_id": "LimitSwitchesPlugin_LimitSwitchesPlugin",
+  "display_name": "LimitSwitchesPlugin_LimitSwitchesPlugin",
+  "pcbench_directory": "PCBs/LimitSwitchesPlugin_LimitSwitchesPlugin",
+  "source": "https://github.com/itadinanta/LimitSwitchesPlugin",
+  "author": "itadinanta",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:58.694130+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 15,
+    "components": 8,
+    "dimensions_mm": {
+      "width": 66.04,
+      "height": 55.88
+    },
+    "area_cm2": 36.9,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 186,
+    "vias": 15,
+    "track_length_mm": 864.28,
+    "kicad_drc_violations": 21,
+    "kicad_drc_breakdown": {
+      "total_violations": 21,
+      "unconnected_count": 0,
+      "by_type": {
+        "lib_footprint_issues": 8,
+        "nonmirrored_text_on_back_layer": 2,
+        "track_dangling": 11
+      },
+      "by_severity": {
+        "warning": 21
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.016949+00:00",
+    "elapsed_seconds": 6.2,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

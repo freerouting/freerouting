@@ -1,0 +1,28 @@
+{
+  "board": "Planet_Vocab",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Planet_Vocab\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 223,
+  "approximate_track_length_mm": 782.17,
+  "kicad_drc_violations": 205,
+  "generated_at": "2026-08-18T19:34:17.409386+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 205,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 54,
+      "copper_edge_clearance": 1,
+      "silk_edge_clearance": 4,
+      "silk_overlap": 135,
+      "starved_thermal": 1,
+      "track_dangling": 9,
+      "tracks_crossing": 1
+    },
+    "by_severity": {
+      "error": 57,
+      "warning": 148
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "board": "Librecalc-Hardware__autosave-calculator",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Librecalc-Hardware__autosave-calculator\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 309,
+  "segment_count": 3477,
+  "approximate_track_length_mm": 4438.17,
+  "kicad_drc_violations": 1272,
+  "generated_at": "2026-08-18T18:19:44.743764+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 1272,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 2,
+      "clearance": 504,
+      "copper_edge_clearance": 17,
+      "hole_clearance": 14,
+      "holes_co_located": 1,
+      "invalid_outline": 3,
+      "padstack": 2,
+      "silk_edge_clearance": 24,
+      "silk_over_copper": 199,
+      "silk_overlap": 199,
+      "solder_mask_bridge": 205,
+      "starved_thermal": 2,
+      "text_height": 88,
+      "text_thickness": 2,
+      "track_dangling": 10
+    },
+    "by_severity": {
+      "error": 747,
+      "warning": 525
+    }
+  }
+}

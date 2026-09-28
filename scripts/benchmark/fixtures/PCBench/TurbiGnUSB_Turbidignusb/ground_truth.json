@@ -1,0 +1,30 @@
+{
+  "board": "TurbiGnUSB_Turbidignusb",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\TurbiGnUSB_Turbidignusb\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 7,
+  "segment_count": 147,
+  "approximate_track_length_mm": 370.47,
+  "kicad_drc_violations": 361,
+  "generated_at": "2026-08-18T19:54:06.786127+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 361,
+    "unconnected_count": 3,
+    "by_type": {
+      "clearance": 96,
+      "copper_edge_clearance": 5,
+      "invalid_outline": 2,
+      "lib_footprint_issues": 29,
+      "silk_edge_clearance": 11,
+      "silk_over_copper": 199,
+      "silk_overlap": 12,
+      "solder_mask_bridge": 6,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 109,
+      "warning": 252
+    }
+  }
+}

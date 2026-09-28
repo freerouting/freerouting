@@ -1,0 +1,28 @@
+{
+  "board": "Camera-Modules_LG-G2-Camera-Shim",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Camera-Modules_LG-G2-Camera-Shim\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 23,
+  "segment_count": 189,
+  "approximate_track_length_mm": 191.96,
+  "kicad_drc_violations": 129,
+  "generated_at": "2026-08-18T18:37:29.282375+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 129,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 23,
+      "clearance": 20,
+      "copper_edge_clearance": 2,
+      "hole_clearance": 23,
+      "lib_footprint_issues": 4,
+      "solder_mask_bridge": 56,
+      "text_height": 1
+    },
+    "by_severity": {
+      "error": 124,
+      "warning": 5
+    }
+  }
+}

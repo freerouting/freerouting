@@ -1,0 +1,44 @@
+name: 'CI: GUI Accessibility & Parity'
+
+on:
+  pull_request:
+    paths:
+      - 'src/main/java/app/freerouting/gui/**'
+      - 'src/test/java/app/freerouting/gui/**'
+      - 'src/main/resources/app/freerouting/gui/**'
+      - 'src/main/resources/app/freerouting/Common*.properties'
+      - 'src/test/resources/**'
+      - 'scripts/i18n/**'
+      - 'docs/gui/**'
+      - 'build.gradle'
+      - 'gradle/**'
+      - 'gradlew'
+      - 'gradlew.bat'
+      - '.github/workflows/gui-a11y.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-gui:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '25'
+          cache: 'gradle'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+      - name: Run forced-headless GUI tests
+        run: ./gradlew testGui
+      - name: Verify Hungarian resource parity
+        run: ./gradlew test --tests "app.freerouting.i18n.HungarianResourceParityCheckTest"

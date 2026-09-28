@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Regression test for the {@code StackOverflowError} in {@link
- * app.freerouting.board.PolylineTrace#combine()}.
+ * app.freerouting.board.trace.PolylineTrace#combine()}.
  *
  * <p>Before the fix, {@code combine()} called itself once per successful merge ({@code
  * combineAtStart} / {@code combine_at_end}), so reading a net made of a long chain of connected

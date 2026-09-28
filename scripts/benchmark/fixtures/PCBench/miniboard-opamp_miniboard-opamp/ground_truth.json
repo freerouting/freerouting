@@ -1,0 +1,27 @@
+{
+  "board": "miniboard-opamp_miniboard-opamp",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\miniboard-opamp_miniboard-opamp\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 34,
+  "segment_count": 196,
+  "approximate_track_length_mm": 357.72,
+  "kicad_drc_violations": 127,
+  "generated_at": "2026-08-18T19:23:44.160705+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 127,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 47,
+      "copper_edge_clearance": 11,
+      "lib_footprint_issues": 26,
+      "silk_edge_clearance": 8,
+      "silk_over_copper": 4,
+      "solder_mask_bridge": 31
+    },
+    "by_severity": {
+      "error": 89,
+      "warning": 38
+    }
+  }
+}

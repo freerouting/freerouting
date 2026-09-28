@@ -1,0 +1,27 @@
+{
+  "board": "1-Wire-Wing-pcb_1-Wire_Wing",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\1-Wire-Wing-pcb_1-Wire_Wing\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 15,
+  "segment_count": 166,
+  "approximate_track_length_mm": 407.17,
+  "kicad_drc_violations": 117,
+  "generated_at": "2026-08-18T17:28:55.640743+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 117,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 78,
+      "items_not_allowed": 1,
+      "lib_footprint_issues": 23,
+      "solder_mask_bridge": 11,
+      "starved_thermal": 3,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 93,
+      "warning": 24
+    }
+  }
+}

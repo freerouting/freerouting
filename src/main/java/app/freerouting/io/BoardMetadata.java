@@ -1,13 +1,13 @@
 package app.freerouting.io;
 
-import app.freerouting.board.AngleRestriction;
-import app.freerouting.board.Unit;
+import app.freerouting.board.model.structure.AngleRestriction;
+import app.freerouting.board.model.structure.Unit;
 import app.freerouting.settings.RouterSettings;
 
 /**
  * Lightweight, immutable snapshot of the information that can be extracted from a board design
  * file's header and structure sections without constructing a full {@link
- * app.freerouting.board.BasicBoard}.
+ * app.freerouting.board.facade.BasicBoard}.
  *
  * <p>All fields map one-to-one to file format tokens:
  *

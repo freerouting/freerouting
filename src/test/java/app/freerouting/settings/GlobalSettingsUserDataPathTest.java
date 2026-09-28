@@ -64,14 +64,14 @@ class GlobalSettingsUserDataPathTest {
   // -------------------------------------------------------------------------
 
   @Test
-  void defaultUserDataPathIsUnderSystemTempDir() {
+  void defaultUserDataPathMatchesAppPathsDefault() {
     Path defaultPath = GlobalSettings.getUserDataPath();
-    Path systemTemp = Path.of(System.getProperty("java.io.tmpdir"));
+    Path expected = AppPaths.getDefaultUserDataPath();
 
-    // The default user-data path must be a child of the system temp directory.
-    assertTrue(
-        defaultPath.startsWith(systemTemp),
-        "Default user-data path should be under java.io.tmpdir, but was: " + defaultPath);
+    assertEquals(
+        expected,
+        defaultPath,
+        "Default user-data path should match AppPaths.getDefaultUserDataPath()");
   }
 
   @Test
@@ -222,7 +222,7 @@ class GlobalSettingsUserDataPathTest {
         "freerouting.json must exist at the custom path");
 
     // File must NOT exist under the default path (different directory).
-    Path defaultDir = Path.of(System.getProperty("java.io.tmpdir"), "freerouting");
+    Path defaultDir = AppPaths.getDefaultUserDataPath();
     Path defaultFile = defaultDir.resolve("freerouting.json");
     if (Files.exists(defaultFile)) {
       // If a stale file already existed, verify it is NOT the one we just wrote

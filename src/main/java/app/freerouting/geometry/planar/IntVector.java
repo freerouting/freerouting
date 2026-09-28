@@ -22,20 +22,20 @@ public class IntVector extends Vector implements Serializable {
     this.y = y;
   }
 
-  /** Returns true, if this IntVector is equal to p_ob. */
+  /** Returns true, if this IntVector is equal to ob. */
   @Override
-  public final boolean equals(Object ob) {
-    if (this == ob) {
+  public final boolean equals(Object other) {
+    if (this == other) {
       return true;
     }
-    if (ob == null) {
+    if (other == null) {
       return false;
     }
-    if (getClass() != ob.getClass()) {
+    if (getClass() != other.getClass()) {
       return false;
     }
-    IntVector other = (IntVector) ob;
-    return x == other.x && y == other.y;
+    IntVector otherVector = (IntVector) other;
+    return x == otherVector.x && y == otherVector.y;
   }
 
   /** Returns true, if both coordinates of this vector are 0. */
@@ -60,7 +60,7 @@ public class IntVector extends Vector implements Serializable {
     return Math.abs(x) == Math.abs(y);
   }
 
-  /** Calculates the determinant of the matrix consisting of this Vector and p_other. */
+  /** Calculates the determinant of the matrix consisting of this Vector and other. */
   public final long determinant(IntVector other) {
     return (long) x * other.y - (long) y * other.x;
   }
@@ -74,31 +74,13 @@ public class IntVector extends Vector implements Serializable {
     while (n >= 4) {
       n -= 4;
     }
-    int newX;
-    int newY;
-    switch (n) {
-      case 0 -> { // 0 degree
-        newX = x;
-        newY = y;
-      }
-      case 1 -> { // 90 degree
-        newX = -y;
-        newY = x;
-      }
-      case 2 -> { // 180 degree
-        newX = -x;
-        newY = -y;
-      }
-      case 3 -> { // 270 degree
-        newX = y;
-        newY = -x;
-      }
-      default -> {
-        newX = 0;
-        newY = 0;
-      }
-    }
-    return new IntVector(newX, newY);
+    return switch (n) {
+      case 0 -> new IntVector(x, y); // 0 degrees
+      case 1 -> new IntVector(-y, x); // 90 degrees
+      case 2 -> new IntVector(-x, -y); // 180 degrees
+      case 3 -> new IntVector(y, -x); // 270 degrees
+      default -> IntVector.ZERO;
+    };
   }
 
   @Override
@@ -111,7 +93,7 @@ public class IntVector extends Vector implements Serializable {
     return new IntVector(this.x, -this.y);
   }
 
-  /** Adds p_other to this vector. */
+  /** Adds other to this vector. */
   @Override
   public final Vector add(Vector other) {
     return other.add(this);
@@ -127,7 +109,7 @@ public class IntVector extends Vector implements Serializable {
     return other.add(this);
   }
 
-  /** Returns the Point, which results from adding this vector to p_point. */
+  /** Returns the Point, which results from adding this vector to point. */
   @Override
   final Point addTo(IntPoint point) {
     return new IntPoint(point.x + x, point.y + y);
@@ -139,8 +121,8 @@ public class IntVector extends Vector implements Serializable {
   }
 
   /**
-   * Let L be the line from the Zero Vector to p_other. The function returns Side.ON_THE_LEFT, if
-   * this Vector is on the left of L Side.ON_THE_RIGHT, if this Vector is on the right of L and
+   * Let L be the line from the Zero Vector to other. The function returns Side.ON_THE_LEFT, if this
+   * Vector is on the left of L Side.ON_THE_RIGHT, if this Vector is on the right of L and
    * Side.COLLINEAR, if this Vector is collinear with L.
    */
   @Override
@@ -162,9 +144,9 @@ public class IntVector extends Vector implements Serializable {
   }
 
   /**
-   * The function returns Signum.POSITIVE, if the scalar product of this vector and p_other
-   * {@literal >} 0, Signum.NEGATIVE, if the scalar product Vector is {@literal <} 0, and
-   * Signum.ZERO, if the scalar product is equal 0.
+   * The function returns Signum.POSITIVE, if the scalar product of this vector and other {@literal
+   * >} 0, Signum.NEGATIVE, if the scalar product Vector is {@literal <} 0, and Signum.ZERO, if the
+   * scalar product is equal 0.
    */
   @Override
   public Signum projection(Vector other) {

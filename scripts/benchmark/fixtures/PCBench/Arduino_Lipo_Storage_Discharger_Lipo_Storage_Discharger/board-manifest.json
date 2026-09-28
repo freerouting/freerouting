@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Arduino_Lipo_Storage_Discharger_Lipo_Storage_Discharger",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 147498,
+      "sha256": "14974706ba434a5e928f901c1e06525476e7de721c03d1103356f1157c41257d"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 99828,
+      "sha256": "05ae0005d087417a046357766c3dd74cc5cd1b157c0b0b9aa471d3abaf1cebc2"
+    },
+    "metadata_json": {
+      "bytes": 601,
+      "sha256": "bc1a652e39fa66d6c0684e986d6f37014ab357e5ec61d7e3b048d27277edb5b2"
+    },
+    "final_json": {
+      "bytes": 83297,
+      "sha256": "913aaea15d0d6e61394b20e4029fd9a4a1712dbaf5cf9e3f616a339423ec6d0f"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:29:21.865524+00:00"
+  }
+}

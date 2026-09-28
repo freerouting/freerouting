@@ -1,0 +1,63 @@
+{
+  "board_id": "hardware-designs_m-trigger",
+  "display_name": "hardware-designs_m-trigger",
+  "pcbench_directory": "PCBs/hardware-designs_m-trigger",
+  "source": "https://github.com/snowcap-electronics/hardware-designs",
+  "author": "snowcap-electronics",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:42.905944+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 7,
+    "dimensions_mm": {
+      "width": 46.23,
+      "height": 15.75
+    },
+    "area_cm2": 7.28,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 8,
+    "vias": 0,
+    "track_length_mm": 32.86,
+    "kicad_drc_violations": 21,
+    "kicad_drc_breakdown": {
+      "total_violations": 21,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 8,
+        "silk_overlap": 12,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 9,
+        "warning": 12
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.939617+00:00",
+    "elapsed_seconds": 7.75,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

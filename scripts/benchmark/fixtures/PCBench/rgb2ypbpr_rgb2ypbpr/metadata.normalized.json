@@ -1,0 +1,62 @@
+{
+  "board_id": "rgb2ypbpr_rgb2ypbpr",
+  "display_name": "rgb2ypbpr_rgb2ypbpr",
+  "pcbench_directory": "PCBs/rgb2ypbpr_rgb2ypbpr",
+  "source": "https://github.com/UzixLS/rgb2ypbpr",
+  "author": "UzixLS",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:38.733895+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 16,
+    "components": 49,
+    "dimensions_mm": {
+      "width": 70.8,
+      "height": 89.2
+    },
+    "area_cm2": 63.15,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 236,
+    "vias": 13,
+    "track_length_mm": 1107.89,
+    "kicad_drc_violations": 138,
+    "kicad_drc_breakdown": {
+      "total_violations": 138,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 6,
+        "copper_edge_clearance": 3,
+        "lib_footprint_issues": 6,
+        "lib_footprint_mismatch": 32,
+        "malformed_courtyard": 6,
+        "silk_edge_clearance": 34,
+        "silk_over_copper": 8,
+        "silk_overlap": 8,
+        "solder_mask_bridge": 33,
+        "starved_thermal": 1,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 49,
+        "warning": 89
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

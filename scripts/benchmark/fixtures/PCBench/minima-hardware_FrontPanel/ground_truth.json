@@ -1,0 +1,31 @@
+{
+  "board": "minima-hardware_FrontPanel",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\minima-hardware_FrontPanel\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 6,
+  "segment_count": 125,
+  "approximate_track_length_mm": 964.4,
+  "kicad_drc_violations": 341,
+  "generated_at": "2026-08-18T19:23:59.515009+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 341,
+    "unconnected_count": 104,
+    "by_type": {
+      "annular_width": 4,
+      "clearance": 16,
+      "copper_edge_clearance": 2,
+      "lib_footprint_issues": 48,
+      "lib_footprint_mismatch": 1,
+      "padstack": 8,
+      "silk_edge_clearance": 82,
+      "silk_over_copper": 4,
+      "silk_overlap": 175,
+      "text_thickness": 1
+    },
+    "by_severity": {
+      "error": 22,
+      "warning": 319
+    }
+  }
+}

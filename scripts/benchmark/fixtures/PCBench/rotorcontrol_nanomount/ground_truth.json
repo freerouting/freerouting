@@ -1,0 +1,22 @@
+{
+  "board": "rotorcontrol_nanomount",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\rotorcontrol_nanomount\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 83,
+  "approximate_track_length_mm": 471.92,
+  "kicad_drc_violations": 3,
+  "generated_at": "2026-08-18T19:41:51.932254+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 3,
+    "unconnected_count": 2,
+    "by_type": {
+      "lib_footprint_issues": 2,
+      "silk_edge_clearance": 1
+    },
+    "by_severity": {
+      "warning": 3
+    }
+  }
+}

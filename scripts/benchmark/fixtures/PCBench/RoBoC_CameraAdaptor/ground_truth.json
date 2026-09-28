@@ -1,0 +1,27 @@
+{
+  "board": "RoBoC_CameraAdaptor",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\RoBoC_CameraAdaptor\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 16,
+  "segment_count": 144,
+  "approximate_track_length_mm": 705.49,
+  "kicad_drc_violations": 100,
+  "generated_at": "2026-08-18T19:41:26.799049+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 100,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 83,
+      "invalid_outline": 1,
+      "lib_footprint_issues": 6,
+      "silk_over_copper": 8,
+      "silk_overlap": 1,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 84,
+      "warning": 16
+    }
+  }
+}

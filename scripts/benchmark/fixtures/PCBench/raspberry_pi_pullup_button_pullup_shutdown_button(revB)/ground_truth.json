@@ -1,0 +1,23 @@
+{
+  "board": "raspberry_pi_pullup_button_pullup_shutdown_button(revB)",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\raspberry_pi_pullup_button_pullup_shutdown_button(revB)\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 1,
+  "segment_count": 29,
+  "approximate_track_length_mm": 55.77,
+  "kicad_drc_violations": 34,
+  "generated_at": "2026-08-18T19:38:01.780405+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 34,
+    "unconnected_count": 0,
+    "by_type": {
+      "copper_edge_clearance": 4,
+      "silk_over_copper": 30
+    },
+    "by_severity": {
+      "error": 4,
+      "warning": 30
+    }
+  }
+}

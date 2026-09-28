@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "TTNEnschedeMote_ArduinoNanoRN2483",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 76805,
+      "sha256": "835744d284cd7847e4a5e748f648da2650a78261c2ad11bf1923708fe72ba5a9"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 33852,
+      "sha256": "36eba2bfd1fface7058ebdcd976956abfd814b85d48f01818b40656a3f4e6d2a"
+    },
+    "metadata_json": {
+      "bytes": 711,
+      "sha256": "8c0d3a1b8416f5278c4b999ca778de4fc744a045ab8ef6a23ddd9cd732a88426"
+    },
+    "final_json": {
+      "bytes": 39917,
+      "sha256": "2845d42c05d446a48047a951c2cacafcd043106a8e7918ca559188af0363b709"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:53:58.557473+00:00"
+  }
+}

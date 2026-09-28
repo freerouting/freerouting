@@ -3,9 +3,9 @@ package app.freerouting.fixtures;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import app.freerouting.board.Item;
-import app.freerouting.board.ObstacleArea;
-import app.freerouting.board.Unit;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.ObstacleArea;
+import app.freerouting.board.model.structure.Unit;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.geometry.planar.Circle;
 import app.freerouting.settings.sources.TestingSettings;
@@ -38,11 +38,11 @@ class HoleKeepoutClearanceTest extends RoutingFixtureTest {
     int reclassified = 0;
     for (Item item : job.board.getItems()) {
       if (item.getClass() == ObstacleArea.class
-          && item.getComponentNo() > 0
+          && item.getComponentId() > 0
           && ((ObstacleArea) item).getArea() instanceof Circle) {
         assertEquals(
             holeEdgeClassNo,
-            item.clearanceClassNo(),
+            item.clearanceClassIndex(),
             "circular package keepout (NPTH hole) must use the hole_edge class");
         reclassified++;
       }

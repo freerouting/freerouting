@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "pcb-ice40-vga_VGA expansion",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 167740,
+      "sha256": "c81604b3f2b8fd068b7fe327eb9825912de5aaff2a39a429417c13f4d7294bc5"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 105967,
+      "sha256": "b24d87f3c5a1e86ae7722966961f3ce28de9b46bf0d9ec7d84a67aafab3f49ee"
+    },
+    "metadata_json": {
+      "bytes": 483,
+      "sha256": "a7689db4e36aee29e9e9b83c07c2145ca3dc14174ac639d0b8f91c37c0f9fd16"
+    },
+    "final_json": {
+      "bytes": 41491,
+      "sha256": "fb80ac1b780f20bee2037a7409380c914ce8c803decc97e9c942a11149cb3f03"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:31:47.697057+00:00"
+  }
+}

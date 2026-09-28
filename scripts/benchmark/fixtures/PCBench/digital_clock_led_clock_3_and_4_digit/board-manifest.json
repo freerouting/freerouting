@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "digital_clock_led_clock_3_and_4_digit",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 366714,
+      "sha256": "59a6bac0f6c13bea29e3bf35c4e8e78c4a7fb2aee2dd099c51679b840114c1b0"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 298542,
+      "sha256": "85aad2fa4d339aac1aef55e4d62109019a93b8818ca504f1c2da7263fa1854f2"
+    },
+    "metadata_json": {
+      "bytes": 734,
+      "sha256": "02b55f7205091582b790011e27b263c0a9634acdc8a1b946e85228ba8c457152"
+    },
+    "final_json": {
+      "bytes": 225292,
+      "sha256": "c18f707177138ca7cc159effb2cd312204237b1549e6031630adb1e1b991ca58"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:41:43.403967+00:00"
+  }
+}

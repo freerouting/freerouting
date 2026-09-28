@@ -1,0 +1,63 @@
+{
+  "board_id": "LoRaCatKitty_NodeLoRaGroveKitty",
+  "display_name": "LoRaCatKitty_NodeLoRaGroveKitty",
+  "pcbench_directory": "PCBs/LoRaCatKitty_NodeLoRaGroveKitty",
+  "source": "https://github.com/ElectronicCats/LoRaCatKitty",
+  "author": "ElectronicCats",
+  "license": "GNU Affero General Public License v3.0",
+  "license_spdx": "AGPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:48.702012+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 52,
+    "components": 42,
+    "dimensions_mm": {
+      "width": 50.0,
+      "height": 50.0
+    },
+    "area_cm2": 25.0,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 578,
+    "vias": 77,
+    "track_length_mm": 1315.06,
+    "kicad_drc_violations": 250,
+    "kicad_drc_breakdown": {
+      "total_violations": 250,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 126,
+        "copper_edge_clearance": 27,
+        "lib_footprint_issues": 42,
+        "malformed_courtyard": 6,
+        "silk_over_copper": 26,
+        "silk_overlap": 1,
+        "solder_mask_bridge": 4,
+        "starved_thermal": 1,
+        "text_height": 2,
+        "text_thickness": 2,
+        "track_dangling": 12,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 164,
+        "warning": 86
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

@@ -1,0 +1,31 @@
+{
+  "board": "smart-meter_SmartMeter",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\smart-meter_SmartMeter\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 37,
+  "segment_count": 465,
+  "approximate_track_length_mm": 1173.97,
+  "kicad_drc_violations": 639,
+  "generated_at": "2026-08-18T19:45:06.391320+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 639,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 170,
+      "hole_to_hole": 2,
+      "holes_co_located": 24,
+      "lib_footprint_issues": 199,
+      "padstack": 174,
+      "pth_inside_courtyard": 9,
+      "shorting_items": 5,
+      "silk_over_copper": 1,
+      "solder_mask_bridge": 53,
+      "starved_thermal": 2
+    },
+    "by_severity": {
+      "error": 239,
+      "warning": 400
+    }
+  }
+}

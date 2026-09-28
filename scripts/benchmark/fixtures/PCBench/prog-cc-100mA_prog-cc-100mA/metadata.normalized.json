@@ -1,0 +1,57 @@
+{
+  "board_id": "prog-cc-100mA_prog-cc-100mA",
+  "display_name": "prog-cc-100mA_prog-cc-100mA",
+  "pcbench_directory": "PCBs/prog-cc-100mA_prog-cc-100mA",
+  "source": "https://github.com/pepaslabs/prog-cc-100mA",
+  "author": "pepaslabs",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:58.818131+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 14,
+    "components": 40,
+    "dimensions_mm": {
+      "width": 49.53,
+      "height": 49.53
+    },
+    "area_cm2": 24.53,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 158,
+    "vias": 0,
+    "track_length_mm": 516.89,
+    "kicad_drc_violations": 225,
+    "kicad_drc_breakdown": {
+      "total_violations": 225,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 52,
+        "lib_footprint_issues": 40,
+        "nonmirrored_text_on_back_layer": 6,
+        "silk_edge_clearance": 4,
+        "silk_overlap": 30,
+        "text_height": 93
+      },
+      "by_severity": {
+        "error": 52,
+        "warning": 173
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

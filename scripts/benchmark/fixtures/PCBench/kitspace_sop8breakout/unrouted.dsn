@@ -1,0 +1,131 @@
+(pcb C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\kitspace_sop8breakout\unrouted.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  158864 -113080  138444 -113080  138444 -97740  158864 -97740
+            158864 -113080)
+    )
+    (via "Via[0-1]_600:400_um")
+    (rule
+      (width 250)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component Pin_Headers:Pin_Header_Straight_1x04
+      (place P1_2 142303.5 -109220 front 180 (PN CONN_01X04))
+      (place P1 155003.5 -109220 front 180 (PN CONN_01X04))
+    )
+    (component "sop8:SOP-8"
+      (place IC1 151130 -107315 back 270 (PN MCP6002))
+    )
+  )
+  (library
+    (image Pin_Headers:Pin_Header_Straight_1x04
+      (outline (polygon signal 0  -1745 1745  1745 1745  1745 -9395  -1745 -9395))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (outline (path signal 150  1270 -1270  -1270 -1270))
+      (outline (path signal 150  -1270 -8890  1270 -8890))
+      (outline (path signal 150  1550 1550  1550 0))
+      (outline (path signal 150  1270 -1270  1270 -8890))
+      (outline (path signal 150  -1270 -1270  -1270 -8890))
+      (pin Rect[A]Pad_2032.000000x1727.200000_um 1 0 0)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 2 0 -2540)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 3 0 -5080)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 4 0 -7620)
+    )
+    (image "sop8:SOP-8"
+      (outline (path signal 150  -200 -4380  -200 -880))
+      (outline (path signal 150  4800 -4380  -200 -4380))
+      (outline (path signal 150  4800 -880  4800 -4380))
+      (outline (path signal 150  -200 -880  4800 -880))
+      (pin Rect[T]Pad_400.000000x2000.000000_um 5 4350 500)
+      (pin Rect[T]Pad_400.000000x2000.000000_um 6 3080 500)
+      (pin Rect[T]Pad_400.000000x2000.000000_um 7 1810 500)
+      (pin Rect[T]Pad_400.000000x2000.000000_um 8 540 500)
+      (pin Rect[T]Pad_400.000000x2000.000000_um 1 540 -5500)
+      (pin Rect[T]Pad_400.000000x2000.000000_um 2 1810 -5500)
+      (pin Rect[T]Pad_400.000000x2000.000000_um 3 3080 -5500)
+      (pin Rect[T]Pad_400.000000x2000.000000_um 4 4350 -5500)
+    )
+    (padstack Oval[A]Pad_2032.000000x1727.200000_um
+      (shape (path F.Cu 1727.2  -152.4 0  152.4 0))
+      (shape (path B.Cu 1727.2  -152.4 0  152.4 0))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_2032.000000x1727.200000_um
+      (shape (rect F.Cu -1016 -863.6 1016 863.6))
+      (shape (rect B.Cu -1016 -863.6 1016 863.6))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_400.000000x2000.000000_um
+      (shape (rect F.Cu -200 -1000 200 1000))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(IC1-Pad1)"
+      (pins P1_2-1 IC1-1)
+    )
+    (net "Net-(IC1-Pad2)"
+      (pins P1_2-2 IC1-2)
+    )
+    (net "Net-(IC1-Pad3)"
+      (pins P1_2-3 IC1-3)
+    )
+    (net "Net-(IC1-Pad4)"
+      (pins P1_2-4 IC1-4)
+    )
+    (net "Net-(IC1-Pad5)"
+      (pins P1-4 IC1-5)
+    )
+    (net "Net-(IC1-Pad6)"
+      (pins P1-3 IC1-6)
+    )
+    (net "Net-(IC1-Pad7)"
+      (pins P1-2 IC1-7)
+    )
+    (net "Net-(IC1-Pad8)"
+      (pins P1-1 IC1-8)
+    )
+    (class kicad_default "Net-(IC1-Pad1)" "Net-(IC1-Pad2)" "Net-(IC1-Pad3)"
+      "Net-(IC1-Pad4)" "Net-(IC1-Pad5)" "Net-(IC1-Pad6)" "Net-(IC1-Pad7)"
+      "Net-(IC1-Pad8)"
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 250)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

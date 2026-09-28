@@ -1,0 +1,28 @@
+{
+  "board": "pcb-ks0108-128x64-glcd_circuit",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\pcb-ks0108-128x64-glcd_circuit\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 13,
+  "segment_count": 146,
+  "approximate_track_length_mm": 315.32,
+  "kicad_drc_violations": 174,
+  "generated_at": "2026-08-18T19:31:52.193395+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 174,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 66,
+      "copper_edge_clearance": 47,
+      "silk_edge_clearance": 8,
+      "silk_over_copper": 2,
+      "silk_overlap": 14,
+      "starved_thermal": 1,
+      "text_height": 36
+    },
+    "by_severity": {
+      "error": 114,
+      "warning": 60
+    }
+  }
+}

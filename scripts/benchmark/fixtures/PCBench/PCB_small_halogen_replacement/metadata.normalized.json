@@ -1,0 +1,55 @@
+{
+  "board_id": "PCB_small_halogen_replacement",
+  "display_name": "PCB_small_halogen_replacement",
+  "pcbench_directory": "PCBs/PCB_small_halogen_replacement",
+  "source": "https://github.com/theopenbar/PCB",
+  "author": "theopenbar",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:59.518140+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 34,
+    "components": 43,
+    "dimensions_mm": {
+      "width": 40.0,
+      "height": 50.0
+    },
+    "area_cm2": 20.0,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 126,
+    "vias": 0,
+    "track_length_mm": 327.69,
+    "kicad_drc_violations": 152,
+    "kicad_drc_breakdown": {
+      "total_violations": 152,
+      "unconnected_count": 0,
+      "by_type": {
+        "courtyards_overlap": 8,
+        "lib_footprint_issues": 43,
+        "silk_edge_clearance": 7,
+        "silk_over_copper": 40,
+        "silk_overlap": 54
+      },
+      "by_severity": {
+        "error": 8,
+        "warning": 144
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

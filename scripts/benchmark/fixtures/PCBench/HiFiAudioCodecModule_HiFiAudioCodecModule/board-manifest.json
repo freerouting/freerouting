@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "HiFiAudioCodecModule_HiFiAudioCodecModule",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 206550,
+      "sha256": "b85e22ddd605fc1e4985be2aca0e9d9fecf829d14f284319c3bbed7934cf99e6"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 157867,
+      "sha256": "79bdee6ef3148ca8390a9cb3161b95c3bd7484b4a3cccb9c743f10b1c548a7b9"
+    },
+    "metadata_json": {
+      "bytes": 661,
+      "sha256": "bd7b7f89fc9a2e45d4ce25126367eb14bd7f887892381209b4f39d35d02a2a73"
+    },
+    "final_json": {
+      "bytes": 61180,
+      "sha256": "c7baf32cd42062eb0b68707c86b9edb7ec96061f803b7ba5dcf08da9ffdda7ba"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:56:39.880155+00:00"
+  }
+}

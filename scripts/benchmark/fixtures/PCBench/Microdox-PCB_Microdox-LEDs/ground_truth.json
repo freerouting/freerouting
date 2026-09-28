@@ -1,0 +1,35 @@
+{
+  "board": "Microdox-PCB_Microdox-LEDs",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Microdox-PCB_Microdox-LEDs\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 31,
+  "segment_count": 777,
+  "approximate_track_length_mm": 3596.83,
+  "kicad_drc_violations": 1155,
+  "generated_at": "2026-08-18T19:22:46.090685+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 1155,
+    "unconnected_count": 4,
+    "by_type": {
+      "annular_width": 89,
+      "clearance": 499,
+      "copper_edge_clearance": 5,
+      "courtyards_overlap": 2,
+      "hole_clearance": 2,
+      "lib_footprint_issues": 47,
+      "padstack": 58,
+      "shorting_items": 201,
+      "silk_edge_clearance": 15,
+      "silk_over_copper": 6,
+      "silk_overlap": 22,
+      "solder_mask_bridge": 200,
+      "starved_thermal": 5,
+      "track_dangling": 4
+    },
+    "by_severity": {
+      "error": 1003,
+      "warning": 152
+    }
+  }
+}

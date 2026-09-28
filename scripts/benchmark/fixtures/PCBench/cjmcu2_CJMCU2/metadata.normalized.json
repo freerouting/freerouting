@@ -1,0 +1,65 @@
+{
+  "board_id": "cjmcu2_CJMCU2",
+  "display_name": "cjmcu2_CJMCU2",
+  "pcbench_directory": "PCBs/cjmcu2_CJMCU2",
+  "source": "https://github.com/aeracoop/cjmcu2",
+  "author": "aeracoop",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:38.365891+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 46,
+    "components": 68,
+    "dimensions_mm": {
+      "width": 57.78,
+      "height": 57.15
+    },
+    "area_cm2": 33.02,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 885,
+    "vias": 45,
+    "track_length_mm": 1902.79,
+    "kicad_drc_violations": 688,
+    "kicad_drc_breakdown": {
+      "total_violations": 688,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 284,
+        "copper_edge_clearance": 8,
+        "courtyards_overlap": 1,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 68,
+        "nonmirrored_text_on_back_layer": 9,
+        "silk_over_copper": 129,
+        "silk_overlap": 14,
+        "solder_mask_bridge": 115,
+        "starved_thermal": 1,
+        "text_height": 39,
+        "text_thickness": 11,
+        "track_dangling": 6,
+        "tracks_crossing": 2
+      },
+      "by_severity": {
+        "error": 412,
+        "warning": 276
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

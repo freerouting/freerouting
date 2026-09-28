@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Hardware_Playground_led_strip_actuator_node",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 303593,
+      "sha256": "c10b16ffdd4536bb52bd8152ca12d3efa8f774c616ee76cdee1035f29f6336e3"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 239674,
+      "sha256": "db796515b36ddbdac688d1fa183d414c3ef73b692c625704d44f9f4d8776f554"
+    },
+    "metadata_json": {
+      "bytes": 544,
+      "sha256": "8ade6eb56615fd9d373a59475b8609a7b84fa793a2638e0bc2fd2d9920a86f75"
+    },
+    "final_json": {
+      "bytes": 144154,
+      "sha256": "e80803b8599cce3561a6bcf8e37b22a61ec750abba9fadb8ac563fa0d7ec9f65"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:53:48.982469+00:00"
+  }
+}

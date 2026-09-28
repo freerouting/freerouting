@@ -1,0 +1,31 @@
+{
+  "board": "timecircuits-hardware_BTTF-TimeCircuits",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\timecircuits-hardware_BTTF-TimeCircuits\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 112,
+  "segment_count": 1720,
+  "approximate_track_length_mm": 6015.77,
+  "kicad_drc_violations": 979,
+  "generated_at": "2026-08-18T19:52:18.787361+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 979,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 14,
+      "clearance": 506,
+      "copper_edge_clearance": 4,
+      "courtyards_overlap": 4,
+      "hole_clearance": 28,
+      "lib_footprint_issues": 102,
+      "padstack": 14,
+      "silk_overlap": 104,
+      "solder_mask_bridge": 200,
+      "track_dangling": 3
+    },
+    "by_severity": {
+      "error": 756,
+      "warning": 223
+    }
+  }
+}

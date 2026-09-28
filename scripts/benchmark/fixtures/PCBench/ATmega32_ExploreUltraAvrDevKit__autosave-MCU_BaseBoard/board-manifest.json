@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "ATmega32_ExploreUltraAvrDevKit__autosave-MCU_BaseBoard",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 3665272,
+      "sha256": "1091158235685e2637db0821bd8729c07940ad85a9add1ed34d23b3422253636"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 3234416,
+      "sha256": "6b757ae1ffaf050f7df3fad5dab36ac5a7a9fb285f22127bf13e7af322be47d2"
+    },
+    "metadata_json": {
+      "bytes": 605,
+      "sha256": "78aa387bc73ccee511052692f779e8db6c295b94fa5b7a435279e63d1a957d39"
+    },
+    "final_json": {
+      "bytes": 428879,
+      "sha256": "e11a81cf462f98df8d8bf059761790cae4dbd71be5ec7bae19f54c21c4cf83f7"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:29:48.561180+00:00"
+  }
+}

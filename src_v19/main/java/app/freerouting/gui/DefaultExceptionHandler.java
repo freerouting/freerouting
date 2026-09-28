@@ -12,8 +12,10 @@ public class DefaultExceptionHandler implements Thread.UncaughtExceptionHandler 
   public static void handleException(Throwable e) {
     // Here you should have a more robust, permanent record of problems
     FRLogger.error(e.getLocalizedMessage(), e);
-    FRAnalytics.exceptionThrown(e.getLocalizedMessage(), e);
-    JOptionPane.showMessageDialog(findActiveFrame(), e.toString(), "Exception Occurred", OK_OPTION);
+    Frame activeFrame = findActiveFrame();
+    if (activeFrame != null) {
+      JOptionPane.showMessageDialog(activeFrame, e.toString(), "Exception Occurred", OK_OPTION);
+    }
   }
 
   private static Frame findActiveFrame() {

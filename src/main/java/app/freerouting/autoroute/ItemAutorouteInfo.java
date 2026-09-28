@@ -1,10 +1,10 @@
 package app.freerouting.autoroute;
 
-import app.freerouting.board.Item;
-import app.freerouting.board.ShapeSearchTree;
-import app.freerouting.boardgraphics.GraphicsContext;
+import app.freerouting.autoroute.expansion.ObstacleExpansionRoom;
+import app.freerouting.autoroute.path.Connection;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.logger.FRLogger;
-import java.awt.Graphics;
 
 /** Temporary data stored in board Items used in the autoroute algorithm. */
 public class ItemAutorouteInfo {
@@ -59,10 +59,10 @@ public class ItemAutorouteInfo {
     } else if (expansionRoomArr.length != currentShapeCount) {
       // Item's tree shape count has changed (e.g., trace modified during routing)
       // Resize the array and preserve existing rooms
-      ObstacleExpansionRoom[] newArr = new ObstacleExpansionRoom[currentShapeCount];
+      ObstacleExpansionRoom[] newArray = new ObstacleExpansionRoom[currentShapeCount];
       int copyLength = Math.min(expansionRoomArr.length, currentShapeCount);
-      System.arraycopy(expansionRoomArr, 0, newArr, 0, copyLength);
-      expansionRoomArr = newArr;
+      System.arraycopy(expansionRoomArr, 0, newArray, 0, copyLength);
+      expansionRoomArr = newArray;
     }
 
     if (index < 0 || index >= expansionRoomArr.length) {
@@ -83,22 +83,22 @@ public class ItemAutorouteInfo {
   /** Resets the expansion rooms for autorouting the next connection. */
   public void resetDoors() {
     if (expansionRoomArr != null) {
-      for (ObstacleExpansionRoom currRoom : expansionRoomArr) {
-        if (currRoom != null) {
-          currRoom.resetDoors();
+      for (ObstacleExpansionRoom currentRoom : expansionRoomArr) {
+        if (currentRoom != null) {
+          currentRoom.resetDoors();
         }
       }
     }
   }
 
-  /** Draws the shapes of the expansion rooms of this info for testing purposes. */
-  public void draw(Graphics graphics, GraphicsContext graphicsContext, double intensity) {
-    if (expansionRoomArr == null) {
+  /** Emits optional diagnostics for the expansion rooms of this info. */
+  public void emitDiagnostics(AutorouteDiagnostic.Sink sink, double intensity) {
+    if (sink == null || intensity <= 0 || expansionRoomArr == null) {
       return;
     }
-    for (ObstacleExpansionRoom currRoom : expansionRoomArr) {
-      if (currRoom != null) {
-        currRoom.draw(graphics, graphicsContext, intensity);
+    for (ObstacleExpansionRoom currentRoom : expansionRoomArr) {
+      if (currentRoom != null) {
+        currentRoom.emitDiagnostic(sink, intensity);
       }
     }
   }

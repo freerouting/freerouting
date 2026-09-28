@@ -1,0 +1,63 @@
+{
+  "board_id": "tbd_tbd",
+  "display_name": "tbd_tbd",
+  "pcbench_directory": "PCBs/tbd_tbd",
+  "source": "https://github.com/al177/tbd",
+  "author": "al177",
+  "license": "Creative Commons Attribution 4.0 International",
+  "license_spdx": "CC-BY-4.0",
+  "retrieved_at": "2023-08-17T17:22:46.677989+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 8,
+    "components": 12,
+    "dimensions_mm": {
+      "width": 20.27,
+      "height": 11.99
+    },
+    "area_cm2": 2.43,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 201,
+    "vias": 31,
+    "track_length_mm": 209.95,
+    "kicad_drc_violations": 96,
+    "kicad_drc_breakdown": {
+      "total_violations": 96,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 37,
+        "copper_edge_clearance": 15,
+        "courtyards_overlap": 2,
+        "lib_footprint_issues": 12,
+        "silk_overlap": 2,
+        "text_height": 28
+      },
+      "by_severity": {
+        "error": 54,
+        "warning": 42
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.133892+00:00",
+    "elapsed_seconds": 36.32,
+    "unrouted_nets": 6,
+    "clearance_violations": 6,
+    "quality_score": 819.99
+  }
+}

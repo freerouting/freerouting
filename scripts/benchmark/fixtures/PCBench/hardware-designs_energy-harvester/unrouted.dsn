@@ -1,0 +1,324 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\hardware-designs_energy-harvester\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  71628 -54864  25400 -54864  25400 -39116  71628 -39116
+            71628 -54864)
+    )
+    (via "Via[0-1]_889:635_um")
+    (rule
+      (width 203.2)
+      (clearance 203.2)
+      (clearance 50.8 (type smd_smd))
+    )
+  )
+  (placement
+    (component SM1206
+      (place C1 62738 -44704 front -90 (PN 100uF))
+      (place C4 30226 -51562 front 90 (PN 10uF))
+    )
+    (component SM0603
+      (place R1 59690 -49530 front 180 (PN 300R))
+      (place C2 59436 -45974 front -90 (PN 1uF))
+      (place C3 51308 -45974 front 90 (PN 4.7uF))
+    )
+    (component PIN_ARRAY_2X1
+      (place P2 55880 -53340 front 0 (PN CONN_2))
+      (place P1 63500 -53340 front 0 (PN CONN_2))
+      (place P3 48260 -53340 front 0 (PN CONN_2))
+    )
+    (component "PIN_ARRAY-6X1"
+      (place P4 26924 -46990 front 90 (PN CONN_6))
+      (place P5 70104 -46990 front -90 (PN CONN_6))
+    )
+    (component "SUPERCAP_ESHSR-0010C0-002R7"
+      (place C5 34544 -44450 front 90 (PN SUPERCAP))
+    )
+    (component SM0805_JUMPER3
+      (place JP1 42164 -52324 front 0 (PN JUMPER3))
+      (place JP2 35560 -52324 front 0 (PN JUMPER3))
+    )
+    (component "INDUCTOR-CDRH2D18-LD"
+      (place L1 54610 -42926 front 180 (PN 10uH))
+    )
+    (component "LTC3588-1-MSOP10"
+      (place U1 54864 -48006 front 90 (PN "LTC3588-1"))
+    )
+    (component "SUPERCAP_ESHSR-0010C0-002R7::1"
+      (place C6 45466 -44450 front -90 (PN SUPERCAP))
+    )
+    (component LOGO_SNOWCAP_BACK
+      (place Noname_1 59436 -44450 back 180)
+    )
+    (component "DIODE-1206"
+      (place D1 65786 -44704 front 90 (PN DIODESCH))
+    )
+  )
+  (library
+    (image SM1206
+      (outline (path signal 127  -889 1143  -2540 1143))
+      (outline (path signal 127  2540 -1143  889 -1143))
+      (outline (path signal 127  2540 1143  2540 -1143))
+      (outline (path signal 127  889 1143  2540 1143))
+      (outline (path signal 127  -2540 -1143  -889 -1143))
+      (outline (path signal 127  -2540 1143  -2540 -1143))
+      (pin Rect[T]Pad_1524.000000x2032.000000_um 1 -1651 0)
+      (pin Rect[T]Pad_1524.000000x2032.000000_um 2 1651 0)
+    )
+    (image SM0603
+      (outline (path signal 127  -1143 -635  -1143 635))
+      (outline (path signal 127  1143 -635  -1143 -635))
+      (outline (path signal 127  1143 635  1143 -635))
+      (outline (path signal 127  -1143 635  1143 635))
+      (pin Rect[T]Pad_635.000000x1143.000000_um 1 -762 0)
+      (pin Rect[T]Pad_635.000000x1143.000000_um 2 762 0)
+    )
+    (image PIN_ARRAY_2X1
+      (outline (path signal 152.4  2540 -1270  -2540 -1270))
+      (outline (path signal 152.4  2540 1270  2540 -1270))
+      (outline (path signal 152.4  -2540 1270  2540 1270))
+      (outline (path signal 152.4  -2540 -1270  -2540 1270))
+      (pin Rect[A]Pad_1524.000000x1524.000000_um 1 -1270 0)
+      (pin Round[A]Pad_1524.000000_um 2 1270 0)
+    )
+    (image "PIN_ARRAY-6X1"
+      (outline (path signal 304.8  -5080 -1270  -5080 1270))
+      (outline (path signal 304.8  7620 -1270  -7620 -1270))
+      (outline (path signal 304.8  7620 1270  7620 -1270))
+      (outline (path signal 304.8  -7620 1270  7620 1270))
+      (outline (path signal 304.8  -7620 -1270  -7620 1270))
+      (pin Rect[A]Pad_1524.000000x1524.000000_um 1 -6350 0)
+      (pin Round[A]Pad_1524.000000_um 2 -3810 0)
+      (pin Round[A]Pad_1524.000000_um 3 -1270 0)
+      (pin Round[A]Pad_1524.000000_um 4 1270 0)
+      (pin Round[A]Pad_1524.000000_um 5 3810 0)
+      (pin Round[A]Pad_1524.000000_um 6 6350 0)
+    )
+    (image "SUPERCAP_ESHSR-0010C0-002R7"
+      (outline (path signal 150  0 -5000  -441.901 -4980.43  -880.343 -4921.89  -1311.89 -4824.82
+            -1733.18 -4690  -2140.9 -4518.47  -2531.86 -4311.57  -2903.01 -4070.93
+            -3251.44 -3798.43  -3574.43 -3496.21  -3869.43 -3166.62  -4134.16 -2812.25
+            -4366.53 -2435.86  -4564.72 -2040.42  -4727.19 -1629  -4852.67 -1204.84
+            -4940.16 -771.245  -4988.99 -331.615  -4998.78 110.61  -4969.44 551.97
+            -4901.21 989.01  -4794.62 1418.31  -4650.51 1836.51  -4470 2240.33
+            -4254.51 2626.63  -4005.72 2992.36  -3725.58 3334.68  -3416.28 3650.89
+            -3080.24 3938.54  -2720.1 4195.36  -2338.67 4419.35  -1938.94 4608.74
+            -1524.03 4762.07  -1097.19 4878.13  -661.769 4956.01  -221.167 4995.11
+            221.167 4995.11  661.769 4956.01  1097.19 4878.13  1524.03 4762.07
+            1938.94 4608.74  2338.67 4419.35  2720.1 4195.36  3080.24 3938.54
+            3416.28 3650.89  3725.58 3334.68  4005.72 2992.36  4254.51 2626.63
+            4470 2240.33  4650.51 1836.51  4794.62 1418.31  4901.21 989.01
+            4969.44 551.97  4998.78 110.61  4988.99 -331.615  4940.16 -771.245
+            4852.67 -1204.84  4727.19 -1629  4564.72 -2040.42  4366.53 -2435.86
+            4134.16 -2812.25  3869.43 -3166.62  3574.43 -3496.21  3251.44 -3798.43
+            2903.01 -4070.93  2531.86 -4311.57  2140.9 -4518.47  1733.18 -4690
+            1311.89 -4824.82  880.343 -4921.89  441.901 -4980.43  0 -5000))
+      (outline (path signal 150  -3500 1000  -3500 2000))
+      (outline (path signal 150  -4000 1500  -3000 1500))
+      (outline (path signal 150  3000 1500  4000 1500))
+      (pin Round[A]Pad_1524.000000_um 1 -2500 0)
+      (pin Round[A]Pad_1524.000000_um 2 2500 0)
+    )
+    (image SM0805_JUMPER3
+      (outline (path signal 150  2921 -1016  2921 1016))
+      (outline (path signal 150  -2921 -1016  2921 -1016))
+      (outline (path signal 150  -2921 1016  -2921 -1016))
+      (outline (path signal 150  2921 1016  -2921 1016))
+      (outline (path signal 150  1016 1016  1016 635))
+      (outline (path signal 150  1016 -1016  1016 -635))
+      (outline (path signal 150  -1016 1016  -1016 635))
+      (outline (path signal 150  -1016 -1016  -1016 -635))
+      (pin Rect[T]Pad_1099.820000x1399.540000_um 1 -2042.16 0)
+      (pin Rect[T]Pad_1099.820000x1399.540000_um 2 10.16 0)
+      (pin Rect[T]Pad_1099.820000x1399.540000_um 3 2032 0)
+    )
+    (image "INDUCTOR-CDRH2D18-LD"
+      (outline (path signal 150  -1500 -700  -1500 600))
+      (outline (path signal 150  -1000 -1200  -1500 -700))
+      (outline (path signal 150  1000 -1200  -1000 -1200))
+      (outline (path signal 150  1600 -700  1000 -1200))
+      (outline (path signal 150  1600 600  1600 -700))
+      (outline (path signal 150  400 1800  1600 600))
+      (outline (path signal 150  -400 1800  400 1800))
+      (outline (path signal 150  -1500 600  -400 1800))
+      (pin Rect[T]Pad_1300.000000x1300.000000_um 1 -1500 0)
+      (pin Rect[T]Pad_1300.000000x1300.000000_um 2 1500 0)
+    )
+    (image "LTC3588-1-MSOP10"
+      (outline (path signal 150  -1500 -1500  -1500 1500))
+      (outline (path signal 150  1500 -1500  -1500 -1500))
+      (outline (path signal 150  1500 1500  1500 -1500))
+      (outline (path signal 150  -1500 1500  1500 1500))
+      (outline (path signal 150  -1100 -1323.61  -1185.57 -1306.59  -1258.11 -1258.11  -1306.59 -1185.57
+            -1323.61 -1100  -1306.59 -1014.43  -1258.11 -941.886  -1185.57 -893.414
+            -1100 -876.393  -1014.43 -893.414  -941.886 -941.886  -893.414 -1014.43
+            -876.393 -1100  -893.414 -1185.57  -941.886 -1258.11  -1014.43 -1306.59
+            -1100 -1323.61))
+      (pin Rect[T]Pad_1880.000000x1680.000000_um 11 0 0)
+      (pin Rect[T]Pad_305.000000x889.000000_um 1 -1000 -2000)
+      (pin Rect[T]Pad_305.000000x889.000000_um 2 -500 -2000)
+      (pin Rect[T]Pad_305.000000x889.000000_um 3 0 -2000)
+      (pin Rect[T]Pad_305.000000x889.000000_um 4 500 -2000)
+      (pin Rect[T]Pad_305.000000x889.000000_um 5 1000 -2000)
+      (pin Rect[T]Pad_305.000000x889.000000_um 6 1000 2000)
+      (pin Rect[T]Pad_305.000000x889.000000_um 7 500 2000)
+      (pin Rect[T]Pad_305.000000x889.000000_um 8 0 2000)
+      (pin Rect[T]Pad_305.000000x889.000000_um 9 -500 2000)
+      (pin Rect[T]Pad_305.000000x889.000000_um 10 -1000 2000)
+    )
+    (image "SUPERCAP_ESHSR-0010C0-002R7::1"
+      (outline (path signal 150  0 5000  441.901 4980.43  880.343 4921.89  1311.89 4824.82
+            1733.18 4690  2140.9 4518.47  2531.86 4311.57  2903.01 4070.93
+            3251.44 3798.43  3574.43 3496.21  3869.43 3166.62  4134.16 2812.25
+            4366.53 2435.86  4564.72 2040.42  4727.19 1629  4852.67 1204.84
+            4940.16 771.245  4988.99 331.615  4998.78 -110.61  4969.44 -551.97
+            4901.21 -989.01  4794.62 -1418.31  4650.51 -1836.51  4470 -2240.33
+            4254.51 -2626.63  4005.72 -2992.36  3725.58 -3334.68  3416.28 -3650.89
+            3080.24 -3938.54  2720.1 -4195.36  2338.67 -4419.35  1938.94 -4608.74
+            1524.03 -4762.07  1097.19 -4878.13  661.769 -4956.01  221.167 -4995.11
+            -221.167 -4995.11  -661.769 -4956.01  -1097.19 -4878.13  -1524.03 -4762.07
+            -1938.94 -4608.74  -2338.67 -4419.35  -2720.1 -4195.36  -3080.24 -3938.54
+            -3416.28 -3650.89  -3725.58 -3334.68  -4005.72 -2992.36  -4254.51 -2626.63
+            -4470 -2240.33  -4650.51 -1836.51  -4794.62 -1418.31  -4901.21 -989.01
+            -4969.44 -551.97  -4998.78 -110.61  -4988.99 331.615  -4940.16 771.245
+            -4852.67 1204.84  -4727.19 1629  -4564.72 2040.42  -4366.53 2435.86
+            -4134.16 2812.25  -3869.43 3166.62  -3574.43 3496.21  -3251.44 3798.43
+            -2903.01 4070.93  -2531.86 4311.57  -2140.9 4518.47  -1733.18 4690
+            -1311.89 4824.82  -880.343 4921.89  -441.901 4980.43  0 5000))
+      (outline (path signal 150  -3500 1000  -3500 2000))
+      (outline (path signal 150  -4000 1500  -3000 1500))
+      (outline (path signal 150  3000 1500  4000 1500))
+      (pin Round[A]Pad_1524.000000_um 1 -2500 0)
+      (pin Round[A]Pad_1524.000000_um 2 2500 0)
+    )
+    (image LOGO_SNOWCAP_BACK
+    )
+    (image "DIODE-1206"
+      (outline (path signal 150  2667 1143  2667 -1143))
+      (outline (path signal 150  -254 -508  -254 635))
+      (outline (path signal 150  381 0  -254 -508))
+      (outline (path signal 150  -254 635  381 0))
+      (pin Rect[T]Pad_1597.660000x1800.860000_um 1 -1419.86 0)
+      (pin Rect[T]Pad_1597.660000x1800.860000_um 2 1419.86 0)
+    )
+    (padstack Round[A]Pad_1524.000000_um
+      (shape (circle F.Cu 1524))
+      (shape (circle B.Cu 1524))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_305.000000x889.000000_um
+      (shape (rect F.Cu -152.5 -444.5 152.5 444.5))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_635.000000x1143.000000_um
+      (shape (rect F.Cu -317.5 -571.5 317.5 571.5))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1099.820000x1399.540000_um
+      (shape (rect F.Cu -549.91 -699.77 549.91 699.77))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1300.000000x1300.000000_um
+      (shape (rect F.Cu -650 -650 650 650))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1524.000000x2032.000000_um
+      (shape (rect F.Cu -762 -1016 762 1016))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1524.000000x1524.000000_um
+      (shape (rect F.Cu -762 -762 762 762))
+      (shape (rect B.Cu -762 -762 762 762))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1597.660000x1800.860000_um
+      (shape (rect F.Cu -798.83 -900.43 798.83 900.43))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1880.000000x1680.000000_um
+      (shape (rect F.Cu -940 -840 940 840))
+      (attach off)
+    )
+    (padstack "Via[0-1]_889:635_um"
+      (shape (circle F.Cu 889))
+      (shape (circle B.Cu 889))
+      (attach off)
+    )
+  )
+  (network
+    (net /PGOOD
+      (pins P5-5 U1-10)
+    )
+    (net /VIN2
+      (pins C3-1 JP1-3 JP2-3 U1-7)
+    )
+    (net GND
+      (pins C1-2 C3-2 P2-1 P1-1 P4-2 JP1-1 JP2-1 U1-11 C6-2 C4-2)
+    )
+    (net "N-0000011"
+      (pins R1-2 P3-1 U1-1)
+    )
+    (net "N-0000012"
+      (pins P3-2 U1-2)
+    )
+    (net "N-0000013"
+      (pins JP2-2 U1-8)
+    )
+    (net "N-0000014"
+      (pins C5-2 C6-1)
+    )
+    (net "N-0000015"
+      (pins JP1-2 U1-9)
+    )
+    (net "N-0000017"
+      (pins P1-2 D1-1)
+    )
+    (net "N-0000018"
+      (pins C2-2 U1-3)
+    )
+    (net "N-0000020"
+      (pins R1-1 P2-2)
+    )
+    (net "N-0000022"
+      (pins L1-1 U1-5)
+    )
+    (net "N-0000023"
+      (pins C1-1 C2-1 U1-4 D1-2)
+    )
+    (net VCC
+      (pins P4-1 C5-1 L1-2 U1-6 C4-1)
+    )
+    (class kicad_default /PGOOD /VIN2 GND "N-0000011" "N-0000012" "N-0000013"
+      "N-0000014" "N-0000015" "N-0000017" "N-0000018" "N-0000020" "N-0000022"
+      "N-0000023" VCC
+      (circuit
+        (use_via "Via[0-1]_889:635_um")
+      )
+      (rule
+        (width 203.2)
+        (clearance 203.2)
+      )
+    )
+  )
+  (wiring
+  )
+)

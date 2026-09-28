@@ -1,0 +1,66 @@
+{
+  "board_id": "Hardware_Playground_nrf52832_coin",
+  "display_name": "Hardware_Playground_nrf52832_coin",
+  "pcbench_directory": "PCBs/Hardware_Playground_nrf52832_coin",
+  "source": "https://github.com/mtiutiu/Hardware_Playground",
+  "author": "mtiutiu",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:21.733695+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 20,
+    "dimensions_mm": {
+      "width": 12.93,
+      "height": 12.83
+    },
+    "area_cm2": 1.66,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 134,
+    "vias": 62,
+    "track_length_mm": 213.86,
+    "kicad_drc_violations": 229,
+    "kicad_drc_breakdown": {
+      "total_violations": 229,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 14,
+        "copper_edge_clearance": 4,
+        "hole_clearance": 1,
+        "lib_footprint_issues": 20,
+        "silk_over_copper": 18,
+        "silk_overlap": 8,
+        "solder_mask_bridge": 141,
+        "starved_thermal": 2,
+        "text_height": 21
+      },
+      "by_severity": {
+        "error": 162,
+        "warning": 67
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.948188+00:00",
+    "elapsed_seconds": 15.14,
+    "unrouted_nets": 3,
+    "clearance_violations": 1,
+    "quality_score": 860.87
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "board_id": "tinyisp-micro_tinyispmicro",
+  "display_name": "tinyisp-micro_tinyispmicro",
+  "pcbench_directory": "PCBs/tinyisp-micro_tinyispmicro",
+  "source": "https://github.com/cnlohr/tinyisp-micro",
+  "author": "cnlohr",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:38.441891+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 16,
+    "dimensions_mm": {
+      "width": 36.83,
+      "height": 16.51
+    },
+    "area_cm2": 6.08,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 489,
+    "vias": 15,
+    "track_length_mm": 367.49,
+    "kicad_drc_violations": 146,
+    "kicad_drc_breakdown": {
+      "total_violations": 146,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 90,
+        "copper_edge_clearance": 9,
+        "isolated_copper": 1,
+        "silk_over_copper": 8,
+        "silk_overlap": 7,
+        "text_height": 31
+      },
+      "by_severity": {
+        "error": 99,
+        "warning": 47
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.143976+00:00",
+    "elapsed_seconds": 17.07,
+    "unrouted_nets": 1,
+    "clearance_violations": 3,
+    "quality_score": 970.36
+  }
+}

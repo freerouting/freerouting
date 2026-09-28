@@ -7,12 +7,12 @@ package app.freerouting.geometry.planar;
 public interface ConvexShape extends Shape {
 
   /**
-   * Calculates the offset shape by p_distance. If p_distance {@literal >} 0, the shape will be
+   * Calculates the offset shape by distance. If distance {@literal >} 0, the shape will be
    * enlarged, else the result shape will be smaller.
    */
   ConvexShape offset(double distance);
 
-  /** Shrinks the shape by p_offset. The result shape will not be empty. */
+  /** Shrinks the shape by offset. The result shape will not be empty. */
   ConvexShape shrink(double offset);
 
   /** Returns the maximum diameter of the shape. */

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "OpenVNAVI_motor unit",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 25868,
+      "sha256": "a2f7c2d3b56fa1f10fffdbf07c26b435a0ef18a0be961c1754697b6ce328241c"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 18121,
+      "sha256": "d3f7419017f18a44b51461d3ccfba50d1676991b0a28c13f1a067e405d37e6a0"
+    },
+    "metadata_json": {
+      "bytes": 657,
+      "sha256": "c9df6d617cb80a9aaaed7d773266725b9f1ad0c40f1b3d624bb5b7aea99a4925"
+    },
+    "final_json": {
+      "bytes": 11444,
+      "sha256": "27f3b8ad220903cdff127d95171a1ea9ef35e02db6055c96ffd3f5aeaffd1c78"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:30:38.415558+00:00"
+  }
+}

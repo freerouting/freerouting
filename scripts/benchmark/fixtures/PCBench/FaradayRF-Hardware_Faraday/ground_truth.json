@@ -1,0 +1,33 @@
+{
+  "board": "FaradayRF-Hardware_Faraday",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\FaradayRF-Hardware_Faraday\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 428,
+  "segment_count": 1713,
+  "approximate_track_length_mm": 3212.52,
+  "kicad_drc_violations": 895,
+  "generated_at": "2026-08-18T18:15:38.304879+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 895,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 505,
+      "copper_edge_clearance": 9,
+      "shorting_items": 6,
+      "silk_edge_clearance": 6,
+      "silk_over_copper": 41,
+      "silk_overlap": 2,
+      "solder_mask_bridge": 121,
+      "starved_thermal": 1,
+      "text_height": 199,
+      "track_dangling": 2,
+      "tracks_crossing": 2,
+      "via_dangling": 1
+    },
+    "by_severity": {
+      "error": 644,
+      "warning": 251
+    }
+  }
+}

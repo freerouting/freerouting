@@ -1,0 +1,26 @@
+{
+  "board": "MySRaspiGW_MySRaspiGW_PA_LNA",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\MySRaspiGW_MySRaspiGW_PA_LNA\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 2,
+  "segment_count": 65,
+  "approximate_track_length_mm": 97.98,
+  "kicad_drc_violations": 30,
+  "generated_at": "2026-08-18T19:26:24.511979+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 30,
+    "unconnected_count": 0,
+    "by_type": {
+      "copper_edge_clearance": 8,
+      "lib_footprint_issues": 5,
+      "malformed_courtyard": 3,
+      "silk_overlap": 2,
+      "text_height": 12
+    },
+    "by_severity": {
+      "error": 11,
+      "warning": 19
+    }
+  }
+}

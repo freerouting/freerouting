@@ -1,0 +1,35 @@
+{
+  "board": "MoonLander_MoonLander",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\MoonLander_MoonLander\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 31,
+  "segment_count": 432,
+  "approximate_track_length_mm": 585.07,
+  "kicad_drc_violations": 538,
+  "generated_at": "2026-08-18T19:25:12.869433+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 538,
+    "unconnected_count": 4,
+    "by_type": {
+      "clearance": 184,
+      "copper_edge_clearance": 19,
+      "courtyards_overlap": 1,
+      "hole_clearance": 82,
+      "hole_to_hole": 12,
+      "item_on_disabled_layer": 6,
+      "lib_footprint_issues": 107,
+      "pth_inside_courtyard": 12,
+      "silk_edge_clearance": 3,
+      "silk_over_copper": 36,
+      "silk_overlap": 3,
+      "starved_thermal": 4,
+      "text_height": 63,
+      "track_dangling": 6
+    },
+    "by_severity": {
+      "error": 308,
+      "warning": 230
+    }
+  }
+}

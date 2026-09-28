@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "usb2serial-CH340G_USB2TTL-CH340G",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 84353,
+      "sha256": "0e760d476df07b47681ba6a5bf8c9358271c870f5e647e960a297209dc051dda"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 55150,
+      "sha256": "68344ab7a759507f3bec46f647780ef690423c3b27541f2d1f776c76041b93bb"
+    },
+    "metadata_json": {
+      "bytes": 657,
+      "sha256": "b02070c6362e3e08df57dc82a18113564e691513c845a15b53b538a01b4575e4"
+    },
+    "final_json": {
+      "bytes": 44716,
+      "sha256": "1a858509f40500bf83ba70d04a0aea9220fccb894a03de0c6686725c4841aa89"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:55:17.837237+00:00"
+  }
+}

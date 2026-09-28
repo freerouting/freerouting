@@ -1,0 +1,60 @@
+{
+  "board_id": "OpenHardwareExG_Shield_OpenHardwareExG_Shield",
+  "display_name": "OpenHardwareExG_Shield_OpenHardwareExG_Shield",
+  "pcbench_directory": "PCBs/OpenHardwareExG_Shield_OpenHardwareExG_Shield",
+  "source": "https://github.com/OpenElectronicsLab/OpenHardwareExG_Shield",
+  "author": "OpenElectronicsLab",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:32.377820+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 82,
+    "components": 204,
+    "dimensions_mm": {
+      "width": 125.09,
+      "height": 59.69
+    },
+    "area_cm2": 74.67,
+    "zones": 10
+  },
+  "reference": {
+    "segments": 1050,
+    "vias": 147,
+    "track_length_mm": 2280.31,
+    "kicad_drc_violations": 606,
+    "kicad_drc_breakdown": {
+      "total_violations": 606,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 319,
+        "lib_footprint_issues": 11,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 46,
+        "silk_overlap": 8,
+        "solder_mask_bridge": 7,
+        "starved_thermal": 3,
+        "text_height": 199,
+        "track_dangling": 9
+      },
+      "by_severity": {
+        "error": 329,
+        "warning": 277
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "complex",
+    "medium",
+    "plane",
+    "tier-c"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
+}

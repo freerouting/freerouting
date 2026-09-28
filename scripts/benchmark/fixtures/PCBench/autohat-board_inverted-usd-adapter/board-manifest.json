@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "autohat-board_inverted-usd-adapter",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 13358,
+      "sha256": "ffdefb70662b1a18fa5a764fffa546c68792ac539c1ed77cd17e139374ee8d2a"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 16211,
+      "sha256": "bd0016624bd4793f422262405d3ed37535330206647cd2c6eb260651da0c7664"
+    },
+    "metadata_json": {
+      "bytes": 696,
+      "sha256": "d0471e5ed9df0e35cdfc82da00a769f97a6f5c23c965b6c8ebfdeb8dce885adb"
+    },
+    "final_json": {
+      "bytes": 11272,
+      "sha256": "1a33c63d6aeaa40669f4c2d6ab2ef6fafb7dadcd13955301b16391611cda6932"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:30:36.819687+00:00"
+  }
+}

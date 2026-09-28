@@ -1,0 +1,26 @@
+{
+  "board": "avr_frs_shield_avr_frs",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\avr_frs_shield_avr_frs\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 6,
+  "segment_count": 216,
+  "approximate_track_length_mm": 800.27,
+  "kicad_drc_violations": 138,
+  "generated_at": "2026-08-18T18:31:26.338907+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 138,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 2,
+      "courtyards_overlap": 8,
+      "lib_footprint_issues": 34,
+      "silk_edge_clearance": 2,
+      "silk_overlap": 92
+    },
+    "by_severity": {
+      "error": 10,
+      "warning": 128
+    }
+  }
+}

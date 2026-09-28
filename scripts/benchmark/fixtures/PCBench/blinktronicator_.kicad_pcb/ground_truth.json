@@ -1,0 +1,30 @@
+{
+  "board": "blinktronicator_.kicad_pcb",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\blinktronicator_.kicad_pcb\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 43,
+  "segment_count": 414,
+  "approximate_track_length_mm": 384.62,
+  "kicad_drc_violations": 198,
+  "generated_at": "2026-08-18T18:34:15.798422+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 198,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 2,
+      "copper_edge_clearance": 20,
+      "invalid_outline": 5,
+      "silk_edge_clearance": 11,
+      "silk_over_copper": 92,
+      "silk_overlap": 16,
+      "text_height": 34,
+      "text_thickness": 17,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 27,
+      "warning": 171
+    }
+  }
+}

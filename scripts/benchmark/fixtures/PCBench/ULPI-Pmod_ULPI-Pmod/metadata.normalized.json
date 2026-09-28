@@ -1,0 +1,63 @@
+{
+  "board_id": "ULPI-Pmod_ULPI-Pmod",
+  "display_name": "ULPI-Pmod_ULPI-Pmod",
+  "pcbench_directory": "PCBs/ULPI-Pmod_ULPI-Pmod",
+  "source": "https://github.com/ObKo/ULPI-Pmod",
+  "author": "ObKo",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:38.141888+00:00",
+  "cad": {
+    "source_version": "KiCad 20160815",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 11,
+    "components": 17,
+    "dimensions_mm": {
+      "width": 40.64,
+      "height": 26.67
+    },
+    "area_cm2": 10.84,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 235,
+    "vias": 11,
+    "track_length_mm": 445.08,
+    "kicad_drc_violations": 227,
+    "kicad_drc_breakdown": {
+      "total_violations": 227,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 126,
+        "copper_edge_clearance": 2,
+        "invalid_outline": 6,
+        "lib_footprint_issues": 17,
+        "solder_mask_bridge": 75,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 209,
+        "warning": 18
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.155126+00:00",
+    "elapsed_seconds": 35.18,
+    "unrouted_nets": 9,
+    "clearance_violations": 6,
+    "quality_score": 843.07
+  }
+}

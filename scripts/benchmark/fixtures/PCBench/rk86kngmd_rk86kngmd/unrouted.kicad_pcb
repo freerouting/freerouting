@@ -1,0 +1,6446 @@
+
+(kicad_pcb
+  (version 20171130)
+  (host pcbnew "(5.1.12)-1")
+  (general
+    (thickness 1.6)
+    (drawings 15)
+    (tracks 1207)
+    (zones 0)
+    (modules 39)
+    (nets 158))
+  (page A4)
+  (layers
+    (0 F.Cu signal)
+    (31 B.Cu signal)
+    (32 B.Adhes user)
+    (33 F.Adhes user)
+    (34 B.Paste user)
+    (35 F.Paste user)
+    (36 B.SilkS user)
+    (37 F.SilkS user)
+    (38 B.Mask user)
+    (39 F.Mask user)
+    (40 Dwgs.User user)
+    (41 Cmts.User user)
+    (42 Eco1.User user)
+    (43 Eco2.User user)
+    (44 Edge.Cuts user)
+    (45 Margin user)
+    (46 B.CrtYd user)
+    (47 F.CrtYd user)
+    (48 B.Fab user)
+    (49 F.Fab user))
+  (setup
+    (last_trace_width 0.35)
+    (trace_clearance 0.2)
+    (zone_clearance 0.508)
+    (zone_45_only no)
+    (trace_min 0.2)
+    (via_size 1)
+    (via_drill 0.5)
+    (via_min_size 0.4)
+    (via_min_drill 0.3)
+    (uvia_size 0.3)
+    (uvia_drill 0.1)
+    (uvias_allowed no)
+    (uvia_min_size 0.2)
+    (uvia_min_drill 0.1)
+    (edge_width 0.1)
+    (segment_width 0.2)
+    (pcb_text_width 0.3)
+    (pcb_text_size 1.5 1.5)
+    (mod_edge_width 0.15)
+    (mod_text_size 1 1)
+    (mod_text_width 0.15)
+    (pad_size 1.5 1.5)
+    (pad_drill 0.9)
+    (pad_to_mask_clearance 0)
+    (aux_axis_origin 0 0)
+    (grid_origin 134.75 74.25)
+    (visible_elements 7FFFFFFF)
+    (pcbplotparams
+      (layerselection 0x000c0_ffffffff)
+      (usegerberextensions false)
+      (usegerberattributes true)
+      (usegerberadvancedattributes true)
+      (creategerberjobfile true)
+      (excludeedgelayer true)
+      (linewidth 0.1)
+      (plotframeref false)
+      (viasonmask false)
+      (mode 1)
+      (useauxorigin false)
+      (hpglpennumber 1)
+      (hpglpenspeed 20)
+      (hpglpendiameter 15.0)
+      (psnegative false)
+      (psa4output false)
+      (plotreference true)
+      (plotvalue true)
+      (plotinvisibletext false)
+      (padsonsilk false)
+      (subtractmaskfromsilk false)
+      (outputformat 1)
+      (mirror false)
+      (drillshape 0)
+      (scaleselection 1)
+      (outputdirectory "gerber/")))
+  (net 0 "")
+  (net 1 "Net-(D1-Pad1)")
+  (net 2 "Net-(D1-Pad2)")
+  (net 3 "Net-(D1-Pad3)")
+  (net 4 "Net-(D1-Pad4)")
+  (net 5 "Net-(D1-Pad6)")
+  (net 6 "Net-(D1-Pad18)")
+  (net 7 "Net-(D1-Pad19)")
+  (net 8 "Net-(D1-Pad20)")
+  (net 9 "Net-(D1-Pad37)")
+  (net 10 "Net-(D1-Pad38)")
+  (net 11 "Net-(D1-Pad39)")
+  (net 12 "Net-(D1-Pad40)")
+  (net 13 GND)
+  (net 14 "Net-(DD6-Pad16)")
+  (net 15 "Net-(DD6-Pad17)")
+  (net 16 /RD)
+  (net 17 WPRT)
+  (net 18 READY)
+  (net 19 TR00)
+  (net 20 IP)
+  (net 21 /WR)
+  (net 22 "Net-(DD10-Pad1)")
+  (net 23 "Net-(DD12-Pad5)")
+  (net 24 "Net-(DD2-Pad4)")
+  (net 25 "Net-(DD2-Pad6)")
+  (net 26 "Net-(DD2-Pad8)")
+  (net 27 "Net-(DD2-Pad10)")
+  (net 28 "Net-(DD2-Pad14)")
+  (net 29 "Net-(DD2-Pad16)")
+  (net 30 "Net-(DD2-Pad18)")
+  (net 31 "Net-(DD17-Pad1)")
+  (net 32 "Net-(DD10-Pad7)")
+  (net 33 +5V)
+  (net 34 "Net-(DD17-Pad13)")
+  (net 35 WR_GATE)
+  (net 36 DIR)
+  (net 37 SIDE)
+  (net 38 STEP)
+  (net 39 DISC_B)
+  (net 40 DISC_A)
+  (net 41 WR_DATA)
+  (net 42 "Net-(DD10-Pad3)")
+  (net 43 "Net-(DD10-Pad14)")
+  (net 44 "Net-(DD11-Pad3)")
+  (net 45 "Net-(DD10-Pad13)")
+  (net 46 "Net-(DD9-Pad7)")
+  (net 47 "Net-(DD15-Pad8)")
+  (net 48 "Net-(DD7-Pad1)")
+  (net 49 "Net-(DD11-Pad5)")
+  (net 50 "Net-(DD14-Pad6)")
+  (net 51 "Net-(DD7-Pad4)")
+  (net 52 "Net-(DD7-Pad6)")
+  (net 53 "Net-(DD7-Pad7)")
+  (net 54 "Net-(DD7-Pad8)")
+  (net 55 "Net-(DD7-Pad9)")
+  (net 56 "Net-(DD7-Pad11)")
+  (net 57 "Net-(DD7-Pad13)")
+  (net 58 "Net-(DD8-Pad1)")
+  (net 59 "Net-(DD8-Pad4)")
+  (net 60 "Net-(DD8-Pad6)")
+  (net 61 "Net-(DD8-Pad7)")
+  (net 62 "Net-(DD14-Pad9)")
+  (net 63 "Net-(DD15-Pad2)")
+  (net 64 "Net-(DD8-Pad11)")
+  (net 65 "Net-(DD8-Pad13)")
+  (net 66 "Net-(DD10-Pad4)")
+  (net 67 "Net-(DD10-Pad5)")
+  (net 68 "Net-(DD10-Pad6)")
+  (net 69 "Net-(DD10-Pad9)")
+  (net 70 "Net-(DD10-Pad10)")
+  (net 71 "Net-(DD10-Pad11)")
+  (net 72 "Net-(DD10-Pad12)")
+  (net 73 "Net-(DD11-Pad10)")
+  (net 74 "Net-(DD11-Pad6)")
+  (net 75 "Net-(DD11-Pad8)")
+  (net 76 "Net-(DD11-Pad9)")
+  (net 77 "Net-(DD11-Pad11)")
+  (net 78 "Net-(DD12-Pad6)")
+  (net 79 "Net-(DD12-Pad8)")
+  (net 80 "Net-(DD12-Pad11)")
+  (net 81 "Net-(DD12-Pad13)")
+  (net 82 "Net-(DD13-Pad3)")
+  (net 83 "Net-(DD13-Pad5)")
+  (net 84 "Net-(DD13-Pad11)")
+  (net 85 RD_DATA)
+  (net 86 "Net-(DD14-Pad4)")
+  (net 87 "Net-(C1-Pad1)")
+  (net 88 "Net-(DD14-Pad8)")
+  (net 89 "Net-(DD14-Pad11)")
+  (net 90 "Net-(DD15-Pad11)")
+  (net 91 /CS3)
+  (net 92 "Net-(DD16-Pad3)")
+  (net 93 "Net-(DD16-Pad11)")
+  (net 94 "Net-(DD9-Pad12)")
+  (net 95 "Net-(DD9-Pad13)")
+  (net 96 /PC7)
+  (net 97 /PC6)
+  (net 98 /PB7)
+  (net 99 "Net-(DD13-Pad1)")
+  (net 100 /WRGATE)
+  (net 101 /CS1)
+  (net 102 /CS2)
+  (net 103 /PC5)
+  (net 104 /PC4)
+  (net 105 /PC1)
+  (net 106 /PC2)
+  (net 107 /PC3)
+  (net 108 /WRDATA)
+  (net 109 /A1)
+  (net 110 /A0)
+  (net 111 /D7)
+  (net 112 /D6)
+  (net 113 /D5)
+  (net 114 /D4)
+  (net 115 /D3)
+  (net 116 /D2)
+  (net 117 /D1)
+  (net 118 /D0)
+  (net 119 /17)
+  (net 120 /18)
+  (net 121 /A7)
+  (net 122 /A6)
+  (net 123 /A5)
+  (net 124 /A4)
+  (net 125 /A3)
+  (net 126 /A2)
+  (net 127 /A10)
+  (net 128 /A9)
+  (net 129 /A8)
+  (net 130 /OSC)
+  (net 131 "Net-(X1-PadA28)")
+  (net 132 "Net-(X1-PadA27)")
+  (net 133 "Net-(X1-PadA26)")
+  (net 134 "Net-(X1-PadA24)")
+  (net 135 "Net-(X1-PadA23)")
+  (net 136 "Net-(X1-PadA14)")
+  (net 137 "Net-(X1-PadA13)")
+  (net 138 "Net-(X1-PadA12)")
+  (net 139 "Net-(X1-PadA11)")
+  (net 140 "Net-(X1-PadA10)")
+  (net 141 "Net-(X1-PadA9)")
+  (net 142 "Net-(X1-PadA8)")
+  (net 143 "Net-(X1-PadA6)")
+  (net 144 "Net-(X1-PadA5)")
+  (net 145 "Net-(X1-PadA4)")
+  (net 146 "Net-(X1-PadA3)")
+  (net 147 "Net-(X1-PadB11)")
+  (net 148 "Net-(X1-PadB23)")
+  (net 149 "Net-(X1-PadB19)")
+  (net 150 "Net-(X1-PadB22)")
+  (net 151 "Net-(X1-PadB20)")
+  (net 152 "Net-(X1-PadB7)")
+  (net 153 "Net-(X1-PadB28)")
+  (net 154 "Net-(X1-PadB4)")
+  (net 155 "Net-(X1-PadB3)")
+  (net 156 "Net-(X1-PadB5)")
+  (net 157 "Net-(X1-PadB21)")
+  (net_class Default "This is the default net class."
+    (clearance 0.2)
+    (trace_width 0.35)
+    (via_dia 1)
+    (via_drill 0.5)
+    (uvia_dia 0.3)
+    (uvia_drill 0.1)
+    (add_net /17)
+    (add_net /18)
+    (add_net /A0)
+    (add_net /A1)
+    (add_net /A10)
+    (add_net /A2)
+    (add_net /A3)
+    (add_net /A4)
+    (add_net /A5)
+    (add_net /A6)
+    (add_net /A7)
+    (add_net /A8)
+    (add_net /A9)
+    (add_net /CS1)
+    (add_net /CS2)
+    (add_net /CS3)
+    (add_net /D0)
+    (add_net /D1)
+    (add_net /D2)
+    (add_net /D3)
+    (add_net /D4)
+    (add_net /D5)
+    (add_net /D6)
+    (add_net /D7)
+    (add_net /OSC)
+    (add_net /PB7)
+    (add_net /PC1)
+    (add_net /PC2)
+    (add_net /PC3)
+    (add_net /PC4)
+    (add_net /PC5)
+    (add_net /PC6)
+    (add_net /PC7)
+    (add_net /RD)
+    (add_net /WR)
+    (add_net /WRDATA)
+    (add_net /WRGATE)
+    (add_net DIR)
+    (add_net DISC_A)
+    (add_net DISC_B)
+    (add_net IP)
+    (add_net "Net-(C1-Pad1)")
+    (add_net "Net-(D1-Pad1)")
+    (add_net "Net-(D1-Pad18)")
+    (add_net "Net-(D1-Pad19)")
+    (add_net "Net-(D1-Pad2)")
+    (add_net "Net-(D1-Pad20)")
+    (add_net "Net-(D1-Pad3)")
+    (add_net "Net-(D1-Pad37)")
+    (add_net "Net-(D1-Pad38)")
+    (add_net "Net-(D1-Pad39)")
+    (add_net "Net-(D1-Pad4)")
+    (add_net "Net-(D1-Pad40)")
+    (add_net "Net-(D1-Pad6)")
+    (add_net "Net-(DD10-Pad1)")
+    (add_net "Net-(DD10-Pad10)")
+    (add_net "Net-(DD10-Pad11)")
+    (add_net "Net-(DD10-Pad12)")
+    (add_net "Net-(DD10-Pad13)")
+    (add_net "Net-(DD10-Pad14)")
+    (add_net "Net-(DD10-Pad3)")
+    (add_net "Net-(DD10-Pad4)")
+    (add_net "Net-(DD10-Pad5)")
+    (add_net "Net-(DD10-Pad6)")
+    (add_net "Net-(DD10-Pad7)")
+    (add_net "Net-(DD10-Pad9)")
+    (add_net "Net-(DD11-Pad10)")
+    (add_net "Net-(DD11-Pad11)")
+    (add_net "Net-(DD11-Pad3)")
+    (add_net "Net-(DD11-Pad5)")
+    (add_net "Net-(DD11-Pad6)")
+    (add_net "Net-(DD11-Pad8)")
+    (add_net "Net-(DD11-Pad9)")
+    (add_net "Net-(DD12-Pad11)")
+    (add_net "Net-(DD12-Pad13)")
+    (add_net "Net-(DD12-Pad5)")
+    (add_net "Net-(DD12-Pad6)")
+    (add_net "Net-(DD12-Pad8)")
+    (add_net "Net-(DD13-Pad1)")
+    (add_net "Net-(DD13-Pad11)")
+    (add_net "Net-(DD13-Pad3)")
+    (add_net "Net-(DD13-Pad5)")
+    (add_net "Net-(DD14-Pad11)")
+    (add_net "Net-(DD14-Pad4)")
+    (add_net "Net-(DD14-Pad6)")
+    (add_net "Net-(DD14-Pad8)")
+    (add_net "Net-(DD14-Pad9)")
+    (add_net "Net-(DD15-Pad11)")
+    (add_net "Net-(DD15-Pad2)")
+    (add_net "Net-(DD15-Pad8)")
+    (add_net "Net-(DD16-Pad11)")
+    (add_net "Net-(DD16-Pad3)")
+    (add_net "Net-(DD17-Pad1)")
+    (add_net "Net-(DD17-Pad13)")
+    (add_net "Net-(DD2-Pad10)")
+    (add_net "Net-(DD2-Pad14)")
+    (add_net "Net-(DD2-Pad16)")
+    (add_net "Net-(DD2-Pad18)")
+    (add_net "Net-(DD2-Pad4)")
+    (add_net "Net-(DD2-Pad6)")
+    (add_net "Net-(DD2-Pad8)")
+    (add_net "Net-(DD6-Pad16)")
+    (add_net "Net-(DD6-Pad17)")
+    (add_net "Net-(DD7-Pad1)")
+    (add_net "Net-(DD7-Pad11)")
+    (add_net "Net-(DD7-Pad13)")
+    (add_net "Net-(DD7-Pad4)")
+    (add_net "Net-(DD7-Pad6)")
+    (add_net "Net-(DD7-Pad7)")
+    (add_net "Net-(DD7-Pad8)")
+    (add_net "Net-(DD7-Pad9)")
+    (add_net "Net-(DD8-Pad1)")
+    (add_net "Net-(DD8-Pad11)")
+    (add_net "Net-(DD8-Pad13)")
+    (add_net "Net-(DD8-Pad4)")
+    (add_net "Net-(DD8-Pad6)")
+    (add_net "Net-(DD8-Pad7)")
+    (add_net "Net-(DD9-Pad12)")
+    (add_net "Net-(DD9-Pad13)")
+    (add_net "Net-(DD9-Pad7)")
+    (add_net "Net-(X1-PadA10)")
+    (add_net "Net-(X1-PadA11)")
+    (add_net "Net-(X1-PadA12)")
+    (add_net "Net-(X1-PadA13)")
+    (add_net "Net-(X1-PadA14)")
+    (add_net "Net-(X1-PadA23)")
+    (add_net "Net-(X1-PadA24)")
+    (add_net "Net-(X1-PadA26)")
+    (add_net "Net-(X1-PadA27)")
+    (add_net "Net-(X1-PadA28)")
+    (add_net "Net-(X1-PadA3)")
+    (add_net "Net-(X1-PadA4)")
+    (add_net "Net-(X1-PadA5)")
+    (add_net "Net-(X1-PadA6)")
+    (add_net "Net-(X1-PadA8)")
+    (add_net "Net-(X1-PadA9)")
+    (add_net "Net-(X1-PadB11)")
+    (add_net "Net-(X1-PadB19)")
+    (add_net "Net-(X1-PadB20)")
+    (add_net "Net-(X1-PadB21)")
+    (add_net "Net-(X1-PadB22)")
+    (add_net "Net-(X1-PadB23)")
+    (add_net "Net-(X1-PadB28)")
+    (add_net "Net-(X1-PadB3)")
+    (add_net "Net-(X1-PadB4)")
+    (add_net "Net-(X1-PadB5)")
+    (add_net "Net-(X1-PadB7)")
+    (add_net RD_DATA)
+    (add_net READY)
+    (add_net SIDE)
+    (add_net STEP)
+    (add_net TR00)
+    (add_net WPRT)
+    (add_net WR_DATA)
+    (add_net WR_GATE))
+  (net_class Power ""
+    (clearance 0.2)
+    (trace_width 0.5)
+    (via_dia 1)
+    (via_drill 0.5)
+    (uvia_dia 0.3)
+    (uvia_drill 0.1)
+    (add_net +5V)
+    (add_net GND))
+  (module rk86ngmd:DIP20-2.5mm
+    (layer F.Cu)
+    (tedit 572663D5)
+    (tstamp 571BE1E8)
+    (at 64.75 90.5 270)
+    (path /55637939)
+    (fp_text reference DD6
+      (at -4 -12 270)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_text value К555ИР22
+      (at -4 4)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_line
+      (start -10 17.5)
+      (end -10 -10)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start 2.5 17.5)
+      (end -10 17.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start 2.5 -10)
+      (end 2.5 17.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -10 -10)
+      (end 2.5 -10)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_arc
+      (start -4 -10)
+      (end -3 -10)
+      (angle 90)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_arc
+      (start -4 -10)
+      (end -4 -9)
+      (angle 90)
+      (layer F.SilkS)
+      (width 0.01))
+    (pad 1 thru_hole circle
+      (at -7.5 -7.5 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 34 "Net-(DD17-Pad13)"))
+    (pad 2 thru_hole circle
+      (at -7.5 -5 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 35 WR_GATE))
+    (pad 3 thru_hole circle
+      (at -7.5 -2.5 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 100 /WRGATE))
+    (pad 4 thru_hole circle
+      (at -7.5 0 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 105 /PC1))
+    (pad 5 thru_hole circle
+      (at -7.5 2.5 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 36 DIR))
+    (pad 6 thru_hole circle
+      (at -7.5 5 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 37 SIDE))
+    (pad 7 thru_hole circle
+      (at -7.5 7.5 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 106 /PC2))
+    (pad 8 thru_hole circle
+      (at -7.5 10 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 104 /PC4))
+    (pad 9 thru_hole circle
+      (at -7.5 12.5 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 38 STEP))
+    (pad 10 thru_hole circle
+      (at -7.5 15 270)
+      (size 1.6 1.6)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 13 GND))
+    (pad 11 thru_hole circle
+      (at 0 15 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 22 "Net-(DD10-Pad1)"))
+    (pad 12 thru_hole circle
+      (at 0 12.5 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 39 DISC_B))
+    (pad 13 thru_hole circle
+      (at 0 10 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 107 /PC3))
+    (pad 14 thru_hole circle
+      (at 0 7.5 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 103 /PC5))
+    (pad 15 thru_hole circle
+      (at 0 5 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 40 DISC_A))
+    (pad 16 thru_hole circle
+      (at 0 2.5 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 14 "Net-(DD6-Pad16)"))
+    (pad 17 thru_hole circle
+      (at 0 0 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 15 "Net-(DD6-Pad17)"))
+    (pad 18 thru_hole circle
+      (at 0 -2.5 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 108 /WRDATA))
+    (pad 19 thru_hole circle
+      (at 0 -5 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 41 WR_DATA))
+    (pad 20 thru_hole circle
+      (at 0 -7.5 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 33 +5V))
+    (model ${KISYS3DMOD}/Housings_DIP.3dshapes/DIP-20_W7.62mm.wrl
+      (offset
+        (xyz -7.499999887361301 7.749999883606678 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module DIP16-2.5mm
+    (layer F.Cu)
+    (tedit 5723A9C5)
+    (tstamp 571BE792)
+    (at 218.5 84.25 90)
+    (path /571BDB27)
+    (fp_text reference DD10
+      (at 4.5 -4 90)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_text value К555ИД4
+      (at 3.5 7.5 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_line
+      (start -2.5 20)
+      (end -2.5 -2.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start 10 20)
+      (end -2.5 20)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start 10 -2.5)
+      (end 10 20)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -2.5 -2.5)
+      (end 10 -2.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start 3.5 -1.5)
+      (end 4 -1.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_arc
+      (start 4 -2.5)
+      (end 5 -2.5)
+      (angle 90)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_arc
+      (start 3.5 -2.5)
+      (end 3.5 -1.5)
+      (angle 90)
+      (layer F.SilkS)
+      (width 0.01))
+    (pad 1 thru_hole rect
+      (at 0 0 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 22 "Net-(DD10-Pad1)"))
+    (pad 2 thru_hole circle
+      (at 0 2.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 43 "Net-(DD10-Pad14)"))
+    (pad 3 thru_hole circle
+      (at 0 5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 42 "Net-(DD10-Pad3)"))
+    (pad 4 thru_hole circle
+      (at 0 7.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 66 "Net-(DD10-Pad4)"))
+    (pad 5 thru_hole circle
+      (at 0 10 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 67 "Net-(DD10-Pad5)"))
+    (pad 6 thru_hole circle
+      (at 0 12.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 68 "Net-(DD10-Pad6)"))
+    (pad 7 thru_hole circle
+      (at 0 15 90)
+      (size 1.5 1.5)
+      (drill 1)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 32 "Net-(DD10-Pad7)"))
+    (pad 8 thru_hole circle
+      (at 0 17.5 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 13 GND))
+    (pad 9 thru_hole circle
+      (at 7.5 17.5 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 69 "Net-(DD10-Pad9)"))
+    (pad 10 thru_hole circle
+      (at 7.5 15 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 70 "Net-(DD10-Pad10)"))
+    (pad 11 thru_hole circle
+      (at 7.5 12.5 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 71 "Net-(DD10-Pad11)"))
+    (pad 12 thru_hole circle
+      (at 7.5 10 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 72 "Net-(DD10-Pad12)"))
+    (pad 13 thru_hole circle
+      (at 7.5 7.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 45 "Net-(DD10-Pad13)"))
+    (pad 14 thru_hole circle
+      (at 7.5 5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 43 "Net-(DD10-Pad14)"))
+    (pad 15 thru_hole circle
+      (at 7.5 2.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 97 /PC6))
+    (pad 16 thru_hole circle
+      (at 7.5 0 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 33 +5V))
+    (model ${KISYS3DMOD}/Housings_DIP.3dshapes/DIP-16_W7.62mm.wrl
+      (offset
+        (xyz 0 0.09999999849815071 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module DIP14-2.5mm locked
+    (layer F.Cu)
+    (tedit 57229EE8)
+    (tstamp 571BEADE)
+    (at 217.25 69.25 90)
+    (path /571A9641)
+    (fp_text reference DD17
+      (at -10.5 -24 90)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_text value К555ЛЕ1
+      (at -11.5 -12.5 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_line
+      (start -17.5 -2.5)
+      (end -17.5 -22.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -5 -2.5)
+      (end -17.5 -2.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -5 -22.5)
+      (end -5 -2.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -17.5 -22.5)
+      (end -5 -22.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -11.5 -21.5)
+      (end -11 -21.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_arc
+      (start -11 -22.5)
+      (end -10 -22.5)
+      (angle 90)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_arc
+      (start -11.5 -22.5)
+      (end -11.5 -21.5)
+      (angle 90)
+      (layer F.SilkS)
+      (width 0.01))
+    (pad 1 thru_hole rect
+      (at -15 -20 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 31 "Net-(DD17-Pad1)"))
+    (pad 2 thru_hole circle
+      (at -15 -17.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 100 /WRGATE))
+    (pad 3 thru_hole circle
+      (at -15 -15 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 32 "Net-(DD10-Pad7)"))
+    (pad 4 thru_hole circle
+      (at -15 -12.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 89 "Net-(DD14-Pad11)"))
+    (pad 5 thru_hole circle
+      (at -15 -10 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 92 "Net-(DD16-Pad3)"))
+    (pad 6 thru_hole circle
+      (at -15 -7.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 86 "Net-(DD14-Pad4)"))
+    (pad 7 thru_hole circle
+      (at -15 -5 90)
+      (size 1.5 1.5)
+      (drill 1)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 13 GND))
+    (pad 8 thru_hole circle
+      (at -7.5 -5 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 32 "Net-(DD10-Pad7)"))
+    (pad 9 thru_hole circle
+      (at -7.5 -7.5 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 44 "Net-(DD11-Pad3)"))
+    (pad 10 thru_hole circle
+      (at -7.5 -10 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 80 "Net-(DD12-Pad11)"))
+    (pad 11 thru_hole circle
+      (at -7.5 -12.5 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 96 /PC7))
+    (pad 12 thru_hole circle
+      (at -7.5 -15 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 96 /PC7))
+    (pad 13 thru_hole circle
+      (at -7.5 -17.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 34 "Net-(DD17-Pad13)"))
+    (pad 14 thru_hole circle
+      (at -7.5 -20 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 33 +5V))
+    (model ${KISYS3DMOD}/Housings_DIP.3dshapes/DIP-14_W7.62mm.wrl
+      (offset
+        (xyz -14.9999997747226 19.99999969963014 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module DIP20-2.5mm locked
+    (layer F.Cu)
+    (tedit 57228664)
+    (tstamp 571BE186)
+    (at 138.5 101.75 90)
+    (path /55637848)
+    (fp_text reference DD3
+      (at -4 -12 90)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_text value К555ИР23
+      (at -4 4 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_line
+      (start -10 17.5)
+      (end -10 -10)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start 2.5 17.5)
+      (end -10 17.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start 2.5 -10)
+      (end 2.5 17.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -10 -10)
+      (end 2.5 -10)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_arc
+      (start -4 -10)
+      (end -3 -10)
+      (angle 90)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_arc
+      (start -4 -10)
+      (end -4 -9)
+      (angle 90)
+      (layer F.SilkS)
+      (width 0.01))
+    (pad 1 thru_hole circle
+      (at -7.5 -7.5 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 120 /18))
+    (pad 2 thru_hole circle
+      (at -7.5 -5 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 118 /D0))
+    (pad 3 thru_hole circle
+      (at -7.5 -2.5 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 24 "Net-(DD2-Pad4)"))
+    (pad 4 thru_hole circle
+      (at -7.5 0 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 25 "Net-(DD2-Pad6)"))
+    (pad 5 thru_hole circle
+      (at -7.5 2.5 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 117 /D1))
+    (pad 6 thru_hole circle
+      (at -7.5 5 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 116 /D2))
+    (pad 7 thru_hole circle
+      (at -7.5 7.5 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 26 "Net-(DD2-Pad8)"))
+    (pad 8 thru_hole circle
+      (at -7.5 10 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 27 "Net-(DD2-Pad10)"))
+    (pad 9 thru_hole circle
+      (at -7.5 12.5 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 115 /D3))
+    (pad 10 thru_hole circle
+      (at -7.5 15 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 13 GND))
+    (pad 11 thru_hole circle
+      (at 0 15 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 32 "Net-(DD10-Pad7)"))
+    (pad 12 thru_hole circle
+      (at 0 12.5 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 114 /D4))
+    (pad 13 thru_hole circle
+      (at 0 10 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 28 "Net-(DD2-Pad14)"))
+    (pad 14 thru_hole circle
+      (at 0 7.5 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 29 "Net-(DD2-Pad16)"))
+    (pad 15 thru_hole circle
+      (at 0 5 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 113 /D5))
+    (pad 16 thru_hole circle
+      (at 0 2.5 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 112 /D6))
+    (pad 17 thru_hole circle
+      (at 0 0 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 30 "Net-(DD2-Pad18)"))
+    (pad 18 thru_hole circle
+      (at 0 -2.5 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 99 "Net-(DD13-Pad1)"))
+    (pad 19 thru_hole circle
+      (at 0 -5 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 111 /D7))
+    (pad 20 thru_hole circle
+      (at 0 -7.5 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 33 +5V))
+    (model ${KISYS3DMOD}/Housings_DIP.3dshapes/DIP-20_W7.62mm.wrl
+      (offset
+        (xyz -7.499999887361301 7.749999883606678 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module DIP24-2.5mm locked
+    (layer F.Cu)
+    (tedit 572278BE)
+    (tstamp 571BE168)
+    (at 167.25 93 270)
+    (path /55636AD2)
+    (fp_text reference DD2
+      (at -7.5 -25 270)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_text value К555ИР13
+      (at -7.5 -5)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_line
+      (start -17.5 10)
+      (end -17.5 -22.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start 2.5 10)
+      (end -17.5 10)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start 2.5 -22.5)
+      (end 2.5 10)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -17.5 -22.5)
+      (end 2.5 -22.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_arc
+      (start -7.5 -22.5)
+      (end -5 -22.5)
+      (angle 90)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_arc
+      (start -7.5 -22.5)
+      (end -7.5 -20)
+      (angle 90)
+      (layer F.SilkS)
+      (width 0.01))
+    (pad 1 thru_hole circle
+      (at -15 -20 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 22 "Net-(DD10-Pad1)"))
+    (pad 2 thru_hole circle
+      (at -15 -17.5 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 23 "Net-(DD12-Pad5)"))
+    (pad 3 thru_hole circle
+      (at -15 -15 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 4 "Net-(D1-Pad4)"))
+    (pad 4 thru_hole circle
+      (at -15 -12.5 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 24 "Net-(DD2-Pad4)"))
+    (pad 5 thru_hole circle
+      (at -15 -10 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 3 "Net-(D1-Pad3)"))
+    (pad 6 thru_hole circle
+      (at -15 -7.5 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 25 "Net-(DD2-Pad6)"))
+    (pad 7 thru_hole circle
+      (at -15 -5 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 2 "Net-(D1-Pad2)"))
+    (pad 8 thru_hole circle
+      (at -15 -2.5 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 26 "Net-(DD2-Pad8)"))
+    (pad 9 thru_hole circle
+      (at -15 0 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 1 "Net-(D1-Pad1)"))
+    (pad 10 thru_hole circle
+      (at -15 2.5 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 27 "Net-(DD2-Pad10)"))
+    (pad 11 thru_hole circle
+      (at -15 5 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 119 /17))
+    (pad 12 thru_hole circle
+      (at -15 7.5 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 13 GND))
+    (pad 13 thru_hole circle
+      (at 0 7.5 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 22 "Net-(DD10-Pad1)"))
+    (pad 14 thru_hole circle
+      (at 0 5 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 28 "Net-(DD2-Pad14)"))
+    (pad 15 thru_hole circle
+      (at 0 2.5 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 12 "Net-(D1-Pad40)"))
+    (pad 16 thru_hole circle
+      (at 0 0 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 29 "Net-(DD2-Pad16)"))
+    (pad 17 thru_hole circle
+      (at 0 -2.5 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 11 "Net-(D1-Pad39)"))
+    (pad 18 thru_hole circle
+      (at 0 -5 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 30 "Net-(DD2-Pad18)"))
+    (pad 19 thru_hole circle
+      (at 0 -7.5 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 10 "Net-(D1-Pad38)"))
+    (pad 20 thru_hole circle
+      (at 0 -10 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 99 "Net-(DD13-Pad1)"))
+    (pad 21 thru_hole circle
+      (at 0 -12.5 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 9 "Net-(D1-Pad37)"))
+    (pad 22 thru_hole circle
+      (at 0 -15 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 22 "Net-(DD10-Pad1)"))
+    (pad 23 thru_hole circle
+      (at 0 -17.5 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 31 "Net-(DD17-Pad1)"))
+    (pad 24 thru_hole circle
+      (at 0 -20 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 33 +5V))
+    (model ${KISYS3DMOD}/Housings_DIP.3dshapes/DIP-24_W15.24mm.wrl
+      (offset
+        (xyz -14.9999997747226 20.24999969587551 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Resistor_Vertical_RM2_5mm
+    (layer F.Cu)
+    (tedit 57210F6C)
+    (tstamp 571BECB1)
+    (at 47.25 99.25 180)
+    (descr "Resistor, Vertical, RM 5mm, 1/3W,")
+    (tags "Resistor, Vertical, RM 5mm, 1/3W,")
+    (path /571E083C)
+    (fp_text reference R6
+      (at -5.5 0 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 1K
+      (at -8.5 0 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_circle
+      (center -2.49936 0)
+      (end -1 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.09906 0)
+      (end 0.9017 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 thru_hole circle
+      (at -2.49936 0 180)
+      (size 1.5 1.5)
+      (drill 0.8)
+      (layers *.Cu *.SilkS *.Mask)
+      (net 33 +5V))
+    (pad 2 thru_hole circle
+      (at 0 0 180)
+      (size 1.5 1.5)
+      (drill 0.8)
+      (layers *.Cu *.SilkS *.Mask)
+      (net 17 WPRT))
+    (model ${KIPRJMOD}/3d/rc05vert.wrl
+      (offset
+        (xyz -1.249999981226884 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Capacitors_ThroughHole:C_Disc_D6_P5
+    (layer F.Cu)
+    (tedit 0)
+    (tstamp 571D0D7D)
+    (at 204.75 104.25 180)
+    (descr "Capacitor 6mm Disc, Pitch 5mm")
+    (tags Capacitor)
+    (path /571AD662)
+    (fp_text reference C1
+      (at 7 -1 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 100
+      (at 2.5 0 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start 5.5 2.25)
+      (end -0.5 2.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.5 -2.25)
+      (end 5.5 -2.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.95 2.5)
+      (end -0.95 -2.5)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 5.95 2.5)
+      (end -0.95 2.5)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 5.95 -2.5)
+      (end 5.95 2.5)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -0.95 -2.5)
+      (end 5.95 -2.5)
+      (layer F.CrtYd)
+      (width 0.05))
+    (pad 1 thru_hole rect
+      (at 0 0 180)
+      (size 1.4 1.4)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 87 "Net-(C1-Pad1)"))
+    (pad 2 thru_hole circle
+      (at 5 0 180)
+      (size 1.4 1.4)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 13 GND))
+    (model ${KISYS3DMOD}/Capacitors_THT.3dshapes/C_Disc_D6.0mm_W2.5mm_P5.00mm.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.3937 0.3937 0.3937))
+      (rotate
+        (xyz 0 0 0))))
+  (module Pin_Headers:Pin_Header_Straight_1x01
+    (layer F.Cu)
+    (tedit 595B92C5)
+    (tstamp 5720FA1B)
+    (at 44.75 109.25)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /572125D8)
+    (fp_text reference P2
+      (at -2.5 0)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value +5V
+      (at -10 0)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.27 1.27)
+      (end 1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 -1.55)
+      (end 1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 0)
+      (end -1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.75 1.75)
+      (end 1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end 1.75 -1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.75 -1.75)
+      (end 1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end -1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.55 -1.55)
+      (end 1.55 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 33 +5V))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x01.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 90))))
+  (module Pin_Headers:Pin_Header_Straight_1x01
+    (layer F.Cu)
+    (tedit 595B92BB)
+    (tstamp 5720FA25)
+    (at 44.75 104.25)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /57212A93)
+    (fp_text reference P4
+      (at -2.5 0)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value DISC_A
+      (at -10 0)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.27 1.27)
+      (end 1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 -1.55)
+      (end 1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 0)
+      (end -1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.75 1.75)
+      (end 1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end 1.75 -1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.75 -1.75)
+      (end 1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end -1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.55 -1.55)
+      (end 1.55 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 40 DISC_A))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x01.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 90))))
+  (module Pin_Headers:Pin_Header_Straight_1x01
+    (layer F.Cu)
+    (tedit 595B92AF)
+    (tstamp 5720FA34)
+    (at 44.75 96.75)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /5721311F)
+    (fp_text reference P7
+      (at -2.5 0)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value STEP
+      (at -10 0)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.27 1.27)
+      (end 1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 -1.55)
+      (end 1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 0)
+      (end -1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.75 1.75)
+      (end 1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end 1.75 -1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.75 -1.75)
+      (end 1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end -1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.55 -1.55)
+      (end 1.55 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 38 STEP))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x01.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 90))))
+  (module Pin_Headers:Pin_Header_Straight_1x01
+    (layer F.Cu)
+    (tedit 595B92A3)
+    (tstamp 5720FA43)
+    (at 44.75 89.25)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /5721351A)
+    (fp_text reference P10
+      (at -2.5 0)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value TR00
+      (at -10 0)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.27 1.27)
+      (end 1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 -1.55)
+      (end 1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 0)
+      (end -1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.75 1.75)
+      (end 1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end 1.75 -1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.75 -1.75)
+      (end 1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end -1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.55 -1.55)
+      (end 1.55 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 19 TR00))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x01.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 90))))
+  (module Pin_Headers:Pin_Header_Straight_1x01
+    (layer F.Cu)
+    (tedit 595B929A)
+    (tstamp 5720FA4D)
+    (at 44.75 84.25)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /57213526)
+    (fp_text reference P12
+      (at -2.5 0)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value RD_DATA
+      (at -10 0)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.27 1.27)
+      (end 1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 -1.55)
+      (end 1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 0)
+      (end -1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.75 1.75)
+      (end 1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end 1.75 -1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.75 -1.75)
+      (end 1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end -1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.55 -1.55)
+      (end 1.55 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 85 RD_DATA))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x01.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 90))))
+  (module Pin_Headers:Pin_Header_Straight_1x01
+    (layer F.Cu)
+    (tedit 595B9295)
+    (tstamp 5720FC5F)
+    (at 44.75 81.75)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /5721352C)
+    (fp_text reference P13
+      (at -3 0)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value SIDE
+      (at -10 0)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.27 1.27)
+      (end 1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 -1.55)
+      (end 1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 0)
+      (end -1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.75 1.75)
+      (end 1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end 1.75 -1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.75 -1.75)
+      (end 1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end -1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.55 -1.55)
+      (end 1.55 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 37 SIDE))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x01.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 90))))
+  (module Pin_Headers:Pin_Header_Straight_1x01
+    (layer F.Cu)
+    (tedit 595B92CA)
+    (tstamp 5720FD55)
+    (at 44.75 111.75)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /572124F5)
+    (fp_text reference P1
+      (at -2.5 0)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value GND
+      (at -10 0)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.27 1.27)
+      (end 1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 -1.55)
+      (end 1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 0)
+      (end -1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.75 1.75)
+      (end 1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end 1.75 -1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.75 -1.75)
+      (end 1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end -1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.55 -1.55)
+      (end 1.55 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 13 GND))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x01.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 90))))
+  (module Pin_Headers:Pin_Header_Straight_1x01
+    (layer F.Cu)
+    (tedit 595B92BF)
+    (tstamp 5720FD5A)
+    (at 44.75 106.75)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /572128AF)
+    (fp_text reference P3
+      (at -2.5 0)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value IP
+      (at -10 0)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.27 1.27)
+      (end 1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 -1.55)
+      (end 1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 0)
+      (end -1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.75 1.75)
+      (end 1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end 1.75 -1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.75 -1.75)
+      (end 1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end -1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.55 -1.55)
+      (end 1.55 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 20 IP))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x01.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 90))))
+  (module Pin_Headers:Pin_Header_Straight_1x01
+    (layer F.Cu)
+    (tedit 595B92B6)
+    (tstamp 5720FD5F)
+    (at 44.75 101.75)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /57213113)
+    (fp_text reference P5
+      (at -2.5 0)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value DISC_B
+      (at -10 0)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.27 1.27)
+      (end 1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 -1.55)
+      (end 1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 0)
+      (end -1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.75 1.75)
+      (end 1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end 1.75 -1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.75 -1.75)
+      (end 1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end -1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.55 -1.55)
+      (end 1.55 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 39 DISC_B))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x01.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 90))))
+  (module Pin_Headers:Pin_Header_Straight_1x01
+    (layer F.Cu)
+    (tedit 595B92B3)
+    (tstamp 5720FD64)
+    (at 44.75 99.25)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /57213119)
+    (fp_text reference P6
+      (at -2.5 0)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value DIR
+      (at -10 0)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.27 1.27)
+      (end 1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 -1.55)
+      (end 1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 0)
+      (end -1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.75 1.75)
+      (end 1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end 1.75 -1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.75 -1.75)
+      (end 1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end -1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.55 -1.55)
+      (end 1.55 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 36 DIR))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x01.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 90))))
+  (module Pin_Headers:Pin_Header_Straight_1x01
+    (layer F.Cu)
+    (tedit 595B92AA)
+    (tstamp 5720FD69)
+    (at 44.75 94.25)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /57213125)
+    (fp_text reference P8
+      (at -2.5 0)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value WR_DATA
+      (at -10 0)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.27 1.27)
+      (end 1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 -1.55)
+      (end 1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 0)
+      (end -1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.75 1.75)
+      (end 1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end 1.75 -1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.75 -1.75)
+      (end 1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end -1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.55 -1.55)
+      (end 1.55 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 41 WR_DATA))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x01.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 90))))
+  (module Pin_Headers:Pin_Header_Straight_1x01
+    (layer F.Cu)
+    (tedit 595B92A7)
+    (tstamp 5720FD6E)
+    (at 44.75 91.75)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /57213514)
+    (fp_text reference P9
+      (at -2.5 0)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value WR_GATE
+      (at -10 0)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.27 1.27)
+      (end 1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 -1.55)
+      (end 1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 0)
+      (end -1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.75 1.75)
+      (end 1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end 1.75 -1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.75 -1.75)
+      (end 1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end -1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.55 -1.55)
+      (end 1.55 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 35 WR_GATE))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x01.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 90))))
+  (module Pin_Headers:Pin_Header_Straight_1x01
+    (layer F.Cu)
+    (tedit 595B929E)
+    (tstamp 5720FD73)
+    (at 44.75 86.75)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /57213520)
+    (fp_text reference P11
+      (at -2.5 0)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value WPRT
+      (at -10 0)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.27 1.27)
+      (end 1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 -1.55)
+      (end 1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 0)
+      (end -1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.75 1.75)
+      (end 1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end 1.75 -1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.75 -1.75)
+      (end 1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end -1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.55 -1.55)
+      (end 1.55 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 17 WPRT))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x01.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 90))))
+  (module rk86ngmd:Resistor_Vertical_RM2_5mm
+    (layer F.Cu)
+    (tedit 57210F6C)
+    (tstamp 571BEC9F)
+    (at 47.25 106.75 180)
+    (descr "Resistor, Vertical, RM 5mm, 1/3W,")
+    (tags "Resistor, Vertical, RM 5mm, 1/3W,")
+    (path /571E03B1)
+    (fp_text reference R3
+      (at -5.5 0 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 1K
+      (at -8.5 0 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_circle
+      (center -2.49936 0)
+      (end -1 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.09906 0)
+      (end 0.9017 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 thru_hole circle
+      (at -2.49936 0 180)
+      (size 1.5 1.5)
+      (drill 0.8)
+      (layers *.Cu *.SilkS *.Mask)
+      (net 33 +5V))
+    (pad 2 thru_hole circle
+      (at 0 0 180)
+      (size 1.5 1.5)
+      (drill 0.8)
+      (layers *.Cu *.SilkS *.Mask)
+      (net 20 IP))
+    (model ${KIPRJMOD}/3d/rc05vert.wrl
+      (offset
+        (xyz -1.249999981226884 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module rk86ngmd:Resistor_Vertical_RM2_5mm
+    (layer F.Cu)
+    (tedit 57210F6C)
+    (tstamp 571BEC99)
+    (at 47.25064 111.75 180)
+    (descr "Resistor, Vertical, RM 5mm, 1/3W,")
+    (tags "Resistor, Vertical, RM 5mm, 1/3W,")
+    (path /571B7D16)
+    (fp_text reference R2
+      (at -5.49936 0 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 1K
+      (at -8.49936 0 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_circle
+      (center -2.49936 0)
+      (end -1 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.09906 0)
+      (end 0.9017 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 thru_hole circle
+      (at -2.49936 0 180)
+      (size 1.5 1.5)
+      (drill 0.8)
+      (layers *.Cu *.SilkS *.Mask)
+      (net 22 "Net-(DD10-Pad1)"))
+    (pad 2 thru_hole circle
+      (at 0 0 180)
+      (size 1.5 1.5)
+      (drill 0.8)
+      (layers *.Cu *.SilkS *.Mask)
+      (net 33 +5V))
+    (model ${KIPRJMOD}/3d/rc05vert.wrl
+      (offset
+        (xyz -1.249999981226884 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module rk86ngmd:Resistor_Vertical_RM2_5mm
+    (layer F.Cu)
+    (tedit 57210F6C)
+    (tstamp 571BECAB)
+    (at 77.25 91.75)
+    (descr "Resistor, Vertical, RM 5mm, 1/3W,")
+    (tags "Resistor, Vertical, RM 5mm, 1/3W,")
+    (path /571E07C1)
+    (fp_text reference R5
+      (at 2.5 0)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 1K
+      (at 5.5 0)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_circle
+      (center -2.49936 0)
+      (end -1 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.09906 0)
+      (end 0.9017 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 thru_hole circle
+      (at -2.49936 0)
+      (size 1.5 1.5)
+      (drill 0.8)
+      (layers *.Cu *.SilkS *.Mask)
+      (net 33 +5V))
+    (pad 2 thru_hole circle
+      (at 0 0)
+      (size 1.5 1.5)
+      (drill 0.8)
+      (layers *.Cu *.SilkS *.Mask)
+      (net 18 READY))
+    (model ${KIPRJMOD}/3d/rc05vert.wrl
+      (offset
+        (xyz -1.249999981226884 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module rk86ngmd:Resistor_Vertical_RM2_5mm
+    (layer F.Cu)
+    (tedit 57210F6C)
+    (tstamp 571BECA5)
+    (at 47.25064 96.75 180)
+    (descr "Resistor, Vertical, RM 5mm, 1/3W,")
+    (tags "Resistor, Vertical, RM 5mm, 1/3W,")
+    (path /571E075E)
+    (fp_text reference R4
+      (at -5.49936 0 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 1K
+      (at -8.49936 0 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_circle
+      (center -2.49936 0)
+      (end -1 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.09906 0)
+      (end 0.9017 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 thru_hole circle
+      (at -2.49936 0 180)
+      (size 1.5 1.5)
+      (drill 0.8)
+      (layers *.Cu *.SilkS *.Mask)
+      (net 33 +5V))
+    (pad 2 thru_hole circle
+      (at 0 0 180)
+      (size 1.5 1.5)
+      (drill 0.8)
+      (layers *.Cu *.SilkS *.Mask)
+      (net 19 TR00))
+    (model ${KIPRJMOD}/3d/rc05vert.wrl
+      (offset
+        (xyz -1.249999981226884 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module rk86ngmd:Resistor_Vertical_RM2_5mm
+    (layer F.Cu)
+    (tedit 57210F6C)
+    (tstamp 571BECB7)
+    (at 68.5 95.5 180)
+    (descr "Resistor, Vertical, RM 5mm, 1/3W,")
+    (tags "Resistor, Vertical, RM 5mm, 1/3W,")
+    (path /571E08AF)
+    (fp_text reference R7
+      (at -6.25 -1.25 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 1K
+      (at -9.25 -1.25 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_circle
+      (center -2.49936 0)
+      (end -1 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.09906 0)
+      (end 0.9017 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 thru_hole circle
+      (at -2.49936 0 180)
+      (size 1.5 1.5)
+      (drill 0.8)
+      (layers *.Cu *.SilkS *.Mask)
+      (net 33 +5V))
+    (pad 2 thru_hole circle
+      (at 0 0 180)
+      (size 1.5 1.5)
+      (drill 0.8)
+      (layers *.Cu *.SilkS *.Mask)
+      (net 85 RD_DATA))
+    (model ${KIPRJMOD}/3d/rc05vert.wrl
+      (offset
+        (xyz -1.249999981226884 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module rk86ngmd:DIP14-2.5mm
+    (layer F.Cu)
+    (tedit 57229EE8)
+    (tstamp 571BF5D1)
+    (at 217.25 86.75 90)
+    (path /571AB636)
+    (fp_text reference DD14
+      (at -10.5 -24 90)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_text value К555ЛН1
+      (at -11.5 -12.5 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_line
+      (start -17.5 -2.5)
+      (end -17.5 -22.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -5 -2.5)
+      (end -17.5 -2.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -5 -22.5)
+      (end -5 -2.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -17.5 -22.5)
+      (end -5 -22.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -11.5 -21.5)
+      (end -11 -21.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_arc
+      (start -11 -22.5)
+      (end -10 -22.5)
+      (angle 90)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_arc
+      (start -11.5 -22.5)
+      (end -11.5 -21.5)
+      (angle 90)
+      (layer F.SilkS)
+      (width 0.01))
+    (pad 1 thru_hole rect
+      (at -15 -20 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 84 "Net-(DD13-Pad11)"))
+    (pad 2 thru_hole circle
+      (at -15 -17.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 73 "Net-(DD11-Pad10)"))
+    (pad 3 thru_hole circle
+      (at -15 -15 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 126 /A2))
+    (pad 4 thru_hole circle
+      (at -15 -12.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 86 "Net-(DD14-Pad4)"))
+    (pad 5 thru_hole circle
+      (at -15 -10 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 87 "Net-(C1-Pad1)"))
+    (pad 6 thru_hole circle
+      (at -15 -7.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 50 "Net-(DD14-Pad6)"))
+    (pad 7 thru_hole circle
+      (at -15 -5 90)
+      (size 1.5 1.5)
+      (drill 1)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 13 GND))
+    (pad 8 thru_hole circle
+      (at -7.5 -5 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 88 "Net-(DD14-Pad8)"))
+    (pad 9 thru_hole circle
+      (at -7.5 -7.5 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 62 "Net-(DD14-Pad9)"))
+    (pad 10 thru_hole circle
+      (at -7.5 -10 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 120 /18))
+    (pad 11 thru_hole circle
+      (at -7.5 -12.5 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 89 "Net-(DD14-Pad11)"))
+    (pad 12 thru_hole circle
+      (at -7.5 -15 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 119 /17))
+    (pad 13 thru_hole circle
+      (at -7.5 -17.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 44 "Net-(DD11-Pad3)"))
+    (pad 14 thru_hole circle
+      (at -7.5 -20 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 33 +5V))
+    (model ${KISYS3DMOD}/Housings_DIP.3dshapes/DIP-14_W7.62mm.wrl
+      (offset
+        (xyz -14.9999997747226 19.99999969963014 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module rk86ngmd:DIP14-2.5mm
+    (layer F.Cu)
+    (tedit 57229EE8)
+    (tstamp 571BE7C4)
+    (at 193.5 101.75 90)
+    (path /571B6F2A)
+    (fp_text reference DD12
+      (at -10.5 -24 90)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_text value К555ТМ2
+      (at -11.5 -12.5 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_line
+      (start -17.5 -2.5)
+      (end -17.5 -22.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -5 -2.5)
+      (end -17.5 -2.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -5 -22.5)
+      (end -5 -2.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -17.5 -22.5)
+      (end -5 -22.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -11.5 -21.5)
+      (end -11 -21.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_arc
+      (start -11 -22.5)
+      (end -10 -22.5)
+      (angle 90)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_arc
+      (start -11.5 -22.5)
+      (end -11.5 -21.5)
+      (angle 90)
+      (layer F.SilkS)
+      (width 0.01))
+    (pad 1 thru_hole rect
+      (at -15 -20 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 22 "Net-(DD10-Pad1)"))
+    (pad 2 thru_hole circle
+      (at -15 -17.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 76 "Net-(DD11-Pad9)"))
+    (pad 3 thru_hole circle
+      (at -15 -15 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 44 "Net-(DD11-Pad3)"))
+    (pad 4 thru_hole circle
+      (at -15 -12.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 22 "Net-(DD10-Pad1)"))
+    (pad 5 thru_hole circle
+      (at -15 -10 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 23 "Net-(DD12-Pad5)"))
+    (pad 6 thru_hole circle
+      (at -15 -7.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 78 "Net-(DD12-Pad6)"))
+    (pad 7 thru_hole circle
+      (at -15 -5 90)
+      (size 1.5 1.5)
+      (drill 1)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 13 GND))
+    (pad 8 thru_hole circle
+      (at -7.5 -5 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 79 "Net-(DD12-Pad8)"))
+    (pad 9 thru_hole circle
+      (at -7.5 -7.5 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 98 /PB7))
+    (pad 10 thru_hole circle
+      (at -7.5 -10 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 22 "Net-(DD10-Pad1)"))
+    (pad 11 thru_hole circle
+      (at -7.5 -12.5 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 80 "Net-(DD12-Pad11)"))
+    (pad 12 thru_hole circle
+      (at -7.5 -15 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 22 "Net-(DD10-Pad1)"))
+    (pad 13 thru_hole circle
+      (at -7.5 -17.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 81 "Net-(DD12-Pad13)"))
+    (pad 14 thru_hole circle
+      (at -7.5 -20 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 33 +5V))
+    (model ${KISYS3DMOD}/Housings_DIP.3dshapes/DIP-14_W7.62mm.wrl
+      (offset
+        (xyz -14.9999997747226 19.99999969963014 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module rk86ngmd:DIP14-2.5mm locked
+    (layer F.Cu)
+    (tedit 57229EE8)
+    (tstamp 571BE7AB)
+    (at 217.25 101.75 90)
+    (path /571B3BA3)
+    (fp_text reference DD11
+      (at -10.5 -24 90)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_text value К555ТМ2
+      (at -11.5 -12.5 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_line
+      (start -17.5 -2.5)
+      (end -17.5 -22.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -5 -2.5)
+      (end -17.5 -2.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -5 -22.5)
+      (end -5 -2.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -17.5 -22.5)
+      (end -5 -22.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -11.5 -21.5)
+      (end -11 -21.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_arc
+      (start -11 -22.5)
+      (end -10 -22.5)
+      (angle 90)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_arc
+      (start -11.5 -22.5)
+      (end -11.5 -21.5)
+      (angle 90)
+      (layer F.SilkS)
+      (width 0.01))
+    (pad 1 thru_hole rect
+      (at -15 -20 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 22 "Net-(DD10-Pad1)"))
+    (pad 2 thru_hole circle
+      (at -15 -17.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 13 GND))
+    (pad 3 thru_hole circle
+      (at -15 -15 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 44 "Net-(DD11-Pad3)"))
+    (pad 4 thru_hole circle
+      (at -15 -12.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 73 "Net-(DD11-Pad10)"))
+    (pad 5 thru_hole circle
+      (at -15 -10 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 49 "Net-(DD11-Pad5)"))
+    (pad 6 thru_hole circle
+      (at -15 -7.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 74 "Net-(DD11-Pad6)"))
+    (pad 7 thru_hole circle
+      (at -15 -5 90)
+      (size 1.5 1.5)
+      (drill 1)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 13 GND))
+    (pad 8 thru_hole circle
+      (at -7.5 -5 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 75 "Net-(DD11-Pad8)"))
+    (pad 9 thru_hole circle
+      (at -7.5 -7.5 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 76 "Net-(DD11-Pad9)"))
+    (pad 10 thru_hole circle
+      (at -7.5 -10 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 73 "Net-(DD11-Pad10)"))
+    (pad 11 thru_hole circle
+      (at -7.5 -12.5 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 77 "Net-(DD11-Pad11)"))
+    (pad 12 thru_hole circle
+      (at -7.5 -15 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 13 GND))
+    (pad 13 thru_hole circle
+      (at -7.5 -17.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 22 "Net-(DD10-Pad1)"))
+    (pad 14 thru_hole circle
+      (at -7.5 -20 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 33 +5V))
+    (model ${KISYS3DMOD}/Housings_DIP.3dshapes/DIP-14_W7.62mm.wrl
+      (offset
+        (xyz -14.9999997747226 19.99999969963014 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module rk86ngmd:DIP16-2.5mm
+    (layer F.Cu)
+    (tedit 5723A9C5)
+    (tstamp 571BF070)
+    (at 242.25 88 90)
+    (path /571BB3F1)
+    (fp_text reference DD9
+      (at 4.5 -4 90)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_text value К555ИЕ7
+      (at 3.5 7.5 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_line
+      (start -2.5 20)
+      (end -2.5 -2.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start 10 20)
+      (end -2.5 20)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start 10 -2.5)
+      (end 10 20)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -2.5 -2.5)
+      (end 10 -2.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start 3.5 -1.5)
+      (end 4 -1.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_arc
+      (start 4 -2.5)
+      (end 5 -2.5)
+      (angle 90)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_arc
+      (start 3.5 -2.5)
+      (end 3.5 -1.5)
+      (angle 90)
+      (layer F.SilkS)
+      (width 0.01))
+    (pad 1 thru_hole rect
+      (at 0 0 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 13 GND))
+    (pad 2 thru_hole circle
+      (at 0 2.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 42 "Net-(DD10-Pad3)"))
+    (pad 3 thru_hole circle
+      (at 0 5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 43 "Net-(DD10-Pad14)"))
+    (pad 4 thru_hole circle
+      (at 0 7.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 22 "Net-(DD10-Pad1)"))
+    (pad 5 thru_hole circle
+      (at 0 10 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 44 "Net-(DD11-Pad3)"))
+    (pad 6 thru_hole circle
+      (at 0 12.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 45 "Net-(DD10-Pad13)"))
+    (pad 7 thru_hole circle
+      (at 0 15 90)
+      (size 1.5 1.5)
+      (drill 1)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 46 "Net-(DD9-Pad7)"))
+    (pad 8 thru_hole circle
+      (at 0 17.5 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 13 GND))
+    (pad 9 thru_hole circle
+      (at 7.5 17.5 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 13 GND))
+    (pad 10 thru_hole circle
+      (at 7.5 15 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 13 GND))
+    (pad 11 thru_hole circle
+      (at 7.5 12.5 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 22 "Net-(DD10-Pad1)"))
+    (pad 12 thru_hole circle
+      (at 7.5 10 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 94 "Net-(DD9-Pad12)"))
+    (pad 13 thru_hole circle
+      (at 7.5 7.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 95 "Net-(DD9-Pad13)"))
+    (pad 14 thru_hole circle
+      (at 7.5 5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 47 "Net-(DD15-Pad8)"))
+    (pad 15 thru_hole circle
+      (at 7.5 2.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 13 GND))
+    (pad 16 thru_hole circle
+      (at 7.5 0 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 33 +5V))
+    (model ${KISYS3DMOD}/Housings_DIP.3dshapes/DIP-16_W7.62mm.wrl
+      (offset
+        (xyz 0 0.09999999849815071 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module rk86ngmd:DIP14-2.5mm
+    (layer F.Cu)
+    (tedit 57229EE8)
+    (tstamp 571BE777)
+    (at 264.75 85.5 90)
+    (path /55638308)
+    (fp_text reference DD8
+      (at -10.5 -24 90)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_text value К555ИЕ5
+      (at -11.5 -12.5 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_line
+      (start -17.5 -2.5)
+      (end -17.5 -22.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -5 -2.5)
+      (end -17.5 -2.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -5 -22.5)
+      (end -5 -2.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -17.5 -22.5)
+      (end -5 -22.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -11.5 -21.5)
+      (end -11 -21.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_arc
+      (start -11 -22.5)
+      (end -10 -22.5)
+      (angle 90)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_arc
+      (start -11.5 -22.5)
+      (end -11.5 -21.5)
+      (angle 90)
+      (layer F.SilkS)
+      (width 0.01))
+    (pad 1 thru_hole rect
+      (at -15 -20 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 58 "Net-(DD8-Pad1)"))
+    (pad 2 thru_hole circle
+      (at -15 -17.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 49 "Net-(DD11-Pad5)"))
+    (pad 3 thru_hole circle
+      (at -15 -15 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 50 "Net-(DD14-Pad6)"))
+    (pad 4 thru_hole circle
+      (at -15 -12.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 59 "Net-(DD8-Pad4)"))
+    (pad 5 thru_hole circle
+      (at -15 -10 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 33 +5V))
+    (pad 6 thru_hole circle
+      (at -15 -7.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 60 "Net-(DD8-Pad6)"))
+    (pad 7 thru_hole circle
+      (at -15 -5 90)
+      (size 1.5 1.5)
+      (drill 1)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 61 "Net-(DD8-Pad7)"))
+    (pad 8 thru_hole circle
+      (at -7.5 -5 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 62 "Net-(DD14-Pad9)"))
+    (pad 9 thru_hole circle
+      (at -7.5 -7.5 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 63 "Net-(DD15-Pad2)"))
+    (pad 10 thru_hole circle
+      (at -7.5 -10 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 13 GND))
+    (pad 11 thru_hole circle
+      (at -7.5 -12.5 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 64 "Net-(DD8-Pad11)"))
+    (pad 12 thru_hole circle
+      (at -7.5 -15 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 58 "Net-(DD8-Pad1)"))
+    (pad 13 thru_hole circle
+      (at -7.5 -17.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 65 "Net-(DD8-Pad13)"))
+    (pad 14 thru_hole circle
+      (at -7.5 -20 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 56 "Net-(DD7-Pad11)"))
+    (model ${KISYS3DMOD}/Housings_DIP.3dshapes/DIP-14_W7.62mm.wrl
+      (offset
+        (xyz -14.9999997747226 19.99999969963014 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module rk86ngmd:DIP14-2.5mm
+    (layer F.Cu)
+    (tedit 57229EE8)
+    (tstamp 571BE75E)
+    (at 264.75 98 90)
+    (path /5563829C)
+    (fp_text reference DD7
+      (at -10.5 -24 90)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_text value К555ИЕ5
+      (at -11.5 -12.5 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_line
+      (start -17.5 -2.5)
+      (end -17.5 -22.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -5 -2.5)
+      (end -17.5 -2.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -5 -22.5)
+      (end -5 -2.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -17.5 -22.5)
+      (end -5 -22.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -11.5 -21.5)
+      (end -11 -21.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_arc
+      (start -11 -22.5)
+      (end -10 -22.5)
+      (angle 90)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_arc
+      (start -11.5 -22.5)
+      (end -11.5 -21.5)
+      (angle 90)
+      (layer F.SilkS)
+      (width 0.01))
+    (pad 1 thru_hole rect
+      (at -15 -20 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 48 "Net-(DD7-Pad1)"))
+    (pad 2 thru_hole circle
+      (at -15 -17.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 49 "Net-(DD11-Pad5)"))
+    (pad 3 thru_hole circle
+      (at -15 -15 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 50 "Net-(DD14-Pad6)"))
+    (pad 4 thru_hole circle
+      (at -15 -12.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 51 "Net-(DD7-Pad4)"))
+    (pad 5 thru_hole circle
+      (at -15 -10 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 33 +5V))
+    (pad 6 thru_hole circle
+      (at -15 -7.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 52 "Net-(DD7-Pad6)"))
+    (pad 7 thru_hole circle
+      (at -15 -5 90)
+      (size 1.5 1.5)
+      (drill 1)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 53 "Net-(DD7-Pad7)"))
+    (pad 8 thru_hole circle
+      (at -7.5 -5 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 54 "Net-(DD7-Pad8)"))
+    (pad 9 thru_hole circle
+      (at -7.5 -7.5 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 55 "Net-(DD7-Pad9)"))
+    (pad 10 thru_hole circle
+      (at -7.5 -10 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 13 GND))
+    (pad 11 thru_hole circle
+      (at -7.5 -12.5 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 56 "Net-(DD7-Pad11)"))
+    (pad 12 thru_hole circle
+      (at -7.5 -15 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 48 "Net-(DD7-Pad1)"))
+    (pad 13 thru_hole circle
+      (at -7.5 -17.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 57 "Net-(DD7-Pad13)"))
+    (pad 14 thru_hole circle
+      (at -7.5 -20 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 130 /OSC))
+    (model ${KISYS3DMOD}/Housings_DIP.3dshapes/DIP-14_W7.62mm.wrl
+      (offset
+        (xyz -14.9999997747226 19.99999969963014 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module rk86ngmd:DIP14-2.5mm
+    (layer F.Cu)
+    (tedit 57229EE8)
+    (tstamp 571BEA7A)
+    (at 241 101.75 90)
+    (path /571B0353)
+    (fp_text reference DD13
+      (at -10.5 -24 90)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_text value К555ЛА3
+      (at -11.5 -12.5 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_line
+      (start -17.5 -2.5)
+      (end -17.5 -22.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -5 -2.5)
+      (end -17.5 -2.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -5 -22.5)
+      (end -5 -2.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -17.5 -22.5)
+      (end -5 -22.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -11.5 -21.5)
+      (end -11 -21.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_arc
+      (start -11 -22.5)
+      (end -10 -22.5)
+      (angle 90)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_arc
+      (start -11.5 -22.5)
+      (end -11.5 -21.5)
+      (angle 90)
+      (layer F.SilkS)
+      (width 0.01))
+    (pad 1 thru_hole rect
+      (at -15 -20 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 99 "Net-(DD13-Pad1)"))
+    (pad 2 thru_hole circle
+      (at -15 -17.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 44 "Net-(DD11-Pad3)"))
+    (pad 3 thru_hole circle
+      (at -15 -15 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 82 "Net-(DD13-Pad3)"))
+    (pad 4 thru_hole circle
+      (at -15 -12.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 82 "Net-(DD13-Pad3)"))
+    (pad 5 thru_hole circle
+      (at -15 -10 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 83 "Net-(DD13-Pad5)"))
+    (pad 6 thru_hole circle
+      (at -15 -7.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 108 /WRDATA))
+    (pad 7 thru_hole circle
+      (at -15 -5 90)
+      (size 1.5 1.5)
+      (drill 1)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 13 GND))
+    (pad 8 thru_hole circle
+      (at -7.5 -5 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 83 "Net-(DD13-Pad5)"))
+    (pad 9 thru_hole circle
+      (at -7.5 -7.5 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 72 "Net-(DD10-Pad12)"))
+    (pad 10 thru_hole circle
+      (at -7.5 -10 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 77 "Net-(DD11-Pad11)"))
+    (pad 11 thru_hole circle
+      (at -7.5 -12.5 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 84 "Net-(DD13-Pad11)"))
+    (pad 12 thru_hole circle
+      (at -7.5 -15 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 100 /WRGATE))
+    (pad 13 thru_hole circle
+      (at -7.5 -17.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 85 RD_DATA))
+    (pad 14 thru_hole circle
+      (at -7.5 -20 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 33 +5V))
+    (model ${KISYS3DMOD}/Housings_DIP.3dshapes/DIP-14_W7.62mm.wrl
+      (offset
+        (xyz -14.9999997747226 19.99999969963014 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module rk86ngmd:DIP14-2.5mm
+    (layer F.Cu)
+    (tedit 57229EE8)
+    (tstamp 571BEAAC)
+    (at 241 86.75 90)
+    (path /571AE946)
+    (fp_text reference DD15
+      (at -10.5 -24 90)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_text value К555ЛИ1
+      (at -11.5 -12.5 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_line
+      (start -17.5 -2.5)
+      (end -17.5 -22.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -5 -2.5)
+      (end -17.5 -2.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -5 -22.5)
+      (end -5 -2.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -17.5 -22.5)
+      (end -5 -22.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -11.5 -21.5)
+      (end -11 -21.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_arc
+      (start -11 -22.5)
+      (end -10 -22.5)
+      (angle 90)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_arc
+      (start -11.5 -22.5)
+      (end -11.5 -21.5)
+      (angle 90)
+      (layer F.SilkS)
+      (width 0.01))
+    (pad 1 thru_hole rect
+      (at -15 -20 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 88 "Net-(DD14-Pad8)"))
+    (pad 2 thru_hole circle
+      (at -15 -17.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 63 "Net-(DD15-Pad2)"))
+    (pad 3 thru_hole circle
+      (at -15 -15 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 77 "Net-(DD11-Pad11)"))
+    (pad 4 thru_hole circle
+      (at -15 -12.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 63 "Net-(DD15-Pad2)"))
+    (pad 5 thru_hole circle
+      (at -15 -10 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 62 "Net-(DD14-Pad9)"))
+    (pad 6 thru_hole circle
+      (at -15 -7.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 44 "Net-(DD11-Pad3)"))
+    (pad 7 thru_hole circle
+      (at -15 -5 90)
+      (size 1.5 1.5)
+      (drill 1)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 13 GND))
+    (pad 8 thru_hole circle
+      (at -7.5 -5 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 47 "Net-(DD15-Pad8)"))
+    (pad 9 thru_hole circle
+      (at -7.5 -7.5 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 77 "Net-(DD11-Pad11)"))
+    (pad 10 thru_hole circle
+      (at -7.5 -10 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 74 "Net-(DD11-Pad6)"))
+    (pad 11 thru_hole circle
+      (at -7.5 -12.5 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 90 "Net-(DD15-Pad11)"))
+    (pad 12 thru_hole circle
+      (at -7.5 -15 270)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 21 /WR))
+    (pad 13 thru_hole circle
+      (at -7.5 -17.5 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 16 /RD))
+    (pad 14 thru_hole circle
+      (at -7.5 -20 90)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 33 +5V))
+    (model ${KISYS3DMOD}/Housings_DIP.3dshapes/DIP-14_W7.62mm.wrl
+      (offset
+        (xyz -14.9999997747226 19.99999969963014 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module rk86ngmd:Resistor_Vertical_RM2_5mm
+    (layer F.Cu)
+    (tedit 57210F6C)
+    (tstamp 571BEC93)
+    (at 207.25 104.25 180)
+    (descr "Resistor, Vertical, RM 5mm, 1/3W,")
+    (tags "Resistor, Vertical, RM 5mm, 1/3W,")
+    (path /571ACE26)
+    (fp_text reference R1
+      (at -5.5 -1 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 200
+      (at -5.5 -2.5 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_circle
+      (center -2.49936 0)
+      (end -1 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.09906 0)
+      (end 0.9017 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 thru_hole circle
+      (at -2.49936 0 180)
+      (size 1.5 1.5)
+      (drill 0.8)
+      (layers *.Cu *.SilkS *.Mask)
+      (net 49 "Net-(DD11-Pad5)"))
+    (pad 2 thru_hole circle
+      (at 0 0 180)
+      (size 1.5 1.5)
+      (drill 0.8)
+      (layers *.Cu *.SilkS *.Mask)
+      (net 87 "Net-(C1-Pad1)"))
+    (model ${KIPRJMOD}/3d/rc05vert.wrl
+      (offset
+        (xyz -1.249999981226884 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module rk86ngmd:DIP14-2.5mm
+    (layer F.Cu)
+    (tedit 57229EE8)
+    (tstamp 571BEAC5)
+    (at 76 119.25)
+    (path /571A8883)
+    (fp_text reference DD16
+      (at -11.25 -24)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_text value К555ЛЛ1
+      (at -11.5 -12.5 90)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_line
+      (start -17.5 -2.5)
+      (end -17.5 -22.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -5 -2.5)
+      (end -17.5 -2.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -5 -22.5)
+      (end -5 -2.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -17.5 -22.5)
+      (end -5 -22.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -11.5 -21.5)
+      (end -11 -21.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_arc
+      (start -11 -22.5)
+      (end -10 -22.5)
+      (angle 90)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_arc
+      (start -11.5 -22.5)
+      (end -11.5 -21.5)
+      (angle 90)
+      (layer F.SilkS)
+      (width 0.01))
+    (pad 1 thru_hole rect
+      (at -15 -20)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 90 "Net-(DD15-Pad11)"))
+    (pad 2 thru_hole circle
+      (at -15 -17.5)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 91 /CS3))
+    (pad 3 thru_hole circle
+      (at -15 -15)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 92 "Net-(DD16-Pad3)"))
+    (pad 4 thru_hole circle
+      (at -15 -12.5)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 92 "Net-(DD16-Pad3)"))
+    (pad 5 thru_hole circle
+      (at -15 -10)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 93 "Net-(DD16-Pad11)"))
+    (pad 6 thru_hole circle
+      (at -15 -7.5)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 81 "Net-(DD12-Pad13)"))
+    (pad 7 thru_hole circle
+      (at -15 -5)
+      (size 1.5 1.5)
+      (drill 1)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 13 GND))
+    (pad 8 thru_hole circle
+      (at -7.5 -5 180)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 5 "Net-(D1-Pad6)"))
+    (pad 9 thru_hole circle
+      (at -7.5 -7.5 180)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 126 /A2))
+    (pad 10 thru_hole circle
+      (at -7.5 -10 180)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 91 /CS3))
+    (pad 11 thru_hole circle
+      (at -7.5 -12.5 180)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 93 "Net-(DD16-Pad11)"))
+    (pad 12 thru_hole circle
+      (at -7.5 -15 180)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 109 /A1))
+    (pad 13 thru_hole circle
+      (at -7.5 -17.5)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 110 /A0))
+    (pad 14 thru_hole circle
+      (at -7.5 -20)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 33 +5V))
+    (model ${KISYS3DMOD}/Housings_DIP.3dshapes/DIP-14_W7.62mm.wrl
+      (offset
+        (xyz -14.9999997747226 19.99999969963014 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module rk86ngmd:ОНп-КС-23
+    (layer F.Cu)
+    (tedit 572455CD)
+    (tstamp 572483B6)
+    (at 86 134.25)
+    (path /57251359)
+    (fp_text reference X1
+      (at 0 23.75)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_text value ОНп-КС-23
+      (at 0 0)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_line
+      (start 36.25 14.25)
+      (end 36.25 20.5)
+      (layer F.SilkS)
+      (width 1))
+    (fp_line
+      (start 33.75 14.25)
+      (end 33.75 20.5)
+      (layer F.SilkS)
+      (width 1))
+    (fp_line
+      (start 31.25 14.25)
+      (end 31.25 20.5)
+      (layer F.SilkS)
+      (width 1))
+    (fp_line
+      (start 28.75 14.25)
+      (end 28.75 20.5)
+      (layer F.SilkS)
+      (width 1))
+    (fp_line
+      (start 26.25 14.25)
+      (end 26.25 20.5)
+      (layer F.SilkS)
+      (width 1))
+    (fp_line
+      (start 23.75 14.25)
+      (end 23.75 20.5)
+      (layer F.SilkS)
+      (width 1))
+    (fp_line
+      (start 21.25 14.25)
+      (end 21.25 20.5)
+      (layer F.SilkS)
+      (width 1))
+    (fp_line
+      (start 18.75 14.25)
+      (end 18.75 20.5)
+      (layer F.SilkS)
+      (width 1))
+    (fp_line
+      (start 16.25 14.25)
+      (end 16.25 20.5)
+      (layer F.SilkS)
+      (width 1))
+    (fp_line
+      (start 13.75 14.25)
+      (end 13.75 20.5)
+      (layer F.SilkS)
+      (width 1))
+    (fp_line
+      (start 11.25 14.25)
+      (end 11.25 20.5)
+      (layer F.SilkS)
+      (width 1))
+    (fp_line
+      (start 8.75 14.25)
+      (end 8.75 20.5)
+      (layer F.SilkS)
+      (width 1))
+    (fp_line
+      (start 6.25 14.25)
+      (end 6.25 20.5)
+      (layer F.SilkS)
+      (width 1))
+    (fp_line
+      (start 3.75 14.25)
+      (end 3.75 20.5)
+      (layer F.SilkS)
+      (width 1))
+    (fp_line
+      (start 1.25 14.25)
+      (end 1.25 20.5)
+      (layer F.SilkS)
+      (width 1))
+    (fp_line
+      (start -1.25 14.25)
+      (end -1.25 20.5)
+      (layer F.SilkS)
+      (width 1))
+    (fp_line
+      (start -3.75 14.25)
+      (end -3.75 20.5)
+      (layer F.SilkS)
+      (width 1))
+    (fp_line
+      (start -6.25 14.25)
+      (end -6.25 20.5)
+      (layer F.SilkS)
+      (width 1))
+    (fp_line
+      (start -8.75 14.25)
+      (end -8.75 20.5)
+      (layer F.SilkS)
+      (width 1))
+    (fp_line
+      (start -11.25 14.25)
+      (end -11.25 20.5)
+      (layer F.SilkS)
+      (width 1))
+    (fp_line
+      (start -13.75 14.25)
+      (end -13.75 20.5)
+      (layer F.SilkS)
+      (width 1))
+    (fp_line
+      (start -16.25 14.25)
+      (end -16.25 20.5)
+      (layer F.SilkS)
+      (width 1))
+    (fp_line
+      (start -18.75 14.25)
+      (end -18.75 20.5)
+      (layer F.SilkS)
+      (width 1))
+    (fp_line
+      (start -21.25 14.25)
+      (end -21.25 20.5)
+      (layer F.SilkS)
+      (width 1))
+    (fp_line
+      (start -23.75 14.25)
+      (end -23.75 20.5)
+      (layer F.SilkS)
+      (width 1))
+    (fp_line
+      (start -26.25 14.25)
+      (end -26.25 20.5)
+      (layer F.SilkS)
+      (width 1))
+    (fp_line
+      (start -28.75 14.25)
+      (end -28.75 20.5)
+      (layer F.SilkS)
+      (width 1))
+    (fp_line
+      (start -31.25 14.25)
+      (end -31.25 20.5)
+      (layer F.SilkS)
+      (width 1))
+    (fp_line
+      (start -33.75 14.25)
+      (end -33.75 20.5)
+      (layer F.SilkS)
+      (width 1))
+    (fp_line
+      (start -36.25 14.25)
+      (end -36.25 20.5)
+      (layer F.SilkS)
+      (width 1))
+    (fp_line
+      (start -42.5 7.5)
+      (end 42.5 7.5)
+      (layer F.SilkS)
+      (width 0.2))
+    (fp_line
+      (start 42.5 7.5)
+      (end 42.5 10)
+      (layer F.SilkS)
+      (width 0.2))
+    (fp_line
+      (start 42.5 10)
+      (end 37.5 10)
+      (layer F.SilkS)
+      (width 0.2))
+    (fp_line
+      (start 37.5 10)
+      (end 37.5 13.75)
+      (layer F.SilkS)
+      (width 0.2))
+    (fp_line
+      (start 37.5 13.75)
+      (end -37.5 13.75)
+      (layer F.SilkS)
+      (width 0.2))
+    (fp_line
+      (start -37.5 13.75)
+      (end -37.5 10)
+      (layer F.SilkS)
+      (width 0.2))
+    (fp_line
+      (start -37.5 10)
+      (end -42.5 10)
+      (layer F.SilkS)
+      (width 0.2))
+    (fp_line
+      (start -42.5 10)
+      (end -42.5 7.5)
+      (layer F.SilkS)
+      (width 0.2))
+    (fp_line
+      (start 37.5 13.75)
+      (end 37.5 21.25)
+      (layer F.SilkS)
+      (width 0.2))
+    (fp_line
+      (start 37.5 21.25)
+      (end -37.5 21.25)
+      (layer F.SilkS)
+      (width 0.2))
+    (fp_line
+      (start -37.5 21.25)
+      (end -37.5 13.75)
+      (layer F.SilkS)
+      (width 0.2))
+    (fp_line
+      (start -36.25 8.75)
+      (end -36.25 12.5)
+      (layer F.SilkS)
+      (width 0.2))
+    (fp_line
+      (start -36.25 12.5)
+      (end 36.25 12.5)
+      (layer F.SilkS)
+      (width 0.2))
+    (fp_line
+      (start 36.25 12.5)
+      (end 36.25 8.75)
+      (layer F.SilkS)
+      (width 0.2))
+    (fp_line
+      (start 36.25 8.75)
+      (end -36.25 8.75)
+      (layer F.SilkS)
+      (width 0.2))
+    (pad B30 smd rect
+      (at -36.25 0)
+      (size 1.5 14)
+      (layers F.Cu F.Paste F.Mask)
+      (net 33 +5V))
+    (pad B29 smd rect
+      (at -33.75 0)
+      (size 1.5 14)
+      (layers F.Cu F.Paste F.Mask)
+      (net 33 +5V))
+    (pad B28 smd rect
+      (at -31.25 0)
+      (size 1.5 14)
+      (layers F.Cu F.Paste F.Mask)
+      (net 153 "Net-(X1-PadB28)"))
+    (pad B27 smd rect
+      (at -28.75 0)
+      (size 1.5 14)
+      (layers F.Cu F.Paste F.Mask)
+      (net 130 /OSC))
+    (pad B26 smd rect
+      (at -26.25 0)
+      (size 1.5 14)
+      (layers F.Cu F.Paste F.Mask)
+      (net 101 /CS1))
+    (pad B25 smd rect
+      (at -23.75 0)
+      (size 1.5 14)
+      (layers F.Cu F.Paste F.Mask)
+      (net 91 /CS3))
+    (pad B24 smd rect
+      (at -21.25 0)
+      (size 1.5 14)
+      (layers F.Cu F.Paste F.Mask)
+      (net 127 /A10))
+    (pad B23 smd rect
+      (at -18.75 0)
+      (size 1.5 14)
+      (layers F.Cu F.Paste F.Mask)
+      (net 148 "Net-(X1-PadB23)"))
+    (pad B22 smd rect
+      (at -16.25 0)
+      (size 1.5 14)
+      (layers F.Cu F.Paste F.Mask)
+      (net 150 "Net-(X1-PadB22)"))
+    (pad B21 smd rect
+      (at -13.75 0)
+      (size 1.5 14)
+      (layers F.Cu F.Paste F.Mask)
+      (net 157 "Net-(X1-PadB21)"))
+    (pad B20 smd rect
+      (at -11.25 0)
+      (size 1.5 14)
+      (layers F.Cu F.Paste F.Mask)
+      (net 151 "Net-(X1-PadB20)"))
+    (pad B19 smd rect
+      (at -8.75 0)
+      (size 1.5 14)
+      (layers F.Cu F.Paste F.Mask)
+      (net 149 "Net-(X1-PadB19)"))
+    (pad B18 smd rect
+      (at -6.25 0)
+      (size 1.5 14)
+      (layers F.Cu F.Paste F.Mask)
+      (net 128 /A9))
+    (pad B17 smd rect
+      (at -3.75 0)
+      (size 1.5 14)
+      (layers F.Cu F.Paste F.Mask)
+      (net 129 /A8))
+    (pad B16 smd rect
+      (at -1.25 0)
+      (size 1.5 14)
+      (layers F.Cu F.Paste F.Mask)
+      (net 121 /A7))
+    (pad B15 smd rect
+      (at 1.25 0)
+      (size 1.5 14)
+      (layers F.Cu F.Paste F.Mask)
+      (net 122 /A6))
+    (pad B14 smd rect
+      (at 3.75 0)
+      (size 1.5 14)
+      (layers F.Cu F.Paste F.Mask)
+      (net 123 /A5))
+    (pad B13 smd rect
+      (at 6.25 0)
+      (size 1.5 14)
+      (layers F.Cu F.Paste F.Mask)
+      (net 124 /A4))
+    (pad B12 smd rect
+      (at 8.75 0)
+      (size 1.5 14)
+      (layers F.Cu F.Paste F.Mask)
+      (net 125 /A3))
+    (pad B11 smd rect
+      (at 11.25 0)
+      (size 1.5 14)
+      (layers F.Cu F.Paste F.Mask)
+      (net 147 "Net-(X1-PadB11)"))
+    (pad B10 smd rect
+      (at 13.75 0)
+      (size 1.5 14)
+      (layers F.Cu F.Paste F.Mask)
+      (net 126 /A2))
+    (pad B9 smd rect
+      (at 16.25 0)
+      (size 1.5 14)
+      (layers F.Cu F.Paste F.Mask)
+      (net 109 /A1))
+    (pad B8 smd rect
+      (at 18.75 0)
+      (size 1.5 14)
+      (layers F.Cu F.Paste F.Mask)
+      (net 110 /A0))
+    (pad B7 smd rect
+      (at 21.25 0)
+      (size 1.5 14)
+      (layers F.Cu F.Paste F.Mask)
+      (net 152 "Net-(X1-PadB7)"))
+    (pad B6 smd rect
+      (at 23.75 0)
+      (size 1.5 14)
+      (layers F.Cu F.Paste F.Mask)
+      (net 21 /WR))
+    (pad B5 smd rect
+      (at 26.25 0)
+      (size 1.5 14)
+      (layers F.Cu F.Paste F.Mask)
+      (net 156 "Net-(X1-PadB5)"))
+    (pad B4 smd rect
+      (at 28.75 0)
+      (size 1.5 14)
+      (layers F.Cu F.Paste F.Mask)
+      (net 154 "Net-(X1-PadB4)"))
+    (pad B3 smd rect
+      (at 31.25 0)
+      (size 1.5 14)
+      (layers F.Cu F.Paste F.Mask)
+      (net 155 "Net-(X1-PadB3)"))
+    (pad B2 smd rect
+      (at 33.75 0)
+      (size 1.5 14)
+      (layers F.Cu F.Paste F.Mask)
+      (net 33 +5V))
+    (pad B1 smd rect
+      (at 36.25 0)
+      (size 1.5 14)
+      (layers F.Cu F.Paste F.Mask)
+      (net 33 +5V))
+    (pad A15 smd rect
+      (at 1.25 0)
+      (size 1.5 14)
+      (layers B.Cu B.Paste B.Mask)
+      (net 118 /D0))
+    (pad A17 smd rect
+      (at -3.75 0)
+      (size 1.5 14)
+      (layers B.Cu B.Paste B.Mask)
+      (net 116 /D2))
+    (pad A16 smd rect
+      (at -1.25 0)
+      (size 1.5 14)
+      (layers B.Cu B.Paste B.Mask)
+      (net 117 /D1))
+    (pad A11 smd rect
+      (at 11.25 0)
+      (size 1.5 14)
+      (layers B.Cu B.Paste B.Mask)
+      (net 139 "Net-(X1-PadA11)"))
+    (pad A13 smd rect
+      (at 6.25 0)
+      (size 1.5 14)
+      (layers B.Cu B.Paste B.Mask)
+      (net 137 "Net-(X1-PadA13)"))
+    (pad A12 smd rect
+      (at 8.75 0)
+      (size 1.5 14)
+      (layers B.Cu B.Paste B.Mask)
+      (net 138 "Net-(X1-PadA12)"))
+    (pad A14 smd rect
+      (at 3.75 0)
+      (size 1.5 14)
+      (layers B.Cu B.Paste B.Mask)
+      (net 136 "Net-(X1-PadA14)"))
+    (pad A18 smd rect
+      (at -6.25 0)
+      (size 1.5 14)
+      (layers B.Cu B.Paste B.Mask)
+      (net 115 /D3))
+    (pad A21 smd rect
+      (at -13.75 0)
+      (size 1.5 14)
+      (layers B.Cu B.Paste B.Mask)
+      (net 113 /D5))
+    (pad A23 smd rect
+      (at -18.75 0)
+      (size 1.5 14)
+      (layers B.Cu B.Paste B.Mask)
+      (net 135 "Net-(X1-PadA23)"))
+    (pad A19 smd rect
+      (at -8.75 0)
+      (size 1.5 14)
+      (layers B.Cu B.Paste B.Mask)
+      (net 111 /D7))
+    (pad A22 smd rect
+      (at -16.25 0)
+      (size 1.5 14)
+      (layers B.Cu B.Paste B.Mask)
+      (net 114 /D4))
+    (pad A20 smd rect
+      (at -11.25 0)
+      (size 1.5 14)
+      (layers B.Cu B.Paste B.Mask)
+      (net 112 /D6))
+    (pad A6 smd rect
+      (at 23.75 0)
+      (size 1.5 14)
+      (layers B.Cu B.Paste B.Mask)
+      (net 143 "Net-(X1-PadA6)"))
+    (pad A10 smd rect
+      (at 13.75 0)
+      (size 1.5 14)
+      (layers B.Cu B.Paste B.Mask)
+      (net 140 "Net-(X1-PadA10)"))
+    (pad A7 smd rect
+      (at 21.25 0)
+      (size 1.5 14)
+      (layers B.Cu B.Paste B.Mask)
+      (net 16 /RD))
+    (pad A9 smd rect
+      (at 16.25 0)
+      (size 1.5 14)
+      (layers B.Cu B.Paste B.Mask)
+      (net 141 "Net-(X1-PadA9)"))
+    (pad A8 smd rect
+      (at 18.75 0)
+      (size 1.5 14)
+      (layers B.Cu B.Paste B.Mask)
+      (net 142 "Net-(X1-PadA8)"))
+    (pad A29 smd rect
+      (at -33.75 0)
+      (size 1.5 14)
+      (layers B.Cu B.Paste B.Mask)
+      (net 13 GND))
+    (pad A28 smd rect
+      (at -31.25 0)
+      (size 1.5 14)
+      (layers B.Cu B.Paste B.Mask)
+      (net 131 "Net-(X1-PadA28)"))
+    (pad A26 smd rect
+      (at -26.25 0)
+      (size 1.5 14)
+      (layers B.Cu B.Paste B.Mask)
+      (net 133 "Net-(X1-PadA26)"))
+    (pad A24 smd rect
+      (at -21.25 0)
+      (size 1.5 14)
+      (layers B.Cu B.Paste B.Mask)
+      (net 134 "Net-(X1-PadA24)"))
+    (pad A25 smd rect
+      (at -23.75 0)
+      (size 1.5 14)
+      (layers B.Cu B.Paste B.Mask)
+      (net 102 /CS2))
+    (pad A30 smd rect
+      (at -36.25 0)
+      (size 1.5 14)
+      (layers B.Cu B.Paste B.Mask)
+      (net 13 GND))
+    (pad A27 smd rect
+      (at -28.75 0)
+      (size 1.5 14)
+      (layers B.Cu B.Paste B.Mask)
+      (net 132 "Net-(X1-PadA27)"))
+    (pad A1 smd rect
+      (at 36.25 0)
+      (size 1.5 14)
+      (layers B.Cu B.Paste B.Mask)
+      (net 13 GND))
+    (pad A2 smd rect
+      (at 33.75 0)
+      (size 1.5 14)
+      (layers B.Cu B.Paste B.Mask)
+      (net 13 GND))
+    (pad A4 smd rect
+      (at 28.75 0)
+      (size 1.5 14)
+      (layers B.Cu B.Paste B.Mask)
+      (net 145 "Net-(X1-PadA4)"))
+    (pad A3 smd rect
+      (at 31.25 0)
+      (size 1.5 14)
+      (layers B.Cu B.Paste B.Mask)
+      (net 146 "Net-(X1-PadA3)"))
+    (pad A5 smd rect
+      (at 26.25 0)
+      (size 1.5 14)
+      (layers B.Cu B.Paste B.Mask)
+      (net 144 "Net-(X1-PadA5)")))
+  (module rk86ngmd:DIP24-2.5mm
+    (layer F.Cu)
+    (tedit 572278BE)
+    (tstamp 571D12F3)
+    (at 104.75 99.25 90)
+    (path /55636CEB)
+    (fp_text reference DD4
+      (at -7.5 -25 90)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_text value 2716
+      (at -7.5 -5 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_line
+      (start -17.5 10)
+      (end -17.5 -22.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start 2.5 10)
+      (end -17.5 10)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start 2.5 -22.5)
+      (end 2.5 10)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -17.5 -22.5)
+      (end 2.5 -22.5)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_arc
+      (start -7.5 -22.5)
+      (end -5 -22.5)
+      (angle 90)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_arc
+      (start -7.5 -22.5)
+      (end -7.5 -20)
+      (angle 90)
+      (layer F.SilkS)
+      (width 0.01))
+    (pad 1 thru_hole circle
+      (at -15 -20 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 121 /A7))
+    (pad 2 thru_hole circle
+      (at -15 -17.5 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 122 /A6))
+    (pad 3 thru_hole circle
+      (at -15 -15 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 123 /A5))
+    (pad 4 thru_hole circle
+      (at -15 -12.5 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 124 /A4))
+    (pad 5 thru_hole circle
+      (at -15 -10 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 125 /A3))
+    (pad 6 thru_hole circle
+      (at -15 -7.5 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 126 /A2))
+    (pad 7 thru_hole circle
+      (at -15 -5 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 109 /A1))
+    (pad 8 thru_hole circle
+      (at -15 -2.5 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 110 /A0))
+    (pad 9 thru_hole circle
+      (at -15 0 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 118 /D0))
+    (pad 10 thru_hole circle
+      (at -15 2.5 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 117 /D1))
+    (pad 11 thru_hole circle
+      (at -15 5 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 116 /D2))
+    (pad 12 thru_hole circle
+      (at -15 7.5 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 13 GND))
+    (pad 13 thru_hole circle
+      (at 0 7.5 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 115 /D3))
+    (pad 14 thru_hole circle
+      (at 0 5 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 114 /D4))
+    (pad 15 thru_hole circle
+      (at 0 2.5 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 113 /D5))
+    (pad 16 thru_hole circle
+      (at 0 0 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 112 /D6))
+    (pad 17 thru_hole circle
+      (at 0 -2.5 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 111 /D7))
+    (pad 18 thru_hole circle
+      (at 0 -5 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 101 /CS1))
+    (pad 19 thru_hole circle
+      (at 0 -7.5 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 127 /A10))
+    (pad 20 thru_hole circle
+      (at 0 -10 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 16 /RD))
+    (pad 21 thru_hole circle
+      (at 0 -12.5 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 33 +5V))
+    (pad 22 thru_hole circle
+      (at 0 -15 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 128 /A9))
+    (pad 23 thru_hole circle
+      (at 0 -17.5 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 129 /A8))
+    (pad 24 thru_hole circle
+      (at 0 -20 90)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 33 +5V))
+    (model ${KISYS3DMOD}/Housings_DIP.3dshapes/DIP-24_W15.24mm.wrl
+      (offset
+        (xyz -14.9999997747226 20.24999969587551 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Pin_Headers:Pin_Header_Straight_1x01
+    (layer F.Cu)
+    (tedit 595B9291)
+    (tstamp 57267005)
+    (at 48.5 78)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /57267131)
+    (fp_text reference P14
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value READY
+      (at -13.75 -1.25)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.27 1.27)
+      (end 1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 -1.55)
+      (end 1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 0)
+      (end -1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.75 1.75)
+      (end 1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end 1.75 -1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.75 -1.75)
+      (end 1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end -1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.55 -1.55)
+      (end 1.55 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.5 1.5)
+      (drill 0.9)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 18 READY))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x01.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 90))))
+  (module rk86kngmd:DIP40-2.5mm locked
+    (layer F.Cu)
+    (tedit 572D7EB2)
+    (tstamp 571BE146)
+    (at 111 81.75 270)
+    (path /55623C09)
+    (fp_text reference D1
+      (at 0 -28.75 270)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_text value К580ВВ55
+      (at 0 1.25)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_line
+      (start -10 26.25)
+      (end -10 -26.25)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start 10 26.25)
+      (end -10 26.25)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start 10 -26.25)
+      (end 10 26.25)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_line
+      (start -10 -26.25)
+      (end 10 -26.25)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_arc
+      (start 0 -26.25)
+      (end 2.5 -26.25)
+      (angle 90)
+      (layer F.SilkS)
+      (width 0.01))
+    (fp_arc
+      (start 0 -26.25)
+      (end 0 -23.75)
+      (angle 90)
+      (layer F.SilkS)
+      (width 0.01))
+    (pad 1 thru_hole circle
+      (at -7.5 -23.75 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 1 "Net-(D1-Pad1)"))
+    (pad 2 thru_hole circle
+      (at -7.5 -21.25 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 2 "Net-(D1-Pad2)"))
+    (pad 3 thru_hole circle
+      (at -7.5 -18.75 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 3 "Net-(D1-Pad3)"))
+    (pad 4 thru_hole circle
+      (at -7.5 -16.25 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 4 "Net-(D1-Pad4)"))
+    (pad 5 thru_hole circle
+      (at -7.5 -13.75 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 16 /RD))
+    (pad 6 thru_hole circle
+      (at -7.5 -11.25 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 5 "Net-(D1-Pad6)"))
+    (pad 7 thru_hole circle
+      (at -7.5 -8.75 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 13 GND))
+    (pad 8 thru_hole circle
+      (at -7.5 -6.25 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 109 /A1))
+    (pad 9 thru_hole circle
+      (at -7.5 -3.75 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 110 /A0))
+    (pad 10 thru_hole circle
+      (at -7.5 -1.25 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 96 /PC7))
+    (pad 11 thru_hole circle
+      (at -7.5 1.25 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 97 /PC6))
+    (pad 12 thru_hole circle
+      (at -7.5 3.75 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 103 /PC5))
+    (pad 13 thru_hole circle
+      (at -7.5 6.25 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 104 /PC4))
+    (pad 14 thru_hole circle
+      (at -7.5 8.75 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 100 /WRGATE))
+    (pad 15 thru_hole circle
+      (at -7.5 11.25 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 105 /PC1))
+    (pad 16 thru_hole circle
+      (at -7.5 13.75 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 106 /PC2))
+    (pad 17 thru_hole circle
+      (at -7.5 16.25 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 107 /PC3))
+    (pad 18 thru_hole circle
+      (at -7.5 18.75 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 6 "Net-(D1-Pad18)"))
+    (pad 19 thru_hole circle
+      (at -7.5 21.25 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 7 "Net-(D1-Pad19)"))
+    (pad 20 thru_hole circle
+      (at -7.5 23.75 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 8 "Net-(D1-Pad20)"))
+    (pad 21 thru_hole circle
+      (at 7.5 23.75 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 17 WPRT))
+    (pad 22 thru_hole circle
+      (at 7.5 21.25 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 18 READY))
+    (pad 23 thru_hole circle
+      (at 7.5 18.75 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 19 TR00))
+    (pad 24 thru_hole circle
+      (at 7.5 16.25 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 20 IP))
+    (pad 25 thru_hole circle
+      (at 7.5 13.75 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 98 /PB7))
+    (pad 26 thru_hole circle
+      (at 7.5 11.25 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 33 +5V))
+    (pad 27 thru_hole circle
+      (at 7.5 8.75 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 111 /D7))
+    (pad 28 thru_hole circle
+      (at 7.5 6.25 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 112 /D6))
+    (pad 29 thru_hole circle
+      (at 7.5 3.75 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 113 /D5))
+    (pad 30 thru_hole circle
+      (at 7.5 1.25 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 114 /D4))
+    (pad 31 thru_hole circle
+      (at 7.5 -1.25 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 115 /D3))
+    (pad 32 thru_hole circle
+      (at 7.5 -3.75 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 116 /D2))
+    (pad 33 thru_hole circle
+      (at 7.5 -6.25 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 117 /D1))
+    (pad 34 thru_hole circle
+      (at 7.5 -8.75 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 118 /D0))
+    (pad 35 thru_hole circle
+      (at 7.5 -11.25 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 13 GND))
+    (pad 36 thru_hole circle
+      (at 7.5 -13.75 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 21 /WR))
+    (pad 37 thru_hole circle
+      (at 7.5 -16.25 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 9 "Net-(D1-Pad37)"))
+    (pad 38 thru_hole circle
+      (at 7.5 -18.75 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 10 "Net-(D1-Pad38)"))
+    (pad 39 thru_hole circle
+      (at 7.5 -21.25 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 11 "Net-(D1-Pad39)"))
+    (pad 40 thru_hole circle
+      (at 7.5 -23.75 270)
+      (size 1.5 1.5)
+      (drill 0.762)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 12 "Net-(D1-Pad40)"))
+    (model ${KISYS3DMOD}/Housings_DIP.3dshapes/DIP-40_W15.24mm.wrl
+      (offset
+        (xyz -7.499999887361301 24.09999963805432 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (gr_text "2016 tnt23"
+    (at 251.59 119.335)
+    (layer F.Cu)
+    (effects
+      (font
+        (size 1.5 1.5)
+        (thickness 0.3))))
+  (gr_line
+    (start 124.72208 138.26308)
+    (end 124.75 125.5)
+    (layer Edge.Cuts)
+    (width 0.1))
+  (gr_line
+    (start 48.5 125.5)
+    (end 48.47208 138.26308)
+    (layer Edge.Cuts)
+    (width 0.1))
+  (gr_line
+    (start 41 125.5)
+    (end 48.5 125.5)
+    (layer Edge.Cuts)
+    (width 0.1))
+  (gr_line
+    (start 124.72208 138.26308)
+    (end 48.47208 138.26308)
+    (layer Edge.Cuts)
+    (width 0.1))
+  (gr_line
+    (start 41 76.75)
+    (end 47.25 70.5)
+    (layer Edge.Cuts)
+    (width 0.1))
+  (gr_line
+    (start 267.25 76.75)
+    (end 258.5 70.5)
+    (layer Edge.Cuts)
+    (width 0.1))
+  (gr_line
+    (start 124.75 125.5)
+    (end 267.25 125.5)
+    (layer Edge.Cuts)
+    (width 0.1)
+    (tstamp 571B5F6A))
+  (gr_line
+    (start 41 76.75)
+    (end 41 125.5)
+    (angle 90)
+    (layer Edge.Cuts)
+    (width 0.1)
+    (tstamp 571B5F5B))
+  (gr_line
+    (start 267.25 76.75)
+    (end 267.25 125.5)
+    (angle 90)
+    (layer Edge.Cuts)
+    (width 0.1))
+  (gr_line
+    (start 47.25 70.5)
+    (end 258.5 70.5)
+    (layer Edge.Cuts)
+    (width 0.1))
+  (gr_circle
+    (center 261 76.75)
+    (end 262.5 76.75)
+    (layer Edge.Cuts)
+    (width 0.1)
+    (tstamp 571B6163))
+  (gr_circle
+    (center 261 119.25)
+    (end 262.5 119.25)
+    (layer Edge.Cuts)
+    (width 0.1)
+    (tstamp 571B6115))
+  (gr_circle
+    (center 44.75 76.75)
+    (end 46.25 76.75)
+    (layer Edge.Cuts)
+    (width 0.1)
+    (tstamp 571B60C4))
+  (gr_circle
+    (center 44.75 119.25)
+    (end 46.25 119.25)
+    (layer Edge.Cuts)
+    (width 0.1))
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  )

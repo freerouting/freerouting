@@ -1,0 +1,59 @@
+{
+  "board_id": "antdroid-board_antdroid-board",
+  "display_name": "antdroid-board_antdroid-board",
+  "pcbench_directory": "PCBs/antdroid-board_antdroid-board",
+  "source": "https://github.com/antdroid-hexapod/antdroid-board",
+  "author": "antdroid-hexapod",
+  "license": "Creative Commons Attribution Share Alike 4.0 International",
+  "license_spdx": "CC-BY-SA-4.0",
+  "retrieved_at": "2023-08-17T17:22:27.921768+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 62,
+    "components": 60,
+    "dimensions_mm": {
+      "width": 99.45,
+      "height": 53.72
+    },
+    "area_cm2": 53.42,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 275,
+    "vias": 2,
+    "track_length_mm": 1110.04,
+    "kicad_drc_violations": 268,
+    "kicad_drc_breakdown": {
+      "total_violations": 268,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 114,
+        "copper_edge_clearance": 1,
+        "lib_footprint_issues": 60,
+        "silk_edge_clearance": 6,
+        "silk_over_copper": 84,
+        "silk_overlap": 1,
+        "starved_thermal": 1,
+        "text_thickness": 1
+      },
+      "by_severity": {
+        "error": 116,
+        "warning": 152
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "medium",
+    "plane",
+    "routine",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

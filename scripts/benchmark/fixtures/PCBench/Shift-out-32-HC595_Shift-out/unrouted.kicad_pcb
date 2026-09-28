@@ -1,0 +1,1869 @@
+(kicad_pcb (version 20171130) (host pcbnew "(5.1.12)-1")
+
+  (general
+    (thickness 1.6)
+    (drawings 4)
+    (tracks 475)
+    (zones 0)
+    (modules 27)
+    (nets 43)
+  )
+
+  (page A4)
+  (title_block
+    (title "Cascadeable 32-bit Shift Register")
+    (date 2016-07-15)
+    (rev v1)
+    (company www.photonvolt.com)
+    (comment 1 "(c) 2016 Lucas V. Hartmann")
+  )
+
+  (layers
+    (0 F.Cu signal)
+    (31 B.Cu signal)
+    (32 B.Adhes user hide)
+    (33 F.Adhes user hide)
+    (34 B.Paste user hide)
+    (35 F.Paste user hide)
+    (36 B.SilkS user hide)
+    (37 F.SilkS user hide)
+    (38 B.Mask user hide)
+    (39 F.Mask user hide)
+    (40 Dwgs.User user hide)
+    (41 Cmts.User user hide)
+    (42 Eco1.User user hide)
+    (43 Eco2.User user hide)
+    (44 Edge.Cuts user)
+    (45 Margin user)
+    (46 B.CrtYd user)
+    (47 F.CrtYd user)
+    (48 B.Fab user)
+    (49 F.Fab user hide)
+  )
+
+  (setup
+    (last_trace_width 0.3)
+    (trace_clearance 0.24)
+    (zone_clearance 0.35)
+    (zone_45_only no)
+    (trace_min 0.2)
+    (via_size 1.3)
+    (via_drill 0.7)
+    (via_min_size 0.4)
+    (via_min_drill 0.3)
+    (uvia_size 0.3)
+    (uvia_drill 0.1)
+    (uvias_allowed no)
+    (uvia_min_size 0.2)
+    (uvia_min_drill 0.1)
+    (edge_width 0.15)
+    (segment_width 0.2)
+    (pcb_text_width 0.3)
+    (pcb_text_size 1.5 1.5)
+    (mod_edge_width 0.15)
+    (mod_text_size 1 1)
+    (mod_text_width 0.15)
+    (pad_size 1.524 1.524)
+    (pad_drill 0.762)
+    (pad_to_mask_clearance 0.2)
+    (aux_axis_origin 0 0)
+    (grid_origin 144.78 95.25)
+    (visible_elements 7FFFFFFF)
+    (pcbplotparams
+      (layerselection 0x01000_80000001)
+      (usegerberextensions false)
+      (usegerberattributes true)
+      (usegerberadvancedattributes true)
+      (creategerberjobfile true)
+      (excludeedgelayer true)
+      (linewidth 0.100000)
+      (plotframeref false)
+      (viasonmask false)
+      (mode 1)
+      (useauxorigin false)
+      (hpglpennumber 1)
+      (hpglpenspeed 20)
+      (hpglpendiameter 15.000000)
+      (psnegative false)
+      (psa4output false)
+      (plotreference true)
+      (plotvalue true)
+      (plotinvisibletext false)
+      (padsonsilk false)
+      (subtractmaskfromsilk false)
+      (outputformat 1)
+      (mirror false)
+      (drillshape 0)
+      (scaleselection 1)
+      (outputdirectory "GERBER"))
+  )
+
+  (net 0 "")
+  (net 1 VCC)
+  (net 2 GND)
+  (net 3 VPP)
+  (net 4 /Q0)
+  (net 5 /Q1)
+  (net 6 /Q2)
+  (net 7 /Q3)
+  (net 8 /Q4)
+  (net 9 /Q5)
+  (net 10 /Q6)
+  (net 11 /Q7)
+  (net 12 /Q8)
+  (net 13 /Q9)
+  (net 14 /Q10)
+  (net 15 /Q11)
+  (net 16 /Q12)
+  (net 17 /Q13)
+  (net 18 /Q14)
+  (net 19 /Q15)
+  (net 20 /BCK)
+  (net 21 /WCK)
+  (net 22 /SDI)
+  (net 23 /Q16)
+  (net 24 /Q17)
+  (net 25 /Q18)
+  (net 26 /Q19)
+  (net 27 /Q20)
+  (net 28 /Q21)
+  (net 29 /Q22)
+  (net 30 /Q23)
+  (net 31 /SDO)
+  (net 32 /Q24)
+  (net 33 /Q25)
+  (net 34 /Q26)
+  (net 35 /Q27)
+  (net 36 /Q28)
+  (net 37 /Q29)
+  (net 38 /Q30)
+  (net 39 /Q31)
+  (net 40 "Net-(U1-Pad9)")
+  (net 41 "Net-(U2-Pad9)")
+  (net 42 "Net-(U3-Pad9)")
+
+  (net_class Default "This is the default net class."
+    (clearance 0.24)
+    (trace_width 0.3)
+    (via_dia 1.3)
+    (via_drill 0.7)
+    (uvia_dia 0.3)
+    (uvia_drill 0.1)
+    (add_net /BCK)
+    (add_net /Q0)
+    (add_net /Q1)
+    (add_net /Q10)
+    (add_net /Q11)
+    (add_net /Q12)
+    (add_net /Q13)
+    (add_net /Q14)
+    (add_net /Q15)
+    (add_net /Q16)
+    (add_net /Q17)
+    (add_net /Q18)
+    (add_net /Q19)
+    (add_net /Q2)
+    (add_net /Q20)
+    (add_net /Q21)
+    (add_net /Q22)
+    (add_net /Q23)
+    (add_net /Q24)
+    (add_net /Q25)
+    (add_net /Q26)
+    (add_net /Q27)
+    (add_net /Q28)
+    (add_net /Q29)
+    (add_net /Q3)
+    (add_net /Q30)
+    (add_net /Q31)
+    (add_net /Q4)
+    (add_net /Q5)
+    (add_net /Q6)
+    (add_net /Q7)
+    (add_net /Q8)
+    (add_net /Q9)
+    (add_net /SDI)
+    (add_net /SDO)
+    (add_net /WCK)
+    (add_net "Net-(U1-Pad9)")
+    (add_net "Net-(U2-Pad9)")
+    (add_net "Net-(U3-Pad9)")
+  )
+
+  (net_class Power ""
+    (clearance 0.24)
+    (trace_width 0.3)
+    (via_dia 1.3)
+    (via_drill 0.7)
+    (uvia_dia 0.3)
+    (uvia_drill 0.1)
+    (add_net GND)
+    (add_net VCC)
+    (add_net VPP)
+  )
+
+  (module Capacitors_SMD:C_0805_HandSoldering (layer F.Cu) (tedit 541A9B8D) (tstamp 564B5063)
+    (at 165.1 86.36 180)
+    (descr "Capacitor SMD 0805, hand soldering")
+    (tags "capacitor 0805")
+    (path /564B60FB)
+    (attr smd)
+    (fp_text reference C1 (at 0 -2.1 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 1uF (at 0 2.1 180) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -0.5 0.85) (end 0.5 0.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0.5 -0.85) (end -0.5 -0.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2.3 -1) (end 2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 -1) (end -2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 1) (end 2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 -1) (end 2.3 -1) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -1.25 0 180) (size 1.5 1.25) (layers F.Cu F.Paste F.Mask)
+      (net 1 VCC))
+    (pad 2 smd rect (at 1.25 0 180) (size 1.5 1.25) (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (model Capacitors_SMD.3dshapes/C_0805_HandSoldering.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitors_SMD:C_0805_HandSoldering (layer F.Cu) (tedit 541A9B8D) (tstamp 564B5069)
+    (at 109.24 86.36 180)
+    (descr "Capacitor SMD 0805, hand soldering")
+    (tags "capacitor 0805")
+    (path /564B616C)
+    (attr smd)
+    (fp_text reference C2 (at 0 -2.1 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 1uF (at 0 2.1 180) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -0.5 0.85) (end 0.5 0.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0.5 -0.85) (end -0.5 -0.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2.3 -1) (end 2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 -1) (end -2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 1) (end 2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 -1) (end 2.3 -1) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -1.25 0 180) (size 1.5 1.25) (layers F.Cu F.Paste F.Mask)
+      (net 1 VCC))
+    (pad 2 smd rect (at 1.25 0 180) (size 1.5 1.25) (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (model Capacitors_SMD.3dshapes/C_0805_HandSoldering.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitors_SMD:C_0805_HandSoldering (layer F.Cu) (tedit 541A9B8D) (tstamp 564B506F)
+    (at 137.14 86.36 180)
+    (descr "Capacitor SMD 0805, hand soldering")
+    (tags "capacitor 0805")
+    (path /564B61A9)
+    (attr smd)
+    (fp_text reference C3 (at 0 -2.1 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 1uF (at 0 2.1 180) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -0.5 0.85) (end 0.5 0.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0.5 -0.85) (end -0.5 -0.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2.3 -1) (end 2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 -1) (end -2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 1) (end 2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 -1) (end 2.3 -1) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -1.25 0 180) (size 1.5 1.25) (layers F.Cu F.Paste F.Mask)
+      (net 1 VCC))
+    (pad 2 smd rect (at 1.25 0 180) (size 1.5 1.25) (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (model Capacitors_SMD.3dshapes/C_0805_HandSoldering.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitors_SMD:C_0805_HandSoldering (layer F.Cu) (tedit 541A9B8D) (tstamp 564B5075)
+    (at 193.04 86.36 180)
+    (descr "Capacitor SMD 0805, hand soldering")
+    (tags "capacitor 0805")
+    (path /564B61EC)
+    (attr smd)
+    (fp_text reference C4 (at 0 -2.1 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 1uF (at 0 2.1 180) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -0.5 0.85) (end 0.5 0.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0.5 -0.85) (end -0.5 -0.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2.3 -1) (end 2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 -1) (end -2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 1) (end 2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 -1) (end 2.3 -1) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -1.25 0 180) (size 1.5 1.25) (layers F.Cu F.Paste F.Mask)
+      (net 1 VCC))
+    (pad 2 smd rect (at 1.25 0 180) (size 1.5 1.25) (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (model Capacitors_SMD.3dshapes/C_0805_HandSoldering.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitors_SMD:C_0805_HandSoldering (layer F.Cu) (tedit 541A9B8D) (tstamp 564B507B)
+    (at 157.48 106.68 270)
+    (descr "Capacitor SMD 0805, hand soldering")
+    (tags "capacitor 0805")
+    (path /564B6E07)
+    (attr smd)
+    (fp_text reference C5 (at 0 -2.1 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 1uF (at 0 2.1 270) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -0.5 0.85) (end 0.5 0.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0.5 -0.85) (end -0.5 -0.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2.3 -1) (end 2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 -1) (end -2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 1) (end 2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 -1) (end 2.3 -1) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -1.25 0 270) (size 1.5 1.25) (layers F.Cu F.Paste F.Mask)
+      (net 3 VPP))
+    (pad 2 smd rect (at 1.25 0 270) (size 1.5 1.25) (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (model Capacitors_SMD.3dshapes/C_0805_HandSoldering.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitors_SMD:C_0805_HandSoldering (layer F.Cu) (tedit 541A9B8D) (tstamp 564B5081)
+    (at 102.87 106.66 270)
+    (descr "Capacitor SMD 0805, hand soldering")
+    (tags "capacitor 0805")
+    (path /564B6E0E)
+    (attr smd)
+    (fp_text reference C6 (at 0 -2.1 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 1uF (at 0 2.1 270) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -0.5 0.85) (end 0.5 0.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0.5 -0.85) (end -0.5 -0.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2.3 -1) (end 2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 -1) (end -2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 1) (end 2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 -1) (end 2.3 -1) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -1.25 0 270) (size 1.5 1.25) (layers F.Cu F.Paste F.Mask)
+      (net 3 VPP))
+    (pad 2 smd rect (at 1.25 0 270) (size 1.5 1.25) (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (model Capacitors_SMD.3dshapes/C_0805_HandSoldering.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitors_SMD:C_0805_HandSoldering (layer F.Cu) (tedit 541A9B8D) (tstamp 564B5087)
+    (at 129.54 106.68 270)
+    (descr "Capacitor SMD 0805, hand soldering")
+    (tags "capacitor 0805")
+    (path /564B6E15)
+    (attr smd)
+    (fp_text reference C7 (at 0 -2.1 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 1uF (at 0 2.1 270) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -0.5 0.85) (end 0.5 0.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0.5 -0.85) (end -0.5 -0.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2.3 -1) (end 2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 -1) (end -2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 1) (end 2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 -1) (end 2.3 -1) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -1.25 0 270) (size 1.5 1.25) (layers F.Cu F.Paste F.Mask)
+      (net 3 VPP))
+    (pad 2 smd rect (at 1.25 0 270) (size 1.5 1.25) (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (model Capacitors_SMD.3dshapes/C_0805_HandSoldering.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitors_SMD:C_0805_HandSoldering (layer F.Cu) (tedit 541A9B8D) (tstamp 564B508D)
+    (at 185.42 106.68 270)
+    (descr "Capacitor SMD 0805, hand soldering")
+    (tags "capacitor 0805")
+    (path /564B6E1C)
+    (attr smd)
+    (fp_text reference C8 (at 0 -2.1 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 1uF (at 0 2.1 270) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -0.5 0.85) (end 0.5 0.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0.5 -0.85) (end -0.5 -0.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2.3 -1) (end 2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 -1) (end -2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 1) (end 2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 -1) (end 2.3 -1) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -1.25 0 270) (size 1.5 1.25) (layers F.Cu F.Paste F.Mask)
+      (net 3 VPP))
+    (pad 2 smd rect (at 1.25 0 270) (size 1.5 1.25) (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (model Capacitors_SMD.3dshapes/C_0805_HandSoldering.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Socket_Strips:Socket_Strip_Straight_2x08 (layer F.Cu) (tedit 0) (tstamp 564B50A1)
+    (at 106.68 102.87)
+    (descr "Through hole socket strip")
+    (tags "socket strip")
+    (path /564B4E7E)
+    (fp_text reference P2 (at 0 -5.1) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_02X08 (at 0 -3.1) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.55 -1.55) (end -1.55 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 1.27 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.27 1.27) (end 1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.55) (end -1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.27 3.81) (end -1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 19.05 3.81) (end 19.05 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 -1.27) (end 19.05 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 19.05 3.81) (end -1.27 3.81) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.75 4.3) (end 19.55 4.3) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end 19.55 -1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 19.55 -1.75) (end 19.55 4.3) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end -1.75 4.3) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 4 /Q0))
+    (pad 2 thru_hole oval (at 0 2.54) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 VPP))
+    (pad 3 thru_hole oval (at 2.54 0) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 5 /Q1))
+    (pad 4 thru_hole oval (at 2.54 2.54) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 VPP))
+    (pad 5 thru_hole oval (at 5.08 0) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 6 /Q2))
+    (pad 6 thru_hole oval (at 5.08 2.54) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 VPP))
+    (pad 7 thru_hole oval (at 7.62 0) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 7 /Q3))
+    (pad 8 thru_hole oval (at 7.62 2.54) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 VPP))
+    (pad 9 thru_hole oval (at 10.16 0) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 8 /Q4))
+    (pad 10 thru_hole oval (at 10.16 2.54) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 VPP))
+    (pad 11 thru_hole oval (at 12.7 0) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 9 /Q5))
+    (pad 12 thru_hole oval (at 12.7 2.54) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 VPP))
+    (pad 13 thru_hole oval (at 15.24 0) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 10 /Q6))
+    (pad 14 thru_hole oval (at 15.24 2.54) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 VPP))
+    (pad 15 thru_hole oval (at 17.78 0) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 11 /Q7))
+    (pad 16 thru_hole oval (at 17.78 2.54) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 VPP))
+    (model Socket_Strips.3dshapes/Socket_Strip_Straight_2x08.wrl
+      (offset (xyz 8.889999866485596 -1.269999980926514 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 180))
+    )
+  )
+
+  (module Socket_Strips:Socket_Strip_Straight_1x08 (layer F.Cu) (tedit 0) (tstamp 564B50AD)
+    (at 106.68 107.95)
+    (descr "Through hole socket strip")
+    (tags "socket strip")
+    (path /564B57F1)
+    (fp_text reference P3 (at 0 -5.1) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_01X08 (at 0 -3.1) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.55 -1.55) (end -1.55 1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.55) (end -1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 1.27 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.55 1.55) (end 0 1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 19.05 -1.27) (end 1.27 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 19.05 1.27) (end 19.05 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 19.05 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.75 1.75) (end 19.55 1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end 19.55 -1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 19.55 -1.75) (end 19.55 1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end -1.75 1.75) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 2 thru_hole oval (at 2.54 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 3 thru_hole oval (at 5.08 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 7.62 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 5 thru_hole oval (at 10.16 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 6 thru_hole oval (at 12.7 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 7 thru_hole oval (at 15.24 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 8 thru_hole oval (at 17.78 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (model Socket_Strips.3dshapes/Socket_Strip_Straight_1x08.wrl
+      (offset (xyz 8.889999866485596 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 180))
+    )
+  )
+
+  (module Socket_Strips:Socket_Strip_Straight_2x08 (layer F.Cu) (tedit 0) (tstamp 564B50C1)
+    (at 134.62 102.87)
+    (descr "Through hole socket strip")
+    (tags "socket strip")
+    (path /564B538D)
+    (fp_text reference P5 (at 0 -5.1) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_02X08 (at 0 -3.1) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.55 -1.55) (end -1.55 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 1.27 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.27 1.27) (end 1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.55) (end -1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.27 3.81) (end -1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 19.05 3.81) (end 19.05 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 -1.27) (end 19.05 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 19.05 3.81) (end -1.27 3.81) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.75 4.3) (end 19.55 4.3) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end 19.55 -1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 19.55 -1.75) (end 19.55 4.3) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end -1.75 4.3) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 12 /Q8))
+    (pad 2 thru_hole oval (at 0 2.54) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 VPP))
+    (pad 3 thru_hole oval (at 2.54 0) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 13 /Q9))
+    (pad 4 thru_hole oval (at 2.54 2.54) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 VPP))
+    (pad 5 thru_hole oval (at 5.08 0) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 14 /Q10))
+    (pad 6 thru_hole oval (at 5.08 2.54) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 VPP))
+    (pad 7 thru_hole oval (at 7.62 0) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 15 /Q11))
+    (pad 8 thru_hole oval (at 7.62 2.54) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 VPP))
+    (pad 9 thru_hole oval (at 10.16 0) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 16 /Q12))
+    (pad 10 thru_hole oval (at 10.16 2.54) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 VPP))
+    (pad 11 thru_hole oval (at 12.7 0) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 17 /Q13))
+    (pad 12 thru_hole oval (at 12.7 2.54) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 VPP))
+    (pad 13 thru_hole oval (at 15.24 0) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 18 /Q14))
+    (pad 14 thru_hole oval (at 15.24 2.54) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 VPP))
+    (pad 15 thru_hole oval (at 17.78 0) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 19 /Q15))
+    (pad 16 thru_hole oval (at 17.78 2.54) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 VPP))
+    (model Socket_Strips.3dshapes/Socket_Strip_Straight_2x08.wrl
+      (offset (xyz 8.889999866485596 -1.269999980926514 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 180))
+    )
+  )
+
+  (module Socket_Strips:Socket_Strip_Straight_1x08 (layer F.Cu) (tedit 0) (tstamp 564B50CD)
+    (at 134.62 107.95)
+    (descr "Through hole socket strip")
+    (tags "socket strip")
+    (path /564B5EDC)
+    (fp_text reference P6 (at 0 -5.1) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_01X08 (at 0 -3.1) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.55 -1.55) (end -1.55 1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.55) (end -1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 1.27 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.55 1.55) (end 0 1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 19.05 -1.27) (end 1.27 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 19.05 1.27) (end 19.05 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 19.05 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.75 1.75) (end 19.55 1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end 19.55 -1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 19.55 -1.75) (end 19.55 1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end -1.75 1.75) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 2 thru_hole oval (at 2.54 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 3 thru_hole oval (at 5.08 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 7.62 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 5 thru_hole oval (at 10.16 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 6 thru_hole oval (at 12.7 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 7 thru_hole oval (at 15.24 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 8 thru_hole oval (at 17.78 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (model Socket_Strips.3dshapes/Socket_Strip_Straight_1x08.wrl
+      (offset (xyz 8.889999866485596 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 180))
+    )
+  )
+
+  (module Socket_Strips:Socket_Strip_Straight_1x05 (layer F.Cu) (tedit 0) (tstamp 564B50D6)
+    (at 101.6 80.01 270)
+    (descr "Through hole socket strip")
+    (tags "socket strip")
+    (path /564B4C2F)
+    (fp_text reference P7 (at 0 -5.1 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value INPUT (at 0 -3.1 270) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.55 -1.55) (end -1.55 1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.55) (end -1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 1.27 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.55 1.55) (end 0 1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 11.43 -1.27) (end 1.27 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 11.43 1.27) (end 11.43 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 11.43 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.75 1.75) (end 11.95 1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end 11.95 -1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 11.95 -1.75) (end 11.95 1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end -1.75 1.75) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0 270) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 1 VCC))
+    (pad 2 thru_hole oval (at 2.54 0 270) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 20 /BCK))
+    (pad 3 thru_hole oval (at 5.08 0 270) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 21 /WCK))
+    (pad 4 thru_hole oval (at 7.62 0 270) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 22 /SDI))
+    (pad 5 thru_hole oval (at 10.16 0 270) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (model Socket_Strips.3dshapes/Socket_Strip_Straight_1x05.wrl
+      (offset (xyz 5.079999923706055 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 180))
+    )
+  )
+
+  (module Socket_Strips:Socket_Strip_Straight_2x08 (layer F.Cu) (tedit 0) (tstamp 564B50EA)
+    (at 162.56 102.87)
+    (descr "Through hole socket strip")
+    (tags "socket strip")
+    (path /564B54A0)
+    (fp_text reference P9 (at 0 -5.1) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_02X08 (at 0 -3.1) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.55 -1.55) (end -1.55 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 1.27 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.27 1.27) (end 1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.55) (end -1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.27 3.81) (end -1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 19.05 3.81) (end 19.05 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 -1.27) (end 19.05 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 19.05 3.81) (end -1.27 3.81) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.75 4.3) (end 19.55 4.3) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end 19.55 -1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 19.55 -1.75) (end 19.55 4.3) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end -1.75 4.3) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 23 /Q16))
+    (pad 2 thru_hole oval (at 0 2.54) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 VPP))
+    (pad 3 thru_hole oval (at 2.54 0) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 24 /Q17))
+    (pad 4 thru_hole oval (at 2.54 2.54) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 VPP))
+    (pad 5 thru_hole oval (at 5.08 0) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 25 /Q18))
+    (pad 6 thru_hole oval (at 5.08 2.54) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 VPP))
+    (pad 7 thru_hole oval (at 7.62 0) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 26 /Q19))
+    (pad 8 thru_hole oval (at 7.62 2.54) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 VPP))
+    (pad 9 thru_hole oval (at 10.16 0) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 27 /Q20))
+    (pad 10 thru_hole oval (at 10.16 2.54) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 VPP))
+    (pad 11 thru_hole oval (at 12.7 0) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 28 /Q21))
+    (pad 12 thru_hole oval (at 12.7 2.54) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 VPP))
+    (pad 13 thru_hole oval (at 15.24 0) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 29 /Q22))
+    (pad 14 thru_hole oval (at 15.24 2.54) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 VPP))
+    (pad 15 thru_hole oval (at 17.78 0) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 30 /Q23))
+    (pad 16 thru_hole oval (at 17.78 2.54) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 VPP))
+    (model Socket_Strips.3dshapes/Socket_Strip_Straight_2x08.wrl
+      (offset (xyz 8.889999866485596 -1.269999980926514 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 180))
+    )
+  )
+
+  (module Socket_Strips:Socket_Strip_Straight_1x05 (layer F.Cu) (tedit 0) (tstamp 564B50F3)
+    (at 213.36 80.01 270)
+    (descr "Through hole socket strip")
+    (tags "socket strip")
+    (path /564A5E7D)
+    (fp_text reference P10 (at 0 -5.1 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value EXPANSION (at 0 -3.1 270) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.55 -1.55) (end -1.55 1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.55) (end -1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 1.27 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.55 1.55) (end 0 1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 11.43 -1.27) (end 1.27 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 11.43 1.27) (end 11.43 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 11.43 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.75 1.75) (end 11.95 1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end 11.95 -1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 11.95 -1.75) (end 11.95 1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end -1.75 1.75) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0 270) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 1 VCC))
+    (pad 2 thru_hole oval (at 2.54 0 270) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 20 /BCK))
+    (pad 3 thru_hole oval (at 5.08 0 270) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 21 /WCK))
+    (pad 4 thru_hole oval (at 7.62 0 270) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 31 /SDO))
+    (pad 5 thru_hole oval (at 10.16 0 270) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (model Socket_Strips.3dshapes/Socket_Strip_Straight_1x05.wrl
+      (offset (xyz 5.079999923706055 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 180))
+    )
+  )
+
+  (module Socket_Strips:Socket_Strip_Straight_1x08 (layer F.Cu) (tedit 0) (tstamp 564B50FF)
+    (at 162.56 107.95)
+    (descr "Through hole socket strip")
+    (tags "socket strip")
+    (path /564B5F8D)
+    (fp_text reference P11 (at 0 -5.1) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_01X08 (at 0 -3.1) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.55 -1.55) (end -1.55 1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.55) (end -1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 1.27 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.55 1.55) (end 0 1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 19.05 -1.27) (end 1.27 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 19.05 1.27) (end 19.05 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 19.05 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.75 1.75) (end 19.55 1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end 19.55 -1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 19.55 -1.75) (end 19.55 1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end -1.75 1.75) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 2 thru_hole oval (at 2.54 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 3 thru_hole oval (at 5.08 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 7.62 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 5 thru_hole oval (at 10.16 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 6 thru_hole oval (at 12.7 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 7 thru_hole oval (at 15.24 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 8 thru_hole oval (at 17.78 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (model Socket_Strips.3dshapes/Socket_Strip_Straight_1x08.wrl
+      (offset (xyz 8.889999866485596 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 180))
+    )
+  )
+
+  (module Socket_Strips:Socket_Strip_Straight_2x08 (layer F.Cu) (tedit 0) (tstamp 564B5113)
+    (at 190.5 102.87)
+    (descr "Through hole socket strip")
+    (tags "socket strip")
+    (path /564B5640)
+    (fp_text reference P14 (at 0 -5.1) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_02X08 (at 0 -3.1) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.55 -1.55) (end -1.55 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 1.27 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.27 1.27) (end 1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.55) (end -1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.27 3.81) (end -1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 19.05 3.81) (end 19.05 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 -1.27) (end 19.05 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 19.05 3.81) (end -1.27 3.81) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.75 4.3) (end 19.55 4.3) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end 19.55 -1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 19.55 -1.75) (end 19.55 4.3) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end -1.75 4.3) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 32 /Q24))
+    (pad 2 thru_hole oval (at 0 2.54) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 VPP))
+    (pad 3 thru_hole oval (at 2.54 0) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 33 /Q25))
+    (pad 4 thru_hole oval (at 2.54 2.54) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 VPP))
+    (pad 5 thru_hole oval (at 5.08 0) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 34 /Q26))
+    (pad 6 thru_hole oval (at 5.08 2.54) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 VPP))
+    (pad 7 thru_hole oval (at 7.62 0) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 35 /Q27))
+    (pad 8 thru_hole oval (at 7.62 2.54) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 VPP))
+    (pad 9 thru_hole oval (at 10.16 0) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 36 /Q28))
+    (pad 10 thru_hole oval (at 10.16 2.54) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 VPP))
+    (pad 11 thru_hole oval (at 12.7 0) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 37 /Q29))
+    (pad 12 thru_hole oval (at 12.7 2.54) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 VPP))
+    (pad 13 thru_hole oval (at 15.24 0) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 38 /Q30))
+    (pad 14 thru_hole oval (at 15.24 2.54) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 VPP))
+    (pad 15 thru_hole oval (at 17.78 0) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 39 /Q31))
+    (pad 16 thru_hole oval (at 17.78 2.54) (size 1.5 1.5) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 VPP))
+    (model Socket_Strips.3dshapes/Socket_Strip_Straight_2x08.wrl
+      (offset (xyz 8.889999866485596 -1.269999980926514 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 180))
+    )
+  )
+
+  (module Socket_Strips:Socket_Strip_Straight_1x08 (layer F.Cu) (tedit 0) (tstamp 564B511F)
+    (at 190.5 107.95)
+    (descr "Through hole socket strip")
+    (tags "socket strip")
+    (path /564B600B)
+    (fp_text reference P15 (at 0 -5.1) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_01X08 (at 0 -3.1) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.55 -1.55) (end -1.55 1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.55) (end -1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 1.27 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.55 1.55) (end 0 1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 19.05 -1.27) (end 1.27 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 19.05 1.27) (end 19.05 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 19.05 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.75 1.75) (end 19.55 1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end 19.55 -1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 19.55 -1.75) (end 19.55 1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end -1.75 1.75) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 2 thru_hole oval (at 2.54 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 3 thru_hole oval (at 5.08 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 7.62 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 5 thru_hole oval (at 10.16 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 6 thru_hole oval (at 12.7 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 7 thru_hole oval (at 15.24 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 8 thru_hole oval (at 17.78 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (model Socket_Strips.3dshapes/Socket_Strip_Straight_1x08.wrl
+      (offset (xyz 8.889999866485596 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 180))
+    )
+  )
+
+  (module SMD_Packages:SO-16-N (layer F.Cu) (tedit 0) (tstamp 564B5133)
+    (at 116.205 92.075)
+    (descr "Module CMS SOJ 16 pins large")
+    (tags "CMS SOJ")
+    (path /564A450E)
+    (attr smd)
+    (fp_text reference U1 (at 0.127 -1.27) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 74HC595 (at 0 1.27) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -5.588 -2.286) (end 5.588 -2.286) (layer F.SilkS) (width 0.15))
+    (fp_line (start -5.588 2.286) (end -5.588 -2.286) (layer F.SilkS) (width 0.15))
+    (fp_line (start 5.588 2.286) (end -5.588 2.286) (layer F.SilkS) (width 0.15))
+    (fp_line (start 5.588 -2.286) (end 5.588 2.286) (layer F.SilkS) (width 0.15))
+    (fp_line (start -4.826 0.762) (end -5.588 0.762) (layer F.SilkS) (width 0.15))
+    (fp_line (start -4.826 -0.762) (end -4.826 0.762) (layer F.SilkS) (width 0.15))
+    (fp_line (start -5.588 -0.762) (end -4.826 -0.762) (layer F.SilkS) (width 0.15))
+    (pad 16 smd rect (at -4.445 -3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 1 VCC))
+    (pad 14 smd rect (at -1.905 -3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 22 /SDI))
+    (pad 13 smd rect (at -0.635 -3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (pad 12 smd rect (at 0.635 -3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 21 /WCK))
+    (pad 11 smd rect (at 1.905 -3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 20 /BCK))
+    (pad 10 smd rect (at 3.175 -3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 1 VCC))
+    (pad 9 smd rect (at 4.445 -3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 40 "Net-(U1-Pad9)"))
+    (pad 8 smd rect (at 4.445 3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (pad 7 smd rect (at 3.175 3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 11 /Q7))
+    (pad 6 smd rect (at 1.905 3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 10 /Q6))
+    (pad 5 smd rect (at 0.635 3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 9 /Q5))
+    (pad 4 smd rect (at -0.635 3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 8 /Q4))
+    (pad 3 smd rect (at -1.905 3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 7 /Q3))
+    (pad 2 smd rect (at -3.175 3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 6 /Q2))
+    (pad 1 smd rect (at -4.445 3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 5 /Q1))
+    (pad 15 smd rect (at -3.175 -3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 4 /Q0))
+    (model SMD_Packages.3dshapes/SO-16-N.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.5 0.4 0.5))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SMD_Packages:SO-16-N (layer F.Cu) (tedit 0) (tstamp 564B5147)
+    (at 144.145 92.075)
+    (descr "Module CMS SOJ 16 pins large")
+    (tags "CMS SOJ")
+    (path /564A4AF6)
+    (attr smd)
+    (fp_text reference U2 (at 0.127 -1.27) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 74HC595 (at 0 1.27) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -5.588 -2.286) (end 5.588 -2.286) (layer F.SilkS) (width 0.15))
+    (fp_line (start -5.588 2.286) (end -5.588 -2.286) (layer F.SilkS) (width 0.15))
+    (fp_line (start 5.588 2.286) (end -5.588 2.286) (layer F.SilkS) (width 0.15))
+    (fp_line (start 5.588 -2.286) (end 5.588 2.286) (layer F.SilkS) (width 0.15))
+    (fp_line (start -4.826 0.762) (end -5.588 0.762) (layer F.SilkS) (width 0.15))
+    (fp_line (start -4.826 -0.762) (end -4.826 0.762) (layer F.SilkS) (width 0.15))
+    (fp_line (start -5.588 -0.762) (end -4.826 -0.762) (layer F.SilkS) (width 0.15))
+    (pad 16 smd rect (at -4.445 -3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 1 VCC))
+    (pad 14 smd rect (at -1.905 -3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 40 "Net-(U1-Pad9)"))
+    (pad 13 smd rect (at -0.635 -3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (pad 12 smd rect (at 0.635 -3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 21 /WCK))
+    (pad 11 smd rect (at 1.905 -3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 20 /BCK))
+    (pad 10 smd rect (at 3.175 -3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 1 VCC))
+    (pad 9 smd rect (at 4.445 -3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 41 "Net-(U2-Pad9)"))
+    (pad 8 smd rect (at 4.445 3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (pad 7 smd rect (at 3.175 3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 19 /Q15))
+    (pad 6 smd rect (at 1.905 3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 18 /Q14))
+    (pad 5 smd rect (at 0.635 3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 17 /Q13))
+    (pad 4 smd rect (at -0.635 3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 16 /Q12))
+    (pad 3 smd rect (at -1.905 3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 15 /Q11))
+    (pad 2 smd rect (at -3.175 3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 14 /Q10))
+    (pad 1 smd rect (at -4.445 3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 13 /Q9))
+    (pad 15 smd rect (at -3.175 -3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 12 /Q8))
+    (model SMD_Packages.3dshapes/SO-16-N.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.5 0.4 0.5))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SMD_Packages:SO-16-N (layer F.Cu) (tedit 0) (tstamp 564B515B)
+    (at 172.085 92.075)
+    (descr "Module CMS SOJ 16 pins large")
+    (tags "CMS SOJ")
+    (path /564A4B89)
+    (attr smd)
+    (fp_text reference U3 (at 0.127 -1.27) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 74HC595 (at 0 1.27) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -5.588 -2.286) (end 5.588 -2.286) (layer F.SilkS) (width 0.15))
+    (fp_line (start -5.588 2.286) (end -5.588 -2.286) (layer F.SilkS) (width 0.15))
+    (fp_line (start 5.588 2.286) (end -5.588 2.286) (layer F.SilkS) (width 0.15))
+    (fp_line (start 5.588 -2.286) (end 5.588 2.286) (layer F.SilkS) (width 0.15))
+    (fp_line (start -4.826 0.762) (end -5.588 0.762) (layer F.SilkS) (width 0.15))
+    (fp_line (start -4.826 -0.762) (end -4.826 0.762) (layer F.SilkS) (width 0.15))
+    (fp_line (start -5.588 -0.762) (end -4.826 -0.762) (layer F.SilkS) (width 0.15))
+    (pad 16 smd rect (at -4.445 -3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 1 VCC))
+    (pad 14 smd rect (at -1.905 -3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 41 "Net-(U2-Pad9)"))
+    (pad 13 smd rect (at -0.635 -3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (pad 12 smd rect (at 0.635 -3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 21 /WCK))
+    (pad 11 smd rect (at 1.905 -3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 20 /BCK))
+    (pad 10 smd rect (at 3.175 -3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 1 VCC))
+    (pad 9 smd rect (at 4.445 -3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 42 "Net-(U3-Pad9)"))
+    (pad 8 smd rect (at 4.445 3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (pad 7 smd rect (at 3.175 3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 30 /Q23))
+    (pad 6 smd rect (at 1.905 3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 29 /Q22))
+    (pad 5 smd rect (at 0.635 3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 28 /Q21))
+    (pad 4 smd rect (at -0.635 3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 27 /Q20))
+    (pad 3 smd rect (at -1.905 3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 26 /Q19))
+    (pad 2 smd rect (at -3.175 3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 25 /Q18))
+    (pad 1 smd rect (at -4.445 3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 24 /Q17))
+    (pad 15 smd rect (at -3.175 -3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 23 /Q16))
+    (model SMD_Packages.3dshapes/SO-16-N.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.5 0.4 0.5))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SMD_Packages:SO-16-N (layer F.Cu) (tedit 0) (tstamp 564B516F)
+    (at 200.025 92.075)
+    (descr "Module CMS SOJ 16 pins large")
+    (tags "CMS SOJ")
+    (path /564A4BAA)
+    (attr smd)
+    (fp_text reference U4 (at 0.127 -1.27) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 74HC595 (at 0 1.27) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -5.588 -2.286) (end 5.588 -2.286) (layer F.SilkS) (width 0.15))
+    (fp_line (start -5.588 2.286) (end -5.588 -2.286) (layer F.SilkS) (width 0.15))
+    (fp_line (start 5.588 2.286) (end -5.588 2.286) (layer F.SilkS) (width 0.15))
+    (fp_line (start 5.588 -2.286) (end 5.588 2.286) (layer F.SilkS) (width 0.15))
+    (fp_line (start -4.826 0.762) (end -5.588 0.762) (layer F.SilkS) (width 0.15))
+    (fp_line (start -4.826 -0.762) (end -4.826 0.762) (layer F.SilkS) (width 0.15))
+    (fp_line (start -5.588 -0.762) (end -4.826 -0.762) (layer F.SilkS) (width 0.15))
+    (pad 16 smd rect (at -4.445 -3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 1 VCC))
+    (pad 14 smd rect (at -1.905 -3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 42 "Net-(U3-Pad9)"))
+    (pad 13 smd rect (at -0.635 -3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (pad 12 smd rect (at 0.635 -3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 21 /WCK))
+    (pad 11 smd rect (at 1.905 -3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 20 /BCK))
+    (pad 10 smd rect (at 3.175 -3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 1 VCC))
+    (pad 9 smd rect (at 4.445 -3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 31 /SDO))
+    (pad 8 smd rect (at 4.445 3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (pad 7 smd rect (at 3.175 3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 39 /Q31))
+    (pad 6 smd rect (at 1.905 3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 38 /Q30))
+    (pad 5 smd rect (at 0.635 3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 37 /Q29))
+    (pad 4 smd rect (at -0.635 3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 36 /Q28))
+    (pad 3 smd rect (at -1.905 3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 35 /Q27))
+    (pad 2 smd rect (at -3.175 3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 34 /Q26))
+    (pad 1 smd rect (at -4.445 3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 33 /Q25))
+    (pad 15 smd rect (at -3.175 -3.175) (size 0.508 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 32 /Q24))
+    (model SMD_Packages.3dshapes/SO-16-N.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.5 0.4 0.5))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Socket_Strips:Socket_Strip_Straight_1x02 (layer F.Cu) (tedit 54E9F75E) (tstamp 564B5AA8)
+    (at 213.36 102.87 270)
+    (descr "Through hole socket strip")
+    (tags "socket strip")
+    (path /564B75C0)
+    (fp_text reference P12 (at 0 -5.1 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_01X02 (at 0 -3.1 270) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.81 -1.27) (end 3.81 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 -1.27) (end 3.81 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.55 -1.55) (end -1.55 1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.55) (end -1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 1.27 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.75 1.75) (end 4.3 1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end 4.3 -1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 4.3 -1.75) (end 4.3 1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end -1.75 1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.81 1.27) (end 1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.55 1.55) (end 0 1.55) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole rect (at 0 0 270) (size 2.032 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 VPP))
+    (pad 2 thru_hole oval (at 2.54 0 270) (size 2.032 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (model Socket_Strips.3dshapes/Socket_Strip_Straight_1x02.wrl
+      (offset (xyz 1.269999980926514 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 180))
+    )
+  )
+
+  (module Socket_Strips:Socket_Strip_Straight_1x08 (layer F.Cu) (tedit 0) (tstamp 58311EDC)
+    (at 106.68 100.33)
+    (descr "Through hole socket strip")
+    (tags "socket strip")
+    (path /58314D9B)
+    (fp_text reference P1 (at 0 -5.1) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_01X08 (at 0 -3.1) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.55 -1.55) (end -1.55 1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.55) (end -1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 1.27 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.55 1.55) (end 0 1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 19.05 -1.27) (end 1.27 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 19.05 1.27) (end 19.05 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 19.05 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.75 1.75) (end 19.55 1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end 19.55 -1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 19.55 -1.75) (end 19.55 1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end -1.75 1.75) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 2 thru_hole oval (at 2.54 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 3 thru_hole oval (at 5.08 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 7.62 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 5 thru_hole oval (at 10.16 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 6 thru_hole oval (at 12.7 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 7 thru_hole oval (at 15.24 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 8 thru_hole oval (at 17.78 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (model Socket_Strips.3dshapes/Socket_Strip_Straight_1x08.wrl
+      (offset (xyz 8.889999866485596 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 180))
+    )
+  )
+
+  (module Socket_Strips:Socket_Strip_Straight_1x08 (layer F.Cu) (tedit 0) (tstamp 58311EE8)
+    (at 134.62 100.33)
+    (descr "Through hole socket strip")
+    (tags "socket strip")
+    (path /58314CE9)
+    (fp_text reference P4 (at 0 -5.1) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_01X08 (at 0 -3.1) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.55 -1.55) (end -1.55 1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.55) (end -1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 1.27 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.55 1.55) (end 0 1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 19.05 -1.27) (end 1.27 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 19.05 1.27) (end 19.05 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 19.05 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.75 1.75) (end 19.55 1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end 19.55 -1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 19.55 -1.75) (end 19.55 1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end -1.75 1.75) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 2 thru_hole oval (at 2.54 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 3 thru_hole oval (at 5.08 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 7.62 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 5 thru_hole oval (at 10.16 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 6 thru_hole oval (at 12.7 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 7 thru_hole oval (at 15.24 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 8 thru_hole oval (at 17.78 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (model Socket_Strips.3dshapes/Socket_Strip_Straight_1x08.wrl
+      (offset (xyz 8.889999866485596 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 180))
+    )
+  )
+
+  (module Socket_Strips:Socket_Strip_Straight_1x08 (layer F.Cu) (tedit 0) (tstamp 58311EF4)
+    (at 162.56 100.33)
+    (descr "Through hole socket strip")
+    (tags "socket strip")
+    (path /58314A63)
+    (fp_text reference P8 (at 0 -5.1) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_01X08 (at 0 -3.1) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.55 -1.55) (end -1.55 1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.55) (end -1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 1.27 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.55 1.55) (end 0 1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 19.05 -1.27) (end 1.27 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 19.05 1.27) (end 19.05 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 19.05 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.75 1.75) (end 19.55 1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end 19.55 -1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 19.55 -1.75) (end 19.55 1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end -1.75 1.75) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 2 thru_hole oval (at 2.54 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 3 thru_hole oval (at 5.08 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 7.62 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 5 thru_hole oval (at 10.16 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 6 thru_hole oval (at 12.7 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 7 thru_hole oval (at 15.24 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 8 thru_hole oval (at 17.78 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (model Socket_Strips.3dshapes/Socket_Strip_Straight_1x08.wrl
+      (offset (xyz 8.889999866485596 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 180))
+    )
+  )
+
+  (module Socket_Strips:Socket_Strip_Straight_1x08 (layer F.Cu) (tedit 0) (tstamp 58311F00)
+    (at 190.5 100.33)
+    (descr "Through hole socket strip")
+    (tags "socket strip")
+    (path /58313DDE)
+    (fp_text reference P13 (at 0 -5.1) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_01X08 (at 0 -3.1) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.55 -1.55) (end -1.55 1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.55) (end -1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 1.27 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.55 1.55) (end 0 1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 19.05 -1.27) (end 1.27 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 19.05 1.27) (end 19.05 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 19.05 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.75 1.75) (end 19.55 1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end 19.55 -1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 19.55 -1.75) (end 19.55 1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end -1.75 1.75) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 2 thru_hole oval (at 2.54 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 3 thru_hole oval (at 5.08 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 7.62 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 5 thru_hole oval (at 10.16 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 6 thru_hole oval (at 12.7 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 7 thru_hole oval (at 15.24 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 8 thru_hole oval (at 17.78 0) (size 1.5 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (model Socket_Strips.3dshapes/Socket_Strip_Straight_1x08.wrl
+      (offset (xyz 8.889999866485596 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 180))
+    )
+  )
+
+  (gr_line (start 99.06 77.47) (end 215.9 77.47) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 99.06 110.49) (end 99.06 77.47) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 215.9 110.49) (end 99.06 110.49) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 215.9 77.47) (end 215.9 110.49) (layer Edge.Cuts) (width 0.15))
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+)

@@ -1,0 +1,28 @@
+{
+  "board": "BGM111-External-Programmer_BGM111_Programmer",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\BGM111-External-Programmer_BGM111_Programmer\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 2,
+  "segment_count": 19,
+  "approximate_track_length_mm": 63.75,
+  "kicad_drc_violations": 56,
+  "generated_at": "2026-08-18T18:33:01.107945+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 56,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 8,
+      "copper_edge_clearance": 1,
+      "lib_footprint_issues": 4,
+      "silk_edge_clearance": 1,
+      "silk_over_copper": 40,
+      "starved_thermal": 1,
+      "text_height": 1
+    },
+    "by_severity": {
+      "error": 10,
+      "warning": 46
+    }
+  }
+}

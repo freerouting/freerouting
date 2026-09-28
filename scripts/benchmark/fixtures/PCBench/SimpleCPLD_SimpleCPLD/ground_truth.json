@@ -1,0 +1,28 @@
+{
+  "board": "SimpleCPLD_SimpleCPLD",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\SimpleCPLD_SimpleCPLD\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 30,
+  "segment_count": 388,
+  "approximate_track_length_mm": 683.89,
+  "kicad_drc_violations": 142,
+  "generated_at": "2026-08-18T18:24:30.712658+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 142,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 78,
+      "copper_edge_clearance": 3,
+      "invalid_outline": 2,
+      "lib_footprint_issues": 16,
+      "silk_edge_clearance": 2,
+      "solder_mask_bridge": 40,
+      "starved_thermal": 1
+    },
+    "by_severity": {
+      "error": 124,
+      "warning": 18
+    }
+  }
+}

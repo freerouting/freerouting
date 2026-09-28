@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "AVR-ISP_pogo-plug_1.27mm_AVR-ISP_pogo-plug_1.27mm",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 45250,
+      "sha256": "4bf8b4e1a1b16219b2ab7d272d7bc2aa7fa75764b11726af103300fdc75867f3"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 54374,
+      "sha256": "51d619f7b8ae15c48f055eb7c01c5bb05ad94df5c28a8b2968532e8266a46110"
+    },
+    "metadata_json": {
+      "bytes": 560,
+      "sha256": "15f2e1750bb0ded4da4b18a49ea96fac6320aa2da27e00340d4ef7ccc03dbd41"
+    },
+    "final_json": {
+      "bytes": 17630,
+      "sha256": "e869c62d097689b701ab20a212124431ff8a5415443e7642708f9d5b4796e029"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:31:10.928588+00:00"
+  }
+}

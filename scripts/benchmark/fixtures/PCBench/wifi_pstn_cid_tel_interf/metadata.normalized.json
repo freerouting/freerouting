@@ -1,0 +1,56 @@
+{
+  "board_id": "wifi_pstn_cid_tel_interf",
+  "display_name": "wifi_pstn_cid_tel_interf",
+  "pcbench_directory": "PCBs/wifi_pstn_cid_tel_interf",
+  "source": "https://github.com/aniline/wifi_pstn_cid",
+  "author": "aniline",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:47.674000+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 33,
+    "components": 55,
+    "dimensions_mm": {
+      "width": 86.36,
+      "height": 66.04
+    },
+    "area_cm2": 57.03,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 353,
+    "vias": 6,
+    "track_length_mm": 1284.82,
+    "kicad_drc_violations": 117,
+    "kicad_drc_breakdown": {
+      "total_violations": 117,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 2,
+        "lib_footprint_issues": 55,
+        "malformed_courtyard": 6,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 26,
+        "silk_overlap": 25
+      },
+      "by_severity": {
+        "error": 8,
+        "warning": 109
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

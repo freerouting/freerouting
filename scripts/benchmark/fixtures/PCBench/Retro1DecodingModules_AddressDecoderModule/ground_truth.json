@@ -1,0 +1,26 @@
+{
+  "board": "Retro1DecodingModules_AddressDecoderModule",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Retro1DecodingModules_AddressDecoderModule\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 1,
+  "segment_count": 202,
+  "approximate_track_length_mm": 524.99,
+  "kicad_drc_violations": 135,
+  "generated_at": "2026-08-18T18:23:57.145272+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 135,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 52,
+      "copper_edge_clearance": 2,
+      "lib_footprint_issues": 4,
+      "silk_overlap": 65,
+      "text_height": 12
+    },
+    "by_severity": {
+      "error": 54,
+      "warning": 81
+    }
+  }
+}

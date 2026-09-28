@@ -1,0 +1,63 @@
+{
+  "board_id": "DaWeather---Project__autosave-CarteDaWeather",
+  "display_name": "DaWeather---Project__autosave-CarteDaWeather",
+  "pcbench_directory": "PCBs/DaWeather---Project__autosave-CarteDaWeather",
+  "source": "https://github.com/DaWeather/DaWeather---Project",
+  "author": "DaWeather",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:54.266078+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 18,
+    "dimensions_mm": {
+      "width": 55.88,
+      "height": 54.61
+    },
+    "area_cm2": 30.52,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 175,
+    "vias": 0,
+    "track_length_mm": 832.05,
+    "kicad_drc_violations": 79,
+    "kicad_drc_breakdown": {
+      "total_violations": 79,
+      "unconnected_count": 0,
+      "by_type": {
+        "nonmirrored_text_on_back_layer": 8,
+        "silk_edge_clearance": 11,
+        "silk_overlap": 58,
+        "text_on_edge_cuts": 2
+      },
+      "by_severity": {
+        "error": 2,
+        "warning": 77
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.891494+00:00",
+    "elapsed_seconds": 6.03,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 1000.0
+  }
+}

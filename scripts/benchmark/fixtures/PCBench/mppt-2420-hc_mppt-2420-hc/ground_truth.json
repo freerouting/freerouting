@@ -1,0 +1,32 @@
+{
+  "board": "mppt-2420-hc_mppt-2420-hc",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\mppt-2420-hc_mppt-2420-hc\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 282,
+  "segment_count": 1263,
+  "approximate_track_length_mm": 2539.7,
+  "kicad_drc_violations": 241,
+  "generated_at": "2026-08-18T18:20:26.950922+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 241,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 25,
+      "copper_edge_clearance": 4,
+      "courtyards_overlap": 8,
+      "items_not_allowed": 1,
+      "lib_footprint_issues": 117,
+      "lib_footprint_mismatch": 28,
+      "npth_inside_courtyard": 1,
+      "pth_inside_courtyard": 4,
+      "silk_edge_clearance": 6,
+      "silk_overlap": 46,
+      "starved_thermal": 1
+    },
+    "by_severity": {
+      "error": 44,
+      "warning": 197
+    }
+  }
+}

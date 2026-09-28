@@ -1,0 +1,66 @@
+{
+  "board_id": "R1002_R1002",
+  "display_name": "R1002_R1002",
+  "pcbench_directory": "PCBs/R1002_R1002",
+  "source": "https://github.com/pluggee/R1002",
+  "author": "pluggee",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:23:00.910156+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 13,
+    "dimensions_mm": {
+      "width": 47.0,
+      "height": 33.3
+    },
+    "area_cm2": 15.65,
+    "zones": 5
+  },
+  "reference": {
+    "segments": 157,
+    "vias": 14,
+    "track_length_mm": 456.04,
+    "kicad_drc_violations": 136,
+    "kicad_drc_breakdown": {
+      "total_violations": 136,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 79,
+        "copper_edge_clearance": 11,
+        "lib_footprint_issues": 13,
+        "mirrored_text_on_front_layer": 4,
+        "silk_edge_clearance": 11,
+        "silk_over_copper": 10,
+        "solder_mask_bridge": 3,
+        "starved_thermal": 3,
+        "text_height": 2
+      },
+      "by_severity": {
+        "error": 96,
+        "warning": 40
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.082458+00:00",
+    "elapsed_seconds": 38.12,
+    "unrouted_nets": 1,
+    "clearance_violations": 49,
+    "quality_score": 874.41
+  }
+}

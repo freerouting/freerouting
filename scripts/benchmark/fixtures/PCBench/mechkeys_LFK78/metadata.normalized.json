@@ -1,0 +1,65 @@
+{
+  "board_id": "mechkeys_LFK78",
+  "display_name": "mechkeys_LFK78",
+  "pcbench_directory": "PCBs/mechkeys_LFK78",
+  "source": "https://github.com/BalzGuenat/mechkeys",
+  "author": "BalzGuenat",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:38.641894+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 98,
+    "components": 517,
+    "dimensions_mm": {
+      "width": 367.75,
+      "height": 92.5
+    },
+    "area_cm2": 340.17,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 3530,
+    "vias": 340,
+    "track_length_mm": 19219.65,
+    "kicad_drc_violations": 1214,
+    "kicad_drc_breakdown": {
+      "total_violations": 1214,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 7,
+        "clearance": 510,
+        "copper_edge_clearance": 2,
+        "courtyards_overlap": 2,
+        "drill_out_of_range": 199,
+        "hole_clearance": 78,
+        "lib_footprint_issues": 199,
+        "padstack": 7,
+        "pth_inside_courtyard": 15,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 30,
+        "silk_overlap": 17,
+        "solder_mask_bridge": 142,
+        "starved_thermal": 2,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 957,
+        "warning": 257
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "extreme-stress",
+    "plane",
+    "tier-d"
+  ],
+  "tier": "D",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:30:00"
+}

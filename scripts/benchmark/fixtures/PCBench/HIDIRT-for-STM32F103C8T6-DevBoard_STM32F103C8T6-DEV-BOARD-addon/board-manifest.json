@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "HIDIRT-for-STM32F103C8T6-DevBoard_STM32F103C8T6-DEV-BOARD-addon",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 109013,
+      "sha256": "154844c9de4c429e2518ecc534ef01943e7e6d2276043b120a10cde08610cfc4"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 78211,
+      "sha256": "7ffad4918227e1a2c53591ed9fd095817c9e83cc5b4b329d972adfa088295936"
+    },
+    "metadata_json": {
+      "bytes": 605,
+      "sha256": "9b1755e0752bd196d8e3651a3e71271f2d04c11bae5cdac3cb11a0aef21f16f8"
+    },
+    "final_json": {
+      "bytes": 46814,
+      "sha256": "2ef17fe38b5f66e4d85854614b4a366fed9e3300e824dda5ff9ec922e4e12bba"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:56:29.835026+00:00"
+  }
+}

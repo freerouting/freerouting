@@ -1,0 +1,37 @@
+{
+  "board": "ourglass_watch-v4",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\ourglass_watch-v4\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 44,
+  "segment_count": 490,
+  "approximate_track_length_mm": 551.17,
+  "kicad_drc_violations": 545,
+  "generated_at": "2026-08-18T18:21:34.123145+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 545,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 44,
+      "clearance": 172,
+      "copper_edge_clearance": 33,
+      "hole_clearance": 114,
+      "hole_to_hole": 3,
+      "invalid_outline": 5,
+      "lib_footprint_issues": 43,
+      "malformed_courtyard": 1,
+      "shorting_items": 1,
+      "silk_edge_clearance": 5,
+      "silk_over_copper": 29,
+      "silk_overlap": 19,
+      "solder_mask_bridge": 1,
+      "text_height": 38,
+      "text_thickness": 33,
+      "track_dangling": 4
+    },
+    "by_severity": {
+      "error": 371,
+      "warning": 174
+    }
+  }
+}

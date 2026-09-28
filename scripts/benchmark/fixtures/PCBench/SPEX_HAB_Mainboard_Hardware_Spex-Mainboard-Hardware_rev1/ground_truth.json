@@ -1,0 +1,36 @@
+{
+  "board": "SPEX_HAB_Mainboard_Hardware_Spex-Mainboard-Hardware_rev1",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\SPEX_HAB_Mainboard_Hardware_Spex-Mainboard-Hardware_rev1\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 191,
+  "segment_count": 1215,
+  "approximate_track_length_mm": 2610.17,
+  "kicad_drc_violations": 980,
+  "generated_at": "2026-08-18T18:24:52.492301+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 980,
+    "unconnected_count": 4,
+    "by_type": {
+      "annular_width": 189,
+      "clearance": 160,
+      "courtyards_overlap": 1,
+      "hole_clearance": 50,
+      "items_not_allowed": 48,
+      "lib_footprint_issues": 134,
+      "silk_edge_clearance": 16,
+      "silk_over_copper": 45,
+      "silk_overlap": 49,
+      "solder_mask_bridge": 200,
+      "starved_thermal": 3,
+      "text_height": 75,
+      "text_thickness": 2,
+      "track_dangling": 3,
+      "via_dangling": 5
+    },
+    "by_severity": {
+      "error": 651,
+      "warning": 329
+    }
+  }
+}

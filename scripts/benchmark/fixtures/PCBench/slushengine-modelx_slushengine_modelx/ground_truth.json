@@ -1,0 +1,38 @@
+{
+  "board": "slushengine-modelx_slushengine_modelx",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\slushengine-modelx_slushengine_modelx\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 546,
+  "segment_count": 3977,
+  "approximate_track_length_mm": 13730.87,
+  "kicad_drc_violations": 1268,
+  "generated_at": "2026-08-18T19:44:56.112202+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 1268,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 10,
+      "clearance": 507,
+      "copper_edge_clearance": 2,
+      "hole_clearance": 27,
+      "hole_to_hole": 9,
+      "items_not_allowed": 1,
+      "lib_footprint_issues": 199,
+      "padstack": 10,
+      "shorting_items": 18,
+      "silk_edge_clearance": 1,
+      "silk_over_copper": 199,
+      "silk_overlap": 53,
+      "solder_mask_bridge": 18,
+      "text_height": 199,
+      "text_thickness": 1,
+      "track_dangling": 10,
+      "via_dangling": 4
+    },
+    "by_severity": {
+      "error": 583,
+      "warning": 685
+    }
+  }
+}

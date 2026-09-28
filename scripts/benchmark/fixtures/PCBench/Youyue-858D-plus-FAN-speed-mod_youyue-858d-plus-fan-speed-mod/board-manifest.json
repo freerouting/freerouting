@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Youyue-858D-plus-FAN-speed-mod_youyue-858d-plus-fan-speed-mod",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 69169,
+      "sha256": "c43074ae51021eb8e3c47de44c25aef07a3ab476b919eefde2685ee488cc0684"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 88022,
+      "sha256": "b822eb1109769aed433b51d3099e8dad1bbbfb9fc5af2f9c434074cf107f0b08"
+    },
+    "metadata_json": {
+      "bytes": 602,
+      "sha256": "dc2d70973d84c71a6f7ac786d661ce3a1682d82e2c58438c18381f0f1973501c"
+    },
+    "final_json": {
+      "bytes": 29288,
+      "sha256": "cecabb6c2c344be3e8eacf1c45ddf1e1689bb06a9aa4ba181809e9c11a0d5f76"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:59:01.222982+00:00"
+  }
+}

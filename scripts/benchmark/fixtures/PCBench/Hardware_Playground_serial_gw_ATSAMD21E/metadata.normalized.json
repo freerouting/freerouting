@@ -1,0 +1,61 @@
+{
+  "board_id": "Hardware_Playground_serial_gw_ATSAMD21E",
+  "display_name": "Hardware_Playground_serial_gw_ATSAMD21E",
+  "pcbench_directory": "PCBs/Hardware_Playground_serial_gw_ATSAMD21E",
+  "source": "https://github.com/mtiutiu/Hardware_Playground",
+  "author": "mtiutiu",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:21.733695+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 13,
+    "components": 78,
+    "dimensions_mm": {
+      "width": 38.9,
+      "height": 21.2
+    },
+    "area_cm2": 8.25,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 359,
+    "vias": 33,
+    "track_length_mm": 612.18,
+    "kicad_drc_violations": 273,
+    "kicad_drc_breakdown": {
+      "total_violations": 273,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 37,
+        "clearance": 28,
+        "copper_edge_clearance": 22,
+        "courtyards_overlap": 22,
+        "lib_footprint_issues": 41,
+        "pth_inside_courtyard": 2,
+        "silk_over_copper": 3,
+        "solder_mask_bridge": 28,
+        "starved_thermal": 2,
+        "text_height": 88
+      },
+      "by_severity": {
+        "error": 141,
+        "warning": 132
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

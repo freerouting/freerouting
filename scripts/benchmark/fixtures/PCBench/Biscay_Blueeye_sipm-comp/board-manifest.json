@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Biscay_Blueeye_sipm-comp",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 290472,
+      "sha256": "f3b05bfa9a069adfde4c8d1cff75b214781293498891a77d33e357c7534358da"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 193531,
+      "sha256": "37e81cbe5293d07fe67c401d724264d59503c96f7006772e5d8367b5861f7dc8"
+    },
+    "metadata_json": {
+      "bytes": 497,
+      "sha256": "9404db4847eaec179c3e2124c18d1f24cd6edc0c3f8c0ae5ed55d4b09237b8f5"
+    },
+    "final_json": {
+      "bytes": 196214,
+      "sha256": "a584a89584af21e909274c743161e86aaa11ce5aa4f8d2b8901e5ecea3b5c3c5"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:33:25.476425+00:00"
+  }
+}

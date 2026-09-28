@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "cat-trainer_feather32u4_mma8452_pcb",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 79196,
+      "sha256": "c4c9d04403eb5efde06d58ad4dac61ab97494bc58608e75d29420a9e3f5b3333"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 50628,
+      "sha256": "f437d43a2875498c3a393663d8c25a82b70a4c13dc61d50bdb6002fffbe7a6d8"
+    },
+    "metadata_json": {
+      "bytes": 726,
+      "sha256": "1a742b6b2d90aa72930b9c7575ac347519f3f5a628b6704a69cc6c85fc152720"
+    },
+    "final_json": {
+      "bytes": 35222,
+      "sha256": "24baa1710808b416d5ab83e1bad6a8e0f3f3c94a1acb74f532a31b59b27c6c58"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:38:04.401417+00:00"
+  }
+}

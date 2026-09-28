@@ -1,0 +1,25 @@
+{
+  "board": "fan_controller_fan_controller",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\fan_controller_fan_controller\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 23,
+  "segment_count": 288,
+  "approximate_track_length_mm": 534.0,
+  "kicad_drc_violations": 116,
+  "generated_at": "2026-08-18T18:49:10.944797+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 116,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 8,
+      "lib_footprint_issues": 66,
+      "silk_over_copper": 33,
+      "silk_overlap": 9
+    },
+    "by_severity": {
+      "error": 8,
+      "warning": 108
+    }
+  }
+}

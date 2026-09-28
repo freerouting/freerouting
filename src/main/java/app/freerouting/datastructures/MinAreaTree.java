@@ -3,8 +3,10 @@ package app.freerouting.datastructures;
 import app.freerouting.geometry.planar.RegularTileShape;
 import app.freerouting.geometry.planar.ShapeBoundingDirections;
 import app.freerouting.logger.FRLogger;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.locks.Lock;
 
 /**
  * Binary search tree for shapes in the plane. The shapes are stored in the leaves of the tree. The
@@ -16,39 +18,71 @@ import java.util.TreeSet;
  */
 public class MinAreaTree extends ShapeTree {
 
+  /** Reusable traversal stack for overlap queries, isolated per caller thread. */
+  protected final ThreadLocal<ArrayStack<TreeNode>> nodeStack =
+      ThreadLocal.withInitial(() -> new ArrayStack<>(10000));
+
   /** Constructor with a fixed set of directions defining the keys and the surrounding shapes. */
   public MinAreaTree(ShapeBoundingDirections directions) {
     super(directions);
   }
 
-  /** Calculates the objects in this tree, which overlap with shape. */
-  public Set<Leaf> overlaps(RegularTileShape shape) {
-    Set<Leaf> foundOverlaps = new TreeSet<>();
+  /** Calculates the objects in this tree, which overlap with shape, in {@link Leaf} order. */
+  public List<Leaf> overlaps(RegularTileShape shape) {
+    Lock lock = readLock();
+    lock.lock();
+    try {
+      return overlapsUnlocked(shape);
+    } finally {
+      lock.unlock();
+    }
+  }
+
+  /** Calculates overlaps while the read lock is already held by the caller. */
+  protected final List<Leaf> overlapsUnlocked(RegularTileShape shape) {
+    List<Leaf> foundOverlaps = new ArrayList<>();
     if (this.root == null) {
       return foundOverlaps;
     }
-    ArrayStack<TreeNode> nodeStack = new ArrayStack<>(10000);
-    nodeStack.push(this.root);
-    TreeNode currNode;
+    ArrayStack<TreeNode> stack = nodeStack.get();
+    stack.reset();
+    stack.push(this.root);
+    TreeNode currentNode;
     for (; ; ) {
-      currNode = nodeStack.pop();
-      if (currNode == null) {
+      currentNode = stack.pop();
+      if (currentNode == null) {
         break;
       }
-      if (currNode.boundingShape.intersects(shape)) {
-        if (currNode instanceof Leaf leaf) {
+      onNodeVisited();
+      if (currentNode.boundingShape.intersects(shape)) {
+        if (currentNode instanceof Leaf leaf) {
           foundOverlaps.add(leaf);
         } else {
-          nodeStack.push(((InnerNode) currNode).firstChild);
-          nodeStack.push(((InnerNode) currNode).secondChild);
+          stack.push(((InnerNode) currentNode).firstChild);
+          stack.push(((InnerNode) currentNode).secondChild);
         }
       }
     }
+    Collections.sort(foundOverlaps);
     return foundOverlaps;
   }
 
+  /** Extension hook for testing and instrumentation during tree traversal. */
+  protected void onNodeVisited() {}
+
   @Override
   void insert(Leaf leaf) {
+    Lock lock = writeLock();
+    lock.lock();
+    try {
+      insertUnlocked(leaf);
+    } finally {
+      lock.unlock();
+    }
+  }
+
+  /** Inserts a leaf while the write lock is already held. */
+  private void insertUnlocked(Leaf leaf) {
     ++this.leafCount;
 
     // Tree is empty - just insert the new leaf
@@ -62,15 +96,15 @@ public class MinAreaTree extends ShapeTree {
 
     // Construct a new node - whenever a leaf is added so is a new node
     RegularTileShape newBounds = leaf.boundingShape.union(leafToReplace.boundingShape);
-    InnerNode currParent = leafToReplace.parent;
-    InnerNode newNode = new InnerNode(newBounds, currParent);
+    InnerNode currentParent = leafToReplace.parent;
+    InnerNode newNode = new InnerNode(newBounds, currentParent);
 
     if (leafToReplace.parent != null) {
       // Replace the pointer from the parent to the leaf with our new node
-      if (leafToReplace == currParent.firstChild) {
-        currParent.firstChild = newNode;
+      if (leafToReplace == currentParent.firstChild) {
+        currentParent.firstChild = newNode;
       } else {
-        currParent.secondChild = newNode;
+        currentParent.secondChild = newNode;
       }
     }
     // Update the parent pointers of the old leaf and new leaf to point to new node
@@ -86,29 +120,30 @@ public class MinAreaTree extends ShapeTree {
     }
   }
 
-  private Leaf positionLocate(TreeNode currNode, Leaf leafToInsert) {
-    TreeNode node = currNode;
+  private Leaf positionLocate(TreeNode currentNode, Leaf leafToInsert) {
+    TreeNode node = currentNode;
 
     while (!(node instanceof Leaf)) {
-      InnerNode currInnerNode = (InnerNode) node;
-      currInnerNode.boundingShape = leafToInsert.boundingShape.union(currInnerNode.boundingShape);
+      InnerNode currentInnerNode = (InnerNode) node;
+      currentInnerNode.boundingShape =
+          leafToInsert.boundingShape.union(currentInnerNode.boundingShape);
 
       // Choose the child, so that the area increase of that child after taking the union
       // with the shape of leafToInsert is minimal.
 
-      RegularTileShape firstChildShape = currInnerNode.firstChild.boundingShape;
+      RegularTileShape firstChildShape = currentInnerNode.firstChild.boundingShape;
       RegularTileShape unionWithFirstChildShape = leafToInsert.boundingShape.union(firstChildShape);
       double firstAreaIncrease = unionWithFirstChildShape.area() - firstChildShape.area();
 
-      RegularTileShape secondChildShape = currInnerNode.secondChild.boundingShape;
+      RegularTileShape secondChildShape = currentInnerNode.secondChild.boundingShape;
       RegularTileShape unionWithSecondChildShape =
           leafToInsert.boundingShape.union(secondChildShape);
       double secondAreaIncrease = unionWithSecondChildShape.area() - secondChildShape.area();
 
       if (firstAreaIncrease <= secondAreaIncrease) {
-        node = currInnerNode.firstChild;
+        node = currentInnerNode.firstChild;
       } else {
-        node = currInnerNode.secondChild;
+        node = currentInnerNode.secondChild;
       }
     }
     return (Leaf) node;
@@ -117,14 +152,28 @@ public class MinAreaTree extends ShapeTree {
   /** Removes an entry from this tree. */
   @Override
   public void removeLeaf(Leaf leaf) {
+    Lock lock = writeLock();
+    lock.lock();
+    try {
+      removeLeafUnlocked(leaf);
+    } finally {
+      lock.unlock();
+    }
+  }
+
+  /** Removes a leaf while the write lock is already held. */
+  private void removeLeafUnlocked(Leaf leaf) {
     if (leaf == null) {
+      return;
+    }
+    if (leaf.parent == null && root != leaf) {
       return;
     }
     // remove the leaf node
     InnerNode parent = leaf.parent;
-    leaf.boundingShape = null;
+    // Keep payload fields valid for callers that retained this Leaf from an earlier query; only
+    // structural ownership is cleared by detaching the leaf.
     leaf.parent = null;
-    leaf.object = null;
     --this.leafCount;
     if (parent == null) {
       // tree gets empty

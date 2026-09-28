@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "LED_port-status_LED_port-status-CA",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 151416,
+      "sha256": "d77aac3581a1bb923bc78826d01ec1815d3509c847940a686ae04d6856b0f0a4"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 93357,
+      "sha256": "ce31ac01021ba053cd0160efb07e56c290798605273ef3aa6a26a94ec6fd0c32"
+    },
+    "metadata_json": {
+      "bytes": 506,
+      "sha256": "2eed537cfd07978c114551be3c983930228d66455684180f3ea6f39c7fcfaa4a"
+    },
+    "final_json": {
+      "bytes": 23379,
+      "sha256": "22a7435e22b11767557c60cdac45d39c5da09f0597d4351a9641a98aa87305ec"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:15:45.013973+00:00"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "board": "VC4000MultiROM_MultiRomCard",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\VC4000MultiROM_MultiRomCard\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 132,
+  "segment_count": 1237,
+  "approximate_track_length_mm": 6199.33,
+  "kicad_drc_violations": 683,
+  "generated_at": "2026-08-18T19:55:53.547124+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 683,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 500,
+      "copper_edge_clearance": 5,
+      "courtyards_overlap": 1,
+      "lib_footprint_issues": 55,
+      "silk_edge_clearance": 3,
+      "silk_overlap": 115,
+      "starved_thermal": 4
+    },
+    "by_severity": {
+      "error": 510,
+      "warning": 173
+    }
+  }
+}

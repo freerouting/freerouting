@@ -8,8 +8,7 @@ plugins {
     id 'maven-publish'
     id 'checkstyle'
     id "com.vanniktech.maven.publish" version "0.37.0"
-    id 'io.github.ben-manes.versions' version '0.60.0'
-    id 'org.openrewrite.rewrite' version '7.38.0'
+    id 'io.github.ben-manes.versions' version '0.61.0'
     id "com.diffplug.spotless" version "8.9.0"
 }
 
@@ -34,14 +33,6 @@ java.toolchain {
 }
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-
-sourceSets {
-    rewriteRecipes {
-        java {
-            srcDirs = ['src/rewrite/java']
-        }
-    }
-}
 
 
 tasks.withType(JavaCompile).configureEach {
@@ -101,6 +92,7 @@ spotless {
 }
 
 tasks.named("dependencyUpdates").configure {
+    outputFormatter = "json"
     rejectVersionIf {
         def current = it.currentVersion
         def candidate = it.candidate.version
@@ -137,10 +129,10 @@ repositories {
     }
 
     mavenCentral()
-    // Adding mirror repositories
+    // Fallback mirror for runner/network environments that receive a transient Maven Central 403.
     maven {
-        name = 'MirrorRepo1'
-        url = 'https://repo1.maven.org/maven2' // Replace with actual mirror URL
+        name = 'MavenCentralGoogleMirror'
+        url = 'https://maven-central.storage-download.googleapis.com/maven2'
     }
 
     google()
@@ -191,37 +183,28 @@ dependencies {
     implementation 'org.slf4j:slf4j-nop:2.0.18'
 
     // Add Google Cloud BigQuery dependencies for telemetry
-    implementation 'com.google.auth:google-auth-library-oauth2-http:1.50.0'
-    implementation 'com.google.api:gax:2.83.0'
-    implementation 'com.google.api-client:google-api-client-appengine:2.9.0'
-    implementation 'com.google.cloud:google-cloud-core:2.73.0'
-    implementation 'com.google.cloud:google-cloud-core-http:2.73.0'
-    implementation 'com.google.cloud:google-cloud-bigquery:2.69.0'
+    implementation 'com.google.auth:google-auth-library-oauth2-http:1.51.0'
+    implementation 'com.google.api:gax:2.84.0'
+    implementation 'com.google.api-client:google-api-client-appengine:2.9.1'
+    implementation 'com.google.cloud:google-cloud-core:2.74.0'
+    implementation 'com.google.cloud:google-cloud-core-http:2.74.0'
+    implementation 'com.google.cloud:google-cloud-bigquery:2.70.0'
 
     // Add Google Sheets API dependencies for API key validation
-    implementation 'com.google.api-client:google-api-client:2.9.0'
+    implementation 'com.google.api-client:google-api-client:2.9.1'
     implementation 'com.google.apis:google-api-services-sheets:v4-rev20260213-2.0.0'
 
+    // Security constraints for transitive dependencies
+    constraints {
+        implementation('io.netty:netty-common:4.1.118.Final') {
+            because 'CVE-2024-47535 and CVE-2025-25193: DoS vulnerability in Netty on Windows'
+        }
+    }
+
     // Add Swagger/OpenAPI dependencies for API documentation (OpenAPI 3.0)
-    implementation 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.53'
-    implementation 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.53'
-    implementation 'io.swagger.core.v3:swagger-core-jakarta:2.2.53'
-
-    // OpenRewrite (all versions verified current as of Aug 2026; rewrite-migrate-java
-    // transitively provides org.openrewrite:rewrite-gradle for the MigrateToGradle9 recipe):
-    rewrite 'org.openrewrite.recipe:rewrite-static-analysis:2.40.0'
-    rewrite 'org.openrewrite.recipe:rewrite-migrate-java:3.41.0'
-    rewrite 'org.openrewrite.recipe:rewrite-recommendations:1.15.0'
-    rewrite 'org.openrewrite.recipe:rewrite-testing-frameworks:3.43.0'
-
-    rewriteRecipesImplementation 'org.openrewrite.recipe:rewrite-static-analysis:2.40.0'
-    rewriteRecipesImplementation 'org.openrewrite:rewrite-java:8.88.0'
-    rewriteRecipesImplementation 'org.openrewrite:rewrite-core:8.88.0'
-    rewrite sourceSets.rewriteRecipes.output
-    testImplementation sourceSets.rewriteRecipes.output
-    testImplementation 'org.openrewrite:rewrite-java:8.88.0'
-    testImplementation 'org.openrewrite:rewrite-core:8.88.0'
-    testImplementation 'org.openrewrite:rewrite-java-25:8.88.0'
+    implementation 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.55'
+    implementation 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.55'
+    implementation 'io.swagger.core.v3:swagger-core-jakarta:2.2.55'
 
 
     // ArchUnit: package-architecture enforcement
@@ -505,7 +488,9 @@ tasks.register('buildDockerImage', Exec) {
 tasks.register('installLocalGitHook', Copy) {
     from new File(rootProject.rootDir, 'scripts/pre-commit')
     into { new File(rootProject.rootDir, '.git/hooks') }
-    fileMode 0775
+    filePermissions {
+        unix('rwxrwxr-x')
+    }
 }
 
 tasks.withType(Test).configureEach { Test task ->
@@ -579,6 +564,8 @@ tasks.withType(Test).configureEach { Test task ->
 test {
     useJUnitPlatform {
         excludeTags 'serial'
+        // GUI/accessibility tests run via the dedicated testGui task (D5/D25).
+        excludeTags 'gui'
         // Daily runs skip slow tests unless explicitly requested.
         if (!includeSlowTests.get()) {
             excludeTags 'slow'
@@ -608,14 +595,27 @@ tasks.register('testSerial', Test) {
     }
 }
 
+tasks.register('testGui', Test) {
+    group = 'verification'
+    description = 'Runs GUI/accessibility tests tagged with @Tag("gui"); component-only, forced headless (D5/D7/D25).'
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    mustRunAfter(tasks.named('testSerial'))
+    // Component-only a11y tests must not require a display (D7).
+    systemProperty 'java.awt.headless', 'true'
+    useJUnitPlatform {
+        includeTags 'gui'
+    }
+}
+
 tasks.named('check') {
     dependsOn(tasks.named('testSerial'))
 }
 
 tasks.register('testAll') {
     group = 'verification'
-    description = 'Runs default, serial-sensitive, and slow tests.'
-    dependsOn(tasks.named('test'), tasks.named('testSlow'), tasks.named('testSerial'))
+    description = 'Runs default, serial-sensitive, slow, and GUI tests.'
+    dependsOn(tasks.named('test'), tasks.named('testSlow'), tasks.named('testSerial'), tasks.named('testGui'))
 }
 
 tasks.named('testSlow') {
@@ -624,104 +624,4 @@ tasks.named('testSlow') {
 
 tasks.named('testSerial') {
     mustRunAfter(tasks.named('testSlow'))
-}
-
-rewrite {
-    // Fail fast on misspelled / nonexistent recipe names instead of silently skipping them.
-    failOnInvalidActiveRecipes = true
-
-    // Protect the v1.9 reference implementation (src_v19 source set) — it must stay unmodified.
-    exclusion("src_v19/**")
-    exclusion("**/src_v19/**")
-    exclusion("**/geometry/**")
-    exclusion("**/board/**")
-    exclusion("**/drc/**")
-    exclusion("**/autoroute/**")
-    exclusion("**/management/**")
-    exclusion("**/io/**")
-    exclusion("**/interactive/**")
-    exclusion("**/gui/**")
-
-
-tasks.register('phase2GenerateFieldMap', Exec) {
-    group = 'rewrite'
-    description = 'Generate field rename map before running rewriteRun'
-    def pkgs = System.getProperty('rewrite.targetPackages', '')
-    if (pkgs) {
-        def pkgList = pkgs.split(',').collect { it.trim() }
-        commandLine 'powershell', '-NoProfile', '-File', 'scripts/rewrite/generate-field-rename-map.ps1', '-TargetPackages', pkgList.join(',')
-    } else {
-        commandLine 'powershell', '-NoProfile', '-File', 'scripts/rewrite/generate-field-rename-map.ps1'
-    }
-}
-
-tasks.register('phase2FieldReferenceRenames', Exec) {
-    group = 'rewrite'
-    description = 'Apply cross-file field reference renames from build/field-renames.tsv'
-    def pkgs = System.getProperty('rewrite.targetPackages', '')
-    if (pkgs) {
-        def pkgList = pkgs.split(',').collect { it.trim() }
-        commandLine 'powershell', '-NoProfile', '-File', 'scripts/rewrite/apply-field-reference-renames.ps1', '-TargetPackages', pkgList.join(',')
-    } else {
-        commandLine 'powershell', '-NoProfile', '-File', 'scripts/rewrite/apply-field-reference-renames.ps1'
-    }
-}
-
-tasks.register('phase2aFieldsPost') {
-    group = 'rewrite'
-    description = 'Post-steps after Phase2aFields: field reference fallback + spotlessApply'
-    dependsOn(tasks.named('phase2FieldReferenceRenames'), tasks.named('spotlessApply'))
-}
-
-tasks.register('phase2fPost') {
-    group = 'rewrite'
-    description = 'Post-steps after Phase2fLocalVariables: spotlessApply only'
-    dependsOn(tasks.named('spotlessApply'))
-}
-
-tasks.register('phase2Naming') {
-    group = 'rewrite'
-    description = 'Phase 2 post-steps: field reference fallback + spotlessApply (run rewriteRun first)'
-    dependsOn(tasks.named('phase2FieldReferenceRenames'), tasks.named('spotlessApply'))
-}
-
-tasks.named('spotlessApply').configure { mustRunAfter(tasks.named('phase2FieldReferenceRenames')) }
-
-['rewriteRun', 'rewriteDryRun', 'rewriteDiscover'].each { taskName ->
-    tasks.matching { it.name == taskName }.configureEach {
-        dependsOn(tasks.named('compileRewriteRecipesJava'))
-    }
-}
-
-
-    // --- PHASE 1: Hygiene (run first to reduce noise) ---
-    // Curated composite in rewrite.yml: CommonStaticAnalysis minus MethodNameCasing
-    // (inconsistent renames across widened-access overrides) and WriteOctalValuesAsDecimal.
-    // activeRecipe("app.freerouting.Phase1Hygiene")
-    // Formatting guardrail: ./gradlew spotlessApply (enforced by spotlessCheck in check)
-
-    // --- PHASE 2: Naming Convention (snake_case -> camelCase) ---
-    // WARNING: renaming private fields breaks Java-serialization compatibility of saved
-    // .frb GUI session files (renamed fields deserialize to defaults).
-    // activeRecipe("org.openrewrite.staticanalysis.RenameLocalVariablesToCamelCase")
-    // activeRecipe("org.openrewrite.staticanalysis.RenamePrivateFieldsToCamelCase")
-
-    // --- PHASE 3: Testing Modernization (JUnit 5 / Jupiter) ---
-    // activeRecipe("org.openrewrite.java.testing.junit5.JUnit5BestPractices")
-
-    // --- PHASE 4: Build System (Gradle 9) ---
-    // activeRecipe("org.openrewrite.gradle.MigrateToGradle9")
-
-    // --- PHASE 5: The Big Upgrade (Java 25) ---
-    // Note: This includes the logic from 17 and 21 automatically.
-    // activeRecipe("org.openrewrite.java.migrate.UpgradeToJava25")
-
-    // --- PHASE 6: Modern Java Features (Optional Polish) ---
-    // activeRecipe("org.openrewrite.staticanalysis.InstanceOfPatternMatch")
-    // activeRecipe("org.openrewrite.java.migrate.lang.UseTextBlocks")
-    // activeRecipe("org.openrewrite.java.migrate.SwitchPatternMatching")
-
-    // --- Configuration ---
-    checkstyleConfigFile = file("config/checkstyle/google_checks.xml")
-    setExportDatatables(true)
 }

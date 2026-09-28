@@ -1,0 +1,35 @@
+{
+  "board": "analog_esr_meter_esr_meter_rev_b",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\analog_esr_meter_esr_meter_rev_b\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 170,
+  "approximate_track_length_mm": 709.77,
+  "kicad_drc_violations": 390,
+  "generated_at": "2026-08-18T18:28:18.274974+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 390,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 144,
+      "copper_edge_clearance": 6,
+      "courtyards_overlap": 56,
+      "hole_clearance": 3,
+      "hole_to_hole": 2,
+      "holes_co_located": 4,
+      "isolated_copper": 8,
+      "lib_footprint_issues": 88,
+      "nonmirrored_text_on_back_layer": 2,
+      "pth_inside_courtyard": 16,
+      "silk_over_copper": 6,
+      "silk_overlap": 50,
+      "solder_mask_bridge": 4,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 229,
+      "warning": 161
+    }
+  }
+}

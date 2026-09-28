@@ -1,0 +1,66 @@
+{
+  "board_id": "OpenTheremin_V3_Shield_OpenThereminCC",
+  "display_name": "OpenTheremin_V3_Shield_OpenThereminCC",
+  "pcbench_directory": "PCBs/OpenTheremin_V3_Shield_OpenThereminCC",
+  "source": "https://github.com/GaudiLabs/OpenTheremin_V3_Shield",
+  "author": "GaudiLabs",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:21.761695+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 30,
+    "components": 109,
+    "dimensions_mm": {
+      "width": 60.0,
+      "height": 100.0
+    },
+    "area_cm2": 60.0,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 962,
+    "vias": 69,
+    "track_length_mm": 2107.1,
+    "kicad_drc_violations": 486,
+    "kicad_drc_breakdown": {
+      "total_violations": 486,
+      "unconnected_count": 1,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 288,
+        "copper_edge_clearance": 4,
+        "courtyards_overlap": 9,
+        "invalid_outline": 2,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 109,
+        "malformed_courtyard": 4,
+        "padstack": 4,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 19,
+        "silk_overlap": 8,
+        "solder_mask_bridge": 23,
+        "starved_thermal": 2,
+        "track_dangling": 7
+      },
+      "by_severity": {
+        "error": 337,
+        "warning": 149
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

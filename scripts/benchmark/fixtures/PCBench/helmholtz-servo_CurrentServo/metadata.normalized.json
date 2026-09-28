@@ -1,0 +1,62 @@
+{
+  "board_id": "helmholtz-servo_CurrentServo",
+  "display_name": "helmholtz-servo_CurrentServo",
+  "pcbench_directory": "PCBs/helmholtz-servo_CurrentServo",
+  "source": "https://github.com/kjaergaard-lab/helmholtz-servo",
+  "author": "kjaergaard-lab",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:01.138159+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 42,
+    "components": 102,
+    "dimensions_mm": {
+      "width": 130.0,
+      "height": 85.0
+    },
+    "area_cm2": 110.5,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 680,
+    "vias": 42,
+    "track_length_mm": 2762.62,
+    "kicad_drc_violations": 677,
+    "kicad_drc_breakdown": {
+      "total_violations": 677,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 499,
+        "copper_edge_clearance": 2,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 102,
+        "padstack": 4,
+        "silk_edge_clearance": 22,
+        "silk_over_copper": 11,
+        "silk_overlap": 18,
+        "starved_thermal": 1,
+        "track_dangling": 13
+      },
+      "by_severity": {
+        "error": 507,
+        "warning": 170
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

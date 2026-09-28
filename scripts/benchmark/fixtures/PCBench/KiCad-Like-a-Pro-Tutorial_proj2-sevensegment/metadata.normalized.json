@@ -1,0 +1,59 @@
+{
+  "board_id": "KiCad-Like-a-Pro-Tutorial_proj2-sevensegment",
+  "display_name": "KiCad-Like-a-Pro-Tutorial_proj2-sevensegment",
+  "pcbench_directory": "PCBs/KiCad-Like-a-Pro-Tutorial_proj2-sevensegment",
+  "source": "https://github.com/wicker/KiCad-Like-a-Pro-Tutorial",
+  "author": "wicker",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:38.409891+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 1,
+    "components": 11,
+    "dimensions_mm": {
+      "width": 45.97,
+      "height": 24.64
+    },
+    "area_cm2": 11.33,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 74,
+    "vias": 5,
+    "track_length_mm": 271.73,
+    "kicad_drc_violations": 38,
+    "kicad_drc_breakdown": {
+      "total_violations": 38,
+      "unconnected_count": 1,
+      "by_type": {
+        "clearance": 27,
+        "lib_footprint_issues": 11
+      },
+      "by_severity": {
+        "error": 27,
+        "warning": 11
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.966138+00:00",
+    "elapsed_seconds": 10.6,
+    "unrouted_nets": 1,
+    "clearance_violations": 0,
+    "quality_score": 959.99
+  }
+}

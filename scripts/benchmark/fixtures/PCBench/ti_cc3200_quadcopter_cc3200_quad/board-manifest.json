@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "ti_cc3200_quadcopter_cc3200_quad",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 427900,
+      "sha256": "74d11a60cc3ff273686f194c91f8449344486a107154f6e1f82f84beb4b7ce9c"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 275846,
+      "sha256": "cadc88397e44e3cb29beb6191b3eedfa01138bc1bd287058d244a99db4ed772d"
+    },
+    "metadata_json": {
+      "bytes": 515,
+      "sha256": "b3ec5021c75e45b988b60ce869f128f19c36a7b74bde6a6d7dc610e1db0b3531"
+    },
+    "final_json": {
+      "bytes": 272932,
+      "sha256": "c88d93527af44b8e1e728f5509459481cded8050ded0f0cf10e2b7bbd6f0d576"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:25:14.783274+00:00"
+  }
+}

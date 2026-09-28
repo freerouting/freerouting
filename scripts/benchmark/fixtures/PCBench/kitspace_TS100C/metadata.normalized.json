@@ -1,0 +1,61 @@
+{
+  "board_id": "kitspace_TS100C",
+  "display_name": "kitspace_TS100C",
+  "pcbench_directory": "PCBs/kitspace_TS100C",
+  "source": "https://github.com/Jana-Marie/Otter-Iron",
+  "author": "",
+  "license": "[{'name': 'GNU', 'link': 'https://raw.githubusercontent.com/Jana-Marie/Otter-Iron/main/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:14:01.912054+00:00",
+  "cad": {
+    "source_version": "KiCad 20211014",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 79,
+    "components": 64,
+    "dimensions_mm": {
+      "width": 84.0,
+      "height": 10.0
+    },
+    "area_cm2": 8.4,
+    "zones": 21
+  },
+  "reference": {
+    "segments": 527,
+    "vias": 108,
+    "track_length_mm": 724.66,
+    "kicad_drc_violations": 161,
+    "kicad_drc_breakdown": {
+      "total_violations": 161,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 4,
+        "courtyards_overlap": 7,
+        "footprint_type_mismatch": 1,
+        "hole_clearance": 2,
+        "lib_footprint_issues": 6,
+        "lib_footprint_mismatch": 56,
+        "silk_over_copper": 13,
+        "silk_overlap": 3,
+        "text_height": 64,
+        "track_dangling": 5
+      },
+      "by_severity": {
+        "error": 14,
+        "warning": 147
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "medium",
+    "plane",
+    "routine",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

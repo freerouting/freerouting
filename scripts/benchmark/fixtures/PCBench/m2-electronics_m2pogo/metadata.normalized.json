@@ -1,0 +1,64 @@
+{
+  "board_id": "m2-electronics_m2pogo",
+  "display_name": "m2-electronics_m2pogo",
+  "pcbench_directory": "PCBs/m2-electronics_m2pogo",
+  "source": "https://github.com/cuspaceflight/m2-electronics",
+  "author": "cuspaceflight",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:40.729918+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 4,
+    "components": 8,
+    "dimensions_mm": {
+      "width": 44.4,
+      "height": 81.8
+    },
+    "area_cm2": 36.32,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 9,
+    "vias": 0,
+    "track_length_mm": 50.09,
+    "kicad_drc_violations": 21,
+    "kicad_drc_breakdown": {
+      "total_violations": 21,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 4,
+        "invalid_outline": 1,
+        "lib_footprint_issues": 8,
+        "silk_edge_clearance": 6,
+        "silk_overlap": 2
+      },
+      "by_severity": {
+        "error": 5,
+        "warning": 16
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.024064+00:00",
+    "elapsed_seconds": 4.44,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

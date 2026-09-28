@@ -1,0 +1,26 @@
+{
+  "board": "cat-trainer_feather32u4_mma8452_pcb",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\cat-trainer_feather32u4_mma8452_pcb\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 4,
+  "segment_count": 107,
+  "approximate_track_length_mm": 630.8,
+  "kicad_drc_violations": 79,
+  "generated_at": "2026-08-18T18:38:04.384499+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 79,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 24,
+      "lib_footprint_issues": 11,
+      "silk_edge_clearance": 30,
+      "silk_overlap": 8,
+      "solder_mask_bridge": 6
+    },
+    "by_severity": {
+      "error": 30,
+      "warning": 49
+    }
+  }
+}

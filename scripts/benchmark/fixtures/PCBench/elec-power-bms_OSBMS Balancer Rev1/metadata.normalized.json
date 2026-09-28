@@ -1,0 +1,63 @@
+{
+  "board_id": "elec-power-bms_OSBMS Balancer Rev1",
+  "display_name": "elec-power-bms_OSBMS Balancer Rev1",
+  "pcbench_directory": "PCBs/elec-power-bms_OSBMS Balancer Rev1",
+  "source": "https://github.com/rLoopTeam/elec-power-bms",
+  "author": "rLoopTeam",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:55.818096+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 53,
+    "components": 74,
+    "dimensions_mm": {
+      "width": 49.0,
+      "height": 49.0
+    },
+    "area_cm2": 24.01,
+    "zones": 16
+  },
+  "reference": {
+    "segments": 788,
+    "vias": 166,
+    "track_length_mm": 1623.1,
+    "kicad_drc_violations": 433,
+    "kicad_drc_breakdown": {
+      "total_violations": 433,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 2,
+        "clearance": 230,
+        "copper_edge_clearance": 2,
+        "courtyards_overlap": 2,
+        "holes_co_located": 64,
+        "lib_footprint_issues": 66,
+        "padstack": 2,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 48,
+        "silk_overlap": 7,
+        "text_height": 7,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 236,
+        "warning": 197
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "esp32-cantroller_EltekController",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 430720,
+      "sha256": "2e789e25451c1c6629093395c31cd803f7edf480e9b1ce7abcf513eb5d905cae"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 169716,
+      "sha256": "bef062b67719e6ddd3e013c230ede1db022363291888d6384f90201611e6ad97"
+    },
+    "metadata_json": {
+      "bytes": 740,
+      "sha256": "5e42b342cd366a18dbaebcee5e9f19dd944eeaf22d6adac6694e02e57abfedf1"
+    },
+    "final_json": {
+      "bytes": 100287,
+      "sha256": "a43c90097595f7eacbe697466ed932ee1c8b7b73cb9dcfe9fedd805a01287801"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:46:04.751563+00:00"
+  }
+}

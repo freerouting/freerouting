@@ -1,0 +1,29 @@
+{
+  "board": "JavierIH_kameshield",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\JavierIH_kameshield\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 71,
+  "approximate_track_length_mm": 211.61,
+  "kicad_drc_violations": 260,
+  "generated_at": "2026-08-18T18:59:53.055358+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 260,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 67,
+      "copper_edge_clearance": 1,
+      "courtyards_overlap": 6,
+      "lib_footprint_issues": 11,
+      "pth_inside_courtyard": 12,
+      "silk_edge_clearance": 2,
+      "silk_overlap": 160,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 86,
+      "warning": 174
+    }
+  }
+}

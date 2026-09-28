@@ -1,0 +1,261 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\Game-Boy-Zero-DMG-Controller-PCB-KiCad_Game-Boy-Zero-DMG-Controller-PCB\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  208280 -114300  192278 -114300  191922 -114302  191210 -114342
+            190502 -114422  189800 -114542  189105 -114700  188421 -114897
+            187748 -115133  187090 -115405  186448 -115715  185824 -116059
+            185221 -116438  184640 -116851  184083 -117295  183551 -117770
+            183048 -118273  182573 -118805  182129 -119362  181716 -119943
+            181337 -120546  180993 -121170  180683 -121812  180411 -122470
+            180175 -123143  179978 -123827  179820 -124522  179700 -125224
+            179620 -125932  179580 -126644  179578 -127000  148590 -127000
+            148590 -118110  145542 -115062  135382 -115062  127000 -106680
+            127000 -74676  208280 -74676  208280 -114300)
+    )
+    (via "Via[0-1]_685.8:330.2_um")
+    (rule
+      (width 152.4)
+      (clearance 152.4)
+      (clearance 38.1 (type smd_smd))
+    )
+  )
+  (placement
+    (component MountingHole:1pin
+      (place REF**_11 194310 -110490 front 0 (PN 1pin))
+    )
+    (component MountingHole:1pin::1
+      (place REF**_10 205486 -107442 front 0 (PN 1pin))
+      (place REF**_9 178562 -98552 front 0 (PN 1pin))
+      (place REF**_7 206756 -98552 front 0 (PN 1pin))
+      (place REF**_6 152146 -110236 front 0 (PN 1pin))
+      (place REF**_5 165100 -117602 front 0 (PN 1pin))
+      (place REF**_4 156972 -112776 front 0 (PN 1pin))
+      (place REF**_3 157480 -90424 front 0 (PN 1pin))
+      (place REF**_2 131064 -89408 front 0 (PN 1pin))
+      (place REF** 129540 -83820 front 0 (PN 1pin))
+    )
+    (component MountingHole:1pin::2
+      (place REF**_8 205486 -89662 front 0 (PN 1pin))
+    )
+    (component Socket_Strips:Socket_Strip_Straight_1x11
+      (place P1 149098 -78232 front 0 (PN CONN_01X11))
+    )
+    (component "GameBoy:GameBoy-DMG-BTN"
+      (place SW2 141986 -90678 front 0 (PN UP))
+      (place SW1 132588 -99822 front 0 (PN LEFT))
+      (place SW3 150876 -99822 front 0 (PN DOWN))
+      (place SW4 141986 -108966 front 0 (PN RIGHT))
+      (place SW7 193802 -80264 front 0 (PN X))
+      (place SW8 179324 -87122 front 0 (PN Y))
+      (place SW9 185674 -101854 front 0 (PN B))
+      (place SW10 200152 -94996 front 0 (PN A))
+    )
+    (component "GameBoy:GameBoy-DMG-START-SEL"
+      (place SW5 155702 -121666 front 27.5 (PN SELECT))
+      (place SW6 170942 -121666 front 27.5 (PN START))
+    )
+  )
+  (library
+    (image MountingHole:1pin
+      (keepout "" (circle F.Cu 5072))
+      (keepout "" (circle B.Cu 5072))
+    )
+    (image MountingHole:1pin::1
+      (keepout "" (circle F.Cu 3040))
+      (keepout "" (circle B.Cu 3040))
+    )
+    (image MountingHole:1pin::2
+      (keepout "" (circle F.Cu 3040 0 5080))
+      (keepout "" (circle B.Cu 3040 0 5080))
+    )
+    (image Socket_Strips:Socket_Strip_Straight_1x11
+      (outline (polygon signal 0  27145 -1745  -1745 -1745  -1745 1745  27145 1745))
+      (outline (path signal 150  -1550 1550  -1550 -1550))
+      (outline (path signal 150  0 1550  -1550 1550))
+      (outline (path signal 150  1270 -1270  1270 1270))
+      (outline (path signal 150  -1550 -1550  0 -1550))
+      (outline (path signal 150  26670 1270  1270 1270))
+      (outline (path signal 150  26670 -1270  26670 1270))
+      (outline (path signal 150  1270 -1270  26670 -1270))
+      (pin Rect[A]Pad_1727.200000x2032.000000_um 1 0 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 2 2540 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 3 5080 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 4 7620 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 5 10160 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 6 12700 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 7 15240 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 8 17780 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 9 20320 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 10 22860 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 11 25400 0)
+    )
+    (image "GameBoy:GameBoy-DMG-BTN"
+      (pin "Oval[T][0.000000,-1651.000000]Pad_381.000000x3810.000000_um" 2 2286 2286)
+      (pin "Oval[T][0.000000,-2540.000000]Pad_381.000000x5524.500000_um" 2@1 -762 3048)
+      (pin Oval[T][0.000000,1270.000000]Pad_381.000000x3048.000000_um 1 -3048 -1270)
+      (pin Oval[T][0.000000,2540.000000]Pad_381.000000x5588.000000_um 1@1 -1524 -3048)
+      (pin Oval[T][0.000000,1270.000000]Pad_381.000000x3048.000000_um 1@2 3048 -1270)
+      (pin Oval[T][0.000000,2540.000000]Pad_381.000000x5588.000000_um 1@3 1524 -3048)
+      (pin Oval[T][0.000000,2540.000000]Pad_381.000000x5588.000000_um 1@4 0 -3048)
+      (pin "Oval[T][0.000000,-2540.000000]Pad_381.000000x5524.500000_um" 2@2 762 3048)
+      (pin "Oval[T][0.000000,-1651.000000]Pad_381.000000x3810.000000_um" 2@3 -2286 2286)
+    )
+    (image "GameBoy:GameBoy-DMG-START-SEL"
+      (outline (path signal 66.04  635 -2413  635 2413))
+      (outline (path signal 66.04  635 2413  5461 2413))
+      (outline (path signal 66.04  5461 -2413  5461 2413))
+      (outline (path signal 66.04  635 -2413  5461 -2413))
+      (outline (path signal 66.04  -5461 -2413  -5461 2413))
+      (outline (path signal 66.04  -5461 2413  -635 2413))
+      (outline (path signal 66.04  -635 -2413  -635 2413))
+      (outline (path signal 66.04  -5461 -2413  -635 -2413))
+      (outline (path signal 66.04  762.001 -2286  761.999 -381))
+      (outline (path signal 66.04  761.999 -381  2667 -381))
+      (outline (path signal 66.04  2667 -2286  2667 -381))
+      (outline (path signal 66.04  762.001 -2286  2667 -2286))
+      (outline (path signal 66.04  3429 -2286  3429 -381))
+      (outline (path signal 66.04  3429 -381  5334 -381))
+      (outline (path signal 66.04  5334 -2286  5334 -381))
+      (outline (path signal 66.04  3429 -2286  5334 -2286))
+      (outline (path signal 66.04  3429 381  3429 2286))
+      (outline (path signal 66.04  3429 2286  5334 2286))
+      (outline (path signal 66.04  5334 381  5334 2286))
+      (outline (path signal 66.04  3429 381  5334 381))
+      (outline (path signal 66.04  762 381  762 2286))
+      (outline (path signal 66.04  762 2286  2667 2286))
+      (outline (path signal 66.04  2667 381  2667 2286))
+      (outline (path signal 66.04  762 381  2667 381))
+      (outline (path signal 66.04  -2667 381  -2667 2286))
+      (outline (path signal 66.04  -2667 2286  -762.001 2286))
+      (outline (path signal 66.04  -761.999 381  -762.001 2286))
+      (outline (path signal 66.04  -2667 381  -761.999 381))
+      (outline (path signal 66.04  -2667 -2286  -2667 -381))
+      (outline (path signal 66.04  -2667 -381  -762 -381))
+      (outline (path signal 66.04  -762 -2286  -762 -381))
+      (outline (path signal 66.04  -2667 -2286  -762 -2286))
+      (outline (path signal 66.04  -5334 -2286  -5334 -381))
+      (outline (path signal 66.04  -5334 -381  -3429 -381))
+      (outline (path signal 66.04  -3429 -2286  -3429 -381))
+      (outline (path signal 66.04  -5334 -2286  -3429 -2286))
+      (outline (path signal 66.04  -5334 381  -5334 2286))
+      (outline (path signal 66.04  -5334 2286  -3429 2286))
+      (outline (path signal 66.04  -3429 381  -3429 2286))
+      (outline (path signal 66.04  -5334 381  -3429 381))
+      (pin Rect[T]Pad_1905.000000x1905.000000_um 1 -4381.5 -1333.5)
+      (pin Rect[T]Pad_1905.000000x1905.000000_um 1@1 1714.5 -1333.5)
+      (pin Rect[T]Pad_1905.000000x1905.000000_um 1@2 -1717.04 1333.5)
+      (pin Rect[T]Pad_1905.000000x1905.000000_um 2 4381.5 -1333.5)
+      (pin Rect[T]Pad_1905.000000x1905.000000_um 2@1 -1714.5 -1333.5)
+      (pin Rect[T]Pad_1905.000000x1905.000000_um 2@2 -4381.5 1333.5)
+      (pin Rect[T]Pad_1905.000000x1905.000000_um 2@3 1714.5 1333.5)
+      (pin Rect[T]Pad_1905.000000x1905.000000_um 1@3 4378.96 1333.5)
+    )
+    (padstack Oval[A]Pad_1727.200000x2032.000000_um
+      (shape (path F.Cu 1727.2  0 -152.4  0 152.4))
+      (shape (path B.Cu 1727.2  0 -152.4  0 152.4))
+      (attach off)
+    )
+    (padstack "Oval[T][0.000000,-1651.000000]Pad_381.000000x3810.000000_um"
+      (shape (path F.Cu 381  0 -3365.5  0 63.5))
+      (attach off)
+    )
+    (padstack "Oval[T][0.000000,-2540.000000]Pad_381.000000x5524.500000_um"
+      (shape (path F.Cu 381  0 -5111.75  0 31.75))
+      (attach off)
+    )
+    (padstack Oval[T][0.000000,1270.000000]Pad_381.000000x3048.000000_um
+      (shape (path F.Cu 381  0 -63.5  0 2603.5))
+      (attach off)
+    )
+    (padstack Oval[T][0.000000,2540.000000]Pad_381.000000x5588.000000_um
+      (shape (path F.Cu 381  0 -63.5  0 5143.5))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1727.200000x2032.000000_um
+      (shape (rect F.Cu -863.6 -1016 863.6 1016))
+      (shape (rect B.Cu -863.6 -1016 863.6 1016))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1905.000000x1905.000000_um
+      (shape (rect F.Cu -952.5 -952.5 952.5 952.5))
+      (attach off)
+    )
+    (padstack "Via[0-1]_685.8:330.2_um"
+      (shape (circle F.Cu 685.8))
+      (shape (circle B.Cu 685.8))
+      (attach off)
+    )
+  )
+  (network
+    (net GND
+      (pins P1-1 SW2-1 SW2-1@1 SW2-1@2 SW2-1@3 SW2-1@4 SW1-1 SW1-1@1 SW1-1@2 SW1-1@3
+        SW1-1@4 SW3-1 SW3-1@1 SW3-1@2 SW3-1@3 SW3-1@4 SW4-1 SW4-1@1 SW4-1@2 SW4-1@3
+        SW4-1@4 SW7-1 SW7-1@1 SW7-1@2 SW7-1@3 SW7-1@4 SW8-1 SW8-1@1 SW8-1@2 SW8-1@3
+        SW8-1@4 SW9-1 SW9-1@1 SW9-1@2 SW9-1@3 SW9-1@4 SW10-1 SW10-1@1 SW10-1@2 SW10-1@3
+        SW10-1@4 SW5-1 SW5-1@1 SW5-1@2 SW5-1@3 SW6-1 SW6-1@1 SW6-1@2 SW6-1@3)
+    )
+    (net "Net-(P1-Pad2)"
+      (pins P1-2 SW1-2 SW1-2@1 SW1-2@2 SW1-2@3)
+    )
+    (net "Net-(P1-Pad3)"
+      (pins P1-3 SW2-2 SW2-2@1 SW2-2@2 SW2-2@3)
+    )
+    (net "Net-(P1-Pad4)"
+      (pins P1-4 SW4-2 SW4-2@1 SW4-2@2 SW4-2@3)
+    )
+    (net "Net-(P1-Pad5)"
+      (pins P1-5 SW3-2 SW3-2@1 SW3-2@2 SW3-2@3)
+    )
+    (net "Net-(P1-Pad6)"
+      (pins P1-6 SW5-2 SW5-2@1 SW5-2@2 SW5-2@3)
+    )
+    (net "Net-(P1-Pad7)"
+      (pins P1-7 SW6-2 SW6-2@1 SW6-2@2 SW6-2@3)
+    )
+    (net "Net-(P1-Pad8)"
+      (pins P1-8 SW7-2 SW7-2@1 SW7-2@2 SW7-2@3)
+    )
+    (net "Net-(P1-Pad9)"
+      (pins P1-9 SW8-2 SW8-2@1 SW8-2@2 SW8-2@3)
+    )
+    (net "Net-(P1-Pad10)"
+      (pins P1-10 SW9-2 SW9-2@1 SW9-2@2 SW9-2@3)
+    )
+    (net "Net-(P1-Pad11)"
+      (pins P1-11 SW10-2 SW10-2@1 SW10-2@2 SW10-2@3)
+    )
+    (class kicad_default GND "Net-(P1-Pad10)" "Net-(P1-Pad11)" "Net-(P1-Pad2)"
+      "Net-(P1-Pad3)" "Net-(P1-Pad4)" "Net-(P1-Pad5)" "Net-(P1-Pad6)" "Net-(P1-Pad7)"
+      "Net-(P1-Pad8)" "Net-(P1-Pad9)"
+      (circuit
+        (use_via "Via[0-1]_685.8:330.2_um")
+      )
+      (rule
+        (width 152.4)
+        (clearance 152.4)
+      )
+    )
+  )
+  (wiring
+  )
+)

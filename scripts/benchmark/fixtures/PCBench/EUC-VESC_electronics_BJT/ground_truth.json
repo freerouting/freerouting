@@ -1,0 +1,35 @@
+{
+  "board": "EUC-VESC_electronics_BJT",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\EUC-VESC_electronics_BJT\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 562,
+  "segment_count": 1393,
+  "approximate_track_length_mm": 2915.42,
+  "kicad_drc_violations": 591,
+  "generated_at": "2026-08-18T18:15:20.245022+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 591,
+    "unconnected_count": 1,
+    "by_type": {
+      "clearance": 89,
+      "copper_edge_clearance": 12,
+      "courtyards_overlap": 8,
+      "hole_to_hole": 2,
+      "holes_co_located": 1,
+      "lib_footprint_issues": 113,
+      "silk_edge_clearance": 34,
+      "silk_over_copper": 199,
+      "silk_overlap": 106,
+      "solder_mask_bridge": 1,
+      "text_height": 3,
+      "track_dangling": 17,
+      "via_dangling": 4,
+      "zones_intersect": 2
+    },
+    "by_severity": {
+      "error": 112,
+      "warning": 479
+    }
+  }
+}

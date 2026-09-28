@@ -1,0 +1,29 @@
+{
+  "board": "elec_turbo_brushless",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\elec_turbo_brushless\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 198,
+  "segment_count": 828,
+  "approximate_track_length_mm": 1870.11,
+  "kicad_drc_violations": 225,
+  "generated_at": "2026-08-18T18:44:56.493402+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 225,
+    "unconnected_count": 1,
+    "by_type": {
+      "clearance": 106,
+      "copper_edge_clearance": 8,
+      "courtyards_overlap": 7,
+      "items_not_allowed": 2,
+      "lib_footprint_issues": 8,
+      "lib_footprint_mismatch": 82,
+      "silk_over_copper": 2,
+      "text_height": 10
+    },
+    "by_severity": {
+      "error": 123,
+      "warning": 102
+    }
+  }
+}

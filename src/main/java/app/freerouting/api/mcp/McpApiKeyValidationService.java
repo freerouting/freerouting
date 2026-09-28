@@ -24,18 +24,18 @@ public final class McpApiKeyValidationService {
     this.providers = new ArrayList<>();
 
     if (Freerouting.globalSettings == null
-        || Freerouting.globalSettings.mcpServerSettings == null) {
-      this.isEnabled = false;
+        || Freerouting.globalSettings.mcpServerSettings == null
+        || Freerouting.globalSettings.mcpServerSettings.authentication == null) {
+      // Fail closed: require authentication by default
+      this.isEnabled = true;
       return;
     }
 
     ApiAuthenticationSettings authSettings =
         Freerouting.globalSettings.mcpServerSettings.authentication;
-    boolean mcpAuthEnabled = authSettings != null && Boolean.TRUE.equals(authSettings.isEnabled);
+    this.isEnabled = !Boolean.FALSE.equals(authSettings.isEnabled);
 
-    this.isEnabled = mcpAuthEnabled;
-
-    if (this.isEnabled && authSettings != null && authSettings.providers != null) {
+    if (this.isEnabled && authSettings.providers != null) {
       String[] providerNames = authSettings.providers.split(",");
       for (String providerName : providerNames) {
         providerName = providerName.trim();

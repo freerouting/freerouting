@@ -1,0 +1,30 @@
+{
+  "board": "eurorack_headphones_eurorack_headphones",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\eurorack_headphones_eurorack_headphones\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 10,
+  "segment_count": 202,
+  "approximate_track_length_mm": 754.83,
+  "kicad_drc_violations": 180,
+  "generated_at": "2026-08-18T18:48:50.571320+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 180,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 6,
+      "clearance": 107,
+      "copper_edge_clearance": 6,
+      "lib_footprint_issues": 30,
+      "malformed_courtyard": 1,
+      "silk_edge_clearance": 9,
+      "silk_overlap": 18,
+      "starved_thermal": 1,
+      "track_dangling": 2
+    },
+    "by_severity": {
+      "error": 121,
+      "warning": 59
+    }
+  }
+}

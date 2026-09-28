@@ -1,0 +1,6151 @@
+
+(kicad_pcb
+  (version 4)
+  (host pcbnew 4.0.2-stable)
+  (general
+    (links 52)
+    (no_connects 0)
+    (area 119.924999 59.899999 160.075001 117.875001)
+    (thickness 1.6)
+    (drawings 8)
+    (tracks 126)
+    (zones 0)
+    (modules 43)
+    (nets 37))
+  (page A4)
+  (layers
+    (0 F.Cu signal)
+    (31 B.Cu signal)
+    (32 B.Adhes user)
+    (33 F.Adhes user)
+    (34 B.Paste user)
+    (35 F.Paste user)
+    (36 B.SilkS user)
+    (37 F.SilkS user)
+    (38 B.Mask user)
+    (39 F.Mask user)
+    (40 Dwgs.User user)
+    (41 Cmts.User user)
+    (42 Eco1.User user)
+    (43 Eco2.User user)
+    (44 Edge.Cuts user)
+    (45 Margin user)
+    (46 B.CrtYd user)
+    (47 F.CrtYd user)
+    (48 B.Fab user)
+    (49 F.Fab user))
+  (setup
+    (last_trace_width 1)
+    (trace_clearance 0.2)
+    (zone_clearance 0.508)
+    (zone_45_only no)
+    (trace_min 0.2)
+    (segment_width 0.2)
+    (edge_width 0.15)
+    (via_size 0.6)
+    (via_drill 0.4)
+    (via_min_size 0.4)
+    (via_min_drill 0.3)
+    (uvia_size 0.3)
+    (uvia_drill 0.1)
+    (uvias_allowed no)
+    (uvia_min_size 0.2)
+    (uvia_min_drill 0.1)
+    (pcb_text_width 0.3)
+    (pcb_text_size 1.5 1.5)
+    (mod_edge_width 0.15)
+    (mod_text_size 1 1)
+    (mod_text_width 0.15)
+    (pad_size 1.524 1.524)
+    (pad_drill 0.762)
+    (pad_to_mask_clearance 0.2)
+    (aux_axis_origin 0 0)
+    (visible_elements 7FFFFFFF)
+    (pcbplotparams
+      (layerselection 0x00030_80000001)
+      (usegerberextensions false)
+      (excludeedgelayer true)
+      (linewidth 0.1)
+      (plotframeref false)
+      (viasonmask false)
+      (mode 1)
+      (useauxorigin false)
+      (hpglpennumber 1)
+      (hpglpenspeed 20)
+      (hpglpendiameter 15)
+      (hpglpenoverlay 2)
+      (psnegative false)
+      (psa4output false)
+      (plotreference true)
+      (plotvalue true)
+      (plotinvisibletext false)
+      (padsonsilk false)
+      (subtractmaskfromsilk false)
+      (outputformat 1)
+      (mirror false)
+      (drillshape 1)
+      (scaleselection 1)
+      (outputdirectory D:/Users/email/Desktop/)))
+  (net 0 "")
+  (net 1 VCC)
+  (net 2 GND)
+  (net 3 "Net-(D1-Pad1)")
+  (net 4 "Net-(D2-Pad1)")
+  (net 5 "Net-(D3-Pad1)")
+  (net 6 "Net-(D4-Pad1)")
+  (net 7 "Net-(D5-Pad1)")
+  (net 8 "Net-(D6-Pad1)")
+  (net 9 "Net-(D7-Pad1)")
+  (net 10 "Net-(D8-Pad1)")
+  (net 11 "Net-(D10-Pad2)")
+  (net 12 "Net-(D10-Pad1)")
+  (net 13 "Net-(D11-Pad1)")
+  (net 14 "Net-(D12-Pad1)")
+  (net 15 "Net-(D13-Pad1)")
+  (net 16 "Net-(D14-Pad1)")
+  (net 17 "Net-(D15-Pad1)")
+  (net 18 "Net-(D16-Pad1)")
+  (net 19 "Net-(D17-Pad4)")
+  (net 20 "Net-(D17-Pad2)")
+  (net 21 "Net-(D18-Pad1)")
+  (net 22 "Net-(D19-Pad1)")
+  (net 23 "Net-(D20-Pad1)")
+  (net 24 "Net-(D21-Pad1)")
+  (net 25 "Net-(D22-Pad1)")
+  (net 26 "Net-(D23-Pad1)")
+  (net 27 "Net-(D24-Pad1)")
+  (net 28 "Net-(D25-Pad1)")
+  (net 29 "Net-(D26-Pad1)")
+  (net 30 "Net-(D27-Pad1)")
+  (net 31 "Net-(D28-Pad1)")
+  (net 32 "Net-(D29-Pad1)")
+  (net 33 "Net-(D30-Pad1)")
+  (net 34 "Net-(D31-Pad1)")
+  (net 35 "Net-(D32-Pad1)")
+  (net 36 "Net-(D33-Pad1)")
+  (net_class Default "Toto je výchozí třída sítě."
+    (clearance 0.2)
+    (trace_width 1)
+    (via_dia 0.6)
+    (via_drill 0.4)
+    (uvia_dia 0.3)
+    (uvia_drill 0.1)
+    (add_net GND)
+    (add_net "Net-(D1-Pad1)")
+    (add_net "Net-(D10-Pad1)")
+    (add_net "Net-(D10-Pad2)")
+    (add_net "Net-(D11-Pad1)")
+    (add_net "Net-(D12-Pad1)")
+    (add_net "Net-(D13-Pad1)")
+    (add_net "Net-(D14-Pad1)")
+    (add_net "Net-(D15-Pad1)")
+    (add_net "Net-(D16-Pad1)")
+    (add_net "Net-(D17-Pad2)")
+    (add_net "Net-(D17-Pad4)")
+    (add_net "Net-(D18-Pad1)")
+    (add_net "Net-(D19-Pad1)")
+    (add_net "Net-(D2-Pad1)")
+    (add_net "Net-(D20-Pad1)")
+    (add_net "Net-(D21-Pad1)")
+    (add_net "Net-(D22-Pad1)")
+    (add_net "Net-(D23-Pad1)")
+    (add_net "Net-(D24-Pad1)")
+    (add_net "Net-(D25-Pad1)")
+    (add_net "Net-(D26-Pad1)")
+    (add_net "Net-(D27-Pad1)")
+    (add_net "Net-(D28-Pad1)")
+    (add_net "Net-(D29-Pad1)")
+    (add_net "Net-(D3-Pad1)")
+    (add_net "Net-(D30-Pad1)")
+    (add_net "Net-(D31-Pad1)")
+    (add_net "Net-(D32-Pad1)")
+    (add_net "Net-(D33-Pad1)")
+    (add_net "Net-(D4-Pad1)")
+    (add_net "Net-(D5-Pad1)")
+    (add_net "Net-(D6-Pad1)")
+    (add_net "Net-(D7-Pad1)")
+    (add_net "Net-(D8-Pad1)")
+    (add_net VCC))
+  (module LEDs:LED_PLCC_2835
+    (layer F.Cu)
+    (tedit 56F53FE2)
+    (tstamp 5710CFAA)
+    (at 154 88)
+    (descr http://www.everlight.com/file/ProductFile/67-21S-KK2C-H4040QAR32835Z15-2T.pdf)
+    (tags LED)
+    (path /5710E4A1)
+    (attr smd)
+    (fp_text reference D13
+      (at 0.02 2.4)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0.27 -2.3)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.38 -0.55)
+      (end -0.88 -0.55)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -1.13 -0.8)
+      (end -1.13 -0.3)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.9)
+      (end -2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 1.9)
+      (end -2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 -1.9)
+      (end 2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.9)
+      (end 2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.78 1.6)
+      (end 1.82 1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.78 -1.6)
+      (end 1.82 -1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.58 0.8)
+      (end -1.58 0)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 1.2)
+      (end -1.58 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 1.2)
+      (end -1.18 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 0.8)
+      (end 1.22 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 -0.8)
+      (end 1.62 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 -1.2)
+      (end 1.62 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 -1.2)
+      (end 1.22 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 -0.8)
+      (end -1.18 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 0)
+      (end -1.58 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 1.4)
+      (end -1.73 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 1.4)
+      (end -1.73 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 -1.4)
+      (end 1.77 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 -1.4)
+      (end 1.77 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (pad 1 smd rect
+      (at 0.93 0)
+      (size 2.2 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 15 "Net-(D13-Pad1)"))
+    (pad 2 smd rect
+      (at -1.33 0)
+      (size 1.3 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 1 VCC))
+    (model LEDs.3dshapes/LED_PLCC_2835.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.4 0.4 0.4))
+      (rotate
+        (xyz 0 0 0))))
+  (module Capacitors_ThroughHole:C_Radial_D10_L13_P5
+    (layer F.Cu)
+    (tedit 0)
+    (tstamp 5710CE4B)
+    (at 142.5 92 180)
+    (descr "Radial Electrolytic Capacitor Diameter 10mm x Length 13mm, Pitch 5mm")
+    (tags "Electrolytic Capacitor")
+    (path /5710D0E9)
+    (fp_text reference C1
+      (at 2.5 -6.3 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value CP
+      (at 2.5 6.3 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start 2.575 -4.999)
+      (end 2.575 4.999)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 2.715 -4.995)
+      (end 2.715 4.995)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 2.855 -4.987)
+      (end 2.855 4.987)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 2.995 -4.975)
+      (end 2.995 4.975)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 3.135 -4.96)
+      (end 3.135 4.96)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 3.275 -4.94)
+      (end 3.275 4.94)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 3.415 -4.916)
+      (end 3.415 4.916)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 3.555 -4.887)
+      (end 3.555 4.887)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 3.695 -4.855)
+      (end 3.695 4.855)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 3.835 -4.818)
+      (end 3.835 4.818)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 3.975 -4.777)
+      (end 3.975 4.777)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 4.115 -4.732)
+      (end 4.115 -0.466)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 4.115 0.466)
+      (end 4.115 4.732)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 4.255 -4.682)
+      (end 4.255 -0.667)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 4.255 0.667)
+      (end 4.255 4.682)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 4.395 -4.627)
+      (end 4.395 -0.796)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 4.395 0.796)
+      (end 4.395 4.627)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 4.535 -4.567)
+      (end 4.535 -0.885)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 4.535 0.885)
+      (end 4.535 4.567)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 4.675 -4.502)
+      (end 4.675 -0.946)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 4.675 0.946)
+      (end 4.675 4.502)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 4.815 -4.432)
+      (end 4.815 -0.983)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 4.815 0.983)
+      (end 4.815 4.432)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 4.955 -4.356)
+      (end 4.955 -0.999)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 4.955 0.999)
+      (end 4.955 4.356)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 5.095 -4.274)
+      (end 5.095 -0.995)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 5.095 0.995)
+      (end 5.095 4.274)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 5.235 -4.186)
+      (end 5.235 -0.972)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 5.235 0.972)
+      (end 5.235 4.186)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 5.375 -4.091)
+      (end 5.375 -0.927)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 5.375 0.927)
+      (end 5.375 4.091)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 5.515 -3.989)
+      (end 5.515 -0.857)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 5.515 0.857)
+      (end 5.515 3.989)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 5.655 -3.879)
+      (end 5.655 -0.756)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 5.655 0.756)
+      (end 5.655 3.879)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 5.795 -3.761)
+      (end 5.795 -0.607)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 5.795 0.607)
+      (end 5.795 3.761)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 5.935 -3.633)
+      (end 5.935 -0.355)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 5.935 0.355)
+      (end 5.935 3.633)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 6.075 -3.496)
+      (end 6.075 3.496)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 6.215 -3.346)
+      (end 6.215 3.346)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 6.355 -3.184)
+      (end 6.355 3.184)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 6.495 -3.007)
+      (end 6.495 3.007)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 6.635 -2.811)
+      (end 6.635 2.811)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 6.775 -2.593)
+      (end 6.775 2.593)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 6.915 -2.347)
+      (end 6.915 2.347)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 7.055 -2.062)
+      (end 7.055 2.062)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 7.195 -1.72)
+      (end 7.195 1.72)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 7.335 -1.274)
+      (end 7.335 1.274)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 7.475 -0.499)
+      (end 7.475 0.499)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_circle
+      (center 5 0)
+      (end 5 -1)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_circle
+      (center 2.5 0)
+      (end 2.5 -5.0375)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_circle
+      (center 2.5 0)
+      (end 2.5 -5.3)
+      (layer F.CrtYd)
+      (width 0.05))
+    (pad 1 thru_hole rect
+      (at 0 0 180)
+      (size 1.3 1.3)
+      (drill 0.8)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 1 VCC))
+    (pad 2 thru_hole circle
+      (at 5 0 180)
+      (size 1.3 1.3)
+      (drill 0.8)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (model Capacitors_ThroughHole.3dshapes/C_Radial_D10_L13_P5.wrl
+      (at
+        (xyz 0.0984252 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 90))))
+  (module LEDs:LED_PLCC_2835
+    (layer F.Cu)
+    (tedit 56F53FE2)
+    (tstamp 5710CE66)
+    (at 126 88 180)
+    (descr http://www.everlight.com/file/ProductFile/67-21S-KK2C-H4040QAR32835Z15-2T.pdf)
+    (tags LED)
+    (path /5710C7FC)
+    (attr smd)
+    (fp_text reference D1
+      (at 0.02 2.4 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0.27 -2.3 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.38 -0.55)
+      (end -0.88 -0.55)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -1.13 -0.8)
+      (end -1.13 -0.3)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.9)
+      (end -2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 1.9)
+      (end -2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 -1.9)
+      (end 2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.9)
+      (end 2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.78 1.6)
+      (end 1.82 1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.78 -1.6)
+      (end 1.82 -1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.58 0.8)
+      (end -1.58 0)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 1.2)
+      (end -1.58 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 1.2)
+      (end -1.18 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 0.8)
+      (end 1.22 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 -0.8)
+      (end 1.62 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 -1.2)
+      (end 1.62 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 -1.2)
+      (end 1.22 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 -0.8)
+      (end -1.18 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 0)
+      (end -1.58 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 1.4)
+      (end -1.73 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 1.4)
+      (end -1.73 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 -1.4)
+      (end 1.77 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 -1.4)
+      (end 1.77 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (pad 1 smd rect
+      (at 0.93 0 180)
+      (size 2.2 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 3 "Net-(D1-Pad1)"))
+    (pad 2 smd rect
+      (at -1.33 0 180)
+      (size 1.3 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 1 VCC))
+    (model LEDs.3dshapes/LED_PLCC_2835.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.4 0.4 0.4))
+      (rotate
+        (xyz 0 0 0))))
+  (module LEDs:LED_PLCC_2835
+    (layer F.Cu)
+    (tedit 56F53FE2)
+    (tstamp 5710CE81)
+    (at 126 92)
+    (descr http://www.everlight.com/file/ProductFile/67-21S-KK2C-H4040QAR32835Z15-2T.pdf)
+    (tags LED)
+    (path /5710CA40)
+    (attr smd)
+    (fp_text reference D2
+      (at 0.02 2.4)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0.27 -2.3)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.38 -0.55)
+      (end -0.88 -0.55)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -1.13 -0.8)
+      (end -1.13 -0.3)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.9)
+      (end -2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 1.9)
+      (end -2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 -1.9)
+      (end 2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.9)
+      (end 2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.78 1.6)
+      (end 1.82 1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.78 -1.6)
+      (end 1.82 -1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.58 0.8)
+      (end -1.58 0)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 1.2)
+      (end -1.58 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 1.2)
+      (end -1.18 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 0.8)
+      (end 1.22 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 -0.8)
+      (end 1.62 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 -1.2)
+      (end 1.62 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 -1.2)
+      (end 1.22 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 -0.8)
+      (end -1.18 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 0)
+      (end -1.58 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 1.4)
+      (end -1.73 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 1.4)
+      (end -1.73 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 -1.4)
+      (end 1.77 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 -1.4)
+      (end 1.77 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (pad 1 smd rect
+      (at 0.93 0)
+      (size 2.2 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 4 "Net-(D2-Pad1)"))
+    (pad 2 smd rect
+      (at -1.33 0)
+      (size 1.3 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 3 "Net-(D1-Pad1)"))
+    (model LEDs.3dshapes/LED_PLCC_2835.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.4 0.4 0.4))
+      (rotate
+        (xyz 0 0 0))))
+  (module LEDs:LED_PLCC_2835
+    (layer F.Cu)
+    (tedit 56F53FE2)
+    (tstamp 5710CE9C)
+    (at 125 97 180)
+    (descr http://www.everlight.com/file/ProductFile/67-21S-KK2C-H4040QAR32835Z15-2T.pdf)
+    (tags LED)
+    (path /5710CB2E)
+    (attr smd)
+    (fp_text reference D3
+      (at 0.02 2.4 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0.27 -2.3 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.38 -0.55)
+      (end -0.88 -0.55)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -1.13 -0.8)
+      (end -1.13 -0.3)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.9)
+      (end -2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 1.9)
+      (end -2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 -1.9)
+      (end 2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.9)
+      (end 2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.78 1.6)
+      (end 1.82 1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.78 -1.6)
+      (end 1.82 -1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.58 0.8)
+      (end -1.58 0)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 1.2)
+      (end -1.58 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 1.2)
+      (end -1.18 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 0.8)
+      (end 1.22 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 -0.8)
+      (end 1.62 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 -1.2)
+      (end 1.62 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 -1.2)
+      (end 1.22 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 -0.8)
+      (end -1.18 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 0)
+      (end -1.58 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 1.4)
+      (end -1.73 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 1.4)
+      (end -1.73 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 -1.4)
+      (end 1.77 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 -1.4)
+      (end 1.77 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (pad 1 smd rect
+      (at 0.93 0 180)
+      (size 2.2 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 5 "Net-(D3-Pad1)"))
+    (pad 2 smd rect
+      (at -1.33 0 180)
+      (size 1.3 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 4 "Net-(D2-Pad1)"))
+    (model LEDs.3dshapes/LED_PLCC_2835.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.4 0.4 0.4))
+      (rotate
+        (xyz 0 0 0))))
+  (module LEDs:LED_PLCC_2835
+    (layer F.Cu)
+    (tedit 56F53FE2)
+    (tstamp 5710CEB7)
+    (at 125 102)
+    (descr http://www.everlight.com/file/ProductFile/67-21S-KK2C-H4040QAR32835Z15-2T.pdf)
+    (tags LED)
+    (path /5710CB34)
+    (attr smd)
+    (fp_text reference D4
+      (at 0.02 2.4)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0.27 -2.3)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.38 -0.55)
+      (end -0.88 -0.55)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -1.13 -0.8)
+      (end -1.13 -0.3)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.9)
+      (end -2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 1.9)
+      (end -2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 -1.9)
+      (end 2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.9)
+      (end 2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.78 1.6)
+      (end 1.82 1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.78 -1.6)
+      (end 1.82 -1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.58 0.8)
+      (end -1.58 0)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 1.2)
+      (end -1.58 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 1.2)
+      (end -1.18 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 0.8)
+      (end 1.22 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 -0.8)
+      (end 1.62 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 -1.2)
+      (end 1.62 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 -1.2)
+      (end 1.22 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 -0.8)
+      (end -1.18 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 0)
+      (end -1.58 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 1.4)
+      (end -1.73 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 1.4)
+      (end -1.73 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 -1.4)
+      (end 1.77 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 -1.4)
+      (end 1.77 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (pad 1 smd rect
+      (at 0.93 0)
+      (size 2.2 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 6 "Net-(D4-Pad1)"))
+    (pad 2 smd rect
+      (at -1.33 0)
+      (size 1.3 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 5 "Net-(D3-Pad1)"))
+    (model LEDs.3dshapes/LED_PLCC_2835.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.4 0.4 0.4))
+      (rotate
+        (xyz 0 0 0))))
+  (module LEDs:LED_PLCC_2835
+    (layer F.Cu)
+    (tedit 56F53FE2)
+    (tstamp 5710CED2)
+    (at 131 88)
+    (descr http://www.everlight.com/file/ProductFile/67-21S-KK2C-H4040QAR32835Z15-2T.pdf)
+    (tags LED)
+    (path /5710E221)
+    (attr smd)
+    (fp_text reference D5
+      (at 0.02 2.4)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0.27 -2.3)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.38 -0.55)
+      (end -0.88 -0.55)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -1.13 -0.8)
+      (end -1.13 -0.3)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.9)
+      (end -2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 1.9)
+      (end -2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 -1.9)
+      (end 2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.9)
+      (end 2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.78 1.6)
+      (end 1.82 1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.78 -1.6)
+      (end 1.82 -1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.58 0.8)
+      (end -1.58 0)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 1.2)
+      (end -1.58 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 1.2)
+      (end -1.18 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 0.8)
+      (end 1.22 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 -0.8)
+      (end 1.62 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 -1.2)
+      (end 1.62 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 -1.2)
+      (end 1.22 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 -0.8)
+      (end -1.18 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 0)
+      (end -1.58 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 1.4)
+      (end -1.73 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 1.4)
+      (end -1.73 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 -1.4)
+      (end 1.77 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 -1.4)
+      (end 1.77 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (pad 1 smd rect
+      (at 0.93 0)
+      (size 2.2 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 7 "Net-(D5-Pad1)"))
+    (pad 2 smd rect
+      (at -1.33 0)
+      (size 1.3 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 1 VCC))
+    (model LEDs.3dshapes/LED_PLCC_2835.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.4 0.4 0.4))
+      (rotate
+        (xyz 0 0 0))))
+  (module LEDs:LED_PLCC_2835
+    (layer F.Cu)
+    (tedit 56F53FE2)
+    (tstamp 5710CEED)
+    (at 131 92 180)
+    (descr http://www.everlight.com/file/ProductFile/67-21S-KK2C-H4040QAR32835Z15-2T.pdf)
+    (tags LED)
+    (path /5710E227)
+    (attr smd)
+    (fp_text reference D6
+      (at 0.02 2.4 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0.27 -2.3 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.38 -0.55)
+      (end -0.88 -0.55)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -1.13 -0.8)
+      (end -1.13 -0.3)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.9)
+      (end -2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 1.9)
+      (end -2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 -1.9)
+      (end 2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.9)
+      (end 2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.78 1.6)
+      (end 1.82 1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.78 -1.6)
+      (end 1.82 -1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.58 0.8)
+      (end -1.58 0)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 1.2)
+      (end -1.58 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 1.2)
+      (end -1.18 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 0.8)
+      (end 1.22 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 -0.8)
+      (end 1.62 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 -1.2)
+      (end 1.62 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 -1.2)
+      (end 1.22 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 -0.8)
+      (end -1.18 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 0)
+      (end -1.58 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 1.4)
+      (end -1.73 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 1.4)
+      (end -1.73 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 -1.4)
+      (end 1.77 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 -1.4)
+      (end 1.77 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (pad 1 smd rect
+      (at 0.93 0 180)
+      (size 2.2 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 8 "Net-(D6-Pad1)"))
+    (pad 2 smd rect
+      (at -1.33 0 180)
+      (size 1.3 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 7 "Net-(D5-Pad1)"))
+    (model LEDs.3dshapes/LED_PLCC_2835.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.4 0.4 0.4))
+      (rotate
+        (xyz 0 0 0))))
+  (module LEDs:LED_PLCC_2835
+    (layer F.Cu)
+    (tedit 56F53FE2)
+    (tstamp 5710CF08)
+    (at 131 97)
+    (descr http://www.everlight.com/file/ProductFile/67-21S-KK2C-H4040QAR32835Z15-2T.pdf)
+    (tags LED)
+    (path /5710E22D)
+    (attr smd)
+    (fp_text reference D7
+      (at 0.02 2.4)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0.27 -2.3)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.38 -0.55)
+      (end -0.88 -0.55)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -1.13 -0.8)
+      (end -1.13 -0.3)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.9)
+      (end -2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 1.9)
+      (end -2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 -1.9)
+      (end 2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.9)
+      (end 2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.78 1.6)
+      (end 1.82 1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.78 -1.6)
+      (end 1.82 -1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.58 0.8)
+      (end -1.58 0)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 1.2)
+      (end -1.58 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 1.2)
+      (end -1.18 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 0.8)
+      (end 1.22 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 -0.8)
+      (end 1.62 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 -1.2)
+      (end 1.62 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 -1.2)
+      (end 1.22 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 -0.8)
+      (end -1.18 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 0)
+      (end -1.58 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 1.4)
+      (end -1.73 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 1.4)
+      (end -1.73 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 -1.4)
+      (end 1.77 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 -1.4)
+      (end 1.77 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (pad 1 smd rect
+      (at 0.93 0)
+      (size 2.2 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 9 "Net-(D7-Pad1)"))
+    (pad 2 smd rect
+      (at -1.33 0)
+      (size 1.3 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 8 "Net-(D6-Pad1)"))
+    (model LEDs.3dshapes/LED_PLCC_2835.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.4 0.4 0.4))
+      (rotate
+        (xyz 0 0 0))))
+  (module LEDs:LED_PLCC_2835
+    (layer F.Cu)
+    (tedit 56F53FE2)
+    (tstamp 5710CF23)
+    (at 131 102 180)
+    (descr http://www.everlight.com/file/ProductFile/67-21S-KK2C-H4040QAR32835Z15-2T.pdf)
+    (tags LED)
+    (path /5710E233)
+    (attr smd)
+    (fp_text reference D8
+      (at 0.02 2.4 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0.27 -2.3 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.38 -0.55)
+      (end -0.88 -0.55)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -1.13 -0.8)
+      (end -1.13 -0.3)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.9)
+      (end -2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 1.9)
+      (end -2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 -1.9)
+      (end 2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.9)
+      (end 2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.78 1.6)
+      (end 1.82 1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.78 -1.6)
+      (end 1.82 -1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.58 0.8)
+      (end -1.58 0)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 1.2)
+      (end -1.58 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 1.2)
+      (end -1.18 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 0.8)
+      (end 1.22 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 -0.8)
+      (end 1.62 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 -1.2)
+      (end 1.62 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 -1.2)
+      (end 1.22 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 -0.8)
+      (end -1.18 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 0)
+      (end -1.58 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 1.4)
+      (end -1.73 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 1.4)
+      (end -1.73 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 -1.4)
+      (end 1.77 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 -1.4)
+      (end 1.77 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (pad 1 smd rect
+      (at 0.93 0 180)
+      (size 2.2 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 10 "Net-(D8-Pad1)"))
+    (pad 2 smd rect
+      (at -1.33 0 180)
+      (size 1.3 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 9 "Net-(D7-Pad1)"))
+    (model LEDs.3dshapes/LED_PLCC_2835.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.4 0.4 0.4))
+      (rotate
+        (xyz 0 0 0))))
+  (module LEDs:LED_PLCC_2835
+    (layer F.Cu)
+    (tedit 56F53FE2)
+    (tstamp 5710CF3E)
+    (at 149 88 180)
+    (descr http://www.everlight.com/file/ProductFile/67-21S-KK2C-H4040QAR32835Z15-2T.pdf)
+    (tags LED)
+    (path /5710E477)
+    (attr smd)
+    (fp_text reference D9
+      (at 0.02 2.4 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0.27 -2.3 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.38 -0.55)
+      (end -0.88 -0.55)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -1.13 -0.8)
+      (end -1.13 -0.3)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.9)
+      (end -2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 1.9)
+      (end -2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 -1.9)
+      (end 2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.9)
+      (end 2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.78 1.6)
+      (end 1.82 1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.78 -1.6)
+      (end 1.82 -1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.58 0.8)
+      (end -1.58 0)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 1.2)
+      (end -1.58 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 1.2)
+      (end -1.18 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 0.8)
+      (end 1.22 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 -0.8)
+      (end 1.62 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 -1.2)
+      (end 1.62 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 -1.2)
+      (end 1.22 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 -0.8)
+      (end -1.18 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 0)
+      (end -1.58 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 1.4)
+      (end -1.73 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 1.4)
+      (end -1.73 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 -1.4)
+      (end 1.77 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 -1.4)
+      (end 1.77 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (pad 1 smd rect
+      (at 0.93 0 180)
+      (size 2.2 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 11 "Net-(D10-Pad2)"))
+    (pad 2 smd rect
+      (at -1.33 0 180)
+      (size 1.3 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 1 VCC))
+    (model LEDs.3dshapes/LED_PLCC_2835.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.4 0.4 0.4))
+      (rotate
+        (xyz 0 0 0))))
+  (module LEDs:LED_PLCC_2835
+    (layer F.Cu)
+    (tedit 56F53FE2)
+    (tstamp 5710CF59)
+    (at 149 92)
+    (descr http://www.everlight.com/file/ProductFile/67-21S-KK2C-H4040QAR32835Z15-2T.pdf)
+    (tags LED)
+    (path /5710E47D)
+    (attr smd)
+    (fp_text reference D10
+      (at 0.02 2.4)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0.27 -2.3)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.38 -0.55)
+      (end -0.88 -0.55)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -1.13 -0.8)
+      (end -1.13 -0.3)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.9)
+      (end -2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 1.9)
+      (end -2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 -1.9)
+      (end 2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.9)
+      (end 2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.78 1.6)
+      (end 1.82 1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.78 -1.6)
+      (end 1.82 -1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.58 0.8)
+      (end -1.58 0)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 1.2)
+      (end -1.58 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 1.2)
+      (end -1.18 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 0.8)
+      (end 1.22 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 -0.8)
+      (end 1.62 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 -1.2)
+      (end 1.62 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 -1.2)
+      (end 1.22 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 -0.8)
+      (end -1.18 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 0)
+      (end -1.58 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 1.4)
+      (end -1.73 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 1.4)
+      (end -1.73 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 -1.4)
+      (end 1.77 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 -1.4)
+      (end 1.77 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (pad 1 smd rect
+      (at 0.93 0)
+      (size 2.2 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 12 "Net-(D10-Pad1)"))
+    (pad 2 smd rect
+      (at -1.33 0)
+      (size 1.3 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 11 "Net-(D10-Pad2)"))
+    (model LEDs.3dshapes/LED_PLCC_2835.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.4 0.4 0.4))
+      (rotate
+        (xyz 0 0 0))))
+  (module LEDs:LED_PLCC_2835
+    (layer F.Cu)
+    (tedit 56F53FE2)
+    (tstamp 5710CF74)
+    (at 149 97 180)
+    (descr http://www.everlight.com/file/ProductFile/67-21S-KK2C-H4040QAR32835Z15-2T.pdf)
+    (tags LED)
+    (path /5710E483)
+    (attr smd)
+    (fp_text reference D11
+      (at 0.02 2.4 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0.27 -2.3 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.38 -0.55)
+      (end -0.88 -0.55)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -1.13 -0.8)
+      (end -1.13 -0.3)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.9)
+      (end -2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 1.9)
+      (end -2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 -1.9)
+      (end 2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.9)
+      (end 2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.78 1.6)
+      (end 1.82 1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.78 -1.6)
+      (end 1.82 -1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.58 0.8)
+      (end -1.58 0)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 1.2)
+      (end -1.58 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 1.2)
+      (end -1.18 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 0.8)
+      (end 1.22 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 -0.8)
+      (end 1.62 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 -1.2)
+      (end 1.62 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 -1.2)
+      (end 1.22 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 -0.8)
+      (end -1.18 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 0)
+      (end -1.58 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 1.4)
+      (end -1.73 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 1.4)
+      (end -1.73 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 -1.4)
+      (end 1.77 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 -1.4)
+      (end 1.77 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (pad 1 smd rect
+      (at 0.93 0 180)
+      (size 2.2 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 13 "Net-(D11-Pad1)"))
+    (pad 2 smd rect
+      (at -1.33 0 180)
+      (size 1.3 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 12 "Net-(D10-Pad1)"))
+    (model LEDs.3dshapes/LED_PLCC_2835.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.4 0.4 0.4))
+      (rotate
+        (xyz 0 0 0))))
+  (module LEDs:LED_PLCC_2835
+    (layer F.Cu)
+    (tedit 56F53FE2)
+    (tstamp 5710CF8F)
+    (at 149 102)
+    (descr http://www.everlight.com/file/ProductFile/67-21S-KK2C-H4040QAR32835Z15-2T.pdf)
+    (tags LED)
+    (path /5710E489)
+    (attr smd)
+    (fp_text reference D12
+      (at 0.02 2.4)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0.27 -2.3)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.38 -0.55)
+      (end -0.88 -0.55)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -1.13 -0.8)
+      (end -1.13 -0.3)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.9)
+      (end -2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 1.9)
+      (end -2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 -1.9)
+      (end 2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.9)
+      (end 2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.78 1.6)
+      (end 1.82 1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.78 -1.6)
+      (end 1.82 -1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.58 0.8)
+      (end -1.58 0)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 1.2)
+      (end -1.58 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 1.2)
+      (end -1.18 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 0.8)
+      (end 1.22 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 -0.8)
+      (end 1.62 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 -1.2)
+      (end 1.62 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 -1.2)
+      (end 1.22 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 -0.8)
+      (end -1.18 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 0)
+      (end -1.58 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 1.4)
+      (end -1.73 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 1.4)
+      (end -1.73 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 -1.4)
+      (end 1.77 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 -1.4)
+      (end 1.77 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (pad 1 smd rect
+      (at 0.93 0)
+      (size 2.2 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 14 "Net-(D12-Pad1)"))
+    (pad 2 smd rect
+      (at -1.33 0)
+      (size 1.3 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 13 "Net-(D11-Pad1)"))
+    (model LEDs.3dshapes/LED_PLCC_2835.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.4 0.4 0.4))
+      (rotate
+        (xyz 0 0 0))))
+  (module LEDs:LED_PLCC_2835
+    (layer F.Cu)
+    (tedit 56F53FE2)
+    (tstamp 5710CFC5)
+    (at 154 92 180)
+    (descr http://www.everlight.com/file/ProductFile/67-21S-KK2C-H4040QAR32835Z15-2T.pdf)
+    (tags LED)
+    (path /5710E4A7)
+    (attr smd)
+    (fp_text reference D14
+      (at 0.02 2.4 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0.27 -2.3 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.38 -0.55)
+      (end -0.88 -0.55)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -1.13 -0.8)
+      (end -1.13 -0.3)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.9)
+      (end -2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 1.9)
+      (end -2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 -1.9)
+      (end 2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.9)
+      (end 2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.78 1.6)
+      (end 1.82 1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.78 -1.6)
+      (end 1.82 -1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.58 0.8)
+      (end -1.58 0)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 1.2)
+      (end -1.58 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 1.2)
+      (end -1.18 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 0.8)
+      (end 1.22 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 -0.8)
+      (end 1.62 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 -1.2)
+      (end 1.62 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 -1.2)
+      (end 1.22 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 -0.8)
+      (end -1.18 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 0)
+      (end -1.58 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 1.4)
+      (end -1.73 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 1.4)
+      (end -1.73 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 -1.4)
+      (end 1.77 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 -1.4)
+      (end 1.77 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (pad 1 smd rect
+      (at 0.93 0 180)
+      (size 2.2 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 16 "Net-(D14-Pad1)"))
+    (pad 2 smd rect
+      (at -1.33 0 180)
+      (size 1.3 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 15 "Net-(D13-Pad1)"))
+    (model LEDs.3dshapes/LED_PLCC_2835.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.4 0.4 0.4))
+      (rotate
+        (xyz 0 0 0))))
+  (module LEDs:LED_PLCC_2835
+    (layer F.Cu)
+    (tedit 56F53FE2)
+    (tstamp 5710CFE0)
+    (at 155 97)
+    (descr http://www.everlight.com/file/ProductFile/67-21S-KK2C-H4040QAR32835Z15-2T.pdf)
+    (tags LED)
+    (path /5710E4AD)
+    (attr smd)
+    (fp_text reference D15
+      (at 0.02 2.4)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0.27 -2.3)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.38 -0.55)
+      (end -0.88 -0.55)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -1.13 -0.8)
+      (end -1.13 -0.3)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.9)
+      (end -2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 1.9)
+      (end -2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 -1.9)
+      (end 2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.9)
+      (end 2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.78 1.6)
+      (end 1.82 1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.78 -1.6)
+      (end 1.82 -1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.58 0.8)
+      (end -1.58 0)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 1.2)
+      (end -1.58 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 1.2)
+      (end -1.18 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 0.8)
+      (end 1.22 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 -0.8)
+      (end 1.62 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 -1.2)
+      (end 1.62 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 -1.2)
+      (end 1.22 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 -0.8)
+      (end -1.18 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 0)
+      (end -1.58 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 1.4)
+      (end -1.73 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 1.4)
+      (end -1.73 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 -1.4)
+      (end 1.77 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 -1.4)
+      (end 1.77 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (pad 1 smd rect
+      (at 0.93 0)
+      (size 2.2 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 17 "Net-(D15-Pad1)"))
+    (pad 2 smd rect
+      (at -1.33 0)
+      (size 1.3 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 16 "Net-(D14-Pad1)"))
+    (model LEDs.3dshapes/LED_PLCC_2835.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.4 0.4 0.4))
+      (rotate
+        (xyz 0 0 0))))
+  (module LEDs:LED_PLCC_2835
+    (layer F.Cu)
+    (tedit 56F53FE2)
+    (tstamp 5710CFFB)
+    (at 155 102 180)
+    (descr http://www.everlight.com/file/ProductFile/67-21S-KK2C-H4040QAR32835Z15-2T.pdf)
+    (tags LED)
+    (path /5710E4B3)
+    (attr smd)
+    (fp_text reference D16
+      (at 0.02 2.4 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0.27 -2.3 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.38 -0.55)
+      (end -0.88 -0.55)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -1.13 -0.8)
+      (end -1.13 -0.3)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.9)
+      (end -2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 1.9)
+      (end -2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 -1.9)
+      (end 2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.9)
+      (end 2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.78 1.6)
+      (end 1.82 1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.78 -1.6)
+      (end 1.82 -1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.58 0.8)
+      (end -1.58 0)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 1.2)
+      (end -1.58 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 1.2)
+      (end -1.18 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 0.8)
+      (end 1.22 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 -0.8)
+      (end 1.62 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 -1.2)
+      (end 1.62 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 -1.2)
+      (end 1.22 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 -0.8)
+      (end -1.18 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 0)
+      (end -1.58 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 1.4)
+      (end -1.73 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 1.4)
+      (end -1.73 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 -1.4)
+      (end 1.77 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 -1.4)
+      (end 1.77 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (pad 1 smd rect
+      (at 0.93 0 180)
+      (size 2.2 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 18 "Net-(D16-Pad1)"))
+    (pad 2 smd rect
+      (at -1.33 0 180)
+      (size 1.3 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 17 "Net-(D15-Pad1)"))
+    (model LEDs.3dshapes/LED_PLCC_2835.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.4 0.4 0.4))
+      (rotate
+        (xyz 0 0 0))))
+  (module yaqwsx:DB207S
+    (layer F.Cu)
+    (tedit 5710B4E1)
+    (tstamp 5710D00A)
+    (at 140 99)
+    (path /5710CDCA)
+    (fp_text reference D17
+      (at 0 6.25)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value DB207S
+      (at 0 -6.25)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -3.75 -5.5)
+      (end 3.75 -5.5)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 3.75 -5.5)
+      (end 3.75 5.5)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 3.75 5.5)
+      (end -3.75 5.5)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -3.75 5.5)
+      (end -3.75 -5.5)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -3.5 5.25)
+      (end 3.5 5.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -3.5 -3.25)
+      (end -3.5 -5.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -3.5 -5.25)
+      (end 3.5 -5.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 3 smd rect
+      (at 2.5 -4.25)
+      (size 1.52 1.52)
+      (layers F.Cu F.Paste F.Mask)
+      (net 1 VCC))
+    (pad 4 smd rect
+      (at 2.5 4.25)
+      (size 1.52 1.52)
+      (layers F.Cu F.Paste F.Mask)
+      (net 19 "Net-(D17-Pad4)"))
+    (pad 2 smd rect
+      (at -2.5 4.25)
+      (size 1.52 1.52)
+      (layers F.Cu F.Paste F.Mask)
+      (net 20 "Net-(D17-Pad2)"))
+    (pad 1 smd rect
+      (at -2.5 -4.25)
+      (size 1.52 1.52)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND)))
+  (module LEDs:LED_PLCC_2835
+    (layer F.Cu)
+    (tedit 56F53FE2)
+    (tstamp 5710D025)
+    (at 131 67 180)
+    (descr http://www.everlight.com/file/ProductFile/67-21S-KK2C-H4040QAR32835Z15-2T.pdf)
+    (tags LED)
+    (path /5710E883)
+    (attr smd)
+    (fp_text reference D18
+      (at 0.02 2.4 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0.27 -2.3 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.38 -0.55)
+      (end -0.88 -0.55)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -1.13 -0.8)
+      (end -1.13 -0.3)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.9)
+      (end -2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 1.9)
+      (end -2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 -1.9)
+      (end 2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.9)
+      (end 2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.78 1.6)
+      (end 1.82 1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.78 -1.6)
+      (end 1.82 -1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.58 0.8)
+      (end -1.58 0)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 1.2)
+      (end -1.58 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 1.2)
+      (end -1.18 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 0.8)
+      (end 1.22 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 -0.8)
+      (end 1.62 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 -1.2)
+      (end 1.62 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 -1.2)
+      (end 1.22 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 -0.8)
+      (end -1.18 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 0)
+      (end -1.58 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 1.4)
+      (end -1.73 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 1.4)
+      (end -1.73 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 -1.4)
+      (end 1.77 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 -1.4)
+      (end 1.77 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (pad 1 smd rect
+      (at 0.93 0 180)
+      (size 2.2 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 21 "Net-(D18-Pad1)"))
+    (pad 2 smd rect
+      (at -1.33 0 180)
+      (size 1.3 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 1 VCC))
+    (model LEDs.3dshapes/LED_PLCC_2835.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.4 0.4 0.4))
+      (rotate
+        (xyz 0 0 0))))
+  (module LEDs:LED_PLCC_2835
+    (layer F.Cu)
+    (tedit 56F53FE2)
+    (tstamp 5710D040)
+    (at 130.5 72)
+    (descr http://www.everlight.com/file/ProductFile/67-21S-KK2C-H4040QAR32835Z15-2T.pdf)
+    (tags LED)
+    (path /5710E889)
+    (attr smd)
+    (fp_text reference D19
+      (at 0.02 2.4)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0.27 -2.3)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.38 -0.55)
+      (end -0.88 -0.55)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -1.13 -0.8)
+      (end -1.13 -0.3)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.9)
+      (end -2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 1.9)
+      (end -2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 -1.9)
+      (end 2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.9)
+      (end 2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.78 1.6)
+      (end 1.82 1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.78 -1.6)
+      (end 1.82 -1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.58 0.8)
+      (end -1.58 0)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 1.2)
+      (end -1.58 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 1.2)
+      (end -1.18 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 0.8)
+      (end 1.22 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 -0.8)
+      (end 1.62 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 -1.2)
+      (end 1.62 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 -1.2)
+      (end 1.22 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 -0.8)
+      (end -1.18 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 0)
+      (end -1.58 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 1.4)
+      (end -1.73 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 1.4)
+      (end -1.73 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 -1.4)
+      (end 1.77 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 -1.4)
+      (end 1.77 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (pad 1 smd rect
+      (at 0.93 0)
+      (size 2.2 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 22 "Net-(D19-Pad1)"))
+    (pad 2 smd rect
+      (at -1.33 0)
+      (size 1.3 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 21 "Net-(D18-Pad1)"))
+    (model LEDs.3dshapes/LED_PLCC_2835.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.4 0.4 0.4))
+      (rotate
+        (xyz 0 0 0))))
+  (module LEDs:LED_PLCC_2835
+    (layer F.Cu)
+    (tedit 56F53FE2)
+    (tstamp 5710D05B)
+    (at 129 76.5 180)
+    (descr http://www.everlight.com/file/ProductFile/67-21S-KK2C-H4040QAR32835Z15-2T.pdf)
+    (tags LED)
+    (path /5710E88F)
+    (attr smd)
+    (fp_text reference D20
+      (at 0.02 2.4 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0.27 -2.3 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.38 -0.55)
+      (end -0.88 -0.55)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -1.13 -0.8)
+      (end -1.13 -0.3)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.9)
+      (end -2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 1.9)
+      (end -2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 -1.9)
+      (end 2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.9)
+      (end 2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.78 1.6)
+      (end 1.82 1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.78 -1.6)
+      (end 1.82 -1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.58 0.8)
+      (end -1.58 0)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 1.2)
+      (end -1.58 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 1.2)
+      (end -1.18 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 0.8)
+      (end 1.22 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 -0.8)
+      (end 1.62 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 -1.2)
+      (end 1.62 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 -1.2)
+      (end 1.22 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 -0.8)
+      (end -1.18 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 0)
+      (end -1.58 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 1.4)
+      (end -1.73 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 1.4)
+      (end -1.73 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 -1.4)
+      (end 1.77 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 -1.4)
+      (end 1.77 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (pad 1 smd rect
+      (at 0.93 0 180)
+      (size 2.2 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 23 "Net-(D20-Pad1)"))
+    (pad 2 smd rect
+      (at -1.33 0 180)
+      (size 1.3 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 22 "Net-(D19-Pad1)"))
+    (model LEDs.3dshapes/LED_PLCC_2835.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.4 0.4 0.4))
+      (rotate
+        (xyz 0 0 0))))
+  (module LEDs:LED_PLCC_2835
+    (layer F.Cu)
+    (tedit 56F53FE2)
+    (tstamp 5710D076)
+    (at 128 81.5 180)
+    (descr http://www.everlight.com/file/ProductFile/67-21S-KK2C-H4040QAR32835Z15-2T.pdf)
+    (tags LED)
+    (path /5710E895)
+    (attr smd)
+    (fp_text reference D21
+      (at 0.02 2.4 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0.27 -2.3 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.38 -0.55)
+      (end -0.88 -0.55)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -1.13 -0.8)
+      (end -1.13 -0.3)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.9)
+      (end -2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 1.9)
+      (end -2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 -1.9)
+      (end 2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.9)
+      (end 2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.78 1.6)
+      (end 1.82 1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.78 -1.6)
+      (end 1.82 -1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.58 0.8)
+      (end -1.58 0)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 1.2)
+      (end -1.58 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 1.2)
+      (end -1.18 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 0.8)
+      (end 1.22 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 -0.8)
+      (end 1.62 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 -1.2)
+      (end 1.62 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 -1.2)
+      (end 1.22 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 -0.8)
+      (end -1.18 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 0)
+      (end -1.58 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 1.4)
+      (end -1.73 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 1.4)
+      (end -1.73 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 -1.4)
+      (end 1.77 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 -1.4)
+      (end 1.77 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (pad 1 smd rect
+      (at 0.93 0 180)
+      (size 2.2 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 24 "Net-(D21-Pad1)"))
+    (pad 2 smd rect
+      (at -1.33 0 180)
+      (size 1.3 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 23 "Net-(D20-Pad1)"))
+    (model LEDs.3dshapes/LED_PLCC_2835.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.4 0.4 0.4))
+      (rotate
+        (xyz 0 0 0))))
+  (module LEDs:LED_PLCC_2835
+    (layer F.Cu)
+    (tedit 56F53FE2)
+    (tstamp 5710D091)
+    (at 149 67)
+    (descr http://www.everlight.com/file/ProductFile/67-21S-KK2C-H4040QAR32835Z15-2T.pdf)
+    (tags LED)
+    (path /5710E8AD)
+    (attr smd)
+    (fp_text reference D22
+      (at 0.02 2.4)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0.27 -2.3)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.38 -0.55)
+      (end -0.88 -0.55)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -1.13 -0.8)
+      (end -1.13 -0.3)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.9)
+      (end -2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 1.9)
+      (end -2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 -1.9)
+      (end 2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.9)
+      (end 2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.78 1.6)
+      (end 1.82 1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.78 -1.6)
+      (end 1.82 -1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.58 0.8)
+      (end -1.58 0)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 1.2)
+      (end -1.58 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 1.2)
+      (end -1.18 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 0.8)
+      (end 1.22 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 -0.8)
+      (end 1.62 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 -1.2)
+      (end 1.62 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 -1.2)
+      (end 1.22 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 -0.8)
+      (end -1.18 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 0)
+      (end -1.58 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 1.4)
+      (end -1.73 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 1.4)
+      (end -1.73 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 -1.4)
+      (end 1.77 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 -1.4)
+      (end 1.77 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (pad 1 smd rect
+      (at 0.93 0)
+      (size 2.2 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 25 "Net-(D22-Pad1)"))
+    (pad 2 smd rect
+      (at -1.33 0)
+      (size 1.3 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 1 VCC))
+    (model LEDs.3dshapes/LED_PLCC_2835.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.4 0.4 0.4))
+      (rotate
+        (xyz 0 0 0))))
+  (module LEDs:LED_PLCC_2835
+    (layer F.Cu)
+    (tedit 56F53FE2)
+    (tstamp 5710D0AC)
+    (at 149.5 72 180)
+    (descr http://www.everlight.com/file/ProductFile/67-21S-KK2C-H4040QAR32835Z15-2T.pdf)
+    (tags LED)
+    (path /5710E8B3)
+    (attr smd)
+    (fp_text reference D23
+      (at 0.02 2.4 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0.27 -2.3 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.38 -0.55)
+      (end -0.88 -0.55)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -1.13 -0.8)
+      (end -1.13 -0.3)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.9)
+      (end -2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 1.9)
+      (end -2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 -1.9)
+      (end 2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.9)
+      (end 2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.78 1.6)
+      (end 1.82 1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.78 -1.6)
+      (end 1.82 -1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.58 0.8)
+      (end -1.58 0)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 1.2)
+      (end -1.58 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 1.2)
+      (end -1.18 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 0.8)
+      (end 1.22 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 -0.8)
+      (end 1.62 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 -1.2)
+      (end 1.62 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 -1.2)
+      (end 1.22 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 -0.8)
+      (end -1.18 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 0)
+      (end -1.58 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 1.4)
+      (end -1.73 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 1.4)
+      (end -1.73 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 -1.4)
+      (end 1.77 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 -1.4)
+      (end 1.77 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (pad 1 smd rect
+      (at 0.93 0 180)
+      (size 2.2 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 26 "Net-(D23-Pad1)"))
+    (pad 2 smd rect
+      (at -1.33 0 180)
+      (size 1.3 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 25 "Net-(D22-Pad1)"))
+    (model LEDs.3dshapes/LED_PLCC_2835.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.4 0.4 0.4))
+      (rotate
+        (xyz 0 0 0))))
+  (module LEDs:LED_PLCC_2835
+    (layer F.Cu)
+    (tedit 56F53FE2)
+    (tstamp 5710D0C7)
+    (at 150.5 76.5)
+    (descr http://www.everlight.com/file/ProductFile/67-21S-KK2C-H4040QAR32835Z15-2T.pdf)
+    (tags LED)
+    (path /5710E8B9)
+    (attr smd)
+    (fp_text reference D24
+      (at 0.02 2.4)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0.27 -2.3)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.38 -0.55)
+      (end -0.88 -0.55)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -1.13 -0.8)
+      (end -1.13 -0.3)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.9)
+      (end -2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 1.9)
+      (end -2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 -1.9)
+      (end 2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.9)
+      (end 2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.78 1.6)
+      (end 1.82 1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.78 -1.6)
+      (end 1.82 -1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.58 0.8)
+      (end -1.58 0)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 1.2)
+      (end -1.58 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 1.2)
+      (end -1.18 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 0.8)
+      (end 1.22 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 -0.8)
+      (end 1.62 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 -1.2)
+      (end 1.62 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 -1.2)
+      (end 1.22 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 -0.8)
+      (end -1.18 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 0)
+      (end -1.58 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 1.4)
+      (end -1.73 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 1.4)
+      (end -1.73 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 -1.4)
+      (end 1.77 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 -1.4)
+      (end 1.77 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (pad 1 smd rect
+      (at 0.93 0)
+      (size 2.2 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 27 "Net-(D24-Pad1)"))
+    (pad 2 smd rect
+      (at -1.33 0)
+      (size 1.3 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 26 "Net-(D23-Pad1)"))
+    (model LEDs.3dshapes/LED_PLCC_2835.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.4 0.4 0.4))
+      (rotate
+        (xyz 0 0 0))))
+  (module LEDs:LED_PLCC_2835
+    (layer F.Cu)
+    (tedit 56F53FE2)
+    (tstamp 5710D0E2)
+    (at 151.5 81.5)
+    (descr http://www.everlight.com/file/ProductFile/67-21S-KK2C-H4040QAR32835Z15-2T.pdf)
+    (tags LED)
+    (path /5710E8BF)
+    (attr smd)
+    (fp_text reference D25
+      (at 0.02 2.4)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0.27 -2.3)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.38 -0.55)
+      (end -0.88 -0.55)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -1.13 -0.8)
+      (end -1.13 -0.3)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.9)
+      (end -2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 1.9)
+      (end -2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 -1.9)
+      (end 2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.9)
+      (end 2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.78 1.6)
+      (end 1.82 1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.78 -1.6)
+      (end 1.82 -1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.58 0.8)
+      (end -1.58 0)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 1.2)
+      (end -1.58 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 1.2)
+      (end -1.18 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 0.8)
+      (end 1.22 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 -0.8)
+      (end 1.62 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 -1.2)
+      (end 1.62 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 -1.2)
+      (end 1.22 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 -0.8)
+      (end -1.18 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 0)
+      (end -1.58 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 1.4)
+      (end -1.73 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 1.4)
+      (end -1.73 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 -1.4)
+      (end 1.77 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 -1.4)
+      (end 1.77 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (pad 1 smd rect
+      (at 0.93 0)
+      (size 2.2 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 28 "Net-(D25-Pad1)"))
+    (pad 2 smd rect
+      (at -1.33 0)
+      (size 1.3 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 27 "Net-(D24-Pad1)"))
+    (model LEDs.3dshapes/LED_PLCC_2835.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.4 0.4 0.4))
+      (rotate
+        (xyz 0 0 0))))
+  (module LEDs:LED_PLCC_2835
+    (layer F.Cu)
+    (tedit 56F53FE2)
+    (tstamp 5710D0FD)
+    (at 144 67)
+    (descr http://www.everlight.com/file/ProductFile/67-21S-KK2C-H4040QAR32835Z15-2T.pdf)
+    (tags LED)
+    (path /5710E8D7)
+    (attr smd)
+    (fp_text reference D26
+      (at 0.02 2.4)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0.27 -2.3)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.38 -0.55)
+      (end -0.88 -0.55)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -1.13 -0.8)
+      (end -1.13 -0.3)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.9)
+      (end -2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 1.9)
+      (end -2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 -1.9)
+      (end 2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.9)
+      (end 2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.78 1.6)
+      (end 1.82 1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.78 -1.6)
+      (end 1.82 -1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.58 0.8)
+      (end -1.58 0)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 1.2)
+      (end -1.58 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 1.2)
+      (end -1.18 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 0.8)
+      (end 1.22 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 -0.8)
+      (end 1.62 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 -1.2)
+      (end 1.62 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 -1.2)
+      (end 1.22 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 -0.8)
+      (end -1.18 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 0)
+      (end -1.58 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 1.4)
+      (end -1.73 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 1.4)
+      (end -1.73 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 -1.4)
+      (end 1.77 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 -1.4)
+      (end 1.77 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (pad 1 smd rect
+      (at 0.93 0)
+      (size 2.2 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 29 "Net-(D26-Pad1)"))
+    (pad 2 smd rect
+      (at -1.33 0)
+      (size 1.3 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 1 VCC))
+    (model LEDs.3dshapes/LED_PLCC_2835.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.4 0.4 0.4))
+      (rotate
+        (xyz 0 0 0))))
+  (module LEDs:LED_PLCC_2835
+    (layer F.Cu)
+    (tedit 56F53FE2)
+    (tstamp 5710D118)
+    (at 144.07 72 180)
+    (descr http://www.everlight.com/file/ProductFile/67-21S-KK2C-H4040QAR32835Z15-2T.pdf)
+    (tags LED)
+    (path /5710E8DD)
+    (attr smd)
+    (fp_text reference D27
+      (at 0.02 2.4 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0.27 -2.3 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.38 -0.55)
+      (end -0.88 -0.55)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -1.13 -0.8)
+      (end -1.13 -0.3)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.9)
+      (end -2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 1.9)
+      (end -2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 -1.9)
+      (end 2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.9)
+      (end 2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.78 1.6)
+      (end 1.82 1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.78 -1.6)
+      (end 1.82 -1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.58 0.8)
+      (end -1.58 0)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 1.2)
+      (end -1.58 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 1.2)
+      (end -1.18 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 0.8)
+      (end 1.22 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 -0.8)
+      (end 1.62 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 -1.2)
+      (end 1.62 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 -1.2)
+      (end 1.22 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 -0.8)
+      (end -1.18 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 0)
+      (end -1.58 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 1.4)
+      (end -1.73 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 1.4)
+      (end -1.73 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 -1.4)
+      (end 1.77 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 -1.4)
+      (end 1.77 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (pad 1 smd rect
+      (at 0.93 0 180)
+      (size 2.2 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 30 "Net-(D27-Pad1)"))
+    (pad 2 smd rect
+      (at -1.33 0 180)
+      (size 1.3 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 29 "Net-(D26-Pad1)"))
+    (model LEDs.3dshapes/LED_PLCC_2835.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.4 0.4 0.4))
+      (rotate
+        (xyz 0 0 0))))
+  (module LEDs:LED_PLCC_2835
+    (layer F.Cu)
+    (tedit 56F53FE2)
+    (tstamp 5710D133)
+    (at 144 76.5)
+    (descr http://www.everlight.com/file/ProductFile/67-21S-KK2C-H4040QAR32835Z15-2T.pdf)
+    (tags LED)
+    (path /5710E8E3)
+    (attr smd)
+    (fp_text reference D28
+      (at 0.02 2.4)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0.27 -2.3)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.38 -0.55)
+      (end -0.88 -0.55)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -1.13 -0.8)
+      (end -1.13 -0.3)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.9)
+      (end -2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 1.9)
+      (end -2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 -1.9)
+      (end 2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.9)
+      (end 2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.78 1.6)
+      (end 1.82 1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.78 -1.6)
+      (end 1.82 -1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.58 0.8)
+      (end -1.58 0)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 1.2)
+      (end -1.58 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 1.2)
+      (end -1.18 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 0.8)
+      (end 1.22 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 -0.8)
+      (end 1.62 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 -1.2)
+      (end 1.62 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 -1.2)
+      (end 1.22 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 -0.8)
+      (end -1.18 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 0)
+      (end -1.58 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 1.4)
+      (end -1.73 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 1.4)
+      (end -1.73 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 -1.4)
+      (end 1.77 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 -1.4)
+      (end 1.77 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (pad 1 smd rect
+      (at 0.93 0)
+      (size 2.2 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 31 "Net-(D28-Pad1)"))
+    (pad 2 smd rect
+      (at -1.33 0)
+      (size 1.3 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 30 "Net-(D27-Pad1)"))
+    (model LEDs.3dshapes/LED_PLCC_2835.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.4 0.4 0.4))
+      (rotate
+        (xyz 0 0 0))))
+  (module LEDs:LED_PLCC_2835
+    (layer F.Cu)
+    (tedit 56F53FE2)
+    (tstamp 5710D14E)
+    (at 145.5 80.5 180)
+    (descr http://www.everlight.com/file/ProductFile/67-21S-KK2C-H4040QAR32835Z15-2T.pdf)
+    (tags LED)
+    (path /5710E8E9)
+    (attr smd)
+    (fp_text reference D29
+      (at 0.02 2.4 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0.27 -2.3 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.38 -0.55)
+      (end -0.88 -0.55)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -1.13 -0.8)
+      (end -1.13 -0.3)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.9)
+      (end -2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 1.9)
+      (end -2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 -1.9)
+      (end 2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.9)
+      (end 2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.78 1.6)
+      (end 1.82 1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.78 -1.6)
+      (end 1.82 -1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.58 0.8)
+      (end -1.58 0)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 1.2)
+      (end -1.58 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 1.2)
+      (end -1.18 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 0.8)
+      (end 1.22 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 -0.8)
+      (end 1.62 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 -1.2)
+      (end 1.62 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 -1.2)
+      (end 1.22 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 -0.8)
+      (end -1.18 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 0)
+      (end -1.58 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 1.4)
+      (end -1.73 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 1.4)
+      (end -1.73 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 -1.4)
+      (end 1.77 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 -1.4)
+      (end 1.77 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (pad 1 smd rect
+      (at 0.93 0 180)
+      (size 2.2 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 32 "Net-(D29-Pad1)"))
+    (pad 2 smd rect
+      (at -1.33 0 180)
+      (size 1.3 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 31 "Net-(D28-Pad1)"))
+    (model LEDs.3dshapes/LED_PLCC_2835.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.4 0.4 0.4))
+      (rotate
+        (xyz 0 0 0))))
+  (module LEDs:LED_PLCC_2835
+    (layer F.Cu)
+    (tedit 56F53FE2)
+    (tstamp 5710D169)
+    (at 136 67 180)
+    (descr http://www.everlight.com/file/ProductFile/67-21S-KK2C-H4040QAR32835Z15-2T.pdf)
+    (tags LED)
+    (path /5710E901)
+    (attr smd)
+    (fp_text reference D30
+      (at 0.02 2.4 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0.27 -2.3 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.38 -0.55)
+      (end -0.88 -0.55)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -1.13 -0.8)
+      (end -1.13 -0.3)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.9)
+      (end -2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 1.9)
+      (end -2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 -1.9)
+      (end 2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.9)
+      (end 2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.78 1.6)
+      (end 1.82 1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.78 -1.6)
+      (end 1.82 -1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.58 0.8)
+      (end -1.58 0)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 1.2)
+      (end -1.58 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 1.2)
+      (end -1.18 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 0.8)
+      (end 1.22 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 -0.8)
+      (end 1.62 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 -1.2)
+      (end 1.62 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 -1.2)
+      (end 1.22 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 -0.8)
+      (end -1.18 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 0)
+      (end -1.58 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 1.4)
+      (end -1.73 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 1.4)
+      (end -1.73 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 -1.4)
+      (end 1.77 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 -1.4)
+      (end 1.77 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (pad 1 smd rect
+      (at 0.93 0 180)
+      (size 2.2 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 33 "Net-(D30-Pad1)"))
+    (pad 2 smd rect
+      (at -1.33 0 180)
+      (size 1.3 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 1 VCC))
+    (model LEDs.3dshapes/LED_PLCC_2835.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.4 0.4 0.4))
+      (rotate
+        (xyz 0 0 0))))
+  (module LEDs:LED_PLCC_2835
+    (layer F.Cu)
+    (tedit 56F53FE2)
+    (tstamp 5710D184)
+    (at 136 72)
+    (descr http://www.everlight.com/file/ProductFile/67-21S-KK2C-H4040QAR32835Z15-2T.pdf)
+    (tags LED)
+    (path /5710E907)
+    (attr smd)
+    (fp_text reference D31
+      (at 0.02 2.4)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0.27 -2.3)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.38 -0.55)
+      (end -0.88 -0.55)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -1.13 -0.8)
+      (end -1.13 -0.3)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.9)
+      (end -2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 1.9)
+      (end -2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 -1.9)
+      (end 2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.9)
+      (end 2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.78 1.6)
+      (end 1.82 1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.78 -1.6)
+      (end 1.82 -1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.58 0.8)
+      (end -1.58 0)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 1.2)
+      (end -1.58 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 1.2)
+      (end -1.18 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 0.8)
+      (end 1.22 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 -0.8)
+      (end 1.62 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 -1.2)
+      (end 1.62 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 -1.2)
+      (end 1.22 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 -0.8)
+      (end -1.18 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 0)
+      (end -1.58 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 1.4)
+      (end -1.73 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 1.4)
+      (end -1.73 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 -1.4)
+      (end 1.77 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 -1.4)
+      (end 1.77 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (pad 1 smd rect
+      (at 0.93 0)
+      (size 2.2 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 34 "Net-(D31-Pad1)"))
+    (pad 2 smd rect
+      (at -1.33 0)
+      (size 1.3 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 33 "Net-(D30-Pad1)"))
+    (model LEDs.3dshapes/LED_PLCC_2835.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.4 0.4 0.4))
+      (rotate
+        (xyz 0 0 0))))
+  (module LEDs:LED_PLCC_2835
+    (layer F.Cu)
+    (tedit 56F53FE2)
+    (tstamp 5710D19F)
+    (at 135.43 76.5 180)
+    (descr http://www.everlight.com/file/ProductFile/67-21S-KK2C-H4040QAR32835Z15-2T.pdf)
+    (tags LED)
+    (path /5710E90D)
+    (attr smd)
+    (fp_text reference D32
+      (at 0.02 2.4 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0.27 -2.3 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.38 -0.55)
+      (end -0.88 -0.55)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -1.13 -0.8)
+      (end -1.13 -0.3)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.9)
+      (end -2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 1.9)
+      (end -2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 -1.9)
+      (end 2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.9)
+      (end 2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.78 1.6)
+      (end 1.82 1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.78 -1.6)
+      (end 1.82 -1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.58 0.8)
+      (end -1.58 0)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 1.2)
+      (end -1.58 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 1.2)
+      (end -1.18 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 0.8)
+      (end 1.22 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 -0.8)
+      (end 1.62 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 -1.2)
+      (end 1.62 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 -1.2)
+      (end 1.22 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 -0.8)
+      (end -1.18 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 0)
+      (end -1.58 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 1.4)
+      (end -1.73 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 1.4)
+      (end -1.73 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 -1.4)
+      (end 1.77 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 -1.4)
+      (end 1.77 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (pad 1 smd rect
+      (at 0.93 0 180)
+      (size 2.2 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 35 "Net-(D32-Pad1)"))
+    (pad 2 smd rect
+      (at -1.33 0 180)
+      (size 1.3 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 34 "Net-(D31-Pad1)"))
+    (model LEDs.3dshapes/LED_PLCC_2835.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.4 0.4 0.4))
+      (rotate
+        (xyz 0 0 0))))
+  (module LEDs:LED_PLCC_2835
+    (layer F.Cu)
+    (tedit 56F53FE2)
+    (tstamp 5710D1BA)
+    (at 133.57 80.5)
+    (descr http://www.everlight.com/file/ProductFile/67-21S-KK2C-H4040QAR32835Z15-2T.pdf)
+    (tags LED)
+    (path /5710E913)
+    (attr smd)
+    (fp_text reference D33
+      (at 0.02 2.4)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0.27 -2.3)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.38 -0.55)
+      (end -0.88 -0.55)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -1.13 -0.8)
+      (end -1.13 -0.3)
+      (layer Dwgs.User)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.9)
+      (end -2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 1.9)
+      (end -2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.2 -1.9)
+      (end 2.2 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.9)
+      (end 2.2 -1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.78 1.6)
+      (end 1.82 1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.78 -1.6)
+      (end 1.82 -1.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.58 0.8)
+      (end -1.58 0)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 1.2)
+      (end -1.58 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 1.2)
+      (end -1.18 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 0.8)
+      (end 1.22 1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.62 -0.8)
+      (end 1.62 0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.22 -1.2)
+      (end 1.62 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.18 -1.2)
+      (end 1.22 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 -0.8)
+      (end -1.18 -1.2)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.58 0)
+      (end -1.58 -0.8)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 1.4)
+      (end -1.73 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 1.4)
+      (end -1.73 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start 1.77 -1.4)
+      (end 1.77 1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (fp_line
+      (start -1.73 -1.4)
+      (end 1.77 -1.4)
+      (layer Dwgs.User)
+      (width 0.1))
+    (pad 1 smd rect
+      (at 0.93 0)
+      (size 2.2 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 36 "Net-(D33-Pad1)"))
+    (pad 2 smd rect
+      (at -1.33 0)
+      (size 1.3 2.1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 35 "Net-(D32-Pad1)"))
+    (model LEDs.3dshapes/LED_PLCC_2835.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.4 0.4 0.4))
+      (rotate
+        (xyz 0 0 0))))
+  (module Pin_Headers:Pin_Header_Angled_1x03
+    (layer F.Cu)
+    (tedit 0)
+    (tstamp 5710D1E7)
+    (at 142.54 107 270)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /5710D1B8)
+    (fp_text reference P1
+      (at 0 -5.1 270)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value CONN_01X03
+      (at 0 -3.1 270)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.5 -1.75)
+      (end -1.5 6.85)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 10.65 -1.75)
+      (end 10.65 6.85)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.5 -1.75)
+      (end 10.65 -1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.5 6.85)
+      (end 10.65 6.85)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.3 -1.55)
+      (end -1.3 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -1.55)
+      (end -1.3 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 4.191 -0.127)
+      (end 10.033 -0.127)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 10.033 -0.127)
+      (end 10.033 0.127)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 10.033 0.127)
+      (end 4.191 0.127)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 4.191 0.127)
+      (end 4.191 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 4.191 0)
+      (end 10.033 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.524 -0.254)
+      (end 1.143 -0.254)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.524 0.254)
+      (end 1.143 0.254)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.524 2.286)
+      (end 1.143 2.286)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.524 2.794)
+      (end 1.143 2.794)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.524 4.826)
+      (end 1.143 4.826)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.524 5.334)
+      (end 1.143 5.334)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 4.064 1.27)
+      (end 4.064 -1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 10.16 0.254)
+      (end 4.064 0.254)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 10.16 -0.254)
+      (end 10.16 0.254)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 4.064 -0.254)
+      (end 10.16 -0.254)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.524 1.27)
+      (end 4.064 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.524 -1.27)
+      (end 1.524 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.524 -1.27)
+      (end 4.064 -1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.524 3.81)
+      (end 4.064 3.81)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.524 3.81)
+      (end 1.524 6.35)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 4.064 4.826)
+      (end 10.16 4.826)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 10.16 4.826)
+      (end 10.16 5.334)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 10.16 5.334)
+      (end 4.064 5.334)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 4.064 6.35)
+      (end 4.064 3.81)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 4.064 3.81)
+      (end 4.064 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 10.16 2.794)
+      (end 4.064 2.794)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 10.16 2.286)
+      (end 10.16 2.794)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 4.064 2.286)
+      (end 10.16 2.286)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.524 3.81)
+      (end 4.064 3.81)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.524 1.27)
+      (end 1.524 3.81)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.524 1.27)
+      (end 4.064 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.524 6.35)
+      (end 4.064 6.35)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 thru_hole rect
+      (at 0 0 270)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 19 "Net-(D17-Pad4)"))
+    (pad 2 thru_hole oval
+      (at 0 2.54 270)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole oval
+      (at 0 5.08 270)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 20 "Net-(D17-Pad2)"))
+    (model Pin_Headers.3dshapes/Pin_Header_Angled_1x03.wrl
+      (at
+        (xyz 0 -0.1 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 90))))
+  (module Resistors_SMD:R_1206_HandSoldering
+    (layer F.Cu)
+    (tedit 5418A20D)
+    (tstamp 5710D1F3)
+    (at 126 108)
+    (descr "Resistor SMD 1206, hand soldering")
+    (tags "resistor 1206")
+    (path /5710CB40)
+    (attr smd)
+    (fp_text reference R1
+      (at 0 -2.3)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 47R
+      (at 0 2.3)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -3.3 -1.2)
+      (end 3.3 -1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -3.3 1.2)
+      (end 3.3 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -3.3 -1.2)
+      (end -3.3 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 3.3 -1.2)
+      (end 3.3 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1 1.075)
+      (end -1 1.075)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1 -1.075)
+      (end 1 -1.075)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 smd rect
+      (at -2 0)
+      (size 2 1.7)
+      (layers F.Cu F.Paste F.Mask)
+      (net 6 "Net-(D4-Pad1)"))
+    (pad 2 smd rect
+      (at 2 0)
+      (size 2 1.7)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (model Resistors_SMD.3dshapes/R_1206_HandSoldering.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Resistors_SMD:R_1206_HandSoldering
+    (layer F.Cu)
+    (tedit 5418A20D)
+    (tstamp 5710D1FF)
+    (at 131 105 180)
+    (descr "Resistor SMD 1206, hand soldering")
+    (tags "resistor 1206")
+    (path /5710E239)
+    (attr smd)
+    (fp_text reference R2
+      (at 0 -2.3 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 47R
+      (at 0 2.3 270)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -3.3 -1.2)
+      (end 3.3 -1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -3.3 1.2)
+      (end 3.3 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -3.3 -1.2)
+      (end -3.3 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 3.3 -1.2)
+      (end 3.3 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1 1.075)
+      (end -1 1.075)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1 -1.075)
+      (end 1 -1.075)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 smd rect
+      (at -2 0 180)
+      (size 2 1.7)
+      (layers F.Cu F.Paste F.Mask)
+      (net 10 "Net-(D8-Pad1)"))
+    (pad 2 smd rect
+      (at 2 0 180)
+      (size 2 1.7)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (model Resistors_SMD.3dshapes/R_1206_HandSoldering.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Resistors_SMD:R_1206_HandSoldering
+    (layer F.Cu)
+    (tedit 5418A20D)
+    (tstamp 5710D20B)
+    (at 151 105)
+    (descr "Resistor SMD 1206, hand soldering")
+    (tags "resistor 1206")
+    (path /5710E48F)
+    (attr smd)
+    (fp_text reference R3
+      (at 0 -2.3)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 47R
+      (at 0 2.3)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -3.3 -1.2)
+      (end 3.3 -1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -3.3 1.2)
+      (end 3.3 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -3.3 -1.2)
+      (end -3.3 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 3.3 -1.2)
+      (end 3.3 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1 1.075)
+      (end -1 1.075)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1 -1.075)
+      (end 1 -1.075)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 smd rect
+      (at -2 0)
+      (size 2 1.7)
+      (layers F.Cu F.Paste F.Mask)
+      (net 14 "Net-(D12-Pad1)"))
+    (pad 2 smd rect
+      (at 2 0)
+      (size 2 1.7)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (model Resistors_SMD.3dshapes/R_1206_HandSoldering.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Resistors_SMD:R_1206_HandSoldering
+    (layer F.Cu)
+    (tedit 5418A20D)
+    (tstamp 5710D217)
+    (at 155 108 180)
+    (descr "Resistor SMD 1206, hand soldering")
+    (tags "resistor 1206")
+    (path /5710E4B9)
+    (attr smd)
+    (fp_text reference R4
+      (at 0 -2.3 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 47R
+      (at 0 2.3 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -3.3 -1.2)
+      (end 3.3 -1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -3.3 1.2)
+      (end 3.3 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -3.3 -1.2)
+      (end -3.3 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 3.3 -1.2)
+      (end 3.3 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1 1.075)
+      (end -1 1.075)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1 -1.075)
+      (end 1 -1.075)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 smd rect
+      (at -2 0 180)
+      (size 2 1.7)
+      (layers F.Cu F.Paste F.Mask)
+      (net 18 "Net-(D16-Pad1)"))
+    (pad 2 smd rect
+      (at 2 0 180)
+      (size 2 1.7)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (model Resistors_SMD.3dshapes/R_1206_HandSoldering.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Resistors_SMD:R_1206_HandSoldering
+    (layer F.Cu)
+    (tedit 5418A20D)
+    (tstamp 5710D223)
+    (at 135.5 86 270)
+    (descr "Resistor SMD 1206, hand soldering")
+    (tags "resistor 1206")
+    (path /5710E89B)
+    (attr smd)
+    (fp_text reference R5
+      (at 0 -2.3 270)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 47R
+      (at 0 2.3 270)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -3.3 -1.2)
+      (end 3.3 -1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -3.3 1.2)
+      (end 3.3 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -3.3 -1.2)
+      (end -3.3 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 3.3 -1.2)
+      (end 3.3 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1 1.075)
+      (end -1 1.075)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1 -1.075)
+      (end 1 -1.075)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 smd rect
+      (at -2 0 270)
+      (size 2 1.7)
+      (layers F.Cu F.Paste F.Mask)
+      (net 24 "Net-(D21-Pad1)"))
+    (pad 2 smd rect
+      (at 2 0 270)
+      (size 2 1.7)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (model Resistors_SMD.3dshapes/R_1206_HandSoldering.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Resistors_SMD:R_1206_HandSoldering
+    (layer F.Cu)
+    (tedit 5418A20D)
+    (tstamp 5710D22F)
+    (at 144.5 86 270)
+    (descr "Resistor SMD 1206, hand soldering")
+    (tags "resistor 1206")
+    (path /5710E8C5)
+    (attr smd)
+    (fp_text reference R6
+      (at -0.075001 -2.025 270)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 47R
+      (at 0 2.3 270)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -3.3 -1.2)
+      (end 3.3 -1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -3.3 1.2)
+      (end 3.3 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -3.3 -1.2)
+      (end -3.3 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 3.3 -1.2)
+      (end 3.3 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1 1.075)
+      (end -1 1.075)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1 -1.075)
+      (end 1 -1.075)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 smd rect
+      (at -2 0 270)
+      (size 2 1.7)
+      (layers F.Cu F.Paste F.Mask)
+      (net 28 "Net-(D25-Pad1)"))
+    (pad 2 smd rect
+      (at 2 0 270)
+      (size 2 1.7)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (model Resistors_SMD.3dshapes/R_1206_HandSoldering.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Resistors_SMD:R_1206_HandSoldering
+    (layer F.Cu)
+    (tedit 5418A20D)
+    (tstamp 5710D23B)
+    (at 142 86 270)
+    (descr "Resistor SMD 1206, hand soldering")
+    (tags "resistor 1206")
+    (path /5710E8EF)
+    (attr smd)
+    (fp_text reference R7
+      (at 0 -2.3 270)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 47R
+      (at 0 2.3 270)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -3.3 -1.2)
+      (end 3.3 -1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -3.3 1.2)
+      (end 3.3 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -3.3 -1.2)
+      (end -3.3 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 3.3 -1.2)
+      (end 3.3 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1 1.075)
+      (end -1 1.075)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1 -1.075)
+      (end 1 -1.075)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 smd rect
+      (at -2 0 270)
+      (size 2 1.7)
+      (layers F.Cu F.Paste F.Mask)
+      (net 32 "Net-(D29-Pad1)"))
+    (pad 2 smd rect
+      (at 2 0 270)
+      (size 2 1.7)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (model Resistors_SMD.3dshapes/R_1206_HandSoldering.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Resistors_SMD:R_1206_HandSoldering
+    (layer F.Cu)
+    (tedit 5418A20D)
+    (tstamp 5710D247)
+    (at 138 86 270)
+    (descr "Resistor SMD 1206, hand soldering")
+    (tags "resistor 1206")
+    (path /5710E919)
+    (attr smd)
+    (fp_text reference R8
+      (at 0 -2.3 270)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 47R
+      (at 0.5 2.5 270)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -3.3 -1.2)
+      (end 3.3 -1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -3.3 1.2)
+      (end 3.3 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -3.3 -1.2)
+      (end -3.3 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 3.3 -1.2)
+      (end 3.3 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1 1.075)
+      (end -1 1.075)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1 -1.075)
+      (end 1 -1.075)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 smd rect
+      (at -2 0 270)
+      (size 2 1.7)
+      (layers F.Cu F.Paste F.Mask)
+      (net 36 "Net-(D33-Pad1)"))
+    (pad 2 smd rect
+      (at 2 0 270)
+      (size 2 1.7)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (model Resistors_SMD.3dshapes/R_1206_HandSoldering.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (gr_line
+    (start 157 85)
+    (end 160 110)
+    (layer Edge.Cuts)
+    (width 0.15))
+  (gr_line
+    (start 150 60)
+    (end 157 85)
+    (layer Edge.Cuts)
+    (width 0.15))
+  (gr_line
+    (start 123 85)
+    (end 130 60)
+    (layer Edge.Cuts)
+    (width 0.15))
+  (gr_line
+    (start 120 110)
+    (end 123 85)
+    (layer Edge.Cuts)
+    (width 0.15))
+  (gr_line
+    (start 123 85)
+    (end 157 85)
+    (layer Cmts.User)
+    (width 0.2))
+  (gr_line
+    (start 130 60)
+    (end 150 60)
+    (layer Edge.Cuts)
+    (width 0.15))
+  (gr_line
+    (start 120 110)
+    (end 160 110)
+    (layer Edge.Cuts)
+    (width 0.15))
+  (gr_line
+    (start 140 110)
+    (end 140 60)
+    (layer Cmts.User)
+    (width 0.2))
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  )

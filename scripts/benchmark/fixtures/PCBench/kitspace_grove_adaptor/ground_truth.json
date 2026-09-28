@@ -1,0 +1,24 @@
+{
+  "board": "kitspace_grove_adaptor",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\kitspace_grove_adaptor\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 9,
+  "approximate_track_length_mm": 17.12,
+  "kicad_drc_violations": 244,
+  "generated_at": "2026-08-18T19:07:14.569384+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 244,
+    "unconnected_count": 0,
+    "by_type": {
+      "lib_footprint_issues": 3,
+      "lib_footprint_mismatch": 1,
+      "silk_over_copper": 103,
+      "silk_overlap": 137
+    },
+    "by_severity": {
+      "warning": 244
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Microdox-PCB_Microdox-topMCU",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 250351,
+      "sha256": "ad2c70d32be4e3b206f585f0bea26112f151178aa61779ea81bb4386dc9e3283"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 266344,
+      "sha256": "9c3eb75d280cff65c427bad6b27f1b15d4b94d0bca220b56eeaaed9549a57e9c"
+    },
+    "metadata_json": {
+      "bytes": 682,
+      "sha256": "981c5da5641ff9622ade5cbc5e3a067f940bda85ef896a7457b1fb70374ca29f"
+    },
+    "final_json": {
+      "bytes": 229498,
+      "sha256": "07a23bcf7f5b0d52b13613c53bb1f77bc4222bfa45d4a3490494bfe742384c0b"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:22:51.361121+00:00"
+  }
+}

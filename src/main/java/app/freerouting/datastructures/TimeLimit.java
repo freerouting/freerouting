@@ -16,8 +16,8 @@ public class TimeLimit {
 
   /** Returns true, if the time limit provided in the constructor of this class is exceeded. */
   public boolean limitExceeded() {
-    long currTime = new Date().getTime();
-    return currTime - this.timeStamp > this.timeLimit;
+    long currentTime = new Date().getTime();
+    return currentTime - this.timeStamp > this.timeLimit;
   }
 
   /** Multiplies this TimeLimit by factor. */

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "RC2014_RC2014 Tandy Sound Card",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 349672,
+      "sha256": "0ba3abd82b2b1bee9e971893ae6b56e1d7916e54a0d87770acb5633ea9a7dc01"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 245832,
+      "sha256": "28686ecff67d4fe3a28cba78a5aa57a8cd710babd553588e029443ffda10d862"
+    },
+    "metadata_json": {
+      "bytes": 673,
+      "sha256": "79a7353d838a8d1de99867662f5c03f3510ea68d6d472cf3e0d8672485209eaf"
+    },
+    "final_json": {
+      "bytes": 146227,
+      "sha256": "cefb2b6cf69984346cb12cd498453ea439baeb0746256754829acebc42e8a0a7"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:38:32.983497+00:00"
+  }
+}

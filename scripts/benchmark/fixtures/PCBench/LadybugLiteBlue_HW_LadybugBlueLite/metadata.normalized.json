@@ -1,0 +1,65 @@
+{
+  "board_id": "LadybugLiteBlue_HW_LadybugBlueLite",
+  "display_name": "LadybugLiteBlue_HW_LadybugBlueLite",
+  "pcbench_directory": "PCBs/LadybugLiteBlue_HW_LadybugBlueLite",
+  "source": "https://github.com/BitKnitting/LadybugLiteBlue_HW",
+  "author": "BitKnitting",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:03.106182+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 32,
+    "components": 71,
+    "dimensions_mm": {
+      "width": 57.5,
+      "height": 52.5
+    },
+    "area_cm2": 30.19,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 427,
+    "vias": 37,
+    "track_length_mm": 694.8,
+    "kicad_drc_violations": 407,
+    "kicad_drc_breakdown": {
+      "total_violations": 407,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 57,
+        "copper_edge_clearance": 2,
+        "courtyards_overlap": 1,
+        "invalid_outline": 1,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 22,
+        "padstack": 4,
+        "silk_edge_clearance": 6,
+        "silk_over_copper": 173,
+        "silk_overlap": 34,
+        "text_height": 84,
+        "text_thickness": 14,
+        "track_dangling": 4
+      },
+      "by_severity": {
+        "error": 66,
+        "warning": 341
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

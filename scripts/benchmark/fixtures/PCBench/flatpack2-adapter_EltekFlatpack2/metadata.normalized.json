@@ -1,0 +1,64 @@
+{
+  "board_id": "flatpack2-adapter_EltekFlatpack2",
+  "display_name": "flatpack2-adapter_EltekFlatpack2",
+  "pcbench_directory": "PCBs/flatpack2-adapter_EltekFlatpack2",
+  "source": "https://github.com/neggles/flatpack2-adapter",
+  "author": "neggles",
+  "license": "Creative Commons Attribution Share Alike 4.0 International",
+  "license_spdx": "CC-BY-SA-4.0",
+  "retrieved_at": "2023-08-17T17:22:40.769919+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 17,
+    "dimensions_mm": {
+      "width": 163.75,
+      "height": 131.0
+    },
+    "area_cm2": 214.51,
+    "zones": 21
+  },
+  "reference": {
+    "segments": 26,
+    "vias": 116,
+    "track_length_mm": 78.59,
+    "kicad_drc_violations": 137,
+    "kicad_drc_breakdown": {
+      "total_violations": 137,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 18,
+        "copper_edge_clearance": 22,
+        "courtyards_overlap": 6,
+        "hole_clearance": 6,
+        "holes_co_located": 6,
+        "lib_footprint_issues": 10,
+        "lib_footprint_mismatch": 3,
+        "npth_inside_courtyard": 4,
+        "pth_inside_courtyard": 38,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 6,
+        "silk_overlap": 9,
+        "zones_intersect": 8
+      },
+      "by_severity": {
+        "error": 102,
+        "warning": 35
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "complex",
+    "medium",
+    "plane",
+    "tier-c"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
+}

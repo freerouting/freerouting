@@ -1,0 +1,284 @@
+(pcb C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\yamsek.kicad_i2c_bridge_primary\unrouted.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  56000 -49000  58000 -49000  58000 -69000  56000 -69000
+            56000 -73000  44000 -73000  44000 -69000  42000 -69000  42000 -49000
+            44000 -49000  44000 -45000  56000 -45000  56000 -49000)
+    )
+    (via "Via[0-1]_600:400_um")
+    (rule
+      (width 250)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component myComponents:solderPads_4_Grove_I2C
+      (place I2C1 50000 -71000 front 0 (PN CONN_01X04))
+    )
+    (component Capacitors_SMD:C_0805
+      (place C1 55550 -52850 front 0 (PN 10µf))
+      (place C2 55550 -54850 front 0 (PN 1µF))
+      (place C3 55550 -56850 front 0 (PN 0.1µF))
+    )
+    (component "Diodes_SMD:SOD-523"
+      (place D1 54500 -47500 front 90 (PN VESD05a1))
+    )
+    (component "Diodes_SMD:SOD-523::1"
+      (place D2 44700 -50500 front 180 (PN VESD05a1))
+    )
+    (component "SMD_Packages:SOIC-8-N"
+      (place U1 50000 -64575 front 0 (PN P82B715))
+    )
+    (component Resistors_SMD:R_0805
+      (place R1 55500 -59500 front 0 (PN 1K))
+      (place R2 55500 -63500 front 0 (PN 1K))
+      (place R3 55500 -61500 front 0 (PN 2K2))
+      (place R4 55500 -65500 front 0 (PN 2K2))
+      (place R5 44800 -61000 front 0 (PN 10K))
+      (place R7 44800 -65000 front 0 (PN 93K1))
+    )
+    (component "myComponents:audio_smd_SJ-43514-SMT"
+      (place TRRS1 50000 -45000 front -90 (PN "SJ-43514-SMT"))
+    )
+    (component Resistors_SMD:R_0805::1
+      (place R6 44800 -63000 front 180 (PN 10K))
+    )
+    (component "TO_SOT_Packages_SMD:SOT-23-6_Handsoldering"
+      (place U2 44350 -54500 front 0 (PN AP2553W6))
+    )
+  )
+  (library
+    (image myComponents:solderPads_4_Grove_I2C
+      (pin Rect[T]Pad_900.000000x3000.000000_um 1 -1905 0)
+      (pin Rect[T]Pad_900.000000x3000.000000_um 2 -635 0)
+      (pin Rect[T]Pad_900.000000x3000.000000_um 3 635 0)
+      (pin Rect[T]Pad_900.000000x3000.000000_um 4 1905 0)
+    )
+    (image Capacitors_SMD:C_0805
+      (outline (polygon signal 0  1795 -995  -1795 -995  -1795 995  1795 995))
+      (outline (path signal 150  -500 -850  500 -850))
+      (outline (path signal 150  500 850  -500 850))
+      (outline (path signal 150  -1000 625  1000 625))
+      (outline (path signal 150  1000 625  1000 -625))
+      (outline (path signal 150  1000 -625  -1000 -625))
+      (outline (path signal 150  -1000 -625  -1000 625))
+      (pin Rect[T]Pad_1000.000000x1250.000000_um 1 -1000 0)
+      (pin Rect[T]Pad_1000.000000x1250.000000_um 2 1000 0)
+    )
+    (image "Diodes_SMD:SOD-523"
+      (outline (polygon signal 0  -1245 -745  -1245 745  1245 745  1245 -745))
+      (outline (path signal 150  600 -600  -1000 -600))
+      (outline (path signal 150  600 600  -1000 600))
+      (outline (path signal 150  600 -400  -600 -400))
+      (outline (path signal 150  -600 -400  -600 400))
+      (outline (path signal 150  -600 400  600 400))
+      (outline (path signal 150  600 400  600 -400))
+      (outline (path signal 150  -200 -200  -200 200))
+      (outline (path signal 150  -200 0  -350 0))
+      (outline (path signal 150  -200 0  100 -200))
+      (outline (path signal 150  100 -200  100 200))
+      (outline (path signal 150  100 200  -200 0))
+      (outline (path signal 150  100 0  250 0))
+      (pin Rect[T]Pad_600.000000x700.000000_um (rotate 180) 2 700 0)
+      (pin Rect[T]Pad_600.000000x700.000000_um (rotate 180) 1 -700 0)
+    )
+    (image "Diodes_SMD:SOD-523::1"
+      (outline (polygon signal 0  -1245 745  1245 745  1245 -745  -1245 -745))
+      (outline (path signal 150  600 -600  -1000 -600))
+      (outline (path signal 150  600 600  -1000 600))
+      (outline (path signal 150  600 -400  -600 -400))
+      (outline (path signal 150  -600 -400  -600 400))
+      (outline (path signal 150  -600 400  600 400))
+      (outline (path signal 150  600 400  600 -400))
+      (outline (path signal 150  -200 -200  -200 200))
+      (outline (path signal 150  -200 0  -350 0))
+      (outline (path signal 150  -200 0  100 -200))
+      (outline (path signal 150  100 -200  100 200))
+      (outline (path signal 150  100 200  -200 0))
+      (outline (path signal 150  100 0  250 0))
+      (pin Rect[T]Pad_600.000000x700.000000_um (rotate 180) 2 700 0)
+      (pin Rect[T]Pad_600.000000x700.000000_um (rotate 180) 1 -700 0)
+    )
+    (image "SMD_Packages:SOIC-8-N"
+      (outline (path signal 150  -2032 -508  -2540 -508))
+      (outline (path signal 150  -2032 762  -2032 -508))
+      (outline (path signal 150  -2540 762  -2032 762))
+      (outline (path signal 150  -2540 -2286  -2540 2286))
+      (outline (path signal 150  2540 -2286  -2540 -2286))
+      (outline (path signal 150  2540 2286  2540 -2286))
+      (outline (path signal 150  -2540 2286  2540 2286))
+      (pin Rect[T]Pad_508.000000x1143.000000_um 8 -1905 3175)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 7 -635 3175)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 6 635 3175)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 5 1905 3175)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 4 1905 -3175)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 3 635 -3175)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 2 -635 -3175)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 1 -1905 -3175)
+    )
+    (image Resistors_SMD:R_0805
+      (outline (polygon signal 0  1595 -995  -1595 -995  -1595 995  1595 995))
+      (outline (path signal 150  -600 875  600 875))
+      (outline (path signal 150  600 -875  -600 -875))
+      (outline (path signal 100  -1000 625  1000 625))
+      (outline (path signal 100  1000 625  1000 -625))
+      (outline (path signal 100  1000 -625  -1000 -625))
+      (outline (path signal 100  -1000 -625  -1000 625))
+      (pin Rect[T]Pad_700.000000x1300.000000_um 1 -950 0)
+      (pin Rect[T]Pad_700.000000x1300.000000_um 2 950 0)
+    )
+    (image "myComponents:audio_smd_SJ-43514-SMT"
+      (outline (path signal 150  -1500 -2300  0 -2300))
+      (outline (path signal 150  -1500 2300  -1500 -2300))
+      (outline (path signal 150  0 2300  -1500 2300))
+      (outline (path signal 150  15500 3000  0 3000))
+      (outline (path signal 150  15500 -3000  15500 3000))
+      (outline (path signal 150  0 -3000  15500 -3000))
+      (outline (path signal 150  0 3000  0 -3000))
+      (pin Round[A]Pad_2000.000000_um @1 4500 0)
+      (pin Round[A]Pad_2000.000000_um @2 11500 0)
+      (pin Rect[T]Pad_2200.000000x2800.000000_um 4 3400 -3800)
+      (pin Rect[T]Pad_2800.000000x2800.000000_um 2 12800 -3800)
+      (pin Rect[T]Pad_2200.000000x2800.000000_um 3 5300 3800)
+      (pin Rect[T]Pad_2000.000000x2800.000000_um 1 600 -3800)
+    )
+    (image Resistors_SMD:R_0805::1
+      (outline (polygon signal 0  -1595 995  1595 995  1595 -995  -1595 -995))
+      (outline (path signal 150  -600 875  600 875))
+      (outline (path signal 150  600 -875  -600 -875))
+      (outline (path signal 100  -1000 625  1000 625))
+      (outline (path signal 100  1000 625  1000 -625))
+      (outline (path signal 100  1000 -625  -1000 -625))
+      (outline (path signal 100  -1000 -625  -1000 625))
+      (pin Rect[T]Pad_700.000000x1300.000000_um 1 -950 0)
+      (pin Rect[T]Pad_700.000000x1300.000000_um 2 950 0)
+    )
+    (image "TO_SOT_Packages_SMD:SOT-23-6_Handsoldering"
+      (outline (polygon signal 0  2395 -1795  -2395 -1795  -2395 1795  2395 1795))
+      (outline (path signal 150  900 1550  900 -1550))
+      (outline (path signal 150  900 -1550  -900 -1550))
+      (outline (path signal 150  -900 1550  -900 -1550))
+      (outline (path signal 150  900 1550  -900 1550))
+      (outline (path signal 120  900 1610  -2050 1610))
+      (outline (path signal 120  -900 -1610  900 -1610))
+      (pin Rect[T]Pad_1560.000000x650.000000_um 1 -1350 950)
+      (pin Rect[T]Pad_1560.000000x650.000000_um 2 -1350 0)
+      (pin Rect[T]Pad_1560.000000x650.000000_um 3 -1350 -950)
+      (pin Rect[T]Pad_1560.000000x650.000000_um 4 1350 -950)
+      (pin Rect[T]Pad_1560.000000x650.000000_um 6 1350 950)
+      (pin Rect[T]Pad_1560.000000x650.000000_um 5 1350 0)
+    )
+    (padstack Round[A]Pad_2000.000000_um
+      (shape (circle F.Cu 2000))
+      (shape (circle B.Cu 2000))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2000.000000x2800.000000_um
+      (shape (rect F.Cu -1000 -1400 1000 1400))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2200.000000x2800.000000_um
+      (shape (rect F.Cu -1100 -1400 1100 1400))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2800.000000x2800.000000_um
+      (shape (rect F.Cu -1400 -1400 1400 1400))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_508.000000x1143.000000_um
+      (shape (rect F.Cu -254 -571.5 254 571.5))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_600.000000x700.000000_um
+      (shape (rect F.Cu -300 -350 300 350))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_700.000000x1300.000000_um
+      (shape (rect F.Cu -350 -650 350 650))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_900.000000x3000.000000_um
+      (shape (rect F.Cu -450 -1500 450 1500))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1000.000000x1250.000000_um
+      (shape (rect F.Cu -500 -625 500 625))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1560.000000x650.000000_um
+      (shape (rect F.Cu -780 -325 780 325))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net +5V
+      (pins I2C1-3 C1-1 C2-1 C3-1 U1-8 R1-2 R2-2 R3-2 R4-2 R5-1 R6-1 U2-1)
+    )
+    (net GND
+      (pins I2C1-4 C1-2 C2-2 C3-2 D1-2 D2-2 U1-4 TRRS1-1 R7-2 U2-2)
+    )
+    (net /i2c_bridge_common/SCL_connector
+      (pins D1-1 U1-7 R1-1 TRRS1-3)
+    )
+    (net /i2c_bridge_common/SDA_connector
+      (pins D2-1 U1-2 R2-1 TRRS1-4)
+    )
+    (net /i2c_bridge_common/SCL_inside
+      (pins I2C1-1 U1-6 R3-1)
+    )
+    (net /i2c_bridge_common/SDA_inside
+      (pins I2C1-2 U1-3 R4-1)
+    )
+    (net "Net-(R5-Pad2)"
+      (pins R5-2 U2-4)
+    )
+    (net "Net-(R6-Pad2)"
+      (pins R6-2 U2-3)
+    )
+    (net "Net-(R7-Pad1)"
+      (pins R7-1 U2-5)
+    )
+    (net "Net-(TRRS1-Pad2)"
+      (pins TRRS1-2 U2-6)
+    )
+    (class kicad_default +5V /i2c_bridge_common/SCL_connector /i2c_bridge_common/SCL_inside
+      /i2c_bridge_common/SDA_connector /i2c_bridge_common/SDA_inside GND "Net-(R5-Pad2)"
+      "Net-(R6-Pad2)" "Net-(R7-Pad1)" "Net-(TRRS1-Pad2)"
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 250)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

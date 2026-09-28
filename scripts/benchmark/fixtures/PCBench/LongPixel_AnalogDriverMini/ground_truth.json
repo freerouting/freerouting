@@ -1,0 +1,33 @@
+{
+  "board": "LongPixel_AnalogDriverMini",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\LongPixel_AnalogDriverMini\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 26,
+  "segment_count": 152,
+  "approximate_track_length_mm": 313.53,
+  "kicad_drc_violations": 155,
+  "generated_at": "2026-08-18T19:17:26.769136+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 155,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 2,
+      "clearance": 8,
+      "copper_edge_clearance": 1,
+      "courtyards_overlap": 1,
+      "holes_co_located": 1,
+      "items_not_allowed": 1,
+      "lib_footprint_issues": 20,
+      "padstack": 1,
+      "silk_over_copper": 67,
+      "silk_overlap": 24,
+      "text_height": 23,
+      "text_thickness": 6
+    },
+    "by_severity": {
+      "error": 13,
+      "warning": 142
+    }
+  }
+}

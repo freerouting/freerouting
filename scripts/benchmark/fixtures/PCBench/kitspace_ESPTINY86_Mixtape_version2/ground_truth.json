@@ -1,0 +1,36 @@
+{
+  "board": "kitspace_ESPTINY86_Mixtape_version2",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\kitspace_ESPTINY86_Mixtape_version2\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 69,
+  "segment_count": 511,
+  "approximate_track_length_mm": 1490.43,
+  "kicad_drc_violations": 736,
+  "generated_at": "2026-08-18T19:06:15.143680+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 736,
+    "unconnected_count": 7,
+    "by_type": {
+      "annular_width": 4,
+      "clearance": 276,
+      "copper_edge_clearance": 6,
+      "hole_clearance": 2,
+      "invalid_outline": 23,
+      "lib_footprint_issues": 34,
+      "malformed_courtyard": 4,
+      "padstack": 4,
+      "shorting_items": 106,
+      "silk_edge_clearance": 15,
+      "silk_over_copper": 49,
+      "solder_mask_bridge": 199,
+      "starved_thermal": 1,
+      "track_dangling": 6,
+      "via_dangling": 7
+    },
+    "by_severity": {
+      "error": 621,
+      "warning": 115
+    }
+  }
+}

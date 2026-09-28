@@ -1,0 +1,63 @@
+{
+  "board_id": "kitspace_BalthazarKeyboard3-keycaps",
+  "display_name": "kitspace_BalthazarKeyboard3-keycaps",
+  "pcbench_directory": "PCBs/kitspace_BalthazarKeyboard3-keycaps",
+  "source": "https://github.com/balthazar-space/balthazarKeyboard3",
+  "author": "",
+  "license": "[{'name': 'CERN', 'link': 'https://raw.githubusercontent.com/balthazar-space/balthazarKeyboard3/main/LICENSE.md'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:24:03.620014+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 94,
+    "components": 199,
+    "dimensions_mm": {
+      "width": 290.58,
+      "height": 127.0
+    },
+    "area_cm2": 369.04,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 1763,
+    "vias": 723,
+    "track_length_mm": 7296.76,
+    "kicad_drc_violations": 589,
+    "kicad_drc_breakdown": {
+      "total_violations": 589,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 49,
+        "courtyards_overlap": 2,
+        "hole_clearance": 2,
+        "lib_footprint_issues": 81,
+        "lib_footprint_mismatch": 102,
+        "nonmirrored_text_on_back_layer": 1,
+        "pth_inside_courtyard": 3,
+        "silk_edge_clearance": 73,
+        "silk_over_copper": 47,
+        "silk_overlap": 51,
+        "text_height": 156,
+        "track_dangling": 22
+      },
+      "by_severity": {
+        "error": 56,
+        "warning": 533
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "complex",
+    "medium",
+    "plane",
+    "tier-c"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
+}

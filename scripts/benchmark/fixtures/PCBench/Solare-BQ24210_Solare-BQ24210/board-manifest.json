@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Solare-BQ24210_Solare-BQ24210",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 82065,
+      "sha256": "086f652318fe4abaf73564ec2b6cca4a3c190dffcd2877a060ae37971ebeabb0"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 52207,
+      "sha256": "9b7b14f8f3a97a3fcdc3b5194aac177d58edca419a2785f3f55f030b43724275"
+    },
+    "metadata_json": {
+      "bytes": 497,
+      "sha256": "2b8c54698a21ed9e9963f631eed599717b02ca6205d298d6323c44ea84c0d233"
+    },
+    "final_json": {
+      "bytes": 24613,
+      "sha256": "778a727cd8210d349aca69a2d3c7267338c45b9818893dbea2fc75c97825431f"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:46:40.444102+00:00"
+  }
+}

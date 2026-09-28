@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "domotics_base-board-arranged",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 332684,
+      "sha256": "e0ad56efa8d0c974fa4a58c6e30de55b87cdaf1363dddaaa252cf3092fae0d75"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 351309,
+      "sha256": "23cba23c4af5ab053d58218f2f805768b9e3cec5786cf9a711f81d367b46635f"
+    },
+    "metadata_json": {
+      "bytes": 484,
+      "sha256": "13ff74543e0a9d4b2607386b4d80e9d87b9def686eabf32741739c28088b4a6f"
+    },
+    "final_json": {
+      "bytes": 345571,
+      "sha256": "2f54e63b1dda4245f23ab07acad1b3c95e527ac4c26fc66ea79fbeea63b89a24"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:42:23.058437+00:00"
+  }
+}

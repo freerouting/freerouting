@@ -1,0 +1,25 @@
+{
+  "board": "custom_cpu--ALU_custom_cpu--ALU",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\custom_cpu--ALU_custom_cpu--ALU\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 54,
+  "segment_count": 303,
+  "approximate_track_length_mm": 1890.72,
+  "kicad_drc_violations": 168,
+  "generated_at": "2026-08-18T18:40:07.524261+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 168,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 132,
+      "copper_edge_clearance": 7,
+      "lib_footprint_issues": 25,
+      "silk_over_copper": 4
+    },
+    "by_severity": {
+      "error": 139,
+      "warning": 29
+    }
+  }
+}

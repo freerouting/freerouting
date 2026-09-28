@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "kitspace_USB-C-Screen-Adapter",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 490260,
+      "sha256": "8cf4dcca7747e4d95b8e406ff0470a38443d8a968e7aa9b14d9a196b29fb3359"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 303630,
+      "sha256": "af68f85c9e98d72d86e6a6842d509bd5f0a3c7abdcfa6f41c89c6c2bbb395c00"
+    },
+    "metadata_json": {
+      "bytes": 584,
+      "sha256": "feaa606a95f74009bdd219084394fc8de6580eb84d5cbfe8afaacf337d830373"
+    },
+    "final_json": {
+      "bytes": 246202,
+      "sha256": "8b441cd785626618a1521a9553b99b49b1ce1c95ddcc8084e942580d300c779c"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:19:33.374521+00:00"
+  }
+}

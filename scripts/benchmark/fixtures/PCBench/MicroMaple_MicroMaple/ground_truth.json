@@ -1,0 +1,33 @@
+{
+  "board": "MicroMaple_MicroMaple",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\MicroMaple_MicroMaple\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 64,
+  "segment_count": 923,
+  "approximate_track_length_mm": 1410.04,
+  "kicad_drc_violations": 268,
+  "generated_at": "2026-08-18T19:23:07.415014+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 268,
+    "unconnected_count": 5,
+    "by_type": {
+      "annular_width": 2,
+      "clearance": 138,
+      "copper_edge_clearance": 2,
+      "courtyards_overlap": 4,
+      "lib_footprint_issues": 39,
+      "padstack": 2,
+      "silk_edge_clearance": 4,
+      "silk_over_copper": 11,
+      "silk_overlap": 14,
+      "solder_mask_bridge": 47,
+      "starved_thermal": 2,
+      "track_dangling": 3
+    },
+    "by_severity": {
+      "error": 195,
+      "warning": 73
+    }
+  }
+}

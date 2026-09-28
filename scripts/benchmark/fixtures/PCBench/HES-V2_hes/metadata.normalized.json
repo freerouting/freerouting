@@ -1,0 +1,66 @@
+{
+  "board_id": "HES-V2_hes",
+  "display_name": "HES-V2_hes",
+  "pcbench_directory": "PCBs/HES-V2_hes",
+  "source": "https://github.com/HackerSchool/HES-V2",
+  "author": "HackerSchool",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:40.753919+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 20,
+    "components": 18,
+    "dimensions_mm": {
+      "width": 0.0,
+      "height": 0.0
+    },
+    "area_cm2": 0.0,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 46,
+    "vias": 0,
+    "track_length_mm": 304.74,
+    "kicad_drc_violations": 73,
+    "kicad_drc_breakdown": {
+      "total_violations": 73,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 52,
+        "copper_edge_clearance": 1,
+        "invalid_outline": 1,
+        "lib_footprint_issues": 16,
+        "malformed_courtyard": 2,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 57,
+        "warning": 16
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "small",
+    "tier-a",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.951876+00:00",
+    "elapsed_seconds": 6.66,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 1000.0
+  }
+}

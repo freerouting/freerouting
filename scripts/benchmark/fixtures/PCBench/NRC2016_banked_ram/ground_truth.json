@@ -1,0 +1,29 @@
+{
+  "board": "NRC2016_banked_ram",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\NRC2016_banked_ram\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 32,
+  "segment_count": 631,
+  "approximate_track_length_mm": 3263.11,
+  "kicad_drc_violations": 445,
+  "generated_at": "2026-08-18T19:28:21.383910+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 445,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 364,
+      "courtyards_overlap": 3,
+      "lib_footprint_issues": 24,
+      "malformed_courtyard": 1,
+      "silk_edge_clearance": 45,
+      "solder_mask_bridge": 4,
+      "starved_thermal": 3,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 375,
+      "warning": 70
+    }
+  }
+}

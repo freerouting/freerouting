@@ -1,0 +1,35 @@
+{
+  "board": "gsm-iot-core-hw_gsm-iot-core",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\gsm-iot-core-hw_gsm-iot-core\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 114,
+  "segment_count": 1116,
+  "approximate_track_length_mm": 1792.36,
+  "kicad_drc_violations": 605,
+  "generated_at": "2026-08-18T18:51:27.632230+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 605,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 2,
+      "clearance": 108,
+      "copper_edge_clearance": 42,
+      "drill_out_of_range": 1,
+      "hole_clearance": 7,
+      "lib_footprint_issues": 92,
+      "malformed_courtyard": 3,
+      "padstack": 2,
+      "pth_inside_courtyard": 2,
+      "silk_edge_clearance": 1,
+      "silk_over_copper": 29,
+      "silk_overlap": 199,
+      "starved_thermal": 2,
+      "text_height": 115
+    },
+    "by_severity": {
+      "error": 167,
+      "warning": 438
+    }
+  }
+}

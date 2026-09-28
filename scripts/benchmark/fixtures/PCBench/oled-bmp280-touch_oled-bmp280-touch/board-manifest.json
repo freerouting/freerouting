@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "oled-bmp280-touch_oled-bmp280-touch",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 75895,
+      "sha256": "8c88d6922221fbddca57354cdd19a255df1081d8e284150a9dd5024fc4b19988"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 59951,
+      "sha256": "efb399a9a66d190ac1aa34e39ec5bb322e7d7676af6e1350dba8eb2ae3dc0778"
+    },
+    "metadata_json": {
+      "bytes": 688,
+      "sha256": "1923edaf104d751feafcee08aeb813f1be47faaa4e14d325335dbc61dfdd9190"
+    },
+    "final_json": {
+      "bytes": 40645,
+      "sha256": "58a3ccb972495f21759ab56a7735bda86e7480a82a9916a771099b9486d9b97b"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:29:03.891835+00:00"
+  }
+}

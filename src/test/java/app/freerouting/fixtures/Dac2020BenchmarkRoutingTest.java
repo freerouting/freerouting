@@ -1,7 +1,7 @@
 package app.freerouting.fixtures;
 
 import app.freerouting.core.RoutingJob;
-import app.freerouting.management.RoutingJobScheduler;
+import app.freerouting.management.jobs.RoutingJobScheduler;
 import app.freerouting.settings.sources.TestingSettings;
 import java.time.Duration;
 import org.junit.jupiter.api.AfterEach;

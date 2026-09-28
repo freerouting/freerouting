@@ -1,0 +1,62 @@
+{
+  "board_id": "kitspace_grove_adaptor",
+  "display_name": "kitspace_grove_adaptor",
+  "pcbench_directory": "PCBs/kitspace_grove_adaptor",
+  "source": "https://github.com/BeeHive-org/BeeHive",
+  "author": "",
+  "license": "[{'name': 'MIT', 'link': 'https://raw.githubusercontent.com/BeeHive-org/BeeHive/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:07:27.271279+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 2,
+    "components": 4,
+    "dimensions_mm": {
+      "width": 14.5,
+      "height": 12.5
+    },
+    "area_cm2": 1.81,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 9,
+    "vias": 0,
+    "track_length_mm": 17.12,
+    "kicad_drc_violations": 244,
+    "kicad_drc_breakdown": {
+      "total_violations": 244,
+      "unconnected_count": 0,
+      "by_type": {
+        "lib_footprint_issues": 3,
+        "lib_footprint_mismatch": 1,
+        "silk_over_copper": 103,
+        "silk_overlap": 137
+      },
+      "by_severity": {
+        "warning": 244
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.988937+00:00",
+    "elapsed_seconds": 5.28,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 1000.0
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "board": "DPS-1200FB_Adapter_Adapter",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\DPS-1200FB_Adapter_Adapter\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 26,
+  "approximate_track_length_mm": 162.6,
+  "kicad_drc_violations": 34,
+  "generated_at": "2026-08-18T18:42:56.151449+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 34,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 2,
+      "lib_footprint_issues": 22,
+      "nonmirrored_text_on_back_layer": 1,
+      "silk_edge_clearance": 7,
+      "silk_over_copper": 2
+    },
+    "by_severity": {
+      "error": 2,
+      "warning": 32
+    }
+  }
+}

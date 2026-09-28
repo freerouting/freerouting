@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "OpenMPPT_OpenMPPT",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 171956,
+      "sha256": "f8441bb0a28bf16b1e1f785c32431cd895dcdb107e45a3f43f063562859a2e93"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 132033,
+      "sha256": "909bb9627a4c39c7a2aa91d7b20f9cb563ceab44a2873055cc97f3050e08383b"
+    },
+    "metadata_json": {
+      "bytes": 600,
+      "sha256": "c2dafbc211b403434dac9dd1e15a9ec41970e17f62d25eaf01a8f9c987634d9c"
+    },
+    "final_json": {
+      "bytes": 100231,
+      "sha256": "6d158afda6accf9a6fbe19262ffc3f07870709b54b99039eb6373dbd05569c90"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:30:12.648872+00:00"
+  }
+}

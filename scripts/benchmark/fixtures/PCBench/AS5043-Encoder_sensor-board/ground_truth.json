@@ -1,0 +1,30 @@
+{
+  "board": "AS5043-Encoder_sensor-board",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\AS5043-Encoder_sensor-board\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 2,
+  "segment_count": 95,
+  "approximate_track_length_mm": 190.61,
+  "kicad_drc_violations": 167,
+  "generated_at": "2026-08-18T18:29:26.690042+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 167,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 74,
+      "items_not_allowed": 1,
+      "lib_footprint_issues": 13,
+      "silk_edge_clearance": 1,
+      "silk_over_copper": 39,
+      "silk_overlap": 9,
+      "solder_mask_bridge": 15,
+      "text_height": 13,
+      "text_thickness": 2
+    },
+    "by_severity": {
+      "error": 90,
+      "warning": 77
+    }
+  }
+}

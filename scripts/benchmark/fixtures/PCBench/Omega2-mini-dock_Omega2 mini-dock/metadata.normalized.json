@@ -1,0 +1,67 @@
+{
+  "board_id": "Omega2-mini-dock_Omega2 mini-dock",
+  "display_name": "Omega2-mini-dock_Omega2 mini-dock",
+  "pcbench_directory": "PCBs/Omega2-mini-dock_Omega2 mini-dock",
+  "source": "https://github.com/WereCatf/Omega2-mini-dock",
+  "author": "WereCatf",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:00.458151+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 17,
+    "dimensions_mm": {
+      "width": 38.1,
+      "height": 60.96
+    },
+    "area_cm2": 23.23,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 131,
+    "vias": 12,
+    "track_length_mm": 389.79,
+    "kicad_drc_violations": 97,
+    "kicad_drc_breakdown": {
+      "total_violations": 97,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 62,
+        "lib_footprint_issues": 17,
+        "silk_edge_clearance": 4,
+        "silk_overlap": 6,
+        "solder_mask_bridge": 5,
+        "starved_thermal": 2,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 69,
+        "warning": 28
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.056331+00:00",
+    "elapsed_seconds": 14.18,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

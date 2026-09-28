@@ -1,0 +1,62 @@
+{
+  "board_id": "ice40_stm32_fsmc_test_pcb_fsmc_ice40",
+  "display_name": "ice40_stm32_fsmc_test_pcb_fsmc_ice40",
+  "pcbench_directory": "PCBs/ice40_stm32_fsmc_test_pcb_fsmc_ice40",
+  "source": "https://github.com/knielsen/ice40_stm32_fsmc_test",
+  "author": "knielsen",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:28.629776+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 7,
+    "components": 44,
+    "dimensions_mm": {
+      "width": 76.2,
+      "height": 48.0
+    },
+    "area_cm2": 36.58,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 772,
+    "vias": 108,
+    "track_length_mm": 1989.1,
+    "kicad_drc_violations": 501,
+    "kicad_drc_breakdown": {
+      "total_violations": 501,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 2,
+        "clearance": 155,
+        "copper_edge_clearance": 70,
+        "courtyards_overlap": 5,
+        "hole_clearance": 4,
+        "lib_footprint_issues": 44,
+        "padstack": 2,
+        "silk_edge_clearance": 12,
+        "silk_over_copper": 26,
+        "solder_mask_bridge": 178,
+        "via_dangling": 3
+      },
+      "by_severity": {
+        "error": 414,
+        "warning": 87
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

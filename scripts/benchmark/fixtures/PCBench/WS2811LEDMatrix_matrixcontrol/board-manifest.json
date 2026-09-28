@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "WS2811LEDMatrix_matrixcontrol",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 203316,
+      "sha256": "f22f2683e49882badebae1b1807941b45cd006fdeb0b5aa1f445ba084cb30455"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 146963,
+      "sha256": "9dbf706b668729871057a4506bb562f9fd1f8dd619d2df6414642d018f792856"
+    },
+    "metadata_json": {
+      "bytes": 485,
+      "sha256": "37d46d4154eb54dd7fc25357130ce333aee5e7eb9bc0bc9d87fbe0821f5495ee"
+    },
+    "final_json": {
+      "bytes": 130356,
+      "sha256": "1f1db61466456a71bf64901b46f89721f8fb2bc609bbc2bef6388596d6c0f8fd"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:57:33.530442+00:00"
+  }
+}

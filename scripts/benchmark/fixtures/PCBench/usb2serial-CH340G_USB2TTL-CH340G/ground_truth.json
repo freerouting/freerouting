@@ -1,0 +1,28 @@
+{
+  "board": "usb2serial-CH340G_USB2TTL-CH340G",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\usb2serial-CH340G_USB2TTL-CH340G\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 6,
+  "segment_count": 116,
+  "approximate_track_length_mm": 176.97,
+  "kicad_drc_violations": 107,
+  "generated_at": "2026-08-18T19:55:17.835236+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 107,
+    "unconnected_count": 1,
+    "by_type": {
+      "annular_width": 2,
+      "clearance": 58,
+      "copper_edge_clearance": 2,
+      "lib_footprint_issues": 20,
+      "padstack": 2,
+      "silk_overlap": 5,
+      "text_height": 18
+    },
+    "by_severity": {
+      "error": 62,
+      "warning": 45
+    }
+  }
+}

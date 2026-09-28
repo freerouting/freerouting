@@ -1,0 +1,62 @@
+{
+  "board_id": "wifi-iot-core-hw_wifi-iot-core-hw",
+  "display_name": "wifi-iot-core-hw_wifi-iot-core-hw",
+  "pcbench_directory": "PCBs/wifi-iot-core-hw_wifi-iot-core-hw",
+  "source": "https://github.com/genuine-engineering/wifi-iot-core-hw",
+  "author": "genuine-engineering",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:26.049746+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 15,
+    "components": 52,
+    "dimensions_mm": {
+      "width": 31.75,
+      "height": 58.42
+    },
+    "area_cm2": 18.55,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 656,
+    "vias": 42,
+    "track_length_mm": 1371.49,
+    "kicad_drc_violations": 612,
+    "kicad_drc_breakdown": {
+      "total_violations": 612,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 284,
+        "copper_edge_clearance": 3,
+        "courtyards_overlap": 15,
+        "drill_out_of_range": 2,
+        "hole_clearance": 2,
+        "lib_footprint_issues": 52,
+        "malformed_courtyard": 8,
+        "solder_mask_bridge": 199,
+        "starved_thermal": 6,
+        "text_height": 39,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 519,
+        "warning": 93
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

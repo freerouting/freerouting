@@ -1,0 +1,32 @@
+{
+  "board": "BirthdayCakeKeyboard_10Key",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\BirthdayCakeKeyboard_10Key\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 92,
+  "segment_count": 1575,
+  "approximate_track_length_mm": 5029.24,
+  "kicad_drc_violations": 481,
+  "generated_at": "2026-08-18T18:33:16.196949+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 481,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 328,
+      "copper_edge_clearance": 2,
+      "courtyards_overlap": 1,
+      "invalid_outline": 3,
+      "lib_footprint_issues": 65,
+      "silk_edge_clearance": 3,
+      "silk_over_copper": 1,
+      "silk_overlap": 5,
+      "solder_mask_bridge": 45,
+      "track_dangling": 25,
+      "via_dangling": 3
+    },
+    "by_severity": {
+      "error": 379,
+      "warning": 102
+    }
+  }
+}

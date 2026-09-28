@@ -1,0 +1,51 @@
+{
+  "board_id": "type5_type5",
+  "display_name": "type5_type5",
+  "pcbench_directory": "PCBs/type5_type5",
+  "source": "https://github.com/zetsu42/type5",
+  "author": "zetsu42",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:00.914156+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 55,
+    "components": 4,
+    "dimensions_mm": {
+      "width": 85.0,
+      "height": 70.0
+    },
+    "area_cm2": 59.5,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 199,
+    "vias": 0,
+    "track_length_mm": 1945.96,
+    "kicad_drc_violations": 5,
+    "kicad_drc_breakdown": {
+      "total_violations": 5,
+      "unconnected_count": 0,
+      "by_type": {
+        "lib_footprint_issues": 4,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "warning": 5
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

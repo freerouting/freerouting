@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "mearm-base-pcb_ServoPCB",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 172250,
+      "sha256": "fb9dc0c89a25e60a876ce7f0a9f230f3d0f3fd7ef2ac77f7629b4d22574bec03"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 91688,
+      "sha256": "b096891e78157556e3db051298c571595c9098814af8dd6a4951011cc3a92b42"
+    },
+    "metadata_json": {
+      "bytes": 493,
+      "sha256": "f59e1b3ee07671b02bed474404c08c8642b938f2389a68293d19db9d5a105152"
+    },
+    "final_json": {
+      "bytes": 41176,
+      "sha256": "b393a9e859c994223dc1b46c6a6c0be0cf923e68f8136d81a862716197f58f28"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:20:54.267749+00:00"
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "board_id": "kitspace_dropbot-front-panel",
+  "display_name": "kitspace_dropbot-front-panel",
+  "pcbench_directory": "PCBs/kitspace_dropbot-front-panel",
+  "source": "https://github.com/sci-bots/dropbot-front-panel.kicad",
+  "author": "",
+  "license": "[{'name': 'Creative Commons', 'link': 'https://raw.githubusercontent.com/sci-bots/dropbot-front-panel.kicad/main/LICENSE.md'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:12:08.809262+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 7,
+    "components": 29,
+    "dimensions_mm": {
+      "width": 108.0,
+      "height": 68.75
+    },
+    "area_cm2": 74.25,
+    "zones": 8
+  },
+  "reference": {
+    "segments": 1707,
+    "vias": 227,
+    "track_length_mm": 8225.74,
+    "kicad_drc_violations": 143,
+    "kicad_drc_breakdown": {
+      "total_violations": 143,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 3,
+        "courtyards_overlap": 2,
+        "lib_footprint_issues": 29,
+        "silk_edge_clearance": 3,
+        "silk_overlap": 43,
+        "solder_mask_bridge": 50,
+        "track_dangling": 5,
+        "via_dangling": 8
+      },
+      "by_severity": {
+        "error": 55,
+        "warning": 88
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

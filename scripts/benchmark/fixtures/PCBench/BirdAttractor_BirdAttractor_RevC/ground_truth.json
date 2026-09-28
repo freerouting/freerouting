@@ -1,0 +1,29 @@
+{
+  "board": "BirdAttractor_BirdAttractor_RevC",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\BirdAttractor_BirdAttractor_RevC\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 34,
+  "segment_count": 319,
+  "approximate_track_length_mm": 1233.69,
+  "kicad_drc_violations": 193,
+  "generated_at": "2026-08-18T18:33:10.711924+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 193,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 5,
+      "courtyards_overlap": 3,
+      "lib_footprint_issues": 45,
+      "padstack": 5,
+      "silk_edge_clearance": 8,
+      "silk_over_copper": 72,
+      "silk_overlap": 52,
+      "track_dangling": 3
+    },
+    "by_severity": {
+      "error": 8,
+      "warning": 185
+    }
+  }
+}

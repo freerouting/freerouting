@@ -1,0 +1,30 @@
+{
+  "board": "ToslinkCNC__autosave-ToslinkCNC_OneAxis",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\ToslinkCNC__autosave-ToslinkCNC_OneAxis\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 62,
+  "segment_count": 674,
+  "approximate_track_length_mm": 1363.66,
+  "kicad_drc_violations": 204,
+  "generated_at": "2026-08-18T19:53:38.732657+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 204,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 30,
+      "copper_edge_clearance": 3,
+      "lib_footprint_issues": 43,
+      "padstack": 4,
+      "silk_over_copper": 44,
+      "silk_overlap": 2,
+      "solder_mask_bridge": 70,
+      "track_dangling": 2,
+      "via_dangling": 6
+    },
+    "by_severity": {
+      "error": 103,
+      "warning": 101
+    }
+  }
+}

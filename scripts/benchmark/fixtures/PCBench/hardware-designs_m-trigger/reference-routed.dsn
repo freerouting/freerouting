@@ -1,0 +1,173 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\hardware-designs_m-trigger\reference-routed.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  225044 -151384  178816 -151384  178816 -135636  225044 -135636
+            225044 -151384)
+    )
+    (plane "N-000006" (polygon B.Cu 0  225044 -151384  178816 -151384  178816 -135636  225044 -135636
+            225044 -151384))
+    (plane "N-000008" (polygon F.Cu 0  225044 -151384  178816 -151384  178816 -135636  225044 -135636
+            225044 -151384))
+    (via "Via[0-1]_889:635_um")
+    (rule
+      (width 254)
+      (clearance 254)
+      (clearance 63.5 (type smd_smd))
+    )
+  )
+  (placement
+    (component SLIDE_SWITCH
+      (place SW2 193040 -144780 front 0 (PN DUAL_SWITCH_INV))
+    )
+    (component SW_PUSH_6MM
+      (place SW1 212090 -144780 front 0 (PN SW_PUSH))
+    )
+    (component R3
+      (place R1 190500 -138430 front 180 (PN R))
+      (place R2 215900 -138430 front 180 (PN R))
+    )
+    (component "SIL-6"
+      (place P1 180340 -143510 front 90 (PN CONN_6))
+      (place P2 223520 -143510 front 90 (PN CONN_6))
+    )
+    (component LOGO_SNOWCAP_FRONT_SMALL
+      (place VAL 184800 -144000 front 90 (PN REF))
+    )
+  )
+  (library
+    (image SLIDE_SWITCH
+      (outline (path signal 150  3000 2000  3000 3500))
+      (outline (path signal 150  3000 3500  1000 3500))
+      (outline (path signal 150  1000 3500  1000 2000))
+      (outline (path signal 150  0 2000  4500 2000))
+      (outline (path signal 150  4500 2000  4500 -2000))
+      (outline (path signal 150  4500 -2000  -4500 -2000))
+      (outline (path signal 150  -4500 -2000  -4500 2000))
+      (outline (path signal 150  -4500 2000  0 2000))
+      (pin Round[A]Pad_1500.000000_um 2 0 0)
+      (pin Round[A]Pad_1500.000000_um 1 2540 0)
+      (pin Round[A]Pad_1500.000000_um 3 -2540 0)
+    )
+    (image SW_PUSH_6MM
+      (outline (path signal 150  1414.21 0  1394.93 -232.772  1337.59 -459.195  1243.76 -673.091
+            1116.01 -868.628  957.821 -1040.47  773.502 -1183.93  568.083 -1295.1
+            347.169 -1370.94  116.785 -1409.38  -116.785 -1409.38  -347.169 -1370.94
+            -568.083 -1295.1  -773.502 -1183.93  -957.821 -1040.47  -1116.01 -868.628
+            -1243.76 -673.091  -1337.59 -459.195  -1394.93 -232.772  -1414.21 0
+            -1394.93 232.772  -1337.59 459.195  -1243.76 673.091  -1116.01 868.628
+            -957.821 1040.47  -773.502 1183.93  -568.083 1295.1  -347.169 1370.94
+            -116.785 1409.38  116.785 1409.38  347.169 1370.94  568.083 1295.1
+            773.502 1183.93  957.821 1040.47  1116.01 868.628  1243.76 673.091
+            1337.59 459.195  1394.93 232.772  1414.21 0))
+      (outline (path signal 150  3000 -3000  3000 3000))
+      (outline (path signal 150  3000 3000  -3000 3000))
+      (outline (path signal 150  -3000 3000  -3000 -3000))
+      (outline (path signal 150  -3000 -3000  3000 -3000))
+      (pin Round[A]Pad_2540.000000_um 1 -5080 2540)
+      (pin Round[A]Pad_2540.000000_um 2 5080 -2540)
+      (pin Round[A]Pad_2540.000000_um 4 5080 2540)
+      (pin Round[A]Pad_2540.000000_um 5 -5080 -2540)
+    )
+    (image R3
+      (outline (path signal 203.2  -3810 0  -3302 0))
+      (outline (path signal 203.2  3810 0  3302 0))
+      (outline (path signal 203.2  3302 0  3302 1016))
+      (outline (path signal 203.2  3302 1016  -3302 1016))
+      (outline (path signal 203.2  -3302 1016  -3302 -1016))
+      (outline (path signal 203.2  -3302 -1016  3302 -1016))
+      (outline (path signal 203.2  3302 -1016  3302 0))
+      (outline (path signal 203.2  -3302 508  -2794 1016))
+      (pin Round[A]Pad_1397.000000_um 1 -3810 0)
+      (pin Round[A]Pad_1397.000000_um 2 3810 0)
+    )
+    (image "SIL-6"
+      (outline (path signal 304.8  -7620 -1270  -7620 1270))
+      (outline (path signal 304.8  -7620 1270  7620 1270))
+      (outline (path signal 304.8  7620 1270  7620 -1270))
+      (outline (path signal 304.8  7620 -1270  -7620 -1270))
+      (outline (path signal 304.8  -5080 -1270  -5080 1270))
+      (pin Rect[A]Pad_1397.000000x1397.000000_um 1 -6350 0)
+      (pin Round[A]Pad_1397.000000_um 2 -3810 0)
+      (pin Round[A]Pad_1397.000000_um 3 -1270 0)
+      (pin Round[A]Pad_1397.000000_um 4 1270 0)
+      (pin Round[A]Pad_1397.000000_um 5 3810 0)
+      (pin Round[A]Pad_1397.000000_um 6 6350 0)
+    )
+    (image LOGO_SNOWCAP_FRONT_SMALL
+    )
+    (padstack Round[A]Pad_1397.000000_um
+      (shape (circle F.Cu 1397))
+      (shape (circle B.Cu 1397))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1500.000000_um
+      (shape (circle F.Cu 1500))
+      (shape (circle B.Cu 1500))
+      (attach off)
+    )
+    (padstack Round[A]Pad_2540.000000_um
+      (shape (circle F.Cu 2540))
+      (shape (circle B.Cu 2540))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1397.000000x1397.000000_um
+      (shape (rect F.Cu -698.5 -698.5 698.5 698.5))
+      (shape (rect B.Cu -698.5 -698.5 698.5 698.5))
+      (attach off)
+    )
+    (padstack "Via[0-1]_889:635_um"
+      (shape (circle F.Cu 889))
+      (shape (circle B.Cu 889))
+      (attach off)
+    )
+  )
+  (network
+    (net "N-000001"
+      (pins SW2-1 R1-2 P1-6)
+    )
+    (net "N-000005"
+      (pins SW1-2 R2-1 P2-6)
+    )
+    (net "N-000006"
+      (pins SW2-2 SW1-1 P1-2)
+    )
+    (net "N-000008"
+      (pins R1-1 R2-2 P1-1)
+    )
+    (class kicad_default "N-000001" "N-000005" "N-000006" "N-000008"
+      (circuit
+        (use_via "Via[0-1]_889:635_um")
+      )
+      (rule
+        (width 254)
+        (clearance 254)
+      )
+    )
+  )
+  (wiring
+    (wire (path F.Cu 254  186690 -138430  187960 -138430  195580 -144780)(net "N-000001")(type route))
+    (wire (path F.Cu 254  180340 -137160  185420 -137160  186690 -138430)(net "N-000001")(type route))
+    (wire (path F.Cu 254  219710 -138430  219710 -146050  217170 -147320)(net "N-000005")(type route))
+    (wire (path F.Cu 254  223520 -137160  220980 -137160  219710 -138430)(net "N-000005")(type route))
+  )
+)

@@ -1,0 +1,573 @@
+(kicad_pcb (version 20171130) (host pcbnew "(5.1.12)-1")
+
+  (general
+    (thickness 1.6)
+    (drawings 5)
+    (tracks 185)
+    (zones 0)
+    (modules 4)
+    (nets 25)
+  )
+
+  (page A4)
+  (layers
+    (0 F.Cu signal)
+    (31 B.Cu signal)
+    (32 B.Adhes user)
+    (33 F.Adhes user)
+    (34 B.Paste user)
+    (35 F.Paste user)
+    (36 B.SilkS user)
+    (37 F.SilkS user)
+    (38 B.Mask user)
+    (39 F.Mask user)
+    (40 Dwgs.User user)
+    (41 Cmts.User user)
+    (42 Eco1.User user)
+    (43 Eco2.User user)
+    (44 Edge.Cuts user)
+    (45 Margin user)
+    (46 B.CrtYd user)
+    (47 F.CrtYd user)
+    (48 B.Fab user)
+    (49 F.Fab user)
+  )
+
+  (setup
+    (last_trace_width 0.1524)
+    (trace_clearance 0.1524)
+    (zone_clearance 0.254)
+    (zone_45_only no)
+    (trace_min 0.1524)
+    (via_size 0.508)
+    (via_drill 0.3302)
+    (via_min_size 0.508)
+    (via_min_drill 0.3302)
+    (uvia_size 0.4826)
+    (uvia_drill 0.2794)
+    (uvias_allowed no)
+    (uvia_min_size 0)
+    (uvia_min_drill 0)
+    (edge_width 0.15)
+    (segment_width 0.2)
+    (pcb_text_width 0.3)
+    (pcb_text_size 1.5 1.5)
+    (mod_edge_width 0.15)
+    (mod_text_size 1 1)
+    (mod_text_width 0.15)
+    (pad_size 1.524 1.524)
+    (pad_drill 0.762)
+    (pad_to_mask_clearance 0.1016)
+    (pad_to_paste_clearance -0.0508)
+    (aux_axis_origin 0 0)
+    (visible_elements 7FFFFFFF)
+    (pcbplotparams
+      (layerselection 0x310fc_80000001)
+      (usegerberextensions true)
+      (usegerberattributes true)
+      (usegerberadvancedattributes true)
+      (creategerberjobfile true)
+      (excludeedgelayer true)
+      (linewidth 0.100000)
+      (plotframeref false)
+      (viasonmask false)
+      (mode 1)
+      (useauxorigin false)
+      (hpglpennumber 1)
+      (hpglpenspeed 20)
+      (hpglpendiameter 15.000000)
+      (psnegative false)
+      (psa4output false)
+      (plotreference false)
+      (plotvalue false)
+      (plotinvisibletext false)
+      (padsonsilk false)
+      (subtractmaskfromsilk false)
+      (outputformat 1)
+      (mirror false)
+      (drillshape 0)
+      (scaleselection 1)
+      (outputdirectory "gerbers/"))
+  )
+
+  (net 0 "")
+  (net 1 /OIS_RESET_N)
+  (net 2 /+1V8_13M_VCM)
+  (net 3 /+1V0_VREG_L3)
+  (net 4 /+2V8_OIS_DIG)
+  (net 5 /+1V8_13M_VDDIO)
+  (net 6 GND)
+  (net 7 /CAM_RESET_N)
+  (net 8 /DATA1_P)
+  (net 9 /DATA1_N)
+  (net 10 /CAM_MCLK)
+  (net 11 /DATA0_P)
+  (net 12 /DATA3_P)
+  (net 13 /DATA0_N)
+  (net 14 /DATA3_N)
+  (net 15 /CLK_P)
+  (net 16 /DATA2_P)
+  (net 17 /CLK_N)
+  (net 18 /DATA2_N)
+  (net 19 /+2V8_OIS_ANA)
+  (net 20 /+2V7_13M_ANA)
+  (net 21 /PHONE_SDA)
+  (net 22 /PHONE_SCL)
+  (net 23 /CAM_SCL)
+  (net 24 /CAM_SDA)
+
+  (net_class Default "This is the default net class."
+    (clearance 0.1524)
+    (trace_width 0.1524)
+    (via_dia 0.508)
+    (via_drill 0.3302)
+    (uvia_dia 0.4826)
+    (uvia_drill 0.2794)
+    (add_net /+1V0_VREG_L3)
+    (add_net /+1V8_13M_VCM)
+    (add_net /+1V8_13M_VDDIO)
+    (add_net /+2V7_13M_ANA)
+    (add_net /+2V8_OIS_ANA)
+    (add_net /+2V8_OIS_DIG)
+    (add_net /CAM_MCLK)
+    (add_net /CAM_RESET_N)
+    (add_net /CAM_SCL)
+    (add_net /CAM_SDA)
+    (add_net /CLK_N)
+    (add_net /CLK_P)
+    (add_net /DATA0_N)
+    (add_net /DATA0_P)
+    (add_net /DATA1_N)
+    (add_net /DATA1_P)
+    (add_net /DATA2_N)
+    (add_net /DATA2_P)
+    (add_net /DATA3_N)
+    (add_net /DATA3_P)
+    (add_net /OIS_RESET_N)
+    (add_net /PHONE_SCL)
+    (add_net /PHONE_SDA)
+    (add_net GND)
+  )
+
+  (module connectors:GB042-30S (layer F.Cu) (tedit 578EEA27) (tstamp 579073BF)
+    (at 146.05 107.95 270)
+    (descr http://www.lsmtron.com/pdf/LS%20Mtron%20Connector.pdf)
+    (path /579076BD)
+    (fp_text reference P4 (at -3.556 -3.556) (layer F.SilkS)
+      (effects (font (size 1.2 1.2) (thickness 0.15)))
+    )
+    (fp_text value LG-G2-G3-Rear-Camera (at 0 3.5 270) (layer F.Fab)
+      (effects (font (size 1.2 1.2) (thickness 0.15)))
+    )
+    (fp_line (start 3.3 1.75) (end 4.3 1.75) (layer F.SilkS) (width 0.1))
+    (fp_line (start 3.3 -1.75) (end 4.3 -1.75) (layer F.SilkS) (width 0.1))
+    (fp_line (start -4.3 -1.75) (end -4.3 1.75) (layer F.SilkS) (width 0.1))
+    (fp_line (start -4.3 1.75) (end -3.3 1.75) (layer F.SilkS) (width 0.1))
+    (fp_line (start 4.3 -1.75) (end 4.3 1.75) (layer F.SilkS) (width 0.1))
+    (fp_line (start -4.3 -1.75) (end -3.3 -1.75) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -2.8 1.7 90) (size 0.23 1) (layers F.Cu F.Paste F.Mask))
+    (pad 2 smd rect (at -2.4 1.7 90) (size 0.23 1) (layers F.Cu F.Paste F.Mask)
+      (net 1 /OIS_RESET_N))
+    (pad 3 smd rect (at -2 1.7 90) (size 0.23 1) (layers F.Cu F.Paste F.Mask)
+      (net 2 /+1V8_13M_VCM))
+    (pad 4 smd rect (at -1.6 1.7 90) (size 0.23 1) (layers F.Cu F.Paste F.Mask)
+      (net 4 /+2V8_OIS_DIG))
+    (pad 5 smd rect (at -1.2 1.7 90) (size 0.23 1) (layers F.Cu F.Paste F.Mask)
+      (net 6 GND))
+    (pad 6 smd rect (at -0.8 1.7 90) (size 0.23 1) (layers F.Cu F.Paste F.Mask)
+      (net 8 /DATA1_P))
+    (pad 7 smd rect (at -0.4 1.7 90) (size 0.23 1) (layers F.Cu F.Paste F.Mask)
+      (net 9 /DATA1_N))
+    (pad 8 smd rect (at 0 1.7 90) (size 0.23 1) (layers F.Cu F.Paste F.Mask)
+      (net 6 GND))
+    (pad 9 smd rect (at 0.4 1.7 90) (size 0.23 1) (layers F.Cu F.Paste F.Mask)
+      (net 11 /DATA0_P))
+    (pad 10 smd rect (at 0.8 1.7 90) (size 0.23 1) (layers F.Cu F.Paste F.Mask)
+      (net 13 /DATA0_N))
+    (pad 11 smd rect (at 1.2 1.7 90) (size 0.23 1) (layers F.Cu F.Paste F.Mask)
+      (net 6 GND))
+    (pad 12 smd rect (at 1.6 1.7 90) (size 0.23 1) (layers F.Cu F.Paste F.Mask)
+      (net 15 /CLK_P))
+    (pad 13 smd rect (at 2 1.7 90) (size 0.23 1) (layers F.Cu F.Paste F.Mask)
+      (net 17 /CLK_N))
+    (pad 14 smd rect (at 2.4 1.7 90) (size 0.23 1) (layers F.Cu F.Paste F.Mask)
+      (net 6 GND))
+    (pad 15 smd rect (at 2.8 1.7 90) (size 0.23 1) (layers F.Cu F.Paste F.Mask)
+      (net 19 /+2V8_OIS_ANA))
+    (pad 16 smd rect (at 2.8 -1.7 270) (size 0.23 1) (layers F.Cu F.Paste F.Mask)
+      (net 20 /+2V7_13M_ANA))
+    (pad 17 smd rect (at 2.4 -1.7 270) (size 0.23 1) (layers F.Cu F.Paste F.Mask)
+      (net 6 GND))
+    (pad 18 smd rect (at 2 -1.7 270) (size 0.23 1) (layers F.Cu F.Paste F.Mask)
+      (net 18 /DATA2_N))
+    (pad 19 smd rect (at 1.6 -1.7 270) (size 0.23 1) (layers F.Cu F.Paste F.Mask)
+      (net 16 /DATA2_P))
+    (pad 20 smd rect (at 1.2 -1.7 270) (size 0.23 1) (layers F.Cu F.Paste F.Mask)
+      (net 6 GND))
+    (pad 21 smd rect (at 0.8 -1.7 270) (size 0.23 1) (layers F.Cu F.Paste F.Mask)
+      (net 14 /DATA3_N))
+    (pad 22 smd rect (at 0.4 -1.7 270) (size 0.23 1) (layers F.Cu F.Paste F.Mask)
+      (net 12 /DATA3_P))
+    (pad 23 smd rect (at 0 -1.7 270) (size 0.23 1) (layers F.Cu F.Paste F.Mask)
+      (net 6 GND))
+    (pad 24 smd rect (at -0.4 -1.7 270) (size 0.23 1) (layers F.Cu F.Paste F.Mask)
+      (net 10 /CAM_MCLK))
+    (pad 25 smd rect (at -0.8 -1.7 270) (size 0.23 1) (layers F.Cu F.Paste F.Mask)
+      (net 6 GND))
+    (pad 26 smd rect (at -1.2 -1.7 270) (size 0.23 1) (layers F.Cu F.Paste F.Mask)
+      (net 7 /CAM_RESET_N))
+    (pad 27 smd rect (at -1.6 -1.7 270) (size 0.23 1) (layers F.Cu F.Paste F.Mask)
+      (net 5 /+1V8_13M_VDDIO))
+    (pad 28 smd rect (at -2 -1.7 270) (size 0.23 1) (layers F.Cu F.Paste F.Mask)
+      (net 3 /+1V0_VREG_L3))
+    (pad 29 smd rect (at -2.4 -1.7 270) (size 0.23 1) (layers F.Cu F.Paste F.Mask)
+      (net 23 /CAM_SCL))
+    (pad 30 smd rect (at -2.8 -1.7 270) (size 0.23 1) (layers F.Cu F.Paste F.Mask)
+      (net 24 /CAM_SDA))
+  )
+
+  (module connectors:GB042-30P (layer B.Cu) (tedit 578EE6ED) (tstamp 5790738E)
+    (at 146.05 107.95 270)
+    (descr http://www.lsmtron.com/pdf/LS%20Mtron%20Connector.pdf)
+    (path /579080C9)
+    (fp_text reference P1 (at -3.048 -3.556 180) (layer B.SilkS)
+      (effects (font (size 1.2 1.2) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value LG-G2-G3-Rear-Camera (at 0 -3.5 270) (layer B.Fab)
+      (effects (font (size 1.2 1.2) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 3.25 1.1) (end 3.75 1.1) (layer B.SilkS) (width 0.1))
+    (fp_line (start 3.75 1.1) (end 3.75 -1.1) (layer B.SilkS) (width 0.1))
+    (fp_line (start 3.75 -1.1) (end 3.25 -1.1) (layer B.SilkS) (width 0.1))
+    (fp_line (start -3.25 1.1) (end -3.75 1.1) (layer B.SilkS) (width 0.1))
+    (fp_line (start -3.75 1.1) (end -3.75 -1.1) (layer B.SilkS) (width 0.1))
+    (fp_line (start -3.75 -1.1) (end -3.25 -1.1) (layer B.SilkS) (width 0.1))
+    (pad 1 smd rect (at -2.8 1.25 270) (size 0.23 0.7) (layers B.Cu B.Paste B.Mask))
+    (pad 30 smd rect (at -2.8 -1.25 270) (size 0.23 0.7) (layers B.Cu B.Paste B.Mask)
+      (net 21 /PHONE_SDA))
+    (pad 2 smd rect (at -2.4 1.25 270) (size 0.23 0.7) (layers B.Cu B.Paste B.Mask)
+      (net 1 /OIS_RESET_N))
+    (pad 29 smd rect (at -2.4 -1.25 270) (size 0.23 0.7) (layers B.Cu B.Paste B.Mask)
+      (net 22 /PHONE_SCL))
+    (pad 3 smd rect (at -2 1.25 270) (size 0.23 0.7) (layers B.Cu B.Paste B.Mask)
+      (net 2 /+1V8_13M_VCM))
+    (pad 28 smd rect (at -2 -1.25 270) (size 0.23 0.7) (layers B.Cu B.Paste B.Mask)
+      (net 3 /+1V0_VREG_L3))
+    (pad 4 smd rect (at -1.6 1.25 270) (size 0.23 0.7) (layers B.Cu B.Paste B.Mask)
+      (net 4 /+2V8_OIS_DIG))
+    (pad 27 smd rect (at -1.6 -1.25 270) (size 0.23 0.7) (layers B.Cu B.Paste B.Mask)
+      (net 5 /+1V8_13M_VDDIO))
+    (pad 5 smd rect (at -1.2 1.25 270) (size 0.23 0.7) (layers B.Cu B.Paste B.Mask)
+      (net 6 GND))
+    (pad 26 smd rect (at -1.2 -1.25 270) (size 0.23 0.7) (layers B.Cu B.Paste B.Mask)
+      (net 7 /CAM_RESET_N))
+    (pad 6 smd rect (at -0.8 1.25 270) (size 0.23 0.7) (layers B.Cu B.Paste B.Mask)
+      (net 8 /DATA1_P))
+    (pad 25 smd rect (at -0.8 -1.25 270) (size 0.23 0.7) (layers B.Cu B.Paste B.Mask)
+      (net 6 GND))
+    (pad 7 smd rect (at -0.4 1.25 270) (size 0.23 0.7) (layers B.Cu B.Paste B.Mask)
+      (net 9 /DATA1_N))
+    (pad 24 smd rect (at -0.4 -1.25 270) (size 0.23 0.7) (layers B.Cu B.Paste B.Mask)
+      (net 10 /CAM_MCLK))
+    (pad 8 smd rect (at 0 1.25 270) (size 0.23 0.7) (layers B.Cu B.Paste B.Mask)
+      (net 6 GND))
+    (pad 23 smd rect (at 0 -1.25 270) (size 0.23 0.7) (layers B.Cu B.Paste B.Mask)
+      (net 6 GND))
+    (pad 9 smd rect (at 0.4 1.25 270) (size 0.23 0.7) (layers B.Cu B.Paste B.Mask)
+      (net 11 /DATA0_P))
+    (pad 22 smd rect (at 0.4 -1.25 270) (size 0.23 0.7) (layers B.Cu B.Paste B.Mask)
+      (net 12 /DATA3_P))
+    (pad 10 smd rect (at 0.8 1.25 270) (size 0.23 0.7) (layers B.Cu B.Paste B.Mask)
+      (net 13 /DATA0_N))
+    (pad 21 smd rect (at 0.8 -1.25 270) (size 0.23 0.7) (layers B.Cu B.Paste B.Mask)
+      (net 14 /DATA3_N))
+    (pad 11 smd rect (at 1.2 1.25 270) (size 0.23 0.7) (layers B.Cu B.Paste B.Mask)
+      (net 6 GND))
+    (pad 20 smd rect (at 1.2 -1.25 270) (size 0.23 0.7) (layers B.Cu B.Paste B.Mask)
+      (net 6 GND))
+    (pad 12 smd rect (at 1.6 1.25 270) (size 0.23 0.7) (layers B.Cu B.Paste B.Mask)
+      (net 15 /CLK_P))
+    (pad 19 smd rect (at 1.6 -1.25 270) (size 0.23 0.7) (layers B.Cu B.Paste B.Mask)
+      (net 16 /DATA2_P))
+    (pad 13 smd rect (at 2 1.25 270) (size 0.23 0.7) (layers B.Cu B.Paste B.Mask)
+      (net 17 /CLK_N))
+    (pad 18 smd rect (at 2 -1.25 270) (size 0.23 0.7) (layers B.Cu B.Paste B.Mask)
+      (net 18 /DATA2_N))
+    (pad 14 smd rect (at 2.4 1.25 270) (size 0.23 0.7) (layers B.Cu B.Paste B.Mask)
+      (net 6 GND))
+    (pad 17 smd rect (at 2.4 -1.25 270) (size 0.23 0.7) (layers B.Cu B.Paste B.Mask)
+      (net 6 GND))
+    (pad 15 smd rect (at 2.8 1.25 270) (size 0.23 0.7) (layers B.Cu B.Paste B.Mask)
+      (net 19 /+2V8_OIS_ANA))
+    (pad 16 smd rect (at 2.8 -1.25 270) (size 0.23 0.7) (layers B.Cu B.Paste B.Mask)
+      (net 20 /+2V7_13M_ANA))
+  )
+
+  (module Pin_Headers:Pin_Header_Straight_2x02 (layer F.Cu) (tedit 0) (tstamp 57907396)
+    (at 158.496 107.442 180)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /57908C0C)
+    (fp_text reference P2 (at -4.064 0 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_02X02 (at 0 -3.1 180) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.27 3.81) (end -1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.81 3.81) (end -1.27 3.81) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.81 -1.27) (end 3.81 3.81) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 -1.27) (end 3.81 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 1.27 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.27 1.27) (end 1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.55) (end -1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.55 0) (end -1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.75 4.3) (end 4.3 4.3) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end 4.3 -1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 4.3 -1.75) (end 4.3 4.3) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end -1.75 4.3) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0 180) (size 1.7272 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 22 /PHONE_SCL))
+    (pad 2 thru_hole oval (at 2.54 0 180) (size 1.7272 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 23 /CAM_SCL))
+    (pad 3 thru_hole oval (at 0 2.54 180) (size 1.7272 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 21 /PHONE_SDA))
+    (pad 4 thru_hole oval (at 2.54 2.54 180) (size 1.7272 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 24 /CAM_SDA))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_2x02.wrl
+      (offset (xyz 1.269999980926514 -1.269999980926514 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 90))
+    )
+  )
+
+  (module Pin_Headers:Pin_Header_Straight_1x03 (layer F.Cu) (tedit 0) (tstamp 5790739D)
+    (at 159.512 110.998 270)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /57908C7A)
+    (fp_text reference P3 (at 3.302 0 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_01X03 (at 0 -3.1 270) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.55 -1.55) (end 1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.55 0) (end -1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end -1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.55 -1.55) (end 1.55 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 6.35) (end 1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.27 6.35) (end 1.27 6.35) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.27 1.27) (end -1.27 6.35) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.75 6.85) (end 1.75 6.85) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end 1.75 -1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.75 -1.75) (end 1.75 6.85) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end -1.75 6.85) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0 270) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 23 /CAM_SCL))
+    (pad 2 thru_hole oval (at 0 2.54 270) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 24 /CAM_SDA))
+    (pad 3 thru_hole oval (at 0 5.08 270) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 6 GND))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x03.wrl
+      (offset (xyz 0 -2.539999961853027 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 90))
+    )
+  )
+
+  (gr_text "GND\nSDA\nSCL" (at 151.765 107.95 90) (layer F.SilkS)
+    (effects (font (size 0.762 0.762) (thickness 0.1905)))
+  )
+  (gr_line (start 161.29 103.124) (end 142.748 103.124) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 161.29 112.776) (end 161.29 103.124) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 142.748 112.776) (end 161.29 112.776) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 142.748 103.124) (end 142.748 112.776) (layer Edge.Cuts) (width 0.15))
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+)

@@ -123,8 +123,12 @@ POST https://api.freerouting.app/v1/jobs/<jobId>/settings
 Content-Type: application/json
 
 {
-  "max_passes": 20,
-  "via_costs": 42
+  "autorouter": {
+    "max_passes": 20
+  },
+  "scoring": {
+    "via_costs": 42
+  }
 }
 ```
 

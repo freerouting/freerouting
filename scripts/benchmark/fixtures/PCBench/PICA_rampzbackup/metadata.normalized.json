@@ -1,0 +1,56 @@
+{
+  "board_id": "PICA_rampzbackup",
+  "display_name": "PICA_rampzbackup",
+  "pcbench_directory": "PCBs/PICA_rampzbackup",
+  "source": "https://github.com/mjrice/PICA",
+  "author": "mjrice",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:25.533740+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 66,
+    "components": 76,
+    "dimensions_mm": {
+      "width": 129.48,
+      "height": 96.98
+    },
+    "area_cm2": 125.57,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 245,
+    "vias": 0,
+    "track_length_mm": 820.28,
+    "kicad_drc_violations": 260,
+    "kicad_drc_breakdown": {
+      "total_violations": 260,
+      "unconnected_count": 165,
+      "by_type": {
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 76,
+        "silk_edge_clearance": 10,
+        "silk_over_copper": 92,
+        "silk_overlap": 79,
+        "tracks_crossing": 2
+      },
+      "by_severity": {
+        "error": 3,
+        "warning": 257
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "medium",
+    "routine",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

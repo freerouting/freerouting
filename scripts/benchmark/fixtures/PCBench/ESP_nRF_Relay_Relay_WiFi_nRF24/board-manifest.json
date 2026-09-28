@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "ESP_nRF_Relay_Relay_WiFi_nRF24",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 70581,
+      "sha256": "b94cc2c2266292c9b79ea6c99865101d5125cd25a416a90369a0d37735b3f7d0"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 89097,
+      "sha256": "d03cbee9540cb6bfb61ce8323efc53c88f22719b908fbf0f4ad3b5f42ebb7621"
+    },
+    "metadata_json": {
+      "bytes": 492,
+      "sha256": "2ecae25ba0147e31e2de35d6a3aad808148f846ebed4f982bf654c2c7b1243f2"
+    },
+    "final_json": {
+      "bytes": 54223,
+      "sha256": "b4b5792d1bf62c0642eed5446b11e8b7f2f44f60a37d8c46a672c98fdf6c2426"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:48:26.700026+00:00"
+  }
+}

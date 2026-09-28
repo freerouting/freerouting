@@ -1,0 +1,83 @@
+package app.freerouting.autoroute.maze;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+
+import app.freerouting.autoroute.expansion.CompleteExpansionRoom;
+import app.freerouting.autoroute.expansion.ExpandableObject;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import org.junit.jupiter.api.Test;
+
+class MazeListElementTest {
+
+  @Test
+  void compareToReturnsZeroForSameInstance() {
+    MazeListElement element =
+        new MazeListElement(new TestDoor(1), 0, null, 0, 0.0, 1.0, null, null, false, null, false);
+
+    assertEquals(0, compare(element, element));
+  }
+
+  @Test
+  void compareToSortsBySortingValue() {
+    MazeListElement lowerCost =
+        new MazeListElement(new TestDoor(1), 0, null, 0, 0.0, 1.0, null, null, false, null, false);
+    MazeListElement higherCost =
+        new MazeListElement(new TestDoor(2), 0, null, 0, 0.0, 2.0, null, null, false, null, false);
+
+    SortedSet<MazeListElement> queue = new TreeSet<>();
+    queue.add(higherCost);
+    queue.add(lowerCost);
+
+    MazeListElement first = queue.first();
+    assertSame(lowerCost, first, "Lower sortingValue must be expanded first");
+  }
+
+  private static final class TestDoor implements ExpandableObject {
+    private final int id;
+
+    private TestDoor(int id) {
+      this.id = id;
+    }
+
+    @Override
+    public app.freerouting.geometry.planar.TileShape getShape() {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public int getDimension() {
+      return 1;
+    }
+
+    @Override
+    public CompleteExpansionRoom otherRoom(CompleteExpansionRoom room) {
+      return null;
+    }
+
+    @Override
+    public int mazeSearchElementCount() {
+      return 1;
+    }
+
+    @Override
+    public MazeSearchElement getMazeSearchElement(int no) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void reset() {
+      // no-op for tests
+    }
+
+    @Override
+    public int getId() {
+      return id;
+    }
+  }
+
+  private static int compare(MazeListElement left, MazeListElement right) {
+    return left.compareTo(right);
+  }
+}

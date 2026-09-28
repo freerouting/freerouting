@@ -1,0 +1,30 @@
+{
+  "board": "open-source-multimeter_board",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\open-source-multimeter_board\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 4,
+  "segment_count": 463,
+  "approximate_track_length_mm": 1673.24,
+  "kicad_drc_violations": 320,
+  "generated_at": "2026-08-18T19:29:39.216750+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 320,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 199,
+      "copper_edge_clearance": 16,
+      "courtyards_overlap": 2,
+      "lib_footprint_issues": 23,
+      "silk_over_copper": 16,
+      "silk_overlap": 1,
+      "solder_mask_bridge": 60,
+      "starved_thermal": 2,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 279,
+      "warning": 41
+    }
+  }
+}

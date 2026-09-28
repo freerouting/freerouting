@@ -1,0 +1,67 @@
+{
+  "board_id": "Sensory_Adaptation_Bot_sa_bot",
+  "display_name": "Sensory_Adaptation_Bot_sa_bot",
+  "pcbench_directory": "PCBs/Sensory_Adaptation_Bot_sa_bot",
+  "source": "https://github.com/IdleHandsProject/Sensory_Adaptation_Bot",
+  "author": "IdleHandsProject",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:44.013957+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 27,
+    "components": 67,
+    "dimensions_mm": {
+      "width": 120.0,
+      "height": 120.0
+    },
+    "area_cm2": 144.0,
+    "zones": 10
+  },
+  "reference": {
+    "segments": 878,
+    "vias": 212,
+    "track_length_mm": 2897.61,
+    "kicad_drc_violations": 882,
+    "kicad_drc_breakdown": {
+      "total_violations": 882,
+      "unconnected_count": 7,
+      "by_type": {
+        "annular_width": 14,
+        "clearance": 451,
+        "copper_edge_clearance": 5,
+        "hole_clearance": 30,
+        "hole_to_hole": 3,
+        "holes_co_located": 112,
+        "lib_footprint_issues": 67,
+        "malformed_courtyard": 2,
+        "padstack": 14,
+        "silk_edge_clearance": 12,
+        "silk_over_copper": 109,
+        "silk_overlap": 8,
+        "starved_thermal": 5,
+        "text_height": 36,
+        "track_dangling": 11,
+        "via_dangling": 3
+      },
+      "by_severity": {
+        "error": 507,
+        "warning": 375
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

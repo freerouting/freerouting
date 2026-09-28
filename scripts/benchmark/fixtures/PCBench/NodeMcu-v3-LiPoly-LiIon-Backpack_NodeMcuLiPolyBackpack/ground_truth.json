@@ -1,0 +1,29 @@
+{
+  "board": "NodeMcu-v3-LiPoly-LiIon-Backpack_NodeMcuLiPolyBackpack",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\NodeMcu-v3-LiPoly-LiIon-Backpack_NodeMcuLiPolyBackpack\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 64,
+  "approximate_track_length_mm": 138.67,
+  "kicad_drc_violations": 202,
+  "generated_at": "2026-08-18T19:28:10.702434+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 202,
+    "unconnected_count": 6,
+    "by_type": {
+      "copper_edge_clearance": 5,
+      "lib_footprint_issues": 16,
+      "silk_edge_clearance": 3,
+      "silk_over_copper": 164,
+      "silk_overlap": 6,
+      "solder_mask_bridge": 1,
+      "text_height": 6,
+      "tracks_crossing": 1
+    },
+    "by_severity": {
+      "error": 7,
+      "warning": 195
+    }
+  }
+}

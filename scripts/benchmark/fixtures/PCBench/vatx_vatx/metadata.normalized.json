@@ -1,0 +1,60 @@
+{
+  "board_id": "vatx_vatx",
+  "display_name": "vatx_vatx",
+  "pcbench_directory": "PCBs/vatx_vatx",
+  "source": "https://github.com/jerome-labidurie/vatx",
+  "author": "jerome-labidurie",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:41.245924+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 7,
+    "components": 31,
+    "dimensions_mm": {
+      "width": 50.0,
+      "height": 50.1
+    },
+    "area_cm2": 25.05,
+    "zones": 7
+  },
+  "reference": {
+    "segments": 231,
+    "vias": 20,
+    "track_length_mm": 633.87,
+    "kicad_drc_violations": 266,
+    "kicad_drc_breakdown": {
+      "total_violations": 266,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 119,
+        "copper_edge_clearance": 3,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 31,
+        "silk_edge_clearance": 15,
+        "silk_over_copper": 65,
+        "silk_overlap": 25,
+        "text_height": 3,
+        "track_dangling": 4
+      },
+      "by_severity": {
+        "error": 123,
+        "warning": 143
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

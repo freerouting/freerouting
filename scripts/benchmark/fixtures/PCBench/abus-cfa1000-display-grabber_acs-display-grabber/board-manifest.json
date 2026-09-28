@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "abus-cfa1000-display-grabber_acs-display-grabber",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 363965,
+      "sha256": "b27aa86c490b4b411f9ec54300e66b219c6df45a4d3a433b3dfbafc8c1a3a5b2"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 267023,
+      "sha256": "2cbcc9b8eaa2ac877c77026663e60dca4d992ffb0ee9f733b2395ff563ee1d36"
+    },
+    "metadata_json": {
+      "bytes": 558,
+      "sha256": "348cfc0e8416dee6aa73e13dd0541df36e93016104c8eb6cc2cd23657a5bfac4"
+    },
+    "final_json": {
+      "bytes": 183011,
+      "sha256": "ee8d09a89720955d480e9593ac15aa8f70851970d505d0ead382b371b479315d"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:27:08.779851+00:00"
+  }
+}

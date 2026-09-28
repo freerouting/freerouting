@@ -1,10 +1,11 @@
 package app.freerouting.core;
 
-import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.core.events.RoutingJobLogEntryAddedEvent;
 import app.freerouting.core.events.RoutingJobLogEntryAddedEventListener;
 import app.freerouting.core.events.RoutingJobUpdatedEvent;
 import app.freerouting.core.events.RoutingJobUpdatedEventListener;
+import app.freerouting.core.results.RoutingResultManifest;
 import app.freerouting.io.FileFormat;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.logger.LogEntry;
@@ -12,8 +13,6 @@ import app.freerouting.settings.DesignRulesCheckerSettings;
 import app.freerouting.settings.RouterSettings;
 import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.awt.Component;
-import java.awt.Dimension;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,8 +25,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 /** Represents a job that needs to be processed by the router. */
 public class RoutingJob implements Serializable, Comparable<RoutingJob> {
@@ -36,7 +33,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   public static final String BINARY_FILE_EXTENSION = "frb";
   private static final String RULES_FILE_EXTENSION = "rules";
   private static final String SES_FILE_EXTENSION = "ses";
-  private static final String EAGLE_SCRIPT_FILE_EXTENSION = "scr";
+  private static final String FUSION_SCRIPT_FILE_EXTENSION = "scr";
 
   @SerializedName("id")
   @Schema(name = "id", description = "Unique identifier for the routing job")
@@ -88,6 +85,16 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   @Schema(name = "session_id", description = "The session ID the job belongs to")
   public UUID sessionId;
 
+  @SerializedName("user_id")
+  @Schema(name = "user_id", description = "The user ID the job belongs to")
+  public UUID userId;
+
+  /**
+   * Hashed API key used for internal telemetry attribution. Marked transient to avoid exposing in
+   * API responses.
+   */
+  public transient String apiKeyHash;
+
   @SerializedName("input")
   @Schema(description = "Details of the uploaded input design file")
   public BoardFileDetails input;
@@ -95,6 +102,24 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   @SerializedName("output")
   @Schema(description = "Details of the routed output design file")
   public BoardFileDetails output;
+
+  @SerializedName("rules")
+  @Schema(description = "Details of the uploaded design rules (.rules) file")
+  public BoardFileDetails rules;
+
+  @SerializedName("initial_session")
+  @Schema(description = "Details of the initial session (.ses or .json) file to import")
+  public BoardFileDetails initialSession;
+
+  @SerializedName("host_cad")
+  @Schema(name = "host_cad", description = "The CAD system that generated the board")
+  public String hostCad;
+
+  @SerializedName("host_version")
+  @Schema(
+      name = "host_version",
+      description = "The version of the CAD system that generated the board")
+  public String hostVersion;
 
   @SerializedName("drc")
   @Schema(description = "Details of the design rules check output")
@@ -114,6 +139,11 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
 
   public transient StoppableThread thread;
   public transient RoutingBoard board;
+
+  /** Per-stage before/after metrics retained for the result manifest. */
+  public transient RoutingResultManifest.PhaseMetrics resultPhaseMetrics =
+      new RoutingResultManifest.PhaseMetrics();
+
   public transient Instant timeoutAt;
   private boolean isCancelledByUser;
 
@@ -147,47 +177,41 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
             + this.id.toString().substring(0, 6).toUpperCase();
   }
 
-  /** Shows a file chooser for opening a design file. */
-  public static File showOpenDialog(String defaultDirectory, Component parent) {
-    JFileChooser fileChooser = new JFileChooser(defaultDirectory);
-    fileChooser.setMinimumSize(new Dimension(500, 250));
-
-    // Add the file filter for SPECCTRA Design .DSN files
-    FileNameExtensionFilter dsnFilter =
-        new FileNameExtensionFilter("SPECCTRA Design file (*.dsn)", "dsn");
-    fileChooser.addChoosableFileFilter(dsnFilter);
-
-    // Add the file filter for Freerouting binary .FRB files
-    FileNameExtensionFilter frbFilter =
-        new FileNameExtensionFilter("Freerouting binary file (*.frb)", "frb");
-    fileChooser.addChoosableFileFilter(frbFilter);
-
-    // Add the file filter for KiCad JSON .JSON files
-    FileNameExtensionFilter jsonFilter =
-        new FileNameExtensionFilter("KiCad Design JSON file (*.json)", "json");
-    fileChooser.addChoosableFileFilter(jsonFilter);
-
-    // Set a file filter as the default one
-    fileChooser.setFileFilter(dsnFilter);
-
-    fileChooser.showOpenDialog(parent);
-    return fileChooser.getSelectedFile();
-  }
-
   /** Detects the file format from its binary content. */
   public static FileFormat getFileFormat(byte[] content) {
     if (content == null) {
       return FileFormat.UNKNOWN;
     }
-    // First, check if it's a JSON file (the first non-whitespace character is '{')
-    for (byte b : content) {
-      if (b == ' ' || b == '\t' || b == '\r' || b == '\n') {
-        continue;
+    // First, check if it's a text-based format (JSON or SCR)
+    int firstNonWs = -1;
+    for (int i = 0; i < content.length; i++) {
+      byte b = content[i];
+      if (b != ' ' && b != '\t' && b != '\r' && b != '\n') {
+        firstNonWs = i;
+        break;
       }
-      if (b == '{') {
+    }
+    if (firstNonWs >= 0) {
+      if (content[firstNonWs] == '{') {
         return FileFormat.KICAD_DESIGN_JSON;
       }
-      break;
+      String textSample =
+          new String(
+                  content,
+                  firstNonWs,
+                  Math.min(content.length - firstNonWs, 64),
+                  java.nio.charset.StandardCharsets.ISO_8859_1)
+              .toUpperCase(java.util.Locale.ROOT);
+      if (textSample.startsWith("GRID ")
+          || textSample.startsWith("GRID;")
+          || textSample.startsWith("SET ")
+          || textSample.startsWith("LAYER ")
+          || textSample.startsWith("WIRE ")
+          || textSample.startsWith("CHANGE LAYER ")
+          || textSample.startsWith("SCRIPT")
+          || textSample.startsWith("RIPUP")) {
+        return FileFormat.SCR;
+      }
     }
 
     // Open the file as a binary file and read the first 6 bytes to determine the
@@ -236,6 +260,14 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
                 && buffer[3] == (byte) 0x53)) {
           return FileFormat.SES;
         }
+
+        // Check if the file is a RULES file (it starts with "(rules" or "(RULES")
+        if (buffer[0] == (byte) 0x28
+            && (buffer[1] == (byte) 0x72 || buffer[1] == (byte) 0x52)
+            && (buffer[2] == (byte) 0x75 || buffer[2] == (byte) 0x55)
+            && (buffer[3] == (byte) 0x6C || buffer[3] == (byte) 0x4C)) {
+          return FileFormat.RULES;
+        }
       }
     } catch (IOException _) {
       // Ignore the exception, it can happen with the built-in template or if the user
@@ -255,6 +287,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
         case DSN_FILE_EXTENSION -> FileFormat.DSN;
         case BINARY_FILE_EXTENSION -> FileFormat.FRB;
         case "ses" -> FileFormat.SES;
+        case RULES_FILE_EXTENSION -> FileFormat.RULES;
         case "scr" -> FileFormat.SCR;
         case "json" -> FileFormat.KICAD_DESIGN_JSON;
         default -> FileFormat.UNKNOWN;
@@ -302,15 +335,61 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     setInputFromFile(inputFile);
   }
 
+  /** Sets the rules from file content. */
+  public boolean setRules(byte[] rulesFileContent) {
+    this.rules = new BoardFileDetails();
+    this.rules.format = FileFormat.RULES;
+    this.rules.setData(rulesFileContent);
+    return true;
+  }
+
+  /** Loads the rules file from the specified path. */
+  public void setRules(String rulesFilePath) throws IOException {
+    setRules(new File(rulesFilePath));
+  }
+
+  /** Loads the rules file from the specified file. */
+  public void setRules(File rulesFile) throws IOException {
+    if (rulesFile != null && rulesFile.exists()) {
+      try (InputStream in = new FileInputStream(rulesFile)) {
+        this.rules = new BoardFileDetails();
+        this.rules.format = FileFormat.RULES;
+        this.rules.setFilename(rulesFile.getName());
+        this.rules.setData(in.readAllBytes());
+      }
+    }
+  }
+
+  /** Sets the initial session from file content. */
+  public boolean setInitialSession(byte[] sessionFileContent, String filename) {
+    this.initialSession = new BoardFileDetails();
+    this.initialSession.setFilename(filename);
+    this.initialSession.format = getFileFormat(sessionFileContent);
+    if (this.initialSession.format == FileFormat.UNKNOWN && filename != null) {
+      this.initialSession.format = getFileFormat(Path.of(filename));
+    }
+    this.initialSession.setData(sessionFileContent);
+    return true;
+  }
+
+  /** Loads the initial session file from the specified file. */
+  public void setInitialSession(File sessionFile) throws IOException {
+    if (sessionFile != null && sessionFile.exists()) {
+      try (InputStream in = new FileInputStream(sessionFile)) {
+        setInitialSession(in.readAllBytes(), sessionFile.getName());
+      }
+    }
+  }
+
   /** Returns the rules file associated with the output file. */
   public File getRulesFile() {
     return new File(changeFileExtension(this.output.getAbsolutePath(), RULES_FILE_EXTENSION));
   }
 
-  /** Returns the EAGLE script file associated with the output file. */
-  public File getEagleScriptFile() {
+  /** Returns the Autodesk Fusion script file associated with the output file. */
+  public File getFusionScriptFile() {
     return new File(
-        changeFileExtension(this.output.getAbsolutePath(), EAGLE_SCRIPT_FILE_EXTENSION));
+        changeFileExtension(this.output.getAbsolutePath(), FUSION_SCRIPT_FILE_EXTENSION));
   }
 
   /** Sets a placeholder input file for the specified path. */
@@ -537,5 +616,86 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   public void logDebug(String message) {
     LogEntry logEntry = FRLogger.debug("[" + this.shortName + "] " + message, this.id);
     fireLogEntryAddedEvent(logEntry);
+  }
+
+  /**
+   * Resolves the detected host CAD name and version from parsed board communication if available.
+   */
+  public String getDetectedHost() {
+    if (hostCad != null && !hostCad.isBlank()) {
+      return (hostVersion != null && !hostVersion.isBlank())
+          ? hostCad + "/" + hostVersion
+          : hostCad;
+    }
+    if (board != null
+        && board.communication != null
+        && board.communication.specctraParserInfo != null) {
+      String cad = board.communication.specctraParserInfo.hostCad;
+      String ver = board.communication.specctraParserInfo.hostVersion;
+      if (cad != null && !cad.isBlank()) {
+        return (ver != null && !ver.isBlank()) ? cad + "/" + ver : cad;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Generates a compact JsonObject representation of this job for token-efficient LLM/API
+   * responses.
+   */
+  public com.google.gson.JsonObject toCompactJsonObject() {
+    com.google.gson.JsonObject json = new com.google.gson.JsonObject();
+    json.addProperty("id", id.toString());
+    if (sessionId != null) {
+      json.addProperty("session_id", sessionId.toString());
+    }
+    json.addProperty("short_name", shortName);
+    if (name != null) {
+      json.addProperty("name", name);
+    }
+    json.addProperty("state", state != null ? state.name() : "UNKNOWN");
+    json.addProperty("stage", stage != null ? stage.name() : "IDLE");
+    json.addProperty("current_pass", currentPass);
+
+    if (startedAt != null) {
+      json.addProperty("started_at", startedAt.toString());
+    }
+    if (finishedAt != null) {
+      json.addProperty("finished_at", finishedAt.toString());
+    }
+    var duration = getDuration();
+    if (duration != null) {
+      json.addProperty("duration_seconds", duration.toMillis() / 1000.0);
+    }
+
+    if (board != null) {
+      var stats = board.getStatistics();
+      if (stats != null) {
+        com.google.gson.JsonObject statsObj = new com.google.gson.JsonObject();
+        if (stats.nets != null) {
+          statsObj.addProperty("total_nets", stats.nets.totalCount);
+        }
+        if (stats.connections != null) {
+          statsObj.addProperty("unrouted_connections", stats.connections.incompleteCount);
+        }
+        if (stats.clearanceViolations != null) {
+          statsObj.addProperty("clearance_violations", stats.clearanceViolations.totalCount);
+        }
+        if (routerSettings != null && routerSettings.scoring != null) {
+          float score = stats.getRouterScore(routerSettings);
+          statsObj.addProperty("normalized_score", score);
+        }
+        json.add("statistics", statsObj);
+      }
+    }
+
+    if (resourceUsage != null) {
+      com.google.gson.JsonObject resObj = new com.google.gson.JsonObject();
+      resObj.addProperty("cpu_time_seconds", resourceUsage.cpuTimeUsed);
+      resObj.addProperty("peak_memory_mb", resourceUsage.peakMemoryUsed);
+      json.add("resource_usage", resObj);
+    }
+
+    return json;
   }
 }

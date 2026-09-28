@@ -1,0 +1,502 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\Arduino-Theremin_arduino-theremin-v1\reference-routed.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  153670 -66040  153670 -77470  158750 -82550  158750 -110490
+            153670 -115570  153670 -118110  87630 -118110  87630 -64770
+            152400 -64770  153670 -66040)
+    )
+    (plane GND (polygon F.Cu 0  153670 -66040  158750 -82550  158750 -110490  153670 -118110
+            87630 -118110  87630 -64770  152400 -64770  153670 -66040))
+    (plane GND (polygon B.Cu 0  153670 -66040  153670 -77470  158750 -82550  158750 -110490
+            153670 -115570  153670 -118110  87630 -118110  87630 -64770
+            152400 -64770  153670 -66040))
+    (via "Via[0-1]_685.8:330.2_um")
+    (rule
+      (width 254)
+      (clearance 254)
+      (clearance 63.5 (type smd_smd))
+    )
+  )
+  (placement
+    (component "Wickerlib:SW-B3F-10XX"
+      (place RESET 126080 -103378 front 0 (PN "B3F-1000"))
+    )
+    (component "Wickerlib:CAPSENSE-CIRCLE-D10"
+      (place A 145605.5 -103886 front 0 (PN KEY1))
+      (place F 145288 -78930.5 front 0 (PN KEY3))
+      (place C 138684 -91186 front 0 (PN KEY2))
+    )
+    (component Wickerlib:LV_EZ1_Rangefinder
+      (place "LV-EZ1-RANGEFINDER" 108585 -97790 front 0 (PN "LV-EZ1-RANGEFINDER"))
+    )
+    (component "Wickerlib:LED-5MM-2PIN"
+      (place REC 92456 -110236 front 0 (PN RECORD))
+      (place PLAY 105664 -109728 front 0 (PN PLAYBACK))
+    )
+    (component Wickerlib:Resistor_Horizontal_RM7mm
+      (place R1 110871 -101346 front 0 (PN 220))
+      (place R2 110871 -105981.5 front 0 (PN 220))
+    )
+    (component Wickerlib:Resistor_Horizontal_RM7mm::1
+      (place R3 103505 -82740.5 front 90 (PN 10K))
+    )
+    (component Wickerlib:Resistor_Horizontal_RM7mm::2
+      (place R4 103600 -86480 front -90 (PN 10K))
+    )
+    (component "Wickerlib:P160-TRIMPOT"
+      (place VOLUME 99400 -77470 front 0 (PN 10K))
+    )
+    (component "Wickerlib:SW-100SP3"
+      (place S1 100838 -102870 front -90 (PN "100SP3 ON-OFF-ON"))
+    )
+    (component "Wickerlib:ARDU-UNOSHIELD"
+      (place U1 87630 -118110 front 0 (PN "ARDUINO-UNO-SHIELD"))
+    )
+    (component Wickerlib:OSTVN02A150
+      (place SPEAKER 95529.4 -68427.6 front -90 (PN "8 OHM"))
+    )
+  )
+  (library
+    (image "Wickerlib:SW-B3F-10XX"
+      (outline (polygon signal 0  7145 -5145  -1145 -5145  -1145 1145  7145 1145))
+      (outline (path signal 150  -950 1000  -950 900))
+      (outline (path signal 150  -1050 1050  -700 1050))
+      (outline (polygon signal 0  -987.596 658.397  -1023.97 629.663  -1070.28 627.795
+            -1108.85 653.507  -1124.94 696.977  -1112.4 741.603  -1005.47 881.157
+            -881.157 1005.47  -741.603 1112.4  -696.977 1124.94  -653.507 1108.85
+            -627.795 1070.28  -629.663 1023.97  -658.397 987.596  -723.457 944.19
+            -841.096 841.096  -944.19 723.457  -987.596 658.397))
+      (outline (path signal 150  -1050 1050  -1050 700))
+      (outline (path signal 150  4414.21 -2000  4394.93 -2232.77  4337.59 -2459.2  4243.76 -2673.09
+            4116.01 -2868.63  3957.82 -3040.47  3773.5 -3183.93  3568.08 -3295.1
+            3347.17 -3370.94  3116.78 -3409.38  2883.22 -3409.38  2652.83 -3370.94
+            2431.92 -3295.1  2226.5 -3183.93  2042.18 -3040.47  1883.99 -2868.63
+            1756.24 -2673.09  1662.41 -2459.2  1605.07 -2232.77  1585.79 -2000
+            1605.07 -1767.23  1662.41 -1540.81  1756.24 -1326.91  1883.99 -1131.37
+            2042.18 -959.529  2226.5 -816.067  2431.92 -704.901  2652.83 -629.061
+            2883.22 -590.616  3116.78 -590.616  3347.17 -629.061  3568.08 -704.901
+            3773.5 -816.067  3957.82 -959.529  4116.01 -1131.37  4243.76 -1326.91
+            4337.59 -1540.81  4394.93 -1767.23  4414.21 -2000))
+      (outline (path signal 150  1000 -5000  5000 -5000))
+      (outline (path signal 150  1000 1000  5000 1000))
+      (outline (path signal 150  0 -2750  0 -1250))
+      (outline (path signal 150  6000 -1250  6000 -2750))
+      (outline (path signal 100  0 -2000  0 -2000))
+      (outline (path signal 100  5000 -5000  1000 -5000))
+      (outline (path signal 100  5000 1000  1000 1000))
+      (outline (path signal 100  6000 -2000  6000 -2000))
+      (outline (path signal 0  4414.21 -2000  4394.93 -2232.77  4337.59 -2459.2  4243.76 -2673.09
+            4116.01 -2868.63  3957.82 -3040.47  3773.5 -3183.93  3568.08 -3295.1
+            3347.17 -3370.94  3116.78 -3409.38  2883.22 -3409.38  2652.83 -3370.94
+            2431.92 -3295.1  2226.5 -3183.93  2042.18 -3040.47  1883.99 -2868.63
+            1756.24 -2673.09  1662.41 -2459.2  1605.07 -2232.77  1585.79 -2000
+            1605.07 -1767.23  1662.41 -1540.81  1756.24 -1326.91  1883.99 -1131.37
+            2042.18 -959.529  2226.5 -816.067  2431.92 -704.901  2652.83 -629.061
+            2883.22 -590.616  3116.78 -590.616  3347.17 -629.061  3568.08 -704.901
+            3773.5 -816.067  3957.82 -959.529  4116.01 -1131.37  4243.76 -1326.91
+            4337.59 -1540.81  4394.93 -1767.23  4414.21 -2000))
+      (pin Round[A]Pad_1700.000000_um 4 6000 -4000)
+      (pin Round[A]Pad_1700.000000_um 3 0 -4000)
+      (pin Round[A]Pad_1700.000000_um 2 6000 0)
+      (pin Round[A]Pad_1700.000000_um 1 0 0)
+    )
+    (image "Wickerlib:CAPSENSE-CIRCLE-D10"
+      (pin Round[T]Pad_10160.000000_um 1 0 0)
+    )
+    (image Wickerlib:LV_EZ1_Rangefinder
+      (outline (path signal 152.4  0 22098  19939 22098))
+      (outline (path signal 152.4  19939 0  19939 22098))
+      (outline (path signal 152.4  0 0  0 22098))
+      (outline (path signal 152.4  0 0  19939 0))
+      (outline (path signal 150  19939 15655  17455 15655))
+      (outline (path signal 150  17125 16775  17125 18325))
+      (outline (path signal 150  17150 18350  19939 18350))
+      (pin Rect[A]Pad_2032.000000x1727.200000_um 1 18669 16891)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 2 18669 14351)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 3 18669 11811)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 4 18669 9271)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 5 18669 6731)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 6 18669 4191)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 7 18669 1651)
+      (keepout "" (circle F.Cu 3649.6 15494 19558))
+      (keepout "" (circle B.Cu 3649.6 15494 19558))
+      (keepout "" (circle F.Cu 3649.6 2540 2540))
+      (keepout "" (circle B.Cu 3649.6 2540 2540))
+    )
+    (image "Wickerlib:LED-5MM-2PIN"
+      (outline (polygon signal 0  1659.25 3177.66  2012.69 3117.48  2357.16 3018.11  2688.36 2880.81
+            3002.09 2707.3  3294.44 2499.76  3561.72 2260.8  3800.57 1993.42
+            4007.99 1700.99  4181.37 1387.19  4318.54 1055.94  4417.77 711.414
+            4477.81 357.963  4497.9 0  4477.81 -357.962  4417.77 -711.413
+            4318.54 -1055.94  4181.37 -1387.19  4007.99 -1700.99  3800.57 -1993.42
+            3561.72 -2260.8  3294.44 -2499.76  3002.09 -2707.3  2688.36 -2880.81
+            2357.16 -3018.11  2012.69 -3117.48  1659.25 -3177.66  1301.3 -3197.9
+            943.336 -3177.95  589.844 -3118.05  245.287 -3018.97  -86.014 -2881.94
+            -399.894 -2708.68  -692.406 -2501.38  -959.884 -2262.64  -1198.95 -1995.46
+            -1406.63 -1703.17  -1495 -1548.67  -1495 1548.67  -1406.63 1703.17
+            -1198.95 1995.46  -959.884 2262.64  -692.406 2501.38  -399.894 2708.68
+            -86.014 2881.94  245.287 3018.97  589.844 3118.06  943.336 3177.95
+            1301.3 3197.91))
+      (outline (polygon signal 0  -1165.69 1461.41  -1200.65 1430.98  -1246.83 1426.91
+            -1286.57 1450.76  -1304.71 1493.42  -1294.31 1538.59  -1104.69 1817.63
+            -884.844 2073.55  -637.571 2303.07  -366.019 2503.28  -73.644 2671.62
+            235.832 2805.97  558.471 2904.59  890.166 2966.26  1226.7 2990.16
+            1563.78 2976.01  1897.12 2923.98  2222.48 2834.74  2535.72 2709.41
+            2832.84 2549.6  3110.08 2357.34  3363.89 2135.08  3591.06 1885.64
+            3788.68 1612.2  3954.25 1318.24  4085.65 1007.51  4181.21 683.946
+            4239.73 351.681  4260.44 14.94  4243.09 -321.992  4187.9 -654.825
+            4095.57 -979.323  3967.28 -1291.36  3804.66 -1586.95  3609.78 -1862.36
+            3385.12 -2114.05  3133.54 -2338.84  2858.24 -2533.86  2562.72 -2696.63
+            2250.75 -2825.08  1926.3 -2917.57  1593.5 -2972.93  1256.57 -2990.45
+            919.822 -2969.9  587.528 -2911.56  263.919 -2816.16  -46.884 -2684.91
+            -340.926 -2519.5  -614.465 -2322.01  -864.018 -2094.97  -1086.41 -1841.27
+            -1278.81 -1564.13  -1289.66 -1519.07  -1271.95 -1476.23  -1232.44 -1451.99
+            -1186.23 -1455.6  -1150.96 -1485.68  -1065.22 -1625.55  -862.545 -1883.59
+            -631.507 -2116.59  -375.18 -2321.43  -96.975 -2495.41  199.411 -2636.19
+            510.034 -2741.92  830.764 -2811.18  1157.34 -2843.06  1485.41 -2837.12
+            1810.61 -2793.46  2128.63 -2712.64  2435.22 -2595.75  2726.32 -2444.34
+            2998.06 -2260.42  3246.81 -2046.44  3469.27 -1805.24  3662.48 -1540.04
+            3823.88 -1254.35  3951.31 -951.982  4043.08 -636.953  4097.97 -313.454
+            4115.26 14.214  4094.7 341.693  4036.58 664.628  3941.66 978.724
+            3811.22 1279.8  3646.97 1563.86  3451.12 1827.12  3226.26 2066.09
+            2975.39 2277.57  2701.83 2458.77  2409.23 2607.26  2101.48 2721.09
+            1782.67 2798.72  1457.05 2839.14  1128.93 2841.79  802.698 2806.65
+            482.676 2734.19  173.125 2625.36  -121.839 2481.62  -398.293 2304.88
+            -652.56 2097.48  -881.259 1862.19  -1081.35 1602.14  -1165.69 1461.41))
+      (outline (path signal 150  -1230 -1500  -1230 1500))
+      (outline (path signal 150  3787.94 0  3768.85 -309.425  3711.89 -614.159  3617.91 -909.583
+            3488.33 -1191.22  3325.13 -1454.8  3130.78 -1696.32  2908.22 -1912.13
+            2660.82 -2098.96  2392.34 -2253.96  2106.85 -2374.8  1808.67 -2459.64
+            1502.33 -2507.2  1192.46 -2516.74  883.77 -2488.14  580.934 -2421.82
+            288.544 -2318.78  11.032 -2180.6  -247.395 -2009.36  -482.821 -1807.66
+            -691.675 -1578.55  -870.792 -1325.52  -1017.46 -1052.4  -1129.45 -763.319
+            -1205.06 -462.67  -1243.16 -155.006  -1243.16 155.006  -1205.06 462.67
+            -1129.45 763.319  -1017.46 1052.4  -870.792 1325.52  -691.675 1578.55
+            -482.821 1807.66  -247.395 2009.36  11.032 2180.6  288.544 2318.78
+            580.934 2421.82  883.77 2488.14  1192.46 2516.74  1502.33 2507.2
+            1808.67 2459.64  2106.85 2374.8  2392.34 2253.96  2660.82 2098.96
+            2908.22 1912.13  3130.78 1696.32  3325.13 1454.8  3488.33 1191.22
+            3617.91 909.583  3711.89 614.159  3768.85 309.425  3787.94 0))
+      (pin Rect[A]Pad_2000.000000x1900.000000_um (rotate 90) 1 0 0)
+      (pin Round[A]Pad_1900.000000_um 2 2540 0)
+    )
+    (image Wickerlib:Resistor_Horizontal_RM7mm
+      (outline (polygon signal 0  8845 -1495  -1245 -1495  -1245 1495  8845 1495))
+      (outline (path signal 150  1270 1270  6350 1270))
+      (outline (path signal 150  6350 1270  6350 -1270))
+      (outline (path signal 150  6350 -1270  1270 -1270))
+      (outline (path signal 150  1270 -1270  1270 1270))
+      (pin Round[A]Pad_1998.980000_um 1 0 0)
+      (pin Round[A]Pad_1998.980000_um 2 7620 0)
+    )
+    (image Wickerlib:Resistor_Horizontal_RM7mm::1
+      (outline (polygon signal 0  -1245 -1495  -1245 1495  8845 1495  8845 -1495))
+      (outline (path signal 150  1270 1270  6350 1270))
+      (outline (path signal 150  6350 1270  6350 -1270))
+      (outline (path signal 150  6350 -1270  1270 -1270))
+      (outline (path signal 150  1270 -1270  1270 1270))
+      (pin Round[A]Pad_1998.980000_um 1 0 0)
+      (pin Round[A]Pad_1998.980000_um 2 7620 0)
+    )
+    (image Wickerlib:Resistor_Horizontal_RM7mm::2
+      (outline (polygon signal 0  8845 1495  8845 -1495  -1245 -1495  -1245 1495))
+      (outline (path signal 150  1270 1270  6350 1270))
+      (outline (path signal 150  6350 1270  6350 -1270))
+      (outline (path signal 150  6350 -1270  1270 -1270))
+      (outline (path signal 150  1270 -1270  1270 1270))
+      (pin Round[A]Pad_1998.980000_um 1 0 0)
+      (pin Round[A]Pad_1998.980000_um 2 7620 0)
+    )
+    (image "Wickerlib:P160-TRIMPOT"
+      (outline (polygon signal 0  1745 -11945  -1745 -11945  -1745 1745  1745 1745))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (outline (path signal 150  1550 1550  1550 0))
+      (outline (path signal 150  1270 -1270  1270 -11430))
+      (outline (path signal 150  1270 -11430  -1270 -11430))
+      (outline (path signal 150  -1270 -11430  -1270 -1270))
+      (outline (path signal 150  1270 -1270  -1270 -1270))
+      (pin Round[A]Pad_2032.000000_um 1 0 0)
+      (pin Round[A]Pad_2032.000000_um 2 0 -5080)
+      (pin Round[A]Pad_2032.000000_um 3 0 -10160)
+    )
+    (image "Wickerlib:SW-100SP3"
+      (outline (polygon signal 0  1745 1745  1745 -11425  -1745 -11425  -1745 1745))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (outline (path signal 150  1550 1550  1550 0))
+      (outline (path signal 150  1270 -1270  1270 -10922))
+      (outline (path signal 150  1270 -10922  -1270 -10922))
+      (outline (path signal 150  -1270 -10922  -1270 -1270))
+      (pin Round[A]Pad_2540.000000_um 1 0 0)
+      (pin Round[A]Pad_2540.000000_um 2 0 -4699)
+      (pin Round[A]Pad_2540.000000_um 3 0 -9398)
+    )
+    (image "Wickerlib:ARDU-UNOSHIELD"
+      (outline (polygon signal 0  66035 52067.9  66035 40637.9  70988 35811.9  70988 6225.51
+            66035 2542.51  66035 5  5 5  5 53335  64767.9 53335))
+      (pin Oval[A]Pad_2540.000000x1524.000000_um (rotate 90) A5 63500 2540)
+      (pin Oval[A]Pad_2540.000000x1524.000000_um (rotate 90) A4 60960 2540)
+      (pin Oval[A]Pad_2540.000000x1524.000000_um (rotate 90) A3 58420 2540)
+      (pin Oval[A]Pad_2540.000000x1524.000000_um (rotate 90) A0 50800 2540)
+      (pin Oval[A]Pad_2540.000000x1524.000000_um (rotate 90) A1 53340 2540)
+      (pin Oval[A]Pad_2540.000000x1524.000000_um (rotate 90) A2 55880 2540)
+      (pin Oval[A]Pad_2540.000000x1524.000000_um (rotate 90) VIN 45720 2540)
+      (pin Oval[A]Pad_2540.000000x1524.000000_um (rotate 90) GND2 43180 2540)
+      (pin Oval[A]Pad_2540.000000x1524.000000_um (rotate 90) GND1 40640 2540)
+      (pin Oval[A]Pad_2540.000000x1524.000000_um (rotate 90) 3V3 35560 2540)
+      (pin Oval[A]Pad_2540.000000x1524.000000_um (rotate 90) RST 33020 2540)
+      (pin Oval[A]Pad_2540.000000x1524.000000_um (rotate 90) D0 63500 50800)
+      (pin Oval[A]Pad_2540.000000x1524.000000_um (rotate 90) D1 60960 50800)
+      (pin Oval[A]Pad_2540.000000x1524.000000_um (rotate 90) D2 58420 50800)
+      (pin Oval[A]Pad_2540.000000x1524.000000_um (rotate 90) D3 55880 50800)
+      (pin Oval[A]Pad_2540.000000x1524.000000_um (rotate 90) D4 53340 50800)
+      (pin Oval[A]Pad_2540.000000x1524.000000_um (rotate 90) D5 50800 50800)
+      (pin Oval[A]Pad_2540.000000x1524.000000_um (rotate 90) D6 48260 50800)
+      (pin Oval[A]Pad_2540.000000x1524.000000_um (rotate 90) D7 45720 50800)
+      (pin Oval[A]Pad_2540.000000x1524.000000_um (rotate 90) D8 41656 50800)
+      (pin Oval[A]Pad_2540.000000x1524.000000_um (rotate 90) D9 39116 50800)
+      (pin Oval[A]Pad_2540.000000x1524.000000_um (rotate 90) D10 36576 50800)
+      (pin Oval[A]Pad_2540.000000x1524.000000_um (rotate 90) D11 34036 50800)
+      (pin Oval[A]Pad_2540.000000x1524.000000_um (rotate 90) D12 31496 50800)
+      (pin Oval[A]Pad_2540.000000x1524.000000_um (rotate 90) D13 28956 50800)
+      (pin Oval[A]Pad_2540.000000x1524.000000_um (rotate 90) GND3 26416 50800)
+      (pin Oval[A]Pad_2540.000000x1524.000000_um (rotate 90) AREF 23876 50800)
+      (pin Oval[A]Pad_2540.000000x1524.000000_um (rotate 90) 5V 38100 2540)
+      (pin Oval[A]Pad_2540.000000x1524.000000_um (rotate 90) SDA 21336 50800)
+      (pin Oval[A]Pad_2540.000000x1524.000000_um (rotate 90) SCL 18796 50800)
+      (pin Oval[A]Pad_2540.000000x1524.000000_um (rotate 90) IO 30480 2540)
+      (pin Oval[A]Pad_2540.000000x1524.000000_um (rotate 90) NC 27940 2540)
+      (keepout "" (circle F.Cu 3675 66040 7620))
+      (keepout "" (circle B.Cu 3675 66040 7620))
+      (keepout "" (circle F.Cu 3675 66040 35560))
+      (keepout "" (circle B.Cu 3675 66040 35560))
+      (keepout "" (circle F.Cu 3675 15240 50800))
+      (keepout "" (circle B.Cu 3675 15240 50800))
+      (keepout "" (circle F.Cu 3675 13970 2540))
+      (keepout "" (circle B.Cu 3675 13970 2540))
+    )
+    (image Wickerlib:OSTVN02A150
+      (outline (polygon signal 0  3295 1745  3295 -4295  -3295 -4295  -3295 1745))
+      (outline (path signal 150  1270 -1270  1270 -3810))
+      (outline (path signal 150  1550 1550  1550 0))
+      (outline (path signal 150  1270 -1270  -1270 -1270))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (outline (path signal 150  -1270 -1270  -1270 -3810))
+      (outline (path signal 150  -1270 -3810  1270 -3810))
+      (pin Rect[A]Pad_2032.000000x2032.000000_um 1 0 0)
+      (pin Oval[A]Pad_2032.000000x2032.000000_um 2 0 -2540)
+    )
+    (padstack Round[T]Pad_10160.000000_um
+      (shape (circle F.Cu 10160))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1700.000000_um
+      (shape (circle F.Cu 1700))
+      (shape (circle B.Cu 1700))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1900.000000_um
+      (shape (circle F.Cu 1900))
+      (shape (circle B.Cu 1900))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1998.980000_um
+      (shape (circle F.Cu 1998.98))
+      (shape (circle B.Cu 1998.98))
+      (attach off)
+    )
+    (padstack Round[A]Pad_2032.000000_um
+      (shape (circle F.Cu 2032))
+      (shape (circle B.Cu 2032))
+      (attach off)
+    )
+    (padstack Round[A]Pad_2540.000000_um
+      (shape (circle F.Cu 2540))
+      (shape (circle B.Cu 2540))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_2540.000000x1524.000000_um
+      (shape (path F.Cu 1524  -508 0  508 0))
+      (shape (path B.Cu 1524  -508 0  508 0))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_2032.000000x1727.200000_um
+      (shape (path F.Cu 1727.2  -152.4 0  152.4 0))
+      (shape (path B.Cu 1727.2  -152.4 0  152.4 0))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_2032.000000x2032.000000_um
+      (shape (path F.Cu 2032  0 0  0 0))
+      (shape (path B.Cu 2032  0 0  0 0))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_2000.000000x1900.000000_um
+      (shape (rect F.Cu -1000 -950 1000 950))
+      (shape (rect B.Cu -1000 -950 1000 950))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_2032.000000x2032.000000_um
+      (shape (rect F.Cu -1016 -1016 1016 1016))
+      (shape (rect B.Cu -1016 -1016 1016 1016))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_2032.000000x1727.200000_um
+      (shape (rect F.Cu -1016 -863.6 1016 863.6))
+      (shape (rect B.Cu -1016 -863.6 1016 863.6))
+      (attach off)
+    )
+    (padstack "Via[0-1]_685.8:330.2_um"
+      (shape (circle F.Cu 685.8))
+      (shape (circle B.Cu 685.8))
+      (attach off)
+    )
+  )
+  (network
+    (net +5V
+      (pins "LV-EZ1-RANGEFINDER"-2 S1-2 U1-5V)
+    )
+    (net GND
+      (pins RESET-3 "LV-EZ1-RANGEFINDER"-1 R1-2 R2-2 R3-2 R4-2 VOLUME-3 U1-GND2 U1-GND1
+        U1-GND3 SPEAKER-2)
+    )
+    (net "Net-(LED1-Pad1)"
+      (pins REC-1 R1-1)
+    )
+    (net "Net-(LED2-Pad1)"
+      (pins PLAY-1 R2-1)
+    )
+    (net /A4_PLAYBACK_LED
+      (pins PLAY-2 U1-A4)
+    )
+    (net /RESET
+      (pins RESET-1 U1-RST)
+    )
+    (net "Net-(RV1-Pad2)"
+      (pins VOLUME-2 SPEAKER-1)
+    )
+    (net /D7_KEY1
+      (pins A-1 U1-D7)
+    )
+    (net /D5_KEY3
+      (pins F-1 U1-D5)
+    )
+    (net /D6_KEY2
+      (pins C-1 U1-D6)
+    )
+    (net /D2_PWM
+      (pins "LV-EZ1-RANGEFINDER"-6 U1-D2)
+    )
+    (net /D3_DIG_SPEAKER_OUT
+      (pins VOLUME-1 U1-D3)
+    )
+    (net /A5_RECORD_LED
+      (pins REC-2 U1-A5)
+    )
+    (net /D9_BTN_PLAYBACK
+      (pins R3-1 S1-3 U1-D9)
+    )
+    (net /D8_BTN_RECORD
+      (pins R4-1 S1-1 U1-D8)
+    )
+    (class kicad_default +5V /A4_PLAYBACK_LED /A5_RECORD_LED /D2_PWM /D3_DIG_SPEAKER_OUT
+      /D5_KEY3 /D6_KEY2 /D7_KEY1 /D8_BTN_RECORD /D9_BTN_PLAYBACK /RESET GND
+      "Net-(LED1-Pad1)" "Net-(LED2-Pad1)" "Net-(RV1-Pad2)"
+      (circuit
+        (use_via "Via[0-1]_685.8:330.2_um")
+      )
+      (rule
+        (width 254)
+        (clearance 254)
+      )
+    )
+  )
+  (wiring
+    (wire (path B.Cu 508  125730 -115570  125730 -111760  128270 -109220  128270 -102108
+            126746 -100584  123190 -100584  113284 -90678)(net +5V)(type route))
+    (wire (path F.Cu 508  127254 -83439  120523 -83439  113284 -90678)(net +5V)(type route))
+    (wire (path F.Cu 508  96139 -102870  96139 -101346  99285 -98200  104400 -98200
+            106000 -96600  106000 -93009  108331 -90678  112268 -90678  113284 -90678)(net +5V)(type route))
+    (wire (path F.Cu 508  92456 -110236  92456 -108204)(net "Net-(LED1-Pad1)")(type route))
+    (wire (path F.Cu 508  105664 -101346  110871 -101346)(net "Net-(LED1-Pad1)")(type route))
+    (wire (path F.Cu 508  99822 -107188  105664 -101346)(net "Net-(LED1-Pad1)")(type route))
+    (wire (path F.Cu 508  93472 -107188  99822 -107188)(net "Net-(LED1-Pad1)")(type route))
+    (wire (path F.Cu 508  92456 -108204  93472 -107188)(net "Net-(LED1-Pad1)")(type route))
+    (wire (path F.Cu 508  110871 -105982  107902 -105982  105664 -108220  105664 -109728)(net "Net-(LED2-Pad1)")(type route))
+    (wire (path F.Cu 508  110808 -105918  110871 -105982)(net "Net-(LED2-Pad1)")(type route))
+    (wire (path F.Cu 508  141478 -109728  108204 -109728)(net /A4_PLAYBACK_LED)(type route))
+    (wire (path B.Cu 330.2  144907 -111379  143129 -111379  141478 -109728)(net /A4_PLAYBACK_LED)(type route))
+    (wire (path B.Cu 330.2  148590 -115570  148590 -115062  144907 -111379)(net /A4_PLAYBACK_LED)(type route))
+    (wire (path B.Cu 508  120650 -115570  120650 -107696)(net /RESET)(type route))
+    (wire (path B.Cu 508  124878 -103378  120650 -107606  120650 -107696)(net /RESET)(type route))
+    (wire (path B.Cu 508  126080 -103378  124878 -103378)(net /RESET)(type route))
+    (wire (path F.Cu 508  95504 -68072  95504 -78654  99400 -82550)(net "Net-(RV1-Pad2)")(type route))
+    (wire (path B.Cu 330.2  133350 -67310  132258 -67310)(net /D7_KEY1)(type route))
+    (wire (path B.Cu 330.2  123190 -93853  123190 -96520)(net /D7_KEY1)(type route))
+    (wire (path B.Cu 330.2  132258 -67310  125908 -73660  119380 -73660  116840 -76200
+            116840 -87503  123190 -93853)(net /D7_KEY1)(type route))
+    (wire (path B.Cu 330.2  123190 -96520  125349 -98679  135509 -98679  140627 -103797
+            140970 -104140)(net /D7_KEY1)(type route))
+    (wire (path F.Cu 330.2  140970 -104140  141224 -103886  145606 -103886)(net /D7_KEY1)(type route))
+    (wire (path B.Cu 330.2  138430 -67310  138430 -68580  139700 -69850  143510 -69850
+            144780 -71120  144780 -74930)(net /D5_KEY3)(type route))
+    (wire (path F.Cu 330.2  144780 -74930  145288 -75438  145288 -78930.5)(net /D5_KEY3)(type route))
+    (wire (path F.Cu 330.2  138684 -91186  136398 -91186  134112 -88900)(net /D6_KEY2)(type route))
+    (wire (path B.Cu 330.2  130810 -85725  134366 -89281)(net /D6_KEY2)(type route))
+    (wire (path B.Cu 330.2  130810 -85090  130810 -85725)(net /D6_KEY2)(type route))
+    (wire (path B.Cu 330.2  130810 -85090  130810 -76200  135890 -71120  135890 -67310)(net /D6_KEY2)(type route))
+    (wire (path F.Cu 508  127254 -93599  128778 -93599  129476 -92900.5  129476 -82613.5
+            139700 -72390  144780 -72390  146050 -71120  146050 -67310)(net /D2_PWM)(type route))
+    (wire (path F.Cu 508  99400 -71000  99400 -77720)(net /D3_DIG_SPEAKER_OUT)(type route))
+    (wire (path F.Cu 508  100296 -70104  99400 -71000)(net /D3_DIG_SPEAKER_OUT)(type route))
+    (wire (path F.Cu 508  142748 -70104  100296 -70104)(net /D3_DIG_SPEAKER_OUT)(type route))
+    (wire (path F.Cu 508  143510 -69342  143510 -67310)(net /D3_DIG_SPEAKER_OUT)(type route))
+    (wire (path F.Cu 508  142748 -70104  143510 -69342)(net /D3_DIG_SPEAKER_OUT)(type route))
+    (wire (path F.Cu 508  149860 -112522  97282 -112522  94996 -110236)(net /A5_RECORD_LED)(type route))
+    (wire (path F.Cu 508  151130 -115570  151130 -113792  149860 -112522)(net /A5_RECORD_LED)(type route))
+    (wire (path B.Cu 508  95504 -85090  91694 -88900)(net /D9_BTN_PLAYBACK)(type route))
+    (wire (path B.Cu 508  91440 -102870  91440 -89154  91694 -88900)(net /D9_BTN_PLAYBACK)(type route))
+    (wire (path B.Cu 508  96774 -85090  95504 -85090)(net /D9_BTN_PLAYBACK)(type route))
+    (wire (path B.Cu 508  101156 -85090  96774 -85090)(net /D9_BTN_PLAYBACK)(type route))
+    (wire (path B.Cu 508  103505 -82740.5  101156 -85090)(net /D9_BTN_PLAYBACK)(type route))
+    (wire (path B.Cu 508  124460 -71120  110490 -71120)(net /D9_BTN_PLAYBACK)(type route))
+    (wire (path B.Cu 508  126746 -68834  124460 -71120)(net /D9_BTN_PLAYBACK)(type route))
+    (wire (path B.Cu 508  126746 -67310  126746 -68834)(net /D9_BTN_PLAYBACK)(type route))
+    (wire (path B.Cu 508  106680 -79565.5  103505 -82740.5)(net /D9_BTN_PLAYBACK)(type route))
+    (wire (path B.Cu 508  106680 -74930  106680 -79565.5)(net /D9_BTN_PLAYBACK)(type route))
+    (wire (path B.Cu 508  110490 -71120  106680 -74930)(net /D9_BTN_PLAYBACK)(type route))
+    (wire (path B.Cu 508  103600 -86480  103600 -89100  100838 -91862  100838 -102870)(net /D8_BTN_RECORD)(type route))
+    (wire (path B.Cu 508  108458 -75692  108458 -81400  108458 -81788)(net /D8_BTN_RECORD)(type route))
+    (wire (path B.Cu 508  103600 -86480  105013 -86480  108458 -83035.5  108458 -81400)(net /D8_BTN_RECORD)(type route))
+    (wire (path B.Cu 508  129286 -67310  129286 -68834)(net /D8_BTN_RECORD)(type route))
+    (wire (path B.Cu 508  111506 -72644  108458 -75692)(net /D8_BTN_RECORD)(type route))
+    (wire (path B.Cu 508  125476 -72644  111506 -72644)(net /D8_BTN_RECORD)(type route))
+    (wire (path B.Cu 508  129286 -68834  125476 -72644)(net /D8_BTN_RECORD)(type route))
+    (via "Via[0-1]_685.8:330.2_um"  113284 -90678 (net +5V)(type route))
+    (via "Via[0-1]_685.8:330.2_um"  141478 -109728 (net /A4_PLAYBACK_LED)(type route))
+    (via "Via[0-1]_685.8:330.2_um"  140970 -104140 (net /D7_KEY1)(type route))
+    (via "Via[0-1]_685.8:330.2_um"  144780 -74930 (net /D5_KEY3)(type route))
+    (via "Via[0-1]_685.8:330.2_um"  134366 -89281 (net /D6_KEY2)(type route))
+  )
+)

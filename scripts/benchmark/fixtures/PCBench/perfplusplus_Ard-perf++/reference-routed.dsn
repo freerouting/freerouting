@@ -1,0 +1,2678 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\perfplusplus_Ard-perf++\reference-routed.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  177038 -74549  177038 -85979  179578 -88519  179578 -121285
+            177038 -123825  177038 -126365  110998 -126365  110998 -73025
+            175514 -73025  177038 -74549)
+    )
+    (via "Via[0-1]_600:400_um")
+    (rule
+      (width 508)
+      (clearance 10)
+      (clearance 2.5 (type smd_smd))
+    )
+  )
+  (placement
+    (component Socket_Arduino_Uno:Socket_Strip_Arduino_1x08
+      (place P1 138938 -123825 front 0 (PN Power))
+      (place P4 156718 -75565 front 0 (PN Digital))
+    )
+    (component Socket_Arduino_Uno:Socket_Strip_Arduino_1x06
+      (place P2 161798 -123825 front 0 (PN Analog))
+    )
+    (component Socket_Arduino_Uno:Socket_Strip_Arduino_1x10
+      (place P3 129794 -75565 front 0 (PN Digital))
+    )
+    (component Socket_Arduino_Uno:Arduino_1pin
+      (place P5 124968 -123825 front 0 (PN CONN_01X01))
+      (place P6 177038 -118745 front 0 (PN CONN_01X01))
+      (place P7 126238 -75565 front 0 (PN CONN_01X01))
+      (place P8 177038 -90805 front 0 (PN CONN_01X01))
+    )
+    (component Socket_Arduino_Uno:2.54D
+      (place JO26 177038 -113665 front 180 (PN perf+2))
+      (place JN26 177038 -111125 front 180 (PN perf+2))
+      (place JM26 177038 -108585 front 180 (PN perf+2))
+      (place JL26 177038 -106045 front 180 (PN perf+2))
+      (place JK26 177038 -103505 front 180 (PN perf+2))
+      (place JJ26 177038 -100965 front 180 (PN perf+2))
+      (place JI26 177038 -98425 front 180 (PN perf+2))
+      (place JH26 177038 -95885 front 180 (PN perf+2))
+      (place JO25 174498 -113665 front 180 (PN perf+2))
+      (place JN25 174498 -111125 front 180 (PN perf+2))
+      (place JM25 174498 -108585 front 180 (PN perf+2))
+      (place JL25 174498 -106045 front 180 (PN perf+2))
+      (place JK25 174498 -103505 front 180 (PN perf+2))
+      (place JJ25 174498 -100965 front 180 (PN perf+2))
+      (place JI25 174498 -98425 front 180 (PN perf+2))
+      (place JH25 174498 -95885 front 180 (PN perf+2))
+      (place JD25 174498 -85725 front 180 (PN perf+2))
+      (place JC25 174498 -83185 front 180 (PN perf+2))
+      (place JB25 174498 -80645 front 180 (PN perf+2))
+      (place JA25 174498 -78105 front 180 (PN perf+2))
+      (place JR24 171958 -121285 front 180 (PN perf+2))
+      (place JQ24 171958 -118745 front 180 (PN perf+2))
+      (place JP24 171958 -116205 front 180 (PN perf+2))
+      (place JO24 171958 -113665 front 180 (PN perf+2))
+      (place JN24 171958 -111125 front 180 (PN perf+2))
+      (place JM24 171958 -108585 front 180 (PN perf+2))
+      (place JL24 171958 -106045 front 180 (PN perf+2))
+      (place JK24 171958 -103505 front 180 (PN perf+2))
+      (place JJ24 171958 -100965 front 180 (PN perf+2))
+      (place JI24 171958 -98425 front 180 (PN perf+2))
+      (place JH24 171958 -95885 front 180 (PN perf+2))
+      (place JG24 171958 -93345 front 180 (PN perf+2))
+      (place JF24 171958 -90805 front 180 (PN perf+2))
+      (place JE24 171958 -88265 front 180 (PN perf+2))
+      (place JD24 171958 -85725 front 180 (PN perf+2))
+      (place JC24 171958 -83185 front 180 (PN perf+2))
+      (place JB24 171958 -80645 front 180 (PN perf+2))
+      (place JA24 171958 -78105 front 180 (PN perf+2))
+      (place JR23 169418 -121285 front 180 (PN perf+2))
+      (place JQ23 169418 -118745 front 180 (PN perf+2))
+      (place JP23 169418 -116205 front 180 (PN perf+2))
+      (place JO23 169418 -113665 front 180 (PN perf+2))
+      (place JN23 169418 -111125 front 180 (PN perf+2))
+      (place JM23 169418 -108585 front 180 (PN perf+2))
+      (place JL23 169418 -106045 front 180 (PN perf+2))
+      (place JK23 169418 -103505 front 180 (PN perf+2))
+      (place JJ23 169418 -100965 front 180 (PN perf+2))
+      (place JI23 169418 -98425 front 180 (PN perf+2))
+      (place JH23 169418 -95885 front 180 (PN perf+2))
+      (place JG23 169418 -93345 front 180 (PN perf+2))
+      (place JF23 169418 -90805 front 180 (PN perf+2))
+      (place JE23 169418 -88265 front 180 (PN perf+2))
+      (place JD23 169418 -85725 front 180 (PN perf+2))
+      (place JC23 169418 -83185 front 180 (PN perf+2))
+      (place JB23 169418 -80645 front 180 (PN perf+2))
+      (place JA23 169418 -78105 front 180 (PN perf+2))
+      (place JR22 166878 -121285 front 180 (PN perf+2))
+      (place JQ22 166878 -118745 front 180 (PN perf+2))
+      (place JP22 166878 -116205 front 180 (PN perf+2))
+      (place JO22 166878 -113665 front 180 (PN perf+2))
+      (place JN22 166878 -111125 front 180 (PN perf+2))
+      (place JM22 166878 -108585 front 180 (PN perf+2))
+      (place JL22 166878 -106045 front 180 (PN perf+2))
+      (place JK22 166878 -103505 front 180 (PN perf+2))
+      (place JJ22 166878 -100965 front 180 (PN perf+2))
+      (place JI22 166878 -98425 front 180 (PN perf+2))
+      (place JH22 166878 -95885 front 180 (PN perf+2))
+      (place JG22 166878 -93345 front 180 (PN perf+2))
+      (place JF22 166878 -90805 front 180 (PN perf+2))
+      (place JE22 166878 -88265 front 180 (PN perf+2))
+      (place JD22 166878 -85725 front 180 (PN perf+2))
+      (place JC22 166878 -83185 front 180 (PN perf+2))
+      (place JB22 166878 -80645 front 180 (PN perf+2))
+      (place JA22 166878 -78105 front 180 (PN perf+2))
+      (place JR21 164338 -121285 front 180 (PN perf+2))
+      (place JQ21 164338 -118745 front 180 (PN perf+2))
+      (place JP21 164338 -116205 front 180 (PN perf+2))
+      (place JO21 164338 -113665 front 180 (PN perf+2))
+      (place JN21 164338 -111125 front 180 (PN perf+2))
+      (place JM21 164338 -108585 front 180 (PN perf+2))
+      (place JL21 164338 -106045 front 180 (PN perf+2))
+      (place JK21 164338 -103505 front 180 (PN perf+2))
+      (place JJ21 164338 -100965 front 180 (PN perf+2))
+      (place JI21 164338 -98425 front 180 (PN perf+2))
+      (place JH21 164338 -95885 front 180 (PN perf+2))
+      (place JG21 164338 -93345 front 180 (PN perf+2))
+      (place JF21 164338 -90805 front 180 (PN perf+2))
+      (place JE21 164338 -88265 front 180 (PN perf+2))
+      (place JD21 164338 -85725 front 180 (PN perf+2))
+      (place JC21 164338 -83185 front 180 (PN perf+2))
+      (place JB21 164338 -80645 front 180 (PN perf+2))
+      (place JA21 164338 -78105 front 180 (PN perf+2))
+      (place JR20 161798 -121285 front 180 (PN perf+2))
+      (place JQ20 161798 -118745 front 180 (PN perf+2))
+      (place JP20 161798 -116205 front 180 (PN perf+2))
+      (place JO20 161798 -113665 front 180 (PN perf+2))
+      (place JN20 161798 -111125 front 180 (PN perf+2))
+      (place JM20 161798 -108585 front 180 (PN perf+2))
+      (place JL20 161798 -106045 front 180 (PN perf+2))
+      (place JK20 161798 -103505 front 180 (PN perf+2))
+      (place JJ20 161798 -100965 front 180 (PN perf+2))
+      (place JI20 161798 -98425 front 180 (PN perf+2))
+      (place JH20 161798 -95885 front 180 (PN perf+2))
+      (place JG20 161798 -93345 front 180 (PN perf+2))
+      (place JF20 161798 -90805 front 180 (PN perf+2))
+      (place JE20 161798 -88265 front 180 (PN perf+2))
+      (place JD20 161798 -85725 front 180 (PN perf+2))
+      (place JC20 161798 -83185 front 180 (PN perf+2))
+      (place JB20 161798 -80645 front 180 (PN perf+2))
+      (place JA20 161798 -78105 front 180 (PN perf+2))
+      (place JR19 159258 -121285 front 180 (PN perf+2))
+      (place JQ19 159258 -118745 front 180 (PN perf+2))
+      (place JP19 159258 -116205 front 180 (PN perf+2))
+      (place JO19 159258 -113665 front 180 (PN perf+2))
+      (place JN19 159258 -111125 front 180 (PN perf+2))
+      (place JM19 159258 -108585 front 180 (PN perf+2))
+      (place JL19 159258 -106045 front 180 (PN perf+2))
+      (place JK19 159258 -103505 front 180 (PN perf+2))
+      (place JJ19 159258 -100965 front 180 (PN perf+2))
+      (place JI19 159258 -98425 front 180 (PN perf+2))
+      (place JH19 159258 -95885 front 180 (PN perf+2))
+      (place JG19 159258 -93345 front 180 (PN perf+2))
+      (place JF19 159258 -90805 front 180 (PN perf+2))
+      (place JE19 159258 -88265 front 180 (PN perf+2))
+      (place JD19 159258 -85725 front 180 (PN perf+2))
+      (place JC19 159258 -83185 front 180 (PN perf+2))
+      (place JB19 159258 -80645 front 180 (PN perf+2))
+      (place JA19 159258 -78105 front 180 (PN perf+2))
+      (place JR18 156718 -121285 front 180 (PN perf+2))
+      (place JQ18 156718 -118745 front 180 (PN perf+2))
+      (place JP18 156718 -116205 front 180 (PN perf+2))
+      (place JO18 156718 -113665 front 180 (PN perf+2))
+      (place JN18 156718 -111125 front 180 (PN perf+2))
+      (place JM18 156718 -108585 front 180 (PN perf+2))
+      (place JL18 156718 -106045 front 180 (PN perf+2))
+      (place JK18 156718 -103505 front 180 (PN perf+2))
+      (place JJ18 156718 -100965 front 180 (PN perf+2))
+      (place JI18 156718 -98425 front 180 (PN perf+2))
+      (place JH18 156718 -95885 front 180 (PN perf+2))
+      (place JG18 156718 -93345 front 180 (PN perf+2))
+      (place JF18 156718 -90805 front 180 (PN perf+2))
+      (place JE18 156718 -88265 front 180 (PN perf+2))
+      (place JD18 156718 -85725 front 180 (PN perf+2))
+      (place JC18 156718 -83185 front 180 (PN perf+2))
+      (place JB18 156718 -80645 front 180 (PN perf+2))
+      (place JA18 156718 -78105 front 180 (PN perf+2))
+      (place JR17 154178 -121285 front 180 (PN perf+2))
+      (place JQ17 154178 -118745 front 180 (PN perf+2))
+      (place JP17 154178 -116205 front 180 (PN perf+2))
+      (place JO17 154178 -113665 front 180 (PN perf+2))
+      (place JN17 154178 -111125 front 180 (PN perf+2))
+      (place JM17 154178 -108585 front 180 (PN perf+2))
+      (place JL17 154178 -106045 front 180 (PN perf+2))
+      (place JK17 154178 -103505 front 180 (PN perf+2))
+      (place JJ17 154178 -100965 front 180 (PN perf+2))
+      (place JI17 154178 -98425 front 180 (PN perf+2))
+      (place JH17 154178 -95885 front 180 (PN perf+2))
+      (place JG17 154178 -93345 front 180 (PN perf+2))
+      (place JF17 154178 -90805 front 180 (PN perf+2))
+      (place JE17 154178 -88265 front 180 (PN perf+2))
+      (place JD17 154178 -85725 front 180 (PN perf+2))
+      (place JC17 154178 -83185 front 180 (PN perf+2))
+      (place JB17 154178 -80645 front 180 (PN perf+2))
+      (place JA17 154178 -78105 front 180 (PN perf+2))
+      (place JR16 151638 -121285 front 180 (PN perf+2))
+      (place JQ16 151638 -118745 front 180 (PN perf+2))
+      (place JP16 151638 -116205 front 180 (PN perf+2))
+      (place JO16 151638 -113665 front 180 (PN perf+2))
+      (place JN16 151638 -111125 front 180 (PN perf+2))
+      (place JM16 151638 -108585 front 180 (PN perf+2))
+      (place JL16 151638 -106045 front 180 (PN perf+2))
+      (place JK16 151638 -103505 front 180 (PN perf+2))
+      (place JJ16 151638 -100965 front 180 (PN perf+2))
+      (place JI16 151638 -98425 front 180 (PN perf+2))
+      (place JH16 151638 -95885 front 180 (PN perf+2))
+      (place JG16 151638 -93345 front 180 (PN perf+2))
+      (place JF16 151638 -90805 front 180 (PN perf+2))
+      (place JE16 151638 -88265 front 180 (PN perf+2))
+      (place JD16 151638 -85725 front 180 (PN perf+2))
+      (place JC16 151638 -83185 front 180 (PN perf+2))
+      (place JB16 151638 -80645 front 180 (PN perf+2))
+      (place JA16 151638 -78105 front 180 (PN perf+2))
+      (place JR15 149098 -121285 front 180 (PN perf+2))
+      (place JQ15 149098 -118745 front 180 (PN perf+2))
+      (place JP15 149098 -116205 front 180 (PN perf+2))
+      (place JO15 149098 -113665 front 180 (PN perf+2))
+      (place JN15 149098 -111125 front 180 (PN perf+2))
+      (place JM15 149098 -108585 front 180 (PN perf+2))
+      (place JL15 149098 -106045 front 180 (PN perf+2))
+      (place JK15 149098 -103505 front 180 (PN perf+2))
+      (place JJ15 149098 -100965 front 180 (PN perf+2))
+      (place JI15 149098 -98425 front 180 (PN perf+2))
+      (place JH15 149098 -95885 front 180 (PN perf+2))
+      (place JG15 149098 -93345 front 180 (PN perf+2))
+      (place JF15 149098 -90805 front 180 (PN perf+2))
+      (place JE15 149098 -88265 front 180 (PN perf+2))
+      (place JD15 149098 -85725 front 180 (PN perf+2))
+      (place JC15 149098 -83185 front 180 (PN perf+2))
+      (place JB15 149098 -80645 front 180 (PN perf+2))
+      (place JA15 149098 -78105 front 180 (PN perf+2))
+      (place JR14 146558 -121285 front 180 (PN perf+2))
+      (place JQ14 146558 -118745 front 180 (PN perf+2))
+      (place JP14 146558 -116205 front 180 (PN perf+2))
+      (place JO14 146558 -113665 front 180 (PN perf+2))
+      (place JN14 146558 -111125 front 180 (PN perf+2))
+      (place JM14 146558 -108585 front 180 (PN perf+2))
+      (place JL14 146558 -106045 front 180 (PN perf+2))
+      (place JK14 146558 -103505 front 180 (PN perf+2))
+      (place JJ14 146558 -100965 front 180 (PN perf+2))
+      (place JI14 146558 -98425 front 180 (PN perf+2))
+      (place JH14 146558 -95885 front 180 (PN perf+2))
+      (place JG14 146558 -93345 front 180 (PN perf+2))
+      (place JF14 146558 -90805 front 180 (PN perf+2))
+      (place JE14 146558 -88265 front 180 (PN perf+2))
+      (place JD14 146558 -85725 front 180 (PN perf+2))
+      (place JC14 146558 -83185 front 180 (PN perf+2))
+      (place JB14 146558 -80645 front 180 (PN perf+2))
+      (place JA14 146558 -78105 front 180 (PN perf+2))
+      (place JR13 144018 -121285 front 180 (PN perf+2))
+      (place JQ13 144018 -118745 front 180 (PN perf+2))
+      (place JP13 144018 -116205 front 180 (PN perf+2))
+      (place JO13 144018 -113665 front 180 (PN perf+2))
+      (place JN13 144018 -111125 front 180 (PN perf+2))
+      (place JM13 144018 -108585 front 180 (PN perf+2))
+      (place JL13 144018 -106045 front 180 (PN perf+2))
+      (place JK13 144018 -103505 front 180 (PN perf+2))
+      (place JJ13 144018 -100965 front 180 (PN perf+2))
+      (place JI13 144018 -98425 front 180 (PN perf+2))
+      (place JH13 144018 -95885 front 180 (PN perf+2))
+      (place JG13 144018 -93345 front 180 (PN perf+2))
+      (place JF13 144018 -90805 front 180 (PN perf+2))
+      (place JE13 144018 -88265 front 180 (PN perf+2))
+      (place JD13 144018 -85725 front 180 (PN perf+2))
+      (place JC13 144018 -83185 front 180 (PN perf+2))
+      (place JB13 144018 -80645 front 180 (PN perf+2))
+      (place JA13 144018 -78105 front 180 (PN perf+2))
+      (place JR12 141478 -121285 front 180 (PN perf+2))
+      (place JQ12 141478 -118745 front 180 (PN perf+2))
+      (place JP12 141478 -116205 front 180 (PN perf+2))
+      (place JO12 141478 -113665 front 180 (PN perf+2))
+      (place JN12 141478 -111125 front 180 (PN perf+2))
+      (place JM12 141478 -108585 front 180 (PN perf+2))
+      (place JL12 141478 -106045 front 180 (PN perf+2))
+      (place JK12 141478 -103505 front 180 (PN perf+2))
+      (place JJ12 141478 -100965 front 180 (PN perf+2))
+      (place JI12 141478 -98425 front 180 (PN perf+2))
+      (place JH12 141478 -95885 front 180 (PN perf+2))
+      (place JG12 141478 -93345 front 180 (PN perf+2))
+      (place JF12 141478 -90805 front 180 (PN perf+2))
+      (place JE12 141478 -88265 front 180 (PN perf+2))
+      (place JD12 141478 -85725 front 180 (PN perf+2))
+      (place JC12 141478 -83185 front 180 (PN perf+2))
+      (place JB12 141478 -80645 front 180 (PN perf+2))
+      (place JA12 141478 -78105 front 180 (PN perf+2))
+      (place JR11 138938 -121285 front 180 (PN perf+2))
+      (place JQ11 138938 -118745 front 180 (PN perf+2))
+      (place JP11 138938 -116205 front 180 (PN perf+2))
+      (place JO11 138938 -113665 front 180 (PN perf+2))
+      (place JN11 138938 -111125 front 180 (PN perf+2))
+      (place JM11 138938 -108585 front 180 (PN perf+2))
+      (place JL11 138938 -106045 front 180 (PN perf+2))
+      (place JK11 138938 -103505 front 180 (PN perf+2))
+      (place JJ11 138938 -100965 front 180 (PN perf+2))
+      (place JI11 138938 -98425 front 180 (PN perf+2))
+      (place JH11 138938 -95885 front 180 (PN perf+2))
+      (place JG11 138938 -93345 front 180 (PN perf+2))
+      (place JF11 138938 -90805 front 180 (PN perf+2))
+      (place JE11 138938 -88265 front 180 (PN perf+2))
+      (place JD11 138938 -85725 front 180 (PN perf+2))
+      (place JC11 138938 -83185 front 180 (PN perf+2))
+      (place JB11 138938 -80645 front 180 (PN perf+2))
+      (place JA11 138938 -78105 front 180 (PN perf+2))
+      (place JR10 136398 -121285 front 180 (PN perf+2))
+      (place JQ10 136398 -118745 front 180 (PN perf+2))
+      (place JP10 136398 -116205 front 180 (PN perf+2))
+      (place JO10 136398 -113665 front 180 (PN perf+2))
+      (place JN10 136398 -111125 front 180 (PN perf+2))
+      (place JM10 136398 -108585 front 180 (PN perf+2))
+      (place JL10 136398 -106045 front 180 (PN perf+2))
+      (place JK10 136398 -103505 front 180 (PN perf+2))
+      (place JJ10 136398 -100965 front 180 (PN perf+2))
+      (place JI10 136398 -98425 front 180 (PN perf+2))
+      (place JH10 136398 -95885 front 180 (PN perf+2))
+      (place JG10 136398 -93345 front 180 (PN perf+2))
+      (place JF10 136398 -90805 front 180 (PN perf+2))
+      (place JE10 136398 -88265 front 180 (PN perf+2))
+      (place JD10 136398 -85725 front 180 (PN perf+2))
+      (place JC10 136398 -83185 front 180 (PN perf+2))
+      (place JB10 136398 -80645 front 180 (PN perf+2))
+      (place JA10 136398 -78105 front 180 (PN perf+2))
+      (place JR9 133858 -121285 front 180 (PN perf+2))
+      (place JQ9 133858 -118745 front 180 (PN perf+2))
+      (place JP9 133858 -116205 front 180 (PN perf+2))
+      (place JO9 133858 -113665 front 180 (PN perf+2))
+      (place JN9 133858 -111125 front 180 (PN perf+2))
+      (place JM9 133858 -108585 front 180 (PN perf+2))
+      (place JL9 133858 -106045 front 180 (PN perf+2))
+      (place JK9 133858 -103505 front 180 (PN perf+2))
+      (place JJ9 133858 -100965 front 180 (PN perf+2))
+      (place JI9 133858 -98425 front 180 (PN perf+2))
+      (place JH9 133858 -95885 front 180 (PN perf+2))
+      (place JG9 133858 -93345 front 180 (PN perf+2))
+      (place JF9 133858 -90805 front 180 (PN perf+2))
+      (place JE9 133858 -88265 front 180 (PN perf+2))
+      (place JD9 133858 -85725 front 180 (PN perf+2))
+      (place JC9 133858 -83185 front 180 (PN perf+2))
+      (place JB9 133858 -80645 front 180 (PN perf+2))
+      (place JA9 133858 -78105 front 180 (PN perf+2))
+      (place JR8 131318 -121285 front 180 (PN perf+2))
+      (place JQ8 131318 -118745 front 180 (PN perf+2))
+      (place JP8 131318 -116205 front 180 (PN perf+2))
+      (place JO8 131318 -113665 front 180 (PN perf+2))
+      (place JN8 131318 -111125 front 180 (PN perf+2))
+      (place JM8 131318 -108585 front 180 (PN perf+2))
+      (place JL8 131318 -106045 front 180 (PN perf+2))
+      (place JK8 131318 -103505 front 180 (PN perf+2))
+      (place JJ8 131318 -100965 front 180 (PN perf+2))
+      (place JI8 131318 -98425 front 180 (PN perf+2))
+      (place JH8 131318 -95885 front 180 (PN perf+2))
+      (place JG8 131318 -93345 front 180 (PN perf+2))
+      (place JF8 131318 -90805 front 180 (PN perf+2))
+      (place JE8 131318 -88265 front 180 (PN perf+2))
+      (place JD8 131318 -85725 front 180 (PN perf+2))
+      (place JC8 131318 -83185 front 180 (PN perf+2))
+      (place JB8 131318 -80645 front 180 (PN perf+2))
+      (place JA8 131318 -78105 front 180 (PN perf+2))
+      (place JR7 128778 -121285 front 180 (PN perf+2))
+      (place JQ7 128778 -118745 front 180 (PN perf+2))
+      (place JP7 128778 -116205 front 180 (PN perf+2))
+      (place JO7 128778 -113665 front 180 (PN perf+2))
+      (place JN7 128778 -111125 front 180 (PN perf+2))
+      (place JM7 128778 -108585 front 180 (PN perf+2))
+      (place JL7 128778 -106045 front 180 (PN perf+2))
+      (place JK7 128778 -103505 front 180 (PN perf+2))
+      (place JJ7 128778 -100965 front 180 (PN perf+2))
+      (place JI7 128778 -98425 front 180 (PN perf+2))
+      (place JH7 128778 -95885 front 180 (PN perf+2))
+      (place JG7 128778 -93345 front 180 (PN perf+2))
+      (place JF7 128778 -90805 front 180 (PN perf+2))
+      (place JE7 128778 -88265 front 180 (PN perf+2))
+      (place JD7 128778 -85725 front 180 (PN perf+2))
+      (place JC7 128778 -83185 front 180 (PN perf+2))
+      (place JB7 128778 -80645 front 180 (PN perf+2))
+      (place JA7 128778 -78105 front 180 (PN perf+2))
+      (place JQ6 126238 -118745 front 180 (PN perf+2))
+      (place JP6 126238 -116205 front 180 (PN perf+2))
+      (place JO6 126238 -113665 front 180 (PN perf+2))
+      (place JN6 126238 -111125 front 180 (PN perf+2))
+      (place JM6 126238 -108585 front 180 (PN perf+2))
+      (place JL6 126238 -106045 front 180 (PN perf+2))
+      (place JK6 126238 -103505 front 180 (PN perf+2))
+      (place JJ6 126238 -100965 front 180 (PN perf+2))
+      (place JI6 126238 -98425 front 180 (PN perf+2))
+      (place JH6 126238 -95885 front 180 (PN perf+2))
+      (place JG6 126238 -93345 front 180 (PN perf+2))
+      (place JF6 126238 -90805 front 180 (PN perf+2))
+      (place JE6 126238 -88265 front 180 (PN perf+2))
+      (place JD6 126238 -85725 front 180 (PN perf+2))
+      (place JC6 126238 -83185 front 180 (PN perf+2))
+      (place JB6 126238 -80645 front 180 (PN perf+2))
+      (place JQ5 123698 -118745 front 180 (PN perf+2))
+      (place JP5 123698 -116205 front 180 (PN perf+2))
+      (place JO5 123698 -113665 front 180 (PN perf+2))
+      (place JN5 123698 -111125 front 180 (PN perf+2))
+      (place JM5 123698 -108585 front 180 (PN perf+2))
+      (place JL5 123698 -106045 front 180 (PN perf+2))
+      (place JK5 123698 -103505 front 180 (PN perf+2))
+      (place JJ5 123698 -100965 front 180 (PN perf+2))
+      (place JI5 123698 -98425 front 180 (PN perf+2))
+      (place JH5 123698 -95885 front 180 (PN perf+2))
+      (place JG5 123698 -93345 front 180 (PN perf+2))
+      (place JF5 123698 -90805 front 180 (PN perf+2))
+      (place JE5 123698 -88265 front 180 (PN perf+2))
+      (place JD5 123698 -85725 front 180 (PN perf+2))
+      (place JC5 123698 -83185 front 180 (PN perf+2))
+      (place JB5 123698 -80645 front 180 (PN perf+2))
+      (place JR4 121158 -121285 front 180 (PN perf+2))
+      (place JQ4 121158 -118745 front 180 (PN perf+2))
+      (place JP4 121158 -116205 front 180 (PN perf+2))
+      (place JO4 121158 -113665 front 180 (PN perf+2))
+      (place JN4 121158 -111125 front 180 (PN perf+2))
+      (place JM4 121158 -108585 front 180 (PN perf+2))
+      (place JL4 121158 -106045 front 180 (PN perf+2))
+      (place JK4 121158 -103505 front 180 (PN perf+2))
+      (place JJ4 121158 -100965 front 180 (PN perf+2))
+      (place JI4 121158 -98425 front 180 (PN perf+2))
+      (place JH4 121158 -95885 front 180 (PN perf+2))
+      (place JG4 121158 -93345 front 180 (PN perf+2))
+      (place JF4 121158 -90805 front 180 (PN perf+2))
+      (place JE4 121158 -88265 front 180 (PN perf+2))
+      (place JD4 121158 -85725 front 180 (PN perf+2))
+      (place JC4 121158 -83185 front 180 (PN perf+2))
+      (place JB4 121158 -80645 front 180 (PN perf+2))
+      (place JA4 121158 -78105 front 180 (PN perf+2))
+      (place JR3 118618 -121285 front 180 (PN perf+2))
+      (place JQ3 118618 -118745 front 180 (PN perf+2))
+      (place JP3 118618 -116205 front 180 (PN perf+2))
+      (place JO3 118618 -113665 front 180 (PN perf+2))
+      (place JN3 118618 -111125 front 180 (PN perf+2))
+      (place JM3 118618 -108585 front 180 (PN perf+2))
+      (place JL3 118618 -106045 front 180 (PN perf+2))
+      (place JK3 118618 -103505 front 180 (PN perf+2))
+      (place JJ3 118618 -100965 front 180 (PN perf+2))
+      (place JI3 118618 -98425 front 180 (PN perf+2))
+      (place JH3 118618 -95885 front 180 (PN perf+2))
+      (place JG3 118618 -93345 front 180 (PN perf+2))
+      (place JF3 118618 -90805 front 180 (PN perf+2))
+      (place JE3 118618 -88265 front 180 (PN perf+2))
+      (place JD3 118618 -85725 front 180 (PN perf+2))
+      (place JC3 118618 -83185 front 180 (PN perf+2))
+      (place JB3 118618 -80645 front 180 (PN perf+2))
+      (place JA3 118618 -78105 front 180 (PN perf+2))
+      (place JR2 116078 -121285 front 180 (PN perf+2))
+      (place JQ2 116078 -118745 front 180 (PN perf+2))
+      (place JP2 116078 -116205 front 180 (PN perf+2))
+      (place JO2 116078 -113665 front 180 (PN perf+2))
+      (place JN2 116078 -111125 front 180 (PN perf+2))
+      (place JM2 116078 -108585 front 180 (PN perf+2))
+      (place JL2 116078 -106045 front 180 (PN perf+2))
+      (place JK2 116078 -103505 front 180 (PN perf+2))
+      (place JJ2 116078 -100965 front 180 (PN perf+2))
+      (place JI2 116078 -98425 front 180 (PN perf+2))
+      (place JH2 116078 -95885 front 180 (PN perf+2))
+      (place JG2 116078 -93345 front 180 (PN perf+2))
+      (place JF2 116078 -90805 front 180 (PN perf+2))
+      (place JE2 116078 -88265 front 180 (PN perf+2))
+      (place JD2 116078 -85725 front 180 (PN perf+2))
+      (place JC2 116078 -83185 front 180 (PN perf+2))
+      (place JB2 116078 -80645 front 180 (PN perf+2))
+      (place JA2 116078 -78105 front 180 (PN perf+2))
+      (place JR1 113538 -121285 front 180 (PN perf+2))
+      (place JQ1 113538 -118745 front 180 (PN perf+2))
+      (place JP1 113538 -116205 front 180 (PN perf+2))
+      (place JO1 113538 -113665 front 180 (PN perf+2))
+      (place JN1 113538 -111125 front 180 (PN perf+2))
+      (place JM1 113538 -108585 front 180 (PN perf+2))
+      (place JL1 113538 -106045 front 180 (PN perf+2))
+      (place JK1 113538 -103505 front 180 (PN perf+2))
+      (place JJ1 113538 -100965 front 180 (PN perf+2))
+      (place JI1 113538 -98425 front 180 (PN perf+2))
+      (place JH1 113538 -95885 front 180 (PN perf+2))
+      (place JG1 113538 -93345 front 180 (PN perf+2))
+      (place JF1 113538 -90805 front 180 (PN perf+2))
+      (place JE1 113538 -88265 front 180 (PN perf+2))
+      (place JD1 113538 -85725 front 180 (PN perf+2))
+      (place JC1 113538 -83185 front 180 (PN perf+2))
+      (place JB1 113538 -80645 front 180 (PN perf+2))
+      (place JA1 113538 -78105 front 180 (PN perf+2))
+    )
+    (component Socket_Arduino_Uno:2.54D::1
+      (place JR25 174498 -121285 front 180 (PN perf+2))
+    )
+  )
+  (library
+    (image Socket_Arduino_Uno:Socket_Strip_Arduino_1x08
+      (outline (polygon signal 0  19545 -1745  -1745 -1745  -1745 1745  19545 1745))
+      (outline (path signal 150  1270 -1270  19050 -1270))
+      (outline (path signal 150  19050 -1270  19050 1270))
+      (outline (path signal 150  19050 1270  1270 1270))
+      (outline (path signal 150  -1550 -1550  0 -1550))
+      (outline (path signal 150  1270 -1270  1270 1270))
+      (outline (path signal 150  0 1550  -1550 1550))
+      (outline (path signal 150  -1550 1550  -1550 -1550))
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 1 0 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 2 2540 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 3 5080 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 4 7620 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 5 10160 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 6 12700 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 7 15240 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 8 17780 0)
+    )
+    (image Socket_Arduino_Uno:Socket_Strip_Arduino_1x06
+      (outline (polygon signal 0  14445 -1745  -1745 -1745  -1745 1745  14445 1745))
+      (outline (path signal 150  1270 -1270  13970 -1270))
+      (outline (path signal 150  13970 -1270  13970 1270))
+      (outline (path signal 150  13970 1270  1270 1270))
+      (outline (path signal 150  -1550 -1550  0 -1550))
+      (outline (path signal 150  1270 -1270  1270 1270))
+      (outline (path signal 150  0 1550  -1550 1550))
+      (outline (path signal 150  -1550 1550  -1550 -1550))
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 1 0 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 2 2540 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 3 5080 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 4 7620 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 5 10160 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 6 12700 0)
+    )
+    (image Socket_Arduino_Uno:Socket_Strip_Arduino_1x10
+      (outline (polygon signal 0  24645 -1745  -1745 -1745  -1745 1745  24645 1745))
+      (outline (path signal 150  1270 -1270  24130 -1270))
+      (outline (path signal 150  24130 -1270  24130 1270))
+      (outline (path signal 150  24130 1270  1270 1270))
+      (outline (path signal 150  -1550 -1550  0 -1550))
+      (outline (path signal 150  1270 -1270  1270 1270))
+      (outline (path signal 150  0 1550  -1550 1550))
+      (outline (path signal 150  -1550 1550  -1550 -1550))
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 1 0 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 2 2540 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 3 5080 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 4 7620 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 5 10160 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 6 12700 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 7 15240 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 8 17780 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 9 20320 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 10 22860 0)
+    )
+    (image Socket_Arduino_Uno:Arduino_1pin
+      (outline (path signal 150  2286 0  2266.44 -298.383  2208.11 -591.66  2111.99 -874.814
+            1979.73 -1143  1813.61 -1391.63  1616.45 -1616.45  1391.63 -1813.61
+            1143 -1979.73  874.814 -2111.99  591.66 -2208.11  298.383 -2266.44
+            0 -2286  -298.383 -2266.44  -591.66 -2208.11  -874.814 -2111.99
+            -1143 -1979.73  -1391.63 -1813.61  -1616.45 -1616.45  -1813.61 -1391.63
+            -1979.73 -1143  -2111.99 -874.814  -2208.11 -591.66  -2266.44 -298.383
+            -2286 0  -2266.44 298.383  -2208.11 591.66  -2111.99 874.814
+            -1979.73 1143  -1813.61 1391.63  -1616.45 1616.45  -1391.63 1813.61
+            -1143 1979.73  -874.814 2111.99  -591.66 2208.11  -298.383 2266.44
+            0 2286  298.383 2266.44  591.66 2208.11  874.814 2111.99  1143 1979.73
+            1391.63 1813.61  1616.45 1616.45  1813.61 1391.63  1979.73 1143
+            2111.99 874.814  2208.11 591.66  2266.44 298.383  2286 0))
+      (pin Round[A]Pad_4064.000000_um 1 0 0)
+    )
+    (image Socket_Arduino_Uno:2.54D
+      (outline (path signal 177.8  -685.8 -482.6  -635 0))
+      (outline (path signal 177.8  685.8 -482.6  -685.8 -482.6))
+      (outline (path signal 177.8  635 0  685.8 -482.6))
+      (outline (path signal 177.8  -508 -685.8  0 -635))
+      (outline (path signal 177.8  -533.4 685.8  -508 -685.8))
+      (outline (path signal 177.8  0 635  -533.4 685.8))
+      (outline (path signal 177.8  685.8 -609.6  -685.8 -609.6))
+      (outline (path signal 177.8  -457.2 -330.2  406.4 -330.2))
+      (outline (path signal 177.8  533.4 -457.2  482.6 0))
+      (outline (path signal 177.8  -533.4 -457.2  533.4 -457.2))
+      (outline (path signal 177.8  -482.6 0  -533.4 -457.2))
+      (outline (path signal 177.8  -685.8 -609.6  -635 0))
+      (outline (path signal 177.8  0 -635  -685.8 -609.6))
+      (outline (path signal 177.8  635 0  -635 0))
+      (outline (path signal 177.8  685.8 -609.6  635 0))
+      (outline (path signal 177.8  0 -635  685.8 -609.6))
+      (outline (path signal 177.8  -609.6 685.8  -609.6 -685.8))
+      (outline (path signal 177.8  -482.6 558.8  -482.6 -50.8))
+      (outline (path signal 177.8  -152.4 558.8  -482.6 558.8))
+      (outline (path signal 177.8  -609.6 152.4  -152.4 558.8))
+      (outline (path signal 177.8  -533.4 -127  -279.4 -508))
+      (outline (path signal 177.8  -482.6 -533.4  -533.4 -127))
+      (outline (path signal 177.8  0 -635  -482.6 -533.4))
+      (outline (path signal 177.8  -609.6 -685.8  0 -635))
+      (outline (path signal 177.8  -635 0  -609.6 -685.8))
+      (outline (path signal 177.8  0 635  0 -635))
+      (outline (path signal 177.8  -609.6 685.8  0 635))
+      (outline (path signal 177.8  -635 0  -609.6 685.8))
+      (pin Rect[T]Pad_508.000000x1524.000000_um 2 -1143 0)
+      (pin Round[A]Pad_1447.800000_um 1 0 0)
+      (pin Rect[B]Pad_508.000000x1524.000000_um (rotate 90) 3 0 -1143)
+    )
+    (image Socket_Arduino_Uno:2.54D::1
+      (outline (path signal 177.8  -685.8 -482.6  -635 0))
+      (outline (path signal 177.8  685.8 -482.6  -685.8 -482.6))
+      (outline (path signal 177.8  635 0  685.8 -482.6))
+      (outline (path signal 177.8  -508 -685.8  0 -635))
+      (outline (path signal 177.8  -533.4 685.8  -508 -685.8))
+      (outline (path signal 177.8  0 635  -533.4 685.8))
+      (outline (path signal 177.8  685.8 -609.6  -685.8 -609.6))
+      (outline (path signal 177.8  -457.2 -330.2  406.4 -330.2))
+      (outline (path signal 177.8  533.4 -457.2  482.6 0))
+      (outline (path signal 177.8  -533.4 -457.2  533.4 -457.2))
+      (outline (path signal 177.8  -482.6 0  -533.4 -457.2))
+      (outline (path signal 177.8  -685.8 -609.6  -635 0))
+      (outline (path signal 177.8  0 -635  -685.8 -609.6))
+      (outline (path signal 177.8  635 0  -635 0))
+      (outline (path signal 177.8  685.8 -609.6  635 0))
+      (outline (path signal 177.8  0 -635  685.8 -609.6))
+      (outline (path signal 177.8  -609.6 685.8  -609.6 -685.8))
+      (outline (path signal 177.8  -482.6 558.8  -482.6 -50.8))
+      (outline (path signal 177.8  -152.4 558.8  -482.6 558.8))
+      (outline (path signal 177.8  -609.6 152.4  -152.4 558.8))
+      (outline (path signal 177.8  -533.4 -127  -279.4 -508))
+      (outline (path signal 177.8  -482.6 -533.4  -533.4 -127))
+      (outline (path signal 177.8  0 -635  -482.6 -533.4))
+      (outline (path signal 177.8  -609.6 -685.8  0 -635))
+      (outline (path signal 177.8  -635 0  -609.6 -685.8))
+      (outline (path signal 177.8  0 635  0 -635))
+      (outline (path signal 177.8  -609.6 685.8  0 635))
+      (outline (path signal 177.8  -635 0  -609.6 685.8))
+      (pin Rect[T]Pad_508.000000x1460.500000_um 2 -1143 76.2)
+      (pin Round[A]Pad_1447.800000_um 1 0 0)
+      (pin Rect[B]Pad_508.000000x1524.000000_um (rotate 90) 3 0 -1143)
+    )
+    (padstack Round[A]Pad_1447.800000_um
+      (shape (circle F.Cu 1447.8))
+      (shape (circle B.Cu 1447.8))
+      (attach off)
+    )
+    (padstack Round[A]Pad_4064.000000_um
+      (shape (circle F.Cu 4064))
+      (shape (circle B.Cu 4064))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_1727.200000x2032.000000_um
+      (shape (path F.Cu 1727.2  0 -152.4  0 152.4))
+      (shape (path B.Cu 1727.2  0 -152.4  0 152.4))
+      (attach off)
+    )
+    (padstack Rect[B]Pad_508.000000x1524.000000_um
+      (shape (rect B.Cu -254 -762 254 762))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_508.000000x1460.500000_um
+      (shape (rect F.Cu -254 -730.25 254 730.25))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_508.000000x1524.000000_um
+      (shape (rect F.Cu -254 -762 254 762))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net +5V
+      (pins P1-5 JR15-1)
+    )
+    (net "Net-(P5-Pad1)"
+      (pins P5-1)
+    )
+    (net "Net-(P6-Pad1)"
+      (pins P6-1)
+    )
+    (net "Net-(P7-Pad1)"
+      (pins P7-1)
+    )
+    (net "Net-(P8-Pad1)"
+      (pins P8-1)
+    )
+    (net +3V3
+      (pins P1-4 JR14-1)
+    )
+    (net /15x25perf/J1
+      (pins JR1-2 JQ1-2 JP1-2 JO1-2 JN1-2 JM1-2 JL1-2 JK1-2 JJ1-2 JI1-2 JH1-2 JG1-2
+        JF1-2 JE1-2 JD1-2 JC1-2 JB1-2 JA1-2)
+    )
+    (net "Net-(JA1-Pad1)"
+      (pins JA1-1)
+    )
+    (net /15x25perf/JA
+      (pins JA25-3 JA24-3 JA23-3 JA22-3 JA21-3 JA20-3 JA19-3 JA18-3 JA17-3 JA16-3
+        JA15-3 JA14-3 JA13-3 JA12-3 JA11-3 JA10-3 JA9-3 JA8-3 JA7-3 JA4-3 JA3-3 JA2-3
+        JA1-3)
+    )
+    (net /15x25perf/J2
+      (pins JR2-2 JQ2-2 JP2-2 JO2-2 JN2-2 JM2-2 JL2-2 JK2-2 JJ2-2 JI2-2 JH2-2 JG2-2
+        JF2-2 JE2-2 JD2-2 JC2-2 JB2-2 JA2-2)
+    )
+    (net "Net-(JA2-Pad1)"
+      (pins JA2-1)
+    )
+    (net /15x25perf/J3
+      (pins JR3-2 JQ3-2 JP3-2 JO3-2 JN3-2 JM3-2 JL3-2 JK3-2 JJ3-2 JI3-2 JH3-2 JG3-2
+        JF3-2 JE3-2 JD3-2 JC3-2 JB3-2 JA3-2)
+    )
+    (net "Net-(JA3-Pad1)"
+      (pins JA3-1)
+    )
+    (net /15x25perf/J4
+      (pins JR4-2 JQ4-2 JP4-2 JO4-2 JN4-2 JM4-2 JL4-2 JK4-2 JJ4-2 JI4-2 JH4-2 JG4-2
+        JF4-2 JE4-2 JD4-2 JC4-2 JB4-2 JA4-2)
+    )
+    (net "Net-(JA4-Pad1)"
+      (pins JA4-1)
+    )
+    (net /15x25perf/J7
+      (pins JR7-2 JQ7-2 JP7-2 JO7-2 JN7-2 JM7-2 JL7-2 JK7-2 JJ7-2 JI7-2 JH7-2 JG7-2
+        JF7-2 JE7-2 JD7-2 JC7-2 JB7-2 JA7-2)
+    )
+    (net /15x25perf/JA7
+      (pins P3-1 JA7-1)
+    )
+    (net /15x25perf/J8
+      (pins JR8-2 JQ8-2 JP8-2 JO8-2 JN8-2 JM8-2 JL8-2 JK8-2 JJ8-2 JI8-2 JH8-2 JG8-2
+        JF8-2 JE8-2 JD8-2 JC8-2 JB8-2 JA8-2)
+    )
+    (net /15x25perf/JA8
+      (pins P3-2 JA8-1)
+    )
+    (net /15x25perf/J9
+      (pins JR9-2 JQ9-2 JP9-2 JO9-2 JN9-2 JM9-2 JL9-2 JK9-2 JJ9-2 JI9-2 JH9-2 JG9-2
+        JF9-2 JE9-2 JD9-2 JC9-2 JB9-2 JA9-2)
+    )
+    (net /15x25perf/JA9
+      (pins P3-3 JA9-1)
+    )
+    (net /15x25perf/J10
+      (pins JR10-2 JQ10-2 JP10-2 JO10-2 JN10-2 JM10-2 JL10-2 JK10-2 JJ10-2 JI10-2
+        JH10-2 JG10-2 JF10-2 JE10-2 JD10-2 JC10-2 JB10-2 JA10-2)
+    )
+    (net /15x25perf/J11
+      (pins JR11-2 JQ11-2 JP11-2 JO11-2 JN11-2 JM11-2 JL11-2 JK11-2 JJ11-2 JI11-2
+        JH11-2 JG11-2 JF11-2 JE11-2 JD11-2 JC11-2 JB11-2 JA11-2)
+    )
+    (net /15x25perf/JA11
+      (pins P3-5 JA11-1)
+    )
+    (net /15x25perf/J12
+      (pins JR12-2 JQ12-2 JP12-2 JO12-2 JN12-2 JM12-2 JL12-2 JK12-2 JJ12-2 JI12-2
+        JH12-2 JG12-2 JF12-2 JE12-2 JD12-2 JC12-2 JB12-2 JA12-2)
+    )
+    (net /15x25perf/JA12
+      (pins P3-6 JA12-1)
+    )
+    (net /15x25perf/J13
+      (pins JR13-2 JQ13-2 JP13-2 JO13-2 JN13-2 JM13-2 JL13-2 JK13-2 JJ13-2 JI13-2
+        JH13-2 JG13-2 JF13-2 JE13-2 JD13-2 JC13-2 JB13-2 JA13-2)
+    )
+    (net /15x25perf/JA13
+      (pins P3-7 JA13-1)
+    )
+    (net /15x25perf/J14
+      (pins JR14-2 JQ14-2 JP14-2 JO14-2 JN14-2 JM14-2 JL14-2 JK14-2 JJ14-2 JI14-2
+        JH14-2 JG14-2 JF14-2 JE14-2 JD14-2 JC14-2 JB14-2 JA14-2)
+    )
+    (net /15x25perf/JA14
+      (pins P3-8 JA14-1)
+    )
+    (net /15x25perf/J15
+      (pins JR15-2 JQ15-2 JP15-2 JO15-2 JN15-2 JM15-2 JL15-2 JK15-2 JJ15-2 JI15-2
+        JH15-2 JG15-2 JF15-2 JE15-2 JD15-2 JC15-2 JB15-2 JA15-2)
+    )
+    (net /15x25perf/JA15
+      (pins P3-9 JA15-1)
+    )
+    (net /15x25perf/J16
+      (pins JR16-2 JQ16-2 JP16-2 JO16-2 JN16-2 JM16-2 JL16-2 JK16-2 JJ16-2 JI16-2
+        JH16-2 JG16-2 JF16-2 JE16-2 JD16-2 JC16-2 JB16-2 JA16-2)
+    )
+    (net /15x25perf/JA16
+      (pins P3-10 JA16-1)
+    )
+    (net /15x25perf/J17
+      (pins JR17-2 JQ17-2 JP17-2 JO17-2 JN17-2 JM17-2 JL17-2 JK17-2 JJ17-2 JI17-2
+        JH17-2 JG17-2 JF17-2 JE17-2 JD17-2 JC17-2 JB17-2 JA17-2)
+    )
+    (net "Net-(JA17-Pad1)"
+      (pins JA17-1)
+    )
+    (net /15x25perf/J18
+      (pins JR18-2 JQ18-2 JP18-2 JO18-2 JN18-2 JM18-2 JL18-2 JK18-2 JJ18-2 JI18-2
+        JH18-2 JG18-2 JF18-2 JE18-2 JD18-2 JC18-2 JB18-2 JA18-2)
+    )
+    (net /15x25perf/JA18
+      (pins P4-1 JA18-1)
+    )
+    (net /15x25perf/J19
+      (pins JR19-2 JQ19-2 JP19-2 JO19-2 JN19-2 JM19-2 JL19-2 JK19-2 JJ19-2 JI19-2
+        JH19-2 JG19-2 JF19-2 JE19-2 JD19-2 JC19-2 JB19-2 JA19-2)
+    )
+    (net /15x25perf/JA19
+      (pins P4-2 JA19-1)
+    )
+    (net /15x25perf/J20
+      (pins JR20-2 JQ20-2 JP20-2 JO20-2 JN20-2 JM20-2 JL20-2 JK20-2 JJ20-2 JI20-2
+        JH20-2 JG20-2 JF20-2 JE20-2 JD20-2 JC20-2 JB20-2 JA20-2)
+    )
+    (net /15x25perf/JA20
+      (pins P4-3 JA20-1)
+    )
+    (net /15x25perf/J21
+      (pins JR21-2 JQ21-2 JP21-2 JO21-2 JN21-2 JM21-2 JL21-2 JK21-2 JJ21-2 JI21-2
+        JH21-2 JG21-2 JF21-2 JE21-2 JD21-2 JC21-2 JB21-2 JA21-2)
+    )
+    (net /15x25perf/JA21
+      (pins P4-4 JA21-1)
+    )
+    (net /15x25perf/J22
+      (pins JR22-2 JQ22-2 JP22-2 JO22-2 JN22-2 JM22-2 JL22-2 JK22-2 JJ22-2 JI22-2
+        JH22-2 JG22-2 JF22-2 JE22-2 JD22-2 JC22-2 JB22-2 JA22-2)
+    )
+    (net /15x25perf/JA22
+      (pins P4-5 JA22-1)
+    )
+    (net /15x25perf/J23
+      (pins JR23-2 JQ23-2 JP23-2 JO23-2 JN23-2 JM23-2 JL23-2 JK23-2 JJ23-2 JI23-2
+        JH23-2 JG23-2 JF23-2 JE23-2 JD23-2 JC23-2 JB23-2 JA23-2)
+    )
+    (net /15x25perf/JA23
+      (pins P4-6 JA23-1)
+    )
+    (net /15x25perf/J24
+      (pins JR24-2 JQ24-2 JP24-2 JO24-2 JN24-2 JM24-2 JL24-2 JK24-2 JJ24-2 JI24-2
+        JH24-2 JG24-2 JF24-2 JE24-2 JD24-2 JC24-2 JB24-2 JA24-2)
+    )
+    (net /15x25perf/JA24
+      (pins P4-7 JA24-1)
+    )
+    (net /15x25perf/J25
+      (pins JR25-2 JO25-2 JN25-2 JM25-2 JL25-2 JK25-2 JJ25-2 JI25-2 JH25-2 JD25-2
+        JC25-2 JB25-2 JA25-2)
+    )
+    (net /15x25perf/JA25
+      (pins P4-8 JA25-1)
+    )
+    (net "Net-(JB1-Pad1)"
+      (pins JB1-1)
+    )
+    (net /15x25perf/JB
+      (pins JB25-3 JB24-3 JB23-3 JB22-3 JB21-3 JB20-3 JB19-3 JB18-3 JB17-3 JB16-3
+        JB15-3 JB14-3 JB13-3 JB12-3 JB11-3 JB10-3 JB9-3 JB8-3 JB7-3 JB6-3 JB5-3 JB4-3
+        JB3-3 JB2-3 JB1-3)
+    )
+    (net "Net-(JB2-Pad1)"
+      (pins JB2-1)
+    )
+    (net "Net-(JB3-Pad1)"
+      (pins JB3-1)
+    )
+    (net "Net-(JB4-Pad1)"
+      (pins JB4-1)
+    )
+    (net /15x25perf/J5
+      (pins JQ5-2 JP5-2 JO5-2 JN5-2 JM5-2 JL5-2 JK5-2 JJ5-2 JI5-2 JH5-2 JG5-2 JF5-2
+        JE5-2 JD5-2 JC5-2 JB5-2)
+    )
+    (net "Net-(JB5-Pad1)"
+      (pins JB5-1)
+    )
+    (net /15x25perf/J6
+      (pins JQ6-2 JP6-2 JO6-2 JN6-2 JM6-2 JL6-2 JK6-2 JJ6-2 JI6-2 JH6-2 JG6-2 JF6-2
+        JE6-2 JD6-2 JC6-2 JB6-2)
+    )
+    (net "Net-(JB6-Pad1)"
+      (pins JB6-1)
+    )
+    (net "Net-(JB7-Pad1)"
+      (pins JB7-1)
+    )
+    (net "Net-(JB8-Pad1)"
+      (pins JB8-1)
+    )
+    (net "Net-(JB9-Pad1)"
+      (pins JB9-1)
+    )
+    (net "Net-(JB10-Pad1)"
+      (pins JB10-1)
+    )
+    (net "Net-(JB11-Pad1)"
+      (pins JB11-1)
+    )
+    (net "Net-(JB12-Pad1)"
+      (pins JB12-1)
+    )
+    (net "Net-(JB13-Pad1)"
+      (pins JB13-1)
+    )
+    (net "Net-(JB14-Pad1)"
+      (pins JB14-1)
+    )
+    (net "Net-(JB15-Pad1)"
+      (pins JB15-1)
+    )
+    (net "Net-(JB16-Pad1)"
+      (pins JB16-1)
+    )
+    (net "Net-(JB17-Pad1)"
+      (pins JB17-1)
+    )
+    (net "Net-(JB18-Pad1)"
+      (pins JB18-1)
+    )
+    (net "Net-(JB19-Pad1)"
+      (pins JB19-1)
+    )
+    (net "Net-(JB20-Pad1)"
+      (pins JB20-1)
+    )
+    (net "Net-(JB21-Pad1)"
+      (pins JB21-1)
+    )
+    (net "Net-(JB22-Pad1)"
+      (pins JB22-1)
+    )
+    (net "Net-(JB23-Pad1)"
+      (pins JB23-1)
+    )
+    (net "Net-(JB24-Pad1)"
+      (pins JB24-1)
+    )
+    (net "Net-(JB25-Pad1)"
+      (pins JB25-1)
+    )
+    (net "Net-(JC1-Pad1)"
+      (pins JC1-1)
+    )
+    (net /15x25perf/JC
+      (pins JC25-3 JC24-3 JC23-3 JC22-3 JC21-3 JC20-3 JC19-3 JC18-3 JC17-3 JC16-3
+        JC15-3 JC14-3 JC13-3 JC12-3 JC11-3 JC10-3 JC9-3 JC8-3 JC7-3 JC6-3 JC5-3 JC4-3
+        JC3-3 JC2-3 JC1-3)
+    )
+    (net "Net-(JC2-Pad1)"
+      (pins JC2-1)
+    )
+    (net "Net-(JC3-Pad1)"
+      (pins JC3-1)
+    )
+    (net "Net-(JC4-Pad1)"
+      (pins JC4-1)
+    )
+    (net "Net-(JC5-Pad1)"
+      (pins JC5-1)
+    )
+    (net "Net-(JC6-Pad1)"
+      (pins JC6-1)
+    )
+    (net "Net-(JC7-Pad1)"
+      (pins JC7-1)
+    )
+    (net "Net-(JC8-Pad1)"
+      (pins JC8-1)
+    )
+    (net "Net-(JC9-Pad1)"
+      (pins JC9-1)
+    )
+    (net "Net-(JC10-Pad1)"
+      (pins JC10-1)
+    )
+    (net "Net-(JC11-Pad1)"
+      (pins JC11-1)
+    )
+    (net "Net-(JC12-Pad1)"
+      (pins JC12-1)
+    )
+    (net "Net-(JC13-Pad1)"
+      (pins JC13-1)
+    )
+    (net "Net-(JC14-Pad1)"
+      (pins JC14-1)
+    )
+    (net "Net-(JC15-Pad1)"
+      (pins JC15-1)
+    )
+    (net "Net-(JC16-Pad1)"
+      (pins JC16-1)
+    )
+    (net "Net-(JC17-Pad1)"
+      (pins JC17-1)
+    )
+    (net "Net-(JC18-Pad1)"
+      (pins JC18-1)
+    )
+    (net "Net-(JC19-Pad1)"
+      (pins JC19-1)
+    )
+    (net "Net-(JC20-Pad1)"
+      (pins JC20-1)
+    )
+    (net "Net-(JC21-Pad1)"
+      (pins JC21-1)
+    )
+    (net "Net-(JC22-Pad1)"
+      (pins JC22-1)
+    )
+    (net "Net-(JC23-Pad1)"
+      (pins JC23-1)
+    )
+    (net "Net-(JC24-Pad1)"
+      (pins JC24-1)
+    )
+    (net "Net-(JC25-Pad1)"
+      (pins JC25-1)
+    )
+    (net "Net-(JD1-Pad1)"
+      (pins JD1-1)
+    )
+    (net /15x25perf/JD
+      (pins JD25-3 JD24-3 JD23-3 JD22-3 JD21-3 JD20-3 JD19-3 JD18-3 JD17-3 JD16-3
+        JD15-3 JD14-3 JD13-3 JD12-3 JD11-3 JD10-3 JD9-3 JD8-3 JD7-3 JD6-3 JD5-3 JD4-3
+        JD3-3 JD2-3 JD1-3)
+    )
+    (net "Net-(JD2-Pad1)"
+      (pins JD2-1)
+    )
+    (net "Net-(JD3-Pad1)"
+      (pins JD3-1)
+    )
+    (net "Net-(JD4-Pad1)"
+      (pins JD4-1)
+    )
+    (net "Net-(JD5-Pad1)"
+      (pins JD5-1)
+    )
+    (net "Net-(JD6-Pad1)"
+      (pins JD6-1)
+    )
+    (net "Net-(JD7-Pad1)"
+      (pins JD7-1)
+    )
+    (net "Net-(JD8-Pad1)"
+      (pins JD8-1)
+    )
+    (net "Net-(JD9-Pad1)"
+      (pins JD9-1)
+    )
+    (net "Net-(JD10-Pad1)"
+      (pins JD10-1)
+    )
+    (net "Net-(JD11-Pad1)"
+      (pins JD11-1)
+    )
+    (net "Net-(JD12-Pad1)"
+      (pins JD12-1)
+    )
+    (net "Net-(JD13-Pad1)"
+      (pins JD13-1)
+    )
+    (net "Net-(JD14-Pad1)"
+      (pins JD14-1)
+    )
+    (net "Net-(JD15-Pad1)"
+      (pins JD15-1)
+    )
+    (net "Net-(JD16-Pad1)"
+      (pins JD16-1)
+    )
+    (net "Net-(JD17-Pad1)"
+      (pins JD17-1)
+    )
+    (net "Net-(JD18-Pad1)"
+      (pins JD18-1)
+    )
+    (net "Net-(JD19-Pad1)"
+      (pins JD19-1)
+    )
+    (net "Net-(JD20-Pad1)"
+      (pins JD20-1)
+    )
+    (net "Net-(JD21-Pad1)"
+      (pins JD21-1)
+    )
+    (net "Net-(JD22-Pad1)"
+      (pins JD22-1)
+    )
+    (net "Net-(JD23-Pad1)"
+      (pins JD23-1)
+    )
+    (net "Net-(JD24-Pad1)"
+      (pins JD24-1)
+    )
+    (net "Net-(JD25-Pad1)"
+      (pins JD25-1)
+    )
+    (net "Net-(JE1-Pad1)"
+      (pins JE1-1)
+    )
+    (net /15x25perf/JE
+      (pins JE24-3 JE23-3 JE22-3 JE21-3 JE20-3 JE19-3 JE18-3 JE17-3 JE16-3 JE15-3
+        JE14-3 JE13-3 JE12-3 JE11-3 JE10-3 JE9-3 JE8-3 JE7-3 JE6-3 JE5-3 JE4-3 JE3-3
+        JE2-3 JE1-3)
+    )
+    (net "Net-(JE2-Pad1)"
+      (pins JE2-1)
+    )
+    (net "Net-(JE3-Pad1)"
+      (pins JE3-1)
+    )
+    (net "Net-(JE4-Pad1)"
+      (pins JE4-1)
+    )
+    (net "Net-(JE5-Pad1)"
+      (pins JE5-1)
+    )
+    (net "Net-(JE6-Pad1)"
+      (pins JE6-1)
+    )
+    (net "Net-(JE7-Pad1)"
+      (pins JE7-1)
+    )
+    (net "Net-(JE8-Pad1)"
+      (pins JE8-1)
+    )
+    (net "Net-(JE9-Pad1)"
+      (pins JE9-1)
+    )
+    (net "Net-(JE10-Pad1)"
+      (pins JE10-1)
+    )
+    (net "Net-(JE11-Pad1)"
+      (pins JE11-1)
+    )
+    (net "Net-(JE12-Pad1)"
+      (pins JE12-1)
+    )
+    (net "Net-(JE13-Pad1)"
+      (pins JE13-1)
+    )
+    (net "Net-(JE14-Pad1)"
+      (pins JE14-1)
+    )
+    (net "Net-(JE15-Pad1)"
+      (pins JE15-1)
+    )
+    (net "Net-(JE16-Pad1)"
+      (pins JE16-1)
+    )
+    (net "Net-(JE17-Pad1)"
+      (pins JE17-1)
+    )
+    (net "Net-(JE18-Pad1)"
+      (pins JE18-1)
+    )
+    (net "Net-(JE19-Pad1)"
+      (pins JE19-1)
+    )
+    (net "Net-(JE20-Pad1)"
+      (pins JE20-1)
+    )
+    (net "Net-(JE21-Pad1)"
+      (pins JE21-1)
+    )
+    (net "Net-(JE22-Pad1)"
+      (pins JE22-1)
+    )
+    (net "Net-(JE23-Pad1)"
+      (pins JE23-1)
+    )
+    (net "Net-(JE24-Pad1)"
+      (pins JE24-1)
+    )
+    (net "Net-(JF1-Pad1)"
+      (pins JF1-1)
+    )
+    (net /15x25perf/JF
+      (pins JF24-3 JF23-3 JF22-3 JF21-3 JF20-3 JF19-3 JF18-3 JF17-3 JF16-3 JF15-3
+        JF14-3 JF13-3 JF12-3 JF11-3 JF10-3 JF9-3 JF8-3 JF7-3 JF6-3 JF5-3 JF4-3 JF3-3
+        JF2-3 JF1-3)
+    )
+    (net "Net-(JF2-Pad1)"
+      (pins JF2-1)
+    )
+    (net "Net-(JF3-Pad1)"
+      (pins JF3-1)
+    )
+    (net "Net-(JF4-Pad1)"
+      (pins JF4-1)
+    )
+    (net "Net-(JF5-Pad1)"
+      (pins JF5-1)
+    )
+    (net "Net-(JF6-Pad1)"
+      (pins JF6-1)
+    )
+    (net "Net-(JF7-Pad1)"
+      (pins JF7-1)
+    )
+    (net "Net-(JF8-Pad1)"
+      (pins JF8-1)
+    )
+    (net "Net-(JF9-Pad1)"
+      (pins JF9-1)
+    )
+    (net "Net-(JF10-Pad1)"
+      (pins JF10-1)
+    )
+    (net "Net-(JF11-Pad1)"
+      (pins JF11-1)
+    )
+    (net "Net-(JF12-Pad1)"
+      (pins JF12-1)
+    )
+    (net "Net-(JF13-Pad1)"
+      (pins JF13-1)
+    )
+    (net "Net-(JF14-Pad1)"
+      (pins JF14-1)
+    )
+    (net "Net-(JF15-Pad1)"
+      (pins JF15-1)
+    )
+    (net "Net-(JF16-Pad1)"
+      (pins JF16-1)
+    )
+    (net "Net-(JF17-Pad1)"
+      (pins JF17-1)
+    )
+    (net "Net-(JF18-Pad1)"
+      (pins JF18-1)
+    )
+    (net "Net-(JF19-Pad1)"
+      (pins JF19-1)
+    )
+    (net "Net-(JF20-Pad1)"
+      (pins JF20-1)
+    )
+    (net "Net-(JF21-Pad1)"
+      (pins JF21-1)
+    )
+    (net "Net-(JF22-Pad1)"
+      (pins JF22-1)
+    )
+    (net "Net-(JF23-Pad1)"
+      (pins JF23-1)
+    )
+    (net "Net-(JF24-Pad1)"
+      (pins JF24-1)
+    )
+    (net /15x25perf/J26
+      (pins JO26-2 JN26-2 JM26-2 JL26-2 JK26-2 JJ26-2 JI26-2 JH26-2)
+    )
+    (net "Net-(JG1-Pad1)"
+      (pins JG1-1)
+    )
+    (net /15x25perf/JG
+      (pins JG24-3 JG23-3 JG22-3 JG21-3 JG20-3 JG19-3 JG18-3 JG17-3 JG16-3 JG15-3
+        JG14-3 JG13-3 JG12-3 JG11-3 JG10-3 JG9-3 JG8-3 JG7-3 JG6-3 JG5-3 JG4-3 JG3-3
+        JG2-3 JG1-3)
+    )
+    (net "Net-(JG2-Pad1)"
+      (pins JG2-1)
+    )
+    (net "Net-(JG3-Pad1)"
+      (pins JG3-1)
+    )
+    (net "Net-(JG4-Pad1)"
+      (pins JG4-1)
+    )
+    (net "Net-(JG5-Pad1)"
+      (pins JG5-1)
+    )
+    (net "Net-(JG6-Pad1)"
+      (pins JG6-1)
+    )
+    (net "Net-(JG7-Pad1)"
+      (pins JG7-1)
+    )
+    (net "Net-(JG8-Pad1)"
+      (pins JG8-1)
+    )
+    (net "Net-(JG9-Pad1)"
+      (pins JG9-1)
+    )
+    (net "Net-(JG10-Pad1)"
+      (pins JG10-1)
+    )
+    (net "Net-(JG11-Pad1)"
+      (pins JG11-1)
+    )
+    (net "Net-(JG12-Pad1)"
+      (pins JG12-1)
+    )
+    (net "Net-(JG13-Pad1)"
+      (pins JG13-1)
+    )
+    (net "Net-(JG14-Pad1)"
+      (pins JG14-1)
+    )
+    (net "Net-(JG15-Pad1)"
+      (pins JG15-1)
+    )
+    (net "Net-(JG16-Pad1)"
+      (pins JG16-1)
+    )
+    (net "Net-(JG17-Pad1)"
+      (pins JG17-1)
+    )
+    (net "Net-(JG18-Pad1)"
+      (pins JG18-1)
+    )
+    (net "Net-(JG19-Pad1)"
+      (pins JG19-1)
+    )
+    (net "Net-(JG20-Pad1)"
+      (pins JG20-1)
+    )
+    (net "Net-(JG21-Pad1)"
+      (pins JG21-1)
+    )
+    (net "Net-(JG22-Pad1)"
+      (pins JG22-1)
+    )
+    (net "Net-(JG23-Pad1)"
+      (pins JG23-1)
+    )
+    (net "Net-(JG24-Pad1)"
+      (pins JG24-1)
+    )
+    (net "Net-(JH1-Pad1)"
+      (pins JH1-1)
+    )
+    (net /15x25perf/JH
+      (pins JH26-3 JH25-3 JH24-3 JH23-3 JH22-3 JH21-3 JH20-3 JH19-3 JH18-3 JH17-3
+        JH16-3 JH15-3 JH14-3 JH13-3 JH12-3 JH11-3 JH10-3 JH9-3 JH8-3 JH7-3 JH6-3 JH5-3
+        JH4-3 JH3-3 JH2-3 JH1-3)
+    )
+    (net "Net-(JH2-Pad1)"
+      (pins JH2-1)
+    )
+    (net "Net-(JH3-Pad1)"
+      (pins JH3-1)
+    )
+    (net "Net-(JH4-Pad1)"
+      (pins JH4-1)
+    )
+    (net "Net-(JH5-Pad1)"
+      (pins JH5-1)
+    )
+    (net "Net-(JH6-Pad1)"
+      (pins JH6-1)
+    )
+    (net "Net-(JH7-Pad1)"
+      (pins JH7-1)
+    )
+    (net "Net-(JH8-Pad1)"
+      (pins JH8-1)
+    )
+    (net "Net-(JH9-Pad1)"
+      (pins JH9-1)
+    )
+    (net "Net-(JH10-Pad1)"
+      (pins JH10-1)
+    )
+    (net "Net-(JH11-Pad1)"
+      (pins JH11-1)
+    )
+    (net "Net-(JH12-Pad1)"
+      (pins JH12-1)
+    )
+    (net "Net-(JH13-Pad1)"
+      (pins JH13-1)
+    )
+    (net "Net-(JH14-Pad1)"
+      (pins JH14-1)
+    )
+    (net "Net-(JH15-Pad1)"
+      (pins JH15-1)
+    )
+    (net "Net-(JH16-Pad1)"
+      (pins JH16-1)
+    )
+    (net "Net-(JH17-Pad1)"
+      (pins JH17-1)
+    )
+    (net "Net-(JH18-Pad1)"
+      (pins JH18-1)
+    )
+    (net "Net-(JH19-Pad1)"
+      (pins JH19-1)
+    )
+    (net "Net-(JH20-Pad1)"
+      (pins JH20-1)
+    )
+    (net "Net-(JH21-Pad1)"
+      (pins JH21-1)
+    )
+    (net "Net-(JH22-Pad1)"
+      (pins JH22-1)
+    )
+    (net "Net-(JH23-Pad1)"
+      (pins JH23-1)
+    )
+    (net "Net-(JH24-Pad1)"
+      (pins JH24-1)
+    )
+    (net "Net-(JH25-Pad1)"
+      (pins JH25-1)
+    )
+    (net "Net-(JH26-Pad1)"
+      (pins JH26-1)
+    )
+    (net "Net-(JI1-Pad1)"
+      (pins JI1-1)
+    )
+    (net /15x25perf/JI
+      (pins JI26-3 JI25-3 JI24-3 JI23-3 JI22-3 JI21-3 JI20-3 JI19-3 JI18-3 JI17-3
+        JI16-3 JI15-3 JI14-3 JI13-3 JI12-3 JI11-3 JI10-3 JI9-3 JI8-3 JI7-3 JI6-3 JI5-3
+        JI4-3 JI3-3 JI2-3 JI1-3)
+    )
+    (net "Net-(JI2-Pad1)"
+      (pins JI2-1)
+    )
+    (net "Net-(JI3-Pad1)"
+      (pins JI3-1)
+    )
+    (net "Net-(JI4-Pad1)"
+      (pins JI4-1)
+    )
+    (net "Net-(JI5-Pad1)"
+      (pins JI5-1)
+    )
+    (net "Net-(JI6-Pad1)"
+      (pins JI6-1)
+    )
+    (net "Net-(JI7-Pad1)"
+      (pins JI7-1)
+    )
+    (net "Net-(JI8-Pad1)"
+      (pins JI8-1)
+    )
+    (net "Net-(JI9-Pad1)"
+      (pins JI9-1)
+    )
+    (net "Net-(JI10-Pad1)"
+      (pins JI10-1)
+    )
+    (net "Net-(JI11-Pad1)"
+      (pins JI11-1)
+    )
+    (net "Net-(JI12-Pad1)"
+      (pins JI12-1)
+    )
+    (net "Net-(JI13-Pad1)"
+      (pins JI13-1)
+    )
+    (net "Net-(JI14-Pad1)"
+      (pins JI14-1)
+    )
+    (net "Net-(JI15-Pad1)"
+      (pins JI15-1)
+    )
+    (net "Net-(JI16-Pad1)"
+      (pins JI16-1)
+    )
+    (net "Net-(JI17-Pad1)"
+      (pins JI17-1)
+    )
+    (net "Net-(JI18-Pad1)"
+      (pins JI18-1)
+    )
+    (net "Net-(JI19-Pad1)"
+      (pins JI19-1)
+    )
+    (net "Net-(JI20-Pad1)"
+      (pins JI20-1)
+    )
+    (net "Net-(JI21-Pad1)"
+      (pins JI21-1)
+    )
+    (net "Net-(JI22-Pad1)"
+      (pins JI22-1)
+    )
+    (net "Net-(JI23-Pad1)"
+      (pins JI23-1)
+    )
+    (net "Net-(JI24-Pad1)"
+      (pins JI24-1)
+    )
+    (net "Net-(JI25-Pad1)"
+      (pins JI25-1)
+    )
+    (net "Net-(JI26-Pad1)"
+      (pins JI26-1)
+    )
+    (net "Net-(JK1-Pad1)"
+      (pins JK1-1)
+    )
+    (net /15x25perf2/JK
+      (pins JK26-3 JK25-3 JK24-3 JK23-3 JK22-3 JK21-3 JK20-3 JK19-3 JK18-3 JK17-3
+        JK16-3 JK15-3 JK14-3 JK13-3 JK12-3 JK11-3 JK10-3 JK9-3 JK8-3 JK7-3 JK6-3 JK5-3
+        JK4-3 JK3-3 JK2-3 JK1-3)
+    )
+    (net "Net-(JK2-Pad1)"
+      (pins JK2-1)
+    )
+    (net "Net-(JK3-Pad1)"
+      (pins JK3-1)
+    )
+    (net "Net-(JK4-Pad1)"
+      (pins JK4-1)
+    )
+    (net "Net-(JK5-Pad1)"
+      (pins JK5-1)
+    )
+    (net "Net-(JK6-Pad1)"
+      (pins JK6-1)
+    )
+    (net "Net-(JK7-Pad1)"
+      (pins JK7-1)
+    )
+    (net "Net-(JK8-Pad1)"
+      (pins JK8-1)
+    )
+    (net "Net-(JK9-Pad1)"
+      (pins JK9-1)
+    )
+    (net "Net-(JK10-Pad1)"
+      (pins JK10-1)
+    )
+    (net "Net-(JK11-Pad1)"
+      (pins JK11-1)
+    )
+    (net "Net-(JK12-Pad1)"
+      (pins JK12-1)
+    )
+    (net "Net-(JK13-Pad1)"
+      (pins JK13-1)
+    )
+    (net "Net-(JK14-Pad1)"
+      (pins JK14-1)
+    )
+    (net "Net-(JK15-Pad1)"
+      (pins JK15-1)
+    )
+    (net "Net-(JK16-Pad1)"
+      (pins JK16-1)
+    )
+    (net "Net-(JK17-Pad1)"
+      (pins JK17-1)
+    )
+    (net "Net-(JK18-Pad1)"
+      (pins JK18-1)
+    )
+    (net "Net-(JK19-Pad1)"
+      (pins JK19-1)
+    )
+    (net "Net-(JK20-Pad1)"
+      (pins JK20-1)
+    )
+    (net "Net-(JK21-Pad1)"
+      (pins JK21-1)
+    )
+    (net "Net-(JK22-Pad1)"
+      (pins JK22-1)
+    )
+    (net "Net-(JK23-Pad1)"
+      (pins JK23-1)
+    )
+    (net "Net-(JK24-Pad1)"
+      (pins JK24-1)
+    )
+    (net "Net-(JK25-Pad1)"
+      (pins JK25-1)
+    )
+    (net "Net-(JK26-Pad1)"
+      (pins JK26-1)
+    )
+    (net "Net-(JL1-Pad1)"
+      (pins JL1-1)
+    )
+    (net /15x25perf2/JL
+      (pins JL26-3 JL25-3 JL24-3 JL23-3 JL22-3 JL21-3 JL20-3 JL19-3 JL18-3 JL17-3
+        JL16-3 JL15-3 JL14-3 JL13-3 JL12-3 JL11-3 JL10-3 JL9-3 JL8-3 JL7-3 JL6-3 JL5-3
+        JL4-3 JL3-3 JL2-3 JL1-3)
+    )
+    (net "Net-(JL2-Pad1)"
+      (pins JL2-1)
+    )
+    (net "Net-(JL3-Pad1)"
+      (pins JL3-1)
+    )
+    (net "Net-(JL4-Pad1)"
+      (pins JL4-1)
+    )
+    (net "Net-(JL5-Pad1)"
+      (pins JL5-1)
+    )
+    (net "Net-(JL6-Pad1)"
+      (pins JL6-1)
+    )
+    (net "Net-(JL7-Pad1)"
+      (pins JL7-1)
+    )
+    (net "Net-(JL8-Pad1)"
+      (pins JL8-1)
+    )
+    (net "Net-(JL9-Pad1)"
+      (pins JL9-1)
+    )
+    (net "Net-(JL10-Pad1)"
+      (pins JL10-1)
+    )
+    (net "Net-(JL11-Pad1)"
+      (pins JL11-1)
+    )
+    (net "Net-(JL12-Pad1)"
+      (pins JL12-1)
+    )
+    (net "Net-(JL13-Pad1)"
+      (pins JL13-1)
+    )
+    (net "Net-(JL14-Pad1)"
+      (pins JL14-1)
+    )
+    (net "Net-(JL15-Pad1)"
+      (pins JL15-1)
+    )
+    (net "Net-(JL16-Pad1)"
+      (pins JL16-1)
+    )
+    (net "Net-(JL17-Pad1)"
+      (pins JL17-1)
+    )
+    (net "Net-(JL18-Pad1)"
+      (pins JL18-1)
+    )
+    (net "Net-(JL19-Pad1)"
+      (pins JL19-1)
+    )
+    (net "Net-(JL20-Pad1)"
+      (pins JL20-1)
+    )
+    (net "Net-(JL21-Pad1)"
+      (pins JL21-1)
+    )
+    (net "Net-(JL22-Pad1)"
+      (pins JL22-1)
+    )
+    (net "Net-(JL23-Pad1)"
+      (pins JL23-1)
+    )
+    (net "Net-(JL24-Pad1)"
+      (pins JL24-1)
+    )
+    (net "Net-(JL25-Pad1)"
+      (pins JL25-1)
+    )
+    (net "Net-(JL26-Pad1)"
+      (pins JL26-1)
+    )
+    (net "Net-(JM1-Pad1)"
+      (pins JM1-1)
+    )
+    (net /15x25perf2/JM
+      (pins JM26-3 JM25-3 JM24-3 JM23-3 JM22-3 JM21-3 JM20-3 JM19-3 JM18-3 JM17-3
+        JM16-3 JM15-3 JM14-3 JM13-3 JM12-3 JM11-3 JM10-3 JM9-3 JM8-3 JM7-3 JM6-3 JM5-3
+        JM4-3 JM3-3 JM2-3 JM1-3)
+    )
+    (net "Net-(JM2-Pad1)"
+      (pins JM2-1)
+    )
+    (net "Net-(JM3-Pad1)"
+      (pins JM3-1)
+    )
+    (net "Net-(JM4-Pad1)"
+      (pins JM4-1)
+    )
+    (net "Net-(JM5-Pad1)"
+      (pins JM5-1)
+    )
+    (net "Net-(JM6-Pad1)"
+      (pins JM6-1)
+    )
+    (net "Net-(JM7-Pad1)"
+      (pins JM7-1)
+    )
+    (net "Net-(JM8-Pad1)"
+      (pins JM8-1)
+    )
+    (net "Net-(JM9-Pad1)"
+      (pins JM9-1)
+    )
+    (net "Net-(JM10-Pad1)"
+      (pins JM10-1)
+    )
+    (net "Net-(JM11-Pad1)"
+      (pins JM11-1)
+    )
+    (net "Net-(JM12-Pad1)"
+      (pins JM12-1)
+    )
+    (net "Net-(JM13-Pad1)"
+      (pins JM13-1)
+    )
+    (net "Net-(JM14-Pad1)"
+      (pins JM14-1)
+    )
+    (net "Net-(JM15-Pad1)"
+      (pins JM15-1)
+    )
+    (net "Net-(JM16-Pad1)"
+      (pins JM16-1)
+    )
+    (net "Net-(JM17-Pad1)"
+      (pins JM17-1)
+    )
+    (net "Net-(JM18-Pad1)"
+      (pins JM18-1)
+    )
+    (net "Net-(JM19-Pad1)"
+      (pins JM19-1)
+    )
+    (net "Net-(JM20-Pad1)"
+      (pins JM20-1)
+    )
+    (net "Net-(JM21-Pad1)"
+      (pins JM21-1)
+    )
+    (net "Net-(JM22-Pad1)"
+      (pins JM22-1)
+    )
+    (net "Net-(JM23-Pad1)"
+      (pins JM23-1)
+    )
+    (net "Net-(JM24-Pad1)"
+      (pins JM24-1)
+    )
+    (net "Net-(JM25-Pad1)"
+      (pins JM25-1)
+    )
+    (net "Net-(JM26-Pad1)"
+      (pins JM26-1)
+    )
+    (net "Net-(JN1-Pad1)"
+      (pins JN1-1)
+    )
+    (net /15x25perf2/JN
+      (pins JN26-3 JN25-3 JN24-3 JN23-3 JN22-3 JN21-3 JN20-3 JN19-3 JN18-3 JN17-3
+        JN16-3 JN15-3 JN14-3 JN13-3 JN12-3 JN11-3 JN10-3 JN9-3 JN8-3 JN7-3 JN6-3 JN5-3
+        JN4-3 JN3-3 JN2-3 JN1-3)
+    )
+    (net "Net-(JN2-Pad1)"
+      (pins JN2-1)
+    )
+    (net "Net-(JN3-Pad1)"
+      (pins JN3-1)
+    )
+    (net "Net-(JN4-Pad1)"
+      (pins JN4-1)
+    )
+    (net "Net-(JN5-Pad1)"
+      (pins JN5-1)
+    )
+    (net "Net-(JN6-Pad1)"
+      (pins JN6-1)
+    )
+    (net "Net-(JN7-Pad1)"
+      (pins JN7-1)
+    )
+    (net "Net-(JN8-Pad1)"
+      (pins JN8-1)
+    )
+    (net "Net-(JN9-Pad1)"
+      (pins JN9-1)
+    )
+    (net "Net-(JN10-Pad1)"
+      (pins JN10-1)
+    )
+    (net "Net-(JN11-Pad1)"
+      (pins JN11-1)
+    )
+    (net "Net-(JN12-Pad1)"
+      (pins JN12-1)
+    )
+    (net "Net-(JN13-Pad1)"
+      (pins JN13-1)
+    )
+    (net "Net-(JN14-Pad1)"
+      (pins JN14-1)
+    )
+    (net "Net-(JN15-Pad1)"
+      (pins JN15-1)
+    )
+    (net "Net-(JN16-Pad1)"
+      (pins JN16-1)
+    )
+    (net "Net-(JN17-Pad1)"
+      (pins JN17-1)
+    )
+    (net "Net-(JN18-Pad1)"
+      (pins JN18-1)
+    )
+    (net "Net-(JN19-Pad1)"
+      (pins JN19-1)
+    )
+    (net "Net-(JN20-Pad1)"
+      (pins JN20-1)
+    )
+    (net "Net-(JN21-Pad1)"
+      (pins JN21-1)
+    )
+    (net "Net-(JN22-Pad1)"
+      (pins JN22-1)
+    )
+    (net "Net-(JN23-Pad1)"
+      (pins JN23-1)
+    )
+    (net "Net-(JN24-Pad1)"
+      (pins JN24-1)
+    )
+    (net "Net-(JN25-Pad1)"
+      (pins JN25-1)
+    )
+    (net "Net-(JN26-Pad1)"
+      (pins JN26-1)
+    )
+    (net "Net-(JO1-Pad1)"
+      (pins JO1-1)
+    )
+    (net /15x25perf2/JO
+      (pins JO26-3 JO25-3 JO24-3 JO23-3 JO22-3 JO21-3 JO20-3 JO19-3 JO18-3 JO17-3
+        JO16-3 JO15-3 JO14-3 JO13-3 JO12-3 JO11-3 JO10-3 JO9-3 JO8-3 JO7-3 JO6-3 JO5-3
+        JO4-3 JO3-3 JO2-3 JO1-3)
+    )
+    (net "Net-(JO2-Pad1)"
+      (pins JO2-1)
+    )
+    (net "Net-(JO3-Pad1)"
+      (pins JO3-1)
+    )
+    (net "Net-(JO4-Pad1)"
+      (pins JO4-1)
+    )
+    (net "Net-(JO5-Pad1)"
+      (pins JO5-1)
+    )
+    (net "Net-(JO6-Pad1)"
+      (pins JO6-1)
+    )
+    (net "Net-(JO7-Pad1)"
+      (pins JO7-1)
+    )
+    (net "Net-(JO8-Pad1)"
+      (pins JO8-1)
+    )
+    (net "Net-(JO9-Pad1)"
+      (pins JO9-1)
+    )
+    (net "Net-(JO10-Pad1)"
+      (pins JO10-1)
+    )
+    (net "Net-(JO11-Pad1)"
+      (pins JO11-1)
+    )
+    (net "Net-(JO12-Pad1)"
+      (pins JO12-1)
+    )
+    (net "Net-(JO13-Pad1)"
+      (pins JO13-1)
+    )
+    (net "Net-(JO14-Pad1)"
+      (pins JO14-1)
+    )
+    (net "Net-(JO15-Pad1)"
+      (pins JO15-1)
+    )
+    (net "Net-(JO16-Pad1)"
+      (pins JO16-1)
+    )
+    (net "Net-(JO17-Pad1)"
+      (pins JO17-1)
+    )
+    (net "Net-(JO18-Pad1)"
+      (pins JO18-1)
+    )
+    (net "Net-(JO19-Pad1)"
+      (pins JO19-1)
+    )
+    (net "Net-(JO20-Pad1)"
+      (pins JO20-1)
+    )
+    (net "Net-(JO21-Pad1)"
+      (pins JO21-1)
+    )
+    (net "Net-(JO22-Pad1)"
+      (pins JO22-1)
+    )
+    (net "Net-(JO23-Pad1)"
+      (pins JO23-1)
+    )
+    (net "Net-(JO24-Pad1)"
+      (pins JO24-1)
+    )
+    (net "Net-(JO25-Pad1)"
+      (pins JO25-1)
+    )
+    (net "Net-(JO26-Pad1)"
+      (pins JO26-1)
+    )
+    (net "Net-(JP1-Pad1)"
+      (pins JP1-1)
+    )
+    (net /15x25perf2/JP
+      (pins JP24-3 JP23-3 JP22-3 JP21-3 JP20-3 JP19-3 JP18-3 JP17-3 JP16-3 JP15-3
+        JP14-3 JP13-3 JP12-3 JP11-3 JP10-3 JP9-3 JP8-3 JP7-3 JP6-3 JP5-3 JP4-3 JP3-3
+        JP2-3 JP1-3)
+    )
+    (net "Net-(JP2-Pad1)"
+      (pins JP2-1)
+    )
+    (net "Net-(JP3-Pad1)"
+      (pins JP3-1)
+    )
+    (net "Net-(JP4-Pad1)"
+      (pins JP4-1)
+    )
+    (net "Net-(JP5-Pad1)"
+      (pins JP5-1)
+    )
+    (net "Net-(JP6-Pad1)"
+      (pins JP6-1)
+    )
+    (net "Net-(JP7-Pad1)"
+      (pins JP7-1)
+    )
+    (net "Net-(JP8-Pad1)"
+      (pins JP8-1)
+    )
+    (net "Net-(JP9-Pad1)"
+      (pins JP9-1)
+    )
+    (net "Net-(JP10-Pad1)"
+      (pins JP10-1)
+    )
+    (net "Net-(JP11-Pad1)"
+      (pins JP11-1)
+    )
+    (net "Net-(JP12-Pad1)"
+      (pins JP12-1)
+    )
+    (net "Net-(JP13-Pad1)"
+      (pins JP13-1)
+    )
+    (net "Net-(JP14-Pad1)"
+      (pins JP14-1)
+    )
+    (net "Net-(JP15-Pad1)"
+      (pins JP15-1)
+    )
+    (net "Net-(JP16-Pad1)"
+      (pins JP16-1)
+    )
+    (net "Net-(JP17-Pad1)"
+      (pins JP17-1)
+    )
+    (net "Net-(JP18-Pad1)"
+      (pins JP18-1)
+    )
+    (net "Net-(JP19-Pad1)"
+      (pins JP19-1)
+    )
+    (net "Net-(JP20-Pad1)"
+      (pins JP20-1)
+    )
+    (net "Net-(JP21-Pad1)"
+      (pins JP21-1)
+    )
+    (net "Net-(JP22-Pad1)"
+      (pins JP22-1)
+    )
+    (net "Net-(JP23-Pad1)"
+      (pins JP23-1)
+    )
+    (net "Net-(JP24-Pad1)"
+      (pins JP24-1)
+    )
+    (net "Net-(JQ1-Pad1)"
+      (pins JQ1-1)
+    )
+    (net /15x25perf2/JQ
+      (pins JQ24-3 JQ23-3 JQ22-3 JQ21-3 JQ20-3 JQ19-3 JQ18-3 JQ17-3 JQ16-3 JQ15-3
+        JQ14-3 JQ13-3 JQ12-3 JQ11-3 JQ10-3 JQ9-3 JQ8-3 JQ7-3 JQ6-3 JQ5-3 JQ4-3 JQ3-3
+        JQ2-3 JQ1-3)
+    )
+    (net "Net-(JQ2-Pad1)"
+      (pins JQ2-1)
+    )
+    (net "Net-(JQ3-Pad1)"
+      (pins JQ3-1)
+    )
+    (net "Net-(JQ4-Pad1)"
+      (pins JQ4-1)
+    )
+    (net "Net-(JQ5-Pad1)"
+      (pins JQ5-1)
+    )
+    (net "Net-(JQ6-Pad1)"
+      (pins JQ6-1)
+    )
+    (net "Net-(JQ7-Pad1)"
+      (pins JQ7-1)
+    )
+    (net "Net-(JQ8-Pad1)"
+      (pins JQ8-1)
+    )
+    (net "Net-(JQ9-Pad1)"
+      (pins JQ9-1)
+    )
+    (net "Net-(JQ10-Pad1)"
+      (pins JQ10-1)
+    )
+    (net "Net-(JQ11-Pad1)"
+      (pins JQ11-1)
+    )
+    (net "Net-(JQ12-Pad1)"
+      (pins JQ12-1)
+    )
+    (net "Net-(JQ13-Pad1)"
+      (pins JQ13-1)
+    )
+    (net "Net-(JQ14-Pad1)"
+      (pins JQ14-1)
+    )
+    (net "Net-(JQ15-Pad1)"
+      (pins JQ15-1)
+    )
+    (net "Net-(JQ16-Pad1)"
+      (pins JQ16-1)
+    )
+    (net "Net-(JQ17-Pad1)"
+      (pins JQ17-1)
+    )
+    (net "Net-(JQ18-Pad1)"
+      (pins JQ18-1)
+    )
+    (net "Net-(JQ19-Pad1)"
+      (pins JQ19-1)
+    )
+    (net "Net-(JQ20-Pad1)"
+      (pins JQ20-1)
+    )
+    (net "Net-(JQ21-Pad1)"
+      (pins JQ21-1)
+    )
+    (net "Net-(JQ22-Pad1)"
+      (pins JQ22-1)
+    )
+    (net "Net-(JQ23-Pad1)"
+      (pins JQ23-1)
+    )
+    (net "Net-(JQ24-Pad1)"
+      (pins JQ24-1)
+    )
+    (net "Net-(JR1-Pad1)"
+      (pins JR1-1)
+    )
+    (net /15x25perf2/JR
+      (pins JR25-3 JR24-3 JR23-3 JR22-3 JR21-3 JR20-3 JR19-3 JR18-3 JR17-3 JR16-3
+        JR15-3 JR14-3 JR13-3 JR12-3 JR11-3 JR10-3 JR9-3 JR8-3 JR7-3 JR4-3 JR3-3 JR2-3
+        JR1-3)
+    )
+    (net "Net-(JR2-Pad1)"
+      (pins JR2-1)
+    )
+    (net "Net-(JR3-Pad1)"
+      (pins JR3-1)
+    )
+    (net "Net-(JR4-Pad1)"
+      (pins JR4-1)
+    )
+    (net "Net-(JR7-Pad1)"
+      (pins JR7-1)
+    )
+    (net "Net-(JR8-Pad1)"
+      (pins JR8-1)
+    )
+    (net "Net-(JR9-Pad1)"
+      (pins JR9-1)
+    )
+    (net "Net-(JR10-Pad1)"
+      (pins JR10-1)
+    )
+    (net /15x25perf2/JR11
+      (pins P1-1 JR11-1)
+    )
+    (net /15x25perf2/JR12
+      (pins P1-2 JR12-1)
+    )
+    (net /15x25perf2/JR13
+      (pins P1-3 JR13-1)
+    )
+    (net /15x25perf2/JR18
+      (pins P1-8 JR18-1)
+    )
+    (net "Net-(JR19-Pad1)"
+      (pins JR19-1)
+    )
+    (net /15x25perf2/JR20
+      (pins P2-1 JR20-1)
+    )
+    (net /15x25perf2/JR21
+      (pins P2-2 JR21-1)
+    )
+    (net /15x25perf2/JR22
+      (pins P2-3 JR22-1)
+    )
+    (net /15x25perf2/JR23
+      (pins P2-4 JR23-1)
+    )
+    (net /15x25perf/JA10
+      (pins P3-4 JA10-1)
+    )
+    (net /15x25perf2/JR16
+      (pins P1-6 JR16-1)
+    )
+    (net /15x25perf2/JR24
+      (pins P2-5 JR24-1)
+    )
+    (net /15x25perf2/JR25
+      (pins P2-6 JR25-1)
+    )
+    (net "Net-(JJ1-Pad1)"
+      (pins JJ1-1)
+    )
+    (net /15x25perf/JJ
+      (pins JJ26-3 JJ25-3 JJ24-3 JJ23-3 JJ22-3 JJ21-3 JJ20-3 JJ19-3 JJ18-3 JJ17-3
+        JJ16-3 JJ15-3 JJ14-3 JJ13-3 JJ12-3 JJ11-3 JJ10-3 JJ9-3 JJ8-3 JJ7-3 JJ6-3 JJ5-3
+        JJ4-3 JJ3-3 JJ2-3 JJ1-3)
+    )
+    (net "Net-(JJ2-Pad1)"
+      (pins JJ2-1)
+    )
+    (net "Net-(JJ3-Pad1)"
+      (pins JJ3-1)
+    )
+    (net "Net-(JJ4-Pad1)"
+      (pins JJ4-1)
+    )
+    (net "Net-(JJ5-Pad1)"
+      (pins JJ5-1)
+    )
+    (net "Net-(JJ6-Pad1)"
+      (pins JJ6-1)
+    )
+    (net "Net-(JJ7-Pad1)"
+      (pins JJ7-1)
+    )
+    (net "Net-(JJ8-Pad1)"
+      (pins JJ8-1)
+    )
+    (net "Net-(JJ9-Pad1)"
+      (pins JJ9-1)
+    )
+    (net "Net-(JJ10-Pad1)"
+      (pins JJ10-1)
+    )
+    (net "Net-(JJ11-Pad1)"
+      (pins JJ11-1)
+    )
+    (net "Net-(JJ12-Pad1)"
+      (pins JJ12-1)
+    )
+    (net "Net-(JJ13-Pad1)"
+      (pins JJ13-1)
+    )
+    (net "Net-(JJ14-Pad1)"
+      (pins JJ14-1)
+    )
+    (net "Net-(JJ15-Pad1)"
+      (pins JJ15-1)
+    )
+    (net "Net-(JJ16-Pad1)"
+      (pins JJ16-1)
+    )
+    (net "Net-(JJ17-Pad1)"
+      (pins JJ17-1)
+    )
+    (net "Net-(JJ18-Pad1)"
+      (pins JJ18-1)
+    )
+    (net "Net-(JJ19-Pad1)"
+      (pins JJ19-1)
+    )
+    (net "Net-(JJ20-Pad1)"
+      (pins JJ20-1)
+    )
+    (net "Net-(JJ21-Pad1)"
+      (pins JJ21-1)
+    )
+    (net "Net-(JJ22-Pad1)"
+      (pins JJ22-1)
+    )
+    (net "Net-(JJ23-Pad1)"
+      (pins JJ23-1)
+    )
+    (net "Net-(JJ24-Pad1)"
+      (pins JJ24-1)
+    )
+    (net "Net-(JJ25-Pad1)"
+      (pins JJ25-1)
+    )
+    (net "Net-(JJ26-Pad1)"
+      (pins JJ26-1)
+    )
+    (net /15x25perf2/JR17
+      (pins P1-7 JR17-1)
+    )
+    (class kicad_default +3V3 +5V /15x25perf/J1 /15x25perf/J10 /15x25perf/J11
+      /15x25perf/J12 /15x25perf/J13 /15x25perf/J14 /15x25perf/J15 /15x25perf/J16
+      /15x25perf/J17 /15x25perf/J18 /15x25perf/J19 /15x25perf/J2 /15x25perf/J20
+      /15x25perf/J21 /15x25perf/J22 /15x25perf/J23 /15x25perf/J24 /15x25perf/J25
+      /15x25perf/J26 /15x25perf/J3 /15x25perf/J4 /15x25perf/J5 /15x25perf/J6
+      /15x25perf/J7 /15x25perf/J8 /15x25perf/J9 /15x25perf/JA /15x25perf/JA10
+      /15x25perf/JA11 /15x25perf/JA12 /15x25perf/JA13 /15x25perf/JA14 /15x25perf/JA15
+      /15x25perf/JA16 /15x25perf/JA18 /15x25perf/JA19 /15x25perf/JA20 /15x25perf/JA21
+      /15x25perf/JA22 /15x25perf/JA23 /15x25perf/JA24 /15x25perf/JA25 /15x25perf/JA7
+      /15x25perf/JA8 /15x25perf/JA9 /15x25perf/JB /15x25perf/JC /15x25perf/JD
+      /15x25perf/JE /15x25perf/JF /15x25perf/JG /15x25perf/JH /15x25perf/JI
+      /15x25perf/JJ /15x25perf2/JK /15x25perf2/JL /15x25perf2/JM /15x25perf2/JN
+      /15x25perf2/JO /15x25perf2/JP /15x25perf2/JQ /15x25perf2/JR /15x25perf2/JR11
+      /15x25perf2/JR12 /15x25perf2/JR13 /15x25perf2/JR16 /15x25perf2/JR17
+      /15x25perf2/JR18 /15x25perf2/JR20 /15x25perf2/JR21 /15x25perf2/JR22
+      /15x25perf2/JR23 /15x25perf2/JR24 /15x25perf2/JR25 "Net-(JA1-Pad1)"
+      "Net-(JA17-Pad1)" "Net-(JA2-Pad1)" "Net-(JA3-Pad1)" "Net-(JA4-Pad1)"
+      "Net-(JB1-Pad1)" "Net-(JB10-Pad1)" "Net-(JB11-Pad1)" "Net-(JB12-Pad1)"
+      "Net-(JB13-Pad1)" "Net-(JB14-Pad1)" "Net-(JB15-Pad1)" "Net-(JB16-Pad1)"
+      "Net-(JB17-Pad1)" "Net-(JB18-Pad1)" "Net-(JB19-Pad1)" "Net-(JB2-Pad1)"
+      "Net-(JB20-Pad1)" "Net-(JB21-Pad1)" "Net-(JB22-Pad1)" "Net-(JB23-Pad1)"
+      "Net-(JB24-Pad1)" "Net-(JB25-Pad1)" "Net-(JB3-Pad1)" "Net-(JB4-Pad1)"
+      "Net-(JB5-Pad1)" "Net-(JB6-Pad1)" "Net-(JB7-Pad1)" "Net-(JB8-Pad1)"
+      "Net-(JB9-Pad1)" "Net-(JC1-Pad1)" "Net-(JC10-Pad1)" "Net-(JC11-Pad1)"
+      "Net-(JC12-Pad1)" "Net-(JC13-Pad1)" "Net-(JC14-Pad1)" "Net-(JC15-Pad1)"
+      "Net-(JC16-Pad1)" "Net-(JC17-Pad1)" "Net-(JC18-Pad1)" "Net-(JC19-Pad1)"
+      "Net-(JC2-Pad1)" "Net-(JC20-Pad1)" "Net-(JC21-Pad1)" "Net-(JC22-Pad1)"
+      "Net-(JC23-Pad1)" "Net-(JC24-Pad1)" "Net-(JC25-Pad1)" "Net-(JC3-Pad1)"
+      "Net-(JC4-Pad1)" "Net-(JC5-Pad1)" "Net-(JC6-Pad1)" "Net-(JC7-Pad1)"
+      "Net-(JC8-Pad1)" "Net-(JC9-Pad1)" "Net-(JD1-Pad1)" "Net-(JD10-Pad1)"
+      "Net-(JD11-Pad1)" "Net-(JD12-Pad1)" "Net-(JD13-Pad1)" "Net-(JD14-Pad1)"
+      "Net-(JD15-Pad1)" "Net-(JD16-Pad1)" "Net-(JD17-Pad1)" "Net-(JD18-Pad1)"
+      "Net-(JD19-Pad1)" "Net-(JD2-Pad1)" "Net-(JD20-Pad1)" "Net-(JD21-Pad1)"
+      "Net-(JD22-Pad1)" "Net-(JD23-Pad1)" "Net-(JD24-Pad1)" "Net-(JD25-Pad1)"
+      "Net-(JD3-Pad1)" "Net-(JD4-Pad1)" "Net-(JD5-Pad1)" "Net-(JD6-Pad1)"
+      "Net-(JD7-Pad1)" "Net-(JD8-Pad1)" "Net-(JD9-Pad1)" "Net-(JE1-Pad1)"
+      "Net-(JE10-Pad1)" "Net-(JE11-Pad1)" "Net-(JE12-Pad1)" "Net-(JE13-Pad1)"
+      "Net-(JE14-Pad1)" "Net-(JE15-Pad1)" "Net-(JE16-Pad1)" "Net-(JE17-Pad1)"
+      "Net-(JE18-Pad1)" "Net-(JE19-Pad1)" "Net-(JE2-Pad1)" "Net-(JE20-Pad1)"
+      "Net-(JE21-Pad1)" "Net-(JE22-Pad1)" "Net-(JE23-Pad1)" "Net-(JE24-Pad1)"
+      "Net-(JE3-Pad1)" "Net-(JE4-Pad1)" "Net-(JE5-Pad1)" "Net-(JE6-Pad1)"
+      "Net-(JE7-Pad1)" "Net-(JE8-Pad1)" "Net-(JE9-Pad1)" "Net-(JF1-Pad1)"
+      "Net-(JF10-Pad1)" "Net-(JF11-Pad1)" "Net-(JF12-Pad1)" "Net-(JF13-Pad1)"
+      "Net-(JF14-Pad1)" "Net-(JF15-Pad1)" "Net-(JF16-Pad1)" "Net-(JF17-Pad1)"
+      "Net-(JF18-Pad1)" "Net-(JF19-Pad1)" "Net-(JF2-Pad1)" "Net-(JF20-Pad1)"
+      "Net-(JF21-Pad1)" "Net-(JF22-Pad1)" "Net-(JF23-Pad1)" "Net-(JF24-Pad1)"
+      "Net-(JF3-Pad1)" "Net-(JF4-Pad1)" "Net-(JF5-Pad1)" "Net-(JF6-Pad1)"
+      "Net-(JF7-Pad1)" "Net-(JF8-Pad1)" "Net-(JF9-Pad1)" "Net-(JG1-Pad1)"
+      "Net-(JG10-Pad1)" "Net-(JG11-Pad1)" "Net-(JG12-Pad1)" "Net-(JG13-Pad1)"
+      "Net-(JG14-Pad1)" "Net-(JG15-Pad1)" "Net-(JG16-Pad1)" "Net-(JG17-Pad1)"
+      "Net-(JG18-Pad1)" "Net-(JG19-Pad1)" "Net-(JG2-Pad1)" "Net-(JG20-Pad1)"
+      "Net-(JG21-Pad1)" "Net-(JG22-Pad1)" "Net-(JG23-Pad1)" "Net-(JG24-Pad1)"
+      "Net-(JG3-Pad1)" "Net-(JG4-Pad1)" "Net-(JG5-Pad1)" "Net-(JG6-Pad1)"
+      "Net-(JG7-Pad1)" "Net-(JG8-Pad1)" "Net-(JG9-Pad1)" "Net-(JH1-Pad1)"
+      "Net-(JH10-Pad1)" "Net-(JH11-Pad1)" "Net-(JH12-Pad1)" "Net-(JH13-Pad1)"
+      "Net-(JH14-Pad1)" "Net-(JH15-Pad1)" "Net-(JH16-Pad1)" "Net-(JH17-Pad1)"
+      "Net-(JH18-Pad1)" "Net-(JH19-Pad1)" "Net-(JH2-Pad1)" "Net-(JH20-Pad1)"
+      "Net-(JH21-Pad1)" "Net-(JH22-Pad1)" "Net-(JH23-Pad1)" "Net-(JH24-Pad1)"
+      "Net-(JH25-Pad1)" "Net-(JH26-Pad1)" "Net-(JH3-Pad1)" "Net-(JH4-Pad1)"
+      "Net-(JH5-Pad1)" "Net-(JH6-Pad1)" "Net-(JH7-Pad1)" "Net-(JH8-Pad1)"
+      "Net-(JH9-Pad1)" "Net-(JI1-Pad1)" "Net-(JI10-Pad1)" "Net-(JI11-Pad1)"
+      "Net-(JI12-Pad1)" "Net-(JI13-Pad1)" "Net-(JI14-Pad1)" "Net-(JI15-Pad1)"
+      "Net-(JI16-Pad1)" "Net-(JI17-Pad1)" "Net-(JI18-Pad1)" "Net-(JI19-Pad1)"
+      "Net-(JI2-Pad1)" "Net-(JI20-Pad1)" "Net-(JI21-Pad1)" "Net-(JI22-Pad1)"
+      "Net-(JI23-Pad1)" "Net-(JI24-Pad1)" "Net-(JI25-Pad1)" "Net-(JI26-Pad1)"
+      "Net-(JI3-Pad1)" "Net-(JI4-Pad1)" "Net-(JI5-Pad1)" "Net-(JI6-Pad1)"
+      "Net-(JI7-Pad1)" "Net-(JI8-Pad1)" "Net-(JI9-Pad1)" "Net-(JJ1-Pad1)"
+      "Net-(JJ10-Pad1)" "Net-(JJ11-Pad1)" "Net-(JJ12-Pad1)" "Net-(JJ13-Pad1)"
+      "Net-(JJ14-Pad1)" "Net-(JJ15-Pad1)" "Net-(JJ16-Pad1)" "Net-(JJ17-Pad1)"
+      "Net-(JJ18-Pad1)" "Net-(JJ19-Pad1)" "Net-(JJ2-Pad1)" "Net-(JJ20-Pad1)"
+      "Net-(JJ21-Pad1)" "Net-(JJ22-Pad1)" "Net-(JJ23-Pad1)" "Net-(JJ24-Pad1)"
+      "Net-(JJ25-Pad1)" "Net-(JJ26-Pad1)" "Net-(JJ3-Pad1)" "Net-(JJ4-Pad1)"
+      "Net-(JJ5-Pad1)" "Net-(JJ6-Pad1)" "Net-(JJ7-Pad1)" "Net-(JJ8-Pad1)"
+      "Net-(JJ9-Pad1)" "Net-(JK1-Pad1)" "Net-(JK10-Pad1)" "Net-(JK11-Pad1)"
+      "Net-(JK12-Pad1)" "Net-(JK13-Pad1)" "Net-(JK14-Pad1)" "Net-(JK15-Pad1)"
+      "Net-(JK16-Pad1)" "Net-(JK17-Pad1)" "Net-(JK18-Pad1)" "Net-(JK19-Pad1)"
+      "Net-(JK2-Pad1)" "Net-(JK20-Pad1)" "Net-(JK21-Pad1)" "Net-(JK22-Pad1)"
+      "Net-(JK23-Pad1)" "Net-(JK24-Pad1)" "Net-(JK25-Pad1)" "Net-(JK26-Pad1)"
+      "Net-(JK3-Pad1)" "Net-(JK4-Pad1)" "Net-(JK5-Pad1)" "Net-(JK6-Pad1)"
+      "Net-(JK7-Pad1)" "Net-(JK8-Pad1)" "Net-(JK9-Pad1)" "Net-(JL1-Pad1)"
+      "Net-(JL10-Pad1)" "Net-(JL11-Pad1)" "Net-(JL12-Pad1)" "Net-(JL13-Pad1)"
+      "Net-(JL14-Pad1)" "Net-(JL15-Pad1)" "Net-(JL16-Pad1)" "Net-(JL17-Pad1)"
+      "Net-(JL18-Pad1)" "Net-(JL19-Pad1)" "Net-(JL2-Pad1)" "Net-(JL20-Pad1)"
+      "Net-(JL21-Pad1)" "Net-(JL22-Pad1)" "Net-(JL23-Pad1)" "Net-(JL24-Pad1)"
+      "Net-(JL25-Pad1)" "Net-(JL26-Pad1)" "Net-(JL3-Pad1)" "Net-(JL4-Pad1)"
+      "Net-(JL5-Pad1)" "Net-(JL6-Pad1)" "Net-(JL7-Pad1)" "Net-(JL8-Pad1)"
+      "Net-(JL9-Pad1)" "Net-(JM1-Pad1)" "Net-(JM10-Pad1)" "Net-(JM11-Pad1)"
+      "Net-(JM12-Pad1)" "Net-(JM13-Pad1)" "Net-(JM14-Pad1)" "Net-(JM15-Pad1)"
+      "Net-(JM16-Pad1)" "Net-(JM17-Pad1)" "Net-(JM18-Pad1)" "Net-(JM19-Pad1)"
+      "Net-(JM2-Pad1)" "Net-(JM20-Pad1)" "Net-(JM21-Pad1)" "Net-(JM22-Pad1)"
+      "Net-(JM23-Pad1)" "Net-(JM24-Pad1)" "Net-(JM25-Pad1)" "Net-(JM26-Pad1)"
+      "Net-(JM3-Pad1)" "Net-(JM4-Pad1)" "Net-(JM5-Pad1)" "Net-(JM6-Pad1)"
+      "Net-(JM7-Pad1)" "Net-(JM8-Pad1)" "Net-(JM9-Pad1)" "Net-(JN1-Pad1)"
+      "Net-(JN10-Pad1)" "Net-(JN11-Pad1)" "Net-(JN12-Pad1)" "Net-(JN13-Pad1)"
+      "Net-(JN14-Pad1)" "Net-(JN15-Pad1)" "Net-(JN16-Pad1)" "Net-(JN17-Pad1)"
+      "Net-(JN18-Pad1)" "Net-(JN19-Pad1)" "Net-(JN2-Pad1)" "Net-(JN20-Pad1)"
+      "Net-(JN21-Pad1)" "Net-(JN22-Pad1)" "Net-(JN23-Pad1)" "Net-(JN24-Pad1)"
+      "Net-(JN25-Pad1)" "Net-(JN26-Pad1)" "Net-(JN3-Pad1)" "Net-(JN4-Pad1)"
+      "Net-(JN5-Pad1)" "Net-(JN6-Pad1)" "Net-(JN7-Pad1)" "Net-(JN8-Pad1)"
+      "Net-(JN9-Pad1)" "Net-(JO1-Pad1)" "Net-(JO10-Pad1)" "Net-(JO11-Pad1)"
+      "Net-(JO12-Pad1)" "Net-(JO13-Pad1)" "Net-(JO14-Pad1)" "Net-(JO15-Pad1)"
+      "Net-(JO16-Pad1)" "Net-(JO17-Pad1)" "Net-(JO18-Pad1)" "Net-(JO19-Pad1)"
+      "Net-(JO2-Pad1)" "Net-(JO20-Pad1)" "Net-(JO21-Pad1)" "Net-(JO22-Pad1)"
+      "Net-(JO23-Pad1)" "Net-(JO24-Pad1)" "Net-(JO25-Pad1)" "Net-(JO26-Pad1)"
+      "Net-(JO3-Pad1)" "Net-(JO4-Pad1)" "Net-(JO5-Pad1)" "Net-(JO6-Pad1)"
+      "Net-(JO7-Pad1)" "Net-(JO8-Pad1)" "Net-(JO9-Pad1)" "Net-(JP1-Pad1)"
+      "Net-(JP10-Pad1)" "Net-(JP11-Pad1)" "Net-(JP12-Pad1)" "Net-(JP13-Pad1)"
+      "Net-(JP14-Pad1)" "Net-(JP15-Pad1)" "Net-(JP16-Pad1)" "Net-(JP17-Pad1)"
+      "Net-(JP18-Pad1)" "Net-(JP19-Pad1)" "Net-(JP2-Pad1)" "Net-(JP20-Pad1)"
+      "Net-(JP21-Pad1)" "Net-(JP22-Pad1)" "Net-(JP23-Pad1)" "Net-(JP24-Pad1)"
+      "Net-(JP3-Pad1)" "Net-(JP4-Pad1)" "Net-(JP5-Pad1)" "Net-(JP6-Pad1)"
+      "Net-(JP7-Pad1)" "Net-(JP8-Pad1)" "Net-(JP9-Pad1)" "Net-(JQ1-Pad1)"
+      "Net-(JQ10-Pad1)" "Net-(JQ11-Pad1)" "Net-(JQ12-Pad1)" "Net-(JQ13-Pad1)"
+      "Net-(JQ14-Pad1)" "Net-(JQ15-Pad1)" "Net-(JQ16-Pad1)" "Net-(JQ17-Pad1)"
+      "Net-(JQ18-Pad1)" "Net-(JQ19-Pad1)" "Net-(JQ2-Pad1)" "Net-(JQ20-Pad1)"
+      "Net-(JQ21-Pad1)" "Net-(JQ22-Pad1)" "Net-(JQ23-Pad1)" "Net-(JQ24-Pad1)"
+      "Net-(JQ3-Pad1)" "Net-(JQ4-Pad1)" "Net-(JQ5-Pad1)" "Net-(JQ6-Pad1)"
+      "Net-(JQ7-Pad1)" "Net-(JQ8-Pad1)" "Net-(JQ9-Pad1)" "Net-(JR1-Pad1)"
+      "Net-(JR10-Pad1)" "Net-(JR19-Pad1)" "Net-(JR2-Pad1)" "Net-(JR3-Pad1)"
+      "Net-(JR4-Pad1)" "Net-(JR7-Pad1)" "Net-(JR8-Pad1)" "Net-(JR9-Pad1)"
+      "Net-(P5-Pad1)" "Net-(P6-Pad1)" "Net-(P7-Pad1)" "Net-(P8-Pad1)"
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 508)
+        (clearance 10)
+      )
+    )
+  )
+  (wiring
+    (wire (path B.Cu 508  149098 -123825  149098 -121285)(net +5V)(type route))
+    (wire (path B.Cu 508  146558 -123825  146558 -121285)(net +3V3)(type route))
+    (wire (path F.Cu 508  114681 -78105  114681 -80645  114681 -83185  114681 -85725
+            114681 -88265  114681 -90805  114681 -93345  114681 -95885  114681 -98425
+            114681 -100965  114681 -103505  114681 -106045  114681 -108585
+            114681 -111125  114681 -113665  114681 -116205  114681 -118745
+            114681 -121285)(net /15x25perf/J1)(type route))
+    (wire (path B.Cu 254  127582 -77612.2  127584 -77609.7  127584 -77508.1  128130 -76962
+            128239 -76962)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 508  127589 -77604.6  127589 -77611.8  126994 -78206.6  123961 -78206.6
+            122716 -76962  121158 -76962)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 508  128239 -76962  128778 -76962)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 508  116078 -76962  118618 -76962)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 508  154178 -76962  155448 -76962)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 508  159258 -76962  159218 -76962)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 507.8  159063 -77116.7  159218 -76962)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 507.8  159062 -77116.7  159063 -77116.7)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 508  158143 -77116.7  157988 -76962)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 508  159062 -77116.7  158143 -77116.7)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 508  156718 -76962  155448 -76962)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 508  156718 -76962  157988 -76962)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 508  161798 -76962  161758 -76962)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 507.8  161603 -77116.7  161758 -76962)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 507.8  161602 -77116.7  161603 -77116.7)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 508  160683 -77116.7  160528 -76962)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 508  161602 -77116.7  160683 -77116.7)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 508  159258 -76962  160528 -76962)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 507.8  164143 -77116.7  164298 -76962)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 507.8  164142 -77116.7  164143 -77116.7)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 508  163223 -77116.7  163068 -76962)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 508  164142 -77116.7  163223 -77116.7)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 508  161798 -76962  163068 -76962)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 508  174498 -76962  174458 -76962)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 507.8  174303 -77116.7  174458 -76962)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 507.8  174302 -77116.7  174303 -77116.7)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 508  173383 -77116.7  173228 -76962)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 508  174302 -77116.7  173383 -77116.7)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 508  171958 -76962  173228 -76962)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 508  144018 -76962  145288 -76962)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 508  146502 -76962  145288 -76962)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 508  113538 -76962  116078 -76962)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 508  118618 -76962  121158 -76962)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 508  128778 -76962  131318 -76962  133858 -76962  136398 -76962
+            138938 -76962  141478 -76962  144018 -76962)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 508  146502 -76962  146558 -76962  149098 -76962  151638 -76962
+            154178 -76962)(net /15x25perf/JA)(type route))
+    (wire (path B.Cu 508  164298 -76962  164338 -76962  166878 -76962  169418 -76962
+            171958 -76962)(net /15x25perf/JA)(type route))
+    (wire (path F.Cu 508  117221 -78105  117221 -80645  117221 -83185  117221 -85725
+            117221 -88265  117221 -90805  117221 -93345  117221 -95885  117221 -98425
+            117221 -100965  117221 -103505  117221 -106045  117221 -108585
+            117221 -111125  117221 -113665  117221 -116205  117221 -118745
+            117221 -121285)(net /15x25perf/J2)(type route))
+    (wire (path F.Cu 508  119761 -78105  119761 -80645  119761 -83185  119761 -85725
+            119761 -88265  119761 -90805  119761 -93345  119761 -95885  119761 -98425
+            119761 -100965  119761 -103505  119761 -106045  119761 -108585
+            119761 -111125  119761 -113665  119761 -116205  119761 -118745
+            119761 -121285)(net /15x25perf/J3)(type route))
+    (wire (path F.Cu 508  122301 -78105  122301 -80645  122301 -83185  122301 -85725
+            122301 -88265  122301 -90805  122301 -93345  122301 -95885  122301 -98425
+            122301 -100965  122301 -103505  122301 -106045  122301 -108585
+            122301 -111125  122301 -113665  122301 -116205  122301 -118745
+            122301 -121285)(net /15x25perf/J4)(type route))
+    (wire (path F.Cu 508  129921 -78105  129921 -80645  129921 -83185  129921 -85725
+            129921 -88265  129921 -90805  129921 -93345  129921 -95885  129921 -98425
+            129921 -100965  129921 -103505  129921 -106045  129921 -108585
+            129921 -111125  129921 -113665  129921 -116205  129921 -118745
+            129921 -121285)(net /15x25perf/J7)(type route))
+    (wire (path F.Cu 508  128778 -76581  128778 -78105)(net /15x25perf/JA7)(type route))
+    (wire (path F.Cu 508  129794 -75565  128778 -76581)(net /15x25perf/JA7)(type route))
+    (wire (path F.Cu 508  132461 -78105  132461 -80645  132461 -83185  132461 -85725
+            132461 -88265  132461 -90805  132461 -93345  132461 -95885  132461 -98425
+            132461 -100965  132461 -103505  132461 -106045  132461 -108585
+            132461 -111125  132461 -113665  132461 -116205  132461 -118745
+            132461 -121285)(net /15x25perf/J8)(type route))
+    (wire (path F.Cu 508  131318 -76581  131318 -78105)(net /15x25perf/JA8)(type route))
+    (wire (path F.Cu 508  132334 -75565  131318 -76581)(net /15x25perf/JA8)(type route))
+    (wire (path F.Cu 508  135001 -78105  135001 -80645  135001 -83185  135001 -85725
+            135001 -88265  135001 -90805  135001 -93345  135001 -95885  135001 -98425
+            135001 -100965  135001 -103505  135001 -106045  135001 -108585
+            135001 -111125  135001 -113665  135001 -116205  135001 -118745
+            135001 -121285)(net /15x25perf/J9)(type route))
+    (wire (path F.Cu 508  133858 -76581  133858 -78105)(net /15x25perf/JA9)(type route))
+    (wire (path F.Cu 508  134874 -75565  133858 -76581)(net /15x25perf/JA9)(type route))
+    (wire (path F.Cu 508  137541 -78105  137541 -80645  137541 -83185  137541 -85725
+            137541 -88265  137541 -90805  137541 -93345  137541 -95885  137541 -98425
+            137541 -100965  137541 -103505  137541 -106045  137541 -108585
+            137541 -111125  137541 -113665  137541 -116205  137541 -118745
+            137541 -121285)(net /15x25perf/J10)(type route))
+    (wire (path F.Cu 508  140081 -78105  140081 -80645  140081 -83185  140081 -85725
+            140081 -88265  140081 -90805  140081 -93345  140081 -95885  140081 -98425
+            140081 -100965  140081 -103505  140081 -106045  140081 -108585
+            140081 -111125  140081 -113665  140081 -116205  140081 -118745
+            140081 -121285)(net /15x25perf/J11)(type route))
+    (wire (path F.Cu 508  138938 -76581  139954 -75565)(net /15x25perf/JA11)(type route))
+    (wire (path F.Cu 508  138938 -78105  138938 -76581)(net /15x25perf/JA11)(type route))
+    (wire (path F.Cu 508  142621 -78105  142621 -80645  142621 -83185  142621 -85725
+            142621 -88265  142621 -90805  142621 -93345  142621 -95885  142621 -98425
+            142621 -100965  142621 -103505  142621 -106045  142621 -108585
+            142621 -111125  142621 -113665  142621 -116205  142621 -118745
+            142621 -121285)(net /15x25perf/J12)(type route))
+    (wire (path F.Cu 508  141478 -76581  141478 -78105)(net /15x25perf/JA12)(type route))
+    (wire (path F.Cu 508  142494 -75565  141478 -76581)(net /15x25perf/JA12)(type route))
+    (wire (path F.Cu 508  145161 -78105  145161 -80645  145161 -83185  145161 -85725
+            145161 -88265  145161 -90805  145161 -93345  145161 -95885  145161 -98425
+            145161 -100965  145161 -103505  145161 -106045  145161 -108585
+            145161 -111125  145161 -113665  145161 -116205  145161 -118745
+            145161 -121285)(net /15x25perf/J13)(type route))
+    (wire (path F.Cu 508  144018 -76581  145034 -75565)(net /15x25perf/JA13)(type route))
+    (wire (path F.Cu 508  144018 -78105  144018 -76581)(net /15x25perf/JA13)(type route))
+    (wire (path F.Cu 508  147701 -78105  147701 -80645  147701 -83185  147701 -85725
+            147701 -88265  147701 -90805  147701 -93345  147701 -95885  147701 -98425
+            147701 -100965  147701 -103505  147701 -106045  147701 -108585
+            147701 -111125  147701 -113665  147701 -116205  147701 -118745
+            147701 -121285)(net /15x25perf/J14)(type route))
+    (wire (path F.Cu 508  146558 -76581  146558 -78105)(net /15x25perf/JA14)(type route))
+    (wire (path F.Cu 508  147574 -75565  146558 -76581)(net /15x25perf/JA14)(type route))
+    (wire (path F.Cu 508  150241 -78105  150241 -80645  150241 -83185  150241 -85725
+            150241 -88265  150241 -90805  150241 -93345  150241 -95885  150241 -98425
+            150241 -100965  150241 -103505  150241 -106045  150241 -108585
+            150241 -111125  150241 -113665  150241 -116205  150241 -118745
+            150241 -121285)(net /15x25perf/J15)(type route))
+    (wire (path F.Cu 508  149098 -76581  149098 -78105)(net /15x25perf/JA15)(type route))
+    (wire (path F.Cu 508  150114 -75565  149098 -76581)(net /15x25perf/JA15)(type route))
+    (wire (path F.Cu 508  152781 -78105  152781 -80645  152781 -83185  152781 -85725
+            152781 -88265  152781 -90805  152781 -93345  152781 -95885  152781 -98425
+            152781 -100965  152781 -103505  152781 -106045  152781 -108585
+            152781 -111125  152781 -113665  152781 -116205  152781 -118745
+            152781 -121285)(net /15x25perf/J16)(type route))
+    (wire (path F.Cu 508  151638 -76581  151638 -78105)(net /15x25perf/JA16)(type route))
+    (wire (path F.Cu 508  152654 -75565  151638 -76581)(net /15x25perf/JA16)(type route))
+    (wire (path F.Cu 508  155321 -78105  155321 -80645  155321 -83185  155321 -85725
+            155321 -88265  155321 -90805  155321 -93345  155321 -95885  155321 -98425
+            155321 -100965  155321 -103505  155321 -106045  155321 -108585
+            155321 -111125  155321 -113665  155321 -116205  155321 -118745
+            155321 -121285)(net /15x25perf/J17)(type route))
+    (wire (path F.Cu 508  157861 -78105  157861 -80645  157861 -83185  157861 -85725
+            157861 -88265  157861 -90805  157861 -93345  157861 -95885  157861 -98425
+            157861 -100965  157861 -103505  157861 -106045  157861 -108585
+            157861 -111125  157861 -113665  157861 -116205  157861 -118745
+            157861 -121285)(net /15x25perf/J18)(type route))
+    (wire (path F.Cu 508  156718 -78105  156718 -75565)(net /15x25perf/JA18)(type route))
+    (wire (path F.Cu 508  160401 -78105  160401 -80645  160401 -83185  160401 -85725
+            160401 -88265  160401 -90805  160401 -93345  160401 -95885  160401 -98425
+            160401 -100965  160401 -103505  160401 -106045  160401 -108585
+            160401 -111125  160401 -113665  160401 -116205  160401 -118745
+            160401 -121285)(net /15x25perf/J19)(type route))
+    (wire (path F.Cu 508  159258 -78105  159258 -75565)(net /15x25perf/JA19)(type route))
+    (wire (path F.Cu 508  162941 -78105  162941 -80645  162941 -83185  162941 -85725
+            162941 -88265  162941 -90805  162941 -93345  162941 -95885  162941 -98425
+            162941 -100965  162941 -103505  162941 -106045  162941 -108585
+            162941 -111125  162941 -113665  162941 -116205  162941 -118745
+            162941 -121285)(net /15x25perf/J20)(type route))
+    (wire (path F.Cu 508  161798 -78105  161798 -75565)(net /15x25perf/JA20)(type route))
+    (wire (path F.Cu 508  165481 -78105  165481 -80645  165481 -83185  165481 -85725
+            165481 -88265  165481 -90805  165481 -93345  165481 -95885  165481 -98425
+            165481 -100965  165481 -103505  165481 -106045  165481 -108585
+            165481 -111125  165481 -113665  165481 -116205  165481 -118745
+            165481 -121285)(net /15x25perf/J21)(type route))
+    (wire (path F.Cu 508  164338 -78105  164338 -75565)(net /15x25perf/JA21)(type route))
+    (wire (path F.Cu 508  168021 -78105  168021 -80645  168021 -83185  168021 -85725
+            168021 -88265  168021 -90805  168021 -93345  168021 -95885  168021 -98425
+            168021 -100965  168021 -103505  168021 -106045  168021 -108585
+            168021 -111125  168021 -113665  168021 -116205  168021 -118745
+            168021 -121285)(net /15x25perf/J22)(type route))
+    (wire (path F.Cu 508  166878 -78105  166878 -75565)(net /15x25perf/JA22)(type route))
+    (wire (path F.Cu 508  170561 -85725  170561 -83185  170561 -80645)(net /15x25perf/J23)(type route))
+    (wire (path F.Cu 508  170561 -78105  170561 -80645)(net /15x25perf/J23)(type route))
+    (wire (path F.Cu 508  170561 -85725  170561 -88265  170561 -90805  170561 -93345
+            170561 -95885  170561 -98425  170561 -100965  170561 -103505
+            170561 -106045  170561 -108585  170561 -111125  170561 -113665
+            170561 -116205  170561 -118745  170561 -121285)(net /15x25perf/J23)(type route))
+    (wire (path F.Cu 508  169418 -75565  169418 -78105)(net /15x25perf/JA23)(type route))
+    (wire (path F.Cu 508  173101 -85725  173101 -83185)(net /15x25perf/J24)(type route))
+    (wire (path F.Cu 508  173101 -78105  173101 -80645  173101 -83185)(net /15x25perf/J24)(type route))
+    (wire (path F.Cu 508  173101 -85725  173101 -88265  173101 -90805  173101 -93345
+            173101 -95885  173101 -98425  173101 -100965  173101 -103505
+            173101 -106045  173101 -108585  173101 -111125  173101 -113665
+            173101 -116205  173101 -118745  173101 -121285)(net /15x25perf/J24)(type route))
+    (wire (path F.Cu 508  171958 -75565  171958 -78105)(net /15x25perf/JA24)(type route))
+    (wire (path F.Cu 508  175641 -113665  175641 -115223  174346 -116518  174346 -119507
+            174922 -120084)(net /15x25perf/J25)(type route))
+    (wire (path F.Cu 254  174346 -119558  174562 -119558  175641 -120637  175641 -120853)(net /15x25perf/J25)(type route))
+    (wire (path F.Cu 508  175641 -85725  175641 -87283.1  174396 -88527.7  174396 -92011.5
+            175641 -93256.1  175641 -95885)(net /15x25perf/J25)(type route))
+    (wire (path F.Cu 508  175641 -120853  175641 -121285)(net /15x25perf/J25)(type route))
+    (wire (path F.Cu 508  175641 -78105  175641 -80645  175641 -83185  175641 -85725)(net /15x25perf/J25)(type route))
+    (wire (path F.Cu 508  175641 -95885  175641 -98425  175641 -100965  175641 -103505
+            175641 -106045  175641 -108585  175641 -111125  175641 -113665)(net /15x25perf/J25)(type route))
+    (wire (path F.Cu 508  174498 -78105  174498 -75565)(net /15x25perf/JA25)(type route))
+    (wire (path B.Cu 508  113538 -79502  116078 -79502  118618 -79502  121158 -79502
+            123698 -79502  126238 -79502  128778 -79502  131318 -79502  133858 -79502
+            136398 -79502  138938 -79502  141478 -79502  144018 -79502  146558 -79502
+            149098 -79502  151638 -79502  154178 -79502  156718 -79502  159258 -79502
+            161798 -79502  164338 -79502  166878 -79502  169418 -79502  171958 -79502
+            174498 -79502)(net /15x25perf/JB)(type route))
+    (wire (path F.Cu 508  124841 -80645  124841 -83185  124841 -85725  124841 -88265
+            124841 -90805  124841 -93345  124841 -95885  124841 -98425  124841 -100965
+            124841 -103505  124841 -106045  124841 -108585  124841 -111125
+            124841 -113665  124841 -116205  124841 -118745)(net /15x25perf/J5)(type route))
+    (wire (path F.Cu 508  127381 -80645  127381 -83185  127381 -85725  127381 -88265
+            127381 -90805  127381 -93345  127381 -95885  127381 -98425  127381 -100965
+            127381 -103505  127381 -106045  127381 -108585  127381 -111125
+            127381 -113665  127381 -116205  127381 -118745)(net /15x25perf/J6)(type route))
+    (wire (path B.Cu 508  113538 -82042  116078 -82042  118618 -82042  121158 -82042
+            123698 -82042  126238 -82042  128778 -82042  131318 -82042  133858 -82042
+            136398 -82042  138938 -82042  141478 -82042  144018 -82042  146558 -82042
+            149098 -82042  151638 -82042  154178 -82042  156718 -82042  159258 -82042
+            161798 -82042  164338 -82042  166878 -82042  169418 -82042  171958 -82042
+            174498 -82042)(net /15x25perf/JC)(type route))
+    (wire (path B.Cu 508  113538 -84582  116078 -84582  118618 -84582  121158 -84582
+            123698 -84582  126238 -84582  128778 -84582  131318 -84582  133858 -84582
+            136398 -84582  138938 -84582  141478 -84582  144018 -84582  146558 -84582
+            149098 -84582  151638 -84582  154178 -84582  156718 -84582  159258 -84582
+            161798 -84582  164338 -84582  166878 -84582  169418 -84582  171958 -84582
+            174498 -84582)(net /15x25perf/JD)(type route))
+    (wire (path B.Cu 508  113538 -87122  116078 -87122  118618 -87122  121158 -87122
+            123698 -87122  126238 -87122  128778 -87122  131318 -87122  133858 -87122
+            136398 -87122  138938 -87122  141478 -87122  144018 -87122  146558 -87122
+            149098 -87122  151638 -87122  154178 -87122  156718 -87122  159258 -87122
+            161798 -87122  164338 -87122  166878 -87122  169418 -87122  171958 -87122)(net /15x25perf/JE)(type route))
+    (wire (path B.Cu 508  113538 -89662  116078 -89662  118618 -89662  121158 -89662
+            123698 -89662  126238 -89662  128778 -89662  131318 -89662  133858 -89662
+            136398 -89662  138938 -89662  141478 -89662  144018 -89662  146558 -89662
+            149098 -89662  151638 -89662  154178 -89662  156718 -89662  159258 -89662
+            161798 -89662  164338 -89662  166878 -89662  169418 -89662  171958 -89662)(net /15x25perf/JF)(type route))
+    (wire (path F.Cu 508  178181 -95885  178181 -98425  178181 -100965  178181 -103505
+            178181 -106045  178181 -108585  178181 -111125  178181 -113665)(net /15x25perf/J26)(type route))
+    (wire (path B.Cu 508  113538 -92202  116078 -92202  118618 -92202  121158 -92202
+            123698 -92202  126238 -92202  128778 -92202  131318 -92202  133858 -92202
+            136398 -92202  138938 -92202  141478 -92202  144018 -92202  146558 -92202
+            149098 -92202  151638 -92202  154178 -92202  156718 -92202  159258 -92202
+            161798 -92202  164338 -92202  166878 -92202  169418 -92202  171958 -92202)(net /15x25perf/JG)(type route))
+    (wire (path B.Cu 508  113538 -94742  116078 -94742  118618 -94742  121158 -94742
+            123698 -94742  126238 -94742  128778 -94742  131318 -94742  133858 -94742
+            136398 -94742  138938 -94742  141478 -94742  144018 -94742  146558 -94742
+            149098 -94742  151638 -94742  154178 -94742  156718 -94742  159258 -94742
+            161798 -94742  164338 -94742  166878 -94742  169418 -94742  171958 -94742
+            174498 -94742  177038 -94742)(net /15x25perf/JH)(type route))
+    (wire (path B.Cu 508  113538 -97282  116078 -97282  118618 -97282  121158 -97282
+            123698 -97282  126238 -97282  128778 -97282  131318 -97282  133858 -97282
+            136398 -97282  138938 -97282  141478 -97282  144018 -97282  146558 -97282
+            149098 -97282  151638 -97282  154178 -97282  156718 -97282  159258 -97282
+            161798 -97282  164338 -97282  166878 -97282  169418 -97282  171958 -97282
+            174498 -97282  177038 -97282)(net /15x25perf/JI)(type route))
+    (wire (path B.Cu 508  113538 -102362  116078 -102362  118618 -102362  121158 -102362
+            123698 -102362  126238 -102362  128778 -102362  131318 -102362
+            133858 -102362  136398 -102362  138938 -102362  141478 -102362
+            144018 -102362  146558 -102362  149098 -102362  151638 -102362
+            154178 -102362  156718 -102362  159258 -102362  161798 -102362
+            164338 -102362  166878 -102362  169418 -102362  171958 -102362
+            174498 -102362  177038 -102362)(net /15x25perf2/JK)(type route))
+    (wire (path B.Cu 508  113538 -104902  116078 -104902  118618 -104902  121158 -104902
+            123698 -104902  126238 -104902  128778 -104902  131318 -104902
+            133858 -104902  136398 -104902  138938 -104902  141478 -104902
+            144018 -104902  146558 -104902  149098 -104902  151638 -104902
+            154178 -104902  156718 -104902  159258 -104902  161798 -104902
+            164338 -104902  166878 -104902  169418 -104902  171958 -104902
+            174498 -104902  177038 -104902)(net /15x25perf2/JL)(type route))
+    (wire (path B.Cu 508  113538 -107442  116078 -107442  118618 -107442  121158 -107442
+            123698 -107442  126238 -107442  128778 -107442  131318 -107442
+            133858 -107442  136398 -107442  138938 -107442  141478 -107442
+            144018 -107442  146558 -107442  149098 -107442  151638 -107442
+            154178 -107442  156718 -107442  159258 -107442  161798 -107442
+            164338 -107442  166878 -107442  169418 -107442  171958 -107442
+            174498 -107442  177038 -107442)(net /15x25perf2/JM)(type route))
+    (wire (path B.Cu 508  113538 -109982  116078 -109982  118618 -109982  121158 -109982
+            123698 -109982  126238 -109982  128778 -109982  131318 -109982
+            133858 -109982  136398 -109982  138938 -109982  141478 -109982
+            144018 -109982  146558 -109982  149098 -109982  151638 -109982
+            154178 -109982  156718 -109982  159258 -109982  161798 -109982
+            164338 -109982  166878 -109982  169418 -109982  171958 -109982
+            174498 -109982  177038 -109982)(net /15x25perf2/JN)(type route))
+    (wire (path B.Cu 508  113538 -112522  116078 -112522  118618 -112522  121158 -112522
+            123698 -112522  126238 -112522  128778 -112522  131318 -112522
+            133858 -112522  136398 -112522  138938 -112522  141478 -112522
+            144018 -112522  146558 -112522  149098 -112522  151638 -112522
+            154178 -112522  156718 -112522  159258 -112522  161798 -112522
+            164338 -112522  166878 -112522  169418 -112522  171958 -112522
+            174498 -112522  177038 -112522)(net /15x25perf2/JO)(type route))
+    (wire (path B.Cu 508  113538 -115062  116078 -115062  118618 -115062  121158 -115062
+            123698 -115062  126238 -115062  128778 -115062  131318 -115062
+            133858 -115062  136398 -115062  138938 -115062  141478 -115062
+            144018 -115062  146558 -115062  149098 -115062  151638 -115062
+            154178 -115062  156718 -115062  159258 -115062  161798 -115062
+            164338 -115062  166878 -115062  169418 -115062  171958 -115062)(net /15x25perf2/JP)(type route))
+    (wire (path B.Cu 508  113538 -117602  116078 -117602  118618 -117602  121158 -117602
+            123698 -117602  126238 -117602  128778 -117602  131318 -117602
+            133858 -117602  136398 -117602  138938 -117602  141478 -117602
+            144018 -117602  146558 -117602  149098 -117602  151638 -117602
+            154178 -117602  156718 -117602  159258 -117602  161798 -117602
+            164338 -117602  166878 -117602  169418 -117602  171958 -117602)(net /15x25perf2/JQ)(type route))
+    (wire (path B.Cu 508  113538 -120142  116078 -120142  118618 -120142  121158 -120142
+            128778 -120142  131318 -120142  133858 -120142  136398 -120142
+            138938 -120142  141478 -120142  144018 -120142  146558 -120142
+            149098 -120142  151638 -120142  154178 -120142  156718 -120142
+            159258 -120142  161798 -120142  164338 -120142  166878 -120142
+            169418 -120142  171958 -120142  174498 -120142)(net /15x25perf2/JR)(type route))
+    (wire (path B.Cu 508  138938 -123825  138938 -121285)(net /15x25perf2/JR11)(type route))
+    (wire (path B.Cu 508  141478 -123825  141478 -121285)(net /15x25perf2/JR12)(type route))
+    (wire (path B.Cu 508  144018 -123825  144018 -121285)(net /15x25perf2/JR13)(type route))
+    (wire (path B.Cu 508  156718 -123825  156718 -121285)(net /15x25perf2/JR18)(type route))
+    (wire (path B.Cu 508  161798 -123825  161798 -121285)(net /15x25perf2/JR20)(type route))
+    (wire (path B.Cu 508  164338 -123825  164338 -121285)(net /15x25perf2/JR21)(type route))
+    (wire (path B.Cu 508  166878 -123825  166878 -121285)(net /15x25perf2/JR22)(type route))
+    (wire (path B.Cu 508  169418 -123825  169418 -121285)(net /15x25perf2/JR23)(type route))
+    (wire (path F.Cu 508  136398 -76581  136398 -78105)(net /15x25perf/JA10)(type route))
+    (wire (path F.Cu 508  137414 -75565  136398 -76581)(net /15x25perf/JA10)(type route))
+    (wire (path B.Cu 508  151638 -123825  151638 -121285)(net /15x25perf2/JR16)(type route))
+    (wire (path B.Cu 508  171958 -123825  171958 -121285)(net /15x25perf2/JR24)(type route))
+    (wire (path B.Cu 508  174498 -123825  174498 -121285)(net /15x25perf2/JR25)(type route))
+    (wire (path B.Cu 508  113538 -99822  116078 -99822  118618 -99822  121158 -99822
+            123698 -99822  126238 -99822  128778 -99822  131318 -99822  133858 -99822
+            136398 -99822  138938 -99822  141478 -99822  144018 -99822  146558 -99822
+            149098 -99822  151638 -99822  154178 -99822  156718 -99822  159258 -99822
+            161798 -99822  164338 -99822  166878 -99822  169418 -99822  171958 -99822
+            174498 -99822  177038 -99822)(net /15x25perf/JJ)(type route))
+    (wire (path B.Cu 508  154178 -123825  154178 -121285)(net /15x25perf2/JR17)(type route))
+  )
+)

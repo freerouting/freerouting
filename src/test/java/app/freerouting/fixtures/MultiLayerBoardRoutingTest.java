@@ -3,7 +3,7 @@ package app.freerouting.fixtures;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import app.freerouting.board.Trace;
+import app.freerouting.board.model.items.Trace;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.settings.sources.TestingSettings;
 import java.util.Set;

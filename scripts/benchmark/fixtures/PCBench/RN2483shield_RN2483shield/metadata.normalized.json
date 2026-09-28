@@ -1,0 +1,67 @@
+{
+  "board_id": "RN2483shield_RN2483shield",
+  "display_name": "RN2483shield_RN2483shield",
+  "pcbench_directory": "PCBs/RN2483shield_RN2483shield",
+  "source": "https://github.com/jpmeijers/RN2483shield",
+  "author": "jpmeijers",
+  "license": "Creative Commons Zero v1.0 Universal",
+  "license_spdx": "CC0-1.0",
+  "retrieved_at": "2023-08-17T17:22:34.125841+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 2,
+    "components": 8,
+    "dimensions_mm": {
+      "width": 68.9,
+      "height": 53.6
+    },
+    "area_cm2": 36.93,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 115,
+    "vias": 14,
+    "track_length_mm": 407.64,
+    "kicad_drc_violations": 250,
+    "kicad_drc_breakdown": {
+      "total_violations": 250,
+      "unconnected_count": 2,
+      "by_type": {
+        "clearance": 106,
+        "courtyards_overlap": 2,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 8,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 2,
+        "silk_overlap": 65,
+        "solder_mask_bridge": 55,
+        "starved_thermal": 7,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 171,
+        "warning": 79
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.096615+00:00",
+    "elapsed_seconds": 32.38,
+    "unrouted_nets": 4,
+    "clearance_violations": 0,
+    "quality_score": 916.66
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "board": "wordclock_ledboard2",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\wordclock_ledboard2\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 2,
+  "segment_count": 430,
+  "approximate_track_length_mm": 6049.31,
+  "kicad_drc_violations": 777,
+  "generated_at": "2026-08-18T19:57:24.536915+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 777,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 199,
+      "clearance": 465,
+      "lib_footprint_issues": 109,
+      "silk_over_copper": 3,
+      "text_height": 1
+    },
+    "by_severity": {
+      "error": 664,
+      "warning": 113
+    }
+  }
+}

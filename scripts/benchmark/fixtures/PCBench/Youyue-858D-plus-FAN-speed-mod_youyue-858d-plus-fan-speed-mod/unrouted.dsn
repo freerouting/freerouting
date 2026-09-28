@@ -1,0 +1,267 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\Youyue-858D-plus-FAN-speed-mod_youyue-858d-plus-fan-speed-mod\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  193250 -54500  176250 -54500  176250 -28050  188900 -28050
+            188900 -24100  193250 -24100  193250 -54500)
+    )
+    (via "Via[0-1]_889:381_um")
+    (rule
+      (width 304.8)
+      (clearance 406.4)
+      (clearance 101.6 (type smd_smd))
+    )
+  )
+  (placement
+    (component Capacitors_SMD:C_0805_HandSoldering
+      (place C1 183676.174 -29233.456 front 180 (PN 100n))
+      (place C5 178700 -33300 front 180 (PN 1µ))
+    )
+    (component Capacitors_SMD:C_0805_HandSoldering::1
+      (place C2 187600 -43100 front 0 (PN 1µF))
+      (place C3 184500 -47750 front 0 (PN 100n))
+      (place C4 184500 -45500 front 0 (PN 1µ))
+    )
+    (component "my_parts:SMD-solder-bridge-3pin"
+      (place JP1 184600 -50700 front 180 (PN "SMD-JUMPER3"))
+    )
+    (component "SIL-Headers:SIL-1"
+      (place P1 191770 -25600 front 0 (PN CONN_01X01))
+      (place P2 191770 -29210 front 0 (PN CONN_01X01))
+      (place P3 177800 -44450 front 0 (PN CONN_01X01))
+      (place P4 191770 -44450 front 0 (PN CONN_01X01))
+    )
+    (component Resistors_SMD:R_0805_HandSoldering
+      (place R1 178876.174 -29233.456 front 180 (PN 1M))
+      (place R2 182300 -43100 front 180 (PN 100k))
+    )
+    (component Resistors_SMD:R_0805_HandSoldering::1
+      (place R3 179000 -53250 front 0 (PN 10k))
+      (place R4 184700 -53250 front 0 (PN 390R))
+      (place R5 190400 -53250 front 0 (PN 390R))
+      (place R6 189400 -51100 front 0 (PN 1k))
+    )
+    (component "my_parts:MADW__TC33X-POT"
+      (place RV1 178700 -37500 front 0 (PN 4k7))
+      (place RV2 189500 -37500 front 0 (PN 4k7))
+    )
+    (component "SMD_Packages:SOIC-8-N"
+      (place U1 184200 -37500 front 0 (PN LM2904))
+    )
+    (component "led-smile:LED_smile_silkscreen_3mm"
+      (place G***_2 186850 -31850 front 0 (PN LED_smile_silkscreen_3mm))
+      (place G*** 191700 -41450 front 0 (PN "OSHW-logo_silkscreen_3mm"))
+    )
+    (component "LEDs:LED-0805"
+      (place D1 180900 -47900 front 90 (PN LED))
+    )
+  )
+  (library
+    (image Capacitors_SMD:C_0805_HandSoldering
+      (outline (polygon signal 0  -2295 995  2295 995  2295 -995  -2295 -995))
+      (outline (path signal 150  500 850  -500 850))
+      (outline (path signal 150  -500 -850  500 -850))
+      (pin Rect[T]Pad_1500.000000x1250.000000_um 1 -1250 0)
+      (pin Rect[T]Pad_1500.000000x1250.000000_um 2 1250 0)
+    )
+    (image Capacitors_SMD:C_0805_HandSoldering::1
+      (outline (polygon signal 0  2295 -995  -2295 -995  -2295 995  2295 995))
+      (outline (path signal 150  500 850  -500 850))
+      (outline (path signal 150  -500 -850  500 -850))
+      (pin Rect[T]Pad_1500.000000x1250.000000_um 1 -1250 0)
+      (pin Rect[T]Pad_1500.000000x1250.000000_um 2 1250 0)
+    )
+    (image "my_parts:SMD-solder-bridge-3pin"
+      (outline (path signal 200  -1900 1200  1900 1200))
+      (outline (path signal 200  1900 1200  1900 -1200))
+      (outline (path signal 200  1900 -1200  -1900 -1200))
+      (outline (path signal 200  -1900 -1200  -1900 1200))
+      (pin Rect[T]Pad_1000.000000x2000.000000_um 1 -1200 0)
+      (pin Rect[T]Pad_1000.000000x2000.000000_um 2 0 0)
+      (pin Rect[T]Pad_1000.000000x2000.000000_um 3 1200 0)
+    )
+    (image "SIL-Headers:SIL-1"
+      (outline (path signal 200  -1270 -1270  1270 -1270))
+      (outline (path signal 200  -1270 1270  1270 1270))
+      (outline (path signal 200  1270 1270  1270 -1270))
+      (outline (path signal 200  -1270 -1270  -1270 1270))
+      (pin Rect[A]Pad_1650.000000x1650.000000_um 1 0 0)
+    )
+    (image Resistors_SMD:R_0805_HandSoldering
+      (outline (polygon signal 0  -2395 995  2395 995  2395 -995  -2395 -995))
+      (outline (path signal 150  600 -875  -600 -875))
+      (outline (path signal 150  -600 875  600 875))
+      (pin Rect[T]Pad_1500.000000x1300.000000_um 1 -1350 0)
+      (pin Rect[T]Pad_1500.000000x1300.000000_um 2 1350 0)
+    )
+    (image Resistors_SMD:R_0805_HandSoldering::1
+      (outline (polygon signal 0  2395 -995  -2395 -995  -2395 995  2395 995))
+      (outline (path signal 150  600 -875  -600 -875))
+      (outline (path signal 150  -600 875  600 875))
+      (pin Rect[T]Pad_1500.000000x1300.000000_um 1 -1350 0)
+      (pin Rect[T]Pad_1500.000000x1300.000000_um 2 1350 0)
+    )
+    (image "my_parts:MADW__TC33X-POT"
+      (outline (path signal 200  -800.1 0  800.1 0))
+      (outline (path signal 200  0 800.1  0 -800.1))
+      (outline (path signal 200  0 1750.06  1800.86 1750.06))
+      (outline (path signal 200  1800.86 1750.06  1800.86 -1998.98))
+      (outline (path signal 200  1800.86 -1998.98  -1800.86 -1998.98))
+      (outline (path signal 200  -1800.86 -1998.98  -1800.86 1750.06))
+      (outline (path signal 200  -1800.86 1750.06  0 1750.06))
+      (outline (path signal 200  1297.4 0  1278.74 -219.262  1223.29 -432.217  1132.65 -632.737
+            1009.43 -815.055  857.161 -973.925  680.238 -1104.78  483.745 -1203.85
+            273.336 -1268.28  55.063 -1296.23  -164.793 -1286.89  -379.909 -1240.53
+            -584.096 -1158.48  -771.479 -1043.11  -936.668 -897.724  -1074.91 -726.513
+            -1182.23 -534.402  -1255.54 -326.917  -1292.73 -110.027  -1292.73 110.027
+            -1255.54 326.917  -1182.23 534.402  -1074.91 726.513  -936.668 897.724
+            -771.479 1043.11  -584.096 1158.48  -379.909 1240.53  -164.793 1286.89
+            55.063 1296.23  273.336 1268.28  483.745 1203.85  680.238 1104.78
+            857.161 973.925  1009.43 815.055  1132.65 632.737  1223.29 432.217
+            1278.74 219.262  1297.4 0))
+      (pin Rect[T]Pad_1198.880000x1198.880000_um 1 -1000.76 -1800.86)
+      (pin Rect[T]Pad_1198.880000x1198.880000_um 3 1000.76 -1800.86)
+      (pin Rect[T]Pad_1600.200000x1501.140000_um 2 0 1450.34)
+    )
+    (image "SMD_Packages:SOIC-8-N"
+      (outline (path signal 150  -2540 2286  2540 2286))
+      (outline (path signal 150  2540 2286  2540 -2286))
+      (outline (path signal 150  2540 -2286  -2540 -2286))
+      (outline (path signal 150  -2540 -2286  -2540 2286))
+      (outline (path signal 150  -2540 762  -2032 762))
+      (outline (path signal 150  -2032 762  -2032 -508))
+      (outline (path signal 150  -2032 -508  -2540 -508))
+      (pin Rect[T]Pad_508.000000x1143.000000_um 8 -1905 3175)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 7 -635 3175)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 6 635 3175)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 5 1905 3175)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 4 1905 -3175)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 3 635 -3175)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 2 -635 -3175)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 1 -1905 -3175)
+    )
+    (image "led-smile:LED_smile_silkscreen_3mm"
+    )
+    (image "LEDs:LED-0805"
+      (outline (polygon signal 0  -1895 -945  -1895 945  1895 945  1895 -945))
+      (outline (path signal 150  -1600 -750  1100 -750))
+      (outline (path signal 150  -1600 750  1100 750))
+      (outline (path signal 150  -100 -150  -100 100))
+      (outline (path signal 150  -100 100  -250 -50))
+      (outline (path signal 150  -350 350  -350 -350))
+      (outline (path signal 150  0 0  350 0))
+      (outline (path signal 150  -350 0  0 350))
+      (outline (path signal 150  0 350  0 -350))
+      (outline (path signal 150  0 -350  -350 0))
+      (pin Rect[T]Pad_1198.880000x1198.880000_um (rotate 180) 2 1049.02 0)
+      (pin Rect[T]Pad_1198.880000x1198.880000_um (rotate 180) 1 -1049.02 0)
+    )
+    (padstack Rect[T]Pad_508.000000x1143.000000_um
+      (shape (rect F.Cu -254 -571.5 254 571.5))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1000.000000x2000.000000_um
+      (shape (rect F.Cu -500 -1000 500 1000))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1198.880000x1198.880000_um
+      (shape (rect F.Cu -599.44 -599.44 599.44 599.44))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1500.000000x1250.000000_um
+      (shape (rect F.Cu -750 -625 750 625))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1500.000000x1300.000000_um
+      (shape (rect F.Cu -750 -650 750 650))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1600.200000x1501.140000_um
+      (shape (rect F.Cu -800.1 -750.57 800.1 750.57))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1650.000000x1650.000000_um
+      (shape (rect F.Cu -825 -825 825 825))
+      (shape (rect B.Cu -825 -825 825 825))
+      (attach off)
+    )
+    (padstack "Via[0-1]_889:381_um"
+      (shape (circle F.Cu 889))
+      (shape (circle B.Cu 889))
+      (attach off)
+    )
+  )
+  (network
+    (net /I_BLDC
+      (pins C1-1 P1-1)
+    )
+    (net "Net-(C1-Pad2)"
+      (pins C1-2 R1-1 U1-3)
+    )
+    (net "Net-(C2-Pad1)"
+      (pins C2-1 R2-1 U1-5)
+    )
+    (net GND
+      (pins C2-2 C3-2 C4-2 C5-2 P4-1 R1-2 R5-2 RV1-1 U1-4 RV2-3 R6-2)
+    )
+    (net +5V
+      (pins C3-1 C4-1 P3-1 R3-1 U1-8)
+    )
+    (net /V_ref
+      (pins C5-1 RV1-2 U1-2)
+    )
+    (net "Net-(JP1-Pad1)"
+      (pins JP1-1 R4-2 R5-1)
+    )
+    (net "Net-(JP1-Pad2)"
+      (pins JP1-2 RV1-3)
+    )
+    (net "Net-(JP1-Pad3)"
+      (pins JP1-3 R3-2 R4-1)
+    )
+    (net /V_out
+      (pins P2-1 U1-7 RV2-1)
+    )
+    (net "Net-(RV2-Pad2)"
+      (pins U1-6 RV2-2)
+    )
+    (net /comp_adj
+      (pins R2-2 U1-1 D1-2)
+    )
+    (net "Net-(D1-Pad1)"
+      (pins D1-1 R6-1)
+    )
+    (class kicad_default +5V /I_BLDC /V_out /V_ref /comp_adj GND "Net-(C1-Pad2)"
+      "Net-(C2-Pad1)" "Net-(D1-Pad1)" "Net-(JP1-Pad1)" "Net-(JP1-Pad2)" "Net-(JP1-Pad3)"
+      "Net-(RV2-Pad2)"
+      (circuit
+        (use_via "Via[0-1]_889:381_um")
+      )
+      (rule
+        (width 304.8)
+        (clearance 406.4)
+      )
+    )
+  )
+  (wiring
+  )
+)

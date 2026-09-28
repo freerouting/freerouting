@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "AVR-ZIF-Programmer_AVR-ZIF-Prog",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 260900,
+      "sha256": "28235c657e0016dc3875fa2f03246f19044d105f8d65482d8efc0d9daedd4ac4"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 121570,
+      "sha256": "968e39a259e5f5b343baa29cb70d6733496c09656d27b4a423d8eb541205477f"
+    },
+    "metadata_json": {
+      "bytes": 506,
+      "sha256": "7d132d042ad6aa646d5e2ff68805187376f806cba3353af54785b642270bdbfb"
+    },
+    "final_json": {
+      "bytes": 85345,
+      "sha256": "688207f63f2b0f11ba518d92360c8fa8d0269cfb0d7e10c385b37ab30b13835d"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:31:21.666050+00:00"
+  }
+}

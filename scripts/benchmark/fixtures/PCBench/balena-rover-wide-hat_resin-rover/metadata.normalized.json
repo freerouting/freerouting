@@ -1,0 +1,62 @@
+{
+  "board_id": "balena-rover-wide-hat_resin-rover",
+  "display_name": "balena-rover-wide-hat_resin-rover",
+  "pcbench_directory": "PCBs/balena-rover-wide-hat_resin-rover",
+  "source": "https://github.com/balena-io-experimental/balena-rover-wide-hat",
+  "author": "balena-io-experimental",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:58.754131+00:00",
+  "cad": {
+    "source_version": "KiCad 20170123",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 75,
+    "components": 116,
+    "dimensions_mm": {
+      "width": 85.0,
+      "height": 58.0
+    },
+    "area_cm2": 49.3,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 614,
+    "vias": 55,
+    "track_length_mm": 1684.06,
+    "kicad_drc_violations": 560,
+    "kicad_drc_breakdown": {
+      "total_violations": 560,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 241,
+        "copper_edge_clearance": 1,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 107,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 1,
+        "silk_overlap": 1,
+        "solder_mask_bridge": 81,
+        "starved_thermal": 6,
+        "text_height": 114,
+        "text_thickness": 3
+      },
+      "by_severity": {
+        "error": 330,
+        "warning": 230
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "medium",
+    "plane",
+    "routine",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

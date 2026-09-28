@@ -1,0 +1,32 @@
+{
+  "board": "LoRaWAN_GPS_MINI-ULTRA-PRO",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\LoRaWAN_GPS_MINI-ULTRA-PRO\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 129,
+  "segment_count": 714,
+  "approximate_track_length_mm": 1202.38,
+  "kicad_drc_violations": 526,
+  "generated_at": "2026-08-18T19:17:58.859883+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 526,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 365,
+      "copper_edge_clearance": 55,
+      "courtyards_overlap": 8,
+      "hole_clearance": 12,
+      "hole_to_hole": 5,
+      "lib_footprint_issues": 62,
+      "silk_edge_clearance": 7,
+      "silk_overlap": 1,
+      "solder_mask_bridge": 3,
+      "starved_thermal": 6,
+      "track_dangling": 2
+    },
+    "by_severity": {
+      "error": 449,
+      "warning": 77
+    }
+  }
+}

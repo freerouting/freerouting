@@ -1,0 +1,30 @@
+{
+  "board": "RaspberryPi-PoE_PoELLi_PI",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\RaspberryPi-PoE_PoELLi_PI\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 36,
+  "segment_count": 291,
+  "approximate_track_length_mm": 667.06,
+  "kicad_drc_violations": 251,
+  "generated_at": "2026-08-18T19:37:51.929271+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 251,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 84,
+      "copper_edge_clearance": 55,
+      "courtyards_overlap": 1,
+      "lib_footprint_issues": 46,
+      "mirrored_text_on_front_layer": 2,
+      "silk_edge_clearance": 45,
+      "silk_over_copper": 13,
+      "silk_overlap": 4,
+      "via_dangling": 1
+    },
+    "by_severity": {
+      "error": 140,
+      "warning": 111
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "board": "Sensory_Adaptation_Bot_sa_bot",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Sensory_Adaptation_Bot_sa_bot\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 212,
+  "segment_count": 878,
+  "approximate_track_length_mm": 2897.61,
+  "kicad_drc_violations": 882,
+  "generated_at": "2026-08-18T19:44:01.695187+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 882,
+    "unconnected_count": 7,
+    "by_type": {
+      "annular_width": 14,
+      "clearance": 451,
+      "copper_edge_clearance": 5,
+      "hole_clearance": 30,
+      "hole_to_hole": 3,
+      "holes_co_located": 112,
+      "lib_footprint_issues": 67,
+      "malformed_courtyard": 2,
+      "padstack": 14,
+      "silk_edge_clearance": 12,
+      "silk_over_copper": 109,
+      "silk_overlap": 8,
+      "starved_thermal": 5,
+      "text_height": 36,
+      "track_dangling": 11,
+      "via_dangling": 3
+    },
+    "by_severity": {
+      "error": 507,
+      "warning": 375
+    }
+  }
+}

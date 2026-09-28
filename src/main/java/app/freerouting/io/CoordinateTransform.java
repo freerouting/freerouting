@@ -100,7 +100,7 @@ public class CoordinateTransform implements Serializable {
       double[] centerCoordinates = boardToDsn(boardCircle.center.toFloat());
       result = new Circle(layer, diameter, centerCoordinates[0], centerCoordinates[1]);
     } else {
-      FRLogger.warn("CoordinateTransform.board_to_dsn not yet implemented for p_board_shape");
+      FRLogger.warn("CoordinateTransform.board_to_dsn not yet implemented for boardShape");
       result = null;
     }
     return result;
@@ -148,7 +148,7 @@ public class CoordinateTransform implements Serializable {
       double[] centerCoordinates = boardToDsnRel(boardCircle.center.toFloat());
       result = new Circle(layer, diameter, centerCoordinates[0], centerCoordinates[1]);
     } else {
-      FRLogger.warn("CoordinateTransform.board_to_dsn not yet implemented for p_board_shape");
+      FRLogger.warn("CoordinateTransform.board_to_dsn not yet implemented for boardShape");
       result = null;
     }
     return result;

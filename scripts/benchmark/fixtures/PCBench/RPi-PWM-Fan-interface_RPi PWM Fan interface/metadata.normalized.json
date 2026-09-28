@@ -1,0 +1,64 @@
+{
+  "board_id": "RPi-PWM-Fan-interface_RPi PWM Fan interface",
+  "display_name": "RPi-PWM-Fan-interface_RPi PWM Fan interface",
+  "pcbench_directory": "PCBs/RPi-PWM-Fan-interface_RPi PWM Fan interface",
+  "source": "https://github.com/roens/RPi-PWM-Fan-interface",
+  "author": "roens",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:49.450021+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 9,
+    "components": 5,
+    "dimensions_mm": {
+      "width": 20.57,
+      "height": 18.8
+    },
+    "area_cm2": 3.87,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 18,
+    "vias": 0,
+    "track_length_mm": 42.79,
+    "kicad_drc_violations": 44,
+    "kicad_drc_breakdown": {
+      "total_violations": 44,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 31,
+        "lib_footprint_issues": 5,
+        "solder_mask_bridge": 4,
+        "starved_thermal": 4
+      },
+      "by_severity": {
+        "error": 39,
+        "warning": 5
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.102703+00:00",
+    "elapsed_seconds": 4.62,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 1000.0
+  }
+}

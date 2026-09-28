@@ -97,29 +97,37 @@ public class Circle implements ConvexShape, Serializable {
 
   @Override
   public IntBox boundingBox() {
-    int llx = center.x - radius;
-    int urx = center.x + radius;
-    int lly = center.y - radius;
-    int ury = center.y + radius;
-    return new IntBox(llx, lly, urx, ury);
+    int lowerLeftX = center.x - radius;
+    int upperRightX = center.x + radius;
+    int lowerLeftY = center.y - radius;
+    int upperRightY = center.y + radius;
+    return new IntBox(lowerLeftX, lowerLeftY, upperRightX, upperRightY);
   }
 
   @Override
   public IntOctagon boundingOctagon() {
-    int lx = center.x - radius;
-    int rx = center.x + radius;
-    int ly = center.y - radius;
-    int uy = center.y + radius;
+    int leftX = center.x - radius;
+    int rightX = center.x + radius;
+    int bottomY = center.y - radius;
+    int topY = center.y + radius;
 
     final double sqrt2Minus1 = Math.sqrt(2) - 1;
     final int ceilCornerValue = (int) Math.ceil(sqrt2Minus1 * radius);
     final int floorCornerValue = (int) Math.floor(sqrt2Minus1 * radius);
 
-    int ulx = lx - (center.y + floorCornerValue);
-    int lrx = rx - (center.y - ceilCornerValue);
-    int llx = lx + (center.y - floorCornerValue);
-    int urx = rx + (center.y + ceilCornerValue);
-    return new IntOctagon(lx, ly, rx, uy, ulx, lrx, llx, urx);
+    int upperLeftDiagonalX = leftX - (center.y + floorCornerValue);
+    int lowerRightDiagonalX = rightX - (center.y - ceilCornerValue);
+    int lowerLeftDiagonalX = leftX + (center.y - floorCornerValue);
+    int upperRightDiagonalX = rightX + (center.y + ceilCornerValue);
+    return new IntOctagon(
+        leftX,
+        bottomY,
+        rightX,
+        topY,
+        upperLeftDiagonalX,
+        lowerRightDiagonalX,
+        lowerLeftDiagonalX,
+        upperRightDiagonalX);
   }
 
   @Override
@@ -135,7 +143,7 @@ public class Circle implements ConvexShape, Serializable {
 
   /**
    * Creates a bounding tile shape around this circle, so that the length of the line segments of
-   * the tile is at most p_max_segment_length.
+   * the tile is at most maxSegmentLength.
    */
   public TileShape boundingTile(int maxSegmentLength) {
     int quadrantDivisionCount = this.radius / maxSegmentLength + 1;
@@ -149,19 +157,19 @@ public class Circle implements ConvexShape, Serializable {
       if (i == 0) {
         borderDelta = new IntVector(this.radius, 0);
       } else {
-        double currAngle = i * Math.PI / (2.0 * quadrantDivisionCount);
-        int currX = (int) Math.ceil(Math.sin(currAngle) * this.radius);
-        int currY = (int) Math.ceil(Math.cos(currAngle) * this.radius);
-        borderDelta = new IntVector(currX, currY);
+        double currentAngle = i * Math.PI / (2.0 * quadrantDivisionCount);
+        int currentX = (int) Math.ceil(Math.sin(currentAngle) * this.radius);
+        int currentY = (int) Math.ceil(Math.cos(currentAngle) * this.radius);
+        borderDelta = new IntVector(currentX, currentY);
       }
-      Point currA = this.center.translateBy(borderDelta);
-      Point currB = currA.turn90Degree(1, this.center);
-      Direction currDir = Direction.getInstance(currB.differenceBy(this.center));
-      Line currTangent = new Line(currA, currDir);
-      tangentLineArr[quadrantDivisionCount + i] = currTangent;
-      tangentLineArr[2 * quadrantDivisionCount + i] = currTangent.turn90Degree(1, this.center);
-      tangentLineArr[3 * quadrantDivisionCount + i] = currTangent.turn90Degree(2, this.center);
-      tangentLineArr[i] = currTangent.turn90Degree(3, this.center);
+      Point currentA = this.center.translateBy(borderDelta);
+      Point currentB = currentA.turn90Degree(1, this.center);
+      Direction currentDirection = Direction.getInstance(currentB.differenceBy(this.center));
+      Line currentTangent = new Line(currentA, currentDirection);
+      tangentLineArr[quadrantDivisionCount + i] = currentTangent;
+      tangentLineArr[2 * quadrantDivisionCount + i] = currentTangent.turn90Degree(1, this.center);
+      tangentLineArr[3 * quadrantDivisionCount + i] = currentTangent.turn90Degree(2, this.center);
+      tangentLineArr[i] = currentTangent.turn90Degree(3, this.center);
     }
     return TileShape.getInstance(tangentLineArr);
   }

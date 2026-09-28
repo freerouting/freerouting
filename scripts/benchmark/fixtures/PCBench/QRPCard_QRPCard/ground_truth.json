@@ -1,0 +1,28 @@
+{
+  "board": "QRPCard_QRPCard",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\QRPCard_QRPCard\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 15,
+  "segment_count": 174,
+  "approximate_track_length_mm": 483.13,
+  "kicad_drc_violations": 165,
+  "generated_at": "2026-08-18T19:37:04.652385+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 165,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 111,
+      "copper_edge_clearance": 2,
+      "lib_footprint_issues": 33,
+      "silk_edge_clearance": 14,
+      "silk_over_copper": 2,
+      "silk_overlap": 1,
+      "track_dangling": 2
+    },
+    "by_severity": {
+      "error": 113,
+      "warning": 52
+    }
+  }
+}

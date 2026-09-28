@@ -1,0 +1,24 @@
+{
+  "board": "LiFePO4-Charge-Controller_LiFePO4-Charge-Controller",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\LiFePO4-Charge-Controller_LiFePO4-Charge-Controller\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 1,
+  "segment_count": 334,
+  "approximate_track_length_mm": 888.55,
+  "kicad_drc_violations": 278,
+  "generated_at": "2026-08-18T19:16:42.198929+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 278,
+    "unconnected_count": 0,
+    "by_type": {
+      "silk_edge_clearance": 4,
+      "silk_over_copper": 147,
+      "silk_overlap": 93,
+      "text_height": 34
+    },
+    "by_severity": {
+      "warning": 278
+    }
+  }
+}

@@ -38,19 +38,19 @@ function ConvertFrom-FrScore {
     $scoreStr = $scoreStr.Trim().TrimEnd('.', ',')
 
     # Pattern: 500.00 (2 unrouted and 1 violation)
-    if ($scoreStr -match '^([\d.]+)\s*\(\s*(\d+)\s+unrouted\s+and\s+(\d+)\s+violations?\s*\)') {
-        $score = [double]$matches[1]
+    if ($scoreStr -match '^([\d.,]+)\s*\(\s*(\d+)\s+unrouted\s+and\s+(\d+)\s+violations?\s*\)') {
+        $score = [double]$matches[1].Replace(',', '.')
         $unrouted = [int]$matches[2]
         $violations = [int]$matches[3]
     }
     # Pattern: 0.00 (3 unrouted)
-    elseif ($scoreStr -match '^([\d.]+)\s*\(\s*(\d+)\s+unrouted\s*\)') {
-        $score = [double]$matches[1]
+    elseif ($scoreStr -match '^([\d.,]+)\s*\(\s*(\d+)\s+unrouted\s*\)') {
+        $score = [double]$matches[1].Replace(',', '.')
         $unrouted = [int]$matches[2]
     }
     # Pattern: 987.65
-    elseif ($scoreStr -match '^([\d.]+)$') {
-        $score = [double]$matches[1]
+    elseif ($scoreStr -match '^([\d.,]+)$') {
+        $score = [double]$matches[1].Replace(',', '.')
     }
 
     return [PSCustomObject]@{
@@ -60,41 +60,65 @@ function ConvertFrom-FrScore {
     }
 }
 
-function Get-PhaseMetrics {
-    param([string]$LogPath, [string]$VersionLabel)
+function ConvertTo-ScaledCpuScore {
+    param([int]$CpuScore)
 
-    $fanout = @{
+    if ($CpuScore -gt 10000) {
+        return [int][math]::Round($CpuScore / 1000.0)
+    }
+    return $CpuScore
+}
+
+function Get-PhaseMetrics {
+    param(
+        [string]$LogPath,
+        [string]$VersionLabel,
+        [bool]$ProcessTimedOut = $false
+    )
+
+    $fanout = [ordered]@{
         log_found = $false
+        before = $null
+        after = $null
         smd_pin_count = $null
         escaped_pin_count = $null
         not_routed_pin_count = $null
         escape_rate_pct = $null
         duration_seconds = $null
         cpu_seconds = $null
+        passes_completed = $null
         total_allocated_gb = $null
         peak_heap_mb = $null
-        passes_completed = $null
     }
 
-    $autorouter = @{
+    $autorouter = [ordered]@{
         log_found = $false
+        before = $null
+        after = $null
+        score_before = $null
+        score_after = $null
         initial_unrouted_count = $null
-        passes_completed = $null
-        completion_reason = $null
-        duration_seconds = $null
-        cpu_seconds = $null
-        total_allocated_gb = $null
-        peak_heap_mb = $null
         final_unrouted = $null
         final_violations = $null
         final_score = $null
-    }
-
-    $optimizer = @{
-        log_found = $false
-        passes_completed = $null
         duration_seconds = $null
         cpu_seconds = $null
+        passes_completed = $null
+        total_allocated_gb = $null
+        peak_heap_mb = $null
+        completion_reason = $null
+    }
+
+    $optimizer = [ordered]@{
+        log_found = $false
+        before = $null
+        after = $null
+        score_before = $null
+        score_after = $null
+        final_score = $null
+        duration_seconds = $null
+        cpu_seconds = $null
+        passes_completed = $null
         total_allocated_gb = $null
         peak_heap_mb = $null
     }
@@ -113,14 +137,32 @@ function Get-PhaseMetrics {
             error_count = 0
             load_error = $false
             exceptions = @()
+            timed_out = $ProcessTimedOut
+            metric_source = "none"
+            last_checkpoint = $null
+            cpu_score = $null
+            board_statistics = $null
+            settings_snapshot = $null
         }
     }
 
-    $lines = Get-Content $LogPath
+    # Current and legacy benchmark runs can write the same line to the file logger and stdout.
+    # Parse each exact line once so fallback durations and warning counts remain meaningful.
+    $lines = [System.Collections.Generic.List[string]]::new()
+    $seenLines = [System.Collections.Generic.HashSet[string]]::new()
+    foreach ($line in (Get-Content $LogPath)) {
+        if ($seenLines.Add([string]$line)) {
+            [void]$lines.Add([string]$line)
+        }
+    }
 
     # 1. Warn / Error count
     $logTimedOut = $false
+    $cpuScore = $null
     foreach ($line in $lines) {
+        if ($line -match 'Hardware:\s+\d+\s+CPU cores,\s+(\d+)\s+CPU score') {
+            $cpuScore = ConvertTo-ScaledCpuScore ([int]$matches[1])
+        }
         if ($line -match '\[WARN\]|WARN |\[warning\]') {
             $warnCount++
         }
@@ -198,6 +240,7 @@ function Get-PhaseMetrics {
 
             $scoreParsed = ConvertFrom-FrScore $matches[4]
             $autorouter.final_score = $scoreParsed.Score
+            $autorouter.score_after = $scoreParsed.Score
             $autorouter.final_unrouted = $scoreParsed.Unrouted
             $autorouter.final_violations = $scoreParsed.Violations
 
@@ -209,12 +252,31 @@ function Get-PhaseMetrics {
         }
     }
 
+    # Current autorouter logs include the starting router score. Older versions only expose the
+    # starting unrouted count, so score_before remains null for those records.
+    foreach ($line in $lines) {
+        if ($line -match 'Auto-routing stage started .*?with baseline score ([\d.,]+) for') {
+            $autorouter.score_before = [double]$matches[1].Replace(',', '.')
+            $autorouter.log_found = $true
+        }
+    }
+
+    # Capture the initial count even when the process is terminated before a session summary.
+    foreach ($line in $lines) {
+        if ($autorouter.initial_unrouted_count -eq $null -and
+            $line -match 'Auto-routing (?:stage|phase|session) started .*?for (\d+) unrouted (?:nets|items)') {
+            $autorouter.initial_unrouted_count = [int]$matches[1]
+            $autorouter.log_found = $true
+        }
+    }
+
     # Autorouter passes completed + fallback duration sum
     $maxPass = 0
     $passDurationSum = 0.0
     $lastPassScore = $null
     $lastPassUnrouted = $null
     $lastPassViolations = $null
+    $lastCheckpoint = $null
     foreach ($line in $lines) {
         if ($line -match 'Auto-rout(?:er|ing) pass #(\d+) on board') {
             $passNum = [int]$matches[1]
@@ -226,11 +288,22 @@ function Get-PhaseMetrics {
                 $passDurationSum += [double]$matches[1]
             }
             # Extract final score from the pass line for fallback
-            if ($line -match 'score of ([\d.,]+(?:\s*\([^)]*\))?)') {
+            if ($line -match 'score(?: of)?\s+([\d.,]+(?:\s*\([^)]*\))?)') {
                 $parsed = ConvertFrom-FrScore $matches[1]
                 $lastPassScore = $parsed.Score
                 $lastPassUnrouted = $parsed.Unrouted
                 $lastPassViolations = $parsed.Violations
+                $lastCheckpoint = [PSCustomObject]@{
+                    pass_number = $passNum
+                    duration_seconds = if ($line -match 'completed in ([\d.]+) seconds') {
+                        [double]$matches[1]
+                    } else {
+                        $null
+                    }
+                    score = $parsed.Score
+                    unrouted = $parsed.Unrouted
+                    violations = $parsed.Violations
+                }
             }
         }
     }
@@ -257,16 +330,63 @@ function Get-PhaseMetrics {
         $optimizer.passes_completed = $maxOptPass
     }
 
+    foreach ($line in $lines) {
+        if ($line -match 'Optimization stage started .*?Baseline router score: ([\d.,]+), optimizer score: ([\d.,]+),') {
+            $optimizer.score_before = [double]$matches[2].Replace(',', '.')
+            $optimizer.log_found = $true
+        }
+        if ($line -match 'Optimization stage .*?baseline optimizer score: ([\d.,]+), final router score: ([\d.,]+), final optimizer score: ([\d.,]+),') {
+            $optimizer.score_before = [double]$matches[1].Replace(',', '.')
+            $optimizer.score_after = [double]$matches[3].Replace(',', '.')
+            $optimizer.log_found = $true
+        }
+        if ($line -match 'Optimization stage .*?completed in ([^,]+), using ([\d.,]+) total CPU seconds, ([\d.,]+) (?:MB|GB) total allocated, and ([\d.,]+) MB peak heap usage\.') {
+            $optimizer.duration_seconds = ConvertFrom-FrDuration $matches[1]
+            $optimizer.cpu_seconds = [double]$matches[2].Replace(',', '.')
+            $allocVal = [double]$matches[3].Replace(',', '.')
+            $optimizer.total_allocated_gb =
+                if ($line.Contains('GB total allocated')) { $allocVal } else { [math]::Round($allocVal / 1024.0, 4) }
+            $optimizer.peak_heap_mb = [double]$matches[4].Replace(',', '.')
+            $optimizer.log_found = $true
+        }
+        if ($line -match 'Optimizer pass #\d+: optimizer score ([\d.,]+) -> ([\d.,]+)') {
+            if ($null -eq $optimizer.score_before) {
+                $optimizer.score_before = [double]$matches[1].Replace(',', '.')
+            }
+            $optimizer.score_after = [double]$matches[2].Replace(',', '.')
+        }
+    }
+
     # Optimizer session/phase summary (new structured format)
     $RE_OPTIMIZER = 'Optimiz(?:er (?:session|phase)|ation stage) ([\w ]+):? started with score ([^,]+), completed in ([^,]+), final score: ([^,]+), using ([\d.,]+) total CPU seconds, ([\d.,]+) (?:MB|GB) total allocated, and ([\d.,]+) MB peak heap usage\.'
     foreach ($line in $lines) {
         if ($line -match $RE_OPTIMIZER) {
             $optimizer.log_found = $true
+            $optimizer.score_before = (ConvertFrom-FrScore $matches[2]).Score
+            $optimizer.score_after = (ConvertFrom-FrScore $matches[4]).Score
             $optimizer.duration_seconds = ConvertFrom-FrDuration $matches[3]
             $optimizer.cpu_seconds = [double]($matches[5].Replace(',', '.'))
             $allocVal = [double]($matches[6].Replace(',', '.'))
             $optimizer.total_allocated_gb = if ($line.Contains('GB total allocated')) { $allocVal } else { [math]::Round($allocVal / 1024.0, 4) }
             $optimizer.peak_heap_mb = [double]($matches[7].Replace(',', '.'))
+        }
+    }
+
+    # Resource fallback for current optimizer summaries whose status text differs from the
+    # structured v1.9 wording. Keep these values independent of score parsing.
+    foreach ($line in $lines) {
+        if ($line -match 'Optimization stage .*?using ([\d.,]+) total CPU seconds, ([\d.,]+) (GB|MB) total allocated, and ([\d.,]+) MB peak heap usage\.') {
+            $optimizer.log_found = $true
+            $optimizer.cpu_seconds = [double]$matches[1].Replace(',', '.')
+            $allocVal = [double]$matches[2].Replace(',', '.')
+            $optimizer.total_allocated_gb =
+                if ($matches[3] -eq 'GB') { $allocVal } else { [math]::Round($allocVal / 1024.0, 4) }
+            $optimizer.peak_heap_mb = [double]$matches[4].Replace(',', '.')
+        }
+        if ($line -match 'Optimization stage .*?final optimizer score: ([\d.,]+)') {
+            $optimizer.score_after =
+                [double]$matches[1].TrimEnd('.', ',').Replace(',', '.')
+            $optimizer.log_found = $true
         }
     }
 
@@ -280,11 +400,12 @@ function Get-PhaseMetrics {
                 if ($matches[2]) {
                     $scoreStr = $matches[2].TrimEnd('.', ',').Replace(',', '.')
                     $autorouter.final_score = [double]$scoreStr
+                    $autorouter.score_after = $autorouter.final_score
                 }
                 if ($matches[3]) {
                     $autorouter.final_unrouted = [int]$matches[3]
                 } else {
-                    $autorouter.final_unrouted = 0
+                    $autorouter.final_unrouted = $null
                 }
                 $autorouter.final_violations = 0
             }
@@ -296,10 +417,15 @@ function Get-PhaseMetrics {
         $autorouter.duration_seconds = [math]::Round($passDurationSum, 2)
     }
     # Fallback final score from last pass line
+    $metricSource = "none"
     if ($autorouter.log_found -and $autorouter.final_score -eq $null -and $lastPassScore -ne $null) {
         $autorouter.final_score = $lastPassScore
+        $autorouter.score_after = $lastPassScore
         $autorouter.final_unrouted = $lastPassUnrouted
         $autorouter.final_violations = $lastPassViolations
+        $metricSource = "last_checkpoint"
+    } elseif ($autorouter.final_score -ne $null) {
+        $metricSource = "final_summary"
     }
 
     if (-not $optimizer.log_found) {
@@ -315,6 +441,12 @@ function Get-PhaseMetrics {
     # When structured optimizer summary missing, fall back to summed pass durations
     if ($optimizer.log_found -and $optimizer.duration_seconds -eq $null -and $optPassDurationSum -gt 0) {
         $optimizer.duration_seconds = [math]::Round($optPassDurationSum, 2)
+    }
+    if ($optimizer.passes_completed -eq $null) {
+        $optimizer.passes_completed = 0
+    }
+    if ($optimizer.score_after -ne $null) {
+        $optimizer.final_score = $optimizer.score_after
     }
 
     # Fallback memory extraction from the background sampler
@@ -352,6 +484,11 @@ function Get-PhaseMetrics {
         error_count = $errorCount
         load_error = $loadError
         exceptions = ($exceptions | Sort-Object)
-        timed_out = $logTimedOut
+        timed_out = ($logTimedOut -or $ProcessTimedOut)
+        metric_source = $metricSource
+        last_checkpoint = $lastCheckpoint
+        cpu_score = $cpuScore
+        board_statistics = $null
+        settings_snapshot = $null
     }
 }

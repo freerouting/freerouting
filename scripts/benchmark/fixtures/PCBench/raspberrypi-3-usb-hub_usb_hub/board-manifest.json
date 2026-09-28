@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "raspberrypi-3-usb-hub_usb_hub",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 64609,
+      "sha256": "ea0dafe720b483fec17a5c6b287b3a33c24482da268173ad3373d2acf74693d9"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 71218,
+      "sha256": "495bb4fca5b90fad0fb18be81789a9b141aad6cfb4fd5f6587763f9ddfbe7950"
+    },
+    "metadata_json": {
+      "bytes": 687,
+      "sha256": "3f017a606fdce8aa047e6ecf802b7e3f8ab7f2e5a11262a9988c83631c5db617"
+    },
+    "final_json": {
+      "bytes": 46943,
+      "sha256": "8eb356266f8767608eefb4e253041d4a82f74cb08476de6fe10d00c3637d8581"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:37:46.137157+00:00"
+  }
+}

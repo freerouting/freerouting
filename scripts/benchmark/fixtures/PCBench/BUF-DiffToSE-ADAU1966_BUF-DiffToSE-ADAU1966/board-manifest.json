@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "BUF-DiffToSE-ADAU1966_BUF-DiffToSE-ADAU1966",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 567097,
+      "sha256": "fe3088a92ceaa67a7a9f73570ce7aa8703c936178b6e3dd2bb7063b8f1395eeb"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 265284,
+      "sha256": "78ea523a390a521957a4c878e404e416ea185f91cc18733860124370a4e31982"
+    },
+    "metadata_json": {
+      "bytes": 662,
+      "sha256": "aa7bfdd2180f534ad2ca6d714d99369856147168374406943493651338bd8009"
+    },
+    "final_json": {
+      "bytes": 222724,
+      "sha256": "bb187f11699253261e41fa5f0e6dfe9e2a6563f2909d95df963d14d6d6f343ff"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:36:45.730265+00:00"
+  }
+}

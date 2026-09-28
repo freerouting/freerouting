@@ -1,0 +1,291 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\Raspberry-Pi-Soft-Power-Controller_Switching Supply TPS563208 MCI\reference-routed.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  161000 -109500  116000 -109500  116000 -89500  161000 -89500
+            161000 -109500)
+    )
+    (plane /OUT (polygon F.Cu 0  142900 -91800  142100 -91800  142000 -101400  136100 -101400
+            136100 -98200  130200 -98200  130200 -94300  126300 -94300  126300 -90100
+            142900 -90100  142900 -91800))
+    (plane /OUT (polygon B.Cu 0  142900 -91800  142100 -91800  142000 -101400  136100 -101400
+            136100 -98200  130200 -98200  130200 -94300  126300 -94300  126300 -90100
+            142900 -90100  142900 -91800))
+    (plane /ToCoil (polygon F.Cu 0  152400 -100100  149300 -100100  149300 -101400  143200 -101400
+            143200 -92600  152400 -92600  152400 -100100))
+    (plane /ToCoil (polygon B.Cu 0  152400 -100100  149300 -100100  149300 -101400  147400 -101400
+            147400 -104700  143200 -104700  143200 -92600  152400 -92600
+            152400 -100100))
+    (plane /IN (polygon B.Cu 0  142900 -105000  147400 -105000  147400 -109000  126500 -109000
+            126400 -105500  131600 -105500  131600 -104600  142900 -104600
+            142900 -105000))
+    (plane /IN (polygon F.Cu 0  142900 -105000  147400 -105000  147400 -109000  126500 -109000
+            126400 -105500  131600 -105500  131600 -104600  142900 -104600
+            142900 -105000))
+    (plane GND (polygon B.Cu 0  116600 -90000  160500 -90000  160500 -109000  116500 -109100
+            116600 -90000))
+    (plane GND (polygon F.Cu 0  160500 -108900  116600 -109100  116600 -90100  160500 -90100
+            160500 -108900))
+    (via "Via[0-1]_600:400_um")
+    (rule
+      (width 250)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component Capacitors_SMD:C_0805_HandSoldering
+      (place C1 141800 -104300 front 90 (PN 10uF))
+    )
+    (component Capacitors_SMD:C_0805_HandSoldering::1
+      (place C2 150950 -100350 front -90 (PN 100nF))
+    )
+    (component Capacitors_SMD:C_1206_HandSoldering
+      (place C3 132650 -98650 front 90 (PN 47uF))
+    )
+    (component Resistors_SMD:R_0402
+      (place R1 142900 -90950 front 0 (PN 55k))
+      (place R2 147000 -91000 front 0 (PN 10k))
+    )
+    (component "TO_SOT_Packages_SMD:SOT-23-6"
+      (place U1 147450 -104250 front 0 (PN TPS563200))
+    )
+    (component freetronics_footprints:1X02
+      (place J1 128000 -104150 front -90 (PN "9V-IN"))
+      (place J2 157200 -100750 front 90 (PN EN))
+      (place J3 128000 -93050 front -90 (PN "5V-OUT"))
+    )
+    (component "My Libraries:KT-MPLCH-0740-Hand"
+      (place "L-KEMET1" 142400 -96600 front 180 (PN 33uH))
+    )
+  )
+  (library
+    (image Capacitors_SMD:C_0805_HandSoldering
+      (outline (polygon signal 0  -2295 -995  -2295 995  2295 995  2295 -995))
+      (outline (path signal 150  -1000 -625  -1000 625))
+      (outline (path signal 150  1000 -625  -1000 -625))
+      (outline (path signal 150  1000 625  1000 -625))
+      (outline (path signal 150  -1000 625  1000 625))
+      (outline (path signal 150  500 850  -500 850))
+      (outline (path signal 150  -500 -850  500 -850))
+      (pin Rect[T]Pad_1500.000000x1250.000000_um 1 -1250 0)
+      (pin Rect[T]Pad_1500.000000x1250.000000_um 2 1250 0)
+    )
+    (image Capacitors_SMD:C_0805_HandSoldering::1
+      (outline (polygon signal 0  2295 995  2295 -995  -2295 -995  -2295 995))
+      (outline (path signal 150  -1000 -625  -1000 625))
+      (outline (path signal 150  1000 -625  -1000 -625))
+      (outline (path signal 150  1000 625  1000 -625))
+      (outline (path signal 150  -1000 625  1000 625))
+      (outline (path signal 150  500 850  -500 850))
+      (outline (path signal 150  -500 -850  500 -850))
+      (pin Rect[T]Pad_1500.000000x1250.000000_um 1 -1250 0)
+      (pin Rect[T]Pad_1500.000000x1250.000000_um 2 1250 0)
+    )
+    (image Capacitors_SMD:C_1206_HandSoldering
+      (outline (polygon signal 0  -3295 -1145  -3295 1145  3295 1145  3295 -1145))
+      (outline (path signal 150  -1600 -800  -1600 800))
+      (outline (path signal 150  1600 -800  -1600 -800))
+      (outline (path signal 150  1600 800  1600 -800))
+      (outline (path signal 150  -1600 800  1600 800))
+      (outline (path signal 150  1000 1025  -1000 1025))
+      (outline (path signal 150  -1000 -1025  1000 -1025))
+      (pin Rect[T]Pad_2000.000000x1600.000000_um 1 -2000 0)
+      (pin Rect[T]Pad_2000.000000x1600.000000_um 2 2000 0)
+    )
+    (image Resistors_SMD:R_0402
+      (outline (polygon signal 0  945 -645  -945 -645  -945 645  945 645))
+      (outline (path signal 100  -500 -250  -500 250))
+      (outline (path signal 100  500 -250  -500 -250))
+      (outline (path signal 100  500 250  500 -250))
+      (outline (path signal 100  -500 250  500 250))
+      (outline (path signal 150  250 525  -250 525))
+      (outline (path signal 150  -250 -525  250 -525))
+      (pin Rect[T]Pad_400.000000x600.000000_um 1 -450 0)
+      (pin Rect[T]Pad_400.000000x600.000000_um 2 450 0)
+    )
+    (image "TO_SOT_Packages_SMD:SOT-23-6"
+      (outline (polygon signal 0  1895 -1795  -1895 -1795  -1895 1795  1895 1795))
+      (outline (path signal 120  -900 -1610  900 -1610))
+      (outline (path signal 120  900 1610  -1550 1610))
+      (outline (path signal 150  900 1550  -900 1550))
+      (outline (path signal 150  -900 1550  -900 -1550))
+      (outline (path signal 150  900 -1550  -900 -1550))
+      (outline (path signal 150  900 1550  900 -1550))
+      (pin Rect[T]Pad_1060.000000x650.000000_um 1 -1100 950)
+      (pin Rect[T]Pad_1060.000000x650.000000_um 2 -1100 0)
+      (pin Rect[T]Pad_1060.000000x650.000000_um 3 -1100 -950)
+      (pin Rect[T]Pad_1060.000000x650.000000_um 4 1100 -950)
+      (pin Rect[T]Pad_1060.000000x650.000000_um 6 1100 950)
+      (pin Rect[T]Pad_1060.000000x650.000000_um 5 1100 0)
+    )
+    (image freetronics_footprints:1X02
+      (outline (path signal 203.2  -635 1270  635 1270))
+      (outline (path signal 203.2  635 1270  1270 635))
+      (outline (path signal 203.2  1270 -635  635 -1270))
+      (outline (path signal 203.2  1270 635  1905 1270))
+      (outline (path signal 203.2  1905 1270  3175 1270))
+      (outline (path signal 203.2  3175 1270  3810 635))
+      (outline (path signal 203.2  3810 -635  3175 -1270))
+      (outline (path signal 203.2  3175 -1270  1905 -1270))
+      (outline (path signal 203.2  1905 -1270  1270 -635))
+      (outline (path signal 203.2  -1270 635  -1270 -635))
+      (outline (path signal 203.2  -635 1270  -1270 635))
+      (outline (path signal 203.2  -1270 -635  -635 -1270))
+      (outline (path signal 203.2  635 -1270  -635 -1270))
+      (outline (path signal 203.2  3810 635  3810 -635))
+      (pin Oval[A]Pad_1524.000000x1524.000000_um (rotate 90) 1 0 0)
+      (pin Oval[A]Pad_1524.000000x1524.000000_um (rotate 90) 2 2540 0)
+    )
+    (image "My Libraries:KT-MPLCH-0740-Hand"
+      (outline (path signal 150  -3950 3580  -3950 -3320))
+      (outline (path signal 150  3850 -3320  -3950 -3320))
+      (outline (path signal 150  3850 3580  3850 -3320))
+      (outline (path signal 150  -3950 3580  3850 3580))
+      (pin Rect[T]Pad_3000.000000x3500.000000_um 1 -3320 0)
+      (pin Rect[T]Pad_3000.000000x3500.000000_um 2 3070 0)
+    )
+    (padstack Oval[A]Pad_1524.000000x1524.000000_um
+      (shape (path F.Cu 1524  0 0  0 0))
+      (shape (path B.Cu 1524  0 0  0 0))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2000.000000x1600.000000_um
+      (shape (rect F.Cu -1000 -800 1000 800))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_3000.000000x3500.000000_um
+      (shape (rect F.Cu -1500 -1750 1500 1750))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_400.000000x600.000000_um
+      (shape (rect F.Cu -200 -300 200 300))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1060.000000x650.000000_um
+      (shape (rect F.Cu -530 -325 530 325))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1500.000000x1250.000000_um
+      (shape (rect F.Cu -750 -625 750 625))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net GND
+      (pins C1-2 C3-1 R2-2 U1-1 J1-1 J2-1 J3-2)
+    )
+    (net "Net-(C2-Pad2)"
+      (pins C2-2 U1-6)
+    )
+    (net "Net-(R1-Pad2)"
+      (pins R1-2 R2-1 U1-4)
+    )
+    (net /IN
+      (pins C1-1 U1-3 J1-2)
+    )
+    (net /ToCoil
+      (pins C2-1 U1-2 "L-KEMET1"-1)
+    )
+    (net /OUT
+      (pins C3-2 R1-1 J3-1 "L-KEMET1"-2)
+    )
+    (net /ENABLE
+      (pins U1-5 J2-2)
+    )
+    (class kicad_default /ENABLE /IN /OUT /ToCoil GND "Net-(C2-Pad2)" "Net-(R1-Pad2)"
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 250)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+    (wire (path F.Cu 250  148550 -103300  149250 -103300  150950 -101600)(net "Net-(C2-Pad2)")(type route))
+    (wire (path F.Cu 250  149250 -103300  150950 -101600)(net "Net-(C2-Pad2)")(type route))
+    (wire (path F.Cu 250  144900 -91000  146550 -91000)(net "Net-(R1-Pad2)")(type route))
+    (wire (path F.Cu 250  148550 -105200  151900 -105200)(net "Net-(R1-Pad2)")(type route))
+    (wire (path F.Cu 250  144850 -90950  143350 -90950)(net "Net-(R1-Pad2)")(type route))
+    (wire (path F.Cu 250  144900 -91000  144850 -90950)(net "Net-(R1-Pad2)")(type route))
+    (wire (path B.Cu 250  152600 -91000  144900 -91000)(net "Net-(R1-Pad2)")(type route))
+    (wire (path B.Cu 250  153400 -91800  152600 -91000)(net "Net-(R1-Pad2)")(type route))
+    (wire (path B.Cu 250  153400 -103700  153400 -91800)(net "Net-(R1-Pad2)")(type route))
+    (wire (path B.Cu 250  151900 -105200  153400 -103700)(net "Net-(R1-Pad2)")(type route))
+    (wire (path F.Cu 250  141800 -105550  143350 -105550  143400 -105600)(net /IN)(type route))
+    (wire (path F.Cu 250  141800 -105550  141800 -105600  142900 -106700)(net /IN)(type route))
+    (wire (path F.Cu 250  141800 -105550  141800 -107200)(net /IN)(type route))
+    (wire (path F.Cu 250  141800 -105550  141550 -105550  140400 -106700)(net /IN)(type route))
+    (wire (path F.Cu 250  141800 -105550  140150 -105550  140100 -105600)(net /IN)(type route))
+    (wire (path F.Cu 250  146350 -104250  145750 -104250  144800 -103300)(net /ToCoil)(type route))
+    (wire (path F.Cu 250  146350 -104250  144750 -104250  143800 -103300)(net /ToCoil)(type route))
+    (wire (path F.Cu 250  146350 -104250  145050 -104250  145000 -104200)(net /ToCoil)(type route))
+    (wire (path F.Cu 250  146350 -104250  143950 -104250  143900 -104200)(net /ToCoil)(type route))
+    (wire (path F.Cu 250  145900 -96650  148550 -96650  150100 -95100  150700 -95100)(net /ToCoil)(type route))
+    (wire (path F.Cu 250  149850 -96650  149900 -96700)(net /ToCoil)(type route))
+    (wire (path F.Cu 250  145900 -96650  149850 -96650)(net /ToCoil)(type route))
+    (wire (path F.Cu 250  145900 -96650  146650 -96650  149700 -93600)(net /ToCoil)(type route))
+    (wire (path B.Cu 250  149700 -93600  149700 -94300)(net /ToCoil)(type route))
+    (wire (path F.Cu 250  135300 -94200  136750 -94200  139200 -96650)(net /OUT)(type route))
+    (wire (path F.Cu 250  137950 -95400  135300 -95400  135300 -95500)(net /OUT)(type route))
+    (wire (path F.Cu 250  135300 -94300  135300 -94200  135300 -92700)(net /OUT)(type route))
+    (wire (path F.Cu 250  135300 -95500  135300 -94300)(net /OUT)(type route))
+    (wire (path F.Cu 250  135300 -95500  135300 -96600)(net /OUT)(type route))
+    (wire (path F.Cu 250  137950 -95400  139200 -96650)(net /OUT)(type route))
+    (wire (path F.Cu 250  135300 -96600  139150 -96600  139200 -96650)(net /OUT)(type route))
+    (wire (path F.Cu 250  135300 -96600  135300 -96600)(net /OUT)(type route))
+    (wire (path F.Cu 250  139200 -96650  139200 -96600  135300 -92700  135400 -92800)(net /OUT)(type route))
+    (wire (path F.Cu 250  139200 -96650  137050 -96650)(net /OUT)(type route))
+    (wire (path F.Cu 250  139200 -96650  138250 -96650)(net /OUT)(type route))
+    (wire (path F.Cu 250  139200 -96650  139200 -96200)(net /OUT)(type route))
+    (wire (path F.Cu 250  148550 -104250  152650 -104250)(net /ENABLE)(type route))
+    (wire (path F.Cu 250  155190 -98210  157200 -98210)(net /ENABLE)(type route))
+    (wire (path F.Cu 250  154500 -98900  155190 -98210)(net /ENABLE)(type route))
+    (wire (path F.Cu 250  154500 -102400  154500 -98900)(net /ENABLE)(type route))
+    (wire (path F.Cu 250  152650 -104250  154500 -102400)(net /ENABLE)(type route))
+    (via "Via[0-1]_600:400_um"  144900 -91000 (net "Net-(R1-Pad2)")(type route))
+    (via "Via[0-1]_600:400_um"  151900 -105200 (net "Net-(R1-Pad2)")(type route))
+    (via "Via[0-1]_600:400_um"  143400 -105600 (net /IN)(type route))
+    (via "Via[0-1]_600:400_um"  142900 -106700 (net /IN)(type route))
+    (via "Via[0-1]_600:400_um"  141800 -107200 (net /IN)(type route))
+    (via "Via[0-1]_600:400_um"  140400 -106700 (net /IN)(type route))
+    (via "Via[0-1]_600:400_um"  140100 -105600 (net /IN)(type route))
+    (via "Via[0-1]_600:400_um"  144800 -103300 (net /ToCoil)(type route))
+    (via "Via[0-1]_600:400_um"  145000 -104200 (net /ToCoil)(type route))
+    (via "Via[0-1]_600:400_um"  143800 -103300 (net /ToCoil)(type route))
+    (via "Via[0-1]_600:400_um"  143900 -104200 (net /ToCoil)(type route))
+    (via "Via[0-1]_600:400_um"  150700 -95100 (net /ToCoil)(type route))
+    (via "Via[0-1]_600:400_um"  149900 -96700 (net /ToCoil)(type route))
+    (via "Via[0-1]_600:400_um"  149700 -93600 (net /ToCoil)(type route))
+    (via "Via[0-1]_600:400_um"  135300 -94300 (net /OUT)(type route))
+    (via "Via[0-1]_600:400_um"  135300 -95400 (net /OUT)(type route))
+    (via "Via[0-1]_600:400_um"  135400 -92800 (net /OUT)(type route))
+    (via "Via[0-1]_600:400_um"  135300 -96600 (net /OUT)(type route))
+  )
+)

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "RGBMatrixPanelCPLD-PhotonBackpack_RGBMatrixPanel_CPLD_negative",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 196463,
+      "sha256": "fbe09219cdf0eb647b73cae4ef1736f587b981774afa8c28293bbc93545d9ee7"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 113869,
+      "sha256": "7115f50eb0e6f9d80fb8096c2db12c3d9b9b26215228f50a65f4a2f2ecb087a3"
+    },
+    "metadata_json": {
+      "bytes": 626,
+      "sha256": "780fc17bebff4946f3b0f3a551e59198cf9163dd188553ca275d8b2c3737cf98"
+    },
+    "final_json": {
+      "bytes": 116196,
+      "sha256": "a96aa17b6aa6717a3d8a5f39708d1854c20535f7c87f6b2d14e20dcc40fd07c5"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:41:01.181934+00:00"
+  }
+}

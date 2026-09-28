@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "FRM16_Relay_Module_I2C_Controller_relay_controller",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 110963,
+      "sha256": "7b36ba5fe59e00a11c553251d8100d2f9f3d3d0f987ade0b5eb2ca223d263c07"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 101359,
+      "sha256": "5b07246a530c5202f8ad09967f5579c05045aa8093961a3af7ca7aa818b400ae"
+    },
+    "metadata_json": {
+      "bytes": 736,
+      "sha256": "dd4e0c8dd6c8bf3ed16c3643c1369f8eec41930d050d06afd071d899cca66f96"
+    },
+    "final_json": {
+      "bytes": 73861,
+      "sha256": "c0c9544a5ff327f176c37bb7f492fc68a419115b5b646408dcd2d459a3daae4b"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:50:40.944834+00:00"
+  }
+}

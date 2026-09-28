@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "z2amiller_sensorboard",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 64235,
+      "sha256": "c7294af9ad3c54f99c14c1283ce8155ded3955f5e0194e3e7d78457a00f06e66"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 81636,
+      "sha256": "3b8c7dc964cfaabb0898430229e8e08d2d210d6e74f55829caf3a9c840e9515a"
+    },
+    "metadata_json": {
+      "bytes": 564,
+      "sha256": "8de09adc49cd28222ee52caa3d64fe0870d217c5bc60ebeb3e9025ca7bfcaa7e"
+    },
+    "final_json": {
+      "bytes": 52291,
+      "sha256": "9e400c395a8817a8f85b29094ee5f16e65778135981d64ed8f12d06894e11005"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:59:11.000264+00:00"
+  }
+}

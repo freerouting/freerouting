@@ -1,0 +1,60 @@
+{
+  "board_id": "eurorack_headphones_eurorack_headphones",
+  "display_name": "eurorack_headphones_eurorack_headphones",
+  "pcbench_directory": "PCBs/eurorack_headphones_eurorack_headphones",
+  "source": "https://github.com/russellmcc/eurorack_headphones",
+  "author": "russellmcc",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:24.225724+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 23,
+    "components": 30,
+    "dimensions_mm": {
+      "width": 97.5,
+      "height": 41.5
+    },
+    "area_cm2": 40.46,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 202,
+    "vias": 10,
+    "track_length_mm": 754.83,
+    "kicad_drc_violations": 180,
+    "kicad_drc_breakdown": {
+      "total_violations": 180,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 6,
+        "clearance": 107,
+        "copper_edge_clearance": 6,
+        "lib_footprint_issues": 30,
+        "malformed_courtyard": 1,
+        "silk_edge_clearance": 9,
+        "silk_overlap": 18,
+        "starved_thermal": 1,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 121,
+        "warning": 59
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

@@ -1,0 +1,60 @@
+{
+  "board_id": "xwhatits-capsense-controller_amkey-usb",
+  "display_name": "xwhatits-capsense-controller_amkey-usb",
+  "pcbench_directory": "PCBs/xwhatits-capsense-controller_amkey-usb",
+  "source": "https://github.com/BASLQC/xwhatits-capsense-controller",
+  "author": "BASLQC",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:25.393738+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 39,
+    "dimensions_mm": {
+      "width": 123.0,
+      "height": 82.25
+    },
+    "area_cm2": 101.17,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 678,
+    "vias": 89,
+    "track_length_mm": 2313.42,
+    "kicad_drc_violations": 500,
+    "kicad_drc_breakdown": {
+      "total_violations": 500,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 203,
+        "copper_edge_clearance": 10,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 191,
+        "silk_overlap": 7,
+        "starved_thermal": 13,
+        "text_height": 69,
+        "track_dangling": 2,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 226,
+        "warning": 274
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

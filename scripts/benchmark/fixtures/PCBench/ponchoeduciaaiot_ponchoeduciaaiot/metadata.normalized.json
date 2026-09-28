@@ -1,0 +1,61 @@
+{
+  "board_id": "ponchoeduciaaiot_ponchoeduciaaiot",
+  "display_name": "ponchoeduciaaiot_ponchoeduciaaiot",
+  "pcbench_directory": "PCBs/ponchoeduciaaiot_ponchoeduciaaiot",
+  "source": "https://github.com/ernesto-g/ponchoeduciaaiot",
+  "author": "ernesto-g",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:23:03.366185+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 83,
+    "components": 43,
+    "dimensions_mm": {
+      "width": 87.0,
+      "height": 81.2
+    },
+    "area_cm2": 70.64,
+    "zones": 5
+  },
+  "reference": {
+    "segments": 599,
+    "vias": 24,
+    "track_length_mm": 1897.62,
+    "kicad_drc_violations": 424,
+    "kicad_drc_breakdown": {
+      "total_violations": 424,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 120,
+        "copper_edge_clearance": 7,
+        "courtyards_overlap": 3,
+        "lib_footprint_issues": 42,
+        "silk_edge_clearance": 15,
+        "silk_over_copper": 46,
+        "silk_overlap": 150,
+        "solder_mask_bridge": 33,
+        "text_height": 6,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 163,
+        "warning": 261
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "medium",
+    "plane",
+    "routine",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

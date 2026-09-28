@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "rc2014_bank_switcher_z80_cpm_mmu",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 112733,
+      "sha256": "348c768ca868a457b01f81eaf434a372a64a807165e2a10dcd8035bdb7a09b59"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 59167,
+      "sha256": "678e8c0c253c7f5df521cfee0df123aef722bcaf344b0f97b03c22eede2258b2"
+    },
+    "metadata_json": {
+      "bytes": 502,
+      "sha256": "0106796df2437298d3c1cb5eee3f02a07dbebecd2d9efdfb2d4d8e2fc8a6cc09"
+    },
+    "final_json": {
+      "bytes": 52800,
+      "sha256": "792c7b83dbed0c39807c139ee8fa69c95c4773696f909eab0cbf5955f6d06624"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:38:17.090964+00:00"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "board": "tmk_HHKB_controller",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\tmk_HHKB_controller\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 118,
+  "segment_count": 895,
+  "approximate_track_length_mm": 2875.69,
+  "kicad_drc_violations": 635,
+  "generated_at": "2026-08-18T19:53:10.365954+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 635,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 437,
+      "copper_edge_clearance": 2,
+      "items_not_allowed": 2,
+      "lib_footprint_issues": 93,
+      "silk_edge_clearance": 3,
+      "silk_over_copper": 81,
+      "silk_overlap": 9,
+      "solder_mask_bridge": 4,
+      "starved_thermal": 1,
+      "text_height": 1,
+      "track_dangling": 2
+    },
+    "by_severity": {
+      "error": 446,
+      "warning": 189
+    }
+  }
+}

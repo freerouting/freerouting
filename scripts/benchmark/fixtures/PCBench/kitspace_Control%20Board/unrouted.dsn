@@ -1,0 +1,1278 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\kitspace_Control%20Board\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  147248 173997  147742 173956  148232 173875  148713 173753
+            149182 173592  149636 173393  150073 173157  150488 172885  150879 172580
+            151244 172244  151580 171879  151885 171488  152157 171073  152393 170636
+            152592 170182  152753 169713  152875 169232  152956 168742  152997 168248
+            153000 168000  153000 5000  152997 4751.94  152956 4257.53  152875 3768.18
+            152753 3287.25  152592 2818.02  152393 2363.69  152157 1927.38
+            151885 1512.05  151580 1120.55  151244 755.546  150879 419.538
+            150488 114.82  150073 -156.527  149636 -392.65  149182 -591.936
+            148713 -753.023  148232 -874.811  147742 -956.469  147248 -997.437
+            147000 -1000  5000 -1000  4751.94 -997.437  4257.53 -956.469
+            3768.18 -874.811  3287.25 -753.023  2818.02 -591.936  2363.69 -392.65
+            1927.38 -156.527  1512.05 114.82  1120.55 419.538  755.546 755.546
+            419.538 1120.55  114.82 1512.05  -156.527 1927.38  -392.65 2363.69
+            -591.936 2818.02  -753.023 3287.25  -874.811 3768.18  -956.469 4257.53
+            -997.437 4751.94  -1000 5000  -1000 168000  -997.437 168248
+            -956.469 168742  -874.811 169232  -753.023 169713  -591.936 170182
+            -392.65 170636  -156.527 171073  114.82 171488  419.538 171879
+            755.546 172244  1120.55 172580  1512.05 172885  1927.38 173157
+            2363.69 173393  2818.02 173592  3287.25 173753  3768.18 173875
+            4257.53 173956  4751.94 173997  5000 174000  147000 174000  147248 173997)
+    )
+    (via "Via[0-1]_800:400_um")
+    (rule
+      (width 250)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component "JPL Robotics:rover_image"
+      (place y1 64185.8 135750.3 front 0 (PN rover_silkscreen))
+    )
+    (component "JPL Robotics:455-1708-ND"
+      (place J10 22783.8 8547.1 front 0 (PN 6posheader))
+    )
+    (component "JPL Robotics:AE9986-ND"
+      (place U2 91465.4 36131.5 front 180 (PN "LM358-N"))
+    )
+    (component "JPL Robotics:AE9986-ND::1"
+      (place U1 91465.4 50457.1 front 180 (PN "LM358-N"))
+    )
+    (component "JPL Robotics:ED1501-ND"
+      (place J13 79019.4 4889.5 front 180 (PN "ED1501-ND"))
+    )
+    (component "JPL Robotics:ED2989-ND USB Conn"
+      (place J14 110973 11747.5 front 0 (PN "ED2989-ND-USB"))
+      (place J12 24765 161036 front 180 (PN "ED2989-ND-USB"))
+    )
+    (component "JPL Robotics:D24V22F12 Regulator"
+      (place J11 84963 6858 front 0 (PN "S7038-ND"))
+    )
+    (component Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal
+      (place C17 79057.5 53213 front -90 (PN 100nf))
+      (place C3 135509 108268 front -90 (PN 100nf))
+      (place C5 14732 149479 front -90 (PN 100nf))
+      (place C4 135382 127635 front -90 (PN 100nf))
+      (place C2 129730 49911 front -90 (PN 100nf))
+      (place C6 22288.5 98742.5 front -90 (PN 100nf))
+      (place C16 75755.5 53213 front -90 (PN 100nf))
+      (place R1 109982 97409 front -90 (PN 4.7K))
+    )
+    (component "JPL Robotics:6x1 Header Pin 0.1 Pitch"
+      (place J8 21209 14668.5 front 0 (PN 6posheader))
+    )
+    (component "JPL Robotics:ED2580-ND"
+      (place J15 83756.5 164973 front 0 (PN "ED2580-ND"))
+      (place J16_2 128206 165227 front 0 (PN "ED2580-ND"))
+      (place J16 130556 7366 front 0 (PN "ED2580-ND"))
+    )
+    (component "JPL Robotics:ED2627-ND"
+      (place J5 15430.5 57277 front 0 (PN "ED2627-ND"))
+      (place J1 136334 68072 front 180 (PN "ED2627-ND"))
+      (place J4 103696 117856 front 180 (PN "ED2627-ND"))
+      (place J3 50292 7874 front 0 (PN "ED2627-ND"))
+      (place J2 48133 107632 front 0 (PN "ED2627-ND"))
+    )
+    (component "JPL Robotics:ED2744-ND"
+      (place J17 144272 31623 front 90 (PN "ED2744-ND"))
+      (place J25 6921.5 132588 front -90 (PN "ED2744-ND"))
+      (place J21 7810.5 95504 front -90 (PN "ED2744-ND"))
+      (place J20 6921.5 155575 front -90 (PN "ED2744-ND"))
+      (place J19 144653 113094 front 90 (PN "ED2744-ND"))
+      (place J24 144590 136080 front 90 (PN "ED2744-ND"))
+      (place J22 7937.5 36830 front -90 (PN "ED2744-ND"))
+      (place J18 144716 90106.5 front 90 (PN "ED2744-ND"))
+      (place J23 144780 67183 front 90 (PN "ED2744-ND"))
+      (place J26 8001 59817 front -90 (PN "ED2744-ND"))
+    )
+    (component "JPL Robotics:Raspberry pi footprint"
+      (place M1 15367 129476 front -90 (PN Mounting_Holes))
+    )
+    (component "JPL Robotics:S7038-ND"
+      (place J9 116776 160655 front -90 (PN "S7038-ND"))
+    )
+    (component "JPL Robotics:S9175-ND"
+      (place J7 128270 130683 front -90 (PN "S9175-ND"))
+      (place J6 116904 130800 front -90 (PN "S9175-ND"))
+    )
+    (component Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal::1
+      (place C1 20764.5 156654 front 0 (PN 0.1mF))
+      (place C9 127444 149288 front 0 (PN 100nf))
+      (place C12 107823 53721 front 0 (PN 100nF))
+      (place C13 107506 26098.5 front 0 (PN 100nF))
+      (place C14 96329.5 53848 front 0 (PN 100nF))
+      (place C15 96393 25971.5 front 0 (PN 100nF))
+      (place R2 112014 166306 front 0 (PN 10K))
+    )
+    (component TestPoint:TestPoint_Pad_1.0x1.0mm
+      (place T21 121348 35750.5 front 0 (PN test_point))
+      (place T12 74231.5 31305.5 front 0 (PN test_point))
+      (place T19 105791 23431.5 front 0 (PN test_point))
+      (place T18 104458 57340.5 front 0 (PN test_point))
+      (place T17 74295 29083 front 0 (PN test_point))
+      (place T16 74168 33591.5 front 0 (PN test_point))
+      (place T15 74295 38163.5 front 0 (PN test_point))
+      (place T14 121348 37973 front 0 (PN test_point))
+      (place T13 74295 40513 front 0 (PN test_point))
+      (place T8 105791 21717 front 0 (PN test_point))
+      (place T7 104458 59055 front 0 (PN test_point))
+      (place T6 89382.6 11328.4 front 0 (PN test_point))
+      (place T5 89408 9207.5 front 0 (PN test_point))
+      (place T4 85090 145415 front 0 (PN test_point))
+      (place T3 85064.6 148552 front 0 (PN test_point))
+      (place T2 85128.1 151308 front 0 (PN test_point))
+      (place T1 85115.4 154140 front 0 (PN test_point))
+      (place T20 121348 42481.5 front 0 (PN test_point))
+    )
+    (component TestPoint:TestPoint_Pad_1.0x1.0mm::1
+      (place T11 74231.5 35941 front 180 (PN test_point))
+      (place T9 121348 39751 front 180 (PN test_point))
+      (place T10 121412 33845.5 front 180 (PN test_point))
+    )
+    (component "JPL Robotics:Roboclaw Mount"
+      (place RC4 74168 65913 front 0 (PN RoboClaw))
+      (place RC2 75565 158750 front 180 (PN RoboClaw))
+      (place RC1 109982 16256 front 0 (PN RoboClaw))
+      (place RC3 76835 58801 front 180 (PN RoboClaw))
+      (place RC5 41402 109093 front 180 (PN RoboClaw))
+    )
+    (component Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal::2
+      (place R8 103950 43180 front 180 (PN 10K))
+      (place C10 32004 124396 front 180 (PN 100nf))
+      (place C11 24066.5 42037 front 180 (PN 100nf))
+      (place R10 104013 29464 front 180 (PN 10K))
+      (place R6 104330 35687 front 180 (PN 10K))
+      (place R7 115506 43370.5 front 180 (PN 22K))
+      (place R9 115126 29400.5 front 180 (PN 22K))
+      (place R5 115443 35623.5 front 180 (PN 22K))
+      (place R4 103950 49657 front 180 (PN 10K))
+      (place R3 115443 49657 front 180 (PN 22K))
+    )
+    (component Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal::3
+      (place C8 138100 76060.3 front 90 (PN 100nf))
+      (place C7 16256 18732.5 front 90 (PN 100nf))
+    )
+    (component "JPL Robotics:#6THRU-HOLE"
+      (place MH1 5379.6 5849.6 front 0 (PN "#6THRU-HOLE"))
+      (place MH2 5379.6 166228 front 0 (PN "#6THRU-HOLE"))
+      (place MH3 146620 166140 front 0 (PN "#6THRU-HOLE"))
+      (place MH4 146602 5849.6 front 0 (PN "#6THRU-HOLE"))
+    )
+    (component "JPL Robotics:497-2738-5-ND"
+      (place D1 98234.5 162458 front 0 (PN D))
+    )
+    (component "JPL Robotics:507-1937-1-ND"
+      (place F1 98171 168872 front 0 (PN Fuse))
+    )
+  )
+  (library
+    (image "JPL Robotics:rover_image"
+    )
+    (image "JPL Robotics:455-1708-ND"
+      (outline (path signal 150  -2000 -2000  -2000 2000))
+      (outline (path signal 150  -2000 2000  12000 2000))
+      (outline (path signal 150  12000 2000  12000 -2000))
+      (outline (path signal 150  12000 -2000  -2000 -2000))
+      (pin Round[A]Pad_1524.000000_um 1 0 0)
+      (pin Round[A]Pad_1524.000000_um 2 2000 0)
+      (pin Round[A]Pad_1524.000000_um 3 4000 0)
+      (pin Round[A]Pad_1524.000000_um 4 6000 0)
+      (pin Round[A]Pad_1524.000000_um 5 8000 0)
+      (pin Round[A]Pad_1524.000000_um 6 10000 0)
+    )
+    (image "JPL Robotics:AE9986-ND"
+      (outline (path signal 150  -1270 9525  -1270 6985))
+      (outline (path signal 150  8890 9525  8890 6985))
+      (outline (path signal 150  8890 -1905  -1270 -1905))
+      (outline (path signal 150  -1270 9525  8890 9525))
+      (outline (path signal 150  -1270 6985  -1270 -1905))
+      (outline (path signal 150  8890 -1905  8890 6985))
+      (pin Round[A]Pad_1700.000000_um 8 0 7620)
+      (pin Round[A]Pad_1700.000000_um 7 2540 7620)
+      (pin Round[A]Pad_1700.000000_um 6 5080 7620)
+      (pin Round[A]Pad_1700.000000_um 5 7620 7620)
+      (pin Round[A]Pad_1700.000000_um 4 7620 0)
+      (pin Round[A]Pad_1700.000000_um 3 5080 0)
+      (pin Round[A]Pad_1700.000000_um 2 2540 0)
+      (pin Round[A]Pad_1700.000000_um 1 0 0)
+    )
+    (image "JPL Robotics:AE9986-ND::1"
+      (outline (path signal 150  8890 -1905  8890 6985))
+      (outline (path signal 150  -1270 6985  -1270 -1905))
+      (outline (path signal 150  -1270 9525  8890 9525))
+      (outline (path signal 150  8890 -1905  -1270 -1905))
+      (outline (path signal 150  8890 9525  8890 6985))
+      (outline (path signal 150  -1270 9525  -1270 6985))
+      (pin Round[A]Pad_1700.000000_um 1 0 0)
+      (pin Round[A]Pad_1700.000000_um 2 2540 0)
+      (pin Round[A]Pad_1700.000000_um 3 5080 0)
+      (pin Round[A]Pad_1700.000000_um 4 7620 0)
+      (pin Round[A]Pad_1700.000000_um 5 7620 7620)
+      (pin Round[A]Pad_1700.000000_um 6 5080 7620)
+      (pin Round[A]Pad_1700.000000_um 7 2540 7620)
+      (pin Round[A]Pad_1700.000000_um 8 0 7620)
+    )
+    (image "JPL Robotics:ED1501-ND"
+      (outline (path signal 150  -1905 3810  -1905 -1905))
+      (outline (path signal 150  5715 3810  -1905 3810))
+      (outline (path signal 150  5715 -1905  5715 3810))
+      (outline (path signal 150  -1905 -1905  5715 -1905))
+      (pin Round[A]Pad_1800.000000_um 2 3500 0)
+      (pin Rect[A]Pad_1800.000000x1800.000000_um 1 0 0)
+    )
+    (image "JPL Robotics:ED2989-ND USB Conn"
+      (outline (path signal 150  9000 -12500  9000 1500))
+      (outline (path signal 150  -9000 -12500  9000 -12500))
+      (outline (path signal 150  -9000 1500  -9000 -12500))
+      (outline (path signal 150  9000 1500  -9000 1500))
+      (pin Round[A]Pad_2850.000000_um @1 6570 -2710)
+      (pin Round[A]Pad_2850.000000_um @2 -6570 -2710)
+      (pin Round[A]Pad_1750.000000_um (rotate 90) 4 3500 0)
+      (pin Round[A]Pad_1750.000000_um 3 1000 0)
+      (pin Round[A]Pad_1750.000000_um 2 -1000 0)
+      (pin Round[A]Pad_1750.000000_um 1 -3500 0)
+    )
+    (image "JPL Robotics:D24V22F12 Regulator"
+      (outline (path signal 150  16530 -1270  -1270 -1270))
+      (outline (path signal 150  -1270 16530  -1270 -1270))
+      (outline (path signal 150  16530 16530  -1270 16530))
+      (outline (path signal 150  16530 -1270  16530 16530))
+      (pin Round[A]Pad_1560.000000_um 5 10160 0)
+      (pin Round[A]Pad_1560.000000_um 4 7620 0)
+      (pin Round[A]Pad_1560.000000_um 3 5080 0)
+      (pin Round[A]Pad_1560.000000_um 2 2540 0)
+      (pin Round[A]Pad_1560.000000_um 1 0 0)
+      (pin Round[A]Pad_3400.000000_um @1 1030 14230)
+      (pin Round[A]Pad_3400.000000_um @2 14230 1030)
+    )
+    (image Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal
+      (outline (polygon signal 0  8665 1495  8665 -1495  -1045 -1495  -1045 1495))
+      (outline (path signal 120  7080 -1370  7080 -1040))
+      (outline (path signal 120  540 -1370  7080 -1370))
+      (outline (path signal 120  540 -1040  540 -1370))
+      (outline (path signal 120  7080 1370  7080 1040))
+      (outline (path signal 120  540 1370  7080 1370))
+      (outline (path signal 120  540 1040  540 1370))
+      (outline (path signal 100  7620 0  6960 0))
+      (outline (path signal 100  0 0  660 0))
+      (outline (path signal 100  6960 1250  660 1250))
+      (outline (path signal 100  6960 -1250  6960 1250))
+      (outline (path signal 100  660 -1250  6960 -1250))
+      (outline (path signal 100  660 1250  660 -1250))
+      (pin Oval[A]Pad_1600.000000x1600.000000_um 2 7620 0)
+      (pin Round[A]Pad_1600.000000_um 1 0 0)
+    )
+    (image "JPL Robotics:6x1 Header Pin 0.1 Pitch"
+      (outline (path signal 150  14224 1524  -1524 1524))
+      (outline (path signal 150  14224 -1524  14224 1524))
+      (outline (path signal 150  -1524 -1524  14224 -1524))
+      (outline (path signal 150  -1524 1524  -1524 -1524))
+      (pin Round[A]Pad_1524.000000_um 6 12700 0)
+      (pin Round[A]Pad_1524.000000_um 5 10160 0)
+      (pin Round[A]Pad_1524.000000_um 4 7620 0)
+      (pin Round[A]Pad_1524.000000_um 3 5080 0)
+      (pin Round[A]Pad_1524.000000_um 2 2540 0)
+      (pin Round[A]Pad_1524.000000_um 1 0 0)
+    )
+    (image "JPL Robotics:ED2580-ND"
+      (outline (path signal 150  -3810 5080  -3810 0))
+      (outline (path signal 150  8890 5080  -3810 5080))
+      (outline (path signal 150  8890 -5080  8890 5080))
+      (outline (path signal 150  -3810 -5080  8890 -5080))
+      (outline (path signal 150  -3810 0  -3810 -5080))
+      (pin Round[A]Pad_2500.000000_um 2 5080 0)
+      (pin Rect[A]Pad_2500.000000x2500.000000_um 1 0 0)
+    )
+    (image "JPL Robotics:ED2627-ND"
+      (outline (path signal 150  20320 -4445  -2540 -4445))
+      (outline (path signal 150  20320 4445  20320 -4445))
+      (outline (path signal 150  -2540 4445  20320 4445))
+      (outline (path signal 150  -2540 -4445  -2540 4445))
+      (pin Round[A]Pad_1750.000000_um 6 17500 0)
+      (pin Round[A]Pad_1750.000000_um 5 14000 0)
+      (pin Round[A]Pad_1750.000000_um 4 10500 0)
+      (pin Round[A]Pad_1750.000000_um 3 7000 0)
+      (pin Round[A]Pad_1750.000000_um 2 3500 0)
+      (pin Rect[A]Pad_1750.000000x1750.000000_um 1 0 0)
+    )
+    (image "JPL Robotics:ED2744-ND"
+      (outline (path signal 150  -2500 3500  -2500 -3500))
+      (outline (path signal 150  20000 3500  -2500 3500))
+      (outline (path signal 150  20000 -3500  20000 3500))
+      (outline (path signal 150  -2500 -3500  20000 -3500))
+      (pin Round[A]Pad_2000.000000_um 6 17500 0)
+      (pin Round[A]Pad_2000.000000_um 5 14000 0)
+      (pin Round[A]Pad_2000.000000_um 4 10500 0)
+      (pin Round[A]Pad_2000.000000_um 3 7000 0)
+      (pin Round[A]Pad_2000.000000_um 2 3500 0)
+      (pin Rect[A]Pad_1750.000000x1750.000000_um 1 0 0)
+    )
+    (image "JPL Robotics:Raspberry pi footprint"
+      (outline (path signal 500  85090 56515  85090 49530))
+      (outline (path signal 500  0 56515  0 49530))
+      (outline (path signal 500  85090 0  0 0))
+      (outline (path signal 500  85090 49530  85090 0))
+      (outline (path signal 500  0 56515  85090 56515))
+      (outline (path signal 500  0 0  0 49530))
+      (pin Round[A]Pad_4600.000000_um @1 61500 3500)
+      (pin Round[A]Pad_4600.000000_um @2 61500 52500)
+      (pin Round[A]Pad_4600.000000_um @3 3500 52500)
+      (pin Round[A]Pad_4600.000000_um @4 3500 3500)
+    )
+    (image "JPL Robotics:S7038-ND"
+      (outline (path signal 150  17780 0  17780 20320))
+      (outline (path signal 150  0 20320  17800 20320))
+      (outline (path signal 150  0 0  0 20300))
+      (outline (path signal 150  0 0  17800 0))
+      (pin Round[A]Pad_3200.000000_um @1 15700 18100)
+      (pin Round[A]Pad_3200.000000_um @2 2200 2100)
+      (pin Round[A]Pad_1650.000000_um 5 15890 1270)
+      (pin Round[A]Pad_1650.000000_um 4 13350 1270)
+      (pin Round[A]Pad_1650.000000_um 3 10810 1270)
+      (pin Round[A]Pad_1650.000000_um 2 8270 1270)
+      (pin Round[A]Pad_1650.000000_um 1 5730 1270)
+    )
+    (image "JPL Robotics:S9175-ND"
+      (outline (path signal 150  -2540 5080  -2540 -2540))
+      (outline (path signal 150  50800 5080  -2540 5080))
+      (outline (path signal 150  50800 -2540  50800 5080))
+      (outline (path signal 150  -2540 -2540  50800 -2540))
+      (pin Round[A]Pad_1524.000000_um 40 48260 2540)
+      (pin Round[A]Pad_1524.000000_um 39 48260 0)
+      (pin Round[A]Pad_1524.000000_um 38 45720 2540)
+      (pin Round[A]Pad_1524.000000_um 37 45720 0)
+      (pin Round[A]Pad_1524.000000_um 36 43180 2540)
+      (pin Round[A]Pad_1524.000000_um 35 43180 0)
+      (pin Round[A]Pad_1524.000000_um 34 40640 2540)
+      (pin Round[A]Pad_1524.000000_um 33 40640 0)
+      (pin Round[A]Pad_1524.000000_um 32 38100 2540)
+      (pin Round[A]Pad_1524.000000_um 31 38100 0)
+      (pin Round[A]Pad_1524.000000_um 30 35560 2540)
+      (pin Round[A]Pad_1524.000000_um 29 35560 0)
+      (pin Round[A]Pad_1524.000000_um 28 33020 2540)
+      (pin Round[A]Pad_1524.000000_um 27 33020 0)
+      (pin Round[A]Pad_1524.000000_um 26 30480 2540)
+      (pin Round[A]Pad_1524.000000_um 25 30480 0)
+      (pin Round[A]Pad_1524.000000_um 24 27940 2540)
+      (pin Round[A]Pad_1524.000000_um 23 27940 0)
+      (pin Round[A]Pad_1524.000000_um 22 25400 2540)
+      (pin Round[A]Pad_1524.000000_um 21 25400 0)
+      (pin Round[A]Pad_1524.000000_um 20 22860 2540)
+      (pin Round[A]Pad_1524.000000_um 19 22860 0)
+      (pin Round[A]Pad_1524.000000_um 18 20320 2540)
+      (pin Round[A]Pad_1524.000000_um 17 20320 0)
+      (pin Round[A]Pad_1524.000000_um 16 17780 2540)
+      (pin Round[A]Pad_1524.000000_um 15 17780 0)
+      (pin Round[A]Pad_1524.000000_um 14 15240 2540)
+      (pin Round[A]Pad_1524.000000_um 13 15240 0)
+      (pin Round[A]Pad_1524.000000_um 12 12700 2540)
+      (pin Round[A]Pad_1524.000000_um 11 12700 0)
+      (pin Round[A]Pad_1524.000000_um 10 10160 2540)
+      (pin Round[A]Pad_1524.000000_um 9 10160 0)
+      (pin Round[A]Pad_1524.000000_um 8 7620 2540)
+      (pin Round[A]Pad_1524.000000_um 7 7620 0)
+      (pin Round[A]Pad_1524.000000_um 6 5080 2540)
+      (pin Round[A]Pad_1524.000000_um 5 5080 0)
+      (pin Round[A]Pad_1524.000000_um 4 2540 2540)
+      (pin Round[A]Pad_1524.000000_um 3 2540 0)
+      (pin Round[A]Pad_1524.000000_um 2 0 2540)
+      (pin Round[A]Pad_1524.000000_um 1 0 0)
+    )
+    (image Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal::1
+      (outline (polygon signal 0  8665 -1495  -1045 -1495  -1045 1495  8665 1495))
+      (outline (path signal 120  7080 -1370  7080 -1040))
+      (outline (path signal 120  540 -1370  7080 -1370))
+      (outline (path signal 120  540 -1040  540 -1370))
+      (outline (path signal 120  7080 1370  7080 1040))
+      (outline (path signal 120  540 1370  7080 1370))
+      (outline (path signal 120  540 1040  540 1370))
+      (outline (path signal 100  7620 0  6960 0))
+      (outline (path signal 100  0 0  660 0))
+      (outline (path signal 100  6960 1250  660 1250))
+      (outline (path signal 100  6960 -1250  6960 1250))
+      (outline (path signal 100  660 -1250  6960 -1250))
+      (outline (path signal 100  660 1250  660 -1250))
+      (pin Oval[A]Pad_1600.000000x1600.000000_um 2 7620 0)
+      (pin Round[A]Pad_1600.000000_um 1 0 0)
+    )
+    (image TestPoint:TestPoint_Pad_1.0x1.0mm
+      (outline (polygon signal 0  995 -995  -995 -995  -995 995  995 995))
+      (outline (path signal 120  -700 -700  -700 700))
+      (outline (path signal 120  700 -700  -700 -700))
+      (outline (path signal 120  700 700  700 -700))
+      (outline (path signal 120  -700 700  700 700))
+      (pin Rect[T]Pad_1000.000000x1000.000000_um 1 0 0)
+    )
+    (image TestPoint:TestPoint_Pad_1.0x1.0mm::1
+      (outline (polygon signal 0  -995 995  995 995  995 -995  -995 -995))
+      (outline (path signal 120  -700 -700  -700 700))
+      (outline (path signal 120  700 -700  -700 -700))
+      (outline (path signal 120  700 700  700 -700))
+      (outline (path signal 120  -700 700  700 700))
+      (pin Rect[T]Pad_1000.000000x1000.000000_um 1 0 0)
+    )
+    (image "JPL Robotics:Roboclaw Mount"
+      (outline (path signal 500  -2490 45390  -2490 -2870))
+      (outline (path signal 500  39166 45390  -2490 45390))
+      (outline (path signal 500  39166 -2870  39166 45390))
+      (outline (path signal 500  -2490 -2870  39166 -2870))
+      (pin Round[A]Pad_3800.000000_um @1 36449 42545)
+      (pin Round[A]Pad_3800.000000_um @2 0 42545)
+      (pin Round[A]Pad_3800.000000_um @3 36449 0)
+      (pin Round[A]Pad_3800.000000_um @4 0 0)
+      (pin Round[A]Pad_1600.000000_um 25 29620 730)
+      (pin Round[A]Pad_1600.000000_um 24 27080 730)
+      (pin Round[A]Pad_1600.000000_um 23 24540 730)
+      (pin Round[A]Pad_1600.000000_um 22 22000 730)
+      (pin Round[A]Pad_1600.000000_um 21 19460 730)
+      (pin Round[A]Pad_1600.000000_um 20 29620 5810)
+      (pin Round[A]Pad_1600.000000_um 19 29620 3270)
+      (pin Round[A]Pad_1600.000000_um 18 27080 5810)
+      (pin Round[A]Pad_1600.000000_um 17 27080 3270)
+      (pin Round[A]Pad_1600.000000_um 16 24540 5810)
+      (pin Round[A]Pad_1600.000000_um 15 24540 3270)
+      (pin Round[A]Pad_1600.000000_um 14 22000 5810)
+      (pin Round[A]Pad_1600.000000_um 13 22000 3270)
+      (pin Round[A]Pad_1600.000000_um 12 19460 5810)
+      (pin Round[A]Pad_1600.000000_um 11 19460 3270)
+      (pin Round[A]Pad_1600.000000_um 10 16920 5810)
+      (pin Round[A]Pad_1600.000000_um 9 16920 3270)
+      (pin Round[A]Pad_1600.000000_um 8 14380 5810)
+      (pin Round[A]Pad_1600.000000_um 7 14380 3270)
+      (pin Round[A]Pad_1600.000000_um 6 11840 5810)
+      (pin Round[A]Pad_1600.000000_um 5 11840 3270)
+      (pin Round[A]Pad_1600.000000_um 4 9300 5810)
+      (pin Round[A]Pad_1600.000000_um 3 9300 3270)
+      (pin Round[A]Pad_1600.000000_um 2 6760 5810)
+      (pin Round[A]Pad_1600.000000_um 1 6760 3270)
+    )
+    (image Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal::2
+      (outline (polygon signal 0  -1045 1495  8665 1495  8665 -1495  -1045 -1495))
+      (outline (path signal 120  7080 -1370  7080 -1040))
+      (outline (path signal 120  540 -1370  7080 -1370))
+      (outline (path signal 120  540 -1040  540 -1370))
+      (outline (path signal 120  7080 1370  7080 1040))
+      (outline (path signal 120  540 1370  7080 1370))
+      (outline (path signal 120  540 1040  540 1370))
+      (outline (path signal 100  7620 0  6960 0))
+      (outline (path signal 100  0 0  660 0))
+      (outline (path signal 100  6960 1250  660 1250))
+      (outline (path signal 100  6960 -1250  6960 1250))
+      (outline (path signal 100  660 -1250  6960 -1250))
+      (outline (path signal 100  660 1250  660 -1250))
+      (pin Oval[A]Pad_1600.000000x1600.000000_um 2 7620 0)
+      (pin Round[A]Pad_1600.000000_um 1 0 0)
+    )
+    (image Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal::3
+      (outline (polygon signal 0  -1045 -1495  -1045 1495  8665 1495  8665 -1495))
+      (outline (path signal 120  7080 -1370  7080 -1040))
+      (outline (path signal 120  540 -1370  7080 -1370))
+      (outline (path signal 120  540 -1040  540 -1370))
+      (outline (path signal 120  7080 1370  7080 1040))
+      (outline (path signal 120  540 1370  7080 1370))
+      (outline (path signal 120  540 1040  540 1370))
+      (outline (path signal 100  7620 0  6960 0))
+      (outline (path signal 100  0 0  660 0))
+      (outline (path signal 100  6960 1250  660 1250))
+      (outline (path signal 100  6960 -1250  6960 1250))
+      (outline (path signal 100  660 -1250  6960 -1250))
+      (outline (path signal 100  660 1250  660 -1250))
+      (pin Oval[A]Pad_1600.000000x1600.000000_um 2 7620 0)
+      (pin Round[A]Pad_1600.000000_um 1 0 0)
+    )
+    (image "JPL Robotics:#6THRU-HOLE"
+      (pin Round[A]Pad_6500.000000_um @1 0 0)
+    )
+    (image "JPL Robotics:497-2738-5-ND"
+      (outline (path signal 150  2794 0  3810 0))
+      (outline (path signal 150  1778 -762  1778 0))
+      (outline (path signal 150  2794 0  1778 -762))
+      (outline (path signal 150  1778 762  2794 0))
+      (outline (path signal 150  1778 0  1778 762))
+      (outline (path signal 150  1016 0  1778 0))
+      (pin Round[A]Pad_1550.000000_um 2 5000 0)
+      (pin Rect[A]Pad_1550.000000x1550.000000_um 1 0 0)
+    )
+    (image "JPL Robotics:507-1937-1-ND"
+      (outline (path signal 150  -1270 -1270  -1270 0))
+      (outline (path signal 150  6350 -1270  -1270 -1270))
+      (outline (path signal 150  6350 1270  6350 -1270))
+      (outline (path signal 150  -1270 1270  6350 1270))
+      (outline (path signal 150  -1270 0  -1270 1270))
+      (pin Round[A]Pad_1550.000000_um 2 5080 0)
+      (pin Rect[A]Pad_1550.000000x1550.000000_um 1 0 0)
+    )
+    (padstack Round[A]Pad_1524.000000_um
+      (shape (circle F.Cu 1524))
+      (shape (circle B.Cu 1524))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1550.000000_um
+      (shape (circle F.Cu 1550))
+      (shape (circle B.Cu 1550))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1560.000000_um
+      (shape (circle F.Cu 1560))
+      (shape (circle B.Cu 1560))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1600.000000_um
+      (shape (circle F.Cu 1600))
+      (shape (circle B.Cu 1600))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1650.000000_um
+      (shape (circle F.Cu 1650))
+      (shape (circle B.Cu 1650))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1700.000000_um
+      (shape (circle F.Cu 1700))
+      (shape (circle B.Cu 1700))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1750.000000_um
+      (shape (circle F.Cu 1750))
+      (shape (circle B.Cu 1750))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1800.000000_um
+      (shape (circle F.Cu 1800))
+      (shape (circle B.Cu 1800))
+      (attach off)
+    )
+    (padstack Round[A]Pad_2000.000000_um
+      (shape (circle F.Cu 2000))
+      (shape (circle B.Cu 2000))
+      (attach off)
+    )
+    (padstack Round[A]Pad_2500.000000_um
+      (shape (circle F.Cu 2500))
+      (shape (circle B.Cu 2500))
+      (attach off)
+    )
+    (padstack Round[A]Pad_2850.000000_um
+      (shape (circle F.Cu 2850))
+      (shape (circle B.Cu 2850))
+      (attach off)
+    )
+    (padstack Round[A]Pad_3200.000000_um
+      (shape (circle F.Cu 3200))
+      (shape (circle B.Cu 3200))
+      (attach off)
+    )
+    (padstack Round[A]Pad_3400.000000_um
+      (shape (circle F.Cu 3400))
+      (shape (circle B.Cu 3400))
+      (attach off)
+    )
+    (padstack Round[A]Pad_3800.000000_um
+      (shape (circle F.Cu 3800))
+      (shape (circle B.Cu 3800))
+      (attach off)
+    )
+    (padstack Round[A]Pad_4600.000000_um
+      (shape (circle F.Cu 4600))
+      (shape (circle B.Cu 4600))
+      (attach off)
+    )
+    (padstack Round[A]Pad_6500.000000_um
+      (shape (circle F.Cu 6500))
+      (shape (circle B.Cu 6500))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_1600.000000x1600.000000_um
+      (shape (path F.Cu 1600  0 0  0 0))
+      (shape (path B.Cu 1600  0 0  0 0))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_2500.000000x2500.000000_um
+      (shape (rect F.Cu -1250 -1250 1250 1250))
+      (shape (rect B.Cu -1250 -1250 1250 1250))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1000.000000x1000.000000_um
+      (shape (rect F.Cu -500 -500 500 500))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1550.000000x1550.000000_um
+      (shape (rect F.Cu -775 -775 775 775))
+      (shape (rect B.Cu -775 -775 775 775))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1750.000000x1750.000000_um
+      (shape (rect F.Cu -875 -875 875 875))
+      (shape (rect B.Cu -875 -875 875 875))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1800.000000x1800.000000_um
+      (shape (rect F.Cu -900 -900 900 900))
+      (shape (rect B.Cu -900 -900 900 900))
+      (attach off)
+    )
+    (padstack "Via[0-1]_800:400_um"
+      (shape (circle F.Cu 800))
+      (shape (circle B.Cu 800))
+      (attach off)
+    )
+  )
+  (network
+    (net /RC1M1A
+      (pins J1-1 J17-1)
+    )
+    (net /RC1M1B
+      (pins J1-2 J17-2)
+    )
+    (net /RC1EN1A
+      (pins J17-5 RC1-7)
+    )
+    (net /RC1EN1B
+      (pins J17-6 RC1-8)
+    )
+    (net /RC1EN2B
+      (pins J18-6 RC1-10)
+    )
+    (net /RC1EN2A
+      (pins J18-5 RC1-9)
+    )
+    (net /RC1M2B
+      (pins J1-6 J18-2)
+    )
+    (net /RC1M2A
+      (pins J1-5 J18-1)
+    )
+    (net /RC2M2B
+      (pins J20-2 J2-6)
+    )
+    (net /RC2M2A
+      (pins J20-1 J2-5)
+    )
+    (net /RC2M1B
+      (pins J19-2 J2-2)
+    )
+    (net /RC2M1A
+      (pins J19-1 J2-1)
+    )
+    (net /RC2EN1A
+      (pins J19-5 RC2-7)
+    )
+    (net /RC2EN2A
+      (pins J20-5 RC2-9)
+    )
+    (net /RC2EN2B
+      (pins J20-6 RC2-10)
+    )
+    (net /RC2EN1B
+      (pins J19-6 RC2-8)
+    )
+    (net /RC4EN1A_RAW
+      (pins J23-5 T9-1 R3-1)
+    )
+    (net GND
+      (pins J10-3 U2-4 U1-4 J13-2 J14-4 J11-4 C17-2 J8-1 J15-2 J5-4 J1-4 J4-4 J17-3
+        J25-3 J21-3 J20-3 J19-3 J24-3 J22-3 J18-3 J23-3 J12-4 J9-4 J9-3 J7-39 J7-34
+        J7-30 J7-25 J7-20 J7-14 J7-9 J7-6 C3-2 C5-2 C4-2 C2-2 C1-2 J26-3 T15-1 T6-1
+        T2-1 RC4-2 R8-2 RC2-2 RC1-2 C10-2 C9-2 C8-2 C7-2 C6-2 C12-1 C13-1 C14-1 C15-1
+        C11-2 C16-2 R10-2 RC3-2 RC5-2 J16-2 R6-2 R4-2 J3-4 J2-4)
+    )
+    (net /RC5EN1A_RAW
+      (pins J25-5 T10-1 R5-1)
+    )
+    (net /RC4EN2A_RAW
+      (pins J24-5 T20-1 R7-1)
+    )
+    (net /RC5EN2A_RAW
+      (pins J26-5 T21-1 R9-1)
+    )
+    (net /RXD
+      (pins J7-10 J6-10 RC4-22 RC2-22 RC1-22 RC3-22 RC5-22 R1-1)
+    )
+    (net +5V
+      (pins J10-2 U2-8 U1-8 J14-1 C17-1 J17-4 J25-4 J21-4 J20-4 J19-4 J24-4 J22-4
+        J18-4 J23-4 J12-1 J9-5 C3-1 C5-1 C4-1 C2-1 C1-1 J26-4 T13-1 T4-1 RC4-1 RC2-1
+        RC1-1 C10-1 C9-1 C8-1 C7-1 C6-1 C11-1 C16-1 RC3-1 RC5-1 R1-2)
+    )
+    (net /TXD
+      (pins J7-8 J6-8 RC4-21 RC2-21 RC1-21 RC3-21 RC5-21)
+    )
+    (net /5REG_EN
+      (pins J9-1)
+    )
+    (net +BATT
+      (pins J11-3 J5-3 J1-3 J4-3 J9-2 J16_2-2 J16-1 R2-2 J3-3 J2-3)
+    )
+    (net /RC4EN1A
+      (pins U1-1 U1-2 T11-1 RC4-7)
+    )
+    (net /RC4EN2A
+      (pins U1-6 U1-7 T16-1 RC4-9)
+    )
+    (net /RC3EN1B
+      (pins J21-6 RC3-8)
+    )
+    (net /RC3EN2B
+      (pins J22-6 RC3-10)
+    )
+    (net /RC3EN2A
+      (pins J22-5 RC3-9)
+    )
+    (net /RC3EN1A
+      (pins J21-5 RC3-7)
+    )
+    (net /RC5EN2A
+      (pins U2-7 U2-6 T17-1 RC5-9)
+    )
+    (net /RC5EN1A
+      (pins U2-2 U2-1 T12-1 RC5-7)
+    )
+    (net /RC4M2A
+      (pins J4-5 J24-1)
+    )
+    (net /RC4M2B
+      (pins J4-6 J24-2)
+    )
+    (net /RC5M1A
+      (pins J5-1 J25-1)
+    )
+    (net /RC5M2A
+      (pins J5-5 J26-1)
+    )
+    (net /RC5M2B
+      (pins J5-6 J26-2)
+    )
+    (net /RC4M1B
+      (pins J4-2 J23-2)
+    )
+    (net /RC4M1A
+      (pins J4-1 J23-1)
+    )
+    (net /RC3M2A
+      (pins J22-1 J3-5)
+    )
+    (net /RC3M2B
+      (pins J22-2 J3-6)
+    )
+    (net /RC3M1B
+      (pins J21-2 J3-2)
+    )
+    (net /RC3M1A
+      (pins J21-1 J3-1)
+    )
+    (net /RC5M1B
+      (pins J5-2 J25-2)
+    )
+    (net "Net-(RC5-Pad3)"
+      (pins RC5-3)
+    )
+    (net "Net-(RC5-Pad4)"
+      (pins RC5-4)
+    )
+    (net "Net-(RC5-Pad5)"
+      (pins RC5-5)
+    )
+    (net "Net-(RC5-Pad6)"
+      (pins RC5-6)
+    )
+    (net "Net-(RC5-Pad11)"
+      (pins RC5-11)
+    )
+    (net "Net-(RC5-Pad12)"
+      (pins RC5-12)
+    )
+    (net "Net-(RC5-Pad13)"
+      (pins RC5-13)
+    )
+    (net "Net-(RC5-Pad14)"
+      (pins RC5-14)
+    )
+    (net "Net-(RC5-Pad15)"
+      (pins RC5-15)
+    )
+    (net "Net-(RC5-Pad16)"
+      (pins RC5-16)
+    )
+    (net "Net-(RC5-Pad17)"
+      (pins RC5-17)
+    )
+    (net "Net-(RC5-Pad18)"
+      (pins RC5-18)
+    )
+    (net "Net-(RC5-Pad19)"
+      (pins RC5-19)
+    )
+    (net "Net-(RC5-Pad20)"
+      (pins RC5-20)
+    )
+    (net "Net-(RC5-Pad24)"
+      (pins RC5-24)
+    )
+    (net "Net-(RC5-Pad25)"
+      (pins RC5-25)
+    )
+    (net "Net-(RC1-Pad25)"
+      (pins RC1-25)
+    )
+    (net "Net-(RC1-Pad24)"
+      (pins RC1-24)
+    )
+    (net "Net-(RC1-Pad20)"
+      (pins RC1-20)
+    )
+    (net "Net-(RC1-Pad19)"
+      (pins RC1-19)
+    )
+    (net "Net-(RC1-Pad18)"
+      (pins RC1-18)
+    )
+    (net "Net-(RC1-Pad17)"
+      (pins RC1-17)
+    )
+    (net "Net-(RC1-Pad16)"
+      (pins RC1-16)
+    )
+    (net "Net-(RC1-Pad15)"
+      (pins RC1-15)
+    )
+    (net "Net-(RC1-Pad14)"
+      (pins RC1-14)
+    )
+    (net "Net-(RC1-Pad13)"
+      (pins RC1-13)
+    )
+    (net "Net-(RC1-Pad12)"
+      (pins RC1-12)
+    )
+    (net "Net-(RC1-Pad11)"
+      (pins RC1-11)
+    )
+    (net "Net-(RC1-Pad6)"
+      (pins RC1-6)
+    )
+    (net "Net-(RC1-Pad5)"
+      (pins RC1-5)
+    )
+    (net "Net-(RC1-Pad4)"
+      (pins RC1-4)
+    )
+    (net "Net-(RC1-Pad3)"
+      (pins RC1-3)
+    )
+    (net "Net-(RC2-Pad3)"
+      (pins RC2-3)
+    )
+    (net "Net-(RC2-Pad4)"
+      (pins RC2-4)
+    )
+    (net "Net-(RC2-Pad5)"
+      (pins RC2-5)
+    )
+    (net "Net-(RC2-Pad6)"
+      (pins RC2-6)
+    )
+    (net "Net-(RC2-Pad11)"
+      (pins RC2-11)
+    )
+    (net "Net-(RC2-Pad12)"
+      (pins RC2-12)
+    )
+    (net "Net-(RC2-Pad13)"
+      (pins RC2-13)
+    )
+    (net "Net-(RC2-Pad14)"
+      (pins RC2-14)
+    )
+    (net "Net-(RC2-Pad15)"
+      (pins RC2-15)
+    )
+    (net "Net-(RC2-Pad16)"
+      (pins RC2-16)
+    )
+    (net "Net-(RC2-Pad17)"
+      (pins RC2-17)
+    )
+    (net "Net-(RC2-Pad18)"
+      (pins RC2-18)
+    )
+    (net "Net-(RC2-Pad19)"
+      (pins RC2-19)
+    )
+    (net "Net-(RC2-Pad20)"
+      (pins RC2-20)
+    )
+    (net "Net-(RC2-Pad24)"
+      (pins RC2-24)
+    )
+    (net "Net-(RC2-Pad25)"
+      (pins RC2-25)
+    )
+    (net "Net-(RC3-Pad25)"
+      (pins RC3-25)
+    )
+    (net "Net-(RC3-Pad24)"
+      (pins RC3-24)
+    )
+    (net "Net-(RC3-Pad20)"
+      (pins RC3-20)
+    )
+    (net "Net-(RC3-Pad19)"
+      (pins RC3-19)
+    )
+    (net "Net-(RC3-Pad18)"
+      (pins RC3-18)
+    )
+    (net "Net-(RC3-Pad17)"
+      (pins RC3-17)
+    )
+    (net "Net-(RC3-Pad16)"
+      (pins RC3-16)
+    )
+    (net "Net-(RC3-Pad15)"
+      (pins RC3-15)
+    )
+    (net "Net-(RC3-Pad14)"
+      (pins RC3-14)
+    )
+    (net "Net-(RC3-Pad13)"
+      (pins RC3-13)
+    )
+    (net "Net-(RC3-Pad12)"
+      (pins RC3-12)
+    )
+    (net "Net-(RC3-Pad11)"
+      (pins RC3-11)
+    )
+    (net "Net-(RC3-Pad6)"
+      (pins RC3-6)
+    )
+    (net "Net-(RC3-Pad5)"
+      (pins RC3-5)
+    )
+    (net "Net-(RC3-Pad4)"
+      (pins RC3-4)
+    )
+    (net "Net-(RC3-Pad3)"
+      (pins RC3-3)
+    )
+    (net "Net-(RC4-Pad3)"
+      (pins RC4-3)
+    )
+    (net "Net-(RC4-Pad4)"
+      (pins RC4-4)
+    )
+    (net "Net-(RC4-Pad5)"
+      (pins RC4-5)
+    )
+    (net "Net-(RC4-Pad6)"
+      (pins RC4-6)
+    )
+    (net "Net-(RC4-Pad11)"
+      (pins RC4-11)
+    )
+    (net "Net-(RC4-Pad12)"
+      (pins RC4-12)
+    )
+    (net "Net-(RC4-Pad13)"
+      (pins RC4-13)
+    )
+    (net "Net-(RC4-Pad14)"
+      (pins RC4-14)
+    )
+    (net "Net-(RC4-Pad15)"
+      (pins RC4-15)
+    )
+    (net "Net-(RC4-Pad16)"
+      (pins RC4-16)
+    )
+    (net "Net-(RC4-Pad17)"
+      (pins RC4-17)
+    )
+    (net "Net-(RC4-Pad18)"
+      (pins RC4-18)
+    )
+    (net "Net-(RC4-Pad19)"
+      (pins RC4-19)
+    )
+    (net "Net-(RC4-Pad20)"
+      (pins RC4-20)
+    )
+    (net "Net-(RC4-Pad24)"
+      (pins RC4-24)
+    )
+    (net "Net-(RC4-Pad25)"
+      (pins RC4-25)
+    )
+    (net /3.3V
+      (pins J7-17 J7-1 J6-17 J6-1)
+    )
+    (net /PI_5V
+      (pins J7-4 J7-2 J6-4 J6-2)
+    )
+    (net /SDA1
+      (pins J7-3 J6-3)
+    )
+    (net /SCL1
+      (pins J7-5 J6-5)
+    )
+    (net /GPIO_CLK
+      (pins J7-7 J6-7)
+    )
+    (net /GPIO_GEN0
+      (pins J7-11 J6-11)
+    )
+    (net /GPIO_GEN1
+      (pins J7-12 J6-12)
+    )
+    (net /GPIO_GEN2
+      (pins J7-13 J6-13)
+    )
+    (net /GPIO_GEN3
+      (pins J7-15 J6-15)
+    )
+    (net /GPIO_GEN5
+      (pins J7-18 J6-18)
+    )
+    (net /SPI_MOSI
+      (pins J7-19 J6-19)
+    )
+    (net /SPI_MISO
+      (pins J7-21 J6-21)
+    )
+    (net /GPIO_GEN6
+      (pins J7-22 J6-22)
+    )
+    (net /SPI_CLK
+      (pins J7-23 J6-23)
+    )
+    (net /SPI_CEO_N
+      (pins J7-24 J6-24)
+    )
+    (net /GPI_CE1_N
+      (pins J7-26 J6-26)
+    )
+    (net /I2C_ID1
+      (pins J7-27 J6-27)
+    )
+    (net /I2C_ID2
+      (pins J7-28 J6-28)
+    )
+    (net /GPIO05
+      (pins J7-29 J6-29)
+    )
+    (net /GPIO06
+      (pins J7-31 J6-31)
+    )
+    (net /GPIO12
+      (pins J7-32 J6-32)
+    )
+    (net /GPIO13
+      (pins J7-33 J6-33)
+    )
+    (net /GPIO19
+      (pins J7-35 J6-35)
+    )
+    (net /GPIO16
+      (pins J7-36 J6-36)
+    )
+    (net /GPIO26
+      (pins J7-37 J6-37)
+    )
+    (net /GPIO20
+      (pins J7-38 J6-38)
+    )
+    (net /GPIO21
+      (pins J7-40 J6-40)
+    )
+    (net "Net-(D1-Pad2)"
+      (pins D1-2 F1-2 J16_2-1 R2-1)
+    )
+    (net "Net-(D1-Pad1)"
+      (pins J15-1 T1-1 D1-1 F1-1)
+    )
+    (net "Net-(C15-Pad2)"
+      (pins U2-5 C15-2 R10-1 R9-2)
+    )
+    (net "Net-(C14-Pad2)"
+      (pins U1-5 T18-1 R8-1 C14-2 R7-2)
+    )
+    (net "Net-(C13-Pad2)"
+      (pins U2-3 T8-1 C13-2 R6-1 R5-2)
+    )
+    (net "Net-(C12-Pad2)"
+      (pins U1-3 T7-1 C12-2 R4-1 R3-2)
+    )
+    (net /E_STOP
+      (pins J6-16 RC4-23 RC2-23 RC1-23 RC3-23 RC5-23)
+    )
+    (net "Net-(RC5-Pad10)"
+      (pins RC5-10)
+    )
+    (net "Net-(RC5-Pad8)"
+      (pins RC5-8)
+    )
+    (net "Net-(RC4-Pad10)"
+      (pins RC4-10)
+    )
+    (net "Net-(RC4-Pad8)"
+      (pins RC4-8)
+    )
+    (net +12V
+      (pins J10-1 J13-1 J11-5 T5-1)
+    )
+    (net /PG
+      (pins J11-1)
+    )
+    (net /12REG_EN
+      (pins J11-2)
+    )
+    (net /CTS#
+      (pins J8-2)
+    )
+    (net /TTL_RXD
+      (pins J10-5 J8-5)
+    )
+    (net /TTL_TXD
+      (pins J10-4 J8-4)
+    )
+    (net /RTS#
+      (pins J8-6)
+    )
+    (net "Net-(J6-Pad6)"
+      (pins J6-6)
+    )
+    (net "Net-(J6-Pad9)"
+      (pins J6-9)
+    )
+    (net "Net-(J6-Pad14)"
+      (pins J6-14)
+    )
+    (net "Net-(J6-Pad20)"
+      (pins J6-20)
+    )
+    (net "Net-(J6-Pad25)"
+      (pins J6-25)
+    )
+    (net "Net-(J6-Pad30)"
+      (pins J6-30)
+    )
+    (net "Net-(J6-Pad34)"
+      (pins J6-34)
+    )
+    (net "Net-(J6-Pad39)"
+      (pins J6-39)
+    )
+    (net "Net-(J7-Pad16)"
+      (pins J7-16)
+    )
+    (net "Net-(J12-Pad2)"
+      (pins J12-2)
+    )
+    (net "Net-(J12-Pad3)"
+      (pins J12-3)
+    )
+    (net "Net-(J23-Pad6)"
+      (pins J23-6)
+    )
+    (net "Net-(J26-Pad6)"
+      (pins J26-6)
+    )
+    (net "Net-(J24-Pad6)"
+      (pins J24-6)
+    )
+    (net "Net-(J25-Pad6)"
+      (pins J25-6)
+    )
+    (net "Net-(J8-Pad3)"
+      (pins J8-3)
+    )
+    (net "Net-(J10-Pad6)"
+      (pins J10-6)
+    )
+    (net "Net-(J14-Pad2)"
+      (pins J14-2)
+    )
+    (net "Net-(J14-Pad3)"
+      (pins J14-3)
+    )
+    (net "Net-(T19-Pad1)"
+      (pins T19-1)
+    )
+    (net "Net-(T3-Pad1)"
+      (pins T3-1)
+    )
+    (net "Net-(T14-Pad1)"
+      (pins T14-1)
+    )
+    (class kicad_default +12V +5V +BATT /12REG_EN /3.3V /5REG_EN /CTS# /E_STOP
+      /GPIO05 /GPIO06 /GPIO12 /GPIO13 /GPIO16 /GPIO19 /GPIO20 /GPIO21 /GPIO26
+      /GPIO_CLK /GPIO_GEN0 /GPIO_GEN1 /GPIO_GEN2 /GPIO_GEN3 /GPIO_GEN5 /GPIO_GEN6
+      /GPI_CE1_N /I2C_ID1 /I2C_ID2 /PG /PI_5V /RC1EN1A /RC1EN1B /RC1EN2A /RC1EN2B
+      /RC1M1A /RC1M1B /RC1M2A /RC1M2B /RC2EN1A /RC2EN1B /RC2EN2A /RC2EN2B
+      /RC2M1A /RC2M1B /RC2M2A /RC2M2B /RC3EN1A /RC3EN1B /RC3EN2A /RC3EN2B
+      /RC3M1A /RC3M1B /RC3M2A /RC3M2B /RC4EN1A /RC4EN1A_RAW /RC4EN2A /RC4EN2A_RAW
+      /RC4M1A /RC4M1B /RC4M2A /RC4M2B /RC5EN1A /RC5EN1A_RAW /RC5EN2A /RC5EN2A_RAW
+      /RC5M1A /RC5M1B /RC5M2A /RC5M2B /RTS# /RXD /SCL1 /SDA1 /SPI_CEO_N /SPI_CLK
+      /SPI_MISO /SPI_MOSI /TTL_RXD /TTL_TXD /TXD GND "Net-(C12-Pad2)" "Net-(C13-Pad2)"
+      "Net-(C14-Pad2)" "Net-(C15-Pad2)" "Net-(D1-Pad1)" "Net-(D1-Pad2)" "Net-(J10-Pad6)"
+      "Net-(J12-Pad2)" "Net-(J12-Pad3)" "Net-(J14-Pad2)" "Net-(J14-Pad3)"
+      "Net-(J23-Pad6)" "Net-(J24-Pad6)" "Net-(J25-Pad6)" "Net-(J26-Pad6)"
+      "Net-(J6-Pad14)" "Net-(J6-Pad20)" "Net-(J6-Pad25)" "Net-(J6-Pad30)"
+      "Net-(J6-Pad34)" "Net-(J6-Pad39)" "Net-(J6-Pad6)" "Net-(J6-Pad9)" "Net-(J7-Pad16)"
+      "Net-(J8-Pad3)" "Net-(RC1-Pad11)" "Net-(RC1-Pad12)" "Net-(RC1-Pad13)"
+      "Net-(RC1-Pad14)" "Net-(RC1-Pad15)" "Net-(RC1-Pad16)" "Net-(RC1-Pad17)"
+      "Net-(RC1-Pad18)" "Net-(RC1-Pad19)" "Net-(RC1-Pad20)" "Net-(RC1-Pad24)"
+      "Net-(RC1-Pad25)" "Net-(RC1-Pad3)" "Net-(RC1-Pad4)" "Net-(RC1-Pad5)"
+      "Net-(RC1-Pad6)" "Net-(RC2-Pad11)" "Net-(RC2-Pad12)" "Net-(RC2-Pad13)"
+      "Net-(RC2-Pad14)" "Net-(RC2-Pad15)" "Net-(RC2-Pad16)" "Net-(RC2-Pad17)"
+      "Net-(RC2-Pad18)" "Net-(RC2-Pad19)" "Net-(RC2-Pad20)" "Net-(RC2-Pad24)"
+      "Net-(RC2-Pad25)" "Net-(RC2-Pad3)" "Net-(RC2-Pad4)" "Net-(RC2-Pad5)"
+      "Net-(RC2-Pad6)" "Net-(RC3-Pad11)" "Net-(RC3-Pad12)" "Net-(RC3-Pad13)"
+      "Net-(RC3-Pad14)" "Net-(RC3-Pad15)" "Net-(RC3-Pad16)" "Net-(RC3-Pad17)"
+      "Net-(RC3-Pad18)" "Net-(RC3-Pad19)" "Net-(RC3-Pad20)" "Net-(RC3-Pad24)"
+      "Net-(RC3-Pad25)" "Net-(RC3-Pad3)" "Net-(RC3-Pad4)" "Net-(RC3-Pad5)"
+      "Net-(RC3-Pad6)" "Net-(RC4-Pad10)" "Net-(RC4-Pad11)" "Net-(RC4-Pad12)"
+      "Net-(RC4-Pad13)" "Net-(RC4-Pad14)" "Net-(RC4-Pad15)" "Net-(RC4-Pad16)"
+      "Net-(RC4-Pad17)" "Net-(RC4-Pad18)" "Net-(RC4-Pad19)" "Net-(RC4-Pad20)"
+      "Net-(RC4-Pad24)" "Net-(RC4-Pad25)" "Net-(RC4-Pad3)" "Net-(RC4-Pad4)"
+      "Net-(RC4-Pad5)" "Net-(RC4-Pad6)" "Net-(RC4-Pad8)" "Net-(RC5-Pad10)"
+      "Net-(RC5-Pad11)" "Net-(RC5-Pad12)" "Net-(RC5-Pad13)" "Net-(RC5-Pad14)"
+      "Net-(RC5-Pad15)" "Net-(RC5-Pad16)" "Net-(RC5-Pad17)" "Net-(RC5-Pad18)"
+      "Net-(RC5-Pad19)" "Net-(RC5-Pad20)" "Net-(RC5-Pad24)" "Net-(RC5-Pad25)"
+      "Net-(RC5-Pad3)" "Net-(RC5-Pad4)" "Net-(RC5-Pad5)" "Net-(RC5-Pad6)"
+      "Net-(RC5-Pad8)" "Net-(T14-Pad1)" "Net-(T19-Pad1)" "Net-(T3-Pad1)"
+      (circuit
+        (use_via "Via[0-1]_800:400_um")
+      )
+      (rule
+        (width 250)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

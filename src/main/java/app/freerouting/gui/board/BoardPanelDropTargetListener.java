@@ -1,0 +1,229 @@
+package app.freerouting.gui.board;
+
+import app.freerouting.core.RoutingJob;
+import app.freerouting.io.FileFormat;
+import app.freerouting.logger.FRLogger;
+import java.awt.Cursor;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.List;
+import javax.swing.JOptionPane;
+
+/**
+ * Handles drag-and-drop file operations on the board panel. Allows users to drop DSN or JSON files
+ * onto the panel to open them.
+ *
+ * <p>Provides visual feedback using a semi-transparent overlay during drag operations.
+ *
+ * <p>Note: SessionManager enforces single GUI session per process. Multi-session support may
+ * require architectural changes to allow parallel boards.
+ */
+public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetListener {
+
+  private final BoardPanel boardPanel;
+  private boolean isDragActive;
+  // Flag to track if we're showing the ghosting overlay
+  private boolean isGhostingActive;
+
+  /**
+   * Creates a new drop target listener for the board panel.
+   *
+   * @param boardPanel The board panel to attach the drop target to
+   */
+  public BoardPanelDropTargetListener(BoardPanel boardPanel) {
+    this.boardPanel = boardPanel;
+  }
+
+  @Override
+  public void dragEnter(DropTargetDragEvent event) {
+    // Visual feedback when drag enters the panel
+    setDragFeedback(true);
+    isDragActive = true;
+    // Accept copy or move actions for files
+    event.acceptDrag(DnDConstants.ACTION_COPY | DnDConstants.ACTION_MOVE);
+  }
+
+  @Override
+  public void dragOver(DropTargetDragEvent event) {
+    // Maintain visual feedback during drag
+    if (!isDragActive) {
+      setDragFeedback(true);
+      isDragActive = true;
+    }
+    event.acceptDrag(DnDConstants.ACTION_COPY | DnDConstants.ACTION_MOVE);
+  }
+
+  @Override
+  public void dropActionChanged(DropTargetDragEvent event) {
+    // Accept the drag action
+    event.acceptDrag(DnDConstants.ACTION_COPY | DnDConstants.ACTION_MOVE);
+  }
+
+  @Override
+  public void dragExit(DropTargetEvent event) {
+    // Remove visual feedback when drag exits
+    setDragFeedback(false);
+    isDragActive = false;
+  }
+
+  @Override
+  public void drop(DropTargetDropEvent event) {
+    // Remove visual feedback immediately
+    setDragFeedback(false);
+    isDragActive = false;
+
+    Transferable transferable = event.getTransferable();
+    if (transferable == null) {
+      event.rejectDrop();
+      return;
+    }
+
+    // Check if it's a file list flavor
+    if (!transferable.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+      event.rejectDrop();
+      return;
+    }
+
+    try {
+      // Accept the drop
+      event.acceptDrop(DnDConstants.ACTION_COPY);
+
+      // Get the file list
+      @SuppressWarnings("unchecked")
+      List<File> files = (List<File>) transferable.getTransferData(DataFlavor.javaFileListFlavor);
+
+      if (files == null || files.isEmpty()) {
+        FRLogger.warn("No files dropped");
+        return;
+      }
+
+      // Process dropped files
+      processDroppedFiles(files);
+
+    } catch (Exception e) {
+      FRLogger.error("Error processing dropped files", e);
+      if (boardPanel != null) {
+        JOptionPane.showMessageDialog(
+            boardPanel,
+            "Error processing dropped file: " + e.getMessage(),
+            "Error",
+            JOptionPane.ERROR_MESSAGE);
+      }
+    }
+  }
+
+  /**
+   * Processes the list of dropped files. Only the first valid DSN or JSON file is loaded.
+   * Additional valid files are logged for future multi-board support.
+   *
+   * @param files The list of dropped files
+   */
+  private void processDroppedFiles(List<File> files) {
+    boolean fileLoaded = false;
+
+    if (boardPanel == null || boardPanel.boardFrame == null) {
+      FRLogger.warn("Board frame is not available for loading dropped file");
+      return;
+    }
+
+    for (int i = 0; i < files.size(); i++) {
+      File file = files.get(i);
+
+      if (file == null) {
+        continue;
+      }
+
+      // Check if file exists and is readable
+      if (!file.exists()) {
+        FRLogger.warn("Dropped file does not exist: " + file.getName());
+        continue;
+      }
+
+      if (!file.canRead()) {
+        FRLogger.warn("Dropped file is not readable: " + file.getName());
+        continue;
+      }
+
+      // Validate file format by extension first, then content for unknown extensions
+      FileFormat format = RoutingJob.getFileFormat(file.toPath());
+
+      if (format == FileFormat.UNKNOWN) {
+        try {
+          byte[] content = Files.readAllBytes(file.toPath());
+          format = RoutingJob.getFileFormat(content);
+        } catch (IOException e) {
+          FRLogger.warn("Could not read file for format detection: " + file.getName());
+          continue;
+        }
+      }
+
+      if (format == FileFormat.DSN || format == FileFormat.KICAD_DESIGN_JSON) {
+        if (!fileLoaded) {
+          // Load the first valid file
+          boardPanel.boardFrame.loadDroppedFile(file, format);
+          fileLoaded = true;
+        } else {
+          // Log additional valid files for future multi-board support
+          FRLogger.warn(
+              "Additional dropped file ignored: '"
+                  + file.getName()
+                  + "'. Multi-board support is planned for future versions.");
+        }
+      } else {
+        // Unknown format
+        FRLogger.warn(
+            "Dropped file format not supported: '"
+                + file.getName()
+                + "'. Supported formats: DSN, KiCad design JSON.");
+      }
+    }
+
+    if (!fileLoaded) {
+      JOptionPane.showMessageDialog(
+          boardPanel,
+          "No valid DSN or JSON files found in drop",
+          "Info",
+          JOptionPane.INFORMATION_MESSAGE);
+    }
+  }
+
+  /**
+   * Sets the visual feedback state of the board panel. Changes the background to grayish to
+   * indicate drop target.
+   *
+   * @param active Whether the drag is active
+   */
+  private void setDragFeedback(boolean active) {
+    if (boardPanel == null) {
+      return;
+    }
+
+    if (active) {
+      // Show ghosting overlay effect
+      isGhostingActive = true;
+      boardPanel.setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
+      boardPanel.repaint();
+    } else {
+      // Remove ghosting overlay effect
+      isGhostingActive = false;
+      boardPanel.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+      boardPanel.repaint();
+    }
+  }
+
+  /**
+   * Checks if the ghosting overlay should be visible.
+   *
+   * @return true if ghosting overlay is active
+   */
+  public boolean isGhostingActive() {
+    return isGhostingActive;
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "board_id": "analog_esr_meter_esr_meter_rev_a",
+  "display_name": "analog_esr_meter_esr_meter_rev_a",
+  "pcbench_directory": "PCBs/analog_esr_meter_esr_meter_rev_a",
+  "source": "https://github.com/4x1md/analog_esr_meter",
+  "author": "4x1md",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:27.613764+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 23,
+    "components": 71,
+    "dimensions_mm": {
+      "width": 645.94,
+      "height": 78.18
+    },
+    "area_cm2": 505.0,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 168,
+    "vias": 1,
+    "track_length_mm": 714.35,
+    "kicad_drc_violations": 517,
+    "kicad_drc_breakdown": {
+      "total_violations": 517,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 147,
+        "copper_edge_clearance": 10,
+        "courtyards_overlap": 76,
+        "hole_clearance": 3,
+        "holes_co_located": 2,
+        "lib_footprint_issues": 71,
+        "nonmirrored_text_on_back_layer": 2,
+        "pth_inside_courtyard": 48,
+        "silk_over_copper": 4,
+        "silk_overlap": 149,
+        "solder_mask_bridge": 4,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 288,
+        "warning": 229
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "complex",
+    "medium",
+    "tier-c",
+    "zone"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
+}

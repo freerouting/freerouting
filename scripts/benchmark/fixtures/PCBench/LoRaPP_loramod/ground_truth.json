@@ -1,0 +1,32 @@
+{
+  "board": "LoRaPP_loramod",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\LoRaPP_loramod\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 150,
+  "segment_count": 722,
+  "approximate_track_length_mm": 677.35,
+  "kicad_drc_violations": 654,
+  "generated_at": "2026-08-18T18:19:49.554765+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 654,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 170,
+      "copper_edge_clearance": 40,
+      "courtyards_overlap": 4,
+      "hole_to_hole": 1,
+      "lib_footprint_issues": 78,
+      "silk_edge_clearance": 4,
+      "silk_over_copper": 116,
+      "silk_overlap": 100,
+      "solder_mask_bridge": 131,
+      "starved_thermal": 7,
+      "track_dangling": 3
+    },
+    "by_severity": {
+      "error": 352,
+      "warning": 302
+    }
+  }
+}

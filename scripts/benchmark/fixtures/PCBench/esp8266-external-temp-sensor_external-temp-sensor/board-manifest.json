@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "esp8266-external-temp-sensor_external-temp-sensor",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 77234,
+      "sha256": "bd3a3452ad98908d230c192b106287d9ec991edb4307a22cacd94b74bbd585e1"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 44647,
+      "sha256": "88850cb4074e54b5924a49c0c52e2ad50720bf32d325dad128fc73a46ee20f37"
+    },
+    "metadata_json": {
+      "bytes": 591,
+      "sha256": "52e7240689446e3f86a349db66047db95bdff923349b6c5224385b09e776472c"
+    },
+    "final_json": {
+      "bytes": 29951,
+      "sha256": "4ae8446b651eb2bc0108b4a6f6a7adc294174dbaa4079e54759c4da2f6a5086e"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:46:35.896987+00:00"
+  }
+}

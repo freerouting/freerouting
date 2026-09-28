@@ -1,0 +1,171 @@
+(pcb C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\Inkjet_InkjetBreakout\unrouted.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  57150 -35560  54610 -35560  54610 -52070  58420 -52070
+            58420 -63500  34290 -63500  34290 -52070  38100 -52070  38100 -35560
+            35560 -35560  35560 -33020  38100 -33020  54610 -33020  57150 -33020
+            57150 -35560)
+    )
+    (via "Via[0-1]_600:400_um")
+    (rule
+      (width 250)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component Pin_Headers:Pin_Header_Straight_2x07
+      (place P1 39370 -59690 front 90 (PN CONN_02X07))
+    )
+    (component myParts:SpringContact
+      (place P2 44450 -45720 front 0 (PN Printhead))
+    )
+  )
+  (library
+    (image Pin_Headers:Pin_Header_Straight_2x07
+      (outline (polygon signal 0  -1745 -16995  -1745 1745  4295 1745  4295 -16995))
+      (outline (path signal 150  -1550 1550  -1550 0))
+      (outline (path signal 150  1270 -1270  -1270 -1270))
+      (outline (path signal 150  1270 1270  1270 -1270))
+      (outline (path signal 150  0 1550  -1550 1550))
+      (outline (path signal 150  3810 1270  1270 1270))
+      (outline (path signal 150  3810 -16510  -1270 -16510))
+      (outline (path signal 150  -1270 -1270  -1270 -16510))
+      (outline (path signal 150  3810 -16510  3810 1270))
+      (pin Rect[A]Pad_1727.200000x1727.200000_um 1 0 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 2 2540 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 3 0 -2540)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 4 2540 -2540)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 5 0 -5080)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 6 2540 -5080)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 7 0 -7620)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 8 2540 -7620)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 9 0 -10160)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 10 2540 -10160)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 11 0 -12700)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 12 2540 -12700)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 13 0 -15240)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 14 2540 -15240)
+    )
+    (image myParts:SpringContact
+      (pin Rect[T]Pad_2100.000000x750.000000_um 5 -1050 375)
+      (pin Rect[T]Pad_2100.000000x750.000000_um 4 -1050 1775)
+      (pin Rect[T]Pad_2100.000000x750.000000_um 3 -1050 3175)
+      (pin Rect[T]Pad_2100.000000x750.000000_um 2 -1050 4575)
+      (pin Rect[T]Pad_2100.000000x750.000000_um 1 -1050 5975)
+      (pin Rect[T]Pad_2100.000000x750.000000_um 13 -1050 7575)
+      (pin Rect[T]Pad_2100.000000x750.000000_um 12 4860 8775)
+      (pin Rect[T]Pad_2100.000000x750.000000_um 6 4860 375)
+      (pin Rect[T]Pad_2100.000000x750.000000_um 7 4860 1775)
+      (pin Rect[T]Pad_2100.000000x750.000000_um 8 4860 3175)
+      (pin Rect[T]Pad_2100.000000x750.000000_um 9 4860 4575)
+      (pin Rect[T]Pad_2100.000000x750.000000_um 10 4860 5975)
+      (pin Rect[T]Pad_2100.000000x750.000000_um 11 4860 7375)
+    )
+    (padstack Oval[A]Pad_1727.200000x1727.200000_um
+      (shape (path F.Cu 1727.2  0 0  0 0))
+      (shape (path B.Cu 1727.2  0 0  0 0))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2100.000000x750.000000_um
+      (shape (rect F.Cu -1050 -375 1050 375))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1727.200000x1727.200000_um
+      (shape (rect F.Cu -863.6 -863.6 863.6 863.6))
+      (shape (rect B.Cu -863.6 -863.6 863.6 863.6))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(P1-Pad1)"
+      (pins P1-1)
+    )
+    (net /VCC
+      (pins P1-2 P2-13)
+    )
+    (net "Net-(P1-Pad3)"
+      (pins P1-3 P2-2)
+    )
+    (net "Net-(P1-Pad4)"
+      (pins P1-4 P2-1)
+    )
+    (net "Net-(P1-Pad5)"
+      (pins P1-5 P2-4)
+    )
+    (net "Net-(P1-Pad6)"
+      (pins P1-6 P2-3)
+    )
+    (net "Net-(P1-Pad7)"
+      (pins P1-7 P2-6)
+    )
+    (net "Net-(P1-Pad8)"
+      (pins P1-8 P2-5)
+    )
+    (net "Net-(P1-Pad9)"
+      (pins P1-9 P2-8)
+    )
+    (net "Net-(P1-Pad10)"
+      (pins P1-10 P2-7)
+    )
+    (net "Net-(P1-Pad11)"
+      (pins P1-11 P2-10)
+    )
+    (net "Net-(P1-Pad12)"
+      (pins P1-12 P2-9)
+    )
+    (net "Net-(P1-Pad13)"
+      (pins P1-13 P2-12)
+    )
+    (net "Net-(P1-Pad14)"
+      (pins P1-14 P2-11)
+    )
+    (class kicad_default "Net-(P1-Pad1)" "Net-(P1-Pad10)" "Net-(P1-Pad11)"
+      "Net-(P1-Pad12)" "Net-(P1-Pad13)" "Net-(P1-Pad14)" "Net-(P1-Pad3)" "Net-(P1-Pad4)"
+      "Net-(P1-Pad5)" "Net-(P1-Pad6)" "Net-(P1-Pad7)" "Net-(P1-Pad8)" "Net-(P1-Pad9)"
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 250)
+        (clearance 200)
+      )
+    )
+    (class VCC /VCC
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 500)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

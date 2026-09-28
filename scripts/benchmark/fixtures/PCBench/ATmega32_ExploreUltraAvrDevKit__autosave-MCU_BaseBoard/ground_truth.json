@@ -1,0 +1,38 @@
+{
+  "board": "ATmega32_ExploreUltraAvrDevKit__autosave-MCU_BaseBoard",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\ATmega32_ExploreUltraAvrDevKit__autosave-MCU_BaseBoard\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 74,
+  "segment_count": 1826,
+  "approximate_track_length_mm": 8220.81,
+  "kicad_drc_violations": 1013,
+  "generated_at": "2026-08-18T18:29:48.544150+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 1013,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 2,
+      "clearance": 506,
+      "copper_edge_clearance": 7,
+      "courtyards_overlap": 4,
+      "hole_clearance": 1,
+      "hole_to_hole": 1,
+      "invalid_outline": 6,
+      "lib_footprint_issues": 148,
+      "lib_footprint_mismatch": 1,
+      "silk_edge_clearance": 9,
+      "silk_over_copper": 199,
+      "silk_overlap": 93,
+      "solder_mask_bridge": 2,
+      "starved_thermal": 2,
+      "text_height": 2,
+      "track_dangling": 29,
+      "tracks_crossing": 1
+    },
+    "by_severity": {
+      "error": 531,
+      "warning": 482
+    }
+  }
+}

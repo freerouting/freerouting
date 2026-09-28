@@ -1,0 +1,62 @@
+{
+  "board_id": "wifi_pants_wifi_pants",
+  "display_name": "wifi_pants_wifi_pants",
+  "pcbench_directory": "PCBs/wifi_pants_wifi_pants",
+  "source": "https://github.com/al177/wifi_pants",
+  "author": "al177",
+  "license": "Creative Commons Attribution 4.0 International",
+  "license_spdx": "CC-BY-4.0",
+  "retrieved_at": "2023-08-17T17:22:25.345737+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 39,
+    "components": 132,
+    "dimensions_mm": {
+      "width": 65.0,
+      "height": 30.0
+    },
+    "area_cm2": 19.5,
+    "zones": 8
+  },
+  "reference": {
+    "segments": 380,
+    "vias": 15,
+    "track_length_mm": 560.53,
+    "kicad_drc_violations": 644,
+    "kicad_drc_breakdown": {
+      "total_violations": 644,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 338,
+        "copper_edge_clearance": 19,
+        "hole_clearance": 2,
+        "items_not_allowed": 4,
+        "lib_footprint_issues": 132,
+        "malformed_courtyard": 8,
+        "pth_inside_courtyard": 16,
+        "silk_over_copper": 103,
+        "silk_overlap": 5,
+        "solder_mask_bridge": 2,
+        "text_height": 15
+      },
+      "by_severity": {
+        "error": 389,
+        "warning": 255
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

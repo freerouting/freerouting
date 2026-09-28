@@ -1,0 +1,1816 @@
+(kicad_pcb (version 20171130) (host pcbnew "(5.1.12)-1")
+
+  (general
+    (thickness 1.6)
+    (drawings 47)
+    (tracks 452)
+    (zones 0)
+    (modules 38)
+    (nets 32)
+  )
+
+  (page A4)
+  (title_block
+    (title keytee)
+    (date 2016-12-09)
+    (rev 0.1)
+  )
+
+  (layers
+    (0 F.Cu signal)
+    (31 B.Cu signal)
+    (32 B.Adhes user hide)
+    (33 F.Adhes user hide)
+    (34 B.Paste user hide)
+    (35 F.Paste user hide)
+    (36 B.SilkS user hide)
+    (37 F.SilkS user hide)
+    (38 B.Mask user hide)
+    (39 F.Mask user hide)
+    (40 Dwgs.User user hide)
+    (41 Cmts.User user hide)
+    (42 Eco1.User user hide)
+    (43 Eco2.User user hide)
+    (44 Edge.Cuts user)
+    (45 Margin user hide)
+    (46 B.CrtYd user hide)
+    (47 F.CrtYd user hide)
+    (48 B.Fab user hide)
+    (49 F.Fab user hide)
+  )
+
+  (setup
+    (last_trace_width 0.15)
+    (trace_clearance 0.15)
+    (zone_clearance 0.508)
+    (zone_45_only yes)
+    (trace_min 0.15)
+    (via_size 0.6)
+    (via_drill 0.3)
+    (via_min_size 0.6)
+    (via_min_drill 0.3)
+    (uvia_size 0.3)
+    (uvia_drill 0.1)
+    (uvias_allowed no)
+    (uvia_min_size 0.2)
+    (uvia_min_drill 0.1)
+    (edge_width 0.15)
+    (segment_width 0.2)
+    (pcb_text_width 0.15)
+    (pcb_text_size 0.7 0.7)
+    (mod_edge_width 0.15)
+    (mod_text_size 1 1)
+    (mod_text_width 0.15)
+    (pad_size 2.49936 2.49936)
+    (pad_drill 1.00076)
+    (pad_to_mask_clearance 0.2)
+    (aux_axis_origin 0 0)
+    (visible_elements 7FFFFFFF)
+    (pcbplotparams
+      (layerselection 0x0f0fc_ffffffff)
+      (usegerberextensions true)
+      (usegerberattributes true)
+      (usegerberadvancedattributes true)
+      (creategerberjobfile true)
+      (excludeedgelayer false)
+      (linewidth 0.100000)
+      (plotframeref false)
+      (viasonmask false)
+      (mode 1)
+      (useauxorigin false)
+      (hpglpennumber 1)
+      (hpglpenspeed 20)
+      (hpglpendiameter 15.000000)
+      (psnegative false)
+      (psa4output false)
+      (plotreference true)
+      (plotvalue true)
+      (plotinvisibletext false)
+      (padsonsilk false)
+      (subtractmaskfromsilk false)
+      (outputformat 1)
+      (mirror false)
+      (drillshape 0)
+      (scaleselection 1)
+      (outputdirectory "plot_files"))
+  )
+
+  (net 0 "")
+  (net 1 VCC)
+  (net 2 GND)
+  (net 3 "Net-(C4-Pad1)")
+  (net 4 "Net-(C5-Pad1)")
+  (net 5 "Net-(C6-Pad2)")
+  (net 6 "Net-(IC1-Pad13)")
+  (net 7 "Net-(IC1-Pad24)")
+  (net 8 "Net-(IC1-Pad29)")
+  (net 9 "Net-(IC1-Pad30)")
+  (net 10 /C2)
+  (net 11 /D0)
+  (net 12 /D1)
+  (net 13 /D2)
+  (net 14 /D3)
+  (net 15 /D4)
+  (net 16 /D5)
+  (net 17 /D6)
+  (net 18 /B0)
+  (net 19 /B1)
+  (net 20 /B2)
+  (net 21 /B3)
+  (net 22 /B4)
+  (net 23 /B5)
+  (net 24 /B6)
+  (net 25 /B7)
+  (net 26 /C7)
+  (net 27 /C6)
+  (net 28 /C5)
+  (net 29 /C4)
+  (net 30 "Net-(R2-Pad2)")
+  (net 31 "Net-(R3-Pad2)")
+
+  (net_class Default "This is the default net class."
+    (clearance 0.15)
+    (trace_width 0.15)
+    (via_dia 0.6)
+    (via_drill 0.3)
+    (uvia_dia 0.3)
+    (uvia_drill 0.1)
+    (add_net /B0)
+    (add_net /B1)
+    (add_net /B2)
+    (add_net /B3)
+    (add_net /B4)
+    (add_net /B5)
+    (add_net /B6)
+    (add_net /B7)
+    (add_net /C2)
+    (add_net /C4)
+    (add_net /C5)
+    (add_net /C6)
+    (add_net /C7)
+    (add_net /D0)
+    (add_net /D1)
+    (add_net /D2)
+    (add_net /D3)
+    (add_net /D4)
+    (add_net /D5)
+    (add_net /D6)
+    (add_net "Net-(C4-Pad1)")
+    (add_net "Net-(C5-Pad1)")
+    (add_net "Net-(C6-Pad2)")
+    (add_net "Net-(IC1-Pad13)")
+    (add_net "Net-(IC1-Pad24)")
+    (add_net "Net-(IC1-Pad29)")
+    (add_net "Net-(IC1-Pad30)")
+    (add_net "Net-(R2-Pad2)")
+    (add_net "Net-(R3-Pad2)")
+  )
+
+  (net_class Power ""
+    (clearance 0.15)
+    (trace_width 0.25)
+    (via_dia 0.6)
+    (via_drill 0.3)
+    (uvia_dia 0.3)
+    (uvia_drill 0.1)
+    (add_net GND)
+    (add_net VCC)
+  )
+
+  (module nan-15:C_0402_square (layer F.Cu) (tedit 584C7C39) (tstamp 5842AB15)
+    (at 138.6 87.65 90)
+    (descr "Capacitor SMD 0402, reflow soldering, AVX (see smccp.pdf)")
+    (tags "capacitor 0402")
+    (path /582769C1)
+    (attr smd)
+    (fp_text reference C6 (at 1.05 0 180) (layer F.SilkS)
+      (effects (font (size 0.5 0.5) (thickness 0.1)))
+    )
+    (fp_text value 1u (at 0 1.7 90) (layer F.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -0.95 -0.6) (end 0.95 -0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 0.6) (end 0.95 0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.95 -0.6) (end 0.95 0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.25 -0.475) (end -0.25 -0.475) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.25 0.475) (end 0.25 0.475) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -0.534 0 90) (size 0.56 0.56) (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (pad 2 smd rect (at 0.534 0 90) (size 0.56 0.56) (layers F.Cu F.Paste F.Mask)
+      (net 5 "Net-(C6-Pad2)"))
+    (model Capacitors_SMD.3dshapes/C_0402.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module nan-15:crystal_MT_32x25 (layer F.Cu) (tedit 58453D40) (tstamp 583F0FCA)
+    (at 142.35 89.45 180)
+    (descr "crystal Epson Toyocom FA-238 and TSX-3225 series")
+    (path /58276AB3)
+    (fp_text reference Y1 (at 0 1.6 180) (layer F.SilkS)
+      (effects (font (size 0.5 0.5) (thickness 0.1)))
+    )
+    (fp_text value "MT 16MHz" (at 0.2 2.3 180) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.6 -1.3) (end 1.6 -1.3) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.6 -1.3) (end 1.6 1.3) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.6 1.3) (end -1.6 1.3) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.6 1.3) (end -1.6 -1.3) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0.9 180) (size 1.3 1) (layers F.Cu F.Paste F.Mask)
+      (net 3 "Net-(C4-Pad1)"))
+    (pad 3 smd rect (at 1.1 0.9 180) (size 1.3 1) (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (pad 3 smd rect (at -1.1 -0.9 180) (size 1.3 1) (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (pad 2 smd rect (at 1.1 -0.9 180) (size 1.3 1) (layers F.Cu F.Paste F.Mask)
+      (net 4 "Net-(C5-Pad1)"))
+    (model Crystals.3dshapes/crystal_FA238-TSX3225.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.24 0.24 0.24))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module nan-15:R_0402_square (layer F.Cu) (tedit 58453D5C) (tstamp 5842AA4F)
+    (at 154.02 86.9 180)
+    (descr "Resistor SMD 0402, reflow soldering, Vishay (see dcrcw.pdf)")
+    (tags "resistor 0402")
+    (path /5827761F)
+    (attr smd)
+    (fp_text reference R1 (at 1.25 0 270) (layer F.SilkS)
+      (effects (font (size 0.5 0.5) (thickness 0.1)))
+    )
+    (fp_text value 10k (at 0 1.8 180) (layer F.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -0.95 -0.6) (end 0.95 -0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 0.6) (end 0.95 0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.95 -0.6) (end 0.95 0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.25 -0.475) (end -0.25 -0.475) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.25 0.475) (end 0.25 0.475) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -0.534 0 180) (size 0.56 0.56) (layers F.Cu F.Paste F.Mask)
+      (net 1 VCC))
+    (pad 2 smd rect (at 0.534 0 180) (size 0.56 0.56) (layers F.Cu F.Paste F.Mask)
+      (net 7 "Net-(IC1-Pad24)"))
+    (model Resistors_SMD.3dshapes/R_0402.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module nan-15:R_0402_square (layer F.Cu) (tedit 584C7DC6) (tstamp 5842AA70)
+    (at 137.05 88.47 180)
+    (descr "Resistor SMD 0402, reflow soldering, Vishay (see dcrcw.pdf)")
+    (tags "resistor 0402")
+    (path /582772C4)
+    (attr smd)
+    (fp_text reference R2 (at -0.55 -0.73 180) (layer F.SilkS)
+      (effects (font (size 0.5 0.5) (thickness 0.1)))
+    )
+    (fp_text value 22 (at 0 1.8 180) (layer F.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -0.95 -0.6) (end 0.95 -0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 0.6) (end 0.95 0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.95 -0.6) (end 0.95 0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.25 -0.475) (end -0.25 -0.475) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.25 0.475) (end 0.25 0.475) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -0.534 0 180) (size 0.56 0.56) (layers F.Cu F.Paste F.Mask)
+      (net 8 "Net-(IC1-Pad29)"))
+    (pad 2 smd rect (at 0.534 0 180) (size 0.56 0.56) (layers F.Cu F.Paste F.Mask)
+      (net 30 "Net-(R2-Pad2)"))
+    (model Resistors_SMD.3dshapes/R_0402.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module nan-15:R_0402_square (layer F.Cu) (tedit 584C7C24) (tstamp 5842AA91)
+    (at 139.1 89.06 180)
+    (descr "Resistor SMD 0402, reflow soldering, Vishay (see dcrcw.pdf)")
+    (tags "resistor 0402")
+    (path /582771BB)
+    (attr smd)
+    (fp_text reference R3 (at -0.8 0.56 180) (layer F.SilkS)
+      (effects (font (size 0.5 0.5) (thickness 0.1)))
+    )
+    (fp_text value 22 (at 0 1.8 180) (layer F.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -0.95 -0.6) (end 0.95 -0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 0.6) (end 0.95 0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.95 -0.6) (end 0.95 0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.25 -0.475) (end -0.25 -0.475) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.25 0.475) (end 0.25 0.475) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -0.534 0 180) (size 0.56 0.56) (layers F.Cu F.Paste F.Mask)
+      (net 9 "Net-(IC1-Pad30)"))
+    (pad 2 smd rect (at 0.534 0 180) (size 0.56 0.56) (layers F.Cu F.Paste F.Mask)
+      (net 31 "Net-(R3-Pad2)"))
+    (model Resistors_SMD.3dshapes/R_0402.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module nan-15:R_0402_square (layer F.Cu) (tedit 584C7D78) (tstamp 5842AAB2)
+    (at 155.25 90.61 180)
+    (descr "Resistor SMD 0402, reflow soldering, Vishay (see dcrcw.pdf)")
+    (tags "resistor 0402")
+    (path /582777CF)
+    (attr smd)
+    (fp_text reference R4 (at 1.15 0.01 270) (layer F.SilkS)
+      (effects (font (size 0.5 0.5) (thickness 0.1)))
+    )
+    (fp_text value 10k (at 0 1.8 180) (layer F.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -0.95 -0.6) (end 0.95 -0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 0.6) (end 0.95 0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.95 -0.6) (end 0.95 0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.25 -0.475) (end -0.25 -0.475) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.25 0.475) (end 0.25 0.475) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -0.534 0 180) (size 0.56 0.56) (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (pad 2 smd rect (at 0.534 0 180) (size 0.56 0.56) (layers F.Cu F.Paste F.Mask)
+      (net 6 "Net-(IC1-Pad13)"))
+    (model Resistors_SMD.3dshapes/R_0402.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module nan-15:C_0402_square (layer F.Cu) (tedit 584C7C83) (tstamp 5842AAD3)
+    (at 145.7 88.65 135)
+    (descr "Capacitor SMD 0402, reflow soldering, AVX (see smccp.pdf)")
+    (tags "capacitor 0402")
+    (path /58277794)
+    (attr smd)
+    (fp_text reference C3 (at 0.035355 0.883883 135) (layer F.SilkS)
+      (effects (font (size 0.5 0.5) (thickness 0.1)))
+    )
+    (fp_text value 100n (at 0 1.7 135) (layer F.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -0.95 -0.6) (end 0.95 -0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 0.6) (end 0.95 0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.95 -0.6) (end 0.95 0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.25 -0.475) (end -0.25 -0.475) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.25 0.475) (end 0.25 0.475) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -0.534 0 135) (size 0.56 0.56) (layers F.Cu F.Paste F.Mask)
+      (net 1 VCC))
+    (pad 2 smd rect (at 0.534 0 135) (size 0.56 0.56) (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (model Capacitors_SMD.3dshapes/C_0402.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module nan-15:C_0402_square (layer F.Cu) (tedit 584C7C6E) (tstamp 5842AB36)
+    (at 139.5 90.55 180)
+    (descr "Capacitor SMD 0402, reflow soldering, AVX (see smccp.pdf)")
+    (tags "capacitor 0402")
+    (path /58276A04)
+    (attr smd)
+    (fp_text reference C5 (at -0.7 0.65 180) (layer F.SilkS)
+      (effects (font (size 0.5 0.5) (thickness 0.1)))
+    )
+    (fp_text value 18p (at 0 1.7 180) (layer F.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -0.95 -0.6) (end 0.95 -0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 0.6) (end 0.95 0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.95 -0.6) (end 0.95 0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.25 -0.475) (end -0.25 -0.475) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.25 0.475) (end 0.25 0.475) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -0.534 0 180) (size 0.56 0.56) (layers F.Cu F.Paste F.Mask)
+      (net 4 "Net-(C5-Pad1)"))
+    (pad 2 smd rect (at 0.534 0 180) (size 0.56 0.56) (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (model Capacitors_SMD.3dshapes/C_0402.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module nan-15:C_0402_square (layer F.Cu) (tedit 5844BC0C) (tstamp 5842AB57)
+    (at 144.85 90.05 270)
+    (descr "Capacitor SMD 0402, reflow soldering, AVX (see smccp.pdf)")
+    (tags "capacitor 0402")
+    (path /58276A6A)
+    (attr smd)
+    (fp_text reference C4 (at 0.55 -0.85 270) (layer F.SilkS)
+      (effects (font (size 0.5 0.5) (thickness 0.1)))
+    )
+    (fp_text value 18p (at 0 1.7 270) (layer F.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -0.95 -0.6) (end 0.95 -0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 0.6) (end 0.95 0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.95 -0.6) (end 0.95 0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.25 -0.475) (end -0.25 -0.475) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.25 0.475) (end 0.25 0.475) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -0.534 0 270) (size 0.56 0.56) (layers F.Cu F.Paste F.Mask)
+      (net 3 "Net-(C4-Pad1)"))
+    (pad 2 smd rect (at 0.534 0 270) (size 0.56 0.56) (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (model Capacitors_SMD.3dshapes/C_0402.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module nan-15:C_0402_square (layer F.Cu) (tedit 584C7B60) (tstamp 5842AB78)
+    (at 134.35 88.9 90)
+    (descr "Capacitor SMD 0402, reflow soldering, AVX (see smccp.pdf)")
+    (tags "capacitor 0402")
+    (path /58276973)
+    (attr smd)
+    (fp_text reference C1 (at -1 0.65 270) (layer F.SilkS)
+      (effects (font (size 0.5 0.5) (thickness 0.1)))
+    )
+    (fp_text value 1u (at 0 1.7 90) (layer F.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -0.95 -0.6) (end 0.95 -0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 0.6) (end 0.95 0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.95 -0.6) (end 0.95 0.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.25 -0.475) (end -0.25 -0.475) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.25 0.475) (end 0.25 0.475) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -0.534 0 90) (size 0.56 0.56) (layers F.Cu F.Paste F.Mask)
+      (net 1 VCC))
+    (pad 2 smd rect (at 0.534 0 90) (size 0.56 0.56) (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (model Capacitors_SMD.3dshapes/C_0402.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module nan-15:SolderWirePad_SMD_circular (layer B.Cu) (tedit 5844B9C7) (tstamp 5844AF2D)
+    (at 154.95 89.15)
+    (descr "Wire Pad, Square, SMD Pad,  5mm x 10mm,")
+    (tags "MesurementPoint Square SMDPad 5mmx10mm ")
+    (path /5844AB00)
+    (attr smd)
+    (fp_text reference W31 (at 0 2.2) (layer B.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value TEST_1P (at 0 -2.45) (layer B.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (pad 1 smd circle (at 0 0) (size 1.5 1.5) (layers B.Cu B.Paste B.Mask)
+      (net 2 GND))
+  )
+
+  (module Symbols:OSHW-Symbol_6.7x6mm_SilkScreen locked (layer B.Cu) (tedit 0) (tstamp 5844C696)
+    (at 150 90.6 180)
+    (descr "Open Source Hardware Symbol")
+    (tags "Logo Symbol OSHW")
+    (attr virtual)
+    (fp_text reference REF*** (at 0 0 180) (layer B.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value OSHW-Symbol_6.7x6mm_SilkScreen (at 0.75 0 180) (layer B.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_poly (pts (xy 0.555814 2.531069) (xy 0.639635 2.086445) (xy 0.94892 1.958947) (xy 1.258206 1.831449)
+      (xy 1.629246 2.083754) (xy 1.733157 2.154004) (xy 1.827087 2.216728) (xy 1.906652 2.269062)
+      (xy 1.96747 2.308143) (xy 2.005157 2.331107) (xy 2.015421 2.336058) (xy 2.03391 2.323324)
+      (xy 2.07342 2.288118) (xy 2.129522 2.234938) (xy 2.197787 2.168282) (xy 2.273786 2.092646)
+      (xy 2.353092 2.012528) (xy 2.431275 1.932426) (xy 2.503907 1.856836) (xy 2.566559 1.790255)
+      (xy 2.614803 1.737182) (xy 2.64421 1.702113) (xy 2.651241 1.690377) (xy 2.641123 1.66874)
+      (xy 2.612759 1.621338) (xy 2.569129 1.552807) (xy 2.513218 1.467785) (xy 2.448006 1.370907)
+      (xy 2.410219 1.31565) (xy 2.341343 1.214752) (xy 2.28014 1.123701) (xy 2.229578 1.04703)
+      (xy 2.192628 0.989272) (xy 2.172258 0.954957) (xy 2.169197 0.947746) (xy 2.176136 0.927252)
+      (xy 2.195051 0.879487) (xy 2.223087 0.811168) (xy 2.257391 0.729011) (xy 2.295109 0.63973)
+      (xy 2.333387 0.550042) (xy 2.36937 0.466662) (xy 2.400206 0.396306) (xy 2.423039 0.34569)
+      (xy 2.435017 0.321529) (xy 2.435724 0.320578) (xy 2.454531 0.315964) (xy 2.504618 0.305672)
+      (xy 2.580793 0.290713) (xy 2.677865 0.272099) (xy 2.790643 0.250841) (xy 2.856442 0.238582)
+      (xy 2.97695 0.215638) (xy 3.085797 0.193805) (xy 3.177476 0.174278) (xy 3.246481 0.158252)
+      (xy 3.287304 0.146921) (xy 3.295511 0.143326) (xy 3.303548 0.118994) (xy 3.310033 0.064041)
+      (xy 3.31497 -0.015108) (xy 3.318364 -0.112026) (xy 3.320218 -0.220287) (xy 3.320538 -0.333465)
+      (xy 3.319327 -0.445135) (xy 3.31659 -0.548868) (xy 3.312331 -0.638241) (xy 3.306555 -0.706826)
+      (xy 3.299267 -0.748197) (xy 3.294895 -0.75681) (xy 3.268764 -0.767133) (xy 3.213393 -0.781892)
+      (xy 3.136107 -0.799352) (xy 3.04423 -0.81778) (xy 3.012158 -0.823741) (xy 2.857524 -0.852066)
+      (xy 2.735375 -0.874876) (xy 2.641673 -0.89308) (xy 2.572384 -0.907583) (xy 2.523471 -0.919292)
+      (xy 2.490897 -0.929115) (xy 2.470628 -0.937956) (xy 2.458626 -0.946724) (xy 2.456947 -0.948457)
+      (xy 2.440184 -0.976371) (xy 2.414614 -1.030695) (xy 2.382788 -1.104777) (xy 2.34726 -1.191965)
+      (xy 2.310583 -1.285608) (xy 2.275311 -1.379052) (xy 2.243996 -1.465647) (xy 2.219193 -1.53874)
+      (xy 2.203454 -1.591678) (xy 2.199332 -1.617811) (xy 2.199676 -1.618726) (xy 2.213641 -1.640086)
+      (xy 2.245322 -1.687084) (xy 2.291391 -1.754827) (xy 2.348518 -1.838423) (xy 2.413373 -1.932982)
+      (xy 2.431843 -1.959854) (xy 2.497699 -2.057275) (xy 2.55565 -2.146163) (xy 2.602538 -2.221412)
+      (xy 2.635207 -2.27792) (xy 2.6505 -2.310581) (xy 2.651241 -2.314593) (xy 2.638392 -2.335684)
+      (xy 2.602888 -2.377464) (xy 2.549293 -2.435445) (xy 2.482171 -2.505135) (xy 2.406087 -2.582045)
+      (xy 2.325604 -2.661683) (xy 2.245287 -2.739561) (xy 2.169699 -2.811186) (xy 2.103405 -2.87207)
+      (xy 2.050969 -2.917721) (xy 2.016955 -2.94365) (xy 2.007545 -2.947883) (xy 1.985643 -2.937912)
+      (xy 1.9408 -2.91102) (xy 1.880321 -2.871736) (xy 1.833789 -2.840117) (xy 1.749475 -2.782098)
+      (xy 1.649626 -2.713784) (xy 1.549473 -2.645579) (xy 1.495627 -2.609075) (xy 1.313371 -2.4858)
+      (xy 1.160381 -2.56852) (xy 1.090682 -2.604759) (xy 1.031414 -2.632926) (xy 0.991311 -2.648991)
+      (xy 0.981103 -2.651226) (xy 0.968829 -2.634722) (xy 0.944613 -2.588082) (xy 0.910263 -2.515609)
+      (xy 0.867588 -2.421606) (xy 0.818394 -2.310374) (xy 0.76449 -2.186215) (xy 0.707684 -2.053432)
+      (xy 0.649782 -1.916327) (xy 0.592593 -1.779202) (xy 0.537924 -1.646358) (xy 0.487584 -1.522098)
+      (xy 0.44338 -1.410725) (xy 0.407119 -1.316539) (xy 0.380609 -1.243844) (xy 0.365658 -1.196941)
+      (xy 0.363254 -1.180833) (xy 0.382311 -1.160286) (xy 0.424036 -1.126933) (xy 0.479706 -1.087702)
+      (xy 0.484378 -1.084599) (xy 0.628264 -0.969423) (xy 0.744283 -0.835053) (xy 0.83143 -0.685784)
+      (xy 0.888699 -0.525913) (xy 0.915086 -0.359737) (xy 0.909585 -0.191552) (xy 0.87119 -0.025655)
+      (xy 0.798895 0.133658) (xy 0.777626 0.168513) (xy 0.666996 0.309263) (xy 0.536302 0.422286)
+      (xy 0.390064 0.506997) (xy 0.232808 0.562806) (xy 0.069057 0.589126) (xy -0.096667 0.58537)
+      (xy -0.259838 0.55095) (xy -0.415935 0.485277) (xy -0.560433 0.387765) (xy -0.605131 0.348187)
+      (xy -0.718888 0.224297) (xy -0.801782 0.093876) (xy -0.858644 -0.052315) (xy -0.890313 -0.197088)
+      (xy -0.898131 -0.35986) (xy -0.872062 -0.52344) (xy -0.814755 -0.682298) (xy -0.728856 -0.830906)
+      (xy -0.617014 -0.963735) (xy -0.481877 -1.075256) (xy -0.464117 -1.087011) (xy -0.40785 -1.125508)
+      (xy -0.365077 -1.158863) (xy -0.344628 -1.18016) (xy -0.344331 -1.180833) (xy -0.348721 -1.203871)
+      (xy -0.366124 -1.256157) (xy -0.394732 -1.33339) (xy -0.432735 -1.431268) (xy -0.478326 -1.545491)
+      (xy -0.529697 -1.671758) (xy -0.585038 -1.805767) (xy -0.642542 -1.943218) (xy -0.700399 -2.079808)
+      (xy -0.756802 -2.211237) (xy -0.809942 -2.333205) (xy -0.85801 -2.441409) (xy -0.899199 -2.531549)
+      (xy -0.931699 -2.599323) (xy -0.953703 -2.64043) (xy -0.962564 -2.651226) (xy -0.98964 -2.642819)
+      (xy -1.040303 -2.620272) (xy -1.105817 -2.587613) (xy -1.141841 -2.56852) (xy -1.294832 -2.4858)
+      (xy -1.477088 -2.609075) (xy -1.570125 -2.672228) (xy -1.671985 -2.741727) (xy -1.767438 -2.807165)
+      (xy -1.81525 -2.840117) (xy -1.882495 -2.885273) (xy -1.939436 -2.921057) (xy -1.978646 -2.942938)
+      (xy -1.991381 -2.947563) (xy -2.009917 -2.935085) (xy -2.050941 -2.900252) (xy -2.110475 -2.846678)
+      (xy -2.184542 -2.777983) (xy -2.269165 -2.697781) (xy -2.322685 -2.646286) (xy -2.416319 -2.554286)
+      (xy -2.497241 -2.471999) (xy -2.562177 -2.402945) (xy -2.607858 -2.350644) (xy -2.631011 -2.318616)
+      (xy -2.633232 -2.312116) (xy -2.622924 -2.287394) (xy -2.594439 -2.237405) (xy -2.550937 -2.167212)
+      (xy -2.495577 -2.081875) (xy -2.43152 -1.986456) (xy -2.413303 -1.959854) (xy -2.346927 -1.863167)
+      (xy -2.287378 -1.776117) (xy -2.237984 -1.703595) (xy -2.202075 -1.650493) (xy -2.182981 -1.621703)
+      (xy -2.181136 -1.618726) (xy -2.183895 -1.595782) (xy -2.198538 -1.545336) (xy -2.222513 -1.474041)
+      (xy -2.253266 -1.388547) (xy -2.288244 -1.295507) (xy -2.324893 -1.201574) (xy -2.360661 -1.113399)
+      (xy -2.392994 -1.037634) (xy -2.419338 -0.980931) (xy -2.437142 -0.949943) (xy -2.438407 -0.948457)
+      (xy -2.449294 -0.939601) (xy -2.467682 -0.930843) (xy -2.497606 -0.921277) (xy -2.543103 -0.909996)
+      (xy -2.608209 -0.896093) (xy -2.696961 -0.878663) (xy -2.813393 -0.856798) (xy -2.961542 -0.829591)
+      (xy -2.993618 -0.823741) (xy -3.088686 -0.805374) (xy -3.171565 -0.787405) (xy -3.23493 -0.771569)
+      (xy -3.271458 -0.7596) (xy -3.276356 -0.75681) (xy -3.284427 -0.732072) (xy -3.290987 -0.67679)
+      (xy -3.296033 -0.597389) (xy -3.299559 -0.500296) (xy -3.301561 -0.391938) (xy -3.302036 -0.27874)
+      (xy -3.300977 -0.167128) (xy -3.298382 -0.063529) (xy -3.294246 0.025632) (xy -3.288563 0.093928)
+      (xy -3.281331 0.134934) (xy -3.276971 0.143326) (xy -3.252698 0.151792) (xy -3.197426 0.165565)
+      (xy -3.116662 0.18345) (xy -3.015912 0.204252) (xy -2.900683 0.226777) (xy -2.837902 0.238582)
+      (xy -2.718787 0.260849) (xy -2.612565 0.281021) (xy -2.524427 0.298085) (xy -2.459566 0.311031)
+      (xy -2.423174 0.318845) (xy -2.417184 0.320578) (xy -2.407061 0.34011) (xy -2.385662 0.387157)
+      (xy -2.355839 0.454997) (xy -2.320445 0.536909) (xy -2.282332 0.626172) (xy -2.244353 0.716065)
+      (xy -2.20936 0.799865) (xy -2.180206 0.870853) (xy -2.159743 0.922306) (xy -2.150823 0.947503)
+      (xy -2.150657 0.948604) (xy -2.160769 0.968481) (xy -2.189117 1.014223) (xy -2.232723 1.081283)
+      (xy -2.288606 1.165116) (xy -2.353787 1.261174) (xy -2.391679 1.31635) (xy -2.460725 1.417519)
+      (xy -2.52205 1.50937) (xy -2.572663 1.587256) (xy -2.609571 1.646531) (xy -2.629782 1.682549)
+      (xy -2.632701 1.690623) (xy -2.620153 1.709416) (xy -2.585463 1.749543) (xy -2.533063 1.806507)
+      (xy -2.467384 1.875815) (xy -2.392856 1.952969) (xy -2.313913 2.033475) (xy -2.234983 2.112837)
+      (xy -2.1605 2.18656) (xy -2.094894 2.250148) (xy -2.042596 2.299106) (xy -2.008039 2.328939)
+      (xy -1.996478 2.336058) (xy -1.977654 2.326047) (xy -1.932631 2.297922) (xy -1.865787 2.254546)
+      (xy -1.781499 2.198782) (xy -1.684144 2.133494) (xy -1.610707 2.083754) (xy -1.239667 1.831449)
+      (xy -0.621095 2.086445) (xy -0.537275 2.531069) (xy -0.453454 2.975693) (xy 0.471994 2.975693)
+      (xy 0.555814 2.531069)) (layer B.SilkS) (width 0.01))
+  )
+
+  (module nan-15:QFN-32-1EP_5x5mm_Pitch0.5mm_internal_vias (layer F.Cu) (tedit 584BF969) (tstamp 58433F5E)
+    (at 150 90 45)
+    (descr "UH Package; 32-Lead Plastic QFN (5mm x 5mm); (see Linear Technology QFN_32_05-08-1693.pdf)")
+    (tags "QFN 0.5")
+    (path /582763D2)
+    (attr smd)
+    (fp_text reference IC1 (at 3.193294 -0.966615 135) (layer F.SilkS)
+      (effects (font (size 0.5 0.5) (thickness 0.1)))
+    )
+    (fp_text value ATMEGA32U2 (at 0 3.75 45) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -3 -3) (end -3 3) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3 -3) (end 3 3) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3 -3) (end 3 -3) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3 3) (end 3 3) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 2.625 -2.625) (end 2.625 -2.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start -2.625 2.625) (end -2.625 2.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2.625 2.625) (end 2.625 2.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start -2.625 -2.625) (end -2.1 -2.625) (layer F.SilkS) (width 0.15))
+    (fp_line (start -2.625 2.625) (end -2.1 2.625) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2.625 2.625) (end 2.1 2.625) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2.625 -2.625) (end 2.1 -2.625) (layer F.SilkS) (width 0.15))
+    (pad 33 thru_hole circle (at -0.8 0.8 225) (size 0.6 0.6) (drill 0.3) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 33 thru_hole circle (at 0.8 0.8 225) (size 0.6 0.6) (drill 0.3) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 33 thru_hole circle (at 0.8 -0.8 225) (size 0.6 0.6) (drill 0.3) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 33 smd roundrect (at 0.8 0.8 90) (size 1.3 1.3) (layers F.Cu F.Paste F.Mask) (roundrect_rratio 0.3)
+      (net 2 GND))
+    (pad 33 smd roundrect (at -0.8 -0.8 90) (size 1.3 1.3) (layers F.Cu F.Paste F.Mask) (roundrect_rratio 0.3)
+      (net 2 GND))
+    (pad 33 smd roundrect (at -0.8 0.8 90) (size 1.3 1.3) (layers F.Cu F.Paste F.Mask) (roundrect_rratio 0.3)
+      (net 2 GND))
+    (pad 1 smd rect (at -2.4 -1.75 45) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 3 "Net-(C4-Pad1)"))
+    (pad 2 smd rect (at -2.4 -1.25 45) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 4 "Net-(C5-Pad1)"))
+    (pad 3 smd rect (at -2.4 -0.75 45) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (pad 4 smd rect (at -2.4 -0.25 45) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 1 VCC))
+    (pad 5 smd rect (at -2.4 0.25 45) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 10 /C2))
+    (pad 6 smd rect (at -2.4 0.75 45) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 11 /D0))
+    (pad 7 smd rect (at -2.4 1.25 45) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 12 /D1))
+    (pad 8 smd rect (at -2.4 1.75 45) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 13 /D2))
+    (pad 9 smd rect (at -1.75 2.4 135) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 14 /D3))
+    (pad 10 smd rect (at -1.25 2.4 135) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 15 /D4))
+    (pad 11 smd rect (at -0.75 2.4 135) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 16 /D5))
+    (pad 12 smd rect (at -0.25 2.4 135) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 17 /D6))
+    (pad 13 smd rect (at 0.25 2.4 135) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 6 "Net-(IC1-Pad13)"))
+    (pad 14 smd rect (at 0.75 2.4 135) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 18 /B0))
+    (pad 15 smd rect (at 1.25 2.4 135) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 19 /B1))
+    (pad 16 smd rect (at 1.75 2.4 135) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 20 /B2))
+    (pad 17 smd rect (at 2.4 1.75 45) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 21 /B3))
+    (pad 18 smd rect (at 2.4 1.25 45) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 22 /B4))
+    (pad 19 smd rect (at 2.4 0.75 45) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 23 /B5))
+    (pad 20 smd rect (at 2.4 0.25 45) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 24 /B6))
+    (pad 21 smd rect (at 2.4 -0.25 45) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 25 /B7))
+    (pad 22 smd rect (at 2.4 -0.75 45) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 26 /C7))
+    (pad 23 smd rect (at 2.4 -1.25 45) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 27 /C6))
+    (pad 24 smd rect (at 2.4 -1.75 45) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 7 "Net-(IC1-Pad24)"))
+    (pad 25 smd rect (at 1.75 -2.4 135) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 28 /C5))
+    (pad 26 smd rect (at 1.25 -2.4 135) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 29 /C4))
+    (pad 27 smd rect (at 0.75 -2.4 135) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 5 "Net-(C6-Pad2)"))
+    (pad 28 smd rect (at 0.25 -2.4 135) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (pad 29 smd rect (at -0.25 -2.4 135) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 8 "Net-(IC1-Pad29)"))
+    (pad 30 smd rect (at -0.75 -2.4 135) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 9 "Net-(IC1-Pad30)"))
+    (pad 31 smd rect (at -1.25 -2.4 135) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 1 VCC))
+    (pad 32 smd rect (at -1.75 -2.4 135) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 1 VCC))
+    (pad 33 smd roundrect (at 0.8 -0.8 90) (size 1.3 1.3) (layers F.Cu F.Paste F.Mask) (roundrect_rratio 0.3)
+      (net 2 GND))
+    (pad 33 smd roundrect (at 0 0 91) (size 1.9 1.9) (layers F.Cu F.Paste F.Mask) (roundrect_rratio 0.3)
+      (net 2 GND))
+    (pad 33 thru_hole circle (at -0.8 -0.8 225) (size 0.6 0.6) (drill 0.3) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (model Housings_DFN_QFN.3dshapes/QFN-32-1EP_5x5mm_Pitch0.5mm.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module nan-15:SolderWirePad_SMD (layer B.Cu) (tedit 584BFA97) (tstamp 5841D9C5)
+    (at 132.4 87.2 90)
+    (descr "Wire Pad, Square, SMD Pad,  1.26x2.5mm")
+    (tags "MesurementPoint Square SMDPad 5mmx10mm ")
+    (path /58409AFF)
+    (attr smd)
+    (fp_text reference W30 (at 0 2.2 90) (layer B.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value TEST_1P (at 0 -2.45 90) (layer B.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.7 1.35) (end 0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end -0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end 0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end 0.7 1.35) (layer B.CrtYd) (width 0.05))
+    (pad 1 smd rect (at 0 0 90) (size 1.26 2.5) (layers B.Cu B.Paste B.Mask)
+      (net 26 /C7))
+  )
+
+  (module nan-15:SolderWirePad_SMD (layer B.Cu) (tedit 584BFA97) (tstamp 5841DA61)
+    (at 132.4 88.75 270)
+    (descr "Wire Pad, Square, SMD Pad,  1.26x2.5mm")
+    (tags "MesurementPoint Square SMDPad 5mmx10mm ")
+    (path /5840BE0A)
+    (attr smd)
+    (fp_text reference W5 (at 0 2.2 270) (layer B.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value TEST_1P (at 0 -2.45 270) (layer B.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.7 1.35) (end 0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end -0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end 0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end 0.7 1.35) (layer B.CrtYd) (width 0.05))
+    (pad 1 smd rect (at 0 0 270) (size 1.26 2.5) (layers B.Cu B.Paste B.Mask)
+      (net 31 "Net-(R3-Pad2)"))
+  )
+
+  (module nan-15:SolderWirePad_SMD (layer B.Cu) (tedit 584BFA97) (tstamp 5841DA79)
+    (at 132.4 90.3 270)
+    (descr "Wire Pad, Square, SMD Pad,  1.26x2.5mm")
+    (tags "MesurementPoint Square SMDPad 5mmx10mm ")
+    (path /5840C0DE)
+    (attr smd)
+    (fp_text reference W7 (at 0 2.2 270) (layer B.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value TEST_1P (at 0 -2.45 270) (layer B.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.7 1.35) (end 0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end -0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end 0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end 0.7 1.35) (layer B.CrtYd) (width 0.05))
+    (pad 1 smd rect (at 0 0 270) (size 1.26 2.5) (layers B.Cu B.Paste B.Mask)
+      (net 2 GND))
+  )
+
+  (module nan-15:SolderWirePad_SMD (layer B.Cu) (tedit 584BFA97) (tstamp 5841D9DD)
+    (at 136.55 87.2 90)
+    (descr "Wire Pad, Square, SMD Pad,  1.26x2.5mm")
+    (tags "MesurementPoint Square SMDPad 5mmx10mm ")
+    (path /584099FE)
+    (attr smd)
+    (fp_text reference W28 (at 0 2.2 90) (layer B.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value TEST_1P (at 0 -2.45 90) (layer B.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.7 1.35) (end 0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end -0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end 0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end 0.7 1.35) (layer B.CrtYd) (width 0.05))
+    (pad 1 smd rect (at 0 0 90) (size 1.26 2.5) (layers B.Cu B.Paste B.Mask)
+      (net 28 /C5))
+  )
+
+  (module nan-15:SolderWirePad_SMD (layer F.Cu) (tedit 584BFA97) (tstamp 5841DAA9)
+    (at 136.55 90.3 90)
+    (descr "Wire Pad, Square, SMD Pad,  1.26x2.5mm")
+    (tags "MesurementPoint Square SMDPad 5mmx10mm ")
+    (path /584098FB)
+    (attr smd)
+    (fp_text reference W26 (at 0 -2.2 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value TEST_1P (at 0 2.45 90) (layer F.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0.7 -1.35) (end 0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end -0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end 0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end 0.7 -1.35) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at 0 0 90) (size 1.26 2.5) (layers F.Cu F.Paste F.Mask)
+      (net 10 /C2))
+  )
+
+  (module nan-15:SolderWirePad_SMD (layer B.Cu) (tedit 584BFA97) (tstamp 5841DB15)
+    (at 148.45 96)
+    (descr "Wire Pad, Square, SMD Pad,  1.26x2.5mm")
+    (tags "MesurementPoint Square SMDPad 5mmx10mm ")
+    (path /58409660)
+    (attr smd)
+    (fp_text reference W20 (at 0 2.2) (layer B.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value TEST_1P (at 0 -2.45) (layer B.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.7 1.35) (end 0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end -0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end 0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end 0.7 1.35) (layer B.CrtYd) (width 0.05))
+    (pad 1 smd rect (at 0 0) (size 1.26 2.5) (layers B.Cu B.Paste B.Mask)
+      (net 12 /D1))
+  )
+
+  (module nan-15:SolderWirePad_SMD (layer B.Cu) (tedit 584BFA97) (tstamp 5841DA0D)
+    (at 150 96)
+    (descr "Wire Pad, Square, SMD Pad,  1.26x2.5mm")
+    (tags "MesurementPoint Square SMDPad 5mmx10mm ")
+    (path /58409731)
+    (attr smd)
+    (fp_text reference W22 (at 0 2.2) (layer B.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value TEST_1P (at 0 -2.45) (layer B.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.7 1.35) (end 0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end -0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end 0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end 0.7 1.35) (layer B.CrtYd) (width 0.05))
+    (pad 1 smd rect (at 0 0) (size 1.26 2.5) (layers B.Cu B.Paste B.Mask)
+      (net 14 /D3))
+  )
+
+  (module nan-15:SolderWirePad_SMD (layer B.Cu) (tedit 584BFA97) (tstamp 5841D9F5)
+    (at 151.55 96)
+    (descr "Wire Pad, Square, SMD Pad,  1.26x2.5mm")
+    (tags "MesurementPoint Square SMDPad 5mmx10mm ")
+    (path /5840980E)
+    (attr smd)
+    (fp_text reference W24 (at 0 2.2) (layer B.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value TEST_1P (at 0 -2.45) (layer B.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.7 1.35) (end 0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end -0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end 0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end 0.7 1.35) (layer B.CrtYd) (width 0.05))
+    (pad 1 smd rect (at 0 0) (size 1.26 2.5) (layers B.Cu B.Paste B.Mask)
+      (net 16 /D5))
+  )
+
+  (module nan-15:SolderWirePad_SMD (layer B.Cu) (tedit 584BFA97) (tstamp 5841DAFD)
+    (at 157.65 87.2 270)
+    (descr "Wire Pad, Square, SMD Pad,  1.26x2.5mm")
+    (tags "MesurementPoint Square SMDPad 5mmx10mm ")
+    (path /58409597)
+    (attr smd)
+    (fp_text reference W18 (at 0 2.2 270) (layer B.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value TEST_1P (at 0 -2.45 270) (layer B.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.7 1.35) (end 0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end -0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end 0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end 0.7 1.35) (layer B.CrtYd) (width 0.05))
+    (pad 1 smd rect (at 0 0 270) (size 1.26 2.5) (layers B.Cu B.Paste B.Mask)
+      (net 25 /B7))
+  )
+
+  (module nan-15:SolderWirePad_SMD (layer B.Cu) (tedit 584BFA97) (tstamp 5841DA85)
+    (at 157.65 90.3 270)
+    (descr "Wire Pad, Square, SMD Pad,  1.26x2.5mm")
+    (tags "MesurementPoint Square SMDPad 5mmx10mm ")
+    (path /58407E26)
+    (attr smd)
+    (fp_text reference W8 (at 0 2.2 270) (layer B.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value TEST_1P (at 0 -2.45 270) (layer B.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.7 1.35) (end 0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end -0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end 0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end 0.7 1.35) (layer B.CrtYd) (width 0.05))
+    (pad 1 smd rect (at 0 0 270) (size 1.26 2.5) (layers B.Cu B.Paste B.Mask)
+      (net 7 "Net-(IC1-Pad24)"))
+  )
+
+  (module nan-15:SolderWirePad_SMD (layer B.Cu) (tedit 584BFA97) (tstamp 5841DAE5)
+    (at 161.8 87.2 270)
+    (descr "Wire Pad, Square, SMD Pad,  1.26x2.5mm")
+    (tags "MesurementPoint Square SMDPad 5mmx10mm ")
+    (path /584094DE)
+    (attr smd)
+    (fp_text reference W16 (at 0 2.2 270) (layer B.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value TEST_1P (at 0 -2.45 270) (layer B.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.7 1.35) (end 0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end -0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end 0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end 0.7 1.35) (layer B.CrtYd) (width 0.05))
+    (pad 1 smd rect (at 0 0 270) (size 1.26 2.5) (layers B.Cu B.Paste B.Mask)
+      (net 23 /B5))
+  )
+
+  (module nan-15:SolderWirePad_SMD (layer B.Cu) (tedit 584BFA97) (tstamp 5841DA49)
+    (at 161.8 88.75 90)
+    (descr "Wire Pad, Square, SMD Pad,  1.26x2.5mm")
+    (tags "MesurementPoint Square SMDPad 5mmx10mm ")
+    (path /58409431)
+    (attr smd)
+    (fp_text reference W3 (at 0 2.2 90) (layer B.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value TEST_1P (at 0 -2.45 90) (layer B.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.7 1.35) (end 0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end -0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end 0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end 0.7 1.35) (layer B.CrtYd) (width 0.05))
+    (pad 1 smd rect (at 0 0 90) (size 1.26 2.5) (layers B.Cu B.Paste B.Mask)
+      (net 21 /B3))
+  )
+
+  (module nan-15:SolderWirePad_SMD (layer B.Cu) (tedit 584BFA97) (tstamp 5841DA31)
+    (at 161.8 90.3 270)
+    (descr "Wire Pad, Square, SMD Pad,  1.26x2.5mm")
+    (tags "MesurementPoint Square SMDPad 5mmx10mm ")
+    (path /5840938C)
+    (attr smd)
+    (fp_text reference W1 (at 0 2.2 270) (layer B.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value TEST_1P (at 0 -2.45 270) (layer B.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.7 1.35) (end 0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end -0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end 0.7 -1.35) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end 0.7 1.35) (layer B.CrtYd) (width 0.05))
+    (pad 1 smd rect (at 0 0 270) (size 1.26 2.5) (layers B.Cu B.Paste B.Mask)
+      (net 19 /B1))
+  )
+
+  (module nan-15:SolderWirePad_SMD (layer F.Cu) (tedit 584BFA97) (tstamp 5841D9D1)
+    (at 132.4 87.2 90)
+    (descr "Wire Pad, Square, SMD Pad,  1.26x2.5mm")
+    (tags "MesurementPoint Square SMDPad 5mmx10mm ")
+    (path /58409A7D)
+    (attr smd)
+    (fp_text reference W29 (at 0 -2.2 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value TEST_1P (at 0 2.45 90) (layer F.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0.7 -1.35) (end 0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end -0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end 0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end 0.7 -1.35) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at 0 0 90) (size 1.26 2.5) (layers F.Cu F.Paste F.Mask)
+      (net 27 /C6))
+  )
+
+  (module nan-15:SolderWirePad_SMD (layer F.Cu) (tedit 584BFA97) (tstamp 5841DA55)
+    (at 132.4 88.75 90)
+    (descr "Wire Pad, Square, SMD Pad,  1.26x2.5mm")
+    (tags "MesurementPoint Square SMDPad 5mmx10mm ")
+    (path /5840BE04)
+    (attr smd)
+    (fp_text reference W4 (at 0 -2.2 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value TEST_1P (at 0 2.45 90) (layer F.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0.7 -1.35) (end 0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end -0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end 0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end 0.7 -1.35) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at 0 0 90) (size 1.26 2.5) (layers F.Cu F.Paste F.Mask)
+      (net 30 "Net-(R2-Pad2)"))
+  )
+
+  (module nan-15:SolderWirePad_SMD (layer F.Cu) (tedit 584BFA97) (tstamp 5841DA6D)
+    (at 132.4 90.3 90)
+    (descr "Wire Pad, Square, SMD Pad,  1.26x2.5mm")
+    (tags "MesurementPoint Square SMDPad 5mmx10mm ")
+    (path /5840BE10)
+    (attr smd)
+    (fp_text reference W6 (at 0 -2.2 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value TEST_1P (at 0 2.45 90) (layer F.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0.7 -1.35) (end 0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end -0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end 0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end 0.7 -1.35) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at 0 0 90) (size 1.26 2.5) (layers F.Cu F.Paste F.Mask)
+      (net 1 VCC))
+  )
+
+  (module nan-15:SolderWirePad_SMD (layer F.Cu) (tedit 584BFA97) (tstamp 5841DA9D)
+    (at 136.55 87.2 90)
+    (descr "Wire Pad, Square, SMD Pad,  1.26x2.5mm")
+    (tags "MesurementPoint Square SMDPad 5mmx10mm ")
+    (path /58409982)
+    (attr smd)
+    (fp_text reference W27 (at 0 -2.2 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value TEST_1P (at 0 2.45 90) (layer F.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0.7 -1.35) (end 0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end -0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end 0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end 0.7 -1.35) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at 0 0 90) (size 1.26 2.5) (layers F.Cu F.Paste F.Mask)
+      (net 29 /C4))
+  )
+
+  (module nan-15:SolderWirePad_SMD (layer F.Cu) (tedit 584BFA97) (tstamp 5841DB09)
+    (at 148.45 96)
+    (descr "Wire Pad, Square, SMD Pad,  1.26x2.5mm")
+    (tags "MesurementPoint Square SMDPad 5mmx10mm ")
+    (path /584095F8)
+    (attr smd)
+    (fp_text reference W19 (at 0 -2.2) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value TEST_1P (at 0 2.45) (layer F.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0.7 -1.35) (end 0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end -0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end 0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end 0.7 -1.35) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at 0 0) (size 1.26 2.5) (layers F.Cu F.Paste F.Mask)
+      (net 11 /D0))
+  )
+
+  (module nan-15:SolderWirePad_SMD (layer F.Cu) (tedit 584BFA97) (tstamp 5841DA19)
+    (at 150 96)
+    (descr "Wire Pad, Square, SMD Pad,  1.26x2.5mm")
+    (tags "MesurementPoint Square SMDPad 5mmx10mm ")
+    (path /584096C7)
+    (attr smd)
+    (fp_text reference W21 (at 0 -2.2) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value TEST_1P (at 0 2.45) (layer F.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0.7 -1.35) (end 0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end -0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end 0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end 0.7 -1.35) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at 0 0) (size 1.26 2.5) (layers F.Cu F.Paste F.Mask)
+      (net 13 /D2))
+  )
+
+  (module nan-15:SolderWirePad_SMD (layer F.Cu) (tedit 584BFA97) (tstamp 5841DA01)
+    (at 151.55 96)
+    (descr "Wire Pad, Square, SMD Pad,  1.26x2.5mm")
+    (tags "MesurementPoint Square SMDPad 5mmx10mm ")
+    (path /5840979E)
+    (attr smd)
+    (fp_text reference W23 (at 0 -2.2) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value TEST_1P (at 0 2.45) (layer F.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0.7 -1.35) (end 0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end -0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end 0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end 0.7 -1.35) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at 0 0) (size 1.26 2.5) (layers F.Cu F.Paste F.Mask)
+      (net 15 /D4))
+  )
+
+  (module nan-15:SolderWirePad_SMD (layer F.Cu) (tedit 584BFA97) (tstamp 5841D9E9)
+    (at 157.65 90.3 270)
+    (descr "Wire Pad, Square, SMD Pad,  1.26x2.5mm")
+    (tags "MesurementPoint Square SMDPad 5mmx10mm ")
+    (path /58409885)
+    (attr smd)
+    (fp_text reference W25 (at 0 -2.2 270) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value TEST_1P (at 0 2.45 270) (layer F.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0.7 -1.35) (end 0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end -0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end 0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end 0.7 -1.35) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at 0 0 270) (size 1.26 2.5) (layers F.Cu F.Paste F.Mask)
+      (net 17 /D6))
+  )
+
+  (module nan-15:SolderWirePad_SMD (layer F.Cu) (tedit 584BFA97) (tstamp 5841DAF1)
+    (at 157.65 87.2 270)
+    (descr "Wire Pad, Square, SMD Pad,  1.26x2.5mm")
+    (tags "MesurementPoint Square SMDPad 5mmx10mm ")
+    (path /58409539)
+    (attr smd)
+    (fp_text reference W17 (at 0 -2.2 270) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value TEST_1P (at 0 2.45 270) (layer F.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0.7 -1.35) (end 0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end -0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end 0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end 0.7 -1.35) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at 0 0 270) (size 1.26 2.5) (layers F.Cu F.Paste F.Mask)
+      (net 24 /B6))
+  )
+
+  (module nan-15:SolderWirePad_SMD (layer F.Cu) (tedit 584BFA97) (tstamp 5841DAD9)
+    (at 161.8 87.2 90)
+    (descr "Wire Pad, Square, SMD Pad,  1.26x2.5mm")
+    (tags "MesurementPoint Square SMDPad 5mmx10mm ")
+    (path /58409486)
+    (attr smd)
+    (fp_text reference W15 (at 0 -2.2 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value TEST_1P (at 0 2.45 90) (layer F.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0.7 -1.35) (end 0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end -0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end 0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end 0.7 -1.35) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at 0 0 90) (size 1.26 2.5) (layers F.Cu F.Paste F.Mask)
+      (net 22 /B4))
+  )
+
+  (module nan-15:SolderWirePad_SMD (layer F.Cu) (tedit 584BFA97) (tstamp 5841DA3D)
+    (at 161.8 88.75 90)
+    (descr "Wire Pad, Square, SMD Pad,  1.26x2.5mm")
+    (tags "MesurementPoint Square SMDPad 5mmx10mm ")
+    (path /584093DF)
+    (attr smd)
+    (fp_text reference W2 (at 0 -2.2 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value TEST_1P (at 0 2.45 90) (layer F.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0.7 -1.35) (end 0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end -0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end 0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end 0.7 -1.35) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at 0 0 90) (size 1.26 2.5) (layers F.Cu F.Paste F.Mask)
+      (net 20 /B2))
+  )
+
+  (module nan-15:SolderWirePad_SMD (layer F.Cu) (tedit 584BFA97) (tstamp 5841DA25)
+    (at 161.8 90.3 90)
+    (descr "Wire Pad, Square, SMD Pad,  1.26x2.5mm")
+    (tags "MesurementPoint Square SMDPad 5mmx10mm ")
+    (path /5840927A)
+    (attr smd)
+    (fp_text reference W0 (at 0 -2.2 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value TEST_1P (at 0 2.45 90) (layer F.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0.7 -1.35) (end 0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end -0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 1.35) (end 0.7 1.35) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.7 -1.35) (end 0.7 -1.35) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at 0 0 90) (size 1.26 2.5) (layers F.Cu F.Paste F.Mask)
+      (net 18 /B0))
+  )
+
+  (dimension 11.3 (width 0.15) (layer Dwgs.User)
+    (gr_text "11.300 mm" (at 169.3 91.9 90) (layer Dwgs.User)
+      (effects (font (size 0.7 0.7) (thickness 0.15)))
+    )
+    (feature1 (pts (xy 152.5 86.25) (xy 169.95 86.25)))
+    (feature2 (pts (xy 152.5 97.55) (xy 169.95 97.55)))
+    (crossbar (pts (xy 168.65 97.55) (xy 168.65 86.25)))
+    (arrow1a (pts (xy 168.65 86.25) (xy 169.236421 87.376504)))
+    (arrow1b (pts (xy 168.65 86.25) (xy 168.063579 87.376504)))
+    (arrow2a (pts (xy 168.65 97.55) (xy 169.236421 96.423496)))
+    (arrow2b (pts (xy 168.65 97.55) (xy 168.063579 96.423496)))
+  )
+  (dimension 16.65 (width 0.15) (layer Dwgs.User)
+    (gr_text "16.650 mm" (at 139.175 102.6) (layer Dwgs.User)
+      (effects (font (size 0.7 0.7) (thickness 0.15)))
+    )
+    (feature1 (pts (xy 130.85 97.55) (xy 130.85 103.25)))
+    (feature2 (pts (xy 147.5 97.55) (xy 147.5 103.25)))
+    (crossbar (pts (xy 147.5 101.95) (xy 130.85 101.95)))
+    (arrow1a (pts (xy 130.85 101.95) (xy 131.976504 101.363579)))
+    (arrow1b (pts (xy 130.85 101.95) (xy 131.976504 102.536421)))
+    (arrow2a (pts (xy 147.5 101.95) (xy 146.373496 101.363579)))
+    (arrow2b (pts (xy 147.5 101.95) (xy 146.373496 102.536421)))
+  )
+  (dimension 32.5 (width 0.15) (layer Dwgs.User)
+    (gr_text "32.500 mm" (at 147.1 104.8) (layer Dwgs.User)
+      (effects (font (size 0.7 0.7) (thickness 0.15)))
+    )
+    (feature1 (pts (xy 163.35 91.25) (xy 163.35 105.45)))
+    (feature2 (pts (xy 130.85 91.25) (xy 130.85 105.45)))
+    (crossbar (pts (xy 130.85 104.15) (xy 163.35 104.15)))
+    (arrow1a (pts (xy 163.35 104.15) (xy 162.223496 104.736421)))
+    (arrow1b (pts (xy 163.35 104.15) (xy 162.223496 103.563579)))
+    (arrow2a (pts (xy 130.85 104.15) (xy 131.976504 104.736421)))
+    (arrow2b (pts (xy 130.85 104.15) (xy 131.976504 103.563579)))
+  )
+  (dimension 5 (width 0.15) (layer Dwgs.User)
+    (gr_text "5.000 mm" (at 166.8 88.75 90) (layer Dwgs.User)
+      (effects (font (size 0.7 0.7) (thickness 0.15)))
+    )
+    (feature1 (pts (xy 162.9 86.25) (xy 167.45 86.25)))
+    (feature2 (pts (xy 162.9 91.25) (xy 167.45 91.25)))
+    (crossbar (pts (xy 166.15 91.25) (xy 166.15 86.25)))
+    (arrow1a (pts (xy 166.15 86.25) (xy 166.736421 87.376504)))
+    (arrow1b (pts (xy 166.15 86.25) (xy 165.563579 87.376504)))
+    (arrow2a (pts (xy 166.15 91.25) (xy 166.736421 90.123496)))
+    (arrow2b (pts (xy 166.15 91.25) (xy 165.563579 90.123496)))
+  )
+  (dimension 5 (width 0.15) (layer Dwgs.User)
+    (gr_text "5.000 mm" (at 150 102.6) (layer Dwgs.User)
+      (effects (font (size 0.7 0.7) (thickness 0.15)))
+    )
+    (feature1 (pts (xy 152.5 97.7) (xy 152.5 103.25)))
+    (feature2 (pts (xy 147.5 97.7) (xy 147.5 103.25)))
+    (crossbar (pts (xy 147.5 101.95) (xy 152.5 101.95)))
+    (arrow1a (pts (xy 152.5 101.95) (xy 151.373496 102.536421)))
+    (arrow1b (pts (xy 152.5 101.95) (xy 151.373496 101.363579)))
+    (arrow2a (pts (xy 147.5 101.95) (xy 148.626504 102.536421)))
+    (arrow2b (pts (xy 147.5 101.95) (xy 148.626504 101.363579)))
+  )
+  (gr_text B2=MOSI (at 146.35 86.9) (layer F.SilkS)
+    (effects (font (size 0.7 0.7) (thickness 0.15)))
+  )
+  (gr_text B1=SCLK (at 153.45 87.65) (layer B.SilkS)
+    (effects (font (size 0.7 0.7) (thickness 0.15)) (justify mirror))
+  )
+  (gr_text B3=MIS0 (at 153.55 86.8) (layer B.SilkS)
+    (effects (font (size 0.7 0.7) (thickness 0.15)) (justify mirror))
+  )
+  (gr_text v0.1 (at 143.2 88.05) (layer B.SilkS)
+    (effects (font (size 0.7 0.7) (thickness 0.15)) (justify mirror))
+  )
+  (gr_text https://github.com/trebb/keytee (at 144.55 86.95) (layer B.SilkS)
+    (effects (font (size 0.5 0.5) (thickness 0.1)) (justify mirror))
+  )
+  (gr_text keytee (at 141.5 89.5) (layer B.SilkS)
+    (effects (font (size 2 2.2) (thickness 0.3)) (justify mirror))
+  )
+  (gr_text C5 (at 135.6 88.3 180) (layer B.SilkS)
+    (effects (font (size 0.7 0.7) (thickness 0.15)) (justify mirror))
+  )
+  (gr_text C7 (at 134.2 87.2 270) (layer B.SilkS)
+    (effects (font (size 0.7 0.7) (thickness 0.15)) (justify mirror))
+  )
+  (gr_text D- (at 134.3 88.8 270) (layer B.SilkS)
+    (effects (font (size 0.7 0.7) (thickness 0.15)) (justify mirror))
+  )
+  (gr_text GND (at 134.8 90.4) (layer B.SilkS)
+    (effects (font (size 0.7 0.7) (thickness 0.15)) (justify mirror))
+  )
+  (gr_text D1 (at 148.4 94.3) (layer B.SilkS)
+    (effects (font (size 0.7 0.7) (thickness 0.15)) (justify mirror))
+  )
+  (gr_text D3 (at 150 94.3) (layer B.SilkS)
+    (effects (font (size 0.7 0.7) (thickness 0.15)) (justify mirror))
+  )
+  (gr_text D5 (at 151.6 94.3) (layer B.SilkS)
+    (effects (font (size 0.7 0.7) (thickness 0.15)) (justify mirror))
+  )
+  (gr_text B1 (at 160 90.3 90) (layer B.SilkS)
+    (effects (font (size 0.7 0.7) (thickness 0.15)) (justify mirror))
+  )
+  (gr_text B3 (at 160 88.8 90) (layer B.SilkS)
+    (effects (font (size 0.7 0.7) (thickness 0.15)) (justify mirror))
+  )
+  (gr_text B5 (at 160 87.2 90) (layer B.SilkS)
+    (effects (font (size 0.7 0.7) (thickness 0.15)) (justify mirror))
+  )
+  (gr_text GND (at 154.1 89.9 135) (layer B.SilkS)
+    (effects (font (size 0.7 0.7) (thickness 0.15)) (justify mirror))
+  )
+  (gr_text RST (at 158.4 89.2) (layer B.SilkS)
+    (effects (font (size 0.7 0.7) (thickness 0.15)) (justify mirror))
+  )
+  (gr_text B7 (at 156.8 88.3 180) (layer B.SilkS)
+    (effects (font (size 0.7 0.7) (thickness 0.15)) (justify mirror))
+  )
+  (gr_text C4 (at 139.6 87.1 270) (layer F.SilkS)
+    (effects (font (size 0.7 0.7) (thickness 0.15)))
+  )
+  (gr_text C2 (at 138.2 90.4 270) (layer F.SilkS)
+    (effects (font (size 0.7 0.7) (thickness 0.15)))
+  )
+  (gr_text 5V (at 134.2 90.4 270) (layer F.SilkS)
+    (effects (font (size 0.7 0.7) (thickness 0.15)))
+  )
+  (gr_text C6 (at 134.2 87.2 270) (layer F.SilkS)
+    (effects (font (size 0.7 0.7) (thickness 0.15)))
+  )
+  (gr_text D+ (at 135.3 88.8 270) (layer F.SilkS)
+    (effects (font (size 0.7 0.7) (thickness 0.15)))
+  )
+  (gr_text D4 (at 151.5 94.2) (layer F.SilkS)
+    (effects (font (size 0.7 0.7) (thickness 0.15)))
+  )
+  (gr_text D2 (at 150 94.2) (layer F.SilkS)
+    (effects (font (size 0.7 0.7) (thickness 0.15)))
+  )
+  (gr_text D0 (at 148.4 94.2) (layer F.SilkS)
+    (effects (font (size 0.7 0.7) (thickness 0.15)))
+  )
+  (gr_text B2 (at 160 88.8 90) (layer F.SilkS)
+    (effects (font (size 0.7 0.7) (thickness 0.15)))
+  )
+  (gr_text B0 (at 160 90.3 90) (layer F.SilkS)
+    (effects (font (size 0.7 0.7) (thickness 0.15)))
+  )
+  (gr_text B4 (at 160 87.2 90) (layer F.SilkS)
+    (effects (font (size 0.7 0.7) (thickness 0.15)))
+  )
+  (gr_text D6 (at 157.6 89.2) (layer F.SilkS)
+    (effects (font (size 0.7 0.7) (thickness 0.15)))
+  )
+  (gr_text B6 (at 155.9 87.2 90) (layer F.SilkS)
+    (effects (font (size 0.7 0.7) (thickness 0.15)))
+  )
+  (gr_line (start 147.5 97.55) (end 147.5 92.45) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 152.5 97.55) (end 152.5 92.45) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 163.35 91.25) (end 153.7 91.25) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 130.85 91.25) (end 146.3 91.25) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 163.35 86.25) (end 130.85 86.25) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 147.5 97.55) (end 152.5 97.55) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 163.35 86.25) (end 163.35 91.25) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 130.85 86.25) (end 130.85 91.25) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_arc (start 146.3 92.45) (end 146.3 91.25) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_arc (start 153.7 92.45) (end 152.5 92.45) (angle 90) (layer Edge.Cuts) (width 0.15))
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+)

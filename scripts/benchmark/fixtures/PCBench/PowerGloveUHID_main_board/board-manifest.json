@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "PowerGloveUHID_main_board",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 166611,
+      "sha256": "4fa0c6df9bd6172502a1ab5b28239b62f47d1ab6915b92660db46b91b938f73b"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 166295,
+      "sha256": "a8ef8d52c90a960deaf6c5517477c27d9f8002c68a71245fe73fe4fe222fd8dc"
+    },
+    "metadata_json": {
+      "bytes": 487,
+      "sha256": "a8f63d0b9d7d65a82a2c767422de0fbd5b6fb7494c9f0dd7aac21ca9d1382825"
+    },
+    "final_json": {
+      "bytes": 128859,
+      "sha256": "8a1e6cdcb56c54513642381ff82a98b685657a766235dd849dc89e6bb0a5d54f"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:35:13.140135+00:00"
+  }
+}

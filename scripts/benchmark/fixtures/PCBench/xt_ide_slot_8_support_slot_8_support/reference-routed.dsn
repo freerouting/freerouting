@@ -1,0 +1,236 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\xt_ide_slot_8_support_slot_8_support\reference-routed.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  133604 -127127  117856 -127127  117856 -91313  133604 -91313
+            133604 -127127)
+    )
+    (plane GND (polygon F.Cu 0  131826 -124460  133477 -124460  133477 -127000  119634 -127000
+            119634 -94488  126492 -94488  126492 -94869  129286 -94869  129286 -91440
+            131826 -91440  131826 -124460))
+    (plane VCC (polygon F.Cu 0  128778 -93980  128143 -93980  128143 -94615  127254 -94615
+            127254 -93980  117983 -93980  117983 -91440  128778 -91440  128778 -91694
+            128778 -93980))
+    (via "Via[0-1]_600:400_um")
+    (rule
+      (width 250)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component Capacitors_SMD:C_1206_HandSoldering
+      (place C1 125730 -95250 front 180 (PN 0.1uF))
+    )
+    (component Resistors_SMD:R_1206_HandSoldering
+      (place R1 125730 -99695 front 180 (PN 10K))
+      (place R2 125730 -104140 front 180 (PN 10K))
+    )
+    (component "SMD_Packages:SOIC-14_N"
+      (place U1 125730 -112395 front -90 (PN 74LS33))
+    )
+    (component "Wire_Pads:SolderWirePad_single_0-8mmDrill"
+      (place P6 118110 -92710 front 90 (PN CONN_1))
+      (place P7 133350 -125730 front -90 (PN CONN_1))
+      (place /CS_ROM1 118110 -113030 front 0 (PN CONN_1))
+      (place /MEMR1 118110 -107950 front 0 (PN CONN_1))
+    )
+    (component testpoints:SMD_TESTPOINT
+      (place TP1 127508 -119888 front 0 (PN CONN_1))
+      (place TP2 122428 -124714 front 0 (PN CONN_1))
+      (place TP3 127508 -124714 front 0 (PN CONN_1))
+    )
+  )
+  (library
+    (image Capacitors_SMD:C_1206_HandSoldering
+      (outline (polygon signal 0  -3295 1145  3295 1145  3295 -1145  -3295 -1145))
+      (outline (path signal 150  1000 1025  -1000 1025))
+      (outline (path signal 150  -1000 -1025  1000 -1025))
+      (pin Rect[T]Pad_2000.000000x1600.000000_um 1 -2000 0)
+      (pin Rect[T]Pad_2000.000000x1600.000000_um 2 2000 0)
+    )
+    (image Resistors_SMD:R_1206_HandSoldering
+      (outline (polygon signal 0  -3295 1195  3295 1195  3295 -1195  -3295 -1195))
+      (outline (path signal 150  1000 -1075  -1000 -1075))
+      (outline (path signal 150  -1000 1075  1000 1075))
+      (pin Rect[T]Pad_2000.000000x1700.000000_um 1 -2000 0)
+      (pin Rect[T]Pad_2000.000000x1700.000000_um 2 2000 0)
+    )
+    (image "SMD_Packages:SOIC-14_N"
+      (outline (path signal 150  5080 2286  5080 -2540))
+      (outline (path signal 150  5080 -2540  -5080 -2540))
+      (outline (path signal 150  -5080 -2540  -5080 2286))
+      (outline (path signal 150  -5080 2286  5080 2286))
+      (outline (path signal 150  -5080 508  -4445 508))
+      (outline (path signal 150  -4445 508  -4445 -762))
+      (outline (path signal 150  -4445 -762  -5080 -762))
+      (pin Rect[T]Pad_508.000000x1143.000000_um 1 -3810 -3302)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 2 -2540 -3302)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 3 -1270 -3302)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 4 0 -3302)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 5 1270 -3302)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 6 2540 -3302)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 7 3810 -3302)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 8 3810 3048)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 9 2540 3048)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 11 0 3048)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 12 -1270 3048)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 13 -2540 3048)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 14 -3810 3048)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 10 1270 3048)
+    )
+    (image "Wire_Pads:SolderWirePad_single_0-8mmDrill"
+      (pin Round[A]Pad_1998.980000_um 1 0 0)
+    )
+    (image testpoints:SMD_TESTPOINT
+      (pin Round[T]Pad_2540.000000_um 1 0 0)
+    )
+    (padstack Round[A]Pad_1998.980000_um
+      (shape (circle F.Cu 1998.98))
+      (shape (circle B.Cu 1998.98))
+      (attach off)
+    )
+    (padstack Round[T]Pad_2540.000000_um
+      (shape (circle F.Cu 2540))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2000.000000x1600.000000_um
+      (shape (rect F.Cu -1000 -800 1000 800))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2000.000000x1700.000000_um
+      (shape (rect F.Cu -1000 -850 1000 850))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_508.000000x1143.000000_um
+      (shape (rect F.Cu -254 -571.5 254 571.5))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net VCC
+      (pins C1-1 R1-1 R2-1 U1-14 P6-1)
+    )
+    (net GND
+      (pins C1-2 U1-7 U1-11 U1-12 P7-1)
+    )
+    (net "Net-(R1-Pad2)"
+      (pins R1-2 U1-4 U1-8)
+    )
+    (net "Net-(R2-Pad2)"
+      (pins R2-2 U1-1 U1-9)
+    )
+    (net "Net-(TP1-Pad1)"
+      (pins U1-10 TP1-1)
+    )
+    (net "Net-(TP2-Pad1)"
+      (pins U1-5 TP2-1)
+    )
+    (net "Net-(TP3-Pad1)"
+      (pins U1-6 TP3-1)
+    )
+    (net "Net-(/CS_ROM1-Pad1)"
+      (pins U1-3 /CS_ROM1-1)
+    )
+    (net "Net-(/MEMR1-Pad1)"
+      (pins U1-2 /MEMR1-1)
+    )
+    (class kicad_default GND "Net-(/CS_ROM1-Pad1)" "Net-(/MEMR1-Pad1)" "Net-(R1-Pad2)"
+      "Net-(R2-Pad2)" "Net-(TP1-Pad1)" "Net-(TP2-Pad1)" "Net-(TP3-Pad1)" VCC
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 250)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+    (wire (path F.Cu 609.6  118110 -92710  119380 -92710)(net VCC)(type route))
+    (wire (path F.Cu 609.6  127730 -95250  127730 -94266  127762 -94234)(net VCC)(type route))
+    (wire (path F.Cu 812.8  127730 -99695  127730 -95250)(net VCC)(type route))
+    (wire (path F.Cu 812.8  127730 -104140  127730 -99695)(net VCC)(type route))
+    (wire (path F.Cu 406.4  128778 -108585  127762 -108585  127730 -108553  127730 -104140)(net VCC)(type route))
+    (wire (path F.Cu 406.4  127635 -104775  127730 -104140)(net VCC)(type route))
+    (wire (path F.Cu 812.8  133350 -125730  131953 -125730)(net GND)(type route))
+    (wire (path F.Cu 304.8  124206 -109220  121539 -109220)(net "Net-(R1-Pad2)")(type route))
+    (wire (path F.Cu 304.8  124460 -109474  124206 -109220)(net "Net-(R1-Pad2)")(type route))
+    (wire (path F.Cu 304.8  124460 -112395  124460 -109728  124460 -109474)(net "Net-(R1-Pad2)")(type route))
+    (wire (path F.Cu 304.8  123730 -101314  123730 -99695)(net "Net-(R1-Pad2)")(type route))
+    (wire (path F.Cu 304.8  123317 -101727  123730 -101314)(net "Net-(R1-Pad2)")(type route))
+    (wire (path F.Cu 304.8  122555 -101727  123317 -101727)(net "Net-(R1-Pad2)")(type route))
+    (wire (path F.Cu 304.8  122047 -102235  122555 -101727)(net "Net-(R1-Pad2)")(type route))
+    (wire (path F.Cu 304.8  122047 -105410  122047 -102235)(net "Net-(R1-Pad2)")(type route))
+    (wire (path F.Cu 304.8  122301 -105664  122047 -105410)(net "Net-(R1-Pad2)")(type route))
+    (wire (path F.Cu 304.8  122682 -105664  122301 -105664)(net "Net-(R1-Pad2)")(type route))
+    (wire (path F.Cu 304.8  122936 -105918  122682 -105664)(net "Net-(R1-Pad2)")(type route))
+    (wire (path F.Cu 304.8  122936 -107442  122936 -105918)(net "Net-(R1-Pad2)")(type route))
+    (wire (path F.Cu 304.8  122682 -107696  122936 -107442)(net "Net-(R1-Pad2)")(type route))
+    (wire (path F.Cu 304.8  121539 -107696  122682 -107696)(net "Net-(R1-Pad2)")(type route))
+    (wire (path F.Cu 304.8  121285 -107950  121539 -107696)(net "Net-(R1-Pad2)")(type route))
+    (wire (path F.Cu 304.8  121285 -108966  121285 -107950)(net "Net-(R1-Pad2)")(type route))
+    (wire (path F.Cu 304.8  121539 -109220  121285 -108966)(net "Net-(R1-Pad2)")(type route))
+    (wire (path F.Cu 304.8  124460 -112395  123825 -112395  122428 -112395)(net "Net-(R1-Pad2)")(type route))
+    (wire (path F.Cu 304.8  124460 -113030  124460 -112395)(net "Net-(R1-Pad2)")(type route))
+    (wire (path F.Cu 304.8  124460 -113030  124460 -115570  125095 -116205)(net "Net-(R1-Pad2)")(type route))
+    (wire (path F.Cu 304.8  128778 -116205  125095 -116205)(net "Net-(R1-Pad2)")(type route))
+    (wire (path F.Cu 304.8  123730 -104140  123730 -108585)(net "Net-(R2-Pad2)")(type route))
+    (wire (path F.Cu 304.8  128778 -114935  126365 -114935  125730 -114300  125730 -109220
+            125095 -108585  123730 -108585)(net "Net-(R2-Pad2)")(type route))
+    (wire (path F.Cu 304.8  123190 -108585  122428 -108585)(net "Net-(R2-Pad2)")(type route))
+    (wire (path F.Cu 304.8  123825 -108585  123190 -108585)(net "Net-(R2-Pad2)")(type route))
+    (wire (path F.Cu 304.8  123730 -108585  123825 -108585)(net "Net-(R2-Pad2)")(type route))
+    (wire (path F.Cu 304.8  123825 -104775  123730 -104140)(net "Net-(R2-Pad2)")(type route))
+    (wire (path F.Cu 304.8  130048 -114046  130048 -119380)(net "Net-(TP1-Pad1)")(type route))
+    (wire (path F.Cu 304.8  129667 -113665  130048 -114046)(net "Net-(TP1-Pad1)")(type route))
+    (wire (path F.Cu 304.8  128778 -113665  129667 -113665)(net "Net-(TP1-Pad1)")(type route))
+    (wire (path F.Cu 304.8  129540 -119888  127508 -119888)(net "Net-(TP1-Pad1)")(type route))
+    (wire (path F.Cu 304.8  130048 -119380  129540 -119888)(net "Net-(TP1-Pad1)")(type route))
+    (wire (path F.Cu 304.8  122428 -113665  121031 -113665)(net "Net-(TP2-Pad1)")(type route))
+    (wire (path F.Cu 304.8  122428 -119634  122428 -124714)(net "Net-(TP2-Pad1)")(type route))
+    (wire (path F.Cu 304.8  120396 -117602  122428 -119634)(net "Net-(TP2-Pad1)")(type route))
+    (wire (path F.Cu 304.8  120396 -114300  120396 -117602)(net "Net-(TP2-Pad1)")(type route))
+    (wire (path F.Cu 304.8  121031 -113665  120396 -114300)(net "Net-(TP2-Pad1)")(type route))
+    (wire (path F.Cu 304.8  123444 -121920  123444 -122682)(net "Net-(TP3-Pad1)")(type route))
+    (wire (path F.Cu 304.8  123444 -119380  121412 -117348)(net "Net-(TP3-Pad1)")(type route))
+    (wire (path F.Cu 304.8  122428 -114935  121539 -114935)(net "Net-(TP3-Pad1)")(type route))
+    (wire (path F.Cu 304.8  123444 -119634  123444 -121920)(net "Net-(TP3-Pad1)")(type route))
+    (wire (path F.Cu 304.8  121158 -117094  121412 -117348)(net "Net-(TP3-Pad1)")(type route))
+    (wire (path F.Cu 304.8  121158 -115316  121158 -117094)(net "Net-(TP3-Pad1)")(type route))
+    (wire (path F.Cu 304.8  121539 -114935  121158 -115316)(net "Net-(TP3-Pad1)")(type route))
+    (wire (path F.Cu 304.8  123444 -119634  123444 -119380)(net "Net-(TP3-Pad1)")(type route))
+    (wire (path F.Cu 304.8  125476 -124714  127508 -124714)(net "Net-(TP3-Pad1)")(type route))
+    (wire (path F.Cu 304.8  123444 -122682  125476 -124714)(net "Net-(TP3-Pad1)")(type route))
+    (wire (path F.Cu 304.8  120396 -111760  120396 -112522  119888 -113030  118110 -113030)(net "Net-(/CS_ROM1-Pad1)")(type route))
+    (wire (path F.Cu 304.8  121031 -111125  120396 -111760)(net "Net-(/CS_ROM1-Pad1)")(type route))
+    (wire (path F.Cu 304.8  122428 -111125  121285 -111125  121031 -111125)(net "Net-(/CS_ROM1-Pad1)")(type route))
+    (wire (path F.Cu 304.8  120396 -108458  119888 -107950  118110 -107950)(net "Net-(/MEMR1-Pad1)")(type route))
+    (wire (path F.Cu 304.8  121031 -109855  120396 -109220  120396 -108458)(net "Net-(/MEMR1-Pad1)")(type route))
+    (wire (path F.Cu 304.8  122428 -109855  121031 -109855)(net "Net-(/MEMR1-Pad1)")(type route))
+  )
+)

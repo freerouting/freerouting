@@ -1,0 +1,30 @@
+{
+  "board": "Hardware_Playground_led_strip_actuator_node",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Hardware_Playground_led_strip_actuator_node\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 26,
+  "segment_count": 276,
+  "approximate_track_length_mm": 561.69,
+  "kicad_drc_violations": 525,
+  "generated_at": "2026-08-18T18:53:48.966908+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 525,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 177,
+      "clearance": 130,
+      "courtyards_overlap": 12,
+      "items_not_allowed": 1,
+      "lib_footprint_issues": 32,
+      "mirrored_text_on_front_layer": 4,
+      "pth_inside_courtyard": 95,
+      "silk_overlap": 5,
+      "text_height": 69
+    },
+    "by_severity": {
+      "error": 415,
+      "warning": 110
+    }
+  }
+}

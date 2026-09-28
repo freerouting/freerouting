@@ -1,0 +1,32 @@
+{
+  "board": "FMCW_RADAR_Radar RF",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\FMCW_RADAR_Radar RF\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 619,
+  "segment_count": 1042,
+  "approximate_track_length_mm": 867.7,
+  "kicad_drc_violations": 827,
+  "generated_at": "2026-08-18T18:15:49.688389+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 827,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 13,
+      "copper_edge_clearance": 111,
+      "items_not_allowed": 2,
+      "lib_footprint_issues": 143,
+      "shorting_items": 30,
+      "silk_over_copper": 199,
+      "silk_overlap": 2,
+      "text_height": 173,
+      "text_thickness": 151,
+      "track_dangling": 2,
+      "via_dangling": 1
+    },
+    "by_severity": {
+      "error": 156,
+      "warning": 671
+    }
+  }
+}

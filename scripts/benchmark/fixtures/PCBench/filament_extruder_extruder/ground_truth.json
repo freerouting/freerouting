@@ -1,0 +1,26 @@
+{
+  "board": "filament_extruder_extruder",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\filament_extruder_extruder\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 4,
+  "segment_count": 303,
+  "approximate_track_length_mm": 983.48,
+  "kicad_drc_violations": 160,
+  "generated_at": "2026-08-18T18:49:20.164616+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 160,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 40,
+      "lib_footprint_issues": 37,
+      "silk_over_copper": 61,
+      "silk_overlap": 20,
+      "zones_intersect": 2
+    },
+    "by_severity": {
+      "error": 42,
+      "warning": 118
+    }
+  }
+}

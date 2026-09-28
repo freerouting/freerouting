@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "navelino-leaf_navelino-leaf",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 296712,
+      "sha256": "f0c3b3a6ba21e5ac62ae3ee35e3fc9d6350f48e915d94c24044a054c4e2d420b"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 367817,
+      "sha256": "6b09a063f86f50c6a4bed4b20b8e86bfd3291099bd365c7ecc5adc25984b17b2"
+    },
+    "metadata_json": {
+      "bytes": 504,
+      "sha256": "add78d6d46865b0f53ff0977a0a79775b04a5b777f712863b78afa14b80eb61a"
+    },
+    "final_json": {
+      "bytes": 326178,
+      "sha256": "a4c487b4654633c74fbba2060abd615c4dc8a5e6371b17bf1a99f773ef80bac0"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:26:58.677718+00:00"
+  }
+}

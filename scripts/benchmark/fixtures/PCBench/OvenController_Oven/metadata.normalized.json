@@ -1,0 +1,60 @@
+{
+  "board_id": "OvenController_Oven",
+  "display_name": "OvenController_Oven",
+  "pcbench_directory": "PCBs/OvenController_Oven",
+  "source": "https://github.com/SteelLiras/OvenController",
+  "author": "SteelLiras",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:38.437891+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 31,
+    "components": 83,
+    "dimensions_mm": {
+      "width": 100.08,
+      "height": 100.08
+    },
+    "area_cm2": 100.16,
+    "zones": 7
+  },
+  "reference": {
+    "segments": 488,
+    "vias": 1,
+    "track_length_mm": 2041.17,
+    "kicad_drc_violations": 298,
+    "kicad_drc_breakdown": {
+      "total_violations": 298,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 62,
+        "copper_edge_clearance": 3,
+        "lib_footprint_issues": 83,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 39,
+        "silk_overlap": 72,
+        "text_height": 20,
+        "text_thickness": 14,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 65,
+        "warning": 233
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

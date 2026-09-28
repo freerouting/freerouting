@@ -1,0 +1,35 @@
+{
+  "board": "OpenAVRc_Mega_2560 core mini_full_2.0",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\OpenAVRc_Mega_2560 core mini_full_2.0\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 118,
+  "segment_count": 1492,
+  "approximate_track_length_mm": 3414.42,
+  "kicad_drc_violations": 788,
+  "generated_at": "2026-08-18T19:29:55.641687+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 788,
+    "unconnected_count": 4,
+    "by_type": {
+      "annular_width": 8,
+      "clearance": 488,
+      "courtyards_overlap": 25,
+      "holes_co_located": 4,
+      "lib_footprint_issues": 110,
+      "malformed_courtyard": 12,
+      "nonmirrored_text_on_back_layer": 2,
+      "silk_edge_clearance": 6,
+      "silk_over_copper": 10,
+      "silk_overlap": 19,
+      "solder_mask_bridge": 93,
+      "starved_thermal": 2,
+      "track_dangling": 1,
+      "via_dangling": 8
+    },
+    "by_severity": {
+      "error": 628,
+      "warning": 160
+    }
+  }
+}

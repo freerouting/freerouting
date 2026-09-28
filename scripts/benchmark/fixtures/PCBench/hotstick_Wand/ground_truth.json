@@ -1,0 +1,29 @@
+{
+  "board": "hotstick_Wand",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\hotstick_Wand\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 37,
+  "segment_count": 356,
+  "approximate_track_length_mm": 561.28,
+  "kicad_drc_violations": 200,
+  "generated_at": "2026-08-18T18:16:12.404933+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 200,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 6,
+      "copper_edge_clearance": 68,
+      "courtyards_overlap": 1,
+      "lib_footprint_issues": 20,
+      "silk_edge_clearance": 2,
+      "solder_mask_bridge": 67,
+      "text_height": 35,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 142,
+      "warning": 58
+    }
+  }
+}

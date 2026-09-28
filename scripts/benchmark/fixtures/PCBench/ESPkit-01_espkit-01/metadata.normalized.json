@@ -1,0 +1,65 @@
+{
+  "board_id": "ESPkit-01_espkit-01",
+  "display_name": "ESPkit-01_espkit-01",
+  "pcbench_directory": "PCBs/ESPkit-01_espkit-01",
+  "source": "https://github.com/mage0r/ESPkit-01",
+  "author": "mage0r",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:50.574034+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 20,
+    "components": 24,
+    "dimensions_mm": {
+      "width": 20.0,
+      "height": 35.7
+    },
+    "area_cm2": 7.14,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 243,
+    "vias": 8,
+    "track_length_mm": 398.34,
+    "kicad_drc_violations": 104,
+    "kicad_drc_breakdown": {
+      "total_violations": 104,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 7,
+        "copper_edge_clearance": 3,
+        "courtyards_overlap": 5,
+        "lib_footprint_issues": 16,
+        "silk_over_copper": 5,
+        "silk_overlap": 14,
+        "text_height": 49,
+        "text_thickness": 5
+      },
+      "by_severity": {
+        "error": 15,
+        "warning": 89
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.922460+00:00",
+    "elapsed_seconds": 32.0,
+    "unrouted_nets": 3,
+    "clearance_violations": 6,
+    "quality_score": 933.33
+  }
+}

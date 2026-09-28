@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "airqualitystation_hardware",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 119488,
+      "sha256": "bba44d7c3e7448911df9efab45ecbad267d89e4b4f7d5a505c634aac5f2fe7a2"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 92778,
+      "sha256": "8f04e6f4df7e33db56dad14a68c0b7148da74432f2c8da9c70a51a5728908065"
+    },
+    "metadata_json": {
+      "bytes": 655,
+      "sha256": "9f4e85cbcb85637a65c7795e83108c9a7063e3964acfb59c319bae3f87028eb2"
+    },
+    "final_json": {
+      "bytes": 77231,
+      "sha256": "e14c81dd6aa94a2bb9ada784d4dccc31f2c9b30823e1b98366413ef4ab2b1ee9"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:27:30.991664+00:00"
+  }
+}

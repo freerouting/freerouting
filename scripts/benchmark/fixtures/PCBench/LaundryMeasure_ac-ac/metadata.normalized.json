@@ -1,0 +1,64 @@
+{
+  "board_id": "LaundryMeasure_ac-ac",
+  "display_name": "LaundryMeasure_ac-ac",
+  "pcbench_directory": "PCBs/LaundryMeasure_ac-ac",
+  "source": "https://github.com/Syralist/LaundryMeasure",
+  "author": "Syralist",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:23:00.946156+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 4,
+    "components": 6,
+    "dimensions_mm": {
+      "width": 42.16,
+      "height": 24.38
+    },
+    "area_cm2": 10.28,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 20,
+    "vias": 0,
+    "track_length_mm": 85.14,
+    "kicad_drc_violations": 23,
+    "kicad_drc_breakdown": {
+      "total_violations": 23,
+      "unconnected_count": 0,
+      "by_type": {
+        "courtyards_overlap": 2,
+        "lib_footprint_issues": 6,
+        "shorting_items": 3,
+        "silk_edge_clearance": 9,
+        "solder_mask_bridge": 3
+      },
+      "by_severity": {
+        "error": 8,
+        "warning": 15
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.011924+00:00",
+    "elapsed_seconds": 4.87,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 1000.0
+  }
+}

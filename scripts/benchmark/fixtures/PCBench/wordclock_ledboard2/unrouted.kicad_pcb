@@ -1,0 +1,3680 @@
+(kicad_pcb (version 20171130) (host pcbnew "(5.1.12)-1")
+
+  (general
+    (thickness 1.6)
+    (drawings 12)
+    (tracks 1028)
+    (zones 0)
+    (modules 109)
+    (nets 105)
+  )
+
+  (page A4)
+  (layers
+    (0 F.Cu signal)
+    (31 B.Cu signal)
+    (32 B.Adhes user hide)
+    (33 F.Adhes user hide)
+    (34 B.Paste user)
+    (35 F.Paste user)
+    (36 B.SilkS user)
+    (37 F.SilkS user)
+    (38 B.Mask user)
+    (39 F.Mask user)
+    (40 Dwgs.User user)
+    (41 Cmts.User user)
+    (42 Eco1.User user)
+    (43 Eco2.User user)
+    (44 Edge.Cuts user)
+    (45 Margin user)
+    (46 B.CrtYd user)
+    (47 F.CrtYd user)
+    (48 B.Fab user)
+    (49 F.Fab user)
+  )
+
+  (setup
+    (last_trace_width 0.25)
+    (trace_clearance 0.2)
+    (zone_clearance 0.508)
+    (zone_45_only no)
+    (trace_min 0.2)
+    (via_size 0.6)
+    (via_drill 0.4)
+    (via_min_size 0.4)
+    (via_min_drill 0.3)
+    (uvia_size 0.3)
+    (uvia_drill 0.1)
+    (uvias_allowed no)
+    (uvia_min_size 0.2)
+    (uvia_min_drill 0.1)
+    (edge_width 0.1)
+    (segment_width 0.2)
+    (pcb_text_width 0.3)
+    (pcb_text_size 1.5 1.5)
+    (mod_edge_width 0.15)
+    (mod_text_size 1 1)
+    (mod_text_width 0.15)
+    (pad_size 1.5 1.5)
+    (pad_drill 0.6)
+    (pad_to_mask_clearance 0)
+    (aux_axis_origin 0 0)
+    (visible_elements 7FFFFFFF)
+    (pcbplotparams
+      (layerselection 0x010fc_80000001)
+      (usegerberextensions true)
+      (usegerberattributes true)
+      (usegerberadvancedattributes true)
+      (creategerberjobfile true)
+      (excludeedgelayer true)
+      (linewidth 0.100000)
+      (plotframeref false)
+      (viasonmask false)
+      (mode 1)
+      (useauxorigin false)
+      (hpglpennumber 1)
+      (hpglpenspeed 20)
+      (hpglpendiameter 15.000000)
+      (psnegative false)
+      (psa4output false)
+      (plotreference true)
+      (plotvalue true)
+      (plotinvisibletext false)
+      (padsonsilk false)
+      (subtractmaskfromsilk false)
+      (outputformat 1)
+      (mirror false)
+      (drillshape 0)
+      (scaleselection 1)
+      (outputdirectory ""))
+  )
+
+  (net 0 "")
+  (net 1 +5V)
+  (net 2 GND)
+  (net 3 DOUT)
+  (net 4 DIN)
+  (net 5 "Net-(R1-Pad1)")
+  (net 6 "Net-(U1-Pad4)")
+  (net 7 "Net-(U12-Pad1)")
+  (net 8 "Net-(U2-Pad1)")
+  (net 9 "Net-(U13-Pad1)")
+  (net 10 "Net-(U3-Pad1)")
+  (net 11 "Net-(U14-Pad1)")
+  (net 12 "Net-(U4-Pad1)")
+  (net 13 "Net-(U15-Pad1)")
+  (net 14 "Net-(U5-Pad1)")
+  (net 15 "Net-(U16-Pad1)")
+  (net 16 "Net-(U6-Pad1)")
+  (net 17 "Net-(U17-Pad1)")
+  (net 18 "Net-(U7-Pad1)")
+  (net 19 "Net-(U18-Pad1)")
+  (net 20 "Net-(U8-Pad1)")
+  (net 21 "Net-(U19-Pad1)")
+  (net 22 "Net-(U9-Pad1)")
+  (net 23 "Net-(U10-Pad4)")
+  (net 24 "Net-(U10-Pad1)")
+  (net 25 "Net-(U11-Pad4)")
+  (net 26 "Net-(U12-Pad4)")
+  (net 27 "Net-(U13-Pad4)")
+  (net 28 "Net-(U14-Pad4)")
+  (net 29 "Net-(U15-Pad4)")
+  (net 30 "Net-(U16-Pad4)")
+  (net 31 "Net-(U17-Pad4)")
+  (net 32 "Net-(U18-Pad4)")
+  (net 33 "Net-(U19-Pad4)")
+  (net 34 "Net-(U20-Pad4)")
+  (net 35 "Net-(U21-Pad4)")
+  (net 36 "Net-(U22-Pad4)")
+  (net 37 "Net-(U23-Pad4)")
+  (net 38 "Net-(U24-Pad4)")
+  (net 39 "Net-(U25-Pad4)")
+  (net 40 "Net-(U26-Pad4)")
+  (net 41 "Net-(U27-Pad4)")
+  (net 42 "Net-(U28-Pad4)")
+  (net 43 "Net-(U29-Pad4)")
+  (net 44 "Net-(U30-Pad4)")
+  (net 45 "Net-(U31-Pad4)")
+  (net 46 "Net-(U32-Pad4)")
+  (net 47 "Net-(U33-Pad4)")
+  (net 48 "Net-(U34-Pad4)")
+  (net 49 "Net-(U35-Pad4)")
+  (net 50 "Net-(U36-Pad4)")
+  (net 51 "Net-(U37-Pad4)")
+  (net 52 "Net-(U38-Pad4)")
+  (net 53 "Net-(U39-Pad4)")
+  (net 54 "Net-(U40-Pad4)")
+  (net 55 "Net-(U41-Pad4)")
+  (net 56 "Net-(U42-Pad4)")
+  (net 57 "Net-(U43-Pad4)")
+  (net 58 "Net-(U44-Pad4)")
+  (net 59 "Net-(U45-Pad4)")
+  (net 60 "Net-(U46-Pad4)")
+  (net 61 "Net-(U47-Pad4)")
+  (net 62 "Net-(U48-Pad4)")
+  (net 63 "Net-(U49-Pad4)")
+  (net 64 "Net-(U50-Pad4)")
+  (net 65 "Net-(U51-Pad4)")
+  (net 66 "Net-(U52-Pad4)")
+  (net 67 "Net-(U53-Pad4)")
+  (net 68 "Net-(U54-Pad4)")
+  (net 69 "Net-(U55-Pad4)")
+  (net 70 "Net-(U56-Pad4)")
+  (net 71 "Net-(U57-Pad4)")
+  (net 72 "Net-(U58-Pad4)")
+  (net 73 "Net-(U59-Pad4)")
+  (net 74 "Net-(U60-Pad4)")
+  (net 75 "Net-(U61-Pad4)")
+  (net 76 "Net-(U62-Pad4)")
+  (net 77 "Net-(U63-Pad4)")
+  (net 78 "Net-(U64-Pad4)")
+  (net 79 "Net-(U65-Pad4)")
+  (net 80 "Net-(U66-Pad4)")
+  (net 81 "Net-(U67-Pad4)")
+  (net 82 "Net-(U68-Pad4)")
+  (net 83 "Net-(U69-Pad4)")
+  (net 84 "Net-(U70-Pad4)")
+  (net 85 "Net-(U71-Pad4)")
+  (net 86 "Net-(U72-Pad4)")
+  (net 87 "Net-(U73-Pad4)")
+  (net 88 "Net-(U74-Pad4)")
+  (net 89 "Net-(U75-Pad4)")
+  (net 90 "Net-(U76-Pad4)")
+  (net 91 "Net-(U77-Pad4)")
+  (net 92 "Net-(U78-Pad4)")
+  (net 93 "Net-(U79-Pad4)")
+  (net 94 "Net-(U80-Pad4)")
+  (net 95 "Net-(U81-Pad4)")
+  (net 96 "Net-(U82-Pad4)")
+  (net 97 "Net-(U83-Pad4)")
+  (net 98 "Net-(U84-Pad4)")
+  (net 99 "Net-(U85-Pad4)")
+  (net 100 "Net-(U86-Pad4)")
+  (net 101 "Net-(U87-Pad4)")
+  (net 102 "Net-(U88-Pad4)")
+  (net 103 "Net-(U89-Pad4)")
+  (net 104 "Net-(U100-Pad1)")
+
+  (net_class Default "This is the default net class."
+    (clearance 0.2)
+    (trace_width 0.25)
+    (via_dia 0.6)
+    (via_drill 0.4)
+    (uvia_dia 0.3)
+    (uvia_drill 0.1)
+    (add_net DIN)
+    (add_net DOUT)
+    (add_net "Net-(R1-Pad1)")
+    (add_net "Net-(U1-Pad4)")
+    (add_net "Net-(U10-Pad1)")
+    (add_net "Net-(U10-Pad4)")
+    (add_net "Net-(U100-Pad1)")
+    (add_net "Net-(U11-Pad4)")
+    (add_net "Net-(U12-Pad1)")
+    (add_net "Net-(U12-Pad4)")
+    (add_net "Net-(U13-Pad1)")
+    (add_net "Net-(U13-Pad4)")
+    (add_net "Net-(U14-Pad1)")
+    (add_net "Net-(U14-Pad4)")
+    (add_net "Net-(U15-Pad1)")
+    (add_net "Net-(U15-Pad4)")
+    (add_net "Net-(U16-Pad1)")
+    (add_net "Net-(U16-Pad4)")
+    (add_net "Net-(U17-Pad1)")
+    (add_net "Net-(U17-Pad4)")
+    (add_net "Net-(U18-Pad1)")
+    (add_net "Net-(U18-Pad4)")
+    (add_net "Net-(U19-Pad1)")
+    (add_net "Net-(U19-Pad4)")
+    (add_net "Net-(U2-Pad1)")
+    (add_net "Net-(U20-Pad4)")
+    (add_net "Net-(U21-Pad4)")
+    (add_net "Net-(U22-Pad4)")
+    (add_net "Net-(U23-Pad4)")
+    (add_net "Net-(U24-Pad4)")
+    (add_net "Net-(U25-Pad4)")
+    (add_net "Net-(U26-Pad4)")
+    (add_net "Net-(U27-Pad4)")
+    (add_net "Net-(U28-Pad4)")
+    (add_net "Net-(U29-Pad4)")
+    (add_net "Net-(U3-Pad1)")
+    (add_net "Net-(U30-Pad4)")
+    (add_net "Net-(U31-Pad4)")
+    (add_net "Net-(U32-Pad4)")
+    (add_net "Net-(U33-Pad4)")
+    (add_net "Net-(U34-Pad4)")
+    (add_net "Net-(U35-Pad4)")
+    (add_net "Net-(U36-Pad4)")
+    (add_net "Net-(U37-Pad4)")
+    (add_net "Net-(U38-Pad4)")
+    (add_net "Net-(U39-Pad4)")
+    (add_net "Net-(U4-Pad1)")
+    (add_net "Net-(U40-Pad4)")
+    (add_net "Net-(U41-Pad4)")
+    (add_net "Net-(U42-Pad4)")
+    (add_net "Net-(U43-Pad4)")
+    (add_net "Net-(U44-Pad4)")
+    (add_net "Net-(U45-Pad4)")
+    (add_net "Net-(U46-Pad4)")
+    (add_net "Net-(U47-Pad4)")
+    (add_net "Net-(U48-Pad4)")
+    (add_net "Net-(U49-Pad4)")
+    (add_net "Net-(U5-Pad1)")
+    (add_net "Net-(U50-Pad4)")
+    (add_net "Net-(U51-Pad4)")
+    (add_net "Net-(U52-Pad4)")
+    (add_net "Net-(U53-Pad4)")
+    (add_net "Net-(U54-Pad4)")
+    (add_net "Net-(U55-Pad4)")
+    (add_net "Net-(U56-Pad4)")
+    (add_net "Net-(U57-Pad4)")
+    (add_net "Net-(U58-Pad4)")
+    (add_net "Net-(U59-Pad4)")
+    (add_net "Net-(U6-Pad1)")
+    (add_net "Net-(U60-Pad4)")
+    (add_net "Net-(U61-Pad4)")
+    (add_net "Net-(U62-Pad4)")
+    (add_net "Net-(U63-Pad4)")
+    (add_net "Net-(U64-Pad4)")
+    (add_net "Net-(U65-Pad4)")
+    (add_net "Net-(U66-Pad4)")
+    (add_net "Net-(U67-Pad4)")
+    (add_net "Net-(U68-Pad4)")
+    (add_net "Net-(U69-Pad4)")
+    (add_net "Net-(U7-Pad1)")
+    (add_net "Net-(U70-Pad4)")
+    (add_net "Net-(U71-Pad4)")
+    (add_net "Net-(U72-Pad4)")
+    (add_net "Net-(U73-Pad4)")
+    (add_net "Net-(U74-Pad4)")
+    (add_net "Net-(U75-Pad4)")
+    (add_net "Net-(U76-Pad4)")
+    (add_net "Net-(U77-Pad4)")
+    (add_net "Net-(U78-Pad4)")
+    (add_net "Net-(U79-Pad4)")
+    (add_net "Net-(U8-Pad1)")
+    (add_net "Net-(U80-Pad4)")
+    (add_net "Net-(U81-Pad4)")
+    (add_net "Net-(U82-Pad4)")
+    (add_net "Net-(U83-Pad4)")
+    (add_net "Net-(U84-Pad4)")
+    (add_net "Net-(U85-Pad4)")
+    (add_net "Net-(U86-Pad4)")
+    (add_net "Net-(U87-Pad4)")
+    (add_net "Net-(U88-Pad4)")
+    (add_net "Net-(U89-Pad4)")
+    (add_net "Net-(U9-Pad1)")
+  )
+
+  (net_class Power ""
+    (clearance 0.25)
+    (trace_width 0.5)
+    (via_dia 0.6)
+    (via_drill 0.4)
+    (uvia_dia 0.3)
+    (uvia_drill 0.1)
+    (add_net +5V)
+    (add_net GND)
+  )
+
+  (module Capacitors_SMD:C_0805_HandSoldering (layer B.Cu) (tedit 5599DB68) (tstamp 5599CF95)
+    (at 27 181 90)
+    (descr "Capacitor SMD 0805, hand soldering")
+    (tags "capacitor 0805")
+    (path /55A063B9)
+    (attr smd)
+    (fp_text reference C1 (at -3.5 0 90) (layer B.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value 0.1u (at 4 0 90) (layer B.Fab)
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start -0.5 -0.85) (end 0.5 -0.85) (layer B.SilkS) (width 0.15))
+    (fp_line (start 0.5 0.85) (end -0.5 0.85) (layer B.SilkS) (width 0.15))
+    (fp_line (start 2.3 1) (end 2.3 -1) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -2.3 1) (end -2.3 -1) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -2.3 -1) (end 2.3 -1) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -2.3 1) (end 2.3 1) (layer B.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -1.25 0 90) (size 1.5 1.25) (layers B.Cu B.Paste B.Mask)
+      (net 1 +5V))
+    (pad 2 smd rect (at 1.25 0 90) (size 1.5 1.25) (layers B.Cu B.Paste B.Mask)
+      (net 2 GND))
+    (model Capacitors_SMD.3dshapes/C_0805_HandSoldering.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitors_SMD:C_0805_HandSoldering (layer B.Cu) (tedit 5599DB99) (tstamp 5599CF9B)
+    (at 29 181 90)
+    (descr "Capacitor SMD 0805, hand soldering")
+    (tags "capacitor 0805")
+    (path /55A07837)
+    (attr smd)
+    (fp_text reference C2 (at -3.5 0 90) (layer B.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value 0.1u (at 4 0 90) (layer B.Fab)
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start -0.5 -0.85) (end 0.5 -0.85) (layer B.SilkS) (width 0.15))
+    (fp_line (start 0.5 0.85) (end -0.5 0.85) (layer B.SilkS) (width 0.15))
+    (fp_line (start 2.3 1) (end 2.3 -1) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -2.3 1) (end -2.3 -1) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -2.3 -1) (end 2.3 -1) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -2.3 1) (end 2.3 1) (layer B.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -1.25 0 90) (size 1.5 1.25) (layers B.Cu B.Paste B.Mask)
+      (net 1 +5V))
+    (pad 2 smd rect (at 1.25 0 90) (size 1.5 1.25) (layers B.Cu B.Paste B.Mask)
+      (net 2 GND))
+    (model Capacitors_SMD.3dshapes/C_0805_HandSoldering.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Pin_Headers:Pin_Header_Straight_1x03 (layer F.Cu) (tedit 5599DBA7) (tstamp 5599CFA2)
+    (at 169 186.5 270)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /55A00D4E)
+    (fp_text reference P1 (at 0.5 9) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_01X03 (at -1 12.5) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.55 -1.55) (end 1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.55 0) (end -1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end -1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.55 -1.55) (end 1.55 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 6.35) (end 1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.27 6.35) (end 1.27 6.35) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.27 1.27) (end -1.27 6.35) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.75 6.85) (end 1.75 6.85) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end 1.75 -1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.75 -1.75) (end 1.75 6.85) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end -1.75 6.85) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0 270) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 DOUT))
+    (pad 2 thru_hole oval (at 0 2.54 270) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0 5.08 270) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x03.wrl
+      (offset (xyz 0 -2.539999961853027 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 90))
+    )
+  )
+
+  (module Pin_Headers:Pin_Header_Straight_1x03 (layer F.Cu) (tedit 5599DBAE) (tstamp 5599CFA9)
+    (at 17 25.5 90)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /55A09C26)
+    (fp_text reference P2 (at 0.5 -3.03) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_01X03 (at 5.18 0.78 180) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.55 -1.55) (end 1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.55 0) (end -1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end -1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.55 -1.55) (end 1.55 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 6.35) (end 1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.27 6.35) (end 1.27 6.35) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.27 1.27) (end -1.27 6.35) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.75 6.85) (end 1.75 6.85) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end 1.75 -1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.75 -1.75) (end 1.75 6.85) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end -1.75 6.85) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0 90) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 4 DIN))
+    (pad 2 thru_hole oval (at 0 2.54 90) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0 5.08 90) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x03.wrl
+      (offset (xyz 0 -2.539999961853027 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 90))
+    )
+  )
+
+  (module Resistors_SMD:R_0805_HandSoldering (layer B.Cu) (tedit 5599DB91) (tstamp 5599CFAF)
+    (at 14 31.5 90)
+    (descr "Resistor SMD 0805, hand soldering")
+    (tags "resistor 0805")
+    (path /55A0BA33)
+    (attr smd)
+    (fp_text reference R1 (at -3.5 0 90) (layer B.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value 300 (at 0 -2.1 90) (layer B.Fab)
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start -0.6 0.875) (end 0.6 0.875) (layer B.SilkS) (width 0.15))
+    (fp_line (start 0.6 -0.875) (end -0.6 -0.875) (layer B.SilkS) (width 0.15))
+    (fp_line (start 2.4 1) (end 2.4 -1) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -2.4 1) (end -2.4 -1) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -2.4 -1) (end 2.4 -1) (layer B.CrtYd) (width 0.05))
+    (fp_line (start -2.4 1) (end 2.4 1) (layer B.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -1.35 0 90) (size 1.5 1.3) (layers B.Cu B.Paste B.Mask)
+      (net 5 "Net-(R1-Pad1)"))
+    (pad 2 smd rect (at 1.35 0 90) (size 1.5 1.3) (layers B.Cu B.Paste B.Mask)
+      (net 4 DIN))
+    (model Resistors_SMD.3dshapes/R_0805_HandSoldering.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module ledboard2:STRAINHOLE (layer F.Cu) (tedit 5599E41A) (tstamp 5599E51C)
+    (at 17 22)
+    (fp_text reference REF**_3 (at 0 2.54) (layer Cmts.User) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value STRAINHOLE (at 0 -2.54) (layer Cmts.User) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 2 2) (drill 1.8) (layers *.Cu *.Mask F.SilkS))
+  )
+
+  (module ledboard2:STRAINHOLE (layer F.Cu) (tedit 5599E41A) (tstamp 0)
+    (at 19.5 22)
+    (fp_text reference REF**_2 (at 0 2.54) (layer Cmts.User) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value STRAINHOLE (at 0 -2.54) (layer Cmts.User) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 2 2) (drill 1.8) (layers *.Cu *.Mask F.SilkS))
+  )
+
+  (module ledboard2:STRAINHOLE (layer F.Cu) (tedit 5599E41A) (tstamp 0)
+    (at 22 22)
+    (fp_text reference REF** (at 0 2.54) (layer Cmts.User) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value STRAINHOLE (at 0 -2.54) (layer Cmts.User) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 2 2) (drill 1.8) (layers *.Cu *.Mask F.SilkS))
+  )
+
+  (module ledboard2:CPOL_SMD_6.3mm (layer F.Cu) (tedit 55EE0A83) (tstamp 55EE0D05)
+    (at 30.64 22.86 90)
+    (path /55EE1E42)
+    (fp_text reference C3 (at 6 0 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CP (at 10.7 1.4 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -3.3 3.3) (end 3.3 3.3) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.3 3.3) (end 3.3 -2.3) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.3 -2.3) (end 2.3 -3.3) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2.3 -3.3) (end -2.3 -3.3) (layer F.SilkS) (width 0.15))
+    (fp_line (start -2.3 -3.3) (end -3.3 -2.3) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.3 -2.3) (end -3.3 3.3) (layer F.SilkS) (width 0.15))
+    (fp_text user + (at 0 -3.8 90) (layer F.SilkS)
+      (effects (font (size 0.5 0.5) (thickness 0.125)))
+    )
+    (pad 1 smd rect (at 0 -3.65 90) (size 1.6 3.5) (layers F.Cu F.Paste F.Mask)
+      (net 1 +5V))
+    (pad 2 smd rect (at 0 3.65 90) (size 1.6 3.5) (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D397)
+    (at 166.413 178.413)
+    (path /5599F35C)
+    (fp_text reference U100 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 3 DOUT))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 104 "Net-(U100-Pad1)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D38D)
+    (at 166.413 162.099)
+    (path /5599F320)
+    (fp_text reference U99 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 24 "Net-(U10-Pad1)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 103 "Net-(U89-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D383)
+    (at 166.413 145.785)
+    (path /5599F2E4)
+    (fp_text reference U98 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 22 "Net-(U9-Pad1)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 102 "Net-(U88-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D379)
+    (at 166.413 129.471)
+    (path /5599F2A8)
+    (fp_text reference U97 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 20 "Net-(U8-Pad1)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 101 "Net-(U87-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D36F)
+    (at 166.413 113.157)
+    (path /5599F26C)
+    (fp_text reference U96 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 18 "Net-(U7-Pad1)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 100 "Net-(U86-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D365)
+    (at 166.413 96.843)
+    (path /5599DD4A)
+    (fp_text reference U95 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 16 "Net-(U6-Pad1)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 99 "Net-(U85-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D35B)
+    (at 166.413 80.529)
+    (path /5599D8F4)
+    (fp_text reference U94 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 14 "Net-(U5-Pad1)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 98 "Net-(U84-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D351)
+    (at 166.413 64.215)
+    (path /5599D728)
+    (fp_text reference U93 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 12 "Net-(U4-Pad1)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 97 "Net-(U83-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D347)
+    (at 166.413 47.901)
+    (path /5599D336)
+    (fp_text reference U92 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 10 "Net-(U3-Pad1)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 96 "Net-(U82-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D33D)
+    (at 166.413 31.587)
+    (path /5599CC9C)
+    (fp_text reference U91 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 8 "Net-(U2-Pad1)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 95 "Net-(U81-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D333)
+    (at 150.099 178.413)
+    (path /5599F356)
+    (fp_text reference U90 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 104 "Net-(U100-Pad1)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 94 "Net-(U80-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D329)
+    (at 150.099 162.099)
+    (path /5599F31A)
+    (fp_text reference U89 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 103 "Net-(U89-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 93 "Net-(U79-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D31F)
+    (at 150.099 145.785)
+    (path /5599F2DE)
+    (fp_text reference U88 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 102 "Net-(U88-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 92 "Net-(U78-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D315)
+    (at 150.099 129.471)
+    (path /5599F2A2)
+    (fp_text reference U87 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 101 "Net-(U87-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 91 "Net-(U77-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D30B)
+    (at 150.099 113.157)
+    (path /5599F266)
+    (fp_text reference U86 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 100 "Net-(U86-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 90 "Net-(U76-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D301)
+    (at 150.099 96.843)
+    (path /5599DD44)
+    (fp_text reference U85 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 99 "Net-(U85-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 89 "Net-(U75-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D2F7)
+    (at 150.099 80.529)
+    (path /5599D8EE)
+    (fp_text reference U84 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 98 "Net-(U84-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 88 "Net-(U74-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D2ED)
+    (at 150.099 64.215)
+    (path /5599D722)
+    (fp_text reference U83 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 97 "Net-(U83-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 87 "Net-(U73-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D2E3)
+    (at 150.099 47.901)
+    (path /5599D330)
+    (fp_text reference U82 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 96 "Net-(U82-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 86 "Net-(U72-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D2D9)
+    (at 150.099 31.587)
+    (path /5599CC21)
+    (fp_text reference U81 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 95 "Net-(U81-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 85 "Net-(U71-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D2CF)
+    (at 133.785 178.413)
+    (path /5599F350)
+    (fp_text reference U80 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 94 "Net-(U80-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 84 "Net-(U70-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D2C5)
+    (at 133.785 162.099)
+    (path /5599F314)
+    (fp_text reference U79 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 93 "Net-(U79-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 83 "Net-(U69-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D2BB)
+    (at 133.785 145.785)
+    (path /5599F2D8)
+    (fp_text reference U78 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 92 "Net-(U78-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 82 "Net-(U68-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D2B1)
+    (at 133.785 129.471)
+    (path /5599F29C)
+    (fp_text reference U77 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 91 "Net-(U77-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 81 "Net-(U67-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D2A7)
+    (at 133.785 113.157)
+    (path /5599F260)
+    (fp_text reference U76 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 90 "Net-(U76-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 80 "Net-(U66-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D29D)
+    (at 133.785 96.843)
+    (path /5599DD3E)
+    (fp_text reference U75 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 89 "Net-(U75-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 79 "Net-(U65-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D293)
+    (at 133.785 80.529)
+    (path /5599D8E8)
+    (fp_text reference U74 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 88 "Net-(U74-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 78 "Net-(U64-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D289)
+    (at 133.785 64.215)
+    (path /5599D71C)
+    (fp_text reference U73 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 87 "Net-(U73-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 77 "Net-(U63-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D27F)
+    (at 133.785 47.901)
+    (path /5599D32A)
+    (fp_text reference U72 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 86 "Net-(U72-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 76 "Net-(U62-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D275)
+    (at 133.785 31.587)
+    (path /5599CBC9)
+    (fp_text reference U71 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 85 "Net-(U71-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 75 "Net-(U61-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D26B)
+    (at 117.471 178.413)
+    (path /5599F34A)
+    (fp_text reference U70 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 84 "Net-(U70-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 74 "Net-(U60-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D261)
+    (at 117.471 162.099)
+    (path /5599F30E)
+    (fp_text reference U69 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 83 "Net-(U69-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 73 "Net-(U59-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D257)
+    (at 117.471 145.785)
+    (path /5599F2D2)
+    (fp_text reference U68 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 82 "Net-(U68-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 72 "Net-(U58-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D24D)
+    (at 117.471 129.471)
+    (path /5599F296)
+    (fp_text reference U67 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 81 "Net-(U67-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 71 "Net-(U57-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D243)
+    (at 117.471 113.157)
+    (path /5599F25A)
+    (fp_text reference U66 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 80 "Net-(U66-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 70 "Net-(U56-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D239)
+    (at 117.471 96.843)
+    (path /5599DD38)
+    (fp_text reference U65 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 79 "Net-(U65-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 69 "Net-(U55-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D22F)
+    (at 117.471 80.529)
+    (path /5599D8E2)
+    (fp_text reference U64 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 78 "Net-(U64-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 68 "Net-(U54-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D225)
+    (at 117.471 64.215)
+    (path /5599D716)
+    (fp_text reference U63 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 77 "Net-(U63-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 67 "Net-(U53-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D21B)
+    (at 117.471 47.901)
+    (path /5599D324)
+    (fp_text reference U62 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 76 "Net-(U62-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 66 "Net-(U52-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D211)
+    (at 117.471 31.587)
+    (path /5599CB6A)
+    (fp_text reference U61 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 75 "Net-(U61-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 65 "Net-(U51-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D207)
+    (at 101.157 178.413)
+    (path /5599F344)
+    (fp_text reference U60 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 74 "Net-(U60-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 64 "Net-(U50-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D1FD)
+    (at 101.157 162.099)
+    (path /5599F308)
+    (fp_text reference U59 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 73 "Net-(U59-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 63 "Net-(U49-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D1F3)
+    (at 101.157 145.785)
+    (path /5599F2CC)
+    (fp_text reference U58 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 72 "Net-(U58-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 62 "Net-(U48-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D1E9)
+    (at 101.157 129.471)
+    (path /5599F290)
+    (fp_text reference U57 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 71 "Net-(U57-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 61 "Net-(U47-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D1DF)
+    (at 101.157 113.157)
+    (path /5599F254)
+    (fp_text reference U56 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 70 "Net-(U56-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 60 "Net-(U46-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D1D5)
+    (at 101.157 96.843)
+    (path /5599DD32)
+    (fp_text reference U55 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 69 "Net-(U55-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 59 "Net-(U45-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D1CB)
+    (at 101.157 80.529)
+    (path /5599D8DC)
+    (fp_text reference U54 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 68 "Net-(U54-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 58 "Net-(U44-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D1C1)
+    (at 101.157 64.215)
+    (path /5599D710)
+    (fp_text reference U53 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 67 "Net-(U53-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 57 "Net-(U43-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D1B7)
+    (at 101.157 47.901)
+    (path /5599D31E)
+    (fp_text reference U52 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 66 "Net-(U52-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 56 "Net-(U42-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D1AD)
+    (at 101.157 31.587)
+    (path /5599CB06)
+    (fp_text reference U51 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 65 "Net-(U51-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 55 "Net-(U41-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D1A3)
+    (at 84.843 178.413)
+    (path /5599F33E)
+    (fp_text reference U50 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 64 "Net-(U50-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 54 "Net-(U40-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D199)
+    (at 84.843 162.099)
+    (path /5599F302)
+    (fp_text reference U49 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 63 "Net-(U49-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 53 "Net-(U39-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D18F)
+    (at 84.843 145.785)
+    (path /5599F2C6)
+    (fp_text reference U48 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 62 "Net-(U48-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 52 "Net-(U38-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D185)
+    (at 84.843 129.471)
+    (path /5599F28A)
+    (fp_text reference U47 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 61 "Net-(U47-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 51 "Net-(U37-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D17B)
+    (at 84.843 113.157)
+    (path /5599F24E)
+    (fp_text reference U46 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 60 "Net-(U46-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 50 "Net-(U36-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D171)
+    (at 84.843 96.843)
+    (path /5599DD2C)
+    (fp_text reference U45 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 59 "Net-(U45-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 49 "Net-(U35-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D167)
+    (at 84.843 80.529)
+    (path /5599D8D6)
+    (fp_text reference U44 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 58 "Net-(U44-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 48 "Net-(U34-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D15D)
+    (at 84.843 64.215)
+    (path /5599D70A)
+    (fp_text reference U43 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 57 "Net-(U43-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 47 "Net-(U33-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D153)
+    (at 84.843 47.901)
+    (path /5599D318)
+    (fp_text reference U42 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 56 "Net-(U42-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 46 "Net-(U32-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D149)
+    (at 84.843 31.587)
+    (path /5599CAB7)
+    (fp_text reference U41 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 55 "Net-(U41-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 45 "Net-(U31-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D13F)
+    (at 68.529 178.413)
+    (path /5599F338)
+    (fp_text reference U40 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 54 "Net-(U40-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 44 "Net-(U30-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D135)
+    (at 68.529 162.099)
+    (path /5599F2FC)
+    (fp_text reference U39 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 53 "Net-(U39-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 43 "Net-(U29-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D12B)
+    (at 68.529 145.785)
+    (path /5599F2C0)
+    (fp_text reference U38 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 52 "Net-(U38-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 42 "Net-(U28-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D121)
+    (at 68.529 129.471)
+    (path /5599F284)
+    (fp_text reference U37 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 51 "Net-(U37-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 41 "Net-(U27-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D117)
+    (at 68.529 113.157)
+    (path /5599F248)
+    (fp_text reference U36 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 50 "Net-(U36-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 40 "Net-(U26-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D10D)
+    (at 68.529 96.843)
+    (path /5599DD26)
+    (fp_text reference U35 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 49 "Net-(U35-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 39 "Net-(U25-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D103)
+    (at 68.529 80.529)
+    (path /5599D8D0)
+    (fp_text reference U34 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 48 "Net-(U34-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 38 "Net-(U24-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D0F9)
+    (at 68.529 64.215)
+    (path /5599D704)
+    (fp_text reference U33 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 47 "Net-(U33-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 37 "Net-(U23-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D0EF)
+    (at 68.529 47.901)
+    (path /5599D312)
+    (fp_text reference U32 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 46 "Net-(U32-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 36 "Net-(U22-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D0E5)
+    (at 68.529 31.587)
+    (path /5599CA6D)
+    (fp_text reference U31 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 45 "Net-(U31-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 35 "Net-(U21-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D0DB)
+    (at 52.215 178.413)
+    (path /5599F332)
+    (fp_text reference U30 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 44 "Net-(U30-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 34 "Net-(U20-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D0D1)
+    (at 52.215 162.099)
+    (path /5599F2F6)
+    (fp_text reference U29 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 43 "Net-(U29-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 33 "Net-(U19-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D0C7)
+    (at 52.215 145.785)
+    (path /5599F2BA)
+    (fp_text reference U28 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 42 "Net-(U28-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 32 "Net-(U18-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D0BD)
+    (at 52.215 129.471)
+    (path /5599F27E)
+    (fp_text reference U27 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 41 "Net-(U27-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 31 "Net-(U17-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D0B3)
+    (at 52.215 113.157)
+    (path /5599F242)
+    (fp_text reference U26 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 40 "Net-(U26-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 30 "Net-(U16-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D0A9)
+    (at 52.215 96.843)
+    (path /5599DD20)
+    (fp_text reference U25 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 39 "Net-(U25-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 29 "Net-(U15-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D09F)
+    (at 52.215 80.529)
+    (path /5599D8CA)
+    (fp_text reference U24 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 38 "Net-(U24-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 28 "Net-(U14-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D095)
+    (at 52.215 64.215)
+    (path /5599D6FE)
+    (fp_text reference U23 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 37 "Net-(U23-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 27 "Net-(U13-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D08B)
+    (at 52.215 47.901)
+    (path /5599D30C)
+    (fp_text reference U22 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 36 "Net-(U22-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 26 "Net-(U12-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D081)
+    (at 52.215 31.587)
+    (path /5599CA1E)
+    (fp_text reference U21 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 35 "Net-(U21-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 25 "Net-(U11-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D077)
+    (at 35.901 178.413)
+    (path /5599F32C)
+    (fp_text reference U20 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 34 "Net-(U20-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 23 "Net-(U10-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D06D)
+    (at 35.901 162.099)
+    (path /5599F2F0)
+    (fp_text reference U19 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 33 "Net-(U19-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 21 "Net-(U19-Pad1)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D063)
+    (at 35.901 145.785)
+    (path /5599F2B4)
+    (fp_text reference U18 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 32 "Net-(U18-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 19 "Net-(U18-Pad1)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D059)
+    (at 35.901 129.471)
+    (path /5599F278)
+    (fp_text reference U17 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 31 "Net-(U17-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 17 "Net-(U17-Pad1)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D04F)
+    (at 35.901 113.157)
+    (path /5599F23C)
+    (fp_text reference U16 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 30 "Net-(U16-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 15 "Net-(U16-Pad1)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D045)
+    (at 35.901 96.843)
+    (path /5599DD1A)
+    (fp_text reference U15 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 29 "Net-(U15-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 13 "Net-(U15-Pad1)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D03B)
+    (at 35.901 80.529)
+    (path /5599D8C4)
+    (fp_text reference U14 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 28 "Net-(U14-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 11 "Net-(U14-Pad1)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D031)
+    (at 35.901 64.215)
+    (path /5599D6F8)
+    (fp_text reference U13 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 27 "Net-(U13-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 9 "Net-(U13-Pad1)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D027)
+    (at 35.901 47.901)
+    (path /5599D306)
+    (fp_text reference U12 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 26 "Net-(U12-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 7 "Net-(U12-Pad1)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D01D)
+    (at 35.901 31.587)
+    (path /5599C9CC)
+    (fp_text reference U11 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 25 "Net-(U11-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 6 "Net-(U1-Pad4)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D013)
+    (at 19.587 178.413)
+    (path /5599F326)
+    (fp_text reference U10 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 23 "Net-(U10-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 24 "Net-(U10-Pad1)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599D009)
+    (at 19.587 162.099)
+    (path /5599F2EA)
+    (fp_text reference U9 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 21 "Net-(U19-Pad1)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 22 "Net-(U9-Pad1)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599CFFF)
+    (at 19.587 145.785)
+    (path /5599F2AE)
+    (fp_text reference U8 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 19 "Net-(U18-Pad1)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 20 "Net-(U8-Pad1)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599CFF5)
+    (at 19.587 129.471)
+    (path /5599F272)
+    (fp_text reference U7 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 17 "Net-(U17-Pad1)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 18 "Net-(U7-Pad1)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599CFEB)
+    (at 19.587 113.157)
+    (path /5599F236)
+    (fp_text reference U6 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 15 "Net-(U16-Pad1)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 16 "Net-(U6-Pad1)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599CFE1)
+    (at 19.587 96.843)
+    (path /5599DD14)
+    (fp_text reference U5 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 13 "Net-(U15-Pad1)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 14 "Net-(U5-Pad1)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599CFD7)
+    (at 19.587 80.529)
+    (path /5599D8BE)
+    (fp_text reference U4 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 11 "Net-(U14-Pad1)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 12 "Net-(U4-Pad1)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599CFCD)
+    (at 19.587 64.215)
+    (path /5599D6F2)
+    (fp_text reference U3 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 9 "Net-(U13-Pad1)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 10 "Net-(U3-Pad1)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599CFC3)
+    (at 19.587 47.901)
+    (path /5599D300)
+    (fp_text reference U2 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 7 "Net-(U12-Pad1)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 8 "Net-(U2-Pad1)"))
+  )
+
+  (module ledboard2:NEOPIXEL_8MM (layer F.Cu) (tedit 55EE13A0) (tstamp 5599CFB9)
+    (at 19.587 31.587)
+    (path /5599C92E)
+    (fp_text reference U1 (at 0 5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value NEOPIXEL (at 0 -5.08) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.5 -1.75) (end 3.5 1.75) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end 0 -4) (layer F.SilkS) (width 0.15))
+    (pad 2 thru_hole oval (at -0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+    (pad 3 thru_hole oval (at 0.6375 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 GND))
+    (pad 4 thru_hole oval (at 1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 6 "Net-(U1-Pad4)"))
+    (pad 1 thru_hole oval (at -1.9125 0) (size 0.96 1.5) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 5 "Net-(R1-Pad1)"))
+  )
+
+  (gr_text https://github.com/apparentlymart/wordclock (at 170 23) (layer F.SilkS)
+    (effects (font (size 1 1) (thickness 0.25)) (justify right))
+  )
+  (gr_text "Wordclock v0.2" (at 170 21) (layer F.SilkS)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify right))
+  )
+  (gr_arc (start 171 188) (end 172 188) (angle 90) (layer Edge.Cuts) (width 0.1))
+  (gr_arc (start 13 187) (end 13 189) (angle 90) (layer Edge.Cuts) (width 0.1))
+  (gr_arc (start 13 21) (end 11 21) (angle 90) (layer Edge.Cuts) (width 0.1))
+  (gr_arc (start 170 21) (end 170 19) (angle 90) (layer Edge.Cuts) (width 0.1))
+  (gr_line (start 172 25) (end 172 21) (angle 90) (layer Edge.Cuts) (width 0.1))
+  (gr_line (start 13 19) (end 170 19) (angle 90) (layer Edge.Cuts) (width 0.1))
+  (gr_line (start 172 188) (end 172 25) (angle 90) (layer Edge.Cuts) (width 0.1))
+  (gr_line (start 11 187) (end 11 183) (angle 90) (layer Edge.Cuts) (width 0.1))
+  (gr_line (start 171 189) (end 13 189) (angle 90) (layer Edge.Cuts) (width 0.1))
+  (gr_line (start 11 21) (end 11 183) (angle 90) (layer Edge.Cuts) (width 0.1))
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+)

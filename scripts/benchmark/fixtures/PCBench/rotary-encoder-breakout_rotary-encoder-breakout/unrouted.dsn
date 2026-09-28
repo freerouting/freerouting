@@ -1,0 +1,157 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\rotary-encoder-breakout_rotary-encoder-breakout\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  159159 -103460  141839 -103460  141839 -82736.2  159159 -82736.2
+            159159 -103460)
+    )
+    (via "Via[0-1]_600:400_um")
+    (rule
+      (width 300)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component Pin_Headers:Pin_Header_Straight_1x03
+      (place P1 147654.4 -84233.6 front 90 (PN CONN_01X03))
+      (place P5 147654.4 -102013.6 front 90 (PN CONN_01X03))
+    )
+    (component Resistors_SMD:R_1206_HandSoldering
+      (place R1 146613 -93149 back 270 (PN R))
+      (place R2 150296 -93149 back 270 (PN R))
+      (place R3 153852 -93149 back 270 (PN R))
+    )
+    (component "sparkfun:SF-ROTARY-ENCODER"
+      (place ROT1 150263.02 -93072.74 front 90 (PN "ROTARY-ENCODER"))
+    )
+  )
+  (library
+    (image Pin_Headers:Pin_Header_Straight_1x03
+      (outline (polygon signal 0  -1745 -6845  -1745 1745  1745 1745  1745 -6845))
+      (outline (path signal 150  -1270 -1270  -1270 -6350))
+      (outline (path signal 150  -1270 -6350  1270 -6350))
+      (outline (path signal 150  1270 -6350  1270 -1270))
+      (outline (path signal 150  1550 1550  1550 0))
+      (outline (path signal 150  1270 -1270  -1270 -1270))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (pin Rect[A]Pad_2032.000000x1727.200000_um 1 0 0)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 2 0 -2540)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 3 0 -5080)
+    )
+    (image Resistors_SMD:R_1206_HandSoldering
+      (outline (polygon signal 0  3295 1195  3295 -1195  -3295 -1195  -3295 1195))
+      (outline (path signal 150  1000 -1075  -1000 -1075))
+      (outline (path signal 150  -1000 1075  1000 1075))
+      (pin Rect[T]Pad_2000.000000x1700.000000_um 1 -2000 0)
+      (pin Rect[T]Pad_2000.000000x1700.000000_um 2 2000 0)
+    )
+    (image "sparkfun:SF-ROTARY-ENCODER"
+      (outline (path signal 203.2  3000 1500  -3000 1500))
+      (outline (path signal 203.2  6000 -6500  -6000 -6500))
+      (outline (path signal 203.2  -6000 -6500  -6000 6500))
+      (outline (path signal 203.2  -6000 6500  6000 6500))
+      (outline (path signal 203.2  6000 6500  6000 -6500))
+      (outline (path signal 203.2  0 -3500  -365.85 -3480.83  -727.691 -3423.52  -1081.56 -3328.7
+            -1423.58 -3197.41  -1750 -3031.09  -2057.25 -2831.56  -2341.96 -2601.01
+            -2601.01 -2341.96  -2831.56 -2057.25  -3031.09 -1750  -3197.41 -1423.58
+            -3328.7 -1081.56  -3423.52 -727.691  -3480.83 -365.85  -3500 0
+            -3480.83 365.85  -3423.52 727.691  -3328.7 1081.56  -3197.41 1423.58
+            -3031.09 1750  -2831.56 2057.25  -2601.01 2341.96  -2341.96 2601.01
+            -2057.25 2831.56  -1750 3031.09  -1423.58 3197.41  -1081.56 3328.7
+            -727.691 3423.52  -365.85 3480.83  0 3500  365.85 3480.83  727.691 3423.52
+            1081.56 3328.7  1423.58 3197.41  1750 3031.09  2057.25 2831.56
+            2341.96 2601.01  2601.01 2341.96  2831.56 2057.25  3031.09 1750
+            3197.41 1423.58  3328.7 1081.56  3423.52 727.691  3480.83 365.85
+            3500 0  3480.83 -365.85  3423.52 -727.691  3328.7 -1081.56  3197.41 -1423.58
+            3031.09 -1750  2831.56 -2057.25  2601.01 -2341.96  2341.96 -2601.01
+            2057.25 -2831.56  1750 -3031.09  1423.58 -3197.41  1081.56 -3328.7
+            727.691 -3423.52  365.85 -3480.83  0 -3500))
+      (pin Round[A]Pad_1800.000000_um 1 -2500 7000)
+      (pin Round[A]Pad_1800.000000_um 2 -2500 -7500)
+      (pin Round[A]Pad_1800.000000_um 3 0 -7500)
+      (pin Round[A]Pad_1800.000000_um 4 2500 -7500)
+      (pin Round[A]Pad_1800.000000_um 5 2500 7000)
+      (pin Round[A]Pad_3000.000000_um @1 5600 0)
+      (pin Round[A]Pad_3000.000000_um @2 -5600 0)
+    )
+    (padstack Round[A]Pad_1800.000000_um
+      (shape (circle F.Cu 1800))
+      (shape (circle B.Cu 1800))
+      (attach off)
+    )
+    (padstack Round[A]Pad_3000.000000_um
+      (shape (circle F.Cu 3000))
+      (shape (circle B.Cu 3000))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_2032.000000x1727.200000_um
+      (shape (path F.Cu 1727.2  -152.4 0  152.4 0))
+      (shape (path B.Cu 1727.2  -152.4 0  152.4 0))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2000.000000x1700.000000_um
+      (shape (rect F.Cu -1000 -850 1000 850))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_2032.000000x1727.200000_um
+      (shape (rect F.Cu -1016 -863.6 1016 863.6))
+      (shape (rect B.Cu -1016 -863.6 1016 863.6))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(P5-Pad1)"
+      (pins P5-1 R2-1 ROT1-2)
+    )
+    (net "Net-(P5-Pad3)"
+      (pins P5-3 R1-1 ROT1-4)
+    )
+    (net "Net-(P1-Pad1)"
+      (pins P1-1 P5-2 ROT1-3 ROT1-5)
+    )
+    (net "Net-(P1-Pad2)"
+      (pins P1-2 R3-1 ROT1-1)
+    )
+    (net /VCC
+      (pins P1-3 R1-2 R2-2 R3-2)
+    )
+    (class kicad_default /VCC "Net-(P1-Pad1)" "Net-(P1-Pad2)" "Net-(P5-Pad1)"
+      "Net-(P5-Pad3)"
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 300)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

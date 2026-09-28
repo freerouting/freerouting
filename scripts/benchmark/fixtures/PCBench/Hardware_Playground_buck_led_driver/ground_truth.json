@@ -1,0 +1,28 @@
+{
+  "board": "Hardware_Playground_buck_led_driver",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Hardware_Playground_buck_led_driver\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 9,
+  "segment_count": 48,
+  "approximate_track_length_mm": 95.16,
+  "kicad_drc_violations": 64,
+  "generated_at": "2026-08-18T18:53:13.411777+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 64,
+    "unconnected_count": 0,
+    "by_type": {
+      "copper_edge_clearance": 27,
+      "courtyards_overlap": 9,
+      "lib_footprint_issues": 1,
+      "lib_footprint_mismatch": 12,
+      "pth_inside_courtyard": 2,
+      "silk_edge_clearance": 12,
+      "silk_over_copper": 1
+    },
+    "by_severity": {
+      "error": 38,
+      "warning": 26
+    }
+  }
+}

@@ -1,0 +1,465 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\teensy-wifi-weather-logger_teensyi2c\reference-routed.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  173709 -107669  122607 -107669  122607 -55855.8  173709 -55855.8
+            173709 -107669)
+    )
+    (plane /GND (polygon B.Cu 0  127762 -56591.2  126187 -56540.4  123495 -59334.4  123444 -85598
+            123190 -89712.8  123292 -94945.2  123444 -100279  123952 -101397
+            126086 -104242  127660 -105562  129134 -107036  165049 -106934
+            166014 -106680  166675 -106020  172669 -99974.4  172669 -61620.4
+            169520 -57810.4  167742 -56642  166370 -56388  128473 -56438.8
+            127762 -56591.2))
+    (via "Via[0-1]_787.4:533.4_um")
+    (rule
+      (width 228.6)
+      (clearance 228.6)
+      (clearance 57.15 (type smd_smd))
+    )
+  )
+  (placement
+    (component "Wickerlib:TEENSY-LC"
+      (place J1 153136.601 -71094.601 front 0 (PN "TEENSY3.2-72MHz"))
+    )
+    (component Wickerlib:Pin_Header_Straight_1x06
+      (place J2 168656 -68834 front 0 (PN "OLED-I2C"))
+    )
+    (component Wickerlib:Pin_Header_Straight_1x07
+      (place J3 132080 -82804 front 180 (PN ADAFRUIT_BME280))
+    )
+    (component "CHIP-DIPs:Symbol_OSHW-Logo_SilkScreen"
+      (place REF** 129286 -93014.8 front -90 (PN "Symbol_OSHW-Logo_SilkScreen"))
+    )
+    (component Wickerlib:Pin_Header_Straight_1x01
+      (place 3V3 168503.6 -85852 front 90 (PN 3V3))
+    )
+    (component Wickerlib:Pin_Header_Straight_1x01::1
+      (place GND1 133654.8 -61264.8 front 0 (PN GND))
+    )
+    (component Wickerlib:Pin_Header_Straight_1x01::2
+      (place GPIO0 137058.4 -105054.4 front -90 (PN GPIO0))
+      (place GPIO2 132892.8 -105003.6 front -90 (PN GPIO2))
+      (place RST1 137109.2 -100279.2 front -90 (PN RST))
+    )
+    (component Resistors_ThroughHole:Resistor_Horizontal_RM7mm
+      (place R1 169316.4 -91948 front -90 (PN R))
+    )
+    (component "ESP8266:ESP-01"
+      (place U1 156362.4 -101447.6 front -90 (PN "ESP-01v090"))
+    )
+    (component Wickerlib:CAPSENSE_CIRCLE_D10
+      (place CAP1 129286 -93167.2 front 0 (PN CAPSENSE_CIRCLE))
+    )
+  )
+  (library
+    (image "Wickerlib:TEENSY-LC"
+      (outline (polygon signal 0  6345 -24125  -11425 -24125  -11425 11425  6345 11425))
+      (pin Round[A]Pad_1727.200000_um G1 -10160 10160)
+      (pin Round[A]Pad_1727.200000_um 0 -10160 7620)
+      (pin Round[A]Pad_1727.200000_um 1 -10160 5080)
+      (pin Round[A]Pad_1727.200000_um 2 -10160 2540)
+      (pin Round[A]Pad_1727.200000_um 3 -10160 0)
+      (pin Round[A]Pad_1727.200000_um 4 -10160 -2540)
+      (pin Round[A]Pad_1727.200000_um 5 -10160 -5080)
+      (pin Round[A]Pad_1727.200000_um 6 -10160 -7620)
+      (pin Round[A]Pad_1727.200000_um 7 -10160 -10160)
+      (pin Round[A]Pad_1727.200000_um 8 -10160 -12700)
+      (pin Round[A]Pad_1727.200000_um 9 -10160 -15240)
+      (pin Round[A]Pad_1727.200000_um 10 -10160 -17780)
+      (pin Round[A]Pad_1727.200000_um 11 -10160 -20320)
+      (pin Round[A]Pad_1727.200000_um 12 -10160 -22860)
+      (pin Round[A]Pad_1727.200000_um 17A -7620 -22860)
+      (pin Round[A]Pad_1727.200000_um 3V1 -5080 -22860)
+      (pin Round[A]Pad_1727.200000_um G2 -2540 -22860)
+      (pin Round[A]Pad_1727.200000_um PGM 0 -22860)
+      (pin Round[A]Pad_1727.200000_um DAC 2540 -22860)
+      (pin Round[A]Pad_1727.200000_um 13 5080 -22860)
+      (pin Round[A]Pad_1727.200000_um 16 5080 -15240)
+      (pin Round[A]Pad_1727.200000_um 3V2 5080 5080)
+      (pin Round[A]Pad_1727.200000_um 18 5080 -10160)
+      (pin Round[A]Pad_1727.200000_um 17 5080 -12700)
+      (pin Round[A]Pad_1727.200000_um G3 5080 7620)
+      (pin Round[A]Pad_1727.200000_um 22 5080 0)
+      (pin Round[A]Pad_1727.200000_um VIN 5080 10160)
+      (pin Round[A]Pad_1727.200000_um 21 5080 -2540)
+      (pin Round[A]Pad_1727.200000_um 20 5080 -5080)
+      (pin Round[A]Pad_1727.200000_um 19 5080 -7620)
+      (pin Round[A]Pad_1727.200000_um 23 5080 2540)
+      (pin Round[A]Pad_1727.200000_um 14 5080 -20320)
+      (pin Round[A]Pad_1727.200000_um 15 5080 -17780)
+    )
+    (image Wickerlib:Pin_Header_Straight_1x06
+      (outline (polygon signal 0  1745 -14445  -1745 -14445  -1745 1745  1745 1745))
+      (outline (path signal 150  1270 -1270  1270 -13970))
+      (outline (path signal 150  1270 -13970  -1270 -13970))
+      (outline (path signal 150  -1270 -13970  -1270 -1270))
+      (outline (path signal 150  1550 1550  1550 0))
+      (outline (path signal 150  1270 -1270  -1270 -1270))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (pin Rect[A]Pad_2032.000000x1727.200000_um 1 0 0)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 2 0 -2540)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 3 0 -5080)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 4 0 -7620)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 5 0 -10160)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 6 0 -12700)
+    )
+    (image Wickerlib:Pin_Header_Straight_1x07
+      (outline (polygon signal 0  -1745 1745  1745 1745  1745 -16995  -1745 -16995))
+      (outline (path signal 150  1270 -1270  1270 -16510))
+      (outline (path signal 150  1270 -16510  -1270 -16510))
+      (outline (path signal 150  -1270 -16510  -1270 -1270))
+      (outline (path signal 150  1550 1550  1550 0))
+      (outline (path signal 150  1270 -1270  -1270 -1270))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (pin Rect[A]Pad_2032.000000x1727.200000_um 1 0 0)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 2 0 -2540)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 3 0 -5080)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 4 0 -7620)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 5 0 -10160)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 6 0 -12700)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 7 0 -15240)
+    )
+    (image "CHIP-DIPs:Symbol_OSHW-Logo_SilkScreen"
+      (outline (path signal 150  -1780.54 -929.64  -2039.62 -1490.98))
+      (outline (path signal 150  -2039.62 -1490.98  -1501.14 -2009.14))
+      (outline (path signal 150  -1501.14 -2009.14  -980.44 -1739.9))
+      (outline (path signal 150  -980.44 -1739.9  -701.04 -1899.92))
+      (outline (path signal 150  739.14 -1879.6  1069.34 -1689.1))
+      (outline (path signal 150  1069.34 -1689.1  1508.76 -2019.3))
+      (outline (path signal 150  1508.76 -2019.3  1981.2 -1529.08))
+      (outline (path signal 150  1981.2 -1529.08  1699.26 -1049.02))
+      (outline (path signal 150  1699.26 -1049.02  1889.76 -579.12))
+      (outline (path signal 150  1889.76 -579.12  2499.36 -391.16))
+      (outline (path signal 150  2499.36 -391.16  2499.36 289.56))
+      (outline (path signal 150  2499.36 289.56  1940.56 429.26))
+      (outline (path signal 150  1940.56 429.26  1739.9 1000.76))
+      (outline (path signal 150  1739.9 1000.76  2009.14 1470.66))
+      (outline (path signal 150  2009.14 1470.66  1539.24 1981.2))
+      (outline (path signal 150  1539.24 1981.2  1021.08 1719.58))
+      (outline (path signal 150  1021.08 1719.58  551.18 1920.24))
+      (outline (path signal 150  551.18 1920.24  381 2461.26))
+      (outline (path signal 150  381 2461.26  -309.88 2479.04))
+      (outline (path signal 150  -309.88 2479.04  -520.7 1930.4))
+      (outline (path signal 150  -520.7 1930.4  -939.8 1760.22))
+      (outline (path signal 150  -939.8 1760.22  -1490.98 2029.46))
+      (outline (path signal 150  -1490.98 2029.46  -2009.14 1501.14))
+      (outline (path signal 150  -2009.14 1501.14  -1760.22 960.12))
+      (outline (path signal 150  -1760.22 960.12  -1930.4 480.06))
+      (outline (path signal 150  -1930.4 480.06  -2479.04 381))
+      (outline (path signal 150  -2479.04 381  -2489.2 -320.04))
+      (outline (path signal 150  -2489.2 -320.04  -1930.4 -520.7))
+      (outline (path signal 150  -1930.4 -520.7  -1790.7 -919.48))
+      (outline (path signal 150  350.52 -899.16  650.24 -749.3))
+      (outline (path signal 150  650.24 -749.3  850.9 -551.18))
+      (outline (path signal 150  850.9 -551.18  1000.76 -149.86))
+      (outline (path signal 150  1000.76 -149.86  1000.76 248.92))
+      (outline (path signal 150  1000.76 248.92  850.9 599.44))
+      (outline (path signal 150  850.9 599.44  398.78 949.96))
+      (outline (path signal 150  398.78 949.96  -50.8 1000.76))
+      (outline (path signal 150  -50.8 1000.76  -449.58 899.16))
+      (outline (path signal 150  -449.58 899.16  -850.9 551.18))
+      (outline (path signal 150  -850.9 551.18  -1000.76 99.06))
+      (outline (path signal 150  -1000.76 99.06  -949.96 -398.78))
+      (outline (path signal 150  -949.96 -398.78  -701.04 -701.04))
+      (outline (path signal 150  -701.04 -701.04  -350.52 -899.16))
+      (outline (path signal 150  -350.52 -899.16  -701.04 -1899.92))
+      (outline (path signal 150  350.52 -899.16  749.3 -1899.92))
+    )
+    (image Wickerlib:Pin_Header_Straight_1x01
+      (outline (polygon signal 0  -1745 -1745  -1745 1745  1745 1745  1745 -1745))
+      (outline (path signal 150  1550 1550  1550 0))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (outline (path signal 150  -1270 -1270  1270 -1270))
+      (pin Rect[A]Pad_2235.200000x2235.200000_um 1 0 0)
+    )
+    (image Wickerlib:Pin_Header_Straight_1x01::1
+      (outline (polygon signal 0  1745 -1745  -1745 -1745  -1745 1745  1745 1745))
+      (outline (path signal 150  1550 1550  1550 0))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (outline (path signal 150  -1270 -1270  1270 -1270))
+      (pin Rect[A]Pad_2235.200000x2235.200000_um 1 0 0)
+    )
+    (image Wickerlib:Pin_Header_Straight_1x01::2
+      (outline (polygon signal 0  1745 1745  1745 -1745  -1745 -1745  -1745 1745))
+      (outline (path signal 150  1550 1550  1550 0))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (outline (path signal 150  -1270 -1270  1270 -1270))
+      (pin Rect[A]Pad_2235.200000x2235.200000_um 1 0 0)
+    )
+    (image Resistors_ThroughHole:Resistor_Horizontal_RM7mm
+      (outline (polygon signal 0  8845 1495  8845 -1495  -1245 -1495  -1245 1495))
+      (outline (path signal 150  1270 1270  6350 1270))
+      (outline (path signal 150  6350 1270  6350 -1270))
+      (outline (path signal 150  6350 -1270  1270 -1270))
+      (outline (path signal 150  1270 -1270  1270 1270))
+      (pin Round[A]Pad_1998.980000_um 1 0 0)
+      (pin Round[A]Pad_1998.980000_um 2 7620 0)
+    )
+    (image "ESP8266:ESP-01"
+      (outline (polygon signal 0  4295 1745  4295 -9395  -1745 -9395  -1745 1745))
+      (outline (path signal 152.4  -1778 3302  22860 3302))
+      (outline (path signal 152.4  22860 3302  22860 -10922))
+      (outline (path signal 152.4  22860 -10922  -1778 -10922))
+      (outline (path signal 152.4  -1778 -10922  -1778 3302))
+      (outline (path signal 152.4  1270 1270  -1270 1270))
+      (outline (path signal 152.4  -1270 1270  -1270 -1270))
+      (outline (path signal 152.4  -1270 -1270  -1270 -8890))
+      (outline (path signal 152.4  -1270 -8890  3810 -8890))
+      (outline (path signal 152.4  3810 -8890  3810 1270))
+      (outline (path signal 152.4  3810 1270  1270 1270))
+      (pin Rect[A]Pad_1727.200000x1727.200000_um 1 0 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 2 2540 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 3 0 -2540)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 4 2540 -2540)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 5 0 -5080)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 6 2540 -5080)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 7 0 -7620)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 8 2540 -7620)
+    )
+    (image Wickerlib:CAPSENSE_CIRCLE_D10
+      (pin Round[T]Pad_10160.000000_um 1 0 0)
+    )
+    (padstack Round[T]Pad_10160.000000_um
+      (shape (circle F.Cu 10160))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1727.200000_um
+      (shape (circle F.Cu 1727.2))
+      (shape (circle B.Cu 1727.2))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1998.980000_um
+      (shape (circle F.Cu 1998.98))
+      (shape (circle B.Cu 1998.98))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_2032.000000x1727.200000_um
+      (shape (path F.Cu 1727.2  -152.4 0  152.4 0))
+      (shape (path B.Cu 1727.2  -152.4 0  152.4 0))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_1727.200000x1727.200000_um
+      (shape (path F.Cu 1727.2  0 0  0 0))
+      (shape (path B.Cu 1727.2  0 0  0 0))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_2032.000000x1727.200000_um
+      (shape (rect F.Cu -1016 -863.6 1016 863.6))
+      (shape (rect B.Cu -1016 -863.6 1016 863.6))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_2235.200000x2235.200000_um
+      (shape (rect F.Cu -1117.6 -1117.6 1117.6 1117.6))
+      (shape (rect B.Cu -1117.6 -1117.6 1117.6 1117.6))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1727.200000x1727.200000_um
+      (shape (rect F.Cu -863.6 -863.6 863.6 863.6))
+      (shape (rect B.Cu -863.6 -863.6 863.6 863.6))
+      (attach off)
+    )
+    (padstack "Via[0-1]_787.4:533.4_um"
+      (shape (circle F.Cu 787.4))
+      (shape (circle B.Cu 787.4))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(J1-Pad0)"
+      (pins J1-0)
+    )
+    (net "Net-(J1-Pad1)"
+      (pins J1-1)
+    )
+    (net "Net-(J1-Pad2)"
+      (pins J1-2)
+    )
+    (net "Net-(J1-Pad5)"
+      (pins J1-5)
+    )
+    (net "Net-(J1-Pad6)"
+      (pins J1-6)
+    )
+    (net "Net-(J1-Pad7)"
+      (pins J1-7)
+    )
+    (net "Net-(J1-Pad8)"
+      (pins J1-8)
+    )
+    (net "Net-(J1-PadPGM)"
+      (pins J1-PGM)
+    )
+    (net "Net-(J1-PadDAC)"
+      (pins J1-DAC)
+    )
+    (net "Net-(J1-Pad16)"
+      (pins J1-16)
+    )
+    (net "Net-(J1-Pad22)"
+      (pins J1-22)
+    )
+    (net "Net-(J1-PadVIN)"
+      (pins J1-VIN)
+    )
+    (net "Net-(J1-Pad21)"
+      (pins J1-21)
+    )
+    (net "Net-(J1-Pad20)"
+      (pins J1-20)
+    )
+    (net "Net-(J1-Pad23)"
+      (pins J1-23)
+    )
+    (net "Net-(J1-Pad14)"
+      (pins J1-14)
+    )
+    (net /CS
+      (pins J3-7)
+    )
+    (net /RST
+      (pins J1-3 J2-3)
+    )
+    (net /GND
+      (pins J1-G1 J1-G2 J2-4 J3-3 GND1-1 U1-2)
+    )
+    (net "Net-(J1-Pad9)"
+      (pins J1-9 U1-1)
+    )
+    (net "Net-(J1-Pad10)"
+      (pins J1-10 U1-8)
+    )
+    (net "Net-(J1-Pad11)"
+      (pins J1-11)
+    )
+    (net "Net-(J1-Pad12)"
+      (pins J1-12)
+    )
+    (net "Net-(J1-Pad13)"
+      (pins J1-13)
+    )
+    (net /SDA
+      (pins J1-18 J2-1 J3-6)
+    )
+    (net /3.3V
+      (pins J2-5)
+    )
+    (net /VIN
+      (pins J1-3V1 J1-3V2 J2-6 J3-1 3V3-1 R1-1 U1-7)
+    )
+    (net /SCK
+      (pins J1-19 J2-2 J3-4)
+    )
+    (net /3V0
+      (pins J3-2)
+    )
+    (net /SDO
+      (pins J3-5)
+    )
+    (net "Net-(GPIO0-Pad1)"
+      (pins GPIO0-1 U1-6)
+    )
+    (net "Net-(GPIO2-Pad1)"
+      (pins GPIO2-1 U1-4)
+    )
+    (net "Net-(J1-Pad4)"
+      (pins J1-4)
+    )
+    (net "Net-(R1-Pad2)"
+      (pins R1-2 U1-3)
+    )
+    (net "Net-(RST1-Pad1)"
+      (pins RST1-1 U1-5)
+    )
+    (net "Net-(CAP1-Pad1)"
+      (pins J1-15 CAP1-1)
+    )
+    (net "Net-(J1-Pad17)"
+      (pins J1-17)
+    )
+    (class kicad_default /3.3V /3V0 /CS /GND /RST /SCK /SDA /SDO /VIN "Net-(CAP1-Pad1)"
+      "Net-(GPIO0-Pad1)" "Net-(GPIO2-Pad1)" "Net-(J1-Pad0)" "Net-(J1-Pad1)"
+      "Net-(J1-Pad10)" "Net-(J1-Pad11)" "Net-(J1-Pad12)" "Net-(J1-Pad13)"
+      "Net-(J1-Pad14)" "Net-(J1-Pad16)" "Net-(J1-Pad17)" "Net-(J1-Pad2)" "Net-(J1-Pad20)"
+      "Net-(J1-Pad21)" "Net-(J1-Pad22)" "Net-(J1-Pad23)" "Net-(J1-Pad4)" "Net-(J1-Pad5)"
+      "Net-(J1-Pad6)" "Net-(J1-Pad7)" "Net-(J1-Pad8)" "Net-(J1-Pad9)" "Net-(J1-PadDAC)"
+      "Net-(J1-PadPGM)" "Net-(J1-PadVIN)" "Net-(R1-Pad2)" "Net-(RST1-Pad1)"
+      (circuit
+        (use_via "Via[0-1]_787.4:533.4_um")
+      )
+      (rule
+        (width 228.6)
+        (clearance 228.6)
+      )
+    )
+  )
+  (wiring
+    (wire (path B.Cu 228.6  142977 -71094.6  144272 -72390  158750 -72390  158877 -72517
+            159004 -72517  160401 -73914  168656 -73914)(net /RST)(type route))
+    (wire (path F.Cu 228.6  142977 -86334.6  149352 -92710  149352 -94488  149479 -94615
+            149479 -94742  149733 -94996  149860 -94996  156337 -101473
+            156362 -101448)(net "Net-(J1-Pad9)")(type route))
+    (wire (path F.Cu 228.6  148742 -103988  148590 -103886  144272 -99568  144272 -91059
+            144145 -90932  144145 -90805  144018 -90678  144018 -90551  143002 -89535
+            143002 -88900  142977 -88874.6)(net "Net-(J1-Pad10)")(type route))
+    (wire (path F.Cu 228.6  158217 -81254.6  153543 -76581)(net /SDA)(type route))
+    (wire (path B.Cu 228.6  153543 -76581  151892 -74930  142621 -74930  142494 -74803
+            142367 -74803  142240 -74676  142113 -74676  137541 -70104  132080 -70104)(net /SDA)(type route))
+    (wire (path B.Cu 228.6  158217 -81254.6  158369 -81153  164719 -74803  165608 -74803)(net /SDA)(type route))
+    (wire (path F.Cu 228.6  165608 -74803  167259 -73152  167259 -70104  167386 -70104
+            168656 -68834)(net /SDA)(type route))
+    (wire (path B.Cu 228.6  148057 -93954.6  146812 -92710  142621 -92710  142494 -92583
+            142367 -92583  142240 -92456  142113 -92456  140716 -91059  140335 -91059)(net /VIN)(type route))
+    (wire (path F.Cu 228.6  140335 -91059  132080 -82804)(net /VIN)(type route))
+    (wire (path F.Cu 228.6  168656 -81534  168529 -81534  164719 -77724  164719 -72644
+            164592 -72517  164592 -72390  158217 -66014.6)(net /VIN)(type route))
+    (wire (path B.Cu 228.6  148057 -93954.6  148209 -93853  149352 -92710  158623 -92710
+            158750 -92583  158877 -92583  159512 -91948  169316 -91948)(net /VIN)(type route))
+    (wire (path F.Cu 228.6  148057 -93954.6  148717 -94615  148717 -101473  148742 -101448)(net /VIN)(type route))
+    (wire (path F.Cu 228.6  169316 -91948  169291 -91948  168529 -91186  168529 -85852
+            168504 -85852  168529 -85852  168656 -85725  168656 -81534)(net /VIN)(type route))
+    (wire (path F.Cu 228.6  158217 -78714.6  158369 -78613  163957 -73025)(net /SCK)(type route))
+    (wire (path B.Cu 228.6  163957 -73025  165608 -71374  168656 -71374)(net /SCK)(type route))
+    (wire (path B.Cu 228.6  158217 -78714.6  156972 -77470  142621 -77470  142494 -77343
+            142367 -77343  142240 -77216  142113 -77216  140081 -75184  132080 -75184)(net /SCK)(type route))
+    (wire (path B.Cu 228.6  137058 -105054  137287 -105283  149987 -105283  151282 -103988)(net "Net-(GPIO0-Pad1)")(type route))
+    (wire (path B.Cu 228.6  132893 -105004  132842 -105029  135128 -102743  152527 -102743
+            153797 -104013  153822 -103988)(net "Net-(GPIO2-Pad1)")(type route))
+    (wire (path B.Cu 228.6  169316 -99568  169291 -99568  168656 -100203  155067 -100203
+            153822 -101448)(net "Net-(R1-Pad2)")(type route))
+    (wire (path B.Cu 228.6  137109 -100279  137287 -100203  149987 -100203  151257 -101473
+            151282 -101448)(net "Net-(RST1-Pad1)")(type route))
+    (wire (path F.Cu 228.6  129286 -93167.2  129286 -93218  131318 -93218  134366 -90170)(net "Net-(CAP1-Pad1)")(type route))
+    (wire (path B.Cu 228.6  134366 -90170  143383 -90170  143510 -90043  143637 -90043
+            144780 -88900  158242 -88900  158217 -88874.6)(net "Net-(CAP1-Pad1)")(type route))
+    (via "Via[0-1]_787.4:533.4_um"  153543 -76581 (net /SDA)(type route))
+    (via "Via[0-1]_787.4:533.4_um"  165608 -74803 (net /SDA)(type route))
+    (via "Via[0-1]_787.4:533.4_um"  140335 -91059 (net /VIN)(type route))
+    (via "Via[0-1]_787.4:533.4_um"  163957 -73025 (net /SCK)(type route))
+    (via "Via[0-1]_787.4:533.4_um"  134366 -90170 (net "Net-(CAP1-Pad1)")(type route))
+  )
+)

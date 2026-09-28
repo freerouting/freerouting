@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "ESP_WiFiSwitch_WifiSwitch",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 60209,
+      "sha256": "e4a588c9730c6bd164a470c6a98918da1fb7d8449180ed79c8a7794c0072a207"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 35024,
+      "sha256": "12797cf0ae1f488f10b07aaf8afbca24d8ba7f1fd56b182adb5fa40a8eb6bebd"
+    },
+    "metadata_json": {
+      "bytes": 683,
+      "sha256": "412bde1309f986aebbe73add6b8414463c61f783713bc0b07d2f293dc3ee673e"
+    },
+    "final_json": {
+      "bytes": 29629,
+      "sha256": "1d298ba196c563565fcf6d90409f9c70074ed389d8fc1e61ba6df7c0caa7e73a"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:48:36.503617+00:00"
+  }
+}

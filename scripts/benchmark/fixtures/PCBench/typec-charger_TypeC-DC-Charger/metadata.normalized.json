@@ -1,0 +1,60 @@
+{
+  "board_id": "typec-charger_TypeC-DC-Charger",
+  "display_name": "typec-charger_TypeC-DC-Charger",
+  "pcbench_directory": "PCBs/typec-charger_TypeC-DC-Charger",
+  "source": "https://github.com/Scottapotamas/typec-charger",
+  "author": "Scottapotamas",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:27.469763+00:00",
+  "cad": {
+    "source_version": "KiCad 20160815",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 59,
+    "components": 99,
+    "dimensions_mm": {
+      "width": 48.0,
+      "height": 56.0
+    },
+    "area_cm2": 26.88,
+    "zones": 52
+  },
+  "reference": {
+    "segments": 860,
+    "vias": 201,
+    "track_length_mm": 1232.18,
+    "kicad_drc_violations": 818,
+    "kicad_drc_breakdown": {
+      "total_violations": 818,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 137,
+        "copper_edge_clearance": 26,
+        "items_not_allowed": 199,
+        "lib_footprint_issues": 99,
+        "malformed_courtyard": 186,
+        "silk_edge_clearance": 15,
+        "silk_over_copper": 2,
+        "solder_mask_bridge": 149,
+        "starved_thermal": 5
+      },
+      "by_severity": {
+        "error": 702,
+        "warning": 116
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

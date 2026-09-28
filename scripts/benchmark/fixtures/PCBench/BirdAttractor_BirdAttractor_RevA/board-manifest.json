@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "BirdAttractor_BirdAttractor_RevA",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 41772,
+      "sha256": "422021d1d28ddcd080dcbf02309a3f53139e25451b70a793941025e70d3c8eef"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 51845,
+      "sha256": "4635c2e1f5e72088e9f0cf576f0f38b46c7f1f487a7b87df956881f91e588426"
+    },
+    "metadata_json": {
+      "bytes": 507,
+      "sha256": "75b19d83024b4474e462435860f489b9232bb9ec2ee4101b6b6e385aac23fe0b"
+    },
+    "final_json": {
+      "bytes": 28998,
+      "sha256": "1d1f061dc9459d089e38e8ea6a11116b18fc05bc5525b98c02edb9c56baee9fa"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:33:05.446468+00:00"
+  }
+}

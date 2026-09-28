@@ -1,0 +1,64 @@
+{
+  "board_id": "Smart-Watch_SmartWatch",
+  "display_name": "Smart-Watch_SmartWatch",
+  "pcbench_directory": "PCBs/Smart-Watch_SmartWatch",
+  "source": "https://github.com/Supercap2F/Smart-Watch",
+  "author": "Supercap2F",
+  "license": "BSD 3-Clause \"New\" or \"Revised\" License",
+  "license_spdx": "BSD-3-Clause",
+  "retrieved_at": "2023-08-17T17:22:53.274066+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 1,
+    "components": 89,
+    "dimensions_mm": {
+      "width": 35.56,
+      "height": 35.56
+    },
+    "area_cm2": 12.65,
+    "zones": 19
+  },
+  "reference": {
+    "segments": 1257,
+    "vias": 184,
+    "track_length_mm": 1560.41,
+    "kicad_drc_violations": 689,
+    "kicad_drc_breakdown": {
+      "total_violations": 689,
+      "unconnected_count": 1,
+      "by_type": {
+        "annular_width": 120,
+        "clearance": 13,
+        "copper_edge_clearance": 27,
+        "hole_clearance": 167,
+        "hole_to_hole": 10,
+        "padstack": 6,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 199,
+        "silk_overlap": 92,
+        "solder_mask_bridge": 1,
+        "text_height": 23,
+        "text_thickness": 23,
+        "track_dangling": 4
+      },
+      "by_severity": {
+        "error": 328,
+        "warning": 361
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

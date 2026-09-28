@@ -1,0 +1,26 @@
+{
+  "board": "m2-electronics_m2pogo",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\m2-electronics_m2pogo\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 9,
+  "approximate_track_length_mm": 50.09,
+  "kicad_drc_violations": 21,
+  "generated_at": "2026-08-18T19:19:03.247397+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 21,
+    "unconnected_count": 0,
+    "by_type": {
+      "copper_edge_clearance": 4,
+      "invalid_outline": 1,
+      "lib_footprint_issues": 8,
+      "silk_edge_clearance": 6,
+      "silk_overlap": 2
+    },
+    "by_severity": {
+      "error": 5,
+      "warning": 16
+    }
+  }
+}

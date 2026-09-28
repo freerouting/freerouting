@@ -24,8 +24,8 @@ class SettingsMergerTest {
 
     assertNotNull(merged);
     // Verify default values
-    assertEquals(9999, merged.maxPasses);
-    assertTrue(merged.enabled);
+    assertEquals(0, merged.autorouter.maxPasses);
+    assertTrue(merged.autorouter.enabled);
     assertTrue(merged.viasAllowed);
     assertTrue(merged.getRunOptimizer());
   }
@@ -37,7 +37,7 @@ class SettingsMergerTest {
 
     assertNotNull(merged);
     // Should have null values
-    assertNull(merged.maxPasses);
+    assertNull(merged.autorouter.maxPasses);
   }
 
   @Test
@@ -63,9 +63,9 @@ class SettingsMergerTest {
 
     assertNotNull(merged);
     // Environment variable should override default
-    assertEquals(50, merged.maxPasses);
+    assertEquals(50, merged.autorouter.maxPasses);
     // Other defaults should remain
-    assertTrue(merged.enabled);
+    assertTrue(merged.autorouter.enabled);
   }
 
   @Test
@@ -85,7 +85,7 @@ class SettingsMergerTest {
 
     assertNotNull(merged);
     // Environment variables (priority 55) should override JSON (priority 10)
-    assertEquals(100, merged.maxPasses);
+    assertEquals(100, merged.autorouter.maxPasses);
     assertEquals(8, merged.optimizer.maxThreads);
   }
 
@@ -117,7 +117,7 @@ class SettingsMergerTest {
 
     assertNotNull(merged);
     // Should still have default values
-    assertEquals(9999, merged.maxPasses);
+    assertEquals(0, merged.autorouter.maxPasses);
   }
 
   @Test
@@ -133,9 +133,9 @@ class SettingsMergerTest {
     RouterSettings merged = new SettingsMerger(defaults, envSource).merge();
 
     assertNotNull(merged);
-    assertEquals(200, merged.maxPasses); // Overridden
+    assertEquals(200, merged.autorouter.maxPasses); // Overridden
     assertTrue(merged.viasAllowed); // Default
-    assertTrue(merged.enabled); // Default
+    assertTrue(merged.autorouter.enabled); // Default
   }
 
   @Test
@@ -166,12 +166,12 @@ class SettingsMergerTest {
     RouterSettings merged = new SettingsMerger(defaults, envSource).merge();
 
     assertNotNull(merged);
-    assertEquals(150, merged.maxPasses);
+    assertEquals(150, merged.autorouter.maxPasses);
     assertEquals(6, merged.optimizer.maxThreads);
     // Note: viasAllowed might not be set correctly due to field name vs
     // serialization name mismatch
     // assertFalse(merged.viasAllowed);
-    assertEquals("freerouting-router-v19", merged.algorithm);
+    assertEquals("freerouting-router-v19", merged.autorouter.algorithm);
   }
 
   @Test
@@ -192,7 +192,7 @@ class SettingsMergerTest {
   void legacyBatchModeEnablesRouterWhenJsonDisablesIt() {
     DefaultSettings defaults = new DefaultSettings();
     RouterSettings jsonSettings = new RouterSettings();
-    jsonSettings.enabled = false;
+    jsonSettings.autorouter.enabled = false;
     SettingsSource json =
         new SettingsSource() {
           @Override
@@ -274,5 +274,36 @@ class SettingsMergerTest {
     assertFalse(target.layers[0].routable);
     assertTrue(target.layers[1].routable);
     assertTrue(target.layers[2].routable);
+  }
+
+  @Test
+  void cliOptimizerImprovementThresholdParsesAndScalesFraction() {
+    DefaultSettings defaults = new DefaultSettings();
+    CliSettings cli1 = new CliSettings(new String[] {"-oit", "0.035"});
+    RouterSettings merged1 = new SettingsMerger(defaults, cli1).merge();
+    assertEquals(3.5f, merged1.optimizer.optimizationImprovementThreshold, 0.001f);
+
+    CliSettings cli2 = new CliSettings(new String[] {"-oit", "4.0"});
+    RouterSettings merged2 = new SettingsMerger(defaults, cli2).merge();
+    assertEquals(4.0f, merged2.optimizer.optimizationImprovementThreshold, 0.001f);
+
+    CliSettings cli3 =
+        new CliSettings(new String[] {"--router.optimizer.improvement_threshold=0.015"});
+    RouterSettings merged3 = new SettingsMerger(defaults, cli3).merge();
+    assertEquals(1.5f, merged3.optimizer.optimizationImprovementThreshold, 0.001f);
+  }
+
+  @Test
+  void cliNestedAutorouterMaxThreadsIsIndependentOfOptimizer() {
+    DefaultSettings defaults = new DefaultSettings();
+    CliSettings cli =
+        new CliSettings(
+            new String[] {"--router.autorouter.max_threads=1", "--router.optimizer.max_threads=4"});
+
+    RouterSettings merged = new SettingsMerger(defaults, cli).merge();
+
+    assertEquals(1, merged.autorouter.maxThreads);
+    assertEquals(4, merged.optimizer.maxThreads);
+    assertEquals(1, merged.getAutorouterMaxThreads());
   }
 }

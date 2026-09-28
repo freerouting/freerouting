@@ -1,0 +1,30 @@
+{
+  "board": "vhf-radio_exp-1",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\vhf-radio_exp-1\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 7,
+  "segment_count": 244,
+  "approximate_track_length_mm": 374.59,
+  "kicad_drc_violations": 121,
+  "generated_at": "2026-08-18T18:25:52.666779+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 121,
+    "unconnected_count": 89,
+    "by_type": {
+      "clearance": 1,
+      "copper_edge_clearance": 10,
+      "lib_footprint_issues": 90,
+      "padstack": 4,
+      "silk_edge_clearance": 5,
+      "silk_over_copper": 2,
+      "silk_overlap": 2,
+      "text_height": 6,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 11,
+      "warning": 110
+    }
+  }
+}

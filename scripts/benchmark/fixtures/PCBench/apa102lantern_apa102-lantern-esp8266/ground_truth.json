@@ -1,0 +1,31 @@
+{
+  "board": "apa102lantern_apa102-lantern-esp8266",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\apa102lantern_apa102-lantern-esp8266\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 1,
+  "segment_count": 137,
+  "approximate_track_length_mm": 397.32,
+  "kicad_drc_violations": 197,
+  "generated_at": "2026-08-18T18:28:37.097119+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 197,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 8,
+      "clearance": 121,
+      "courtyards_overlap": 8,
+      "items_not_allowed": 1,
+      "lib_footprint_issues": 27,
+      "padstack": 8,
+      "shorting_items": 1,
+      "silk_over_copper": 14,
+      "starved_thermal": 8,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 147,
+      "warning": 50
+    }
+  }
+}

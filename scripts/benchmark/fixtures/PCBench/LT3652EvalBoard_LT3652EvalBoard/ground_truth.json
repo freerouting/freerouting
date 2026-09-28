@@ -1,0 +1,29 @@
+{
+  "board": "LT3652EvalBoard_LT3652EvalBoard",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\LT3652EvalBoard_LT3652EvalBoard\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 8,
+  "segment_count": 186,
+  "approximate_track_length_mm": 460.1,
+  "kicad_drc_violations": 178,
+  "generated_at": "2026-08-18T19:18:29.266494+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 178,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 93,
+      "lib_footprint_issues": 47,
+      "silk_over_copper": 13,
+      "silk_overlap": 8,
+      "starved_thermal": 1,
+      "text_height": 14,
+      "text_thickness": 1,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 94,
+      "warning": 84
+    }
+  }
+}

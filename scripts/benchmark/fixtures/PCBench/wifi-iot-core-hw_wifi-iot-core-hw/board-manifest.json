@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "wifi-iot-core-hw_wifi-iot-core-hw",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 350679,
+      "sha256": "9cde169f2f6ea51c05f4f9cd3d1688f76001de5caece7f27ba9acd090605a685"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 159975,
+      "sha256": "e8c4cb63f93d63f8b219dbc816c6a44c75a3951eb59f4bdae144e815271ffafc"
+    },
+    "metadata_json": {
+      "bytes": 540,
+      "sha256": "bb8c28620970670d8e64e9b4d43b0c12876d38718a31bb84712cc253b92f17e6"
+    },
+    "final_json": {
+      "bytes": 155545,
+      "sha256": "b3ff869fdd7d0a5d7f99ac90298c765cb681a86a7fb411feb74e5f0bbcde911d"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:56:48.359717+00:00"
+  }
+}

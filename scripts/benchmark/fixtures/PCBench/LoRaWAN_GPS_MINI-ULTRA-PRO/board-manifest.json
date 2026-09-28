@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "LoRaWAN_GPS_MINI-ULTRA-PRO",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 499379,
+      "sha256": "cd4ac4c8d6d691af7b9ece75cba7079e2cfd2290e5d8c3574032c25186d4fac3"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 264632,
+      "sha256": "1b220a12b4eed19d3e1ce64c92cca9fcacdfb94c9553d85190af2e30749f2c5c"
+    },
+    "metadata_json": {
+      "bytes": 684,
+      "sha256": "569c3e737aefc59edf000d7c9ebe783537e08f459d72440f6a188ce23496bddd"
+    },
+    "final_json": {
+      "bytes": 211566,
+      "sha256": "1459ddcfe1c329c1d0477e0b7d94ae9a01e6e3699d4928047095b56992e00b7d"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:17:58.875516+00:00"
+  }
+}

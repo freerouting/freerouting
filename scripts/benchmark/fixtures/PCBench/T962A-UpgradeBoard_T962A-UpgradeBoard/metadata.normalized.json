@@ -1,0 +1,64 @@
+{
+  "board_id": "T962A-UpgradeBoard_T962A-UpgradeBoard",
+  "display_name": "T962A-UpgradeBoard_T962A-UpgradeBoard",
+  "pcbench_directory": "PCBs/T962A-UpgradeBoard_T962A-UpgradeBoard",
+  "source": "https://github.com/rharrison/T962A-UpgradeBoard",
+  "author": "rharrison",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:44.093958+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 12,
+    "components": 37,
+    "dimensions_mm": {
+      "width": 35.4,
+      "height": 57.11
+    },
+    "area_cm2": 20.22,
+    "zones": 6
+  },
+  "reference": {
+    "segments": 488,
+    "vias": 72,
+    "track_length_mm": 728.2,
+    "kicad_drc_violations": 489,
+    "kicad_drc_breakdown": {
+      "total_violations": 489,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 151,
+        "copper_edge_clearance": 8,
+        "hole_clearance": 20,
+        "lib_footprint_issues": 37,
+        "shorting_items": 15,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 155,
+        "silk_overlap": 2,
+        "solder_mask_bridge": 56,
+        "starved_thermal": 1,
+        "text_height": 32,
+        "text_thickness": 8,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 251,
+        "warning": 238
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

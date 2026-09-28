@@ -1,0 +1,70 @@
+{
+  "board_id": "kitspace_filaSens",
+  "display_name": "kitspace_filaSens",
+  "pcbench_directory": "PCBs/kitspace_filaSens",
+  "source": "https://github.com/drspangle/infidel-sensor",
+  "author": "",
+  "license": "[{'name': 'Creative Commons', 'link': 'https://raw.githubusercontent.com/drspangle/infidel-sensor/main/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:16:34.388679+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 2,
+    "components": 16,
+    "dimensions_mm": {
+      "width": 50.0,
+      "height": 20.0
+    },
+    "area_cm2": 10.0,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 161,
+    "vias": 25,
+    "track_length_mm": 327.21,
+    "kicad_drc_violations": 204,
+    "kicad_drc_breakdown": {
+      "total_violations": 204,
+      "unconnected_count": 25,
+      "by_type": {
+        "annular_width": 3,
+        "copper_edge_clearance": 1,
+        "items_not_allowed": 63,
+        "lib_footprint_issues": 16,
+        "silk_over_copper": 88,
+        "silk_overlap": 6,
+        "text_height": 5,
+        "text_thickness": 4,
+        "track_dangling": 2,
+        "via_dangling": 16
+      },
+      "by_severity": {
+        "error": 67,
+        "warning": 137
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.986936+00:00",
+    "elapsed_seconds": 10.8,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

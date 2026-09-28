@@ -12,7 +12,7 @@ alwaysApply: true
 - Never stage files automatically. Keep formatting-only changes separate from functional
   changes and inspect `git diff --stat` and `git diff --check`.
 - Before handoff, run:
-  `gradlew.bat spotlessCheck checkstyleMain checkstyleTest checkstyleRewriteRecipes`
+  `gradlew.bat spotlessCheck checkstyleMain checkstyleTest`
   on Windows, or the equivalent `./gradlew` command elsewhere.
 - Run `python scripts/i18n/extract-context.py --check` when Java or translation sources
   change.

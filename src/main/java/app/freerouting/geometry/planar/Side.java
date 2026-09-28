@@ -15,8 +15,7 @@ public final class Side {
   }
 
   /**
-   * Returns ON_THE_LEFT if p_value &lt; 0, ON_THE_RIGHT if p_value &gt; 0, and COLLINEAR if p_value
-   * == 0.
+   * Returns ON_THE_LEFT if value &lt; 0, ON_THE_RIGHT if value &gt; 0, and COLLINEAR if value == 0.
    */
   static Side of(double value) {
     Side result;
@@ -31,8 +30,8 @@ public final class Side {
   }
 
   /** Returns the string of this instance. */
-  @SuppressWarnings("checkstyle:MethodName")
-  public String to_string() {
+  @Override
+  public String toString() {
     return name;
   }
 

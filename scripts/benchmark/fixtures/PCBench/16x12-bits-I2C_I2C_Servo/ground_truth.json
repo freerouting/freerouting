@@ -1,0 +1,26 @@
+{
+  "board": "16x12-bits-I2C_I2C_Servo",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\16x12-bits-I2C_I2C_Servo\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 18,
+  "segment_count": 372,
+  "approximate_track_length_mm": 1110.12,
+  "kicad_drc_violations": 229,
+  "generated_at": "2026-08-18T18:26:03.868948+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 229,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 109,
+      "lib_footprint_issues": 55,
+      "silk_over_copper": 10,
+      "silk_overlap": 29,
+      "solder_mask_bridge": 26
+    },
+    "by_severity": {
+      "error": 135,
+      "warning": 94
+    }
+  }
+}

@@ -1,0 +1,6648 @@
+
+(kicad_pcb
+  (version 20171130)
+  (host pcbnew "(5.1.12)-1")
+  (general
+    (thickness 1.55)
+    (drawings 17)
+    (tracks 324)
+    (zones 0)
+    (modules 31)
+    (nets 28))
+  (page A4)
+  (title_block
+    (title NodeMCU_CO2)
+    (date 2020-10-04)
+    (company https://nerdyscout.github.io/NodeMCU/CO2))
+  (layers
+    (0 F.Cu mixed)
+    (31 B.Cu mixed)
+    (32 B.Adhes user hide)
+    (33 F.Adhes user hide)
+    (34 B.Paste user hide)
+    (35 F.Paste user hide)
+    (36 B.SilkS user hide)
+    (37 F.SilkS user hide)
+    (38 B.Mask user hide)
+    (39 F.Mask user hide)
+    (40 Dwgs.User user hide)
+    (41 Cmts.User user hide)
+    (42 Eco1.User user hide)
+    (43 Eco2.User user hide)
+    (44 Edge.Cuts user)
+    (45 Margin user hide)
+    (46 B.CrtYd user hide)
+    (47 F.CrtYd user hide)
+    (48 B.Fab user hide)
+    (49 F.Fab user hide))
+  (setup
+    (last_trace_width 0.25)
+    (user_trace_width 0.25)
+    (user_trace_width 0.5)
+    (user_trace_width 0.75)
+    (trace_clearance 0.2)
+    (zone_clearance 0.2)
+    (zone_45_only no)
+    (trace_min 0.2)
+    (via_size 0.8)
+    (via_drill 0.4)
+    (via_min_size 0.4)
+    (via_min_drill 0.3)
+    (uvia_size 0.3)
+    (uvia_drill 0.1)
+    (uvias_allowed no)
+    (uvia_min_size 0.2)
+    (uvia_min_drill 0.1)
+    (edge_width 0.05)
+    (segment_width 0.2)
+    (pcb_text_width 0.3)
+    (pcb_text_size 1.5 1.5)
+    (mod_edge_width 0.12)
+    (mod_text_size 1 1)
+    (mod_text_width 0.15)
+    (pad_size 1 1)
+    (pad_drill 0.5)
+    (pad_to_mask_clearance 0.2)
+    (solder_mask_min_width 0.125)
+    (aux_axis_origin 121.285 109.22)
+    (grid_origin 121.285 109.22)
+    (visible_elements 7FFFFFFF)
+    (pcbplotparams
+      (layerselection 0x3d1ff_ffffffff)
+      (usegerberextensions false)
+      (usegerberattributes false)
+      (usegerberadvancedattributes false)
+      (creategerberjobfile false)
+      (excludeedgelayer true)
+      (linewidth 0.1)
+      (plotframeref false)
+      (viasonmask false)
+      (mode 1)
+      (useauxorigin false)
+      (hpglpennumber 1)
+      (hpglpenspeed 20)
+      (hpglpendiameter 15.0)
+      (psnegative false)
+      (psa4output false)
+      (plotreference true)
+      (plotvalue true)
+      (plotinvisibletext false)
+      (padsonsilk false)
+      (subtractmaskfromsilk false)
+      (outputformat 1)
+      (mirror false)
+      (drillshape 0)
+      (scaleselection 1)
+      (outputdirectory "gerber")))
+  (net 0 "")
+  (net 1 GND)
+  (net 2 +5V)
+  (net 3 "Net-(J1-Pad1)")
+  (net 4 +3V3)
+  (net 5 "Net-(D1-Pad2)")
+  (net 6 "Net-(D2-Pad2)")
+  (net 7 SDA)
+  (net 8 SCL)
+  (net 9 CS)
+  (net 10 COPI)
+  (net 11 CLK)
+  (net 12 CIPO)
+  (net 13 +BATT)
+  (net 14 "Net-(R1-Pad2)")
+  (net 15 "Net-(D4-Pad1)")
+  (net 16 A0)
+  (net 17 "Net-(R4-Pad1)")
+  (net 18 "Net-(D1-Pad4)")
+  (net 19 "Net-(Q1-Pad1)")
+  (net 20 LED)
+  (net 21 IRQ)
+  (net 22 RXD)
+  (net 23 RST)
+  (net 24 "Net-(D5-Pad2)")
+  (net 25 "Net-(J5-Pad1)")
+  (net 26 "Net-(R7-Pad1)")
+  (net 27 "Net-(R8-Pad1)")
+  (net_class Default "This is the default net class."
+    (clearance 0.2)
+    (trace_width 0.25)
+    (via_dia 0.8)
+    (via_drill 0.4)
+    (uvia_dia 0.3)
+    (uvia_drill 0.1)
+    (add_net +3V3)
+    (add_net +5V)
+    (add_net +BATT)
+    (add_net A0)
+    (add_net CIPO)
+    (add_net CLK)
+    (add_net COPI)
+    (add_net CS)
+    (add_net GND)
+    (add_net IRQ)
+    (add_net LED)
+    (add_net "Net-(D1-Pad2)")
+    (add_net "Net-(D1-Pad4)")
+    (add_net "Net-(D2-Pad2)")
+    (add_net "Net-(D4-Pad1)")
+    (add_net "Net-(D5-Pad2)")
+    (add_net "Net-(J1-Pad1)")
+    (add_net "Net-(J5-Pad1)")
+    (add_net "Net-(Q1-Pad1)")
+    (add_net "Net-(R1-Pad2)")
+    (add_net "Net-(R4-Pad1)")
+    (add_net "Net-(R7-Pad1)")
+    (add_net "Net-(R8-Pad1)")
+    (add_net RST)
+    (add_net RXD)
+    (add_net SCL)
+    (add_net SDA))
+  (module Package_LGA:Bosch_LGA-8_3x3mm_P0.8mm_ClockwisePinNumbering
+    (layer F.Cu)
+    (tedit 5D9F7937)
+    (tstamp 5F821EB0)
+    (at 132.715 105.41 180)
+    (descr "Bosch  LGA, 8 Pin (https://ae-bst.resource.bosch.com/media/_tech/media/datasheets/BST-BME680-DS001-00.pdf#page=44), generated with kicad-footprint-generator ipc_noLead_generator.py")
+    (tags "Bosch LGA NoLead")
+    (path /5F81BBE7)
+    (attr smd)
+    (fp_text reference U6
+      (at 0 -2.45)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.2))))
+    (fp_text value BME680
+      (at 0 2.45)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text user %R
+      (at 0 0)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 0.75 0.75)
+          (thickness 0.11))))
+    (fp_line
+      (start -1.61 0)
+      (end -1.61 1.5)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_line
+      (start 1.61 -1.5)
+      (end 1.61 1.5)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -0.75 -1.5)
+      (end 1.5 -1.5)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start 1.5 -1.5)
+      (end 1.5 1.5)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start 1.5 1.5)
+      (end -1.5 1.5)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start -1.5 1.5)
+      (end -1.5 -0.75)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start -1.5 -0.75)
+      (end -0.75 -1.5)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start -1.75 -1.75)
+      (end -1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 1.75)
+      (end 1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.75 1.75)
+      (end 1.75 -1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.75 -1.75)
+      (end -1.75 -1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (pad 8 smd roundrect
+      (at -1.2 1.1875 180)
+      (size 0.5 0.525)
+      (layers F.Cu F.Paste F.Mask)
+      (roundrect_rratio 0.25)
+      (net 4 +3V3))
+    (pad 7 smd roundrect
+      (at -0.4 1.1875 180)
+      (size 0.5 0.525)
+      (layers F.Cu F.Paste F.Mask)
+      (roundrect_rratio 0.25)
+      (net 1 GND))
+    (pad 6 smd roundrect
+      (at 0.4 1.1875 180)
+      (size 0.5 0.525)
+      (layers F.Cu F.Paste F.Mask)
+      (roundrect_rratio 0.25)
+      (net 4 +3V3))
+    (pad 5 smd roundrect
+      (at 1.2 1.1875 180)
+      (size 0.5 0.525)
+      (layers F.Cu F.Paste F.Mask)
+      (roundrect_rratio 0.25)
+      (net 4 +3V3))
+    (pad 4 smd roundrect
+      (at 1.2 -1.1875 180)
+      (size 0.5 0.525)
+      (layers F.Cu F.Paste F.Mask)
+      (roundrect_rratio 0.25)
+      (net 8 SCL))
+    (pad 3 smd roundrect
+      (at 0.4 -1.1875 180)
+      (size 0.5 0.525)
+      (layers F.Cu F.Paste F.Mask)
+      (roundrect_rratio 0.25)
+      (net 7 SDA))
+    (pad 2 smd roundrect
+      (at -0.4 -1.1875 180)
+      (size 0.5 0.525)
+      (layers F.Cu F.Paste F.Mask)
+      (roundrect_rratio 0.25)
+      (net 4 +3V3))
+    (pad 1 smd roundrect
+      (at -1.2 -1.1875 180)
+      (size 0.5 0.525)
+      (layers F.Cu F.Paste F.Mask)
+      (roundrect_rratio 0.25)
+      (net 1 GND))
+    (model ${KISYS3DMOD}/Package_LGA.3dshapes/Bosch_LGA-8_3x3mm_P0.8mm_ClockwisePinNumbering.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical
+    (layer F.Cu)
+    (tedit 59FED5CC)
+    (tstamp 5F81D121)
+    (at 141.351 139.7 180)
+    (descr "Through hole straight pin header, 1x04, 2.54mm pitch, single row")
+    (tags "Through hole pin header THT 1x04 2.54mm single row")
+    (path /5C4C85C5)
+    (fp_text reference J2
+      (at 0 -2.33)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value Display
+      (at 0 9.95)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text user %R
+      (at 0 3.81 90)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -0.635 -1.27)
+      (end 1.27 -1.27)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start 1.27 -1.27)
+      (end 1.27 8.89)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start 1.27 8.89)
+      (end -1.27 8.89)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start -1.27 8.89)
+      (end -1.27 -0.635)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start -1.27 -0.635)
+      (end -0.635 -1.27)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start -1.33 8.95)
+      (end 1.33 8.95)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -1.33 1.27)
+      (end -1.33 8.95)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_line
+      (start 1.33 1.27)
+      (end 1.33 8.95)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -1.33 1.27)
+      (end 1.33 1.27)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -1.33 0)
+      (end -1.33 -1.33)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -1.33 -1.33)
+      (end 0 -1.33)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -1.8 -1.8)
+      (end -1.8 9.4)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.8 9.4)
+      (end 1.8 9.4)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.8 9.4)
+      (end 1.8 -1.8)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.8 -1.8)
+      (end -1.8 -1.8)
+      (layer F.CrtYd)
+      (width 0.05))
+    (pad 4 thru_hole oval
+      (at 0 7.62 180)
+      (size 1.7 1.7)
+      (drill 1)
+      (layers *.Cu *.Mask)
+      (net 7 SDA))
+    (pad 3 thru_hole oval
+      (at 0 5.08 180)
+      (size 1.7 1.7)
+      (drill 1)
+      (layers *.Cu *.Mask)
+      (net 8 SCL))
+    (pad 2 thru_hole oval
+      (at 0 2.54 180)
+      (size 1.7 1.7)
+      (drill 1)
+      (layers *.Cu *.Mask)
+      (net 1 GND))
+    (pad 1 thru_hole rect
+      (at 0 0 180)
+      (size 1.7 1.7)
+      (drill 1)
+      (layers *.Cu *.Mask)
+      (net 2 +5V))
+    (model ${KISYS3DMOD}/Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x04_P2.54mm_Vertical.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Capacitor_SMD:C_0603_1608Metric
+    (layer F.Cu)
+    (tedit 5B301BBE)
+    (tstamp 5F821F1E)
+    (at 129.54 105.41 270)
+    (descr "Capacitor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: http://www.tortai-tech.com/upload/download/2011102023233369053.pdf), generated with kicad-footprint-generator")
+    (tags capacitor)
+    (path /5F824EF5)
+    (attr smd)
+    (fp_text reference C7
+      (at 2.54 0 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.2))))
+    (fp_text value 100n
+      (at 0 1.43 90)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text user %R
+      (at 0 0 90)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 0.4 0.4)
+          (thickness 0.06))))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.162779 -0.51)
+      (end 0.162779 -0.51)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -0.162779 0.51)
+      (end 0.162779 0.51)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -1.48 0.73)
+      (end -1.48 -0.73)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.48 -0.73)
+      (end 1.48 -0.73)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.48 -0.73)
+      (end 1.48 0.73)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.48 0.73)
+      (end -1.48 0.73)
+      (layer F.CrtYd)
+      (width 0.05))
+    (pad 2 smd roundrect
+      (at 0.7875 0 270)
+      (size 0.875 0.95)
+      (layers F.Cu F.Paste F.Mask)
+      (roundrect_rratio 0.25)
+      (net 4 +3V3))
+    (pad 1 smd roundrect
+      (at -0.7875 0 270)
+      (size 0.875 0.95)
+      (layers F.Cu F.Paste F.Mask)
+      (roundrect_rratio 0.25)
+      (net 1 GND))
+    (model ${KISYS3DMOD}/Capacitor_SMD.3dshapes/C_0603_1608Metric.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Capacitor_SMD:C_0603_1608Metric
+    (layer F.Cu)
+    (tedit 5B301BBE)
+    (tstamp 5F821EEE)
+    (at 135.89 105.41 90)
+    (descr "Capacitor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: http://www.tortai-tech.com/upload/download/2011102023233369053.pdf), generated with kicad-footprint-generator")
+    (tags capacitor)
+    (path /5F824F16)
+    (attr smd)
+    (fp_text reference C6
+      (at -2.54 0 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.2))))
+    (fp_text value 100n
+      (at 0 1.43 90)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text user %R
+      (at 0 0 90)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 0.4 0.4)
+          (thickness 0.06))))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.162779 -0.51)
+      (end 0.162779 -0.51)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -0.162779 0.51)
+      (end 0.162779 0.51)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -1.48 0.73)
+      (end -1.48 -0.73)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.48 -0.73)
+      (end 1.48 -0.73)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.48 -0.73)
+      (end 1.48 0.73)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.48 0.73)
+      (end -1.48 0.73)
+      (layer F.CrtYd)
+      (width 0.05))
+    (pad 2 smd roundrect
+      (at 0.7875 0 90)
+      (size 0.875 0.95)
+      (layers F.Cu F.Paste F.Mask)
+      (roundrect_rratio 0.25)
+      (net 4 +3V3))
+    (pad 1 smd roundrect
+      (at -0.7875 0 90)
+      (size 0.875 0.95)
+      (layers F.Cu F.Paste F.Mask)
+      (roundrect_rratio 0.25)
+      (net 1 GND))
+    (model ${KISYS3DMOD}/Capacitor_SMD.3dshapes/C_0603_1608Metric.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Capacitor_SMD:C_0603_1608Metric
+    (layer B.Cu)
+    (tedit 5B301BBE)
+    (tstamp 5F7593C3)
+    (at 125.095 139.065 90)
+    (descr "Capacitor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: http://www.tortai-tech.com/upload/download/2011102023233369053.pdf), generated with kicad-footprint-generator")
+    (tags capacitor)
+    (path /5F917330)
+    (attr smd)
+    (fp_text reference C5
+      (at -2.413 0 180)
+      (layer B.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text value 100n
+      (at 0 -1.43 90)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))
+        (justify mirror)))
+    (fp_text user %R
+      (at 0 0 90)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 0.4 0.4)
+          (thickness 0.06))
+        (justify mirror)))
+    (fp_line
+      (start -0.8 -0.4)
+      (end -0.8 0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.8 0.4)
+      (end 0.8 0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.8 0.4)
+      (end 0.8 -0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.8 -0.4)
+      (end -0.8 -0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.162779 0.51)
+      (end 0.162779 0.51)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -0.162779 -0.51)
+      (end 0.162779 -0.51)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -1.48 -0.73)
+      (end -1.48 0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.48 0.73)
+      (end 1.48 0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.48 0.73)
+      (end 1.48 -0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.48 -0.73)
+      (end -1.48 -0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (pad 2 smd roundrect
+      (at 0.7875 0 90)
+      (size 0.875 0.95)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 4 +3V3))
+    (pad 1 smd roundrect
+      (at -0.7875 0 90)
+      (size 0.875 0.95)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 1 GND))
+    (model ${KISYS3DMOD}/Capacitor_SMD.3dshapes/C_0603_1608Metric.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Resistor_SMD:R_0603_1608Metric
+    (layer B.Cu)
+    (tedit 5B301BBD)
+    (tstamp 5F75511F)
+    (at 127.635 123.19 180)
+    (descr "Resistor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: http://www.tortai-tech.com/upload/download/2011102023233369053.pdf), generated with kicad-footprint-generator")
+    (tags resistor)
+    (path /5F896E25)
+    (attr smd)
+    (fp_text reference R7
+      (at -9.017 0)
+      (layer B.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text value 1k
+      (at 0 -1.43)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))
+        (justify mirror)))
+    (fp_text user %R
+      (at 0 0)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 0.4 0.4)
+          (thickness 0.06))
+        (justify mirror)))
+    (fp_line
+      (start -0.8 -0.4)
+      (end -0.8 0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.8 0.4)
+      (end 0.8 0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.8 0.4)
+      (end 0.8 -0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.8 -0.4)
+      (end -0.8 -0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.162779 0.51)
+      (end 0.162779 0.51)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -0.162779 -0.51)
+      (end 0.162779 -0.51)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -1.48 -0.73)
+      (end -1.48 0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.48 0.73)
+      (end 1.48 0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.48 0.73)
+      (end 1.48 -0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.48 -0.73)
+      (end -1.48 -0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (pad 2 smd roundrect
+      (at 0.7875 0 180)
+      (size 0.875 0.95)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 24 "Net-(D5-Pad2)"))
+    (pad 1 smd roundrect
+      (at -0.7875 0 180)
+      (size 0.875 0.95)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 26 "Net-(R7-Pad1)"))
+    (model ${KISYS3DMOD}/Resistor_SMD.3dshapes/R_0603_1608Metric.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Resistor_SMD:R_0603_1608Metric
+    (layer F.Cu)
+    (tedit 5B301BBD)
+    (tstamp 5F74E12C)
+    (at 127.635 138.43)
+    (descr "Resistor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: http://www.tortai-tech.com/upload/download/2011102023233369053.pdf), generated with kicad-footprint-generator")
+    (tags resistor)
+    (path /5F820403)
+    (attr smd)
+    (fp_text reference R6
+      (at -2.54 0)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.2))))
+    (fp_text value 1k
+      (at 0 -1.905)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text user %R
+      (at 0 0)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 0.4 0.4)
+          (thickness 0.06))))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.162779 -0.51)
+      (end 0.162779 -0.51)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -0.162779 0.51)
+      (end 0.162779 0.51)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -1.48 0.73)
+      (end -1.48 -0.73)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.48 -0.73)
+      (end 1.48 -0.73)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.48 -0.73)
+      (end 1.48 0.73)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.48 0.73)
+      (end -1.48 0.73)
+      (layer F.CrtYd)
+      (width 0.05))
+    (pad 2 smd roundrect
+      (at 0.7875 0)
+      (size 0.875 0.95)
+      (layers F.Cu F.Paste F.Mask)
+      (roundrect_rratio 0.25)
+      (net 19 "Net-(Q1-Pad1)"))
+    (pad 1 smd roundrect
+      (at -0.7875 0)
+      (size 0.875 0.95)
+      (layers F.Cu F.Paste F.Mask)
+      (roundrect_rratio 0.25)
+      (net 20 LED))
+    (model ${KISYS3DMOD}/Resistor_SMD.3dshapes/R_0603_1608Metric.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Resistor_SMD:R_0603_1608Metric
+    (layer F.Cu)
+    (tedit 5B301BBD)
+    (tstamp 5F74F51B)
+    (at 127.635 140.97 180)
+    (descr "Resistor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: http://www.tortai-tech.com/upload/download/2011102023233369053.pdf), generated with kicad-footprint-generator")
+    (tags resistor)
+    (path /5F81F669)
+    (attr smd)
+    (fp_text reference R5
+      (at 2.54 0)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.2))))
+    (fp_text value 1k
+      (at 0 -1.27)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text user %R
+      (at 0 0)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 0.4 0.4)
+          (thickness 0.06))))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.162779 -0.51)
+      (end 0.162779 -0.51)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -0.162779 0.51)
+      (end 0.162779 0.51)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -1.48 0.73)
+      (end -1.48 -0.73)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.48 -0.73)
+      (end 1.48 -0.73)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.48 -0.73)
+      (end 1.48 0.73)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.48 0.73)
+      (end -1.48 0.73)
+      (layer F.CrtYd)
+      (width 0.05))
+    (pad 2 smd roundrect
+      (at 0.7875 0 180)
+      (size 0.875 0.95)
+      (layers F.Cu F.Paste F.Mask)
+      (roundrect_rratio 0.25)
+      (net 2 +5V))
+    (pad 1 smd roundrect
+      (at -0.7875 0 180)
+      (size 0.875 0.95)
+      (layers F.Cu F.Paste F.Mask)
+      (roundrect_rratio 0.25)
+      (net 18 "Net-(D1-Pad4)"))
+    (model ${KISYS3DMOD}/Resistor_SMD.3dshapes/R_0603_1608Metric.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Resistor_SMD:R_0603_1608Metric
+    (layer B.Cu)
+    (tedit 5B301BBD)
+    (tstamp 5F74D739)
+    (at 140.97 144.78 90)
+    (descr "Resistor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: http://www.tortai-tech.com/upload/download/2011102023233369053.pdf), generated with kicad-footprint-generator")
+    (tags resistor)
+    (path /5F7C6E13)
+    (attr smd)
+    (fp_text reference R4
+      (at 2.794 0 180)
+      (layer B.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text value 2k
+      (at 2.54 0 180)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))
+        (justify mirror)))
+    (fp_text user %R
+      (at 0 0 90)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 0.4 0.4)
+          (thickness 0.06))
+        (justify mirror)))
+    (fp_line
+      (start -0.8 -0.4)
+      (end -0.8 0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.8 0.4)
+      (end 0.8 0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.8 0.4)
+      (end 0.8 -0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.8 -0.4)
+      (end -0.8 -0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.162779 0.51)
+      (end 0.162779 0.51)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -0.162779 -0.51)
+      (end 0.162779 -0.51)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -1.48 -0.73)
+      (end -1.48 0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.48 0.73)
+      (end 1.48 0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.48 0.73)
+      (end 1.48 -0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.48 -0.73)
+      (end -1.48 -0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (pad 2 smd roundrect
+      (at 0.7875 0 90)
+      (size 0.875 0.95)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 1 GND))
+    (pad 1 smd roundrect
+      (at -0.7875 0 90)
+      (size 0.875 0.95)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 17 "Net-(R4-Pad1)"))
+    (model ${KISYS3DMOD}/Resistor_SMD.3dshapes/R_0603_1608Metric.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Resistor_SMD:R_0603_1608Metric
+    (layer B.Cu)
+    (tedit 5B301BBD)
+    (tstamp 5F74D6D9)
+    (at 137.16 139.065 270)
+    (descr "Resistor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: http://www.tortai-tech.com/upload/download/2011102023233369053.pdf), generated with kicad-footprint-generator")
+    (tags resistor)
+    (path /5F7DB2B8)
+    (attr smd)
+    (fp_text reference R3
+      (at -2.413 0 180)
+      (layer B.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text value 1k
+      (at 0 -1.27 270)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))
+        (justify mirror)))
+    (fp_text user %R
+      (at 0 0 90)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 0.4 0.4)
+          (thickness 0.06))
+        (justify mirror)))
+    (fp_line
+      (start -0.8 -0.4)
+      (end -0.8 0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.8 0.4)
+      (end 0.8 0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.8 0.4)
+      (end 0.8 -0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.8 -0.4)
+      (end -0.8 -0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.162779 0.51)
+      (end 0.162779 0.51)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -0.162779 -0.51)
+      (end 0.162779 -0.51)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -1.48 -0.73)
+      (end -1.48 0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.48 0.73)
+      (end 1.48 0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.48 0.73)
+      (end 1.48 -0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.48 -0.73)
+      (end -1.48 -0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (pad 2 smd roundrect
+      (at 0.7875 0 270)
+      (size 0.875 0.95)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 1 GND))
+    (pad 1 smd roundrect
+      (at -0.7875 0 270)
+      (size 0.875 0.95)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 16 A0))
+    (model ${KISYS3DMOD}/Resistor_SMD.3dshapes/R_0603_1608Metric.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Resistor_SMD:R_0603_1608Metric
+    (layer B.Cu)
+    (tedit 5B301BBD)
+    (tstamp 5F77CEA6)
+    (at 134.62 139.065 90)
+    (descr "Resistor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: http://www.tortai-tech.com/upload/download/2011102023233369053.pdf), generated with kicad-footprint-generator")
+    (tags resistor)
+    (path /5F7DBA1E)
+    (attr smd)
+    (fp_text reference R2
+      (at 2.413 0 180)
+      (layer B.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text value 1k
+      (at 0 1.27 90)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))
+        (justify mirror)))
+    (fp_text user %R
+      (at 0 0 90)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 0.4 0.4)
+          (thickness 0.06))
+        (justify mirror)))
+    (fp_line
+      (start -0.8 -0.4)
+      (end -0.8 0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.8 0.4)
+      (end 0.8 0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.8 0.4)
+      (end 0.8 -0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.8 -0.4)
+      (end -0.8 -0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.162779 0.51)
+      (end 0.162779 0.51)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -0.162779 -0.51)
+      (end 0.162779 -0.51)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -1.48 -0.73)
+      (end -1.48 0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.48 0.73)
+      (end 1.48 0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.48 0.73)
+      (end 1.48 -0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.48 -0.73)
+      (end -1.48 -0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (pad 2 smd roundrect
+      (at 0.7875 0 90)
+      (size 0.875 0.95)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 16 A0))
+    (pad 1 smd roundrect
+      (at -0.7875 0 90)
+      (size 0.875 0.95)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 13 +BATT))
+    (model ${KISYS3DMOD}/Resistor_SMD.3dshapes/R_0603_1608Metric.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Resistor_SMD:R_0603_1608Metric
+    (layer B.Cu)
+    (tedit 5B301BBD)
+    (tstamp 5F74D637)
+    (at 135.89 149.225 180)
+    (descr "Resistor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: http://www.tortai-tech.com/upload/download/2011102023233369053.pdf), generated with kicad-footprint-generator")
+    (tags resistor)
+    (path /5F7CF4EC)
+    (attr smd)
+    (fp_text reference R1
+      (at 0 1.524)
+      (layer B.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text value 1k
+      (at 0 -1.27)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))
+        (justify mirror)))
+    (fp_text user %R
+      (at 0 0)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 0.4 0.4)
+          (thickness 0.06))
+        (justify mirror)))
+    (fp_line
+      (start -0.8 -0.4)
+      (end -0.8 0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.8 0.4)
+      (end 0.8 0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.8 0.4)
+      (end 0.8 -0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.8 -0.4)
+      (end -0.8 -0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.162779 0.51)
+      (end 0.162779 0.51)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -0.162779 -0.51)
+      (end 0.162779 -0.51)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -1.48 -0.73)
+      (end -1.48 0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.48 0.73)
+      (end 1.48 0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.48 0.73)
+      (end 1.48 -0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.48 -0.73)
+      (end -1.48 -0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (pad 2 smd roundrect
+      (at 0.7875 0 180)
+      (size 0.875 0.95)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 14 "Net-(R1-Pad2)"))
+    (pad 1 smd roundrect
+      (at -0.7875 0 180)
+      (size 0.875 0.95)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 15 "Net-(D4-Pad1)"))
+    (model ${KISYS3DMOD}/Resistor_SMD.3dshapes/R_0603_1608Metric.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module LED_SMD:LED_0603_1608Metric
+    (layer B.Cu)
+    (tedit 5B301BBE)
+    (tstamp 5F750B61)
+    (at 124.46 123.19)
+    (descr "LED SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: http://www.tortai-tech.com/upload/download/2011102023233369053.pdf), generated with kicad-footprint-generator")
+    (tags diode)
+    (path /5F897713)
+    (attr smd)
+    (fp_text reference D5
+      (at -0.635 -1.651)
+      (layer B.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text value LED
+      (at 0 1.27)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))
+        (justify mirror)))
+    (fp_text user %R
+      (at 0 0)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 0.4 0.4)
+          (thickness 0.06))
+        (justify mirror)))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.5 0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.5 0.4)
+      (end -0.8 0.1)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.8 0.1)
+      (end -0.8 -0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.8 0.735)
+      (end -1.485 0.735)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -1.485 0.735)
+      (end -1.485 -0.735)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -1.485 -0.735)
+      (end 0.8 -0.735)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -1.48 -0.73)
+      (end -1.48 0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.48 0.73)
+      (end 1.48 0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.48 0.73)
+      (end 1.48 -0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.48 -0.73)
+      (end -1.48 -0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (pad 2 smd roundrect
+      (at 0.7875 0)
+      (size 0.875 0.95)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 24 "Net-(D5-Pad2)"))
+    (pad 1 smd roundrect
+      (at -0.7875 0)
+      (size 0.875 0.95)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 1 GND))
+    (model ${KISYS3DMOD}/LED_SMD.3dshapes/LED_0603_1608Metric.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module LED_SMD:LED_0603_1608Metric
+    (layer B.Cu)
+    (tedit 5B301BBE)
+    (tstamp 5F757B77)
+    (at 139.7 149.225)
+    (descr "LED SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: http://www.tortai-tech.com/upload/download/2011102023233369053.pdf), generated with kicad-footprint-generator")
+    (tags diode)
+    (path /5F7D1BCD)
+    (attr smd)
+    (fp_text reference D4
+      (at 0 -1.524)
+      (layer B.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text value LED
+      (at 0 1.27)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))
+        (justify mirror)))
+    (fp_text user %R
+      (at 0 0)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 0.4 0.4)
+          (thickness 0.06))
+        (justify mirror)))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.5 0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.5 0.4)
+      (end -0.8 0.1)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.8 0.1)
+      (end -0.8 -0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.8 0.735)
+      (end -1.485 0.735)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -1.485 0.735)
+      (end -1.485 -0.735)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -1.485 -0.735)
+      (end 0.8 -0.735)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -1.48 -0.73)
+      (end -1.48 0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.48 0.73)
+      (end 1.48 0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.48 0.73)
+      (end 1.48 -0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.48 -0.73)
+      (end -1.48 -0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (pad 2 smd roundrect
+      (at 0.7875 0)
+      (size 0.875 0.95)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 2 +5V))
+    (pad 1 smd roundrect
+      (at -0.7875 0)
+      (size 0.875 0.95)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 15 "Net-(D4-Pad1)"))
+    (model ${KISYS3DMOD}/LED_SMD.3dshapes/LED_0603_1608Metric.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Capacitor_SMD:C_0603_1608Metric
+    (layer B.Cu)
+    (tedit 5B301BBE)
+    (tstamp 5F754BED)
+    (at 133.985 123.19 180)
+    (descr "Capacitor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: http://www.tortai-tech.com/upload/download/2011102023233369053.pdf), generated with kicad-footprint-generator")
+    (tags capacitor)
+    (path /5F8AEFA7)
+    (attr smd)
+    (fp_text reference C4
+      (at -7.62 0)
+      (layer B.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text value 100n
+      (at 0 -1.43)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))
+        (justify mirror)))
+    (fp_text user %R
+      (at 0 0)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 0.4 0.4)
+          (thickness 0.06))
+        (justify mirror)))
+    (fp_line
+      (start -0.8 -0.4)
+      (end -0.8 0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.8 0.4)
+      (end 0.8 0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.8 0.4)
+      (end 0.8 -0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.8 -0.4)
+      (end -0.8 -0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.162779 0.51)
+      (end 0.162779 0.51)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -0.162779 -0.51)
+      (end 0.162779 -0.51)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -1.48 -0.73)
+      (end -1.48 0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.48 0.73)
+      (end 1.48 0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.48 0.73)
+      (end 1.48 -0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.48 -0.73)
+      (end -1.48 -0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (pad 2 smd roundrect
+      (at 0.7875 0 180)
+      (size 0.875 0.95)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 4 +3V3))
+    (pad 1 smd roundrect
+      (at -0.7875 0 180)
+      (size 0.875 0.95)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 1 GND))
+    (model ${KISYS3DMOD}/Capacitor_SMD.3dshapes/C_0603_1608Metric.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Capacitor_SMD:C_0603_1608Metric
+    (layer B.Cu)
+    (tedit 5B301BBE)
+    (tstamp 5F750A95)
+    (at 130.81 123.19)
+    (descr "Capacitor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: http://www.tortai-tech.com/upload/download/2011102023233369053.pdf), generated with kicad-footprint-generator")
+    (tags capacitor)
+    (path /5F8BC155)
+    (attr smd)
+    (fp_text reference C3
+      (at 8.382 0)
+      (layer B.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text value 100n
+      (at 0 1.27)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))
+        (justify mirror)))
+    (fp_text user %R
+      (at 0 0)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 0.4 0.4)
+          (thickness 0.06))
+        (justify mirror)))
+    (fp_line
+      (start -0.8 -0.4)
+      (end -0.8 0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.8 0.4)
+      (end 0.8 0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.8 0.4)
+      (end 0.8 -0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.8 -0.4)
+      (end -0.8 -0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.162779 0.51)
+      (end 0.162779 0.51)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -0.162779 -0.51)
+      (end 0.162779 -0.51)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -1.48 -0.73)
+      (end -1.48 0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.48 0.73)
+      (end 1.48 0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.48 0.73)
+      (end 1.48 -0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.48 -0.73)
+      (end -1.48 -0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (pad 2 smd roundrect
+      (at 0.7875 0)
+      (size 0.875 0.95)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 4 +3V3))
+    (pad 1 smd roundrect
+      (at -0.7875 0)
+      (size 0.875 0.95)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 1 GND))
+    (model ${KISYS3DMOD}/Capacitor_SMD.3dshapes/C_0603_1608Metric.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Capacitor_SMD:C_0603_1608Metric
+    (layer B.Cu)
+    (tedit 5B301BBE)
+    (tstamp 5F74D709)
+    (at 132.08 139.065 270)
+    (descr "Capacitor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: http://www.tortai-tech.com/upload/download/2011102023233369053.pdf), generated with kicad-footprint-generator")
+    (tags capacitor)
+    (path /5F78F9B4)
+    (attr smd)
+    (fp_text reference C2
+      (at 2.54 0 180)
+      (layer B.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text value 10µF
+      (at 0 -1.27 90)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))
+        (justify mirror)))
+    (fp_text user %R
+      (at 0 0 90)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 0.4 0.4)
+          (thickness 0.06))
+        (justify mirror)))
+    (fp_line
+      (start -0.8 -0.4)
+      (end -0.8 0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.8 0.4)
+      (end 0.8 0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.8 0.4)
+      (end 0.8 -0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.8 -0.4)
+      (end -0.8 -0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.162779 0.51)
+      (end 0.162779 0.51)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -0.162779 -0.51)
+      (end 0.162779 -0.51)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -1.48 -0.73)
+      (end -1.48 0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.48 0.73)
+      (end 1.48 0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.48 0.73)
+      (end 1.48 -0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.48 -0.73)
+      (end -1.48 -0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (pad 2 smd roundrect
+      (at 0.7875 0 270)
+      (size 0.875 0.95)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 13 +BATT))
+    (pad 1 smd roundrect
+      (at -0.7875 0 270)
+      (size 0.875 0.95)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 1 GND))
+    (model ${KISYS3DMOD}/Capacitor_SMD.3dshapes/C_0603_1608Metric.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Capacitor_SMD:C_0603_1608Metric
+    (layer B.Cu)
+    (tedit 5B301BBE)
+    (tstamp 5F74C64A)
+    (at 134.62 144.78 90)
+    (descr "Capacitor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: http://www.tortai-tech.com/upload/download/2011102023233369053.pdf), generated with kicad-footprint-generator")
+    (tags capacitor)
+    (path /5F7B3A30)
+    (attr smd)
+    (fp_text reference C1
+      (at 2.794 0 180)
+      (layer B.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text value 100n
+      (at 2.54 0)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))
+        (justify mirror)))
+    (fp_text user %R
+      (at 0 0 90)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 0.4 0.4)
+          (thickness 0.06))
+        (justify mirror)))
+    (fp_line
+      (start -0.8 -0.4)
+      (end -0.8 0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.8 0.4)
+      (end 0.8 0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.8 0.4)
+      (end 0.8 -0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.8 -0.4)
+      (end -0.8 -0.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.162779 0.51)
+      (end 0.162779 0.51)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -0.162779 -0.51)
+      (end 0.162779 -0.51)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -1.48 -0.73)
+      (end -1.48 0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.48 0.73)
+      (end 1.48 0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.48 0.73)
+      (end 1.48 -0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.48 -0.73)
+      (end -1.48 -0.73)
+      (layer B.CrtYd)
+      (width 0.05))
+    (pad 2 smd roundrect
+      (at 0.7875 0 90)
+      (size 0.875 0.95)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 13 +BATT))
+    (pad 1 smd roundrect
+      (at -0.7875 0 90)
+      (size 0.875 0.95)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 1 GND))
+    (model ${KISYS3DMOD}/Capacitor_SMD.3dshapes/C_0603_1608Metric.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module RF_GPS:ublox_MAX
+    (layer B.Cu)
+    (tedit 5E9E8EA6)
+    (tstamp 5F752D93)
+    (at 128.905 130.81 270)
+    (descr "ublox MAX 6/7/8, (https://www.u-blox.com/sites/default/files/MAX-8-M8-FW3_HardwareIntegrationManual_%28UBX-15030059%29.pdf)")
+    (tags "GPS ublox MAX 6/7/8")
+    (path /5F88B3DC)
+    (attr smd)
+    (fp_text reference U3
+      (at -0.889 -6.35 180)
+      (layer B.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text value MAX-8Q
+      (at 0.635 0 180)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))
+        (justify mirror)))
+    (fp_text user %R
+      (at -0.635 0 180)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))
+        (justify mirror)))
+    (fp_line
+      (start -4.85 4.05)
+      (end -4.85 -5.05)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 4.85 5.05)
+      (end 4.85 -5.05)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -3.85 5.05)
+      (end 4.85 5.05)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -4.85 -5.05)
+      (end 4.85 -5.05)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -4.96 5.16)
+      (end 4.96 5.16)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -4.96 -5.16)
+      (end 4.96 -5.16)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start 4.96 -5.01)
+      (end 4.96 -5.16)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -4.96 -5.01)
+      (end -4.96 -5.16)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start 4.96 5.16)
+      (end 4.96 5.01)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -5.9 5.3)
+      (end -5.9 -5.3)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -5.9 -5.3)
+      (end 5.9 -5.3)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 5.9 5.3)
+      (end 5.9 -5.3)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -5.9 5.3)
+      (end 5.9 5.3)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -3.85 5.05)
+      (end -4.85 4.05)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -4.96 5.16)
+      (end -4.96 5.01)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -5.65 5.01)
+      (end -4.96 5.01)
+      (layer B.SilkS)
+      (width 0.12))
+    (pad 18 smd roundrect
+      (at 4.75 4.4 270)
+      (size 1.8 0.7)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25))
+    (pad 17 smd roundrect
+      (at 4.75 3.3 270)
+      (size 1.8 0.8)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25))
+    (pad 16 smd roundrect
+      (at 4.75 2.2 270)
+      (size 1.8 0.8)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25))
+    (pad 15 smd roundrect
+      (at 4.75 1.1 270)
+      (size 1.8 0.8)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25))
+    (pad 14 smd roundrect
+      (at 4.75 0 270)
+      (size 1.8 0.8)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 27 "Net-(R8-Pad1)"))
+    (pad 13 smd roundrect
+      (at 4.75 -1.1 270)
+      (size 1.8 0.8)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25))
+    (pad 12 smd roundrect
+      (at 4.75 -2.2 270)
+      (size 1.8 0.8)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 1 GND))
+    (pad 11 smd roundrect
+      (at 4.75 -3.3 270)
+      (size 1.8 0.8)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 25 "Net-(J5-Pad1)"))
+    (pad 10 smd roundrect
+      (at 4.75 -4.4 270)
+      (size 1.8 0.7)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 1 GND))
+    (pad 9 smd roundrect
+      (at -4.75 -4.4 270)
+      (size 1.8 0.7)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25))
+    (pad 8 smd roundrect
+      (at -4.75 -3.3 270)
+      (size 1.8 0.8)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 4 +3V3))
+    (pad 7 smd roundrect
+      (at -4.75 -2.2 270)
+      (size 1.8 0.8)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 4 +3V3))
+    (pad 6 smd roundrect
+      (at -4.75 -1.1 270)
+      (size 1.8 0.8)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 4 +3V3))
+    (pad 5 smd roundrect
+      (at -4.75 0 270)
+      (size 1.8 0.8)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25))
+    (pad 4 smd roundrect
+      (at -4.75 1.1 270)
+      (size 1.8 0.8)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 26 "Net-(R7-Pad1)"))
+    (pad 3 smd roundrect
+      (at -4.75 2.2 270)
+      (size 1.8 0.8)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25))
+    (pad 2 smd roundrect
+      (at -4.75 3.3 270)
+      (size 1.8 0.8)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 22 RXD))
+    (pad 1 smd roundrect
+      (at -4.75 4.4 270)
+      (size 1.8 0.7)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 1 GND))
+    (model ${KISYS3DMOD}/RF_GPS.3dshapes/ublox_MAX.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical
+    (layer B.Cu)
+    (tedit 5A1DBFC3)
+    (tstamp 5F750C67)
+    (at 136.525 132.715)
+    (descr "Hirose U.FL Coaxial https://www.hirose.com/product/en/products/U.FL/U.FL-R-SMT-1%2810%29/")
+    (tags "Hirose U.FL Coaxial")
+    (path /5F8A9C45)
+    (attr smd)
+    (fp_text reference J5
+      (at 3.175 0 180)
+      (layer B.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text value Conn_Coaxial
+      (at 3.175 0 90)
+      (layer B.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))
+        (justify mirror)))
+    (fp_text user %R
+      (at 0.475 0 270)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 0.6 0.6)
+          (thickness 0.09))
+        (justify mirror)))
+    (fp_line
+      (start -2.02 -1)
+      (end -2.02 1)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.32 -1)
+      (end -2.02 -1)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.08 -1.8)
+      (end 2.28 -1.8)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.08 -2.5)
+      (end 2.08 -1.8)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.28 -1.8)
+      (end 2.28 1.8)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.32 -1.8)
+      (end -1.12 -1.8)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.12 -2.5)
+      (end -1.12 -1.8)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.08 -2.5)
+      (end -1.12 -2.5)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.835 1.35)
+      (end 1.835 -1.35)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -0.885 0.76)
+      (end -1.515 0.76)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -0.885 -1.4)
+      (end -0.885 -0.76)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -0.925 0.3)
+      (end -1.075 0.15)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 1.775 1.3)
+      (end 1.375 1.3)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 1.375 1.5)
+      (end 1.375 1.3)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.425 1.5)
+      (end 1.375 1.5)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 1.775 1.3)
+      (end 1.775 -1.3)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 1.775 -1.3)
+      (end 1.375 -1.3)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 1.375 -1.5)
+      (end 1.375 -1.3)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.425 -1.5)
+      (end 1.375 -1.5)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.425 1.3)
+      (end -0.825 1.3)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.425 1.5)
+      (end -0.425 1.3)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.825 0.3)
+      (end -0.825 1.3)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.925 0.3)
+      (end -0.825 0.3)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -1.075 -0.3)
+      (end -1.075 0.15)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -1.075 -0.3)
+      (end -0.825 -0.3)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.825 -0.3)
+      (end -0.825 -1.3)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.425 -1.3)
+      (end -0.825 -1.3)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.425 -1.5)
+      (end -0.425 -1.3)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.885 1.4)
+      (end -0.885 0.76)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start 2.08 1.8)
+      (end 2.28 1.8)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.08 1.8)
+      (end 2.08 2.5)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.32 1)
+      (end -1.32 1.8)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.08 2.5)
+      (end -1.12 2.5)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.12 1.8)
+      (end -1.12 2.5)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.32 1.8)
+      (end -1.12 1.8)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.32 -1.8)
+      (end -1.32 -1)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.32 1)
+      (end -2.02 1)
+      (layer B.CrtYd)
+      (width 0.05))
+    (pad 2 smd rect
+      (at 0.475 1.475)
+      (size 2.2 1.05)
+      (layers B.Cu B.Paste B.Mask)
+      (net 1 GND))
+    (pad 1 smd rect
+      (at -1.05 0)
+      (size 1.05 1)
+      (layers B.Cu B.Paste B.Mask)
+      (net 25 "Net-(J5-Pad1)"))
+    (pad 2 smd rect
+      (at 0.475 -1.475)
+      (size 2.2 1.05)
+      (layers B.Cu B.Paste B.Mask)
+      (net 1 GND))
+    (model ${KISYS3DMOD}/Connector_Coaxial.3dshapes/U.FL_Hirose_U.FL-R-SMT-1_Vertical.wrl
+      (offset
+        (xyz 0.4749999928262157 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Connector_JST:JST_PH_S2B-PH-SM4-TB_1x02-1MP_P2.00mm_Horizontal
+    (layer B.Cu)
+    (tedit 5B78AD87)
+    (tstamp 5F7513D1)
+    (at 128.905 146.685 180)
+    (descr "JST PH series connector, S2B-PH-SM4-TB (http://www.jst-mfg.com/product/pdf/eng/ePH.pdf), generated with kicad-footprint-generator")
+    (tags "connector JST PH top entry")
+    (path /5F7ED42D)
+    (attr smd)
+    (fp_text reference J4
+      (at 5.08 1.27)
+      (layer B.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text value JST
+      (at 0 -3.175)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))
+        (justify mirror)))
+    (fp_text user %R
+      (at 0 -1.5)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))
+        (justify mirror)))
+    (fp_line
+      (start -1 0.892893)
+      (end -0.5 1.6)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -1.5 1.6)
+      (end -1 0.892893)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 4.6 5.1)
+      (end -4.6 5.1)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 4.6 -5.1)
+      (end 4.6 5.1)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -4.6 -5.1)
+      (end 4.6 -5.1)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -4.6 5.1)
+      (end -4.6 -5.1)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 3.95 3.2)
+      (end 3.95 -4.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -3.95 3.2)
+      (end -3.95 -4.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -3.95 -4.4)
+      (end 3.95 -4.4)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -2.34 -4.51)
+      (end 2.34 -4.51)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start 3.04 1.71)
+      (end 1.76 1.71)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start 3.04 3.31)
+      (end 3.04 1.71)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start 4.06 3.31)
+      (end 3.04 3.31)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start 4.06 -0.94)
+      (end 4.06 3.31)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -1.76 1.71)
+      (end -1.76 4.6)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -3.04 1.71)
+      (end -1.76 1.71)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -3.04 3.31)
+      (end -3.04 1.71)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -4.06 3.31)
+      (end -3.04 3.31)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -4.06 -0.94)
+      (end -4.06 3.31)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start 3.15 3.2)
+      (end 3.95 3.2)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 3.15 1.6)
+      (end 3.15 3.2)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -3.15 1.6)
+      (end 3.15 1.6)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -3.15 3.2)
+      (end -3.15 1.6)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -3.95 3.2)
+      (end -3.15 3.2)
+      (layer B.Fab)
+      (width 0.1))
+    (pad 1 smd roundrect
+      (at -1 2.85 180)
+      (size 1 3.5)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 1 GND))
+    (pad 2 smd roundrect
+      (at 1 2.85 180)
+      (size 1 3.5)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.25)
+      (net 13 +BATT))
+    (pad MP smd roundrect
+      (at -3.35 -2.9 180)
+      (size 1.5 3.4)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.166667))
+    (pad MP smd roundrect
+      (at 3.35 -2.9 180)
+      (size 1.5 3.4)
+      (layers B.Cu B.Paste B.Mask)
+      (roundrect_rratio 0.166667))
+    (model ${KISYS3DMOD}/Connector_JST.3dshapes/JST_PH_S2B-PH-SM4-TB_1x02-1MP_P2.00mm_Horizontal.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm
+    (layer F.Cu)
+    (tedit 5B391E66)
+    (tstamp 5F74F1F5)
+    (at 132.08 139.7 270)
+    (descr "SMD Solder Jumper, 1x1.5mm, rounded Pads, 0.3mm gap, open")
+    (tags "solder jumper open")
+    (path /5F84B155)
+    (attr virtual)
+    (fp_text reference JP1
+      (at -2.54 0 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.2))))
+    (fp_text value Jumper_NC_Small
+      (at 0 1.9 90)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.4 0.3)
+      (end -1.4 -0.3)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_line
+      (start 0.7 1)
+      (end -0.7 1)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_line
+      (start 1.4 -0.3)
+      (end 1.4 0.3)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -0.7 -1)
+      (end 0.7 -1)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -1.65 -1.25)
+      (end 1.65 -1.25)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.65 -1.25)
+      (end -1.65 1.25)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.65 1.25)
+      (end 1.65 -1.25)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.65 1.25)
+      (end -1.65 1.25)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_arc
+      (start -0.7 -0.3)
+      (end -0.7 -1)
+      (angle -90)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_arc
+      (start -0.7 0.3)
+      (end -1.4 0.3)
+      (angle -90)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_arc
+      (start 0.7 0.3)
+      (end 0.7 1)
+      (angle -90)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_arc
+      (start 0.7 -0.3)
+      (end 1.4 -0.3)
+      (angle -90)
+      (layer F.SilkS)
+      (width 0.12))
+    (pad 2 smd custom
+      (at 0.65 0 270)
+      (size 1 0.5)
+      (layers F.Cu F.Mask)
+      (net 18 "Net-(D1-Pad4)")
+      (zone_connect 2)
+      (options
+        (clearance outline)
+        (anchor rect))
+      (primitives
+        (gr_circle
+          (center 0 0.25)
+          (end 0.5 0.25)
+          (width 0))
+        (gr_circle
+          (center 0 -0.25)
+          (end 0.5 -0.25)
+          (width 0))
+        (gr_poly
+          (pts
+            (xy 0 -0.75)
+            (xy -0.5 -0.75)
+            (xy -0.5 0.75)
+            (xy 0 0.75))
+          (width 0))))
+    (pad 1 smd custom
+      (at -0.65 0 270)
+      (size 1 0.5)
+      (layers F.Cu F.Mask)
+      (net 20 LED)
+      (zone_connect 2)
+      (options
+        (clearance outline)
+        (anchor rect))
+      (primitives
+        (gr_circle
+          (center 0 0.25)
+          (end 0.5 0.25)
+          (width 0))
+        (gr_circle
+          (center 0 -0.25)
+          (end 0.5 -0.25)
+          (width 0))
+        (gr_poly
+          (pts
+            (xy 0 -0.75)
+            (xy 0.5 -0.75)
+            (xy 0.5 0.75)
+            (xy 0 0.75))
+          (width 0)))))
+  (module Package_TO_SOT_SMD:SOT-23
+    (layer F.Cu)
+    (tedit 5A02FF57)
+    (tstamp 5F74E08A)
+    (at 136.525 139.7)
+    (descr "SOT-23, Standard")
+    (tags SOT-23)
+    (path /5F815007)
+    (attr smd)
+    (fp_text reference Q1
+      (at -1.27 -2.54)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.2))))
+    (fp_text value Q_NPN_BCE
+      (at 0 2.5)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text user %R
+      (at 0 0 90)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 0.5 0.5)
+          (thickness 0.075))))
+    (fp_line
+      (start -0.7 -0.95)
+      (end -0.7 1.5)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.15 -1.52)
+      (end 0.7 -1.52)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.7 -0.95)
+      (end -0.15 -1.52)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.7 -1.52)
+      (end 0.7 1.52)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.7 1.52)
+      (end 0.7 1.52)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.76 1.58)
+      (end 0.76 0.65)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_line
+      (start 0.76 -1.58)
+      (end 0.76 -0.65)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -1.7 -1.75)
+      (end 1.7 -1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.7 -1.75)
+      (end 1.7 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.7 1.75)
+      (end -1.7 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.7 1.75)
+      (end -1.7 -1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 0.76 -1.58)
+      (end -1.4 -1.58)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_line
+      (start 0.76 1.58)
+      (end -0.7 1.58)
+      (layer F.SilkS)
+      (width 0.12))
+    (pad 3 smd rect
+      (at 1 0)
+      (size 0.9 0.8)
+      (layers F.Cu F.Paste F.Mask)
+      (net 1 GND))
+    (pad 2 smd rect
+      (at -1 0.95)
+      (size 0.9 0.8)
+      (layers F.Cu F.Paste F.Mask)
+      (net 18 "Net-(D1-Pad4)"))
+    (pad 1 smd rect
+      (at -1 -0.95)
+      (size 0.9 0.8)
+      (layers F.Cu F.Paste F.Mask)
+      (net 19 "Net-(Q1-Pad1)"))
+    (model ${KISYS3DMOD}/Package_TO_SOT_SMD.3dshapes/SOT-23.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Package_TO_SOT_SMD:SOT-23-5
+    (layer B.Cu)
+    (tedit 5A02FF57)
+    (tstamp 5F753487)
+    (at 128.905 139.065 90)
+    (descr "5-pin SOT23 package")
+    (tags SOT-23-5)
+    (path /5F77DDDD)
+    (attr smd)
+    (fp_text reference U5
+      (at -2.54 0 180)
+      (layer B.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text value AP2112K-3.3
+      (at -1.905 0 180)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))
+        (justify mirror)))
+    (fp_text user %R
+      (at 0 0 180)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 0.5 0.5)
+          (thickness 0.075))
+        (justify mirror)))
+    (fp_line
+      (start -0.9 -1.61)
+      (end 0.9 -1.61)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start 0.9 1.61)
+      (end -1.55 1.61)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -1.9 1.8)
+      (end 1.9 1.8)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.9 1.8)
+      (end 1.9 -1.8)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.9 -1.8)
+      (end -1.9 -1.8)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.9 -1.8)
+      (end -1.9 1.8)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -0.9 0.9)
+      (end -0.25 1.55)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.9 1.55)
+      (end -0.25 1.55)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.9 0.9)
+      (end -0.9 -1.55)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.9 -1.55)
+      (end -0.9 -1.55)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.9 1.55)
+      (end 0.9 -1.55)
+      (layer B.Fab)
+      (width 0.1))
+    (pad 5 smd rect
+      (at 1.1 0.95 90)
+      (size 1.06 0.65)
+      (layers B.Cu B.Paste B.Mask)
+      (net 4 +3V3))
+    (pad 4 smd rect
+      (at 1.1 -0.95 90)
+      (size 1.06 0.65)
+      (layers B.Cu B.Paste B.Mask))
+    (pad 3 smd rect
+      (at -1.1 -0.95 90)
+      (size 1.06 0.65)
+      (layers B.Cu B.Paste B.Mask)
+      (net 13 +BATT))
+    (pad 2 smd rect
+      (at -1.1 0 90)
+      (size 1.06 0.65)
+      (layers B.Cu B.Paste B.Mask)
+      (net 1 GND))
+    (pad 1 smd rect
+      (at -1.1 0.95 90)
+      (size 1.06 0.65)
+      (layers B.Cu B.Paste B.Mask)
+      (net 13 +BATT))
+    (model ${KISYS3DMOD}/Package_TO_SOT_SMD.3dshapes/SOT-23-5.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Package_TO_SOT_SMD:SOT-23-5
+    (layer B.Cu)
+    (tedit 5A02FF57)
+    (tstamp 5F74D76D)
+    (at 137.795 144.78)
+    (descr "5-pin SOT23 package")
+    (tags SOT-23-5)
+    (path /5F77F16C)
+    (attr smd)
+    (fp_text reference U4
+      (at 0 -2.794)
+      (layer B.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text value MCP73831-2-OT
+      (at 0 2.54)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))
+        (justify mirror)))
+    (fp_text user %R
+      (at 0 0 270)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 0.5 0.5)
+          (thickness 0.075))
+        (justify mirror)))
+    (fp_line
+      (start -0.9 -1.61)
+      (end 0.9 -1.61)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start 0.9 1.61)
+      (end -1.55 1.61)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -1.9 1.8)
+      (end 1.9 1.8)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.9 1.8)
+      (end 1.9 -1.8)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.9 -1.8)
+      (end -1.9 -1.8)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.9 -1.8)
+      (end -1.9 1.8)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -0.9 0.9)
+      (end -0.25 1.55)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.9 1.55)
+      (end -0.25 1.55)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.9 0.9)
+      (end -0.9 -1.55)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.9 -1.55)
+      (end -0.9 -1.55)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 0.9 1.55)
+      (end 0.9 -1.55)
+      (layer B.Fab)
+      (width 0.1))
+    (pad 5 smd rect
+      (at 1.1 0.95)
+      (size 1.06 0.65)
+      (layers B.Cu B.Paste B.Mask)
+      (net 17 "Net-(R4-Pad1)"))
+    (pad 4 smd rect
+      (at 1.1 -0.95)
+      (size 1.06 0.65)
+      (layers B.Cu B.Paste B.Mask)
+      (net 2 +5V))
+    (pad 3 smd rect
+      (at -1.1 -0.95)
+      (size 1.06 0.65)
+      (layers B.Cu B.Paste B.Mask)
+      (net 13 +BATT))
+    (pad 2 smd rect
+      (at -1.1 0)
+      (size 1.06 0.65)
+      (layers B.Cu B.Paste B.Mask)
+      (net 1 GND))
+    (pad 1 smd rect
+      (at -1.1 0.95)
+      (size 1.06 0.65)
+      (layers B.Cu B.Paste B.Mask)
+      (net 14 "Net-(R1-Pad2)"))
+    (model ${KISYS3DMOD}/Package_TO_SOT_SMD.3dshapes/SOT-23-5.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical
+    (layer B.Cu)
+    (tedit 5A1DBFC3)
+    (tstamp 5F74ADDF)
+    (at 137.16 127 180)
+    (descr "Hirose U.FL Coaxial https://www.hirose.com/product/en/products/U.FL/U.FL-R-SMT-1%2810%29/")
+    (tags "Hirose U.FL Coaxial")
+    (path /5F74F41D)
+    (attr smd)
+    (fp_text reference J1
+      (at -2.54 0)
+      (layer B.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text value Conn_Coaxial
+      (at -2.54 0 270)
+      (layer B.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))
+        (justify mirror)))
+    (fp_text user %R
+      (at 0.475 0 90)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 0.6 0.6)
+          (thickness 0.09))
+        (justify mirror)))
+    (fp_line
+      (start -2.02 -1)
+      (end -2.02 1)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.32 -1)
+      (end -2.02 -1)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.08 -1.8)
+      (end 2.28 -1.8)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.08 -2.5)
+      (end 2.08 -1.8)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.28 -1.8)
+      (end 2.28 1.8)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.32 -1.8)
+      (end -1.12 -1.8)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.12 -2.5)
+      (end -1.12 -1.8)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.08 -2.5)
+      (end -1.12 -2.5)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.835 1.35)
+      (end 1.835 -1.35)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -0.885 0.76)
+      (end -1.515 0.76)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -0.885 -1.4)
+      (end -0.885 -0.76)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -0.925 0.3)
+      (end -1.075 0.15)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 1.775 1.3)
+      (end 1.375 1.3)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 1.375 1.5)
+      (end 1.375 1.3)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.425 1.5)
+      (end 1.375 1.5)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 1.775 1.3)
+      (end 1.775 -1.3)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 1.775 -1.3)
+      (end 1.375 -1.3)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 1.375 -1.5)
+      (end 1.375 -1.3)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.425 -1.5)
+      (end 1.375 -1.5)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.425 1.3)
+      (end -0.825 1.3)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.425 1.5)
+      (end -0.425 1.3)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.825 0.3)
+      (end -0.825 1.3)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.925 0.3)
+      (end -0.825 0.3)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -1.075 -0.3)
+      (end -1.075 0.15)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -1.075 -0.3)
+      (end -0.825 -0.3)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.825 -0.3)
+      (end -0.825 -1.3)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.425 -1.3)
+      (end -0.825 -1.3)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.425 -1.5)
+      (end -0.425 -1.3)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.885 1.4)
+      (end -0.885 0.76)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start 2.08 1.8)
+      (end 2.28 1.8)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.08 1.8)
+      (end 2.08 2.5)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.32 1)
+      (end -1.32 1.8)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.08 2.5)
+      (end -1.12 2.5)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.12 1.8)
+      (end -1.12 2.5)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.32 1.8)
+      (end -1.12 1.8)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.32 -1.8)
+      (end -1.32 -1)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.32 1)
+      (end -2.02 1)
+      (layer B.CrtYd)
+      (width 0.05))
+    (pad 2 smd rect
+      (at 0.475 1.475 180)
+      (size 2.2 1.05)
+      (layers B.Cu B.Paste B.Mask)
+      (net 1 GND))
+    (pad 1 smd rect
+      (at -1.05 0 180)
+      (size 1.05 1)
+      (layers B.Cu B.Paste B.Mask)
+      (net 3 "Net-(J1-Pad1)"))
+    (pad 2 smd rect
+      (at 0.475 -1.475 180)
+      (size 2.2 1.05)
+      (layers B.Cu B.Paste B.Mask)
+      (net 1 GND))
+    (model ${KISYS3DMOD}/Connector_Coaxial.3dshapes/U.FL_Hirose_U.FL-R-SMT-1_Vertical.wrl
+      (offset
+        (xyz 0.4749999928262157 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module RF_Module:HOPERF_RFM9XW_SMD
+    (layer B.Cu)
+    (tedit 5C227243)
+    (tstamp 5F743E0E)
+    (at 132.715 112.395 270)
+    (descr "Low Power Long Range Transceiver Module SMD-16 (https://www.hoperf.com/data/upload/portal/20181127/5bfcbea20e9ef.pdf)")
+    (tags "LoRa Low Power Long Range Transceiver Module")
+    (path /5F74E300)
+    (attr smd)
+    (fp_text reference U2
+      (at 0 -9.144 180)
+      (layer B.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text value RFM95W-868S2
+      (at 0.635 0)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))
+        (justify mirror)))
+    (fp_text user %R
+      (at -0.635 0)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))
+        (justify mirror)))
+    (fp_line
+      (start -7 8)
+      (end 8 8)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 8 -8)
+      (end 8 8)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -8 -8)
+      (end 8 -8)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -8 -8)
+      (end -8 7)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -9.25 8.25)
+      (end 9.25 8.25)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 9.25 8.25)
+      (end 9.25 -8.25)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -9.25 -8.25)
+      (end 9.25 -8.25)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -9.25 -8.25)
+      (end -9.25 8.25)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -8.1 8.1)
+      (end 8.1 8.1)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start 8.1 8.1)
+      (end 8.1 7.7)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -8.1 -7.7)
+      (end -8.1 -8.1)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -8.1 -8.1)
+      (end 8.1 -8.1)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start 8.1 -8.1)
+      (end 8.1 -7.7)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -8.1 8.1)
+      (end -8.1 7.75)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -8.1 7.75)
+      (end -9 7.75)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -7 8)
+      (end -8 7)
+      (layer B.Fab)
+      (width 0.1))
+    (pad 16 smd rect
+      (at 8 7 270)
+      (size 2 1)
+      (layers B.Cu B.Paste B.Mask))
+    (pad 15 smd rect
+      (at 8 5 270)
+      (size 2 1)
+      (layers B.Cu B.Paste B.Mask))
+    (pad 14 smd rect
+      (at 8 3 270)
+      (size 2 1)
+      (layers B.Cu B.Paste B.Mask)
+      (net 21 IRQ))
+    (pad 13 smd rect
+      (at 8 1 270)
+      (size 2 1)
+      (layers B.Cu B.Paste B.Mask)
+      (net 4 +3V3))
+    (pad 12 smd rect
+      (at 8 -1 270)
+      (size 2 1)
+      (layers B.Cu B.Paste B.Mask))
+    (pad 11 smd rect
+      (at 8 -3 270)
+      (size 2 1)
+      (layers B.Cu B.Paste B.Mask))
+    (pad 10 smd rect
+      (at 8 -5 270)
+      (size 2 1)
+      (layers B.Cu B.Paste B.Mask)
+      (net 1 GND))
+    (pad 9 smd rect
+      (at 8 -7 270)
+      (size 2 1)
+      (layers B.Cu B.Paste B.Mask)
+      (net 3 "Net-(J1-Pad1)"))
+    (pad 8 smd rect
+      (at -8 -7 270)
+      (size 2 1)
+      (layers B.Cu B.Paste B.Mask)
+      (net 1 GND))
+    (pad 7 smd rect
+      (at -8 -5 270)
+      (size 2 1)
+      (layers B.Cu B.Paste B.Mask))
+    (pad 6 smd rect
+      (at -8 -3 270)
+      (size 2 1)
+      (layers B.Cu B.Paste B.Mask)
+      (net 23 RST))
+    (pad 5 smd rect
+      (at -8 -1 270)
+      (size 2 1)
+      (layers B.Cu B.Paste B.Mask)
+      (net 9 CS))
+    (pad 4 smd rect
+      (at -8 1 270)
+      (size 2 1)
+      (layers B.Cu B.Paste B.Mask)
+      (net 11 CLK))
+    (pad 3 smd rect
+      (at -8 3 270)
+      (size 2 1)
+      (layers B.Cu B.Paste B.Mask)
+      (net 10 COPI))
+    (pad 2 smd rect
+      (at -8 5 270)
+      (size 2 1)
+      (layers B.Cu B.Paste B.Mask)
+      (net 12 CIPO))
+    (pad 1 smd rect
+      (at -8 7 270)
+      (size 2 1)
+      (layers B.Cu B.Paste B.Mask)
+      (net 1 GND))
+    (model ${KISYS3DMOD}/RF_Module.3dshapes/HOPERF_RFM9XW_SMD.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Module:NodeMCU_Amica locked
+    (layer B.Cu)
+    (tedit 5C2D2650)
+    (tstamp 5F779DB7)
+    (at 144.145 109.22 180)
+    (descr "NodeMCU ESP866")
+    (tags "NodeMCU ESP866")
+    (path /5B936524)
+    (attr virtual)
+    (fp_text reference U1
+      (at 2.286 0 180)
+      (layer B.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text value "NodeMCU1.0(ESP-12E)"
+      (at 1.905 -5.08 90)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))
+        (justify mirror)))
+    (fp_text user %R
+      (at 1.905 0 90)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))
+        (justify mirror)))
+    (fp_text user D0
+      (at 20.32 0)
+      (layer B.SilkS) hide
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text user D1
+      (at 20.32 -2.54)
+      (layer B.SilkS) hide
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text user D2
+      (at 20.32 -5.08)
+      (layer B.SilkS) hide
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text user D3
+      (at 20.32 -7.62)
+      (layer B.SilkS) hide
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text user D4
+      (at 20.32 -10.16)
+      (layer B.SilkS) hide
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text user 3V
+      (at 20.32 -12.7)
+      (layer B.SilkS) hide
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text user GND
+      (at 20.32 -15.24)
+      (layer B.SilkS) hide
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text user D5
+      (at 20.32 -17.78)
+      (layer B.SilkS) hide
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text user D6
+      (at 20.32 -20.32)
+      (layer B.SilkS) hide
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text user D7
+      (at 20.32 -22.86)
+      (layer B.SilkS) hide
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text user D8
+      (at 20.32 -25.4)
+      (layer B.SilkS) hide
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text user RX
+      (at 20.32 -27.94)
+      (layer B.SilkS) hide
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text user TX
+      (at 20.32 -30.48)
+      (layer B.SilkS) hide
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text user GND
+      (at 20.32 -33.02)
+      (layer B.SilkS) hide
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text user 3V
+      (at 20.32 -35.56)
+      (layer B.SilkS) hide
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text user A0
+      (at 2.54 0)
+      (layer B.SilkS) hide
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text user GND
+      (at 2.54 -2.54)
+      (layer B.SilkS) hide
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text user VU
+      (at 2.54 -5.08)
+      (layer B.SilkS) hide
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text user S3
+      (at 2.54 -7.62)
+      (layer B.SilkS) hide
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text user S2
+      (at 2.54 -10.16)
+      (layer B.SilkS) hide
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text user S1
+      (at 2.54 -12.7)
+      (layer B.SilkS) hide
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text user SC
+      (at 2.54 -15.24)
+      (layer B.SilkS) hide
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text user SO
+      (at 2.54 -17.78)
+      (layer B.SilkS) hide
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text user SK
+      (at 2.54 -20.32)
+      (layer B.SilkS) hide
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text user G
+      (at 2.54 -22.86)
+      (layer B.SilkS) hide
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text user 3V
+      (at 2.54 -25.4)
+      (layer B.SilkS) hide
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text user EN
+      (at 2.54 -27.94)
+      (layer B.SilkS) hide
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text user RST
+      (at 2.54 -30.48)
+      (layer B.SilkS) hide
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text user GND
+      (at 2.54 -33.02)
+      (layer B.SilkS) hide
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_text user VIN
+      (at 2.54 -35.56)
+      (layer B.SilkS) hide
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.2))
+        (justify mirror)))
+    (fp_line
+      (start -1.8 -42.4)
+      (end -1.8 6.2)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 24.6 -42.4)
+      (end -1.8 -42.4)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 24.6 6.2)
+      (end 24.6 -42.4)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.8 6.2)
+      (end 24.6 6.2)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.27 1.27)
+      (end -1.27 -36.83)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -1.27 -36.83)
+      (end 1.27 -36.83)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start 1.27 -36.83)
+      (end 1.27 1.27)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start 1.27 -1.27)
+      (end -1.27 -1.27)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start 21.59 -36.83)
+      (end 24.13 -36.83)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start 21.59 1.27)
+      (end 21.59 -36.83)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start 24.13 1.27)
+      (end 21.59 1.27)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start 24.13 -36.83)
+      (end 24.13 1.27)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start 1.27 1.27)
+      (end -1.27 1.27)
+      (layer B.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -1.143 5.08)
+      (end -1.143 -42.164)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -1.143 -42.164)
+      (end 24.003 -42.164)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 24.003 -42.164)
+      (end 24.003 6.096)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start 24.003 6.096)
+      (end -0.127 6.096)
+      (layer B.Fab)
+      (width 0.1))
+    (fp_line
+      (start -0.127 6.096)
+      (end -1.143 5.08)
+      (layer B.Fab)
+      (width 0.1))
+    (pad "" np_thru_hole circle
+      (at 0.75 4.25 180)
+      (size 3.2 3.2)
+      (drill 3.2)
+      (layers *.Cu *.Mask))
+    (pad "" np_thru_hole circle
+      (at 22 4.25 180)
+      (size 3.2 3.2)
+      (drill 3.2)
+      (layers *.Cu *.Mask))
+    (pad "" np_thru_hole circle
+      (at 22 -39.38 180)
+      (size 3.2 3.2)
+      (drill 3.2)
+      (layers *.Cu *.Mask))
+    (pad "" np_thru_hole circle
+      (at 0.8 -39.38 180)
+      (size 3.2 3.2)
+      (drill 3.2)
+      (layers *.Cu *.Mask))
+    (pad 29 thru_hole circle
+      (at 22.86 -2.54 180)
+      (size 2.032 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask)
+      (net 7 SDA))
+    (pad 27 thru_hole circle
+      (at 22.86 -7.62 180)
+      (size 2.032 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask)
+      (net 20 LED))
+    (pad 28 thru_hole circle
+      (at 22.86 -5.08 180)
+      (size 2.032 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask)
+      (net 8 SCL))
+    (pad 20 thru_hole circle
+      (at 22.86 -25.4 180)
+      (size 2.032 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask)
+      (net 21 IRQ))
+    (pad 21 thru_hole circle
+      (at 22.86 -22.86 180)
+      (size 2.032 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask)
+      (net 10 COPI))
+    (pad 23 thru_hole circle
+      (at 22.86 -17.78 180)
+      (size 2.032 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask)
+      (net 11 CLK))
+    (pad 22 thru_hole circle
+      (at 22.86 -20.32 180)
+      (size 2.032 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask)
+      (net 12 CIPO))
+    (pad 16 thru_hole circle
+      (at 22.86 -35.56 180)
+      (size 2.032 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask)
+      (net 4 +3V3))
+    (pad 24 thru_hole circle
+      (at 22.86 -15.24 180)
+      (size 2.032 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask)
+      (net 1 GND))
+    (pad 26 thru_hole circle
+      (at 22.86 -10.16 180)
+      (size 2.032 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask)
+      (net 9 CS))
+    (pad 25 thru_hole circle
+      (at 22.86 -12.7 180)
+      (size 2.032 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask)
+      (net 4 +3V3))
+    (pad 19 thru_hole circle
+      (at 22.86 -27.94 180)
+      (size 2.032 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask)
+      (net 22 RXD))
+    (pad 17 thru_hole circle
+      (at 22.86 -33.02 180)
+      (size 2.032 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask)
+      (net 1 GND))
+    (pad 18 thru_hole circle
+      (at 22.86 -30.48 180)
+      (size 2.032 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask))
+    (pad 30 thru_hole circle
+      (at 22.86 0 180)
+      (size 2.032 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask)
+      (net 23 RST))
+    (pad 15 thru_hole circle
+      (at 0 -35.56 180)
+      (size 2.032 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask)
+      (net 2 +5V))
+    (pad 14 thru_hole circle
+      (at 0 -33.02 180)
+      (size 2.032 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask)
+      (net 1 GND))
+    (pad 13 thru_hole circle
+      (at 0 -30.48 180)
+      (size 2.032 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask))
+    (pad 12 thru_hole circle
+      (at 0 -27.94 180)
+      (size 2.032 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask))
+    (pad 11 thru_hole circle
+      (at 0 -25.4 180)
+      (size 2.032 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask)
+      (net 4 +3V3))
+    (pad 10 thru_hole circle
+      (at 0 -22.86 180)
+      (size 2.032 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask)
+      (net 1 GND))
+    (pad 9 thru_hole circle
+      (at 0 -20.32 180)
+      (size 2.032 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask))
+    (pad 8 thru_hole circle
+      (at 0 -17.78 180)
+      (size 2.032 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask))
+    (pad 7 thru_hole circle
+      (at 0 -15.24 180)
+      (size 2.032 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask))
+    (pad 6 thru_hole circle
+      (at 0 -12.7 180)
+      (size 2.032 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask))
+    (pad 5 thru_hole circle
+      (at 0 -10.16 180)
+      (size 2.032 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask))
+    (pad 4 thru_hole circle
+      (at 0 -7.62 180)
+      (size 2.032 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask))
+    (pad 3 thru_hole circle
+      (at 0 -5.08 180)
+      (size 2.032 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask))
+    (pad 2 thru_hole circle
+      (at 0 -2.54 180)
+      (size 2.032 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask))
+    (pad 1 thru_hole rect
+      (at 0 0 180)
+      (size 2.032 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask)
+      (net 16 A0))
+    (model ${KISYS3DMOD}/Module.3dshapes/NodeMCU_Amica.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module LED_SMD:LED_WS2812B_PLCC4_5.0x5.0mm_P3.2mm
+    (layer F.Cu)
+    (tedit 5AA4B285)
+    (tstamp 5F743743)
+    (at 138.43 146.685 90)
+    (descr https://cdn-shop.adafruit.com/datasheets/WS2812B.pdf)
+    (tags "LED RGB NeoPixel")
+    (path /5F74D560)
+    (attr smd)
+    (fp_text reference D3
+      (at 4.191 0 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.2))))
+    (fp_text value WS2812B
+      (at 0 0 90)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text user %R
+      (at 0 -1.27 90)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.15))))
+    (fp_text user 1
+      (at -4.15 -1.6 90)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start 3.45 -2.75)
+      (end -3.45 -2.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 3.45 2.75)
+      (end 3.45 -2.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -3.45 2.75)
+      (end 3.45 2.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -3.45 -2.75)
+      (end -3.45 2.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.5 1.5)
+      (end 1.5 2.5)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start -2.5 -2.5)
+      (end -2.5 2.5)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start -2.5 2.5)
+      (end 2.5 2.5)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start 2.5 2.5)
+      (end 2.5 -2.5)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start 2.5 -2.5)
+      (end -2.5 -2.5)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start -3.65 -2.75)
+      (end 3.65 -2.75)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -3.65 2.75)
+      (end 3.65 2.75)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_line
+      (start 3.65 2.75)
+      (end 3.65 1.6)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_circle
+      (center 0 0)
+      (end 0 -2)
+      (layer F.Fab)
+      (width 0.1))
+    (pad 1 smd rect
+      (at -2.45 -1.6 90)
+      (size 1.5 1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 +5V))
+    (pad 2 smd rect
+      (at -2.45 1.6 90)
+      (size 1.5 1)
+      (layers F.Cu F.Paste F.Mask))
+    (pad 4 smd rect
+      (at 2.45 -1.6 90)
+      (size 1.5 1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 6 "Net-(D2-Pad2)"))
+    (pad 3 smd rect
+      (at 2.45 1.6 90)
+      (size 1.5 1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 1 GND))
+    (model ${KISYS3DMOD}/LED_SMD.3dshapes/LED_WS2812B_PLCC4_5.0x5.0mm_P3.2mm.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module LED_SMD:LED_WS2812B_PLCC4_5.0x5.0mm_P3.2mm
+    (layer F.Cu)
+    (tedit 5AA4B285)
+    (tstamp 5F74372C)
+    (at 132.715 146.685 90)
+    (descr https://cdn-shop.adafruit.com/datasheets/WS2812B.pdf)
+    (tags "LED RGB NeoPixel")
+    (path /5F74D1C3)
+    (attr smd)
+    (fp_text reference D2
+      (at 4.191 0 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.2))))
+    (fp_text value WS2812B
+      (at 0 0 90)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text user %R
+      (at 0 -1.27 90)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.15))))
+    (fp_text user 1
+      (at -4.15 -1.6 90)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start 3.45 -2.75)
+      (end -3.45 -2.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 3.45 2.75)
+      (end 3.45 -2.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -3.45 2.75)
+      (end 3.45 2.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -3.45 -2.75)
+      (end -3.45 2.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.5 1.5)
+      (end 1.5 2.5)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start -2.5 -2.5)
+      (end -2.5 2.5)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start -2.5 2.5)
+      (end 2.5 2.5)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start 2.5 2.5)
+      (end 2.5 -2.5)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start 2.5 -2.5)
+      (end -2.5 -2.5)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start -3.65 -2.75)
+      (end 3.65 -2.75)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -3.65 2.75)
+      (end 3.65 2.75)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_line
+      (start 3.65 2.75)
+      (end 3.65 1.6)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_circle
+      (center 0 0)
+      (end 0 -2)
+      (layer F.Fab)
+      (width 0.1))
+    (pad 1 smd rect
+      (at -2.45 -1.6 90)
+      (size 1.5 1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 +5V))
+    (pad 2 smd rect
+      (at -2.45 1.6 90)
+      (size 1.5 1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 6 "Net-(D2-Pad2)"))
+    (pad 4 smd rect
+      (at 2.45 -1.6 90)
+      (size 1.5 1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 5 "Net-(D1-Pad2)"))
+    (pad 3 smd rect
+      (at 2.45 1.6 90)
+      (size 1.5 1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 1 GND))
+    (model ${KISYS3DMOD}/LED_SMD.3dshapes/LED_WS2812B_PLCC4_5.0x5.0mm_P3.2mm.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module LED_SMD:LED_WS2812B_PLCC4_5.0x5.0mm_P3.2mm
+    (layer F.Cu)
+    (tedit 5AA4B285)
+    (tstamp 5F779048)
+    (at 127 146.685 90)
+    (descr https://cdn-shop.adafruit.com/datasheets/WS2812B.pdf)
+    (tags "LED RGB NeoPixel")
+    (path /5F74DA50)
+    (attr smd)
+    (fp_text reference D1
+      (at 4.191 0 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.2))))
+    (fp_text value WS2812B
+      (at 0 0 90)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text user %R
+      (at 0 -1.27 90)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.15))))
+    (fp_text user 1
+      (at -4.15 -1.6 90)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start 3.45 -2.75)
+      (end -3.45 -2.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 3.45 2.75)
+      (end 3.45 -2.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -3.45 2.75)
+      (end 3.45 2.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -3.45 -2.75)
+      (end -3.45 2.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 2.5 1.5)
+      (end 1.5 2.5)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start -2.5 -2.5)
+      (end -2.5 2.5)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start -2.5 2.5)
+      (end 2.5 2.5)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start 2.5 2.5)
+      (end 2.5 -2.5)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start 2.5 -2.5)
+      (end -2.5 -2.5)
+      (layer F.Fab)
+      (width 0.1))
+    (fp_line
+      (start -3.65 -2.75)
+      (end 3.65 -2.75)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_line
+      (start -3.65 2.75)
+      (end 3.65 2.75)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_line
+      (start 3.65 2.75)
+      (end 3.65 1.6)
+      (layer F.SilkS)
+      (width 0.12))
+    (fp_circle
+      (center 0 0)
+      (end 0 -2)
+      (layer F.Fab)
+      (width 0.1))
+    (pad 1 smd rect
+      (at -2.45 -1.6 90)
+      (size 1.5 1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 +5V))
+    (pad 2 smd rect
+      (at -2.45 1.6 90)
+      (size 1.5 1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 5 "Net-(D1-Pad2)"))
+    (pad 4 smd rect
+      (at 2.45 -1.6 90)
+      (size 1.5 1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 18 "Net-(D1-Pad4)"))
+    (pad 3 smd rect
+      (at 2.45 1.6 90)
+      (size 1.5 1)
+      (layers F.Cu F.Paste F.Mask)
+      (net 1 GND))
+    (model ${KISYS3DMOD}/LED_SMD.3dshapes/LED_WS2812B_PLCC4_5.0x5.0mm_P3.2mm.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (gr_text "www.hacKNology.de\n@ttn_kn"
+    (at 126.365 120.65 90)
+    (layer F.SilkS)
+    (tstamp 5F823032)
+    (effects
+      (font
+        (size 2 2)
+        (thickness 0.4))))
+  (gr_text 5V
+    (at 139.065 139.7 90)
+    (layer F.SilkS)
+    (tstamp 5F77B011)
+    (effects
+      (font
+        (size 1 1)
+        (thickness 0.2))))
+  (gr_text G
+    (at 139.065 137.16 90)
+    (layer F.SilkS)
+    (tstamp 5F77AFF8)
+    (effects
+      (font
+        (size 1 1)
+        (thickness 0.2))))
+  (gr_text SCL
+    (at 139.065 134.62 90)
+    (layer F.SilkS)
+    (tstamp 5F77AFEB)
+    (effects
+      (font
+        (size 1 1)
+        (thickness 0.2))))
+  (gr_text SDA
+    (at 139.065 132.08 90)
+    (layer F.SilkS)
+    (effects
+      (font
+        (size 1 1)
+        (thickness 0.2))))
+  (gr_arc
+    (start 120.65 150.495)
+    (end 119.38 150.495)
+    (angle -90)
+    (layer Edge.Cuts)
+    (width 0.12)
+    (tstamp 5F74B7A3))
+  (gr_arc
+    (start 144.78 150.495)
+    (end 144.78 151.765)
+    (angle -90)
+    (layer Edge.Cuts)
+    (width 0.12)
+    (tstamp 5F74B7A0))
+  (gr_arc
+    (start 120.65 104.14489)
+    (end 120.65 102.87489)
+    (angle -90)
+    (layer Edge.Cuts)
+    (width 0.12)
+    (tstamp 5C435B5B))
+  (gr_arc
+    (start 144.78 104.14489)
+    (end 146.05 104.14489)
+    (angle -90)
+    (layer Edge.Cuts)
+    (width 0.12)
+    (tstamp 5C435C00))
+  (gr_line
+    (start 119.38 141.605)
+    (end 119.38 106.045)
+    (layer Dwgs.User)
+    (width 0.15)
+    (tstamp 5F749BB2))
+  (gr_line
+    (start 142.875 141.605)
+    (end 119.38 141.605)
+    (layer Dwgs.User)
+    (width 0.15))
+  (gr_line
+    (start 142.875 106.045)
+    (end 142.875 141.605)
+    (layer Dwgs.User)
+    (width 0.15))
+  (gr_line
+    (start 119.38 106.045)
+    (end 142.875 106.045)
+    (layer Dwgs.User)
+    (width 0.15))
+  (gr_line
+    (start 146.05 150.495)
+    (end 146.05 104.14)
+    (layer Edge.Cuts)
+    (width 0.12)
+    (tstamp 5C4357E6))
+  (gr_line
+    (start 120.65 151.765)
+    (end 144.78 151.765)
+    (layer Edge.Cuts)
+    (width 0.12)
+    (tstamp 5C435819))
+  (gr_line
+    (start 119.38 104.14)
+    (end 119.38 150.495)
+    (layer Edge.Cuts)
+    (width 0.12)
+    (tstamp 5C435816))
+  (gr_line
+    (start 144.78 102.87489)
+    (end 120.65 102.87489)
+    (layer Edge.Cuts)
+    (width 0.12)
+    (tstamp 5C435813))
+  (segment
+    (start 129.286 146.685)
+    (end 127.254 146.685)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 129.905 146.066)
+    (end 129.286 146.685)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 129.905 143.835)
+    (end 129.905 146.066)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 127.254 146.685)
+    (end 127.254 146.685)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1)
+    (tstamp 5F78396B))
+  (segment
+    (start 134.4485 106.5975)
+    (end 133.915 106.5975)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 5F821E91))
+  (segment
+    (start 134.8485 106.1975)
+    (end 134.4485 106.5975)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 5F821E8E))
+  (segment
+    (start 135.89 106.1975)
+    (end 134.8485 106.1975)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 5F821F3F))
+  (segment
+    (start 128.1685 104.6225)
+    (end 126.746 106.045)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 129.54 104.6225)
+    (end 128.1685 104.6225)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 136.69001 104.178516)
+    (end 136.69001 105.39749)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 135.781494 103.27)
+    (end 136.69001 104.178516)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 133.805 103.27)
+    (end 135.781494 103.27)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 133.115 103.96)
+    (end 133.805 103.27)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 136.69001 105.39749)
+    (end 135.89 106.1975)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 128.6 145.339)
+    (end 127.254 146.685)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 128.6 144.235)
+    (end 128.6 145.339)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 132.461 146.089)
+    (end 134.315 144.235)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 132.461 146.685)
+    (end 132.461 146.089)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 140.03 144.094)
+    (end 138.176 142.24)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 140.03 144.235)
+    (end 140.03 144.094)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 134.315 144.094)
+    (end 134.315 144.235)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 132.461 142.24)
+    (end 134.315 144.094)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 137.525 141.589)
+    (end 138.176 142.24)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 137.525 139.7)
+    (end 137.525 141.589)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 125.715 105.014)
+    (end 126.746 106.045)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 125.715 104.395)
+    (end 125.715 105.014)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 130.52751 103.63499)
+    (end 129.54 104.6225)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 133.115 103.96)
+    (end 132.78999 103.63499)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 132.78999 103.63499)
+    (end 130.52751 103.63499)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 133.115 104.2225)
+    (end 133.115 103.96)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 130.595 142.24)
+    (end 132.461 142.24)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 128.6 144.235)
+    (end 130.595 142.24)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 133.5785 145.5675)
+    (end 132.461 146.685)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 134.62 145.5675)
+    (end 133.5785 145.5675)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 135.4075 144.78)
+    (end 136.695 144.78)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 134.62 145.5675)
+    (end 135.4075 144.78)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 136.695 144.78)
+    (end 137.475 144.78)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 140.1825 144.78)
+    (end 137.475 144.78)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 140.97 143.9925)
+    (end 140.1825 144.78)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 137.550001 142.865999)
+    (end 137.550001 144.704999)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 137.550001 144.704999)
+    (end 137.475 144.78)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 138.176 142.24)
+    (end 137.550001 142.865999)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 137.16 141.224)
+    (end 138.176 142.24)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 137.16 139.8525)
+    (end 137.16 141.224)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 138.6585 139.8525)
+    (end 141.351 137.16)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 137.16 139.8525)
+    (end 138.6585 139.8525)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 142.526001 138.335001)
+    (end 141.351 137.16)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 142.526001 140.621001)
+    (end 142.526001 138.335001)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 144.145 142.24)
+    (end 142.526001 140.621001)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 142.803999 135.707001)
+    (end 141.351 137.16)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 142.803999 133.421001)
+    (end 142.803999 135.707001)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 144.145 132.08)
+    (end 142.803999 133.421001)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 135.63 135.56)
+    (end 137 134.19)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 133.305 135.56)
+    (end 135.63 135.56)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 137 131.24)
+    (end 137 134.19)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 128.905 139.385)
+    (end 128.905 140.165)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 128.980001 139.309999)
+    (end 128.905 139.385)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 131.6025 138.2775)
+    (end 130.570001 139.309999)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 130.570001 139.309999)
+    (end 128.980001 139.309999)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 132.08 138.2775)
+    (end 131.6025 138.2775)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 125.095 144.526)
+    (end 127.254 146.685)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 125.095 139.8525)
+    (end 125.095 144.526)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 123.499999 146.121001)
+    (end 125.095 144.526)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 120.641319 146.121001)
+    (end 123.499999 146.121001)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 119.943999 145.423681)
+    (end 120.641319 146.121001)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 119.943999 143.581001)
+    (end 119.943999 145.423681)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 121.285 142.24)
+    (end 119.943999 143.581001)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 134.322104 131.24)
+    (end 137 131.24)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 131.105 134.457104)
+    (end 134.322104 131.24)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 131.105 135.56)
+    (end 131.105 134.457104)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 128.829999 139.309999)
+    (end 128.905 139.385)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 125.637501 139.309999)
+    (end 128.829999 139.309999)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 125.095 139.8525)
+    (end 125.637501 139.309999)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 137 128.79)
+    (end 136.685 128.475)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 137 131.24)
+    (end 137 128.79)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 136.685 128.475)
+    (end 136.685 125.525)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 136.685 125.1025)
+    (end 134.7725 123.19)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 136.685 125.525)
+    (end 136.685 125.1025)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 134.92 123.19)
+    (end 137.715 120.395)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 134.7725 123.19)
+    (end 134.92 123.19)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 137.715 120.395)
+    (end 137.715 106.76)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 139.715 104.76)
+    (end 139.715 104.395)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 137.715 106.76)
+    (end 139.715 104.76)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 137.1525 106.1975)
+    (end 137.715 106.76)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 135.89 106.1975)
+    (end 137.1525 106.1975)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 122.555 123.19)
+    (end 121.285 124.46)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 123.6725 123.19)
+    (end 122.555 123.19)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 122.885 126.06)
+    (end 121.285 124.46)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 124.505 126.06)
+    (end 122.885 126.06)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 124.47251 122.38999)
+    (end 123.6725 123.19)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 129.22249 122.38999)
+    (end 124.47251 122.38999)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 130.0225 123.19)
+    (end 129.22249 122.38999)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 125.895999 106.895001)
+    (end 126.746 106.045)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 121.625317 106.895001)
+    (end 125.895999 106.895001)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 119.943999 108.576319)
+    (end 121.625317 106.895001)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 119.943999 123.118999)
+    (end 119.943999 108.576319)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 121.285 124.46)
+    (end 119.943999 123.118999)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 127.217876 131.24)
+    (end 134.322104 131.24)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 123.64001 134.817866)
+    (end 127.217876 131.24)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 123.64001 135.4414)
+    (end 123.64001 134.817866)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 122.626001 136.455409)
+    (end 123.64001 135.4414)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 122.626001 140.898999)
+    (end 122.626001 136.455409)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 121.285 142.24)
+    (end 122.626001 140.898999)
+    (width 0.25)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 144.145 144.78)
+    (end 141.351 141.986)
+    (width 0.5)
+    (layer B.Cu)
+    (net 2))
+  (segment
+    (start 141.351 141.986)
+    (end 141.351 139.7)
+    (width 0.5)
+    (layer B.Cu)
+    (net 2))
+  (segment
+    (start 144.145 144.78)
+    (end 140.462 148.463)
+    (width 0.5)
+    (layer B.Cu)
+    (net 2))
+  (segment
+    (start 140.462 148.463)
+    (end 140.462 149.225)
+    (width 0.5)
+    (layer B.Cu)
+    (net 2))
+  (segment
+    (start 125.4 150.292)
+    (end 125.857 150.749)
+    (width 0.5)
+    (layer F.Cu)
+    (net 2))
+  (segment
+    (start 131.191 150.749)
+    (end 125.857 150.749)
+    (width 0.5)
+    (layer F.Cu)
+    (net 2))
+  (segment
+    (start 136.83 149.135)
+    (end 136.83 150.135)
+    (width 0.5)
+    (layer F.Cu)
+    (net 2))
+  (segment
+    (start 136.83 150.135)
+    (end 136.216 150.749)
+    (width 0.5)
+    (layer F.Cu)
+    (net 2))
+  (segment
+    (start 136.216 150.749)
+    (end 131.191 150.749)
+    (width 0.5)
+    (layer F.Cu)
+    (net 2))
+  (segment
+    (start 125.4 149.135)
+    (end 125.4 150.292)
+    (width 0.5)
+    (layer F.Cu)
+    (net 2))
+  (segment
+    (start 131.191 150.211)
+    (end 131.191 150.749)
+    (width 0.5)
+    (layer F.Cu)
+    (net 2))
+  (segment
+    (start 131.115 149.135)
+    (end 131.115 150.135)
+    (width 0.5)
+    (layer F.Cu)
+    (net 2))
+  (segment
+    (start 131.115 150.135)
+    (end 131.191 150.211)
+    (width 0.5)
+    (layer F.Cu)
+    (net 2))
+  (segment
+    (start 126.111 140.97)
+    (end 126.8475 140.97)
+    (width 0.5)
+    (layer F.Cu)
+    (net 2))
+  (segment
+    (start 124.333 142.748)
+    (end 126.111 140.97)
+    (width 0.5)
+    (layer F.Cu)
+    (net 2))
+  (segment
+    (start 124.333 146.05)
+    (end 124.333 142.748)
+    (width 0.5)
+    (layer F.Cu)
+    (net 2))
+  (segment
+    (start 125.4 147.117)
+    (end 124.333 146.05)
+    (width 0.5)
+    (layer F.Cu)
+    (net 2))
+  (segment
+    (start 125.4 149.135)
+    (end 125.4 147.117)
+    (width 0.5)
+    (layer F.Cu)
+    (net 2))
+  (segment
+    (start 136.83 149.135)
+    (end 136.83 148.158)
+    (width 0.5)
+    (layer F.Cu)
+    (net 2))
+  (segment
+    (start 136.83 148.158)
+    (end 138.176 146.812)
+    (width 0.5)
+    (layer F.Cu)
+    (net 2))
+  (segment
+    (start 142.70816 144.78)
+    (end 144.145 144.78)
+    (width 0.5)
+    (layer F.Cu)
+    (net 2))
+  (segment
+    (start 138.176 146.812)
+    (end 140.67616 146.812)
+    (width 0.5)
+    (layer F.Cu)
+    (net 2))
+  (segment
+    (start 140.67616 146.812)
+    (end 142.70816 144.78)
+    (width 0.5)
+    (layer F.Cu)
+    (net 2))
+  (segment
+    (start 138.895 143.299)
+    (end 140.208 141.986)
+    (width 0.5)
+    (layer B.Cu)
+    (net 2))
+  (segment
+    (start 140.208 141.986)
+    (end 141.351 141.986)
+    (width 0.5)
+    (layer B.Cu)
+    (net 2))
+  (segment
+    (start 138.895 143.83)
+    (end 138.895 143.299)
+    (width 0.5)
+    (layer B.Cu)
+    (net 2))
+  (segment
+    (start 138.21 126.331)
+    (end 138.21 127)
+    (width 0.6)
+    (layer B.Cu)
+    (net 3))
+  (segment
+    (start 139.715 120.395)
+    (end 139.715 124.826)
+    (width 0.6)
+    (layer B.Cu)
+    (net 3))
+  (segment
+    (start 139.715 124.826)
+    (end 138.21 126.331)
+    (width 0.6)
+    (layer B.Cu)
+    (net 3))
+  (segment
+    (start 131.5975 123.19)
+    (end 133.223 123.19)
+    (width 0.25)
+    (layer B.Cu)
+    (net 4))
+  (segment
+    (start 142.875 135.89)
+    (end 138.557 135.89)
+    (width 0.4)
+    (layer F.Cu)
+    (net 4))
+  (segment
+    (start 144.145 134.62)
+    (end 142.875 135.89)
+    (width 0.4)
+    (layer F.Cu)
+    (net 4))
+  (segment
+    (start 129.855 137.16)
+    (end 129.982 137.033)
+    (width 0.4)
+    (layer B.Cu)
+    (net 4))
+  (segment
+    (start 129.982 137.033)
+    (end 137.414 137.033)
+    (width 0.4)
+    (layer B.Cu)
+    (net 4))
+  (segment
+    (start 137.414 137.033)
+    (end 138.557 135.89)
+    (width 0.4)
+    (layer B.Cu)
+    (net 4))
+  (segment
+    (start 129.855 137.965)
+    (end 129.855 137.16)
+    (width 0.4)
+    (layer B.Cu)
+    (net 4))
+  (segment
+    (start 138.157001 135.489999)
+    (end 132.988001 130.320999)
+    (width 0.4)
+    (layer F.Cu)
+    (net 4))
+  (segment
+    (start 138.557 135.89)
+    (end 138.157001 135.489999)
+    (width 0.4)
+    (layer F.Cu)
+    (net 4))
+  (segment
+    (start 132.988001 130.320999)
+    (end 132.588002 129.921)
+    (width 0.4)
+    (layer F.Cu)
+    (net 4))
+  (segment
+    (start 131.105 128.437998)
+    (end 132.588002 129.921)
+    (width 0.4)
+    (layer B.Cu)
+    (net 4))
+  (segment
+    (start 131.105 126.06)
+    (end 131.105 128.437998)
+    (width 0.4)
+    (layer B.Cu)
+    (net 4))
+  (segment
+    (start 123.444 142.621)
+    (end 121.285 144.78)
+    (width 0.4)
+    (layer B.Cu)
+    (net 4))
+  (segment
+    (start 123.444 139.192)
+    (end 123.444 142.621)
+    (width 0.4)
+    (layer B.Cu)
+    (net 4))
+  (segment
+    (start 124.3585 138.2775)
+    (end 123.444 139.192)
+    (width 0.4)
+    (layer B.Cu)
+    (net 4))
+  (segment
+    (start 125.095 138.2775)
+    (end 124.3585 138.2775)
+    (width 0.4)
+    (layer B.Cu)
+    (net 4))
+  (segment
+    (start 129.728 137.033)
+    (end 129.855 137.16)
+    (width 0.4)
+    (layer B.Cu)
+    (net 4))
+  (segment
+    (start 125.73 137.033)
+    (end 129.728 137.033)
+    (width 0.4)
+    (layer B.Cu)
+    (net 4))
+  (segment
+    (start 125.095 137.668)
+    (end 125.73 137.033)
+    (width 0.4)
+    (layer B.Cu)
+    (net 4))
+  (segment
+    (start 125.095 138.2775)
+    (end 125.095 137.668)
+    (width 0.4)
+    (layer B.Cu)
+    (net 4))
+  (segment
+    (start 131.715 118.38)
+    (end 131.715 120.395)
+    (width 0.5)
+    (layer B.Cu)
+    (net 4))
+  (segment
+    (start 131.699 118.364)
+    (end 131.715 118.38)
+    (width 0.5)
+    (layer B.Cu)
+    (net 4))
+  (segment
+    (start 133.115 106.5975)
+    (end 133.115 107.334)
+    (width 0.4)
+    (layer F.Cu)
+    (net 4))
+  (segment
+    (start 133.115 107.334)
+    (end 133.731 107.95)
+    (width 0.4)
+    (layer F.Cu)
+    (net 4))
+  (segment
+    (start 133.731 107.95)
+    (end 134.62 107.95)
+    (width 0.4)
+    (layer F.Cu)
+    (net 4))
+  (segment
+    (start 121.285 121.92)
+    (end 124.841 118.364)
+    (width 0.5)
+    (layer B.Cu)
+    (net 4))
+  (segment
+    (start 124.841 118.364)
+    (end 132.715 118.364)
+    (width 0.5)
+    (layer B.Cu)
+    (net 4))
+  (segment
+    (start 132.715 118.364)
+    (end 134.62 116.459)
+    (width 0.5)
+    (layer B.Cu)
+    (net 4))
+  (segment
+    (start 134.62 116.459)
+    (end 134.62 107.95)
+    (width 0.5)
+    (layer B.Cu)
+    (net 4))
+  (segment
+    (start 133.115 105.285)
+    (end 133.115 106.5975)
+    (width 0.25)
+    (layer F.Cu)
+    (net 4))
+  (segment
+    (start 133.915 104.485)
+    (end 133.115 105.285)
+    (width 0.25)
+    (layer F.Cu)
+    (net 4))
+  (segment
+    (start 133.915 104.2225)
+    (end 133.915 104.485)
+    (width 0.25)
+    (layer F.Cu)
+    (net 4))
+  (segment
+    (start 132.315 104.485)
+    (end 133.115 105.285)
+    (width 0.25)
+    (layer F.Cu)
+    (net 4))
+  (segment
+    (start 132.315 104.2225)
+    (end 132.315 104.485)
+    (width 0.25)
+    (layer F.Cu)
+    (net 4))
+  (segment
+    (start 131.515 104.2225)
+    (end 132.315 104.2225)
+    (width 0.25)
+    (layer F.Cu)
+    (net 4))
+  (segment
+    (start 131.515 104.2225)
+    (end 129.54 106.1975)
+    (width 0.25)
+    (layer F.Cu)
+    (net 4))
+  (segment
+    (start 134.315 104.6225)
+    (end 133.915 104.2225)
+    (width 0.25)
+    (layer F.Cu)
+    (net 4))
+  (segment
+    (start 135.89 104.6225)
+    (end 134.315 104.6225)
+    (width 0.25)
+    (layer F.Cu)
+    (net 4))
+  (segment
+    (start 130.005 126.06)
+    (end 131.105 126.06)
+    (width 0.25)
+    (layer B.Cu)
+    (net 4))
+  (segment
+    (start 131.105 123.6825)
+    (end 131.5975 123.19)
+    (width 0.25)
+    (layer B.Cu)
+    (net 4))
+  (segment
+    (start 131.105 126.06)
+    (end 131.105 123.6825)
+    (width 0.25)
+    (layer B.Cu)
+    (net 4))
+  (segment
+    (start 131.5975 120.5125)
+    (end 131.715 120.395)
+    (width 0.25)
+    (layer B.Cu)
+    (net 4))
+  (segment
+    (start 131.5975 123.19)
+    (end 131.5975 120.5125)
+    (width 0.25)
+    (layer B.Cu)
+    (net 4))
+  (segment
+    (start 132.205 126.06)
+    (end 131.105 126.06)
+    (width 0.25)
+    (layer B.Cu)
+    (net 4))
+  (segment
+    (start 128.6 148.006)
+    (end 128.6 149.135)
+    (width 0.25)
+    (layer F.Cu)
+    (net 5))
+  (segment
+    (start 131.115 145.491)
+    (end 128.6 148.006)
+    (width 0.25)
+    (layer F.Cu)
+    (net 5))
+  (segment
+    (start 131.115 144.235)
+    (end 131.115 145.491)
+    (width 0.25)
+    (layer F.Cu)
+    (net 5))
+  (segment
+    (start 134.315 147.9415)
+    (end 134.315 149.135)
+    (width 0.25)
+    (layer F.Cu)
+    (net 6))
+  (segment
+    (start 136.83 145.4265)
+    (end 134.315 147.9415)
+    (width 0.25)
+    (layer F.Cu)
+    (net 6))
+  (segment
+    (start 136.83 144.235)
+    (end 136.83 145.4265)
+    (width 0.25)
+    (layer F.Cu)
+    (net 6))
+  (segment
+    (start 121.285 111.76)
+    (end 122.721841 111.759999)
+    (width 0.25)
+    (layer B.Cu)
+    (net 7))
+  (segment
+    (start 122.721841 111.759999)
+    (end 131.514316 111.759999)
+    (width 0.25)
+    (layer B.Cu)
+    (net 7))
+  (segment
+    (start 131.514316 111.759999)
+    (end 132.080001 111.759999)
+    (width 0.25)
+    (layer B.Cu)
+    (net 7))
+  (segment
+    (start 132.48 112.159998)
+    (end 132.080001 111.759999)
+    (width 0.25)
+    (layer F.Cu)
+    (net 7))
+  (segment
+    (start 136.398092 116.07809)
+    (end 132.48 112.159998)
+    (width 0.25)
+    (layer F.Cu)
+    (net 7))
+  (segment
+    (start 136.398092 127.127092)
+    (end 136.398092 116.07809)
+    (width 0.25)
+    (layer F.Cu)
+    (net 7))
+  (segment
+    (start 141.351 132.08)
+    (end 136.398092 127.127092)
+    (width 0.25)
+    (layer F.Cu)
+    (net 7))
+  (segment
+    (start 132.080001 107.549999)
+    (end 132.080001 111.759999)
+    (width 0.25)
+    (layer F.Cu)
+    (net 7))
+  (segment
+    (start 132.315 107.315)
+    (end 132.080001 107.549999)
+    (width 0.25)
+    (layer F.Cu)
+    (net 7))
+  (segment
+    (start 132.315 106.5975)
+    (end 132.315 107.315)
+    (width 0.25)
+    (layer F.Cu)
+    (net 7))
+  (segment
+    (start 121.285 114.3)
+    (end 130.174994 114.3)
+    (width 0.25)
+    (layer B.Cu)
+    (net 8))
+  (segment
+    (start 131.826 114.3)
+    (end 130.174994 114.3)
+    (width 0.25)
+    (layer F.Cu)
+    (net 8))
+  (segment
+    (start 134.239 116.713)
+    (end 131.826 114.3)
+    (width 0.25)
+    (layer F.Cu)
+    (net 8))
+  (segment
+    (start 134.239 127.508)
+    (end 134.239 116.713)
+    (width 0.25)
+    (layer F.Cu)
+    (net 8))
+  (segment
+    (start 141.351 134.62)
+    (end 134.239 127.508)
+    (width 0.25)
+    (layer F.Cu)
+    (net 8))
+  (segment
+    (start 130.174994 111.125006)
+    (end 130.174994 114.3)
+    (width 0.25)
+    (layer F.Cu)
+    (net 8))
+  (segment
+    (start 131.515 109.785)
+    (end 130.174994 111.125006)
+    (width 0.25)
+    (layer F.Cu)
+    (net 8))
+  (segment
+    (start 131.515 106.5975)
+    (end 131.515 109.785)
+    (width 0.25)
+    (layer F.Cu)
+    (net 8))
+  (segment
+    (start 123.063 117.602)
+    (end 121.285 119.38)
+    (width 0.25)
+    (layer B.Cu)
+    (net 9))
+  (segment
+    (start 132.461 117.602)
+    (end 123.063 117.602)
+    (width 0.25)
+    (layer B.Cu)
+    (net 9))
+  (segment
+    (start 133.715 116.348)
+    (end 132.461 117.602)
+    (width 0.25)
+    (layer B.Cu)
+    (net 9))
+  (segment
+    (start 133.715 104.395)
+    (end 133.715 116.348)
+    (width 0.25)
+    (layer B.Cu)
+    (net 9))
+  (segment
+    (start 129.715 104.395)
+    (end 129.715 107.013)
+    (width 0.25)
+    (layer B.Cu)
+    (net 10))
+  (segment
+    (start 129.715 107.013)
+    (end 128.397 108.331)
+    (width 0.25)
+    (layer B.Cu)
+    (net 10))
+  (segment
+    (start 128.397 109.130998)
+    (end 128.397 108.331)
+    (width 0.25)
+    (layer F.Cu)
+    (net 10))
+  (segment
+    (start 128.397 124.968)
+    (end 128.397 109.130998)
+    (width 0.25)
+    (layer F.Cu)
+    (net 10))
+  (segment
+    (start 121.285 132.08)
+    (end 128.397 124.968)
+    (width 0.25)
+    (layer F.Cu)
+    (net 10))
+  (segment
+    (start 124.714 123.571)
+    (end 124.714 110.236)
+    (width 0.25)
+    (layer F.Cu)
+    (net 11))
+  (segment
+    (start 121.285 127)
+    (end 124.714 123.571)
+    (width 0.25)
+    (layer F.Cu)
+    (net 11))
+  (segment
+    (start 125.279685 110.236)
+    (end 124.714 110.236)
+    (width 0.25)
+    (layer B.Cu)
+    (net 11))
+  (segment
+    (start 130.175 110.236)
+    (end 125.279685 110.236)
+    (width 0.25)
+    (layer B.Cu)
+    (net 11))
+  (segment
+    (start 131.715 108.696)
+    (end 130.175 110.236)
+    (width 0.25)
+    (layer B.Cu)
+    (net 11))
+  (segment
+    (start 131.715 104.395)
+    (end 131.715 108.696)
+    (width 0.25)
+    (layer B.Cu)
+    (net 11))
+  (segment
+    (start 127.715 104.395)
+    (end 127.715 107.108)
+    (width 0.25)
+    (layer B.Cu)
+    (net 12))
+  (segment
+    (start 127.715 107.108)
+    (end 126.492 108.331)
+    (width 0.25)
+    (layer B.Cu)
+    (net 12))
+  (segment
+    (start 121.285 129.54)
+    (end 126.454015 124.370985)
+    (width 0.25)
+    (layer F.Cu)
+    (net 12))
+  (segment
+    (start 126.454015 108.93467)
+    (end 126.492 108.896685)
+    (width 0.25)
+    (layer F.Cu)
+    (net 12))
+  (segment
+    (start 126.454015 124.370985)
+    (end 126.454015 108.93467)
+    (width 0.25)
+    (layer F.Cu)
+    (net 12))
+  (segment
+    (start 126.492 108.896685)
+    (end 126.492 108.331)
+    (width 0.25)
+    (layer F.Cu)
+    (net 12))
+  (segment
+    (start 132.08 139.8525)
+    (end 131.1655 139.8525)
+    (width 0.5)
+    (layer B.Cu)
+    (net 13))
+  (segment
+    (start 129.855 140.165)
+    (end 130.853 140.165)
+    (width 0.5)
+    (layer B.Cu)
+    (net 13))
+  (segment
+    (start 130.853 140.165)
+    (end 131.1655 139.8525)
+    (width 0.5)
+    (layer B.Cu)
+    (net 13))
+  (segment
+    (start 127.905 141.2105)
+    (end 127.905 143.835)
+    (width 0.5)
+    (layer B.Cu)
+    (net 13))
+  (segment
+    (start 127.955 141.1605)
+    (end 127.905 141.2105)
+    (width 0.5)
+    (layer B.Cu)
+    (net 13))
+  (segment
+    (start 127.955 140.165)
+    (end 127.955 141.1605)
+    (width 0.5)
+    (layer B.Cu)
+    (net 13))
+  (segment
+    (start 135.697 143.83)
+    (end 135.5345 143.9925)
+    (width 0.5)
+    (layer B.Cu)
+    (net 13))
+  (segment
+    (start 136.695 143.83)
+    (end 135.697 143.83)
+    (width 0.5)
+    (layer B.Cu)
+    (net 13))
+  (segment
+    (start 135.5345 143.9925)
+    (end 134.62 143.9925)
+    (width 0.5)
+    (layer B.Cu)
+    (net 13))
+  (segment
+    (start 134.62 143.9925)
+    (end 134.62 139.827)
+    (width 0.5)
+    (layer B.Cu)
+    (net 13))
+  (segment
+    (start 134.62 139.8525)
+    (end 132.1055 139.8525)
+    (width 0.5)
+    (layer B.Cu)
+    (net 13))
+  (segment
+    (start 128.0185 141.224)
+    (end 127.955 141.1605)
+    (width 0.5)
+    (layer B.Cu)
+    (net 13))
+  (segment
+    (start 129.54 141.224)
+    (end 128.0185 141.224)
+    (width 0.5)
+    (layer B.Cu)
+    (net 13))
+  (segment
+    (start 129.855 140.909)
+    (end 129.54 141.224)
+    (width 0.5)
+    (layer B.Cu)
+    (net 13))
+  (segment
+    (start 129.855 140.165)
+    (end 129.855 140.909)
+    (width 0.5)
+    (layer B.Cu)
+    (net 13))
+  (segment
+    (start 136.695 146.7055)
+    (end 136.695 145.73)
+    (width 0.25)
+    (layer B.Cu)
+    (net 14))
+  (segment
+    (start 135.1025 148.298)
+    (end 136.695 146.7055)
+    (width 0.25)
+    (layer B.Cu)
+    (net 14))
+  (segment
+    (start 135.1025 149.225)
+    (end 135.1025 148.298)
+    (width 0.25)
+    (layer B.Cu)
+    (net 14))
+  (segment
+    (start 136.6775 149.225)
+    (end 137.795 149.225)
+    (width 0.25)
+    (layer B.Cu)
+    (net 15))
+  (segment
+    (start 138.9125 149.225)
+    (end 137.795 149.225)
+    (width 0.25)
+    (layer B.Cu)
+    (net 15))
+  (segment
+    (start 134.62 138.2775)
+    (end 137.122 138.2775)
+    (width 0.25)
+    (layer B.Cu)
+    (net 16))
+  (segment
+    (start 139.954 136.525)
+    (end 138.2015 138.2775)
+    (width 0.25)
+    (layer B.Cu)
+    (net 16))
+  (segment
+    (start 139.954 126.657998)
+    (end 139.954 136.525)
+    (width 0.25)
+    (layer B.Cu)
+    (net 16))
+  (segment
+    (start 141.605 125.006998)
+    (end 139.954 126.657998)
+    (width 0.25)
+    (layer B.Cu)
+    (net 16))
+  (segment
+    (start 141.605 110.236)
+    (end 141.605 125.006998)
+    (width 0.25)
+    (layer B.Cu)
+    (net 16))
+  (segment
+    (start 142.621 109.22)
+    (end 141.605 110.236)
+    (width 0.25)
+    (layer B.Cu)
+    (net 16))
+  (segment
+    (start 138.2015 138.2775)
+    (end 137.16 138.2775)
+    (width 0.25)
+    (layer B.Cu)
+    (net 16))
+  (segment
+    (start 144.145 109.22)
+    (end 142.621 109.22)
+    (width 0.25)
+    (layer B.Cu)
+    (net 16))
+  (segment
+    (start 139.675 145.73)
+    (end 138.895 145.73)
+    (width 0.25)
+    (layer B.Cu)
+    (net 17))
+  (segment
+    (start 139.8375 145.5675)
+    (end 139.675 145.73)
+    (width 0.25)
+    (layer B.Cu)
+    (net 17))
+  (segment
+    (start 140.97 145.5675)
+    (end 139.8375 145.5675)
+    (width 0.25)
+    (layer B.Cu)
+    (net 17))
+  (segment
+    (start 135.525 140.65)
+    (end 134.173 140.65)
+    (width 0.25)
+    (layer F.Cu)
+    (net 18))
+  (segment
+    (start 133.873 140.35)
+    (end 134.173 140.65)
+    (width 0.25)
+    (layer F.Cu)
+    (net 18))
+  (segment
+    (start 132.08 140.35)
+    (end 133.873 140.35)
+    (width 0.25)
+    (layer F.Cu)
+    (net 18))
+  (segment
+    (start 126.238 141.859)
+    (end 125.4 142.697)
+    (width 0.25)
+    (layer F.Cu)
+    (net 18))
+  (segment
+    (start 125.4 142.697)
+    (end 125.4 144.235)
+    (width 0.25)
+    (layer F.Cu)
+    (net 18))
+  (segment
+    (start 128.143 141.859)
+    (end 126.238 141.859)
+    (width 0.25)
+    (layer F.Cu)
+    (net 18))
+  (segment
+    (start 128.4225 141.5795)
+    (end 128.143 141.859)
+    (width 0.25)
+    (layer F.Cu)
+    (net 18))
+  (segment
+    (start 128.4225 140.97)
+    (end 128.4225 141.5795)
+    (width 0.25)
+    (layer F.Cu)
+    (net 18))
+  (segment
+    (start 129.794 140.97)
+    (end 128.397 140.97)
+    (width 0.25)
+    (layer F.Cu)
+    (net 18))
+  (segment
+    (start 130.414 140.35)
+    (end 129.794 140.97)
+    (width 0.25)
+    (layer F.Cu)
+    (net 18))
+  (segment
+    (start 132.08 140.35)
+    (end 130.414 140.35)
+    (width 0.25)
+    (layer F.Cu)
+    (net 18))
+  (segment
+    (start 131.318 138.049)
+    (end 130.937 138.43)
+    (width 0.25)
+    (layer F.Cu)
+    (net 19))
+  (segment
+    (start 132.715 138.049)
+    (end 131.318 138.049)
+    (width 0.25)
+    (layer F.Cu)
+    (net 19))
+  (segment
+    (start 130.937 138.43)
+    (end 128.524 138.43)
+    (width 0.25)
+    (layer F.Cu)
+    (net 19))
+  (segment
+    (start 133.416 138.75)
+    (end 132.715 138.049)
+    (width 0.25)
+    (layer F.Cu)
+    (net 19))
+  (segment
+    (start 135.525 138.75)
+    (end 133.416 138.75)
+    (width 0.25)
+    (layer F.Cu)
+    (net 19))
+  (segment
+    (start 132.079998 116.84)
+    (end 132.08 116.839998)
+    (width 0.25)
+    (layer B.Cu)
+    (net 20))
+  (segment
+    (start 121.285 116.84)
+    (end 132.079998 116.84)
+    (width 0.25)
+    (layer B.Cu)
+    (net 20))
+  (segment
+    (start 132.08 117.405683)
+    (end 132.08 116.839998)
+    (width 0.25)
+    (layer F.Cu)
+    (net 20))
+  (segment
+    (start 132.08 127)
+    (end 132.08 117.405683)
+    (width 0.25)
+    (layer F.Cu)
+    (net 20))
+  (segment
+    (start 126.8475 132.2325)
+    (end 132.08 127)
+    (width 0.25)
+    (layer F.Cu)
+    (net 20))
+  (segment
+    (start 126.8475 138.43)
+    (end 126.8475 132.2325)
+    (width 0.25)
+    (layer F.Cu)
+    (net 20))
+  (segment
+    (start 129.301 139.05)
+    (end 132.08 139.05)
+    (width 0.25)
+    (layer F.Cu)
+    (net 20))
+  (segment
+    (start 129.032 139.319)
+    (end 129.301 139.05)
+    (width 0.25)
+    (layer F.Cu)
+    (net 20))
+  (segment
+    (start 127 139.319)
+    (end 129.032 139.319)
+    (width 0.25)
+    (layer F.Cu)
+    (net 20))
+  (segment
+    (start 126.8475 139.1665)
+    (end 127 139.319)
+    (width 0.25)
+    (layer F.Cu)
+    (net 20))
+  (segment
+    (start 126.8475 138.43)
+    (end 126.8475 139.1665)
+    (width 0.25)
+    (layer F.Cu)
+    (net 20))
+  (segment
+    (start 121.285 134.62)
+    (end 130.556004 125.348996)
+    (width 0.25)
+    (layer F.Cu)
+    (net 21))
+  (segment
+    (start 130.556004 125.348996)
+    (end 130.556004 122.612685)
+    (width 0.25)
+    (layer F.Cu)
+    (net 21))
+  (segment
+    (start 130.556004 122.612685)
+    (end 130.556004 122.047)
+    (width 0.25)
+    (layer F.Cu)
+    (net 21))
+  (segment
+    (start 130.048 122.047)
+    (end 130.556004 122.047)
+    (width 0.25)
+    (layer B.Cu)
+    (net 21))
+  (segment
+    (start 129.715 121.714)
+    (end 130.048 122.047)
+    (width 0.25)
+    (layer B.Cu)
+    (net 21))
+  (segment
+    (start 129.715 120.395)
+    (end 129.715 121.714)
+    (width 0.25)
+    (layer B.Cu)
+    (net 21))
+  (segment
+    (start 125.605 127.633)
+    (end 125.605 126.06)
+    (width 0.25)
+    (layer B.Cu)
+    (net 22))
+  (segment
+    (start 125.603 127.635)
+    (end 125.605 127.633)
+    (width 0.25)
+    (layer B.Cu)
+    (net 22))
+  (segment
+    (start 125.603 130.048)
+    (end 125.603 127.635)
+    (width 0.25)
+    (layer B.Cu)
+    (net 22))
+  (segment
+    (start 123.19 132.461)
+    (end 125.603 130.048)
+    (width 0.25)
+    (layer B.Cu)
+    (net 22))
+  (segment
+    (start 123.19 135.255)
+    (end 123.19 132.461)
+    (width 0.25)
+    (layer B.Cu)
+    (net 22))
+  (segment
+    (start 121.285 137.16)
+    (end 123.19 135.255)
+    (width 0.25)
+    (layer B.Cu)
+    (net 22))
+  (segment
+    (start 132.569001 109.111999)
+    (end 132.969 108.712)
+    (width 0.25)
+    (layer B.Cu)
+    (net 23))
+  (segment
+    (start 130.556 111.125)
+    (end 132.569001 109.111999)
+    (width 0.25)
+    (layer B.Cu)
+    (net 23))
+  (segment
+    (start 123.19 111.125)
+    (end 130.556 111.125)
+    (width 0.25)
+    (layer B.Cu)
+    (net 23))
+  (segment
+    (start 121.285 109.22)
+    (end 123.19 111.125)
+    (width 0.25)
+    (layer B.Cu)
+    (net 23))
+  (segment
+    (start 132.969 108.712)
+    (end 135.509 108.712)
+    (width 0.25)
+    (layer F.Cu)
+    (net 23))
+  (segment
+    (start 135.509 105.997)
+    (end 135.509 108.712)
+    (width 0.25)
+    (layer B.Cu)
+    (net 23))
+  (segment
+    (start 135.715 105.791)
+    (end 135.509 105.997)
+    (width 0.25)
+    (layer B.Cu)
+    (net 23))
+  (segment
+    (start 135.715 104.395)
+    (end 135.715 105.791)
+    (width 0.25)
+    (layer B.Cu)
+    (net 23))
+  (segment
+    (start 126.8475 123.19)
+    (end 125.349 123.19)
+    (width 0.25)
+    (layer B.Cu)
+    (net 24))
+  (segment
+    (start 133.731 132.715)
+    (end 135.475 132.715)
+    (width 0.6)
+    (layer B.Cu)
+    (net 25))
+  (segment
+    (start 132.205 134.241)
+    (end 133.731 132.715)
+    (width 0.6)
+    (layer B.Cu)
+    (net 25))
+  (segment
+    (start 132.205 135.56)
+    (end 132.205 134.241)
+    (width 0.6)
+    (layer B.Cu)
+    (net 25))
+  (segment
+    (start 128.4225 124.722788)
+    (end 127.805 125.340288)
+    (width 0.25)
+    (layer B.Cu)
+    (net 26))
+  (segment
+    (start 128.4225 123.19)
+    (end 128.4225 124.722788)
+    (width 0.25)
+    (layer B.Cu)
+    (net 26))
+  (segment
+    (start 127.805 125.340288)
+    (end 127.805 126.06)
+    (width 0.25)
+    (layer B.Cu)
+    (net 26))
+  (via
+    (at 127.254 146.685)
+    (size 0.8)
+    (drill 0.4)
+    (layers F.Cu B.Cu)
+    (net 1))
+  (via
+    (at 132.461 146.685)
+    (size 0.8)
+    (drill 0.4)
+    (layers F.Cu B.Cu)
+    (net 1))
+  (via
+    (at 138.176 142.24)
+    (size 0.8)
+    (drill 0.4)
+    (layers F.Cu B.Cu)
+    (net 1))
+  (via
+    (at 132.461 142.24)
+    (size 0.8)
+    (drill 0.4)
+    (layers F.Cu B.Cu)
+    (net 1))
+  (via
+    (at 126.746 106.045)
+    (size 0.8)
+    (drill 0.4)
+    (layers F.Cu B.Cu)
+    (net 1))
+  (via
+    (at 137.715 106.76)
+    (size 0.8)
+    (drill 0.4)
+    (layers F.Cu B.Cu)
+    (net 1))
+  (via
+    (at 138.557 135.89)
+    (size 0.8)
+    (drill 0.4)
+    (layers F.Cu B.Cu)
+    (net 4))
+  (via
+    (at 132.588002 129.921)
+    (size 0.8)
+    (drill 0.4)
+    (layers F.Cu B.Cu)
+    (net 4))
+  (via
+    (at 134.62 107.95)
+    (size 0.8)
+    (drill 0.4)
+    (layers F.Cu B.Cu)
+    (net 4))
+  (via
+    (at 132.080001 111.759999)
+    (size 0.8)
+    (drill 0.4)
+    (layers F.Cu B.Cu)
+    (net 7))
+  (via
+    (at 130.174994 114.3)
+    (size 0.8)
+    (drill 0.4)
+    (layers F.Cu B.Cu)
+    (net 8))
+  (via
+    (at 128.397 108.331)
+    (size 0.8)
+    (drill 0.4)
+    (layers F.Cu B.Cu)
+    (net 10))
+  (via
+    (at 124.714 110.236)
+    (size 0.8)
+    (drill 0.4)
+    (layers F.Cu B.Cu)
+    (net 11))
+  (via
+    (at 126.492 108.331)
+    (size 0.8)
+    (drill 0.4)
+    (layers F.Cu B.Cu)
+    (net 12))
+  (via
+    (at 132.08 116.839998)
+    (size 0.8)
+    (drill 0.4)
+    (layers F.Cu B.Cu)
+    (net 20))
+  (via
+    (at 130.556004 122.047)
+    (size 0.8)
+    (drill 0.4)
+    (layers F.Cu B.Cu)
+    (net 21))
+  (via
+    (at 132.969 108.712)
+    (size 0.8)
+    (drill 0.4)
+    (layers F.Cu B.Cu)
+    (net 23))
+  (via
+    (at 135.509 108.712)
+    (size 0.8)
+    (drill 0.4)
+    (layers F.Cu B.Cu)
+    (net 23)))

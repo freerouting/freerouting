@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "karabas-nano_karabas-nano-revC",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 1159371,
+      "sha256": "de1ec50d1806e2991d0486348b73b0c4ff4a1c60ad5fdc85db9d76daf322932a"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 940025,
+      "sha256": "ddd3116afe9d0ec87daf58b2e6dc965fbe995cafc9431f61a814ab2e4999806e"
+    },
+    "metadata_json": {
+      "bytes": 703,
+      "sha256": "847a9aae787c994a5ad1cedb452b0b1b9ceb03d6beff766850d373a242fe8979"
+    },
+    "final_json": {
+      "bytes": 983270,
+      "sha256": "e2ffa0d74d056abd62474ac710bd44fa0e01163c66c7c0b7798d21e254321e7a"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:00:28.636129+00:00"
+  }
+}

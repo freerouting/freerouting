@@ -1,0 +1,67 @@
+{
+  "board_id": "LoRaWAN_GPS_lorawan_gps",
+  "display_name": "LoRaWAN_GPS_lorawan_gps",
+  "pcbench_directory": "PCBs/LoRaWAN_GPS_lorawan_gps",
+  "source": "https://github.com/robot-army/LoRaWAN_GPS",
+  "author": "robot-army",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:45.361973+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 25,
+    "components": 120,
+    "dimensions_mm": {
+      "width": 95.0,
+      "height": 20.0
+    },
+    "area_cm2": 19.0,
+    "zones": 5
+  },
+  "reference": {
+    "segments": 935,
+    "vias": 93,
+    "track_length_mm": 1253.02,
+    "kicad_drc_violations": 514,
+    "kicad_drc_breakdown": {
+      "total_violations": 514,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 244,
+        "copper_edge_clearance": 14,
+        "courtyards_overlap": 1,
+        "hole_clearance": 18,
+        "holes_co_located": 1,
+        "lib_footprint_issues": 120,
+        "malformed_courtyard": 2,
+        "padstack": 4,
+        "shorting_items": 1,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 33,
+        "silk_overlap": 8,
+        "solder_mask_bridge": 1,
+        "text_height": 58,
+        "track_dangling": 4,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 281,
+        "warning": 233
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

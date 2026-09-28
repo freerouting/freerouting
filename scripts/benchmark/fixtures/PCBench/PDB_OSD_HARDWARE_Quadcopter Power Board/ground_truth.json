@@ -1,0 +1,30 @@
+{
+  "board": "PDB_OSD_HARDWARE_Quadcopter Power Board",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\PDB_OSD_HARDWARE_Quadcopter Power Board\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 41,
+  "segment_count": 377,
+  "approximate_track_length_mm": 439.41,
+  "kicad_drc_violations": 518,
+  "generated_at": "2026-08-18T18:23:12.371393+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 518,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 152,
+      "copper_edge_clearance": 5,
+      "hole_clearance": 4,
+      "lib_footprint_issues": 140,
+      "silk_edge_clearance": 1,
+      "silk_over_copper": 73,
+      "silk_overlap": 18,
+      "text_height": 72,
+      "text_thickness": 53
+    },
+    "by_severity": {
+      "error": 161,
+      "warning": 357
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "PDB_OSD_HARDWARE_Quadcopter Power Board",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 331894,
+      "sha256": "96fce8e3b2d005cafa1c740c91cdef3e8e2fd5b973aa963dbc91f000c2a64898"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 223788,
+      "sha256": "9626f4668af59c2ff7e5f6cb9f5f4896059903c298f37f0d7167d47c5985e843"
+    },
+    "metadata_json": {
+      "bytes": 683,
+      "sha256": "e991089698daaf89aad8e97f07fd629596b0afd1677a875d67c9f424b171e3f3"
+    },
+    "final_json": {
+      "bytes": 162693,
+      "sha256": "21728f641e01a24a57bc0b478363fdcdb3982cba3d63b548de8bdec5d70de6fa"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:23:12.386086+00:00"
+  }
+}

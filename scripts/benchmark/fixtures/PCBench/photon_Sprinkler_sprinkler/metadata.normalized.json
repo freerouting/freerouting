@@ -1,0 +1,61 @@
+{
+  "board_id": "photon_Sprinkler_sprinkler",
+  "display_name": "photon_Sprinkler_sprinkler",
+  "pcbench_directory": "PCBs/photon_Sprinkler_sprinkler",
+  "source": "https://github.com/broncosis/photon_Sprinkler",
+  "author": "broncosis",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:58.834131+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 25,
+    "components": 17,
+    "dimensions_mm": {
+      "width": 83.82,
+      "height": 53.39
+    },
+    "area_cm2": 44.75,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 117,
+    "vias": 2,
+    "track_length_mm": 775.66,
+    "kicad_drc_violations": 19,
+    "kicad_drc_breakdown": {
+      "total_violations": 19,
+      "unconnected_count": 0,
+      "by_type": {
+        "lib_footprint_issues": 17,
+        "silk_overlap": 2
+      },
+      "by_severity": {
+        "warning": 19
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.068351+00:00",
+    "elapsed_seconds": 6.23,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

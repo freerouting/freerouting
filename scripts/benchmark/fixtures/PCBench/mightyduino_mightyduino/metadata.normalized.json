@@ -1,0 +1,67 @@
+{
+  "board_id": "mightyduino_mightyduino",
+  "display_name": "mightyduino_mightyduino",
+  "pcbench_directory": "PCBs/mightyduino_mightyduino",
+  "source": "https://github.com/peekpt/mightyduino",
+  "author": "peekpt",
+  "license": "GNU Lesser General Public License v2.1",
+  "license_spdx": "LGPL-2.1",
+  "retrieved_at": "2023-08-17T17:22:31.629811+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 7,
+    "components": 24,
+    "dimensions_mm": {
+      "width": 46.23,
+      "height": 23.11
+    },
+    "area_cm2": 10.68,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 531,
+    "vias": 32,
+    "track_length_mm": 1005.48,
+    "kicad_drc_violations": 241,
+    "kicad_drc_breakdown": {
+      "total_violations": 241,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 38,
+        "copper_edge_clearance": 42,
+        "invalid_outline": 3,
+        "lib_footprint_issues": 24,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 1,
+        "silk_overlap": 39,
+        "solder_mask_bridge": 74,
+        "text_height": 16,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 157,
+        "warning": 84
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.033604+00:00",
+    "elapsed_seconds": 35.18,
+    "unrouted_nets": 16,
+    "clearance_violations": 84,
+    "quality_score": 589.99
+  }
+}

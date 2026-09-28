@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "hwstar_ac-power-monitor",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 191146,
+      "sha256": "79cca4580f30630b93a0f346782c4be0d25826547e73eef94dc426b4e4310ced"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 119505,
+      "sha256": "66d8353de914fff21da28b20fa490f77684782d1246e8bc861cf8ebafce78265"
+    },
+    "metadata_json": {
+      "bytes": 457,
+      "sha256": "e81256de24fb1634af2a8fb24ddcc94505db4c6ba1dfb5d2bbf36b5c2d40fd94"
+    },
+    "final_json": {
+      "bytes": 99947,
+      "sha256": "5a326ee19f9798bdf3edaa6ae0975912b8e4beb786ea0d8020953ba6d554bf55"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:57:37.495907+00:00"
+  }
+}

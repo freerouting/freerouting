@@ -1,0 +1,33 @@
+{
+  "board": "kitspace_f-91w",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\kitspace_f-91w\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 68,
+  "segment_count": 617,
+  "approximate_track_length_mm": 635.19,
+  "kicad_drc_violations": 334,
+  "generated_at": "2026-08-18T19:06:38.403823+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 334,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 55,
+      "copper_edge_clearance": 46,
+      "courtyards_overlap": 9,
+      "hole_clearance": 50,
+      "invalid_outline": 16,
+      "lib_footprint_issues": 37,
+      "silk_edge_clearance": 1,
+      "silk_over_copper": 9,
+      "solder_mask_bridge": 105,
+      "text_height": 1,
+      "track_dangling": 3,
+      "zones_intersect": 2
+    },
+    "by_severity": {
+      "error": 283,
+      "warning": 51
+    }
+  }
+}

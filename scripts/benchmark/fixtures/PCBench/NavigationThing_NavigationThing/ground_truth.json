@@ -1,0 +1,28 @@
+{
+  "board": "NavigationThing_NavigationThing",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\NavigationThing_NavigationThing\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 240,
+  "approximate_track_length_mm": 642.73,
+  "kicad_drc_violations": 152,
+  "generated_at": "2026-08-18T19:27:10.430636+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 152,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 88,
+      "courtyards_overlap": 1,
+      "lib_footprint_issues": 39,
+      "silk_edge_clearance": 3,
+      "silk_over_copper": 7,
+      "silk_overlap": 13,
+      "starved_thermal": 1
+    },
+    "by_severity": {
+      "error": 90,
+      "warning": 62
+    }
+  }
+}

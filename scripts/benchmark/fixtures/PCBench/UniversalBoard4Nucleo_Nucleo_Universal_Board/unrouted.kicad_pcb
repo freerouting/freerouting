@@ -1,0 +1,5449 @@
+
+(kicad_pcb
+  (version 4)
+  (host pcbnew 4.0.2-stable)
+  (general
+    (links 117)
+    (no_connects 0)
+    (area 98.159999 61.749999 168.260001 119.390001)
+    (thickness 1.6)
+    (drawings 21)
+    (tracks 637)
+    (zones 0)
+    (modules 68)
+    (nets 80))
+  (page A4)
+  (title_block
+    (title "Universal Board for Nucleo")
+    (date 2016-05-26)
+    (rev 1.0)
+    (company "SIProp.org: Noritsuna Imamura noritsuna@siprop.org"))
+  (layers
+    (0 F.Cu signal)
+    (31 B.Cu signal)
+    (32 B.Adhes user)
+    (33 F.Adhes user)
+    (34 B.Paste user)
+    (35 F.Paste user)
+    (36 B.SilkS user)
+    (37 F.SilkS user)
+    (38 B.Mask user)
+    (39 F.Mask user)
+    (40 Dwgs.User user)
+    (41 Cmts.User user)
+    (42 Eco1.User user)
+    (43 Eco2.User user)
+    (44 Edge.Cuts user)
+    (45 Margin user)
+    (46 B.CrtYd user)
+    (47 F.CrtYd user)
+    (48 B.Fab user)
+    (49 F.Fab user))
+  (setup
+    (last_trace_width 0.2)
+    (user_trace_width 0.3)
+    (user_trace_width 0.4)
+    (trace_clearance 0.2)
+    (zone_clearance 0.508)
+    (zone_45_only no)
+    (trace_min 0.2)
+    (segment_width 0.1)
+    (edge_width 0.1)
+    (via_size 0.8)
+    (via_drill 0.4)
+    (via_min_size 0.8)
+    (via_min_drill 0.4)
+    (uvia_size 0.3)
+    (uvia_drill 0.1)
+    (uvias_allowed no)
+    (uvia_min_size 0.2)
+    (uvia_min_drill 0.1)
+    (pcb_text_width 0.3)
+    (pcb_text_size 1.5 1.5)
+    (mod_edge_width 0.15)
+    (mod_text_size 1.2 1.2)
+    (mod_text_width 0.15)
+    (pad_size 3.2 3.2)
+    (pad_drill 3.2)
+    (pad_to_mask_clearance 0)
+    (aux_axis_origin 98.22 119.33)
+    (visible_elements 7FFFEFFF)
+    (pcbplotparams
+      (layerselection 0x010f0_80000001)
+      (usegerberextensions true)
+      (excludeedgelayer true)
+      (linewidth 0.1)
+      (plotframeref false)
+      (viasonmask false)
+      (mode 1)
+      (useauxorigin false)
+      (hpglpennumber 1)
+      (hpglpenspeed 20)
+      (hpglpendiameter 15)
+      (hpglpenoverlay 2)
+      (psnegative false)
+      (psa4output false)
+      (plotreference true)
+      (plotvalue true)
+      (plotinvisibletext false)
+      (padsonsilk false)
+      (subtractmaskfromsilk false)
+      (outputformat 1)
+      (mirror false)
+      (drillshape 0)
+      (scaleselection 1)
+      (outputdirectory "")))
+  (net 0 "")
+  (net 1 /PB21)
+  (net 2 /PB19)
+  (net 3 /PB17)
+  (net 4 /PB15)
+  (net 5 /PB13)
+  (net 6 /PB11)
+  (net 7 /PB9)
+  (net 8 /PB7)
+  (net 9 /PB5)
+  (net 10 /PB3)
+  (net 11 /PA10)
+  (net 12 /PA12)
+  (net 13 /PA14)
+  (net 14 /PA16)
+  (net 15 /PA18)
+  (net 16 /PA20)
+  (net 17 /PA22)
+  (net 18 /PA24)
+  (net 19 /PA1)
+  (net 20 /PA2)
+  (net 21 /PA3)
+  (net 22 /PA4)
+  (net 23 /PA5)
+  (net 24 /PA6)
+  (net 25 /PA7)
+  (net 26 /PA8)
+  (net 27 /PA9)
+  (net 28 /PA11)
+  (net 29 /PA13)
+  (net 30 /PA15)
+  (net 31 /PA17)
+  (net 32 /PA19)
+  (net 33 /PA21)
+  (net 34 /PA23)
+  (net 35 /PA25)
+  (net 36 /PA26)
+  (net 37 /PA27)
+  (net 38 /PA28)
+  (net 39 /PA29)
+  (net 40 /PA30)
+  (net 41 /PA31)
+  (net 42 /PA32)
+  (net 43 /PA33)
+  (net 44 /PA34)
+  (net 45 /PA35)
+  (net 46 /PA36)
+  (net 47 /PA37)
+  (net 48 /PA38)
+  (net 49 /PB37)
+  (net 50 /PB35)
+  (net 51 /PB33)
+  (net 52 /PB31)
+  (net 53 /PB29)
+  (net 54 /PB27)
+  (net 55 /PB25)
+  (net 56 /PB23)
+  (net 57 /PB1)
+  (net 58 /PB2)
+  (net 59 /PB4)
+  (net 60 /PB6)
+  (net 61 /PB8)
+  (net 62 /PB10)
+  (net 63 /PB12)
+  (net 64 /PB14)
+  (net 65 /PB16)
+  (net 66 /PB18)
+  (net 67 /PB20)
+  (net 68 /PB22)
+  (net 69 /PB24)
+  (net 70 /PB26)
+  (net 71 /PB28)
+  (net 72 /PB30)
+  (net 73 /PB32)
+  (net 74 /PB34)
+  (net 75 /PB36)
+  (net 76 /PB38)
+  (net 77 /PC1)
+  (net 78 /PC3)
+  (net 79 /PC4)
+  (net_class Default "これは標準のネット クラスです。"
+    (clearance 0.2)
+    (trace_width 0.2)
+    (via_dia 0.8)
+    (via_drill 0.4)
+    (uvia_dia 0.3)
+    (uvia_drill 0.1)
+    (add_net /PA1)
+    (add_net /PA10)
+    (add_net /PA11)
+    (add_net /PA12)
+    (add_net /PA13)
+    (add_net /PA14)
+    (add_net /PA15)
+    (add_net /PA17)
+    (add_net /PA2)
+    (add_net /PA21)
+    (add_net /PA23)
+    (add_net /PA25)
+    (add_net /PA26)
+    (add_net /PA27)
+    (add_net /PA28)
+    (add_net /PA29)
+    (add_net /PA3)
+    (add_net /PA30)
+    (add_net /PA31)
+    (add_net /PA32)
+    (add_net /PA34)
+    (add_net /PA35)
+    (add_net /PA36)
+    (add_net /PA37)
+    (add_net /PA38)
+    (add_net /PA4)
+    (add_net /PA6)
+    (add_net /PA7)
+    (add_net /PA9)
+    (add_net /PB1)
+    (add_net /PB10)
+    (add_net /PB11)
+    (add_net /PB12)
+    (add_net /PB13)
+    (add_net /PB14)
+    (add_net /PB15)
+    (add_net /PB16)
+    (add_net /PB17)
+    (add_net /PB18)
+    (add_net /PB19)
+    (add_net /PB2)
+    (add_net /PB21)
+    (add_net /PB22)
+    (add_net /PB23)
+    (add_net /PB24)
+    (add_net /PB25)
+    (add_net /PB26)
+    (add_net /PB27)
+    (add_net /PB28)
+    (add_net /PB29)
+    (add_net /PB3)
+    (add_net /PB30)
+    (add_net /PB31)
+    (add_net /PB33)
+    (add_net /PB34)
+    (add_net /PB35)
+    (add_net /PB36)
+    (add_net /PB37)
+    (add_net /PB38)
+    (add_net /PB4)
+    (add_net /PB5)
+    (add_net /PB6)
+    (add_net /PB8)
+    (add_net /PC1)
+    (add_net /PC3)
+    (add_net /PC4))
+  (net_class VCC ""
+    (clearance 0.2)
+    (trace_width 0.4)
+    (via_dia 0.8)
+    (via_drill 0.4)
+    (uvia_dia 0.3)
+    (uvia_drill 0.1)
+    (add_net /PA16)
+    (add_net /PA18)
+    (add_net /PA19)
+    (add_net /PA20)
+    (add_net /PA22)
+    (add_net /PA24)
+    (add_net /PA33)
+    (add_net /PA5)
+    (add_net /PA8)
+    (add_net /PB20)
+    (add_net /PB32)
+    (add_net /PB7)
+    (add_net /PB9))
+  (module Mounting_Holes:MountingHole_3.2mm_M3
+    (layer F.Cu)
+    (tedit 574B1719)
+    (tstamp 57469F94)
+    (at 141.947 116.84)
+    (descr "Mounting Hole 3.2mm, no annular, M3")
+    (tags "mounting hole 3.2mm no annular m3")
+    (fp_text reference MH3
+      (at 0 -4.2)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value MountingHole_3.2mm_M3
+      (at 0 4.2)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_circle
+      (center 0 0)
+      (end 3.2 0)
+      (layer Cmts.User)
+      (width 0.15))
+    (fp_circle
+      (center 0 0)
+      (end 3.45 0)
+      (layer F.CrtYd)
+      (width 0.05))
+    (pad "" np_thru_hole circle
+      (at 0.013 0)
+      (size 3.2 3.2)
+      (drill 3.2)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module Pin_Headers:Pin_Header_Straight_2x03
+    (layer F.Cu)
+    (tedit 574B1CD0)
+    (tstamp 574B1241)
+    (at 136.88 114.3 270)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /574B0E95)
+    (fp_text reference ICSP1
+      (at 4.445 4.8 360)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 0.6 0.6)
+          (thickness 0.15))))
+    (fp_text value CONN_02X03
+      (at 0 -3.1 270)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.27 1.27)
+      (end -1.27 6.35)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 -1.55)
+      (end 0 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.75 -1.75)
+      (end -1.75 6.85)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 4.3 -1.75)
+      (end 4.3 6.85)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end 4.3 -1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 6.85)
+      (end 4.3 6.85)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.27 -1.27)
+      (end 1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.27 1.27)
+      (end -1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.27 6.35)
+      (end 3.81 6.35)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 3.81 6.35)
+      (end 3.81 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 -1.55)
+      (end -1.55 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 3.81 -1.27)
+      (end 1.27 -1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 3.81 1.27)
+      (end 3.81 -1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 thru_hole rect
+      (at 0 0 270)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 77 /PC1))
+    (pad 2 thru_hole oval
+      (at 2.54 0 270)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 15 /PA18))
+    (pad 3 thru_hole oval
+      (at 0 2.54 270)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 78 /PC3))
+    (pad 4 thru_hole oval
+      (at 2.54 2.54 270)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 79 /PC4))
+    (pad 5 thru_hole oval
+      (at 0 5.08 270)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 13 /PA14))
+    (pad 6 thru_hole oval
+      (at 2.54 5.08 270)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 16 /PA20))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_2x03.wrl
+      (at
+        (xyz 0.05 -0.1 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 90))))
+  (module Pin_Headers:Pin_Header_Straight_2x03
+    (layer F.Cu)
+    (tedit 574B1CE3)
+    (tstamp 574B1258)
+    (at 125.73 114.3 270)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /574B0DF8)
+    (fp_text reference ICSP_HOLE1
+      (at 4.445 3.81 360)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 0.6 0.6)
+          (thickness 0.15))))
+    (fp_text value HOLE_02X03
+      (at 0 -3.1 270)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.27 1.27)
+      (end -1.27 6.35)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 -1.55)
+      (end 0 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.75 -1.75)
+      (end -1.75 6.85)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 4.3 -1.75)
+      (end 4.3 6.85)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end 4.3 -1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 6.85)
+      (end 4.3 6.85)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.27 -1.27)
+      (end 1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.27 1.27)
+      (end -1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.27 6.35)
+      (end 3.81 6.35)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 3.81 6.35)
+      (end 3.81 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 -1.55)
+      (end -1.55 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 3.81 -1.27)
+      (end 1.27 -1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 3.81 1.27)
+      (end 3.81 -1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 thru_hole rect
+      (at 0 0 270)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 77 /PC1))
+    (pad 2 thru_hole oval
+      (at 2.54 0 270)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 15 /PA18))
+    (pad 3 thru_hole oval
+      (at 0 2.54 270)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 78 /PC3))
+    (pad 4 thru_hole oval
+      (at 2.54 2.54 270)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 79 /PC4))
+    (pad 5 thru_hole oval
+      (at 0 5.08 270)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 13 /PA14))
+    (pad 6 thru_hole oval
+      (at 2.54 5.08 270)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 16 /PA20))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_2x03.wrl
+      (at
+        (xyz 0.05 -0.1 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 90))))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746F0CA)
+    (tstamp 5746E6B1)
+    (at 130.81 106.68 90)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H50
+      (at 0 -5.1 90)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1 90)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0 90)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54 90)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08 90)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62 90)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module Pin_Headers:Pin_Header_Straight_1x10
+    (layer F.Cu)
+    (tedit 5746F60F)
+    (tstamp 5745EF41)
+    (at 157.2 92.46 180)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /5745A5D3)
+    (fp_text reference CN5
+      (at 2.327 0.45 270)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value CONN_01X10
+      (at 0 -3.1 180)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.75 -1.75)
+      (end -1.75 24.65)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.75 -1.75)
+      (end 1.75 24.65)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end 1.75 -1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 24.65)
+      (end 1.75 24.65)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.27 1.27)
+      (end 1.27 24.13)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.27 24.13)
+      (end -1.27 24.13)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.27 24.13)
+      (end -1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.55 -1.55)
+      (end 1.55 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.27 1.27)
+      (end -1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 0)
+      (end -1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 -1.55)
+      (end 1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 thru_hole rect
+      (at 0 0 180)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 1 /PB21))
+    (pad 2 thru_hole oval
+      (at 0 2.54 180)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 2 /PB19))
+    (pad 3 thru_hole oval
+      (at 0 5.08 180)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 3 /PB17))
+    (pad 4 thru_hole oval
+      (at 0 7.62 180)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 4 /PB15))
+    (pad 5 thru_hole oval
+      (at 0 10.16 180)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 5 /PB13))
+    (pad 6 thru_hole oval
+      (at 0 12.7 180)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 6 /PB11))
+    (pad 7 thru_hole oval
+      (at 0 15.24 180)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 7 /PB9))
+    (pad 8 thru_hole oval
+      (at 0 17.78 180)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 8 /PB7))
+    (pad 9 thru_hole oval
+      (at 0 20.32 180)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 9 /PB5))
+    (pad 10 thru_hole oval
+      (at 0 22.86 180)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 10 /PB3))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x10.wrl
+      (at
+        (xyz 0 -0.45 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 90))))
+  (module Pin_Headers:Pin_Header_Straight_1x08
+    (layer F.Cu)
+    (tedit 574B166E)
+    (tstamp 5745EF58)
+    (at 108.927 78.74)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /5745A4A1)
+    (fp_text reference CN6
+      (at -0.287 -2.55)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value CONN_01X08
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.75 -1.75)
+      (end -1.75 19.55)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.75 -1.75)
+      (end 1.75 19.55)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end 1.75 -1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 19.55)
+      (end 1.75 19.55)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.27 1.27)
+      (end 1.27 19.05)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.27 19.05)
+      (end -1.27 19.05)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.27 19.05)
+      (end -1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.55 -1.55)
+      (end 1.55 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.27 1.27)
+      (end -1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 0)
+      (end -1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 -1.55)
+      (end 1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 thru_hole rect
+      (at 0.013 0)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 11 /PA10))
+    (pad 2 thru_hole oval
+      (at 0 2.54)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 12 /PA12))
+    (pad 3 thru_hole oval
+      (at 0 5.08)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 13 /PA14))
+    (pad 4 thru_hole oval
+      (at 0 7.62)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 14 /PA16))
+    (pad 5 thru_hole oval
+      (at 0 10.16)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 15 /PA18))
+    (pad 6 thru_hole oval
+      (at 0 12.7)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 16 /PA20))
+    (pad 7 thru_hole oval
+      (at 0 15.24)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 17 /PA22))
+    (pad 8 thru_hole oval
+      (at 0 17.78)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 18 /PA24))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x08.wrl
+      (at
+        (xyz 0 -0.35 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 90))))
+  (module Pin_Headers:Pin_Header_Straight_2x19
+    (layer F.Cu)
+    (tedit 5746F662)
+    (tstamp 5745EF8E)
+    (at 101.32 68.58)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /5745A3EA)
+    (fp_text reference CN7
+      (at 0.123 -2.71)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value CONN_02X19
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.75 -1.75)
+      (end -1.75 47.5)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 4.3 -1.75)
+      (end 4.3 47.5)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end 4.3 -1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 47.5)
+      (end 4.3 47.5)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 3.81 -1.27)
+      (end 3.81 46.99)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.27 46.99)
+      (end -1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 3.81 46.99)
+      (end -1.27 46.99)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 3.81 -1.27)
+      (end 1.27 -1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -1.55)
+      (end -1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.27 -1.27)
+      (end 1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.27 1.27)
+      (end -1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 -1.55)
+      (end -1.55 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 thru_hole rect
+      (at -0.1663 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 19 /PA1))
+    (pad 2 thru_hole oval
+      (at 2.54 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 20 /PA2))
+    (pad 3 thru_hole oval
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 21 /PA3))
+    (pad 4 thru_hole oval
+      (at 2.54 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 22 /PA4))
+    (pad 5 thru_hole oval
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 23 /PA5))
+    (pad 6 thru_hole oval
+      (at 2.54 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 24 /PA6))
+    (pad 7 thru_hole oval
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 25 /PA7))
+    (pad 8 thru_hole oval
+      (at 2.54 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 26 /PA8))
+    (pad 9 thru_hole oval
+      (at 0 10.16)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 27 /PA9))
+    (pad 10 thru_hole oval
+      (at 2.54 10.16)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 11 /PA10))
+    (pad 11 thru_hole oval
+      (at 0 12.7)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 28 /PA11))
+    (pad 12 thru_hole oval
+      (at 2.54 12.7)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 12 /PA12))
+    (pad 13 thru_hole oval
+      (at 0 15.24)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 29 /PA13))
+    (pad 14 thru_hole oval
+      (at 2.54 15.24)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 13 /PA14))
+    (pad 15 thru_hole oval
+      (at 0 17.78)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 30 /PA15))
+    (pad 16 thru_hole oval
+      (at 2.54 17.78)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 14 /PA16))
+    (pad 17 thru_hole oval
+      (at 0 20.32)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 31 /PA17))
+    (pad 18 thru_hole oval
+      (at 2.54 20.32)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 15 /PA18))
+    (pad 19 thru_hole oval
+      (at 0 22.86)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 32 /PA19))
+    (pad 20 thru_hole oval
+      (at 2.54 22.86)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 16 /PA20))
+    (pad 21 thru_hole oval
+      (at 0 25.4)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 33 /PA21))
+    (pad 22 thru_hole oval
+      (at 2.54 25.4)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 17 /PA22))
+    (pad 23 thru_hole oval
+      (at 0 27.94)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 34 /PA23))
+    (pad 24 thru_hole oval
+      (at 2.54 27.94)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 18 /PA24))
+    (pad 25 thru_hole oval
+      (at 0 30.48)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 35 /PA25))
+    (pad 26 thru_hole oval
+      (at 2.54 30.48)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 36 /PA26))
+    (pad 27 thru_hole oval
+      (at 0 33.02)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 37 /PA27))
+    (pad 28 thru_hole oval
+      (at 2.54 33.02)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 38 /PA28))
+    (pad 29 thru_hole oval
+      (at 0 35.56)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 39 /PA29))
+    (pad 30 thru_hole oval
+      (at 2.54 35.56)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 40 /PA30))
+    (pad 31 thru_hole oval
+      (at 0 38.1)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 41 /PA31))
+    (pad 32 thru_hole oval
+      (at 2.54 38.1)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 42 /PA32))
+    (pad 33 thru_hole oval
+      (at 0 40.64)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 43 /PA33))
+    (pad 34 thru_hole oval
+      (at 2.54 40.64)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 44 /PA34))
+    (pad 35 thru_hole oval
+      (at 0 43.18)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 45 /PA35))
+    (pad 36 thru_hole oval
+      (at 2.54 43.18)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 46 /PA36))
+    (pad 37 thru_hole oval
+      (at 0 45.72)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 47 /PA37))
+    (pad 38 thru_hole oval
+      (at 2.54 45.72)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 48 /PA38))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_2x19.wrl
+      (at
+        (xyz 0.05 -0.9 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 90))))
+  (module Pin_Headers:Pin_Header_Straight_1x06
+    (layer F.Cu)
+    (tedit 5746F54E)
+    (tstamp 5745EFA3)
+    (at 108.94 101.6)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /5745A54E)
+    (fp_text reference CN8
+      (at -0.377 -2.48)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value CONN_01X06
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.75 -1.75)
+      (end -1.75 14.45)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.75 -1.75)
+      (end 1.75 14.45)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end 1.75 -1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 14.45)
+      (end 1.75 14.45)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.27 1.27)
+      (end 1.27 13.97)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.27 13.97)
+      (end -1.27 13.97)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.27 13.97)
+      (end -1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.55 -1.55)
+      (end 1.55 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.27 1.27)
+      (end -1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 0)
+      (end -1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 -1.55)
+      (end 1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 thru_hole rect
+      (at 0 0)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 38 /PA28))
+    (pad 2 thru_hole oval
+      (at 0 2.54)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 40 /PA30))
+    (pad 3 thru_hole oval
+      (at 0 5.08)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 42 /PA32))
+    (pad 4 thru_hole oval
+      (at 0 7.62)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 44 /PA34))
+    (pad 5 thru_hole oval
+      (at 0 10.16)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 46 /PA36))
+    (pad 6 thru_hole oval
+      (at 0 12.7)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 48 /PA38))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x06.wrl
+      (at
+        (xyz 0 -0.25 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 90))))
+  (module Pin_Headers:Pin_Header_Straight_1x08
+    (layer F.Cu)
+    (tedit 5746F61D)
+    (tstamp 5745EFBA)
+    (at 157.2 114.3 180)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /5745A666)
+    (fp_text reference CN9
+      (at 2.327 0.06 270)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value CONN_01X08
+      (at 0 -3.1 180)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.75 -1.75)
+      (end -1.75 19.55)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.75 -1.75)
+      (end 1.75 19.55)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end 1.75 -1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 19.55)
+      (end 1.75 19.55)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.27 1.27)
+      (end 1.27 19.05)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.27 19.05)
+      (end -1.27 19.05)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.27 19.05)
+      (end -1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.55 -1.55)
+      (end 1.55 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.27 1.27)
+      (end -1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 0)
+      (end -1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 -1.55)
+      (end 1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 thru_hole rect
+      (at 0 0 180)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 49 /PB37))
+    (pad 2 thru_hole oval
+      (at 0 2.54 180)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 50 /PB35))
+    (pad 3 thru_hole oval
+      (at 0 5.08 180)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 51 /PB33))
+    (pad 4 thru_hole oval
+      (at 0 7.62 180)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 52 /PB31))
+    (pad 5 thru_hole oval
+      (at 0 10.16 180)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 53 /PB29))
+    (pad 6 thru_hole oval
+      (at 0 12.7 180)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 54 /PB27))
+    (pad 7 thru_hole oval
+      (at 0 15.24 180)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 55 /PB25))
+    (pad 8 thru_hole oval
+      (at 0 17.78 180)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 56 /PB23))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x08.wrl
+      (at
+        (xyz 0 -0.35 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 90))))
+  (module Pin_Headers:Pin_Header_Straight_2x19
+    (layer F.Cu)
+    (tedit 5746F64D)
+    (tstamp 5745EFF0)
+    (at 162.28 68.58)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /5745A41F)
+    (fp_text reference CN10
+      (at 0.683 -2.79)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value CONN_02X19
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.75 -1.75)
+      (end -1.75 47.5)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 4.3 -1.75)
+      (end 4.3 47.5)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end 4.3 -1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 47.5)
+      (end 4.3 47.5)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 3.81 -1.27)
+      (end 3.81 46.99)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.27 46.99)
+      (end -1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 3.81 46.99)
+      (end -1.27 46.99)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 3.81 -1.27)
+      (end 1.27 -1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -1.55)
+      (end -1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.27 -1.27)
+      (end 1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.27 1.27)
+      (end -1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 -1.55)
+      (end -1.55 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 thru_hole rect
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 57 /PB1))
+    (pad 2 thru_hole oval
+      (at 2.54 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 58 /PB2))
+    (pad 3 thru_hole oval
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 10 /PB3))
+    (pad 4 thru_hole oval
+      (at 2.54 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 59 /PB4))
+    (pad 5 thru_hole oval
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 9 /PB5))
+    (pad 6 thru_hole oval
+      (at 2.54 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 60 /PB6))
+    (pad 7 thru_hole oval
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 8 /PB7))
+    (pad 8 thru_hole oval
+      (at 2.54 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 61 /PB8))
+    (pad 9 thru_hole oval
+      (at 0 10.16)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 7 /PB9))
+    (pad 10 thru_hole oval
+      (at 2.54 10.16)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 62 /PB10))
+    (pad 11 thru_hole oval
+      (at 0 12.7)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 6 /PB11))
+    (pad 12 thru_hole oval
+      (at 2.54 12.7)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 63 /PB12))
+    (pad 13 thru_hole oval
+      (at 0 15.24)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 5 /PB13))
+    (pad 14 thru_hole oval
+      (at 2.54 15.24)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 64 /PB14))
+    (pad 15 thru_hole oval
+      (at 0 17.78)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 4 /PB15))
+    (pad 16 thru_hole oval
+      (at 2.54 17.78)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 65 /PB16))
+    (pad 17 thru_hole oval
+      (at 0 20.32)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 3 /PB17))
+    (pad 18 thru_hole oval
+      (at 2.54 20.32)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 66 /PB18))
+    (pad 19 thru_hole oval
+      (at 0 22.86)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 2 /PB19))
+    (pad 20 thru_hole oval
+      (at 2.54 22.86)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 67 /PB20))
+    (pad 21 thru_hole oval
+      (at 0 25.4)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 1 /PB21))
+    (pad 22 thru_hole oval
+      (at 2.54 25.4)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 68 /PB22))
+    (pad 23 thru_hole oval
+      (at 0 27.94)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 56 /PB23))
+    (pad 24 thru_hole oval
+      (at 2.54 27.94)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 69 /PB24))
+    (pad 25 thru_hole oval
+      (at 0 30.48)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 55 /PB25))
+    (pad 26 thru_hole oval
+      (at 2.54 30.48)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 70 /PB26))
+    (pad 27 thru_hole oval
+      (at 0 33.02)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 54 /PB27))
+    (pad 28 thru_hole oval
+      (at 2.54 33.02)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 71 /PB28))
+    (pad 29 thru_hole oval
+      (at 0 35.56)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 53 /PB29))
+    (pad 30 thru_hole oval
+      (at 2.54 35.56)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 72 /PB30))
+    (pad 31 thru_hole oval
+      (at 0 38.1)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 52 /PB31))
+    (pad 32 thru_hole oval
+      (at 2.54 38.1)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 73 /PB32))
+    (pad 33 thru_hole oval
+      (at 0 40.64)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 51 /PB33))
+    (pad 34 thru_hole oval
+      (at 2.54 40.64)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 74 /PB34))
+    (pad 35 thru_hole oval
+      (at 0 43.18)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 50 /PB35))
+    (pad 36 thru_hole oval
+      (at 2.54 43.18)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 75 /PB36))
+    (pad 37 thru_hole oval
+      (at 0 45.72)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 49 /PB37))
+    (pad 38 thru_hole oval
+      (at 2.54 45.72)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 76 /PB38))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_2x19.wrl
+      (at
+        (xyz 0.05 -0.9 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 90))))
+  (module Pin_Headers:Pin_Header_Straight_2x19
+    (layer F.Cu)
+    (tedit 5746F65C)
+    (tstamp 5745F026)
+    (at 114.02 68.58)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /5745C4AF)
+    (fp_text reference P7
+      (at -0.307 -2.88)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value HOLE_02X19
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.75 -1.75)
+      (end -1.75 47.5)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 4.3 -1.75)
+      (end 4.3 47.5)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end 4.3 -1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 47.5)
+      (end 4.3 47.5)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 3.81 -1.27)
+      (end 3.81 46.99)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.27 46.99)
+      (end -1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 3.81 46.99)
+      (end -1.27 46.99)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 3.81 -1.27)
+      (end 1.27 -1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -1.55)
+      (end -1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.27 -1.27)
+      (end 1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.27 1.27)
+      (end -1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 -1.55)
+      (end -1.55 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 thru_hole rect
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 19 /PA1))
+    (pad 2 thru_hole oval
+      (at 2.54 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 20 /PA2))
+    (pad 3 thru_hole oval
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 21 /PA3))
+    (pad 4 thru_hole oval
+      (at 2.54 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 22 /PA4))
+    (pad 5 thru_hole oval
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 23 /PA5))
+    (pad 6 thru_hole oval
+      (at 2.54 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 24 /PA6))
+    (pad 7 thru_hole oval
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 25 /PA7))
+    (pad 8 thru_hole oval
+      (at 2.54 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 26 /PA8))
+    (pad 9 thru_hole oval
+      (at 0 10.16)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 27 /PA9))
+    (pad 10 thru_hole oval
+      (at 2.54 10.16)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 11 /PA10))
+    (pad 11 thru_hole oval
+      (at 0 12.7)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 28 /PA11))
+    (pad 12 thru_hole oval
+      (at 2.54 12.7)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 12 /PA12))
+    (pad 13 thru_hole oval
+      (at 0 15.24)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 29 /PA13))
+    (pad 14 thru_hole oval
+      (at 2.54 15.24)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 13 /PA14))
+    (pad 15 thru_hole oval
+      (at 0 17.78)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 30 /PA15))
+    (pad 16 thru_hole oval
+      (at 2.54 17.78)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 14 /PA16))
+    (pad 17 thru_hole oval
+      (at 0 20.32)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 31 /PA17))
+    (pad 18 thru_hole oval
+      (at 2.54 20.32)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 15 /PA18))
+    (pad 19 thru_hole oval
+      (at 0 22.86)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 32 /PA19))
+    (pad 20 thru_hole oval
+      (at 2.54 22.86)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 16 /PA20))
+    (pad 21 thru_hole oval
+      (at 0 25.4)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 33 /PA21))
+    (pad 22 thru_hole oval
+      (at 2.54 25.4)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 17 /PA22))
+    (pad 23 thru_hole oval
+      (at 0 27.94)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 34 /PA23))
+    (pad 24 thru_hole oval
+      (at 2.54 27.94)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 18 /PA24))
+    (pad 25 thru_hole oval
+      (at 0 30.48)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 35 /PA25))
+    (pad 26 thru_hole oval
+      (at 2.54 30.48)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 36 /PA26))
+    (pad 27 thru_hole oval
+      (at 0 33.02)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 37 /PA27))
+    (pad 28 thru_hole oval
+      (at 2.54 33.02)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 38 /PA28))
+    (pad 29 thru_hole oval
+      (at 0 35.56)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 39 /PA29))
+    (pad 30 thru_hole oval
+      (at 2.54 35.56)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 40 /PA30))
+    (pad 31 thru_hole oval
+      (at 0 38.1)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 41 /PA31))
+    (pad 32 thru_hole oval
+      (at 2.54 38.1)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 42 /PA32))
+    (pad 33 thru_hole oval
+      (at 0 40.64)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 43 /PA33))
+    (pad 34 thru_hole oval
+      (at 2.54 40.64)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 44 /PA34))
+    (pad 35 thru_hole oval
+      (at 0 43.18)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 45 /PA35))
+    (pad 36 thru_hole oval
+      (at 2.54 43.18)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 46 /PA36))
+    (pad 37 thru_hole oval
+      (at 0 45.72)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 47 /PA37))
+    (pad 38 thru_hole oval
+      (at 2.54 45.72)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 48 /PA38))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_2x19.wrl
+      (at
+        (xyz 0.05 -0.9 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 90))))
+  (module Pin_Headers:Pin_Header_Straight_2x19
+    (layer F.Cu)
+    (tedit 5746F653)
+    (tstamp 5745F05C)
+    (at 149.58 68.58)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /5745C4FC)
+    (fp_text reference P10
+      (at 0.053 -2.79)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value HOLE_02X19
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.75 -1.75)
+      (end -1.75 47.5)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 4.3 -1.75)
+      (end 4.3 47.5)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end 4.3 -1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 47.5)
+      (end 4.3 47.5)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 3.81 -1.27)
+      (end 3.81 46.99)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.27 46.99)
+      (end -1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 3.81 46.99)
+      (end -1.27 46.99)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 3.81 -1.27)
+      (end 1.27 -1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -1.55)
+      (end -1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.27 -1.27)
+      (end 1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.27 1.27)
+      (end -1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 -1.55)
+      (end -1.55 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 thru_hole rect
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 57 /PB1))
+    (pad 2 thru_hole oval
+      (at 2.54 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 58 /PB2))
+    (pad 3 thru_hole oval
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 10 /PB3))
+    (pad 4 thru_hole oval
+      (at 2.54 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 59 /PB4))
+    (pad 5 thru_hole oval
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 9 /PB5))
+    (pad 6 thru_hole oval
+      (at 2.54 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 60 /PB6))
+    (pad 7 thru_hole oval
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 8 /PB7))
+    (pad 8 thru_hole oval
+      (at 2.54 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 61 /PB8))
+    (pad 9 thru_hole oval
+      (at 0 10.16)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 7 /PB9))
+    (pad 10 thru_hole oval
+      (at 2.54 10.16)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 62 /PB10))
+    (pad 11 thru_hole oval
+      (at 0 12.7)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 6 /PB11))
+    (pad 12 thru_hole oval
+      (at 2.54 12.7)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 63 /PB12))
+    (pad 13 thru_hole oval
+      (at 0 15.24)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 5 /PB13))
+    (pad 14 thru_hole oval
+      (at 2.54 15.24)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 64 /PB14))
+    (pad 15 thru_hole oval
+      (at 0 17.78)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 4 /PB15))
+    (pad 16 thru_hole oval
+      (at 2.54 17.78)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 65 /PB16))
+    (pad 17 thru_hole oval
+      (at 0 20.32)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 3 /PB17))
+    (pad 18 thru_hole oval
+      (at 2.54 20.32)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 66 /PB18))
+    (pad 19 thru_hole oval
+      (at 0 22.86)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 2 /PB19))
+    (pad 20 thru_hole oval
+      (at 2.54 22.86)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 67 /PB20))
+    (pad 21 thru_hole oval
+      (at 0 25.4)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 1 /PB21))
+    (pad 22 thru_hole oval
+      (at 2.54 25.4)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 68 /PB22))
+    (pad 23 thru_hole oval
+      (at 0 27.94)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 56 /PB23))
+    (pad 24 thru_hole oval
+      (at 2.54 27.94)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 69 /PB24))
+    (pad 25 thru_hole oval
+      (at 0 30.48)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 55 /PB25))
+    (pad 26 thru_hole oval
+      (at 2.54 30.48)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 70 /PB26))
+    (pad 27 thru_hole oval
+      (at 0 33.02)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 54 /PB27))
+    (pad 28 thru_hole oval
+      (at 2.54 33.02)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 71 /PB28))
+    (pad 29 thru_hole oval
+      (at 0 35.56)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 53 /PB29))
+    (pad 30 thru_hole oval
+      (at 2.54 35.56)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 72 /PB30))
+    (pad 31 thru_hole oval
+      (at 0 38.1)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 52 /PB31))
+    (pad 32 thru_hole oval
+      (at 2.54 38.1)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 73 /PB32))
+    (pad 33 thru_hole oval
+      (at 0 40.64)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 51 /PB33))
+    (pad 34 thru_hole oval
+      (at 2.54 40.64)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 74 /PB34))
+    (pad 35 thru_hole oval
+      (at 0 43.18)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 50 /PB35))
+    (pad 36 thru_hole oval
+      (at 2.54 43.18)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 75 /PB36))
+    (pad 37 thru_hole oval
+      (at 0 45.72)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 49 /PB37))
+    (pad 38 thru_hole oval
+      (at 2.54 45.72)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 76 /PB38))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_2x19.wrl
+      (at
+        (xyz 0.05 -0.9 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 90))))
+  (module Mounting_Holes:MountingHole_3.2mm_M3
+    (layer F.Cu)
+    (tedit 574B16A1)
+    (tstamp 57469F85)
+    (at 157.187 66.04)
+    (descr "Mounting Hole 3.2mm, no annular, M3")
+    (tags "mounting hole 3.2mm no annular m3")
+    (fp_text reference MH2
+      (at 0 -4.2)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value MountingHole_3.2mm_M3
+      (at 0 4.2)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_circle
+      (center 0 0)
+      (end 3.2 0)
+      (layer Cmts.User)
+      (width 0.15))
+    (fp_circle
+      (center 0 0)
+      (end 3.45 0)
+      (layer F.CrtYd)
+      (width 0.05))
+    (pad "" np_thru_hole circle
+      (at 0.013 0)
+      (size 3.2 3.2)
+      (drill 3.2)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module Mounting_Holes:MountingHole_3.2mm_M3
+    (layer F.Cu)
+    (tedit 574B167C)
+    (tstamp 57469F8D)
+    (at 108.927 64.77)
+    (descr "Mounting Hole 3.2mm, no annular, M3")
+    (tags "mounting hole 3.2mm no annular m3")
+    (fp_text reference MH1
+      (at 0 -4.2)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value MountingHole_3.2mm_M3
+      (at 0 4.2)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_circle
+      (center 0 0)
+      (end 3.2 0)
+      (layer Cmts.User)
+      (width 0.15))
+    (fp_circle
+      (center 0 0)
+      (end 3.45 0)
+      (layer F.CrtYd)
+      (width 0.05))
+    (pad "" np_thru_hole circle
+      (at 0.013 0)
+      (size 3.2 3.2)
+      (drill 3.2)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746F0AD)
+    (tstamp inf)
+    (at 120.67 106.68 90)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H47
+      (at 0 -5.1 90)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1 90)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0 90)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54 90)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08 90)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62 90)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746F0B9)
+    (tstamp inf)
+    (at 120.65 109.22 90)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H48
+      (at 0 -5.1 90)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1 90)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0 90)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54 90)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08 90)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62 90)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746F0C2)
+    (tstamp 5746E6A0)
+    (at 120.65 111.76 90)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H49
+      (at 0 -5.1 90)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1 90)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0 90)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54 90)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08 90)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62 90)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746F0D3)
+    (tstamp 5746E6C0)
+    (at 130.81 109.22 90)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H51
+      (at 0 -5.1 90)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1 90)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0 90)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54 90)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08 90)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62 90)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746F0DB)
+    (tstamp 5746E6CF)
+    (at 130.81 111.76 90)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H52
+      (at 0 -5.1 90)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1 90)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0 90)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54 90)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08 90)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62 90)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746F0F5)
+    (tstamp 5746E6FC)
+    (at 140.99 104.14)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H56
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746F0FE)
+    (tstamp 5746E70B)
+    (at 143.53 104.14)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H57
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746F108)
+    (tstamp 5746E71A)
+    (at 146.07 104.14)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H58
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746F021)
+    (tstamp inf)
+    (at 120.67 96.52)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H36
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746F02B)
+    (tstamp inf)
+    (at 123.21 96.52)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H37
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746F036)
+    (tstamp inf)
+    (at 125.75 96.52)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H38
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746F041)
+    (tstamp inf)
+    (at 128.29 96.52)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H39
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746F053)
+    (tstamp inf)
+    (at 130.83 96.52)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H40
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746F05E)
+    (tstamp inf)
+    (at 133.37 96.52)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H41
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746F069)
+    (tstamp inf)
+    (at 135.91 96.52)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H42
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746F075)
+    (tstamp inf)
+    (at 138.45 96.52)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H43
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EF71)
+    (tstamp 5746E7A1)
+    (at 120.67 86.36)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H25
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EF83)
+    (tstamp 5746E7B0)
+    (at 123.21 86.36)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H26
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EF8E)
+    (tstamp 5746E7BF)
+    (at 125.75 86.36)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H27
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EF98)
+    (tstamp 5746E7CE)
+    (at 128.29 86.36)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H28
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EFA3)
+    (tstamp 5746E7DD)
+    (at 130.83 86.36)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H29
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EFAE)
+    (tstamp 5746E7EC)
+    (at 133.37 86.36)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H30
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EFB9)
+    (tstamp 5746E7FB)
+    (at 135.91 86.36)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H31
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EFC3)
+    (tstamp 5746E80A)
+    (at 138.45 86.36)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H32
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746F087)
+    (tstamp inf)
+    (at 140.99 93.98)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H44
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746F095)
+    (tstamp inf)
+    (at 143.53 93.98)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H45
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746F09E)
+    (tstamp inf)
+    (at 146.07 93.98)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H46
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EEEE)
+    (tstamp inf)
+    (at 120.67 76.2)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H14
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EEF8)
+    (tstamp inf)
+    (at 123.21 76.2)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H15
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EF06)
+    (tstamp inf)
+    (at 125.75 76.2)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H16
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EF0F)
+    (tstamp inf)
+    (at 128.29 76.2)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H17
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EF1C)
+    (tstamp inf)
+    (at 130.83 76.2)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H18
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EF27)
+    (tstamp inf)
+    (at 133.37 76.2)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H19
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EF31)
+    (tstamp 5746E8A0)
+    (at 135.91 76.2)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H20
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EF3C)
+    (tstamp 5746E8AF)
+    (at 138.45 76.2)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H21
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EE82)
+    (tstamp 5746E8BE)
+    (at 120.67 66.04)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H6
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EE8E)
+    (tstamp 5746E8CD)
+    (at 123.21 66.04)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H7
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EE99)
+    (tstamp 5746E8DC)
+    (at 125.75 66.04)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H8
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EEB1)
+    (tstamp 5746E8EB)
+    (at 128.29 66.04)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H9
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EEBD)
+    (tstamp 5746E8FA)
+    (at 130.83 66.04)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H10
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EEC8)
+    (tstamp inf)
+    (at 133.37 66.04)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H11
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EED3)
+    (tstamp inf)
+    (at 135.91 66.04)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H12
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EEDE)
+    (tstamp inf)
+    (at 138.45 66.04)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H13
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EFDC)
+    (tstamp inf)
+    (at 140.99 83.82)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H33
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EFE7)
+    (tstamp inf)
+    (at 143.53 83.82)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H34
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EFF5)
+    (tstamp inf)
+    (at 146.07 83.82)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H35
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EF48)
+    (tstamp inf)
+    (at 140.99 73.66)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H22
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EF52)
+    (tstamp inf)
+    (at 143.53 73.66)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H23
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EF5E)
+    (tstamp inf)
+    (at 146.07 73.66)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H24
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EE38)
+    (tstamp inf)
+    (at 140.99 63.5)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H3
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EE69)
+    (tstamp 5746E99F)
+    (at 143.53 63.5)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H4
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EE73)
+    (tstamp 5746E9AE)
+    (at 146.07 63.5)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H5
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EDAB)
+    (tstamp 5746E9BD)
+    (at 120.67 63.5 90)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H1
+      (at 0 -5.1 90)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1 90)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0 90)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54 90)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08 90)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62 90)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module noritsuna:Wire_Pad_Straight_1x04
+    (layer F.Cu)
+    (tedit 5746EE2B)
+    (tstamp 5746E9CC)
+    (at 130.83 63.5 90)
+    (descr "Through hole Wire Pads")
+    (tags "Wire Pad")
+    (fp_text reference H2
+      (at 0 -5.1 90)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.2 1.2)
+          (thickness 0.15))))
+    (fp_text value WirePads_Straight_1x04
+      (at 0 -3.1 90)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0 90)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle
+      (at 0 2.54 90)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole circle
+      (at 0 5.08 90)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 4 thru_hole circle
+      (at 0 7.62 90)
+      (size 1.7272 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)))
+  (gr_line
+    (start 147.45 62.1)
+    (end 119.15 62.1)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 119.15 62.1)
+    (end 119.15 113.03)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 147.45 113.03)
+    (end 147.45 62.1)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 119.15 113.03)
+    (end 147.45 113.03)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 147.45 62.1)
+    (end 119.15 62.1)
+    (angle 90)
+    (layer F.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 147.45 113.03)
+    (end 147.45 62.1)
+    (angle 90)
+    (layer F.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 119.15 113.03)
+    (end 147.45 113.03)
+    (angle 90)
+    (layer F.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 119.15 62.1)
+    (end 119.15 113.03)
+    (angle 90)
+    (layer F.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 98.21 61.8)
+    (end 168.21 61.8)
+    (angle 90)
+    (layer Edge.Cuts)
+    (width 0.1))
+  (gr_line
+    (start 144.36 119.34)
+    (end 146.36 117.34)
+    (angle 90)
+    (layer Edge.Cuts)
+    (width 0.1))
+  (gr_line
+    (start 109.36 117.34)
+    (end 111.36 119.34)
+    (angle 90)
+    (layer Edge.Cuts)
+    (width 0.1))
+  (gr_line
+    (start 99.21 117.34)
+    (end 109.36 117.34)
+    (angle 90)
+    (layer Edge.Cuts)
+    (width 0.1))
+  (gr_line
+    (start 146.36 117.34)
+    (end 167.21 117.34)
+    (angle 90)
+    (layer Edge.Cuts)
+    (width 0.1))
+  (gr_line
+    (start 111.36 119.34)
+    (end 144.36 119.34)
+    (angle 90)
+    (layer Edge.Cuts)
+    (width 0.1))
+  (gr_line
+    (start 168.21 116.34)
+    (end 168.21 61.8)
+    (angle 90)
+    (layer Edge.Cuts)
+    (width 0.1))
+  (gr_line
+    (start 98.21 116.34)
+    (end 98.21 61.8)
+    (angle 90)
+    (layer Edge.Cuts)
+    (width 0.1))
+  (gr_text "Designed by Noritsuna Imamura"
+    (at 156.8 116.51)
+    (layer F.SilkS)
+    (effects
+      (font
+        (size 0.7 0.7)
+        (thickness 0.175))))
+  (gr_text http://www.siprop.org/
+    (at 114.58 117.49)
+    (layer F.SilkS)
+    (effects
+      (font
+        (size 0.5 0.5)
+        (thickness 0.125))))
+  (gr_text "Universal Board for Nucleo Ver.1.0"
+    (at 108.74 116.4)
+    (layer F.SilkS)
+    (effects
+      (font
+        (size 0.7 0.7)
+        (thickness 0.175))))
+  (gr_arc
+    (start 99.21 116.34)
+    (end 99.21 117.34)
+    (angle 90)
+    (layer Edge.Cuts)
+    (width 0.1))
+  (gr_arc
+    (start 167.21 116.34)
+    (end 168.21 116.34)
+    (angle 90)
+    (layer Edge.Cuts)
+    (width 0.1))
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  )

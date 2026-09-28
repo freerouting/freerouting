@@ -38,10 +38,12 @@ function Invoke-BenchmarkRun {
     $errFile = Join-Path $LogsDir "${BaseName}.err"
     $memLog = Join-Path $LogsDir "${BaseName}-memory.log"
     $outputFile = Join-Path $OutputsDir "${BaseName}.ses"
+    $resultJsonFile = Join-Path $OutputsDir "${BaseName}-result.json"
     $liveLogFile = if ($isV19) { $stdoutFile } else { $logFile }
 
     # Clean previous output
     if (Test-Path $outputFile) { Remove-Item $outputFile -Force -ErrorAction SilentlyContinue }
+    if (Test-Path $resultJsonFile) { Remove-Item $resultJsonFile -Force -ErrorAction SilentlyContinue }
     if (Test-Path $logFile) { Remove-Item $logFile -Force -ErrorAction SilentlyContinue }
     if (Test-Path $stdoutFile) { Remove-Item $stdoutFile -Force -ErrorAction SilentlyContinue }
     if (Test-Path $errFile) { Remove-Item $errFile -Force -ErrorAction SilentlyContinue }
@@ -51,7 +53,19 @@ function Invoke-BenchmarkRun {
         "-Xmx$($Settings.heap_max)",
         "-Xms256m",
         "-XX:+HeapDumpOnOutOfMemoryError",
-        "-XX:HeapDumpPath=`"$LogsDir`"",
+        "-XX:HeapDumpPath=`"$LogsDir`""
+    )
+    if ($Settings.profile_enabled) {
+        $jvmArgs += "-Dfreerouting.benchmark.profile=true"
+    }
+    if ($Settings.retain_autoroute_database) {
+        $jvmArgs += "-Dfreerouting.benchmark.retain_autoroute_database=true"
+    }
+    $envGitSha = $Settings.git_sha
+    if ($envGitSha -and $SupportsCliMode -and ($Binary.Name -notmatch 'freerouting-1\.9\.0\.jar')) {
+        $jvmArgs += "-Dfreerouting.git.sha=$envGitSha"
+    }
+    $jvmArgs += @(
         "-jar", ('"{0}"' -f $Binary.FullName),
         "-de", ('"{0}"' -f $Fixture.FullName)
     )
@@ -60,18 +74,21 @@ function Invoke-BenchmarkRun {
     $jvmArgs += "-do"
     $jvmArgs += ('"{0}"' -f $outputFile)
 
-    # Router and logger options (supported by both v1.9 and current builds)
-    $jvmArgs += "--router.max_passes=$($Settings.max_passes)"
+    # Shared parent keys work on both v1.9 and current builds.
     $jvmArgs += "--router.max_threads=$($Settings.max_threads)"
     $jvmArgs += "--router.job_timeout=`"$($Settings.max_time)`""
     $jvmArgs += "--router.optimizer.enabled=$($Settings.optimizer_enabled.ToString().ToLower())"
     $jvmArgs += "--router.fanout.enabled=$($Settings.fanout_enabled.ToString().ToLower())"
-    $jvmArgs += "--router.enabled=$($Settings.router_enabled.ToString().ToLower())"
+    $jvmArgs += "--router.autorouter.max_passes=$($Settings.max_passes)"
+    $jvmArgs += "--router.autorouter.enabled=$($Settings.router_enabled.ToString().ToLower())"
     if ($Settings.fanout_timeout) {
         $jvmArgs += "--router.fanout.timeout=`"$($Settings.fanout_timeout)`""
     }
     if ($Settings.optimizer_timeout) {
         $jvmArgs += "--router.optimizer.timeout=`"$($Settings.optimizer_timeout)`""
+    }
+    if ($Settings.max_items -and [int]$Settings.max_items -gt 0) {
+        $jvmArgs += "--router.autorouter.max_items=$($Settings.max_items)"
     }
 
     # Logging flags
@@ -83,7 +100,12 @@ function Invoke-BenchmarkRun {
         $jvmArgs += "--api_server.enabled=false"
         if ($SupportsCliMode) {
             $jvmArgs += "--gui.enabled=false"
+            $jvmArgs += ('--router.result_json="{0}"' -f $resultJsonFile)
         }
+    } else {
+        # The frozen v1.9 startup path supports result manifests even though it does not
+        # support the current CLI/headless flags.
+        $jvmArgs += ('--router.result_json="{0}"' -f $resultJsonFile)
     }
 
     $startTime = Get-Date
@@ -110,6 +132,11 @@ function Invoke-BenchmarkRun {
     # Parse max time to milliseconds
     $maxTs = [timespan]::Parse($Settings.max_time)
     $timeoutMs = $maxTs.TotalMilliseconds
+    $gracePeriodSeconds = if ($Settings.timeout_grace_period_seconds -ne $null) {
+        [int]$Settings.timeout_grace_period_seconds
+    } else {
+        45
+    }
 
     # Wait for completion with timeout while printing log lines dynamically
     $lastLineCount = 0
@@ -159,21 +186,33 @@ function Invoke-BenchmarkRun {
         } catch {}
     }
 
-    $endTime = Get-Date
-
     # Stop memory sampler
     Stop-Job $memJob -ErrorAction SilentlyContinue
     Remove-Job $memJob -ErrorAction SilentlyContinue
 
+    if (-not $completed -and $process.HasExited) {
+        $completed = $true
+    }
     $timedOut = -not $completed
     if ($timedOut) {
-        # Force terminate hung process
-        try {
-            $process.Kill()
-        } catch {}
+        # Give Freerouting's internal timeout monitor time to request a graceful stop and
+        # write its final checkpoint before force termination.
+        $graceDeadline = (Get-Date).AddSeconds($gracePeriodSeconds)
+        while (-not $process.HasExited -and (Get-Date) -lt $graceDeadline) {
+            Start-Sleep -Milliseconds $sleepIntervalMs
+        }
+        if (-not $process.HasExited) {
+            try {
+                $process.Kill()
+                $process.WaitForExit(5000)
+            } catch {}
+        }
     }
+    $endTime = Get-Date
 
-    # Copy/merge stdout to logFile
+    # The file logger is canonical for current versions. Appending stdout to it duplicates every
+    # INFO line because console logging is enabled for live progress output. Keep stdout separate
+    # unless file logging produced no content at all.
     if ($isV19) {
         if (Test-Path $stdoutFile) {
             Move-Item -Path $stdoutFile -Destination $logFile -Force -ErrorAction SilentlyContinue
@@ -181,11 +220,13 @@ function Invoke-BenchmarkRun {
     } else {
         if (Test-Path $stdoutFile) {
             try {
-                $stdoutLines = Get-Content $stdoutFile -ErrorAction SilentlyContinue
-                if ($stdoutLines) {
-                    $stdoutLines | Add-Content $logFile -ErrorAction SilentlyContinue
+                $logHasContent =
+                    (Test-Path $logFile) -and ((Get-Item $logFile -ErrorAction SilentlyContinue).Length -gt 0)
+                if (-not $logHasContent) {
+                    Move-Item -Path $stdoutFile -Destination $logFile -Force -ErrorAction SilentlyContinue
+                } else {
+                    Remove-Item $stdoutFile -Force -ErrorAction SilentlyContinue
                 }
-                Remove-Item $stdoutFile -Force -ErrorAction SilentlyContinue
             } catch {}
         }
     }
@@ -209,11 +250,15 @@ function Invoke-BenchmarkRun {
         }
     }
 
+    # Clean up any stray SES files created in the repository root due to '+' filename splitting
+    Get-ChildItem -Path "." -Filter "*--unrouted--*.ses" -File -ErrorAction SilentlyContinue | Remove-Item -Force -ErrorAction SilentlyContinue
+
     return [PSCustomObject]@{
         ExitCode          = if ($timedOut) { -1 } else { $process.ExitCode }
         WallClockSeconds  = ($endTime - $startTime).TotalSeconds
         LogFile           = $logFile
         OutputFile        = $outputFile
+        ResultJsonFile    = $resultJsonFile
         Crashed           = $crashed
         OomDetected       = $oomDetected
         TimedOut          = $timedOut

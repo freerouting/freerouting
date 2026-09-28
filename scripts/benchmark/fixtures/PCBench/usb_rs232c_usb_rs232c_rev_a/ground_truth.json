@@ -1,0 +1,30 @@
+{
+  "board": "usb_rs232c_usb_rs232c_rev_a",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\usb_rs232c_usb_rs232c_rev_a\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 19,
+  "segment_count": 189,
+  "approximate_track_length_mm": 248.25,
+  "kicad_drc_violations": 93,
+  "generated_at": "2026-08-18T19:55:33.302682+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 93,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 21,
+      "copper_edge_clearance": 18,
+      "courtyards_overlap": 4,
+      "hole_clearance": 1,
+      "lib_footprint_issues": 33,
+      "silk_edge_clearance": 3,
+      "silk_overlap": 4,
+      "solder_mask_bridge": 4,
+      "text_height": 5
+    },
+    "by_severity": {
+      "error": 48,
+      "warning": 45
+    }
+  }
+}

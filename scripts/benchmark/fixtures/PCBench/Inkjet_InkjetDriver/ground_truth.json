@@ -1,0 +1,28 @@
+{
+  "board": "Inkjet_InkjetDriver",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Inkjet_InkjetDriver\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 49,
+  "segment_count": 317,
+  "approximate_track_length_mm": 1205.36,
+  "kicad_drc_violations": 396,
+  "generated_at": "2026-08-18T18:59:08.675362+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 396,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 335,
+      "courtyards_overlap": 1,
+      "isolated_copper": 1,
+      "lib_footprint_issues": 19,
+      "silk_over_copper": 29,
+      "silk_overlap": 8,
+      "track_dangling": 3
+    },
+    "by_severity": {
+      "error": 336,
+      "warning": 60
+    }
+  }
+}

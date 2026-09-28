@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "ToslinkCNC_Toslink PlanetCNC ECO shield",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 5791076,
+      "sha256": "59c46feae77be5199fc42616e94fabdf9c5f6ba0b9dc82e94e4fac829c277b40"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 5710275,
+      "sha256": "5bbed3f48d9b09b69b2e689d8f4cd170eb2a84aac1ac68f3475fd40e534916c9"
+    },
+    "metadata_json": {
+      "bytes": 639,
+      "sha256": "86711a23f601ce25e8f3bf3f96953398f5efbd79d4e7cbac680ac43e8b7d8c77"
+    },
+    "final_json": {
+      "bytes": 49671,
+      "sha256": "7299165ac3e2e2e696550caf6c6c8d18eb2dbba82ebd73f7de1d10b914910c67"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:53:26.500509+00:00"
+  }
+}

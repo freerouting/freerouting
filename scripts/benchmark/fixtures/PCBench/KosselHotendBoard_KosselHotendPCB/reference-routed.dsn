@@ -1,0 +1,246 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\KosselHotendBoard_KosselHotendPCB\reference-routed.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  177415 -194550  155677 -194550  155677 -159050  177415 -159050
+            177415 -194550)
+    )
+    (via "Via[0-1]_889:635_um")
+    (rule
+      (width 254)
+      (clearance 254)
+      (clearance 63.5 (type smd_smd))
+    )
+  )
+  (placement
+    (component PIN_ARRAY_6x2_lugs
+      (place P1 166547.8 -167708.58 front 0 (PN CONN_6X2))
+    )
+    (component Fixing_2.7mm
+      (place Noname_2 160000 -191700 front 0)
+    )
+    (component PIN_ARRAY_3X1_KK
+      (place P6 158877 -182270.4 front -90 (PN Probe))
+    )
+    (component Fixing_2.7mm::1
+      (place Noname_1 174300 -191700 front 0)
+    )
+    (component PIN_ARRAY_2X1_KK
+      (place P5 167800 -179412.9 front -90 (PN FAN))
+      (place P4 167800 -173697.9 front -90 (PN "PWM FAN"))
+      (place P3 174231.3 -185127.9 front -90 (PN THERM))
+      (place P7 174231.3 -173697.9 front -90 (PN "PWM FAN"))
+      (place P8 174231.3 -179412.9 front -90 (PN SP))
+    )
+    (component 3.5MM_2X1
+      (place P2 159296.1 -174459.9 front 90 (PN HEATER))
+    )
+  )
+  (library
+    (image PIN_ARRAY_6x2_lugs
+      (outline (path signal 150  10800 9130  9820 10750))
+      (outline (path signal 150  -10820 9150  -9820 10750))
+      (outline (path signal 150  -10825 9150  10825 9150))
+      (outline (path signal 150  10825 -3000  10825 9150))
+      (outline (path signal 150  -10825 -3000  -10825 9150))
+      (outline (path signal 150  -9825 10750  9825 10750))
+      (outline (path signal 150  10825 -3000  -10825 -3000))
+      (pin Rect[A]Pad_1600.000000x1600.000000_um 1 -7500 1500)
+      (pin Round[A]Pad_1600.000000_um 2 -7500 -1500)
+      (pin Round[A]Pad_1600.000000_um 3 -4500 1500)
+      (pin Round[A]Pad_1600.000000_um 4 -4500 -1500)
+      (pin Round[A]Pad_1600.000000_um 5 -1500 1500)
+      (pin Round[A]Pad_1600.000000_um 6 -1500 -1500)
+      (pin Round[A]Pad_1600.000000_um 7 1500 1500)
+      (pin Round[A]Pad_1600.000000_um 8 1500 -1500)
+      (pin Round[A]Pad_1600.000000_um 9 4500 1500)
+      (pin Round[A]Pad_1600.000000_um 10 4500 -1500)
+      (pin Round[A]Pad_1600.000000_um 12 7500 -1500)
+      (pin Round[A]Pad_1600.000000_um 11 7500 1500)
+      (keepout "" (circle F.Cu 3500 -5350 5820))
+      (keepout "" (circle B.Cu 3500 -5350 5820))
+      (keepout "" (circle F.Cu 3500 5350 5820))
+      (keepout "" (circle B.Cu 3500 5350 5820))
+    )
+    (image Fixing_2.7mm
+      (keepout "" (circle F.Cu 3200 -1000 0))
+      (keepout "" (circle B.Cu 3200 -1000 0))
+    )
+    (image PIN_ARRAY_3X1_KK
+      (outline (path signal 149.86  -4041.14 3098.8  4041.14 3098.8))
+      (outline (path signal 149.86  4041.14 3098.8  4041.14 -3098.8))
+      (outline (path signal 149.86  4041.14 -3098.8  -4041.14 -3098.8))
+      (outline (path signal 149.86  -4041.14 -3098.8  -4041.14 3098.8))
+      (outline (path signal 152.4  -3810 -1270  -3810 1270))
+      (outline (path signal 152.4  -3810 1270  3810 1270))
+      (outline (path signal 152.4  3810 1270  3810 -1270))
+      (outline (path signal 152.4  3810 -1270  -3810 -1270))
+      (outline (path signal 152.4  -1270 1270  -1270 -1270))
+      (pin Rect[A]Pad_1524.000000x1524.000000_um 1 -2540 0)
+      (pin Round[A]Pad_1524.000000_um 2 0 0)
+      (pin Round[A]Pad_1524.000000_um 3 2540 0)
+    )
+    (image Fixing_2.7mm::1
+      (keepout "" (circle F.Cu 3200))
+      (keepout "" (circle B.Cu 3200))
+    )
+    (image PIN_ARRAY_2X1_KK
+      (outline (path signal 149.86  -2771.14 3098.8  2771.14 3098.8))
+      (outline (path signal 149.86  2771.14 3098.8  2771.14 -3098.8))
+      (outline (path signal 149.86  2771.14 -3098.8  -2771.14 -3098.8))
+      (outline (path signal 149.86  -2771.14 -3098.8  -2771.14 3098.8))
+      (outline (path signal 152.4  -2540 -1270  -2540 1270))
+      (outline (path signal 152.4  -2540 1270  2540 1270))
+      (outline (path signal 152.4  2540 1270  2540 -1270))
+      (outline (path signal 152.4  2540 -1270  -2540 -1270))
+      (pin Rect[A]Pad_1524.000000x1524.000000_um 1 -1270 0)
+      (pin Round[A]Pad_1524.000000_um 2 1270 0)
+    )
+    (image 3.5MM_2X1
+      (outline (path signal 149.86  -3600 3600  3600 3600))
+      (outline (path signal 149.86  3600 3600  3600 -3098.8))
+      (outline (path signal 149.86  3600 -3098.8  -3600 -3098.8))
+      (outline (path signal 149.86  -3600 -3098.8  -3600 3600))
+      (pin Rect[A]Pad_1524.000000x1524.000000_um 1 -1750 0)
+      (pin Round[A]Pad_1524.000000_um 2 1750 0)
+    )
+    (padstack Round[A]Pad_1524.000000_um
+      (shape (circle F.Cu 1524))
+      (shape (circle B.Cu 1524))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1600.000000_um
+      (shape (circle F.Cu 1600))
+      (shape (circle B.Cu 1600))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1524.000000x1524.000000_um
+      (shape (rect F.Cu -762 -762 762 762))
+      (shape (rect B.Cu -762 -762 762 762))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1600.000000x1600.000000_um
+      (shape (rect F.Cu -800 -800 800 800))
+      (shape (rect B.Cu -800 -800 800 800))
+      (attach off)
+    )
+    (padstack "Via[0-1]_889:635_um"
+      (shape (circle F.Cu 889))
+      (shape (circle B.Cu 889))
+      (attach off)
+    )
+  )
+  (network
+    (net +12V
+      (pins P1-2 P2-2)
+    )
+    (net "FAN +"
+      (pins P1-12 P5-2 P4-2 P7-2)
+    )
+    (net GND
+      (pins P1-11 P5-1)
+    )
+    (net "Heater -VE"
+      (pins P1-4 P2-1)
+    )
+    (net "PWM Fan -VE"
+      (pins P1-9 P4-1 P7-1)
+    )
+    (net "Probe GND"
+      (pins P1-8 P6-2)
+    )
+    (net "Probe Sig"
+      (pins P1-10 P6-3)
+    )
+    (net Spare1
+      (pins P1-7 P8-1)
+    )
+    (net Spare2
+      (pins P1-5 P8-2)
+    )
+    (net Therm1
+      (pins P1-3 P3-1)
+    )
+    (net Therm2
+      (pins P1-1 P3-2)
+    )
+    (net Vcc
+      (pins P1-6 P6-1)
+    )
+    (class kicad_default +12V "FAN +" GND "Heater -VE" "PWM Fan -VE" "Probe GND"
+      "Probe Sig" Spare1 Spare2 Therm1 Therm2 Vcc
+      (circuit
+        (use_via "Via[0-1]_889:635_um")
+      )
+      (rule
+        (width 254)
+        (clearance 254)
+      )
+    )
+  )
+  (wiring
+    (wire (path B.Cu 1016  159296 -172710  159296 -169457  159048 -169209)(net +12V)(type route))
+    (wire (path B.Cu 508  167800 -174968  166334 -176433)(net "FAN +")(type route))
+    (wire (path B.Cu 508  166334 -179217  167800 -180683)(net "FAN +")(type route))
+    (wire (path B.Cu 508  166334 -176433  166334 -179217)(net "FAN +")(type route))
+    (wire (path B.Cu 508  167800 -174968  174231 -174968  175743 -174968  175743 -171310
+            175743 -170903  174048 -169209)(net "FAN +")(type route))
+    (wire (path B.Cu 508  167800 -178143  169311 -176632  175534 -176632)(net GND)(type route))
+    (wire (path B.Cu 508  174048 -166209  176555 -168716)(net GND)(type route))
+    (wire (path B.Cu 508  176555 -175611  175534 -176632)(net GND)(type route))
+    (wire (path B.Cu 508  176555 -168716  176555 -175611)(net GND)(type route))
+    (wire (path B.Cu 1016  159296 -176210  162048 -173458  162048 -169209)(net "Heater -VE")(type route))
+    (wire (path B.Cu 508  167800 -172428  174231 -172428  174231 -172212  172537 -170518
+            172537 -167698  171048 -166209)(net "PWM Fan -VE")(type route))
+    (wire (path B.Cu 508  168048 -169209  166999 -169209)(net "Probe GND")(type route))
+    (wire (path B.Cu 508  164092 -177056  158877 -182270)(net "Probe GND")(type route))
+    (wire (path B.Cu 508  164092 -172115  164092 -177056)(net "Probe GND")(type route))
+    (wire (path B.Cu 508  166999 -169209  164092 -172115)(net "Probe GND")(type route))
+    (wire (path B.Cu 381  171048 -169209  169515 -170741)(net "Probe Sig")(type route))
+    (wire (path B.Cu 381  165585 -178102  158877 -184810)(net "Probe Sig")(type route))
+    (wire (path B.Cu 381  165585 -171920  165585 -178102)(net "Probe Sig")(type route))
+    (wire (path B.Cu 381  166764 -170741  165585 -171920)(net "Probe Sig")(type route))
+    (wire (path B.Cu 381  169515 -170741  166764 -170741)(net "Probe Sig")(type route))
+    (wire (path F.Cu 381  168048 -166209  169537 -167698)(net Spare1)(type route))
+    (wire (path F.Cu 381  169537 -173449  174231 -178143)(net Spare1)(type route))
+    (wire (path F.Cu 381  169537 -167698  169537 -173449)(net Spare1)(type route))
+    (wire (path F.Cu 381  166830 -179400  172949 -179400)(net Spare2)(type route))
+    (wire (path F.Cu 381  165621 -178191  166830 -179400)(net Spare2)(type route))
+    (wire (path F.Cu 381  165621 -171384  165621 -178191)(net Spare2)(type route))
+    (wire (path F.Cu 381  166535 -170470  165621 -171384)(net Spare2)(type route))
+    (wire (path F.Cu 381  165048 -166209  166535 -167696)(net Spare2)(type route))
+    (wire (path F.Cu 381  172949 -179400  174231 -180683)(net Spare2)(type route))
+    (wire (path F.Cu 381  166535 -167696  166535 -170470)(net Spare2)(type route))
+    (wire (path F.Cu 381  162048 -166209  163520 -167681)(net Therm1)(type route))
+    (wire (path F.Cu 381  167399 -183858  174231 -183858)(net Therm1)(type route))
+    (wire (path F.Cu 381  163520 -179979  167399 -183858)(net Therm1)(type route))
+    (wire (path F.Cu 381  163520 -167681  163520 -179979)(net Therm1)(type route))
+    (wire (path F.Cu 381  159048 -166209  160536 -167696)(net Therm2)(type route))
+    (wire (path F.Cu 381  168186 -186398  174231 -186398)(net Therm2)(type route))
+    (wire (path F.Cu 381  160536 -178747  168186 -186398)(net Therm2)(type route))
+    (wire (path F.Cu 381  160536 -167696  160536 -178747)(net Therm2)(type route))
+    (wire (path B.Cu 508  165048 -169209  164954 -169209)(net Vcc)(type route))
+    (wire (path B.Cu 508  163064 -175544  158775 -179832)(net Vcc)(type route))
+    (wire (path B.Cu 508  163064 -171099  163064 -175544)(net Vcc)(type route))
+    (wire (path B.Cu 508  164954 -169209  163064 -171099)(net Vcc)(type route))
+  )
+)

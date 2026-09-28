@@ -1,0 +1,32 @@
+{
+  "board": "bypass_crossmix_bypass_crossmix",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\bypass_crossmix_bypass_crossmix\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 86,
+  "segment_count": 641,
+  "approximate_track_length_mm": 1531.33,
+  "kicad_drc_violations": 395,
+  "generated_at": "2026-08-18T18:37:06.156638+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 395,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 266,
+      "copper_edge_clearance": 5,
+      "courtyards_overlap": 3,
+      "holes_co_located": 1,
+      "lib_footprint_issues": 61,
+      "silk_over_copper": 3,
+      "silk_overlap": 9,
+      "solder_mask_bridge": 36,
+      "text_height": 4,
+      "text_thickness": 4,
+      "via_dangling": 3
+    },
+    "by_severity": {
+      "error": 310,
+      "warning": 85
+    }
+  }
+}

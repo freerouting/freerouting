@@ -1,0 +1,26 @@
+{
+  "board": "snappi-zero_snappi-zero",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\snappi-zero_snappi-zero\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 11,
+  "segment_count": 113,
+  "approximate_track_length_mm": 348.2,
+  "kicad_drc_violations": 111,
+  "generated_at": "2026-08-18T19:46:19.389444+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 111,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 71,
+      "copper_edge_clearance": 2,
+      "lib_footprint_issues": 13,
+      "pth_inside_courtyard": 22,
+      "starved_thermal": 3
+    },
+    "by_severity": {
+      "error": 98,
+      "warning": 13
+    }
+  }
+}

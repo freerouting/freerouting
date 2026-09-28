@@ -1,0 +1,30 @@
+{
+  "board": "Teensy-Hats_Teensy-7-Segment-Hat",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Teensy-Hats_Teensy-7-Segment-Hat\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 3,
+  "segment_count": 80,
+  "approximate_track_length_mm": 143.66,
+  "kicad_drc_violations": 94,
+  "generated_at": "2026-08-18T19:50:41.031687+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 94,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 14,
+      "copper_edge_clearance": 15,
+      "courtyards_overlap": 5,
+      "lib_footprint_issues": 7,
+      "malformed_courtyard": 1,
+      "pth_inside_courtyard": 16,
+      "silk_edge_clearance": 4,
+      "silk_over_copper": 29,
+      "starved_thermal": 3
+    },
+    "by_severity": {
+      "error": 54,
+      "warning": 40
+    }
+  }
+}

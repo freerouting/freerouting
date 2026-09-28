@@ -1,0 +1,27 @@
+{
+  "board": "HellScribe_HellScribe",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\HellScribe_HellScribe\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 71,
+  "segment_count": 297,
+  "approximate_track_length_mm": 1367.67,
+  "kicad_drc_violations": 179,
+  "generated_at": "2026-08-18T18:56:09.151140+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 179,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 122,
+      "copper_edge_clearance": 2,
+      "lib_footprint_issues": 49,
+      "silk_over_copper": 2,
+      "silk_overlap": 2,
+      "track_dangling": 2
+    },
+    "by_severity": {
+      "error": 124,
+      "warning": 55
+    }
+  }
+}

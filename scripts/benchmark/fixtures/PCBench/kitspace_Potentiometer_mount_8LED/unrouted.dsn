@@ -1,0 +1,218 @@
+(pcb C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\kitspace_Potentiometer_mount_8LED\unrouted.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  198000 -94000  118000 -94000  118000 -54000  198000 -54000
+            198000 -94000)
+    )
+    (via "Via[0-1]_800:400_um")
+    (rule
+      (width 250)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component Potentiometer_THT:Potentiometer_Vishay_43_Horizontal
+      (place "LED 8" 192120 -70000 front -90)
+      (place "LED 7" 181960 -70000 front -90)
+      (place "LED 5" 161800 -70000 front -90)
+      (place "LED 6" 171800 -70000 front -90)
+      (place "LED 1" 121000 -70000 front -90)
+      (place "LED 3" 141320 -70000 front -90)
+    )
+    (component "Connector_JST:JST_PUD_B08B-PUDSS_2x04_P2.00mm_Vertical"
+      (place "To LED" 168300 -87500 front 0)
+      (place "From Stimlator" 142600 -87500 front 0)
+    )
+    (component Potentiometer_THT:Potentiometer_Vishay_43_Horizontal::1
+      (place "LED 2" 131160 -70000 front -90)
+      (place "LED 4" 151480 -70000 front -90)
+    )
+    (component "Maxime:logo 750"
+      (place G*** 157700 -76700 back 0 (PN LOGO))
+    )
+  )
+  (library
+    (image Potentiometer_THT:Potentiometer_Vishay_43_Horizontal
+      (outline (polygon signal 0  3245 3945  3245 -1395  -17795 -1395  -17795 3945))
+      (outline (path signal 100  -16000 3670  -16000 -1130))
+      (outline (path signal 100  -16000 -1130  3000 -1130))
+      (outline (path signal 100  3000 -1130  3000 3670))
+      (outline (path signal 100  3000 3670  -16000 3670))
+      (outline (path signal 100  -17520 2450  -17520 90))
+      (outline (path signal 100  -17520 90  -16000 90))
+      (outline (path signal 100  -16000 90  -16000 2450))
+      (outline (path signal 100  -16000 2450  -17520 2450))
+      (outline (path signal 100  -17520 1270  -16760 1270))
+      (outline (path signal 120  -16120 3790  3120 3790))
+      (outline (path signal 120  -16120 -1250  3120 -1250))
+      (outline (path signal 120  -16120 3790  -16120 -1250))
+      (outline (path signal 120  3120 3790  3120 -1250))
+      (outline (path signal 120  -17640 2570  -16121 2570))
+      (outline (path signal 120  -17640 -30  -16121 -30))
+      (outline (path signal 120  -17640 2570  -17640 -30))
+      (outline (path signal 120  -16121 2570  -16121 -30))
+      (outline (path signal 120  -17640 1270  -16881 1270))
+      (pin Round[A]Pad_1800.000000_um 3 -12700 0)
+      (pin Round[A]Pad_1800.000000_um 2 -7620 2540)
+      (pin Round[A]Pad_1800.000000_um 1 0 0)
+    )
+    (image "Connector_JST:JST_PUD_B08B-PUDSS_2x04_P2.00mm_Vertical"
+      (outline (polygon signal 0  8495 -4895  -2495 -4895  -2495 4395  8495 4395))
+      (outline (path signal 100  -2000 3900  -2000 -4400))
+      (outline (path signal 100  -2000 -4400  8000 -4400))
+      (outline (path signal 100  8000 -4400  8000 3900))
+      (outline (path signal 100  8000 3900  -2000 3900))
+      (outline (path signal 120  1250 3150  1250 2400))
+      (outline (path signal 120  1250 2400  4750 2400))
+      (outline (path signal 120  4750 2400  4750 3150))
+      (outline (path signal 120  4750 3150  1250 3150))
+      (outline (path signal 120  500 4010  500 2400))
+      (outline (path signal 120  500 2400  -250 2400))
+      (outline (path signal 120  -250 2400  -250 3150))
+      (outline (path signal 120  -250 3150  -1250 3150))
+      (outline (path signal 120  -1250 3150  -1250 -3650))
+      (outline (path signal 120  -1250 -3650  3000 -3650))
+      (outline (path signal 120  5500 4010  5500 2400))
+      (outline (path signal 120  5500 2400  6250 2400))
+      (outline (path signal 120  6250 2400  6250 3150))
+      (outline (path signal 120  6250 3150  7250 3150))
+      (outline (path signal 120  7250 3150  7250 -3650))
+      (outline (path signal 120  7250 -3650  3000 -3650))
+      (outline (path signal 120  -2110 4010  -2110 -4510))
+      (outline (path signal 120  -2110 -4510  8110 -4510))
+      (outline (path signal 120  8110 -4510  8110 4010))
+      (outline (path signal 120  8110 4010  -2110 4010))
+      (outline (path signal 120  -2310 0  -2910 -300))
+      (outline (path signal 120  -2910 -300  -2910 300))
+      (outline (path signal 120  -2910 300  -2310 0))
+      (outline (path signal 100  -2000 -500  -1292.89 0))
+      (outline (path signal 100  -1292.89 0  -2000 500))
+      (pin Round[A]Pad_1200.000000_um 8 6000 -2000)
+      (pin Round[A]Pad_1200.000000_um 6 4000 -2000)
+      (pin Round[A]Pad_1200.000000_um 4 2000 -2000)
+      (pin Round[A]Pad_1200.000000_um 2 0 -2000)
+      (pin Round[A]Pad_1200.000000_um 7 6000 0)
+      (pin Round[A]Pad_1200.000000_um 5 4000 0)
+      (pin Round[A]Pad_1200.000000_um 3 2000 0)
+      (pin Rect[A]Pad_1200.000000x1200.000000_um 1 0 0)
+    )
+    (image Potentiometer_THT:Potentiometer_Vishay_43_Horizontal::1
+      (outline (polygon signal 0  3245 3945  3245 -1395  -17795 -1395  -17795 3945))
+      (outline (path signal 120  -17640 1270  -16881 1270))
+      (outline (path signal 120  -16121 2570  -16121 -30))
+      (outline (path signal 120  -17640 2570  -17640 -30))
+      (outline (path signal 120  -17640 -30  -16121 -30))
+      (outline (path signal 120  -17640 2570  -16121 2570))
+      (outline (path signal 120  3120 3790  3120 -1250))
+      (outline (path signal 120  -16120 3790  -16120 -1250))
+      (outline (path signal 120  -16120 -1250  3120 -1250))
+      (outline (path signal 120  -16120 3790  3120 3790))
+      (outline (path signal 100  -17520 1270  -16760 1270))
+      (outline (path signal 100  -16000 2450  -17520 2450))
+      (outline (path signal 100  -16000 90  -16000 2450))
+      (outline (path signal 100  -17520 90  -16000 90))
+      (outline (path signal 100  -17520 2450  -17520 90))
+      (outline (path signal 100  3000 3670  -16000 3670))
+      (outline (path signal 100  3000 -1130  3000 3670))
+      (outline (path signal 100  -16000 -1130  3000 -1130))
+      (outline (path signal 100  -16000 3670  -16000 -1130))
+      (pin Round[A]Pad_1800.000000_um 1 0 0)
+      (pin Round[A]Pad_1800.000000_um 2 -7620 2540)
+      (pin Round[A]Pad_1800.000000_um 3 -12700 0)
+    )
+    (image "Maxime:logo 750"
+    )
+    (padstack Round[A]Pad_1200.000000_um
+      (shape (circle F.Cu 1200))
+      (shape (circle B.Cu 1200))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1800.000000_um
+      (shape (circle F.Cu 1800))
+      (shape (circle B.Cu 1800))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1200.000000x1200.000000_um
+      (shape (rect F.Cu -600 -600 600 600))
+      (shape (rect B.Cu -600 -600 600 600))
+      (attach off)
+    )
+    (padstack "Via[0-1]_800:400_um"
+      (shape (circle F.Cu 800))
+      (shape (circle B.Cu 800))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(J1-Pad1)"
+      (pins "From Stimlator"-1 "LED 1"-3)
+    )
+    (net "Net-(J1-Pad2)"
+      (pins "From Stimlator"-3 "LED 2"-3)
+    )
+    (net "Net-(J1-Pad3)"
+      (pins "From Stimlator"-5 "LED 3"-3)
+    )
+    (net "Net-(J1-Pad4)"
+      (pins "From Stimlator"-7 "LED 4"-3)
+    )
+    (net "Net-(J2-Pad4)"
+      (pins "To LED"-7 "LED 4"-2)
+    )
+    (net "Net-(J2-Pad3)"
+      (pins "To LED"-5 "LED 3"-2)
+    )
+    (net "Net-(J2-Pad2)"
+      (pins "To LED"-3 "LED 2"-2)
+    )
+    (net "Net-(J2-Pad1)"
+      (pins "To LED"-1 "LED 1"-2)
+    )
+    (net "Net-(RV1-Pad1)"
+      (pins "LED 1"-1)
+    )
+    (net "Net-(RV2-Pad1)"
+      (pins "LED 2"-1)
+    )
+    (net "Net-(RV3-Pad1)"
+      (pins "LED 3"-1)
+    )
+    (net "Net-(RV4-Pad1)"
+      (pins "LED 4"-1)
+    )
+    (class kicad_default "Net-(J1-Pad1)" "Net-(J1-Pad2)" "Net-(J1-Pad3)" "Net-(J1-Pad4)"
+      "Net-(J2-Pad1)" "Net-(J2-Pad2)" "Net-(J2-Pad3)" "Net-(J2-Pad4)" "Net-(RV1-Pad1)"
+      "Net-(RV2-Pad1)" "Net-(RV3-Pad1)" "Net-(RV4-Pad1)"
+      (circuit
+        (use_via "Via[0-1]_800:400_um")
+      )
+      (rule
+        (width 250)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

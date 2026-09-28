@@ -1,17 +1,14 @@
 package app.freerouting.io.specctra.parser;
 
-import app.freerouting.board.BasicBoard;
-import app.freerouting.board.BoardOutline;
-import app.freerouting.board.ConductionArea;
-import app.freerouting.board.FixedState;
-import app.freerouting.board.Item;
-import app.freerouting.board.Trace;
+import app.freerouting.board.facade.BasicBoard;
+import app.freerouting.board.model.items.ConductionArea;
+import app.freerouting.board.model.structure.BoardOutline;
+import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.LinkedList;
 
 /** Class for reading and writing dsn-files. */
 @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
@@ -23,7 +20,7 @@ public final class DsnFile {
 
   /**
    * Sets containsPlane to true for nets with a conductionArea covering a large part of a signal
-   * layer, if that layer does not contain any traces. This is useful in case the layer type was not
+   * layer (at least 50% of the board outline area). This is useful in case the layer type was not
    * set correctly to plane in the dsn-file. Returns true, if something was changed.
    *
    * <p>Called from {@link app.freerouting.io.specctra.DsnReader#readBoard} when the DSN file
@@ -33,77 +30,77 @@ public final class DsnFile {
     if (routingBoard == null) {
       return false;
     }
-    final app.freerouting.board.LayerStructure boardLayerStructure = routingBoard.layerStructure;
-    if (boardLayerStructure.arr.length <= 2) {
+    final app.freerouting.board.model.structure.LayerStructure boardLayerStructure =
+        routingBoard.layerStructure;
+    if (boardLayerStructure.layers.length < 1) {
       return false;
     }
-    for (app.freerouting.board.Layer currLayer : boardLayerStructure.arr) {
-      if (!currLayer.isSignal) {
+    for (app.freerouting.board.model.structure.Layer currentLayer : boardLayerStructure.layers) {
+      if (!currentLayer.isSignal) {
         return false;
       }
     }
-    boolean[] layerContainsWiresArr = new boolean[boardLayerStructure.arr.length];
-    boolean[] changedLayerArr = new boolean[boardLayerStructure.arr.length];
-    for (int i = 0; i < layerContainsWiresArr.length; i++) {
-      layerContainsWiresArr[i] = false;
-      changedLayerArr[i] = false;
-    }
-    Collection<ConductionArea> conductionAreaList = new LinkedList<>();
-    Collection<Item> itemList = routingBoard.getItems();
-    for (Item currItem : itemList) {
-      if (currItem instanceof Trace trace) {
-        final int currLayer = trace.getLayer();
-        layerContainsWiresArr[currLayer] = true;
-      } else if (currItem instanceof ConductionArea area) {
-        conductionAreaList.add(area);
-      }
-    }
+    boolean[] changedLayerArr = new boolean[boardLayerStructure.layers.length];
+    Collection<ConductionArea> conductionAreaList = routingBoard.getConductionAreas();
     boolean nothingChanged = true;
 
     BoardOutline boardOutline = routingBoard.getOutline();
     double boardArea = 0;
-    for (int i = 0; i < boardOutline.shapeCount(); i++) {
-      TileShape[] currPieceArr = boardOutline.getShape(i).splitToConvex();
-      if (currPieceArr != null) {
-        for (TileShape currPiece : currPieceArr) {
-          boardArea += currPiece.area();
+    if (boardOutline != null) {
+      for (int i = 0; i < boardOutline.shapeCount(); i++) {
+        TileShape[] currentPieceArr = boardOutline.getShape(i).splitToConvex();
+        if (currentPieceArr != null) {
+          for (TileShape currentPiece : currentPieceArr) {
+            boardArea += currentPiece.area();
+          }
         }
       }
     }
-    for (ConductionArea currConductionArea : conductionAreaList) {
-      int layerNo = currConductionArea.getLayer();
-      if (layerContainsWiresArr[layerNo]) {
+    if (boardArea <= 0) {
+      return false;
+    }
+
+    for (ConductionArea currentConductionArea : conductionAreaList) {
+      int layerIndex = currentConductionArea.getLayer();
+      if (layerIndex < 0 || layerIndex >= boardLayerStructure.layers.length) {
         continue;
       }
-      final app.freerouting.board.Layer currLayer = routingBoard.layerStructure.arr[layerNo];
-      if (!currLayer.isSignal || layerNo == 0 || layerNo == boardLayerStructure.arr.length - 1) {
+      final app.freerouting.board.model.structure.Layer currentLayer =
+          routingBoard.layerStructure.layers[layerIndex];
+      if (!currentLayer.isSignal) {
         continue;
       }
-      TileShape[] convexPieces = currConductionArea.getArea().splitToConvex();
-      double currArea = 0;
-      for (TileShape currPiece : convexPieces) {
-        currArea += currPiece.area();
-      }
-      if (currArea < 0.5 * boardArea) {
+      TileShape[] convexPieces = currentConductionArea.getArea().splitToConvex();
+      if (convexPieces == null) {
         continue;
       }
-      for (int i = 0; i < currConductionArea.netCount(); i++) {
-        final Net currentNet = routingBoard.rules.nets.get(currConductionArea.getNetNo(i));
-        currentNet.setContainsPlane(true);
-        nothingChanged = false;
+      double currentArea = 0;
+      for (TileShape currentPiece : convexPieces) {
+        currentArea += currentPiece.area();
       }
-      changedLayerArr[layerNo] = true;
-      if (currConductionArea.getFixedState().ordinal() < FixedState.USER_FIXED.ordinal()) {
-        currConductionArea.setFixedState(FixedState.USER_FIXED);
+      // Relaxed area threshold: 30% of board area (supports outer-layer pours on 2-layer boards)
+      if (currentArea < 0.3 * boardArea) {
+        continue;
+      }
+      for (int i = 0; i < currentConductionArea.netCount(); i++) {
+        final Net currentNet = routingBoard.rules.nets.get(currentConductionArea.getNetNumber(i));
+        if (currentNet != null) {
+          currentNet.setContainsPlane(true);
+          nothingChanged = false;
+        }
+      }
+      changedLayerArr[layerIndex] = true;
+      if (currentConductionArea.getFixedState().ordinal() < FixedState.USER_FIXED.ordinal()) {
+        currentConductionArea.setFixedState(FixedState.USER_FIXED);
       }
     }
     for (int i = 0; i < changedLayerArr.length; i++) {
       if (changedLayerArr[i]) {
         FRLogger.info(
             "Layer '"
-                + routingBoard.layerStructure.arr[i].name
-                + "' has been automatically configured as a dedicated power plane because it "
-                + "contains a large conduction area covering >50% of the board.");
+                + routingBoard.layerStructure.layers[i].name
+                + "' contains a power plane / large copper pour covering >=30% of the board; "
+                + "associated net(s) configured for plane routing.");
       }
     }
     return !nothingChanged;
@@ -185,14 +182,20 @@ public final class DsnFile {
 
   public static String readStringScope(IJFlexScanner scanner) {
     try {
-      scanner.yybegin(SpecctraDsnStreamReader.NAME);
-      String result = scanner.nextString();
+      String result = scanner.nextString(true);
+      if (result == null) {
+        return null;
+      }
       Object nextToken = scanner.nextToken();
       if (nextToken != Keyword.CLOSED_BRACKET) {
         FRLogger.warn(
             "DsnFile.read_string_scope: closing bracket expected at '"
                 + scanner.getScopeIdentifier()
-                + "'");
+                + "', got: "
+                + nextToken);
+        while (nextToken != null && nextToken != Keyword.CLOSED_BRACKET) {
+          nextToken = scanner.nextToken();
+        }
       }
       return result;
     } catch (IOException e) {

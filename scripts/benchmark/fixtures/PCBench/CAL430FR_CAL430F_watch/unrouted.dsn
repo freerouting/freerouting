@@ -1,0 +1,236 @@
+(pcb C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\CAL430FR_CAL430F_watch\unrouted.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  150668 -77002.4  151003 -77040.1  151331 -77115  151649 -77226.2
+            151952 -77372.3  152237 -77551.4  152501 -77761.3  152739 -77999.4
+            152949 -78262.6  153128 -78547.7  153274 -78851  153385 -79168.8
+            153460 -79497.1  153498 -79831.7  153500 -80000  153500 -81500
+            153502 -81565.5  153536 -81692.2  153602 -81805.7  153694 -81898.4
+            153808 -81963.9  153934 -81997.9  154000 -82000  155000 -82000
+            157000 -84000  158000 -85000  158000 -115000  155000 -118000
+            154000 -118000  153934 -118002  153808 -118036  153694 -118102
+            153602 -118194  153536 -118308  153502 -118434  153500 -118500
+            153500 -120000  153497 -120164  153455 -120488  153370 -120804
+            153245 -121107  153081 -121390  152882 -121650  152650 -121882
+            152390 -122081  152107 -122245  151804 -122370  151488 -122455
+            151164 -122497  151000 -122500  129000 -122500  128836 -122497
+            128512 -122455  128196 -122370  127893 -122245  127610 -122081
+            127350 -121882  127118 -121650  126919 -121390  126755 -121107
+            126630 -120804  126545 -120488  126503 -120164  126500 -120000
+            126500 -118500  126498 -118434  126464 -118308  126398 -118194
+            126306 -118102  126192 -118036  126066 -118002  126000 -118000
+            125000 -118000  122000 -115000  122000 -85000  125000 -82000
+            126000 -82000  126066 -81997.9  126192 -81963.9  126306 -81898.4
+            126398 -81805.7  126464 -81692.2  126498 -81565.5  126500 -81500
+            126500 -80000  126502 -79831.7  126540 -79497.1  126615 -79168.8
+            126726 -78851  126872 -78547.7  127051 -78262.6  127261 -77999.4
+            127499 -77761.3  127763 -77551.4  128048 -77372.3  128351 -77226.2
+            128669 -77115  128997 -77040.1  129332 -77002.4  129500 -77000
+            150500 -77000  150668 -77002.4)
+    )
+    (via "Via[0-1]_600:300_um")
+    (rule
+      (width 180)
+      (clearance 180)
+      (clearance 45 (type smd_smd))
+    )
+  )
+  (placement
+    (component Drill:Drill_M2
+      (place Drill_M2_4 155000 -85000 front 0 (PN VAL**))
+      (place Drill_M2_3 125000 -85000 front 0 (PN VAL**))
+      (place Drill_M2_2 125000 -115000 front 0 (PN VAL**))
+      (place Drill_M2 155000 -115000 front 0 (PN VAL**))
+    )
+    (component "CONN_DF12:DF12_20(B)_metal"
+      (place P1 150000 -105000 front 0 (PN "DF12#-20DP(86)"))
+    )
+    (component "CONN_2m:P1-10_2mm"
+      (place P2 155000 -100000 front -90 (PN CONN_10))
+      (place P3 125000 -100000 front -90 (PN CONN_10))
+    )
+    (component LOGO:N_LOGO_3mm
+      (place G*** 140000 -95000 back 180 (PN LOGO))
+    )
+  )
+  (library
+    (image Drill:Drill_M2
+      (keepout "" (circle F.Cu 2500))
+      (keepout "" (circle B.Cu 2500))
+    )
+    (image "CONN_DF12:DF12_20(B)_metal"
+      (outline (path signal 150  -2300 3400  -2317.29 3318.65  -2366.17 3251.37  -2438.2 3209.79
+            -2520.91 3201.1  -2600 3226.8  -2661.8 3282.44  -2695.63 3358.42
+            -2695.63 3441.58  -2661.8 3517.56  -2600 3573.2  -2520.91 3598.9
+            -2438.2 3590.21  -2366.17 3548.63  -2317.29 3481.35  -2300 3400))
+      (outline (path signal 150  -2000 -2500  -2000 -3700))
+      (outline (path signal 150  -2000 -3700  -1000 -3700))
+      (outline (path signal 150  1950 -2500  1950 -3700))
+      (outline (path signal 150  1900 -3700  1000 -3700))
+      (outline (path signal 150  1000 3700  2000 3700))
+      (outline (path signal 150  2000 3700  2000 2500))
+      (outline (path signal 150  -2000 2500  -2000 3700))
+      (outline (path signal 150  -2000 3700  -1000 3700))
+      (pin Trapz[T]Pad_800.000000x1800.000000_p0.000000xp0.000000_um (rotate 270) 21 0 4000)
+      (pin Trapz[T]Pad_800.000000x1800.000000_p0.000000xp0.000000_um (rotate 270) 22 0 -4000)
+      (pin Trapz[T]Pad_300.000000x1600.000000_p0.000000xp0.000000_um (rotate 270) 1 1750 2250)
+      (pin Trapz[T]Pad_300.000000x1600.000000_p0.000000xp0.000000_um (rotate 270) 2 -1750 2250)
+      (pin Trapz[T]Pad_300.000000x1600.000000_p0.000000xp0.000000_um (rotate 270) 3 1750 1750)
+      (pin Trapz[T]Pad_300.000000x1600.000000_p0.000000xp0.000000_um (rotate 270) 4 -1750 1750)
+      (pin Trapz[T]Pad_300.000000x1600.000000_p0.000000xp0.000000_um (rotate 270) 5 1750 1250)
+      (pin Trapz[T]Pad_300.000000x1600.000000_p0.000000xp0.000000_um (rotate 270) 6 -1750 1250)
+      (pin Trapz[T]Pad_300.000000x1600.000000_p0.000000xp0.000000_um (rotate 270) 7 1750 750)
+      (pin Trapz[T]Pad_300.000000x1600.000000_p0.000000xp0.000000_um (rotate 270) 8 -1750 750)
+      (pin Trapz[T]Pad_300.000000x1600.000000_p0.000000xp0.000000_um (rotate 270) 9 1750 250)
+      (pin Trapz[T]Pad_300.000000x1600.000000_p0.000000xp0.000000_um (rotate 270) 10 -1750 250)
+      (pin Trapz[T]Pad_300.000000x1600.000000_p0.000000xp0.000000_um (rotate 270) 11 1750 -250)
+      (pin Trapz[T]Pad_300.000000x1600.000000_p0.000000xp0.000000_um (rotate 270) 12 -1750 -250)
+      (pin Trapz[T]Pad_300.000000x1600.000000_p0.000000xp0.000000_um (rotate 270) 13 1750 -750)
+      (pin Trapz[T]Pad_300.000000x1600.000000_p0.000000xp0.000000_um (rotate 270) 14 -1750 -750)
+      (pin Trapz[T]Pad_300.000000x1600.000000_p0.000000xp0.000000_um (rotate 270) 15 1750 -1250)
+      (pin Trapz[T]Pad_300.000000x1600.000000_p0.000000xp0.000000_um (rotate 270) 16 -1750 -1250)
+      (pin Trapz[T]Pad_300.000000x1600.000000_p0.000000xp0.000000_um (rotate 270) 17 1750 -1750)
+      (pin Trapz[T]Pad_300.000000x1600.000000_p0.000000xp0.000000_um (rotate 270) 18 -1750 -1750)
+      (pin Trapz[T]Pad_300.000000x1600.000000_p0.000000xp0.000000_um (rotate 270) 19 1750 -2250)
+      (pin Trapz[T]Pad_300.000000x1600.000000_p0.000000xp0.000000_um (rotate 270) 20 -1750 -2250)
+    )
+    (image "CONN_2m:P1-10_2mm"
+      (outline (path signal 150  -10000 1000  10000 1000))
+      (outline (path signal 150  10000 1000  10000 -1000))
+      (outline (path signal 150  10000 -1000  -10000 -1000))
+      (outline (path signal 150  -10000 -1000  -10000 1000))
+      (pin Trapz[A]Pad_1500.000000x1500.000000_p0.000000xp0.000000_um 1 -9000 0)
+      (pin Round[A]Pad_1500.000000_um 3 -5000 0)
+      (pin Round[A]Pad_1500.000000_um 4 -3000 0)
+      (pin Round[A]Pad_1500.000000_um 5 -1000 0)
+      (pin Round[A]Pad_1500.000000_um 6 1000 0)
+      (pin Round[A]Pad_1500.000000_um 7 3000 0)
+      (pin Round[A]Pad_1500.000000_um 8 5000 0)
+      (pin Round[A]Pad_1500.000000_um 9 7000 0)
+      (pin Round[A]Pad_1500.000000_um 10 9000 0)
+      (pin Round[A]Pad_1500.000000_um 2 -7000 0)
+    )
+    (image LOGO:N_LOGO_3mm
+    )
+    (padstack Round[A]Pad_1500.000000_um
+      (shape (circle F.Cu 1500))
+      (shape (circle B.Cu 1500))
+      (attach off)
+    )
+    (padstack Trapz[T]Pad_300.000000x1600.000000_p0.000000xp0.000000_um
+      (shape (polygon F.Cu 0  -150 -800  -150 800  150 800  150 -800))
+      (attach off)
+    )
+    (padstack Trapz[T]Pad_800.000000x1800.000000_p0.000000xp0.000000_um
+      (shape (polygon F.Cu 0  -400 -900  -400 900  400 900  400 -900))
+      (attach off)
+    )
+    (padstack Trapz[A]Pad_1500.000000x1500.000000_p0.000000xp0.000000_um
+      (shape (polygon F.Cu 0  -750 -750  -750 750  750 750  750 -750))
+      (shape (polygon B.Cu 0  -750 -750  -750 750  750 750  750 -750))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:300_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net GND
+      (pins P1-21 P1-22 P1-20 P3-10)
+    )
+    (net +3.3V
+      (pins P1-1 P2-1)
+    )
+    (net "Net-(P1-Pad2)"
+      (pins P1-2 P3-1)
+    )
+    (net "Net-(P1-Pad3)"
+      (pins P1-3 P2-2)
+    )
+    (net "Net-(P1-Pad4)"
+      (pins P1-4 P3-2)
+    )
+    (net "Net-(P1-Pad5)"
+      (pins P1-5 P2-3)
+    )
+    (net "Net-(P1-Pad6)"
+      (pins P1-6 P3-3)
+    )
+    (net "Net-(P1-Pad7)"
+      (pins P1-7 P2-4)
+    )
+    (net "Net-(P1-Pad8)"
+      (pins P1-8 P3-4)
+    )
+    (net "Net-(P1-Pad9)"
+      (pins P1-9 P2-5)
+    )
+    (net "Net-(P1-Pad10)"
+      (pins P1-10 P3-5)
+    )
+    (net "Net-(P1-Pad11)"
+      (pins P1-11 P2-6)
+    )
+    (net "Net-(P1-Pad12)"
+      (pins P1-12 P3-6)
+    )
+    (net "Net-(P1-Pad13)"
+      (pins P1-13 P2-7)
+    )
+    (net "Net-(P1-Pad14)"
+      (pins P1-14 P3-7)
+    )
+    (net "Net-(P1-Pad15)"
+      (pins P1-15 P2-8)
+    )
+    (net "Net-(P1-Pad16)"
+      (pins P1-16 P3-8)
+    )
+    (net "Net-(P1-Pad17)"
+      (pins P1-17 P2-9)
+    )
+    (net "Net-(P1-Pad18)"
+      (pins P1-18 P3-9)
+    )
+    (net "Net-(P1-Pad19)"
+      (pins P1-19 P2-10)
+    )
+    (class kicad_default +3.3V GND "Net-(P1-Pad10)" "Net-(P1-Pad11)" "Net-(P1-Pad12)"
+      "Net-(P1-Pad13)" "Net-(P1-Pad14)" "Net-(P1-Pad15)" "Net-(P1-Pad16)"
+      "Net-(P1-Pad17)" "Net-(P1-Pad18)" "Net-(P1-Pad19)" "Net-(P1-Pad2)" "Net-(P1-Pad3)"
+      "Net-(P1-Pad4)" "Net-(P1-Pad5)" "Net-(P1-Pad6)" "Net-(P1-Pad7)" "Net-(P1-Pad8)"
+      "Net-(P1-Pad9)"
+      (circuit
+        (use_via "Via[0-1]_600:300_um")
+      )
+      (rule
+        (width 180)
+        (clearance 180)
+      )
+    )
+  )
+  (wiring
+  )
+)

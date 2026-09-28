@@ -1,0 +1,29 @@
+{
+  "board": "raspberrypi-3-usb-hub_usb_hub",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\raspberrypi-3-usb-hub_usb_hub\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 66,
+  "approximate_track_length_mm": 473.31,
+  "kicad_drc_violations": 71,
+  "generated_at": "2026-08-18T19:37:46.125133+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 71,
+    "unconnected_count": 40,
+    "by_type": {
+      "annular_width": 4,
+      "courtyards_overlap": 1,
+      "holes_co_located": 6,
+      "lib_footprint_issues": 21,
+      "pth_inside_courtyard": 2,
+      "silk_edge_clearance": 20,
+      "silk_over_copper": 10,
+      "silk_overlap": 7
+    },
+    "by_severity": {
+      "error": 7,
+      "warning": 64
+    }
+  }
+}

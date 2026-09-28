@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "OvenController_Oven",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 232845,
+      "sha256": "5227eee1adcb19eb258b2da2252d518d1669441b534f5a6f36d248a076afcc81"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 205201,
+      "sha256": "162f164e9f93c38ff1b33a15b3497417366a267fbb21bb496a3e3cceaf43e0a3"
+    },
+    "metadata_json": {
+      "bytes": 627,
+      "sha256": "df1fe755240c5ba78cb7c5715e13791f8e0c5cad0d1beed832d4f644f3772f31"
+    },
+    "final_json": {
+      "bytes": 131249,
+      "sha256": "1e0cfc76c6c7291cb6e7a2c6be70be096a328340fd15b637e95d92fc71f5e87c"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:31:05.359268+00:00"
+  }
+}

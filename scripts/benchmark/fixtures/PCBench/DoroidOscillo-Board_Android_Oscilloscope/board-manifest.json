@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "DoroidOscillo-Board_Android_Oscilloscope",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 407608,
+      "sha256": "6cd16167edb1591ea8c3d9a52afe276ee523389ec3b579c214e5597eb920b332"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 375853,
+      "sha256": "4c17863e0223e15a90998c58468b9455c6efd948f8bf7c4f7975b53bde0e498f"
+    },
+    "metadata_json": {
+      "bytes": 538,
+      "sha256": "1dbe5c456718b8140ccab0318dca0a95f880f69e67457a2072e8d60854c80634"
+    },
+    "final_json": {
+      "bytes": 357127,
+      "sha256": "aa5c093f82fbfa8db412d17e7caaef895edb037a7b455591a2cbb79275acfb8b"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:14:25.879395+00:00"
+  }
+}

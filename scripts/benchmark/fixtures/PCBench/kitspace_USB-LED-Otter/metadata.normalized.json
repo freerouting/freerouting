@@ -1,0 +1,67 @@
+{
+  "board_id": "kitspace_USB-LED-Otter",
+  "display_name": "kitspace_USB-LED-Otter",
+  "pcbench_directory": "PCBs/kitspace_USB-LED-Otter",
+  "source": "https://github.com/Jana-Marie/USB-LED-Otter",
+  "author": "",
+  "license": "[{'name': 'CERN', 'link': 'https://raw.githubusercontent.com/Jana-Marie/USB-LED-Otter/master/LICENSE.md'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:20:47.337733+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 28,
+    "components": 14,
+    "dimensions_mm": {
+      "width": 12.0,
+      "height": 15.0
+    },
+    "area_cm2": 1.8,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 168,
+    "vias": 17,
+    "track_length_mm": 152.37,
+    "kicad_drc_violations": 105,
+    "kicad_drc_breakdown": {
+      "total_violations": 105,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 7,
+        "copper_edge_clearance": 18,
+        "courtyards_overlap": 3,
+        "lib_footprint_issues": 6,
+        "lib_footprint_mismatch": 8,
+        "silk_edge_clearance": 3,
+        "solder_mask_bridge": 38,
+        "text_height": 13,
+        "track_dangling": 3,
+        "via_dangling": 6
+      },
+      "by_severity": {
+        "error": 66,
+        "warning": 39
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.008395+00:00",
+    "elapsed_seconds": 37.96,
+    "unrouted_nets": 7,
+    "clearance_violations": 11,
+    "quality_score": 764.1
+  }
+}

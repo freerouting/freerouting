@@ -1,0 +1,68 @@
+{
+  "board_id": "TTNEnschedeMote_ArduinoNanoRN2483",
+  "display_name": "TTNEnschedeMote_ArduinoNanoRN2483",
+  "pcbench_directory": "PCBs/TTNEnschedeMote_ArduinoNanoRN2483",
+  "source": "https://github.com/jpmeijers/TTNEnschedeMote",
+  "author": "jpmeijers",
+  "license": "Creative Commons Zero v1.0 Universal",
+  "license_spdx": "CC0-1.0",
+  "retrieved_at": "2023-08-17T17:22:38.741895+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 2,
+    "components": 6,
+    "dimensions_mm": {
+      "width": 46.99,
+      "height": 33.02
+    },
+    "area_cm2": 15.52,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 57,
+    "vias": 5,
+    "track_length_mm": 355.16,
+    "kicad_drc_violations": 137,
+    "kicad_drc_breakdown": {
+      "total_violations": 137,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 69,
+        "copper_edge_clearance": 2,
+        "items_not_allowed": 3,
+        "lib_footprint_issues": 6,
+        "silk_over_copper": 2,
+        "silk_overlap": 3,
+        "solder_mask_bridge": 42,
+        "starved_thermal": 10
+      },
+      "by_severity": {
+        "error": 126,
+        "warning": 11
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.151918+00:00",
+    "elapsed_seconds": 20.48,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 1000.0
+  }
+}

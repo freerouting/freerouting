@@ -1,0 +1,62 @@
+{
+  "board_id": "cat-trainer_feather32u4_mma8452_pcb",
+  "display_name": "cat-trainer_feather32u4_mma8452_pcb",
+  "pcbench_directory": "PCBs/cat-trainer_feather32u4_mma8452_pcb",
+  "source": "https://github.com/james481/cat-trainer",
+  "author": "james481",
+  "license": "BSD 3-Clause Clear License",
+  "license_spdx": "BSD-3-Clause-Clear",
+  "retrieved_at": "2023-08-17T17:22:31.657812+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 28,
+    "components": 11,
+    "dimensions_mm": {
+      "width": 56.0,
+      "height": 57.0
+    },
+    "area_cm2": 31.92,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 107,
+    "vias": 4,
+    "track_length_mm": 630.8,
+    "kicad_drc_violations": 79,
+    "kicad_drc_breakdown": {
+      "total_violations": 79,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 24,
+        "lib_footprint_issues": 11,
+        "silk_edge_clearance": 30,
+        "silk_overlap": 8,
+        "solder_mask_bridge": 6
+      },
+      "by_severity": {
+        "error": 30,
+        "warning": 49
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.860417+00:00",
+    "elapsed_seconds": 11.03,
+    "unrouted_nets": 1,
+    "clearance_violations": 4,
+    "quality_score": 935.71
+  }
+}

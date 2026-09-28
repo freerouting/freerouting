@@ -1,0 +1,30 @@
+{
+  "board": "raspberry-pi-rfm69_rfm69-rpi",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\raspberry-pi-rfm69_rfm69-rpi\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 107,
+  "segment_count": 523,
+  "approximate_track_length_mm": 1556.94,
+  "kicad_drc_violations": 283,
+  "generated_at": "2026-08-18T19:37:31.506779+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 283,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 208,
+      "copper_edge_clearance": 20,
+      "hole_clearance": 1,
+      "lib_footprint_issues": 20,
+      "silk_edge_clearance": 10,
+      "silk_over_copper": 12,
+      "starved_thermal": 1,
+      "text_height": 2,
+      "track_dangling": 9
+    },
+    "by_severity": {
+      "error": 230,
+      "warning": 53
+    }
+  }
+}

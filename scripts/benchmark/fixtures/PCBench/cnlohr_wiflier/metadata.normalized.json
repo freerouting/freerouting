@@ -1,0 +1,57 @@
+{
+  "board_id": "cnlohr_wiflier",
+  "display_name": "cnlohr_wiflier",
+  "pcbench_directory": "PCBs/cnlohr_wiflier",
+  "source": "https://github.com/cnlohr/wiflier",
+  "author": "",
+  "license": "",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-30T22:36:20+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 57,
+    "dimensions_mm": {
+      "width": 37.75,
+      "height": 21.5
+    },
+    "area_cm2": 8.12,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 800,
+    "vias": 85,
+    "track_length_mm": 805.47,
+    "kicad_drc_violations": 305,
+    "kicad_drc_breakdown": {
+      "total_violations": 305,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 136,
+        "copper_edge_clearance": 35,
+        "silk_over_copper": 34,
+        "silk_overlap": 22,
+        "text_height": 73,
+        "track_dangling": 5
+      },
+      "by_severity": {
+        "error": 171,
+        "warning": 134
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

@@ -1,0 +1,26 @@
+{
+  "board": "fifogfx_c64cart",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\fifogfx_c64cart\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 323,
+  "approximate_track_length_mm": 3209.52,
+  "kicad_drc_violations": 151,
+  "generated_at": "2026-08-18T18:49:15.380720+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 151,
+    "unconnected_count": 0,
+    "by_type": {
+      "lib_footprint_issues": 6,
+      "padstack": 44,
+      "silk_edge_clearance": 2,
+      "silk_overlap": 15,
+      "solder_mask_bridge": 84
+    },
+    "by_severity": {
+      "error": 84,
+      "warning": 67
+    }
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "board_id": "PocketBone_pocketbone-kicad",
+  "display_name": "PocketBone_pocketbone-kicad",
+  "pcbench_directory": "PCBs/PocketBone_pocketbone-kicad",
+  "source": "https://github.com/jadonk/PocketBone",
+  "author": "jadonk",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:20.913685+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 344,
+    "components": 65,
+    "dimensions_mm": {
+      "width": 55.0,
+      "height": 35.0
+    },
+    "area_cm2": 19.25,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 891,
+    "vias": 151,
+    "track_length_mm": 1302.84,
+    "kicad_drc_violations": 498,
+    "kicad_drc_breakdown": {
+      "total_violations": 498,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 151,
+        "clearance": 167,
+        "copper_edge_clearance": 10,
+        "courtyards_overlap": 1,
+        "hole_clearance": 20,
+        "lib_footprint_issues": 62,
+        "silk_edge_clearance": 14,
+        "silk_overlap": 4,
+        "text_height": 68,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 349,
+        "warning": 149
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "complex",
+    "large",
+    "plane",
+    "tier-c"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
+}

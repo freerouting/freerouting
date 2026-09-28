@@ -1,0 +1,31 @@
+{
+  "board": "Hardware_Playground_esp8266_uno_relay",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Hardware_Playground_esp8266_uno_relay\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 105,
+  "approximate_track_length_mm": 403.23,
+  "kicad_drc_violations": 542,
+  "generated_at": "2026-08-18T18:53:28.704882+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 542,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 113,
+      "clearance": 69,
+      "courtyards_overlap": 1,
+      "hole_to_hole": 12,
+      "lib_footprint_issues": 131,
+      "npth_inside_courtyard": 4,
+      "pth_inside_courtyard": 199,
+      "silk_edge_clearance": 2,
+      "silk_overlap": 2,
+      "solder_mask_bridge": 9
+    },
+    "by_severity": {
+      "error": 395,
+      "warning": 147
+    }
+  }
+}

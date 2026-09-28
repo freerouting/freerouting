@@ -1,0 +1,197 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\espeverywhere__autosave-espeverywhere_breakout\reference-routed.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  162000 -85000  163000 -85000  163203 -85002.6  163606 -85043.6
+            164003 -85125.2  164390 -85246.6  164763 -85406.5  165117 -85603.2
+            165450 -85834.9  165758 -86099  166037 -86392.8  166285 -86713.5
+            166500 -87057.5  166678 -87421.6  166819 -87801.8  166921 -88194.3
+            166982 -88595.1  167003 -89000  166982 -89404.9  166921 -89805.7
+            166819 -90198.2  166678 -90578.4  166500 -90942.5  166285 -91286.5
+            166037 -91607.2  165758 -91901  165450 -92165.1  165117 -92396.8
+            164763 -92593.5  164390 -92753.4  164003 -92874.8  163606 -92956.4
+            163203 -92997.4  163000 -93000  162000 -93000  162000 -95000
+            130000 -95000  130000 -83000  162000 -83000  162000 -85000)
+    )
+    (plane GND (polygon F.Cu 0  126000 -78000  170000 -78000  170000 -100000  126000 -100000
+            126000 -78000))
+    (plane GND (polygon B.Cu 0  125931 -78000  169931 -78000  169931 -100000  125931 -100000
+            125931 -78000))
+    (via "Via[0-1]_600:400_um")
+    (rule
+      (width 250)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component "Connectors_JST_SH:Connectors_JST_SM08B-SRSS-TB"
+      (place P1 133500 -89000 front -90 (PN CONN_01X08))
+    )
+    (component Pin_Headers:Pin_Header_Straight_1x08
+      (place P2 141540 -85000 front 90 (PN CONN_01X08))
+    )
+    (component idlehands_footprints:MountingHole_2.5mm_NO
+      (place REF** 163625 -89000 front 0 (PN MountingHole_2.5mm))
+    )
+  )
+  (library
+    (image "Connectors_JST_SH:Connectors_JST_SM08B-SRSS-TB"
+      (outline (polygon signal 0  5895 3245  5895 -3345  -5895 -3345  -5895 3245))
+      (outline (path signal 150  -4500 2437.5  -4409.69 2420.62  -4331.58 2372.25  -4276.21 2298.93
+            -4251.07 2210.57  -4259.54 2119.08  -4300.5 2036.84  -4368.39 1974.95
+            -4454.06 1941.76  -4545.94 1941.76  -4631.61 1974.95  -4699.5 2036.84
+            -4740.46 2119.08  -4748.93 2210.57  -4723.79 2298.93  -4668.42 2372.25
+            -4590.31 2420.62  -4500 2437.5))
+      (outline (path signal 150  -3900 -2637.5  3900 -2637.5))
+      (outline (path signal 150  -5000 -737.5  -5000 1612.5))
+      (outline (path signal 150  -5000 1612.5  -4100 1612.5))
+      (outline (path signal 150  -4500 1612.5  -4500 412.5))
+      (outline (path signal 150  -4500 412.5  -4500 412.5))
+      (outline (path signal 150  -4500 412.5  -4500 1612.5))
+      (outline (path signal 150  -4500 1612.5  -4500 1612.5))
+      (outline (path signal 150  -4500 1112.5  -4500 1112.5))
+      (outline (path signal 150  -4500 1112.5  -5000 1112.5))
+      (outline (path signal 150  -5000 1112.5  -5000 1112.5))
+      (outline (path signal 150  -5000 1112.5  -4500 1112.5))
+      (outline (path signal 150  -4500 412.5  -4500 412.5))
+      (outline (path signal 150  -4500 412.5  -5000 412.5))
+      (outline (path signal 150  -5000 412.5  -5000 412.5))
+      (outline (path signal 150  -5000 412.5  -4500 412.5))
+      (outline (path signal 150  5000 -737.5  5000 1612.5))
+      (outline (path signal 150  5000 1612.5  4100 1612.5))
+      (outline (path signal 150  4500 1612.5  4500 412.5))
+      (outline (path signal 150  4500 412.5  4500 412.5))
+      (outline (path signal 150  4500 412.5  4500 1612.5))
+      (outline (path signal 150  4500 1612.5  4500 1612.5))
+      (outline (path signal 150  4500 1112.5  4500 1112.5))
+      (outline (path signal 150  4500 1112.5  5000 1112.5))
+      (outline (path signal 150  5000 1112.5  5000 1112.5))
+      (outline (path signal 150  5000 1112.5  4500 1112.5))
+      (outline (path signal 150  4500 412.5  4500 412.5))
+      (outline (path signal 150  4500 412.5  5000 412.5))
+      (outline (path signal 150  5000 412.5  5000 412.5))
+      (outline (path signal 150  5000 412.5  4500 412.5))
+      (pin Rect[T]Pad_600.000000x1550.000000_um 1 -3500 1937.5)
+      (pin Rect[T]Pad_600.000000x1550.000000_um 2 -2500 1937.5)
+      (pin Rect[T]Pad_600.000000x1550.000000_um 3 -1500 1937.5)
+      (pin Rect[T]Pad_600.000000x1550.000000_um 4 -500 1937.5)
+      (pin Rect[T]Pad_600.000000x1550.000000_um 5 500 1937.5)
+      (pin Rect[T]Pad_600.000000x1550.000000_um 6 1500 1937.5)
+      (pin Rect[T]Pad_600.000000x1550.000000_um 7 2500 1937.5)
+      (pin Rect[T]Pad_600.000000x1550.000000_um 8 3500 1937.5)
+      (pin Rect[T]Pad_1200.000000x1800.000000_um @1 -4800 -1937.5)
+      (pin Rect[T]Pad_1200.000000x1800.000000_um @2 4800 -1937.5)
+    )
+    (image Pin_Headers:Pin_Header_Straight_1x08
+      (outline (polygon signal 0  -1745 -19545  -1745 1745  1745 1745  1745 -19545))
+      (outline (path signal 150  1270 -1270  1270 -19050))
+      (outline (path signal 150  1270 -19050  -1270 -19050))
+      (outline (path signal 150  -1270 -19050  -1270 -1270))
+      (outline (path signal 150  1550 1550  1550 0))
+      (outline (path signal 150  1270 -1270  -1270 -1270))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (pin Rect[A]Pad_2032.000000x1727.200000_um 1 0 0)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 2 0 -2540)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 3 0 -5080)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 4 0 -7620)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 5 0 -10160)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 6 0 -12700)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 7 0 -15240)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 8 0 -17780)
+    )
+    (image idlehands_footprints:MountingHole_2.5mm_NO
+      (keepout "" (circle F.Cu 3000 -25 0))
+      (keepout "" (circle B.Cu 3000 -25 0))
+    )
+    (padstack Oval[A]Pad_2032.000000x1727.200000_um
+      (shape (path F.Cu 1727.2  -152.4 0  152.4 0))
+      (shape (path B.Cu 1727.2  -152.4 0  152.4 0))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_2032.000000x1727.200000_um
+      (shape (rect F.Cu -1016 -863.6 1016 863.6))
+      (shape (rect B.Cu -1016 -863.6 1016 863.6))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_600.000000x1550.000000_um
+      (shape (rect F.Cu -300 -775 300 775))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1200.000000x1800.000000_um
+      (shape (rect F.Cu -600 -900 600 900))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net +3V3
+      (pins P1-1 P2-1)
+    )
+    (net /GPIO4
+      (pins P1-2 P2-2)
+    )
+    (net /GPIO5
+      (pins P1-3 P2-3)
+    )
+    (net /GPIO14
+      (pins P1-4 P2-4)
+    )
+    (net /GPIO12
+      (pins P1-5 P2-5)
+    )
+    (net /GPIO13
+      (pins P1-6 P2-6)
+    )
+    (net /ADC
+      (pins P1-7 P2-7)
+    )
+    (net GND
+      (pins P1-8 P2-8)
+    )
+    (class kicad_default +3V3 /ADC /GPIO12 /GPIO13 /GPIO14 /GPIO4 /GPIO5 GND
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 250)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+    (wire (path F.Cu 600  135438 -85500  141040 -85500  141540 -85000)(net +3V3)(type route))
+    (wire (path F.Cu 400  135438 -86500  142732 -86500  144080 -85152.4  144080 -85000)(net /GPIO4)(type route))
+    (wire (path F.Cu 400  135438 -87500  142581 -87500  143665 -86416  145356 -86416
+            146620 -85152.4  146620 -85000)(net /GPIO5)(type route))
+    (wire (path F.Cu 400  135438 -88500  142429 -88500  143913 -87016  147296 -87016
+            149160 -85152.4  149160 -85000)(net /GPIO14)(type route))
+    (wire (path F.Cu 400  135438 -89500  147352 -89500  151700 -85152.4  151700 -85000)(net /GPIO12)(type route))
+    (wire (path F.Cu 400  135438 -90500  148892 -90500  154240 -85152.4  154240 -85000)(net /GPIO13)(type route))
+    (wire (path F.Cu 400  135438 -91500  150432 -91500  156780 -85152.4  156780 -85000)(net /ADC)(type route))
+  )
+)

@@ -1,0 +1,31 @@
+{
+  "board": "TX5823_TX5823",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\TX5823_TX5823\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 138,
+  "segment_count": 1069,
+  "approximate_track_length_mm": 1525.21,
+  "kicad_drc_violations": 419,
+  "generated_at": "2026-08-18T18:25:30.609064+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 419,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 40,
+      "copper_edge_clearance": 7,
+      "courtyards_overlap": 8,
+      "lib_footprint_issues": 98,
+      "silk_over_copper": 73,
+      "silk_overlap": 48,
+      "solder_mask_bridge": 128,
+      "text_height": 7,
+      "text_thickness": 4,
+      "track_dangling": 6
+    },
+    "by_severity": {
+      "error": 183,
+      "warning": 236
+    }
+  }
+}

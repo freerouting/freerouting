@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Biscay_Blueeye_sipm-fpga",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 203040,
+      "sha256": "4846a2bcba848489cc5d5032ee6bbbf092765d1335eb1922942d8b126a4049ef"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 125350,
+      "sha256": "80cbc681cd0a411b9f66c9392dbf07842f404b521b2de59ff3f65ba8e9733311"
+    },
+    "metadata_json": {
+      "bytes": 490,
+      "sha256": "9a1fd316ed10565e0e4c68a1c1dcca4e546cb0c8fca477e6781cd4f42628a5fe"
+    },
+    "final_json": {
+      "bytes": 156994,
+      "sha256": "0e8a3998829a228c69ea160b5054128351a8e163b5b74fd406aa04bbeb401401"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:33:30.635416+00:00"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "board": "kitspace_filaSens",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\kitspace_filaSens\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 25,
+  "segment_count": 161,
+  "approximate_track_length_mm": 327.21,
+  "kicad_drc_violations": 204,
+  "generated_at": "2026-08-18T19:06:48.435047+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 204,
+    "unconnected_count": 25,
+    "by_type": {
+      "annular_width": 3,
+      "copper_edge_clearance": 1,
+      "items_not_allowed": 63,
+      "lib_footprint_issues": 16,
+      "silk_over_copper": 88,
+      "silk_overlap": 6,
+      "text_height": 5,
+      "text_thickness": 4,
+      "track_dangling": 2,
+      "via_dangling": 16
+    },
+    "by_severity": {
+      "error": 67,
+      "warning": 137
+    }
+  }
+}

@@ -2,6 +2,7 @@ package app.freerouting.api;
 
 import app.freerouting.api.security.ApiKeyValidationService;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.management.jobs.RoutingJobScheduler;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
@@ -69,10 +70,14 @@ public class AppContextListener implements ServletContextListener {
     // Eagerly initialize CPU load baseline measurement
     app.freerouting.api.v1.SystemControllerV1.getCpuLoad();
 
+    int maxParallelJobs = RoutingJobScheduler.getInstance().getMaxParallelJobs();
+
     FRLogger.info(
         "API web server started successfully at "
             + fullUrl
-            + ". You can ping it at "
+            + " (max parallel jobs: "
+            + maxParallelJobs
+            + "). You can ping it at "
             + fullUrl
             + "/v1/system/status. Swagger UI is available at "
             + fullUrl

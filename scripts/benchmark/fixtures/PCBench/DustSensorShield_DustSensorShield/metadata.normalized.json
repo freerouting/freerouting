@@ -1,0 +1,57 @@
+{
+  "board_id": "DustSensorShield_DustSensorShield",
+  "display_name": "DustSensorShield_DustSensorShield",
+  "pcbench_directory": "PCBs/DustSensorShield_DustSensorShield",
+  "source": "https://github.com/danfei/DustSensorShield",
+  "author": "danfei",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:23:03.266184+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 38,
+    "components": 13,
+    "dimensions_mm": {
+      "width": 80.01,
+      "height": 53.34
+    },
+    "area_cm2": 42.68,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 75,
+    "vias": 5,
+    "track_length_mm": 536.93,
+    "kicad_drc_violations": 143,
+    "kicad_drc_breakdown": {
+      "total_violations": 143,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 103,
+        "copper_edge_clearance": 4,
+        "lib_footprint_issues": 12,
+        "lib_footprint_mismatch": 1,
+        "silk_edge_clearance": 13,
+        "silk_overlap": 10
+      },
+      "by_severity": {
+        "error": 107,
+        "warning": 36
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

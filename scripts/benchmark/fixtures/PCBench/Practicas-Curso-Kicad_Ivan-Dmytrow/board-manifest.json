@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Practicas-Curso-Kicad_Ivan-Dmytrow",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 16176,
+      "sha256": "3d7933a4aedf120800fd9a6e902c21868b4d3ab058a9546f6c0f7208eac15045"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 19676,
+      "sha256": "82c202ca97134a5d750be5eff5218fb228dd889afa8d676e633d7996a39a4c1c"
+    },
+    "metadata_json": {
+      "bytes": 518,
+      "sha256": "6e78a1910bbe3b5c38a0595f615a5f13f62390814f9ff9f834ff9ccb1729b420"
+    },
+    "final_json": {
+      "bytes": 6748,
+      "sha256": "25a372048b64293b940c9fb618b0267c47a2b0fbcce7212cb604764017b1ed1b"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:35:48.947411+00:00"
+  }
+}

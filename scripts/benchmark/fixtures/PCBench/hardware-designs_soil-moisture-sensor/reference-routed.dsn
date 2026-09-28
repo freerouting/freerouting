@@ -1,0 +1,308 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\hardware-designs_soil-moisture-sensor\reference-routed.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  88125 -72125  194875 -72125  199875 -72125  210125 -82375
+            199875 -92625  194875 -92625  88125 -92625  88125 -105625  61875 -105625
+            61875 -59125  88125 -59125  88125 -72125)
+    )
+    (via "Via[0-1]_889:635_um")
+    (rule
+      (width 254)
+      (clearance 254)
+      (clearance 63.5 (type smd_smd))
+    )
+  )
+  (placement
+    (component SM0603_Resistor
+      (place R1 76375 -85125 front 180 (PN 10k))
+      (place R2 81375 -74375 front 0 (PN 510k))
+      (place R5 74875 -75875 front 90 (PN 100R))
+      (place R4 74875 -80125 front 90 (PN 100R))
+      (place R3 71625 -85125 front 180 (PN 3k3))
+    )
+    (component SM0603_Capa
+      (place C4 81375 -77125 front 0 (PN 1uF))
+      (place C2 71125 -76625 front 0 (PN 100pF))
+      (place C1 71125 -80875 front 0 (PN 100pF))
+    )
+    (component PIN_ARRAY_2X1
+      (place P1 84125 -104125 front 0 (PN CONN_2))
+    )
+    (component "PIN_ARRAY-6X1"
+      (place P2 69825 -103987 front 180 (PN CN_6))
+      (place P3 69825 -60807 front 0 (PN CN_6))
+    )
+    (component "CONN-10-2MM"
+      (place CN2 72375 -71375 front 0 (PN CN_10))
+      (place CN1 72375 -93375 front 0 (PN CN_10))
+    )
+    (component "HSMS-2815"
+      (place U1 82125 -84375 front 180 (PN "HSMS-2815"))
+    )
+    (component SOIL_SENSOR_CAPACITIVE
+      (place SENSOR_TRACK1 164875 -82375 front 90 (PN C))
+    )
+    (component LOGO_SNOWCAP_FRONT
+      (place Noname_1 93200 -82400 front 90)
+    )
+  )
+  (library
+    (image SM0603_Resistor
+      (outline (path signal 127  1206.5 -698.5  500.38 -698.5))
+      (outline (path signal 127  1206.5 698.5  1206.5 -698.5))
+      (outline (path signal 127  1206.5 698.5  500.38 698.5))
+      (outline (path signal 127  -1206.5 -698.5  -500.38 -698.5))
+      (outline (path signal 127  -1206.5 698.5  -1206.5 -698.5))
+      (outline (path signal 127  -500.38 698.5  -1206.5 698.5))
+      (pin Rect[T]Pad_635.000000x1143.000000_um 1 -762 0)
+      (pin Rect[T]Pad_635.000000x1143.000000_um 2 762 0)
+    )
+    (image SM0603_Capa
+      (outline (path signal 119.38  -1198.88 -635  -1198.88 635))
+      (outline (path signal 119.38  1198.88 635  1198.88 -635))
+      (outline (path signal 119.38  -1198.88 650.24  -500.38 650.24))
+      (outline (path signal 119.38  500.38 650.24  1198.88 650.24))
+      (outline (path signal 119.38  -500.38 -650.24  -1198.88 -650.24))
+      (outline (path signal 119.38  500.38 -650.24  1198.88 -650.24))
+      (pin Rect[T]Pad_635.000000x1143.000000_um 1 -762 0)
+      (pin Rect[T]Pad_635.000000x1143.000000_um 2 762 0)
+    )
+    (image PIN_ARRAY_2X1
+      (outline (path signal 152.4  2540 -1270  -2540 -1270))
+      (outline (path signal 152.4  2540 1270  2540 -1270))
+      (outline (path signal 152.4  -2540 1270  2540 1270))
+      (outline (path signal 152.4  -2540 -1270  -2540 1270))
+      (pin Rect[A]Pad_1524.000000x1524.000000_um 1 -1270 0)
+      (pin Round[A]Pad_1524.000000_um 2 1270 0)
+    )
+    (image "PIN_ARRAY-6X1"
+      (outline (path signal 304.8  -5080 -1270  -5080 1270))
+      (outline (path signal 304.8  7620 -1270  -7620 -1270))
+      (outline (path signal 304.8  7620 1270  7620 -1270))
+      (outline (path signal 304.8  -7620 1270  7620 1270))
+      (outline (path signal 304.8  -7620 -1270  -7620 1270))
+      (pin Rect[A]Pad_1524.000000x1524.000000_um 1 -6350 0)
+      (pin Round[A]Pad_1524.000000_um 2 -3810 0)
+      (pin Round[A]Pad_1524.000000_um 3 -1270 0)
+      (pin Round[A]Pad_1524.000000_um 4 1270 0)
+      (pin Round[A]Pad_1524.000000_um 5 3810 0)
+      (pin Round[A]Pad_1524.000000_um 6 6350 0)
+    )
+    (image "CONN-10-2MM"
+      (outline (path signal 304.8  10226 1000.76  -10050.8 1000.76))
+      (outline (path signal 304.8  -10050.8 -1000.76  10226 -1000.76))
+      (outline (path signal 304.8  -10050.8 -975.36  -10050.8 975.36))
+      (outline (path signal 304.8  10226 975.36  10226 -949.96))
+      (pin Round[A]Pad_1150.620000_um 10 8999.22 0)
+      (pin Round[A]Pad_1150.620000_um 6 1000.76 0)
+      (pin Round[A]Pad_1150.620000_um 7 2999.74 0)
+      (pin Round[A]Pad_1150.620000_um 8 5001.26 0)
+      (pin Round[A]Pad_1150.620000_um 9 7000.24 0)
+      (pin Round[A]Pad_1150.620000_um 5 -1000.76 0)
+      (pin Round[A]Pad_1150.620000_um 4 -2999.74 0)
+      (pin Round[A]Pad_1150.620000_um 3 -5001.26 0)
+      (pin Rect[A]Pad_1150.620000x1150.620000_um 1 -8999.22 0)
+      (pin Round[A]Pad_1150.620000_um 2 -7000.24 0)
+    )
+    (image "HSMS-2815"
+      (outline (path signal 150  -1905 -1016  -1905 1016))
+      (outline (path signal 150  2032 -1016  -1905 -1016))
+      (outline (path signal 150  2032 1016  2032 -1016))
+      (outline (path signal 150  -1905 1016  2032 1016))
+      (pin Rect[T]Pad_700.000000x1500.000000_um 4 -950 -2000)
+      (pin Rect[T]Pad_700.000000x1500.000000_um 3 950 -2000)
+      (pin Rect[T]Pad_700.000000x1500.000000_um 2 -950 2000)
+      (pin Rect[T]Pad_1000.000000x1500.000000_um 1 950 2000)
+    )
+    (image SOIL_SENSOR_CAPACITIVE
+      (outline (path signal 150  -10000 -30000  0 -45000))
+      (outline (path signal 150  -10000 45000  -10000 -30000))
+      (outline (path signal 150  10000 45000  -10000 45000))
+      (outline (path signal 150  10000 -30000  10000 45000))
+      (outline (path signal 150  0 -45000  10000 -30000))
+      (pin Oval[T]Pad_7500.000000x70000.000000_um 1 0 5000)
+      (pin Rect[T]Pad_8000.000000x2000.000000_um 2 -5000 43500)
+      (pin Rect[T]Pad_8000.000000x2000.000000_um 2@1 5000 43500)
+      (pin Rect[B]Pad_8000.000000x2000.000000_um 2@2 -5000 43500)
+      (pin Rect[B]Pad_8000.000000x2000.000000_um 2@3 5000 43500)
+      (pin Oval[B]Pad_7500.000000x70000.000000_um 1@1 0 5000)
+    )
+    (image LOGO_SNOWCAP_FRONT
+    )
+    (padstack Round[A]Pad_1150.620000_um
+      (shape (circle F.Cu 1150.62))
+      (shape (circle B.Cu 1150.62))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1524.000000_um
+      (shape (circle F.Cu 1524))
+      (shape (circle B.Cu 1524))
+      (attach off)
+    )
+    (padstack Oval[B]Pad_7500.000000x70000.000000_um
+      (shape (path B.Cu 7500  0 -31250  0 31250))
+      (attach off)
+    )
+    (padstack Oval[T]Pad_7500.000000x70000.000000_um
+      (shape (path F.Cu 7500  0 -31250  0 31250))
+      (attach off)
+    )
+    (padstack Rect[B]Pad_8000.000000x2000.000000_um
+      (shape (rect B.Cu -4000 -1000 4000 1000))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_635.000000x1143.000000_um
+      (shape (rect F.Cu -317.5 -571.5 317.5 571.5))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_700.000000x1500.000000_um
+      (shape (rect F.Cu -350 -750 350 750))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_8000.000000x2000.000000_um
+      (shape (rect F.Cu -4000 -1000 4000 1000))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1000.000000x1500.000000_um
+      (shape (rect F.Cu -500 -750 500 750))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1150.620000x1150.620000_um
+      (shape (rect F.Cu -575.31 -575.31 575.31 575.31))
+      (shape (rect B.Cu -575.31 -575.31 575.31 575.31))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1524.000000x1524.000000_um
+      (shape (rect F.Cu -762 -762 762 762))
+      (shape (rect B.Cu -762 -762 762 762))
+      (attach off)
+    )
+    (padstack "Via[0-1]_889:635_um"
+      (shape (circle F.Cu 889))
+      (shape (circle B.Cu 889))
+      (attach off)
+    )
+  )
+  (network
+    (net +3.3V
+      (pins P1-1 P2-1 CN1-1)
+    )
+    (net /CAP_ADC
+      (pins R2-1 C4-1 CN2-9 U1-2)
+    )
+    (net /CAP_CLK
+      (pins CN2-6 R5-2)
+    )
+    (net /TEMP_ADJ_ADC
+      (pins CN2-8 R3-1 U1-3)
+    )
+    (net /TEMP_ADJ_VCC
+      (pins CN2-3 R3-2)
+    )
+    (net /V_MEASURE1
+      (pins P2-6 CN2-10)
+    )
+    (net /V_MEASURE2
+      (pins P3-5 CN2-5)
+    )
+    (net GND
+      (pins R2-2 C4-2 P1-2 P2-2 CN1-10 C2-1 C1-1 U1-1 SENSOR_TRACK1-2 SENSOR_TRACK1-2@1
+        SENSOR_TRACK1-2@2 SENSOR_TRACK1-2@3)
+    )
+    (net "N-0000014"
+      (pins R5-1 R4-2 C2-2)
+    )
+    (net "N-0000015"
+      (pins R1-2 R4-1 C1-2)
+    )
+    (net "N-0000028"
+      (pins R1-1 U1-4 SENSOR_TRACK1-1 SENSOR_TRACK1-1@1)
+    )
+    (class kicad_default +3.3V /CAP_ADC /CAP_CLK /TEMP_ADJ_ADC /TEMP_ADJ_VCC
+      /V_MEASURE1 /V_MEASURE2 GND "N-0000014" "N-0000015" "N-0000028"
+      (circuit
+        (use_via "Via[0-1]_889:635_um")
+      )
+      (rule
+        (width 254)
+        (clearance 254)
+      )
+    )
+  )
+  (wiring
+    (wire (path F.Cu 609.6  76175 -103987  82717 -103987  82855 -104125)(net +3.3V)(type route))
+    (wire (path F.Cu 609.6  63375.8 -93375  63375.8 -96125.8  65750 -98500  74250 -98500
+            76175 -100425  76175 -103987)(net +3.3V)(type route))
+    (wire (path F.Cu 609.6  79375.2 -71375  79375.2 -73137.2  80613 -74375  80613 -77125)(net /CAP_ADC)(type route))
+    (wire (path F.Cu 254  80613 -77125  80613 -77863  82250 -79500  82250 -85550  83075 -86375)(net /CAP_ADC)(type route))
+    (wire (path F.Cu 609.6  73375.8 -71375  73375.8 -72375.8  74875 -73875  74875 -75113)(net /CAP_CLK)(type route))
+    (wire (path F.Cu 609.6  77376.3 -71375  77376.3 -76626.3  81175 -80425  81175 -82375
+            79875 -82375  79000 -83250  79000 -86000  78000 -87000  73250 -87000
+            72387 -86137  72387 -85125)(net /TEMP_ADJ_ADC)(type route))
+    (wire (path F.Cu 609.6  67373.7 -71375  67373.7 -83123.7  69375 -85125  70863 -85125)(net /TEMP_ADJ_VCC)(type route))
+    (wire (path B.Cu 254  81374.2 -71375  81374.2 -72125.8  80500 -73000  63750 -73000
+            62250 -74500  62250 -102762  63475 -103987)(net /V_MEASURE1)(type route))
+    (wire (path F.Cu 609.6  73635 -60807  73635 -64865  71374.2 -67125.8  71374.2 -71375)(net /V_MEASURE2)(type route))
+    (wire (path F.Cu 254  82486.3 -74375  82835.6 -74375)(net GND)(type route))
+    (wire (path F.Cu 254  82137 -74375  82486.3 -74375)(net GND)(type route))
+    (wire (path F.Cu 254  82486.3 -77125  82835.6 -77125)(net GND)(type route))
+    (wire (path F.Cu 254  82137 -77125  82486.3 -77125  82486.3 -74375)(net GND)(type route))
+    (wire (path B.Cu 254  74375.3 -100104  74375.3 -85697.9  82948.2 -77125  83180.8 -77125)(net GND)(type route))
+    (wire (path B.Cu 254  73635 -103987  74375.3 -103247  74375.3 -100104  81374.2 -100104)(net GND)(type route))
+    (wire (path F.Cu 254  82835.6 -77125  83180.8 -77125)(net GND)(type route))
+    (wire (path F.Cu 254  81175 -87715.2  81175 -89475.2  83224.5 -91524.7)(net GND)(type route))
+    (wire (path F.Cu 254  81175 -86375  81175 -87715.2  72918.9 -87715.2  71688.3 -86484.6
+            71688.3 -82200.3  71061.6 -81573.6  71061.6 -80875)(net GND)(type route))
+    (wire (path F.Cu 254  70712.3 -80875  70363 -80525.7  70363 -76625)(net GND)(type route))
+    (wire (path F.Cu 254  70712.3 -80875  71061.6 -80875)(net GND)(type route))
+    (wire (path F.Cu 254  70363 -80875  70712.3 -80875)(net GND)(type route))
+    (wire (path B.Cu 254  81374.2 -100104  85395 -104125)(net GND)(type route))
+    (wire (path B.Cu 254  81374.2 -93375  81374.2 -100104)(net GND)(type route))
+    (wire (path F.Cu 254  83224.5 -91524.7  81374.2 -93375)(net GND)(type route))
+    (wire (path F.Cu 254  119666 -91524.7  83224.5 -91524.7)(net GND)(type route))
+    (wire (path B.Cu 254  121375 -91756.1  119897 -91756.1  119666 -91524.7)(net GND)(type route))
+    (wire (path F.Cu 254  121375 -91756.1  119897 -91756.1  119666 -91524.7)(net GND)(type route))
+    (wire (path F.Cu 254  119666 -73456.7  83753.9 -73456.7  82835.6 -74375)(net GND)(type route))
+    (wire (path F.Cu 254  121375 -72993.9  120128 -72993.9  119666 -73456.7)(net GND)(type route))
+    (wire (path B.Cu 254  121375 -87375  121375 -91756.1)(net GND)(type route))
+    (wire (path F.Cu 254  121375 -87375  121375 -91756.1)(net GND)(type route))
+    (wire (path B.Cu 254  121375 -72993.9  120128 -72993.9  119666 -73456.7)(net GND)(type route))
+    (wire (path B.Cu 254  121375 -77375  121375 -72993.9)(net GND)(type route))
+    (wire (path F.Cu 254  121375 -77375  121375 -72993.9)(net GND)(type route))
+    (wire (path F.Cu 609.6  74875 -79363  74875 -76637)(net "N-0000014")(type route))
+    (wire (path F.Cu 609.6  71887 -76625  74863 -76625  74875 -76637)(net "N-0000014")(type route))
+    (wire (path F.Cu 609.6  71887 -80875  74863 -80875  74875 -80887)(net "N-0000015")(type route))
+    (wire (path F.Cu 609.6  75613 -85125  75613 -81625  74875 -80887)(net "N-0000015")(type route))
+    (wire (path F.Cu 609.6  84500 -82375  83075 -82375)(net "N-0000028")(type route))
+    (wire (path F.Cu 609.6  159875 -82375  84500 -82375)(net "N-0000028")(type route))
+    (wire (path B.Cu 609.6  159875 -82375  84625 -82375  84500 -82250)(net "N-0000028")(type route))
+    (wire (path F.Cu 609.6  84500 -82250  84500 -82375)(net "N-0000028")(type route))
+    (wire (path B.Cu 609.6  84500 -82250  84500 -82500  83500 -83500  77750 -83500)(net "N-0000028")(type route))
+    (wire (path F.Cu 609.6  77750 -83500  77137 -84113  77137 -85125)(net "N-0000028")(type route))
+    (via "Via[0-1]_889:635_um"  83180.8 -77125 (net GND)(type route))
+    (via "Via[0-1]_889:635_um"  119666 -91524.7 (net GND)(type route))
+    (via "Via[0-1]_889:635_um"  119666 -73456.7 (net GND)(type route))
+    (via "Via[0-1]_889:635_um"  84500 -82250 (net "N-0000028")(type route))
+    (via "Via[0-1]_889:635_um"  77750 -83500 (net "N-0000028")(type route))
+  )
+)

@@ -170,6 +170,54 @@ class GlobalSettingsCommandLineTest {
     assertEquals(10, settings.getMaxPasses());
   }
 
+  @Test
+  void outputFileWithPlusInNameNotSplit() {
+    String[] args = {"-do", "scripts/benchmark/outputs/mechkeys_MF68+10--unrouted--2.5.0-RC5.ses"};
+    settings.applyCommandLineArguments(args);
+
+    assertEquals(
+        "scripts/benchmark/outputs/mechkeys_MF68+10--unrouted--2.5.0-RC5.ses",
+        settings.initialOutputFile);
+    assertTrue(settings.additionalOutputFiles.isEmpty());
+  }
+
+  @Test
+  void outputFileWithTrailingPlusNotSplit() {
+    String[] args = {
+      "-do", "scripts/benchmark/outputs/perfplusplus_Ard-perf++--unrouted--2.5.0-RC5.ses"
+    };
+    settings.applyCommandLineArguments(args);
+
+    assertEquals(
+        "scripts/benchmark/outputs/perfplusplus_Ard-perf++--unrouted--2.5.0-RC5.ses",
+        settings.initialOutputFile);
+    assertTrue(settings.additionalOutputFiles.isEmpty());
+  }
+
+  @Test
+  void multiFileOutputWithPlusSplit() {
+    String[] args = {"-do", "output.ses+output.kicad_pcb"};
+    settings.applyCommandLineArguments(args);
+
+    assertEquals("output.ses", settings.initialOutputFile);
+    assertEquals(1, settings.additionalOutputFiles.size());
+    assertEquals("output.kicad_pcb", settings.additionalOutputFiles.get(0));
+  }
+
+  @Test
+  void fileWithDotAndPlusInNameNotSplit() {
+    String[] args = {"-do", "board.v1+final.dsn"};
+    settings.applyCommandLineArguments(args);
+
+    assertEquals("board.v1+final.dsn", settings.initialOutputFile);
+    assertTrue(settings.additionalOutputFiles.isEmpty());
+
+    GlobalSettings gsDe = new GlobalSettings();
+    gsDe.applyCommandLineArguments(new String[] {"-de", "board.v1+final.dsn"});
+    assertEquals("board.v1+final.dsn", gsDe.initialInputFile);
+    assertNull(gsDe.designSessionFilename);
+  }
+
   // -------------------------------------------------------------------------
   // Tests for string-array settings via the --key=value mechanism
   // -------------------------------------------------------------------------
@@ -256,5 +304,51 @@ class GlobalSettingsCommandLineTest {
     assertTrue(settings.mcpServerSettings.rateLimit.enabled);
     assertEquals(5, settings.mcpServerSettings.rateLimit.requestsPerWindow);
     assertEquals(12, settings.mcpServerSettings.rateLimit.windowSeconds);
+  }
+
+  @Test
+  void newLanguagesViaCommandLineArgument() {
+    String[][] languageTests = {
+      {"sk", "sk", "Zrušiť (Esc)"},
+      {"da", "da", "Annuller (Esc)"},
+      {"hr", "hr", "Odustani (Esc)"},
+      {"nb", "nb", "Avbryt (Esc)"},
+      {"fi", "fi", "Peruuta (Esc)"},
+      {"sl", "sl", "Prekliči (Esc)"},
+      {"el", "el", "Ακύρωση (Esc)"},
+      {"he", "he", "ביטול (Esc)"},
+      {"ca", "ca", "Cancel·la (Esc)"},
+      {"lt", "lt", "Atšaukti (Esc)"}
+    };
+
+    for (String[] testCase : languageTests) {
+      String cliArg = testCase[0];
+      String expectedLanguage = testCase[1];
+      String expectedCancelText = testCase[2];
+
+      GlobalSettings gs = new GlobalSettings();
+      gs.applyCommandLineArguments(new String[] {"-l", cliArg});
+
+      assertEquals(
+          expectedLanguage,
+          gs.currentLocale.getLanguage(),
+          "Expected language " + expectedLanguage + " for CLI argument -l " + cliArg);
+
+      app.freerouting.util.TextManager tm =
+          new app.freerouting.util.TextManager(
+              app.freerouting.gui.board.BoardFrame.class, gs.currentLocale);
+      assertEquals(
+          expectedCancelText,
+          tm.getText("cancel"),
+          "Expected translated cancel text in " + expectedLanguage);
+    }
+  }
+
+  @Test
+  void apiServerMaxParallelJobsViaCli() {
+    String[] args = {"--api_server.max_parallel_jobs=8"};
+    settings.applyCommandLineArguments(args);
+
+    assertEquals(8, settings.apiServerSettings.maxParallelJobs);
   }
 }

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "pmod-rgmii_pmod-rgmii-RTL8211E-module",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 603512,
+      "sha256": "b7a335834e397d80b28045b4e502615ea8095d6f7b9d244dbf535d7fb8da8327"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 229844,
+      "sha256": "28698f25e27a9b8b321e02b156a2835a31f4a41096ba8489b8822859ba0a5003"
+    },
+    "metadata_json": {
+      "bytes": 507,
+      "sha256": "e40e0bef32d8ab21545de7dfe1a2ecfdc448b2311ce8a44e6eea6ecf76a02249"
+    },
+    "final_json": {
+      "bytes": 250247,
+      "sha256": "7b22846db83ebac1e15b90a44a2a61203c9c4c1caf56407afa404a32615ae083"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:23:22.101083+00:00"
+  }
+}

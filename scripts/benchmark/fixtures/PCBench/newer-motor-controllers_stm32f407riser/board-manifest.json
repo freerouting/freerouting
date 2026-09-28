@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "newer-motor-controllers_stm32f407riser",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 316383,
+      "sha256": "573c228ba42b9cb9f3cf4523f5582107d50b4210d4fd0e163bd3c206f410217f"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 193034,
+      "sha256": "b91f0effab9fd864a176bd28945bc4cb0d229d00633c19d2889ef63a45024228"
+    },
+    "metadata_json": {
+      "bytes": 535,
+      "sha256": "bb61d5c40e9e8fffd4c1f9b044fce0ad0452f4d62b8165b91a85a4c50efb86df"
+    },
+    "final_json": {
+      "bytes": 198274,
+      "sha256": "3754549a5b06a7149663643d77b041b53ca5351bfc4a7815f24dd28e0ce7c809"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:21:03.604310+00:00"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "board": "AVR-ZIF-Programmer_AVR-ZIF-Prog",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\AVR-ZIF-Programmer_AVR-ZIF-Prog\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 337,
+  "approximate_track_length_mm": 1463.96,
+  "kicad_drc_violations": 361,
+  "generated_at": "2026-08-18T18:31:21.649571+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 361,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 307,
+      "copper_edge_clearance": 2,
+      "lib_footprint_issues": 35,
+      "silk_edge_clearance": 1,
+      "silk_over_copper": 11,
+      "solder_mask_bridge": 3,
+      "track_dangling": 2
+    },
+    "by_severity": {
+      "error": 312,
+      "warning": 49
+    }
+  }
+}

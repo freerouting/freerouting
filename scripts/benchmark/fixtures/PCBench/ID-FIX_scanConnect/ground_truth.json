@@ -1,0 +1,26 @@
+{
+  "board": "ID-FIX_scanConnect",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\ID-FIX_scanConnect\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 19,
+  "approximate_track_length_mm": 44.12,
+  "kicad_drc_violations": 38,
+  "generated_at": "2026-08-18T18:58:29.386572+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 38,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 18,
+      "copper_edge_clearance": 5,
+      "lib_footprint_issues": 8,
+      "silk_edge_clearance": 2,
+      "silk_overlap": 5
+    },
+    "by_severity": {
+      "error": 23,
+      "warning": 15
+    }
+  }
+}

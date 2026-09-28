@@ -1,0 +1,63 @@
+{
+  "board_id": "busblaster-to-swd_busblaster-to-swd",
+  "display_name": "busblaster-to-swd_busblaster-to-swd",
+  "pcbench_directory": "PCBs/busblaster-to-swd_busblaster-to-swd",
+  "source": "https://github.com/ianrrees/busblaster-to-swd",
+  "author": "ianrrees",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:52.350055+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 2,
+    "components": 7,
+    "dimensions_mm": {
+      "width": 22.0,
+      "height": 35.0
+    },
+    "area_cm2": 7.7,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 118,
+    "vias": 5,
+    "track_length_mm": 255.34,
+    "kicad_drc_violations": 116,
+    "kicad_drc_breakdown": {
+      "total_violations": 116,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 85,
+        "lib_footprint_issues": 7,
+        "solder_mask_bridge": 24
+      },
+      "by_severity": {
+        "error": 109,
+        "warning": 7
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.854630+00:00",
+    "elapsed_seconds": 8.59,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

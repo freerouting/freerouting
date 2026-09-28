@@ -1,0 +1,62 @@
+{
+  "board_id": "esp32stack_esp32stack",
+  "display_name": "esp32stack_esp32stack",
+  "pcbench_directory": "PCBs/esp32stack_esp32stack",
+  "source": "https://github.com/asukiaaa/esp32stack",
+  "author": "asukiaaa",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:34.393844+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 34,
+    "components": 30,
+    "dimensions_mm": {
+      "width": 48.49,
+      "height": 56.39
+    },
+    "area_cm2": 27.34,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 402,
+    "vias": 61,
+    "track_length_mm": 1169.48,
+    "kicad_drc_violations": 579,
+    "kicad_drc_breakdown": {
+      "total_violations": 579,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 194,
+        "copper_edge_clearance": 2,
+        "courtyards_overlap": 2,
+        "invalid_outline": 10,
+        "lib_footprint_issues": 30,
+        "silk_edge_clearance": 5,
+        "silk_over_copper": 49,
+        "solder_mask_bridge": 201,
+        "starved_thermal": 2,
+        "text_height": 82,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 411,
+        "warning": 168
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

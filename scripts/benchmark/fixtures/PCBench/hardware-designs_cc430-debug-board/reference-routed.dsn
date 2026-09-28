@@ -1,0 +1,515 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\hardware-designs_cc430-debug-board\reference-routed.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer Front
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer Back
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  104000 -61000  55000 -61000  55000 -25000  104000 -25000
+            104000 -61000)
+    )
+    (via "Via[0-1]_889:635_um")
+    (rule
+      (width 203.2)
+      (clearance 254)
+      (clearance 63.5 (type smd_smd))
+    )
+  )
+  (placement
+    (component SSOP28
+      (place U1 79375 -46990 front -90 (PN FT232R))
+    )
+    (component PIN_ARRAY_3X1
+      (place 5V1 57150 -55626 front 90 (PN CN_3))
+      (place RX_SEL1 66294 -55626 front -90 (PN CN_3))
+      (place TX_SEL1 61722 -55626 front -90 (PN CN_3))
+      (place K1 75946 -58166 front 0 (PN CONN_3))
+    )
+    (component pin_array_13x2
+      (place RPI1 99695 -43180 front -90 (PN CONN_13X2))
+    )
+    (component "CONN-10-2MM"
+      (place CN1 68072 -37338 front -90 (PN CN_10))
+      (place CN2 90170 -37338 front -90 (PN CN_10))
+    )
+    (component SM0805
+      (place R1 87630 -54610 front -90 (PN 500R))
+      (place R2 71932.8 -54432.2 front -90 (PN 500R))
+    )
+    (component "LED-0603"
+      (place D1 82727.8 -54432.2 front -90 (PN LED))
+      (place D2 75742.8 -54432.2 front -90 (PN LED))
+    )
+    (component "USB_MICRO_10118194-0001LF"
+      (place J1 61000 -27000 front 180 (PN USB_MICRO))
+    )
+    (component LOGO_SNOWCAP_FRONT
+      (place Noname_1 88392 -57404 front 0)
+    )
+  )
+  (library
+    (image SSOP28
+      (outline (path signal 127  5207 2667  5207 -2667))
+      (outline (path signal 127  -5080 2667  -5080 -2667))
+      (outline (path signal 127  -5080 2667  5207 2667))
+      (outline (path signal 127  5207 -2667  -5080 -2667))
+      (outline (path signal 127  -4318 -635  -5080 -635))
+      (outline (path signal 127  -4318 635  -4318 -635))
+      (outline (path signal 127  -5080 635  -4318 635))
+      (outline (path signal 127  -4572 -1799.79  -4461 -1817.37  -4360.86 -1868.39  -4281.39 -1947.86
+            -4230.37 -2048  -4212.79 -2159  -4230.37 -2270  -4281.39 -2370.14
+            -4360.86 -2449.61  -4461 -2500.63  -4572 -2518.21  -4683 -2500.63
+            -4783.14 -2449.61  -4862.61 -2370.14  -4913.63 -2270  -4931.21 -2159
+            -4913.63 -2048  -4862.61 -1947.86  -4783.14 -1868.39  -4683 -1817.37
+            -4572 -1799.79))
+      (pin Rect[T]Pad_406.400000x1270.000000_um 1 -4191 -3556)
+      (pin Rect[T]Pad_406.400000x1270.000000_um 2 -3556 -3556)
+      (pin Rect[T]Pad_406.400000x1270.000000_um 3 -2895.6 -3556)
+      (pin Rect[T]Pad_406.400000x1270.000000_um 4 -2235.2 -3556)
+      (pin Rect[T]Pad_406.400000x1270.000000_um 5 -1600.2 -3556)
+      (pin Rect[T]Pad_406.400000x1270.000000_um 6 -939.8 -3556)
+      (pin Rect[T]Pad_406.400000x1270.000000_um 7 -279.4 -3556)
+      (pin Rect[T]Pad_406.400000x1270.000000_um 8 355.6 -3556)
+      (pin Rect[T]Pad_406.400000x1270.000000_um 9 1016 -3556)
+      (pin Rect[T]Pad_406.400000x1270.000000_um 10 1651 -3556)
+      (pin Rect[T]Pad_406.400000x1270.000000_um 11 2311.4 -3556)
+      (pin Rect[T]Pad_406.400000x1270.000000_um 12 2971.8 -3556)
+      (pin Rect[T]Pad_406.400000x1270.000000_um 13 3606.8 -3556)
+      (pin Rect[T]Pad_406.400000x1270.000000_um 14 4267.2 -3556)
+      (pin Rect[T]Pad_406.400000x1270.000000_um 15 4267.2 3556)
+      (pin Rect[T]Pad_406.400000x1270.000000_um 16 3606.8 3556)
+      (pin Rect[T]Pad_406.400000x1270.000000_um 17 2997.2 3556)
+      (pin Rect[T]Pad_406.400000x1270.000000_um 18 2311.4 3556)
+      (pin Rect[T]Pad_406.400000x1270.000000_um 19 1651 3556)
+      (pin Rect[T]Pad_406.400000x1270.000000_um 20 1016 3556)
+      (pin Rect[T]Pad_406.400000x1270.000000_um 21 355.6 3556)
+      (pin Rect[T]Pad_406.400000x1270.000000_um 22 -279.4 3556)
+      (pin Rect[T]Pad_406.400000x1270.000000_um 23 -939.8 3556)
+      (pin Rect[T]Pad_406.400000x1270.000000_um 24 -1600.2 3556)
+      (pin Rect[T]Pad_406.400000x1270.000000_um 25 -2235.2 3556)
+      (pin Rect[T]Pad_406.400000x1270.000000_um 26 -2895.6 3556)
+      (pin Rect[T]Pad_406.400000x1270.000000_um 27 -3556 3556)
+      (pin Rect[T]Pad_406.400000x1270.000000_um 28 -4191 3556)
+    )
+    (image PIN_ARRAY_3X1
+      (outline (path signal 152.4  -1270 1270  -1270 -1270))
+      (outline (path signal 152.4  3810 -1270  -3810 -1270))
+      (outline (path signal 152.4  3810 1270  3810 -1270))
+      (outline (path signal 152.4  -3810 1270  3810 1270))
+      (outline (path signal 152.4  -3810 -1270  -3810 1270))
+      (pin Rect[A]Pad_1524.000000x1524.000000_um 1 -2540 0)
+      (pin Round[A]Pad_1524.000000_um 2 0 0)
+      (pin Round[A]Pad_1524.000000_um 3 2540 0)
+    )
+    (image pin_array_13x2
+      (outline (path signal 203.2  16510 -2540  16510 2540))
+      (outline (path signal 203.2  -16510 2540  -16510 -2540))
+      (outline (path signal 203.2  16510 2540  -16510 2540))
+      (outline (path signal 203.2  -16510 -2540  16510 -2540))
+      (pin Rect[A]Pad_1524.000000x1524.000000_um 1 -15240 -1270)
+      (pin Round[A]Pad_1524.000000_um 2 -15240 1270)
+      (pin Round[A]Pad_1524.000000_um 3 -12700 -1270)
+      (pin Round[A]Pad_1524.000000_um 4 -12700 1270)
+      (pin Round[A]Pad_1524.000000_um 5 -10160 -1270)
+      (pin Round[A]Pad_1524.000000_um 6 -10160 1270)
+      (pin Round[A]Pad_1524.000000_um 7 -7620 -1270)
+      (pin Round[A]Pad_1524.000000_um 8 -7620 1270)
+      (pin Round[A]Pad_1524.000000_um 9 -5080 -1270)
+      (pin Round[A]Pad_1524.000000_um 10 -5080 1270)
+      (pin Round[A]Pad_1524.000000_um 11 -2540 -1270)
+      (pin Round[A]Pad_1524.000000_um 12 -2540 1270)
+      (pin Round[A]Pad_1524.000000_um 13 0 -1270)
+      (pin Round[A]Pad_1524.000000_um 14 0 1270)
+      (pin Round[A]Pad_1524.000000_um 15 2540 -1270)
+      (pin Round[A]Pad_1524.000000_um 16 2540 1270)
+      (pin Round[A]Pad_1524.000000_um 17 5080 -1270)
+      (pin Round[A]Pad_1524.000000_um 18 5080 1270)
+      (pin Round[A]Pad_1524.000000_um 19 7620 -1270)
+      (pin Round[A]Pad_1524.000000_um 20 7620 1270)
+      (pin Round[A]Pad_1524.000000_um 21 10160 -1270)
+      (pin Round[A]Pad_1524.000000_um 22 10160 1270)
+      (pin Round[A]Pad_1524.000000_um 23 12700 -1270)
+      (pin Round[A]Pad_1524.000000_um 24 12700 1270)
+      (pin Round[A]Pad_1524.000000_um 25 15240 -1270)
+      (pin Round[A]Pad_1524.000000_um 26 15240 1270)
+    )
+    (image "CONN-10-2MM"
+      (outline (path signal 304.8  10226 1000.76  -10050.8 1000.76))
+      (outline (path signal 304.8  -10050.8 -1000.76  10226 -1000.76))
+      (outline (path signal 304.8  -10050.8 -975.36  -10050.8 975.36))
+      (outline (path signal 304.8  10226 975.36  10226 -949.96))
+      (pin Round[A]Pad_1150.620000_um 10 8999.22 0)
+      (pin Round[A]Pad_1150.620000_um 6 1000.76 0)
+      (pin Round[A]Pad_1150.620000_um 7 2999.74 0)
+      (pin Round[A]Pad_1150.620000_um 8 5001.26 0)
+      (pin Round[A]Pad_1150.620000_um 9 7000.24 0)
+      (pin Round[A]Pad_1150.620000_um 5 -1000.76 0)
+      (pin Round[A]Pad_1150.620000_um 4 -2999.74 0)
+      (pin Round[A]Pad_1150.620000_um 3 -5001.26 0)
+      (pin Rect[A]Pad_1150.620000x1150.620000_um 1 -8999.22 0)
+      (pin Round[A]Pad_1150.620000_um 2 -7000.24 0)
+    )
+    (image SM0805
+      (outline (path signal 127  1524 -762  508 -762))
+      (outline (path signal 127  1524 762  1524 -762))
+      (outline (path signal 127  508 762  1524 762))
+      (outline (path signal 127  -1524 762  -508 762))
+      (outline (path signal 127  -1524 -762  -1524 762))
+      (outline (path signal 127  -508 -762  -1524 -762))
+      (outline (path signal 127  -1651 -635  -1587.5 -652.015  -1541.02 -698.5  -1524 -762
+            -1541.02 -825.5  -1587.5 -871.985  -1651 -889  -1714.5 -871.985
+            -1760.98 -825.5  -1778 -762  -1760.98 -698.5  -1714.5 -652.015
+            -1651 -635))
+      (pin Rect[T]Pad_889.000000x1397.000000_um 1 -952.5 0)
+      (pin Rect[T]Pad_889.000000x1397.000000_um 2 952.5 0)
+    )
+    (image "LED-0603"
+      (outline (path signal 101.6  449.58 -398.78  -449.58 -398.78))
+      (outline (path signal 101.6  449.58 398.78  -449.58 398.78))
+      (outline (path signal 66.04  0 149.86  299.72 149.86))
+      (outline (path signal 66.04  299.72 149.86  299.72 -149.86))
+      (outline (path signal 66.04  0 -149.86  299.72 -149.86))
+      (outline (path signal 66.04  0 149.86  0 -149.86))
+      (outline (path signal 66.04  0 -299.72  299.72 -299.72))
+      (outline (path signal 66.04  299.72 -299.72  299.72 -449.58))
+      (outline (path signal 66.04  0 -449.58  299.72 -449.58))
+      (outline (path signal 66.04  0 -299.72  0 -449.58))
+      (outline (path signal 66.04  0 449.58  299.72 449.58))
+      (outline (path signal 66.04  299.72 449.58  299.72 299.72))
+      (outline (path signal 66.04  0 299.72  299.72 299.72))
+      (outline (path signal 66.04  0 449.58  0 299.72))
+      (outline (path signal 66.04  -848.36 449.58  -449.58 449.58))
+      (outline (path signal 66.04  -449.58 449.58  -449.58 -449.58))
+      (outline (path signal 66.04  -848.36 -449.58  -449.58 -449.58))
+      (outline (path signal 66.04  -848.36 449.58  -848.36 -449.58))
+      (outline (path signal 66.04  449.58 449.58  848.36 449.58))
+      (outline (path signal 66.04  848.36 449.58  848.36 -449.58))
+      (outline (path signal 66.04  449.58 -449.58  848.36 -449.58))
+      (outline (path signal 66.04  449.58 449.58  449.58 -449.58))
+      (pin Rect[T]Pad_797.560000x797.560000_um 1 -749.3 0)
+      (pin Rect[T]Pad_797.560000x797.560000_um 2 749.3 0)
+    )
+    (image "USB_MICRO_10118194-0001LF"
+      (outline (path signal 381  3749.04 -1450.34  3749.04 2948.94))
+      (outline (path signal 381  -3749.04 -1450.34  3749.04 -1450.34))
+      (outline (path signal 381  -3749.04 2948.94  3749.04 2948.94))
+      (outline (path signal 381  -3749.04 -1450.34  -3749.04 2948.94))
+      (outline (path signal 381  3749.04 -2550.16  3749.04 -1450.34))
+      (outline (path signal 381  -3749.04 -2550.16  3749.04 -2550.16))
+      (outline (path signal 381  -3749.04 -1450.34  -3749.04 -2550.16))
+      (pin Rect[T]Pad_398.780000x1849.120000_um 3 0 2999.74)
+      (pin Rect[T]Pad_398.780000x1849.120000_um 4 650.24 2999.74)
+      (pin Rect[T]Pad_398.780000x1849.120000_um 5 1300.48 2999.74)
+      (pin Rect[T]Pad_398.780000x1849.120000_um 2 -650.24 2999.74)
+      (pin Rect[T]Pad_398.780000x1849.120000_um 1 -1300.48 2999.74)
+      (pin Round[A]Pad_1249.680000_um 6 2499.36 2700.02)
+      (pin Round[A]Pad_1249.680000_um 9 -2499.36 2700.02)
+      (pin Round[A]Pad_1549.400000_um 7 3500.12 0)
+      (pin Round[A]Pad_1549.400000_um 8 -3500.12 0)
+    )
+    (image LOGO_SNOWCAP_FRONT
+    )
+    (padstack Round[A]Pad_1150.620000_um
+      (shape (circle Front 1150.62))
+      (shape (circle Back 1150.62))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1249.680000_um
+      (shape (circle Front 1249.68))
+      (shape (circle Back 1249.68))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1524.000000_um
+      (shape (circle Front 1524))
+      (shape (circle Back 1524))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1549.400000_um
+      (shape (circle Front 1549.4))
+      (shape (circle Back 1549.4))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_398.780000x1849.120000_um
+      (shape (rect Front -199.39 -924.56 199.39 924.56))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_406.400000x1270.000000_um
+      (shape (rect Front -203.2 -635 203.2 635))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_797.560000x797.560000_um
+      (shape (rect Front -398.78 -398.78 398.78 398.78))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_889.000000x1397.000000_um
+      (shape (rect Front -444.5 -698.5 444.5 698.5))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1150.620000x1150.620000_um
+      (shape (rect Front -575.31 -575.31 575.31 575.31))
+      (shape (rect Back -575.31 -575.31 575.31 575.31))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1524.000000x1524.000000_um
+      (shape (rect Front -762 -762 762 762))
+      (shape (rect Back -762 -762 762 762))
+      (attach off)
+    )
+    (padstack "Via[0-1]_889:635_um"
+      (shape (circle Front 889))
+      (shape (circle Back 889))
+      (attach off)
+    )
+  )
+  (network
+    (net +3.3V
+      (pins U1-4 U1-17 CN1-1)
+    )
+    (net +5V
+      (pins U1-20 5V1-2 R1-1 R2-1)
+    )
+    (net /RADIO_A0
+      (pins RPI1-11 CN2-8)
+    )
+    (net /RADIO_A0_SCLK
+      (pins RPI1-23 CN2-4)
+    )
+    (net /RADIO_A0_SS
+      (pins RPI1-24 CN2-3)
+    )
+    (net /RADIO_A1
+      (pins RPI1-13 CN2-9)
+    )
+    (net /RADIO_A2
+      (pins RPI1-15 CN2-10)
+    )
+    (net /RADIO_A3
+      (pins RPI1-12 CN1-9)
+    )
+    (net /RADIO_ACLK
+      (pins RPI1-22 CN2-5)
+    )
+    (net /RADIO_B0_SCL
+      (pins RPI1-5 CN2-1)
+    )
+    (net /RADIO_B0_SDA
+      (pins RPI1-3 CN2-2)
+    )
+    (net /RADIO_NRST
+      (pins RPI1-16 CN1-5)
+    )
+    (net /RADIO_RFGDO0
+      (pins RPI1-7 CN2-7)
+    )
+    (net /RADIO_RFGDO2
+      (pins RPI1-26 CN2-6)
+    )
+    (net /RADIO_RX
+      (pins RX_SEL1-1 CN1-3)
+    )
+    (net /RADIO_TEST
+      (pins RPI1-18 CN1-6)
+    )
+    (net /RADIO_TX
+      (pins TX_SEL1-1 CN1-2)
+    )
+    (net /RPI_RX
+      (pins RX_SEL1-3 RPI1-10)
+    )
+    (net /RPI_TX
+      (pins TX_SEL1-3 RPI1-8)
+    )
+    (net GND
+      (pins U1-7 U1-18 U1-21 U1-25 U1-26 RPI1-6 RPI1-9 RPI1-14 RPI1-20 RPI1-25 CN1-10
+        J1-5 J1-6 J1-9 J1-7 J1-8)
+    )
+    (net "N-0000017"
+      (pins U1-5 RX_SEL1-2)
+    )
+    (net "N-0000018"
+      (pins U1-1 TX_SEL1-2)
+    )
+    (net "N-0000027"
+      (pins U1-23 D1-1)
+    )
+    (net "N-0000030"
+      (pins U1-15 J1-3)
+    )
+    (net "N-0000032"
+      (pins U1-11 K1-1)
+    )
+    (net "N-0000033"
+      (pins U1-3 K1-2)
+    )
+    (net "N-0000034"
+      (pins U1-2 K1-3)
+    )
+    (net "N-0000042"
+      (pins 5V1-1 RPI1-2)
+    )
+    (net "N-0000046"
+      (pins 5V1-3 J1-1)
+    )
+    (net "N-0000047"
+      (pins U1-16 J1-2)
+    )
+    (net "N-0000049"
+      (pins R2-2 D2-2)
+    )
+    (net "N-0000052"
+      (pins R1-2 D1-2)
+    )
+    (net "N-0000053"
+      (pins U1-22 D2-1)
+    )
+    (class kicad_default +3.3V +5V /RADIO_A0 /RADIO_A0_SCLK /RADIO_A0_SS /RADIO_A1
+      /RADIO_A2 /RADIO_A3 /RADIO_ACLK /RADIO_B0_SCL /RADIO_B0_SDA /RADIO_NRST
+      /RADIO_RFGDO0 /RADIO_RFGDO2 /RADIO_RX /RADIO_TEST /RADIO_TX /RPI_RX
+      /RPI_TX GND "N-0000017" "N-0000018" "N-0000027" "N-0000030" "N-0000032"
+      "N-0000033" "N-0000034" "N-0000042" "N-0000046" "N-0000047" "N-0000049"
+      "N-0000052" "N-0000053"
+      (circuit
+        (use_via "Via[0-1]_889:635_um")
+      )
+      (rule
+        (width 203.2)
+        (clearance 254)
+      )
+    )
+  )
+  (wiring
+    (wire (path Back 304.8  77470 -40640  77470 -32766  73042.8 -28338.8  68072 -28338.8)(net +3.3V)(type route))
+    (wire (path Back 304.8  86106 -49784  86106 -43942  82804 -40640  77470 -40640)(net +3.3V)(type route))
+    (wire (path Front 304.8  85902.8 -49987.2  86106 -49784)(net +3.3V)(type route))
+    (wire (path Front 203.2  82931 -49987.2  85902.8 -49987.2)(net +3.3V)(type route))
+    (wire (path Front 304.8  75819 -44754.8  79451.2 -44754.8  80264 -43942  80264 -42672
+            79248 -41656  77724 -41656  77470 -41402  77470 -40640)(net +3.3V)(type route))
+    (wire (path Front 304.8  82931 -48006  85852 -48006  87630 -49784  87630 -53657.5
+            88709.5 -53657.5  89154 -54102  89154 -56388  88900 -56642  81788 -56642
+            77724 -52578  72834.5 -52578  71932.8 -53479.7  70726.3 -53479.7
+            68834 -55372  68834 -58674)(net +5V)(type route))
+    (wire (path Back 304.8  68834 -58674  67310 -60198  60198 -60198  59182 -59182
+            59182 -56642  58166 -55626  57150 -55626)(net +5V)(type route))
+    (wire (path Front 203.2  90170 -42339.3  94312.7 -42339.3  96012 -40640  98425 -40640)(net /RADIO_A0)(type route))
+    (wire (path Back 203.2  90170 -34338.3  88851.7 -34338.3  88646 -34544  88646 -50800
+            93726 -55880  98425 -55880)(net /RADIO_A0_SCLK)(type route))
+    (wire (path Back 203.2  90170 -32336.7  88821.3 -32336.7  87884 -33274  87884 -51054
+            93980 -57150  99695 -57150  100965 -55880)(net /RADIO_A0_SS)(type route))
+    (wire (path Front 203.2  90170 -44338.2  94599.8 -44338.2  95758 -43180  98425 -43180)(net /RADIO_A1)(type route))
+    (wire (path Front 203.2  90170 -46337.2  94886.8 -46337.2  95504 -45720  98425 -45720)(net /RADIO_A2)(type route))
+    (wire (path Back 203.2  100965 -40640  100965 -40513  99822 -39370  96774 -39370
+            92202 -34798  92202 -27686  91440 -26924  67056 -26924  66548 -27432
+            66548 -42814.2  68072 -44338.2)(net /RADIO_A3)(type route))
+    (wire (path Back 203.2  100965 -53340  100838 -53340  99568 -52070  97282 -52070
+            95504 -50292  95504 -39624  92217.2 -36337.2  90170 -36337.2)(net /RADIO_ACLK)(type route))
+    (wire (path Front 203.2  90170 -28338.8  91584.8 -28338.8  96266 -33020  98425 -33020)(net /RADIO_B0_SCL)(type route))
+    (wire (path Front 203.2  98425 -30480  94996 -30480  91440 -26924  89154 -26924
+            88646 -27432  88646 -29718  89265.8 -30337.8  90170 -30337.8)(net /RADIO_B0_SDA)(type route))
+    (wire (path Front 203.2  68072 -36337.2  69865.2 -36337.2  69850 -36322  80772 -36322
+            87630 -43180  87630 -47244  89154 -48768  95250 -48768  97028 -46990
+            99695 -46990  100965 -45720)(net /RADIO_NRST)(type route))
+    (wire (path Front 203.2  90170 -40337.7  91996.3 -40337.7  96774 -35560  98425 -35560)(net /RADIO_RFGDO0)(type route))
+    (wire (path Back 203.2  90170 -38338.8  92186.8 -38338.8  94488 -40640  94488 -52324)(net /RADIO_RFGDO2)(type route))
+    (wire (path Front 203.2  94488 -52324  94488 -54864  96774 -57150  99695 -57150
+            100965 -58420)(net /RADIO_RFGDO2)(type route))
+    (wire (path Front 203.2  68072 -32336.7  67485.3 -32336.7  66294 -33528  66294 -53086)(net /RADIO_RX)(type route))
+    (wire (path Front 203.2  100965 -48260  99695 -49530  88900 -49530  86868 -47498
+            86868 -43180  82042 -38354  68087.2 -38354  68072 -38338.8)(net /RADIO_TEST)(type route))
+    (wire (path Front 203.2  61722 -53086  61722 -51562  62992 -50292  64516 -50292
+            65786 -49022  65786 -31750  67198.2 -30337.8  68072 -30337.8)(net /RADIO_TX)(type route))
+    (wire (path Front 203.2  100965 -38100  101346 -38100  102616 -39370  102616 -59182
+            101854 -59944  68072 -59944  66294 -58166)(net /RPI_RX)(type route))
+    (wire (path Front 203.2  61722 -58166  61722 -58674  63500 -60452  102108 -60452
+            103124 -59436  103124 -37719  100965 -35560)(net /RPI_TX)(type route))
+    (wire (path Front 203.2  63499.4 -29700  63822 -29377.4  85806.1 -29377.4  89774.1 -33345.4
+            93654.8 -33345.4  94481.3 -34171.9  99813.1 -34171.9  100965 -33020)(net GND)(type route))
+    (wire (path Front 203.2  81940.3 -47345.6  79776 -47345.6)(net GND)(type route))
+    (wire (path Back 203.2  68072 -46337.2  69080.4 -47345.6  79776 -47345.6)(net GND)(type route))
+    (wire (path Front 203.2  82054.7 -47345.6  81940.3 -47345.6)(net GND)(type route))
+    (wire (path Front 203.2  82931 -47345.6  82054.7 -47345.6)(net GND)(type route))
+    (wire (path Front 203.2  82931 -49301.4  81940.3 -49301.4)(net GND)(type route))
+    (wire (path Front 203.2  81940.3 -47345.6  81940.3 -49301.4)(net GND)(type route))
+    (wire (path Front 203.2  81940.3 -44754.8  81432.1 -45263  79276.9 -45263  77829.3 -46710.6
+            75819 -46710.6)(net GND)(type route))
+    (wire (path Front 203.2  82165.6 -44094.4  81940.3 -44319.7  81940.3 -44754.8)(net GND)(type route))
+    (wire (path Front 203.2  82435.7 -44094.4  82165.6 -44094.4  81940.3 -44094.4)(net GND)(type route))
+    (wire (path Front 203.2  82931 -44754.8  81940.3 -44754.8)(net GND)(type route))
+    (wire (path Front 203.2  82931 -44094.4  82435.7 -44094.4)(net GND)(type route))
+    (wire (path Back 203.2  99774.4 -36830  101337 -36830  102126 -37619.2  102126 -42019.1
+            100965 -43180)(net GND)(type route))
+    (wire (path Back 203.2  98425 -38100  99695 -36830  99774.4 -36830  99774.4 -34210.6
+            100965 -33020)(net GND)(type route))
+    (wire (path Back 203.2  100965 -43180  99774.4 -44370.6  99774.4 -49609.4  100965 -50800)(net GND)(type route))
+    (wire (path Back 203.2  98425 -58420  99071.9 -58420  100342 -57150  101321 -57150
+            102121 -56350.5  102121 -51955.7  100965 -50800)(net GND)(type route))
+    (wire (path Front 203.2  68072 -46337.2  74569.9 -39839.3  78157.6 -39839.3  81940.3 -43622
+            81940.3 -44094.4)(net GND)(type route))
+    (wire (path Back 203.2  63499.4 -29700  63499.4 -41764.6  68072 -46337.2)(net GND)(type route))
+    (wire (path Back 203.2  64500.1 -27000  63499.4 -28000.7  63499.4 -29700)(net GND)(type route))
+    (wire (path Front 203.2  59699.5 -29999.7  59699.5 -28719.4)(net GND)(type route))
+    (wire (path Front 203.2  58500.6 -29700  58500.6 -29454.7  59235.9 -28719.4  59699.5 -28719.4)(net GND)(type route))
+    (wire (path Front 203.2  64500.1 -27000  57499.9 -27000)(net GND)(type route))
+    (wire (path Back 203.2  57499.9 -27000  58500.6 -28000.7  58500.6 -29700)(net GND)(type route))
+    (wire (path Front 203.2  66294 -55626  67564 -55626  72644 -50546  72644 -46228
+            73482.2 -45389.8  75819 -45389.8)(net "N-0000017")(type route))
+    (wire (path Front 203.2  75819 -42799  73787 -42799  71882 -44704  71882 -50038
+            71374 -50546)(net "N-0000018")(type route))
+    (wire (path Back 203.2  71374 -50546  64516 -50546  64008 -51054  64008 -54610
+            62992 -55626  61722 -55626)(net "N-0000018")(type route))
+    (wire (path Front 203.2  82931 -46050.2  79933.8 -46050.2  78740 -47244  78740 -51308
+            81114.9 -53682.9  82727.8 -53682.9)(net "N-0000027")(type route))
+    (wire (path Front 203.2  61000 -29999.7  61000 -32218  60706 -32512)(net "N-0000030")(type route))
+    (wire (path Back 203.2  60706 -32512  60706 -43434  66294 -49022  77978 -49022
+            80264 -51308)(net "N-0000030")(type route))
+    (wire (path Front 203.2  80264 -51308  80314.8 -51257.2  82931 -51257.2)(net "N-0000030")(type route))
+    (wire (path Front 203.2  75819 -49301.4  74904.6 -49301.4  74168 -50038)(net "N-0000032")(type route))
+    (wire (path Back 203.2  74168 -50038  73406 -50800  73406 -58166)(net "N-0000032")(type route))
+    (wire (path Front 203.2  75819 -44094.4  78333.6 -44094.4  78740 -43688)(net "N-0000033")(type route))
+    (wire (path Back 203.2  78740 -43688  82042 -43688  83312 -44958  83312 -52070
+            78994 -56388  76708 -56388  75946 -57150  75946 -58166)(net "N-0000033")(type route))
+    (wire (path Front 203.2  75819 -43434  77216 -43434  77978 -42672)(net "N-0000034")(type route))
+    (wire (path Back 203.2  77978 -42672  82550 -42672  84074 -44196  84074 -52578
+            78486 -58166)(net "N-0000034")(type route))
+    (wire (path Front 304.8  100965 -27940  100965 -26797  99822 -25654  56134 -25654
+            55626 -26162  55626 -56642  57150 -58166)(net "N-0000042")(type route))
+    (wire (path Front 304.8  62300.5 -29999.7  62300.5 -28772.5  61722 -28194  57912 -28194
+            57150 -28956  57150 -53086)(net "N-0000046")(type route))
+    (wire (path Front 203.2  82931 -50596.8  80822.8 -50596.8  80264 -50038)(net "N-0000047")(type route))
+    (wire (path Back 203.2  80264 -50038  78486 -48260  66802 -48260  61722 -43180
+            61722 -33528)(net "N-0000047")(type route))
+    (wire (path Front 203.2  61722 -33528  61650.2 -33456.2  61650.2 -29999.7)(net "N-0000047")(type route))
+    (wire (path Front 203.2  71932.8 -55384.7  75539.6 -55384.7  75742.8 -55181.5)(net "N-0000049")(type route))
+    (wire (path Front 203.2  87630 -55562.5  83108.8 -55562.5  82727.8 -55181.5)(net "N-0000052")(type route))
+    (wire (path Front 203.2  82931 -46710.6  85318.6 -46710.6  89916 -51308  89916 -56642
+            88900 -57658  81280 -57658  77304.9 -53682.9  75742.8 -53682.9)(net "N-0000053")(type route))
+    (via "Via[0-1]_889:635_um"  86106 -49784 (net +3.3V)(type route))
+    (via "Via[0-1]_889:635_um"  77470 -40640 (net +3.3V)(type route))
+    (via "Via[0-1]_889:635_um"  68834 -58674 (net +5V)(type route))
+    (via "Via[0-1]_889:635_um"  94488 -52324 (net /RADIO_RFGDO2)(type route))
+    (via "Via[0-1]_889:635_um"  79776 -47345.6 (net GND)(type route))
+    (via "Via[0-1]_889:635_um"  71374 -50546 (net "N-0000018")(type route))
+    (via "Via[0-1]_889:635_um"  60706 -32512 (net "N-0000030")(type route))
+    (via "Via[0-1]_889:635_um"  80264 -51308 (net "N-0000030")(type route))
+    (via "Via[0-1]_889:635_um"  74168 -50038 (net "N-0000032")(type route))
+    (via "Via[0-1]_889:635_um"  78740 -43688 (net "N-0000033")(type route))
+    (via "Via[0-1]_889:635_um"  77978 -42672 (net "N-0000034")(type route))
+    (via "Via[0-1]_889:635_um"  80264 -50038 (net "N-0000047")(type route))
+    (via "Via[0-1]_889:635_um"  61722 -33528 (net "N-0000047")(type route))
+  )
+)

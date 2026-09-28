@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "4N35-TTL-Serial-Optoisolator_4N35-TTL-Serial-Optoisolator",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 51107,
+      "sha256": "e78a03c9a3f827a6be3e4cb35f4754e7a24b1e711b50b3841b5f3ae78365f616"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 40040,
+      "sha256": "35c77e4627600239eb7d0d16f24b8e03aa2c08f1fbb386a69b3939d4fee0c4d5"
+    },
+    "metadata_json": {
+      "bytes": 759,
+      "sha256": "9122fd5c5513441b79f730bb3b43e0c8a9c07df79fa8ea2f91ff13b2028811a8"
+    },
+    "final_json": {
+      "bytes": 21672,
+      "sha256": "a33f199ad94cefb641ff0b6ee02a52940aba66a68e4eb825a43c104a3f384240"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:26:18.633563+00:00"
+  }
+}

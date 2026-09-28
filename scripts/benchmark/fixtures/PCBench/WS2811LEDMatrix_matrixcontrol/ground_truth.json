@@ -1,0 +1,28 @@
+{
+  "board": "WS2811LEDMatrix_matrixcontrol",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\WS2811LEDMatrix_matrixcontrol\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 25,
+  "segment_count": 492,
+  "approximate_track_length_mm": 1348.08,
+  "kicad_drc_violations": 317,
+  "generated_at": "2026-08-18T19:57:33.516295+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 317,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 109,
+      "copper_edge_clearance": 17,
+      "lib_footprint_issues": 43,
+      "silk_over_copper": 136,
+      "silk_overlap": 8,
+      "starved_thermal": 1,
+      "text_height": 3
+    },
+    "by_severity": {
+      "error": 127,
+      "warning": 190
+    }
+  }
+}

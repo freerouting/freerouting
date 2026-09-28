@@ -1,0 +1,31 @@
+{
+  "board": "kitspace_neotron-32",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\kitspace_neotron-32\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 101,
+  "segment_count": 1404,
+  "approximate_track_length_mm": 7730.4,
+  "kicad_drc_violations": 160,
+  "generated_at": "2026-08-18T18:18:44.325034+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 160,
+    "unconnected_count": 1,
+    "by_type": {
+      "clearance": 2,
+      "invalid_outline": 3,
+      "lib_footprint_issues": 11,
+      "lib_footprint_mismatch": 78,
+      "silk_edge_clearance": 8,
+      "silk_over_copper": 6,
+      "silk_overlap": 3,
+      "solder_mask_bridge": 7,
+      "starved_thermal": 35,
+      "track_dangling": 7
+    },
+    "by_severity": {
+      "error": 47,
+      "warning": 113
+    }
+  }
+}

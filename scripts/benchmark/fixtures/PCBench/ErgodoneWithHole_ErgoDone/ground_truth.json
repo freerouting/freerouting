@@ -1,0 +1,35 @@
+{
+  "board": "ErgodoneWithHole_ErgoDone",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\ErgodoneWithHole_ErgoDone\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 29,
+  "segment_count": 1402,
+  "approximate_track_length_mm": 5601.68,
+  "kicad_drc_violations": 1388,
+  "generated_at": "2026-08-18T18:45:12.736802+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 1388,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 109,
+      "clearance": 509,
+      "copper_edge_clearance": 20,
+      "hole_clearance": 159,
+      "isolated_copper": 2,
+      "lib_footprint_issues": 22,
+      "padstack": 80,
+      "pth_inside_courtyard": 8,
+      "shorting_items": 200,
+      "silk_edge_clearance": 10,
+      "silk_over_copper": 6,
+      "silk_overlap": 61,
+      "solder_mask_bridge": 200,
+      "track_dangling": 2
+    },
+    "by_severity": {
+      "error": 1205,
+      "warning": 183
+    }
+  }
+}

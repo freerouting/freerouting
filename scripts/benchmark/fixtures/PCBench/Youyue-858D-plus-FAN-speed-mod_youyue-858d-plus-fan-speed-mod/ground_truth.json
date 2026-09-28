@@ -1,0 +1,25 @@
+{
+  "board": "Youyue-858D-plus-FAN-speed-mod_youyue-858d-plus-fan-speed-mod",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Youyue-858D-plus-FAN-speed-mod_youyue-858d-plus-fan-speed-mod\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 13,
+  "segment_count": 111,
+  "approximate_track_length_mm": 206.63,
+  "kicad_drc_violations": 41,
+  "generated_at": "2026-08-18T19:59:01.210474+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 41,
+    "unconnected_count": 0,
+    "by_type": {
+      "copper_edge_clearance": 1,
+      "lib_footprint_issues": 22,
+      "silk_over_copper": 16,
+      "solder_mask_bridge": 2
+    },
+    "by_severity": {
+      "error": 3,
+      "warning": 38
+    }
+  }
+}

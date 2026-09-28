@@ -1,0 +1,58 @@
+{
+  "board_id": "kitspace_ideal_diode",
+  "display_name": "kitspace_ideal_diode",
+  "pcbench_directory": "PCBs/kitspace_ideal_diode",
+  "source": "https://github.com/InaneCoding/KOS01_IdealDiode20A",
+  "author": "",
+  "license": "[{'name': 'CERN', 'link': 'https://raw.githubusercontent.com/InaneCoding/KOS01_IdealDiode20A/master/LICENSE.md'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:23:56.455679+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 4,
+    "components": 54,
+    "dimensions_mm": {
+      "width": 40.0,
+      "height": 25.0
+    },
+    "area_cm2": 10.0,
+    "zones": 8
+  },
+  "reference": {
+    "segments": 56,
+    "vias": 3,
+    "track_length_mm": 79.45,
+    "kicad_drc_violations": 115,
+    "kicad_drc_breakdown": {
+      "total_violations": 115,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 32,
+        "copper_edge_clearance": 8,
+        "lib_footprint_issues": 54,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 13,
+        "solder_mask_bridge": 6,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 47,
+        "warning": 68
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

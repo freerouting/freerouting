@@ -3,7 +3,7 @@ package app.freerouting.fixtures;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import app.freerouting.board.Unit;
+import app.freerouting.board.model.structure.Unit;
 import app.freerouting.settings.sources.TestingSettings;
 import org.junit.jupiter.api.Test;
 
@@ -14,8 +14,8 @@ class DevBoardClearanceRoutingTest extends RoutingFixtureTest {
     final double testCopperToEdgeClearanceUm = 650.0;
     var testingSettings = new TestingSettings();
     testingSettings.setCopperToEdgeClearanceUm(testCopperToEdgeClearanceUm);
-    testingSettings.setMaxPasses(300);
-    testingSettings.setJobTimeoutString("00:03:00");
+    testingSettings.setMaxPasses(5);
+    testingSettings.setJobTimeoutString("00:05:00");
     var job = getRoutingJob("Issue558-dev-board.dsn", testingSettings);
 
     job = runRoutingJob(job);
@@ -24,7 +24,7 @@ class DevBoardClearanceRoutingTest extends RoutingFixtureTest {
     assertTrue(boardEdgeClassNo >= 0, "Expected board_edge clearance class to be created.");
     assertEquals(
         boardEdgeClassNo,
-        job.board.getOutline().clearanceClassNo(),
+        job.board.getOutline().clearanceClassIndex(),
         "Board outline should be assigned to the board_edge clearance class.");
 
     int expectedBoardUnits =

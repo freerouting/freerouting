@@ -1,0 +1,32 @@
+{
+  "board": "Hornbill-ESP32-DEV_Hornbill Devboard",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Hornbill-ESP32-DEV_Hornbill Devboard\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 95,
+  "segment_count": 930,
+  "approximate_track_length_mm": 1290.6,
+  "kicad_drc_violations": 266,
+  "generated_at": "2026-08-18T18:56:59.797791+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 266,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 2,
+      "copper_edge_clearance": 40,
+      "courtyards_overlap": 5,
+      "lib_footprint_issues": 51,
+      "pth_inside_courtyard": 1,
+      "silk_over_copper": 24,
+      "silk_overlap": 3,
+      "solder_mask_bridge": 77,
+      "text_height": 39,
+      "track_dangling": 12,
+      "via_dangling": 12
+    },
+    "by_severity": {
+      "error": 125,
+      "warning": 141
+    }
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "board_id": "kitspace_d20_r0.1",
+  "display_name": "kitspace_d20_r0.1",
+  "pcbench_directory": "PCBs/kitspace_d20_r0.1",
+  "source": "https://github.com/gregdavill/d20-hardware",
+  "author": "",
+  "license": "[{'name': 'BSD', 'link': 'https://raw.githubusercontent.com/gregdavill/d20-hardware/main/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:07:14.410037+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 0,
+    "components": 91,
+    "dimensions_mm": {
+      "width": 39.25,
+      "height": 31.0
+    },
+    "area_cm2": 12.17,
+    "zones": 254
+  },
+  "reference": {
+    "segments": 1069,
+    "vias": 209,
+    "track_length_mm": 920.87,
+    "kicad_drc_violations": 242,
+    "kicad_drc_breakdown": {
+      "total_violations": 242,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 7,
+        "copper_edge_clearance": 6,
+        "courtyards_overlap": 35,
+        "hole_clearance": 74,
+        "lib_footprint_issues": 22,
+        "lib_footprint_mismatch": 65,
+        "silk_over_copper": 5,
+        "solder_mask_bridge": 3,
+        "zones_intersect": 25
+      },
+      "by_severity": {
+        "error": 150,
+        "warning": 92
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

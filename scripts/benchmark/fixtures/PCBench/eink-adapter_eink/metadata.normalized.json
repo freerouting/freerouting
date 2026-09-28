@@ -1,0 +1,60 @@
+{
+  "board_id": "eink-adapter_eink",
+  "display_name": "eink-adapter_eink",
+  "pcbench_directory": "PCBs/eink-adapter_eink",
+  "source": "https://github.com/sapir/eink-adapter",
+  "author": "sapir",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:23.369714+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 5,
+    "components": 65,
+    "dimensions_mm": {
+      "width": 85.34,
+      "height": 38.48
+    },
+    "area_cm2": 32.84,
+    "zones": 5
+  },
+  "reference": {
+    "segments": 806,
+    "vias": 61,
+    "track_length_mm": 2336.21,
+    "kicad_drc_violations": 456,
+    "kicad_drc_breakdown": {
+      "total_violations": 456,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 3,
+        "copper_edge_clearance": 8,
+        "courtyards_overlap": 20,
+        "drill_out_of_range": 61,
+        "lib_footprint_issues": 65,
+        "silk_over_copper": 101,
+        "silk_overlap": 180,
+        "starved_thermal": 1,
+        "text_height": 17
+      },
+      "by_severity": {
+        "error": 93,
+        "warning": 363
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

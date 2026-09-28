@@ -1,0 +1,28 @@
+{
+  "board": "Radio-FM-TEA5767_radio tea5767",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Radio-FM-TEA5767_radio tea5767\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 8,
+  "segment_count": 284,
+  "approximate_track_length_mm": 775.14,
+  "kicad_drc_violations": 385,
+  "generated_at": "2026-08-18T19:37:19.364466+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 385,
+    "unconnected_count": 3,
+    "by_type": {
+      "invalid_outline": 1,
+      "lib_footprint_issues": 4,
+      "silk_over_copper": 165,
+      "silk_overlap": 199,
+      "text_height": 8,
+      "text_thickness": 6,
+      "track_dangling": 2
+    },
+    "by_severity": {
+      "error": 1,
+      "warning": 384
+    }
+  }
+}

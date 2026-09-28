@@ -1,0 +1,29 @@
+{
+  "board": "cdm324_backpack_cdm324",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\cdm324_backpack_cdm324\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 13,
+  "segment_count": 165,
+  "approximate_track_length_mm": 217.54,
+  "kicad_drc_violations": 122,
+  "generated_at": "2026-08-18T18:38:24.884913+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 122,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 6,
+      "copper_edge_clearance": 8,
+      "courtyards_overlap": 17,
+      "lib_footprint_issues": 29,
+      "silk_edge_clearance": 5,
+      "silk_over_copper": 39,
+      "silk_overlap": 16,
+      "solder_mask_bridge": 2
+    },
+    "by_severity": {
+      "error": 33,
+      "warning": 89
+    }
+  }
+}

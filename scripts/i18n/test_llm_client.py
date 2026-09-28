@@ -35,7 +35,7 @@ class LlmClientGeminiTest(unittest.TestCase):
 
         result = llm_client._call_gemini(
             "translate save",
-            "gemini-3.6-flash",
+            "gemini-3.7-flash",
             "test-key",
             "https://generativelanguage.googleapis.com/v1beta",
             500,
@@ -43,15 +43,15 @@ class LlmClientGeminiTest(unittest.TestCase):
         self.assertEqual(result, '{"save": "Speichern"}')
 
         args, kwargs = mock_post.call_args
-        self.assertIn("/models/gemini-3.6-flash:generateContent", args[0])  # codespell:ignore
+        self.assertIn("/models/gemini-3.7-flash:generateContent", args[0])  # codespell:ignore
         self.assertEqual(kwargs["headers"]["x-goog-api-key"], "test-key")
         generation_config = kwargs["json"]["generationConfig"]
-        self.assertNotIn("temperature", generation_config)
-        self.assertEqual(generation_config["thinkingConfig"]["thinkingLevel"], "minimal")
+        self.assertEqual(generation_config["thinkingConfig"]["thinkingLevel"], "low")
+        self.assertNotIn("thinkingBudget", generation_config.get("thinkingConfig", {}))
 
     def test_call_gemini_requires_api_key(self) -> None:
         with self.assertRaisesRegex(ValueError, "GEMINI_API_KEY is not set"):
-            llm_client._call_gemini("prompt", "gemini-3.6-flash", "", "http://example", 100)
+            llm_client._call_gemini("prompt", "gemini-3.7-flash", "", "http://example", 100)
 
     @patch("requests.post")
     def test_call_gemini_gemini_25_uses_thinking_budget(self, mock_post: MagicMock) -> None:
@@ -79,6 +79,16 @@ class LlmClientGeminiTest(unittest.TestCase):
         generation_config = mock_post.call_args.kwargs["json"]["generationConfig"]
         self.assertEqual(generation_config["thinkingConfig"]["thinkingLevel"], "low")
         self.assertNotIn("thinkingBudget", generation_config.get("thinkingConfig", {}))
+
+    def test_is_server_capacity_error(self) -> None:
+        self.assertTrue(llm_client._is_server_capacity_error(ValueError("503 Service Unavailable")))
+        self.assertTrue(llm_client._is_server_capacity_error(ValueError("This model is currently experiencing high demand")))
+        self.assertFalse(llm_client._is_server_capacity_error(ValueError("429 Resource Exhausted")))
+
+    def test_is_quota_or_balance_error(self) -> None:
+        self.assertTrue(llm_client._is_quota_or_balance_error(ValueError("429 RESOURCE_EXHAUSTED")))
+        self.assertTrue(llm_client._is_quota_or_balance_error(ValueError("Quota exceeded for quota metric")))
+        self.assertFalse(llm_client._is_quota_or_balance_error(ValueError("503 Service Unavailable")))
 
 
 if __name__ == "__main__":

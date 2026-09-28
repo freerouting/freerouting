@@ -1,0 +1,30 @@
+{
+  "board": "xwhatits-capsense-controller_amkey-usb",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\xwhatits-capsense-controller_amkey-usb\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 89,
+  "segment_count": 678,
+  "approximate_track_length_mm": 2313.42,
+  "kicad_drc_violations": 500,
+  "generated_at": "2026-08-18T19:58:04.746005+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 500,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 203,
+      "copper_edge_clearance": 10,
+      "silk_edge_clearance": 4,
+      "silk_over_copper": 191,
+      "silk_overlap": 7,
+      "starved_thermal": 13,
+      "text_height": 69,
+      "track_dangling": 2,
+      "via_dangling": 1
+    },
+    "by_severity": {
+      "error": 226,
+      "warning": 274
+    }
+  }
+}

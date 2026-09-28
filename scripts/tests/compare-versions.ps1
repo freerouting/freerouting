@@ -113,8 +113,6 @@ $BaseArgs = @(
     "--api_server.enabled=false"
     "--debug.enable_detailed_logging=true"
     "--router.job_timeout=`"$job_timeout`""
-    "--router.max_passes=$max_passes"
-    "--router.max_items=$max_items"
     "--router.max_threads=$max_threads"
     "--logging.file.level=$LoggingLevel"
     "--logging.file.pattern=$LoggingPattern"
@@ -225,7 +223,12 @@ function Invoke-Version {
     $env:FREEROUTING_LOG_DIR = $LogBaseDir
 
     # Construct flat argument list with specific log location and output file
-    $ProcessArgs = @("-jar", $JarPath) + $BaseArgs + @("--logging.file.location=$LogPath", "-do", "`"$OutputFile`"")
+    $ProcessArgs = @("-jar", $JarPath) + $BaseArgs + @(
+        "--router.autorouter.max_passes=$max_passes"
+        "--router.autorouter.max_items=$max_items"
+        "--logging.file.location=$LogPath"
+        "-do", "`"$OutputFile`""
+    )
 
     Write-Host "Command: java $ProcessArgs" -ForegroundColor Gray
     Write-Host "Log Target:    $LogPath"    -ForegroundColor Gray

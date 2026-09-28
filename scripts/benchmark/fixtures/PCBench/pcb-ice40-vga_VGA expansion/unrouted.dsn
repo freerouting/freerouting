@@ -1,0 +1,374 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\pcb-ice40-vga_VGA expansion\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  174343 -52002.5  174626 -52043.2  174900 -52123.7  175160 -52242.4
+            175400 -52396.9  175616 -52584  175803 -52799.9  175958 -53040.3
+            176076 -53300.2  176157 -53574.3  176197 -53857.1  176200 -54000
+            176200 -98000  176197 -98142.9  176157 -98425.7  176076 -98699.8
+            175958 -98959.7  175803 -99200.1  175616 -99416  175400 -99603.1
+            175160 -99757.6  174900 -99876.3  174626 -99956.8  174343 -99997.5
+            174200 -100000  102000 -100000  101857 -99997.5  101574 -99956.8
+            101300 -99876.3  101040 -99757.6  100800 -99603.1  100584 -99416
+            100397 -99200.1  100242 -98959.7  100124 -98699.8  100043 -98425.7
+            100003 -98142.9  100000 -98000  100000 -54000  100003 -53857.1
+            100043 -53574.3  100124 -53300.2  100242 -53040.3  100397 -52799.9
+            100584 -52584  100800 -52396.9  101040 -52242.4  101300 -52123.7
+            101574 -52043.2  101857 -52002.5  102000 -52000  174200 -52000
+            174343 -52002.5)
+    )
+    (keepout "" (polygon signal 0  102626 -79441.8  102387 -79519.5  102163 -79633.7  101959 -79781.5
+            101781 -79959.3  101634 -80162.7  101520 -80386.8  101442 -80625.9
+            101402 -80874.3  101402 -81125.7  101442 -81374.1  101520 -81613.2
+            101634 -81837.3  101781 -82040.7  101959 -82218.5  102163 -82366.3
+            102387 -82480.5  102626 -82558.2  102874 -82597.5  103126 -82597.5
+            103374 -82558.2  103613 -82480.5  103837 -82366.3  104041 -82218.5
+            104219 -82040.7  104366 -81837.3  104480 -81613.2  104558 -81374.1
+            104598 -81125.7  104600 -81000  104598 -80874.3  104558 -80625.9
+            104480 -80386.8  104366 -80162.7  104219 -79959.3  104041 -79781.5
+            103837 -79633.7  103613 -79519.5  103374 -79441.8  103126 -79402.5
+            102874 -79402.5  102626 -79441.8))
+    (keepout "" (polygon signal 0  102626 -53441.8  102387 -53519.5  102163 -53633.7  101959 -53781.5
+            101781 -53959.3  101634 -54162.7  101520 -54386.8  101442 -54625.9
+            101402 -54874.3  101402 -55125.7  101442 -55374.1  101520 -55613.2
+            101634 -55837.3  101781 -56040.7  101959 -56218.5  102163 -56366.3
+            102387 -56480.5  102626 -56558.2  102874 -56597.5  103126 -56597.5
+            103374 -56558.2  103613 -56480.5  103837 -56366.3  104041 -56218.5
+            104219 -56040.7  104366 -55837.3  104480 -55613.2  104558 -55374.1
+            104598 -55125.7  104600 -55000  104598 -54874.3  104558 -54625.9
+            104480 -54386.8  104366 -54162.7  104219 -53959.3  104041 -53781.5
+            103837 -53633.7  103613 -53519.5  103374 -53441.8  103126 -53402.5
+            102874 -53402.5  102626 -53441.8))
+    (via "Via[0-1]_600:400_um")
+    (rule
+      (width 250)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component Connectors:20x2_EdgePinHeaders
+      (place P2 139377 -100000 front 0 (PN CONN_02X20))
+    )
+    (component Connectors:VGA_Connector
+      (place P1 176200 -73000 front 0 (PN VGA))
+    )
+    (component Resistors_SMD:R_0603_HandSoldering
+      (place R1 153416 -84836 front -90 (PN 510))
+      (place R2 143256 -84836 front -90 (PN 510))
+      (place R3 133096 -84836 front -90 (PN 510))
+      (place R7 150876 -84836 front -90 (PN 510))
+      (place R8 140716 -84836 front -90 (PN 510))
+      (place R9 130556 -84836 front -90 (PN 510))
+      (place R13 148336 -84836 front -90 (PN 510))
+      (place R14 138176 -84836 front -90 (PN 510))
+      (place R15 128016 -84836 front -90 (PN 510))
+      (place R19 122936 -84752 front -90 (PN 510))
+      (place R20 120396 -84752 front -90 (PN 510))
+    )
+    (component Resistors_SMD:R_0603_HandSoldering::1
+      (place R4 153416 -79756 front 90 (PN 255))
+      (place R5 143256 -79756 front 90 (PN 255))
+      (place R6 133096 -79756 front 90 (PN 255))
+      (place R10 150876 -79756 front 90 (PN 255))
+      (place R11 140716 -79756 front 90 (PN 255))
+      (place R12 130556 -79756 front 90 (PN 255))
+      (place R16 148336 -79756 front 90 (PN 510))
+      (place R17 138176 -79756 front 90 (PN 510))
+      (place R18 128016 -79756 front 90 (PN 510))
+    )
+    (component Aesthetics:oshw_logo_8.3mm
+      (place G***_2 157988 -90424 back 0 (PN LOGO))
+      (place G*** 124968 -90424 back 0 (PN LOGO))
+    )
+  )
+  (library
+    (image Connectors:20x2_EdgePinHeaders
+      (pin Rect[T]Pad_1524.000000x3048.000000_um 22 -1270 1905)
+      (pin Rect[T]Pad_1524.000000x3048.000000_um 20 1270 1905)
+      (pin Rect[T]Pad_1524.000000x3048.000000_um 24 -3810 1905)
+      (pin Rect[T]Pad_1524.000000x3048.000000_um 26 -6350 1905)
+      (pin Rect[T]Pad_1524.000000x3048.000000_um 28 -8890 1905)
+      (pin Rect[T]Pad_1524.000000x3048.000000_um 30 -11430 1905)
+      (pin Rect[T]Pad_1524.000000x3048.000000_um 32 -13970 1905)
+      (pin Rect[T]Pad_1524.000000x3048.000000_um 34 -16510 1905)
+      (pin Rect[T]Pad_1524.000000x3048.000000_um 36 -19050 1905)
+      (pin Rect[T]Pad_1524.000000x3048.000000_um 38 -21590 1905)
+      (pin Rect[T]Pad_1524.000000x3048.000000_um 40 -24130 1905)
+      (pin Rect[T]Pad_1524.000000x3048.000000_um 18 3810 1905)
+      (pin Rect[T]Pad_1524.000000x3048.000000_um 16 6350 1905)
+      (pin Rect[T]Pad_1524.000000x3048.000000_um 14 8890 1905)
+      (pin Rect[T]Pad_1524.000000x3048.000000_um 12 11430 1905)
+      (pin Rect[T]Pad_1524.000000x3048.000000_um 10 13970 1905)
+      (pin Rect[T]Pad_1524.000000x3048.000000_um 8 16510 1905)
+      (pin Rect[T]Pad_1524.000000x3048.000000_um 6 19050 1905)
+      (pin Rect[T]Pad_1524.000000x3048.000000_um 4 21590 1905)
+      (pin Rect[T]Pad_1524.000000x3048.000000_um 2 24130 1905)
+      (pin Rect[B]Pad_1524.000000x3048.000000_um 19 1270 1905)
+      (pin Rect[B]Pad_1524.000000x3048.000000_um 17 3810 1905)
+      (pin Rect[B]Pad_1524.000000x3048.000000_um 21 -1270 1905)
+      (pin Rect[B]Pad_1524.000000x3048.000000_um 23 -3810 1905)
+      (pin Rect[B]Pad_1524.000000x3048.000000_um 25 -6350 1905)
+      (pin Rect[B]Pad_1524.000000x3048.000000_um 27 -8890 1905)
+      (pin Rect[B]Pad_1524.000000x3048.000000_um 35 -19050 1905)
+      (pin Rect[B]Pad_1524.000000x3048.000000_um 37 -21590 1905)
+      (pin Rect[B]Pad_1524.000000x3048.000000_um 29 -11430 1905)
+      (pin Rect[B]Pad_1524.000000x3048.000000_um 31 -13970 1905)
+      (pin Rect[B]Pad_1524.000000x3048.000000_um 33 -16510 1905)
+      (pin Rect[B]Pad_1524.000000x3048.000000_um 39 -24130 1905)
+      (pin Rect[B]Pad_1524.000000x3048.000000_um 15 6350 1905)
+      (pin Rect[B]Pad_1524.000000x3048.000000_um 13 8890 1905)
+      (pin Rect[B]Pad_1524.000000x3048.000000_um 11 11430 1905)
+      (pin Rect[B]Pad_1524.000000x3048.000000_um 9 13970 1905)
+      (pin Rect[B]Pad_1524.000000x3048.000000_um 7 16510 1905)
+      (pin Rect[B]Pad_1524.000000x3048.000000_um 5 19050 1905)
+      (pin Rect[B]Pad_1524.000000x3048.000000_um 3 21590 1905)
+      (pin Rect[B]Pad_1524.000000x3048.000000_um 1 24130 1905)
+    )
+    (image Connectors:VGA_Connector
+      (outline (path signal 150  0 15400  -16000 15400))
+      (outline (path signal 150  -16000 15400  -16000 -15400))
+      (outline (path signal 150  -16000 -15400  0 -15400))
+      (pin Round[A]Pad_4500.000000_um @1 -11430 12495)
+      (pin Round[A]Pad_4500.000000_um @2 -11430 -12495)
+      (pin Round[A]Pad_1600.000000_um 6 -11430 5455)
+      (pin Round[A]Pad_1600.000000_um 7 -11430 3165)
+      (pin Round[A]Pad_1600.000000_um 8 -11430 875)
+      (pin Round[A]Pad_1600.000000_um 9 -11430 -1415)
+      (pin Round[A]Pad_1600.000000_um 10 -11430 -3705)
+      (pin Round[A]Pad_1600.000000_um 1 -13970 4315)
+      (pin Round[A]Pad_1600.000000_um 2 -13970 2025)
+      (pin Round[A]Pad_1600.000000_um 3 -13970 -265)
+      (pin Round[A]Pad_1600.000000_um 4 -13970 -2555)
+      (pin Round[A]Pad_1600.000000_um 5 -13970 -4845)
+      (pin Round[A]Pad_1600.000000_um 13 -8890 -265)
+      (pin Round[A]Pad_1600.000000_um 14 -8890 -2555)
+      (pin Round[A]Pad_1600.000000_um 15 -8890 -4845)
+      (pin Round[A]Pad_1600.000000_um 11 -8890 4315)
+      (pin Round[A]Pad_1600.000000_um 12 -8890 2025)
+    )
+    (image Resistors_SMD:R_0603_HandSoldering
+      (outline (polygon signal 0  1995 795  1995 -795  -1995 -795  -1995 795))
+      (outline (path signal 150  -500 675  500 675))
+      (outline (path signal 150  500 -675  -500 -675))
+      (pin Rect[T]Pad_1200.000000x900.000000_um 1 -1100 0)
+      (pin Rect[T]Pad_1200.000000x900.000000_um 2 1100 0)
+    )
+    (image Resistors_SMD:R_0603_HandSoldering::1
+      (outline (polygon signal 0  -1995 -795  -1995 795  1995 795  1995 -795))
+      (outline (path signal 150  -500 675  500 675))
+      (outline (path signal 150  500 -675  -500 -675))
+      (pin Rect[T]Pad_1200.000000x900.000000_um 1 -1100 0)
+      (pin Rect[T]Pad_1200.000000x900.000000_um 2 1100 0)
+    )
+    (image Aesthetics:oshw_logo_8.3mm
+    )
+    (padstack Round[A]Pad_1600.000000_um
+      (shape (circle F.Cu 1600))
+      (shape (circle B.Cu 1600))
+      (attach off)
+    )
+    (padstack Round[A]Pad_4500.000000_um
+      (shape (circle F.Cu 4500))
+      (shape (circle B.Cu 4500))
+      (attach off)
+    )
+    (padstack Rect[B]Pad_1524.000000x3048.000000_um
+      (shape (rect B.Cu -762 -1524 762 1524))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1200.000000x900.000000_um
+      (shape (rect F.Cu -600 -450 600 450))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1524.000000x3048.000000_um
+      (shape (rect F.Cu -762 -1524 762 1524))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(P1-Pad9)"
+      (pins P1-9)
+    )
+    (net "Net-(P1-Pad4)"
+      (pins P1-4)
+    )
+    (net "Net-(P1-Pad15)"
+      (pins P1-15)
+    )
+    (net "Net-(P1-Pad11)"
+      (pins P1-11)
+    )
+    (net "Net-(P1-Pad12)"
+      (pins P1-12)
+    )
+    (net +1V2
+      (pins P2-3 P2-1)
+    )
+    (net VCC
+      (pins P2-2)
+    )
+    (net "Net-(P2-Pad4)"
+      (pins P2-4)
+    )
+    (net "Net-(P2-Pad5)"
+      (pins P2-5)
+    )
+    (net "Net-(P2-Pad6)"
+      (pins P2-6)
+    )
+    (net GND
+      (pins P2-24 P2-32 P2-40 P2-16 P2-8 P2-23 P2-31 P2-39 P2-15 P2-7 P1-6 P1-7 P1-8
+        P1-10 P1-5 R16-2 R17-2 R18-2)
+    )
+    (net "Net-(P2-Pad9)"
+      (pins P2-9)
+    )
+    (net "Net-(P2-Pad10)"
+      (pins P2-10 R1-2)
+    )
+    (net "Net-(P2-Pad11)"
+      (pins P2-11)
+    )
+    (net "Net-(P2-Pad12)"
+      (pins P2-12 R7-2)
+    )
+    (net "Net-(P2-Pad13)"
+      (pins P2-13)
+    )
+    (net "Net-(P2-Pad14)"
+      (pins P2-14 R13-2)
+    )
+    (net "Net-(P2-Pad17)"
+      (pins P2-17)
+    )
+    (net "Net-(P2-Pad18)"
+      (pins P2-18 R2-2)
+    )
+    (net "Net-(P2-Pad19)"
+      (pins P2-19)
+    )
+    (net "Net-(P2-Pad20)"
+      (pins P2-20 R8-2)
+    )
+    (net "Net-(P2-Pad21)"
+      (pins P2-21)
+    )
+    (net "Net-(P2-Pad22)"
+      (pins P2-22 R14-2)
+    )
+    (net "Net-(P2-Pad25)"
+      (pins P2-25)
+    )
+    (net "Net-(P2-Pad26)"
+      (pins P2-26 R3-2)
+    )
+    (net "Net-(P2-Pad27)"
+      (pins P2-27)
+    )
+    (net "Net-(P2-Pad28)"
+      (pins P2-28 R9-2)
+    )
+    (net "Net-(P2-Pad29)"
+      (pins P2-29)
+    )
+    (net "Net-(P2-Pad30)"
+      (pins P2-30 R15-2)
+    )
+    (net "Net-(P2-Pad33)"
+      (pins P2-33)
+    )
+    (net "Net-(P2-Pad34)"
+      (pins P2-34 R19-2)
+    )
+    (net "Net-(P2-Pad35)"
+      (pins P2-35)
+    )
+    (net "Net-(P2-Pad36)"
+      (pins P2-36 R20-2)
+    )
+    (net "Net-(P2-Pad37)"
+      (pins P2-37)
+    )
+    (net "Net-(P2-Pad38)"
+      (pins P2-38)
+    )
+    (net RED
+      (pins P1-1 R3-1 R6-1)
+    )
+    (net GREEN
+      (pins P1-2 R2-1 R5-1)
+    )
+    (net BLUE
+      (pins P1-3 R1-1 R4-1)
+    )
+    (net HSYNC
+      (pins P1-13 R19-1)
+    )
+    (net VSYNC
+      (pins P1-14 R20-1)
+    )
+    (net "Net-(R10-Pad1)"
+      (pins R4-2 R7-1 R10-1)
+    )
+    (net "Net-(R11-Pad1)"
+      (pins R5-2 R8-1 R11-1)
+    )
+    (net "Net-(R12-Pad1)"
+      (pins R6-2 R9-1 R12-1)
+    )
+    (net "Net-(R10-Pad2)"
+      (pins R10-2 R13-1 R16-1)
+    )
+    (net "Net-(R11-Pad2)"
+      (pins R11-2 R14-1 R17-1)
+    )
+    (net "Net-(R12-Pad2)"
+      (pins R12-2 R15-1 R18-1)
+    )
+    (class kicad_default +1V2 BLUE GND GREEN HSYNC "Net-(P1-Pad11)" "Net-(P1-Pad12)"
+      "Net-(P1-Pad15)" "Net-(P1-Pad4)" "Net-(P1-Pad9)" "Net-(P2-Pad10)" "Net-(P2-Pad11)"
+      "Net-(P2-Pad12)" "Net-(P2-Pad13)" "Net-(P2-Pad14)" "Net-(P2-Pad17)"
+      "Net-(P2-Pad18)" "Net-(P2-Pad19)" "Net-(P2-Pad20)" "Net-(P2-Pad21)"
+      "Net-(P2-Pad22)" "Net-(P2-Pad25)" "Net-(P2-Pad26)" "Net-(P2-Pad27)"
+      "Net-(P2-Pad28)" "Net-(P2-Pad29)" "Net-(P2-Pad30)" "Net-(P2-Pad33)"
+      "Net-(P2-Pad34)" "Net-(P2-Pad35)" "Net-(P2-Pad36)" "Net-(P2-Pad37)"
+      "Net-(P2-Pad38)" "Net-(P2-Pad4)" "Net-(P2-Pad5)" "Net-(P2-Pad6)" "Net-(P2-Pad9)"
+      "Net-(R10-Pad1)" "Net-(R10-Pad2)" "Net-(R11-Pad1)" "Net-(R11-Pad2)"
+      "Net-(R12-Pad1)" "Net-(R12-Pad2)" RED VCC VSYNC
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 250)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

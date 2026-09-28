@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "MeArm-Wireless-PCB_MeArmWireless",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 240288,
+      "sha256": "c6d52c996206f2621904b8ac3ca4363bb4b50d98ada72ab038ad9209bedd6d28"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 151052,
+      "sha256": "1a2b7e3306fe8c0de2f4ceb6a013f016e39713f95b954a402434c3297d1ecf7c"
+    },
+    "metadata_json": {
+      "bytes": 524,
+      "sha256": "7cafe4758eee1929e604abf47bb8cb6b154d0c13d3c9d4a34129358f2f7ac39c"
+    },
+    "final_json": {
+      "bytes": 116552,
+      "sha256": "9b609c48fa48717229041479238e89c34bffc37824fc03c27f781103b6a49e77"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:21:00.590193+00:00"
+  }
+}

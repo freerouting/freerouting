@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "atmegax8-protoboard_atmegax8-protoboard",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 68796,
+      "sha256": "2f9ce47c2d80fd8946eb55f6750b71a1e54751f1ff0380e9a9860f95fc7de0fd"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 40978,
+      "sha256": "c8f3ec60c3f629a9bf6570b951c612e20c51f6507f20bc6b3f2a8f9a7dd4350e"
+    },
+    "metadata_json": {
+      "bytes": 519,
+      "sha256": "14c146b5a4b17089e6023c8c628753cf4e9a8a99bc17d4dfdaa01b16566b77e2"
+    },
+    "final_json": {
+      "bytes": 31738,
+      "sha256": "ab4b0529b625557032461a871493be289f73cd26c5bb4e6e49712dca8416c17c"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:29:53.064101+00:00"
+  }
+}

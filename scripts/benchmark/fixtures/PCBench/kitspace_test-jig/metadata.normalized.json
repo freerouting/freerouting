@@ -1,0 +1,62 @@
+{
+  "board_id": "kitspace_test-jig",
+  "display_name": "kitspace_test-jig",
+  "pcbench_directory": "PCBs/kitspace_test-jig",
+  "source": "https://github.com/GlasgowEmbedded/glasgow",
+  "author": "",
+  "license": "[{'name': 'BSD', 'link': 'https://raw.githubusercontent.com/GlasgowEmbedded/glasgow/main/LICENSE-0BSD.txt'}, {'name': 'Apache', 'link': 'https://raw.githubusercontent.com/GlasgowEmbedded/glasgow/main/LICENSE-Apache-2.0.txt'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:10:12.921824+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 43,
+    "components": 131,
+    "dimensions_mm": {
+      "width": 207.5,
+      "height": 45.5
+    },
+    "area_cm2": 94.41,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 1257,
+    "vias": 123,
+    "track_length_mm": 3241.58,
+    "kicad_drc_violations": 477,
+    "kicad_drc_breakdown": {
+      "total_violations": 477,
+      "unconnected_count": 13,
+      "by_type": {
+        "clearance": 90,
+        "copper_edge_clearance": 4,
+        "courtyards_overlap": 7,
+        "lib_footprint_issues": 92,
+        "lib_footprint_mismatch": 17,
+        "silk_edge_clearance": 20,
+        "silk_over_copper": 18,
+        "silk_overlap": 24,
+        "solder_mask_bridge": 199,
+        "starved_thermal": 3,
+        "track_dangling": 3
+      },
+      "by_severity": {
+        "error": 303,
+        "warning": 174
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

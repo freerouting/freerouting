@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "boatcontrol_NonLatchingNO30A",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 255353,
+      "sha256": "b299ce3c711c4238afa2784acf956c149281452a3316470bb361e68863217b64"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 238670,
+      "sha256": "13875a6d5eb6c6d17508886d9302d6bb02a9326fbd28a44188348afbf1660e70"
+    },
+    "metadata_json": {
+      "bytes": 623,
+      "sha256": "9354f740553850e71709f3fbb3860aef363e47bd044e57b210a5e4d0ba0cf5f0"
+    },
+    "final_json": {
+      "bytes": 109950,
+      "sha256": "dcacf014c9877801ecb75a90c14eef6e12770305520f01a3456a8d7e0717ac56"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:13:49.952631+00:00"
+  }
+}

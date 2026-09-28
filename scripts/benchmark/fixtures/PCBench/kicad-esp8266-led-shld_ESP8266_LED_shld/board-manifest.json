@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "kicad-esp8266-led-shld_ESP8266_LED_shld",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 185586,
+      "sha256": "4e73a85ca48474e07eaf7da59714842b0334ba9112e16d13fa1a5362482c88aa"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 103503,
+      "sha256": "74aa990a5e56b08ad68d54bf59da39bee5e1b5a69eaf2142c26ab3968a019f02"
+    },
+    "metadata_json": {
+      "bytes": 734,
+      "sha256": "112fdc664b8879ec6a0417b3a28e9ea7b06ffa61da5325610c68a387fe42367d"
+    },
+    "final_json": {
+      "bytes": 78789,
+      "sha256": "b27d80ccff02ee7ec4270fa2494274cfedf5deb0375d0141c0c1a6c358a995ce"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:01:30.528395+00:00"
+  }
+}

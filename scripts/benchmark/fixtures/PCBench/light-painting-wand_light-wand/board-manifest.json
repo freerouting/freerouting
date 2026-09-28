@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "light-painting-wand_light-wand",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 165141,
+      "sha256": "2c33e9153b04080ac4450ce574c189e947c2f3e0540dd5f41aab033c67499442"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 79142,
+      "sha256": "ec4383a220fd13131dc910f6642afbe1d7f11ee302e6fe8c644c5878f7a4006a"
+    },
+    "metadata_json": {
+      "bytes": 501,
+      "sha256": "05427f5a23b05e39e5976e6dde8adc21d6f8d27c33b437979c30cee6761d5091"
+    },
+    "final_json": {
+      "bytes": 74949,
+      "sha256": "d594f4e538fa2b05d29107a3db4b9a7a12a3602611b432c39e76ff2dadfcf147"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:16:47.283803+00:00"
+  }
+}

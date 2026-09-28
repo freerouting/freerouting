@@ -1,48 +1,50 @@
-<p align="center">
-<img src="https://raw.githubusercontent.com/freerouting/freerouting/master/assets/social_preview/freerouting_social_preview_1280x960_v2.png" alt="Freerouting" title="Freerouting" align="center">
-</p>
-<h1 align="center">Freerouting</h1>
-<h5 align="center">Freerouting is an advanced autorouter for all PCB programs that support the standard Specctra or Electra DSN interface.</h5>
+# Developer Guide
 
-<br/>
-<br/>
+This document covers how to build, test, and release Freerouting from source.
 
-# Information for developers
-
-## How to build it from source
+## Building from source
 
 ### Requirements
 
-- Java >= 25 ([Adoptium Temurin 25 JRE](https://adoptium.net/temurin/releases/))
-- [Gradle 9.x](https://gradle.org/releases/)
-- Internet connection (dependencies are downloaded automatically)
-- For IDE integration: Gradle extension (not necessary for command line usage)
+- **Java JDK >= 25** ([Adoptium Temurin 25 JDK](https://adoptium.net/temurin/releases/))
+- **Gradle 9.x** (or simply use the included `./gradlew` / `.\gradlew.bat` wrapper)
+- Internet connection (dependencies download automatically)
 
-### IDE
+### Command-line builds
 
-Open the `freerouting` [Gradle](http://www.gradle.org/) project in your favourite IDE (NB, IntelliJ, Eclipse etc. with Gradle Plugin) and build it by calling the `assemble` task.
+Open a terminal in the repository root:
 
-### Command Line
+- **Build executable JAR**:
+  ```bash
+  ./gradlew executableJar
+  ```
+  *(On Windows: `.\gradlew.bat executableJar`)*
+  The runnable JAR is generated at `build/libs/freerouting-current-executable.jar`.
 
-Navigate to the [Gradle](http://www.gradle.org/) project (e.g., `path/to/freerouting`) and enter the following command
+- **Fast compilation check (no tests, no JARs)**:
+  ```bash
+  ./gradlew compileJava
+  ```
 
-#### Bash (Linux/OS X/Cygwin/other Unix-like shell)
+- **Run all standard unit tests**:
+  ```bash
+  ./gradlew test
+  ```
 
-``` bash
-./gradlew assemble
+- **Run full verification suite (tests + Spotless + Checkstyle)**:
+  ```bash
+  ./gradlew check
+  ```
+
+### GUI and Accessibility Tests
+
+GUI accessibility tests are tagged `@Tag("gui")` and run in headless mode:
+
+```bash
+./gradlew testGui
 ```
 
-#### Windows (CMD)
-
-```powershell
-gradlew executableJar
-```
-
-![image](https://user-images.githubusercontent.com/910321/143483981-5f1f8473-098e-4cf2-997b-a34d14346853.png)
-
-#### Generated Executables
-
-All four .jar files will be generated in the `build\libs` subfolder. You would typically run the `freerouting-current-executable.jar` file.
+`testGui` runs component-level tests without opening real desktop windows. The default `test` task excludes GUI tests; `testAll` runs `test`, `testSlow`, `testSerial`, and `testGui`.
 
 ## Translations (i18n)
 
@@ -123,7 +125,7 @@ commit.
 
 - **Run Checkstyle on maintained sources independently**:
   ```bash
-  ./gradlew checkstyleMain checkstyleTest checkstyleRewriteRecipes
+  ./gradlew checkstyleMain checkstyleTest
   ```
 
 - **Verify generated i18n context without rewriting it**:
@@ -141,69 +143,120 @@ Checkstyle configuration do not overwrite it.
 
 Creating a release takes about half an hour if everything goes according to the plan. Usually it doesn't, so free up ~3 hours for this.
 
-Let's suppose that the new version is `2.3.4`. You need to complete these steps:
+Let's suppose that the new version is `<version>` (e.g. `2.5.0`). You need to complete these steps:
 
-* Run the `gradlew wrapper --gradle-version latest` command to update the Gradle wrapper to the latest version.
-* Run the `./gradlew dependencyUpdates useLatestVersions` command to check if there are any dependencies that need to be updated. Update them manually if necessary and commit the changes.
-* Check if there are any [outstanding pull requests](https://github.com/freerouting/freerouting/pulls) and merge them as well
-* Change `ext.publishing.versionId` in `\gradle\project-info.gradle` to `2.3.4`
-* Push it to GitHub
-* Check if it was built successfully on GitHub Actions
-* Create a new draft release
-* Run `gradlew.bat executableJar` -> this will generate the files in `\build\libs\freerouting*.jar`
-* Rename to `freerouting-current-executable.jar` to `freerouting-2.3.4.jar`
-* Update the `integrations\KiCad`
-    * Copy `freerouting-2.3.4.jar` into `\integrations\KiCad\kicad-freerouting\plugins\jar\`
-    * Update `\integrations\KiCad\kicad-freerouting\plugins\plugin.ini` with the new filename
-    * Update `\integrations\KiCad\kicad-freerouting\metadata.json`
-    * Create a ZIP file from the `kicad-freerouting` folder
-    * Copy this `kicad-freerouting.zip` file to `kicad-freerouting-2.3.4.zip`
-    * Use KiCad Packager
-      from [https://gitlab.com/kicad/addons/metadata/tools](https://gitlab.com/kicad/addons/metadata/-/tree/main/tools)
-      to get hash and file sizes
-    * Update `\integrations\KiCad\metadata.json` with these values
-    * Push these changes to GitHub
-        * Run the "Run KiCad repository validation" command in KiCad Packager
-    * Delete previous fork at https://gitlab.com/freeroutingapp/metadata
-      (Settings / General / Delete this project)
-    * Fork https://gitlab.com/kicad/addons/metadata again
-    * Create a new branch, named `freerouting-2.3.4`
-    * Replace https://gitlab.com/freeroutingapp/metadata/-/blob/main/packages/app.freerouting.kicad-plugin/metadata.json
-      with the new one
-    * Create a merge request at https://gitlab.com/kicad/addons/metadata / Merge request / ...
-* Update README.md, integrations.md, self-hosting.md and settings.md
-* Publish the release
-* Check if Windows, Linux and macOS installers were added to the release [in GitHub Actions](https://github.com/freerouting/freerouting/actions) and if the Docker image was updated on [GHCR.io](https://github.com/freerouting/freerouting/pkgs/container/freerouting)
-* Publish the library to Maven Central
-    * Use the [Gradle Maven plugin]([url](https://github.com/vanniktech/gradle-maven-publish-plugin)) and set the properties in `/.gradle/gradle.properties`
+### 1. Pre-Release (Clean & Ready `master`)
+
+* Check if there are any [outstanding pull requests](https://github.com/freerouting/freerouting/pulls) and merge them into `master` first.
+* Fetch the latest `master` branch and ensure your local repo is up to date:
+  ```bash
+  git checkout master
+  git pull origin master
+  ```
+
+### 2. Prepare Release Branch (`release/v<version>`)
+
+* Create a new release branch:
+  ```bash
+  git checkout -b release/v<version>
+  ```
+* Run `gradlew wrapper --gradle-version latest` (or pass `--gradle-distribution-sha256-sum <hash>` if checksum verification is configured) to update the Gradle wrapper.
+* Run `./gradlew dependencyUpdates useLatestVersions` to check and apply dependency updates. Verify changes manually if necessary.
+* Change `ext.publishInfo.versionId` in `gradle/project-info.gradle` to `<version>`.
+* Set the package version in `integrations/mcp-server/package.json` to `<version>` (`npm version <version> --no-git-tag-version`).
+* Build the executable JAR:
+  ```powershell
+  gradlew executableJar
+  ```
+* Copy and rename `build/libs/freerouting-current-executable.jar` to `freerouting-<version>.jar`.
+* Update the KiCad integration (`integrations/KiCad/`):
+    * Copy `freerouting-<version>.jar` into `integrations/KiCad/kicad-freerouting/plugins/jar/` (and remove the previous version JAR).
+    * Update `integrations/KiCad/kicad-freerouting/plugins/plugin.ini` with the new filename (`location = jar/freerouting-<version>.jar`).
+    * Update `integrations/KiCad/kicad-freerouting/metadata.json` with the new version and download URL.
+    * Create a ZIP file from the `kicad-freerouting` folder and save it as both `kicad-freerouting.zip` and `kicad-freerouting-<version>.zip`.
+    * Use KiCad Packager from [https://gitlab.com/kicad/addons/metadata/tools](https://gitlab.com/kicad/addons/metadata/-/tree/main/tools) to compute SHA-256 and file sizes.
+    * Update `integrations/KiCad/metadata.json` with the new version entry, SHA-256, download size, and install size.
+    * Run a full routing session from KiCad after manually installing the plugin ZIP, to make sure that the router executes properly in CLI mode and the resulting SES file imports without corruption or parser errors.
+* Update documentation version references (`README.md`, `integrations.md`, `self-hosting.md`, `settings.md`, and `scoring.md` if the score formulas or defaults changed).
+* Run verification quality checks:
+  ```bash
+  ./gradlew spotlessCheck checkstyleMain checkstyleTest
+  ```
+* Commit the release changes and push to GitHub:
+  ```bash
+  git add -A
+  git commit -m "Prepare release v<version>"
+  git push -u origin release/v<version>
+  ```
+
+### 3. Pull Request & Verification
+
+* Create a PR from `release/v<version>` → `master`.
+* Check if it builds successfully on GitHub Actions CI.
+* Merge the PR into `master`.
+
+### 4. Publish Release & Artifacts
+
+* Update your local `master` branch:
+  ```bash
+  git checkout master
+  git pull origin master
+  ```
+* Create and publish the new release on GitHub:
+  * Draft a release for tag `v<version>` targeting the latest commit on `master`.
+  * You do not need to manually attach artifacts. Publishing the release automatically triggers GitHub Actions (`create-release.yml` and `docker-release.yml`) to build and attach:
+    * Universal executable JAR (`freerouting-<version>.jar`).
+    * Windows x64 installer (`freerouting-<version>-windows-x64.msi`).
+    * Linux x64 distribution package (`freerouting-<version>-linux-x64.zip`).
+    * macOS Apple Silicon ARM64 disk image (`freerouting-<version>-macos-arm64.dmg`).
+    * macOS Intel x86_64 disk image (`freerouting-<version>-macos-x64.dmg`).
+    * Multi-architecture Docker image automatically published to GitHub Container Registry ([`ghcr.io/freerouting/freerouting`](https://github.com/freerouting/freerouting/pkgs/container/freerouting)).
+  * *Note on KiCad plugin ZIP:* We do not attach the KiCad plugin ZIP directly to the GitHub release; it is hosted under `integrations/KiCad/kicad-freerouting-<version>.zip` and distributed to users through KiCad's Plugin and Content Manager (PCM).
+* Publish the library to Maven Central:
+    * Use the [Gradle Maven plugin](https://github.com/vanniktech/gradle-maven-publish-plugin) and verify properties in `~/.gradle/gradle.properties`:
       <img width="896" height="293" alt="image" src="https://github.com/user-attachments/assets/fa85332d-91d8-4715-924d-aa8b6f86c64c" />
-    * Run the `./gradlew publishToMavenCentral --no-configuration-cache` command in the root folder to publish it to Maven Central
-    * Publish the deployment [on Maven Central Repository](https://central.sonatype.com/publishing)
-
-* Update the Docker image on Azure
-    1. build docker image locally for Linux x64 (~2 mins)
-       ```
-       docker build -t freerouting:latest .
-         ```
-    3. tag the docker image
-       ```
-       docker tag freerouting:latest freerouting.azurecr.io/freerouting/api:latest
-         ```
-    5. push image to Azure as freerouting.azurecr.io/freerouting/api:latest
-       ```
-         az login
-       az acr login --name freerouting
-       docker push freerouting.azurecr.io/freerouting/api:latest
-       ```
-* Change `ext.publishing.versionId` in `\gradle\project-info.gradle` again to `2.3.5-SNAPSHOT`
-
-* Test and publish a new version of the Python Freerouting Client on PyPI (in the separate `freerouting-python-client` repository). **Keep the PyPI package version in sync with the Freerouting GA release** (same semver as `ext.publishing.versionId`).
-* Bump and publish `@freerouting/freerouting-mcp-server` on [npm](https://www.npmjs.com/package/@freerouting/freerouting-mcp-server) (`integrations/mcp-server`). **Use the same semver as the Freerouting GA release.**
+    * Run `./gradlew publishToMavenCentral --no-configuration-cache` in the root folder to publish it to Maven Central.
+    * Publish the deployment on [Maven Central Repository (Sonatype)](https://central.sonatype.com/publishing).
+* Publish the MCP Server NPM package:
+  ```bash
+  cd integrations/mcp-server
+  npm pkg fix
+  npm publish
+  cd ../..
+  ```
+* Test and publish a new version of the Python Freerouting Client on PyPI (in the separate `freerouting-python-client` repository). Keep the PyPI package version in sync with the Freerouting GA release.
+* Submit KiCad Addon Repository update:
+    * You can perform this update directly on GitLab's website without cloning the repository locally:
+    * Go to your GitLab fork of the official repository: [`https://gitlab.com/freeroutingapp/metadata`](https://gitlab.com/freeroutingapp/metadata) (or fork [`https://gitlab.com/kicad/addons/metadata`](https://gitlab.com/kicad/addons/metadata) if not already done, and click **Update fork** to bring it up to date).
+    * Navigate to [`packages/app.freerouting.kicad-plugin/metadata.json`](https://gitlab.com/freeroutingapp/metadata/-/blob/main/packages/app.freerouting.kicad-plugin/metadata.json).
+    * Click **Edit** -> **Edit single file**.
+    * Paste the updated version entry or content from `integrations/KiCad/metadata.json` into the editor.
+    * In the **Commit changes** section:
+      * Set **Commit message**: `Update Freerouting Addon to <version>`
+      * Set **Commit to a new branch**: enter a new branch name (e.g. `freerouting-<version>`). *Do not commit to `main`*, as GitLab CI package validation requires a dedicated branch.
+      * Ensure **Create a merge request for this change** is checked.
+      * Click **Commit changes**.
+    * On the Merge [Request page](https://gitlab.com/kicad/addons/metadata/-/merge_requests), the GitLab CI pipeline will automatically start and run the `validate` and `build` stages:
+      * Click the **Pipelines** tab on the MR to view progress.
+      * Once the `build` job finishes, open its log: it outputs a link to a temporary PCM repository containing only the updated package.
+      * In KiCad, open **Plugin and Content Manager (PCM)** -> **Manage** -> **Repository**, add that temporary repository URL, and test installing and running the plugin to verify everything works end-to-end.
+    * *Note:* After the merge request is approved and merged, a scheduled job syncs updates to the official KiCad PCM repository within ~24 hours.
+* **Docker Image Updates (GHCR):**
+    * The multi-architecture Docker image is automatically built and published to GitHub Container Registry ([`ghcr.io/freerouting/freerouting`](https://github.com/freerouting/freerouting/pkgs/container/freerouting)) via `.github/workflows/docker-release.yml` whenever a release is published on GitHub. No manual build or push is required.
 * Optionally regenerate non-official SDK scaffolds from this repository before preparing SDK PRs:
-    * `./scripts/sdk/regenerate-all.ps1 -SharedVersion 2.3.4`
+    * `./scripts/sdk/regenerate-all.ps1 -SharedVersion <version>`
     * `./scripts/sdk/generate-javascript-client.ps1`
     * `./scripts/sdk/generate-csharp-client.ps1`
     * `./scripts/sdk/generate-cpp-client.ps1`
+
+### 5. Next Development Cycle
+
+* Create a branch for the next development snapshot:
+  ```bash
+  git checkout -b chore/bump-to-next-snapshot
+  ```
+* Change `ext.publishInfo.versionId` in `gradle/project-info.gradle` to the next snapshot version (e.g. `2.5.1-SNAPSHOT`).
+* Commit, push, open a PR from `chore/bump-to-next-snapshot` → `master`, and merge it into `master`.
 
 ## How to update the MCP Server NPM package
 
@@ -280,12 +333,24 @@ Recommended guardrails:
 
 ## Source formatting and cleanup
 
-- Freerouting follows Google coding conventions from Google Java Style, and the configured OpenRewrite recipe
-  `org.openrewrite.staticanalysis.CodeCleanup` applies those rules automatically to the codebase.
-- Run the cleanup recipe locally with the Rewrite task:
+- Freerouting follows Google coding conventions from Google Java Style, enforced via Spotless and Checkstyle.
+- Verify formatting locally before committing:
 
-```
-  ./gradlew rewriteRun
+```bash
+./gradlew spotlessCheck checkstyleMain checkstyleTest
 ```
 
-- Run the same command before committing so formatting stays consistent with the automated checks.
+- When formatting changes are intentionally needed, apply them via:
+
+```bash
+./gradlew spotlessApply
+```
+
+## Questions & Support
+
+Have questions about the architecture or need help getting started?
+
+- **GitHub Discussions**: [Start a discussion](https://github.com/freerouting/freerouting/discussions)
+- **Twitter/X**: [@freeroutingPCB](https://x.com/freeroutingPCB) or [@andrasfuchs](https://x.com/andrasfuchs)
+- **LinkedIn**: [Andras Fuchs](https://www.linkedin.com/in/andrasfuchs/)
+- **Email**: [info@freerouting.app](mailto:info@freerouting.app)

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Inhibition_amplifier",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 357876,
+      "sha256": "f7f35cc9edb6812b5e99f99b26639010e2e71e01dfbe0bf076817debe45789a0"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 190715,
+      "sha256": "a638d274cfacbd42e8dadf4afde6bb33eaab3cdf0000e04443db601cd4c67041"
+    },
+    "metadata_json": {
+      "bytes": 462,
+      "sha256": "03d19a77b9719fcca410853a6a33de999b7569439572121d268e245750c3241f"
+    },
+    "final_json": {
+      "bytes": 145861,
+      "sha256": "b40ebe1367755cfcac47ed090ae0b0e8752295f245ae314933e1ba5b6d215221"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:58:53.384309+00:00"
+  }
+}

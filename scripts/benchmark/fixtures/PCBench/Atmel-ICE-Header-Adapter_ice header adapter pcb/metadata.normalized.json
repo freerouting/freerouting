@@ -1,0 +1,67 @@
+{
+  "board_id": "Atmel-ICE-Header-Adapter_ice header adapter pcb",
+  "display_name": "Atmel-ICE-Header-Adapter_ice header adapter pcb",
+  "pcbench_directory": "PCBs/Atmel-ICE-Header-Adapter_ice header adapter pcb",
+  "source": "https://github.com/bobc/Atmel-ICE-Header-Adapter",
+  "author": "bobc",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:59.958145+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 1,
+    "components": 13,
+    "dimensions_mm": {
+      "width": 48.26,
+      "height": 48.26
+    },
+    "area_cm2": 23.29,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 261,
+    "vias": 8,
+    "track_length_mm": 896.96,
+    "kicad_drc_violations": 259,
+    "kicad_drc_breakdown": {
+      "total_violations": 259,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 161,
+        "copper_edge_clearance": 5,
+        "lib_footprint_issues": 13,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 4,
+        "silk_overlap": 12,
+        "solder_mask_bridge": 50,
+        "starved_thermal": 6,
+        "text_height": 2,
+        "text_thickness": 2
+      },
+      "by_severity": {
+        "error": 222,
+        "warning": 37
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.828924+00:00",
+    "elapsed_seconds": 35.65,
+    "unrouted_nets": 3,
+    "clearance_violations": 0,
+    "quality_score": 957.74
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "pcb-usb-ft245r-parallel-adapter_pcb-usb-ft245r-parallel-adapter",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 90256,
+      "sha256": "b86bc0faf487a254acaa27eab187ba2df7d51c74cfc83f6b04b3ad4a3df5497c"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 61106,
+      "sha256": "3e49d87b10ca9809c0dc4084354b10529b609c0467f656f75960e9d651c81a1e"
+    },
+    "metadata_json": {
+      "bytes": 764,
+      "sha256": "cf8748b70136f4b05c9a0ca10e7398e1adbf0ac69c1f8aaf8dcd019dfb015781"
+    },
+    "final_json": {
+      "bytes": 53817,
+      "sha256": "3ec9eec3eff4299ef9b5c654a7930f0c4f7bcfb89f72a70b57a108115488b8b2"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:31:56.973834+00:00"
+  }
+}

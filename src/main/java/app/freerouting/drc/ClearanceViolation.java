@@ -1,13 +1,31 @@
 package app.freerouting.drc;
 
-import app.freerouting.board.Item;
-import app.freerouting.board.ObjectInfoPanel;
+import app.freerouting.board.actions.ItemInfoPrinter;
+import app.freerouting.board.model.items.ComponentOutline;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.ObstacleArea;
+import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.items.Trace;
+import app.freerouting.board.model.items.Via;
+import app.freerouting.board.model.structure.BoardOutline;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.util.TextManager;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 
 /** Information of a clearance violation between 2 items. */
-public class ClearanceViolation implements ObjectInfoPanel.Printable {
+public class ClearanceViolation implements ItemInfoPrinter.Printable {
+
+  /** Categorization of clearance violations by item fixability and participant types. */
+  public enum Category {
+    PIN_TO_PIN,
+    PIN_TO_OUTLINE_OR_KEEPOUT,
+    FIXED_ROUTE,
+    OTHER_UNFIXABLE,
+    POTENTIALLY_FIXABLE
+  }
 
   /** The first item of the clearance violation. */
   public final Item firstItem;
@@ -40,30 +58,118 @@ public class ClearanceViolation implements ObjectInfoPanel.Printable {
     this.actualClearance = actualClearance;
   }
 
+  /**
+   * Returns true if neither participant in this clearance violation is routable, meaning the
+   * violation cannot be resolved by ripping up or rerouting traces or vias.
+   */
+  public boolean isUnfixable() {
+    return (this.firstItem == null || !this.firstItem.isRoutable())
+        && (this.secondItem == null || !this.secondItem.isRoutable());
+  }
+
+  /** Categorizes this clearance violation based on participant item types and fixability. */
+  public Category getCategory() {
+    if (!isUnfixable()) {
+      return Category.POTENTIALLY_FIXABLE;
+    }
+    boolean firstIsPin = this.firstItem instanceof Pin;
+    boolean secondIsPin = this.secondItem instanceof Pin;
+    if (firstIsPin && secondIsPin) {
+      return Category.PIN_TO_PIN;
+    }
+    boolean firstIsOutlineOrKeepout = isOutlineOrKeepout(this.firstItem);
+    boolean secondIsOutlineOrKeepout = isOutlineOrKeepout(this.secondItem);
+    if ((firstIsPin && secondIsOutlineOrKeepout) || (secondIsPin && firstIsOutlineOrKeepout)) {
+      return Category.PIN_TO_OUTLINE_OR_KEEPOUT;
+    }
+    boolean firstIsRoute = this.firstItem instanceof Trace || this.firstItem instanceof Via;
+    boolean secondIsRoute = this.secondItem instanceof Trace || this.secondItem instanceof Via;
+    if (firstIsRoute || secondIsRoute) {
+      return Category.FIXED_ROUTE;
+    }
+    return Category.OTHER_UNFIXABLE;
+  }
+
+  private static boolean isOutlineOrKeepout(Item item) {
+    return item instanceof BoardOutline
+        || item instanceof ComponentOutline
+        || item instanceof ObstacleArea;
+  }
+
+  /**
+   * Aggregates the clearance violations of the given items into a single list, sorted by violation
+   * severity (largest expected-minus-actual shortfall first). This is the clearance-violation
+   * <em>compute</em> that the GUI façade {@code interactive.ClearanceViolations} presents; keeping
+   * it here (headless-safe, no GUI/Swing/AWT types) lets the violations of a board be computed
+   * without any GUI class (SoC plan Phase 5, D13).
+   *
+   * <p><strong>Note on double counting:</strong> a violation between items A and B is reported once
+   * on each item, so the pair appears twice in this list. Callers that need a deduplicated,
+   * whole-board count should use {@link DesignRulesChecker#getAllClearanceViolations()} instead.
+   *
+   * <p>As a side effect, each item's {@code smallestClearance} field is populated by {@link
+   * Item#clearanceViolations()}; read it via {@link #smallestClearance(Collection)} after this
+   * call.
+   *
+   * @param items the board items to aggregate
+   * @return the aggregated, severity-sorted violations (never {@code null})
+   */
+  public static List<ClearanceViolation> aggregateSortedBySeverity(Collection<Item> items) {
+    List<ClearanceViolation> violations = new ArrayList<>();
+    for (Item item : items) {
+      violations.addAll(item.clearanceViolations());
+    }
+    violations.sort(
+        (o1, o2) ->
+            -Double.compare(
+                o1.expectedClearance - o1.actualClearance,
+                o2.expectedClearance - o2.actualClearance));
+    return violations;
+  }
+
+  /**
+   * Returns the smallest clearance among the given items, or {@link Double#MAX_VALUE} if none has
+   * been computed. This reads each item's {@code smallestClearance} field, which is populated by
+   * {@link Item#clearanceViolations()}; call it after {@link
+   * #aggregateSortedBySeverity(Collection)}.
+   *
+   * @param items the board items to inspect
+   * @return the smallest clearance found, or {@link Double#MAX_VALUE} when no positive value exists
+   */
+  public static double smallestClearance(Collection<Item> items) {
+    double smallest = Double.MAX_VALUE;
+    for (Item item : items) {
+      if ((item.smallestClearance >= 0) && (item.smallestClearance < smallest)) {
+        smallest = item.smallestClearance;
+      }
+    }
+    return smallest;
+  }
+
   @Override
-  public void printInfo(ObjectInfoPanel window, Locale locale) {
+  public void printInfo(ItemInfoPrinter printer, Locale locale) {
     TextManager tm = new TextManager(this.getClass(), locale);
 
-    window.appendBold(tm.getText("clearance_violation_2"));
-    window.append(" " + tm.getText("at") + " ");
-    window.append(shape.centreOfGravity());
-    window.append(", " + tm.getText("width") + " ");
-    window.append(2 * this.shape.smallestRadius());
-    window.append(", " + tm.getText("layer") + " ");
-    window.append(firstItem.board.layerStructure.arr[this.layer].name);
-    window.append(", " + tm.getText("between"));
-    window.newline();
-    window.indent();
-    firstItem.printInfo(window, locale);
-    window.indent();
-    secondItem.printInfo(window, locale);
-    window.newline();
-    window.indent();
+    printer.appendBold(tm.getText("clearance_violation_2"));
+    printer.append(" " + tm.getText("at") + " ");
+    printer.append(shape.centreOfGravity());
+    printer.append(", " + tm.getText("width") + " ");
+    printer.append(2 * this.shape.smallestRadius());
+    printer.append(", " + tm.getText("layer") + " ");
+    printer.append(firstItem.board.layerStructure.layers[this.layer].name);
+    printer.append(", " + tm.getText("between"));
+    printer.newline();
+    printer.indent();
+    firstItem.printInfo(printer, locale);
+    printer.indent();
+    secondItem.printInfo(printer, locale);
+    printer.newline();
+    printer.indent();
     String clearanceViolationInfoExpectedClearance =
         tm.getText(
             "clearanceViolationInfoExpectedClearance",
             "%.4f".formatted(this.expectedClearance / 10000.0),
             "%.4f".formatted(this.actualClearance / 10000.0));
-    window.append(clearanceViolationInfoExpectedClearance);
+    printer.append(clearanceViolationInfoExpectedClearance);
   }
 }

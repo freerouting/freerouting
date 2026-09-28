@@ -1,0 +1,33 @@
+{
+  "board": "Hardware_Playground_serial_gw_ATMEGA328P",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Hardware_Playground_serial_gw_ATMEGA328P\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 25,
+  "segment_count": 398,
+  "approximate_track_length_mm": 672.92,
+  "kicad_drc_violations": 408,
+  "generated_at": "2026-08-18T18:55:20.131129+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 408,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 76,
+      "clearance": 35,
+      "copper_edge_clearance": 10,
+      "courtyards_overlap": 13,
+      "lib_footprint_issues": 39,
+      "mirrored_text_on_front_layer": 1,
+      "nonmirrored_text_on_back_layer": 1,
+      "pth_inside_courtyard": 5,
+      "silk_over_copper": 2,
+      "silk_overlap": 2,
+      "solder_mask_bridge": 140,
+      "text_height": 84
+    },
+    "by_severity": {
+      "error": 279,
+      "warning": 129
+    }
+  }
+}

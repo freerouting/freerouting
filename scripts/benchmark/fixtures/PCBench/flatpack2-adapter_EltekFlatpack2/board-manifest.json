@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "flatpack2-adapter_EltekFlatpack2",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 165392,
+      "sha256": "16a851cbf44cf7e06cebe00cdb5b3618ce5a72e3ac730f7ac64d470401566d23"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 68944,
+      "sha256": "36e6dd8af26dc866d138f5cc66193d91dfc409868a9c1a28b778c4f664df4dad"
+    },
+    "metadata_json": {
+      "bytes": 741,
+      "sha256": "2714868de5d01dc3f72f172e286f47186738a886f2e3ea7acda5bbbd8ed0531f"
+    },
+    "final_json": {
+      "bytes": 38290,
+      "sha256": "d15b9c084cd07d51960d1276ffb9d6d1af766fb6ec23bd1877bebbef474510cc"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:49:50.126787+00:00"
+  }
+}

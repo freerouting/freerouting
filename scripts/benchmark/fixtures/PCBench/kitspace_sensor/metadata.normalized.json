@@ -1,0 +1,64 @@
+{
+  "board_id": "kitspace_sensor",
+  "display_name": "kitspace_sensor",
+  "pcbench_directory": "PCBs/kitspace_sensor",
+  "source": "https://github.com/less-smog/hardware",
+  "author": "",
+  "license": "[{'name': 'CERN', 'link': 'https://raw.githubusercontent.com/less-smog/hardware/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:16:16.377057+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 34,
+    "components": 68,
+    "dimensions_mm": {
+      "width": 62.0,
+      "height": 65.0
+    },
+    "area_cm2": 40.3,
+    "zones": 9
+  },
+  "reference": {
+    "segments": 1175,
+    "vias": 91,
+    "track_length_mm": 2000.76,
+    "kicad_drc_violations": 608,
+    "kicad_drc_breakdown": {
+      "total_violations": 608,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 40,
+        "clearance": 55,
+        "copper_edge_clearance": 2,
+        "items_not_allowed": 92,
+        "lib_footprint_issues": 68,
+        "malformed_courtyard": 58,
+        "pth_inside_courtyard": 5,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 55,
+        "silk_overlap": 51,
+        "solder_mask_bridge": 163,
+        "text_height": 12,
+        "track_dangling": 4
+      },
+      "by_severity": {
+        "error": 415,
+        "warning": 193
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

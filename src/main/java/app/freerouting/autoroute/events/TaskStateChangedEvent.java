@@ -1,6 +1,6 @@
 package app.freerouting.autoroute.events;
 
-import app.freerouting.autoroute.TaskState;
+import app.freerouting.autoroute.pipeline.TaskState;
 import java.util.EventObject;
 
 /** TaskStateChangedEvent. */

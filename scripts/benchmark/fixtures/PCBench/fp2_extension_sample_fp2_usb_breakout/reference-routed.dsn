@@ -1,0 +1,132 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\fp2_extension_sample_fp2_usb_breakout\reference-routed.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  160832 -118414  142947 -118414  142947 -95200  160832 -95200
+            160832 -118414)
+    )
+    (plane GND (polygon B.Cu 0  143002 -118364  143002 -95250  160782 -95250  160782 -118364
+            143002 -118364))
+    (via "Via[0-1]_600:400_um")
+    (rule
+      (width 500)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component fairphone:fp2_p5_connector
+      (place P1 151892 -99822 back 180 (PN "FP2-MODULE_5-CONNECTOR"))
+    )
+    (component Connect:USB_A
+      (place P2 148501.1 -105003.6 front 0 (PN USB_A))
+    )
+  )
+  (library
+    (image fairphone:fp2_p5_connector
+      (pin Oval[T]Pad_1524.000000x1524.000000_um 5 -1695 -1695)
+      (pin Oval[T]Pad_1524.000000x1524.000000_um 4 1695 -1695)
+      (pin Oval[T]Pad_1524.000000x1524.000000_um 2 -1695 1695)
+      (pin Oval[T]Pad_1524.000000x1524.000000_um 3 0 0)
+      (pin Oval[T]Pad_1524.000000x1524.000000_um 1 1695 1695)
+      (pin Round[A]Pad_1524.000000_um @1 -3935 0)
+      (pin Round[A]Pad_1524.000000_um @2 3935 30)
+    )
+    (image Connect:USB_A
+      (outline (polygon signal 0  11945 -13195  -5295 -13195  -5295 1395  11945 1395))
+      (outline (path signal 150  11049.9 -12951.9  -3936.14 -12951.9))
+      (outline (path signal 150  11049.9 1145.12  -3936.14 1145.12))
+      (outline (path signal 150  -3936.14 -12951.9  -3936.14 1145.12))
+      (outline (path signal 150  11049.9 1145.12  11049.9 -12951.9))
+      (pin Round[A]Pad_1501.140000_um (rotate 270) 4 7112.86 2.12)
+      (pin Round[A]Pad_1501.140000_um (rotate 270) 3 4572.86 2.12)
+      (pin Round[A]Pad_1501.140000_um (rotate 270) 2 2540.86 2.12)
+      (pin Round[A]Pad_1501.140000_um (rotate 270) 1 0.86 2.12)
+      (pin Round[A]Pad_2999.740000_um (rotate 270) 5 10160.9 -2664.88)
+      (pin Round[A]Pad_2999.740000_um (rotate 270) 5@1 -3555.14 -2664.88)
+    )
+    (padstack Round[A]Pad_1501.140000_um
+      (shape (circle F.Cu 1501.14))
+      (shape (circle B.Cu 1501.14))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1524.000000_um
+      (shape (circle F.Cu 1524))
+      (shape (circle B.Cu 1524))
+      (attach off)
+    )
+    (padstack Round[A]Pad_2999.740000_um
+      (shape (circle F.Cu 2999.74))
+      (shape (circle B.Cu 2999.74))
+      (attach off)
+    )
+    (padstack Oval[T]Pad_1524.000000x1524.000000_um
+      (shape (path F.Cu 1524  0 0  0 0))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(P1-Pad5)"
+      (pins P1-5 P2-2)
+    )
+    (net "Net-(P1-Pad4)"
+      (pins P1-4 P2-3)
+    )
+    (net "Net-(P1-Pad2)"
+      (pins P1-2)
+    )
+    (net GND
+      (pins P1-3 P2-4 P2-5 P2-5@1)
+    )
+    (net "Net-(P1-Pad1)"
+      (pins P1-1 P2-1)
+    )
+    (class kicad_default GND "Net-(P1-Pad1)" "Net-(P1-Pad2)" "Net-(P1-Pad4)"
+      "Net-(P1-Pad5)"
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 500)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+    (wire (path F.Cu 500  151042 -105001  151042 -96354  151130 -96266)(net "Net-(P1-Pad5)")(type route))
+    (wire (path B.Cu 500  150197 -97199  150197 -98127)(net "Net-(P1-Pad5)")(type route))
+    (wire (path B.Cu 500  151130 -96266  150197 -97199)(net "Net-(P1-Pad5)")(type route))
+    (wire (path F.Cu 500  153074 -105001  153074 -96354)(net "Net-(P1-Pad4)")(type route))
+    (wire (path B.Cu 500  153587 -96691  153587 -98127)(net "Net-(P1-Pad4)")(type route))
+    (wire (path B.Cu 500  153162 -96266  153587 -96691)(net "Net-(P1-Pad4)")(type route))
+    (wire (path F.Cu 500  153074 -96354  153162 -96266)(net "Net-(P1-Pad4)")(type route))
+    (wire (path B.Cu 500  153587 -101517  153499 -101517  151892 -103124  150379 -103124
+            148502 -105001)(net "Net-(P1-Pad1)")(type route))
+    (via "Via[0-1]_600:400_um"  151130 -96266 (net "Net-(P1-Pad5)")(type route))
+    (via "Via[0-1]_600:400_um"  153162 -96266 (net "Net-(P1-Pad4)")(type route))
+  )
+)

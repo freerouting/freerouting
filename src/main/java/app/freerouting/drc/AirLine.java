@@ -1,6 +1,6 @@
 package app.freerouting.drc;
 
-import app.freerouting.board.Item;
+import app.freerouting.board.model.items.Item;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.rules.Net;
 

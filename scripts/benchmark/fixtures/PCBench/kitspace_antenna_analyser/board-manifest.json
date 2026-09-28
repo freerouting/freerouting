@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "kitspace_antenna_analyser",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 201392,
+      "sha256": "28628b816b4b9b33789b4a2616b87b078a31dd894d67214d52ccb2e62f83c726"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 117692,
+      "sha256": "f286f7082bff5dfd51bb8e8168416083308cac77c7739cc0f5ddd7c1759547f7"
+    },
+    "metadata_json": {
+      "bytes": 495,
+      "sha256": "99d237234c955fbb8b922633c82b142ad95b074d62ec648b38d64b1818589341"
+    },
+    "final_json": {
+      "bytes": 77073,
+      "sha256": "06efa04255e11fe653604b88c132ebe625b6dcc23b710324882ebe21cd1cc905"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:03:14.888170+00:00"
+  }
+}

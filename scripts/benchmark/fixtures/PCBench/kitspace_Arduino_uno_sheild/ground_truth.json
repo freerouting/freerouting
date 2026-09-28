@@ -1,0 +1,25 @@
+{
+  "board": "kitspace_Arduino_uno_sheild",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\kitspace_Arduino_uno_sheild\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 3,
+  "segment_count": 166,
+  "approximate_track_length_mm": 949.06,
+  "kicad_drc_violations": 23,
+  "generated_at": "2026-08-18T19:03:43.083932+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 23,
+    "unconnected_count": 1,
+    "by_type": {
+      "courtyards_overlap": 4,
+      "lib_footprint_issues": 8,
+      "malformed_courtyard": 3,
+      "text_height": 8
+    },
+    "by_severity": {
+      "error": 7,
+      "warning": 16
+    }
+  }
+}

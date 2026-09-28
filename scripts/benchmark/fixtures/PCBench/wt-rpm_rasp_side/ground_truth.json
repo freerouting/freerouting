@@ -1,0 +1,29 @@
+{
+  "board": "wt-rpm_rasp_side",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\wt-rpm_rasp_side\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 638,
+  "approximate_track_length_mm": 2559.19,
+  "kicad_drc_violations": 492,
+  "generated_at": "2026-08-18T19:57:44.146431+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 492,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 10,
+      "clearance": 325,
+      "padstack": 10,
+      "silk_edge_clearance": 23,
+      "silk_overlap": 83,
+      "solder_mask_bridge": 25,
+      "starved_thermal": 1,
+      "text_height": 15
+    },
+    "by_severity": {
+      "error": 361,
+      "warning": 131
+    }
+  }
+}

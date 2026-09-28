@@ -1,0 +1,28 @@
+{
+  "board": "DAC-ADAU1966_DAC-ADAU1966",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\DAC-ADAU1966_DAC-ADAU1966\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 298,
+  "segment_count": 1485,
+  "approximate_track_length_mm": 3650.57,
+  "kicad_drc_violations": 685,
+  "generated_at": "2026-08-18T18:14:15.847349+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 685,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 390,
+      "lib_footprint_issues": 199,
+      "silk_over_copper": 9,
+      "silk_overlap": 2,
+      "solder_mask_bridge": 79,
+      "starved_thermal": 2,
+      "track_dangling": 4
+    },
+    "by_severity": {
+      "error": 471,
+      "warning": 214
+    }
+  }
+}

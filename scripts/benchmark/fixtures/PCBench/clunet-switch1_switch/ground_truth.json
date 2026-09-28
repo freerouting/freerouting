@@ -1,0 +1,31 @@
+{
+  "board": "clunet-switch1_switch",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\clunet-switch1_switch\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 304,
+  "approximate_track_length_mm": 654.39,
+  "kicad_drc_violations": 131,
+  "generated_at": "2026-08-18T18:39:10.070655+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 131,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 12,
+      "clearance": 4,
+      "courtyards_overlap": 7,
+      "invalid_outline": 1,
+      "lib_footprint_issues": 36,
+      "pth_inside_courtyard": 1,
+      "silk_over_copper": 15,
+      "silk_overlap": 20,
+      "solder_mask_bridge": 29,
+      "track_dangling": 6
+    },
+    "by_severity": {
+      "error": 54,
+      "warning": 77
+    }
+  }
+}

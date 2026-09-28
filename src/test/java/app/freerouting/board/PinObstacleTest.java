@@ -5,6 +5,8 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.items.Via;
 import org.junit.jupiter.api.Test;
 import org.mockito.Answers;
 

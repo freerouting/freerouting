@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "SparkSwitch_SparkProtectionSwitch",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 45631,
+      "sha256": "392f0b6594086904b82133c63cdf0034fed3ac4f8c4885ecdd60534ef109ba17"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 32328,
+      "sha256": "b66c9243038a4e2f0092dda18e86544b65f5533bec384d49149a0ef08f56f63e"
+    },
+    "metadata_json": {
+      "bytes": 499,
+      "sha256": "666e0e5c789a0426240dc232bca0ac913a5aad49421990949676cad68e2dd755"
+    },
+    "final_json": {
+      "bytes": 23786,
+      "sha256": "e39be9989fea60d0d5ea5d85abdd1e859db928be7e191fb71e256061f7203963"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:46:50.205558+00:00"
+  }
+}

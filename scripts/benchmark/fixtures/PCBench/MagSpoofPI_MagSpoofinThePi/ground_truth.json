@@ -1,0 +1,30 @@
+{
+  "board": "MagSpoofPI_MagSpoofinThePi",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\MagSpoofPI_MagSpoofinThePi\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 125,
+  "approximate_track_length_mm": 540.78,
+  "kicad_drc_violations": 104,
+  "generated_at": "2026-08-18T19:19:42.918035+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 104,
+    "unconnected_count": 5,
+    "by_type": {
+      "clearance": 73,
+      "invalid_outline": 3,
+      "lib_footprint_issues": 17,
+      "silk_edge_clearance": 1,
+      "solder_mask_bridge": 5,
+      "starved_thermal": 1,
+      "text_height": 1,
+      "text_thickness": 1,
+      "track_dangling": 2
+    },
+    "by_severity": {
+      "error": 82,
+      "warning": 22
+    }
+  }
+}

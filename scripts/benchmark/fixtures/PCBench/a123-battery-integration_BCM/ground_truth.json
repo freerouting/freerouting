@@ -1,0 +1,30 @@
+{
+  "board": "a123-battery-integration_BCM",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\a123-battery-integration_BCM\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 88,
+  "segment_count": 466,
+  "approximate_track_length_mm": 1065.18,
+  "kicad_drc_violations": 436,
+  "generated_at": "2026-08-18T17:47:09.032509+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 436,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 141,
+      "copper_edge_clearance": 4,
+      "holes_co_located": 1,
+      "lib_footprint_issues": 67,
+      "silk_over_copper": 158,
+      "silk_overlap": 59,
+      "starved_thermal": 3,
+      "track_dangling": 2,
+      "zones_intersect": 1
+    },
+    "by_severity": {
+      "error": 149,
+      "warning": 287
+    }
+  }
+}

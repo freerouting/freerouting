@@ -1,31 +1,17 @@
-<p align="center">
-<img src="https://raw.githubusercontent.com/freerouting/freerouting/master/assets/social_preview/freerouting_social_preview_1280x960_v2.png" alt="Freerouting" title="Freerouting" align="center">
-</p>
-<h1 align="center">Freerouting</h1>
-<h5 align="center">Freerouting is an advanced autorouter for all PCB programs that support the standard Specctra or Electra DSN interface.</h5>
-
-<br/>
-<br/>
-
 # EDA Integrations
+
+Freerouting integrates seamlessly with many popular EDA tools and PCB design software packages.
 
 ## [KiCad](https://www.kicad.org/)
 
 1. Open KiCad 6.0 or newer
-
 2. Start Tools / Plugin and Content Manager (Ctrl+M)
-
 ![image](https://user-images.githubusercontent.com/910321/210979489-9856712b-f5c8-497e-9bfa-3f869dae85bc.png)
-
 3. Search for the Freerouting plugin
-
 ![image](https://user-images.githubusercontent.com/910321/210980390-8bfdaeed-ea17-4e3f-b998-b5e52c04b2c0.png)
-
 4. Click on the Install button
-
 ![image](https://user-images.githubusercontent.com/910321/210980590-0e006f1c-dfb9-4fd1-994c-8e6e0b4cb56a.png)
-
-5. Open you PCB design in PCB Editor
+5. Open your PCB design in PCB Editor
 
 6. (Optional) Remove routed tracks and via from the design
 
@@ -39,19 +25,57 @@
 
 ![image](https://user-images.githubusercontent.com/910321/210981925-d32fb974-e3e6-4e65-832e-ed033ef3b3db.png)
 
-## [Autodesk EAGLE](https://www.autodesk.com/products/eagle/overview)
+## [Autodesk Fusion](https://www.autodesk.com/products/fusion-360/overview)
 
-1) Download the latest [eagle2freerouter ulp file](https://github.com/freerouting/freerouting/tree/master/integrations/Eagle)
+Autodesk Fusion Electronics integrates with Freerouting via the dedicated Freerouting Fusion Plugin ULP ([`freerouting_fusion_plugin.ulp`](https://github.com/freerouting/freerouting/blob/master/integrations/AutodeskFusion/freerouting_fusion_plugin.ulp)).
 
-2) Start EAGLE and open in the control panel of Eagle for example the design my_design.brd.
+> **Download Plugin:** Download the latest plugin package as a ZIP archive: [**`freerouting_fusion_plugin.zip`**](https://github.com/freerouting/freerouting/raw/master/integrations/AutodeskFusion/freerouting_fusion_plugin.zip). Extract the archive into your Autodesk Fusion ULP directory or any folder of your choice.
 
-3) Choose in the Files pulldown-menu of Eagle the item "execute ULP" and select the Eagle2freerouter ulp file. A file with name my_design.dsn is generated.
+### Features
+* **1-Click Auto-Routing:** Exports the Specctra DSN, launches the Freerouting engine in the background (or GUI), and automatically imports the generated tracks and vias back into Fusion.
+* **Step-by-Step Execution:** Optionally export DSN, launch the router, and import the script as individual steps.
+* **Headless or Interactive GUI:** Choose between ultra-fast headless background routing or the visual Freerouting GUI to inspect traces before applying.
+* **Stackup & Keepout Translation:** Accurately maps 2-layer, 4-layer, and multi-layer stackups (including `Route2`, `Route15`, `Bottom`) and keepout wire geometries.
 
-4) Start the router, push the "Open Your Own Design" button and select my_design.dsn in the file chooser.
+---
 
-5) After making some changes to the design with the router select "export Eagle session script" in the Files pulldown-menu. A file with name my_design.scr is generated.
+### Step-by-Step Guide
 
-6) Choose in the Files pulldown-menu of Eagle the item "execute Script" and select my_design.scr.
+#### 1. Open your PCB Layout & Launch ULP
+1. In Autodesk Fusion, open your PCB layout document.
+2. In the top navigation bar, switch to the **UTILITIES** tab.
+3. Under the **AUTOMATE** panel, click the **>ULP** button (or type `run` in the command line).
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/freerouting/freerouting/master/assets/integrations/Fusion_01_Automate_Menu.png" alt="Autodesk Fusion Utilities Automate ULP Menu" align="center" width="750">
+</p>
+
+#### 2. Browse for the Freerouting Plugin
+1. In the ULP dialog window, click the **Browse...** button in the lower-left corner.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/freerouting/freerouting/master/assets/integrations/Fusion_02_Browse_ULP.png" alt="Browse for ULP" align="center" width="550">
+</p>
+
+2. Navigate to the directory where you extracted [**`freerouting_fusion_plugin.zip`**](https://github.com/freerouting/freerouting/raw/master/integrations/AutodeskFusion/freerouting_fusion_plugin.zip) (or the [`integrations/AutodeskFusion`](https://github.com/freerouting/freerouting/tree/master/integrations/AutodeskFusion) directory in your cloned repository).
+3. Select `freerouting_fusion_plugin.ulp` and click **Open**.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/freerouting/freerouting/master/assets/integrations/Fusion_03_Select_ULP.png" alt="Select freerouting_fusion_plugin.ulp" align="center" width="650">
+</p>
+
+#### 3. Configure & Run Auto-Routing
+1. In the **Environment Setup** section, verify that both **Java Runtime** and **Freerouting JAR** show a green `✓ Ready` status. *(If not found automatically, click the buttons on the right to locate `java.exe` or `freerouting-executable.jar`)*.
+2. Choose your desired **Execution Mode**:
+   * **Headless Mode:** Fast background routing with automatic script execution and import.
+   * **Interactive GUI:** Opens the visual Freerouting window for inspection.
+3. Click **★ 1-Click Auto-Route (Export -> Route -> Import)** to route the board automatically.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/freerouting/freerouting/master/assets/integrations/Fusion_04_Run_Freerouting.png" alt="Freerouting Fusion Plugin Dialog Window" align="center" width="750">
+</p>
+
+4. Upon completion, Autodesk Fusion automatically executes the generated script, rips up previous unrouted airwires, places the new tracks and vias across all active layers, and recalculates the ratsnest.
 
 ## [Target 3001!](https://ibfriedrich.com/)
 
@@ -75,35 +99,22 @@
 
 ## [pcb-rnd](http://www.repo.hu/projects/pcb-rnd)
 
-### Using the standalone freerouting application
+### Using the standalone Freerouting application
 
-1) Download the latest `freerouting-<version>.jar` file from the [Releases](https://github.com/freerouting/freerouting/releases) page
-
+1) Download the latest `freerouting-<version>.jar` file from the [Releases](https://github.com/freerouting/freerouting/releases) page.
 2) Start pcb-rnd and load your layout.
-
 3) Export the layout as Specctra DSN (File / Export... / Specctra DSN).
+4) Start Freerouting by running the downloaded JAR file, click "Open Your Own Design", and select the exported `.dsn` file.
+5) Run the autorouter.
+6) When finished, export the results as a Specctra session file (File / Export Specctra Session File) to generate a `.ses` file.
+7) Return to pcb-rnd and import the results (File / Import autorouted dsn/ses file...). Track widths and clearances are based on the selected route style.
 
-4) Start the router by running the downloaded JAR file, push the "Open Your Own Design" button and select the exported .dsn file in the file chooser.
+### Using Freerouting directly from within pcb-rnd
 
-5) Do the routing.
-
-5) When you're finished, export the results into a Specctra session file (File / Export Specctra Session File). The router will generate a .ses file for you.
-
-6) Go back to pcb-rnd and import the results (File / Import autorouted dsn/ses file...). Track widths and clearances during autorouting are based on the currently selected route style during DSN export.
-
-
-### Using freerouting from within pcb-rnd
-
-1) Download the latest `freerouting-<version>-linux-x64.zip` from the [Releases](https://github.com/freerouting/freerouting/releases) page
-
-2) Unzip it and rename the top directory to `freerouting.net` (the default location is `/opt/freerouting.net`)
-
-3) Start pcb-rnd and ensure that this directory is specified in (File / Preferences / Config Tree / Plugins / ar_extern / freerouting_net...); the location of the executable can be customised.
-
-4) Load your layout
-
-5) Open the external autorouter window with (Connect / Automatic Routing / External autorouter...)
-
-6) Select the freerouting.net tab, and push the "Route" button.
-
-7) Go back to the layout and inspect the autorouted networks. Track widths and clearances during autorouting are based on the currently selected route style when the autorouter is started.
+1) Download the latest `freerouting-<version>-linux-x64.zip` from the [Releases](https://github.com/freerouting/freerouting/releases) page.
+2) Unzip it and rename the directory to `freerouting.net` (default location: `/opt/freerouting.net`).
+3) In pcb-rnd, verify this directory in (File / Preferences / Config Tree / Plugins / ar_extern / freerouting_net...).
+4) Load your layout.
+5) Open the external autorouter dialog via (Connect / Automatic Routing / External autorouter...).
+6) Select the `freerouting.net` tab and click "Route".
+7) Inspect the autorouted board back in pcb-rnd.

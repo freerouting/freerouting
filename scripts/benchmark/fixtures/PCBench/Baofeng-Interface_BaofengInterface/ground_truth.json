@@ -1,0 +1,31 @@
+{
+  "board": "Baofeng-Interface_BaofengInterface",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Baofeng-Interface_BaofengInterface\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 32,
+  "approximate_track_length_mm": 90.47,
+  "kicad_drc_violations": 157,
+  "generated_at": "2026-08-18T18:32:03.434013+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 157,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 37,
+      "copper_edge_clearance": 2,
+      "courtyards_overlap": 2,
+      "hole_clearance": 1,
+      "lib_footprint_issues": 69,
+      "pth_inside_courtyard": 20,
+      "silk_edge_clearance": 4,
+      "silk_overlap": 2,
+      "solder_mask_bridge": 6,
+      "text_height": 14
+    },
+    "by_severity": {
+      "error": 68,
+      "warning": 89
+    }
+  }
+}

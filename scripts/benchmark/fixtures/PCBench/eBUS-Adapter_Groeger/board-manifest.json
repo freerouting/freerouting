@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "eBUS-Adapter_Groeger",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 37228,
+      "sha256": "9d981e8ff107df6a476ae178eef4ff3ca08e662ac04e6ff3f5b04356b5367986"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 46569,
+      "sha256": "653bc03133017d334774fa8a2d60efbd383bc6fce73ee57f0fd431e900260d60"
+    },
+    "metadata_json": {
+      "bytes": 458,
+      "sha256": "ae7a5acd11295c6f0463f637e76cb24ec35b0568d2e9f823289f334abdef71cd"
+    },
+    "final_json": {
+      "bytes": 22056,
+      "sha256": "e58732aabc5b059565bedb73d0f8b55e152e6f3853d10a0414a2738121f95872"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:43:40.037477+00:00"
+  }
+}

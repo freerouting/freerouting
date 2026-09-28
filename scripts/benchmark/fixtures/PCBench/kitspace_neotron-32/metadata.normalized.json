@@ -1,0 +1,61 @@
+{
+  "board_id": "kitspace_neotron-32",
+  "display_name": "kitspace_neotron-32",
+  "pcbench_directory": "PCBs/kitspace_neotron-32",
+  "source": "https://github.com/Neotron-Compute/Neotron-32-Hardware",
+  "author": "",
+  "license": "[{'name': 'Creative Commons', 'link': 'https://raw.githubusercontent.com/Neotron-Compute/Neotron-32-Hardware/master/models/din-5.license.txt'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:10:50.178285+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 118,
+    "components": 97,
+    "dimensions_mm": {
+      "width": 166.9,
+      "height": 140.67
+    },
+    "area_cm2": 234.78,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 1404,
+    "vias": 101,
+    "track_length_mm": 7730.4,
+    "kicad_drc_violations": 160,
+    "kicad_drc_breakdown": {
+      "total_violations": 160,
+      "unconnected_count": 1,
+      "by_type": {
+        "clearance": 2,
+        "invalid_outline": 3,
+        "lib_footprint_issues": 11,
+        "lib_footprint_mismatch": 78,
+        "silk_edge_clearance": 8,
+        "silk_over_copper": 6,
+        "silk_overlap": 3,
+        "solder_mask_bridge": 7,
+        "starved_thermal": 35,
+        "track_dangling": 7
+      },
+      "by_severity": {
+        "error": 47,
+        "warning": 113
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "complex",
+    "medium",
+    "plane",
+    "tier-c"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
+}

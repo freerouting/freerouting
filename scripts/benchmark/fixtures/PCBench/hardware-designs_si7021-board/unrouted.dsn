@@ -1,0 +1,162 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\hardware-designs_si7021-board\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  141605 -106553  131826 -106553  131699 -106553  131699 -61087
+            141605 -61087  141605 -106553)
+    )
+    (via "Via[0-1]_889:635_um")
+    (rule
+      (width 254)
+      (clearance 254)
+      (clearance 63.5 (type smd_smd))
+    )
+  )
+  (placement
+    (component SM0603_Resistor
+      (place R1 134239 -90932 front 0 (PN 10k))
+      (place R2 134239 -88392 front 0 (PN 10k))
+    )
+    (component SHIELD_I2C
+      (place U1 136652 -83820 front 0 (PN SHIELD_I2C))
+    )
+    (component SI7021
+      (place U2 136652 -84074 front 180 (PN SI7021))
+    )
+    (component SM0603_Capa
+      (place C1 133604 -80772 front 0 (PN 0.1uF))
+    )
+    (component LOGO_SNOWCAP_FRONT
+      (place Noname_1 138811 -71501 front 90)
+    )
+  )
+  (library
+    (image SM0603_Resistor
+      (outline (path signal 127  1206.5 -698.5  500.38 -698.5))
+      (outline (path signal 127  1206.5 698.5  1206.5 -698.5))
+      (outline (path signal 127  1206.5 698.5  500.38 698.5))
+      (outline (path signal 127  -1206.5 -698.5  -500.38 -698.5))
+      (outline (path signal 127  -1206.5 698.5  -1206.5 -698.5))
+      (outline (path signal 127  -500.38 698.5  -1206.5 698.5))
+      (pin Rect[T]Pad_635.000000x1143.000000_um 1 -762 0)
+      (pin Rect[T]Pad_635.000000x1143.000000_um 2 762 0)
+    )
+    (image SHIELD_I2C
+      (outline (path signal 150  -4826 20574  -4826 22606))
+      (outline (path signal 150  4826 20574  -4826 20574))
+      (outline (path signal 150  4826 22606  4826 20574))
+      (outline (path signal 150  -4826 22606  4826 22606))
+      (outline (path signal 150  -4826 -22606  -4826 -20574))
+      (outline (path signal 150  4826 -22606  -4826 -22606))
+      (outline (path signal 150  4826 -20574  4826 -22606))
+      (outline (path signal 150  -4826 -20574  4826 -20574))
+      (pin Round[A]Pad_1500.000000_um 1 -3810 21590)
+      (pin Round[A]Pad_1500.000000_um 2 -1270 21590)
+      (pin Round[A]Pad_1500.000000_um 3 1270 21590)
+      (pin Round[A]Pad_1500.000000_um 4 3810 21590)
+      (pin Round[A]Pad_1500.000000_um 5 -3810 -21590)
+      (pin Round[A]Pad_1500.000000_um 6 -1270 -21590)
+      (pin Round[A]Pad_1500.000000_um 7 1270 -21590)
+      (pin Round[A]Pad_1500.000000_um 8 3810 -21590)
+    )
+    (image SI7021
+      (outline (path signal 150  1778 1778  1778 1524))
+      (outline (path signal 150  -1778 1778  1778 1778))
+      (outline (path signal 150  -1778 1524  -1778 1778))
+      (outline (path signal 150  1778 -1778  1778 -1524))
+      (outline (path signal 150  -1778 -1778  1778 -1778))
+      (outline (path signal 150  -1778 -1524  -1778 -1778))
+      (outline (path signal 150  -2137.21 1778  -2119.63 1889  -2068.61 1989.14  -1989.14 2068.61
+            -1889 2119.63  -1778 2137.21  -1667 2119.63  -1566.86 2068.61
+            -1487.39 1989.14  -1436.37 1889  -1418.79 1778  -1436.37 1667
+            -1487.39 1566.86  -1566.86 1487.39  -1667 1436.37  -1778 1418.79
+            -1889 1436.37  -1989.14 1487.39  -2068.61 1566.86  -2119.63 1667
+            -2137.21 1778))
+      (pin Rect[T]Pad_1850.000000x450.000000_um 1 -1950 1000)
+      (pin Rect[T]Pad_1850.000000x450.000000_um 2 -1950 0)
+      (pin Rect[T]Pad_1850.000000x450.000000_um 3 -1950 -1000)
+      (pin Rect[T]Pad_1850.000000x450.000000_um 4 1950 -1000)
+      (pin Rect[T]Pad_1850.000000x450.000000_um 5 1950 0)
+      (pin Rect[T]Pad_1850.000000x450.000000_um 6 1950 1000)
+      (pin Rect[T]Pad_1600.000000x2500.000000_um 7 0 0)
+    )
+    (image SM0603_Capa
+      (outline (path signal 119.38  -1198.88 -635  -1198.88 635))
+      (outline (path signal 119.38  1198.88 635  1198.88 -635))
+      (outline (path signal 119.38  -1198.88 650.24  -500.38 650.24))
+      (outline (path signal 119.38  500.38 650.24  1198.88 650.24))
+      (outline (path signal 119.38  -500.38 -650.24  -1198.88 -650.24))
+      (outline (path signal 119.38  500.38 -650.24  1198.88 -650.24))
+      (pin Rect[T]Pad_635.000000x1143.000000_um 1 -762 0)
+      (pin Rect[T]Pad_635.000000x1143.000000_um 2 762 0)
+    )
+    (image LOGO_SNOWCAP_FRONT
+    )
+    (padstack Round[A]Pad_1500.000000_um
+      (shape (circle F.Cu 1500))
+      (shape (circle B.Cu 1500))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_635.000000x1143.000000_um
+      (shape (rect F.Cu -317.5 -571.5 317.5 571.5))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1600.000000x2500.000000_um
+      (shape (rect F.Cu -800 -1250 800 1250))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1850.000000x450.000000_um
+      (shape (rect F.Cu -925 -225 925 225))
+      (attach off)
+    )
+    (padstack "Via[0-1]_889:635_um"
+      (shape (circle F.Cu 889))
+      (shape (circle B.Cu 889))
+      (attach off)
+    )
+  )
+  (network
+    (net GND
+      (pins U1-2 U2-2 C1-2)
+    )
+    (net "N-000007"
+      (pins R1-2 U1-8 U2-6)
+    )
+    (net "N-000008"
+      (pins U1-7 U2-1 R2-2)
+    )
+    (net VCC
+      (pins R1-1 U1-1 U2-5 R2-1 C1-1)
+    )
+    (class kicad_default GND "N-000007" "N-000008" VCC
+      (circuit
+        (use_via "Via[0-1]_889:635_um")
+      )
+      (rule
+        (width 254)
+        (clearance 254)
+      )
+    )
+  )
+  (wiring
+  )
+)

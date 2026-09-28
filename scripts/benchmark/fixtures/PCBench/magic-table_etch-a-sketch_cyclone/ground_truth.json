@@ -1,0 +1,24 @@
+{
+  "board": "magic-table_etch-a-sketch_cyclone",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\magic-table_etch-a-sketch_cyclone\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 117,
+  "approximate_track_length_mm": 610.65,
+  "kicad_drc_violations": 193,
+  "generated_at": "2026-08-18T19:19:37.826791+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 193,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 107,
+      "silk_overlap": 78,
+      "text_height": 8
+    },
+    "by_severity": {
+      "error": 107,
+      "warning": 86
+    }
+  }
+}

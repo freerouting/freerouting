@@ -1,0 +1,69 @@
+{
+  "board_id": "kika-in-space_analog-test-board",
+  "display_name": "kika-in-space_analog-test-board",
+  "pcbench_directory": "PCBs/kika-in-space_analog-test-board",
+  "source": "https://github.com/skopjehacklab/kika-in-space",
+  "author": "skopjehacklab",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:23:01.594164+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 11,
+    "components": 17,
+    "dimensions_mm": {
+      "width": 31.5,
+      "height": 16.26
+    },
+    "area_cm2": 5.12,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 79,
+    "vias": 0,
+    "track_length_mm": 96.47,
+    "kicad_drc_violations": 196,
+    "kicad_drc_breakdown": {
+      "total_violations": 196,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 28,
+        "copper_edge_clearance": 1,
+        "lib_footprint_issues": 17,
+        "silk_over_copper": 116,
+        "solder_mask_bridge": 8,
+        "starved_thermal": 1,
+        "text_height": 13,
+        "text_thickness": 11,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 38,
+        "warning": 158
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "small",
+    "tier-a",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.972380+00:00",
+    "elapsed_seconds": 11.13,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

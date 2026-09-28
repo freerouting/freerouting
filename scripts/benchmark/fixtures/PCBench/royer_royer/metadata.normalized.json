@@ -1,0 +1,58 @@
+{
+  "board_id": "royer_royer",
+  "display_name": "royer_royer",
+  "pcbench_directory": "PCBs/royer_royer",
+  "source": "https://github.com/emard/royer",
+  "author": "emard",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:59.694142+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 1,
+    "components": 26,
+    "dimensions_mm": {
+      "width": 40.64,
+      "height": 59.69
+    },
+    "area_cm2": 24.26,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 101,
+    "vias": 0,
+    "track_length_mm": 290.06,
+    "kicad_drc_violations": 120,
+    "kicad_drc_breakdown": {
+      "total_violations": 120,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 74,
+        "courtyards_overlap": 4,
+        "lib_footprint_issues": 26,
+        "silk_edge_clearance": 7,
+        "silk_over_copper": 6,
+        "silk_overlap": 2,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 79,
+        "warning": 41
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

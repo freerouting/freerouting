@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "PWRmeter_PWMeter",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 115326,
+      "sha256": "f43285895cd305b564f6d1228a7deff7e85c140bd646ae1b1aaceaa94237511e"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 53954,
+      "sha256": "526ff2784dd1e789ff5adafc07de4452d74d11989935e228313fa87eb1bcfd58"
+    },
+    "metadata_json": {
+      "bytes": 439,
+      "sha256": "309c5990096233c05c39f6361eecc5249f965fba4b1a4d9cf04fa5029203be59"
+    },
+    "final_json": {
+      "bytes": 36389,
+      "sha256": "68f21a11fcee98fec76de98b33cac56ad6630fbc8beeb699c996c123bc2ea1c0"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:36:59.380456+00:00"
+  }
+}

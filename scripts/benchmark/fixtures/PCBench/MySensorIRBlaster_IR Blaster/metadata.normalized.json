@@ -1,0 +1,60 @@
+{
+  "board_id": "MySensorIRBlaster_IR Blaster",
+  "display_name": "MySensorIRBlaster_IR Blaster",
+  "pcbench_directory": "PCBs/MySensorIRBlaster_IR Blaster",
+  "source": "https://github.com/bblacey/MySensorIRBlaster",
+  "author": "bblacey",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:43.129947+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 16,
+    "components": 54,
+    "dimensions_mm": {
+      "width": 47.79,
+      "height": 24.01
+    },
+    "area_cm2": 11.47,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 547,
+    "vias": 59,
+    "track_length_mm": 1015.05,
+    "kicad_drc_violations": 316,
+    "kicad_drc_breakdown": {
+      "total_violations": 316,
+      "unconnected_count": 3,
+      "by_type": {
+        "clearance": 126,
+        "copper_edge_clearance": 19,
+        "courtyards_overlap": 18,
+        "hole_clearance": 1,
+        "lib_footprint_issues": 53,
+        "malformed_courtyard": 23,
+        "silk_over_copper": 71,
+        "starved_thermal": 3,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 190,
+        "warning": 126
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

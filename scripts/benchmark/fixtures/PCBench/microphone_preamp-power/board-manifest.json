@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "microphone_preamp-power",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 55877,
+      "sha256": "39c0e8e2cb0d56d6d43cd75b02990b3781706f8a7aa0bbe4f6b93cdefae5ba77"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 24212,
+      "sha256": "dc9ca97ac6c1412c1cbddba747f4257b3ce2d94470f37a97b2d1a0240922501a"
+    },
+    "metadata_json": {
+      "bytes": 495,
+      "sha256": "bb1b4941bdbdc11a34e765f8d253ed98a0706feee04b63f303347795d8506469"
+    },
+    "final_json": {
+      "bytes": 17292,
+      "sha256": "8748574a7820fc0c0cec44a13a617f8b075dbd8327c05a83048fac95fd324b01"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:23:17.720820+00:00"
+  }
+}

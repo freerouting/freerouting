@@ -1,0 +1,33 @@
+{
+  "board": "Hardware_Playground_Touch_Switch_2ch_PCB",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Hardware_Playground_Touch_Switch_2ch_PCB\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 87,
+  "segment_count": 385,
+  "approximate_track_length_mm": 606.3,
+  "kicad_drc_violations": 178,
+  "generated_at": "2026-08-18T18:55:39.763189+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 178,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 4,
+      "copper_edge_clearance": 10,
+      "hole_clearance": 4,
+      "items_not_allowed": 2,
+      "lib_footprint_issues": 57,
+      "shorting_items": 2,
+      "silk_over_copper": 24,
+      "silk_overlap": 6,
+      "solder_mask_bridge": 6,
+      "starved_thermal": 5,
+      "text_height": 57,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 33,
+      "warning": 145
+    }
+  }
+}

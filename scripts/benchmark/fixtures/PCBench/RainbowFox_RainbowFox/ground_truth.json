@@ -1,0 +1,36 @@
+{
+  "board": "RainbowFox_RainbowFox",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\RainbowFox_RainbowFox\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 113,
+  "segment_count": 3738,
+  "approximate_track_length_mm": 18333.63,
+  "kicad_drc_violations": 1140,
+  "generated_at": "2026-08-18T19:37:25.971098+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 1140,
+    "unconnected_count": 1,
+    "by_type": {
+      "annular_width": 199,
+      "clearance": 86,
+      "courtyards_overlap": 23,
+      "hole_clearance": 18,
+      "hole_to_hole": 72,
+      "item_on_disabled_layer": 1,
+      "lib_footprint_issues": 199,
+      "npth_inside_courtyard": 1,
+      "padstack": 199,
+      "shorting_items": 1,
+      "silk_edge_clearance": 3,
+      "silk_over_copper": 14,
+      "silk_overlap": 183,
+      "solder_mask_bridge": 140,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 469,
+      "warning": 671
+    }
+  }
+}

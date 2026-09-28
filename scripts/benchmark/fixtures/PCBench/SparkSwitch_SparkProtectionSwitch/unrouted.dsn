@@ -1,0 +1,194 @@
+(pcb C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\SparkSwitch_SparkProtectionSwitch\unrouted.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  152000 -103000  112000 -103000  112000 -71000  152000 -71000
+            152000 -103000)
+    )
+    (via "Via[0-1]_889:400_um")
+    (rule
+      (width 254)
+      (clearance 254)
+      (clearance 63.5 (type smd_smd))
+    )
+  )
+  (placement
+    (component "Diodes_SMD:Diode-SMA_Handsoldering"
+      (place D2 121412 -91059 front -90 (PN ZENERsmall))
+    )
+    (component CRF1:1PAD_6x5mm
+      (place P1 115824 -74676 front 0 (PN IN+))
+      (place P2 115824 -99060 front 0 (PN "IN-"))
+      (place P4 148336 -74676 front 0 (PN OUT+))
+      (place P5 148336 -99060 front 0 (PN "OUT-"))
+      (place P6 127508 -74676 front 0 (PN FUSE_A))
+      (place P9 138811 -74676 front 0 (PN FUSE_B))
+    )
+    (component "CRF1:D2PAK-7-GDS"
+      (place Q1 128778 -89154 front 0 (PN IRFS7530))
+      (place Q2 140208 -89154 front 0 (PN IRFS7530))
+    )
+    (component CRF1:1PAD_4x5mm
+      (place P7 115189 -86868 front 90 (PN 12V_SW))
+      (place P8 115189 -92202 front 90 (PN 12V_SW))
+      (place P3 115189 -81534 front 90 (PN SW))
+    )
+    (component Resistors_SMD:R_0603_HandSoldering
+      (place R1 120523 -80518 front 180 (PN 1M))
+      (place R2 120523 -82931 front 180 (PN 1k))
+    )
+    (component Capacitors_SMD:C_0805_HandSoldering
+      (place C1 120523 -85217 front 0 (PN 1u/100V))
+    )
+  )
+  (library
+    (image "Diodes_SMD:Diode-SMA_Handsoldering"
+      (outline (polygon signal 0  4495 1995  4495 -1995  -4495 -1995  -4495 1995))
+      (outline (path signal 150  -2250.44 1750.06  2250.44 1750.06))
+      (outline (path signal 150  -2250.44 -1750.06  2250.44 -1750.06))
+      (outline (path signal 150  2250.44 1750.06  2250.44 1399.54))
+      (outline (path signal 150  -2250.44 1750.06  -2250.44 1399.54))
+      (outline (path signal 150  -2250.44 -1750.06  -2250.44 -1399.54))
+      (outline (path signal 150  2250.44 -1750.06  2250.44 -1399.54))
+      (outline (path signal 150  -1799.14 1750.06  -1799.14 1399.54))
+      (outline (path signal 150  -1799.14 -1750.06  -1799.14 -1399.54))
+      (outline (path signal 150  -250 550  -250 -550))
+      (outline (path signal 150  300 -450  -250 0))
+      (outline (path signal 150  300 450  300 -450))
+      (outline (path signal 150  -250 0  300 450))
+      (pin Rect[T]Pad_3500.120000x1800.860000_um 2 -2499.36 0)
+      (pin Rect[T]Pad_3500.120000x1800.860000_um 1 2499.36 0)
+    )
+    (image CRF1:1PAD_6x5mm
+      (outline (path signal 150  -3300 -2800  -3300 2800))
+      (outline (path signal 150  3300 -2800  -3300 -2800))
+      (outline (path signal 150  3300 2800  3300 -2800))
+      (outline (path signal 150  -3300 2800  3300 2800))
+      (pin Rect[T]Pad_6000.000000x5000.000000_um 1 0 0)
+    )
+    (image "CRF1:D2PAK-7-GDS"
+      (outline (path signal 381  5199.38 8498.84  5199.38 701.04))
+      (outline (path signal 381  2799.08 9799.32  5199.38 8498.84))
+      (outline (path signal 381  -2799.08 9799.32  2799.08 9799.32))
+      (outline (path signal 381  -5199.38 8498.84  -2799.08 9799.32))
+      (outline (path signal 381  -5199.38 701.04  -5199.38 8498.84))
+      (outline (path signal 381  5199.38 701.04  -5199.38 701.04))
+      (pin Rect[T]Pad_10800.080000x8150.860000_um D 0 5900.42)
+      (pin Rect[T]Pad_899.160000x3200.400000_um G -3810 -4701.54)
+      (pin Rect[T]Pad_899.160000x3200.400000_um S -2540 -4701.54)
+      (pin Rect[T]Pad_899.160000x3200.400000_um S@1 -1270 -4701.54)
+      (pin Rect[T]Pad_899.160000x3200.400000_um S@2 1270 -4701.54)
+      (pin Rect[T]Pad_899.160000x3200.400000_um S@3 2540 -4701.54)
+      (pin Rect[T]Pad_899.160000x3200.400000_um S@4 3810 -4701.54)
+    )
+    (image CRF1:1PAD_4x5mm
+      (outline (path signal 150  -2300 -2800  -2300 2800))
+      (outline (path signal 150  2300 -2800  -2300 -2800))
+      (outline (path signal 150  2300 2800  2300 -2800))
+      (outline (path signal 150  -2300 2800  2300 2800))
+      (pin Rect[T]Pad_4000.000000x5000.000000_um 1 0 0)
+    )
+    (image Resistors_SMD:R_0603_HandSoldering
+      (outline (polygon signal 0  -1995 795  1995 795  1995 -795  -1995 -795))
+      (outline (path signal 150  -500 675  500 675))
+      (outline (path signal 150  500 -675  -500 -675))
+      (pin Rect[T]Pad_1200.000000x900.000000_um 1 -1100 0)
+      (pin Rect[T]Pad_1200.000000x900.000000_um 2 1100 0)
+    )
+    (image Capacitors_SMD:C_0805_HandSoldering
+      (outline (polygon signal 0  2295 -995  -2295 -995  -2295 995  2295 995))
+      (outline (path signal 150  -500 -850  500 -850))
+      (outline (path signal 150  500 850  -500 850))
+      (pin Rect[T]Pad_1500.000000x1250.000000_um 1 -1250 0)
+      (pin Rect[T]Pad_1500.000000x1250.000000_um 2 1250 0)
+    )
+    (padstack Rect[T]Pad_3500.120000x1800.860000_um
+      (shape (rect F.Cu -1750.06 -900.43 1750.06 900.43))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_4000.000000x5000.000000_um
+      (shape (rect F.Cu -2000 -2500 2000 2500))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_6000.000000x5000.000000_um
+      (shape (rect F.Cu -3000 -2500 3000 2500))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_899.160000x3200.400000_um
+      (shape (rect F.Cu -449.58 -1600.2 449.58 1600.2))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_10800.080000x8150.860000_um
+      (shape (rect F.Cu -5400.04 -4075.43 5400.04 4075.43))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1200.000000x900.000000_um
+      (shape (rect F.Cu -600 -450 600 450))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1500.000000x1250.000000_um
+      (shape (rect F.Cu -750 -625 750 625))
+      (attach off)
+    )
+    (padstack "Via[0-1]_889:400_um"
+      (shape (circle F.Cu 889))
+      (shape (circle B.Cu 889))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(C1-Pad1)"
+      (pins R2-2 C1-1)
+    )
+    (net "Net-(C1-Pad2)"
+      (pins D2-2 Q1-G Q2-G P7-1 C1-2)
+    )
+    (net "Net-(P1-Pad1)"
+      (pins P1-1 P6-1)
+    )
+    (net "Net-(P3-Pad1)"
+      (pins P3-1 R1-2)
+    )
+    (net "Net-(P5-Pad1)"
+      (pins P5-1 Q1-D Q2-D R2-1)
+    )
+    (net "Net-(P4-Pad1)"
+      (pins P4-1 R1-1 P9-1)
+    )
+    (net "Net-(D2-Pad1)"
+      (pins D2-1 P2-1 Q1-S Q1-S@1 Q1-S@2 Q1-S@3 Q1-S@4 Q2-S Q2-S@1 Q2-S@2 Q2-S@3 Q2-S@4
+        P8-1)
+    )
+    (class kicad_default "Net-(C1-Pad1)" "Net-(C1-Pad2)" "Net-(D2-Pad1)" "Net-(P1-Pad1)"
+      "Net-(P3-Pad1)" "Net-(P4-Pad1)" "Net-(P5-Pad1)"
+      (circuit
+        (use_via "Via[0-1]_889:400_um")
+      )
+      (rule
+        (width 254)
+        (clearance 254)
+      )
+    )
+  )
+  (wiring
+  )
+)

@@ -1,0 +1,28 @@
+{
+  "board": "headstage-adapter_headstage adapter",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\headstage-adapter_headstage adapter\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 8,
+  "segment_count": 407,
+  "approximate_track_length_mm": 1737.33,
+  "kicad_drc_violations": 273,
+  "generated_at": "2026-08-18T18:16:06.692325+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 273,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 8,
+      "clearance": 2,
+      "copper_edge_clearance": 37,
+      "hole_clearance": 12,
+      "lib_footprint_issues": 12,
+      "silk_edge_clearance": 1,
+      "solder_mask_bridge": 201
+    },
+    "by_severity": {
+      "error": 260,
+      "warning": 13
+    }
+  }
+}

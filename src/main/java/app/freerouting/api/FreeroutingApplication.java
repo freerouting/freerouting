@@ -1,7 +1,9 @@
 package app.freerouting.api;
 
 import app.freerouting.api.v1.AnalyticsControllerV1;
-import app.freerouting.api.v1.JobControllerV1;
+import app.freerouting.api.v1.JobInputResource;
+import app.freerouting.api.v1.JobOutputResource;
+import app.freerouting.api.v1.JobProgressResource;
 import app.freerouting.api.v1.SessionControllerV1;
 import app.freerouting.api.v1.SystemControllerV1;
 import jakarta.ws.rs.ApplicationPath;
@@ -36,9 +38,14 @@ public class FreeroutingApplication extends Application {
         new HashSet<>(
             Set.of(
                 AnalyticsControllerV1.class,
-                JobControllerV1.class,
+                app.freerouting.api.v1.AutorouteControllerV1.class,
+                JobInputResource.class,
+                JobOutputResource.class,
+                JobProgressResource.class,
                 SessionControllerV1.class,
                 SystemControllerV1.class,
+                OpenApiResource.class,
+                SwaggerUIResource.class,
                 ApiExceptionMapper.class,
                 NotFoundExceptionMapper.class,
                 CorrelationIdFilter.class,
@@ -51,6 +58,8 @@ public class FreeroutingApplication extends Application {
                 // individually by the controller methods with full request/response payloads.
                 ApiAnalyticsFilter.class,
                 ApiUsageFilter.class,
+                GsonMessageBodyHandler.class,
+                JsonStringMessageBodyWriter.class,
                 SseFeature.class));
     return classes;
   }

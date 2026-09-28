@@ -1,0 +1,363 @@
+(pcb C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\Paperino_HW_paperino_module\unrouted.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  149835 -106050  121097 -106086  121097 -84085.8  149835 -84050.3
+            149835 -106050)
+    )
+    (via "Via[0-1]_600:300_um")
+    (rule
+      (width 200)
+      (clearance 150)
+      (clearance 37.5 (type smd_smd))
+    )
+  )
+  (placement
+    (component Capacitors_SMD:C_0603
+      (place C1 133460 -97380 front -90 (PN 100n))
+      (place C5 141900 -95350 front -90 (PN 100n))
+      (place C6 140250 -95350 front -90 (PN 1µ))
+      (place C7 131300 -95400 front -90 (PN 1µ))
+      (place C9 129100 -95400 front -90 (PN 1µ))
+    )
+    (component Capacitors_SMD:C_0603::1
+      (place C2 137925 -97725 front 90 (PN 100n))
+    )
+    (component Capacitors_SMD:C_0603::2
+      (place C3 140675 -98325 front 180 (PN 2µ2))
+      (place C4 130300 -98300 front 180 (PN 2µ2))
+      (place C8 135950 -94325 front 180 (PN 1µ))
+    )
+    (component "Paperino:XF2M-2615-1A"
+      (place X1 135400 -89300 front 180 (PN "XF2M-2615-1A"))
+    )
+    (component "Paperino:LGA-12-2x2x0.95"
+      (place U1 135550 -97380 front 180 (PN BMA250E))
+    )
+    (component Paperino:NR4018T470M
+      (place L1 135400 -103306 front 180 (PN 47µ))
+    )
+    (component Paperino:1x6_header
+      (place P2 125230 -91700 front 0 (PN CONN_01X06))
+      (place P4 122690 -91700 front 0 (PN CONN_01X06))
+    )
+    (component Paperino:1x6_header::1
+      (place P1 145560 -104400 front 180 (PN CONN_01X06))
+      (place P3 148100 -104400 front 180 (PN CONN_01X06))
+    )
+    (component "Paperino:SOT-23"
+      (place Q1 140400 -103600 front -90 (PN PMOS))
+      (place Q2 130400 -103600 front -90 (PN NMOS))
+    )
+    (component "Paperino:SOD-523F"
+      (place D1 140350 -100300 front 0 (PN 30V))
+      (place D2 130500 -100300 front 0 (PN 30V))
+    )
+  )
+  (library
+    (image Capacitors_SMD:C_0603
+      (outline (polygon signal 0  1445 745  1445 -745  -1445 -745  -1445 745))
+      (outline (path signal 120  350 -600  -350 -600))
+      (outline (path signal 120  -350 600  350 600))
+      (outline (path signal 100  -800 400  800 400))
+      (outline (path signal 100  800 400  800 -400))
+      (outline (path signal 100  800 -400  -800 -400))
+      (outline (path signal 100  -800 -400  -800 400))
+      (pin Rect[T]Pad_800.000000x750.000000_um 1 -750 0)
+      (pin Rect[T]Pad_800.000000x750.000000_um 2 750 0)
+    )
+    (image Capacitors_SMD:C_0603::1
+      (outline (polygon signal 0  -1445 -745  -1445 745  1445 745  1445 -745))
+      (outline (path signal 120  350 -600  -350 -600))
+      (outline (path signal 120  -350 600  350 600))
+      (outline (path signal 100  -800 400  800 400))
+      (outline (path signal 100  800 400  800 -400))
+      (outline (path signal 100  800 -400  -800 -400))
+      (outline (path signal 100  -800 -400  -800 400))
+      (pin Rect[T]Pad_800.000000x750.000000_um 1 -750 0)
+      (pin Rect[T]Pad_800.000000x750.000000_um 2 750 0)
+    )
+    (image Capacitors_SMD:C_0603::2
+      (outline (polygon signal 0  -1445 745  1445 745  1445 -745  -1445 -745))
+      (outline (path signal 120  350 -600  -350 -600))
+      (outline (path signal 120  -350 600  350 600))
+      (outline (path signal 100  -800 400  800 400))
+      (outline (path signal 100  800 400  800 -400))
+      (outline (path signal 100  800 -400  -800 -400))
+      (outline (path signal 100  -800 -400  -800 400))
+      (pin Rect[T]Pad_800.000000x750.000000_um 1 -750 0)
+      (pin Rect[T]Pad_800.000000x750.000000_um 2 750 0)
+    )
+    (image "Paperino:XF2M-2615-1A"
+      (outline (path signal 200  -6750 0  -8300 0))
+      (outline (path signal 200  -8300 0  -8300 -2675))
+      (outline (path signal 200  6750 0  8300 0))
+      (outline (path signal 200  8300 0  8300 -2675))
+      (outline (path signal 200  -8250 -4875  8250 -4875))
+      (pin Rect[T]Pad_300.000000x1300.000000_um 1 -6250 0)
+      (pin Rect[T]Pad_300.000000x1300.000000_um 2 -5750 0)
+      (pin Rect[T]Pad_300.000000x1300.000000_um 3 -5250 0)
+      (pin Rect[T]Pad_300.000000x1300.000000_um 4 -4750 0)
+      (pin Rect[T]Pad_300.000000x1300.000000_um 5 -4250 0)
+      (pin Rect[T]Pad_300.000000x1300.000000_um 6 -3750 0)
+      (pin Rect[T]Pad_300.000000x1300.000000_um 7 -3250 0)
+      (pin Rect[T]Pad_300.000000x1300.000000_um 8 -2750 0)
+      (pin Rect[T]Pad_300.000000x1300.000000_um 9 -2250 0)
+      (pin Rect[T]Pad_300.000000x1300.000000_um 10 -1750 0)
+      (pin Rect[T]Pad_300.000000x1300.000000_um 11 -1250 0)
+      (pin Rect[T]Pad_300.000000x1300.000000_um 12 -750 0)
+      (pin Rect[T]Pad_300.000000x1300.000000_um 13 -250 0)
+      (pin Rect[T]Pad_300.000000x1300.000000_um 14 250 0)
+      (pin Rect[T]Pad_300.000000x1300.000000_um 15 750 0)
+      (pin Rect[T]Pad_300.000000x1300.000000_um 16 1250 0)
+      (pin Rect[T]Pad_300.000000x1300.000000_um 17 1750 0)
+      (pin Rect[T]Pad_300.000000x1300.000000_um 18 2250 0)
+      (pin Rect[T]Pad_300.000000x1300.000000_um 19 2750 0)
+      (pin Rect[T]Pad_300.000000x1300.000000_um 20 3250 0)
+      (pin Rect[T]Pad_300.000000x1300.000000_um 21 3750 0)
+      (pin Rect[T]Pad_300.000000x1300.000000_um 22 4250 0)
+      (pin Rect[T]Pad_300.000000x1300.000000_um 23 4750 0)
+      (pin Rect[T]Pad_300.000000x1300.000000_um 24 5250 0)
+      (pin Rect[T]Pad_300.000000x1300.000000_um 25 5750 0)
+      (pin Rect[T]Pad_300.000000x1300.000000_um 26 6250 0)
+      (pin Rect[T]Pad_1700.000000x1500.000000_um 0 -7900 -3900)
+      (pin Rect[T]Pad_1700.000000x1500.000000_um 0@1 7900 -3900)
+    )
+    (image "Paperino:LGA-12-2x2x0.95"
+      (outline (polygon signal 0  -1245 1245  1245 1245  1245 -1245  -1245 -1245))
+      (outline (path signal 200  -1420.71 875  -1404.17 920.452  -1362.28 944.637  -1314.64 936.238
+            -1283.55 899.185  -1283.55 850.815  -1314.64 813.762  -1362.28 805.363
+            -1404.17 829.548  -1420.71 875))
+      (pin Rect[T]Pad_410.000000x280.000000_um (rotate 90) 6 250 -815)
+      (pin Rect[T]Pad_410.000000x280.000000_um 1 -815 750)
+      (pin Rect[T]Pad_410.000000x280.000000_um 2 -815 250)
+      (pin Rect[T]Pad_410.000000x280.000000_um 3 -815 -250)
+      (pin Rect[T]Pad_410.000000x280.000000_um 4 -815 -750)
+      (pin Rect[T]Pad_410.000000x280.000000_um 7 815 -750)
+      (pin Rect[T]Pad_410.000000x280.000000_um 8 815 -250)
+      (pin Rect[T]Pad_410.000000x280.000000_um 9 815 250)
+      (pin Rect[T]Pad_410.000000x280.000000_um 10 815 750)
+      (pin Rect[T]Pad_410.000000x280.000000_um (rotate 90) 5 -250 -815)
+      (pin Rect[T]Pad_410.000000x280.000000_um (rotate 90) 11 250 815)
+      (pin Rect[T]Pad_410.000000x280.000000_um (rotate 90) 12 -250 815)
+    )
+    (image Paperino:NR4018T470M
+      (outline (polygon signal 0  -2895 2345  2895 2345  2895 -2345  -2895 -2345))
+      (outline (path signal 200  -800 2000  800 2000))
+      (outline (path signal 200  -800 -2000  800 -2000))
+      (pin Rect[T]Pad_1400.000000x3700.000000_um 1 -1700 0)
+      (pin Rect[T]Pad_1400.000000x3700.000000_um 2 1700 0)
+    )
+    (image Paperino:1x6_header
+      (outline (polygon signal 0  1495 -14345  -1495 -14345  -1495 1645  1495 1645))
+      (pin Rect[A]Pad_2000.000000x2000.000000_um 1 0 0)
+      (pin Rect[A]Pad_2000.000000x2000.000000_um 2 0 -2540)
+      (pin Rect[A]Pad_2000.000000x2000.000000_um 3 0 -5080)
+      (pin Rect[A]Pad_2000.000000x2000.000000_um 4 0 -7620)
+      (pin Rect[A]Pad_2000.000000x2000.000000_um 5 0 -10160)
+      (pin Rect[A]Pad_2000.000000x2000.000000_um 6 0 -12700)
+    )
+    (image Paperino:1x6_header::1
+      (outline (polygon signal 0  -1495 1645  1495 1645  1495 -14345  -1495 -14345))
+      (pin Rect[A]Pad_2000.000000x2000.000000_um 1 0 0)
+      (pin Rect[A]Pad_2000.000000x2000.000000_um 2 0 -2540)
+      (pin Rect[A]Pad_2000.000000x2000.000000_um 3 0 -5080)
+      (pin Rect[A]Pad_2000.000000x2000.000000_um 4 0 -7620)
+      (pin Rect[A]Pad_2000.000000x2000.000000_um 5 0 -10160)
+      (pin Rect[A]Pad_2000.000000x2000.000000_um 6 0 -12700)
+    )
+    (image "Paperino:SOT-23"
+      (outline (polygon signal 0  1695 1745  1695 -1745  -1695 -1745  -1695 1745))
+      (outline (path signal 120  760 -1580  -700 -1580))
+      (outline (path signal 120  760 1580  -1400 1580))
+      (outline (path signal 120  760 1580  760 650))
+      (outline (path signal 120  760 -1580  760 -650))
+      (outline (path signal 100  -700 -1520  700 -1520))
+      (outline (path signal 100  700 1520  700 -1520))
+      (outline (path signal 100  -700 950  -150 1520))
+      (outline (path signal 100  -150 1520  700 1520))
+      (outline (path signal 100  -700 950  -700 -1500))
+      (pin Rect[T]Pad_900.000000x800.000000_um 1 -1100 1000)
+      (pin Rect[T]Pad_900.000000x800.000000_um 2 -1100 -1000)
+      (pin Rect[T]Pad_900.000000x800.000000_um 3 1100 0)
+    )
+    (image "Paperino:SOD-523F"
+      (outline (polygon signal 0  1545 -595  -1545 -595  -1545 595  1545 595))
+      (outline (path signal 100  600 -450  -600 -450))
+      (outline (path signal 100  -600 -450  -600 450))
+      (outline (path signal 100  -600 450  600 450))
+      (outline (path signal 100  600 450  600 -450))
+      (outline (path signal 100  -200 -200  -200 200))
+      (outline (path signal 100  -200 0  -350 0))
+      (outline (path signal 100  -200 0  100 -200))
+      (outline (path signal 100  100 -200  100 200))
+      (outline (path signal 100  100 200  -200 0))
+      (outline (path signal 100  100 0  250 0))
+      (outline (path signal 120  -1650 600  -1650 -600))
+      (pin Rect[T]Pad_800.000000x500.000000_um (rotate 180) 2 900 0)
+      (pin Rect[T]Pad_800.000000x500.000000_um (rotate 180) 1 -900 0)
+    )
+    (padstack Rect[A]Pad_2000.000000x2000.000000_um
+      (shape (rect F.Cu -1000 -1000 1000 1000))
+      (shape (rect B.Cu -1000 -1000 1000 1000))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_300.000000x1300.000000_um
+      (shape (rect F.Cu -150 -650 150 650))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_410.000000x280.000000_um
+      (shape (rect F.Cu -205 -140 205 140))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_800.000000x500.000000_um
+      (shape (rect F.Cu -400 -250 400 250))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_800.000000x750.000000_um
+      (shape (rect F.Cu -400 -375 400 375))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_900.000000x800.000000_um
+      (shape (rect F.Cu -450 -400 450 400))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1400.000000x3700.000000_um
+      (shape (rect F.Cu -700 -1850 700 1850))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1700.000000x1500.000000_um
+      (shape (rect F.Cu -850 -750 850 750))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:300_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net +3V3
+      (pins C1-1 C2-2 C8-1 X1-4 X1-17 X1-18 U1-3 U1-7 P2-1 P4-1 Q1-2)
+    )
+    (net GND
+      (pins C1-2 C2-1 C3-2 C4-1 C5-2 C6-2 C7-2 C8-2 C9-2 X1-2 X1-3 X1-20 U1-8 U1-9
+        U1-11 P2-2 P4-2 Q2-2)
+    )
+    (net /VGL
+      (pins C3-1 X1-24 D1-2)
+    )
+    (net /VGH
+      (pins C4-2 X1-23 D2-1)
+    )
+    (net /VSL
+      (pins C9-1 X1-26)
+    )
+    (net /VSH
+      (pins C7-1 X1-25)
+    )
+    (net /VDD
+      (pins C6-1 X1-5 X1-19)
+    )
+    (net /TPCOM
+      (pins C5-1 X1-1)
+    )
+    (net "Net-(D1-Pad1)"
+      (pins L1-1 Q1-3 D1-1)
+    )
+    (net "Net-(D2-Pad2)"
+      (pins L1-2 Q2-3 D2-2)
+    )
+    (net /SPI_MOSI
+      (pins X1-14 U1-2 P1-2 P3-2)
+    )
+    (net /SPI_MISO
+      (pins X1-15 U1-1 P1-1 P3-1)
+    )
+    (net /SPI_CLK
+      (pins X1-13 U1-12 P1-3 P3-3)
+    )
+    (net /SPI_CS1
+      (pins X1-12 P1-4 P3-4)
+    )
+    (net "/~{RST}"
+      (pins X1-11 P1-5 P3-5)
+    )
+    (net "/~{BUSY}"
+      (pins X1-10 P1-6 P3-6)
+    )
+    (net "Net-(P2-Pad3)"
+      (pins P2-3)
+    )
+    (net /SPI_CS2
+      (pins U1-10 P2-4 P4-4)
+    )
+    (net /INT2
+      (pins U1-6 P2-5 P4-5)
+    )
+    (net /INT1
+      (pins U1-5 P2-6 P4-6)
+    )
+    (net "Net-(U1-Pad4)"
+      (pins U1-4)
+    )
+    (net /GDR_P
+      (pins X1-22 Q1-1)
+    )
+    (net /GDR_N
+      (pins X1-21 Q2-1)
+    )
+    (net "Net-(P4-Pad3)"
+      (pins P4-3)
+    )
+    (net "Net-(X1-Pad6)"
+      (pins X1-6)
+    )
+    (net "Net-(X1-Pad7)"
+      (pins X1-7)
+    )
+    (net "Net-(X1-Pad8)"
+      (pins X1-8)
+    )
+    (net "Net-(X1-Pad9)"
+      (pins X1-9)
+    )
+    (net "Net-(X1-Pad16)"
+      (pins X1-16)
+    )
+    (class kicad_default +3V3 /GDR_N /GDR_P /INT1 /INT2 /SPI_CLK /SPI_CS1
+      /SPI_CS2 /SPI_MISO /SPI_MOSI /TPCOM /VDD /VGH /VGL /VSH /VSL "/~{BUSY}"
+      "/~{RST}" GND "Net-(D1-Pad1)" "Net-(D2-Pad2)" "Net-(P2-Pad3)" "Net-(P4-Pad3)"
+      "Net-(U1-Pad4)" "Net-(X1-Pad16)" "Net-(X1-Pad6)" "Net-(X1-Pad7)" "Net-(X1-Pad8)"
+      "Net-(X1-Pad9)"
+      (circuit
+        (use_via "Via[0-1]_600:300_um")
+      )
+      (rule
+        (width 200)
+        (clearance 150)
+      )
+    )
+  )
+  (wiring
+  )
+)

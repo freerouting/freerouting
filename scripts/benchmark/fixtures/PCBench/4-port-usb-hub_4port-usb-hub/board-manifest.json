@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "4-port-usb-hub_4port-usb-hub",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 191724,
+      "sha256": "291c968937ed0810016ea479ce273cae676cd72454d4525730d9c1e934a8c0fc"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 147539,
+      "sha256": "4357a85327a703f08f222b9a23513577060b5d4793874ce5e2a87f7e8000104c"
+    },
+    "metadata_json": {
+      "bytes": 491,
+      "sha256": "d3a8038a545938896bfbced87917c431285fa1aebdff520ebec9c4cd8256ec43"
+    },
+    "final_json": {
+      "bytes": 130493,
+      "sha256": "175f93ffac88951508177082e22ec0e209c3013107b5b46379b1cad29fe3dc84"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:26:14.044901+00:00"
+  }
+}

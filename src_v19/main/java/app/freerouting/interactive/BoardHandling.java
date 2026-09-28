@@ -857,16 +857,10 @@ public class BoardHandling extends BoardHandlingHeadless {
     }
 
     if ((logEntries.getWarningCount() > 0) || (logEntries.getErrorCount() > 0)) {
-      // Show a dialog box with the latest log entries
-      JTextArea textArea = new JTextArea(logEntries.getAsString());
-      JScrollPane scrollPane = new JScrollPane(textArea);
-      scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-      scrollPane.setPreferredSize(new Dimension(1000, 600));
-
       if (logEntries.getErrorCount() > 0) {
-        JOptionPane.showMessageDialog(null, scrollPane, resources.getString("dsn_reader_modal_title"), JOptionPane.ERROR_MESSAGE);
+        FRLogger.error("DSN reader encountered " + logEntries.getErrorCount() + " error(s):\n" + logEntries.getAsString());
       } else {
-        JOptionPane.showMessageDialog(null, scrollPane, resources.getString("dsn_reader_modal_title"), JOptionPane.WARNING_MESSAGE);
+        FRLogger.warn("DSN reader encountered " + logEntries.getWarningCount() + " warning(s):\n" + logEntries.getAsString());
       }
     }
     logEntries.clear();

@@ -1,0 +1,23 @@
+{
+  "board": "atmel-programmer_atmel_programmer",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\atmel-programmer_atmel_programmer\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 5,
+  "segment_count": 107,
+  "approximate_track_length_mm": 785.58,
+  "kicad_drc_violations": 334,
+  "generated_at": "2026-08-18T18:30:02.622542+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 334,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 322,
+      "lib_footprint_issues": 12
+    },
+    "by_severity": {
+      "error": 322,
+      "warning": 12
+    }
+  }
+}

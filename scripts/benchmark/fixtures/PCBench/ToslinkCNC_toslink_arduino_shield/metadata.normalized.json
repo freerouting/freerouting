@@ -1,0 +1,62 @@
+{
+  "board_id": "ToslinkCNC_toslink_arduino_shield",
+  "display_name": "ToslinkCNC_toslink_arduino_shield",
+  "pcbench_directory": "PCBs/ToslinkCNC_toslink_arduino_shield",
+  "source": "https://github.com/IRNAS/ToslinkCNC",
+  "author": "IRNAS",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:23.305713+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 20,
+    "dimensions_mm": {
+      "width": 82.1,
+      "height": 53.7
+    },
+    "area_cm2": 44.09,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 684,
+    "vias": 81,
+    "track_length_mm": 2243.59,
+    "kicad_drc_violations": 347,
+    "kicad_drc_breakdown": {
+      "total_violations": 347,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 310,
+        "copper_edge_clearance": 2,
+        "lib_footprint_issues": 20,
+        "solder_mask_bridge": 9,
+        "track_dangling": 6
+      },
+      "by_severity": {
+        "error": 321,
+        "warning": 26
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.148968+00:00",
+    "elapsed_seconds": 35.28,
+    "unrouted_nets": 3,
+    "clearance_violations": 0,
+    "quality_score": 961.53
+  }
+}

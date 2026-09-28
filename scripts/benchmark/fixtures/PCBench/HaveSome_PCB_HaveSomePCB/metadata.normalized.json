@@ -1,0 +1,65 @@
+{
+  "board_id": "HaveSome_PCB_HaveSomePCB",
+  "display_name": "HaveSome_PCB_HaveSomePCB",
+  "pcbench_directory": "PCBs/HaveSome_PCB_HaveSomePCB",
+  "source": "https://github.com/DeuxVis/HaveSome_PCB",
+  "author": "DeuxVis",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:38.965898+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 3,
+    "components": 14,
+    "dimensions_mm": {
+      "width": 7.62,
+      "height": 18.41
+    },
+    "area_cm2": 1.4,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 90,
+    "vias": 8,
+    "track_length_mm": 86.36,
+    "kicad_drc_violations": 58,
+    "kicad_drc_breakdown": {
+      "total_violations": 58,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 20,
+        "courtyards_overlap": 11,
+        "lib_footprint_issues": 6,
+        "silk_over_copper": 4,
+        "silk_overlap": 3,
+        "text_height": 12,
+        "text_thickness": 1,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 31,
+        "warning": 27
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.949778+00:00",
+    "elapsed_seconds": 11.93,
+    "unrouted_nets": 1,
+    "clearance_violations": 10,
+    "quality_score": 869.56
+  }
+}

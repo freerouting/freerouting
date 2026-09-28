@@ -1,0 +1,156 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\breakout-boards_swd-to-wires\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  151241 -88902.4  151459 -88940.9  151668 -89016.8  151860 -89127.7
+            152030 -89270.3  152172 -89440.2  152283 -89632.2  152359 -89840.7
+            152398 -90059.1  152400 -90170  152400 -101600  152398 -101711
+            152359 -101929  152283 -102138  152172 -102330  152030 -102500
+            151860 -102642  151668 -102753  151459 -102829  151241 -102868
+            151130 -102870  140970 -102870  140859 -102868  140641 -102829
+            140432 -102753  140240 -102642  140070 -102500  139928 -102330
+            139817 -102138  139741 -101929  139702 -101711  139700 -101600
+            139700 -90170  139702 -90059.1  139741 -89840.7  139817 -89632.2
+            139928 -89440.2  140070 -89270.3  140240 -89127.7  140432 -89016.8
+            140641 -88940.9  140859 -88902.4  140970 -88900  151130 -88900
+            151241 -88902.4)
+    )
+    (via "Via[0-1]_889:635_um")
+    (rule
+      (width 177.8)
+      (clearance 152.4)
+      (clearance 38.1 (type smd_smd))
+    )
+  )
+  (placement
+    (component Pin_Headers:Pin_Header_Straight_2x04
+      (place P1 146050 -99060 front 0 (PN CONN_02X04))
+    )
+    (component "myelin-kicad:pin_array_5x2_50mil"
+      (place CON1 147320 -91440 front 180 (PN "ARM-SWD-HEADER"))
+    )
+  )
+  (library
+    (image Pin_Headers:Pin_Header_Straight_2x04
+      (outline (path signal 150  -5080 -2540  -5080 0))
+      (outline (path signal 150  -2540 0  -2540 -2540))
+      (outline (path signal 150  -5080 0  -2540 0))
+      (outline (path signal 150  -5080 -2540  -2540 -2540))
+      (outline (path signal 150  -5080 2540  -5080 0))
+      (outline (path signal 150  5080 2540  -5080 2540))
+      (outline (path signal 150  5080 -2540  5080 2540))
+      (outline (path signal 150  -2540 -2540  5080 -2540))
+      (pin Rect[A]Pad_1727.200000x1727.200000_um 1 -3810 -1270)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 2 -3810 1270)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 3 -1270 -1270)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 4 -1270 1270)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 5 1270 -1270)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 6 1270 1270)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 7 3810 -1270)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 8 3810 1270)
+    )
+    (image "myelin-kicad:pin_array_5x2_50mil"
+      (outline (path signal 150  -1016 -1905  -1270 -1524))
+      (outline (path signal 150  -1143 -1905  -1016 -1905))
+      (outline (path signal 150  -1524 -1905  -1143 -1905))
+      (outline (path signal 150  -1270 -1524  -1524 -1905))
+      (outline (path signal 150  -2100 -1500  -400 -1500))
+      (outline (path signal 150  -2100 200  -2100 -1500))
+      (pin Rect[A]Pad_1016.000000x1016.000000_um 1 -1270 -635)
+      (pin Round[A]Pad_1016.000000_um 2 -1270 635)
+      (pin Round[A]Pad_1016.000000_um 3 0 -635)
+      (pin Round[A]Pad_1016.000000_um 4 0 635)
+      (pin Round[A]Pad_1016.000000_um 5 1270 -635)
+      (pin Round[A]Pad_1016.000000_um 6 1270 635)
+      (pin Round[A]Pad_1016.000000_um 7 2540 -635)
+      (pin Round[A]Pad_1016.000000_um 8 2540 635)
+      (pin Round[A]Pad_1016.000000_um 9 3810 -635)
+      (pin Round[A]Pad_1016.000000_um 10 3810 635)
+    )
+    (padstack Round[A]Pad_1016.000000_um
+      (shape (circle F.Cu 1016))
+      (shape (circle B.Cu 1016))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_1727.200000x1727.200000_um
+      (shape (path F.Cu 1727.2  0 0  0 0))
+      (shape (path B.Cu 1727.2  0 0  0 0))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1016.000000x1016.000000_um
+      (shape (rect F.Cu -508 -508 508 508))
+      (shape (rect B.Cu -508 -508 508 508))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1727.200000x1727.200000_um
+      (shape (rect F.Cu -863.6 -863.6 863.6 863.6))
+      (shape (rect B.Cu -863.6 -863.6 863.6 863.6))
+      (attach off)
+    )
+    (padstack "Via[0-1]_889:635_um"
+      (shape (circle F.Cu 889))
+      (shape (circle B.Cu 889))
+      (attach off)
+    )
+  )
+  (network
+    (net /reset
+      (pins P1-7 CON1-10)
+    )
+    (net /gnddetect
+      (pins P1-5 CON1-9)
+    )
+    (net /tdi
+      (pins P1-8 CON1-8)
+    )
+    (net "Net-(CON1-Pad7)"
+      (pins CON1-7)
+    )
+    (net /vcc
+      (pins P1-1 CON1-1)
+    )
+    (net /swdio
+      (pins P1-2 CON1-2)
+    )
+    (net /gnd
+      (pins P1-3 CON1-3 CON1-5)
+    )
+    (net /swclk
+      (pins P1-4 CON1-4)
+    )
+    (net /tdo
+      (pins P1-6 CON1-6)
+    )
+    (class kicad_default /gnd /gnddetect /reset /swclk /swdio /tdi /tdo /vcc
+      "Net-(CON1-Pad7)"
+      (circuit
+        (use_via "Via[0-1]_889:635_um")
+      )
+      (rule
+        (width 177.8)
+        (clearance 152.4)
+      )
+    )
+  )
+  (wiring
+  )
+)

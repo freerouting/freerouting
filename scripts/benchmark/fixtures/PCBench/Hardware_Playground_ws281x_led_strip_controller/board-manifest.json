@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Hardware_Playground_ws281x_led_strip_controller",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 248394,
+      "sha256": "63f0b7dfee3e9ad5c93fecc3c4514fd3c2a22dafbd780b40412edf07cbef82dd"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 184615,
+      "sha256": "cbd15311a97577ac0148ef8c4888203b233e7b1f5ef95d3f5f77fa69dce904d6"
+    },
+    "metadata_json": {
+      "bytes": 556,
+      "sha256": "c5e815c82d921cbfe4a94bf6e8f02ad3f76752433c2ea54331a71a3c1600ba89"
+    },
+    "final_json": {
+      "bytes": 121024,
+      "sha256": "1ad10021d7d0370470287c1a90d6b33f54e7d052f2c74fb0f2bb4140feb43555"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:55:54.444975+00:00"
+  }
+}

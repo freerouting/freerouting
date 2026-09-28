@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "polearm-weapon_rod",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 62021,
+      "sha256": "e26a00eb48b6dabc1209c5f0cc881adac80798efa11987a8fe683b08fbad3636"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 64413,
+      "sha256": "959fd7c7f270dd4f79ffec54e74d9c14b41d0f65cb942c1c723fa379e0de41c2"
+    },
+    "metadata_json": {
+      "bytes": 493,
+      "sha256": "1ce8fe8939044be9029194e10d90d2705a32db9b94a8c7e0b78a31f3a18fce76"
+    },
+    "final_json": {
+      "bytes": 54395,
+      "sha256": "20a32d139d22f013cfcf2de01b484e9054d1b0789ca96f060a7a0d5d49001200"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:34:42.470092+00:00"
+  }
+}

@@ -34,12 +34,17 @@ public class OptimizerSettings implements Serializable, Cloneable {
   public Integer maxThreads;
 
   /**
-   * The improvement threshold (as a fraction, e.g., 0.01 for 1%) below which the optimizer
-   * terminates. If a pass improves the board by less than this fraction, the optimization process
-   * stops.
+   * Relative pass-improvement threshold expressed directly as a percentage (e.g., 2.5 = 2.5% of the
+   * incumbent optimizer score). {@code BatchOptimizer} stops when the relative percentage
+   * improvement is below this value. Default is 2.5 (2.5%), providing optimal balance between via
+   * elimination and runtime.
    */
   @SerializedName("improvement_threshold")
   public Float optimizationImprovementThreshold;
+
+  /** Whether pre-flight optimization guards are enabled to skip un-improvable boards. */
+  @SerializedName("enable_preflight_guards")
+  public Boolean enablePreflightGuards;
 
   /**
    * The maximum number of consecutive item optimization failures allowed before aborting the
@@ -47,6 +52,13 @@ public class OptimizerSettings implements Serializable, Cloneable {
    */
   @SerializedName("max_consecutive_failures")
   public Integer maxConsecutiveFailures;
+
+  /**
+   * The maximum number of consecutive item optimization failures allowed before aborting pass 1
+   * early (canary limit). Defaults to 12.
+   */
+  @SerializedName("max_consecutive_failures_pass1")
+  public Integer maxConsecutiveFailuresPass1;
 
   /**
    * A multiplier applied to the base ripup cost at the start of optimization. Higher values make
@@ -72,19 +84,17 @@ public class OptimizerSettings implements Serializable, Cloneable {
   // -------------------------------
 
   /**
-   * The strategy to update the board: GREEDY (update immediately on any improvement),
-   * GLOBAL_OPTIMAL (calculate updates in parallel and apply the single best improvement), or HYBRID
-   * (combine GREEDY and GLOBAL_OPTIMAL).
+   * The strategy to update the board: GLOBAL_OPTIMAL (calculate updates and apply the single best
+   * improvement).
    */
+  @SerializedName("board_update_strategy")
   public transient BoardUpdateStrategy boardUpdateStrategy;
 
-  /** The ratio of GLOBAL_OPTIMAL to GREEDY updates when using the HYBRID strategy (e.g., "1:1"). */
-  public transient String hybridRatio;
-
   /**
-   * The strategy for selecting and ordering the items to be optimized (e.g., SEQUENTIAL, RANDOM, or
+   * The strategy for selecting and ordering the items to be optimized (e.g., SEQUENTIAL or
    * PRIORITIZED).
    */
+  @SerializedName("item_selection_strategy")
   public transient ItemSelectionStrategy itemSelectionStrategy;
 
   /** Timeout for the optimizer stage (e.g., "5m", "300s"). Default is null (no timeout). */
@@ -107,7 +117,6 @@ public class OptimizerSettings implements Serializable, Cloneable {
       // Primitive wrappers and Strings are immutable, so no need to clone them
       // But we need to ensure transient fields are copied
       result.boardUpdateStrategy = this.boardUpdateStrategy;
-      result.hybridRatio = this.hybridRatio;
       result.itemSelectionStrategy = this.itemSelectionStrategy;
       return result;
     } catch (CloneNotSupportedException e) {

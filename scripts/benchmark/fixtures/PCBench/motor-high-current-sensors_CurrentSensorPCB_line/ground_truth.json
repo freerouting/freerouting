@@ -1,0 +1,37 @@
+{
+  "board": "motor-high-current-sensors_CurrentSensorPCB_line",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\motor-high-current-sensors_CurrentSensorPCB_line\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 117,
+  "segment_count": 1552,
+  "approximate_track_length_mm": 3180.36,
+  "kicad_drc_violations": 1067,
+  "generated_at": "2026-08-18T19:25:41.422328+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 1067,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 506,
+      "copper_edge_clearance": 23,
+      "courtyards_overlap": 57,
+      "hole_clearance": 59,
+      "items_not_allowed": 2,
+      "lib_footprint_issues": 199,
+      "mirrored_text_on_front_layer": 5,
+      "nonmirrored_text_on_back_layer": 1,
+      "npth_inside_courtyard": 1,
+      "silk_edge_clearance": 44,
+      "silk_over_copper": 56,
+      "silk_overlap": 40,
+      "solder_mask_bridge": 17,
+      "starved_thermal": 4,
+      "text_height": 46,
+      "track_dangling": 7
+    },
+    "by_severity": {
+      "error": 669,
+      "warning": 398
+    }
+  }
+}

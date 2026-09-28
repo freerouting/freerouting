@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "antdroid-board_antdroid-board",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 316559,
+      "sha256": "c610f750f0f38eb16e0027ab11c4668a5f39e8115739688b85af7d71d1859f44"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 200409,
+      "sha256": "840bc0382fb2a841704320ef506021e0cc05816e89f8a1aab21880da5c6d559a"
+    },
+    "metadata_json": {
+      "bytes": 756,
+      "sha256": "cdad8c1eb32cc74bd065e52fb776d5f520b840f107fac10ebbf262f256a440c1"
+    },
+    "final_json": {
+      "bytes": 118979,
+      "sha256": "dfc1a5d6f07339b0aa20503481b3053fe0a031d55d962d4722e21032f30b3542"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:28:32.386616+00:00"
+  }
+}

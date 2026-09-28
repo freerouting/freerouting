@@ -1,0 +1,235 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\Starburst-One_alpha\reference-routed.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  171450 -128270  156210 -128270  156210 -105410  171450 -105410
+            171450 -128270)
+    )
+    (via "Via[0-1]_1651:889_um")
+    (rule
+      (width 508)
+      (clearance 508)
+      (clearance 127 (type smd_smd))
+    )
+  )
+  (placement
+    (component "libs:DIP-18_Flipped_W12.7mm"
+      (place LED1 165100 -104140 front 0 (PN "LTP-587G"))
+    )
+    (component Resistors_SMD:R_1206_HandSoldering
+      (place R1 163925 -107950 front 0 (PN 68R))
+    )
+    (component "libs:SOIC-20W_7x12.8mm_Pitch1.27mm"
+      (place U1 163830 -117856 front -90 (PN "ATTINY461A-S"))
+    )
+  )
+  (library
+    (image "libs:DIP-18_Flipped_W12.7mm"
+      (pin Round[A]Pad_1524.000000_um 1 5080 -2540)
+      (pin Round[A]Pad_1524.000000_um 2 5080 -5080)
+      (pin Round[A]Pad_1524.000000_um 3 5080 -7620)
+      (pin Round[A]Pad_1524.000000_um 4 5080 -10160)
+      (pin Round[A]Pad_1524.000000_um 5 5080 -12700)
+      (pin Round[A]Pad_1524.000000_um 6 5080 -15240)
+      (pin Round[A]Pad_1524.000000_um 7 5080 -17780)
+      (pin Round[A]Pad_1524.000000_um 8 5080 -20320)
+      (pin Round[A]Pad_1524.000000_um 9 5080 -22860)
+      (pin Round[A]Pad_1524.000000_um 10 -7620 -22860)
+      (pin Round[A]Pad_1524.000000_um 11 -7620 -20320)
+      (pin Round[A]Pad_1524.000000_um 12 -7620 -17780)
+      (pin Round[A]Pad_1524.000000_um 13 -7620 -15240)
+      (pin Round[A]Pad_1524.000000_um 14 -7620 -12700)
+      (pin Round[A]Pad_1524.000000_um 15 -7620 -10160)
+      (pin Round[A]Pad_1524.000000_um 16 -7620 -7620)
+      (pin Round[A]Pad_1524.000000_um 17 -7620 -5080)
+      (pin Round[A]Pad_1524.000000_um 18 -7620 -2540)
+    )
+    (image Resistors_SMD:R_1206_HandSoldering
+      (outline (polygon signal 0  3295 -1195  -3295 -1195  -3295 1195  3295 1195))
+      (outline (path signal 100  -1600 -800  -1600 800))
+      (outline (path signal 100  1600 -800  -1600 -800))
+      (outline (path signal 100  1600 800  1600 -800))
+      (outline (path signal 100  -1600 800  1600 800))
+      (outline (path signal 150  1000 -1075  -1000 -1075))
+      (outline (path signal 150  -1000 1075  1000 1075))
+      (pin Rect[T]Pad_2000.000000x1700.000000_um 1 -2000 0)
+      (pin Rect[T]Pad_2000.000000x1700.000000_um 2 2000 0)
+    )
+    (image "libs:SOIC-20W_7x12.8mm_Pitch1.27mm"
+      (outline (path signal 150  -5515 5100  -6515 4100))
+      (outline (path signal 150  -6515 4100  -6515 -5100))
+      (outline (path signal 150  -6515 -5100  6515 -5100))
+      (outline (path signal 150  6515 -5100  6515 5100))
+      (outline (path signal 150  6515 5100  -5515 5100))
+      (pin Rect[T]Pad_600.000000x2200.000000_um 20 -5715 3500)
+      (pin Rect[T]Pad_600.000000x2200.000000_um 1 -5715 -3500)
+      (pin Rect[T]Pad_600.000000x2200.000000_um 19 -4445 3500)
+      (pin Rect[T]Pad_600.000000x2200.000000_um 2 -4445 -3500)
+      (pin Rect[T]Pad_600.000000x2200.000000_um 18 -3175 3500)
+      (pin Rect[T]Pad_600.000000x2200.000000_um 3 -3175 -3500)
+      (pin Rect[T]Pad_600.000000x2200.000000_um 17 -1905 3500)
+      (pin Rect[T]Pad_600.000000x2200.000000_um 4 -1905 -3500)
+      (pin Rect[T]Pad_600.000000x2200.000000_um 16 -635 3500)
+      (pin Rect[T]Pad_600.000000x2200.000000_um 5 -635 -3500)
+      (pin Rect[T]Pad_600.000000x2200.000000_um 15 635 3500)
+      (pin Rect[T]Pad_600.000000x2200.000000_um 6 635 -3500)
+      (pin Rect[T]Pad_600.000000x2200.000000_um 14 1905 3500)
+      (pin Rect[T]Pad_600.000000x2200.000000_um 7 1905 -3500)
+      (pin Rect[T]Pad_600.000000x2200.000000_um 13 3175 3500)
+      (pin Rect[T]Pad_600.000000x2200.000000_um 8 3175 -3500)
+      (pin Rect[T]Pad_600.000000x2200.000000_um 12 4445 3500)
+      (pin Rect[T]Pad_600.000000x2200.000000_um 9 4445 -3500)
+      (pin Rect[T]Pad_600.000000x2200.000000_um 11 5715 3500)
+      (pin Rect[T]Pad_600.000000x2200.000000_um 10 5715 -3500)
+    )
+    (padstack Round[A]Pad_1524.000000_um
+      (shape (circle F.Cu 1524))
+      (shape (circle B.Cu 1524))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2000.000000x1700.000000_um
+      (shape (rect F.Cu -1000 -850 1000 850))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_600.000000x2200.000000_um
+      (shape (rect F.Cu -300 -1100 300 1100))
+      (attach off)
+    )
+    (padstack "Via[0-1]_1651:889_um"
+      (shape (circle F.Cu 1651))
+      (shape (circle B.Cu 1651))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(LED1-Pad1)"
+      (pins LED1-1 LED1-2 U1-20)
+    )
+    (net "Net-(LED1-Pad3)"
+      (pins LED1-3 U1-19)
+    )
+    (net "Net-(LED1-Pad4)"
+      (pins LED1-4 U1-18)
+    )
+    (net "Net-(LED1-Pad5)"
+      (pins LED1-5 U1-17)
+    )
+    (net "Net-(LED1-Pad6)"
+      (pins LED1-6 U1-14)
+    )
+    (net "Net-(LED1-Pad7)"
+      (pins LED1-7 U1-13)
+    )
+    (net "Net-(LED1-Pad8)"
+      (pins LED1-8 U1-11)
+    )
+    (net "Net-(LED1-Pad9)"
+      (pins LED1-9 U1-12)
+    )
+    (net "Net-(LED1-Pad10)"
+      (pins LED1-10)
+    )
+    (net "Net-(LED1-Pad11)"
+      (pins LED1-11 U1-9)
+    )
+    (net "Net-(LED1-Pad12)"
+      (pins LED1-12 U1-8)
+    )
+    (net "Net-(LED1-Pad13)"
+      (pins LED1-13 U1-7)
+    )
+    (net "Net-(LED1-Pad14)"
+      (pins LED1-14 U1-4)
+    )
+    (net "Net-(LED1-Pad15)"
+      (pins LED1-15 U1-3)
+    )
+    (net "Net-(LED1-Pad16)"
+      (pins LED1-16 U1-2)
+    )
+    (net "Net-(LED1-Pad17)"
+      (pins LED1-17 U1-1)
+    )
+    (net "Net-(LED1-Pad18)"
+      (pins LED1-18 R1-1)
+    )
+    (net +5V
+      (pins R1-2 U1-5 U1-15)
+    )
+    (net GND
+      (pins U1-16 U1-6)
+    )
+    (net "Net-(U1-Pad10)"
+      (pins U1-10)
+    )
+    (class kicad_default +5V GND "Net-(LED1-Pad1)" "Net-(LED1-Pad10)" "Net-(LED1-Pad11)"
+      "Net-(LED1-Pad12)" "Net-(LED1-Pad13)" "Net-(LED1-Pad14)" "Net-(LED1-Pad15)"
+      "Net-(LED1-Pad16)" "Net-(LED1-Pad17)" "Net-(LED1-Pad18)" "Net-(LED1-Pad3)"
+      "Net-(LED1-Pad4)" "Net-(LED1-Pad5)" "Net-(LED1-Pad6)" "Net-(LED1-Pad7)"
+      "Net-(LED1-Pad8)" "Net-(LED1-Pad9)" "Net-(U1-Pad10)"
+      (circuit
+        (use_via "Via[0-1]_1651:889_um")
+      )
+      (rule
+        (width 508)
+        (clearance 508)
+      )
+    )
+  )
+  (wiring
+    (wire (path F.Cu 508  170180 -109220  170180 -106680)(net "Net-(LED1-Pad1)")(type route))
+    (wire (path F.Cu 508  167330 -112141  167330 -112070  170180 -109220)(net "Net-(LED1-Pad1)")(type route))
+    (wire (path F.Cu 508  167330 -113411  168832 -113411)(net "Net-(LED1-Pad3)")(type route))
+    (wire (path F.Cu 508  169418 -112522  170180 -111760)(net "Net-(LED1-Pad3)")(type route))
+    (wire (path F.Cu 508  168832 -113411  169418 -112825  169418 -112522)(net "Net-(LED1-Pad3)")(type route))
+    (wire (path F.Cu 508  167330 -114681  169799 -114681  170180 -114300)(net "Net-(LED1-Pad4)")(type route))
+    (wire (path F.Cu 508  167330 -115951  169291 -115951  170180 -116840)(net "Net-(LED1-Pad5)")(type route))
+    (wire (path F.Cu 508  167330 -119761  169799 -119761  170180 -119380)(net "Net-(LED1-Pad6)")(type route))
+    (wire (path F.Cu 508  167330 -121031  169291 -121031  170180 -121920)(net "Net-(LED1-Pad7)")(type route))
+    (wire (path F.Cu 508  167330 -123571  169291 -123571  170180 -124460)(net "Net-(LED1-Pad8)")(type route))
+    (wire (path F.Cu 508  167330 -122301  165722 -122301  165468 -122555  165468 -124481
+            167987 -127000  169102 -127000  170180 -127000)(net "Net-(LED1-Pad9)")(type route))
+    (wire (path F.Cu 508  160330 -122301  161938 -122301  162192 -122555  162192 -124481
+            161451 -125222  158242 -125222  157480 -124460)(net "Net-(LED1-Pad11)")(type route))
+    (wire (path F.Cu 508  160330 -121031  158369 -121031  157480 -121920)(net "Net-(LED1-Pad12)")(type route))
+    (wire (path F.Cu 508  160330 -119761  157861 -119761  157480 -119380)(net "Net-(LED1-Pad13)")(type route))
+    (wire (path F.Cu 508  160330 -115951  158369 -115951  157480 -116840)(net "Net-(LED1-Pad14)")(type route))
+    (wire (path F.Cu 508  160330 -114681  157861 -114681  157480 -114300)(net "Net-(LED1-Pad15)")(type route))
+    (wire (path F.Cu 508  160330 -113411  158828 -113411  158242 -112825  158242 -112522
+            157480 -111760)(net "Net-(LED1-Pad16)")(type route))
+    (wire (path F.Cu 508  160330 -112141  160330 -112070  157480 -109220)(net "Net-(LED1-Pad17)")(type route))
+    (wire (path F.Cu 508  161925 -107950  158750 -107950  157480 -106680)(net "Net-(LED1-Pad18)")(type route))
+    (wire (path F.Cu 508  164465 -110490  163298 -110490  162306 -111482  162306 -117221)(net +5V)(type route))
+    (wire (path F.Cu 508  165925 -107950  165925 -109030  164465 -110490)(net +5V)(type route))
+    (wire (path F.Cu 508  162306 -117221  163576 -118491  167330 -118491)(net +5V)(type route))
+    (wire (path F.Cu 508  160330 -117221  162306 -117221)(net +5V)(type route))
+    (wire (path F.Cu 508  164465 -120650  164465 -122121  163830 -122756  163830 -126365)(net GND)(type route))
+    (wire (path F.Cu 508  160330 -118491  161938 -118491  163272 -119825  163640 -119825
+            164465 -120650)(net GND)(type route))
+    (wire (path B.Cu 508  164465 -116205  164465 -120650)(net GND)(type route))
+    (wire (path F.Cu 508  167330 -117221  165481 -117221  164465 -116205)(net GND)(type route))
+    (via "Via[0-1]_1651:889_um"  164465 -110490 (net +5V)(type route))
+    (via "Via[0-1]_1651:889_um"  163830 -126365 (net GND)(type route))
+    (via "Via[0-1]_1651:889_um"  164465 -120650 (net GND)(type route))
+    (via "Via[0-1]_1651:889_um"  164465 -116205 (net GND)(type route))
+  )
+)

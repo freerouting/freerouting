@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "MAGFest-2017-Swadges_magfest_badges",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 293837,
+      "sha256": "c4faffac07679d29d1059df81e9d9ec52cfb16f8a05ca6b8399ba01a3a7b1551"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 228420,
+      "sha256": "d2e3bee20906ff41643a42b6af22317830d1da7efc3c648e2e269f90216da0bc"
+    },
+    "metadata_json": {
+      "bytes": 514,
+      "sha256": "f823a3fbf192ea395f25fd13310daeaf22a21bf4a42c928cbc5a7875be06c2a7"
+    },
+    "final_json": {
+      "bytes": 85625,
+      "sha256": "b079076e966de17883de2d467fdb945ec98442e7ff861c938166297cc97090f5"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:19:28.152836+00:00"
+  }
+}

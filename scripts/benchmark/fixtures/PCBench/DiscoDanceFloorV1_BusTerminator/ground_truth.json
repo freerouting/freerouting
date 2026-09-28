@@ -1,0 +1,26 @@
+{
+  "board": "DiscoDanceFloorV1_BusTerminator",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\DiscoDanceFloorV1_BusTerminator\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 3,
+  "segment_count": 29,
+  "approximate_track_length_mm": 49.05,
+  "kicad_drc_violations": 16,
+  "generated_at": "2026-08-18T18:41:57.101270+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 16,
+    "unconnected_count": 1,
+    "by_type": {
+      "clearance": 3,
+      "lib_footprint_issues": 8,
+      "silk_overlap": 2,
+      "solder_mask_bridge": 2,
+      "starved_thermal": 1
+    },
+    "by_severity": {
+      "error": 6,
+      "warning": 10
+    }
+  }
+}

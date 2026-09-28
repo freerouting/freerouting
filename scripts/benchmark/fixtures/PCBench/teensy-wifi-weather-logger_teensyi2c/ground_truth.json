@@ -1,0 +1,24 @@
+{
+  "board": "teensy-wifi-weather-logger_teensyi2c",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\teensy-wifi-weather-logger_teensyi2c\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 5,
+  "segment_count": 109,
+  "approximate_track_length_mm": 334.82,
+  "kicad_drc_violations": 45,
+  "generated_at": "2026-08-18T19:51:04.823902+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 45,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 31,
+      "invalid_outline": 2,
+      "lib_footprint_issues": 12
+    },
+    "by_severity": {
+      "error": 33,
+      "warning": 12
+    }
+  }
+}

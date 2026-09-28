@@ -1,0 +1,65 @@
+{
+  "board_id": "eeg_muscleboardv0",
+  "display_name": "eeg_muscleboardv0",
+  "pcbench_directory": "PCBs/eeg_muscleboardv0",
+  "source": "https://github.com/gskelly/eeg",
+  "author": "gskelly",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:24.221724+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 11,
+    "components": 54,
+    "dimensions_mm": {
+      "width": 33.17,
+      "height": 36.58
+    },
+    "area_cm2": 12.13,
+    "zones": 7
+  },
+  "reference": {
+    "segments": 581,
+    "vias": 57,
+    "track_length_mm": 690.17,
+    "kicad_drc_violations": 552,
+    "kicad_drc_breakdown": {
+      "total_violations": 552,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 171,
+        "copper_edge_clearance": 7,
+        "hole_clearance": 20,
+        "isolated_copper": 1,
+        "lib_footprint_issues": 1,
+        "shorting_items": 2,
+        "silk_edge_clearance": 14,
+        "silk_over_copper": 199,
+        "silk_overlap": 32,
+        "solder_mask_bridge": 21,
+        "text_height": 44,
+        "text_thickness": 36,
+        "track_dangling": 3,
+        "tracks_crossing": 1
+      },
+      "by_severity": {
+        "error": 222,
+        "warning": 330
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

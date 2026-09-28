@@ -10,8 +10,8 @@ import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.Session;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.RoutingJobScheduler;
-import app.freerouting.management.SessionManager;
+import app.freerouting.management.jobs.RoutingJobScheduler;
+import app.freerouting.management.sessions.SessionManager;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.DefaultSettings;
@@ -206,13 +206,6 @@ public class RoutingFixtureTest {
         + job.timeoutAt;
   }
 
-  /** Identifies a routing fixture timeout separately from generic test runtime failures. */
-  private static final class RoutingJobTimeoutException extends RuntimeException {
-    private RoutingJobTimeoutException(String message) {
-      super(message);
-    }
-  }
-
   /** Returns board statistics for the routed job. */
   protected BoardStatistics getBoardStatistics(RoutingJob job) {
     if ((job == null) || (job.board == null)) {
@@ -245,6 +238,13 @@ public class RoutingFixtureTest {
    */
   protected RoutingResultAssertions assertRoutingResult(RoutingJob job, String boardName) {
     return new RoutingResultAssertions(job, boardName);
+  }
+
+  /** Identifies a routing fixture timeout separately from generic test runtime failures. */
+  private static final class RoutingJobTimeoutException extends RuntimeException {
+    private RoutingJobTimeoutException(String message) {
+      super(message);
+    }
   }
 
   /**

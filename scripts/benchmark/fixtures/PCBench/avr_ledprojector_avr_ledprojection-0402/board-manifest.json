@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "avr_ledprojector_avr_ledprojection-0402",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 335324,
+      "sha256": "28c9efb37407f9f8afb7fabb2cfca3208beabff38592dabdad5318bfa4d6e0fa"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 209465,
+      "sha256": "69d3c2298c094604a2fb139f058dae96ecfba91ffa38b1bd4c38d866f4412b22"
+    },
+    "metadata_json": {
+      "bytes": 677,
+      "sha256": "d75ee57522f65b49158b56ac62bfdf8216910e0fedd286aa126537d80de1fdb8"
+    },
+    "final_json": {
+      "bytes": 194382,
+      "sha256": "03798e609e53be5b597c8ce5c028fa22f2521460cded7d494427fc8a9629d015"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:31:36.687474+00:00"
+  }
+}

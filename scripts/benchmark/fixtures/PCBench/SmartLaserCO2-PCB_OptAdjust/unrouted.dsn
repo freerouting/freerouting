@@ -1,0 +1,184 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\SmartLaserCO2-PCB_OptAdjust\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  207750 -147750  165750 -147750  165750 -105750  207750 -105750
+            207750 -147750)
+    )
+    (via "Via[0-1]_800.1:508_um")
+    (rule
+      (width 762)
+      (clearance 254)
+      (clearance 63.5 (type smd_smd))
+    )
+  )
+  (placement
+    (component "S5B-XH-A"
+      (place J1 187000 -142500 back 180 (PN CONN_5))
+    )
+    (component HOLE_M2
+      (place Ref**_4 167500 -107500 front 0 (PN Val**))
+      (place Ref**_3 206000 -107500 front 0 (PN Val**))
+      (place Ref**_2 206000 -146000 front 0 (PN Val**))
+      (place Ref** 167500 -146000 front 0 (PN Val**))
+    )
+    (component "WH09A-2"
+      (place PM1 177500 -127000 front 0 (PN PMETER))
+    )
+    (component TSA06131
+      (place SW1 196500 -127000 front 0 (PN TACT_SWITCH))
+    )
+  )
+  (library
+    (image "S5B-XH-A"
+      (outline (path signal 150  -4600 9200  6000 9200))
+      (outline (path signal 150  0 9200  -4600 9200))
+      (outline (path signal 150  -7450 -200  -7450 9100))
+      (outline (path signal 150  -7450 50  -7450 -200))
+      (outline (path signal 150  7450 -50  7450 8350))
+      (outline (path signal 150  -4600 9200  -7450 9200))
+      (outline (path signal 150  -7450 9200  -7250 9200))
+      (outline (path signal 150  -7450 8950  -7450 9200))
+      (outline (path signal 150  7450 9200  7450 8100))
+      (outline (path signal 150  5750 9200  7450 9200))
+      (outline (path signal 150  7450 0  7450 -2300))
+      (outline (path signal 150  -7450 0  -7450 -2300))
+      (outline (path signal 150  -6950 -2300  -6950 -1000))
+      (outline (path signal 150  -7450 -2300  -6950 -2300))
+      (outline (path signal 150  -6950 2200  5350 2200))
+      (outline (path signal 150  -6950 -1050  -6950 2200))
+      (outline (path signal 150  6950 -2300  6950 2050))
+      (outline (path signal 150  7450 -2300  6950 -2300))
+      (outline (path signal 150  6950 2200  6950 2050))
+      (outline (path signal 150  5350 2200  6950 2200))
+      (outline (path signal 150  -6000 9200  -6000 7400))
+      (outline (path signal 150  -4000 9200  -4000 7400))
+      (outline (path signal 150  4000 9200  4000 8100))
+      (outline (path signal 150  6000 9200  6000 7400))
+      (outline (path signal 150  6000 7500  6000 6400))
+      (outline (path signal 150  6000 6200  6000 6600))
+      (outline (path signal 150  4000 6200  6000 6200))
+      (outline (path signal 150  4000 8200  4000 6200))
+      (outline (path signal 150  -6000 6200  -6000 7400))
+      (outline (path signal 150  -4000 6200  -6000 6200))
+      (outline (path signal 150  -4000 7500  -4000 6200))
+      (pin Round[A]Pad_2032.000000_um 1 -5080 0)
+      (pin Round[A]Pad_2032.000000_um 2 -2540 0)
+      (pin Round[A]Pad_2032.000000_um 3 0 0)
+      (pin Round[A]Pad_2032.000000_um 4 2540 0)
+      (pin Round[A]Pad_2032.000000_um 5 5080 0)
+    )
+    (image HOLE_M2
+      (keepout "" (circle F.Cu 2700))
+      (keepout "" (circle B.Cu 2700))
+    )
+    (image "WH09A-2"
+      (outline (path signal 150  -4900 -6000  -4900 -1200))
+      (outline (path signal 150  0 -6000  -4900 -6000))
+      (outline (path signal 150  4900 -6000  4900 -1200))
+      (outline (path signal 150  100 -6000  4900 -6000))
+      (outline (path signal 150  -4900 6000  -4900 1200))
+      (outline (path signal 150  0 6000  -4900 6000))
+      (outline (path signal 150  4900 6000  4900 1200))
+      (outline (path signal 150  0 6000  4900 6000))
+      (outline (path signal 150  3000 0  2980.45 -341.974  2922.04 -679.49  2825.53 -1008.15
+            2692.2 -1323.66  2523.76 -1621.92  2322.43 -1899.04  2090.81 -2151.39
+            1831.94 -2375.71  1549.19 -2569.05  1246.24 -2728.9  927.051 -2853.17
+            595.771 -2940.25  256.725 -2988.99  -85.668 -2998.78  -426.945 -2969.46
+            -762.655 -2901.44  -1088.42 -2795.59  -1400 -2653.3  -1693.33 -2476.42
+            -1964.58 -2267.25  -2210.22 -2028.53  -2427.05 -1763.36  -2612.24 -1475.2
+            -2763.37 -1167.81  -2878.48 -845.198  -2956.06 -511.567  -2995.11 -171.266
+            -2995.11 171.266  -2956.06 511.567  -2878.48 845.198  -2763.37 1167.81
+            -2612.24 1475.2  -2427.05 1763.36  -2210.22 2028.53  -1964.58 2267.25
+            -1693.33 2476.42  -1400 2653.3  -1088.42 2795.59  -762.655 2901.44
+            -426.945 2969.46  -85.668 2998.78  256.725 2988.99  595.771 2940.25
+            927.051 2853.17  1246.24 2728.9  1549.19 2569.05  1831.94 2375.71
+            2090.81 2151.39  2322.43 1899.04  2523.76 1621.92  2692.2 1323.66
+            2825.53 1008.15  2922.04 679.49  2980.45 341.974  3000 0))
+      (pin Round[A]Pad_2000.000000_um 1 -2500 -7000)
+      (pin Round[A]Pad_2000.000000_um 2 0 -7000)
+      (pin Round[A]Pad_2000.000000_um 3 2500 -7000)
+      (pin Oval[A]Pad_2300.000000x2600.000000_um @1 -4400 0)
+      (pin Oval[A]Pad_2300.000000x2600.000000_um @2 4400 0)
+    )
+    (image TSA06131
+      (outline (path signal 150  -3050 1350  -3050 -1300))
+      (outline (path signal 150  -3050 0  -3050 1350))
+      (outline (path signal 150  3050 -1300  3050 -950))
+      (outline (path signal 150  3050 1350  3050 -1300))
+      (outline (path signal 150  3050 0  3050 1350))
+      (outline (path signal 150  -2750 -3050  2800 -3050))
+      (outline (path signal 150  0 -3050  -2750 -3050))
+      (outline (path signal 150  -2850 3050  2850 3050))
+      (outline (path signal 150  50 3050  -2850 3050))
+      (pin Round[A]Pad_2000.000000_um 4 -3250 2250)
+      (pin Round[A]Pad_2000.000000_um 1 3250 2250)
+      (pin Round[A]Pad_2000.000000_um 3 -3250 -2250)
+      (pin Round[A]Pad_2000.000000_um 2 3250 -2250)
+    )
+    (padstack Round[A]Pad_2000.000000_um
+      (shape (circle F.Cu 2000))
+      (shape (circle B.Cu 2000))
+      (attach off)
+    )
+    (padstack Round[A]Pad_2032.000000_um
+      (shape (circle F.Cu 2032))
+      (shape (circle B.Cu 2032))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_2300.000000x2600.000000_um
+      (shape (path F.Cu 2300  0 -150  0 150))
+      (shape (path B.Cu 2300  0 -150  0 150))
+      (attach off)
+    )
+    (padstack "Via[0-1]_800.1:508_um"
+      (shape (circle F.Cu 800.1))
+      (shape (circle B.Cu 800.1))
+      (attach off)
+    )
+  )
+  (network
+    (net GND
+      (pins J1-3 J1-4 PM1-3 SW1-2)
+    )
+    (net "N-000002"
+      (pins J1-1 PM1-1)
+    )
+    (net "N-000003"
+      (pins J1-2 PM1-2)
+    )
+    (net "N-000004"
+      (pins J1-5 SW1-1)
+    )
+    (class kicad_default GND "N-000002" "N-000003" "N-000004"
+      (circuit
+        (use_via "Via[0-1]_800.1:508_um")
+      )
+      (rule
+        (width 762)
+        (clearance 254)
+      )
+    )
+  )
+  (wiring
+  )
+)

@@ -1,0 +1,27 @@
+{
+  "board": "ESProto-One_ESProto",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\ESProto-One_ESProto\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 205,
+  "approximate_track_length_mm": 713.06,
+  "kicad_drc_violations": 206,
+  "generated_at": "2026-08-18T18:48:12.037847+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 206,
+    "unconnected_count": 2,
+    "by_type": {
+      "clearance": 1,
+      "copper_edge_clearance": 3,
+      "courtyards_overlap": 32,
+      "lib_footprint_issues": 32,
+      "silk_edge_clearance": 1,
+      "silk_overlap": 137
+    },
+    "by_severity": {
+      "error": 36,
+      "warning": 170
+    }
+  }
+}

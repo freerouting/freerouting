@@ -7,8 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import app.freerouting.Freerouting;
-import app.freerouting.board.DrillItem;
-import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.DrillItem;
 import app.freerouting.settings.GlobalSettings;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -68,6 +68,21 @@ class SesRoundTripTest {
         "SES output must start with '(session '; got: "
             + content.substring(0, Math.min(50, content.length())));
     assertTrue(content.contains("(routes"), "SES output must contain '(routes' scope");
+    assertFalse(content.contains("(hostCad"), "SES output must not contain camelCase '(hostCad'");
+    assertFalse(
+        content.contains("(stringQuote"), "SES output must not contain camelCase '(stringQuote'");
+    assertFalse(
+        content.contains("(writeResolution"),
+        "SES output must not contain camelCase '(writeResolution'");
+    assertFalse(content.contains("(viaRule"), "SES output must not contain camelCase '(viaRule'");
+    assertFalse(
+        content.contains("(pullTight"), "SES output must not contain camelCase '(pullTight'");
+    assertFalse(
+        content.contains("(shoveFixed"), "SES output must not contain camelCase '(shoveFixed'");
+    assertFalse(content.contains("(useLayer"), "SES output must not contain camelCase '(useLayer'");
+    assertFalse(
+        content.contains("(clearanceClass"),
+        "SES output must not contain camelCase '(clearanceClass'");
   }
 
   /**
@@ -190,8 +205,8 @@ class SesRoundTripTest {
     assertTrue(imported.wiresImported() > 0);
 
     int tracesWithDrillContacts = 0;
-    for (app.freerouting.board.Item item : board.getItems()) {
-      if (!(item instanceof app.freerouting.board.PolylineTrace trace)) {
+    for (app.freerouting.board.model.items.Item item : board.getItems()) {
+      if (!(item instanceof app.freerouting.board.trace.PolylineTrace trace)) {
         continue;
       }
       for (boolean startSide : new boolean[] {true, false}) {

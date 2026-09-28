@@ -111,7 +111,7 @@ services:
       --api_server.enabled=true
       --gui.enabled=false
       --api_server.authentication.enabled=false
-      --api_server-endpoints=http://0.0.0.0:37864
+      --api_server.endpoints=http://0.0.0.0:37864
       --feature_flags.save_jobs=true
       --user_data_path=/mnt/freerouting
 
@@ -121,7 +121,7 @@ volumes:
 
 ### Custom endpoint / network exposure
 
-By default the Docker CMD already passes `--api_server-enabled=true` and binds to `0.0.0.0:37864` inside the container. To restrict which host interface is exposed, change the `-p` mapping:
+By default the Docker CMD already passes `--api_server.enabled=true` and binds to `0.0.0.0:37864` inside the container. To restrict which host interface is exposed, change the `-p` mapping:
 
 ```bash
 # Only accessible from the local machine (most secure)
@@ -165,7 +165,7 @@ java -jar freerouting.jar \
   --gui.enabled=false \
   --api_server.enabled=true \
   --api_server.authentication.enabled=false \
-  --api_server-endpoints=http://0.0.0.0:37864
+  --api_server.endpoints=http://0.0.0.0:37864
 ```
 
 > ⚠️ **Security note:** Binding to `0.0.0.0` exposes the API to every network interface on the host. Only do this on a trusted local network or behind a firewall / reverse proxy.
@@ -268,12 +268,12 @@ nssm start Freerouting
 | Disable GUI | `--gui.enabled=false` | `true` | Required for headless/server operation. |
 | Enable API server | `--api_server.enabled=true` | `false` | Starts the embedded REST API server. |
 | Disable authentication | `--api_server.authentication.enabled=false` | `true` | Allows requests without an API key. Recommended for local use. |
-| Bind address | `--api_server-endpoints=http://0.0.0.0:37864` | `http://127.0.0.1:37864` | Address and port the server listens on. |
+| Bind address | `--api_server.endpoints=http://0.0.0.0:37864` | `http://127.0.0.1:37864` | Address and port the server listens on. |
 | CORS origins | `--api_server.cors_origins=*` | _(none)_ | Allows browser-based clients to call the API. Set to `*` or a specific origin. |
-| Data directory | `--user_data_path=/path/to/data` | OS temp dir | Where logs and saved jobs are stored. |
+| Data directory | `--user_data_path=/path/to/data` | OS standard user-data dir (`%APPDATA%\freerouting`, `~/Library/Application Support/freerouting`, or `~/.config/freerouting`) | Where logs and saved jobs are stored. |
 | Save jobs to disk | `--feature_flags.save_jobs=true` | `false` | Persists routing jobs (input/output files + metadata) under `user_data_path`. |
-| Max routing passes | `--router.max_passes=100` | `100` | Upper limit on autorouting passes per job. |
-| Thread count | `-mt 4` or `--router.max_threads=4` | CPU count − 1 | Worker threads for route optimisation. |
+| Max routing passes | `--router.autorouter.max_passes=100` | `0` (no limit) | Upper limit on autorouting passes per job. Flat `--router.max_passes` still works with a deprecation warning. |
+| Thread count | `-mt 4` or `--router.max_threads=4` | CPU count - 1 | Worker threads for route optimisation. |
 
 ### All configuration methods
 
@@ -369,7 +369,7 @@ Address already in use: bind
 Another process is using port 37864. Either stop the other process or change the port:
 
 ```bash
---api_server-endpoints=http://0.0.0.0:38000
+--api_server.endpoints=http://0.0.0.0:38000
 ```
 
 and update your `-p` mapping accordingly if using Docker.
@@ -386,12 +386,39 @@ Authentication is enabled. Either:
 - Add `--api_server.authentication.enabled=false` for local use, or
 - Include the header `Authorization: Bearer <your-api-key>` in all requests.
 
+### Volume permission denied (`freerouting.log: Permission denied`)
+
+The Docker container runs as non-root user `freerouting` (UID `10001`, GID `10001`). When using external Docker volumes or host mounts, Docker creates the directory owned by `root:root` (UID 0:0), preventing Freerouting from creating logs and saving jobs.
+
+Fix permissions directly inside the running container as root:
+
+```bash
+docker exec -u 0 <container-name> chown -R 10001:10001 /mnt/freerouting
+```
+
+> **Umbrel users:** On Umbrel, Portainer runs in a Docker-in-Docker environment (`portainer_docker_1`). Open the **Console** for the container in the Portainer web UI, select **User: root**, and run `chown -R 10001:10001 /mnt/freerouting`. Alternatively, run from the Umbrel host terminal:
+> ```bash
+> sudo docker exec -it portainer_docker_1 docker exec -u 0 <container-id-or-name> chown -R 10001:10001 /mnt/freerouting
+> ```
+
+### Java restricted native access warning (`Conscrypt`)
+
+If you see:
+```text
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by org.conscrypt.NativeLibraryUtil
+```
+Add `--enable-native-access=ALL-UNNAMED` as a JVM flag **before** `-jar` in your launch command:
+```bash
+java --enable-native-access=ALL-UNNAMED -jar /app/freerouting-executable.jar ...
+```
+
 ### Out-of-memory on large boards (Raspberry Pi / ARMv7)
 
 The `linux/arm/v7` image runs a 32-bit JVM, which has a 4 GB address-space ceiling. Large boards with hundreds of nets can approach this. Mitigation options:
 
 - Use a 64-bit OS and the `linux/arm64` image instead (Raspberry Pi OS 64-bit is available for Pi 3 and later).
-- Limit routing passes with `--router.max_passes=20` to reduce peak memory usage.
+- Limit routing passes with `--router.autorouter.max_passes=20` to reduce peak memory usage.
 - Add a JVM heap flag: `-Xmx1g` (adjust to your available RAM).
 
 ```bash
@@ -402,3 +429,58 @@ docker run -d -p 37864:37864 \
   --gui.enabled=false \
   --api_server.authentication.enabled=false
 ```
+
+---
+
+## Running the MCP Server with Cloudflare Tunnel or Reverse Proxy
+
+Freerouting includes a dedicated Model Context Protocol (MCP) server alongside the REST API:
+* **REST API server:** port `37864` (`/v1/system/*`, `/v1/jobs/*`)
+* **MCP server:** port `37964` (`/v1/mcp`, `/v1/mcp/events`, `/v1/mcp/ws`)
+
+### Docker Compose Stack Configuration
+
+When hosting both services behind a reverse proxy or Cloudflare Tunnel, ensure both listeners bind to `0.0.0.0` so other containers on the network can reach them:
+
+```yaml
+services:
+  freerouting-api:
+    image: ghcr.io/freerouting/freerouting:latest
+    container_name: freerouting-api
+    restart: unless-stopped
+    command: >
+      java --enable-native-access=ALL-UNNAMED
+      -jar /app/freerouting-executable.jar
+      --gui.enabled=false
+      --feature_flags.save_jobs=true
+      --user_data_path=/mnt/freerouting
+      --api_server.enabled=true
+      --api_server.endpoints=http://0.0.0.0:37864
+      --mcp_server.enabled=true
+      --mcp_server.endpoints=http://0.0.0.0:37964
+    volumes:
+      - freerouting-userdata:/mnt/freerouting
+    networks:
+      - freerouting-network
+
+volumes:
+  freerouting-userdata:
+
+networks:
+  freerouting-network:
+    driver: bridge
+```
+
+### Cloudflare Tunnel / Reverse Proxy Path Routing
+
+Clients using `@freerouting/freerouting-mcp-server` target `https://<your-domain>/v1/mcp`. Because the API and MCP servers run on separate internal ports, configure path-based routing in your reverse proxy:
+
+1. **Rule 1 (Specific route - must be first):**
+   * **Path:** `v1/mcp*`
+   * **Target:** `http://freerouting-api:37964`
+2. **Rule 2 (Catch-all route):**
+   * **Path:** `*` (or empty)
+   * **Target:** `http://freerouting-api:37864`
+
+> **Important (Cloudflare Tunnel):** Cloudflare evaluates published application routes from top to bottom. The `v1/mcp*` route **must be ordered above** the catch-all `*` route, otherwise all MCP requests will hit the REST API port and return `404 Not Found`.
+

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "DerKnopf_led-ring",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 116819,
+      "sha256": "4f2950e2a782d579ae60bb28a14bd2323df47f749d12d0d5e5c0fe7e1b563275"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 149359,
+      "sha256": "3b2d3a8ab2c14cb402c0cd591dce26695e993f52da7a1619f0fe4c0c0fc74918"
+    },
+    "metadata_json": {
+      "bytes": 455,
+      "sha256": "873de6db860ed75751b5b4f23291e579a9a187ceadd9adaa537f48b6175e8dc6"
+    },
+    "final_json": {
+      "bytes": 86137,
+      "sha256": "7596735445283f7dd1af02e4e536e8ee81f3798581edc43b73dc894e67d27c10"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:41:19.156292+00:00"
+  }
+}

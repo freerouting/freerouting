@@ -1,0 +1,36 @@
+{
+  "board": "MYS-PMS7003_MYS-PMS7003",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\MYS-PMS7003_MYS-PMS7003\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 50,
+  "segment_count": 704,
+  "approximate_track_length_mm": 2253.47,
+  "kicad_drc_violations": 344,
+  "generated_at": "2026-08-18T19:25:58.201330+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 344,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 13,
+      "clearance": 149,
+      "copper_edge_clearance": 58,
+      "courtyards_overlap": 2,
+      "lib_footprint_issues": 43,
+      "npth_inside_courtyard": 1,
+      "silk_edge_clearance": 4,
+      "silk_over_copper": 26,
+      "silk_overlap": 23,
+      "solder_mask_bridge": 17,
+      "starved_thermal": 2,
+      "text_height": 1,
+      "track_dangling": 2,
+      "via_dangling": 2,
+      "zones_intersect": 1
+    },
+    "by_severity": {
+      "error": 243,
+      "warning": 101
+    }
+  }
+}

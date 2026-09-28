@@ -1,0 +1,36 @@
+{
+  "board": "arf154_arf154",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\arf154_arf154\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 25,
+  "segment_count": 270,
+  "approximate_track_length_mm": 385.84,
+  "kicad_drc_violations": 254,
+  "generated_at": "2026-08-18T17:47:14.101340+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 254,
+    "unconnected_count": 28,
+    "by_type": {
+      "clearance": 173,
+      "copper_edge_clearance": 3,
+      "courtyards_overlap": 4,
+      "lib_footprint_issues": 30,
+      "shorting_items": 4,
+      "silk_edge_clearance": 4,
+      "silk_over_copper": 10,
+      "silk_overlap": 8,
+      "solder_mask_bridge": 1,
+      "starved_thermal": 6,
+      "text_height": 1,
+      "track_dangling": 2,
+      "track_width": 4,
+      "tracks_crossing": 3,
+      "via_dangling": 1
+    },
+    "by_severity": {
+      "error": 198,
+      "warning": 56
+    }
+  }
+}

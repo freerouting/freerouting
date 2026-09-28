@@ -1,0 +1,64 @@
+{
+  "board_id": "PowerGloveUHID_sensor_board",
+  "display_name": "PowerGloveUHID_sensor_board",
+  "pcbench_directory": "PCBs/PowerGloveUHID_sensor_board",
+  "source": "https://github.com/nolanmoore/PowerGloveUHID",
+  "author": "nolanmoore",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:42.429939+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 2,
+    "components": 18,
+    "dimensions_mm": {
+      "width": 48.26,
+      "height": 43.18
+    },
+    "area_cm2": 20.84,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 53,
+    "vias": 2,
+    "track_length_mm": 322.93,
+    "kicad_drc_violations": 79,
+    "kicad_drc_breakdown": {
+      "total_violations": 79,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 55,
+        "copper_edge_clearance": 2,
+        "lib_footprint_issues": 18,
+        "silk_over_copper": 4
+      },
+      "by_severity": {
+        "error": 57,
+        "warning": 22
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.073441+00:00",
+    "elapsed_seconds": 7.93,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 1000.0
+  }
+}

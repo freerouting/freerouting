@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "motor_control_hardware_poncho",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 71497,
+      "sha256": "6a6f565b3bd9ec10a50eaf68d56b9c8e4e2c9abbdb3f80f5f29e92925aa69633"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 79970,
+      "sha256": "84ead6affc58d0a68f9edcb3e02e252c67c8581975d02abd1e46b754518dbbc4"
+    },
+    "metadata_json": {
+      "bytes": 520,
+      "sha256": "9c1874bc18390062b957d61a3df2bb5458f2f7f93b048a54ae5a5fdbdfb05154"
+    },
+    "final_json": {
+      "bytes": 79684,
+      "sha256": "e3e3acf656ec0bd03809eb237e801147a32c725a56e4e26674aef2f518edfc9a"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:25:47.589791+00:00"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "board": "Eggbot-Spherebot-polargraph-Controller_eggbot-spherebot-polargraph-controller",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Eggbot-Spherebot-polargraph-Controller_eggbot-spherebot-polargraph-controller\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 192,
+  "approximate_track_length_mm": 1165.18,
+  "kicad_drc_violations": 120,
+  "generated_at": "2026-08-18T18:43:58.012407+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 120,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 4,
+      "clearance": 93,
+      "lib_footprint_issues": 17,
+      "padstack": 4,
+      "silk_overlap": 2
+    },
+    "by_severity": {
+      "error": 97,
+      "warning": 23
+    }
+  }
+}

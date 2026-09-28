@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "cap-soil-moisture-v2_soil-moisture2x4",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 56453,
+      "sha256": "b8daf80f7e758bc810c0fb984dd9ebf77ba40977f5ebdea5c67bf488b70ed8ef"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 56645,
+      "sha256": "72a46fad6f29c85a204ee60c0edafffbc32022ca40fcac92d6f0bdf435bac800"
+    },
+    "metadata_json": {
+      "bytes": 668,
+      "sha256": "cdb324316e7cf74fa59ceed7bf2022cef23f4664cb27f62324e4d83b050c9786"
+    },
+    "final_json": {
+      "bytes": 32436,
+      "sha256": "32f9c817cfadcb9d241b7d9035a332b2926dbba83040b6482946ca1f3ca0f87e"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:37:49.742372+00:00"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "board": "KiwiSDR_PCB_ant",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\KiwiSDR_PCB_ant\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 54,
+  "segment_count": 420,
+  "approximate_track_length_mm": 841.52,
+  "kicad_drc_violations": 159,
+  "generated_at": "2026-08-18T19:13:51.959398+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 159,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 152,
+      "padstack": 4,
+      "silk_over_copper": 2,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 152,
+      "warning": 7
+    }
+  }
+}

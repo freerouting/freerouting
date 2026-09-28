@@ -1,0 +1,56 @@
+{
+  "board_id": "Hypfer-RGB-W-LED-Controller_led_strip_controller",
+  "display_name": "Hypfer-RGB-W-LED-Controller_led_strip_controller",
+  "pcbench_directory": "PCBs/Hypfer-RGB-W-LED-Controller_led_strip_controller",
+  "source": "https://github.com/Duckle29/Hypfer-RGB-W-LED-Controller",
+  "author": "Duckle29",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:45.697977+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 1,
+    "components": 31,
+    "dimensions_mm": {
+      "width": 73.66,
+      "height": 80.01
+    },
+    "area_cm2": 58.94,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 303,
+    "vias": 7,
+    "track_length_mm": 1450.97,
+    "kicad_drc_violations": 309,
+    "kicad_drc_breakdown": {
+      "total_violations": 309,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 194,
+        "courtyards_overlap": 2,
+        "lib_footprint_issues": 31,
+        "silk_overlap": 80,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 196,
+        "warning": 113
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

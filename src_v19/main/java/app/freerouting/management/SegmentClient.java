@@ -5,6 +5,7 @@ import app.freerouting.management.segment.*;
 import com.google.gson.GsonBuilder;
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import com.google.gson.Gson;
 
@@ -35,7 +36,7 @@ public class SegmentClient {
       String jsonPayload = GSON.toJson(payload);
 
       // Create and configure HTTP connection
-      URL url = new URL(endpoint);
+      URL url = new URI(endpoint).toURL();
       HttpURLConnection connection = (HttpURLConnection) url.openConnection();
       connection.setRequestMethod("POST");
       connection.setRequestProperty("Content-Type", "application/json; utf-8");

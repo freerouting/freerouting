@@ -1,0 +1,60 @@
+{
+  "board_id": "kitspace_d20_tri_r0.3",
+  "display_name": "kitspace_d20_tri_r0.3",
+  "pcbench_directory": "PCBs/kitspace_d20_tri_r0.3",
+  "source": "https://github.com/gregdavill/d20-hardware",
+  "author": "",
+  "license": "[{'name': 'BSD', 'link': 'https://raw.githubusercontent.com/gregdavill/d20-hardware/main/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:07:15.283970+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 0,
+    "components": 152,
+    "dimensions_mm": {
+      "width": 36.07,
+      "height": 31.24
+    },
+    "area_cm2": 11.27,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 4396,
+    "vias": 262,
+    "track_length_mm": 2951.98,
+    "kicad_drc_violations": 468,
+    "kicad_drc_breakdown": {
+      "total_violations": 468,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 22,
+        "copper_edge_clearance": 89,
+        "courtyards_overlap": 8,
+        "hole_clearance": 199,
+        "lib_footprint_issues": 129,
+        "lib_footprint_mismatch": 6,
+        "silk_overlap": 6,
+        "track_dangling": 8,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 318,
+        "warning": 150
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "complex",
+    "medium",
+    "plane",
+    "tier-c"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
+}

@@ -1,0 +1,34 @@
+{
+  "board": "P8000_WDC_Emulator_P8000_WDC_Emulator",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\P8000_WDC_Emulator_P8000_WDC_Emulator\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 27,
+  "segment_count": 1503,
+  "approximate_track_length_mm": 9162.25,
+  "kicad_drc_violations": 878,
+  "generated_at": "2026-08-18T19:31:16.856567+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 878,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 426,
+      "copper_edge_clearance": 2,
+      "courtyards_overlap": 7,
+      "drill_out_of_range": 163,
+      "hole_clearance": 16,
+      "lib_footprint_issues": 199,
+      "pth_inside_courtyard": 7,
+      "silk_edge_clearance": 3,
+      "silk_over_copper": 4,
+      "silk_overlap": 43,
+      "solder_mask_bridge": 2,
+      "starved_thermal": 3,
+      "track_dangling": 3
+    },
+    "by_severity": {
+      "error": 626,
+      "warning": 252
+    }
+  }
+}

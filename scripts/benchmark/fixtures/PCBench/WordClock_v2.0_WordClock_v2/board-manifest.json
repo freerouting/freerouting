@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "WordClock_v2.0_WordClock_v2",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 58330,
+      "sha256": "38fdfd46f9529e0b73ef0f8d74ef3452f9a29c38008bfbe978172da4279b2244"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 72571,
+      "sha256": "b3127d07e9ee3eae65801ef7b3ed9f029d99c2142a3f625854e20b4e5e1bb316"
+    },
+    "metadata_json": {
+      "bytes": 622,
+      "sha256": "4cd9624bd2b864327d3565f965dab5030ac84aca795079a506f1f7a8e4dca4dd"
+    },
+    "final_json": {
+      "bytes": 53502,
+      "sha256": "7f05f4996eef502933a23f94b0a2d73490b5b7c6a7f4b34c5b82e447a9394847"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:57:29.126602+00:00"
+  }
+}

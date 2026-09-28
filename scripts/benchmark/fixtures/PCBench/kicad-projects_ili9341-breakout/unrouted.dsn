@@ -1,0 +1,222 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\kicad-projects_ili9341-breakout\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  194056 -107188  145796 -107188  145796 -91948  194056 -91948
+            194056 -107188)
+    )
+    (via "Via[0-1]_600:400_um")
+    (rule
+      (width 250)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component Socket_Strips:Socket_Strip_Straight_1x18
+      (place P1 148501 -105004 front 0 (PN CONN_01X18))
+    )
+    (component "components:18p-ili9341"
+      (place U1 164084 -95504 front 0 (PN "ili9341-18p"))
+    )
+    (component Mounting_Holes:MountingHole_2.7mm_M2.5_Pad
+      (place REF**_2 149606 -95504 front 0 (PN MountingHole_2.7mm_M2.5_Pad))
+      (place REF** 190246 -95504 front 0 (PN MountingHole_2.7mm_M2.5_Pad))
+    )
+  )
+  (library
+    (image Socket_Strips:Socket_Strip_Straight_1x18
+      (outline (polygon signal 0  44945 -1745  -1745 -1745  -1745 1745  44945 1745))
+      (outline (path signal 150  -1550 1550  -1550 -1550))
+      (outline (path signal 150  0 1550  -1550 1550))
+      (outline (path signal 150  1270 -1270  1270 1270))
+      (outline (path signal 150  -1550 -1550  0 -1550))
+      (outline (path signal 150  44450 1270  1270 1270))
+      (outline (path signal 150  44450 -1270  44450 1270))
+      (outline (path signal 150  1270 -1270  44450 -1270))
+      (pin Rect[A]Pad_1727.200000x2032.000000_um 1 0 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 2 2540 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 3 5080 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 4 7620 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 5 10160 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 6 12700 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 7 15240 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 8 17780 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 9 20320 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 10 22860 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 11 25400 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 12 27940 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 13 30480 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 14 33020 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 15 35560 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 16 38100 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 17 40640 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 18 43180 0)
+    )
+    (image "components:18p-ili9341"
+      (pin Rect[T]Pad_400.000000x4000.000000_um 1 0 0)
+      (pin Rect[T]Pad_400.000000x4000.000000_um 2 800 0)
+      (pin Rect[T]Pad_400.000000x4000.000000_um 3 1600 0)
+      (pin Rect[T]Pad_400.000000x4000.000000_um 4 2400 0)
+      (pin Rect[T]Pad_400.000000x4000.000000_um 5 3200 0)
+      (pin Rect[T]Pad_400.000000x4000.000000_um 6 4000 0)
+      (pin Rect[T]Pad_400.000000x4000.000000_um 7 4800 0)
+      (pin Rect[T]Pad_400.000000x4000.000000_um 8 5600 0)
+      (pin Rect[T]Pad_400.000000x4000.000000_um 9 6400 0)
+      (pin Rect[T]Pad_400.000000x4000.000000_um 10 7200 0)
+      (pin Rect[T]Pad_400.000000x4000.000000_um 11 8000 0)
+      (pin Rect[T]Pad_400.000000x4000.000000_um 12 8800 0)
+      (pin Rect[T]Pad_400.000000x4000.000000_um 13 9600 0)
+      (pin Rect[T]Pad_400.000000x4000.000000_um 14 10400 0)
+      (pin Rect[T]Pad_400.000000x4000.000000_um 15 11200 0)
+      (pin Rect[T]Pad_400.000000x4000.000000_um 16 12000 0)
+      (pin Rect[T]Pad_400.000000x4000.000000_um 17 12800 0)
+      (pin Rect[T]Pad_400.000000x4000.000000_um 18 13600 0)
+    )
+    (image Mounting_Holes:MountingHole_2.7mm_M2.5_Pad
+      (outline (polygon signal 0  342.187 2927.56  679.736 2868.04  1008.1 2769.74  1322.83 2633.97
+            1619.67 2462.59  1894.61 2257.91  2143.93 2022.69  2364.25 1760.12
+            2552.6 1473.75  2706.43 1167.44  2823.66 845.352  2902.71 511.827
+            2942.51 171.344  2945 0  2942.51 -171.343  2902.71 -511.826
+            2823.66 -845.351  2706.43 -1167.44  2552.6 -1473.74  2364.25 -1760.12
+            2143.93 -2022.69  1894.61 -2257.91  1619.67 -2462.59  1322.83 -2633.97
+            1008.1 -2769.73  679.736 -2868.04  342.187 -2927.56  0 -2947.49
+            -342.188 -2927.56  -679.737 -2868.04  -1008.1 -2769.73  -1322.83 -2633.97
+            -1619.67 -2462.59  -1894.61 -2257.91  -2143.93 -2022.69  -2364.25 -1760.12
+            -2552.6 -1473.74  -2706.44 -1167.44  -2823.67 -845.351  -2902.71 -511.826
+            -2942.5 -171.383  -2942.5 171.384  -2902.71 511.827  -2823.67 845.352
+            -2706.44 1167.44  -2552.6 1473.75  -2364.25 1760.12  -2143.93 2022.69
+            -1894.61 2257.91  -1619.67 2462.59  -1322.83 2633.97  -1008.1 2769.74
+            -679.737 2868.04  -342.188 2927.56  0 2947.49))
+      (outline (path signal 150  2700 0  2681.05 -319.338  2624.46 -634.192  2531.03 -940.144
+            2402.07 -1232.9  2239.39 -1508.35  2045.28 -1762.62  1822.45 -1992.15
+            1574.05 -2193.72  1303.54 -2364.48  1014.73 -2502.06  711.685 -2604.52
+            398.646 -2670.41  80.01 -2698.81  -239.749 -2689.34  -556.142 -2642.1
+            -864.729 -2557.78  -1161.18 -2437.55  -1441.32 -2283.11  -1701.24 -2096.61
+            -1937.27 -1880.69  -2146.11 -1638.36  -2324.82 -1373.03  -2470.89 -1088.43
+            -2582.28 -788.553  -2657.42 -477.604  -2695.26 -159.95  -2695.26 159.95
+            -2657.42 477.604  -2582.28 788.553  -2470.89 1088.43  -2324.82 1373.03
+            -2146.11 1638.36  -1937.27 1880.69  -1701.24 2096.61  -1441.32 2283.11
+            -1161.18 2437.55  -864.729 2557.78  -556.142 2642.1  -239.749 2689.34
+            80.01 2698.81  398.646 2670.41  711.685 2604.52  1014.73 2502.06
+            1303.54 2364.48  1574.05 2193.72  1822.45 1992.15  2045.28 1762.62
+            2239.39 1508.35  2402.07 1232.9  2531.03 940.144  2624.46 634.192
+            2681.05 319.338  2700 0))
+      (pin Round[A]Pad_5400.000000_um 1 0 0)
+    )
+    (padstack Round[A]Pad_5400.000000_um
+      (shape (circle F.Cu 5400))
+      (shape (circle B.Cu 5400))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_1727.200000x2032.000000_um
+      (shape (path F.Cu 1727.2  0 -152.4  0 152.4))
+      (shape (path B.Cu 1727.2  0 -152.4  0 152.4))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_400.000000x4000.000000_um
+      (shape (rect F.Cu -200 -2000 200 2000))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1727.200000x2032.000000_um
+      (shape (rect F.Cu -863.6 -1016 863.6 1016))
+      (shape (rect B.Cu -863.6 -1016 863.6 1016))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(P1-Pad1)"
+      (pins P1-1 U1-1)
+    )
+    (net "Net-(P1-Pad2)"
+      (pins P1-2 U1-2)
+    )
+    (net "Net-(P1-Pad3)"
+      (pins P1-3 U1-3)
+    )
+    (net "Net-(P1-Pad4)"
+      (pins P1-4 U1-4)
+    )
+    (net "Net-(P1-Pad5)"
+      (pins P1-5 U1-5)
+    )
+    (net "Net-(P1-Pad6)"
+      (pins P1-6 U1-6)
+    )
+    (net "Net-(P1-Pad7)"
+      (pins P1-7 U1-7)
+    )
+    (net "Net-(P1-Pad8)"
+      (pins P1-8 U1-8)
+    )
+    (net "Net-(P1-Pad9)"
+      (pins P1-9 U1-9)
+    )
+    (net "Net-(P1-Pad10)"
+      (pins P1-10 U1-10)
+    )
+    (net "Net-(P1-Pad11)"
+      (pins P1-11 U1-11)
+    )
+    (net "Net-(P1-Pad12)"
+      (pins P1-12 U1-12)
+    )
+    (net "Net-(P1-Pad13)"
+      (pins P1-13 U1-13)
+    )
+    (net "Net-(P1-Pad14)"
+      (pins P1-14 U1-14)
+    )
+    (net "Net-(P1-Pad15)"
+      (pins P1-15 U1-15)
+    )
+    (net "Net-(P1-Pad16)"
+      (pins P1-16 U1-16)
+    )
+    (net "Net-(P1-Pad17)"
+      (pins P1-17 U1-17)
+    )
+    (net "Net-(P1-Pad18)"
+      (pins P1-18 U1-18)
+    )
+    (class kicad_default "Net-(P1-Pad1)" "Net-(P1-Pad10)" "Net-(P1-Pad11)"
+      "Net-(P1-Pad12)" "Net-(P1-Pad13)" "Net-(P1-Pad14)" "Net-(P1-Pad15)"
+      "Net-(P1-Pad16)" "Net-(P1-Pad17)" "Net-(P1-Pad18)" "Net-(P1-Pad2)" "Net-(P1-Pad3)"
+      "Net-(P1-Pad4)" "Net-(P1-Pad5)" "Net-(P1-Pad6)" "Net-(P1-Pad7)" "Net-(P1-Pad8)"
+      "Net-(P1-Pad9)"
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 250)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

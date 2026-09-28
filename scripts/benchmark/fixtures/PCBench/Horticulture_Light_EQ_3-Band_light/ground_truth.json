@@ -1,0 +1,29 @@
+{
+  "board": "Horticulture_Light_EQ_3-Band_light",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Horticulture_Light_EQ_3-Band_light\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 26,
+  "segment_count": 554,
+  "approximate_track_length_mm": 3760.75,
+  "kicad_drc_violations": 751,
+  "generated_at": "2026-08-18T18:57:15.546626+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 751,
+    "unconnected_count": 1,
+    "by_type": {
+      "clearance": 283,
+      "copper_edge_clearance": 69,
+      "hole_clearance": 8,
+      "hole_to_hole": 2,
+      "lib_footprint_issues": 199,
+      "silk_over_copper": 130,
+      "solder_mask_bridge": 56,
+      "track_dangling": 4
+    },
+    "by_severity": {
+      "error": 416,
+      "warning": 335
+    }
+  }
+}

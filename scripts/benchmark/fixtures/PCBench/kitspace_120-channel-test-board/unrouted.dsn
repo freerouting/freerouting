@@ -1,0 +1,787 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\kitspace_120-channel-test-board\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer Front
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer Back
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  114203 -86353.6  38196.9 -86353.6  38196.9 -35566.4  114203 -35566.4
+            114203 -86353.6)
+    )
+    (via "Via[0-1]_762:381_um")
+    (rule
+      (width 177.8)
+      (clearance 177.8)
+      (clearance 44.45 (type smd_smd))
+    )
+  )
+  (placement
+    (component Capacitors_SMD:C_1206
+      (place C1 79375 -43180 front 0 (PN C))
+      (place C2 85725 -43180 front 0 (PN C))
+      (place C3 92075 -43180 front 0 (PN C))
+      (place C4 98425 -43180 front 0 (PN C))
+      (place C5 79375 -45720 front 0 (PN C))
+      (place C6 85725 -45720 front 0 (PN C))
+      (place C7 92075 -45720 front 0 (PN C))
+      (place C8 98425 -45720 front 0 (PN C))
+      (place C9 79375 -48260 front 0 (PN C))
+      (place C10 85725 -48260 front 0 (PN C))
+      (place C11 92075 -48260 front 0 (PN C))
+      (place C12 98425 -48260 front 0 (PN C))
+      (place C13 79375 -50800 front 0 (PN C))
+      (place C14 85725 -50800 front 0 (PN C))
+      (place C15 92075 -50800 front 0 (PN C))
+      (place C16 98425 -50800 front 0 (PN C))
+      (place C17 79375 -53340 front 0 (PN C))
+      (place C18 85725 -53340 front 0 (PN C))
+      (place C19 92075 -53340 front 0 (PN C))
+      (place C20 98425 -53340 front 0 (PN C))
+      (place C21 79375 -55880 front 0 (PN C))
+      (place C22 85725 -55880 front 0 (PN C))
+      (place C23 92075 -55880 front 0 (PN C))
+      (place C24 98425 -55880 front 0 (PN C))
+      (place C25 79375 -58420 front 0 (PN C))
+      (place C26 85725 -58420 front 0 (PN C))
+      (place C27 92075 -58420 front 0 (PN C))
+      (place C28 98425 -58420 front 0 (PN C))
+      (place C29 79375 -60960 front 0 (PN C))
+      (place C30 85725 -60960 front 0 (PN C))
+      (place C31 92075 -60960 front 0 (PN C))
+      (place C32 98425 -60960 front 0 (PN C))
+      (place C33 79375 -63500 front 0 (PN C))
+      (place C34 85725 -63500 front 0 (PN C))
+      (place C35 92075 -63500 front 0 (PN C))
+      (place C36 98425 -63500 front 0 (PN C))
+      (place C37 79375 -66040 front 0 (PN C))
+      (place C38 85725 -66040 front 0 (PN C))
+      (place C39 92075 -66040 front 0 (PN C))
+      (place C40 98425 -66040 front 0 (PN C))
+      (place C41 79375 -68580 front 0 (PN C))
+      (place C42 85725 -68580 front 0 (PN C))
+      (place C43 92075 -68580 front 0 (PN C))
+      (place C44 98425 -68580 front 0 (PN C))
+      (place C45 79375 -71120 front 0 (PN C))
+      (place C46 85725 -71120 front 0 (PN C))
+      (place C47 92075 -71120 front 0 (PN C))
+      (place C48 98425 -71120 front 0 (PN C))
+      (place C49 79375 -73660 front 0 (PN C))
+      (place C50 85725 -73660 front 0 (PN C))
+      (place C51 92075 -73660 front 0 (PN C))
+      (place C52 98425 -73660 front 0 (PN C))
+      (place C53 79375 -76200 front 0 (PN C))
+      (place C54 85725 -76200 front 0 (PN C))
+      (place C55 92075 -76200 front 0 (PN C))
+      (place C56 98425 -76200 front 0 (PN C))
+      (place C57 79375 -78740 front 0 (PN C))
+      (place C58 85725 -78740 front 0 (PN C))
+      (place C59 92075 -78740 front 0 (PN C))
+      (place C60 98425 -78740 front 0 (PN C))
+      (place C61 53975 -78740 front 0 (PN C))
+      (place C62 60325 -78740 front 0 (PN C))
+      (place C63 66675 -78740 front 0 (PN C))
+      (place C64 73025 -78740 front 0 (PN C))
+      (place C65 53975 -76200 front 0 (PN C))
+      (place C66 60325 -76200 front 0 (PN C))
+      (place C67 66675 -76200 front 0 (PN C))
+      (place C68 73025 -76200 front 0 (PN C))
+      (place C69 53975 -73660 front 0 (PN C))
+      (place C70 60325 -73660 front 0 (PN C))
+      (place C71 66675 -73660 front 0 (PN C))
+      (place C72 73025 -73660 front 0 (PN C))
+      (place C73 53975 -71120 front 0 (PN C))
+      (place C74 60325 -71120 front 0 (PN C))
+      (place C75 66675 -71120 front 0 (PN C))
+      (place C76 73025 -71120 front 0 (PN C))
+      (place C77 53975 -68580 front 0 (PN C))
+      (place C78 60325 -68580 front 0 (PN C))
+      (place C79 66675 -68580 front 0 (PN C))
+      (place C80 73025 -68580 front 0 (PN C))
+      (place C81 53975 -66040 front 0 (PN C))
+      (place C82 60325 -66040 front 0 (PN C))
+      (place C83 66675 -66040 front 0 (PN C))
+      (place C84 73025 -66040 front 0 (PN C))
+      (place C85 53975 -63500 front 0 (PN C))
+      (place C86 60325 -63500 front 0 (PN C))
+      (place C87 66675 -63500 front 0 (PN C))
+      (place C88 73025 -63500 front 0 (PN C))
+      (place C89 53975 -60960 front 0 (PN C))
+      (place C90 60325 -60960 front 0 (PN C))
+      (place C91 66675 -60960 front 0 (PN C))
+      (place C92 73025 -60960 front 0 (PN C))
+      (place C93 53975 -58420 front 0 (PN C))
+      (place C94 60325 -58420 front 0 (PN C))
+      (place C95 66675 -58420 front 0 (PN C))
+      (place C96 73025 -58420 front 0 (PN C))
+      (place C97 53975 -55880 front 0 (PN C))
+      (place C98 60325 -55880 front 0 (PN C))
+      (place C99 66675 -55880 front 0 (PN C))
+      (place C100 73025 -55880 front 0 (PN C))
+      (place C101 53975 -53340 front 0 (PN C))
+      (place C102 60325 -53340 front 0 (PN C))
+      (place C103 66675 -53340 front 0 (PN C))
+      (place C104 73025 -53340 front 0 (PN C))
+      (place C105 53975 -50800 front 0 (PN C))
+      (place C106 60325 -50800 front 0 (PN C))
+      (place C107 66675 -50800 front 0 (PN C))
+      (place C108 73025 -50800 front 0 (PN C))
+      (place C109 53975 -48260 front 0 (PN C))
+      (place C110 60325 -48260 front 0 (PN C))
+      (place C111 66675 -48260 front 0 (PN C))
+      (place C112 73025 -48260 front 0 (PN C))
+      (place C113 53975 -45720 front 0 (PN C))
+      (place C114 60325 -45720 front 0 (PN C))
+      (place C115 66675 -45720 front 0 (PN C))
+      (place C116 73025 -45720 front 0 (PN C))
+      (place C117 53975 -43180 front 0 (PN C))
+      (place C118 60325 -43180 front 0 (PN C))
+      (place C119 66675 -43180 front 0 (PN C))
+      (place C120 73025 -43180 front 0 (PN C))
+    )
+    (component Pin_Headers:Pin_Header_Straight_1x01_Pitch2.54mm
+      (place P121 76200 -82296 front 0 (PN CONN_01X01))
+      (place P138 76200 -39116 front 0 (PN CONN_01X01))
+    )
+    (component "Sci-Bots:1.9mm_DMF_Electrode"
+      (place P1 104140 -43180 front 0 (PN CONN_01X01))
+      (place P2 106680 -43180 front 0 (PN CONN_01X01))
+      (place P3 109220 -43180 front 0 (PN CONN_01X01))
+      (place P4 111760 -43180 front 0 (PN CONN_01X01))
+      (place P5 104140 -45720 front 180 (PN CONN_01X01))
+      (place P6 106680 -45720 front 180 (PN CONN_01X01))
+      (place P7 109220 -45720 front 180 (PN CONN_01X01))
+      (place P8 111760 -45720 front 180 (PN CONN_01X01))
+      (place P9 104140 -48260 front 180 (PN CONN_01X01))
+      (place P10 106680 -48260 front 0 (PN CONN_01X01))
+      (place P11 109220 -48260 front 0 (PN CONN_01X01))
+      (place P12 111760 -48260 front 0 (PN CONN_01X01))
+      (place P13 104140 -50800 front 0 (PN CONN_01X01))
+      (place P14 106680 -50800 front 0 (PN CONN_01X01))
+      (place P15 109220 -50800 front 0 (PN CONN_01X01))
+      (place P16 111760 -50800 front 0 (PN CONN_01X01))
+      (place P17 104140 -53340 front 0 (PN CONN_01X01))
+      (place P18 106680 -53340 front 0 (PN CONN_01X01))
+      (place P19 109220 -53340 front 0 (PN CONN_01X01))
+      (place P20 111760 -53340 front 0 (PN CONN_01X01))
+      (place P21 104140 -55880 front 0 (PN CONN_01X01))
+      (place P22 106680 -55880 front 0 (PN CONN_01X01))
+      (place P23 109220 -55880 front 0 (PN CONN_01X01))
+      (place P24 111760 -55880 front 0 (PN CONN_01X01))
+      (place P25 104140 -58420 front 0 (PN CONN_01X01))
+      (place P26 106680 -58420 front 0 (PN CONN_01X01))
+      (place P27 109220 -58420 front 0 (PN CONN_01X01))
+      (place P28 111760 -58420 front 0 (PN CONN_01X01))
+      (place P29 104140 -60960 front 0 (PN CONN_01X01))
+      (place P30 106680 -60960 front 0 (PN CONN_01X01))
+      (place P31 109220 -60960 front 0 (PN CONN_01X01))
+      (place P32 111760 -60960 front 0 (PN CONN_01X01))
+      (place P33 104140 -63500 front 0 (PN CONN_01X01))
+      (place P34 106680 -63500 front 0 (PN CONN_01X01))
+      (place P35 109220 -63500 front 0 (PN CONN_01X01))
+      (place P36 111760 -63500 front 0 (PN CONN_01X01))
+      (place P37 104140 -66040 front 0 (PN CONN_01X01))
+      (place P38 106680 -66040 front 0 (PN CONN_01X01))
+      (place P39 109220 -66040 front 0 (PN CONN_01X01))
+      (place P40 111760 -66040 front 0 (PN CONN_01X01))
+      (place P41 104140 -68580 front 0 (PN CONN_01X01))
+      (place P42 106680 -68580 front 0 (PN CONN_01X01))
+      (place P43 109220 -68580 front 0 (PN CONN_01X01))
+      (place P44 111760 -68580 front 0 (PN CONN_01X01))
+      (place P45 104140 -71120 front 0 (PN CONN_01X01))
+      (place P46 106680 -71120 front 0 (PN CONN_01X01))
+      (place P47 109220 -71120 front 0 (PN CONN_01X01))
+      (place P48 111760 -71120 front 0 (PN CONN_01X01))
+      (place P49 104140 -73660 front 0 (PN CONN_01X01))
+      (place P50 106680 -73660 front 0 (PN CONN_01X01))
+      (place P51 109220 -73660 front 0 (PN CONN_01X01))
+      (place P52 111760 -73660 front 0 (PN CONN_01X01))
+      (place P53 104140 -76200 front 0 (PN CONN_01X01))
+      (place P54 106680 -76200 front 0 (PN CONN_01X01))
+      (place P55 109220 -76200 front 0 (PN CONN_01X01))
+      (place P56 111760 -76200 front 0 (PN CONN_01X01))
+      (place P57 104140 -78740 front 0 (PN CONN_01X01))
+      (place P58 106680 -78740 front 0 (PN CONN_01X01))
+      (place P59 109220 -78740 front 0 (PN CONN_01X01))
+      (place P60 111760 -78740 front 0 (PN CONN_01X01))
+      (place P61 40640 -78740 front 0 (PN CONN_01X01))
+      (place P62 43180 -78740 front 0 (PN CONN_01X01))
+      (place P63 45720 -78740 front 0 (PN CONN_01X01))
+      (place P64 48260 -78740 front 0 (PN CONN_01X01))
+      (place P65 40640 -76200 front 0 (PN CONN_01X01))
+      (place P66 43180 -76200 front 0 (PN CONN_01X01))
+      (place P67 45720 -76200 front 0 (PN CONN_01X01))
+      (place P68 48260 -76200 front 0 (PN CONN_01X01))
+      (place P69 40640 -73660 front 0 (PN CONN_01X01))
+      (place P70 43180 -73660 front 0 (PN CONN_01X01))
+      (place P71 45720 -73660 front 0 (PN CONN_01X01))
+      (place P72 48260 -73660 front 0 (PN CONN_01X01))
+      (place P73 40640 -71120 front 0 (PN CONN_01X01))
+      (place P74 43180 -71120 front 0 (PN CONN_01X01))
+      (place P75 45720 -71120 front 0 (PN CONN_01X01))
+      (place P76 48260 -71120 front 0 (PN CONN_01X01))
+      (place P77 40640 -68580 front 0 (PN CONN_01X01))
+      (place P78 43180 -68580 front 0 (PN CONN_01X01))
+      (place P79 45720 -68580 front 0 (PN CONN_01X01))
+      (place P80 48260 -68580 front 0 (PN CONN_01X01))
+      (place P81 40640 -66040 front 0 (PN CONN_01X01))
+      (place P82 43180 -66040 front 0 (PN CONN_01X01))
+      (place P83 45720 -66040 front 0 (PN CONN_01X01))
+      (place P84 48260 -66040 front 0 (PN CONN_01X01))
+      (place P85 40640 -63500 front 0 (PN CONN_01X01))
+      (place P86 43180 -63500 front 0 (PN CONN_01X01))
+      (place P87 45720 -63500 front 0 (PN CONN_01X01))
+      (place P88 48260 -63500 front 0 (PN CONN_01X01))
+      (place P89 40640 -60960 front 0 (PN CONN_01X01))
+      (place P90 43180 -60960 front 0 (PN CONN_01X01))
+      (place P91 45720 -60960 front 0 (PN CONN_01X01))
+      (place P92 48260 -60960 front 0 (PN CONN_01X01))
+      (place P93 40640 -58420 front 0 (PN CONN_01X01))
+      (place P94 43180 -58420 front 0 (PN CONN_01X01))
+      (place P95 45720 -58420 front 0 (PN CONN_01X01))
+      (place P96 48260 -58420 front 0 (PN CONN_01X01))
+      (place P97 40640 -55880 front 0 (PN CONN_01X01))
+      (place P98 43180 -55880 front 0 (PN CONN_01X01))
+      (place P99 45720 -55880 front 0 (PN CONN_01X01))
+      (place P100 48260 -55880 front 0 (PN CONN_01X01))
+      (place P101 40640 -53340 front 0 (PN CONN_01X01))
+      (place P102 43180 -53340 front 0 (PN CONN_01X01))
+      (place P103 45720 -53340 front 0 (PN CONN_01X01))
+      (place P104 48260 -53340 front 0 (PN CONN_01X01))
+      (place P105 40640 -50800 front 0 (PN CONN_01X01))
+      (place P106 43180 -50800 front 0 (PN CONN_01X01))
+      (place P107 45720 -50800 front 0 (PN CONN_01X01))
+      (place P108 48260 -50800 front 0 (PN CONN_01X01))
+      (place P109 40640 -48260 front 0 (PN CONN_01X01))
+      (place P110 43180 -48260 front 0 (PN CONN_01X01))
+      (place P111 45720 -48260 front 0 (PN CONN_01X01))
+      (place P112 48260 -48260 front 0 (PN CONN_01X01))
+      (place P113 40640 -45720 front 0 (PN CONN_01X01))
+      (place P114 43180 -45720 front 0 (PN CONN_01X01))
+      (place P115 45720 -45720 front 0 (PN CONN_01X01))
+      (place P116 48260 -45720 front 0 (PN CONN_01X01))
+      (place P117 40640 -43180 front 0 (PN CONN_01X01))
+      (place P118 43180 -43180 front 0 (PN CONN_01X01))
+      (place P119 45720 -43180 front 0 (PN CONN_01X01))
+      (place P120 48260 -43180 front 0 (PN CONN_01X01))
+      (place P122 48260 -40640 front 0 (PN CONN_01X01))
+      (place P123 48260 -81280 front 0 (PN CONN_01X01))
+      (place P124 104140 -81280 front 0 (PN CONN_01X01))
+      (place P125 104140 -40640 front 0 (PN CONN_01X01))
+      (place P126 45720 -40640 front 0 (PN CONN_01X01))
+      (place P127 43180 -40640 front 0 (PN CONN_01X01))
+      (place P128 45720 -81280 front 0 (PN CONN_01X01))
+      (place P129 43180 -81280 front 0 (PN CONN_01X01))
+      (place P130 106680 -81280 front 0 (PN CONN_01X01))
+      (place P131 109220 -81280 front 0 (PN CONN_01X01))
+      (place P132 106680 -40640 front 0 (PN CONN_01X01))
+      (place P133 109220 -40640 front 0 (PN CONN_01X01))
+      (place P134 40640 -40640 front 0 (PN CONN_01X01))
+      (place P135 40640 -81280 front 0 (PN CONN_01X01))
+      (place P136 111760 -81280 front 0 (PN CONN_01X01))
+      (place P137 111760 -40640 front 0 (PN CONN_01X01))
+    )
+  )
+  (library
+    (image Capacitors_SMD:C_1206
+      (outline (polygon signal 0  2245 -1045  -2245 -1045  -2245 1045  2245 1045))
+      (outline (path signal 100  -1600 -800  -1600 800))
+      (outline (path signal 100  1600 -800  -1600 -800))
+      (outline (path signal 100  1600 800  1600 -800))
+      (outline (path signal 100  -1600 800  1600 800))
+      (outline (path signal 120  1000 1020  -1000 1020))
+      (outline (path signal 120  -1000 -1020  1000 -1020))
+      (pin Rect[T]Pad_1000.000000x1600.000000_um 1 -1500 0)
+      (pin Rect[T]Pad_1000.000000x1600.000000_um 2 1500 0)
+    )
+    (image Pin_Headers:Pin_Header_Straight_1x01_Pitch2.54mm
+      (outline (polygon signal 0  1795 -1795  -1795 -1795  -1795 1795  1795 1795))
+      (outline (path signal 100  -1270 1270  -1270 -1270))
+      (outline (path signal 100  -1270 -1270  1270 -1270))
+      (outline (path signal 100  1270 -1270  1270 1270))
+      (outline (path signal 100  1270 1270  -1270 1270))
+      (outline (path signal 120  -1330 -1270  -1330 -1330))
+      (outline (path signal 120  -1330 -1330  1330 -1330))
+      (outline (path signal 120  1330 -1330  1330 -1270))
+      (outline (path signal 120  1330 -1270  -1330 -1270))
+      (outline (path signal 120  -1330 0  -1330 1330))
+      (outline (path signal 120  -1330 1330  0 1330))
+      (pin Rect[A]Pad_1700.000000x1700.000000_um 1 0 0)
+    )
+    (image "Sci-Bots:1.9mm_DMF_Electrode"
+      (pin Rect[T]Pad_1899.920000x1899.920000_um 1 0 0)
+    )
+    (padstack Rect[T]Pad_1000.000000x1600.000000_um
+      (shape (rect Front -500 -800 500 800))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1700.000000x1700.000000_um
+      (shape (rect Front -850 -850 850 850))
+      (shape (rect Back -850 -850 850 850))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1899.920000x1899.920000_um
+      (shape (rect Front -949.96 -949.96 949.96 949.96))
+      (attach off)
+    )
+    (padstack "Via[0-1]_762:381_um"
+      (shape (circle Front 762))
+      (shape (circle Back 762))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(C1-Pad1)"
+      (pins C1-1 P1-1)
+    )
+    (net "Net-(C2-Pad1)"
+      (pins C2-1 P2-1)
+    )
+    (net "Net-(C3-Pad1)"
+      (pins C3-1 P3-1)
+    )
+    (net "Net-(C4-Pad1)"
+      (pins C4-1 P4-1)
+    )
+    (net "Net-(C5-Pad1)"
+      (pins C5-1 P5-1)
+    )
+    (net "Net-(C6-Pad1)"
+      (pins C6-1 P6-1)
+    )
+    (net "Net-(C7-Pad1)"
+      (pins C7-1 P7-1)
+    )
+    (net "Net-(C8-Pad1)"
+      (pins C8-1 P8-1)
+    )
+    (net "Net-(C9-Pad1)"
+      (pins C9-1 P9-1)
+    )
+    (net "Net-(C10-Pad1)"
+      (pins C10-1 P10-1)
+    )
+    (net "Net-(C11-Pad1)"
+      (pins C11-1 P11-1)
+    )
+    (net "Net-(C12-Pad1)"
+      (pins C12-1 P12-1)
+    )
+    (net "Net-(C13-Pad1)"
+      (pins C13-1 P13-1)
+    )
+    (net "Net-(C14-Pad1)"
+      (pins C14-1 P14-1)
+    )
+    (net "Net-(C15-Pad1)"
+      (pins C15-1 P15-1)
+    )
+    (net "Net-(C16-Pad1)"
+      (pins C16-1 P16-1)
+    )
+    (net "Net-(C17-Pad1)"
+      (pins C17-1 P17-1)
+    )
+    (net "Net-(C18-Pad1)"
+      (pins C18-1 P18-1)
+    )
+    (net "Net-(C19-Pad1)"
+      (pins C19-1 P19-1)
+    )
+    (net "Net-(C20-Pad1)"
+      (pins C20-1 P20-1)
+    )
+    (net "Net-(C21-Pad1)"
+      (pins C21-1 P21-1)
+    )
+    (net "Net-(C22-Pad1)"
+      (pins C22-1 P22-1)
+    )
+    (net "Net-(C23-Pad1)"
+      (pins C23-1 P23-1)
+    )
+    (net "Net-(C24-Pad1)"
+      (pins C24-1 P24-1)
+    )
+    (net "Net-(C25-Pad1)"
+      (pins C25-1 P25-1)
+    )
+    (net "Net-(C26-Pad1)"
+      (pins C26-1 P26-1)
+    )
+    (net "Net-(C27-Pad1)"
+      (pins C27-1 P27-1)
+    )
+    (net "Net-(C28-Pad1)"
+      (pins C28-1 P28-1)
+    )
+    (net "Net-(C29-Pad1)"
+      (pins C29-1 P29-1)
+    )
+    (net "Net-(C30-Pad1)"
+      (pins C30-1 P30-1)
+    )
+    (net "Net-(C31-Pad1)"
+      (pins C31-1 P31-1)
+    )
+    (net "Net-(C32-Pad1)"
+      (pins C32-1 P32-1)
+    )
+    (net "Net-(C33-Pad1)"
+      (pins C33-1 P33-1)
+    )
+    (net "Net-(C34-Pad1)"
+      (pins C34-1 P34-1)
+    )
+    (net "Net-(C35-Pad1)"
+      (pins C35-1 P35-1)
+    )
+    (net "Net-(C36-Pad1)"
+      (pins C36-1 P36-1)
+    )
+    (net "Net-(C37-Pad1)"
+      (pins C37-1 P37-1)
+    )
+    (net "Net-(C38-Pad1)"
+      (pins C38-1 P38-1)
+    )
+    (net "Net-(C39-Pad1)"
+      (pins C39-1 P39-1)
+    )
+    (net "Net-(C40-Pad1)"
+      (pins C40-1 P40-1)
+    )
+    (net "Net-(C41-Pad1)"
+      (pins C41-1 P41-1)
+    )
+    (net "Net-(C42-Pad1)"
+      (pins C42-1 P42-1)
+    )
+    (net "Net-(C43-Pad1)"
+      (pins C43-1 P43-1)
+    )
+    (net "Net-(C44-Pad1)"
+      (pins C44-1 P44-1)
+    )
+    (net "Net-(C45-Pad1)"
+      (pins C45-1 P45-1)
+    )
+    (net "Net-(C46-Pad1)"
+      (pins C46-1 P46-1)
+    )
+    (net "Net-(C47-Pad1)"
+      (pins C47-1 P47-1)
+    )
+    (net "Net-(C48-Pad1)"
+      (pins C48-1 P48-1)
+    )
+    (net "Net-(C49-Pad1)"
+      (pins C49-1 P49-1)
+    )
+    (net "Net-(C50-Pad1)"
+      (pins C50-1 P50-1)
+    )
+    (net "Net-(C51-Pad1)"
+      (pins C51-1 P51-1)
+    )
+    (net "Net-(C52-Pad1)"
+      (pins C52-1 P52-1)
+    )
+    (net "Net-(C53-Pad1)"
+      (pins C53-1 P53-1)
+    )
+    (net "Net-(C54-Pad1)"
+      (pins C54-1 P54-1)
+    )
+    (net "Net-(C55-Pad1)"
+      (pins C55-1 P55-1)
+    )
+    (net "Net-(C56-Pad1)"
+      (pins C56-1 P56-1)
+    )
+    (net "Net-(C57-Pad1)"
+      (pins C57-1 P57-1)
+    )
+    (net "Net-(C58-Pad1)"
+      (pins C58-1 P58-1)
+    )
+    (net "Net-(C59-Pad1)"
+      (pins C59-1 P59-1)
+    )
+    (net "Net-(C60-Pad1)"
+      (pins C60-1 P60-1)
+    )
+    (net "Net-(C61-Pad1)"
+      (pins C61-1 P61-1)
+    )
+    (net "Net-(C62-Pad1)"
+      (pins C62-1 P62-1)
+    )
+    (net "Net-(C63-Pad1)"
+      (pins C63-1 P63-1)
+    )
+    (net "Net-(C64-Pad1)"
+      (pins C64-1 P64-1)
+    )
+    (net "Net-(C65-Pad1)"
+      (pins C65-1 P65-1)
+    )
+    (net "Net-(C66-Pad1)"
+      (pins C66-1 P66-1)
+    )
+    (net "Net-(C67-Pad1)"
+      (pins C67-1 P67-1)
+    )
+    (net "Net-(C68-Pad1)"
+      (pins C68-1 P68-1)
+    )
+    (net "Net-(C69-Pad1)"
+      (pins C69-1 P69-1)
+    )
+    (net "Net-(C70-Pad1)"
+      (pins C70-1 P70-1)
+    )
+    (net "Net-(C71-Pad1)"
+      (pins C71-1 P71-1)
+    )
+    (net "Net-(C72-Pad1)"
+      (pins C72-1 P72-1)
+    )
+    (net "Net-(C73-Pad1)"
+      (pins C73-1 P73-1)
+    )
+    (net "Net-(C74-Pad1)"
+      (pins C74-1 P74-1)
+    )
+    (net "Net-(C75-Pad1)"
+      (pins C75-1 P75-1)
+    )
+    (net "Net-(C76-Pad1)"
+      (pins C76-1 P76-1)
+    )
+    (net "Net-(C77-Pad1)"
+      (pins C77-1 P77-1)
+    )
+    (net "Net-(C78-Pad1)"
+      (pins C78-1 P78-1)
+    )
+    (net "Net-(C79-Pad1)"
+      (pins C79-1 P79-1)
+    )
+    (net "Net-(C80-Pad1)"
+      (pins C80-1 P80-1)
+    )
+    (net "Net-(C81-Pad1)"
+      (pins C81-1 P81-1)
+    )
+    (net "Net-(C82-Pad1)"
+      (pins C82-1 P82-1)
+    )
+    (net "Net-(C83-Pad1)"
+      (pins C83-1 P83-1)
+    )
+    (net "Net-(C84-Pad1)"
+      (pins C84-1 P84-1)
+    )
+    (net "Net-(C85-Pad1)"
+      (pins C85-1 P85-1)
+    )
+    (net "Net-(C86-Pad1)"
+      (pins C86-1 P86-1)
+    )
+    (net "Net-(C87-Pad1)"
+      (pins C87-1 P87-1)
+    )
+    (net "Net-(C88-Pad1)"
+      (pins C88-1 P88-1)
+    )
+    (net "Net-(C89-Pad1)"
+      (pins C89-1 P89-1)
+    )
+    (net "Net-(C90-Pad1)"
+      (pins C90-1 P90-1)
+    )
+    (net "Net-(C91-Pad1)"
+      (pins C91-1 P91-1)
+    )
+    (net "Net-(C92-Pad1)"
+      (pins C92-1 P92-1)
+    )
+    (net "Net-(C93-Pad1)"
+      (pins C93-1 P93-1)
+    )
+    (net "Net-(C94-Pad1)"
+      (pins C94-1 P94-1)
+    )
+    (net "Net-(C95-Pad1)"
+      (pins C95-1 P95-1)
+    )
+    (net "Net-(C96-Pad1)"
+      (pins C96-1 P96-1)
+    )
+    (net "Net-(C97-Pad1)"
+      (pins C97-1 P97-1)
+    )
+    (net "Net-(C98-Pad1)"
+      (pins C98-1 P98-1)
+    )
+    (net "Net-(C99-Pad1)"
+      (pins C99-1 P99-1)
+    )
+    (net "Net-(C100-Pad1)"
+      (pins C100-1 P100-1)
+    )
+    (net "Net-(C101-Pad1)"
+      (pins C101-1 P101-1)
+    )
+    (net "Net-(C102-Pad1)"
+      (pins C102-1 P102-1)
+    )
+    (net "Net-(C103-Pad1)"
+      (pins C103-1 P103-1)
+    )
+    (net "Net-(C104-Pad1)"
+      (pins C104-1 P104-1)
+    )
+    (net "Net-(C105-Pad1)"
+      (pins C105-1 P105-1)
+    )
+    (net "Net-(C106-Pad1)"
+      (pins C106-1 P106-1)
+    )
+    (net "Net-(C107-Pad1)"
+      (pins C107-1 P107-1)
+    )
+    (net "Net-(C108-Pad1)"
+      (pins C108-1 P108-1)
+    )
+    (net "Net-(C109-Pad1)"
+      (pins C109-1 P109-1)
+    )
+    (net "Net-(C110-Pad1)"
+      (pins C110-1 P110-1)
+    )
+    (net "Net-(C111-Pad1)"
+      (pins C111-1 P111-1)
+    )
+    (net "Net-(C112-Pad1)"
+      (pins C112-1 P112-1)
+    )
+    (net "Net-(C113-Pad1)"
+      (pins C113-1 P113-1)
+    )
+    (net "Net-(C114-Pad1)"
+      (pins C114-1 P114-1)
+    )
+    (net "Net-(C115-Pad1)"
+      (pins C115-1 P115-1)
+    )
+    (net "Net-(C116-Pad1)"
+      (pins C116-1 P116-1)
+    )
+    (net "Net-(C117-Pad1)"
+      (pins C117-1 P117-1)
+    )
+    (net "Net-(C118-Pad1)"
+      (pins C118-1 P118-1)
+    )
+    (net "Net-(C119-Pad1)"
+      (pins C119-1 P119-1)
+    )
+    (net "Net-(C120-Pad1)"
+      (pins C120-1 P120-1)
+    )
+    (net CUR_SENSE
+      (pins C1-2 C2-2 C3-2 C4-2 C5-2 C6-2 C7-2 C8-2 C9-2 C10-2 C11-2 C12-2 C13-2 C14-2
+        C15-2 C16-2 C17-2 C18-2 C19-2 C20-2 C21-2 C22-2 C23-2 C24-2 C25-2 C26-2 C27-2
+        C28-2 C29-2 C30-2 C31-2 C32-2 C33-2 C34-2 C35-2 C36-2 C37-2 C38-2 C39-2 C40-2
+        C41-2 C42-2 C43-2 C44-2 C45-2 C46-2 C47-2 C48-2 C49-2 C50-2 C51-2 C52-2 C53-2
+        C54-2 C55-2 C56-2 C57-2 C58-2 C59-2 C60-2 C61-2 C62-2 C63-2 C64-2 C65-2 C66-2
+        C67-2 C68-2 C69-2 C70-2 C71-2 C72-2 C73-2 C74-2 C75-2 C76-2 C77-2 C78-2 C79-2
+        C80-2 C81-2 C82-2 C83-2 C84-2 C85-2 C86-2 C87-2 C88-2 C89-2 C90-2 C91-2 C92-2
+        C93-2 C94-2 C95-2 C96-2 C97-2 C98-2 C99-2 C100-2 C101-2 C102-2 C103-2 C104-2
+        C105-2 C106-2 C107-2 C108-2 C109-2 C110-2 C111-2 C112-2 C113-2 C114-2 C115-2
+        C116-2 C117-2 C118-2 C119-2 C120-2 P121-1 P138-1 P122-1 P123-1 P124-1 P125-1)
+    )
+    (net "Net-(P126-Pad1)"
+      (pins P126-1 P127-1)
+    )
+    (net "Net-(P128-Pad1)"
+      (pins P128-1 P129-1)
+    )
+    (net "Net-(P130-Pad1)"
+      (pins P130-1 P131-1)
+    )
+    (net "Net-(P132-Pad1)"
+      (pins P132-1 P133-1)
+    )
+    (net "Net-(P134-Pad1)"
+      (pins P134-1)
+    )
+    (net "Net-(P135-Pad1)"
+      (pins P135-1)
+    )
+    (net "Net-(P136-Pad1)"
+      (pins P136-1)
+    )
+    (net "Net-(P137-Pad1)"
+      (pins P137-1)
+    )
+    (class kicad_default CUR_SENSE "Net-(C1-Pad1)" "Net-(C10-Pad1)" "Net-(C100-Pad1)"
+      "Net-(C101-Pad1)" "Net-(C102-Pad1)" "Net-(C103-Pad1)" "Net-(C104-Pad1)"
+      "Net-(C105-Pad1)" "Net-(C106-Pad1)" "Net-(C107-Pad1)" "Net-(C108-Pad1)"
+      "Net-(C109-Pad1)" "Net-(C11-Pad1)" "Net-(C110-Pad1)" "Net-(C111-Pad1)"
+      "Net-(C112-Pad1)" "Net-(C113-Pad1)" "Net-(C114-Pad1)" "Net-(C115-Pad1)"
+      "Net-(C116-Pad1)" "Net-(C117-Pad1)" "Net-(C118-Pad1)" "Net-(C119-Pad1)"
+      "Net-(C12-Pad1)" "Net-(C120-Pad1)" "Net-(C13-Pad1)" "Net-(C14-Pad1)"
+      "Net-(C15-Pad1)" "Net-(C16-Pad1)" "Net-(C17-Pad1)" "Net-(C18-Pad1)"
+      "Net-(C19-Pad1)" "Net-(C2-Pad1)" "Net-(C20-Pad1)" "Net-(C21-Pad1)" "Net-(C22-Pad1)"
+      "Net-(C23-Pad1)" "Net-(C24-Pad1)" "Net-(C25-Pad1)" "Net-(C26-Pad1)"
+      "Net-(C27-Pad1)" "Net-(C28-Pad1)" "Net-(C29-Pad1)" "Net-(C3-Pad1)" "Net-(C30-Pad1)"
+      "Net-(C31-Pad1)" "Net-(C32-Pad1)" "Net-(C33-Pad1)" "Net-(C34-Pad1)"
+      "Net-(C35-Pad1)" "Net-(C36-Pad1)" "Net-(C37-Pad1)" "Net-(C38-Pad1)"
+      "Net-(C39-Pad1)" "Net-(C4-Pad1)" "Net-(C40-Pad1)" "Net-(C41-Pad1)" "Net-(C42-Pad1)"
+      "Net-(C43-Pad1)" "Net-(C44-Pad1)" "Net-(C45-Pad1)" "Net-(C46-Pad1)"
+      "Net-(C47-Pad1)" "Net-(C48-Pad1)" "Net-(C49-Pad1)" "Net-(C5-Pad1)" "Net-(C50-Pad1)"
+      "Net-(C51-Pad1)" "Net-(C52-Pad1)" "Net-(C53-Pad1)" "Net-(C54-Pad1)"
+      "Net-(C55-Pad1)" "Net-(C56-Pad1)" "Net-(C57-Pad1)" "Net-(C58-Pad1)"
+      "Net-(C59-Pad1)" "Net-(C6-Pad1)" "Net-(C60-Pad1)" "Net-(C61-Pad1)" "Net-(C62-Pad1)"
+      "Net-(C63-Pad1)" "Net-(C64-Pad1)" "Net-(C65-Pad1)" "Net-(C66-Pad1)"
+      "Net-(C67-Pad1)" "Net-(C68-Pad1)" "Net-(C69-Pad1)" "Net-(C7-Pad1)" "Net-(C70-Pad1)"
+      "Net-(C71-Pad1)" "Net-(C72-Pad1)" "Net-(C73-Pad1)" "Net-(C74-Pad1)"
+      "Net-(C75-Pad1)" "Net-(C76-Pad1)" "Net-(C77-Pad1)" "Net-(C78-Pad1)"
+      "Net-(C79-Pad1)" "Net-(C8-Pad1)" "Net-(C80-Pad1)" "Net-(C81-Pad1)" "Net-(C82-Pad1)"
+      "Net-(C83-Pad1)" "Net-(C84-Pad1)" "Net-(C85-Pad1)" "Net-(C86-Pad1)"
+      "Net-(C87-Pad1)" "Net-(C88-Pad1)" "Net-(C89-Pad1)" "Net-(C9-Pad1)" "Net-(C90-Pad1)"
+      "Net-(C91-Pad1)" "Net-(C92-Pad1)" "Net-(C93-Pad1)" "Net-(C94-Pad1)"
+      "Net-(C95-Pad1)" "Net-(C96-Pad1)" "Net-(C97-Pad1)" "Net-(C98-Pad1)"
+      "Net-(C99-Pad1)" "Net-(P126-Pad1)" "Net-(P128-Pad1)" "Net-(P130-Pad1)"
+      "Net-(P132-Pad1)" "Net-(P134-Pad1)" "Net-(P135-Pad1)" "Net-(P136-Pad1)"
+      "Net-(P137-Pad1)"
+      (circuit
+        (use_via "Via[0-1]_762:381_um")
+      )
+      (rule
+        (width 177.8)
+        (clearance 177.8)
+      )
+    )
+  )
+  (wiring
+  )
+)

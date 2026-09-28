@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "powersupply_5v_v1_powersupply_5v_v1",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 223503,
+      "sha256": "f6e314a44aded1d165595e1486fff860e50180681a87bb7d66fa272097ad3676"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 138148,
+      "sha256": "d1e26c23c333be2fa723bcd785214db89446196096ddb01d89eff050f8e2e985"
+    },
+    "metadata_json": {
+      "bytes": 667,
+      "sha256": "87bd4b3c5e9eb784e4c78cec852d456730a1136dee497e9d7b8c1f816a3cd73e"
+    },
+    "final_json": {
+      "bytes": 55605,
+      "sha256": "4430b8e71ccf919aea37929b66bbb405a97178dafb7a96481bc34fa786c57074"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:35:23.509251+00:00"
+  }
+}

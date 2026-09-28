@@ -1,0 +1,11 @@
+{
+  "board": "beer-gauge_beer-gauge",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\beer-gauge_beer-gauge\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 151,
+  "segment_count": 818,
+  "approximate_track_length_mm": 2064.09,
+  "kicad_drc_violations": null,
+  "generated_at": "2026-08-18T18:13:10.383959+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference."
+}

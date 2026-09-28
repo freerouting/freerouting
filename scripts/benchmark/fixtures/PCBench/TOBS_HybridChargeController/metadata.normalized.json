@@ -1,0 +1,60 @@
+{
+  "board_id": "TOBS_HybridChargeController",
+  "display_name": "TOBS_HybridChargeController",
+  "pcbench_directory": "PCBs/TOBS_HybridChargeController",
+  "source": "https://github.com/soldesign/TOBS",
+  "author": "soldesign",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:47.153994+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 39,
+    "components": 103,
+    "dimensions_mm": {
+      "width": 87.0,
+      "height": 87.0
+    },
+    "area_cm2": 75.69,
+    "zones": 20
+  },
+  "reference": {
+    "segments": 766,
+    "vias": 127,
+    "track_length_mm": 2162.69,
+    "kicad_drc_violations": 302,
+    "kicad_drc_breakdown": {
+      "total_violations": 302,
+      "unconnected_count": 2,
+      "by_type": {
+        "clearance": 118,
+        "copper_edge_clearance": 2,
+        "lib_footprint_issues": 103,
+        "malformed_courtyard": 8,
+        "silk_over_copper": 8,
+        "solder_mask_bridge": 17,
+        "starved_thermal": 10,
+        "text_height": 35,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 155,
+        "warning": 147
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

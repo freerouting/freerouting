@@ -10,4 +10,7 @@ module app.freerouting {
   opens app.freerouting.gui to com.google.gson;
   opens app.freerouting.autoroute to com.google.gson;
   opens app.freerouting.management.segment to com.google.gson;
+  opens app.freerouting.core to com.google.gson;
+  opens app.freerouting.core.results to com.google.gson;
+  opens app.freerouting.core.scoring to com.google.gson;
 }

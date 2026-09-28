@@ -1,0 +1,29 @@
+{
+  "board": "BeaconBuddy_BeaconBuddy",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\BeaconBuddy_BeaconBuddy\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 8,
+  "segment_count": 256,
+  "approximate_track_length_mm": 339.62,
+  "kicad_drc_violations": 244,
+  "generated_at": "2026-08-18T18:32:37.545903+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 244,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 59,
+      "copper_edge_clearance": 38,
+      "hole_clearance": 10,
+      "lib_footprint_issues": 112,
+      "pth_inside_courtyard": 16,
+      "shorting_items": 1,
+      "silk_overlap": 5,
+      "starved_thermal": 3
+    },
+    "by_severity": {
+      "error": 127,
+      "warning": 117
+    }
+  }
+}

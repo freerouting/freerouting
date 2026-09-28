@@ -350,6 +350,16 @@ public class FRLogger {
   }
 
   /**
+   * Logs an ERROR message without an exception or topic.
+   *
+   * @param msg The message to log.
+   * @return The created LogEntry.
+   */
+  public static LogEntry error(String msg) {
+    return error(msg, null, null);
+  }
+
+  /**
    * Checks if TRACE level logging is enabled.
    *
    * @return true if TRACE logging is enabled, false otherwise.

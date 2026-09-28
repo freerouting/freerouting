@@ -1,0 +1,33 @@
+{
+  "board": "kitspace_BalthazarKeyboard3-keycaps",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\kitspace_BalthazarKeyboard3-keycaps\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 723,
+  "segment_count": 1763,
+  "approximate_track_length_mm": 7296.76,
+  "kicad_drc_violations": 589,
+  "generated_at": "2026-08-18T18:16:43.248818+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 589,
+    "unconnected_count": 0,
+    "by_type": {
+      "copper_edge_clearance": 49,
+      "courtyards_overlap": 2,
+      "hole_clearance": 2,
+      "lib_footprint_issues": 81,
+      "lib_footprint_mismatch": 102,
+      "nonmirrored_text_on_back_layer": 1,
+      "pth_inside_courtyard": 3,
+      "silk_edge_clearance": 73,
+      "silk_over_copper": 47,
+      "silk_overlap": 51,
+      "text_height": 156,
+      "track_dangling": 22
+    },
+    "by_severity": {
+      "error": 56,
+      "warning": 533
+    }
+  }
+}

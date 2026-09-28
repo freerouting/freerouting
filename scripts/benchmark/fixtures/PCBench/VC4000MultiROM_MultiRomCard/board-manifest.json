@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "VC4000MultiROM_MultiRomCard",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 526858,
+      "sha256": "cf6a7e80066b4f751dd1c010ef596cdbcd2c2baad52fd1e4fcaa0b4a4f34b3a8"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 259521,
+      "sha256": "ba0495ce1e103a9ab0aaaa0cb8bc01c175ae5ace262eb5696a1db7c723587f07"
+    },
+    "metadata_json": {
+      "bytes": 654,
+      "sha256": "b5fd6204efd45779780d4b9788d78144e706345d7a1dd67dc9df9453ef7694dd"
+    },
+    "final_json": {
+      "bytes": 299407,
+      "sha256": "4ab19bbc5815fb0e570413266c2b7a025cbd9c5190047cdd7ee97e29ea5eb9e8"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:55:53.570223+00:00"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "board_id": "ESP32-Module-Breakout_ESP32S-breakout",
+  "display_name": "ESP32-Module-Breakout_ESP32S-breakout",
+  "pcbench_directory": "PCBs/ESP32-Module-Breakout_ESP32S-breakout",
+  "source": "https://github.com/Black-Electronics/ESP32-Module-Breakout",
+  "author": "Black-Electronics",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:43.681953+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 35,
+    "components": 9,
+    "dimensions_mm": {
+      "width": 49.33,
+      "height": 26.44
+    },
+    "area_cm2": 13.04,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 255,
+    "vias": 22,
+    "track_length_mm": 743.52,
+    "kicad_drc_violations": 87,
+    "kicad_drc_breakdown": {
+      "total_violations": 87,
+      "unconnected_count": 0,
+      "by_type": {
+        "lib_footprint_issues": 9,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 42,
+        "solder_mask_bridge": 34
+      },
+      "by_severity": {
+        "error": 34,
+        "warning": 53
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.908422+00:00",
+    "elapsed_seconds": 13.94,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.98
+  }
+}

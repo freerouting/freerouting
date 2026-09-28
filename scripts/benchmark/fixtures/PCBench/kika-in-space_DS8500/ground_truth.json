@@ -1,0 +1,29 @@
+{
+  "board": "kika-in-space_DS8500",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\kika-in-space_DS8500\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 4,
+  "segment_count": 92,
+  "approximate_track_length_mm": 155.59,
+  "kicad_drc_violations": 189,
+  "generated_at": "2026-08-18T19:02:37.280302+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 189,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 18,
+      "lib_footprint_issues": 21,
+      "silk_over_copper": 107,
+      "silk_overlap": 4,
+      "solder_mask_bridge": 14,
+      "starved_thermal": 5,
+      "text_height": 11,
+      "text_thickness": 9
+    },
+    "by_severity": {
+      "error": 37,
+      "warning": 152
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "bobc_LCD-panel-adapter-lvc",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 65782,
+      "sha256": "692404c7a9f03ca170710d09243549631222096d8f40170aa9ee6c207b7b2534"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 80917,
+      "sha256": "ce7124d68f9c2a7012af9163dd418ffa67a7bbe2f066e62952111741bf0c6891"
+    },
+    "metadata_json": {
+      "bytes": 463,
+      "sha256": "17ea355c8946eeebe3010a3eb52afe410abc04089624042dcdb9c2f6fcfcf858"
+    },
+    "final_json": {
+      "bytes": 62289,
+      "sha256": "f688b7d8e3641bb94c916797635a560c7a84bf9d3c5efd2d33c597c60459bdf1"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:35:13.622861+00:00"
+  }
+}

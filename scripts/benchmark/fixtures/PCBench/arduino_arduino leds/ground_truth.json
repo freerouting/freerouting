@@ -1,0 +1,28 @@
+{
+  "board": "arduino_arduino leds",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\arduino_arduino leds\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 116,
+  "approximate_track_length_mm": 732.53,
+  "kicad_drc_violations": 344,
+  "generated_at": "2026-08-18T18:29:17.082740+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 344,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 2,
+      "clearance": 111,
+      "silk_over_copper": 3,
+      "silk_overlap": 199,
+      "starved_thermal": 1,
+      "text_height": 27,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 114,
+      "warning": 230
+    }
+  }
+}

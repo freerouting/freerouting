@@ -1,0 +1,30 @@
+{
+  "board": "TLPHnodeV2_TLPHnodeV2",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\TLPHnodeV2_TLPHnodeV2\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 27,
+  "segment_count": 271,
+  "approximate_track_length_mm": 329.19,
+  "kicad_drc_violations": 215,
+  "generated_at": "2026-08-18T18:25:19.317703+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 215,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 36,
+      "lib_footprint_issues": 35,
+      "malformed_courtyard": 6,
+      "silk_edge_clearance": 4,
+      "silk_over_copper": 6,
+      "silk_overlap": 7,
+      "solder_mask_bridge": 81,
+      "starved_thermal": 1,
+      "text_height": 39
+    },
+    "by_severity": {
+      "error": 124,
+      "warning": 91
+    }
+  }
+}

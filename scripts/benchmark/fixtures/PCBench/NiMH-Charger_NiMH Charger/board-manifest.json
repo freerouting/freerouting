@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "NiMH-Charger_NiMH Charger",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 82763,
+      "sha256": "aa425f865afff11a9457830eb0fd4b94213656062c6dcabc1b44735472ac8f7b"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 57026,
+      "sha256": "be1985bae186d29785e16c498a882b087bc6b15d978dd586ec5f37a48a69a600"
+    },
+    "metadata_json": {
+      "bytes": 479,
+      "sha256": "c2695e8be96bc9f93f514c1df0967d12c8428d07533b97401d07e3f017bc3c3b"
+    },
+    "final_json": {
+      "bytes": 38353,
+      "sha256": "90248bf43c4986e32e84bafec7cc78f20c3a3a448169bca2afe3f7c80a223e34"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:27:49.405827+00:00"
+  }
+}

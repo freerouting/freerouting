@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "rfidBoard_rfid",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 128683,
+      "sha256": "6acc77b0e1b29e024a7b780d81ba4eba27c9db82c0d36288cfa3e74ee16285b4"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 77248,
+      "sha256": "278f6ce702d80093da47c2b10fda4490e43cfd7d1c1e54c61dcfc787a371df2b"
+    },
+    "metadata_json": {
+      "bytes": 584,
+      "sha256": "1c36178416d0c93c100397337f644830b62378a944db05be32abae0050a768d8"
+    },
+    "final_json": {
+      "bytes": 60706,
+      "sha256": "03f06abad6408ca63229955ca734e5f8a1b8700b99e56bce4d48bea00be2aecb"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:40:19.477985+00:00"
+  }
+}

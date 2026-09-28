@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "pcb-covox-amp_pcb-covox-amp",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 152039,
+      "sha256": "95266424e6f98c5bb7d9bfdd3b332e257fcf8d73c121e15add41934d941483ca"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 103193,
+      "sha256": "493cfd1ba9c617c6a9b09c9e2930966cf0ca55cb4bb7a713e63e6986549ba741"
+    },
+    "metadata_json": {
+      "bytes": 638,
+      "sha256": "1562178afce409e26a43500fd968cda0fc378117ade8b2cee8a08e8d145f0dd0"
+    },
+    "final_json": {
+      "bytes": 70532,
+      "sha256": "fbabdbe2499a0df278ecf69fa3c7d5f47ae8a538fb711003635c45371bfa1962"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:31:41.637328+00:00"
+  }
+}

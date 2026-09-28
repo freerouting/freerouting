@@ -1,0 +1,26 @@
+{
+  "board": "PWRmeter_PWMeter",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\PWRmeter_PWMeter\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 29,
+  "segment_count": 120,
+  "approximate_track_length_mm": 682.45,
+  "kicad_drc_violations": 191,
+  "generated_at": "2026-08-18T19:36:59.367941+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 191,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 113,
+      "lib_footprint_issues": 20,
+      "silk_over_copper": 24,
+      "silk_overlap": 33,
+      "starved_thermal": 1
+    },
+    "by_severity": {
+      "error": 114,
+      "warning": 77
+    }
+  }
+}

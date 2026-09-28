@@ -1,0 +1,62 @@
+{
+  "board_id": "LoRaPP_loramod",
+  "display_name": "LoRaPP_loramod",
+  "pcbench_directory": "PCBs/LoRaPP_loramod",
+  "source": "https://github.com/daveshah1/LoRaPP",
+  "author": "daveshah1",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:44.401962+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 37,
+    "components": 78,
+    "dimensions_mm": {
+      "width": 50.0,
+      "height": 18.0
+    },
+    "area_cm2": 9.0,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 722,
+    "vias": 150,
+    "track_length_mm": 677.35,
+    "kicad_drc_violations": 654,
+    "kicad_drc_breakdown": {
+      "total_violations": 654,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 170,
+        "copper_edge_clearance": 40,
+        "courtyards_overlap": 4,
+        "hole_to_hole": 1,
+        "lib_footprint_issues": 78,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 116,
+        "silk_overlap": 100,
+        "solder_mask_bridge": 131,
+        "starved_thermal": 7,
+        "track_dangling": 3
+      },
+      "by_severity": {
+        "error": 352,
+        "warning": 302
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

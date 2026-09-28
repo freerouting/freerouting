@@ -1,0 +1,28 @@
+{
+  "board": "CubeSAT-Reaction-Wheel__autosave-GPIO to motor",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\CubeSAT-Reaction-Wheel__autosave-GPIO to motor\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 76,
+  "segment_count": 309,
+  "approximate_track_length_mm": 998.97,
+  "kicad_drc_violations": 162,
+  "generated_at": "2026-08-18T18:39:57.481617+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 162,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 139,
+      "courtyards_overlap": 1,
+      "holes_co_located": 6,
+      "lib_footprint_issues": 11,
+      "silk_edge_clearance": 2,
+      "starved_thermal": 1,
+      "track_dangling": 2
+    },
+    "by_severity": {
+      "error": 141,
+      "warning": 21
+    }
+  }
+}

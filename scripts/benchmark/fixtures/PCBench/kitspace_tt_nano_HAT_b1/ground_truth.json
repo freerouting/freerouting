@@ -1,0 +1,31 @@
+{
+  "board": "kitspace_tt_nano_HAT_b1",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\kitspace_tt_nano_HAT_b1\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 117,
+  "approximate_track_length_mm": 379.83,
+  "kicad_drc_violations": 104,
+  "generated_at": "2026-08-18T19:12:43.797627+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 104,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 17,
+      "courtyards_overlap": 12,
+      "hole_clearance": 12,
+      "lib_footprint_issues": 7,
+      "lib_footprint_mismatch": 12,
+      "pth_inside_courtyard": 26,
+      "silk_over_copper": 3,
+      "silk_overlap": 5,
+      "solder_mask_bridge": 8,
+      "track_dangling": 2
+    },
+    "by_severity": {
+      "error": 75,
+      "warning": 29
+    }
+  }
+}

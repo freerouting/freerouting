@@ -1,0 +1,30 @@
+{
+  "board": "DSKY-alarm-panel-replica_DSKY_alarm",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\DSKY-alarm-panel-replica_DSKY_alarm\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 32,
+  "segment_count": 744,
+  "approximate_track_length_mm": 2622.4,
+  "kicad_drc_violations": 328,
+  "generated_at": "2026-08-18T18:43:11.153128+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 328,
+    "unconnected_count": 0,
+    "by_type": {
+      "copper_edge_clearance": 7,
+      "lib_footprint_issues": 59,
+      "lib_footprint_mismatch": 28,
+      "silk_edge_clearance": 1,
+      "silk_over_copper": 11,
+      "silk_overlap": 3,
+      "solder_mask_bridge": 201,
+      "text_height": 15,
+      "text_thickness": 3
+    },
+    "by_severity": {
+      "error": 208,
+      "warning": 120
+    }
+  }
+}

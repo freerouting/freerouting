@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "ADC-DAC-16bit_ADC-DAC-16bit",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 172520,
+      "sha256": "5a4f8d901eae2e3ca2696664f9b636d1a111e2986716cc9270f8216fd341360b"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 150163,
+      "sha256": "6a99a19e7717bbe05c64a8105fb2aaf39f39bdb8f9f8c14b66e059133614a292"
+    },
+    "metadata_json": {
+      "bytes": 731,
+      "sha256": "4f5c5c2832ab96701da259df7085a5d32a9af7733dcce8e7fa6b3272c4c13aa7"
+    },
+    "final_json": {
+      "bytes": 33456,
+      "sha256": "a3ae45152683e6210efa9e804d8b3af6cc577fffd0ef553f2bc330b1c0b5668d"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:27:13.567908+00:00"
+  }
+}

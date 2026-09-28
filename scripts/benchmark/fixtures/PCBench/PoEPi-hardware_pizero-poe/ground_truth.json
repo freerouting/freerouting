@@ -1,0 +1,36 @@
+{
+  "board": "PoEPi-hardware_pizero-poe",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\PoEPi-hardware_pizero-poe\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 69,
+  "segment_count": 921,
+  "approximate_track_length_mm": 1209.49,
+  "kicad_drc_violations": 512,
+  "generated_at": "2026-08-18T19:34:32.788110+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 512,
+    "unconnected_count": 2,
+    "by_type": {
+      "annular_width": 4,
+      "clearance": 27,
+      "copper_edge_clearance": 6,
+      "hole_clearance": 4,
+      "hole_to_hole": 1,
+      "lib_footprint_issues": 77,
+      "nonmirrored_text_on_back_layer": 11,
+      "padstack": 4,
+      "shorting_items": 10,
+      "silk_over_copper": 199,
+      "silk_overlap": 76,
+      "solder_mask_bridge": 16,
+      "text_height": 74,
+      "text_thickness": 1,
+      "via_dangling": 2
+    },
+    "by_severity": {
+      "error": 67,
+      "warning": 445
+    }
+  }
+}

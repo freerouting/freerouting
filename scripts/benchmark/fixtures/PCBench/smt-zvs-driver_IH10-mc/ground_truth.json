@@ -1,0 +1,30 @@
+{
+  "board": "smt-zvs-driver_IH10-mc",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\smt-zvs-driver_IH10-mc\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 57,
+  "approximate_track_length_mm": 101.59,
+  "kicad_drc_violations": 137,
+  "generated_at": "2026-08-18T19:46:01.479034+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 137,
+    "unconnected_count": 1,
+    "by_type": {
+      "copper_edge_clearance": 2,
+      "hole_clearance": 4,
+      "lib_footprint_issues": 6,
+      "silk_edge_clearance": 4,
+      "silk_over_copper": 72,
+      "silk_overlap": 32,
+      "solder_mask_bridge": 1,
+      "text_height": 15,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 7,
+      "warning": 130
+    }
+  }
+}

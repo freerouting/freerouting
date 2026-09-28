@@ -1,0 +1,57 @@
+{
+  "board_id": "96boards-robomezzi_96boards-robomezzi",
+  "display_name": "96boards-robomezzi_96boards-robomezzi",
+  "pcbench_directory": "PCBs/96boards-robomezzi_96boards-robomezzi",
+  "source": "https://github.com/mwelling/96boards-robomezzi",
+  "author": "mwelling",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:42.301937+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 165,
+    "components": 119,
+    "dimensions_mm": {
+      "width": 85.0,
+      "height": 54.0
+    },
+    "area_cm2": 45.9,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 968,
+    "vias": 113,
+    "track_length_mm": 2366.8,
+    "kicad_drc_violations": 478,
+    "kicad_drc_breakdown": {
+      "total_violations": 478,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 98,
+        "courtyards_overlap": 25,
+        "lib_footprint_issues": 118,
+        "silk_over_copper": 36,
+        "silk_overlap": 199,
+        "text_height": 2
+      },
+      "by_severity": {
+        "error": 123,
+        "warning": 355
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "complex",
+    "medium",
+    "plane",
+    "tier-c"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
+}

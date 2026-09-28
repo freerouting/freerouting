@@ -1,0 +1,30 @@
+{
+  "board": "NightClock_ESPBoard",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\NightClock_ESPBoard\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 10,
+  "segment_count": 146,
+  "approximate_track_length_mm": 510.66,
+  "kicad_drc_violations": 171,
+  "generated_at": "2026-08-18T19:27:39.475738+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 171,
+    "unconnected_count": 4,
+    "by_type": {
+      "annular_width": 4,
+      "clearance": 95,
+      "courtyards_overlap": 2,
+      "lib_footprint_issues": 25,
+      "malformed_courtyard": 8,
+      "padstack": 4,
+      "silk_edge_clearance": 4,
+      "silk_overlap": 28,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 109,
+      "warning": 62
+    }
+  }
+}

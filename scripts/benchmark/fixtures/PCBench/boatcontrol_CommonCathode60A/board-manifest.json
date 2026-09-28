@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "boatcontrol_CommonCathode60A",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 250333,
+      "sha256": "cb2f4a6e29318a1be9bd0234342564c8269cc0bec97226a16dd69cc4ee1126bc"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 180425,
+      "sha256": "8ff60b755fc94e0d64a055894b146cfab2069cc0a4ddd208c2845c15e2f14124"
+    },
+    "metadata_json": {
+      "bytes": 623,
+      "sha256": "8f005c41bcd700b3dc899b36ee64b1475e22c55b436372083c53745bca801a70"
+    },
+    "final_json": {
+      "bytes": 96722,
+      "sha256": "4f6dbffbd150a2f62e1d501ba8512ee438a95360e615b0a71a88612ab77e7220"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:13:44.834336+00:00"
+  }
+}

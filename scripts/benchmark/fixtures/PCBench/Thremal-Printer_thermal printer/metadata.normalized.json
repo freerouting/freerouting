@@ -1,0 +1,69 @@
+{
+  "board_id": "Thremal-Printer_thermal printer",
+  "display_name": "Thremal-Printer_thermal printer",
+  "pcbench_directory": "PCBs/Thremal-Printer_thermal printer",
+  "source": "https://github.com/gpthimble/Thremal-Printer",
+  "author": "gpthimble",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:48.682012+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 23,
+    "components": 17,
+    "dimensions_mm": {
+      "width": 81.91,
+      "height": 42.93
+    },
+    "area_cm2": 35.16,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 306,
+    "vias": 35,
+    "track_length_mm": 1118.28,
+    "kicad_drc_violations": 271,
+    "kicad_drc_breakdown": {
+      "total_violations": 271,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 9,
+        "clearance": 219,
+        "copper_edge_clearance": 2,
+        "isolated_copper": 1,
+        "lib_footprint_issues": 17,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 2,
+        "silk_overlap": 16,
+        "starved_thermal": 2
+      },
+      "by_severity": {
+        "error": 232,
+        "warning": 39
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.142943+00:00",
+    "elapsed_seconds": 19.91,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

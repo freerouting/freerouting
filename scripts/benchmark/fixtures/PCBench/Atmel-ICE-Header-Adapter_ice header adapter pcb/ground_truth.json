@@ -1,0 +1,31 @@
+{
+  "board": "Atmel-ICE-Header-Adapter_ice header adapter pcb",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Atmel-ICE-Header-Adapter_ice header adapter pcb\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 8,
+  "segment_count": 261,
+  "approximate_track_length_mm": 896.96,
+  "kicad_drc_violations": 259,
+  "generated_at": "2026-08-18T18:29:57.561917+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 259,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 161,
+      "copper_edge_clearance": 5,
+      "lib_footprint_issues": 13,
+      "silk_edge_clearance": 4,
+      "silk_over_copper": 4,
+      "silk_overlap": 12,
+      "solder_mask_bridge": 50,
+      "starved_thermal": 6,
+      "text_height": 2,
+      "text_thickness": 2
+    },
+    "by_severity": {
+      "error": 222,
+      "warning": 37
+    }
+  }
+}

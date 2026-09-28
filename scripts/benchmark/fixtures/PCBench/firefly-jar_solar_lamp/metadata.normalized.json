@@ -1,0 +1,62 @@
+{
+  "board_id": "firefly-jar_solar_lamp",
+  "display_name": "firefly-jar_solar_lamp",
+  "pcbench_directory": "PCBs/firefly-jar_solar_lamp",
+  "source": "https://github.com/mogenson/firefly-jar",
+  "author": "mogenson",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:25.953745+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 9,
+    "components": 11,
+    "dimensions_mm": {
+      "width": 68.07,
+      "height": 0.0
+    },
+    "area_cm2": 0.0,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 59,
+    "vias": 0,
+    "track_length_mm": 285.64,
+    "kicad_drc_violations": 24,
+    "kicad_drc_breakdown": {
+      "total_violations": 24,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 1,
+        "lib_footprint_issues": 11,
+        "padstack": 1,
+        "silk_overlap": 6,
+        "solder_mask_bridge": 4,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 5,
+        "warning": 19
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.925511+00:00",
+    "elapsed_seconds": 9.88,
+    "unrouted_nets": 1,
+    "clearance_violations": 0,
+    "quality_score": 950.0
+  }
+}

@@ -1,6 +1,6 @@
 package app.freerouting.autoroute.events;
 
-import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.facade.RoutingBoard;
 import java.util.EventObject;
 
 /** BoardSnapshotEvent. */

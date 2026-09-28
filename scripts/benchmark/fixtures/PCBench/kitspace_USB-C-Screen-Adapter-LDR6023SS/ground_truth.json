@@ -1,0 +1,31 @@
+{
+  "board": "kitspace_USB-C-Screen-Adapter-LDR6023SS",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\kitspace_USB-C-Screen-Adapter-LDR6023SS\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 154,
+  "segment_count": 686,
+  "approximate_track_length_mm": 640.34,
+  "kicad_drc_violations": 155,
+  "generated_at": "2026-08-18T19:13:04.675714+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 155,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 4,
+      "clearance": 25,
+      "copper_edge_clearance": 10,
+      "courtyards_overlap": 24,
+      "hole_clearance": 10,
+      "lib_footprint_issues": 3,
+      "lib_footprint_mismatch": 35,
+      "silk_edge_clearance": 2,
+      "text_height": 40,
+      "track_dangling": 2
+    },
+    "by_severity": {
+      "error": 73,
+      "warning": 82
+    }
+  }
+}

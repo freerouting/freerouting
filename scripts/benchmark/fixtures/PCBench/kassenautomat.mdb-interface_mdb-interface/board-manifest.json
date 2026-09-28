@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "kassenautomat.mdb-interface_mdb-interface",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 417362,
+      "sha256": "864b5d7579b5dd15354443a02f83727e3302046ffb8d8c5ebc30fd5e08dc4cfa"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 228967,
+      "sha256": "afa4fb05dda976f81a30d52743d7d1f38b5e27264bc30090b8ed82ca17d35ea8"
+    },
+    "metadata_json": {
+      "bytes": 548,
+      "sha256": "ac0ab540a8b2a8efa1ada02bfa74370c32dbcdcac472450db851df18ac950494"
+    },
+    "final_json": {
+      "bytes": 181614,
+      "sha256": "60acbe6c4fe2b9c9dca363ad477b98b1b8807e34db709b87650c2f1a1a4412bf"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:00:46.739220+00:00"
+  }
+}

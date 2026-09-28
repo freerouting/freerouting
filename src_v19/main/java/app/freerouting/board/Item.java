@@ -39,7 +39,7 @@ public abstract class Item
   private final int id_no;
   /** The board this Item is on */
   public transient BasicBoard board;
-  public double smallest_clearance;
+  public double smallest_clearance = -1.0;
   /** The nets, to which this item belongs */
   int[] net_no_arr;
   /** the index in the clearance matrix describing the required spacing to other items */
@@ -364,7 +364,7 @@ public abstract class Item
           // Get the two shapes the clearance is calculated between
           TileShape shape_1 = curr_tile_shape;
           TileShape shape_2 =
-              curr_item.get_tree_shape(default_tree, curr_entry.shape_index_in_object);
+              curr_item.get_tile_shape(curr_entry.shape_index_in_object);
           if (shape_1 == null || shape_2 == null) {
             FRLogger.warn("Item.clearance_violations: unexpected null shape");
             continue;
@@ -375,27 +375,37 @@ public abstract class Item
               board.rules.clearance_matrix.get_value(
                   curr_item.clearance_class, this.clearance_class, shape_layer(i), false);
 
-          double actual_clearance = 0;
-
-          TileShape enlarged_shape_1 = (TileShape) shape_1.enlarge(0);
-          TileShape enlarged_shape_2 = (TileShape) shape_2.enlarge(0);
-
-          if (!this.board.search_tree_manager.is_clearance_compensation_used()) {
-            double cl_offset = 0.5 * minimum_clearance;
-            enlarged_shape_1 = (TileShape) shape_1.enlarge(cl_offset);
-            enlarged_shape_2 = (TileShape) shape_2.enlarge(cl_offset);
-
-            actual_clearance = calculate_clearance_between_two_shapes(shape_1, shape_2, minimum_clearance + ClearanceMatrix.clearance_safety_margin);
-            if ((smallest_clearance == 0) || (actual_clearance < smallest_clearance))
-            {
-              smallest_clearance = actual_clearance;
-            }
+          int cl_comp_1 = 0;
+          int cl_comp_2 = 0;
+          if (this.board.search_tree_manager.is_clearance_compensation_used()) {
+            cl_comp_1 = default_tree.clearance_compensation_value(this.clearance_class, shape_layer(i));
+            cl_comp_2 = default_tree.clearance_compensation_value(curr_item.clearance_class, shape_layer(i));
+          } else {
+            cl_comp_1 = (int) Math.round(0.5 * minimum_clearance);
+            cl_comp_2 = (int) Math.round(minimum_clearance - cl_comp_1);
           }
+
+          TileShape enlarged_shape_1 = (cl_comp_1 > 0) ? (TileShape) shape_1.enlarge(cl_comp_1) : shape_1;
+          TileShape enlarged_shape_2 = (cl_comp_2 > 0) ? (TileShape) shape_2.enlarge(cl_comp_2) : shape_2;
 
           TileShape intersection = enlarged_shape_1.intersection(enlarged_shape_2);
           if (intersection.dimension() == 2) {
+            double actual_clearance =
+                calculate_clearance_between_two_shapes(
+                    shape_1, shape_2, minimum_clearance, cl_comp_1, cl_comp_2);
+
+            if ((smallest_clearance < 0) || (actual_clearance < smallest_clearance)) {
+              smallest_clearance = actual_clearance;
+            }
+
             ClearanceViolation curr_violation =
-                new ClearanceViolation(this, curr_item, intersection, shape_layer(i), minimum_clearance, actual_clearance);
+                new ClearanceViolation(
+                    this,
+                    curr_item,
+                    intersection,
+                    shape_layer(i),
+                    minimum_clearance,
+                    actual_clearance);
             result.add(curr_violation);
           }
         }
@@ -404,21 +414,32 @@ public abstract class Item
     return result;
   }
 
-  private double calculate_clearance_between_two_shapes(TileShape shape_1, TileShape shape_2, double minimum_clearance)
-  {
-    for (double clearance = minimum_clearance; clearance > 0; clearance--) {
-      double cl_offset = 0.5 * clearance;
-      TileShape enlarged_shape_1 = (TileShape) shape_1.enlarge(cl_offset);
-      TileShape enlarged_shape_2 = (TileShape) shape_2.enlarge(cl_offset);
+  private double calculate_clearance_between_two_shapes(
+      TileShape raw_shape_1,
+      TileShape raw_shape_2,
+      double minimum_clearance,
+      int cl_comp_1,
+      int cl_comp_2) {
+    if (raw_shape_1.intersection(raw_shape_2).dimension() == 2) {
+      return 0.0;
+    }
+    double low = 0.0;
+    double high = minimum_clearance;
+    double sum_comp = cl_comp_1 + cl_comp_2;
+    double factor1 = (sum_comp > 0) ? ((double) cl_comp_1 / sum_comp) : 0.5;
+    double factor2 = (sum_comp > 0) ? ((double) cl_comp_2 / sum_comp) : 0.5;
 
-      TileShape intersection = enlarged_shape_1.intersection(enlarged_shape_2);
-      if (intersection.dimension() != 2)
-      {
-        return clearance;
+    for (int iter = 0; iter < 16; iter++) {
+      double mid = (low + high) * 0.5;
+      TileShape s1 = (TileShape) raw_shape_1.enlarge(mid * factor1);
+      TileShape s2 = (TileShape) raw_shape_2.enlarge(mid * factor2);
+      if (s1.intersection(s2).dimension() == 2) {
+        high = mid;
+      } else {
+        low = mid;
       }
     }
-
-    return 0;
+    return low;
   }
 
   /**

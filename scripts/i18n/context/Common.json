@@ -58,7 +58,7 @@
   "add_corner": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
-    "english_hash": "53199c82e663c772cba735e1898e22192767522f627bef793b9224f2fb0ef8b9",
+    "english_hash": "285d92ae10467290ee73e674f4bfedfefe4d2f7a286d31194e406c107ef2b163",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
@@ -156,8 +156,8 @@
   "cancel": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
-    "english_hash": "160c1332911765be11bc7a832b3f36ade5fd1857d12a4d83606750ac6217175f",
-    "grammatical_role": "fragment",
+    "english_hash": "862c2324686bab7af826ce0047a7659ef197578ac148e23b46967bd9578e7180",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": null,
@@ -170,8 +170,8 @@
   "cancel_route": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
-    "english_hash": "25c4dda05447b7f0da9d6d7d9a331b8dace05641f98204f0ce9f57ce8622c178",
-    "grammatical_role": "fragment",
+    "english_hash": "c832e909c0f4c6d51903d42a11deb8fddf59520113608c30fa47c5c0c1098089",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": null,
@@ -200,8 +200,8 @@
   "center_display": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
-    "english_hash": "8f3934954facf2c8993ccdbbc628b55c5a8567d4688eceddc72869b7cbcbddb0",
-    "grammatical_role": "fragment",
+    "english_hash": "9437e0d11ae6b5d8310a1baead32c3977068af1a104e204b313ed2d956284b56",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": null,
@@ -232,8 +232,8 @@
   "change_layer_tooltip": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
-    "english_hash": "082817d48e868c685684beb70b4433b209b6d33f1c958ed1da8dd53a6e842a97",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "1648a0b33f1d4db3087fdeb5ae9389022888f3bfd3c59984589e9bda7659443c",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": null,
@@ -373,7 +373,7 @@
   "clearance_violation_info_expected_clearance": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
-    "english_hash": "6fac31215ce8a0599f34d0baeb90d15ccdf46b5202e3241dd1f5f5ac98be05b8",
+    "english_hash": "876ae21704463e33ff751243c4950ce15202cb861136fe2af532fcb4f2352f94",
     "grammatical_role": "full_sentence",
     "has_placeholders": true,
     "is_html": false,
@@ -415,8 +415,8 @@
   "close": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
-    "english_hash": "310ff200149b44a32f124023d7caba19a1a890763a980606813d3a3d4a085d36",
-    "grammatical_role": "verb_phrase",
+    "english_hash": "7d9eb7acb13e24625c404401d8e88b2350e32162455885f18276cf802f7701ed",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": null,
@@ -572,8 +572,8 @@
   "done": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
-    "english_hash": "5fc9e5dc9fcf71b7588c4d0c9d06dc6e437273871578a087636f253a7ee5089e",
-    "grammatical_role": "fragment",
+    "english_hash": "f895e35177efaec73be469ee32691f3d9a84b57f35d243dc8037d999674a6f73",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": null,
@@ -586,8 +586,8 @@
   "end_route": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
-    "english_hash": "db5fd778559ccb984c2c2db50800e23f99e283c6d0aa69d1cb902d70c1ff4319",
-    "grammatical_role": "fragment",
+    "english_hash": "3d432a49afc8626bca223e1deb1faf430df9f13c9c6d61b843e473663a220fcb",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": null,
@@ -714,7 +714,7 @@
   "insert": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
-    "english_hash": "dbceb4c7c4bfce8c039fe4c5570b91de21cacc67ddc91615d84edb7f4546c9c6",
+    "english_hash": "f618fec01046dc5d98f3970cd3930973a487445ce20c199eee8d95d5f28e9d3b",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
@@ -1120,7 +1120,7 @@
   "pick_a_color": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
-    "english_hash": "72850b40c5eb96941ed595b2be244d98715f4e5739b0face696083a619a590a6",
+    "english_hash": "a03f110d2b8df5d5f465d7fb8d3716abc559d582ef133a2dfcc520b0a28d3014",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
@@ -1243,8 +1243,8 @@
   "route_completed": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
-    "english_hash": "d9cbd798033551db2d6cb7dd7d3aa8c43b97ad3b1731ea5cdf3cc6dd5b2dc963",
-    "grammatical_role": "fragment",
+    "english_hash": "e6d2eb9e762baeb4370fe032fdb8d7d0f80d4d7c680aef297367ed60ead38d3d",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": null,
@@ -1421,7 +1421,7 @@
   "trace_hover_info": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
-    "english_hash": "3cc13f1007e6006718213ec457874596e66452f2ecb78ba4fe045c97823c9a11",
+    "english_hash": "0bcdad3d50de6f39b133475573bcc7a66dbc6730a6cca2c46b9580f5439f2c37",
     "grammatical_role": "fragment",
     "has_placeholders": true,
     "is_html": true,
@@ -1536,7 +1536,7 @@
   "via_hover_info": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
-    "english_hash": "5fcd3e3e9d7bcb77bc47752b418a8cef4225f2af88c00fd1b28e0d3531b8730c",
+    "english_hash": "a24cfdfb79b24290ccda23b5928eff4d4820c178e3f11003ec73bfe8f2ec26a7",
     "grammatical_role": "fragment",
     "has_placeholders": true,
     "is_html": true,
@@ -1701,7 +1701,7 @@
   "zoom": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
-    "english_hash": "d21bb537725d603ee2dbadf9c3d1e291a6b7aed215d36a34e58a1a3b0daa5084",
+    "english_hash": "509c517ede79fef060a5f3a109fd1f45951eef2c7970b25c20992011e36a4070",
     "grammatical_role": "fragment",
     "has_placeholders": false,
     "is_html": false,

@@ -1,0 +1,26 @@
+{
+  "board": "led_array_atmega8_led_array",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\led_array_atmega8_led_array\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 5,
+  "segment_count": 401,
+  "approximate_track_length_mm": 1725.68,
+  "kicad_drc_violations": 380,
+  "generated_at": "2026-08-18T19:15:30.229408+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 380,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 299,
+      "lib_footprint_issues": 63,
+      "silk_edge_clearance": 2,
+      "silk_over_copper": 15,
+      "silk_overlap": 1
+    },
+    "by_severity": {
+      "error": 299,
+      "warning": 81
+    }
+  }
+}

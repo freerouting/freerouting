@@ -1,0 +1,64 @@
+{
+  "board_id": "autohat-board_autohat-rig",
+  "display_name": "autohat-board_autohat-rig",
+  "pcbench_directory": "PCBs/autohat-board_autohat-rig",
+  "source": "https://github.com/balena-io/autohat-board",
+  "author": "balena-io",
+  "license": "Apache License 2.0",
+  "license_spdx": "Apache-2.0",
+  "retrieved_at": "2023-08-17T17:22:27.761766+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 75,
+    "components": 96,
+    "dimensions_mm": {
+      "width": 75.4,
+      "height": 114.0
+    },
+    "area_cm2": 85.96,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 767,
+    "vias": 61,
+    "track_length_mm": 2556.02,
+    "kicad_drc_violations": 958,
+    "kicad_drc_breakdown": {
+      "total_violations": 958,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 457,
+        "copper_edge_clearance": 15,
+        "isolated_copper": 2,
+        "lib_footprint_issues": 96,
+        "shorting_items": 32,
+        "silk_edge_clearance": 8,
+        "silk_over_copper": 113,
+        "silk_overlap": 10,
+        "solder_mask_bridge": 204,
+        "starved_thermal": 2,
+        "text_height": 10,
+        "text_thickness": 7,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 710,
+        "warning": 248
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "medium",
+    "plane",
+    "routine",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

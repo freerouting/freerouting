@@ -1,0 +1,27 @@
+{
+  "board": "DerKnopf_led-ring",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\DerKnopf_led-ring\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 36,
+  "segment_count": 393,
+  "approximate_track_length_mm": 550.27,
+  "kicad_drc_violations": 108,
+  "generated_at": "2026-08-18T18:41:19.141147+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 108,
+    "unconnected_count": 0,
+    "by_type": {
+      "copper_edge_clearance": 47,
+      "hole_clearance": 3,
+      "lib_footprint_issues": 33,
+      "silk_edge_clearance": 1,
+      "silk_over_copper": 4,
+      "solder_mask_bridge": 20
+    },
+    "by_severity": {
+      "error": 70,
+      "warning": 38
+    }
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "board_id": "USB-TypeC-breakout-board_USB-TypeC-breakout-board",
+  "display_name": "USB-TypeC-breakout-board_USB-TypeC-breakout-board",
+  "pcbench_directory": "PCBs/USB-TypeC-breakout-board_USB-TypeC-breakout-board",
+  "source": "https://github.com/perillamint/USB-TypeC-breakout-board",
+  "author": "perillamint",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:23:00.462151+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 16,
+    "components": 2,
+    "dimensions_mm": {
+      "width": 50.0,
+      "height": 50.0
+    },
+    "area_cm2": 25.0,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 115,
+    "vias": 4,
+    "track_length_mm": 537.74,
+    "kicad_drc_violations": 86,
+    "kicad_drc_breakdown": {
+      "total_violations": 86,
+      "unconnected_count": 6,
+      "by_type": {
+        "clearance": 55,
+        "hole_clearance": 3,
+        "lib_footprint_issues": 2,
+        "solder_mask_bridge": 22,
+        "starved_thermal": 4
+      },
+      "by_severity": {
+        "error": 84,
+        "warning": 2
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.157669+00:00",
+    "elapsed_seconds": 35.43,
+    "unrouted_nets": 4,
+    "clearance_violations": 0,
+    "quality_score": 882.34
+  }
+}

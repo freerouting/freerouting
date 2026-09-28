@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "arduino-led-driver_arduino-led-driver",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 431721,
+      "sha256": "90ba8a6c3a2795e33302a23716321d35a2c42ee795ffd6fe5070c5fcd02aff37"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 290774,
+      "sha256": "fc7a85e6ce3c0321bd4bacbb884b56d2f0bfbb63b86ee79218d0a10d51d9a38d"
+    },
+    "metadata_json": {
+      "bytes": 708,
+      "sha256": "fb4f496537f34738fd22197e04c19a25949ed704bebb2f02b8a0621a39576983"
+    },
+    "final_json": {
+      "bytes": 247558,
+      "sha256": "e6d74fab66e5be7d3edf4875427903413197d36d9fdf0be3234d361d5c561297"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:29:02.229159+00:00"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "board": "Hardware_Playground_multisensor_cr123",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Hardware_Playground_multisensor_cr123\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 30,
+  "segment_count": 371,
+  "approximate_track_length_mm": 768.54,
+  "kicad_drc_violations": 376,
+  "generated_at": "2026-08-18T18:54:13.024230+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 376,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 104,
+      "copper_edge_clearance": 15,
+      "courtyards_overlap": 35,
+      "lib_footprint_issues": 64,
+      "pth_inside_courtyard": 60,
+      "silk_overlap": 8,
+      "starved_thermal": 3,
+      "text_height": 87
+    },
+    "by_severity": {
+      "error": 217,
+      "warning": 159
+    }
+  }
+}

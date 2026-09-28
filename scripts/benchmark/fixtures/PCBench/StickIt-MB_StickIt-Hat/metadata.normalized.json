@@ -1,0 +1,60 @@
+{
+  "board_id": "StickIt-MB_StickIt-Hat",
+  "display_name": "StickIt-MB_StickIt-Hat",
+  "pcbench_directory": "PCBs/StickIt-MB_StickIt-Hat",
+  "source": "https://github.com/xesscorp/StickIt-MB",
+  "author": "xesscorp",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:38.849896+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 11,
+    "components": 42,
+    "dimensions_mm": {
+      "width": 65.0,
+      "height": 56.0
+    },
+    "area_cm2": 36.4,
+    "zones": 5
+  },
+  "reference": {
+    "segments": 358,
+    "vias": 19,
+    "track_length_mm": 1173.79,
+    "kicad_drc_violations": 357,
+    "kicad_drc_breakdown": {
+      "total_violations": 357,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 220,
+        "copper_edge_clearance": 5,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 42,
+        "shorting_items": 15,
+        "silk_edge_clearance": 12,
+        "silk_over_copper": 26,
+        "silk_overlap": 30,
+        "solder_mask_bridge": 6
+      },
+      "by_severity": {
+        "error": 247,
+        "warning": 110
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

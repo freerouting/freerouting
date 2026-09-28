@@ -1,0 +1,33 @@
+{
+  "board": "newer-motor-controllers_si31-3",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\newer-motor-controllers_si31-3\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 85,
+  "segment_count": 1064,
+  "approximate_track_length_mm": 3507.64,
+  "kicad_drc_violations": 690,
+  "generated_at": "2026-08-18T18:20:58.019948+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 690,
+    "unconnected_count": 7,
+    "by_type": {
+      "clearance": 114,
+      "copper_edge_clearance": 16,
+      "courtyards_overlap": 7,
+      "hole_clearance": 2,
+      "lib_footprint_issues": 119,
+      "pth_inside_courtyard": 41,
+      "shorting_items": 5,
+      "silk_over_copper": 199,
+      "silk_overlap": 107,
+      "solder_mask_bridge": 55,
+      "track_dangling": 23,
+      "via_dangling": 2
+    },
+    "by_severity": {
+      "error": 240,
+      "warning": 450
+    }
+  }
+}

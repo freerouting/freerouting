@@ -1,0 +1,30 @@
+{
+  "board": "StickIt-MB_StickIt-Hat",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\StickIt-MB_StickIt-Hat\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 19,
+  "segment_count": 358,
+  "approximate_track_length_mm": 1173.79,
+  "kicad_drc_violations": 357,
+  "generated_at": "2026-08-18T19:48:12.570066+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 357,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 220,
+      "copper_edge_clearance": 5,
+      "courtyards_overlap": 1,
+      "lib_footprint_issues": 42,
+      "shorting_items": 15,
+      "silk_edge_clearance": 12,
+      "silk_over_copper": 26,
+      "silk_overlap": 30,
+      "solder_mask_bridge": 6
+    },
+    "by_severity": {
+      "error": 247,
+      "warning": 110
+    }
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "board_id": "ADC-PCM4202-SE_ADC-PCM4202-SE",
+  "display_name": "ADC-PCM4202-SE_ADC-PCM4202-SE",
+  "pcbench_directory": "PCBs/ADC-PCM4202-SE_ADC-PCM4202-SE",
+  "source": "https://github.com/ohdsp/ADC-PCM4202-SE",
+  "author": "ohdsp",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:41.253925+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 59,
+    "components": 230,
+    "dimensions_mm": {
+      "width": 100.0,
+      "height": 100.0
+    },
+    "area_cm2": 100.0,
+    "zones": 24
+  },
+  "reference": {
+    "segments": 1343,
+    "vias": 290,
+    "track_length_mm": 3175.08,
+    "kicad_drc_violations": 664,
+    "kicad_drc_breakdown": {
+      "total_violations": 664,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 390,
+        "items_not_allowed": 2,
+        "lib_footprint_issues": 199,
+        "silk_over_copper": 40,
+        "silk_overlap": 6,
+        "solder_mask_bridge": 26,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 418,
+        "warning": 246
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "complex",
+    "medium",
+    "plane",
+    "tier-c"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
+}
