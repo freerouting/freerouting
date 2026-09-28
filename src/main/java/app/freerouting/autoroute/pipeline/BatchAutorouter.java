@@ -68,6 +68,7 @@ public final class BatchAutorouter extends NamedAlgorithm {
       Boolean.getBoolean("freerouting.benchmark.retain_autoroute_database");
 
   final boolean removeUnconnectedVias;
+  final boolean preferredDirections;
   final AutorouteControl.ExpansionCostFactor[] traceCosts;
   final boolean retainAutorouteDatabase;
   final int startRipupCosts;
@@ -109,6 +110,10 @@ public final class BatchAutorouter extends NamedAlgorithm {
   long profileTailRemovalNanos;
   int profileRouteItemCount;
   int profilePlaneItemCount;
+  int profileSnapshotRetries;
+  int profileSnapshotAdopted;
+  long profileSnapshotCopyNanos;
+  long profileSnapshotPreparedNanos;
   BoardStatistics progressStatistics;
   int progressItemsSinceStatistics;
 
@@ -141,6 +146,7 @@ public final class BatchAutorouter extends NamedAlgorithm {
     this.random = new Random(0);
 
     this.removeUnconnectedVias = removeUnconnectedVias;
+    this.preferredDirections = withPreferredDirections;
     if (withPreferredDirections) {
       this.traceCosts = this.settings.getTraceCosts();
     } else {
@@ -210,6 +216,10 @@ public final class BatchAutorouter extends NamedAlgorithm {
     this.profileTailRemovalNanos = 0;
     this.profileRouteItemCount = 0;
     this.profilePlaneItemCount = 0;
+    this.profileSnapshotRetries = 0;
+    this.profileSnapshotAdopted = 0;
+    this.profileSnapshotCopyNanos = 0;
+    this.profileSnapshotPreparedNanos = 0;
   }
 
   void logBenchmarkProfile(int passNo) {
@@ -240,7 +250,39 @@ public final class BatchAutorouter extends NamedAlgorithm {
             + ", board_statistics_ms="
             + AutorouteRuntimeMetrics.nanosToMillis(this.profileBoardStatisticsNanos)
             + ", incomplete_drc_ms="
-            + AutorouteRuntimeMetrics.nanosToMillis(this.profileIncompleteDrcNanos));
+            + AutorouteRuntimeMetrics.nanosToMillis(this.profileIncompleteDrcNanos)
+            + ", snapshot_retries="
+            + this.profileSnapshotRetries
+            + ", snapshot_adopted="
+            + this.profileSnapshotAdopted
+            + ", snapshot_copy_ms="
+            + AutorouteRuntimeMetrics.nanosToMillis(this.profileSnapshotCopyNanos)
+            + ", snapshot_prepared_ms="
+            + AutorouteRuntimeMetrics.nanosToMillis(this.profileSnapshotPreparedNanos));
+  }
+
+  /** Router that searches one item on a snapshot board with this router's settings. */
+  BatchAutorouter forSnapshot(RoutingBoard copy) {
+    BatchAutorouter worker =
+        new BatchAutorouter(
+            this.thread,
+            copy,
+            this.settings,
+            this.removeUnconnectedVias,
+            this.preferredDirections,
+            this.startRipupCosts,
+            this.tracePullTightAccuracy);
+    worker.job = this.job;
+    worker.isOptimizerAutorouter = this.isOptimizerAutorouter;
+    return worker;
+  }
+
+  /** Replaces the live board after a snapshot search that matched the single-thread result. */
+  void adoptBoard(RoutingBoard replacement) {
+    this.board = replacement;
+    if (this.job != null) {
+      this.job.board = replacement;
+    }
   }
 
   /**

@@ -33,9 +33,10 @@ public class AutorouterSettings implements Serializable, Cloneable {
   public Integer maxItems;
 
   /**
-   * Worker-thread cap reserved for a future parallel autorouter pass. The production batch loop
-   * routes one item at a time on a single thread and does not read this value. Canonical CLI:
-   * {@code --router.autorouter.max_threads}. Independent of {@code router.optimizer.max_threads}.
+   * Worker-thread cap for snapshot-commit lookahead. The batch loop reads it only when the JVM is
+   * started with {@code -Dfreerouting.autoroute.snapshot_commit=true}. With the property unset the
+   * pass stays single-threaded. Canonical CLI: {@code --router.autorouter.max_threads}. Independent
+   * of {@code router.optimizer.max_threads}.
    */
   @SerializedName("max_threads")
   @Schema(description = "Maximum worker threads for the autorouter stage")
