@@ -39,6 +39,8 @@ else:
 
 DEFAULT_PROJECT_ID = "freerouting-analytics"
 DEFAULT_DATASET_ID = "freerouting_application"
+SHEET_URL_ENV = "FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__SHEET_URL"
+GOOGLE_API_KEY_ENV = "FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__GOOGLE_API_KEY"
 
 METRIC_COLUMNS = [
     "Sessions Created",
@@ -96,7 +98,7 @@ def query_bigquery_stats(
         profile_id,
         environment_host,
         api_route,
-        REGEXP_EXTRACT(api_path, r'v1/jobs/([a-f0-9\-]+)/') AS job_id,
+        REGEXP_EXTRACT(api_path, r'v1/jobs/([a-f0-9-]+)/') AS job_id,
         http_status,
         PARSE_TIMESTAMP('%Y-%m-%d %H:%M:%E*S UTC', timestamp) AS event_time
       FROM `{project_id}.{dataset_id}.api_usage`
@@ -150,19 +152,43 @@ def query_bigquery_stats(
     return stats_by_hash
 
 
+def open_worksheet(credentials: Any, google_api_key: Optional[str], spreadsheet_id_or_url: str):
+    """Open the first worksheet.
+
+    The service account can write cells. The Google API key matches the app and can
+    read a sheet that is shared publicly when the service account cannot open it.
+    """
+    clients = []
+    if credentials is not None:
+        clients.append(gspread.authorize(credentials))
+    if google_api_key:
+        clients.append(gspread.api_key(google_api_key))
+    if not clients:
+        raise ValueError(
+            "Google Sheets credentials are required. Set "
+            f"{GOOGLE_API_KEY_ENV} or provide a service account key."
+        )
+
+    last_error: Optional[Exception] = None
+    for client in clients:
+        try:
+            if spreadsheet_id_or_url.startswith("https://"):
+                return client.open_by_url(spreadsheet_id_or_url).sheet1
+            return client.open_by_key(spreadsheet_id_or_url).sheet1
+        except Exception as exc:
+            last_error = exc
+    raise last_error
+
+
 def sync_to_google_sheet(
     credentials: Any,
     spreadsheet_id_or_url: str,
     stats_by_hash: Dict[str, Dict[str, Any]],
     dry_run: bool = False,
+    google_api_key: Optional[str] = None,
 ) -> None:
     """Match API keys from the sheet, compute SHA-256, and update columns."""
-    gc = gspread.authorize(credentials)
-
-    if spreadsheet_id_or_url.startswith("https://"):
-        sheet = gc.open_by_url(spreadsheet_id_or_url).sheet1
-    else:
-        sheet = gc.open_by_key(spreadsheet_id_or_url).sheet1
+    sheet = open_worksheet(credentials, google_api_key, spreadsheet_id_or_url)
 
     all_values = sheet.get_all_values()
     if not all_values:
@@ -261,8 +287,12 @@ def main() -> None:
         "--spreadsheet-id",
         "-s",
         help="Google Sheets Spreadsheet ID or full URL",
-        default=os.environ.get("FREEROUTING_API_KEY_SPREADSHEET_ID")
-        or os.environ.get("FREEROUTING_API_KEY_SPREADSHEET_URL"),
+        default=os.environ.get(SHEET_URL_ENV),
+    )
+    parser.add_argument(
+        "--google-api-key",
+        help="Google API key for the Sheets API",
+        default=os.environ.get(GOOGLE_API_KEY_ENV),
     )
     parser.add_argument(
         "--service-account-key",
@@ -299,7 +329,7 @@ def main() -> None:
     if not args.spreadsheet_id:
         print(
             "Error: Spreadsheet ID or URL is required.\n"
-            "Specify via --spreadsheet-id <ID> or set FREEROUTING_API_KEY_SPREADSHEET_ID env var.",
+            f"Specify via --spreadsheet-id <ID> or set {SHEET_URL_ENV}.",
             file=sys.stderr,
         )
         sys.exit(1)
@@ -316,6 +346,7 @@ def main() -> None:
             spreadsheet_id_or_url=args.spreadsheet_id,
             stats_by_hash=stats,
             dry_run=args.dry_run,
+            google_api_key=args.google_api_key,
         )
     except Exception as exc:
         print(f"Error during sync: {exc}", file=sys.stderr)
