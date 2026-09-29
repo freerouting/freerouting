@@ -24,6 +24,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
 
   private static final long MAX_TIMEOUT = 24 * 60 * 60; // 24 hours
   private static final int GRACE_PERIOD = 30; // 30 seconds
+  private final Object terminalStateLock = new Object();
   RoutingJob job;
 
   /**
@@ -82,7 +83,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
                         e.printStackTrace();
                       }
                     }
-                    job.state = RoutingJobState.TIMED_OUT;
+                    markTimedOutIfStillActive();
                   }
                 }
               }
@@ -196,16 +197,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
         pipeline.getOptimizer() != null && pipeline.getOptimizer().isTimedOut();
 
     job.finishedAt = Instant.now();
-    if (job.state == RoutingJobState.RUNNING) {
-      job.state = RoutingJobState.COMPLETED;
-      Freerouting.globalSettings.statistics.incrementJobsCompleted();
-    } else if (job.state == RoutingJobState.STOPPING) {
-      if (job.isCancelledByUser()) {
-        job.state = RoutingJobState.CANCELLED;
-      } else {
-        job.state = RoutingJobState.COMPLETED;
-      }
-    }
+    assignTerminalState();
 
     long durationMs = java.time.Duration.between(job.startedAt, job.finishedAt).toMillis();
     double durationSec = durationMs / 1000.0;
@@ -374,5 +366,45 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
         FRLogger.error("Couldn't save the SCR output into the job object.", e);
       }
     }
+  }
+
+  /**
+   * Marks a job that is still running or stopping as timed out. A job that already reached {@link
+   * RoutingJobState#COMPLETED} or another terminal state keeps that state.
+   */
+  void markTimedOutIfStillActive() {
+    synchronized (terminalStateLock) {
+      if (job.state == RoutingJobState.RUNNING || job.state == RoutingJobState.STOPPING) {
+        job.state = RoutingJobState.TIMED_OUT;
+      }
+    }
+  }
+
+  /**
+   * One terminal state for a finished pipeline. A job stopped because {@code timeoutAt} has passed
+   * becomes {@link RoutingJobState#TIMED_OUT}. A user cancel stays {@link
+   * RoutingJobState#CANCELLED}. Anything already terminal, including a timeout assigned by the
+   * monitor, is left as it is.
+   */
+  void assignTerminalState() {
+    synchronized (terminalStateLock) {
+      if (job.state != RoutingJobState.RUNNING && job.state != RoutingJobState.STOPPING) {
+        return;
+      }
+      if (job.isCancelledByUser()) {
+        job.state = RoutingJobState.CANCELLED;
+        return;
+      }
+      if (jobClockExpired() && job.thread != null && job.thread.isStopRequested()) {
+        job.state = RoutingJobState.TIMED_OUT;
+        return;
+      }
+      job.state = RoutingJobState.COMPLETED;
+      Freerouting.globalSettings.statistics.incrementJobsCompleted();
+    }
+  }
+
+  private boolean jobClockExpired() {
+    return job.timeoutAt != null && !Instant.now().isBefore(job.timeoutAt);
   }
 }

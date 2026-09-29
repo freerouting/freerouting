@@ -301,7 +301,7 @@ The Windows, Linux, and macOS installers use `jlink` to build a minimal bundled 
 
 ## Why each module is needed
 
-- **`java.management`** — `ManagementFactory` (used in `SystemControllerV1`, `BatchAutorouterThread`, `RoutingJobSchedulerActionThread`, Log4j2 startup, Jersey-server). Missing this module causes `NoClassDefFoundError: java/lang/management/ManagementFactory` on startup and crashes the `/v1/system/status` endpoint with HTTP 500.
+- **`java.management`** — `ManagementFactory` (used in `SystemControllerV1`, `RoutingJobSchedulerActionThread`, Log4j2 startup, Jersey-server). Missing this module causes `NoClassDefFoundError: java/lang/management/ManagementFactory` on startup and crashes the `/v1/system/status` endpoint with HTTP 500.
 - **`jdk.management`** — `com.sun.management.ThreadMXBean.getThreadAllocatedBytes()` and `com.sun.management.OperatingSystemMXBean.getCpuLoad()`. Transitively brings in `java.management`.
 - **`jdk.crypto.ec`** — EC crypto provider (`SunEC`) required for TLS 1.3 / ECDHE key exchange. Without it, all HTTPS connections to Google APIs (OAuth2, BigQuery, Sheets) fail at the SSL handshake.
 - **`jdk.crypto.mscapi`** — Windows native certificate store access. Without it, Java uses only its own bundled `cacerts`, which is usually sufficient but may miss system-level certificates.
@@ -327,7 +327,7 @@ try {
 }
 ```
 
-Affected files: `SystemControllerV1.getCpuLoad()`, `BatchAutorouterThread.captureStats()`, `RoutingJobSchedulerActionThread.monitorCpuAndMemoryUsage()`.
+Affected files: `SystemControllerV1.getCpuLoad()`, `RoutingJobSchedulerActionThread.monitorCpuAndMemoryUsage()`.
 
 ## Analysing module requirements
 
