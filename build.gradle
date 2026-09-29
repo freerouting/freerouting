@@ -86,8 +86,8 @@ spotless {
         // build/generated-src (VersionInfo.java regenerated on every build).
         target 'src/main/java/**/*.java', 'src/test/java/**/*.java'
         removeUnusedImports()
-        // 1.28.0+ required for Java 25 (see diffplug/spotless#2468).
-        googleJavaFormat('1.28.0').reorderImports(true)
+        // Spotless 8.9 on JVM 25 requires google-java-format >= 1.30.0.
+        googleJavaFormat('1.30.0').reorderImports(true)
     }
 }
 
