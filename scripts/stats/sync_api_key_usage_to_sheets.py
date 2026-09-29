@@ -99,14 +99,14 @@ def query_bigquery_stats(
         environment_host,
         api_route,
         REGEXP_EXTRACT(api_path, r'v1/jobs/([a-f0-9-]+)/') AS job_id,
-        http_status,
-        PARSE_TIMESTAMP('%Y-%m-%d %H:%M:%E*S UTC', timestamp) AS event_time
+        SAFE_CAST(http_status AS INT64) AS http_status,
+        timestamp AS event_time
       FROM `{project_id}.{dataset_id}.api_usage`
       WHERE api_key_hash IS NOT NULL
     ),
     completed_jobs AS (
       SELECT DISTINCT
-        job_id
+        CAST(job_id AS STRING) AS job_id
       FROM `{project_id}.{dataset_id}.job_lifecycle`
       WHERE status IN ('SUCCEEDED', 'COMPLETED')
     )
@@ -115,13 +115,13 @@ def query_bigquery_stats(
       ARRAY_AGG(r.environment_host IGNORE NULLS ORDER BY r.event_time DESC LIMIT 1)[SAFE_OFFSET(0)] AS last_environment_host,
       COUNT(DISTINCT CASE WHEN r.api_route IN ('POST v1/sessions/create', 'POST /v1/sessions/create') AND r.http_status = 200 THEN r.event_time END) AS sessions_created,
       COUNT(DISTINCT CASE WHEN (
-        r.api_route IN ('PUT v1/jobs/{id}/start', 'POST /v1/jobs/{jobId}/start')
+        r.api_route IN ('PUT v1/jobs/{{id}}/start', 'POST /v1/jobs/{{jobId}}/start')
         OR r.api_route IN ('POST v1/autoroute', 'POST /v1/autoroute')
       ) AND r.http_status IN (200, 202) THEN COALESCE(r.job_id, CAST(r.event_time AS STRING)) END) AS boards_started,
       GREATEST(
-        COUNT(DISTINCT CASE WHEN r.api_route IN ('PUT v1/jobs/{id}/start', 'POST /v1/jobs/{jobId}/start') AND r.http_status IN (200, 202) AND c.job_id IS NOT NULL THEN r.job_id END),
+        COUNT(DISTINCT CASE WHEN r.api_route IN ('PUT v1/jobs/{{id}}/start', 'POST /v1/jobs/{{jobId}}/start') AND r.http_status IN (200, 202) AND c.job_id IS NOT NULL THEN r.job_id END),
         COUNT(DISTINCT CASE WHEN (
-          r.api_route IN ('GET v1/jobs/{id}/output', 'GET v1/jobs/{id}/output/json', 'GET /v1/jobs/{jobId}/output', 'GET /v1/jobs/{jobId}/output/json', 'GET /v1/jobs/{jobId}/output/file')
+          r.api_route IN ('GET v1/jobs/{{id}}/output', 'GET v1/jobs/{{id}}/output/json', 'GET /v1/jobs/{{jobId}}/output', 'GET /v1/jobs/{{jobId}}/output/json', 'GET /v1/jobs/{{jobId}}/output/file')
           OR r.api_route IN ('POST v1/autoroute', 'POST /v1/autoroute')
         ) AND r.http_status = 200 THEN COALESCE(r.job_id, CAST(r.event_time AS STRING)) END)
       ) AS boards_completed,
@@ -219,6 +219,9 @@ def sync_to_google_sheet(
 
     if missing_cols and not dry_run:
         start_col = len(headers) + 1
+        columns_needed = start_col + len(missing_cols) - 1
+        if sheet.col_count < columns_needed:
+            sheet.add_cols(columns_needed - sheet.col_count)
         for i, col_name in enumerate(missing_cols):
             col_indices[col_name] = len(headers) + i
             sheet.update_cell(1, start_col + i, col_name)
