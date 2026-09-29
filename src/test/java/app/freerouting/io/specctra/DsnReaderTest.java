@@ -128,6 +128,79 @@ class DsnReaderTest {
     assertTrue(board.components.count() > 0, "board must contain placed components");
   }
 
+  // Power layers without a plane
+
+  private static String dsnWithPowerLayer(String planeScope) {
+    return "(pcb test\n"
+        + "  (parser (string_quote \") (host_cad \"KiCad's Pcbnew\"))\n"
+        + "  (resolution um 10)\n"
+        + "  (unit um)\n"
+        + "  (structure\n"
+        + "    (layer F.Cu (type signal) (property (index 0)))\n"
+        + "    (layer In1.Cu (type power) (property (index 1)))\n"
+        + "    (layer B.Cu (type signal) (property (index 2)))\n"
+        + "    (boundary (path pcb 0 0 0 20000 0 20000 20000 0 20000 0 0))\n"
+        + planeScope
+        + "    (via \"Via[0-2]_800:400_um\")\n"
+        + "    (rule (width 200) (clearance 200))\n"
+        + "  )\n"
+        + "  (placement)\n"
+        + "  (library\n"
+        + "    (padstack \"Via[0-2]_800:400_um\"\n"
+        + "      (shape (circle F.Cu 800))\n"
+        + "      (shape (circle In1.Cu 800))\n"
+        + "      (shape (circle B.Cu 800))\n"
+        + "      (attach off)\n"
+        + "    )\n"
+        + "  )\n"
+        + "  (network\n"
+        + "    (net GND)\n"
+        + "    (class kicad_default GND (circuit (use_via \"Via[0-2]_800:400_um\"))"
+        + " (rule (width 200) (clearance 200)))\n"
+        + "  )\n"
+        + "  (wiring)\n"
+        + ")\n";
+  }
+
+  @Test
+  void powerLayerWithoutPlaneBecomesRoutableSignalLayer() {
+    InputStream in =
+        new ByteArrayInputStream(dsnWithPowerLayer("").getBytes(StandardCharsets.UTF_8));
+    BoardReadResult result = DsnReader.readBoard(in, null, null);
+
+    assertInstanceOf(BoardReadResult.Success.class, result);
+    RoutingBoard board = (RoutingBoard) ((BoardReadResult.Success) result).board();
+    assertTrue(
+        board.layerStructure.layers[1].isSignal,
+        "a power layer without any plane must be treated as a signal layer");
+  }
+
+  @Test
+  void kicadPowerTypedLayersWithoutPlanesAreRoutable() {
+    InputStream in = DsnTestFixtures.openResource("PCBench-Box0-hv-analog-breakout.dsn");
+    BoardReadResult result = DsnReader.readBoard(in, null, null);
+
+    assertInstanceOf(BoardReadResult.Success.class, result);
+    RoutingBoard board = (RoutingBoard) ((BoardReadResult.Success) result).board();
+    for (var layer : board.layerStructure.layers) {
+      assertTrue(layer.isSignal, "layer " + layer.name + " must be routable");
+    }
+  }
+
+  @Test
+  void powerLayerWithPlaneStaysNonSignal() {
+    String plane = "    (plane GND (polygon In1.Cu 0 0 0 20000 0 20000 20000 0 20000))\n";
+    InputStream in =
+        new ByteArrayInputStream(dsnWithPowerLayer(plane).getBytes(StandardCharsets.UTF_8));
+    BoardReadResult result = DsnReader.readBoard(in, null, null);
+
+    assertInstanceOf(BoardReadResult.Success.class, result);
+    RoutingBoard board = (RoutingBoard) ((BoardReadResult.Success) result).board();
+    assertTrue(
+        !board.layerStructure.layers[1].isSignal,
+        "a power layer that carries a plane must stay non-routable");
+  }
+
   // Sealed-switch exhaustiveness check (compile-time guarantee)
 
   @Test

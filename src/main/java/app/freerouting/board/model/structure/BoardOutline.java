@@ -9,6 +9,7 @@ import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.geometry.planar.Area;
+import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
@@ -129,6 +130,71 @@ public class BoardOutline extends Item implements Serializable {
     }
     this.edgePinNets = set;
     return this.edgePinNets;
+  }
+
+  /**
+   * Returns the smallest gap, in board units, between the copper of any pin and the outline lines.
+   * The gap is 0 if a pin touches or crosses the outline. Returns {@link Double#POSITIVE_INFINITY}
+   * if the board has no pins.
+   *
+   * <p>Pad corners are sampled, so the result is exact for polygonal pads and conservative (never
+   * larger than the true gap) for round pads, which are represented by their bounding box.
+   */
+  public double minimumPinGap() {
+    double result = Double.POSITIVE_INFINITY;
+    if (this.board == null) {
+      return result;
+    }
+    for (Pin pin : this.board.getPins()) {
+      for (int layer = pin.firstLayer(); layer <= pin.lastLayer(); layer++) {
+        Shape shape = pin.getShape(layer - pin.firstLayer());
+        if (shape == null) {
+          continue;
+        }
+        result = Math.min(result, cornerGap(shape));
+        if (result <= 0) {
+          return 0;
+        }
+      }
+    }
+    return result;
+  }
+
+  private double cornerGap(Shape padShape) {
+    double result = Double.POSITIVE_INFINITY;
+    if (padShape.isEmpty() || !padShape.isBounded()) {
+      return result;
+    }
+    if (padShape instanceof TileShape tileShape) {
+      for (int c = 0; c < tileShape.borderLineCount(); c++) {
+        result = Math.min(result, distanceToOutline(tileShape.corner(c).toFloat()));
+      }
+    } else {
+      IntBox box = padShape.boundingBox();
+      for (int c = 0; c < 4; c++) {
+        result = Math.min(result, distanceToOutline(box.corner(c).toFloat()));
+      }
+    }
+    return result;
+  }
+
+  /** Distance to the outline lines, 0 for points that are not inside the outline. */
+  private double distanceToOutline(FloatPoint point) {
+    if (!this.contains(point)) {
+      return 0;
+    }
+    double result = Double.POSITIVE_INFINITY;
+    for (PolylineShape outlineShape : this.shapes) {
+      // PolygonShape.borderDistance is not implemented, so measure to the corner-to-corner
+      // segments directly.
+      int cornerCount = outlineShape.borderLineCount();
+      for (int i = 0; i < cornerCount; i++) {
+        FloatPoint from = outlineShape.corner(i).toFloat();
+        FloatPoint to = outlineShape.corner((i + 1) % cornerCount).toFloat();
+        result = Math.min(result, new FloatLine(from, to).segmentDistance(point));
+      }
+    }
+    return result;
   }
 
   /** Invalidates cached edge pin nets when board geometry or pins change. */
