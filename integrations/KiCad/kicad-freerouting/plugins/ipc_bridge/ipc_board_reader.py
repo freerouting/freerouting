@@ -428,6 +428,13 @@ class KiCadIpcBoardReader:
         except Exception as e:
             logger.warning(f"Could not read pads via IPC: {e}")
 
+        copper_layer_names = []
+        for lid in layer_id_to_index.keys():
+            try:
+                copper_layer_names.append(self.board.get_layer_name(lid))
+            except Exception:
+                pass
+
         # 2. Extract footprints
         try:
             footprints = self.board.get_footprints()
@@ -473,14 +480,20 @@ class KiCadIpcBoardReader:
                 if not fp_pads:
                     fp_pads = pads_by_footprint.get(fp_id, [])
                 for pad in fp_pads:
-                    pad_dict = self._serialize_pad(pad, fp.position, rotation_deg)
+                    pad_dict = self._serialize_pad(pad, fp.position, rotation_deg, copper_layer_names)
                     comp_dict["pads"].append(pad_dict)
 
                 data["components"].append(comp_dict)
         except Exception as e:
             logger.warning(f"Could not read footprints via IPC: {e}")
 
-    def _serialize_pad(self, pad: Any, fp_pos: Any, fp_rot_deg: float) -> Dict[str, Any]:
+    def _serialize_pad(
+        self,
+        pad: Any,
+        fp_pos: Any,
+        fp_rot_deg: float,
+        copper_layer_names: Optional[List[str]] = None,
+    ) -> Dict[str, Any]:
         """Serializes a single pad object."""
         net_name = pad.net.name if pad.net and pad.net.name else ""
         pad_num = str(pad.number) if pad.number is not None else ""
@@ -515,6 +528,10 @@ class KiCadIpcBoardReader:
                     size_y = getattr(first_cl.size, "y", getattr(first_cl.size, "y_nm", 1000000))
                     size_x_mm = size_x / 1e6
                     size_y_mm = size_y / 1e6
+            elif drill_mm > 0:
+                shape_name = "circle"
+                size_x_mm = drill_mm
+                size_y_mm = drill_mm
 
             # Layers
             layers = []
@@ -526,6 +543,9 @@ class KiCadIpcBoardReader:
                     pass
             if not layers:
                 layers = ["F.Cu"]
+
+            if copper_layer_names and drill_mm > 0 and not any(l in copper_layer_names for l in layers):
+                layers = list(copper_layer_names)
 
         # Calculate relative offset from component origin
         dx_nm = pad.position.x - fp_pos.x

@@ -118,7 +118,8 @@ public class Via extends DrillItem implements Serializable {
       return null;
     }
     if (this.precalculatedShapes == null) {
-      this.precalculatedShapes = new Shape[padstack.toLayer() - padstack.fromLayer() + 1];
+      int shapeCount = Math.max(0, padstack.toLayer() - padstack.fromLayer() + 1);
+      this.precalculatedShapes = new Shape[shapeCount];
       for (int i = 0; i < this.precalculatedShapes.length; i++) {
         int padstackLayer = i + this.firstLayer();
         Vector translateVector = getCenter().differenceBy(Point.ZERO);
