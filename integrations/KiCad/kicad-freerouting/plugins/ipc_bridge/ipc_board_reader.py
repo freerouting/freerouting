@@ -433,6 +433,7 @@ class KiCadIpcBoardReader:
             try:
                 copper_layer_names.append(self.board.get_layer_name(lid))
             except Exception:
+                # Layer name lookup may fail if layer ID is invalid or board API raises
                 pass
 
         # 2. Extract footprints
@@ -511,8 +512,20 @@ class KiCadIpcBoardReader:
                 drill_x = getattr(ps.drill.diameter, "x", getattr(ps.drill.diameter, "x_nm", 0))
                 drill_mm = drill_x / 1e6
 
+            # Layers
+            layers = []
+            if hasattr(ps, "layers") and ps.layers:
+                for l_enum in ps.layers:
+                    try:
+                        layers.append(self.board.get_layer_name(l_enum))
+                    except Exception:
+                        # Layer name lookup failed for enum value; skip
+                        pass
+
+            has_copper = bool(copper_layer_names and any(l in copper_layer_names for l in layers))
+
             # Determine shape and size from copper layers
-            if ps.copper_layers:
+            if ps.copper_layers and has_copper:
                 first_cl = ps.copper_layers[0]
                 shape_val = getattr(first_cl, "shape", None)
                 shape_str = str(shape_val).upper()
@@ -533,19 +546,10 @@ class KiCadIpcBoardReader:
                 size_x_mm = drill_mm
                 size_y_mm = drill_mm
 
-            # Layers
-            layers = []
-            for l_enum in ps.layers:
-                try:
-                    layers.append(self.board.get_layer_name(l_enum))
-                except Exception:
-                    # Layer name lookup failed for enum value; skip
-                    pass
-            if not layers:
-                layers = ["F.Cu"]
-
-            if copper_layer_names and drill_mm > 0 and not any(l in copper_layer_names for l in layers):
+            if copper_layer_names and drill_mm > 0 and not has_copper:
                 layers = list(copper_layer_names)
+            elif not layers:
+                layers = ["F.Cu"]
 
         # Calculate relative offset from component origin
         dx_nm = pad.position.x - fp_pos.x

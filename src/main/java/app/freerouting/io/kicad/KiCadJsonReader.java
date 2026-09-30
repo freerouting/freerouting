@@ -44,6 +44,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -570,19 +571,18 @@ public final class KiCadJsonReader {
           boolean isDrillable = pad.drill > 0.0;
           // If no copper layers matched explicitly:
           // - If it has a drill hole (e.g. NPTH mounting hole), it spans all layers.
-          // - Otherwise, default to component's mounted layer for valid layer representation.
+          // - Otherwise, default to package-relative layer 0. When placed on the back side,
+          //   DrillItem automatically mirrors layer 0 to the bottom layer.
           if (!hasMatchedCopperLayer && !isDrillable) {
-            int compLayerIdx = !"B.Cu".equalsIgnoreCase(comp.layer) ? 0 : layerCount - 1;
-            startLayer = compLayerIdx;
-            endLayer = compLayerIdx;
+            startLayer = 0;
+            endLayer = 0;
           }
 
           for (int li = startLayer; li <= endLayer; li++) {
             shapes[li] = padShape;
           }
 
-          String padstackName =
-              getDescriptivePadstackName(pad, boardLayers, layerCount, startLayer, endLayer);
+          String padstackName = getDescriptivePadstackName(pad, layerCount, startLayer, endLayer);
           Padstack padstack = padstacks.get(padstackName);
           if (padstack == null) {
             padstack = padstacks.add(padstackName, shapes, isDrillable, false);
@@ -867,11 +867,7 @@ public final class KiCadJsonReader {
   }
 
   private static String getDescriptivePadstackName(
-      KiCadBoardJson.PadJson pad,
-      Layer[] boardLayers,
-      int layerCount,
-      int startLayer,
-      int endLayer) {
+      KiCadBoardJson.PadJson pad, int layerCount, int startLayer, int endLayer) {
     String shapeStr = "Round";
     if (pad.shape != null) {
       if ("circle".equalsIgnoreCase(pad.shape) || "round".equalsIgnoreCase(pad.shape)) {
@@ -895,16 +891,28 @@ public final class KiCadJsonReader {
     } else if (startLayer == endLayer) {
       layerType = "L" + (startLayer + 1);
     } else {
-      layerType = String.format("L%d-L%d", startLayer + 1, endLayer + 1);
+      layerType = String.format(Locale.ROOT, "L%d-L%d", startLayer + 1, endLayer + 1);
     }
 
+    String drillSuffix =
+        pad.drill > 0.0 ? String.format(Locale.ROOT, ":%.0f", pad.drill * 1000.0) : "";
     if ("Round".equals(shapeStr)) {
-      return String.format("%s[%s]Pad_%.0f_um", shapeStr, layerType, pad.size.x * 1000.0);
+      return String.format(
+          Locale.ROOT,
+          "%s[%s]Pad_%.0f%s_um",
+          shapeStr,
+          layerType,
+          pad.size.x * 1000.0,
+          drillSuffix);
     } else {
       return String.format(
-              "%s[%s]Pad_%.0fxf_%.0f_um",
-              shapeStr, layerType, pad.size.x * 1000.0, pad.size.y * 1000.0)
-          .replace("xf_", "x");
+          Locale.ROOT,
+          "%s[%s]Pad_%.0fx%.0f%s_um",
+          shapeStr,
+          layerType,
+          pad.size.x * 1000.0,
+          pad.size.y * 1000.0,
+          drillSuffix);
     }
   }
 
