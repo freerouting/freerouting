@@ -30,11 +30,14 @@ import app.freerouting.rules.DefaultItemClearanceClasses;
 import app.freerouting.rules.DefaultItemClearanceClasses.ItemClass;
 import app.freerouting.rules.NetClass;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /** Class for reading and writing structure scopes from dsn-files. */
 @SuppressWarnings({
@@ -1136,6 +1139,48 @@ public class Structure extends ScopeKeyword {
     return result;
   }
 
+  /**
+   * Turns {@code (type power)} layers into signal layers when the DSN file does not define any
+   * plane for them.
+   *
+   * <p>A power layer is not routable. That is only meaningful when the layer really carries a
+   * plane, either a {@code (plane ...)} scope or a {@code (use_net ...)} declaration on the layer.
+   * Some exporters (e.g. KiCad) mark inner or even outer layers as {@code power} without exporting
+   * the matching zone. Keeping such a layer non-routable would silently remove it from the router,
+   * so it is promoted to a regular signal layer instead.
+   */
+  private static void promotePowerLayersWithoutPlane(
+      ReadScopeParameter scopeParameter, BoardConstructionInfo boardConstructionInfo) {
+    Set<Integer> layersWithPlane = new HashSet<>();
+    for (ReadScopeParameter.PlaneInfo planeInfo : scopeParameter.planeList) {
+      for (Shape planeShape : planeInfo.area.shapeList) {
+        layersWithPlane.add(planeShape.layer.no);
+      }
+    }
+    List<Layer> updatedLayers = new ArrayList<>(boardConstructionInfo.layerInfo.size());
+    boolean changed = false;
+    for (Layer currentLayer : boardConstructionInfo.layerInfo) {
+      if (!currentLayer.isSignal
+          && currentLayer.netNames.isEmpty()
+          && !layersWithPlane.contains(currentLayer.no)) {
+        FRLogger.warn(
+            "Layer '"
+                + currentLayer.name
+                + "' is declared as a power layer but no plane is defined for it. It will be"
+                + " treated as a signal layer.");
+        updatedLayers.add(
+            new Layer(currentLayer.name, currentLayer.no, true, currentLayer.netNames));
+        changed = true;
+      } else {
+        updatedLayers.add(currentLayer);
+      }
+    }
+    if (changed) {
+      boardConstructionInfo.layerInfo.clear();
+      boardConstructionInfo.layerInfo.addAll(updatedLayers);
+    }
+  }
+
   private boolean createBoard(
       ReadScopeParameter scopeParameter, BoardConstructionInfo boardConstructionInfo) {
     int layerCount = boardConstructionInfo.layerInfo.size();
@@ -1146,6 +1191,7 @@ public class Structure extends ScopeKeyword {
               + "'");
       return false;
     }
+    promotePowerLayersWithoutPlane(scopeParameter, boardConstructionInfo);
     if (boardConstructionInfo.boundingShape == null) {
       // happens if the boundary shape with layer pcb is missing
       if (boardConstructionInfo.outlineShapes.isEmpty()) {
