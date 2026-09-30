@@ -165,9 +165,9 @@ public class BoardOutline extends Item implements Serializable {
     if (padShape.isEmpty() || !padShape.isBounded()) {
       return result;
     }
-    if (padShape instanceof TileShape tileShape) {
-      for (int c = 0; c < tileShape.borderLineCount(); c++) {
-        result = Math.min(result, distanceToOutline(tileShape.corner(c).toFloat()));
+    } else if (padShape instanceof PolylineShape polylineShape) {
+      for (int c = 0; c < polylineShape.borderLineCount(); c++) {
+        result = Math.min(result, distanceToOutline(polylineShape.cornerApprox(c)));
       }
     } else {
       IntBox box = padShape.boundingBox();
