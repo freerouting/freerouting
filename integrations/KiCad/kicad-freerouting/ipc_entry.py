@@ -96,11 +96,11 @@ def main():
             logger.error("Java 25+ JRE not found.")
             sys.exit(1)
 
-        jar_path = plugins_dir / "jar" / "freerouting-current-executable.jar"
+        jar_path = plugins_dir / "jar" / "freerouting.jar"
         if not jar_path.is_file():
             # Check configured location in plugin.ini or root build
             candidates = [
-                plugins_dir / "jar" / "freerouting-2.4.1.jar",
+                plugins_dir / "jar" / "freerouting-2.5.0-RC12.jar",
                 here.parent.parent / "build" / "libs" / "freerouting-current-executable.jar",
             ]
             for c in candidates:

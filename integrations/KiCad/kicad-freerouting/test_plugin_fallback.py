@@ -519,7 +519,10 @@ class TestPluginRoutingMode(unittest.TestCase):
                 f.flush()
 
             # Allow tailer loop to pick up lines
-            time.sleep(0.5)
+            for _ in range(30):
+                if len(received_lines) >= 2:
+                    break
+                time.sleep(0.1)
 
             self.assertEqual(len(received_lines), 2)
             self.assertIn("Pass #7: Failed to route Pin on net '/PUL-'", received_lines[0])
