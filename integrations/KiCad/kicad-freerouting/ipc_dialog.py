@@ -411,6 +411,7 @@ class IpcRoutingDialog:
                 try:
                     self._root.after(40, self._poll_queue)
                 except Exception:
+                    # Root window may have been closed or destroyed during shutdown
                     pass
 
     # ------------------------------------------------------------------
@@ -475,6 +476,7 @@ class IpcRoutingDialog:
             try:
                 self._root.destroy()
             except Exception:
+                # Root window might already be destroyed
                 pass
             self._root = None
 
