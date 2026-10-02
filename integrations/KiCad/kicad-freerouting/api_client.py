@@ -42,16 +42,14 @@ def _flush_log_handlers():
         try:
             if isinstance(h, logging.FileHandler):
                 h.flush()
-        except Exception:
-            # Safe fallback if handler is closed or unwritable
-            pass
+        except Exception as e:
+            logger.debug("Failed to flush logger handler: %s", e)
     for h in logging.root.handlers:
         try:
             if isinstance(h, logging.FileHandler):
                 h.flush()
-        except Exception:
-            # Safe fallback if root handler is closed or unwritable
-            pass
+        except Exception as e:
+            logger.debug("Failed to flush root handler: %s", e)
 
 
 class FreeroutingApiClient:

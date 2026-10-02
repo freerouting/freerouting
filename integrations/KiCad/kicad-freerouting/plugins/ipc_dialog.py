@@ -153,9 +153,8 @@ class LogTailer(threading.Thread):
                                     if self.on_log_line:
                                         self.on_log_line(stripped)
                                         last_dispatch = now
-            except Exception:
-                # Ignore transient file read or decoding errors while log file is being written
-                pass
+            except Exception as e:
+                logger.debug("Transient log read error: %s", e)
             self._stop_event.wait(0.1)
 
 
@@ -411,9 +410,8 @@ class IpcRoutingDialog:
             if self._root:
                 try:
                     self._root.after(40, self._poll_queue)
-                except Exception:
-                    # Root window may have been closed or destroyed during shutdown
-                    pass
+                except Exception as e:
+                    logger.debug("Poll queue schedule skipped during teardown: %s", e)
 
     # ------------------------------------------------------------------
     # Worker Thread API (100% thread-safe: pushes to queue only)
@@ -476,9 +474,8 @@ class IpcRoutingDialog:
         if self._root:
             try:
                 self._root.destroy()
-            except Exception:
-                # Root window might already be destroyed
-                pass
+            except Exception as e:
+                logger.debug("Root window destroy error: %s", e)
             self._root = None
 
     def _open_log_file(self) -> None:

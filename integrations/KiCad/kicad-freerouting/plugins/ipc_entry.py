@@ -32,8 +32,8 @@ if sys.platform == "win32":
         hwnd = ctypes.windll.kernel32.GetConsoleWindow()
         if hwnd:
             ctypes.windll.user32.ShowWindow(hwnd, 0)  # SW_HIDE
-    except Exception:
-        pass
+    except Exception as e:
+        logger.debug("Could not hide console window: %s", e)
 
 # Add plugins and ipc_bridge to sys.path
 here = Path(__file__).resolve().parent
@@ -309,8 +309,8 @@ def run_pipeline(dialog: IpcRoutingDialog, args: argparse.Namespace) -> None:
                 try:
                     if isinstance(h, logging.FileHandler):
                         h.flush()
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.debug("Safe flush error: %s", e)
 
         def _on_route_progress(state: str, elapsed: float, info: dict) -> None:
             if state in ("COMPLETED", "FINISHED", "DONE"):
@@ -425,8 +425,8 @@ def run_pipeline(dialog: IpcRoutingDialog, args: argparse.Namespace) -> None:
         for handler in logger.handlers:
             try:
                 handler.flush()
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug("Final handler flush error: %s", e)
 
 
 def main():
