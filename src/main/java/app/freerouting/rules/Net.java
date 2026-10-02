@@ -40,6 +40,11 @@ public class Net implements Comparable<Net>, ItemInfoPrinter.Printable, Serializ
   /** The routing rule of this net. */
   private NetClass netClass;
 
+  /**
+   * Optional explicit trace length constraint for this net, or null if inheriting from netClass.
+   */
+  private NetLengthConstraint lengthConstraint;
+
   /** Creates a new net. */
   public Net(String name, int subnetNumber, int number, Nets netList, boolean containsPlane) {
     this.name = name;
@@ -69,6 +74,73 @@ public class Net implements Comparable<Net>, ItemInfoPrinter.Printable, Serializ
   /** Sets the class of this net. */
   public void setClass(NetClass netClass) {
     this.netClass = netClass;
+  }
+
+  /**
+   * Returns the minimum trace length of this net in board coordinate units. If no explicit
+   * net-level restriction is set, falls back to the net class constraint. If {@literal <}= 0, there
+   * is no minimal trace length restriction.
+   */
+  public double getMinimumTraceLength() {
+    if (this.lengthConstraint != null && this.lengthConstraint.hasMin()) {
+      return this.lengthConstraint.minLength();
+    }
+    return this.netClass != null ? this.netClass.getMinimumTraceLength() : 0.0;
+  }
+
+  /**
+   * Sets the explicit minimum trace length of this net. If {@code value} is {@literal <}= 0, there
+   * is no minimal trace length restriction at the net level.
+   */
+  public void setMinimumTraceLength(double value) {
+    double currentMax = (this.lengthConstraint != null) ? this.lengthConstraint.maxLength() : 0.0;
+    this.lengthConstraint = new NetLengthConstraint(value, currentMax);
+  }
+
+  /**
+   * Returns the maximum trace length of this net in board coordinate units. If no explicit
+   * net-level restriction is set, falls back to the net class constraint. If {@literal <}= 0, there
+   * is no maximal trace length restriction.
+   */
+  public double getMaximumTraceLength() {
+    if (this.lengthConstraint != null && this.lengthConstraint.hasMax()) {
+      return this.lengthConstraint.maxLength();
+    }
+    return this.netClass != null ? this.netClass.getMaximumTraceLength() : 0.0;
+  }
+
+  /**
+   * Sets the explicit maximum trace length of this net. If {@code value} is {@literal <}= 0, there
+   * is no maximal trace length restriction at the net level.
+   */
+  public void setMaximumTraceLength(double value) {
+    double currentMin = (this.lengthConstraint != null) ? this.lengthConstraint.minLength() : 0.0;
+    this.lengthConstraint = new NetLengthConstraint(currentMin, value);
+  }
+
+  /**
+   * Returns the effective length constraint of this net. Combines net-level explicit constraints
+   * with inherited net class constraints where applicable.
+   */
+  public NetLengthConstraint getLengthConstraint() {
+    return new NetLengthConstraint(getMinimumTraceLength(), getMaximumTraceLength());
+  }
+
+  /**
+   * Sets the explicit length constraint for this net. Pass null or {@link
+   * NetLengthConstraint#UNCONSTRAINED} to remove the explicit net-level constraint and inherit
+   * entirely from the net class.
+   */
+  public void setLengthConstraint(NetLengthConstraint constraint) {
+    this.lengthConstraint = constraint;
+  }
+
+  /**
+   * Returns true if this net has an explicit net-level trace length constraint set, false if
+   * inheriting entirely from its net class.
+   */
+  public boolean hasExplicitLengthConstraint() {
+    return this.lengthConstraint != null && this.lengthConstraint.isConstrained();
   }
 
   /** Returns the pins and conduction areas of this net. */
