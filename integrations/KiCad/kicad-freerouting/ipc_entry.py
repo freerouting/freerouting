@@ -20,7 +20,6 @@ from __future__ import annotations
 import argparse
 import json
 import logging
-import os
 import subprocess
 import sys
 import threading
@@ -110,28 +109,33 @@ def run_pipeline(dialog: IpcRoutingDialog, args: argparse.Namespace) -> None:
 
     try:
         # --------------------------------------------------------------
-        # Stage 0: Check Java 25+ JRE
+        # Stage 0: Check Java 25+ JRE (skip if API server is already running)
         # --------------------------------------------------------------
-        dialog.set_stage(STAGE_JAVA, STATE_ACTIVE)
-        dialog.set_status("Detecting Java 25+ JRE...")
+        java_path = None
+        if client.health_check():
+            logger.info("Existing Freerouting API server detected; skipping Java check.")
+            dialog.set_stage(STAGE_JAVA, STATE_PASS)
+        else:
+            dialog.set_stage(STAGE_JAVA, STATE_ACTIVE)
+            dialog.set_status("Detecting Java 25+ JRE...")
 
-        os_name, _ = detect_os_architecture()
-        java_path = get_local_java_executable_path(os_name)
-        if not java_path:
-            err = "Java 25+ JRE not found. Please install Java 25 or higher."
-            logger.error(err)
-            dialog.set_stage(STAGE_JAVA, STATE_FAIL)
-            dialog.complete_error(err)
-            return
+            os_name, _ = detect_os_architecture()
+            java_candidate = get_local_java_executable_path(os_name)
+            if not java_candidate:
+                err = "Java 25+ JRE not found. Please install Java 25 or higher, or start Freerouting API server."
+                logger.error(err)
+                dialog.set_stage(STAGE_JAVA, STATE_FAIL)
+                dialog.complete_error(err)
+                return
 
-        java_path = Path(java_path)
-        # Prefer javaw.exe on Windows to prevent any console window popup
-        if sys.platform == "win32":
-            javaw_candidate = java_path.with_name("javaw.exe")
-            if javaw_candidate.is_file():
-                java_path = javaw_candidate
+            java_path = Path(java_candidate)
+            # Prefer javaw.exe on Windows to prevent any console window popup
+            if sys.platform == "win32":
+                javaw_candidate = java_path.with_name("javaw.exe")
+                if javaw_candidate.is_file():
+                    java_path = javaw_candidate
 
-        dialog.set_stage(STAGE_JAVA, STATE_PASS)
+            dialog.set_stage(STAGE_JAVA, STATE_PASS)
 
         if dialog.cancel_event.is_set():
             dialog.complete_error("Routing cancelled by user.")
@@ -181,6 +185,21 @@ def run_pipeline(dialog: IpcRoutingDialog, args: argparse.Namespace) -> None:
         if not client.health_check():
             logger.info("Freerouting API server is not running; launching in background...")
             dialog.set_status("Starting Freerouting background service...")
+
+            if not java_path:
+                os_name, _ = detect_os_architecture()
+                java_candidate = get_local_java_executable_path(os_name)
+                if not java_candidate:
+                    err = "Java 25+ JRE not found. Please install Java 25 or higher to launch the API server."
+                    logger.error(err)
+                    dialog.set_stage(STAGE_SERVER, STATE_FAIL)
+                    dialog.complete_error(err)
+                    return
+                java_path = Path(java_candidate)
+                if sys.platform == "win32":
+                    javaw_candidate = java_path.with_name("javaw.exe")
+                    if javaw_candidate.is_file():
+                        java_path = javaw_candidate
 
             jar_path = plugins_dir / "jar" / "freerouting.jar"
             if not jar_path.is_file():

@@ -30,7 +30,7 @@ try:
         JRE_VERSION_REGEX,
         MAC_HOMEBREW_JAVA_PATH,
     )
-    from .gui_helpers import wx_show_error, wx_show_warning
+    from .gui_helpers import wx_show_error
 except (ImportError, ValueError):
     from config import (
         ADOPTIUM_API_URL,
@@ -40,7 +40,7 @@ except (ImportError, ValueError):
         JRE_VERSION_REGEX,
         MAC_HOMEBREW_JAVA_PATH,
     )
-    from gui_helpers import wx_show_error, wx_show_warning
+    from gui_helpers import wx_show_error
 
 
 def detect_os_architecture():

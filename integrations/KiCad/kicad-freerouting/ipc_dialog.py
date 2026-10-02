@@ -154,6 +154,7 @@ class LogTailer(threading.Thread):
                                         self.on_log_line(stripped)
                                         last_dispatch = now
             except Exception:
+                # Ignore transient file read or decoding errors while log file is being written
                 pass
             self._stop_event.wait(0.1)
 

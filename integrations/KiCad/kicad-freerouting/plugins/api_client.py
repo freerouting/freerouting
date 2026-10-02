@@ -43,12 +43,14 @@ def _flush_log_handlers():
             if isinstance(h, logging.FileHandler):
                 h.flush()
         except Exception:
+            # Safe fallback if handler is closed or unwritable
             pass
     for h in logging.root.handlers:
         try:
             if isinstance(h, logging.FileHandler):
                 h.flush()
         except Exception:
+            # Safe fallback if root handler is closed or unwritable
             pass
 
 
