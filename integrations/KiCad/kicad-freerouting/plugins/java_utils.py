@@ -21,15 +21,26 @@ from pathlib import Path
 
 logger = logging.getLogger("freerouting")
 
-from .config import (
-    ADOPTIUM_API_URL,
-    JAVA_MIN_MAJOR_VERSION,
-    JRE_GLOB_PATTERN,
-    JRE_TEMP_FOLDER,
-    JRE_VERSION_REGEX,
-    MAC_HOMEBREW_JAVA_PATH,
-)
-from .gui_helpers import wx_show_error, wx_show_warning
+try:
+    from .config import (
+        ADOPTIUM_API_URL,
+        JAVA_MIN_MAJOR_VERSION,
+        JRE_GLOB_PATTERN,
+        JRE_TEMP_FOLDER,
+        JRE_VERSION_REGEX,
+        MAC_HOMEBREW_JAVA_PATH,
+    )
+    from .gui_helpers import wx_show_error, wx_show_warning
+except (ImportError, ValueError):
+    from config import (
+        ADOPTIUM_API_URL,
+        JAVA_MIN_MAJOR_VERSION,
+        JRE_GLOB_PATTERN,
+        JRE_TEMP_FOLDER,
+        JRE_VERSION_REGEX,
+        MAC_HOMEBREW_JAVA_PATH,
+    )
+    from gui_helpers import wx_show_error, wx_show_warning
 
 
 def detect_os_architecture():

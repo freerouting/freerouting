@@ -8,21 +8,48 @@
 #   * Downloading routing results as KiCad JSON.
 # ---------------------------------------------------------------------------
 
+import socket
 import urllib.error
 import urllib.parse
 import urllib.request
 import uuid
 import logging
 
-from .config import (
-    API_JOB_TIMEOUT,
-    API_POLL_INTERVAL,
-    API_REQUEST_TIMEOUT,
-    DEFAULT_FR_API_BASE_URL,
-)
+# Ensure raw sockets can never block indefinitely on Windows
+socket.setdefaulttimeout(30.0)
+
+try:
+    from .config import (
+        API_JOB_TIMEOUT,
+        API_POLL_INTERVAL,
+        API_REQUEST_TIMEOUT,
+        DEFAULT_FR_API_BASE_URL,
+    )
+except (ImportError, ValueError):
+    from config import (
+        API_JOB_TIMEOUT,
+        API_POLL_INTERVAL,
+        API_REQUEST_TIMEOUT,
+        DEFAULT_FR_API_BASE_URL,
+    )
 
 logger = logging.getLogger("freerouting")
 
+
+def _flush_log_handlers():
+    """Flushes file-based log handlers without blocking on unconsumed stdout pipes."""
+    for h in logging.getLogger().handlers:
+        try:
+            if isinstance(h, logging.FileHandler):
+                h.flush()
+        except Exception:
+            pass
+    for h in logging.root.handlers:
+        try:
+            if isinstance(h, logging.FileHandler):
+                h.flush()
+        except Exception:
+            pass
 
 
 class FreeroutingApiClient:
@@ -46,39 +73,43 @@ class FreeroutingApiClient:
     # ------------------------------------------------------------------
 
     def _build_opener(self):
-        """Build a urllib opener with default headers."""
+        """Build a urllib opener bypassing system proxy."""
+        return urllib.request.build_opener(urllib.request.ProxyHandler({}))
+
+    def _request(self, method, path, data=None, timeout=API_REQUEST_TIMEOUT):
+        """Make an HTTP request and return ``(status_code, body)``."""
         headers = {
             "Content-Type": "application/json",
             "Accept": "application/json",
             "Freerouting-Environment-Host": "KiCad/10",
             "Freerouting-Profile-ID": self.profile_id,
+            "Connection": "close",
         }
         if self.api_key:
             headers["Authorization"] = f"Bearer {self.api_key}"
-        opener = urllib.request.build_opener(urllib.request.HTTPHandler())
-        opener.addheaders = list(headers.items())
-        return opener
 
-    def _request(self, method, path, data=None, timeout=API_REQUEST_TIMEOUT):
-        """Make an HTTP request and return ``(status_code, body)``."""
-        url = f"{self.base_url}{path}"
-        req = urllib.request.Request(url, method=method)
-        for key, value in self._opener.addheaders:
-            req.add_header(key, value)
+        body_bytes = None
         if data is not None:
-            req.data = (
-                data.encode("utf-8")
-                if isinstance(data, (str, bytes))
-                else __import__("json").dumps(data).encode("utf-8")
-            )
+            if isinstance(data, bytes):
+                body_bytes = data
+            elif isinstance(data, str):
+                body_bytes = data.encode("utf-8")
+            else:
+                body_bytes = __import__("json").dumps(data).encode("utf-8")
+
+        url = f"{self.base_url}{path}"
+        req = urllib.request.Request(url, data=body_bytes, headers=headers, method=method)
+
+        opener = getattr(self, "_opener", None) or urllib.request.build_opener(urllib.request.ProxyHandler({}))
         try:
-            with urllib.request.urlopen(req, timeout=timeout) as resp:
-                return resp.status, resp.read().decode("utf-8")
+            with opener.open(req, timeout=timeout) as resp:
+                body_str = resp.read().decode("utf-8", errors="replace")
+                return resp.status, body_str
         except urllib.error.HTTPError as e:
-            body = e.read().decode("utf-8") if e.fp else ""
-            return e.code, body
-        except urllib.error.URLError as e:
-            raise ConnectionError(f"Could not connect to {url}: {e}")
+            err_body = e.read().decode("utf-8", errors="replace")
+            return e.code, err_body
+        except Exception as e:
+            raise ConnectionError(f"Could not connect to {self.base_url}{path}: {e}") from e
 
     # ------------------------------------------------------------------
     # Server health
@@ -185,38 +216,75 @@ class FreeroutingApiClient:
         Returns:
             Parsed JSON dict, or ``None`` on failure.
         """
-        status, body = self._request("GET", f"/v1/jobs/{job_id}")
-        if status == 200:
-            try:
-                return __import__("json").loads(body)
-            except __import__("json").JSONDecodeError:
-                return None
+        try:
+            status, body = self._request("GET", f"/v1/jobs/{job_id}?compact=true", timeout=10)
+            if status == 200:
+                try:
+                    return __import__("json").loads(body)
+                except __import__("json").JSONDecodeError:
+                    return None
+            else:
+                logger.info(f"get_job_status for {job_id} returned HTTP {status}: {body[:200]}")
+        except Exception as e:
+            logger.info(f"Error querying job status for {job_id}: {e}")
         return None
 
-    def download_json_output(self, job_id):
-        """Download the routing result as KiCad JSON.
+    def download_json_output(self, job_id, max_retries=5, retry_delay=0.5):
+        """Download the routing result as KiCad JSON with retries.
 
         Returns:
             JSON string, or ``None`` on failure.
         """
-        status, body = self._request(
-            "GET", f"/v1/jobs/{job_id}/output/json", timeout=60
-        )
-        if status in (200, 202):
-            return body
-        logger.error(f"Failed to download JSON output: HTTP {status} — {body}")
+        import time as _time
+
+        for attempt in range(1, max_retries + 1):
+            try:
+                status, body = self._request(
+                    "GET", f"/v1/jobs/{job_id}/output/json", timeout=30
+                )
+                if status == 200 and body:
+                    return body
+                elif status in (202, 204):
+                    logger.debug(
+                        f"JSON output for {job_id} not ready yet (HTTP {status}), retrying ({attempt}/{max_retries})..."
+                    )
+                else:
+                    logger.warning(
+                        f"Download JSON output attempt {attempt}/{max_retries} returned HTTP {status}"
+                    )
+            except Exception as dl_err:
+                logger.warning(
+                    f"Download JSON output attempt {attempt}/{max_retries} failed: {dl_err}"
+                )
+            if attempt < max_retries:
+                _time.sleep(retry_delay)
+
+        logger.error(f"Failed to download JSON output for {job_id} after {max_retries} attempts.")
         return None
 
     # ------------------------------------------------------------------
     # Blocking wait
     # ------------------------------------------------------------------
 
-    def wait_for_job_completion(self, job_id, poll_interval=None, timeout=None):
+    def wait_for_job_completion(
+        self,
+        job_id,
+        poll_interval=None,
+        timeout=None,
+        progress_callback=None,
+        cancel_event=None,
+        completion_event=None,
+        terminal_state_holder=None,
+    ):
         """Poll the job until it completes or times out.
 
         Args:
             poll_interval: Seconds between polls (default ``API_POLL_INTERVAL``).
             timeout: Maximum seconds to wait (default ``API_JOB_TIMEOUT``).
+            progress_callback: Optional callable ``f(state, elapsed, info)``.
+            cancel_event: Optional ``threading.Event`` to signal cancellation.
+            completion_event: Optional ``threading.Event`` to signal completion from log tailer.
+            terminal_state_holder: Optional list ``[state_string]`` holding terminal state from log.
 
         Returns:
             ``(success, output_json)`` tuple.
@@ -227,8 +295,40 @@ class FreeroutingApiClient:
         poll_interval = poll_interval or API_POLL_INTERVAL
         timeout = timeout or API_JOB_TIMEOUT
         start = _time.time()
+        consecutive_none = 0
 
         while True:
+            if cancel_event and cancel_event.is_set():
+                end_utc = datetime.now(timezone.utc).isoformat()
+                logger.info(f"Cancellation requested for job {job_id} (elapsed: {_time.time() - start:.2f}s, finished at UTC: {end_utc}).")
+                self.cancel_job(job_id)
+                return False, None
+
+            if completion_event and completion_event.is_set():
+                term_state = terminal_state_holder[0] if terminal_state_holder else "COMPLETED"
+                elapsed = _time.time() - start
+                logger.info(f"Completion signaled via log tailer ({term_state}) for job {job_id}.")
+                if progress_callback:
+                    try:
+                        progress_callback(term_state, elapsed, {"state": term_state})
+                    except Exception as cb_err:
+                        logger.debug(f"Progress callback error: {cb_err}")
+                if term_state == "COMPLETED":
+                    end_utc = datetime.now(timezone.utc).isoformat()
+                    logger.info(f"Job {job_id} completed successfully (elapsed: {elapsed:.2f}s, finished at UTC: {end_utc}). Downloading output...")
+                    _flush_log_handlers()
+                    out_data = self.download_json_output(job_id)
+                    if out_data:
+                        logger.info(f"Downloaded output for job {job_id} ({len(out_data)} bytes).")
+                        _flush_log_handlers()
+                        return True, out_data
+                    else:
+                        logger.error(f"Failed to download output for job {job_id}.")
+                        _flush_log_handlers()
+                        return False, None
+                else:
+                    return False, None
+
             elapsed = _time.time() - start
             if elapsed > timeout:
                 end_utc = datetime.now(timezone.utc).isoformat()
@@ -237,20 +337,50 @@ class FreeroutingApiClient:
 
             info = self.get_job_status(job_id)
             if info is None:
-                end_utc = datetime.now(timezone.utc).isoformat()
-                logger.error(f"Could not get job status for {job_id} (elapsed: {elapsed:.2f}s, finished at UTC: {end_utc}).")
-                return False, None
+                consecutive_none += 1
+                logger.info(f"Could not get job status for {job_id} (attempt {consecutive_none}/15)")
+                _flush_log_handlers()
+                if consecutive_none >= 15:
+                    logger.info(f"Checking if job {job_id} output is already available before failing...")
+                    out_data = self.download_json_output(job_id)
+                    if out_data:
+                        logger.info(f"Output for {job_id} downloaded successfully ({len(out_data)} bytes).")
+                        return True, out_data
+                    end_utc = datetime.now(timezone.utc).isoformat()
+                    logger.error(f"Could not get job status for {job_id} after {consecutive_none} attempts (elapsed: {elapsed:.2f}s, finished at UTC: {end_utc}).")
+                    _flush_log_handlers()
+                    return False, None
+                _time.sleep(poll_interval)
+                continue
+            consecutive_none = 0
 
             state = info.get("state", "UNKNOWN")
             logger.info(f"  Job {job_id} state: {state} ({elapsed:.0f}s elapsed)")
+            _flush_log_handlers()
+
+            if progress_callback:
+                try:
+                    progress_callback(state, elapsed, info)
+                except Exception as cb_err:
+                    logger.debug(f"Progress callback exception: {cb_err}")
 
             if state in ("COMPLETED", "FINISHED", "DONE"):
                 end_utc = datetime.now(timezone.utc).isoformat()
-                logger.info(f"Job {job_id} completed successfully (elapsed: {elapsed:.2f}s, finished at UTC: {end_utc}).")
-                return True, self.download_json_output(job_id)
+                logger.info(f"Job {job_id} completed successfully (elapsed: {elapsed:.2f}s, finished at UTC: {end_utc}). Downloading output...")
+                _flush_log_handlers()
+                out_data = self.download_json_output(job_id)
+                if out_data:
+                    logger.info(f"Downloaded output for job {job_id} ({len(out_data)} bytes).")
+                    _flush_log_handlers()
+                    return True, out_data
+                else:
+                    logger.error(f"Failed to download output for job {job_id}.")
+                    _flush_log_handlers()
+                    return False, None
             elif state in ("TERMINATED", "CANCELLED", "TIMED_OUT", "INVALID", "ERROR"):
                 end_utc = datetime.now(timezone.utc).isoformat()
                 logger.error(f"Job {job_id} ended with state: {state} (elapsed: {elapsed:.2f}s, finished at UTC: {end_utc}).")
+                _flush_log_handlers()
                 return False, None
 
             _time.sleep(poll_interval)
