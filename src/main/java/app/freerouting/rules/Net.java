@@ -143,6 +143,14 @@ public class Net implements Comparable<Net>, ItemInfoPrinter.Printable, Serializ
     return this.lengthConstraint != null && this.lengthConstraint.isConstrained();
   }
 
+  /**
+   * Returns the explicit net-level length constraint of this net, or null if unconstrained directly
+   * at the net level.
+   */
+  public NetLengthConstraint getExplicitLengthConstraint() {
+    return this.lengthConstraint;
+  }
+
   /** Returns the pins and conduction areas of this net. */
   public Collection<Item> getTerminalItems() {
     Collection<Item> result = new LinkedList<>();

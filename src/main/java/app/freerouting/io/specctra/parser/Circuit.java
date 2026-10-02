@@ -142,7 +142,7 @@ public final class Circuit {
   }
 
   /** A maxLength of -1 indicates that no maximum length is defined. */
-  private static class LengthMatchingRule {
+  static class LengthMatchingRule {
 
     public final double maxLength;
     public final double minLength;
