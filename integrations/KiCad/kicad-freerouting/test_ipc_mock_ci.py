@@ -374,5 +374,68 @@ class TestMockIpcCi(unittest.TestCase):
             self.assertEqual(len(mock_board.commits_pushed), 0)
 
 
+class TestIpcDialogAndClient(unittest.TestCase):
+    """Tests multi-line log queuing and client completion event signaling."""
+
+    def test_three_line_log_display(self):
+        plugins_dir = here / "plugins"
+        if str(plugins_dir) not in sys.path:
+            sys.path.insert(0, str(plugins_dir))
+        from ipc_dialog import IpcRoutingDialog
+
+        dialog = IpcRoutingDialog()
+        # Mock UI elements without opening a real window
+        dialog._root = MagicMock()
+        dialog._log_line_var = MagicMock()
+
+        lines = [
+            "Pass #1: 20 unrouted",
+            "Pass #2: 10 unrouted",
+            "Pass #3: 5 unrouted",
+            "Pass #4: 1 unrouted",
+            "Job finished with state: COMPLETED",
+        ]
+        for line in lines:
+            dialog.set_log_line(line)
+
+        dialog._poll_queue()
+
+        self.assertEqual(len(dialog._log_lines), 3)
+        self.assertEqual(
+            dialog._log_lines,
+            [
+                "Pass #3: 5 unrouted",
+                "Pass #4: 1 unrouted",
+                "Job finished with state: COMPLETED",
+            ],
+        )
+        dialog._log_line_var.set.assert_called_with(
+            "Pass #3: 5 unrouted\nPass #4: 1 unrouted\nJob finished with state: COMPLETED"
+        )
+
+    def test_completion_event_triggers_output_download(self):
+        import threading
+        plugins_dir = here / "plugins"
+        if str(plugins_dir) not in sys.path:
+            sys.path.insert(0, str(plugins_dir))
+        from api_client import FreeroutingApiClient
+
+        client = FreeroutingApiClient()
+        client.download_json_output = MagicMock(return_value='{"tracks": []}')
+
+        completion_event = threading.Event()
+        completion_event.set()
+        terminal_state_holder = ["COMPLETED"]
+
+        ok, out = client.wait_for_job_completion(
+            "fake-job-id",
+            completion_event=completion_event,
+            terminal_state_holder=terminal_state_holder,
+        )
+        self.assertTrue(ok)
+        self.assertEqual(out, '{"tracks": []}')
+        client.download_json_output.assert_called_once_with("fake-job-id")
+
+
 if __name__ == "__main__":
     unittest.main()
