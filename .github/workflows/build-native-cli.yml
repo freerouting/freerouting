@@ -4,8 +4,7 @@ on:
   workflow_dispatch:
   pull_request:
     paths:
-      - 'src/main/java/app/freerouting/cli/**'
-      - 'src/main/java/app/freerouting/startup/**'
+      - 'src/main/java/**'
       - 'src/main/resources/META-INF/native-image/**'
       - 'build.gradle'
       - 'settings.gradle'
@@ -29,7 +28,7 @@ jobs:
         include:
           - platform: linux
             arch: x64
-            runner: ubuntu-latest
+            runner: ubuntu-22.04
             binary-name: freerouting-cli
             archive-ext: tar.gz
             use-tar: true
@@ -131,9 +130,9 @@ jobs:
       - name: Smoke Test - DRC Report Mode
         run: |
           if [ "${{ runner.os }}" = "Windows" ]; then
-            ./build/native/nativeCompile/freerouting-cli.exe -de fixtures/Issue508-DAC2020_bm01.dsn -drc build/test_smoke_drc.json
+            ./build/native/nativeCompile/freerouting-cli.exe -de fixtures/Issue508-DAC2020_bm01.dsn -s build/test_smoke.ses -drc build/test_smoke_drc.json
           else
-            ./build/native/nativeCompile/freerouting-cli -de fixtures/Issue508-DAC2020_bm01.dsn -drc build/test_smoke_drc.json
+            ./build/native/nativeCompile/freerouting-cli -de fixtures/Issue508-DAC2020_bm01.dsn -s build/test_smoke.ses -drc build/test_smoke_drc.json
           fi
           test -s build/test_smoke_drc.json
         shell: bash

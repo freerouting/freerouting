@@ -160,7 +160,7 @@ public class BoardFileDetails implements Serializable {
 
     var path = Path.of(filename).toAbsolutePath();
 
-    if (filename.contains(File.separator)) {
+    if (filename.contains("/") || filename.contains("\\")) {
       // separate the filename into its absolute path and its filename only
       this.directoryPath = path.getParent().toString();
       // replace the redundant "\.\" with a simple "\"

@@ -48,7 +48,7 @@ public final class FreeroutingCli {
             + ")");
 
     GlobalSettings globalSettings =
-        GlobalSettingsBootstrap.initialize(args, loggingConfig.fileLoggingLocation());
+        GlobalSettingsBootstrap.initialize(args, loggingConfig.fileLoggingLocation(), true);
 
     // Headless CLI explicitly disables GUI and server modes
     globalSettings.guiSettings.isEnabled = false;
@@ -97,8 +97,8 @@ public final class FreeroutingCli {
       boolean drcOk = DrcRunner.initializeDrc(globalSettings);
       exitCode = drcOk ? 0 : 1;
     } else if (globalSettings.initialInputFile != null) {
-      CliRunner.initializeCli(globalSettings);
-      exitCode = globalSettings.cliExitCode;
+      boolean cliOk = CliRunner.initializeCli(globalSettings);
+      exitCode = cliOk ? globalSettings.cliExitCode : 1;
     } else {
       FRLogger.error("No input design file specified. Use --help for usage information.", null);
       exitCode = 1;

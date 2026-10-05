@@ -28,6 +28,20 @@ public final class GlobalSettingsBootstrap {
    * @return initialized GlobalSettings object
    */
   public static GlobalSettings initialize(String[] args, String fileLoggingLocation) {
+    return initialize(args, fileLoggingLocation, false);
+  }
+
+  /**
+   * Loads GlobalSettings from disk or defaults, initializes hardware parameters, and applies CLI
+   * arguments.
+   *
+   * @param args command line arguments
+   * @param fileLoggingLocation active log file path
+   * @param deferCpuCalibration whether to defer synthetic CPU benchmark calibration
+   * @return initialized GlobalSettings object
+   */
+  public static GlobalSettings initialize(
+      String[] args, String fileLoggingLocation, boolean deferCpuCalibration) {
     GlobalSettings globalSettings = null;
 
     try {
@@ -133,22 +147,24 @@ public final class GlobalSettingsBootstrap {
         Locale.getDefault().getLanguage() + "," + Locale.getDefault();
     globalSettings.runtimeEnvironment.cpuCores = Runtime.getRuntime().availableProcessors();
     globalSettings.runtimeEnvironment.ram = (int) (Runtime.getRuntime().maxMemory() / 1024 / 1024);
-    globalSettings.runtimeEnvironment.cpuScore = RuntimeEnvironment.measureCpuScore();
-
-    FRLogger.debug("Version: " + globalSettings.runtimeEnvironment.freeroutingVersion);
-    FRLogger.debug(
-        "Command line arguments: '" + globalSettings.runtimeEnvironment.commandLineArguments + "'");
-    FRLogger.debug("Architecture: " + globalSettings.runtimeEnvironment.architecture);
-    FRLogger.debug("Java: " + globalSettings.runtimeEnvironment.java);
-    FRLogger.debug("System Language: " + globalSettings.runtimeEnvironment.systemLanguage);
-    FRLogger.info(
-        "Hardware: "
-            + globalSettings.runtimeEnvironment.cpuCores
-            + " CPU cores, "
-            + globalSettings.runtimeEnvironment.cpuScore
-            + " CPU score, "
-            + globalSettings.runtimeEnvironment.ram
-            + " MB RAM");
+    if (!deferCpuCalibration) {
+      globalSettings.runtimeEnvironment.cpuScore = RuntimeEnvironment.measureCpuScore();
+      FRLogger.info(
+          "Hardware: "
+              + globalSettings.runtimeEnvironment.cpuCores
+              + " CPU cores, "
+              + globalSettings.runtimeEnvironment.cpuScore
+              + " CPU score, "
+              + globalSettings.runtimeEnvironment.ram
+              + " MB RAM");
+    } else {
+      FRLogger.info(
+          "Hardware: "
+              + globalSettings.runtimeEnvironment.cpuCores
+              + " CPU cores, "
+              + globalSettings.runtimeEnvironment.ram
+              + " MB RAM");
+    }
     FRLogger.debug("UTC Time: " + globalSettings.runtimeEnvironment.appStartedAt);
 
     globalSettings.applyCommandLineArguments(args);

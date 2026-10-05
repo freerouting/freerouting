@@ -161,9 +161,7 @@ public final class CliRunner {
                   / 1000.0
               : 0.0;
       String inputBasename =
-          globalSettings.initialInputFile != null
-              ? java.nio.file.Path.of(globalSettings.initialInputFile).getFileName().toString()
-              : "unknown.dsn";
+          java.nio.file.Path.of(globalSettings.initialInputFile).getFileName().toString();
 
       FRAnalytics.recordBatchJobSummary(
           routingJob.id.toString(),
@@ -300,7 +298,7 @@ public final class CliRunner {
               globalSettings.initialInputFile,
               outputWritten,
               exitCode,
-              globalSettings.runtimeEnvironment.cpuScore);
+              globalSettings.runtimeEnvironment.getCpuScore());
       RoutingResultManifest.write(Path.of(routingJob.routerSettings.resultJsonPath), manifest);
     } catch (IOException e) {
       FRLogger.error(

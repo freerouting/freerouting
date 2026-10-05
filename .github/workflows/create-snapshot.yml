@@ -267,7 +267,7 @@ jobs:
         include:
           - platform: linux
             arch: x64
-            runner: ubuntu-latest
+            runner: ubuntu-22.04
             binary-name: freerouting-cli
             archive-ext: tar.gz
             use-tar: true

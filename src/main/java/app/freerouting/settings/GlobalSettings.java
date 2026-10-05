@@ -32,21 +32,33 @@ public class GlobalSettings implements Serializable {
   private static volatile GlobalSettings currentInstance;
 
   /**
-   * Returns the currently active GlobalSettings instance, lazily creating a default instance if
-   * unset.
+   * Returns the currently active GlobalSettings instance.
+   *
+   * <p>Checks {@code Freerouting.globalSettings} first if available in JVM runtime, then falls back
+   * to {@code currentInstance}.
    */
   public static GlobalSettings current() {
-    GlobalSettings instance = currentInstance;
-    if (instance == null) {
-      synchronized (GlobalSettings.class) {
-        instance = currentInstance;
-        if (instance == null) {
-          instance = new GlobalSettings();
-          currentInstance = instance;
-        }
-      }
+    GlobalSettings fromFreerouting = getFreeroutingGlobalSettingsIfAvailable();
+    if (fromFreerouting != null) {
+      return fromFreerouting;
     }
-    return instance;
+    return currentInstance;
+  }
+
+  private static GlobalSettings getFreeroutingGlobalSettingsIfAvailable() {
+    try {
+      Class<?> freeroutingClass =
+          Class.forName(
+              "app.freerouting.Freerouting", false, GlobalSettings.class.getClassLoader());
+      java.lang.reflect.Field field = freeroutingClass.getField("globalSettings");
+      Object val = field.get(null);
+      if (val instanceof GlobalSettings gs) {
+        return gs;
+      }
+    } catch (Throwable _) {
+      // Ignored in environments where Freerouting is not loaded or unavailable
+    }
+    return null;
   }
 
   /** Sets the currently active GlobalSettings instance. */
@@ -238,6 +250,7 @@ public class GlobalSettings implements Serializable {
     isUserDataPathLocked = false;
     userDataPath = AppPaths.getDefaultUserDataPath();
     configurationFilePath = userDataPath.resolve("freerouting.json");
+    currentInstance = null;
   }
 
   /**

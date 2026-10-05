@@ -658,7 +658,7 @@ graalvmNative {
         }
     }
     metadataRepository {
-        enabled = true
+        enabled = false
     }
     metadataCopy {
         inputTaskNames.add("runCli")
