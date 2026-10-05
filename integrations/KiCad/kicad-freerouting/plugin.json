@@ -11,7 +11,7 @@
       "description": "Route active PCB with Freerouting",
       "entrypoint": "ipc_entry.py",
       "scopes": ["pcb"],
-      "show-button": true,
+      "show-button": false,
       "icons-light": ["resources/icon_24x24.png"],
       "icons-dark": ["resources/icon_24x24.png"]
     }

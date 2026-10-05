@@ -32,8 +32,8 @@ if sys.platform == "win32":
         hwnd = ctypes.windll.kernel32.GetConsoleWindow()
         if hwnd:
             ctypes.windll.user32.ShowWindow(hwnd, 0)  # SW_HIDE
-    except Exception as e:
-        logger.debug("Could not hide console window: %s", e)
+    except Exception:
+        pass
 
 # Add plugins and ipc_bridge to sys.path
 here = Path(__file__).resolve().parent
@@ -103,6 +103,8 @@ def run_pipeline(dialog: IpcRoutingDialog, args: argparse.Namespace) -> None:
     logger.info("=== Starting Freerouting IPC Plugin Action ===")
     logger.info(f"Python: {sys.executable} ({sys.version.split()[0]})")
     logger.info(f"Arguments: {args}")
+    logger.info(f"KICAD_API_SOCKET: {os.environ.get('KICAD_API_SOCKET')}")
+    logger.info(f"KICAD_API_TOKEN: {'[SET]' if os.environ.get('KICAD_API_TOKEN') else '[NOT SET]'}")
 
     reader = None
     client = FreeroutingApiClient()
@@ -151,7 +153,14 @@ def run_pipeline(dialog: IpcRoutingDialog, args: argparse.Namespace) -> None:
             reader = KiCadIpcBoardReader(socket_path=args.socket)
             logger.info(f"Connected to KiCad {reader.kicad_version} — Board: '{reader.board.name}'")
         except Exception as e:
-            err = f"Failed to connect to KiCad IPC: {e}\nPlease verify that 'Preferences > Plugins > Enable KiCad API' is enabled."
+            if "kicad_token did not match" in str(e).lower():
+                err = (
+                    "KiCad IPC Token Mismatch:\n"
+                    "Another instance or version of KiCad is running in the background.\n"
+                    "Please close all other KiCad instances and try again."
+                )
+            else:
+                err = f"Failed to connect to KiCad IPC: {e}\nPlease verify that 'Preferences > Plugins > Enable KiCad API' is enabled."
             logger.error(err, exc_info=True)
             dialog.set_stage(STAGE_EXTRACT, STATE_FAIL)
             dialog.complete_error(err)
