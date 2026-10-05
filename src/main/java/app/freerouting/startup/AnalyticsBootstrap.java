@@ -33,6 +33,7 @@ public final class AnalyticsBootstrap {
       int screenWidth,
       int screenHeight,
       int screenDpi) {
+    FRAnalytics.setGlobalSettings(globalSettings);
     NetworkProxyConfig.configure(globalSettings.networkSettings);
 
     FRAnalytics.setAccessKey(

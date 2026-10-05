@@ -29,6 +29,31 @@ public class GlobalSettings implements Serializable {
   private static Path userDataPath = AppPaths.getDefaultUserDataPath();
   private static Path configurationFilePath = userDataPath.resolve("freerouting.json");
   private static Boolean isUserDataPathLocked = false;
+  private static volatile GlobalSettings currentInstance;
+
+  /**
+   * Returns the currently active GlobalSettings instance, lazily creating a default instance if
+   * unset.
+   */
+  public static GlobalSettings current() {
+    GlobalSettings instance = currentInstance;
+    if (instance == null) {
+      synchronized (GlobalSettings.class) {
+        instance = currentInstance;
+        if (instance == null) {
+          instance = new GlobalSettings();
+          currentInstance = instance;
+        }
+      }
+    }
+    return instance;
+  }
+
+  /** Sets the currently active GlobalSettings instance. */
+  public static void setCurrent(GlobalSettings settings) {
+    currentInstance = settings;
+  }
+
   public final transient RuntimeEnvironment runtimeEnvironment = new RuntimeEnvironment();
 
   @SerializedName("profile")

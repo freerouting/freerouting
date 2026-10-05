@@ -1,0 +1,3724 @@
+{
+  "reflection": [
+    {
+      "type": "app.freerouting.analytics.dto.Context",
+      "fields": [
+        {
+          "name": "anonymousId"
+        },
+        {
+          "name": "event"
+        },
+        {
+          "name": "library"
+        },
+        {
+          "name": "properties"
+        },
+        {
+          "name": "traits"
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.analytics.dto.Library",
+      "fields": [
+        {
+          "name": "name"
+        },
+        {
+          "name": "version"
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.analytics.dto.Payload",
+      "fields": [
+        {
+          "name": "anonymousId"
+        },
+        {
+          "name": "context"
+        },
+        {
+          "name": "event"
+        },
+        {
+          "name": "properties"
+        },
+        {
+          "name": "traits"
+        },
+        {
+          "name": "userId"
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.analytics.dto.Properties"
+    },
+    {
+      "type": "app.freerouting.analytics.dto.Traits"
+    },
+    {
+      "type": "app.freerouting.autoroute.RoutingFailureLog",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.board.actions.ItemIdGenerator",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.board.facade.BasicBoard",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.board.facade.RoutingBoard",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.board.model.items.DrillItem",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.board.model.items.Item",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.board.model.items.Pin",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.board.model.items.Trace",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.board.model.items.Via",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.board.model.structure.BoardOutline",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.board.model.structure.Component",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.board.model.structure.Components",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.board.model.structure.FixedState",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.board.model.structure.Layer",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.board.model.structure.LayerStructure",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.board.model.structure.Layer[]",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.board.model.structure.Unit",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.board.state.Communication",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.board.state.Communication$SpecctraParserInfo",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.board.trace.PolylineTrace",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.core.RouterJobResourceUsage",
+      "fields": [
+        {
+          "name": "cpuTimeUsed"
+        },
+        {
+          "name": "ioRead"
+        },
+        {
+          "name": "ioWrite"
+        },
+        {
+          "name": "maxMemoryUsed"
+        },
+        {
+          "name": "peakMemoryUsed"
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.core.library.BoardLibrary",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.core.library.LogicalParts",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.core.library.Package",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.core.library.Package$Keepout[]",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.core.library.Package$Pin",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.core.library.Package$Pin[]",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.core.library.Packages",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.core.library.Padstack",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.core.library.Padstacks",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.core.results.RoutingResultManifest",
+      "fields": [
+        {
+          "name": "appVersion"
+        },
+        {
+          "name": "boardStatistics"
+        },
+        {
+          "name": "bounds"
+        },
+        {
+          "name": "cpuScore"
+        },
+        {
+          "name": "exitCode"
+        },
+        {
+          "name": "finalState"
+        },
+        {
+          "name": "fixture"
+        },
+        {
+          "name": "generatedAt"
+        },
+        {
+          "name": "gitSha"
+        },
+        {
+          "name": "normalizedScore"
+        },
+        {
+          "name": "optimizerScore"
+        },
+        {
+          "name": "outputWritten"
+        },
+        {
+          "name": "phases"
+        },
+        {
+          "name": "resourceUsage"
+        },
+        {
+          "name": "schemaVersion"
+        },
+        {
+          "name": "settingsSnapshot"
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.core.results.RoutingResultManifest$FixtureInfo",
+      "fields": [
+        {
+          "name": "filename"
+        },
+        {
+          "name": "sha256"
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.core.results.RoutingResultManifest$PhaseDetail",
+      "fields": [
+        {
+          "name": "after"
+        },
+        {
+          "name": "before"
+        },
+        {
+          "name": "cpuSeconds"
+        },
+        {
+          "name": "durationSeconds"
+        },
+        {
+          "name": "passesCompleted"
+        },
+        {
+          "name": "peakHeapMb"
+        },
+        {
+          "name": "totalAllocatedGb"
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.core.results.RoutingResultManifest$PhaseMetrics",
+      "fields": [
+        {
+          "name": "autorouter"
+        },
+        {
+          "name": "fanout"
+        },
+        {
+          "name": "optimizer"
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.core.results.RoutingResultManifest$PhaseSnapshot",
+      "fields": [
+        {
+          "name": "boardStatistics"
+        },
+        {
+          "name": "currentOptimizerScore"
+        },
+        {
+          "name": "currentRouterScore"
+        },
+        {
+          "name": "currentScoreSource"
+        },
+        {
+          "name": "optimizerScore"
+        },
+        {
+          "name": "routerScore"
+        },
+        {
+          "name": "score"
+        },
+        {
+          "name": "scoreSource"
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.core.scoring.BoardStatistics",
+      "fields": [
+        {
+          "name": "bends"
+        },
+        {
+          "name": "board"
+        },
+        {
+          "name": "bounds"
+        },
+        {
+          "name": "clearanceViolations"
+        },
+        {
+          "name": "components"
+        },
+        {
+          "name": "connections"
+        },
+        {
+          "name": "difficulty"
+        },
+        {
+          "name": "fanout"
+        },
+        {
+          "name": "host"
+        },
+        {
+          "name": "items"
+        },
+        {
+          "name": "layers"
+        },
+        {
+          "name": "nets"
+        },
+        {
+          "name": "pads"
+        },
+        {
+          "name": "traces"
+        },
+        {
+          "name": "unit"
+        },
+        {
+          "name": "vias"
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.core.scoring.BoardStatistics$BoardStatisticsFanout",
+      "fields": [
+        {
+          "name": "escapedCount"
+        },
+        {
+          "name": "pinsToEscape"
+        },
+        {
+          "name": "totalSmdPins"
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.core.scoring.BoardStatisticsBends",
+      "fields": [
+        {
+          "name": "fortyFiveDegreeCount"
+        },
+        {
+          "name": "ninetyDegreeCount"
+        },
+        {
+          "name": "otherAngleCount"
+        },
+        {
+          "name": "totalCount"
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.core.scoring.BoardStatisticsBoard",
+      "fields": [
+        {
+          "name": "areaCm2"
+        },
+        {
+          "name": "boundingBox"
+        },
+        {
+          "name": "size"
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.core.scoring.BoardStatisticsBounds",
+      "fields": [
+        {
+          "name": "minBendCount"
+        },
+        {
+          "name": "minTraceLengthMm"
+        },
+        {
+          "name": "minViaCount"
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.core.scoring.BoardStatisticsClearanceViolations",
+      "fields": [
+        {
+          "name": "avgViolationUm"
+        },
+        {
+          "name": "maxViolationUm"
+        },
+        {
+          "name": "minViolationUm"
+        },
+        {
+          "name": "preExistingCount"
+        },
+        {
+          "name": "routerIntroducedCount"
+        },
+        {
+          "name": "totalCount"
+        },
+        {
+          "name": "totalViolationUm"
+        },
+        {
+          "name": "unfixableCount"
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.core.scoring.BoardStatisticsComponents",
+      "fields": [
+        {
+          "name": "totalCount"
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.core.scoring.BoardStatisticsConnections",
+      "fields": [
+        {
+          "name": "incompleteCount"
+        },
+        {
+          "name": "maximumCount"
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.core.scoring.BoardStatisticsDifficulty",
+      "fields": [
+        {
+          "name": "boardAreaCm2"
+        },
+        {
+          "name": "complexityC"
+        },
+        {
+          "name": "difficultyD"
+        },
+        {
+          "name": "pinCount"
+        },
+        {
+          "name": "signalLayerCount"
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.core.scoring.BoardStatisticsItems",
+      "fields": [
+        {
+          "name": "componentOutlineCount"
+        },
+        {
+          "name": "conductionAreaCount"
+        },
+        {
+          "name": "drillItemCount"
+        },
+        {
+          "name": "otherCount"
+        },
+        {
+          "name": "pinCount"
+        },
+        {
+          "name": "totalCount"
+        },
+        {
+          "name": "traceCount"
+        },
+        {
+          "name": "viaCount"
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.core.scoring.BoardStatisticsLayers",
+      "fields": [
+        {
+          "name": "signalCount"
+        },
+        {
+          "name": "totalCount"
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.core.scoring.BoardStatisticsNets",
+      "fields": [
+        {
+          "name": "classCount"
+        },
+        {
+          "name": "totalCount"
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.core.scoring.BoardStatisticsPads",
+      "fields": [
+        {
+          "name": "totalCount"
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.core.scoring.BoardStatisticsTraces",
+      "fields": [
+        {
+          "name": "averageLength"
+        },
+        {
+          "name": "totalAngledLength"
+        },
+        {
+          "name": "totalCount"
+        },
+        {
+          "name": "totalHorizontalLength"
+        },
+        {
+          "name": "totalLength"
+        },
+        {
+          "name": "totalLengthMm"
+        },
+        {
+          "name": "totalSegmentCount"
+        },
+        {
+          "name": "totalVerticalLength"
+        },
+        {
+          "name": "totalWeightedLength"
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.core.scoring.BoardStatisticsVias",
+      "fields": [
+        {
+          "name": "blindCount"
+        },
+        {
+          "name": "buriedCount"
+        },
+        {
+          "name": "throughHoleCount"
+        },
+        {
+          "name": "totalCount"
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.datastructures.UndoableObjects",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.datastructures.UndoableObjects$UndoableObjectNode",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.geometry.planar.Circle",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.geometry.planar.ConvexShape[]",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.geometry.planar.IntBox",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.geometry.planar.IntOctagon",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.geometry.planar.IntPoint",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.geometry.planar.IntVector",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.geometry.planar.Line",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.geometry.planar.Line[]",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.geometry.planar.Point",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.geometry.planar.Point[]",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.geometry.planar.PolygonShape",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.geometry.planar.Polyline",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.geometry.planar.PolylineShape",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.geometry.planar.PolylineShape[]",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.geometry.planar.RegularTileShape",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.geometry.planar.Shape[]",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.geometry.planar.Simplex",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.geometry.planar.TileShape",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.geometry.planar.Vector",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.io.CoordinateTransform",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.logger.Log4j2ConfigurationFactory",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.rules.BoardRules",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.rules.ClearanceMatrix",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.rules.ClearanceMatrix$MatrixEntry",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.rules.ClearanceMatrix$MatrixEntry[]",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.rules.ClearanceMatrix$Row",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.rules.ClearanceMatrix$Row[]",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.rules.DefaultItemClearanceClasses",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.rules.Net",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.rules.NetClass",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.rules.NetClasses",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.rules.Nets",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.rules.ViaInfo",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.rules.ViaInfos",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.rules.ViaRule",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.settings.ApiAuthenticationSettings",
+      "fields": [
+        {
+          "name": "googleSheets"
+        },
+        {
+          "name": "isEnabled"
+        },
+        {
+          "name": "providers"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.settings.ApiServerSettings",
+      "fields": [
+        {
+          "name": "authentication"
+        },
+        {
+          "name": "corsOrigins"
+        },
+        {
+          "name": "endpoints"
+        },
+        {
+          "name": "isEnabled"
+        },
+        {
+          "name": "isHttpAllowed"
+        },
+        {
+          "name": "isRunning"
+        },
+        {
+          "name": "maxParallelJobs"
+        },
+        {
+          "name": "rateLimit"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.settings.AutorouterSettings",
+      "fields": [
+        {
+          "name": "algorithm"
+        },
+        {
+          "name": "enabled"
+        },
+        {
+          "name": "ignoreNetClasses"
+        },
+        {
+          "name": "maxItems"
+        },
+        {
+          "name": "maxPasses"
+        },
+        {
+          "name": "maxThreads"
+        },
+        {
+          "name": "saveIntermediateStages"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.settings.DebugSettings",
+      "fields": [
+        {
+          "name": "enableDetailedLogging"
+        },
+        {
+          "name": "filterByNet"
+        },
+        {
+          "name": "operationFilters"
+        },
+        {
+          "name": "singleStepExecution"
+        },
+        {
+          "name": "traceInsertionDelay"
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.settings.DesignRulesCheckerSettings",
+      "fields": [
+        {
+          "name": "clearanceToleranceUm"
+        },
+        {
+          "name": "enabled"
+        },
+        {
+          "name": "includeErrors"
+        },
+        {
+          "name": "includeWarnings"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.settings.FanoutSettings",
+      "fields": [
+        {
+          "name": "enabled"
+        },
+        {
+          "name": "endViaDiameterMm"
+        },
+        {
+          "name": "fallbackToBoardVias"
+        },
+        {
+          "name": "maxEscapeLengthMm"
+        },
+        {
+          "name": "maxItems"
+        },
+        {
+          "name": "maxMillisecondsPerPin"
+        },
+        {
+          "name": "maxPasses"
+        },
+        {
+          "name": "minEscapeLengthMm"
+        },
+        {
+          "name": "pinSortingOrder"
+        },
+        {
+          "name": "ripupAllowed"
+        },
+        {
+          "name": "startViaDiameterMm"
+        },
+        {
+          "name": "timeoutString"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.settings.FeatureFlagsSettings",
+      "fields": [
+        {
+          "name": "inspectionMode"
+        },
+        {
+          "name": "multiThreading"
+        },
+        {
+          "name": "otherMenu"
+        },
+        {
+          "name": "saveJobs"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.settings.GlobalSettings",
+      "fields": [
+        {
+          "name": "additionalOutputFiles"
+        },
+        {
+          "name": "apiServerSettings"
+        },
+        {
+          "name": "benchmarkScoresInput"
+        },
+        {
+          "name": "benchmarkScoresOutput"
+        },
+        {
+          "name": "calculateBenchmarkScores"
+        },
+        {
+          "name": "cliExitCode"
+        },
+        {
+          "name": "compareFile1"
+        },
+        {
+          "name": "compareFile2"
+        },
+        {
+          "name": "currentLocale"
+        },
+        {
+          "name": "debugSettings"
+        },
+        {
+          "name": "designSessionFilename"
+        },
+        {
+          "name": "drcReportFile"
+        },
+        {
+          "name": "drcSettings"
+        },
+        {
+          "name": "featureFlags"
+        },
+        {
+          "name": "guiSettings"
+        },
+        {
+          "name": "initialInputFile"
+        },
+        {
+          "name": "initialOutputFile"
+        },
+        {
+          "name": "initialRulesFile"
+        },
+        {
+          "name": "logging"
+        },
+        {
+          "name": "mcpServerSettings"
+        },
+        {
+          "name": "networkSettings"
+        },
+        {
+          "name": "routerSettings"
+        },
+        {
+          "name": "runtimeEnvironment"
+        },
+        {
+          "name": "settingsMergerProtype"
+        },
+        {
+          "name": "showHelpOption"
+        },
+        {
+          "name": "statistics"
+        },
+        {
+          "name": "usageAndDiagnosticData"
+        },
+        {
+          "name": "userProfileSettings"
+        },
+        {
+          "name": "version"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.settings.GoogleSheetsProviderSettings",
+      "fields": [
+        {
+          "name": "googleApiKey"
+        },
+        {
+          "name": "sheetUrl"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.settings.GuiApplicationSettings",
+      "fields": [
+        {
+          "name": "dialogConfirmationTimeout"
+        },
+        {
+          "name": "exitWhenFinished"
+        },
+        {
+          "name": "inputDirectory"
+        },
+        {
+          "name": "isEnabled"
+        },
+        {
+          "name": "isRunning"
+        },
+        {
+          "name": "showRoutingSummary"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.settings.LayerSettings",
+      "fields": [
+        {
+          "name": "bendCost"
+        },
+        {
+          "name": "preferredDirectionHorizontal"
+        },
+        {
+          "name": "preferredDirectionTraceCost"
+        },
+        {
+          "name": "routable"
+        },
+        {
+          "name": "undesiredDirectionTraceCost"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.settings.LayerSettings[]"
+    },
+    {
+      "type": "app.freerouting.settings.LoggingSettings",
+      "fields": [
+        {
+          "name": "console"
+        },
+        {
+          "name": "file"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.settings.LoggingSettings$ConsoleLoggingSettings",
+      "fields": [
+        {
+          "name": "enabled"
+        },
+        {
+          "name": "level"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.settings.LoggingSettings$FileLoggingSettings",
+      "fields": [
+        {
+          "name": "enabled"
+        },
+        {
+          "name": "level"
+        },
+        {
+          "name": "location"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.settings.McpServerSettings",
+      "fields": [
+        {
+          "name": "authentication"
+        },
+        {
+          "name": "corsOrigins"
+        },
+        {
+          "name": "endpoints"
+        },
+        {
+          "name": "isEnabled"
+        },
+        {
+          "name": "isHttpAllowed"
+        },
+        {
+          "name": "isRunning"
+        },
+        {
+          "name": "isStdioMode"
+        },
+        {
+          "name": "rateLimit"
+        },
+        {
+          "name": "targetApiBaseUrl"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.settings.NetworkSettings",
+      "fields": [
+        {
+          "name": "customTruststorePassword"
+        },
+        {
+          "name": "customTruststorePath"
+        },
+        {
+          "name": "customTruststoreType"
+        },
+        {
+          "name": "noProxy"
+        },
+        {
+          "name": "proxyUrl"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.settings.OptimizerScoreSettings",
+      "fields": [
+        {
+          "name": "difficultyScaleFloor"
+        },
+        {
+          "name": "excessBendWeight"
+        },
+        {
+          "name": "excessViaWeight"
+        },
+        {
+          "name": "excessWireLengthWeight"
+        },
+        {
+          "name": "lengthFloor"
+        },
+        {
+          "name": "version"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.settings.OptimizerScoringVersion",
+      "fields": [
+        {
+          "name": "V1_LEGACY"
+        },
+        {
+          "name": "V2_LOWER_BOUND"
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.settings.OptimizerSettings",
+      "fields": [
+        {
+          "name": "additionalRipupCostFactorAtStart"
+        },
+        {
+          "name": "algorithm"
+        },
+        {
+          "name": "boardUpdateStrategy"
+        },
+        {
+          "name": "enablePreflightGuards"
+        },
+        {
+          "name": "enabled"
+        },
+        {
+          "name": "itemSelectionStrategy"
+        },
+        {
+          "name": "maxAutoroutePasses"
+        },
+        {
+          "name": "maxConsecutiveFailures"
+        },
+        {
+          "name": "maxConsecutiveFailuresPass1"
+        },
+        {
+          "name": "maxItems"
+        },
+        {
+          "name": "maxPasses"
+        },
+        {
+          "name": "maxThreads"
+        },
+        {
+          "name": "optimizationImprovementThreshold"
+        },
+        {
+          "name": "timeoutString"
+        },
+        {
+          "name": "traceRipupCostFactor"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.settings.RateLimitSettings",
+      "fields": [
+        {
+          "name": "enabled"
+        },
+        {
+          "name": "requestsPerWindow"
+        },
+        {
+          "name": "windowSeconds"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.settings.RouterScoreSettings",
+      "fields": [
+        {
+          "name": "clearanceViolationCountWeight"
+        },
+        {
+          "name": "clearanceViolationDepthScale"
+        },
+        {
+          "name": "clearanceViolationDepthWeight"
+        },
+        {
+          "name": "unroutedConnectionWeight"
+        },
+        {
+          "name": "unroutedFirstHalfWeight"
+        },
+        {
+          "name": "unroutedFreeFraction"
+        },
+        {
+          "name": "unroutedSecondHalfWeight"
+        },
+        {
+          "name": "version"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.settings.RouterScoringVersion",
+      "fields": [
+        {
+          "name": "V1_LEGACY"
+        },
+        {
+          "name": "V2_CONTINUOUS"
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.settings.RouterSettings",
+      "fields": [
+        {
+          "name": "automaticNeckdown"
+        },
+        {
+          "name": "autorouter"
+        },
+        {
+          "name": "boardSpecificTraceCostsApplied"
+        },
+        {
+          "name": "clearanceToleranceUm"
+        },
+        {
+          "name": "copperToEdgeClearanceUm"
+        },
+        {
+          "name": "fanout"
+        },
+        {
+          "name": "holeClearanceUm"
+        },
+        {
+          "name": "jobTimeoutString"
+        },
+        {
+          "name": "layers"
+        },
+        {
+          "name": "maxThreads"
+        },
+        {
+          "name": "neckWidthUm"
+        },
+        {
+          "name": "optimizer"
+        },
+        {
+          "name": "optimizerScoring"
+        },
+        {
+          "name": "planeAsObstacle"
+        },
+        {
+          "name": "planeNets"
+        },
+        {
+          "name": "resultJsonPath"
+        },
+        {
+          "name": "routerScoring"
+        },
+        {
+          "name": "scoring"
+        },
+        {
+          "name": "strictDrc"
+        },
+        {
+          "name": "tracePullTightAccuracy"
+        },
+        {
+          "name": "validationWarnings"
+        },
+        {
+          "name": "viasAllowed"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.settings.RoutingCostSettings",
+      "fields": [
+        {
+          "name": "bendPenalty"
+        },
+        {
+          "name": "clearanceViolationPenalty"
+        },
+        {
+          "name": "defaultBendCost"
+        },
+        {
+          "name": "defaultPreferredDirectionTraceCost"
+        },
+        {
+          "name": "defaultUndesiredDirectionTraceCost"
+        },
+        {
+          "name": "planeViaCosts"
+        },
+        {
+          "name": "preferredDirectionTraceCost"
+        },
+        {
+          "name": "startRipupCosts"
+        },
+        {
+          "name": "undesiredDirectionTraceCost"
+        },
+        {
+          "name": "unroutedNetPenalty"
+        },
+        {
+          "name": "viaCosts"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.settings.RuntimeEnvironment",
+      "fields": [
+        {
+          "name": "actorType"
+        },
+        {
+          "name": "appStartedAt"
+        },
+        {
+          "name": "architecture"
+        },
+        {
+          "name": "commandLineArguments"
+        },
+        {
+          "name": "cpuCores"
+        },
+        {
+          "name": "cpuScore"
+        },
+        {
+          "name": "freeroutingVersion"
+        },
+        {
+          "name": "host"
+        },
+        {
+          "name": "java"
+        },
+        {
+          "name": "pipelineType"
+        },
+        {
+          "name": "ram"
+        },
+        {
+          "name": "systemLanguage"
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.settings.SettingsMerger"
+    },
+    {
+      "type": "app.freerouting.settings.StatisticsSettings",
+      "fields": [
+        {
+          "name": "endTime"
+        },
+        {
+          "name": "jobsCompleted"
+        },
+        {
+          "name": "jobsStarted"
+        },
+        {
+          "name": "sessionsTotal"
+        },
+        {
+          "name": "startTime"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.settings.UsageAndDiagnosticDataSettings",
+      "fields": [
+        {
+          "name": "bigqueryServiceAccountKey"
+        },
+        {
+          "name": "disableAnalytics"
+        },
+        {
+          "name": "loggerKey"
+        },
+        {
+          "name": "trackButtonClicked"
+        },
+        {
+          "name": "trackWindowChanged"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.settings.UserProfileSettings",
+      "fields": [
+        {
+          "name": "isContactAllowed"
+        },
+        {
+          "name": "isTelemetryAllowed"
+        },
+        {
+          "name": "userEmail"
+        },
+        {
+          "name": "userId"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "boolean"
+    },
+    {
+      "type": "boolean[]",
+      "serializable": true
+    },
+    {
+      "type": "byte[]"
+    },
+    {
+      "type": "com.fasterxml.jackson.core.JsonParser"
+    },
+    {
+      "type": "com.fasterxml.jackson.databind.JsonNode"
+    },
+    {
+      "type": "com.fasterxml.jackson.databind.ObjectMapper"
+    },
+    {
+      "type": "com.fasterxml.jackson.databind.ext.Java7SupportImpl",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.fasterxml.jackson.dataformat.yaml.YAMLFactory"
+    },
+    {
+      "type": "com.google.gson.internal.bind.JavaTimeTypeAdapters",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.crypto.provider.AESCipher$General",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.crypto.provider.ARCFOURCipher",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.crypto.provider.ChaCha20Cipher$ChaCha20Poly1305",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.crypto.provider.DESCipher",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.crypto.provider.DESedeCipher",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.crypto.provider.DHParameters",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.crypto.provider.GaloisCounterMode$AESGCM",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.crypto.provider.HKDFKeyDerivation$HKDFSHA256",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "javax.crypto.KDFParameters"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "com.sun.crypto.provider.HKDFKeyDerivation$HKDFSHA384",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "javax.crypto.KDFParameters"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "com.sun.crypto.provider.HmacCore$HmacSHA256",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.crypto.provider.HmacCore$HmacSHA384",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.crypto.provider.TlsMasterSecretGenerator",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "double"
+    },
+    {
+      "type": "double[]",
+      "serializable": true
+    },
+    {
+      "type": "int"
+    },
+    {
+      "type": "int[]",
+      "serializable": true
+    },
+    {
+      "type": "jakarta.servlet.Servlet"
+    },
+    {
+      "type": "java.awt.geom.Rectangle2D"
+    },
+    {
+      "type": "java.awt.geom.Rectangle2D$Float",
+      "fields": [
+        {
+          "name": "height"
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "type": "java.awt.geom.RectangularShape"
+    },
+    {
+      "type": "java.lang.Boolean",
+      "jniAccessible": true,
+      "methods": [
+        {
+          "name": "getBoolean",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "java.lang.Class",
+      "methods": [
+        {
+          "name": "isRecord",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "java.lang.Enum",
+      "serializable": true
+    },
+    {
+      "type": "java.lang.Object"
+    },
+    {
+      "type": "java.lang.Object[]",
+      "serializable": true
+    },
+    {
+      "type": "java.lang.String",
+      "serializable": true
+    },
+    {
+      "type": "java.lang.String[]"
+    },
+    {
+      "type": "java.lang.reflect.RecordComponent"
+    },
+    {
+      "type": "java.security.AlgorithmParametersSpi"
+    },
+    {
+      "type": "java.security.KeyStoreSpi"
+    },
+    {
+      "type": "java.security.interfaces.ECPrivateKey"
+    },
+    {
+      "type": "java.security.interfaces.ECPublicKey"
+    },
+    {
+      "type": "java.sql.Date"
+    },
+    {
+      "type": "java.sql.Time"
+    },
+    {
+      "type": "java.util.ArrayList",
+      "jniAccessible": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "java.util.LinkedList",
+      "serializable": true,
+      "fields": [
+        {
+          "name": "serialVersionUID"
+        }
+      ]
+    },
+    {
+      "type": "java.util.Locale"
+    },
+    {
+      "type": "java.util.Vector",
+      "serializable": true,
+      "fields": [
+        {
+          "name": "serialVersionUID"
+        }
+      ]
+    },
+    {
+      "type": "java.util.concurrent.ConcurrentHashMap",
+      "serializable": true,
+      "fields": [
+        {
+          "name": "serialVersionUID"
+        }
+      ]
+    },
+    {
+      "type": "java.util.concurrent.ConcurrentHashMap$Segment",
+      "serializable": true
+    },
+    {
+      "type": "java.util.concurrent.ConcurrentHashMap$Segment[]",
+      "serializable": true
+    },
+    {
+      "type": "java.util.concurrent.ConcurrentSkipListMap",
+      "serializable": true,
+      "fields": [
+        {
+          "name": "serialVersionUID"
+        }
+      ]
+    },
+    {
+      "type": "java.util.concurrent.locks.AbstractOwnableSynchronizer",
+      "serializable": true
+    },
+    {
+      "type": "java.util.concurrent.locks.AbstractQueuedSynchronizer",
+      "serializable": true
+    },
+    {
+      "type": "java.util.concurrent.locks.ReentrantLock",
+      "serializable": true,
+      "fields": [
+        {
+          "name": "serialVersionUID"
+        }
+      ]
+    },
+    {
+      "type": "java.util.concurrent.locks.ReentrantLock$NonfairSync",
+      "serializable": true
+    },
+    {
+      "type": "java.util.concurrent.locks.ReentrantLock$Sync",
+      "serializable": true
+    },
+    {
+      "type": "javax.servlet.Servlet"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.Appender[]"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.AbstractAppender$Builder",
+      "fields": [
+        {
+          "name": "configuration"
+        },
+        {
+          "name": "ignoreExceptions"
+        },
+        {
+          "name": "layout"
+        },
+        {
+          "name": "name"
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.AbstractOutputStreamAppender$Builder",
+      "fields": [
+        {
+          "name": "bufferSize"
+        },
+        {
+          "name": "bufferedIo"
+        },
+        {
+          "name": "immediateFlush"
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.AppenderSet"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.AsyncAppender"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.ConsoleAppender",
+      "methods": [
+        {
+          "name": "newBuilder",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.ConsoleAppender$Builder",
+      "fields": [
+        {
+          "name": "direct"
+        },
+        {
+          "name": "follow"
+        },
+        {
+          "name": "target"
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.CountingNoOpAppender"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.FailoverAppender"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.FailoversPlugin"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.FileAppender",
+      "methods": [
+        {
+          "name": "newBuilder",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.FileAppender$Builder",
+      "fields": [
+        {
+          "name": "advertise"
+        },
+        {
+          "name": "advertiseUri"
+        },
+        {
+          "name": "append"
+        },
+        {
+          "name": "createOnDemand"
+        },
+        {
+          "name": "fileGroup"
+        },
+        {
+          "name": "fileName"
+        },
+        {
+          "name": "fileOwner"
+        },
+        {
+          "name": "filePermissions"
+        },
+        {
+          "name": "locking"
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.HttpAppender"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.MemoryMappedFileAppender"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.NullAppender"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.OutputStreamAppender"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.RandomAccessFileAppender"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.RollingFileAppender"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.RollingRandomAccessFileAppender"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.ScriptAppenderSelector"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.SmtpAppender"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.SocketAppender"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.SyslogAppender"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.WriterAppender"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.db.ColumnMapping"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.db.jdbc.ColumnConfig"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.db.jdbc.DataSourceConnectionSource"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.db.jdbc.DriverManagerConnectionSource"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.db.jdbc.FactoryMethodConnectionSource"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.db.jdbc.JdbcAppender"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.mom.JmsAppender"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.mom.jeromq.JeroMqAppender"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.mom.kafka.KafkaAppender"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.nosql.NoSqlAppender"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.rewrite.LoggerNameLevelRewritePolicy"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.rewrite.MapRewritePolicy"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.rewrite.PropertiesRewritePolicy"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.rewrite.RewriteAppender"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.rolling.CompositeTriggeringPolicy"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.rolling.CronTriggeringPolicy"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.rolling.DefaultRolloverStrategy"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.rolling.DirectWriteRolloverStrategy"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.rolling.NoOpTriggeringPolicy"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.rolling.OnStartupTriggeringPolicy"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.rolling.SizeBasedTriggeringPolicy"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.rolling.TimeBasedTriggeringPolicy"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.rolling.action.DeleteAction"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.rolling.action.IfAccumulatedFileCount"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.rolling.action.IfAccumulatedFileSize"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.rolling.action.IfAll"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.rolling.action.IfAny"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.rolling.action.IfFileName"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.rolling.action.IfLastModified"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.rolling.action.IfNot"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.rolling.action.PathSortByModificationTime"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.rolling.action.PosixViewAttributeAction"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.rolling.action.ScriptCondition"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.routing.IdlePurgePolicy"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.routing.Route"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.routing.Routes"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.appender.routing.RoutingAppender"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.async.ArrayBlockingQueueFactory"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.async.AsyncLoggerConfig"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.async.AsyncLoggerConfig$RootLogger"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.async.AsyncWaitStrategyFactoryConfig"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.async.DisruptorBlockingQueueFactory"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.async.JCToolsBlockingQueueFactory"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.async.LinkedTransferQueueFactory"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.AppenderControlArraySet"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.AppenderRef",
+      "methods": [
+        {
+          "name": "createAppenderRef",
+          "parameterTypes": [
+            "java.lang.String",
+            "org.apache.logging.log4j.Level",
+            "org.apache.logging.log4j.core.Filter"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.AppenderRef[]"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.AppendersPlugin",
+      "methods": [
+        {
+          "name": "createAppenders",
+          "parameterTypes": [
+            "org.apache.logging.log4j.core.Appender[]"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.CustomLevelConfig"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.CustomLevels"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.DefaultAdvertiser"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.HttpWatcher"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.LoggerConfig"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.LoggerConfig$RootLogger",
+      "methods": [
+        {
+          "name": "newRootBuilder",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.LoggerConfig$RootLogger$Builder",
+      "fields": [
+        {
+          "name": "additivity"
+        },
+        {
+          "name": "config"
+        },
+        {
+          "name": "filter"
+        },
+        {
+          "name": "includeLocation"
+        },
+        {
+          "name": "level"
+        },
+        {
+          "name": "levelAndRefs"
+        },
+        {
+          "name": "properties"
+        },
+        {
+          "name": "refs"
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.LoggerConfig[]"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.LoggersPlugin",
+      "methods": [
+        {
+          "name": "createLoggers",
+          "parameterTypes": [
+            "org.apache.logging.log4j.core.config.LoggerConfig[]"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.MonitorResource"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.MonitorResources"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.PropertiesPlugin"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.Property"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.Property[]"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.ScriptsPlugin"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.arbiters.ClassArbiter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.arbiters.DefaultArbiter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.arbiters.EnvironmentArbiter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.arbiters.ScriptArbiter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.arbiters.SelectArbiter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.arbiters.SystemPropertyArbiter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.builder.impl.BuiltConfiguration",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "org.apache.logging.log4j.core.LoggerContext",
+            "org.apache.logging.log4j.core.config.ConfigurationSource",
+            "org.apache.logging.log4j.core.config.builder.api.Component"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.json.JsonConfigurationFactory",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.plugins.convert.TypeConverters$BigDecimalConverter",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.plugins.convert.TypeConverters$BigIntegerConverter",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.plugins.convert.TypeConverters$BooleanConverter",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.plugins.convert.TypeConverters$ByteArrayConverter",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.plugins.convert.TypeConverters$ByteConverter",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.plugins.convert.TypeConverters$CharArrayConverter",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.plugins.convert.TypeConverters$CharacterConverter",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.plugins.convert.TypeConverters$CharsetConverter",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.plugins.convert.TypeConverters$ClassConverter",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.plugins.convert.TypeConverters$CronExpressionConverter",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.plugins.convert.TypeConverters$DoubleConverter",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.plugins.convert.TypeConverters$DurationConverter",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.plugins.convert.TypeConverters$FileConverter",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.plugins.convert.TypeConverters$FloatConverter",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.plugins.convert.TypeConverters$InetAddressConverter",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.plugins.convert.TypeConverters$IntegerConverter",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.plugins.convert.TypeConverters$LevelConverter",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.plugins.convert.TypeConverters$LongConverter",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.plugins.convert.TypeConverters$PathConverter",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.plugins.convert.TypeConverters$PatternConverter",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.plugins.convert.TypeConverters$SecurityProviderConverter",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.plugins.convert.TypeConverters$ShortConverter",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.plugins.convert.TypeConverters$StringConverter",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.plugins.convert.TypeConverters$UriConverter",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.plugins.convert.TypeConverters$UrlConverter",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.plugins.convert.TypeConverters$UuidConverter",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.plugins.validation.validators.RequiredValidator",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.plugins.visitors.PluginAttributeVisitor",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.plugins.visitors.PluginBuilderAttributeVisitor",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.plugins.visitors.PluginConfigurationVisitor",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.plugins.visitors.PluginElementVisitor",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.properties.PropertiesConfigurationFactory",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.xml.XmlConfigurationFactory",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.config.yaml.YamlConfigurationFactory",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.filter.AbstractFilterable$Builder",
+      "fields": [
+        {
+          "name": "filter"
+        },
+        {
+          "name": "propertyArray"
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.filter.BurstFilter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.filter.CompositeFilter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.filter.DenyAllFilter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.filter.DynamicThresholdFilter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.filter.LevelMatchFilter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.filter.LevelRangeFilter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.filter.MapFilter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.filter.MarkerFilter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.filter.MutableThreadContextMapFilter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.filter.NoMarkerFilter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.filter.RegexFilter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.filter.ScriptFilter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.filter.StringMatchFilter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.filter.StructuredDataFilter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.filter.ThreadContextMapFilter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.filter.ThresholdFilter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.filter.TimeFilter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.impl.Log4jProvider"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.impl.ThreadContextDataProvider"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.layout.CsvLogEventLayout"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.layout.CsvParameterLayout"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.layout.GelfLayout"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.layout.HtmlLayout"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.layout.JsonLayout"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.layout.LevelPatternSelector"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.layout.LoggerFields"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.layout.MarkerPatternSelector"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.layout.MessageLayout"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.layout.PatternLayout",
+      "methods": [
+        {
+          "name": "newBuilder",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.layout.PatternLayout$Builder",
+      "fields": [
+        {
+          "name": "alwaysWriteExceptions"
+        },
+        {
+          "name": "charset"
+        },
+        {
+          "name": "configuration"
+        },
+        {
+          "name": "disableAnsi"
+        },
+        {
+          "name": "footer"
+        },
+        {
+          "name": "header"
+        },
+        {
+          "name": "noConsoleNoAnsi"
+        },
+        {
+          "name": "pattern"
+        },
+        {
+          "name": "patternSelector"
+        },
+        {
+          "name": "regexReplacement"
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.layout.PatternMatch"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.layout.Rfc5424Layout"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.layout.ScriptPatternSelector"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.layout.SerializedLayout"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.layout.SyslogLayout"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.layout.XmlLayout"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.layout.YamlLayout"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.lookup.ContextMapLookup",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.lookup.DateLookup",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.lookup.EnvironmentLookup",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.lookup.EventLookup",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.lookup.JavaLookup",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.lookup.JndiLookup"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.lookup.Log4jLookup",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.lookup.LowerLookup",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.lookup.MainMapLookup",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.lookup.MapLookup",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.lookup.MarkerLookup",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.lookup.ResourceBundleLookup",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.lookup.StructuredDataLookup",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.lookup.SystemPropertiesLookup",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.lookup.UpperLookup",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.net.MulticastDnsAdvertiser"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.net.SocketAddress"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.net.SocketOptions"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.net.SocketPerformancePreferences"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.net.ssl.KeyStoreConfiguration"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.net.ssl.SslConfiguration"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.net.ssl.TrustStoreConfiguration"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.AbstractStyleNameConverter$Black"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.AbstractStyleNameConverter$Blue"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.AbstractStyleNameConverter$Cyan"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.AbstractStyleNameConverter$Green"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.AbstractStyleNameConverter$Magenta"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.AbstractStyleNameConverter$Red"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.AbstractStyleNameConverter$White"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.AbstractStyleNameConverter$Yellow"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.ClassNamePatternConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.DatePatternConverter",
+      "methods": [
+        {
+          "name": "newInstance",
+          "parameterTypes": [
+            "java.lang.String[]"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.EncodingPatternConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.EndOfBatchPatternConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.EqualsIgnoreCaseReplacementConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.EqualsReplacementConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.ExtendedThrowablePatternConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.FileDatePatternConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.FileLocationPatternConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.FullLocationPatternConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.HighlightConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.IntegerPatternConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.LevelPatternConverter",
+      "methods": [
+        {
+          "name": "newInstance",
+          "parameterTypes": [
+            "java.lang.String[]"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.LineLocationPatternConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.LineSeparatorPatternConverter",
+      "methods": [
+        {
+          "name": "newInstance",
+          "parameterTypes": [
+            "java.lang.String[]"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.LoggerFqcnPatternConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.LoggerPatternConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.MapPatternConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.MarkerPatternConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.MarkerSimpleNamePatternConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.MaxLengthConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.MdcPatternConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.MessagePatternConverter",
+      "methods": [
+        {
+          "name": "newInstance",
+          "parameterTypes": [
+            "org.apache.logging.log4j.core.config.Configuration",
+            "java.lang.String[]"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.MethodLocationPatternConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.NanoTimePatternConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.NdcPatternConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.ProcessIdPatternConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.RegexReplacement"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.RegexReplacementConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.RelativeTimePatternConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.RepeatPatternConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.RootThrowablePatternConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.SequenceNumberPatternConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.StyleConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.ThreadIdPatternConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.ThreadNamePatternConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.ThreadPriorityPatternConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.ThrowablePatternConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.UuidPatternConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.pattern.VariablesNotEmptyReplacementConverter"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.script.Script"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.script.ScriptFile"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.script.ScriptRef"
+    },
+    {
+      "type": "org.apache.logging.log4j.core.util.KeyValuePair"
+    },
+    {
+      "type": "org.apache.logging.log4j.util.EnvironmentPropertySource"
+    },
+    {
+      "type": "org.apache.logging.log4j.util.SystemPropertiesPropertySource"
+    },
+    {
+      "type": "org.osgi.framework.FrameworkUtil"
+    },
+    {
+      "type": "sun.management.VMManagementImpl",
+      "jniAccessible": true,
+      "fields": [
+        {
+          "name": "compTimeMonitoringSupport"
+        },
+        {
+          "name": "currentThreadCpuTimeSupport"
+        },
+        {
+          "name": "objectMonitorUsageSupport"
+        },
+        {
+          "name": "otherThreadCpuTimeSupport"
+        },
+        {
+          "name": "remoteDiagnosticCommandsSupport"
+        },
+        {
+          "name": "synchronizerUsageSupport"
+        },
+        {
+          "name": "threadAllocatedMemorySupport"
+        },
+        {
+          "name": "threadContentionMonitoringSupport"
+        }
+      ]
+    },
+    {
+      "type": "sun.security.mscapi.CKeyStore",
+      "jniAccessible": true,
+      "methods": [
+        {
+          "name": "generateCertificate",
+          "parameterTypes": [
+            "byte[]",
+            "java.util.Collection"
+          ]
+        },
+        {
+          "name": "generateCertificateChain",
+          "parameterTypes": [
+            "java.lang.String",
+            "java.util.Collection"
+          ]
+        },
+        {
+          "name": "generateKeyAndCertificateChain",
+          "parameterTypes": [
+            "boolean",
+            "java.lang.String",
+            "long",
+            "long",
+            "int",
+            "java.util.Collection"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "sun.security.mscapi.CKeyStore$ROOT"
+    },
+    {
+      "type": "sun.security.pkcs12.PKCS12KeyStore",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.pkcs12.PKCS12KeyStore$DualFormatPKCS12",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.provider.DRBG",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.security.SecureRandomParameters"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "sun.security.provider.DSA$SHA224withDSA",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.provider.DSA$SHA256withDSA",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.provider.JavaKeyStore$DualFormatJKS",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.provider.JavaKeyStore$JKS",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.provider.MD5",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.provider.SHA",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.provider.SHA2$SHA224",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.provider.SHA2$SHA256",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.provider.SHA5$SHA384",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.provider.SHA5$SHA512",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.provider.X509Factory",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.provider.certpath.PKIXCertPathValidator",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.rsa.PSSParameters",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.rsa.RSAKeyFactory$Legacy",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.rsa.RSAPSSSignature",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.rsa.RSASignature$SHA224withRSA",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.ssl.KeyManagerFactoryImpl$SunX509",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.ssl.SSLContextImpl$DefaultSSLContext",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.ssl.SSLContextImpl$TLSContext",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.ssl.TrustManagerFactoryImpl$PKIXFactory",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.x509.AuthorityInfoAccessExtension",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.Boolean",
+            "java.lang.Object"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "sun.security.x509.AuthorityKeyIdentifierExtension",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.Boolean",
+            "java.lang.Object"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "sun.security.x509.BasicConstraintsExtension",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.Boolean",
+            "java.lang.Object"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "sun.security.x509.CRLDistributionPointsExtension",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.Boolean",
+            "java.lang.Object"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "sun.security.x509.CertificatePoliciesExtension",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.Boolean",
+            "java.lang.Object"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "sun.security.x509.ExtendedKeyUsageExtension",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.Boolean",
+            "java.lang.Object"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "sun.security.x509.KeyUsageExtension",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.Boolean",
+            "java.lang.Object"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "sun.security.x509.NetscapeCertTypeExtension",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.Boolean",
+            "java.lang.Object"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "sun.security.x509.PrivateKeyUsageExtension",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.Boolean",
+            "java.lang.Object"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "sun.security.x509.SubjectAlternativeNameExtension",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.Boolean",
+            "java.lang.Object"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "sun.security.x509.SubjectKeyIdentifierExtension",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.Boolean",
+            "java.lang.Object"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "sun.text.resources.cldr.FormatData"
+    },
+    {
+      "type": "sun.text.resources.cldr.FormatData_en"
+    },
+    {
+      "type": "sun.text.resources.cldr.FormatData_en_US"
+    },
+    {
+      "type": "sun.util.resources.cldr.CalendarData"
+    }
+  ],
+  "resources": [
+    {
+      "glob": "META-INF/log4j-provider.properties"
+    },
+    {
+      "glob": "META-INF/org/apache/logging/log4j/core/config/plugins/Log4j2Plugins.dat"
+    },
+    {
+      "glob": "META-INF/services/java.net.spi.InetAddressResolverProvider"
+    },
+    {
+      "glob": "META-INF/services/java.net.spi.URLStreamHandlerProvider"
+    },
+    {
+      "glob": "META-INF/services/java.nio.channels.spi.SelectorProvider"
+    },
+    {
+      "glob": "META-INF/services/java.time.zone.ZoneRulesProvider"
+    },
+    {
+      "glob": "META-INF/services/org.apache.logging.log4j.core.util.ContextDataProvider"
+    },
+    {
+      "glob": "META-INF/services/org.apache.logging.log4j.core.util.WatchEventService"
+    },
+    {
+      "glob": "META-INF/services/org.apache.logging.log4j.spi.Provider"
+    },
+    {
+      "glob": "META-INF/services/org.apache.logging.log4j.util.PropertySource"
+    },
+    {
+      "glob": "log4j2.StatusLogger.properties"
+    },
+    {
+      "glob": "log4j2.component.properties"
+    },
+    {
+      "glob": "log4j2.system.properties"
+    },
+    {
+      "module": "java.base",
+      "glob": "jdk/internal/icu/impl/data/icudt76b/nfkc.nrm"
+    },
+    {
+      "module": "java.base",
+      "glob": "jdk/internal/icu/impl/data/icudt76b/uprops.icu"
+    },
+    {
+      "module": "java.base",
+      "glob": "sun/net/idn/uidna.spp"
+    }
+  ]
+}

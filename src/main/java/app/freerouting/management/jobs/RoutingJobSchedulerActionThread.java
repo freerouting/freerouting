@@ -1,6 +1,5 @@
 package app.freerouting.management.jobs;
 
-import app.freerouting.Freerouting;
 import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.analytics.model.JobLifecycleStatus;
 import app.freerouting.autoroute.pipeline.BatchAutorouter;
@@ -13,6 +12,7 @@ import app.freerouting.core.StoppableThread;
 import app.freerouting.io.FileFormat;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.HeadlessBoardManager;
+import app.freerouting.settings.GlobalSettings;
 import app.freerouting.util.TextManager;
 import com.sun.management.ThreadMXBean;
 import java.io.ByteArrayOutputStream;
@@ -400,7 +400,10 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
         return;
       }
       job.state = RoutingJobState.COMPLETED;
-      Freerouting.globalSettings.statistics.incrementJobsCompleted();
+      GlobalSettings settings = GlobalSettings.current();
+      if (settings != null && settings.statistics != null) {
+        settings.statistics.incrementJobsCompleted();
+      }
     }
   }
 

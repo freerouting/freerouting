@@ -152,6 +152,7 @@ public final class GlobalSettingsBootstrap {
     FRLogger.debug("UTC Time: " + globalSettings.runtimeEnvironment.appStartedAt);
 
     globalSettings.applyCommandLineArguments(args);
+    GlobalSettings.setCurrent(globalSettings);
 
     return globalSettings;
   }

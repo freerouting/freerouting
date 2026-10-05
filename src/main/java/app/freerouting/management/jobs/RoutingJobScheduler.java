@@ -1,7 +1,5 @@
 package app.freerouting.management.jobs;
 
-import static app.freerouting.Freerouting.globalSettings;
-
 import app.freerouting.board.actions.ItemIdGenerator;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
@@ -100,9 +98,13 @@ public final class RoutingJobScheduler {
                               }
                               job.board = boardManager.getRoutingBoard();
 
-                              var settingsMerger = globalSettings.settingsMergerProtype.clone();
+                              GlobalSettings gs = globalSettings();
+                              var settingsMerger =
+                                  gs != null && gs.settingsMergerProtype != null
+                                      ? gs.settingsMergerProtype.clone()
+                                      : null;
 
-                              if (isDsn) {
+                              if (isDsn && settingsMerger != null) {
                                 settingsMerger.addOrReplaceSources(
                                     new DsnFileSettings(
                                         job.input.getData(), job.input.getFilename()));
@@ -115,8 +117,8 @@ public final class RoutingJobScheduler {
                               if (job.rules != null && job.rules.getData() != null) {
                                 rulesData = job.rules.getData().readAllBytes();
                                 rulesFilename = job.rules.getFilename();
-                              } else if (globalSettings.initialRulesFile != null) {
-                                java.io.File rf = new java.io.File(globalSettings.initialRulesFile);
+                              } else if (gs != null && gs.initialRulesFile != null) {
+                                java.io.File rf = new java.io.File(gs.initialRulesFile);
                                 if (rf.exists()) {
                                   try {
                                     rulesData = Files.readAllBytes(rf.toPath());
@@ -194,9 +196,9 @@ public final class RoutingJobScheduler {
                                   && job.initialSession.getData() != null) {
                                 sessionBytesToLoad = job.initialSession.getData().readAllBytes();
                                 sessionFilenameToLoad = job.initialSession.getFilename();
-                              } else if (globalSettings.designSessionFilename != null) {
+                              } else if (gs != null && gs.designSessionFilename != null) {
                                 java.io.File sessionFile =
-                                    new java.io.File(globalSettings.designSessionFilename);
+                                    new java.io.File(gs.designSessionFilename);
                                 if (sessionFile.exists()) {
                                   try {
                                     sessionBytesToLoad = Files.readAllBytes(sessionFile.toPath());
@@ -207,8 +209,7 @@ public final class RoutingJobScheduler {
                                   }
                                 } else {
                                   FRLogger.warn(
-                                      "Session file not found: "
-                                          + globalSettings.designSessionFilename);
+                                      "Session file not found: " + gs.designSessionFilename);
                                 }
                               }
 
@@ -330,12 +331,17 @@ public final class RoutingJobScheduler {
    *
    * @return The maximum number of parallel jobs.
    */
+  private static GlobalSettings globalSettings() {
+    return GlobalSettings.current();
+  }
+
   public int getMaxParallelJobs() {
-    if ((globalSettings != null)
-        && (globalSettings.apiServerSettings != null)
-        && (globalSettings.apiServerSettings.maxParallelJobs != null)
-        && (globalSettings.apiServerSettings.maxParallelJobs > 0)) {
-      return globalSettings.apiServerSettings.maxParallelJobs;
+    GlobalSettings gs = globalSettings();
+    if ((gs != null)
+        && (gs.apiServerSettings != null)
+        && (gs.apiServerSettings.maxParallelJobs != null)
+        && (gs.apiServerSettings.maxParallelJobs > 0)) {
+      return gs.apiServerSettings.maxParallelJobs;
     }
     return defaultMaxParallelJobs();
   }
@@ -387,7 +393,10 @@ public final class RoutingJobScheduler {
       this.jobs.add(job);
     }
 
-    globalSettings.statistics.incrementJobsStarted();
+    GlobalSettings gs = globalSettings();
+    if (gs != null && gs.statistics != null) {
+      gs.statistics.incrementJobsStarted();
+    }
 
     return job;
   }
@@ -398,7 +407,8 @@ public final class RoutingJobScheduler {
    * @param job the job to save
    */
   public void saveJob(RoutingJob job) {
-    if (globalSettings.featureFlags.saveJobs) {
+    GlobalSettings gs = globalSettings();
+    if (gs != null && gs.featureFlags != null && gs.featureFlags.saveJobs) {
       String sessionIdString = "null";
       String userIdString = "null";
 

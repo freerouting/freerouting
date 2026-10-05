@@ -65,7 +65,8 @@ public final class FreeroutingCli {
     versionThread.start();
 
     if (globalSettings.showHelpOption) {
-      TextManager ctm = new TextManager(FreeroutingCli.class, globalSettings.currentLocale);
+      TextManager ctm =
+          new TextManager("app.freerouting.Freerouting", globalSettings.currentLocale);
       System.out.print(ctm.getText("command_line_help"));
       System.exit(0);
     }

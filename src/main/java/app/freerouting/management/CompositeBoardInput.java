@@ -1,6 +1,5 @@
 package app.freerouting.management;
 
-import app.freerouting.Freerouting;
 import app.freerouting.board.actions.ItemIdGenerator;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.core.BoardFileDetails;
@@ -10,6 +9,7 @@ import app.freerouting.io.kicad.KiCadJsonReader;
 import app.freerouting.io.specctra.RulesReader;
 import app.freerouting.io.specctra.SesReader;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.sources.ApiSettings;
 import app.freerouting.settings.sources.DsnFileSettings;
@@ -182,8 +182,10 @@ public class CompositeBoardInput {
     }
 
     // Settings merging pipeline
-    var settingsMerger = Freerouting.globalSettings.settingsMergerProtype.clone();
-    if (isDsn) {
+    GlobalSettings gs = GlobalSettings.current();
+    var settingsMerger =
+        gs != null && gs.settingsMergerProtype != null ? gs.settingsMergerProtype.clone() : null;
+    if (isDsn && settingsMerger != null) {
       settingsMerger.addOrReplaceSources(
           new DsnFileSettings(new ByteArrayInputStream(designData), job.input.getFilename()));
     }
