@@ -308,6 +308,9 @@ jobs:
         uses: gradle/actions/setup-gradle@v5
         with:
           build-scan-publish: false
+      - name: Make gradlew executable
+        if: runner.os != 'Windows'
+        run: chmod +x gradlew
       - name: Build PGO Instrumented Executable
         shell: bash
         run: ./gradlew nativeCompile --pgo-instrument
@@ -324,6 +327,40 @@ jobs:
       - name: Build Final PGO-Optimized Native Binary
         shell: bash
         run: ./gradlew nativeCompile
+      - name: Smoke Test - Help Option
+        shell: bash
+        run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            ./build/native/nativeCompile/freerouting-cli.exe --help
+          else
+            ./build/native/nativeCompile/freerouting-cli --help
+          fi
+      - name: Smoke Test - Autorouting Benchmark
+        shell: bash
+        run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            ./build/native/nativeCompile/freerouting-cli.exe -de fixtures/Issue508-DAC2020_bm01.dsn -do build/test_smoke.ses -mp 1
+          else
+            ./build/native/nativeCompile/freerouting-cli -de fixtures/Issue508-DAC2020_bm01.dsn -do build/test_smoke.ses -mp 1
+          fi
+          test -s build/test_smoke.ses
+      - name: Smoke Test - DRC Report Mode
+        shell: bash
+        run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            ./build/native/nativeCompile/freerouting-cli.exe -de fixtures/Issue508-DAC2020_bm01.dsn -s build/test_smoke.ses -drc build/test_smoke_drc.json
+          else
+            ./build/native/nativeCompile/freerouting-cli -de fixtures/Issue508-DAC2020_bm01.dsn -s build/test_smoke.ses -drc build/test_smoke_drc.json
+          fi
+          test -s build/test_smoke_drc.json
+      - name: Smoke Test - Compare Boards Mode
+        shell: bash
+        run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            ./build/native/nativeCompile/freerouting-cli.exe --compare-boards=fixtures/Issue508-DAC2020_bm01.dsn,fixtures/Issue508-DAC2020_bm01.dsn
+          else
+            ./build/native/nativeCompile/freerouting-cli --compare-boards=fixtures/Issue508-DAC2020_bm01.dsn,fixtures/Issue508-DAC2020_bm01.dsn
+          fi
       - name: Package Native Executable Archive
         shell: bash
         run: |

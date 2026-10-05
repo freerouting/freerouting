@@ -11,7 +11,9 @@ import app.freerouting.io.specctra.SesReader;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.RouterSettings;
+import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.ApiSettings;
+import app.freerouting.settings.sources.DefaultSettings;
 import app.freerouting.settings.sources.DsnFileSettings;
 import app.freerouting.settings.sources.RulesFileSettings;
 import java.io.ByteArrayInputStream;
@@ -184,8 +186,10 @@ public class CompositeBoardInput {
     // Settings merging pipeline
     GlobalSettings gs = GlobalSettings.current();
     var settingsMerger =
-        gs != null && gs.settingsMergerProtype != null ? gs.settingsMergerProtype.clone() : null;
-    if (isDsn && settingsMerger != null) {
+        gs != null && gs.settingsMergerProtype != null
+            ? gs.settingsMergerProtype.clone()
+            : new SettingsMerger(new DefaultSettings());
+    if (isDsn) {
       settingsMerger.addOrReplaceSources(
           new DsnFileSettings(new ByteArrayInputStream(designData), job.input.getFilename()));
     }

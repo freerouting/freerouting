@@ -25,6 +25,7 @@ flowchart TD
         A11Y["**gui.a11y**\nAccessibility locators"]
         API["**api.v1**\nREST / HTTP"]
         MCP["**api.mcp**\nMCP JSON-RPC + SSE + WS"]
+        CLI["**cli**\nNative CLI entry point"]
     end
 
     subgraph services ["Shared Services"]
@@ -58,6 +59,7 @@ flowchart TD
     A11Y -. helpers .-> GUI
     API --> MGMT
     MCP --> API
+    CLI --> MGMT
     MGMT <--> CORE
     CFG --> AR
     CORE --> AR
@@ -93,6 +95,8 @@ Use the table below to jump to the package most likely to own the behavior you a
 | Runtime settings and settings sources | `app.freerouting.settings` |
 | Router or optimizer board scores | `app.freerouting.core.scoring` (`BoardStatistics.getRouterScore` / `getOptimizerScore`) |
 | Geometry, shapes, points, and planar math | `app.freerouting.geometry.planar` |
+| CLI entry point and native execution | `app.freerouting.cli` |
+| Startup bootstrap, settings initialization, and CPU calibration | `app.freerouting.startup` |
 
 ## Module Boundaries (ArchUnit)
 
@@ -102,6 +106,7 @@ Architectural boundaries are codified in `src/test/java/app/freerouting/architec
   - `rules`, `drc`, `geometry`, and `datastructures` must not depend on `gui`/`gui.interactive` or `api`.
   - `settings`, `logger`, and `debug` must not depend on `gui`/`gui.interactive`, `api`, `management`, or `analytics`.
   - `core`, `board`, and `autoroute` must not depend on `gui`/`gui.interactive`.
+  - `cli` and `startup` must not depend on `gui`/`gui.interactive` or `api`.
   - `api`, `management`, and `analytics` must not depend on `GuiBoardManager` or `InteractiveState`, nor on `gui`/`gui.rendering` types.
 - **Strict boundaries (continued):**
   - `gui.interactive` concrete state classes must only be used from within the GUI layer.
@@ -435,6 +440,13 @@ File parsing and export live in `io.specctra`.
 - `io.specctra.parser` contains the lower-level grammar and parsing logic.
 
 When diagnosing a load or export issue, begin here.
+
+### Native CLI and Startup Path
+
+The headless command-line interface and bootstrap orchestration live in `app.freerouting.cli` and `app.freerouting.startup`.
+
+- `app.freerouting.cli` contains `FreeroutingCli`, the native CLI entry point built for GraalVM native image execution without GUI or server dependencies.
+- `app.freerouting.startup` contains `GlobalSettingsBootstrap`, coordinating decoupled settings initialization, system environment setup, and lazy CPU benchmarking.
 
 ## Test Layout
 

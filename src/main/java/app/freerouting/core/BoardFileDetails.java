@@ -158,11 +158,13 @@ public class BoardFileDetails implements Serializable {
       return;
     }
 
-    var path = Path.of(filename).toAbsolutePath();
+    String normalized = File.separatorChar == '\\' ? filename : filename.replace('\\', '/');
+    var path = Path.of(normalized).toAbsolutePath();
 
     if (filename.contains("/") || filename.contains("\\")) {
       // separate the filename into its absolute path and its filename only
-      this.directoryPath = path.getParent().toString();
+      Path parent = path.getParent();
+      this.directoryPath = parent != null ? parent.toString() : "";
       // replace the redundant "\.\" with a simple "\"
       this.directoryPath = this.directoryPath.replace("\\.\\", "\\");
       // remove the "/", "\" from the end of the directory path
@@ -174,7 +176,8 @@ public class BoardFileDetails implements Serializable {
     }
 
     // set the filename only
-    this.filename = path.getFileName().toString();
+    Path fileName = path.getFileName();
+    this.filename = fileName != null ? fileName.toString() : "";
 
     if (this.format == FileFormat.UNKNOWN) {
       // try to read the file contents to determine the file format

@@ -1,6 +1,7 @@
 name: 'CI: Pull Request Build & Test'
 
 on:
+  workflow_dispatch:
   pull_request:
     paths-ignore:
       - 'docs/**'
@@ -76,3 +77,167 @@ jobs:
         run: python integrations/KiCad/kicad-freerouting/test_plugin_fallback.py
       - name: Run KiCad IPC Mock CI Tests
         run: python integrations/KiCad/kicad-freerouting/test_ipc_mock_ci.py
+
+  build-native:
+    name: Build Native CLI (${{ matrix.platform }}-${{ matrix.arch }})
+    needs: [ test ]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 45
+    permissions:
+      contents: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux
+            arch: x64
+            runner: ubuntu-22.04
+            binary-name: freerouting-cli
+            archive-ext: tar.gz
+            use-tar: true
+          - platform: linux
+            arch: arm64
+            runner: ubuntu-24.04-arm
+            binary-name: freerouting-cli
+            archive-ext: tar.gz
+            use-tar: true
+          - platform: macos
+            arch: arm64
+            runner: macos-15
+            binary-name: freerouting-cli
+            archive-ext: tar.gz
+            use-tar: true
+          - platform: macos
+            arch: x64
+            runner: macos-15-intel
+            binary-name: freerouting-cli
+            archive-ext: tar.gz
+            use-tar: true
+          - platform: windows
+            arch: x64
+            runner: windows-latest
+            binary-name: freerouting-cli.exe
+            archive-ext: zip
+            use-tar: false
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Oracle GraalVM JDK 25
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '25'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          native-image-job-reports: 'true'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          build-scan-publish: false
+
+      - name: Make gradlew executable
+        if: runner.os != 'Windows'
+        run: chmod +x gradlew
+
+      - name: Determine Version
+        id: version
+        shell: bash
+        run: |
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            VER="${GITHUB_REF_NAME#v}"
+          else
+            VER=$(./gradlew properties -q --property version | awk '/^version:/ {print $2}')
+            [ -z "$VER" ] && VER="SNAPSHOT"
+          fi
+          echo "version=${VER}" >> "$GITHUB_OUTPUT"
+          echo "archive-name=freerouting-cli-${VER}-${{ matrix.platform }}-${{ matrix.arch }}.${{ matrix.archive-ext }}" >> "$GITHUB_OUTPUT"
+
+      - name: Build PGO Instrumented Executable
+        run: |
+          ./gradlew nativeCompile --pgo-instrument
+        shell: bash
+
+      - name: Run Golden Workload to Generate PGO Profile
+        run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            ./build/native/nativeCompile/freerouting-cli-instrumented.exe -de fixtures/Issue508-DAC2020_bm01.dsn -do build/train_pgo.ses -mp 1
+          else
+            ./build/native/nativeCompile/freerouting-cli-instrumented -de fixtures/Issue508-DAC2020_bm01.dsn -do build/train_pgo.ses -mp 1
+          fi
+          mkdir -p src/pgo-profiles/main
+          cp default.iprof src/pgo-profiles/main/default.iprof
+        shell: bash
+
+      - name: Build Final PGO-Optimized Native Binary
+        run: |
+          ./gradlew nativeCompile
+        shell: bash
+
+      - name: Smoke Test - Help Option
+        run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            ./build/native/nativeCompile/freerouting-cli.exe --help
+          else
+            ./build/native/nativeCompile/freerouting-cli --help
+          fi
+        shell: bash
+
+      - name: Smoke Test - Autorouting Benchmark
+        run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            ./build/native/nativeCompile/freerouting-cli.exe -de fixtures/Issue508-DAC2020_bm01.dsn -do build/test_smoke.ses -mp 1
+          else
+            ./build/native/nativeCompile/freerouting-cli -de fixtures/Issue508-DAC2020_bm01.dsn -do build/test_smoke.ses -mp 1
+          fi
+          test -s build/test_smoke.ses
+        shell: bash
+
+      - name: Smoke Test - DRC Report Mode
+        run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            ./build/native/nativeCompile/freerouting-cli.exe -de fixtures/Issue508-DAC2020_bm01.dsn -s build/test_smoke.ses -drc build/test_smoke_drc.json
+          else
+            ./build/native/nativeCompile/freerouting-cli -de fixtures/Issue508-DAC2020_bm01.dsn -s build/test_smoke.ses -drc build/test_smoke_drc.json
+          fi
+          test -s build/test_smoke_drc.json
+        shell: bash
+
+      - name: Smoke Test - Compare Boards Mode
+        run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            ./build/native/nativeCompile/freerouting-cli.exe --compare-boards=fixtures/Issue508-DAC2020_bm01.dsn,fixtures/Issue508-DAC2020_bm01.dsn
+          else
+            ./build/native/nativeCompile/freerouting-cli --compare-boards=fixtures/Issue508-DAC2020_bm01.dsn,fixtures/Issue508-DAC2020_bm01.dsn
+          fi
+        shell: bash
+
+      - name: Package Native Executable Archive
+        run: |
+          ARCHIVE_NAME="${{ steps.version.outputs.archive-name }}"
+          mkdir -p build/dist
+          cd build/native/nativeCompile
+          if [ "${{ matrix.use-tar }}" = "true" ]; then
+            tar -czvf "../../dist/${ARCHIVE_NAME}" "${{ matrix.binary-name }}"
+          else
+            7z a "../../dist/${ARCHIVE_NAME}" "${{ matrix.binary-name }}"
+          fi
+          cd ../../dist
+          if command -v sha256sum >/dev/null 2>&1; then
+            sha256sum "${ARCHIVE_NAME}" > "${ARCHIVE_NAME}.sha256"
+          else
+            shasum -a 256 "${ARCHIVE_NAME}" > "${ARCHIVE_NAME}.sha256"
+          fi
+          cd ../..
+        shell: bash
+
+      - name: Upload Native Binary Archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.version.outputs.archive-name }}
+          path: |
+            build/dist/${{ steps.version.outputs.archive-name }}
+            build/dist/${{ steps.version.outputs.archive-name }}.sha256
+          if-no-files-found: error

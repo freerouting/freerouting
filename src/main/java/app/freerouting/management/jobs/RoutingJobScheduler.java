@@ -13,7 +13,9 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.management.HeadlessBoardManager;
 import app.freerouting.management.sessions.SessionManager;
 import app.freerouting.settings.GlobalSettings;
+import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.ApiSettings;
+import app.freerouting.settings.sources.DefaultSettings;
 import app.freerouting.settings.sources.DsnFileSettings;
 import app.freerouting.settings.sources.RulesFileSettings;
 import app.freerouting.util.TextManager;
@@ -102,9 +104,9 @@ public final class RoutingJobScheduler {
                               var settingsMerger =
                                   gs != null && gs.settingsMergerProtype != null
                                       ? gs.settingsMergerProtype.clone()
-                                      : null;
+                                      : new SettingsMerger(new DefaultSettings());
 
-                              if (isDsn && settingsMerger != null) {
+                              if (isDsn) {
                                 settingsMerger.addOrReplaceSources(
                                     new DsnFileSettings(
                                         job.input.getData(), job.input.getFilename()));

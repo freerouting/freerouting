@@ -401,7 +401,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
       }
       job.state = RoutingJobState.COMPLETED;
       GlobalSettings settings = GlobalSettings.current();
-      if (settings != null && settings.statistics != null) {
+      if (settings != null) {
         settings.statistics.incrementJobsCompleted();
       }
     }
