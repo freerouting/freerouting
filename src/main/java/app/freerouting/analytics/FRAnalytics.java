@@ -323,7 +323,7 @@ public final class FRAnalytics {
   }
 
   private static boolean isEventTrackingEnabled(String action) {
-    if (globalSettings == null || globalSettings.usageAndDiagnosticData == null) {
+    if (globalSettings == null) {
       return true;
     }
     return switch (action) {
@@ -351,10 +351,7 @@ public final class FRAnalytics {
     traits.put("anonymous", "true");
     traits.put("user_id", permanentUserId);
     traits.put("user_email", permanentUserEmail);
-    String firstSeen =
-        (globalSettings != null && globalSettings.statistics != null)
-            ? globalSettings.statistics.startTime
-            : null;
+    String firstSeen = (globalSettings != null) ? globalSettings.statistics.startTime : null;
     if (firstSeen == null || firstSeen.isBlank()) {
       firstSeen = Instant.now().toString();
     }
@@ -376,15 +373,11 @@ public final class FRAnalytics {
     traits.put(
         "allow_telemetry",
         Boolean.toString(
-            globalSettings != null
-                && globalSettings.userProfileSettings != null
-                && globalSettings.userProfileSettings.isTelemetryAllowed));
+            globalSettings != null && globalSettings.userProfileSettings.isTelemetryAllowed));
     traits.put(
         "allow_contact",
         Boolean.toString(
-            globalSettings != null
-                && globalSettings.userProfileSettings != null
-                && globalSettings.userProfileSettings.isContactAllowed));
+            globalSettings != null && globalSettings.userProfileSettings.isContactAllowed));
     return traits;
   }
 
@@ -534,7 +527,7 @@ public final class FRAnalytics {
     properties.put("total_route_optimizer_runtime", String.valueOf(totalRouteOptimizerRuntime));
     properties.put(
         "application_runtime", String.valueOf(Instant.now().getEpochSecond() - appStartedAt));
-    if (globalSettings != null && globalSettings.statistics != null) {
+    if (globalSettings != null) {
       properties.put("statistics_start_time", globalSettings.statistics.startTime);
       properties.put("statistics_end_time", globalSettings.statistics.endTime);
       properties.put(

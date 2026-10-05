@@ -173,6 +173,8 @@ public final class LoggingBootstrap {
       }
     }
 
-    return folderPath.resolve(filename).normalize().toAbsolutePath();
+    return folderPath != null
+        ? folderPath.resolve(filename).normalize().toAbsolutePath()
+        : defaultDir.resolve(filename).normalize().toAbsolutePath();
   }
 }
