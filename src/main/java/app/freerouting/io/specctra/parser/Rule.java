@@ -207,7 +207,8 @@ public abstract class Rule {
               cornerStyle = NetMeanderConstraint.CornerStyle.CHAMFERED_45;
             } else if (cornerStr.equalsIgnoreCase("round")
                 || cornerStr.equalsIgnoreCase("rounded")
-                || cornerStr.equalsIgnoreCase("fillet")) {
+                || cornerStr.equalsIgnoreCase("fillet")
+                || cornerStr.equalsIgnoreCase("filleted")) {
               cornerStyle = NetMeanderConstraint.CornerStyle.FILLETED_ROUND;
             } else if (cornerStr.equalsIgnoreCase("orthogonal")
                 || cornerStr.equalsIgnoreCase("90")) {
