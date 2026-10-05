@@ -512,12 +512,9 @@ public class Network extends ScopeKeyword {
         Rule.buildMeanderConstraint(
             netClass.amplitudeRule, netClass.gapRule, netClass.rules, coordinateTransform);
     if (meanderConstraint != null) {
-      if (boardNetClass.getMeanderConstraint() != null) {
-        boardNetClass.setMeanderConstraint(
-            meanderConstraint.mergeWith(boardNetClass.getMeanderConstraint()));
-      } else {
-        boardNetClass.setMeanderConstraint(meanderConstraint);
-      }
+      boardNetClass.setMeanderConstraint(
+          app.freerouting.rules.NetMeanderConstraint.merge(
+              meanderConstraint, boardNetClass.getMeanderConstraint()));
     }
 
     // read the layer dependent rules.
@@ -1516,11 +1513,9 @@ public class Network extends ScopeKeyword {
               netRules,
               coordinateTransform);
       if (boardNet != null && netMeander != null) {
-        if (boardNet.getMeanderConstraint() != null) {
-          boardNet.setMeanderConstraint(netMeander.mergeWith(boardNet.getMeanderConstraint()));
-        } else {
-          boardNet.setMeanderConstraint(netMeander);
-        }
+        boardNet.setMeanderConstraint(
+            app.freerouting.rules.NetMeanderConstraint.merge(
+                netMeander, boardNet.getMeanderConstraint()));
       }
       ++subnetNumber;
     }

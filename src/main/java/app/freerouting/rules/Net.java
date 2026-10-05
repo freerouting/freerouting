@@ -165,10 +165,7 @@ public class Net implements Comparable<Net>, ItemInfoPrinter.Printable, Serializ
   public NetMeanderConstraint getMeanderConstraint() {
     NetMeanderConstraint classConstraint =
         (this.netClass != null) ? this.netClass.getMeanderConstraint() : null;
-    if (this.meanderConstraint != null) {
-      return this.meanderConstraint.mergeWith(classConstraint);
-    }
-    return classConstraint;
+    return NetMeanderConstraint.merge(this.meanderConstraint, classConstraint);
   }
 
   /** Sets the explicit meander constraint for this net. Pass null to inherit from net-class. */

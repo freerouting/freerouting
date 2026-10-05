@@ -199,22 +199,7 @@ public abstract class Rule {
         } else if (nextToken instanceof String s && s.equalsIgnoreCase("single_sided")) {
           singleSided = DsnFile.readOnOffScope(scanner);
         } else if (nextToken instanceof String s && s.equalsIgnoreCase("corner")) {
-          String cornerStr = scanner.nextString();
-          if (cornerStr != null) {
-            if (cornerStr.equalsIgnoreCase("chamfered")
-                || cornerStr.equalsIgnoreCase("chamfer")
-                || cornerStr.equalsIgnoreCase("45")) {
-              cornerStyle = NetMeanderConstraint.CornerStyle.CHAMFERED_45;
-            } else if (cornerStr.equalsIgnoreCase("round")
-                || cornerStr.equalsIgnoreCase("rounded")
-                || cornerStr.equalsIgnoreCase("fillet")
-                || cornerStr.equalsIgnoreCase("filleted")) {
-              cornerStyle = NetMeanderConstraint.CornerStyle.FILLETED_ROUND;
-            } else if (cornerStr.equalsIgnoreCase("orthogonal")
-                || cornerStr.equalsIgnoreCase("90")) {
-              cornerStyle = NetMeanderConstraint.CornerStyle.ORTHOGONAL_90;
-            }
-          }
+          cornerStyle = NetMeanderConstraint.CornerStyle.parse(scanner.nextString());
           scanner.nextClosingBracket();
         } else if (nextToken instanceof String s && s.equalsIgnoreCase("radius")) {
           double radiusVal = scanner.nextDouble();
@@ -346,6 +331,20 @@ public abstract class Rule {
     scopeParameter.file.endScope();
   }
 
+  private static double toBoardDimension(double dsnValue, CoordinateTransform transform) {
+    if (dsnValue > 0) {
+      return transform.dsnToBoard(dsnValue);
+    }
+    return dsnValue == 0.0 ? 0.0 : NetMeanderConstraint.UNSPECIFIED;
+  }
+
+  private static double toDsnDimension(double boardValue, CoordinateTransform transform) {
+    if (boardValue > 0) {
+      return transform.boardToDsn(boardValue);
+    }
+    return boardValue == 0.0 ? 0.0 : -1.0;
+  }
+
   /** Writes meander rules (length_amplitude and length_gap) if defined in the constraint. */
   public static void writeMeanderRules(
       NetMeanderConstraint constraint, WriteScopeParameter scopeParameter) throws IOException {
@@ -356,40 +355,26 @@ public abstract class Rule {
         constraint.hasMaxAmplitude()
             || constraint.maxAmplitude() == 0.0
             || constraint.singleSided()
-            || (constraint.cornerStyle() != null
-                && constraint.cornerStyle() != NetMeanderConstraint.CornerStyle.AUTO);
+            || constraint.hasCustomCornerStyle();
     if (shouldWriteAmp) {
       scopeParameter.file.newLine();
       scopeParameter.file.write("(length_amplitude ");
-      double transformedMax;
-      if (constraint.maxAmplitude() == 0.0) {
-        transformedMax = 0.0;
-      } else if (constraint.maxAmplitude() > 0) {
-        transformedMax = scopeParameter.coordinateTransform.boardToDsn(constraint.maxAmplitude());
-      } else {
-        transformedMax = -1;
-      }
-      scopeParameter.file.write(String.valueOf(transformedMax));
+      scopeParameter.file.write(
+          String.valueOf(
+              toDsnDimension(constraint.maxAmplitude(), scopeParameter.coordinateTransform)));
 
       if (constraint.hasMinAmplitude()) {
         scopeParameter.file.write(" ");
-        double transformedMin =
-            scopeParameter.coordinateTransform.boardToDsn(constraint.minAmplitude());
-        scopeParameter.file.write(String.valueOf(transformedMin));
+        scopeParameter.file.write(
+            String.valueOf(
+                scopeParameter.coordinateTransform.boardToDsn(constraint.minAmplitude())));
       }
       if (constraint.singleSided()) {
         scopeParameter.file.write(" (type trombone)");
       }
-      if (constraint.cornerStyle() != null
-          && constraint.cornerStyle() != NetMeanderConstraint.CornerStyle.AUTO) {
+      if (constraint.hasCustomCornerStyle()) {
         scopeParameter.file.write(" (corner ");
-        scopeParameter.file.write(
-            switch (constraint.cornerStyle()) {
-              case CHAMFERED_45 -> "chamfered";
-              case FILLETED_ROUND -> "filleted";
-              case ORTHOGONAL_90 -> "orthogonal";
-              default -> "chamfered";
-            });
+        scopeParameter.file.write(constraint.cornerStyle().toDsn());
         scopeParameter.file.write(")");
       }
       if (constraint.cornerRadiusPercentage() > 0
@@ -405,13 +390,8 @@ public abstract class Rule {
     if (constraint.hasGap() || constraint.gap() == 0.0) {
       scopeParameter.file.newLine();
       scopeParameter.file.write("(length_gap ");
-      double transformedGap;
-      if (constraint.gap() <= 0.0) {
-        transformedGap = 0.0;
-      } else {
-        transformedGap = scopeParameter.coordinateTransform.boardToDsn(constraint.gap());
-      }
-      scopeParameter.file.write(String.valueOf(transformedGap));
+      scopeParameter.file.write(
+          String.valueOf(toDsnDimension(constraint.gap(), scopeParameter.coordinateTransform)));
       scopeParameter.file.write(")");
     }
   }
@@ -588,17 +568,9 @@ public abstract class Rule {
     }
 
     public NetMeanderConstraint toConstraint(CoordinateTransform coordinateTransform) {
-      double maxAmp =
-          (maxAmplitude > 0)
-              ? coordinateTransform.dsnToBoard(maxAmplitude)
-              : (maxAmplitude == 0.0 ? 0.0 : NetMeanderConstraint.UNSPECIFIED);
-      double minAmp =
-          (minAmplitude > 0)
-              ? coordinateTransform.dsnToBoard(minAmplitude)
-              : (minAmplitude == 0.0 ? 0.0 : NetMeanderConstraint.UNSPECIFIED);
       return new NetMeanderConstraint(
-          maxAmp,
-          minAmp,
+          toBoardDimension(maxAmplitude, coordinateTransform),
+          toBoardDimension(minAmplitude, coordinateTransform),
           NetMeanderConstraint.UNSPECIFIED,
           singleSided,
           cornerStyle != null ? cornerStyle : NetMeanderConstraint.CornerStyle.AUTO,
@@ -615,14 +587,10 @@ public abstract class Rule {
     }
 
     public NetMeanderConstraint toConstraint(CoordinateTransform coordinateTransform) {
-      double g =
-          (gap > 0)
-              ? coordinateTransform.dsnToBoard(gap)
-              : (gap == 0.0 ? 0.0 : NetMeanderConstraint.UNSPECIFIED);
       return new NetMeanderConstraint(
           NetMeanderConstraint.UNSPECIFIED,
           NetMeanderConstraint.UNSPECIFIED,
-          g,
+          toBoardDimension(gap, coordinateTransform),
           false,
           NetMeanderConstraint.CornerStyle.AUTO,
           NetMeanderConstraint.DEFAULT_CORNER_RADIUS_PERCENT);
@@ -638,22 +606,20 @@ public abstract class Rule {
       LengthGapRule gapRule,
       Collection<Rule> rules,
       CoordinateTransform coordinateTransform) {
-    NetMeanderConstraint constraint = null;
-    if (ampRule != null) {
-      constraint = ampRule.toConstraint(coordinateTransform);
-    }
+    NetMeanderConstraint constraint =
+        ampRule != null ? ampRule.toConstraint(coordinateTransform) : null;
     if (gapRule != null) {
-      NetMeanderConstraint gapConstraint = gapRule.toConstraint(coordinateTransform);
-      constraint = constraint != null ? constraint.mergeWith(gapConstraint) : gapConstraint;
+      constraint =
+          NetMeanderConstraint.merge(constraint, gapRule.toConstraint(coordinateTransform));
     }
     if (rules != null) {
       for (Rule r : rules) {
         if (r instanceof Rule.LengthAmplitudeRule amp) {
-          NetMeanderConstraint c = amp.toConstraint(coordinateTransform);
-          constraint = constraint != null ? constraint.mergeWith(c) : c;
+          constraint =
+              NetMeanderConstraint.merge(constraint, amp.toConstraint(coordinateTransform));
         } else if (r instanceof Rule.LengthGapRule gap) {
-          NetMeanderConstraint c = gap.toConstraint(coordinateTransform);
-          constraint = constraint != null ? constraint.mergeWith(c) : c;
+          constraint =
+              NetMeanderConstraint.merge(constraint, gap.toConstraint(coordinateTransform));
         }
       }
     }

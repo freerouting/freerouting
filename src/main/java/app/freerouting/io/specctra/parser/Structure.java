@@ -651,12 +651,8 @@ public class Structure extends ScopeKeyword {
         Rule.buildMeanderConstraint(
             null, null, boardConstructionInfo.defaultRules, scopeParameter.coordinateTransform);
     if (defaultMeander != null) {
-      if (boardRules.getDefaultMeanderConstraint() != null) {
-        boardRules.setDefaultMeanderConstraint(
-            defaultMeander.mergeWith(boardRules.getDefaultMeanderConstraint()));
-      } else {
-        boardRules.setDefaultMeanderConstraint(defaultMeander);
-      }
+      boardRules.setDefaultMeanderConstraint(
+          NetMeanderConstraint.merge(defaultMeander, boardRules.getDefaultMeanderConstraint()));
     }
     for (LayerRule layerRule : boardConstructionInfo.layerDependentRules) {
       int layerIndex = scopeParameter.layerStructure.getNo(layerRule.layerName);

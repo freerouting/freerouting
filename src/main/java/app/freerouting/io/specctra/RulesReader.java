@@ -308,12 +308,9 @@ public final class RulesReader {
       NetMeanderConstraint meanderConstraint =
           Rule.buildMeanderConstraint(null, null, rules, coordinateTransform);
       if (meanderConstraint != null) {
-        if (board.rules.getDefaultMeanderConstraint() != null) {
-          board.rules.setDefaultMeanderConstraint(
-              meanderConstraint.mergeWith(board.rules.getDefaultMeanderConstraint()));
-        } else {
-          board.rules.setDefaultMeanderConstraint(meanderConstraint);
-        }
+        board.rules.setDefaultMeanderConstraint(
+            NetMeanderConstraint.merge(
+                meanderConstraint, board.rules.getDefaultMeanderConstraint()));
       }
     }
   }

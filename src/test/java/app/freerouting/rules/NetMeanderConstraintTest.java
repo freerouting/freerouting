@@ -180,4 +180,61 @@ class NetMeanderConstraintTest {
     assertNotNull(resolved);
     assertEquals(3.0, resolved.maxAmplitude(), 1e-6);
   }
+
+  @Test
+  void cornerStyleParseAndToDsn() {
+    assertEquals(
+        NetMeanderConstraint.CornerStyle.CHAMFERED_45,
+        NetMeanderConstraint.CornerStyle.parse("chamfered"));
+    assertEquals(
+        NetMeanderConstraint.CornerStyle.CHAMFERED_45,
+        NetMeanderConstraint.CornerStyle.parse("45"));
+    assertEquals(
+        NetMeanderConstraint.CornerStyle.FILLETED_ROUND,
+        NetMeanderConstraint.CornerStyle.parse("fillet"));
+    assertEquals(
+        NetMeanderConstraint.CornerStyle.FILLETED_ROUND,
+        NetMeanderConstraint.CornerStyle.parse("filleted"));
+    assertEquals(
+        NetMeanderConstraint.CornerStyle.FILLETED_ROUND,
+        NetMeanderConstraint.CornerStyle.parse("round"));
+    assertEquals(
+        NetMeanderConstraint.CornerStyle.ORTHOGONAL_90,
+        NetMeanderConstraint.CornerStyle.parse("orthogonal"));
+    assertEquals(
+        NetMeanderConstraint.CornerStyle.ORTHOGONAL_90,
+        NetMeanderConstraint.CornerStyle.parse("90"));
+    assertEquals(
+        NetMeanderConstraint.CornerStyle.AUTO, NetMeanderConstraint.CornerStyle.parse("unknown"));
+    assertEquals(
+        NetMeanderConstraint.CornerStyle.AUTO, NetMeanderConstraint.CornerStyle.parse(null));
+
+    assertEquals("chamfered", NetMeanderConstraint.CornerStyle.CHAMFERED_45.toDsn());
+    assertEquals("filleted", NetMeanderConstraint.CornerStyle.FILLETED_ROUND.toDsn());
+    assertEquals("orthogonal", NetMeanderConstraint.CornerStyle.ORTHOGONAL_90.toDsn());
+  }
+
+  @Test
+  void hasCustomCornerStyleDetection() {
+    NetMeanderConstraint autoConstraint = new NetMeanderConstraint(1.0, 0.2, 0.5);
+    assertFalse(autoConstraint.hasCustomCornerStyle());
+
+    NetMeanderConstraint styled =
+        autoConstraint.withCornerStyle(NetMeanderConstraint.CornerStyle.CHAMFERED_45, 80);
+    assertTrue(styled.hasCustomCornerStyle());
+  }
+
+  @Test
+  void staticMergeNullSafety() {
+    NetMeanderConstraint a = new NetMeanderConstraint(1.0, 0.2, 0.5);
+    NetMeanderConstraint b = new NetMeanderConstraint(2.0, 0.4, 0.8);
+
+    assertNull(NetMeanderConstraint.merge(null, null));
+    assertEquals(a, NetMeanderConstraint.merge(a, null));
+    assertEquals(b, NetMeanderConstraint.merge(null, b));
+
+    NetMeanderConstraint merged = NetMeanderConstraint.merge(a, b);
+    assertNotNull(merged);
+    assertEquals(1.0, merged.maxAmplitude(), 1e-6);
+  }
 }

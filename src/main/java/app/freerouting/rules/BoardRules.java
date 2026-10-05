@@ -399,10 +399,7 @@ public class BoardRules implements Serializable {
    */
   public NetMeanderConstraint resolveMeanderConstraint(Net net) {
     NetMeanderConstraint netConstraint = (net != null) ? net.getMeanderConstraint() : null;
-    if (netConstraint != null) {
-      return netConstraint.mergeWith(this.defaultMeanderConstraint);
-    }
-    return this.defaultMeanderConstraint;
+    return NetMeanderConstraint.merge(netConstraint, this.defaultMeanderConstraint);
   }
 
   /** The angle restriction for traces: 90 degree, 45 degree or none. */

@@ -36,7 +36,30 @@ public record NetMeanderConstraint(
     AUTO,
     CHAMFERED_45,
     FILLETED_ROUND,
-    ORTHOGONAL_90
+    ORTHOGONAL_90;
+
+    /** Parses corner style from DSN keyword or numeric identifier. */
+    public static CornerStyle parse(String name) {
+      if (name == null) {
+        return AUTO;
+      }
+      return switch (name.toLowerCase()) {
+        case "chamfered", "chamfer", "45" -> CHAMFERED_45;
+        case "round", "rounded", "fillet", "filleted" -> FILLETED_ROUND;
+        case "orthogonal", "90" -> ORTHOGONAL_90;
+        default -> AUTO;
+      };
+    }
+
+    /** Returns standard DSN keyword representation. */
+    public String toDsn() {
+      return switch (this) {
+        case CHAMFERED_45 -> "chamfered";
+        case FILLETED_ROUND -> "filleted";
+        case ORTHOGONAL_90 -> "orthogonal";
+        default -> "chamfered";
+      };
+    }
   }
 
   /**
@@ -72,6 +95,11 @@ public record NetMeanderConstraint(
   /** Returns true if a positive gap / spacing rule is defined. */
   public boolean hasGap() {
     return gap > 0;
+  }
+
+  /** Returns true if a non-automatic corner style has been explicitly configured. */
+  public boolean hasCustomCornerStyle() {
+    return cornerStyle != null && cornerStyle != CornerStyle.AUTO;
   }
 
   /**
@@ -131,6 +159,18 @@ public record NetMeanderConstraint(
 
     return new NetMeanderConstraint(
         resolvedMax, resolvedMin, resolvedGap, resolvedSingleSided, resolvedCorner, resolvedRadius);
+  }
+
+  /**
+   * Null-safe merge of primary and fallback constraints. Returns {@code null} if both are null,
+   * {@code fallback} if primary is null, {@code primary} if fallback is null, or the merged result.
+   */
+  public static NetMeanderConstraint merge(
+      NetMeanderConstraint primary, NetMeanderConstraint fallback) {
+    if (primary == null) {
+      return fallback;
+    }
+    return primary.mergeWith(fallback);
   }
 
   /** Returns a copy of this constraint with updated amplitude bounds. */
