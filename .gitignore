@@ -58,3 +58,7 @@ scripts/benchmark/results/.benchmarks.json.*.tmp
 # GraalVM PGO profiles
 *.iprof
 /src/pgo-profiles/
+
+# Python bytecode and cache
+__pycache__/
+*.pyc
