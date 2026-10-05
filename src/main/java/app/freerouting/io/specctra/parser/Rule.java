@@ -6,6 +6,7 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.ClearanceMatrix;
 import app.freerouting.rules.NetClass;
+import app.freerouting.rules.NetMeanderConstraint;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -57,6 +58,12 @@ public abstract class Rule {
           if (lengthResult != null) {
             currentRule = new LengthRule(lengthResult.maxLength, lengthResult.minLength);
           }
+        } else if (isKeyword(currentToken, Keyword.LENGTH_AMPLITUDE, "length_amplitude")) {
+          // this is a "(length_amplitude" rule
+          currentRule = readLengthAmplitudeRule(scanner);
+        } else if (isKeyword(currentToken, Keyword.LENGTH_GAP, "length_gap")) {
+          // this is a "(length_gap" rule
+          currentRule = readLengthGapRule(scanner);
         } else {
           ScopeKeyword.skipScope(scanner);
         }
@@ -120,6 +127,133 @@ public abstract class Rule {
     }
 
     return new WidthRule(value);
+  }
+
+  public static LengthAmplitudeRule readLengthAmplitudeRule(IJFlexScanner scanner) {
+    double maxAmplitude = -1;
+    double minAmplitude = 0;
+    boolean singleSided = false;
+    NetMeanderConstraint.CornerStyle cornerStyle = NetMeanderConstraint.CornerStyle.AUTO;
+    int cornerRadiusPercentage = NetMeanderConstraint.DEFAULT_CORNER_RADIUS_PERCENT;
+
+    Object nextToken;
+    try {
+      nextToken = scanner.nextToken();
+    } catch (IOException e) {
+      FRLogger.error("Rule.readLengthAmplitudeRule: IO error scanning file", e);
+      return null;
+    }
+
+    if (nextToken instanceof Double doubleVal) {
+      maxAmplitude = doubleVal;
+    } else if (nextToken instanceof Integer intVal) {
+      maxAmplitude = intVal;
+    } else {
+      FRLogger.warn(
+          "Rule.readLengthAmplitudeRule: number expected at '"
+              + scanner.getScopeIdentifier()
+              + "'");
+      return null;
+    }
+
+    boolean minAmplitudeRead = false;
+    for (; ; ) {
+      Object prevToken = nextToken;
+      try {
+        nextToken = scanner.nextToken();
+      } catch (IOException e) {
+        FRLogger.error("Rule.readLengthAmplitudeRule: IO error scanning file", e);
+        return null;
+      }
+      if (nextToken == null) {
+        FRLogger.warn(
+            "Rule.readLengthAmplitudeRule: unexpected end of file at '"
+                + scanner.getScopeIdentifier()
+                + "'");
+        return null;
+      }
+      if (nextToken == Keyword.CLOSED_BRACKET) {
+        break;
+      }
+      if (!minAmplitudeRead && prevToken != Keyword.OPEN_BRACKET) {
+        if (nextToken instanceof Double doubleVal) {
+          minAmplitude = doubleVal;
+          minAmplitudeRead = true;
+          continue;
+        } else if (nextToken instanceof Integer intVal) {
+          minAmplitude = intVal;
+          minAmplitudeRead = true;
+          continue;
+        }
+      }
+      if (prevToken == Keyword.OPEN_BRACKET) {
+        if (isKeyword(nextToken, Keyword.TYPE, "type")) {
+          String typeStr = scanner.nextString();
+          if (typeStr != null
+              && (typeStr.equalsIgnoreCase("trombone")
+                  || typeStr.equalsIgnoreCase("single_sided"))) {
+            singleSided = true;
+          }
+          scanner.nextClosingBracket();
+        } else if (nextToken instanceof String s && s.equalsIgnoreCase("single_sided")) {
+          singleSided = DsnFile.readOnOffScope(scanner);
+        } else if (nextToken instanceof String s && s.equalsIgnoreCase("corner")) {
+          String cornerStr = scanner.nextString();
+          if (cornerStr != null) {
+            if (cornerStr.equalsIgnoreCase("chamfered")
+                || cornerStr.equalsIgnoreCase("chamfer")
+                || cornerStr.equalsIgnoreCase("45")) {
+              cornerStyle = NetMeanderConstraint.CornerStyle.CHAMFERED_45;
+            } else if (cornerStr.equalsIgnoreCase("round")
+                || cornerStr.equalsIgnoreCase("rounded")
+                || cornerStr.equalsIgnoreCase("fillet")) {
+              cornerStyle = NetMeanderConstraint.CornerStyle.FILLETED_ROUND;
+            } else if (cornerStr.equalsIgnoreCase("orthogonal")
+                || cornerStr.equalsIgnoreCase("90")) {
+              cornerStyle = NetMeanderConstraint.CornerStyle.ORTHOGONAL_90;
+            }
+          }
+          scanner.nextClosingBracket();
+        } else if (nextToken instanceof String s && s.equalsIgnoreCase("radius")) {
+          double radiusVal = scanner.nextDouble();
+          if (radiusVal > 0) {
+            cornerRadiusPercentage = (int) Math.round(radiusVal);
+          }
+          scanner.nextClosingBracket();
+        } else {
+          ScopeKeyword.skipScope(scanner);
+        }
+      }
+    }
+
+    return new LengthAmplitudeRule(
+        maxAmplitude, minAmplitude, singleSided, cornerStyle, cornerRadiusPercentage);
+  }
+
+  public static LengthGapRule readLengthGapRule(IJFlexScanner scanner) {
+    try {
+      double value = scanner.nextDouble();
+      for (; ; ) {
+        Object token = scanner.nextToken();
+        if (token == null || token == Keyword.CLOSED_BRACKET) {
+          break;
+        }
+        if (token == Keyword.OPEN_BRACKET) {
+          ScopeKeyword.skipScope(scanner);
+        }
+      }
+      return new LengthGapRule(value);
+    } catch (IOException e) {
+      FRLogger.error("Rule.readLengthGapRule: IO error scanning file", e);
+      return null;
+    }
+  }
+
+  static boolean isKeyword(Object token, Keyword keyword, String name) {
+    if (token == keyword) {
+      return true;
+    }
+    return token instanceof String s && s.equalsIgnoreCase(name);
   }
 
   public static void writeScope(NetClass netClass, WriteScopeParameter scopeParameter)
@@ -344,6 +478,46 @@ public abstract class Rule {
     public LengthRule(double maxLength, double minLength) {
       this.maxLength = maxLength;
       this.minLength = minLength;
+    }
+  }
+
+  public static class LengthAmplitudeRule extends Rule {
+
+    public final double maxAmplitude;
+    public final double minAmplitude;
+    public final boolean singleSided;
+    public final NetMeanderConstraint.CornerStyle cornerStyle;
+    public final int cornerRadiusPercentage;
+
+    public LengthAmplitudeRule(double maxAmplitude, double minAmplitude) {
+      this(
+          maxAmplitude,
+          minAmplitude,
+          false,
+          NetMeanderConstraint.CornerStyle.AUTO,
+          NetMeanderConstraint.DEFAULT_CORNER_RADIUS_PERCENT);
+    }
+
+    public LengthAmplitudeRule(
+        double maxAmplitude,
+        double minAmplitude,
+        boolean singleSided,
+        NetMeanderConstraint.CornerStyle cornerStyle,
+        int cornerRadiusPercentage) {
+      this.maxAmplitude = maxAmplitude;
+      this.minAmplitude = minAmplitude;
+      this.singleSided = singleSided;
+      this.cornerStyle = cornerStyle;
+      this.cornerRadiusPercentage = cornerRadiusPercentage;
+    }
+  }
+
+  public static class LengthGapRule extends Rule {
+
+    public final double gap;
+
+    public LengthGapRule(double gap) {
+      this.gap = gap;
     }
   }
 

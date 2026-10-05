@@ -45,6 +45,8 @@ public class Keyword {
   public static final Keyword LAYER = new Keyword("layer");
   public static final Keyword LAYER_RULE = new Keyword("layer_rule");
   public static final Keyword LENGTH = new Keyword("length");
+  public static final Keyword LENGTH_AMPLITUDE = new Keyword("length_amplitude");
+  public static final Keyword LENGTH_GAP = new Keyword("length_gap");
   public static final ScopeKeyword LIBRARY_SCOPE = new Library();
   public static final Keyword LOCK_TYPE = new Keyword("lock_type");
   public static final Keyword LOGICAL_PART = new Keyword("logical_part");

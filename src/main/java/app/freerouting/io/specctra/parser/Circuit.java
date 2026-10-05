@@ -25,6 +25,8 @@ public final class Circuit {
     double maxTraceLength = 0;
     Collection<String> useVia = new LinkedList<>();
     Collection<String> useLayer = new LinkedList<>();
+    Rule.LengthAmplitudeRule amplitudeRule = null;
+    Rule.LengthGapRule gapRule = null;
     for (; ; ) {
       Object prevToken = nextToken;
       try {
@@ -49,6 +51,10 @@ public final class Circuit {
             minTraceLength = lengthRule.minLength;
             maxTraceLength = lengthRule.maxLength;
           }
+        } else if (Rule.isKeyword(nextToken, Keyword.LENGTH_AMPLITUDE, "length_amplitude")) {
+          amplitudeRule = Rule.readLengthAmplitudeRule(scanner);
+        } else if (Rule.isKeyword(nextToken, Keyword.LENGTH_GAP, "length_gap")) {
+          gapRule = Rule.readLengthGapRule(scanner);
         } else if (nextToken == Keyword.USE_VIA) {
           useVia.addAll(Structure.readViaPadstacks(scanner));
         } else if (nextToken == Keyword.USE_LAYER) {
@@ -58,7 +64,8 @@ public final class Circuit {
         }
       }
     }
-    return new ReadScopeResult(maxTraceLength, minTraceLength, useVia, useLayer);
+    return new ReadScopeResult(
+        maxTraceLength, minTraceLength, useVia, useLayer, amplitudeRule, gapRule);
   }
 
   static LengthMatchingRule readLengthScope(IJFlexScanner scanner) {
@@ -128,16 +135,30 @@ public final class Circuit {
     public final double minLength;
     public final Collection<String> useVia;
     public final Collection<String> useLayer;
+    public final Rule.LengthAmplitudeRule amplitudeRule;
+    public final Rule.LengthGapRule gapRule;
 
     public ReadScopeResult(
         double maxLength,
         double minLength,
         Collection<String> useVia,
         Collection<String> useLayer) {
+      this(maxLength, minLength, useVia, useLayer, null, null);
+    }
+
+    public ReadScopeResult(
+        double maxLength,
+        double minLength,
+        Collection<String> useVia,
+        Collection<String> useLayer,
+        Rule.LengthAmplitudeRule amplitudeRule,
+        Rule.LengthGapRule gapRule) {
       this.maxLength = maxLength;
       this.minLength = minLength;
       this.useVia = useVia;
       this.useLayer = useLayer;
+      this.amplitudeRule = amplitudeRule;
+      this.gapRule = gapRule;
     }
   }
 
