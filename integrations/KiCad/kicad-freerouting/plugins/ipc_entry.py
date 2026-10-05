@@ -202,9 +202,24 @@ def run_pipeline(dialog: IpcRoutingDialog, args: argparse.Namespace) -> None:
                         java_path = javaw_candidate
 
             jar_path = plugins_dir / "jar" / "freerouting.jar"
+            ini_file = plugins_dir / "plugin.ini"
+            if not jar_path.is_file() and ini_file.is_file():
+                try:
+                    import configparser
+                    cfg = configparser.ConfigParser()
+                    cfg.read(ini_file)
+                    if cfg.has_option("artifact", "location"):
+                        rel_loc = cfg.get("artifact", "location").strip()
+                        candidate_ini = plugins_dir / rel_loc
+                        if candidate_ini.is_file():
+                            jar_path = candidate_ini
+                except Exception:
+                    pass
+
             if not jar_path.is_file():
                 candidates = [
-                    plugins_dir / "jar" / "freerouting-2.5.0-RC12.jar",
+                    plugins_dir / "jar" / "freerouting-2.5.0.jar",
+                    *sorted(plugins_dir.glob("jar/freerouting*.jar"), reverse=True),
                     here.parent.parent / "build" / "libs" / "freerouting-current-executable.jar",
                 ]
                 for c in candidates:
