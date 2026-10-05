@@ -153,11 +153,22 @@
       "version": "2.5.0",
       "status": "stable",
       "kicad_version": "6.0",
+      "kicad_version_max": "10.0",
+      "runtime": "swig",
+      "download_sha256": "ce7cf96eb7a9216637992a4ff99e98edd926a8906a8b6a96fb2fcb4761cdd6b1",
+      "download_size": 59892682,
+      "download_url": "https://github.com/freerouting/freerouting/raw/master/integrations/KiCad/kicad-freerouting-2.5.0-swig.zip",
+      "install_size": 65126449
+    },
+    {
+      "version": "2.5.0",
+      "status": "stable",
+      "kicad_version": "10.99",
       "runtime": "ipc",
-      "download_sha256": "8dea70d9301a82b57cf29b7b382e1596d03143cec862936105dd8f1df33e429b",
-      "download_size": 59893448,
+      "download_sha256": "a2ccb1492eb403e8a813af1df6c279755c4b85d75422149883e1ebcf3cacd0b0",
+      "download_size": 59893446,
       "download_url": "https://github.com/freerouting/freerouting/raw/master/integrations/KiCad/kicad-freerouting-2.5.0.zip",
-      "install_size": 65127483
+      "install_size": 65127481
     }
   ]
 }
