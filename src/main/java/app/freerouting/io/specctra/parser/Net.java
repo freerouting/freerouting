@@ -40,7 +40,7 @@ public class Net {
       }
     }
     scopeParameter.file.endScope();
-    if (net.hasExplicitLengthConstraint()) {
+    if (net.hasExplicitLengthConstraint() || net.hasExplicitMeanderConstraint()) {
       writeCircuit(net, scopeParameter);
     }
     scopeParameter.file.endScope();
@@ -48,32 +48,41 @@ public class Net {
 
   private static void writeCircuit(
       app.freerouting.rules.Net net, WriteScopeParameter scopeParameter) throws IOException {
-    app.freerouting.rules.NetLengthConstraint constraint = net.getExplicitLengthConstraint();
-    if (constraint == null || !constraint.isConstrained()) {
+    app.freerouting.rules.NetLengthConstraint lengthConstraint = net.getExplicitLengthConstraint();
+    app.freerouting.rules.NetMeanderConstraint meanderConstraint =
+        net.getExplicitMeanderConstraint();
+    boolean hasLength = lengthConstraint != null && lengthConstraint.isConstrained();
+    boolean hasMeander = meanderConstraint != null;
+    if (!hasLength && !hasMeander) {
       return;
     }
-    final double minTraceLength = constraint.minLength();
-    final double maxTraceLength = constraint.maxLength();
     scopeParameter.file.startScope();
     scopeParameter.file.write("circuit");
-    scopeParameter.file.newLine();
-    scopeParameter.file.write("(length ");
-    double transformedMaxLength;
-    if (maxTraceLength <= 0) {
-      transformedMaxLength = -1;
-    } else {
-      transformedMaxLength = scopeParameter.coordinateTransform.boardToDsn(maxTraceLength);
+    if (hasLength) {
+      final double minTraceLength = lengthConstraint.minLength();
+      final double maxTraceLength = lengthConstraint.maxLength();
+      scopeParameter.file.newLine();
+      scopeParameter.file.write("(length ");
+      double transformedMaxLength;
+      if (maxTraceLength <= 0) {
+        transformedMaxLength = -1;
+      } else {
+        transformedMaxLength = scopeParameter.coordinateTransform.boardToDsn(maxTraceLength);
+      }
+      scopeParameter.file.write(String.valueOf(transformedMaxLength));
+      scopeParameter.file.write(" ");
+      double transformedMinLength;
+      if (minTraceLength <= 0) {
+        transformedMinLength = 0;
+      } else {
+        transformedMinLength = scopeParameter.coordinateTransform.boardToDsn(minTraceLength);
+      }
+      scopeParameter.file.write(String.valueOf(transformedMinLength));
+      scopeParameter.file.write(")");
     }
-    scopeParameter.file.write(String.valueOf(transformedMaxLength));
-    scopeParameter.file.write(" ");
-    double transformedMinLength;
-    if (minTraceLength <= 0) {
-      transformedMinLength = 0;
-    } else {
-      transformedMinLength = scopeParameter.coordinateTransform.boardToDsn(minTraceLength);
+    if (hasMeander) {
+      Rule.writeMeanderRules(meanderConstraint, scopeParameter);
     }
-    scopeParameter.file.write(String.valueOf(transformedMinLength));
-    scopeParameter.file.write(")");
     scopeParameter.file.endScope();
   }
 

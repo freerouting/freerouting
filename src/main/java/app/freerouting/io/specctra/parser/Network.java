@@ -186,6 +186,9 @@ public class Network extends ScopeKeyword {
       scopeParameter.file.write(String.valueOf(transformedMinLength));
       scopeParameter.file.write(")");
     }
+    if (netClass.getMeanderConstraint() != null) {
+      Rule.writeMeanderRules(netClass.getMeanderConstraint(), scopeParameter);
+    }
     scopeParameter.file.endScope();
   }
 

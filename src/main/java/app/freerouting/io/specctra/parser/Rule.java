@@ -338,7 +338,81 @@ public abstract class Rule {
     writeNamedClearanceRules(scopeParameter, layer);
     // write_non_default_clearance_rules(scopeParameter, layer, defaultBoardClearance);
 
+    if (scopeParameter.board.rules.getDefaultMeanderConstraint() != null) {
+      writeMeanderRules(scopeParameter.board.rules.getDefaultMeanderConstraint(), scopeParameter);
+    }
+
     scopeParameter.file.endScope();
+  }
+
+  /** Writes meander rules (length_amplitude and length_gap) if defined in the constraint. */
+  public static void writeMeanderRules(
+      NetMeanderConstraint constraint, WriteScopeParameter scopeParameter) throws IOException {
+    if (constraint == null) {
+      return;
+    }
+    boolean shouldWriteAmp =
+        constraint.hasMaxAmplitude()
+            || constraint.maxAmplitude() == 0.0
+            || constraint.singleSided()
+            || (constraint.cornerStyle() != null
+                && constraint.cornerStyle() != NetMeanderConstraint.CornerStyle.AUTO);
+    if (shouldWriteAmp) {
+      scopeParameter.file.newLine();
+      scopeParameter.file.write("(length_amplitude ");
+      double transformedMax;
+      if (constraint.maxAmplitude() == 0.0) {
+        transformedMax = 0.0;
+      } else if (constraint.maxAmplitude() > 0) {
+        transformedMax = scopeParameter.coordinateTransform.boardToDsn(constraint.maxAmplitude());
+      } else {
+        transformedMax = -1;
+      }
+      scopeParameter.file.write(String.valueOf(transformedMax));
+
+      if (constraint.hasMinAmplitude()) {
+        scopeParameter.file.write(" ");
+        double transformedMin =
+            scopeParameter.coordinateTransform.boardToDsn(constraint.minAmplitude());
+        scopeParameter.file.write(String.valueOf(transformedMin));
+      }
+      if (constraint.singleSided()) {
+        scopeParameter.file.write(" (type trombone)");
+      }
+      if (constraint.cornerStyle() != null
+          && constraint.cornerStyle() != NetMeanderConstraint.CornerStyle.AUTO) {
+        scopeParameter.file.write(" (corner ");
+        scopeParameter.file.write(
+            switch (constraint.cornerStyle()) {
+              case CHAMFERED_45 -> "chamfered";
+              case FILLETED_ROUND -> "filleted";
+              case ORTHOGONAL_90 -> "orthogonal";
+              default -> "chamfered";
+            });
+        scopeParameter.file.write(")");
+      }
+      if (constraint.cornerRadiusPercentage() > 0
+          && constraint.cornerRadiusPercentage()
+              != NetMeanderConstraint.DEFAULT_CORNER_RADIUS_PERCENT) {
+        scopeParameter.file.write(" (radius ");
+        scopeParameter.file.write(String.valueOf(constraint.cornerRadiusPercentage()));
+        scopeParameter.file.write(")");
+      }
+      scopeParameter.file.write(")");
+    }
+
+    if (constraint.hasGap() || constraint.gap() == 0.0) {
+      scopeParameter.file.newLine();
+      scopeParameter.file.write("(length_gap ");
+      double transformedGap;
+      if (constraint.gap() <= 0.0) {
+        transformedGap = 0.0;
+      } else {
+        transformedGap = scopeParameter.coordinateTransform.boardToDsn(constraint.gap());
+      }
+      scopeParameter.file.write(String.valueOf(transformedGap));
+      scopeParameter.file.write(")");
+    }
   }
 
   /** Write the clearance rules, which are different from the default clearance. */
