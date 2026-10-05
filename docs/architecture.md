@@ -199,7 +199,13 @@ The rule model that defines nets, clearance classes, via rules, layer constraint
 
 - `NetLengthConstraint` — Immutable record representing minimum and maximum trace length bounds (`minLength`, `maxLength`), target length calculation (midpoint or single bound), and boundary checks (`isSatisfied(traceLength)`).
 - Trace length bounds are supported at both the `NetClass` level and as explicit overrides at the `Net` level (parsed from Specctra DSN `(circuit (length <max> [<min>]))` or `(rule (length <max> [<min>]))` scopes). When unconstrained at the net level, a net transparently falls back to its net class constraint.
-- **Future Extension Point:** Net length constraints are structured for forward compatibility with future post-routing Net Length Tuning and accordion meander insertion phases, providing the target length and tolerance envelope without coupling to active routing search heuristics.
+- `NetMeanderConstraint` — Immutable record representing waveform geometry and spacing rules for trace length tuning serpentine meanders (`maxAmplitude`, `minAmplitude`, `gap`, `singleSided`, `cornerStyle`, `cornerRadiusPercentage`).
+  - Supports symmetric dual-sided accordions and single-sided trombone U-loops (`(type trombone)` / `single_sided on`).
+  - Configurable corner styling (`CHAMFERED_45`, `FILLETED_ROUND`, `ORTHOGONAL_90`, and `AUTO` adapting to the board's `AngleRestriction`) and corner radius percentages (0–100%, defaulting to 80%).
+  - Adheres to the Specctra 3W rule fallback via `resolveEffectiveGap(traceWidth, traceClearance)` ($\max(3 \times \text{width}, \text{width} + \text{clearance})$).
+  - Supports explicit prohibition sentinels (`maxAmplitude == 0.0` strictly forbids meander insertion per Specctra specification).
+  - Hierarchical inheritance: Net override &rarr; NetClass &rarr; BoardRules default, with `mergeWith()` handling partial overrides.
+  - Specctra DSN grammar: parsed from and serialized to `length_amplitude` and `length_gap` in `(rule ...)` and `(circuit ...)` scopes across single nets, net classes, and board default rules.
 
 ### `app.freerouting.drc`
 
