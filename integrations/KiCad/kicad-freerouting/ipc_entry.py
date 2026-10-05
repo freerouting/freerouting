@@ -20,6 +20,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import os
 import subprocess
 import sys
 import threading
@@ -32,8 +33,8 @@ if sys.platform == "win32":
         hwnd = ctypes.windll.kernel32.GetConsoleWindow()
         if hwnd:
             ctypes.windll.user32.ShowWindow(hwnd, 0)  # SW_HIDE
-    except Exception as e:
-        logger.debug("Could not hide console window: %s", e)
+    except Exception:
+        pass
 
 # Add plugins and ipc_bridge to sys.path
 here = Path(__file__).resolve().parent
@@ -70,11 +71,20 @@ from ipc_dialog import (
     STATE_FAIL,
 )
 
+
+class AutoFlushFileHandler(logging.FileHandler):
+    """FileHandler that flushes immediately after every write to prevent buffering."""
+
+    def emit(self, record):
+        super().emit(record)
+        self.flush()
+
+
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 log_file = LOG_DIR / "freerouting_ipc_plugin.log"
 
 logging_handlers = [
-    logging.FileHandler(log_file, mode="a", encoding="utf-8"),
+    AutoFlushFileHandler(log_file, mode="a", encoding="utf-8"),
 ]
 if sys.stdout and getattr(sys.stdout, "isatty", lambda: False)():
     logging_handlers.append(logging.StreamHandler(sys.stdout))
@@ -103,6 +113,8 @@ def run_pipeline(dialog: IpcRoutingDialog, args: argparse.Namespace) -> None:
     logger.info("=== Starting Freerouting IPC Plugin Action ===")
     logger.info(f"Python: {sys.executable} ({sys.version.split()[0]})")
     logger.info(f"Arguments: {args}")
+    logger.info(f"KICAD_API_SOCKET: {os.environ.get('KICAD_API_SOCKET')}")
+    logger.info(f"KICAD_API_TOKEN: {'[SET]' if os.environ.get('KICAD_API_TOKEN') else '[NOT SET]'}")
 
     reader = None
     client = FreeroutingApiClient()
@@ -151,7 +163,14 @@ def run_pipeline(dialog: IpcRoutingDialog, args: argparse.Namespace) -> None:
             reader = KiCadIpcBoardReader(socket_path=args.socket)
             logger.info(f"Connected to KiCad {reader.kicad_version} — Board: '{reader.board.name}'")
         except Exception as e:
-            err = f"Failed to connect to KiCad IPC: {e}\nPlease verify that 'Preferences > Plugins > Enable KiCad API' is enabled."
+            if "kicad_token did not match" in str(e).lower():
+                err = (
+                    "KiCad IPC Token Mismatch:\n"
+                    "Another instance or version of KiCad is running in the background.\n"
+                    "Please close all other KiCad instances and try again."
+                )
+            else:
+                err = f"Failed to connect to KiCad IPC: {e}\nPlease verify that 'Preferences > Plugins > Enable KiCad API' is enabled."
             logger.error(err, exc_info=True)
             dialog.set_stage(STAGE_EXTRACT, STATE_FAIL)
             dialog.complete_error(err)
@@ -202,9 +221,24 @@ def run_pipeline(dialog: IpcRoutingDialog, args: argparse.Namespace) -> None:
                         java_path = javaw_candidate
 
             jar_path = plugins_dir / "jar" / "freerouting.jar"
+            ini_file = plugins_dir / "plugin.ini"
+            if not jar_path.is_file() and ini_file.is_file():
+                try:
+                    import configparser
+                    cfg = configparser.ConfigParser()
+                    cfg.read(ini_file)
+                    if cfg.has_option("artifact", "location"):
+                        rel_loc = cfg.get("artifact", "location").strip()
+                        candidate_ini = plugins_dir / rel_loc
+                        if candidate_ini.is_file():
+                            jar_path = candidate_ini
+                except Exception:
+                    pass
+
             if not jar_path.is_file():
                 candidates = [
-                    plugins_dir / "jar" / "freerouting-2.5.0-RC12.jar",
+                    plugins_dir / "jar" / "freerouting-2.5.0.jar",
+                    *sorted(plugins_dir.glob("jar/freerouting*.jar"), reverse=True),
                     here.parent.parent / "build" / "libs" / "freerouting-current-executable.jar",
                 ]
                 for c in candidates:
