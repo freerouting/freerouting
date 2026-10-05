@@ -45,6 +45,12 @@ public class Net implements Comparable<Net>, ItemInfoPrinter.Printable, Serializ
    */
   private NetLengthConstraint lengthConstraint;
 
+  /**
+   * Optional explicit meander (length tuning) constraint for this net, or null if inheriting from
+   * netClass.
+   */
+  private NetMeanderConstraint meanderConstraint;
+
   /** Creates a new net. */
   public Net(String name, int subnetNumber, int number, Nets netList, boolean containsPlane) {
     this.name = name;
@@ -149,6 +155,38 @@ public class Net implements Comparable<Net>, ItemInfoPrinter.Printable, Serializ
    */
   public NetLengthConstraint getExplicitLengthConstraint() {
     return this.lengthConstraint;
+  }
+
+  /**
+   * Returns the effective meander constraint of this net. If an explicit net-level constraint is
+   * present, it is merged with any inherited net-class constraint; otherwise falls back to the
+   * net-class constraint.
+   */
+  public NetMeanderConstraint getMeanderConstraint() {
+    NetMeanderConstraint classConstraint =
+        (this.netClass != null) ? this.netClass.getMeanderConstraint() : null;
+    if (this.meanderConstraint != null) {
+      return this.meanderConstraint.mergeWith(classConstraint);
+    }
+    return classConstraint;
+  }
+
+  /** Sets the explicit meander constraint for this net. Pass null to inherit from net-class. */
+  public void setMeanderConstraint(NetMeanderConstraint constraint) {
+    this.meanderConstraint = constraint;
+  }
+
+  /** Returns true if this net has an explicit net-level meander constraint configured. */
+  public boolean hasExplicitMeanderConstraint() {
+    return this.meanderConstraint != null;
+  }
+
+  /**
+   * Returns the explicit net-level meander constraint of this net, or null if inheriting from the
+   * net class.
+   */
+  public NetMeanderConstraint getExplicitMeanderConstraint() {
+    return this.meanderConstraint;
   }
 
   /** Returns the pins and conduction areas of this net. */

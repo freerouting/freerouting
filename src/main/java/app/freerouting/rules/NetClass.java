@@ -35,6 +35,7 @@ public class NetClass implements Serializable, ItemInfoPrinter.Printable {
   private boolean ignoreCyclesWithAreas;
   private double minimumTraceLength = 0;
   private double maximumTraceLength = 0;
+  private NetMeanderConstraint meanderConstraint;
 
   /** Creates a new instance of {@code NetClass}. */
   public NetClass(
@@ -203,6 +204,22 @@ public class NetClass implements Serializable, ItemInfoPrinter.Printable {
       this.minimumTraceLength = constraint.minLength();
       this.maximumTraceLength = constraint.maxLength();
     }
+  }
+
+  /**
+   * Returns the length tuning meander constraint of this net class, or null if none is specified.
+   */
+  public NetMeanderConstraint getMeanderConstraint() {
+    return this.meanderConstraint;
+  }
+
+  /**
+   * Sets the length tuning meander constraint of this net class.
+   *
+   * @param constraint the new meander constraint, or null for unconstrained
+   */
+  public void setMeanderConstraint(NetMeanderConstraint constraint) {
+    this.meanderConstraint = constraint;
   }
 
   /** Returns whether the layer with the given index is active for routing. */

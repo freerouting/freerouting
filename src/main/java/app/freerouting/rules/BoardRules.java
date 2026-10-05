@@ -47,6 +47,7 @@ public class BoardRules implements Serializable {
 
   private static final long serialVersionUID = 3029478744858107286L;
 
+  private NetMeanderConstraint defaultMeanderConstraint;
   private boolean useSlowAutorouteAlgorithm;
   private int holeClearance;
   public transient double clearanceToleranceUm = 1.0;
@@ -377,6 +378,31 @@ public class BoardRules implements Serializable {
   /** Sets whether the router should ignore conduction areas. */
   public void setIgnoreConduction(boolean value) {
     this.ignoreConduction = value;
+  }
+
+  /**
+   * Returns the board-level default meander constraint for trace length tuning, or null if none is
+   * set.
+   */
+  public NetMeanderConstraint getDefaultMeanderConstraint() {
+    return this.defaultMeanderConstraint;
+  }
+
+  /** Sets the board-level default meander constraint for trace length tuning. */
+  public void setDefaultMeanderConstraint(NetMeanderConstraint constraint) {
+    this.defaultMeanderConstraint = constraint;
+  }
+
+  /**
+   * Resolves the effective meander constraint for the given net, traversing the hierarchy: Net
+   * override &rarr; NetClass &rarr; Board default &rarr; null.
+   */
+  public NetMeanderConstraint resolveMeanderConstraint(Net net) {
+    NetMeanderConstraint netConstraint = (net != null) ? net.getMeanderConstraint() : null;
+    if (netConstraint != null) {
+      return netConstraint.mergeWith(this.defaultMeanderConstraint);
+    }
+    return this.defaultMeanderConstraint;
   }
 
   /** The angle restriction for traces: 90 degree, 45 degree or none. */
