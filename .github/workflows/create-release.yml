@@ -35,13 +35,31 @@ jobs:
       - name: Build and Run Tests
         run: ./gradlew build
 
+  setup-release:
+    name: 'Validate Release Tag'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions: {}
+    outputs:
+      version: ${{ steps.tagName.outputs.tag }}
+    steps:
+      - name: Get Tag name
+        id: tagName
+        shell: bash
+        run: |
+          if [ "${GITHUB_REF_TYPE}" != "tag" ] || [[ ! "${GITHUB_REF_NAME}" =~ ^v[0-9]+\.[0-9]+(\.[0-9]+)?(-[a-zA-Z0-9.]+)?$ ]]; then
+            echo "Error: Release workflow must be run on a version tag (e.g. v2.5.0), but got ref '${GITHUB_REF_NAME}' (${GITHUB_REF_TYPE})." >&2
+            exit 1
+          fi
+          echo "tag=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
   build-jar:
     name: 'Build JAR'
-    needs: test
+    needs: [ test, setup-release ]
     runs-on: [ ubuntu-latest ]
     timeout-minutes: 30
     permissions:
-      contents: write
+      contents: read
     steps:
       - uses: actions/checkout@v5
       - name: Set up JDK
@@ -61,29 +79,22 @@ jobs:
         run: chmod +x scripts/build/*.sh
       - name: Build with Gradle
         run: ./gradlew dist
-      - name: Get Tag name
-        id: tagName
-        shell: bash
-        run: |
-          if [ "${GITHUB_REF_TYPE}" != "tag" ] || [[ ! "${GITHUB_REF_NAME}" =~ ^v[0-9]+\.[0-9]+(\.[0-9]+)?(-[a-zA-Z0-9.]+)?$ ]]; then
-            echo "Error: Release workflow must be run on a version tag (e.g. v2.5.0), but got ref '${GITHUB_REF_NAME}' (${GITHUB_REF_TYPE})." >&2
-            exit 1
-          fi
-          echo "tag=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
       - name: Create Distribution
-        run: scripts/build/create-distribution-jar.sh ${{ steps.tagName.outputs.tag }}
-      - uses: AButler/upload-release-assets@v4.0
+        run: scripts/build/create-distribution-jar.sh ${{ needs.setup-release.outputs.version }}
+      - name: Upload JAR Artifact
+        uses: actions/upload-artifact@v4
         with:
-          files: './scripts/build/freerouting-${{ steps.tagName.outputs.tag }}.jar'
-          release-tag: v${{ steps.tagName.outputs.tag }}
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          name: release-dist-jar
+          path: './scripts/build/freerouting-${{ needs.setup-release.outputs.version }}.jar'
+          retention-days: 1
 
   build-ubuntu-x64:
-    needs: test
+    name: 'Build Ubuntu x64 Package'
+    needs: [ test, setup-release ]
     runs-on: [ ubuntu-latest ]
     timeout-minutes: 30
     permissions:
-      contents: write
+      contents: read
     steps:
       - uses: actions/checkout@v5
       - name: Set up JDK
@@ -103,46 +114,23 @@ jobs:
         run: chmod +x scripts/build/*.sh
       - name: Build with Gradle
         run: ./gradlew dist
-      - name: Get Tag name
-        id: tagName
-        shell: bash
-        run: |
-          if [ "${GITHUB_REF_TYPE}" != "tag" ] || [[ ! "${GITHUB_REF_NAME}" =~ ^v[0-9]+\.[0-9]+(\.[0-9]+)?(-[a-zA-Z0-9.]+)?$ ]]; then
-            echo "Error: Release workflow must be run on a version tag (e.g. v2.5.0), but got ref '${GITHUB_REF_NAME}' (${GITHUB_REF_TYPE})." >&2
-            exit 1
-          fi
-          echo "tag=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
       - name: Create Distribution
-        run: scripts/build/create-distribution-linux-x64.sh ${{ steps.tagName.outputs.tag }}
+        run: scripts/build/create-distribution-linux-x64.sh ${{ needs.setup-release.outputs.version }}
       - name: Upload Linux Dist Zip Artifact
         uses: actions/upload-artifact@v4
         with:
           name: release-linux-dist-zip
-          path: './scripts/build/freerouting-${{ steps.tagName.outputs.tag }}-linux-x64.zip'
+          path: './scripts/build/freerouting-${{ needs.setup-release.outputs.version }}-linux-x64.zip'
           retention-days: 1
-      - uses: AButler/upload-release-assets@v4.0
-        with:
-          files: './scripts/build/freerouting-${{ steps.tagName.outputs.tag }}-linux-x64.zip'
-          release-tag: v${{ steps.tagName.outputs.tag }}
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
 
   build-appimage:
     name: 'Build AppImage'
-    needs: [ test, build-ubuntu-x64 ]
+    needs: [ test, setup-release, build-ubuntu-x64 ]
     runs-on: [ ubuntu-latest ]
     timeout-minutes: 30
     permissions:
-      contents: write
+      contents: read
     steps:
-      - name: Get Tag name
-        id: tagName
-        shell: bash
-        run: |
-          if [ "${GITHUB_REF_TYPE}" != "tag" ] || [[ ! "${GITHUB_REF_NAME}" =~ ^v[0-9]+\.[0-9]+(\.[0-9]+)?(-[a-zA-Z0-9.]+)?$ ]]; then
-            echo "Error: Release workflow must be run on a version tag (e.g. v2.5.0), but got ref '${GITHUB_REF_NAME}' (${GITHUB_REF_TYPE})." >&2
-            exit 1
-          fi
-          echo "tag=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
       - uses: actions/checkout@v5
       - name: Download Linux Dist Zip
         uses: actions/download-artifact@v4
@@ -157,23 +145,27 @@ jobs:
             -v "$PWD":/workspace \
             -w /workspace \
             -e GITHUB_REPOSITORY="${{ github.repository }}" \
-            -e RELEASE_TAG="${{ steps.tagName.outputs.tag }}" \
+            -e RELEASE_TAG="${{ needs.setup-release.outputs.version }}" \
             docker.io/pkgforge/archlinux:latest \
             /bin/sh -c "chmod +x ./scripts/build/*.sh ./scripts/build/appimage/*.sh && \
               /bin/sh ./scripts/build/appimage/install-dependencies.sh && \
               /bin/sh ./scripts/build/create-distribution-appimage.sh x86_64 \"\$RELEASE_TAG\""
-      - uses: AButler/upload-release-assets@v4.0
+      - name: Upload AppImage Artifacts
+        uses: actions/upload-artifact@v4
         with:
-          files: './dist/freerouting-${{ steps.tagName.outputs.tag }}-x86_64.AppImage;./dist/freerouting-${{ steps.tagName.outputs.tag }}-x86_64.AppImage.zsync'
-          release-tag: v${{ steps.tagName.outputs.tag }}
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          name: release-dist-appimage
+          path: |
+            ./dist/freerouting-${{ needs.setup-release.outputs.version }}-x86_64.AppImage
+            ./dist/freerouting-${{ needs.setup-release.outputs.version }}-x86_64.AppImage.zsync
+          retention-days: 1
 
   build-windows-x64:
-    needs: test
+    name: 'Build Windows x64 MSI'
+    needs: [ test, setup-release ]
     runs-on: [ windows-latest ]
     timeout-minutes: 30
     permissions:
-      contents: write
+      contents: read
     steps:
       - uses: actions/checkout@v5
       - name: Set up JDK
@@ -189,29 +181,22 @@ jobs:
           build-scan-terms-of-use-agree: 'yes'
       - name: Build with Gradle
         run: .\gradlew.bat dist --no-daemon
-      - name: Get Tag name
-        id: tagName
-        shell: bash
-        run: |
-          if [ "${GITHUB_REF_TYPE}" != "tag" ] || [[ ! "${GITHUB_REF_NAME}" =~ ^v[0-9]+\.[0-9]+(\.[0-9]+)?(-[a-zA-Z0-9.]+)?$ ]]; then
-            echo "Error: Release workflow must be run on a version tag (e.g. v2.5.0), but got ref '${GITHUB_REF_NAME}' (${GITHUB_REF_TYPE})." >&2
-            exit 1
-          fi
-          echo "tag=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
       - name: Create Distribution
-        run: .\scripts\build\create-distribution-windows-x64.bat ${{ steps.tagName.outputs.tag }}
-      - uses: AButler/upload-release-assets@v4.0
+        run: .\scripts\build\create-distribution-windows-x64.bat ${{ needs.setup-release.outputs.version }}
+      - name: Upload Windows MSI Artifact
+        uses: actions/upload-artifact@v4
         with:
-          files: './scripts/build/freerouting-${{ steps.tagName.outputs.tag }}-windows-x64.msi'
-          release-tag: v${{ steps.tagName.outputs.tag }}
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          name: release-dist-windows
+          path: './scripts/build/freerouting-${{ needs.setup-release.outputs.version }}-windows-x64.msi'
+          retention-days: 1
 
   build-macos-arm64:
-    needs: test
+    name: 'Build macOS ARM64 DMG'
+    needs: [ test, setup-release ]
     runs-on: [ macos-15 ]
     timeout-minutes: 30
     permissions:
-      contents: write
+      contents: read
     steps:
       - uses: actions/checkout@v5
       - name: Set up JDK
@@ -231,29 +216,22 @@ jobs:
         run: chmod +x scripts/build/*.sh
       - name: Build with Gradle
         run: ./gradlew dist
-      - name: Get Tag name
-        id: tagName
-        shell: bash
-        run: |
-          if [ "${GITHUB_REF_TYPE}" != "tag" ] || [[ ! "${GITHUB_REF_NAME}" =~ ^v[0-9]+\.[0-9]+(\.[0-9]+)?(-[a-zA-Z0-9.]+)?$ ]]; then
-            echo "Error: Release workflow must be run on a version tag (e.g. v2.5.0), but got ref '${GITHUB_REF_NAME}' (${GITHUB_REF_TYPE})." >&2
-            exit 1
-          fi
-          echo "tag=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
       - name: Create Distribution
-        run: scripts/build/create-distribution-macos-arm64.sh ${{ steps.tagName.outputs.tag }}
-      - uses: AButler/upload-release-assets@v4.0
+        run: scripts/build/create-distribution-macos-arm64.sh ${{ needs.setup-release.outputs.version }}
+      - name: Upload macOS ARM64 DMG Artifact
+        uses: actions/upload-artifact@v4
         with:
-          files: './scripts/build/freerouting-${{ steps.tagName.outputs.tag }}-macos-arm64.dmg'
-          release-tag: v${{ steps.tagName.outputs.tag }}
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          name: release-dist-macos-arm64
+          path: './scripts/build/freerouting-${{ needs.setup-release.outputs.version }}-macos-arm64.dmg'
+          retention-days: 1
 
   build-macos-x64:
-    needs: test
+    name: 'Build macOS x64 DMG'
+    needs: [ test, setup-release ]
     runs-on: [ macos-15-intel ]
     timeout-minutes: 30
     permissions:
-      contents: write
+      contents: read
     steps:
       - uses: actions/checkout@v5
       - name: Set up JDK
@@ -274,19 +252,243 @@ jobs:
         run: chmod +x scripts/build/*.sh
       - name: Build with Gradle
         run: ./gradlew dist
-      - name: Get Tag name
-        id: tagName
+      - name: Create Distribution
+        run: scripts/build/create-distribution-macos-x64.sh ${{ needs.setup-release.outputs.version }}
+      - name: Upload macOS x64 DMG Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-dist-macos-x64
+          path: './scripts/build/freerouting-${{ needs.setup-release.outputs.version }}-macos-x64.dmg'
+          retention-days: 1
+
+  build-native-cli:
+    name: 'Build Native CLI (${{ matrix.platform }}-${{ matrix.arch }})'
+    needs: [ test, setup-release ]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux
+            arch: x64
+            runner: ubuntu-latest
+            binary-name: freerouting-cli
+            archive-ext: tar.gz
+            use-tar: true
+          - platform: linux
+            arch: arm64
+            runner: ubuntu-24.04-arm
+            binary-name: freerouting-cli
+            archive-ext: tar.gz
+            use-tar: true
+          - platform: macos
+            arch: arm64
+            runner: macos-15
+            binary-name: freerouting-cli
+            archive-ext: tar.gz
+            use-tar: true
+          - platform: macos
+            arch: x64
+            runner: macos-15-intel
+            binary-name: freerouting-cli
+            archive-ext: tar.gz
+            use-tar: true
+          - platform: windows
+            arch: x64
+            runner: windows-latest
+            binary-name: freerouting-cli.exe
+            archive-ext: zip
+            use-tar: false
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set up Oracle GraalVM JDK 25
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '25'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          native-image-job-reports: 'true'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          build-scan-publish: false
+      - name: Build PGO Instrumented Executable
+        shell: bash
+        run: ./gradlew nativeCompile --pgo-instrument
+      - name: Run Golden Workload to Generate PGO Profile
         shell: bash
         run: |
-          if [ "${GITHUB_REF_TYPE}" != "tag" ] || [[ ! "${GITHUB_REF_NAME}" =~ ^v[0-9]+\.[0-9]+(\.[0-9]+)?(-[a-zA-Z0-9.]+)?$ ]]; then
-            echo "Error: Release workflow must be run on a version tag (e.g. v2.5.0), but got ref '${GITHUB_REF_NAME}' (${GITHUB_REF_TYPE})." >&2
-            exit 1
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            ./build/native/nativeCompile/freerouting-cli-instrumented.exe -de fixtures/Issue508-DAC2020_bm01.dsn -do build/train_pgo.ses -mp 1
+          else
+            ./build/native/nativeCompile/freerouting-cli-instrumented -de fixtures/Issue508-DAC2020_bm01.dsn -do build/train_pgo.ses -mp 1
           fi
-          echo "tag=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
-      - name: Create Distribution
-        run: scripts/build/create-distribution-macos-x64.sh ${{ steps.tagName.outputs.tag }}
-      - uses: AButler/upload-release-assets@v4.0
+          mkdir -p src/pgo-profiles/main
+          cp default.iprof src/pgo-profiles/main/default.iprof
+      - name: Build Final PGO-Optimized Native Binary
+        shell: bash
+        run: ./gradlew nativeCompile
+      - name: Package Native Executable Archive
+        shell: bash
+        run: |
+          VER="${{ needs.setup-release.outputs.version }}"
+          ARCHIVE_NAME="freerouting-cli-${VER}-${{ matrix.platform }}-${{ matrix.arch }}.${{ matrix.archive-ext }}"
+          mkdir -p build/dist
+          cd build/native/nativeCompile
+          if [ "${{ matrix.use-tar }}" = "true" ]; then
+            tar -czvf "../../dist/${ARCHIVE_NAME}" "${{ matrix.binary-name }}"
+          else
+            7z a "../../dist/${ARCHIVE_NAME}" "${{ matrix.binary-name }}"
+          fi
+          cd ../../dist
+          if command -v sha256sum >/dev/null 2>&1; then
+            sha256sum "${ARCHIVE_NAME}" > "${ARCHIVE_NAME}.sha256"
+          else
+            shasum -a 256 "${ARCHIVE_NAME}" > "${ARCHIVE_NAME}.sha256"
+          fi
+      - name: Upload Native Artifact
+        uses: actions/upload-artifact@v4
         with:
-          files: './scripts/build/freerouting-${{ steps.tagName.outputs.tag }}-macos-x64.dmg'
-          release-tag: v${{ steps.tagName.outputs.tag }}
+          name: release-native-cli-${{ matrix.platform }}-${{ matrix.arch }}
+          path: |
+            build/dist/freerouting-cli-${{ needs.setup-release.outputs.version }}-${{ matrix.platform }}-${{ matrix.arch }}.${{ matrix.archive-ext }}
+            build/dist/freerouting-cli-${{ needs.setup-release.outputs.version }}-${{ matrix.platform }}-${{ matrix.arch }}.${{ matrix.archive-ext }}.sha256
+          retention-days: 1
+
+  publish-release:
+    name: 'Publish Release Assets'
+    needs:
+      - setup-release
+      - build-jar
+      - build-windows-x64
+      - build-ubuntu-x64
+      - build-macos-arm64
+      - build-macos-x64
+      - build-appimage
+      - build-native-cli
+    runs-on: [ ubuntu-latest ]
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - name: Download all built artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./staging
+          merge-multiple: true
+
+      - name: List downloaded assets
+        run: ls -la ./staging
+
+      # Upload assets in the defined popularity order:
+      # 1. JAR
+      # 2. Windows MSI
+      # 3. Linux ZIP
+      # 4. macOS ARM64 DMG
+      # 5. macOS x64 DMG
+      # 6. AppImage
+      # 7. AppImage zsync
+      # 8. Native CLI Windows x64 ZIP
+      # 9. Native CLI Linux x64 TAR.GZ
+      # 10. Native CLI Linux ARM64 TAR.GZ
+      # 11. Native CLI macOS ARM64 TAR.GZ
+      # 12. Native CLI macOS x64 TAR.GZ
+      # 13. Native CLI Checksums
+      - name: Upload JAR
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-${{ needs.setup-release.outputs.version }}.jar'
+          release-tag: v${{ needs.setup-release.outputs.version }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Windows MSI
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-${{ needs.setup-release.outputs.version }}-windows-x64.msi'
+          release-tag: v${{ needs.setup-release.outputs.version }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Linux ZIP
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-${{ needs.setup-release.outputs.version }}-linux-x64.zip'
+          release-tag: v${{ needs.setup-release.outputs.version }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload macOS ARM64 DMG
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-${{ needs.setup-release.outputs.version }}-macos-arm64.dmg'
+          release-tag: v${{ needs.setup-release.outputs.version }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload macOS x64 DMG
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-${{ needs.setup-release.outputs.version }}-macos-x64.dmg'
+          release-tag: v${{ needs.setup-release.outputs.version }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload AppImage
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-${{ needs.setup-release.outputs.version }}-x86_64.AppImage'
+          release-tag: v${{ needs.setup-release.outputs.version }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload AppImage zsync
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-${{ needs.setup-release.outputs.version }}-x86_64.AppImage.zsync'
+          release-tag: v${{ needs.setup-release.outputs.version }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate Combined Native Checksums
+        run: |
+          cd ./staging
+          cat freerouting-cli-*.sha256 > "freerouting-cli-${{ needs.setup-release.outputs.version }}-checksums.txt"
+
+      - name: Upload Native CLI Windows x64 ZIP
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-cli-${{ needs.setup-release.outputs.version }}-windows-x64.zip'
+          release-tag: v${{ needs.setup-release.outputs.version }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Native CLI Linux x64 TAR.GZ
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-cli-${{ needs.setup-release.outputs.version }}-linux-x64.tar.gz'
+          release-tag: v${{ needs.setup-release.outputs.version }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Native CLI Linux ARM64 TAR.GZ
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-cli-${{ needs.setup-release.outputs.version }}-linux-arm64.tar.gz'
+          release-tag: v${{ needs.setup-release.outputs.version }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Native CLI macOS ARM64 TAR.GZ
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-cli-${{ needs.setup-release.outputs.version }}-macos-arm64.tar.gz'
+          release-tag: v${{ needs.setup-release.outputs.version }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Native CLI macOS x64 TAR.GZ
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-cli-${{ needs.setup-release.outputs.version }}-macos-x64.tar.gz'
+          release-tag: v${{ needs.setup-release.outputs.version }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Native CLI Checksums
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-cli-${{ needs.setup-release.outputs.version }}-checksums.txt'
+          release-tag: v${{ needs.setup-release.outputs.version }}
           repo-token: ${{ secrets.GITHUB_TOKEN }}

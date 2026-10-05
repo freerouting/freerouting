@@ -1,6 +1,5 @@
 package app.freerouting.logger;
 
-import app.freerouting.Freerouting;
 import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.debug.DebugControl;
 import app.freerouting.geometry.planar.Point;
@@ -21,6 +20,7 @@ import org.apache.logging.log4j.Logger;
 @SuppressWarnings("AbbreviationAsWordInName")
 public final class FRLogger {
 
+  private static final String LOGGER_NAME = "app.freerouting.Freerouting";
   public static final DecimalFormat defaultFloatFormat =
       new DecimalFormat("0.00", new java.text.DecimalFormatSymbols(java.util.Locale.US));
   public static final DecimalFormat defaultSignedFloatFormat =
@@ -161,7 +161,7 @@ public final class FRLogger {
       return;
     }
     if (logger == null) {
-      logger = LogManager.getLogger(Freerouting.class);
+      logger = LogManager.getLogger(LOGGER_NAME);
     }
 
     perfData.put(perfId.hashCode(), Instant.now());
@@ -178,7 +178,7 @@ public final class FRLogger {
       return 0.0;
     }
     if (logger == null) {
-      logger = LogManager.getLogger(Freerouting.class);
+      logger = LogManager.getLogger(LOGGER_NAME);
     }
 
     return traceExit(perfId, null);
@@ -196,7 +196,7 @@ public final class FRLogger {
       return 0.0;
     }
     if (logger == null) {
-      logger = LogManager.getLogger(Freerouting.class);
+      logger = LogManager.getLogger(LOGGER_NAME);
     }
 
     long timeElapsed = 0;
@@ -235,7 +235,7 @@ public final class FRLogger {
       return null;
     }
     if (logger == null) {
-      logger = LogManager.getLogger(Freerouting.class);
+      logger = LogManager.getLogger(LOGGER_NAME);
     }
 
     logger.info(msg);
@@ -265,7 +265,7 @@ public final class FRLogger {
       return null;
     }
     if (logger == null) {
-      logger = LogManager.getLogger(Freerouting.class);
+      logger = LogManager.getLogger(LOGGER_NAME);
     }
 
     logger.warn(msg);
@@ -295,7 +295,7 @@ public final class FRLogger {
       return null;
     }
     if (logger == null) {
-      logger = LogManager.getLogger(Freerouting.class);
+      logger = LogManager.getLogger(LOGGER_NAME);
     }
 
     logger.debug(msg);
@@ -326,7 +326,7 @@ public final class FRLogger {
       return null;
     }
     if (logger == null) {
-      logger = LogManager.getLogger(Freerouting.class);
+      logger = LogManager.getLogger(LOGGER_NAME);
     }
 
     if (exception == null) {
@@ -359,7 +359,7 @@ public final class FRLogger {
       return false;
     }
     if (logger == null) {
-      logger = LogManager.getLogger(Freerouting.class);
+      logger = LogManager.getLogger(LOGGER_NAME);
     }
     return logger.isTraceEnabled();
   }
@@ -375,7 +375,7 @@ public final class FRLogger {
       return null;
     }
     if (logger == null) {
-      logger = LogManager.getLogger(Freerouting.class);
+      logger = LogManager.getLogger(LOGGER_NAME);
     }
 
     logger.trace(msg);
@@ -415,7 +415,7 @@ public final class FRLogger {
       Point[] impactedPoints) {
     if (enabled) {
       if (logger == null) {
-        logger = LogManager.getLogger(Freerouting.class);
+        logger = LogManager.getLogger(LOGGER_NAME);
       }
 
       if (granularTraceEnabled
@@ -456,7 +456,7 @@ public final class FRLogger {
    */
   public static Logger getLogger() {
     if (logger == null) {
-      logger = LogManager.getLogger(Freerouting.class);
+      logger = LogManager.getLogger(LOGGER_NAME);
     }
 
     return logger;

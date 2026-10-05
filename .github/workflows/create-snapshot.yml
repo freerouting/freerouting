@@ -254,6 +254,103 @@ jobs:
           path: './scripts/build/freerouting-${{ needs.setup-snapshot.outputs.snapshot_version }}-macos-x64.dmg'
           retention-days: 1
 
+  build-native-cli:
+    name: 'Build Native CLI (${{ matrix.platform }}-${{ matrix.arch }})'
+    needs: [ test, setup-snapshot ]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux
+            arch: x64
+            runner: ubuntu-latest
+            binary-name: freerouting-cli
+            archive-ext: tar.gz
+            use-tar: true
+          - platform: linux
+            arch: arm64
+            runner: ubuntu-24.04-arm
+            binary-name: freerouting-cli
+            archive-ext: tar.gz
+            use-tar: true
+          - platform: macos
+            arch: arm64
+            runner: macos-15
+            binary-name: freerouting-cli
+            archive-ext: tar.gz
+            use-tar: true
+          - platform: macos
+            arch: x64
+            runner: macos-15-intel
+            binary-name: freerouting-cli
+            archive-ext: tar.gz
+            use-tar: true
+          - platform: windows
+            arch: x64
+            runner: windows-latest
+            binary-name: freerouting-cli.exe
+            archive-ext: zip
+            use-tar: false
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set up Oracle GraalVM JDK 25
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '25'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          native-image-job-reports: 'true'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          build-scan-publish: false
+      - name: Build PGO Instrumented Executable
+        shell: bash
+        run: ./gradlew nativeCompile --pgo-instrument
+      - name: Run Golden Workload to Generate PGO Profile
+        shell: bash
+        run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            ./build/native/nativeCompile/freerouting-cli-instrumented.exe -de fixtures/Issue508-DAC2020_bm01.dsn -do build/train_pgo.ses -mp 1
+          else
+            ./build/native/nativeCompile/freerouting-cli-instrumented -de fixtures/Issue508-DAC2020_bm01.dsn -do build/train_pgo.ses -mp 1
+          fi
+          mkdir -p src/pgo-profiles/main
+          cp default.iprof src/pgo-profiles/main/default.iprof
+      - name: Build Final PGO-Optimized Native Binary
+        shell: bash
+        run: ./gradlew nativeCompile
+      - name: Package Native Executable Archive
+        shell: bash
+        run: |
+          VER="${{ needs.setup-snapshot.outputs.snapshot_version }}"
+          ARCHIVE_NAME="freerouting-cli-${VER}-${{ matrix.platform }}-${{ matrix.arch }}.${{ matrix.archive-ext }}"
+          mkdir -p build/dist
+          cd build/native/nativeCompile
+          if [ "${{ matrix.use-tar }}" = "true" ]; then
+            tar -czvf "../../dist/${ARCHIVE_NAME}" "${{ matrix.binary-name }}"
+          else
+            7z a "../../dist/${ARCHIVE_NAME}" "${{ matrix.binary-name }}"
+          fi
+          cd ../../dist
+          if command -v sha256sum >/dev/null 2>&1; then
+            sha256sum "${ARCHIVE_NAME}" > "${ARCHIVE_NAME}.sha256"
+          else
+            shasum -a 256 "${ARCHIVE_NAME}" > "${ARCHIVE_NAME}.sha256"
+          fi
+      - name: Upload Native Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: snapshot-native-cli-${{ matrix.platform }}-${{ matrix.arch }}
+          path: |
+            build/dist/freerouting-cli-${{ needs.setup-snapshot.outputs.snapshot_version }}-${{ matrix.platform }}-${{ matrix.arch }}.${{ matrix.archive-ext }}
+            build/dist/freerouting-cli-${{ needs.setup-snapshot.outputs.snapshot_version }}-${{ matrix.platform }}-${{ matrix.arch }}.${{ matrix.archive-ext }}.sha256
+          retention-days: 1
+
   publish-snapshot:
     name: 'Publish Release Assets'
     needs:
@@ -264,6 +361,7 @@ jobs:
       - build-macos-arm64
       - build-macos-x64
       - build-appimage
+      - build-native-cli
     runs-on: [ ubuntu-latest ]
     timeout-minutes: 30
     permissions:
@@ -288,8 +386,22 @@ jobs:
             freerouting-SNAPSHOT.zip
             freerouting-SNAPSHOT.tar.gz
             freerouting-SNAPSHOT-*.*
+            freerouting-cli-SNAPSHOT-*.*
 
-      # Upload assets in the defined order: .jar, windows, linux, macos-arm64, macos-x64, appimage, appimage.zsync
+      # Upload assets in the defined popularity order:
+      # 1. JAR
+      # 2. Windows MSI
+      # 3. Linux ZIP
+      # 4. macOS ARM64 DMG
+      # 5. macOS x64 DMG
+      # 6. AppImage
+      # 7. AppImage zsync
+      # 8. Native CLI Windows x64 ZIP
+      # 9. Native CLI Linux x64 TAR.GZ
+      # 10. Native CLI Linux ARM64 TAR.GZ
+      # 11. Native CLI macOS ARM64 TAR.GZ
+      # 12. Native CLI macOS x64 TAR.GZ
+      # 13. Native CLI Checksums
       - name: Upload JAR
         uses: AButler/upload-release-assets@v4.0
         with:
@@ -336,5 +448,52 @@ jobs:
         uses: AButler/upload-release-assets@v4.0
         with:
           files: './staging/freerouting-${{ needs.setup-snapshot.outputs.snapshot_version }}-x86_64.AppImage.zsync'
+          release-tag: SNAPSHOT
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate Combined Native Checksums
+        run: |
+          cd ./staging
+          cat freerouting-cli-*.sha256 > "freerouting-cli-${{ needs.setup-snapshot.outputs.snapshot_version }}-checksums.txt"
+
+      - name: Upload Native CLI Windows x64 ZIP
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-cli-${{ needs.setup-snapshot.outputs.snapshot_version }}-windows-x64.zip'
+          release-tag: SNAPSHOT
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Native CLI Linux x64 TAR.GZ
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-cli-${{ needs.setup-snapshot.outputs.snapshot_version }}-linux-x64.tar.gz'
+          release-tag: SNAPSHOT
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Native CLI Linux ARM64 TAR.GZ
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-cli-${{ needs.setup-snapshot.outputs.snapshot_version }}-linux-arm64.tar.gz'
+          release-tag: SNAPSHOT
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Native CLI macOS ARM64 TAR.GZ
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-cli-${{ needs.setup-snapshot.outputs.snapshot_version }}-macos-arm64.tar.gz'
+          release-tag: SNAPSHOT
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Native CLI macOS x64 TAR.GZ
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-cli-${{ needs.setup-snapshot.outputs.snapshot_version }}-macos-x64.tar.gz'
+          release-tag: SNAPSHOT
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Native CLI Checksums
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-cli-${{ needs.setup-snapshot.outputs.snapshot_version }}-checksums.txt'
           release-tag: SNAPSHOT
           repo-token: ${{ secrets.GITHUB_TOKEN }}

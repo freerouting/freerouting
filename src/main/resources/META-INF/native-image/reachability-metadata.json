@@ -3719,6 +3719,20 @@
     {
       "module": "java.base",
       "glob": "sun/net/idn/uidna.spp"
+    },
+    {
+      "glob": "app/freerouting/*.properties"
+    },
+    {
+      "glob": "app/freerouting/**/*.properties"
+    }
+  ],
+  "bundles": [
+    {
+      "name": "app.freerouting.Common"
+    },
+    {
+      "name": "app.freerouting.Freerouting"
     }
   ]
 }

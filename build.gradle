@@ -122,6 +122,10 @@ tasks.named("dependencyUpdates").configure {
 // https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
 configurations {
     mockitoAgent
+    cliRuntimeClasspath {
+        canBeResolved = true
+        canBeConsumed = false
+    }
 }
 
 repositories {
@@ -207,6 +211,13 @@ dependencies {
     implementation 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.55'
     implementation 'io.swagger.core.v3:swagger-core-jakarta:2.2.55'
 
+
+    // Dedicated lightweight runtime classpath for standalone headless CLI native image
+    cliRuntimeClasspath 'org.apache.logging.log4j:log4j-core:2.26.1'
+    cliRuntimeClasspath 'org.apache.logging.log4j:log4j-api:2.26.1'
+    cliRuntimeClasspath 'org.slf4j:slf4j-api:2.0.20'
+    cliRuntimeClasspath 'org.slf4j:slf4j-nop:2.0.20'
+    cliRuntimeClasspath 'com.google.code.gson:gson:2.14.0'
 
     // ArchUnit: package-architecture enforcement
     testImplementation 'com.tngtech.archunit:archunit-junit5:1.5.1'
@@ -637,11 +648,12 @@ graalvmNative {
         main {
             imageName = 'freerouting-cli'
             mainClass = 'app.freerouting.cli.FreeroutingCli'
+            classpath = configurations.cliRuntimeClasspath + sourceSets.main.output
             buildArgs.addAll(
                 '--no-fallback',
                 '-H:+ReportExceptionStackTraces',
-                '--install-exit-handlers',
-                '-march=compatibility'
+                '-march=compatibility',
+                '--enable-url-protocols=https,http'
             )
         }
     }

@@ -1,11 +1,11 @@
 package app.freerouting.analytics;
 
-import app.freerouting.Freerouting;
 import app.freerouting.analytics.dto.Context;
 import app.freerouting.analytics.dto.Library;
 import app.freerouting.analytics.dto.Payload;
 import app.freerouting.analytics.dto.Properties;
 import app.freerouting.analytics.dto.Traits;
+import app.freerouting.settings.GlobalSettings;
 import app.freerouting.util.gson.GsonProvider;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -92,8 +92,8 @@ public class FreeroutingAnalyticsClient implements AnalyticsClient {
             if (connection instanceof HttpsURLConnection httpsConn) {
               SSLSocketFactory ssf =
                   NetworkProxyConfig.getCompositeSslSocketFactory(
-                      Freerouting.globalSettings != null
-                          ? Freerouting.globalSettings.networkSettings
+                      GlobalSettings.current() != null
+                          ? GlobalSettings.current().networkSettings
                           : null);
               if (ssf != null) {
                 httpsConn.setSSLSocketFactory(ssf);
