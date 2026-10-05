@@ -20,6 +20,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import os
 import subprocess
 import sys
 import threading
@@ -70,11 +71,20 @@ from ipc_dialog import (
     STATE_FAIL,
 )
 
+
+class AutoFlushFileHandler(logging.FileHandler):
+    """FileHandler that flushes immediately after every write to prevent buffering."""
+
+    def emit(self, record):
+        super().emit(record)
+        self.flush()
+
+
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 log_file = LOG_DIR / "freerouting_ipc_plugin.log"
 
 logging_handlers = [
-    logging.FileHandler(log_file, mode="a", encoding="utf-8"),
+    AutoFlushFileHandler(log_file, mode="a", encoding="utf-8"),
 ]
 if sys.stdout and getattr(sys.stdout, "isatty", lambda: False)():
     logging_handlers.append(logging.StreamHandler(sys.stdout))
