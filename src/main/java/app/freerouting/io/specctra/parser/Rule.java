@@ -2,6 +2,7 @@ package app.freerouting.io.specctra.parser;
 
 import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
+import app.freerouting.io.CoordinateTransform;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.ClearanceMatrix;
@@ -510,6 +511,24 @@ public abstract class Rule {
       this.cornerStyle = cornerStyle;
       this.cornerRadiusPercentage = cornerRadiusPercentage;
     }
+
+    public NetMeanderConstraint toConstraint(CoordinateTransform coordinateTransform) {
+      double maxAmp =
+          (maxAmplitude > 0)
+              ? coordinateTransform.dsnToBoard(maxAmplitude)
+              : (maxAmplitude == 0.0 ? 0.0 : NetMeanderConstraint.UNSPECIFIED);
+      double minAmp =
+          (minAmplitude > 0)
+              ? coordinateTransform.dsnToBoard(minAmplitude)
+              : (minAmplitude == 0.0 ? 0.0 : NetMeanderConstraint.UNSPECIFIED);
+      return new NetMeanderConstraint(
+          maxAmp,
+          minAmp,
+          NetMeanderConstraint.UNSPECIFIED,
+          singleSided,
+          cornerStyle != null ? cornerStyle : NetMeanderConstraint.CornerStyle.AUTO,
+          cornerRadiusPercentage);
+    }
   }
 
   public static class LengthGapRule extends Rule {
@@ -519,6 +538,51 @@ public abstract class Rule {
     public LengthGapRule(double gap) {
       this.gap = gap;
     }
+
+    public NetMeanderConstraint toConstraint(CoordinateTransform coordinateTransform) {
+      double g =
+          (gap > 0)
+              ? coordinateTransform.dsnToBoard(gap)
+              : (gap == 0.0 ? 0.0 : NetMeanderConstraint.UNSPECIFIED);
+      return new NetMeanderConstraint(
+          NetMeanderConstraint.UNSPECIFIED,
+          NetMeanderConstraint.UNSPECIFIED,
+          g,
+          false,
+          NetMeanderConstraint.CornerStyle.AUTO,
+          NetMeanderConstraint.DEFAULT_CORNER_RADIUS_PERCENT);
+    }
+  }
+
+  /**
+   * Combines length_amplitude, length_gap, and collection of rules into an aggregated {@link
+   * NetMeanderConstraint}. Returns {@code null} if no meander rules are present.
+   */
+  public static NetMeanderConstraint buildMeanderConstraint(
+      LengthAmplitudeRule ampRule,
+      LengthGapRule gapRule,
+      Collection<Rule> rules,
+      CoordinateTransform coordinateTransform) {
+    NetMeanderConstraint constraint = null;
+    if (ampRule != null) {
+      constraint = ampRule.toConstraint(coordinateTransform);
+    }
+    if (gapRule != null) {
+      NetMeanderConstraint gapConstraint = gapRule.toConstraint(coordinateTransform);
+      constraint = constraint != null ? constraint.mergeWith(gapConstraint) : gapConstraint;
+    }
+    if (rules != null) {
+      for (Rule r : rules) {
+        if (r instanceof Rule.LengthAmplitudeRule amp) {
+          NetMeanderConstraint c = amp.toConstraint(coordinateTransform);
+          constraint = constraint != null ? constraint.mergeWith(c) : c;
+        } else if (r instanceof Rule.LengthGapRule gap) {
+          NetMeanderConstraint c = gap.toConstraint(coordinateTransform);
+          constraint = constraint != null ? constraint.mergeWith(c) : c;
+        }
+      }
+    }
+    return constraint;
   }
 
   public static class LayerRule {

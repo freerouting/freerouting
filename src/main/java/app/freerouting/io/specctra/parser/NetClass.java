@@ -23,6 +23,8 @@ public class NetClass {
   public final boolean pullTight;
   public double minTraceLength;
   public double maxTraceLength;
+  public Rule.LengthAmplitudeRule amplitudeRule;
+  public Rule.LengthGapRule gapRule;
 
   /** Creates a new instance of NetClass. */
   public NetClass(
@@ -75,6 +77,8 @@ public class NetClass {
       boolean shoveFixed = false;
       double minTraceLength = 0;
       double maxTraceLength = 0;
+      Rule.LengthAmplitudeRule amplitudeRule = null;
+      Rule.LengthGapRule gapRule = null;
 
       Object nextToken = scanner.nextToken();
       if (!rulesMissing) {
@@ -104,6 +108,8 @@ public class NetClass {
               if (currentRule != null) {
                 maxTraceLength = currentRule.maxLength;
                 minTraceLength = currentRule.minLength;
+                amplitudeRule = currentRule.amplitudeRule;
+                gapRule = currentRule.gapRule;
                 useVia.addAll(currentRule.useVia);
                 useLayer.addAll(currentRule.useLayer);
               }
@@ -123,19 +129,23 @@ public class NetClass {
           prevToken = nextToken;
         }
       }
-      return new NetClass(
-          className,
-          traceClearanceClass,
-          netList,
-          rules,
-          layerRules,
-          useVia,
-          useLayer,
-          viaRule,
-          shoveFixed,
-          pullTight,
-          minTraceLength,
-          maxTraceLength);
+      NetClass parsedClass =
+          new NetClass(
+              className,
+              traceClearanceClass,
+              netList,
+              rules,
+              layerRules,
+              useVia,
+              useLayer,
+              viaRule,
+              shoveFixed,
+              pullTight,
+              minTraceLength,
+              maxTraceLength);
+      parsedClass.amplitudeRule = amplitudeRule;
+      parsedClass.gapRule = gapRule;
+      return parsedClass;
     } catch (IOException e) {
       FRLogger.error("NetClass.read_scope: IO error while scanning file", e);
       return null;

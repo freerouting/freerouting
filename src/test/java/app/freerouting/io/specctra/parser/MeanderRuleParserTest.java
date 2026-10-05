@@ -146,4 +146,51 @@ class MeanderRuleParserTest {
     assertNotNull(result.gapRule);
     assertEquals(0.55, result.gapRule.gap, 1e-6);
   }
+
+  @Test
+  void testToConstraintWithCoordinateTransform() {
+    app.freerouting.io.CoordinateTransform transform =
+        new app.freerouting.io.CoordinateTransform(1000.0, 0, 0);
+
+    Rule.LengthAmplitudeRule ampRule =
+        new Rule.LengthAmplitudeRule(
+            1.5, 0.3, true, NetMeanderConstraint.CornerStyle.FILLETED_ROUND, 60);
+    NetMeanderConstraint ampConstraint = ampRule.toConstraint(transform);
+    assertEquals(1500.0, ampConstraint.maxAmplitude(), 1e-6);
+    assertEquals(300.0, ampConstraint.minAmplitude(), 1e-6);
+    assertEquals(NetMeanderConstraint.UNSPECIFIED, ampConstraint.gap(), 1e-6);
+    assertTrue(ampConstraint.singleSided());
+    assertEquals(NetMeanderConstraint.CornerStyle.FILLETED_ROUND, ampConstraint.cornerStyle());
+    assertEquals(60, ampConstraint.cornerRadiusPercentage());
+
+    Rule.LengthGapRule gapRule = new Rule.LengthGapRule(0.8);
+    NetMeanderConstraint gapConstraint = gapRule.toConstraint(transform);
+    assertEquals(NetMeanderConstraint.UNSPECIFIED, gapConstraint.maxAmplitude(), 1e-6);
+    assertEquals(800.0, gapConstraint.gap(), 1e-6);
+
+    NetMeanderConstraint merged = ampConstraint.mergeWith(gapConstraint);
+    assertEquals(1500.0, merged.maxAmplitude(), 1e-6);
+    assertEquals(300.0, merged.minAmplitude(), 1e-6);
+    assertEquals(800.0, merged.gap(), 1e-6);
+    assertTrue(merged.singleSided());
+    assertEquals(NetMeanderConstraint.CornerStyle.FILLETED_ROUND, merged.cornerStyle());
+    assertEquals(60, merged.cornerRadiusPercentage());
+  }
+
+  @Test
+  void testBuildMeanderConstraintAggregatesRules() throws IOException {
+    app.freerouting.io.CoordinateTransform transform =
+        new app.freerouting.io.CoordinateTransform(1000.0, 0, 0);
+    String snippet =
+        "(rule (length_amplitude 2.5 0.5 (type trombone) (corner orthogonal)) (length_gap 1.2))";
+    Collection<Rule> rules = parseRuleScope(snippet);
+
+    NetMeanderConstraint constraint = Rule.buildMeanderConstraint(null, null, rules, transform);
+    assertNotNull(constraint);
+    assertEquals(2500.0, constraint.maxAmplitude(), 1e-6);
+    assertEquals(500.0, constraint.minAmplitude(), 1e-6);
+    assertEquals(1200.0, constraint.gap(), 1e-6);
+    assertTrue(constraint.singleSided());
+    assertEquals(NetMeanderConstraint.CornerStyle.ORTHOGONAL_90, constraint.cornerStyle());
+  }
 }

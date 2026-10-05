@@ -494,11 +494,26 @@ public class Network extends ScopeKeyword {
         if (rule.minLength > 0) {
           boardNetClass.setMinimumTraceLength(coordinateTransform.dsnToBoard(rule.minLength));
         }
+      } else if (currentRule instanceof Rule.LengthAmplitudeRule
+          || currentRule instanceof Rule.LengthGapRule) {
+        // Handled via buildMeanderConstraint below
       } else {
         FRLogger.warn(
             "Network.insert_net_class: rule type not yet implemented at '"
                 + boardNetClass.getName()
                 + "'");
+      }
+    }
+
+    app.freerouting.rules.NetMeanderConstraint meanderConstraint =
+        Rule.buildMeanderConstraint(
+            netClass.amplitudeRule, netClass.gapRule, netClass.rules, coordinateTransform);
+    if (meanderConstraint != null) {
+      if (boardNetClass.getMeanderConstraint() != null) {
+        boardNetClass.setMeanderConstraint(
+            meanderConstraint.mergeWith(boardNetClass.getMeanderConstraint()));
+      } else {
+        boardNetClass.setMeanderConstraint(meanderConstraint);
       }
     }
 
@@ -1480,12 +1495,28 @@ public class Network extends ScopeKeyword {
             if (max > 0 || min > 0) {
               boardNet.setLengthConstraint(new app.freerouting.rules.NetLengthConstraint(min, max));
             }
+          } else if (currentObject instanceof Rule.LengthAmplitudeRule
+              || currentObject instanceof Rule.LengthGapRule) {
+            // Handled via buildMeanderConstraint below
           } else {
             FRLogger.warn(
                 "Network.read_net_scope: Rule not yet implemented at '"
                     + scanner.getScopeIdentifier()
                     + "'");
           }
+        }
+      }
+      app.freerouting.rules.NetMeanderConstraint netMeander =
+          Rule.buildMeanderConstraint(
+              netCircuit != null ? netCircuit.amplitudeRule : null,
+              netCircuit != null ? netCircuit.gapRule : null,
+              netRules,
+              coordinateTransform);
+      if (boardNet != null && netMeander != null) {
+        if (boardNet.getMeanderConstraint() != null) {
+          boardNet.setMeanderConstraint(netMeander.mergeWith(boardNet.getMeanderConstraint()));
+        } else {
+          boardNet.setMeanderConstraint(netMeander);
         }
       }
       ++subnetNumber;

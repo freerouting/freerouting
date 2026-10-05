@@ -29,6 +29,7 @@ import app.freerouting.rules.ClearanceMatrix;
 import app.freerouting.rules.DefaultItemClearanceClasses;
 import app.freerouting.rules.DefaultItemClearanceClasses.ItemClass;
 import app.freerouting.rules.NetClass;
+import app.freerouting.rules.NetMeanderConstraint;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -644,6 +645,17 @@ public class Structure extends ScopeKeyword {
                 + (traceHalfwidth * 2 / 40000.0)
                 + " mm)");
         boardRules.setDefaultTraceHalfWidths(traceHalfwidth);
+      }
+    }
+    NetMeanderConstraint defaultMeander =
+        Rule.buildMeanderConstraint(
+            null, null, boardConstructionInfo.defaultRules, scopeParameter.coordinateTransform);
+    if (defaultMeander != null) {
+      if (boardRules.getDefaultMeanderConstraint() != null) {
+        boardRules.setDefaultMeanderConstraint(
+            defaultMeander.mergeWith(boardRules.getDefaultMeanderConstraint()));
+      } else {
+        boardRules.setDefaultMeanderConstraint(defaultMeander);
       }
     }
     for (LayerRule layerRule : boardConstructionInfo.layerDependentRules) {

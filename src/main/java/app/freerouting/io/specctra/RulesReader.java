@@ -15,6 +15,7 @@ import app.freerouting.io.specctra.parser.ScopeKeyword;
 import app.freerouting.io.specctra.parser.SpecctraDsnStreamReader;
 import app.freerouting.io.specctra.parser.Structure;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.rules.NetMeanderConstraint;
 import app.freerouting.rules.ViaInfo;
 import app.freerouting.settings.RouterSettings;
 import java.io.ByteArrayInputStream;
@@ -301,6 +302,18 @@ public final class RulesReader {
       } else if (rule instanceof Rule.ClearanceRule clearanceRule) {
         Structure.setClearanceRule(
             clearanceRule, layerIndex, coordinateTransform, board.rules, stringQuote);
+      }
+    }
+    if (layerIndex < 0) {
+      NetMeanderConstraint meanderConstraint =
+          Rule.buildMeanderConstraint(null, null, rules, coordinateTransform);
+      if (meanderConstraint != null) {
+        if (board.rules.getDefaultMeanderConstraint() != null) {
+          board.rules.setDefaultMeanderConstraint(
+              meanderConstraint.mergeWith(board.rules.getDefaultMeanderConstraint()));
+        } else {
+          board.rules.setDefaultMeanderConstraint(meanderConstraint);
+        }
       }
     }
   }
