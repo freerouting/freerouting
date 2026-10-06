@@ -154,10 +154,10 @@
       "status": "stable",
       "kicad_version": "6.0",
       "runtime": "ipc",
-      "download_sha256": "a70107b06fe5a9819f46c1da86c379fbb160b83aca7c9b956322d7d6d2d044dc",
-      "download_size": 59783922,
+      "download_sha256": "00c3949e960bb49e39787e9d23f48715422639b75580a6f032ed557f7bf66a8e",
+      "download_size": 59781209,
       "download_url": "https://github.com/freerouting/freerouting/raw/master/integrations/KiCad/kicad-freerouting-2.5.0.zip",
-      "install_size": 64906002
+      "install_size": 64897466
     }
   ]
 }

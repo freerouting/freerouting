@@ -45,9 +45,14 @@ def package_plugin(
 
     files_to_pack: list[tuple[Path, str]] = []
     for root, dirs, files in os.walk(source_dir):
-        dirs[:] = [d for d in dirs if d != "__pycache__" and not d.startswith(".")]
+        dirs[:] = [
+            d for d in dirs
+            if d != "__pycache__" and not d.startswith(".") and d != "tests" and d != "__tests__"
+        ]
         for f in files:
             if f.endswith(".pyc") or f.startswith(".") or f == "Thumbs.db":
+                continue
+            if f.startswith("test_") or f.endswith("_test.py"):
                 continue
             full_path = Path(root) / f
             rel_path = full_path.relative_to(source_dir).as_posix()

@@ -15,8 +15,14 @@ import time
 from pathlib import Path
 
 # Setup paths
-bridge_dir = Path(__file__).parent.resolve()
+here = Path(__file__).parent.resolve()
+kicad_root = here.parent / "kicad-freerouting"
+bridge_dir = kicad_root / "plugins" / "ipc_bridge"
+if not bridge_dir.is_dir():
+    bridge_dir = here / "plugins" / "ipc_bridge"
 sys.path.insert(0, str(bridge_dir))
+if (kicad_root / "plugins").is_dir():
+    sys.path.insert(0, str(kicad_root / "plugins"))
 
 from ipc_board_writer import KiCadIpcBoardWriter
 
