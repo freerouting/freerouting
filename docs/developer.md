@@ -172,10 +172,16 @@ Let's suppose that the new version is `<version>` (e.g. `2.5.0`). You need to co
 * Update the KiCad integration (`integrations/KiCad/`):
     * Copy `freerouting-<version>.jar` into `integrations/KiCad/kicad-freerouting/plugins/jar/` (and remove the previous version JAR).
     * Update `integrations/KiCad/kicad-freerouting/plugins/plugin.ini` with the new filename (`location = jar/freerouting-<version>.jar`).
-    * Update `integrations/KiCad/kicad-freerouting/metadata.json` with the new version and download URL.
-    * Create a ZIP file from the `kicad-freerouting` folder and save it as both `kicad-freerouting.zip` and `kicad-freerouting-<version>.zip`.
-    * Use KiCad Packager from [https://gitlab.com/kicad/addons/metadata/tools](https://gitlab.com/kicad/addons/metadata/-/tree/main/tools) to compute SHA-256 and file sizes.
-    * Update `integrations/KiCad/metadata.json` with the new version entry, SHA-256, download size, and install size.
+    * Update `integrations/KiCad/kicad-freerouting/metadata.json` with the new version (in-archive metadata must not contain `download_*` keys).
+    * Build, package, and validate the KiCad PCM packages using the automated script:
+      ```bash
+      python scripts/kicad/package_plugin.py --update-metadata
+      ```
+      This packages `kicad-freerouting.zip` and `kicad-freerouting-<version>.zip` strictly excluding any disallowed files (such as root tests or extra resource icons), computes the exact SHA-256 and size metrics, updates `integrations/KiCad/metadata.json`, and verifies the package against KiCad PCM whitelist rules.
+    * Run local package verification:
+      ```bash
+      python scripts/kicad/validate_pcm_package.py
+      ```
     * Run a full routing session from KiCad after manually installing the plugin ZIP, to make sure that the router executes properly in CLI mode and the resulting SES file imports without corruption or parser errors.
 * Update documentation version references (`README.md`, `integrations.md`, `self-hosting.md`, `settings.md`, and `scoring.md` if the score formulas or defaults changed).
 * Run verification quality checks:
@@ -224,8 +230,10 @@ Let's suppose that the new version is `<version>` (e.g. `2.5.0`). You need to co
   npm publish
   cd ../..
   ```
-* Test and publish a new version of the Python Freerouting Client on PyPI (in the separate `freerouting-python-client` repository). Keep the PyPI package version in sync with the Freerouting GA release.
+* Test and publish a new version of the Python Freerouting Client on PyPI (in the separate [`freerouting-python-client`](https://github.com/freerouting/freerouting-python-client) repository). Keep the PyPI package version in sync with the Freerouting GA release. Automated publishing to PyPI via GitHub Actions CI is supported in that repository, so the only step needed after updating the Python client is creating and publishing a new GitHub release with tag `v<version>`.
 * Submit KiCad Addon Repository update:
+    * Run `python scripts/kicad/validate_pcm_package.py` locally to verify package conformance and SHA/size consistency.
+    * Ensure the updated `kicad-freerouting-<version>.zip` package has already been merged and pushed to GitHub `master`, as GitLab CI's validator will download the package archive directly from GitHub `master` during the pipeline run.
     * You can perform this update directly on GitLab's website without cloning the repository locally:
     * Go to your GitLab fork of the official repository: [`https://gitlab.com/freeroutingapp/metadata`](https://gitlab.com/freeroutingapp/metadata) (or fork [`https://gitlab.com/kicad/addons/metadata`](https://gitlab.com/kicad/addons/metadata) if not already done, and click **Update fork** to bring it up to date).
     * Navigate to [`packages/app.freerouting.kicad-plugin/metadata.json`](https://gitlab.com/freeroutingapp/metadata/-/blob/main/packages/app.freerouting.kicad-plugin/metadata.json).

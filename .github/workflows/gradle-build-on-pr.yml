@@ -74,6 +74,8 @@ jobs:
         with:
           python-version: '3.12'
       - name: Run KiCad Plugin Fallback Tests
-        run: python integrations/KiCad/kicad-freerouting/test_plugin_fallback.py
+        run: python integrations/KiCad/tests/test_plugin_fallback.py
       - name: Run KiCad IPC Mock CI Tests
-        run: python integrations/KiCad/kicad-freerouting/test_ipc_mock_ci.py
+        run: python integrations/KiCad/tests/test_ipc_mock_ci.py
+      - name: Verify KiCad PCM Package Conformance
+        run: python scripts/kicad/validate_pcm_package.py
