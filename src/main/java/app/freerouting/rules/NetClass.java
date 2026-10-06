@@ -6,7 +6,9 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.util.TextManager;
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.Locale;
+import java.util.Map;
 
 /** Describes routing rules for individual nets. */
 public class NetClass implements Serializable, ItemInfoPrinter.Printable {
@@ -35,6 +37,8 @@ public class NetClass implements Serializable, ItemInfoPrinter.Printable {
   private boolean ignoreCyclesWithAreas;
   private double minimumTraceLength = 0;
   private double maximumTraceLength = 0;
+  private Map<NetMeanderConstraint.MeanderTarget, NetMeanderConstraint> meanderConstraints =
+      new EnumMap<>(NetMeanderConstraint.MeanderTarget.class);
   private NetMeanderConstraint meanderConstraint;
 
   /** Creates a new instance of {@code NetClass}. */
@@ -207,19 +211,73 @@ public class NetClass implements Serializable, ItemInfoPrinter.Printable {
   }
 
   /**
-   * Returns the length tuning meander constraint of this net class, or null if none is specified.
+   * Returns the length tuning meander constraint of this net class for the specified target, or
+   * null if none is configured.
    */
-  public NetMeanderConstraint getMeanderConstraint() {
-    return this.meanderConstraint;
+  public NetMeanderConstraint getMeanderConstraint(NetMeanderConstraint.MeanderTarget target) {
+    if (target == null) {
+      target = NetMeanderConstraint.MeanderTarget.SINGLE_TRACK;
+    }
+    if (this.meanderConstraints == null) {
+      this.meanderConstraints = new EnumMap<>(NetMeanderConstraint.MeanderTarget.class);
+    }
+    NetMeanderConstraint constraint = this.meanderConstraints.get(target);
+    if (constraint == null && target == NetMeanderConstraint.MeanderTarget.SINGLE_TRACK) {
+      return this.meanderConstraint;
+    }
+    return constraint;
   }
 
   /**
-   * Sets the length tuning meander constraint of this net class.
+   * Returns the single-track meander constraint of this net class, or null if none is specified.
+   */
+  public NetMeanderConstraint getMeanderConstraint() {
+    return getMeanderConstraint(NetMeanderConstraint.MeanderTarget.SINGLE_TRACK);
+  }
+
+  /**
+   * Sets the length tuning meander constraint of this net class for the specified target.
+   *
+   * @param target the tuning target (Single Track, Diff Pair, Diff Pair Skew)
+   * @param constraint the new meander constraint, or null for unconstrained
+   */
+  public void setMeanderConstraint(
+      NetMeanderConstraint.MeanderTarget target, NetMeanderConstraint constraint) {
+    if (target == null) {
+      target = NetMeanderConstraint.MeanderTarget.SINGLE_TRACK;
+    }
+    if (this.meanderConstraints == null) {
+      this.meanderConstraints = new EnumMap<>(NetMeanderConstraint.MeanderTarget.class);
+    }
+    if (constraint == null) {
+      this.meanderConstraints.remove(target);
+      if (target == NetMeanderConstraint.MeanderTarget.SINGLE_TRACK) {
+        this.meanderConstraint = null;
+      }
+    } else {
+      NetMeanderConstraint tagged = constraint.withTarget(target);
+      this.meanderConstraints.put(target, tagged);
+      if (target == NetMeanderConstraint.MeanderTarget.SINGLE_TRACK) {
+        this.meanderConstraint = tagged;
+      }
+    }
+  }
+
+  /**
+   * Sets the single-track meander constraint of this net class.
    *
    * @param constraint the new meander constraint, or null for unconstrained
    */
   public void setMeanderConstraint(NetMeanderConstraint constraint) {
-    this.meanderConstraint = constraint;
+    setMeanderConstraint(NetMeanderConstraint.MeanderTarget.SINGLE_TRACK, constraint);
+  }
+
+  /** Returns true if any meander constraint is defined on this net class for any target. */
+  public boolean hasAnyMeanderConstraint() {
+    if (this.meanderConstraints != null && !this.meanderConstraints.isEmpty()) {
+      return true;
+    }
+    return this.meanderConstraint != null;
   }
 
   /** Returns whether the layer with the given index is active for routing. */

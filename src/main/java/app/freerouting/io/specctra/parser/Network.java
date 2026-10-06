@@ -19,6 +19,7 @@ import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.ClearanceMatrix;
 import app.freerouting.rules.DefaultItemClearanceClasses;
 import app.freerouting.rules.DefaultItemClearanceClasses.ItemClass;
+import app.freerouting.rules.NetMeanderConstraint;
 import app.freerouting.rules.ViaInfo;
 import app.freerouting.rules.ViaRule;
 import java.io.IOException;
@@ -186,8 +187,11 @@ public class Network extends ScopeKeyword {
       scopeParameter.file.write(String.valueOf(transformedMinLength));
       scopeParameter.file.write(")");
     }
-    if (netClass.getMeanderConstraint() != null) {
-      Rule.writeMeanderRules(netClass.getMeanderConstraint(), scopeParameter);
+    for (NetMeanderConstraint.MeanderTarget target : NetMeanderConstraint.MeanderTarget.values()) {
+      NetMeanderConstraint constraint = netClass.getMeanderConstraint(target);
+      if (constraint != null) {
+        Rule.writeMeanderRules(constraint, scopeParameter);
+      }
     }
     scopeParameter.file.endScope();
   }
@@ -508,13 +512,22 @@ public class Network extends ScopeKeyword {
       }
     }
 
-    app.freerouting.rules.NetMeanderConstraint meanderConstraint =
-        Rule.buildMeanderConstraint(
-            netClass.amplitudeRule, netClass.gapRule, netClass.rules, coordinateTransform);
-    if (meanderConstraint != null) {
-      boardNetClass.setMeanderConstraint(
-          app.freerouting.rules.NetMeanderConstraint.merge(
-              meanderConstraint, boardNetClass.getMeanderConstraint()));
+    Collection<Rule> classMeanderRules = new LinkedList<>(netClass.rules);
+    if (netClass.amplitudeRule != null && !classMeanderRules.contains(netClass.amplitudeRule)) {
+      classMeanderRules.add(netClass.amplitudeRule);
+    }
+    if (netClass.gapRule != null && !classMeanderRules.contains(netClass.gapRule)) {
+      classMeanderRules.add(netClass.gapRule);
+    }
+    for (NetMeanderConstraint.MeanderTarget target : NetMeanderConstraint.MeanderTarget.values()) {
+      NetMeanderConstraint meanderConstraint =
+          Rule.buildMeanderConstraint(null, null, classMeanderRules, coordinateTransform, target);
+      if (meanderConstraint != null) {
+        boardNetClass.setMeanderConstraint(
+            target,
+            NetMeanderConstraint.merge(
+                meanderConstraint, boardNetClass.getMeanderConstraint(target)));
+      }
     }
 
     // read the layer dependent rules.
@@ -1506,16 +1519,32 @@ public class Network extends ScopeKeyword {
           }
         }
       }
-      app.freerouting.rules.NetMeanderConstraint netMeander =
-          Rule.buildMeanderConstraint(
-              netCircuit != null ? netCircuit.amplitudeRule : null,
-              netCircuit != null ? netCircuit.gapRule : null,
-              netRules,
-              coordinateTransform);
-      if (boardNet != null && netMeander != null) {
-        boardNet.setMeanderConstraint(
-            app.freerouting.rules.NetMeanderConstraint.merge(
-                netMeander, boardNet.getMeanderConstraint()));
+      Collection<Rule> combinedRules = new LinkedList<>(netRules);
+      if (netCircuit != null && netCircuit.meanderRules != null) {
+        combinedRules.addAll(netCircuit.meanderRules);
+      }
+      if (netCircuit != null
+          && netCircuit.amplitudeRule != null
+          && !combinedRules.contains(netCircuit.amplitudeRule)) {
+        combinedRules.add(netCircuit.amplitudeRule);
+      }
+      if (netCircuit != null
+          && netCircuit.gapRule != null
+          && !combinedRules.contains(netCircuit.gapRule)) {
+        combinedRules.add(netCircuit.gapRule);
+      }
+      if (boardNet != null) {
+        for (NetMeanderConstraint.MeanderTarget target :
+            NetMeanderConstraint.MeanderTarget.values()) {
+          NetMeanderConstraint netMeander =
+              Rule.buildMeanderConstraint(null, null, combinedRules, coordinateTransform, target);
+          if (netMeander != null) {
+            boardNet.setMeanderConstraint(
+                target,
+                NetMeanderConstraint.merge(
+                    netMeander, boardNet.getExplicitMeanderConstraint(target)));
+          }
+        }
       }
       ++subnetNumber;
     }

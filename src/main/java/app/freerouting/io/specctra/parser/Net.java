@@ -5,6 +5,7 @@ import app.freerouting.core.library.Package;
 import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.rules.NetMeanderConstraint;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Set;
@@ -40,7 +41,7 @@ public class Net {
       }
     }
     scopeParameter.file.endScope();
-    if (net.hasExplicitLengthConstraint() || net.hasExplicitMeanderConstraint()) {
+    if (net.hasExplicitLengthConstraint() || net.hasAnyExplicitMeanderConstraint()) {
       writeCircuit(net, scopeParameter);
     }
     scopeParameter.file.endScope();
@@ -49,10 +50,8 @@ public class Net {
   private static void writeCircuit(
       app.freerouting.rules.Net net, WriteScopeParameter scopeParameter) throws IOException {
     app.freerouting.rules.NetLengthConstraint lengthConstraint = net.getExplicitLengthConstraint();
-    app.freerouting.rules.NetMeanderConstraint meanderConstraint =
-        net.getExplicitMeanderConstraint();
     boolean hasLength = lengthConstraint != null && lengthConstraint.isConstrained();
-    boolean hasMeander = meanderConstraint != null;
+    boolean hasMeander = net.hasAnyExplicitMeanderConstraint();
     if (!hasLength && !hasMeander) {
       return;
     }
@@ -81,7 +80,13 @@ public class Net {
       scopeParameter.file.write(")");
     }
     if (hasMeander) {
-      Rule.writeMeanderRules(meanderConstraint, scopeParameter);
+      for (NetMeanderConstraint.MeanderTarget target :
+          NetMeanderConstraint.MeanderTarget.values()) {
+        NetMeanderConstraint constraint = net.getExplicitMeanderConstraint(target);
+        if (constraint != null) {
+          Rule.writeMeanderRules(constraint, scopeParameter);
+        }
+      }
     }
     scopeParameter.file.endScope();
   }

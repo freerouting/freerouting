@@ -10,8 +10,10 @@ import app.freerouting.rules.NetClass;
 import app.freerouting.rules.NetMeanderConstraint;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.EnumMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /** Class for reading and writing rule scopes from dsn-files. */
@@ -136,6 +138,7 @@ public abstract class Rule {
     boolean singleSided = false;
     NetMeanderConstraint.CornerStyle cornerStyle = NetMeanderConstraint.CornerStyle.AUTO;
     int cornerRadiusPercentage = NetMeanderConstraint.DEFAULT_CORNER_RADIUS_PERCENT;
+    NetMeanderConstraint.MeanderTarget target = NetMeanderConstraint.MeanderTarget.SINGLE_TRACK;
 
     Object nextToken;
     try {
@@ -207,6 +210,9 @@ public abstract class Rule {
             cornerRadiusPercentage = (int) Math.round(radiusVal);
           }
           scanner.nextClosingBracket();
+        } else if (nextToken instanceof String s && s.equalsIgnoreCase("target")) {
+          target = NetMeanderConstraint.MeanderTarget.parse(scanner.nextString());
+          scanner.nextClosingBracket();
         } else {
           ScopeKeyword.skipScope(scanner);
         }
@@ -214,22 +220,30 @@ public abstract class Rule {
     }
 
     return new LengthAmplitudeRule(
-        maxAmplitude, minAmplitude, singleSided, cornerStyle, cornerRadiusPercentage);
+        maxAmplitude, minAmplitude, singleSided, cornerStyle, cornerRadiusPercentage, target);
   }
 
   public static LengthGapRule readLengthGapRule(IJFlexScanner scanner) {
     try {
       double value = scanner.nextDouble();
+      NetMeanderConstraint.MeanderTarget target = NetMeanderConstraint.MeanderTarget.SINGLE_TRACK;
+      Object nextToken = null;
       for (; ; ) {
-        Object token = scanner.nextToken();
-        if (token == null || token == Keyword.CLOSED_BRACKET) {
+        Object prevToken = nextToken;
+        nextToken = scanner.nextToken();
+        if (nextToken == null || nextToken == Keyword.CLOSED_BRACKET) {
           break;
         }
-        if (token == Keyword.OPEN_BRACKET) {
-          ScopeKeyword.skipScope(scanner);
+        if (prevToken == Keyword.OPEN_BRACKET) {
+          if (nextToken instanceof String s && s.equalsIgnoreCase("target")) {
+            target = NetMeanderConstraint.MeanderTarget.parse(scanner.nextString());
+            scanner.nextClosingBracket();
+          } else {
+            ScopeKeyword.skipScope(scanner);
+          }
         }
       }
-      return new LengthGapRule(value);
+      return new LengthGapRule(value, target);
     } catch (IOException e) {
       FRLogger.error("Rule.readLengthGapRule: IO error scanning file", e);
       return null;
@@ -324,8 +338,12 @@ public abstract class Rule {
     writeNamedClearanceRules(scopeParameter, layer);
     // write_non_default_clearance_rules(scopeParameter, layer, defaultBoardClearance);
 
-    if (scopeParameter.board.rules.getDefaultMeanderConstraint() != null) {
-      writeMeanderRules(scopeParameter.board.rules.getDefaultMeanderConstraint(), scopeParameter);
+    for (NetMeanderConstraint.MeanderTarget target : NetMeanderConstraint.MeanderTarget.values()) {
+      NetMeanderConstraint constraint =
+          scopeParameter.board.rules.getDefaultMeanderConstraint(target);
+      if (constraint != null) {
+        writeMeanderRules(constraint, scopeParameter);
+      }
     }
 
     scopeParameter.file.endScope();
@@ -355,7 +373,9 @@ public abstract class Rule {
         constraint.hasMaxAmplitude()
             || constraint.maxAmplitude() == 0.0
             || constraint.singleSided()
-            || constraint.hasCustomCornerStyle();
+            || constraint.hasCustomCornerStyle()
+            || (constraint.target() != null
+                && constraint.target() != NetMeanderConstraint.MeanderTarget.SINGLE_TRACK);
     if (shouldWriteAmp) {
       scopeParameter.file.newLine();
       scopeParameter.file.write("(length_amplitude ");
@@ -384,6 +404,12 @@ public abstract class Rule {
         scopeParameter.file.write(String.valueOf(constraint.cornerRadiusPercentage()));
         scopeParameter.file.write(")");
       }
+      if (constraint.target() != null
+          && constraint.target() != NetMeanderConstraint.MeanderTarget.SINGLE_TRACK) {
+        scopeParameter.file.write(" (target ");
+        scopeParameter.file.write(constraint.target().toDsn());
+        scopeParameter.file.write(")");
+      }
       scopeParameter.file.write(")");
     }
 
@@ -392,6 +418,12 @@ public abstract class Rule {
       scopeParameter.file.write("(length_gap ");
       scopeParameter.file.write(
           String.valueOf(toDsnDimension(constraint.gap(), scopeParameter.coordinateTransform)));
+      if (constraint.target() != null
+          && constraint.target() != NetMeanderConstraint.MeanderTarget.SINGLE_TRACK) {
+        scopeParameter.file.write(" (target ");
+        scopeParameter.file.write(constraint.target().toDsn());
+        scopeParameter.file.write(")");
+      }
       scopeParameter.file.write(")");
     }
   }
@@ -544,6 +576,7 @@ public abstract class Rule {
     public final boolean singleSided;
     public final NetMeanderConstraint.CornerStyle cornerStyle;
     public final int cornerRadiusPercentage;
+    public final NetMeanderConstraint.MeanderTarget target;
 
     public LengthAmplitudeRule(double maxAmplitude, double minAmplitude) {
       this(
@@ -551,7 +584,8 @@ public abstract class Rule {
           minAmplitude,
           false,
           NetMeanderConstraint.CornerStyle.AUTO,
-          NetMeanderConstraint.DEFAULT_CORNER_RADIUS_PERCENT);
+          NetMeanderConstraint.DEFAULT_CORNER_RADIUS_PERCENT,
+          NetMeanderConstraint.MeanderTarget.SINGLE_TRACK);
     }
 
     public LengthAmplitudeRule(
@@ -560,11 +594,28 @@ public abstract class Rule {
         boolean singleSided,
         NetMeanderConstraint.CornerStyle cornerStyle,
         int cornerRadiusPercentage) {
+      this(
+          maxAmplitude,
+          minAmplitude,
+          singleSided,
+          cornerStyle,
+          cornerRadiusPercentage,
+          NetMeanderConstraint.MeanderTarget.SINGLE_TRACK);
+    }
+
+    public LengthAmplitudeRule(
+        double maxAmplitude,
+        double minAmplitude,
+        boolean singleSided,
+        NetMeanderConstraint.CornerStyle cornerStyle,
+        int cornerRadiusPercentage,
+        NetMeanderConstraint.MeanderTarget target) {
       this.maxAmplitude = maxAmplitude;
       this.minAmplitude = minAmplitude;
       this.singleSided = singleSided;
       this.cornerStyle = cornerStyle;
       this.cornerRadiusPercentage = cornerRadiusPercentage;
+      this.target = target != null ? target : NetMeanderConstraint.MeanderTarget.SINGLE_TRACK;
     }
 
     public NetMeanderConstraint toConstraint(CoordinateTransform coordinateTransform) {
@@ -574,16 +625,23 @@ public abstract class Rule {
           NetMeanderConstraint.UNSPECIFIED,
           singleSided,
           cornerStyle != null ? cornerStyle : NetMeanderConstraint.CornerStyle.AUTO,
-          cornerRadiusPercentage);
+          cornerRadiusPercentage,
+          target);
     }
   }
 
   public static class LengthGapRule extends Rule {
 
     public final double gap;
+    public final NetMeanderConstraint.MeanderTarget target;
 
     public LengthGapRule(double gap) {
+      this(gap, NetMeanderConstraint.MeanderTarget.SINGLE_TRACK);
+    }
+
+    public LengthGapRule(double gap, NetMeanderConstraint.MeanderTarget target) {
       this.gap = gap;
+      this.target = target != null ? target : NetMeanderConstraint.MeanderTarget.SINGLE_TRACK;
     }
 
     public NetMeanderConstraint toConstraint(CoordinateTransform coordinateTransform) {
@@ -593,37 +651,81 @@ public abstract class Rule {
           toBoardDimension(gap, coordinateTransform),
           false,
           NetMeanderConstraint.CornerStyle.AUTO,
-          NetMeanderConstraint.DEFAULT_CORNER_RADIUS_PERCENT);
+          NetMeanderConstraint.DEFAULT_CORNER_RADIUS_PERCENT,
+          target);
     }
   }
 
   /**
    * Combines length_amplitude, length_gap, and collection of rules into an aggregated {@link
-   * NetMeanderConstraint}. Returns {@code null} if no meander rules are present.
+   * NetMeanderConstraint} for the single-track target. Returns {@code null} if no matching meander
+   * rules are present.
    */
   public static NetMeanderConstraint buildMeanderConstraint(
       LengthAmplitudeRule ampRule,
       LengthGapRule gapRule,
       Collection<Rule> rules,
       CoordinateTransform coordinateTransform) {
-    NetMeanderConstraint constraint =
-        ampRule != null ? ampRule.toConstraint(coordinateTransform) : null;
-    if (gapRule != null) {
+    return buildMeanderConstraint(
+        ampRule,
+        gapRule,
+        rules,
+        coordinateTransform,
+        NetMeanderConstraint.MeanderTarget.SINGLE_TRACK);
+  }
+
+  /**
+   * Combines length_amplitude, length_gap, and collection of rules into an aggregated {@link
+   * NetMeanderConstraint} for the specified target. Returns {@code null} if no matching meander
+   * rules are present.
+   */
+  public static NetMeanderConstraint buildMeanderConstraint(
+      LengthAmplitudeRule ampRule,
+      LengthGapRule gapRule,
+      Collection<Rule> rules,
+      CoordinateTransform coordinateTransform,
+      NetMeanderConstraint.MeanderTarget target) {
+    if (target == null) {
+      target = NetMeanderConstraint.MeanderTarget.SINGLE_TRACK;
+    }
+    NetMeanderConstraint constraint = null;
+    if (ampRule != null && ampRule.target == target) {
+      constraint = ampRule.toConstraint(coordinateTransform);
+    }
+    if (gapRule != null && gapRule.target == target) {
       constraint =
           NetMeanderConstraint.merge(constraint, gapRule.toConstraint(coordinateTransform));
     }
     if (rules != null) {
       for (Rule r : rules) {
-        if (r instanceof Rule.LengthAmplitudeRule amp) {
+        if (r instanceof Rule.LengthAmplitudeRule amp && amp.target == target) {
           constraint =
               NetMeanderConstraint.merge(constraint, amp.toConstraint(coordinateTransform));
-        } else if (r instanceof Rule.LengthGapRule gap) {
+        } else if (r instanceof Rule.LengthGapRule gap && gap.target == target) {
           constraint =
               NetMeanderConstraint.merge(constraint, gap.toConstraint(coordinateTransform));
         }
       }
     }
     return constraint;
+  }
+
+  /**
+   * Builds meander constraints across all {@link NetMeanderConstraint.MeanderTarget} types present
+   * in the specified rules collection.
+   */
+  public static Map<NetMeanderConstraint.MeanderTarget, NetMeanderConstraint>
+      buildAllMeanderConstraints(Collection<Rule> rules, CoordinateTransform coordinateTransform) {
+    Map<NetMeanderConstraint.MeanderTarget, NetMeanderConstraint> map =
+        new EnumMap<>(NetMeanderConstraint.MeanderTarget.class);
+    for (NetMeanderConstraint.MeanderTarget target : NetMeanderConstraint.MeanderTarget.values()) {
+      NetMeanderConstraint constraint =
+          buildMeanderConstraint(null, null, rules, coordinateTransform, target);
+      if (constraint != null) {
+        map.put(target, constraint);
+      }
+    }
+    return map;
   }
 
   public static class LayerRule {

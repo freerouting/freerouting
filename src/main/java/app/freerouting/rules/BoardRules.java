@@ -11,6 +11,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.Vector;
 
 /** Contains the rules and constraints required for items to be inserted into a routing board. */
@@ -380,26 +382,86 @@ public class BoardRules implements Serializable {
     this.ignoreConduction = value;
   }
 
+  /** Board-level default meander constraints by target (Single Track, Diff Pair, Skew). */
+  private Map<NetMeanderConstraint.MeanderTarget, NetMeanderConstraint> defaultMeanderConstraints =
+      new EnumMap<>(NetMeanderConstraint.MeanderTarget.class);
+
   /**
-   * Returns the board-level default meander constraint for trace length tuning, or null if none is
+   * Returns the board-level default meander constraint for the given target, or null if none is
    * set.
    */
-  public NetMeanderConstraint getDefaultMeanderConstraint() {
-    return this.defaultMeanderConstraint;
+  public NetMeanderConstraint getDefaultMeanderConstraint(
+      NetMeanderConstraint.MeanderTarget target) {
+    if (target == null) {
+      target = NetMeanderConstraint.MeanderTarget.SINGLE_TRACK;
+    }
+    if (this.defaultMeanderConstraints == null) {
+      this.defaultMeanderConstraints = new EnumMap<>(NetMeanderConstraint.MeanderTarget.class);
+    }
+    NetMeanderConstraint constraint = this.defaultMeanderConstraints.get(target);
+    if (constraint == null && target == NetMeanderConstraint.MeanderTarget.SINGLE_TRACK) {
+      return this.defaultMeanderConstraint;
+    }
+    return constraint;
   }
 
-  /** Sets the board-level default meander constraint for trace length tuning. */
+  /** Returns the board-level default single-track meander constraint, or null if none is set. */
+  public NetMeanderConstraint getDefaultMeanderConstraint() {
+    return getDefaultMeanderConstraint(NetMeanderConstraint.MeanderTarget.SINGLE_TRACK);
+  }
+
+  /** Sets the board-level default meander constraint for the given target. */
+  public void setDefaultMeanderConstraint(
+      NetMeanderConstraint.MeanderTarget target, NetMeanderConstraint constraint) {
+    if (target == null) {
+      target = NetMeanderConstraint.MeanderTarget.SINGLE_TRACK;
+    }
+    if (this.defaultMeanderConstraints == null) {
+      this.defaultMeanderConstraints = new EnumMap<>(NetMeanderConstraint.MeanderTarget.class);
+    }
+    if (constraint == null) {
+      this.defaultMeanderConstraints.remove(target);
+      if (target == NetMeanderConstraint.MeanderTarget.SINGLE_TRACK) {
+        this.defaultMeanderConstraint = null;
+      }
+    } else {
+      NetMeanderConstraint tagged = constraint.withTarget(target);
+      this.defaultMeanderConstraints.put(target, tagged);
+      if (target == NetMeanderConstraint.MeanderTarget.SINGLE_TRACK) {
+        this.defaultMeanderConstraint = tagged;
+      }
+    }
+  }
+
+  /** Sets the board-level default single-track meander constraint. */
   public void setDefaultMeanderConstraint(NetMeanderConstraint constraint) {
-    this.defaultMeanderConstraint = constraint;
+    setDefaultMeanderConstraint(NetMeanderConstraint.MeanderTarget.SINGLE_TRACK, constraint);
   }
 
   /**
-   * Resolves the effective meander constraint for the given net, traversing the hierarchy: Net
-   * override &rarr; NetClass &rarr; Board default &rarr; null.
+   * Resolves the effective meander constraint for the given net and target, traversing the
+   * hierarchy: Net override &rarr; NetClass &rarr; Board default &rarr; null.
+   */
+  public NetMeanderConstraint resolveMeanderConstraint(
+      Net net, NetMeanderConstraint.MeanderTarget target) {
+    NetMeanderConstraint netConstraint = (net != null) ? net.getMeanderConstraint(target) : null;
+    return NetMeanderConstraint.merge(netConstraint, getDefaultMeanderConstraint(target));
+  }
+
+  /**
+   * Resolves the effective single-track meander constraint for the given net, traversing the
+   * hierarchy: Net override &rarr; NetClass &rarr; Board default &rarr; null.
    */
   public NetMeanderConstraint resolveMeanderConstraint(Net net) {
-    NetMeanderConstraint netConstraint = (net != null) ? net.getMeanderConstraint() : null;
-    return NetMeanderConstraint.merge(netConstraint, this.defaultMeanderConstraint);
+    return resolveMeanderConstraint(net, NetMeanderConstraint.MeanderTarget.SINGLE_TRACK);
+  }
+
+  /** Returns true if any board-level default meander constraint is defined for any target. */
+  public boolean hasAnyDefaultMeanderConstraint() {
+    if (this.defaultMeanderConstraints != null && !this.defaultMeanderConstraints.isEmpty()) {
+      return true;
+    }
+    return this.defaultMeanderConstraint != null;
   }
 
   /** The angle restriction for traces: 90 degree, 45 degree or none. */

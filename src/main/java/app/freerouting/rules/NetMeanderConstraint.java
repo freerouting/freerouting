@@ -18,6 +18,7 @@ import java.io.Serializable;
  *     symmetric dual-sided accordions.
  * @param cornerStyle corner geometry style (auto, 45-degree chamfer, rounded fillet, 90-degree).
  * @param cornerRadiusPercentage corner radius percentage for rounded or mitered turns (0-100%).
+ * @param target target scope/context (single-ended trace, differential pair, diff pair skew).
  */
 public record NetMeanderConstraint(
     double maxAmplitude,
@@ -25,11 +26,40 @@ public record NetMeanderConstraint(
     double gap,
     boolean singleSided,
     CornerStyle cornerStyle,
-    int cornerRadiusPercentage)
+    int cornerRadiusPercentage,
+    MeanderTarget target)
     implements Serializable {
 
   public static final double UNSPECIFIED = -1.0;
   public static final int DEFAULT_CORNER_RADIUS_PERCENT = 80;
+
+  /** Target scope/context for trace length tuning (Single Track, Diff Pair, Diff Pair Skew). */
+  public enum MeanderTarget {
+    SINGLE_TRACK,
+    DIFF_PAIR,
+    DIFF_PAIR_SKEW;
+
+    /** Parses meander target from DSN keyword or identifier. Defaults to SINGLE_TRACK. */
+    public static MeanderTarget parse(String name) {
+      if (name == null) {
+        return SINGLE_TRACK;
+      }
+      return switch (name.toLowerCase()) {
+        case "diff_pair", "pair", "differential_pair" -> DIFF_PAIR;
+        case "diff_pair_skew", "skew", "pair_skew" -> DIFF_PAIR_SKEW;
+        default -> SINGLE_TRACK;
+      };
+    }
+
+    /** Returns standard DSN keyword representation. */
+    public String toDsn() {
+      return switch (this) {
+        case DIFF_PAIR -> "diff_pair";
+        case DIFF_PAIR_SKEW -> "diff_pair_skew";
+        case SINGLE_TRACK -> "single_track";
+      };
+    }
+  }
 
   /** Corner geometry style for meander fold crests and turns. */
   public enum CornerStyle {
@@ -63,15 +93,52 @@ public record NetMeanderConstraint(
   }
 
   /**
+   * Compact canonical constructor providing robust non-null defaults for cornerStyle and target.
+   */
+  public NetMeanderConstraint {
+    if (cornerStyle == null) {
+      cornerStyle = CornerStyle.AUTO;
+    }
+    if (target == null) {
+      target = MeanderTarget.SINGLE_TRACK;
+    }
+  }
+
+  /** Overload constructor defaulting to {@link MeanderTarget#SINGLE_TRACK}. */
+  public NetMeanderConstraint(
+      double maxAmplitude,
+      double minAmplitude,
+      double gap,
+      boolean singleSided,
+      CornerStyle cornerStyle,
+      int cornerRadiusPercentage) {
+    this(
+        maxAmplitude,
+        minAmplitude,
+        gap,
+        singleSided,
+        cornerStyle,
+        cornerRadiusPercentage,
+        MeanderTarget.SINGLE_TRACK);
+  }
+
+  /**
    * Convenience constructor for standard Specctra amplitude and gap constraints, defaulting to
-   * dual-sided accordion, automatic corner style, and 80% corner radius.
+   * dual-sided accordion, automatic corner style, 80% corner radius, and single track target.
    *
    * @param maxAmplitude maximum excursion height (0 = prohibited, &lt;= 0 = unspecified)
    * @param minAmplitude minimum excursion height (&lt;= 0 = unspecified)
    * @param gap spacing between adjacent folds (&lt;= 0 = Specctra 3W fallback)
    */
   public NetMeanderConstraint(double maxAmplitude, double minAmplitude, double gap) {
-    this(maxAmplitude, minAmplitude, gap, false, CornerStyle.AUTO, DEFAULT_CORNER_RADIUS_PERCENT);
+    this(
+        maxAmplitude,
+        minAmplitude,
+        gap,
+        false,
+        CornerStyle.AUTO,
+        DEFAULT_CORNER_RADIUS_PERCENT,
+        MeanderTarget.SINGLE_TRACK);
   }
 
   /**
@@ -157,8 +224,19 @@ public record NetMeanderConstraint(
             ? this.cornerRadiusPercentage
             : fallback.cornerRadiusPercentage;
 
+    MeanderTarget resolvedTarget =
+        (this.target != null && this.target != MeanderTarget.SINGLE_TRACK)
+            ? this.target
+            : (fallback.target != null ? fallback.target : MeanderTarget.SINGLE_TRACK);
+
     return new NetMeanderConstraint(
-        resolvedMax, resolvedMin, resolvedGap, resolvedSingleSided, resolvedCorner, resolvedRadius);
+        resolvedMax,
+        resolvedMin,
+        resolvedGap,
+        resolvedSingleSided,
+        resolvedCorner,
+        resolvedRadius,
+        resolvedTarget);
   }
 
   /**
@@ -176,7 +254,13 @@ public record NetMeanderConstraint(
   /** Returns a copy of this constraint with updated amplitude bounds. */
   public NetMeanderConstraint withAmplitude(double max, double min) {
     return new NetMeanderConstraint(
-        max, min, this.gap, this.singleSided, this.cornerStyle, this.cornerRadiusPercentage);
+        max,
+        min,
+        this.gap,
+        this.singleSided,
+        this.cornerStyle,
+        this.cornerRadiusPercentage,
+        this.target);
   }
 
   /** Returns a copy of this constraint with an updated gap value. */
@@ -187,7 +271,8 @@ public record NetMeanderConstraint(
         newGap,
         this.singleSided,
         this.cornerStyle,
-        this.cornerRadiusPercentage);
+        this.cornerRadiusPercentage,
+        this.target);
   }
 
   /** Returns a copy of this constraint with an updated singleSided flag. */
@@ -198,12 +283,31 @@ public record NetMeanderConstraint(
         this.gap,
         newSingleSided,
         this.cornerStyle,
-        this.cornerRadiusPercentage);
+        this.cornerRadiusPercentage,
+        this.target);
   }
 
   /** Returns a copy of this constraint with updated corner style settings. */
   public NetMeanderConstraint withCornerStyle(CornerStyle newStyle, int radiusPercent) {
     return new NetMeanderConstraint(
-        this.maxAmplitude, this.minAmplitude, this.gap, this.singleSided, newStyle, radiusPercent);
+        this.maxAmplitude,
+        this.minAmplitude,
+        this.gap,
+        this.singleSided,
+        newStyle,
+        radiusPercent,
+        this.target);
+  }
+
+  /** Returns a copy of this constraint with an updated meander target. */
+  public NetMeanderConstraint withTarget(MeanderTarget newTarget) {
+    return new NetMeanderConstraint(
+        this.maxAmplitude,
+        this.minAmplitude,
+        this.gap,
+        this.singleSided,
+        this.cornerStyle,
+        this.cornerRadiusPercentage,
+        newTarget != null ? newTarget : MeanderTarget.SINGLE_TRACK);
   }
 }

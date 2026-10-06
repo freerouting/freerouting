@@ -1,9 +1,11 @@
 package app.freerouting.io.specctra.parser;
 
 import app.freerouting.logger.FRLogger;
+import app.freerouting.rules.NetMeanderConstraint;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 
 @SuppressWarnings({
@@ -25,6 +27,7 @@ public final class Circuit {
     double maxTraceLength = 0;
     Collection<String> useVia = new LinkedList<>();
     Collection<String> useLayer = new LinkedList<>();
+    Collection<Rule> meanderRules = new LinkedList<>();
     Rule.LengthAmplitudeRule amplitudeRule = null;
     Rule.LengthGapRule gapRule = null;
     for (; ; ) {
@@ -52,9 +55,23 @@ public final class Circuit {
             maxTraceLength = lengthRule.maxLength;
           }
         } else if (Rule.isKeyword(nextToken, Keyword.LENGTH_AMPLITUDE, "length_amplitude")) {
-          amplitudeRule = Rule.readLengthAmplitudeRule(scanner);
+          Rule.LengthAmplitudeRule parsedAmp = Rule.readLengthAmplitudeRule(scanner);
+          if (parsedAmp != null) {
+            meanderRules.add(parsedAmp);
+            if (parsedAmp.target == NetMeanderConstraint.MeanderTarget.SINGLE_TRACK
+                && amplitudeRule == null) {
+              amplitudeRule = parsedAmp;
+            }
+          }
         } else if (Rule.isKeyword(nextToken, Keyword.LENGTH_GAP, "length_gap")) {
-          gapRule = Rule.readLengthGapRule(scanner);
+          Rule.LengthGapRule parsedGap = Rule.readLengthGapRule(scanner);
+          if (parsedGap != null) {
+            meanderRules.add(parsedGap);
+            if (parsedGap.target == NetMeanderConstraint.MeanderTarget.SINGLE_TRACK
+                && gapRule == null) {
+              gapRule = parsedGap;
+            }
+          }
         } else if (nextToken == Keyword.USE_VIA) {
           useVia.addAll(Structure.readViaPadstacks(scanner));
         } else if (nextToken == Keyword.USE_LAYER) {
@@ -64,8 +81,24 @@ public final class Circuit {
         }
       }
     }
+    if (amplitudeRule == null) {
+      for (Rule r : meanderRules) {
+        if (r instanceof Rule.LengthAmplitudeRule a) {
+          amplitudeRule = a;
+          break;
+        }
+      }
+    }
+    if (gapRule == null) {
+      for (Rule r : meanderRules) {
+        if (r instanceof Rule.LengthGapRule g) {
+          gapRule = g;
+          break;
+        }
+      }
+    }
     return new ReadScopeResult(
-        maxTraceLength, minTraceLength, useVia, useLayer, amplitudeRule, gapRule);
+        maxTraceLength, minTraceLength, useVia, useLayer, amplitudeRule, gapRule, meanderRules);
   }
 
   static LengthMatchingRule readLengthScope(IJFlexScanner scanner) {
@@ -137,13 +170,14 @@ public final class Circuit {
     public final Collection<String> useLayer;
     public final Rule.LengthAmplitudeRule amplitudeRule;
     public final Rule.LengthGapRule gapRule;
+    public final Collection<Rule> meanderRules;
 
     public ReadScopeResult(
         double maxLength,
         double minLength,
         Collection<String> useVia,
         Collection<String> useLayer) {
-      this(maxLength, minLength, useVia, useLayer, null, null);
+      this(maxLength, minLength, useVia, useLayer, null, null, Collections.emptyList());
     }
 
     public ReadScopeResult(
@@ -153,12 +187,43 @@ public final class Circuit {
         Collection<String> useLayer,
         Rule.LengthAmplitudeRule amplitudeRule,
         Rule.LengthGapRule gapRule) {
+      this(
+          maxLength,
+          minLength,
+          useVia,
+          useLayer,
+          amplitudeRule,
+          gapRule,
+          collectRules(amplitudeRule, gapRule));
+    }
+
+    public ReadScopeResult(
+        double maxLength,
+        double minLength,
+        Collection<String> useVia,
+        Collection<String> useLayer,
+        Rule.LengthAmplitudeRule amplitudeRule,
+        Rule.LengthGapRule gapRule,
+        Collection<Rule> meanderRules) {
       this.maxLength = maxLength;
       this.minLength = minLength;
       this.useVia = useVia;
       this.useLayer = useLayer;
       this.amplitudeRule = amplitudeRule;
       this.gapRule = gapRule;
+      this.meanderRules = meanderRules != null ? meanderRules : Collections.emptyList();
+    }
+
+    private static Collection<Rule> collectRules(
+        Rule.LengthAmplitudeRule amp, Rule.LengthGapRule gap) {
+      Collection<Rule> rules = new LinkedList<>();
+      if (amp != null) {
+        rules.add(amp);
+      }
+      if (gap != null) {
+        rules.add(gap);
+      }
+      return rules;
     }
   }
 

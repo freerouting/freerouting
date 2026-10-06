@@ -25,6 +25,7 @@ public class NetClass {
   public double maxTraceLength;
   public Rule.LengthAmplitudeRule amplitudeRule;
   public Rule.LengthGapRule gapRule;
+  public final Collection<Rule> meanderRules = new LinkedList<>();
 
   /** Creates a new instance of NetClass. */
   public NetClass(
@@ -112,6 +113,9 @@ public class NetClass {
                 gapRule = currentRule.gapRule;
                 useVia.addAll(currentRule.useVia);
                 useLayer.addAll(currentRule.useLayer);
+                if (currentRule.meanderRules != null) {
+                  rules.addAll(currentRule.meanderRules);
+                }
               }
             } else if (nextToken == Keyword.CLEARANCE_CLASS) {
               traceClearanceClass = DsnFile.readStringScope(scanner);
@@ -145,6 +149,11 @@ public class NetClass {
               maxTraceLength);
       parsedClass.amplitudeRule = amplitudeRule;
       parsedClass.gapRule = gapRule;
+      for (Rule r : rules) {
+        if (r instanceof Rule.LengthAmplitudeRule || r instanceof Rule.LengthGapRule) {
+          parsedClass.meanderRules.add(r);
+        }
+      }
       return parsedClass;
     } catch (IOException e) {
       FRLogger.error("NetClass.read_scope: IO error while scanning file", e);

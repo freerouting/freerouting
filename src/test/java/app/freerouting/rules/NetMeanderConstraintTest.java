@@ -237,4 +237,163 @@ class NetMeanderConstraintTest {
     assertNotNull(merged);
     assertEquals(1.0, merged.maxAmplitude(), 1e-6);
   }
+
+  @Test
+  void meanderTargetParseAndToDsn() {
+    assertEquals(
+        NetMeanderConstraint.MeanderTarget.DIFF_PAIR,
+        NetMeanderConstraint.MeanderTarget.parse("diff_pair"));
+    assertEquals(
+        NetMeanderConstraint.MeanderTarget.DIFF_PAIR,
+        NetMeanderConstraint.MeanderTarget.parse("pair"));
+    assertEquals(
+        NetMeanderConstraint.MeanderTarget.DIFF_PAIR,
+        NetMeanderConstraint.MeanderTarget.parse("differential_pair"));
+
+    assertEquals(
+        NetMeanderConstraint.MeanderTarget.DIFF_PAIR_SKEW,
+        NetMeanderConstraint.MeanderTarget.parse("diff_pair_skew"));
+    assertEquals(
+        NetMeanderConstraint.MeanderTarget.DIFF_PAIR_SKEW,
+        NetMeanderConstraint.MeanderTarget.parse("skew"));
+    assertEquals(
+        NetMeanderConstraint.MeanderTarget.DIFF_PAIR_SKEW,
+        NetMeanderConstraint.MeanderTarget.parse("pair_skew"));
+
+    assertEquals(
+        NetMeanderConstraint.MeanderTarget.SINGLE_TRACK,
+        NetMeanderConstraint.MeanderTarget.parse("single_track"));
+    assertEquals(
+        NetMeanderConstraint.MeanderTarget.SINGLE_TRACK,
+        NetMeanderConstraint.MeanderTarget.parse("track"));
+    assertEquals(
+        NetMeanderConstraint.MeanderTarget.SINGLE_TRACK,
+        NetMeanderConstraint.MeanderTarget.parse(null));
+
+    assertEquals("single_track", NetMeanderConstraint.MeanderTarget.SINGLE_TRACK.toDsn());
+    assertEquals("diff_pair", NetMeanderConstraint.MeanderTarget.DIFF_PAIR.toDsn());
+    assertEquals("diff_pair_skew", NetMeanderConstraint.MeanderTarget.DIFF_PAIR_SKEW.toDsn());
+  }
+
+  @Test
+  void multiTargetConstraintsOnNetClassAndNet() {
+    RoutingBoard board = createTestBoard();
+    BoardRules rules = board.rules;
+    NetClass netClass = rules.getDefaultNetClass();
+
+    NetMeanderConstraint singleTrack =
+        new NetMeanderConstraint(1.5, 0.3, 0.6, false, NetMeanderConstraint.CornerStyle.AUTO, 80);
+    NetMeanderConstraint diffPair =
+        new NetMeanderConstraint(
+            2.5,
+            0.5,
+            1.2,
+            true,
+            NetMeanderConstraint.CornerStyle.CHAMFERED_45,
+            75,
+            NetMeanderConstraint.MeanderTarget.DIFF_PAIR);
+    NetMeanderConstraint skew =
+        new NetMeanderConstraint(
+            0.8,
+            0.1,
+            0.4,
+            false,
+            NetMeanderConstraint.CornerStyle.FILLETED_ROUND,
+            60,
+            NetMeanderConstraint.MeanderTarget.DIFF_PAIR_SKEW);
+
+    netClass.setMeanderConstraint(NetMeanderConstraint.MeanderTarget.SINGLE_TRACK, singleTrack);
+    netClass.setMeanderConstraint(NetMeanderConstraint.MeanderTarget.DIFF_PAIR, diffPair);
+    netClass.setMeanderConstraint(NetMeanderConstraint.MeanderTarget.DIFF_PAIR_SKEW, skew);
+
+    assertTrue(netClass.hasAnyMeanderConstraint());
+    assertEquals(singleTrack, netClass.getMeanderConstraint());
+    assertEquals(
+        singleTrack,
+        netClass.getMeanderConstraint(NetMeanderConstraint.MeanderTarget.SINGLE_TRACK));
+    assertEquals(
+        diffPair, netClass.getMeanderConstraint(NetMeanderConstraint.MeanderTarget.DIFF_PAIR));
+    assertEquals(
+        skew, netClass.getMeanderConstraint(NetMeanderConstraint.MeanderTarget.DIFF_PAIR_SKEW));
+
+    Net net = rules.nets.add("DP_TX_P", 1, false);
+    // Net inherits all 3 targets from class
+    assertEquals(
+        singleTrack, net.getMeanderConstraint(NetMeanderConstraint.MeanderTarget.SINGLE_TRACK));
+    assertEquals(diffPair, net.getMeanderConstraint(NetMeanderConstraint.MeanderTarget.DIFF_PAIR));
+    assertEquals(skew, net.getMeanderConstraint(NetMeanderConstraint.MeanderTarget.DIFF_PAIR_SKEW));
+    assertFalse(net.hasAnyExplicitMeanderConstraint());
+
+    // Explicit override on diff pair only
+    NetMeanderConstraint diffPairOverride =
+        new NetMeanderConstraint(3.0, 0.6, 1.5, false, NetMeanderConstraint.CornerStyle.AUTO, 80);
+    net.setMeanderConstraint(NetMeanderConstraint.MeanderTarget.DIFF_PAIR, diffPairOverride);
+
+    assertTrue(net.hasAnyExplicitMeanderConstraint());
+    assertFalse(net.hasExplicitMeanderConstraint()); // single track is not explicitly set
+    assertTrue(net.hasExplicitMeanderConstraint(NetMeanderConstraint.MeanderTarget.DIFF_PAIR));
+
+    assertEquals(
+        3.0,
+        net.getMeanderConstraint(NetMeanderConstraint.MeanderTarget.DIFF_PAIR).maxAmplitude(),
+        1e-6);
+    // Single track and skew still inherit from netClass
+    assertEquals(
+        1.5,
+        net.getMeanderConstraint(NetMeanderConstraint.MeanderTarget.SINGLE_TRACK).maxAmplitude(),
+        1e-6);
+    assertEquals(
+        0.8,
+        net.getMeanderConstraint(NetMeanderConstraint.MeanderTarget.DIFF_PAIR_SKEW).maxAmplitude(),
+        1e-6);
+  }
+
+  @Test
+  void boardRulesMultiTargetResolution() {
+    RoutingBoard board = createTestBoard();
+    BoardRules rules = board.rules;
+
+    NetMeanderConstraint defaultSingle = new NetMeanderConstraint(2.0, 0.4, 0.8);
+    NetMeanderConstraint defaultDiffPair =
+        new NetMeanderConstraint(
+            3.0,
+            0.6,
+            1.0,
+            true,
+            NetMeanderConstraint.CornerStyle.AUTO,
+            80,
+            NetMeanderConstraint.MeanderTarget.DIFF_PAIR);
+
+    rules.setDefaultMeanderConstraint(
+        NetMeanderConstraint.MeanderTarget.SINGLE_TRACK, defaultSingle);
+    rules.setDefaultMeanderConstraint(
+        NetMeanderConstraint.MeanderTarget.DIFF_PAIR, defaultDiffPair);
+
+    assertTrue(rules.hasAnyDefaultMeanderConstraint());
+    assertEquals(defaultSingle, rules.getDefaultMeanderConstraint());
+    assertEquals(
+        defaultSingle,
+        rules.getDefaultMeanderConstraint(NetMeanderConstraint.MeanderTarget.SINGLE_TRACK));
+    assertEquals(
+        defaultDiffPair,
+        rules.getDefaultMeanderConstraint(NetMeanderConstraint.MeanderTarget.DIFF_PAIR));
+    assertNull(
+        rules.getDefaultMeanderConstraint(NetMeanderConstraint.MeanderTarget.DIFF_PAIR_SKEW));
+
+    Net net = rules.nets.add("BUS_D0", 1, false);
+    assertEquals(
+        2.0,
+        rules
+            .resolveMeanderConstraint(net, NetMeanderConstraint.MeanderTarget.SINGLE_TRACK)
+            .maxAmplitude(),
+        1e-6);
+    assertEquals(
+        3.0,
+        rules
+            .resolveMeanderConstraint(net, NetMeanderConstraint.MeanderTarget.DIFF_PAIR)
+            .maxAmplitude(),
+        1e-6);
+    assertNull(
+        rules.resolveMeanderConstraint(net, NetMeanderConstraint.MeanderTarget.DIFF_PAIR_SKEW));
+  }
 }

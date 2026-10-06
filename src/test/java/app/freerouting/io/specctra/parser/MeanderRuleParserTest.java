@@ -11,6 +11,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 class MeanderRuleParserTest {
@@ -192,5 +193,85 @@ class MeanderRuleParserTest {
     assertEquals(1200.0, constraint.gap(), 1e-6);
     assertTrue(constraint.singleSided());
     assertEquals(NetMeanderConstraint.CornerStyle.ORTHOGONAL_90, constraint.cornerStyle());
+  }
+
+  @Test
+  void parseLengthAmplitudeWithTargetDiffPair() throws IOException {
+    Collection<Rule> rules = parseRuleScope("(rule (length_amplitude 2.5 0.5 (target diff_pair)))");
+    assertNotNull(rules);
+    assertEquals(1, rules.size());
+
+    Rule.LengthAmplitudeRule ampRule = (Rule.LengthAmplitudeRule) rules.iterator().next();
+    assertEquals(2.5, ampRule.maxAmplitude, 1e-6);
+    assertEquals(0.5, ampRule.minAmplitude, 1e-6);
+    assertEquals(NetMeanderConstraint.MeanderTarget.DIFF_PAIR, ampRule.target);
+  }
+
+  @Test
+  void parseLengthAmplitudeWithTargetDiffPairSkew() throws IOException {
+    Collection<Rule> rules =
+        parseRuleScope("(rule (length_amplitude 0.9 0.1 (target diff_pair_skew)))");
+    assertNotNull(rules);
+    assertEquals(1, rules.size());
+
+    Rule.LengthAmplitudeRule ampRule = (Rule.LengthAmplitudeRule) rules.iterator().next();
+    assertEquals(0.9, ampRule.maxAmplitude, 1e-6);
+    assertEquals(0.1, ampRule.minAmplitude, 1e-6);
+    assertEquals(NetMeanderConstraint.MeanderTarget.DIFF_PAIR_SKEW, ampRule.target);
+  }
+
+  @Test
+  void parseLengthGapWithTargetDiffPair() throws IOException {
+    Collection<Rule> rules = parseRuleScope("(rule (length_gap 1.5 (target diff_pair)))");
+    assertNotNull(rules);
+    assertEquals(1, rules.size());
+
+    Rule.LengthGapRule gapRule = (Rule.LengthGapRule) rules.iterator().next();
+    assertEquals(1.5, gapRule.gap, 1e-6);
+    assertEquals(NetMeanderConstraint.MeanderTarget.DIFF_PAIR, gapRule.target);
+  }
+
+  @Test
+  void parseMultipleTargetsInRuleScopeAndBuildAll() throws IOException {
+    String snippet =
+        """
+        (rule
+          (length_amplitude 1.5 0.3)
+          (length_gap 0.8)
+          (length_amplitude 2.5 0.5 (target diff_pair))
+          (length_gap 1.2 (target diff_pair))
+          (length_amplitude 0.6 0.1 (target diff_pair_skew))
+          (length_gap 0.4 (target diff_pair_skew))
+        )
+        """;
+    Collection<Rule> rules = parseRuleScope(snippet);
+    assertNotNull(rules);
+    assertEquals(6, rules.size());
+
+    app.freerouting.io.CoordinateTransform transform =
+        new app.freerouting.io.CoordinateTransform(1000.0, 0, 0);
+
+    Map<NetMeanderConstraint.MeanderTarget, NetMeanderConstraint> all =
+        Rule.buildAllMeanderConstraints(rules, transform);
+
+    assertEquals(3, all.size());
+
+    NetMeanderConstraint single = all.get(NetMeanderConstraint.MeanderTarget.SINGLE_TRACK);
+    assertNotNull(single);
+    assertEquals(1500.0, single.maxAmplitude(), 1e-6);
+    assertEquals(300.0, single.minAmplitude(), 1e-6);
+    assertEquals(800.0, single.gap(), 1e-6);
+
+    NetMeanderConstraint diffPair = all.get(NetMeanderConstraint.MeanderTarget.DIFF_PAIR);
+    assertNotNull(diffPair);
+    assertEquals(2500.0, diffPair.maxAmplitude(), 1e-6);
+    assertEquals(500.0, diffPair.minAmplitude(), 1e-6);
+    assertEquals(1200.0, diffPair.gap(), 1e-6);
+
+    NetMeanderConstraint skew = all.get(NetMeanderConstraint.MeanderTarget.DIFF_PAIR_SKEW);
+    assertNotNull(skew);
+    assertEquals(600.0, skew.maxAmplitude(), 1e-6);
+    assertEquals(100.0, skew.minAmplitude(), 1e-6);
+    assertEquals(400.0, skew.gap(), 1e-6);
   }
 }

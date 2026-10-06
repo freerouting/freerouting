@@ -368,4 +368,148 @@ class DsnMeanderConstraintsTest {
         1000.0, board.communication.coordinateTransform.boardToDsn(resolved.minAmplitude()), 1e-4);
     assertEquals(2000.0, board.communication.coordinateTransform.boardToDsn(resolved.gap()), 1e-4);
   }
+
+  @Test
+  void testMultiTargetMeanderConstraintsParsedAndResolved() throws Exception {
+    String dsn =
+        createDsn(
+            """
+            (class BUS_DIFF N1
+              (rule
+                (width 250)
+                (clearance 200)
+                (length_amplitude 2000 400)
+                (length_gap 1000)
+                (length_amplitude 3500 700 (target diff_pair))
+                (length_gap 1500 (target diff_pair))
+                (length_amplitude 800 100 (target diff_pair_skew))
+                (length_gap 500 (target diff_pair_skew))
+              )
+            )
+            (net N1 (pins U1-1 U2-1))
+            (net N2 (pins U1-1 U2-1)
+              (rule
+                (length_amplitude 900 150 (target diff_pair_skew))
+              )
+            )
+            """);
+
+    RoutingBoard board = loadBoardFromString(dsn);
+    app.freerouting.rules.NetClass busClass = board.rules.netClasses.get("BUS_DIFF");
+    assertNotNull(busClass);
+
+    NetMeanderConstraint singleTrack =
+        busClass.getMeanderConstraint(NetMeanderConstraint.MeanderTarget.SINGLE_TRACK);
+    assertNotNull(singleTrack);
+    assertEquals(
+        2000.0,
+        board.communication.coordinateTransform.boardToDsn(singleTrack.maxAmplitude()),
+        1e-4);
+    assertEquals(
+        1000.0, board.communication.coordinateTransform.boardToDsn(singleTrack.gap()), 1e-4);
+
+    NetMeanderConstraint diffPair =
+        busClass.getMeanderConstraint(NetMeanderConstraint.MeanderTarget.DIFF_PAIR);
+    assertNotNull(diffPair);
+    assertEquals(
+        3500.0, board.communication.coordinateTransform.boardToDsn(diffPair.maxAmplitude()), 1e-4);
+    assertEquals(1500.0, board.communication.coordinateTransform.boardToDsn(diffPair.gap()), 1e-4);
+
+    NetMeanderConstraint skew =
+        busClass.getMeanderConstraint(NetMeanderConstraint.MeanderTarget.DIFF_PAIR_SKEW);
+    assertNotNull(skew);
+    assertEquals(
+        800.0, board.communication.coordinateTransform.boardToDsn(skew.maxAmplitude()), 1e-4);
+    assertEquals(500.0, board.communication.coordinateTransform.boardToDsn(skew.gap()), 1e-4);
+
+    // N1 inherits all 3 from class
+    Net n1 = board.rules.nets.get("N1", 1);
+    assertEquals(
+        3500.0,
+        board.communication.coordinateTransform.boardToDsn(
+            n1.getMeanderConstraint(NetMeanderConstraint.MeanderTarget.DIFF_PAIR).maxAmplitude()),
+        1e-4);
+
+    // N2 has explicit skew override
+    Net n2 = board.rules.nets.get("N2", 1);
+    assertTrue(n2.hasExplicitMeanderConstraint(NetMeanderConstraint.MeanderTarget.DIFF_PAIR_SKEW));
+    assertFalse(n2.hasExplicitMeanderConstraint(NetMeanderConstraint.MeanderTarget.SINGLE_TRACK));
+    assertEquals(
+        900.0,
+        board.communication.coordinateTransform.boardToDsn(
+            n2.getMeanderConstraint(NetMeanderConstraint.MeanderTarget.DIFF_PAIR_SKEW)
+                .maxAmplitude()),
+        1e-4);
+  }
+
+  @Test
+  void testMultiTargetRoundTripExportAndReload() throws Exception {
+    String dsn =
+        createDsn(
+            """
+            (class HIGH_SPEED N1
+              (circuit
+                (use_layer F.Cu)
+                (length_amplitude 1800 300)
+                (length_gap 900)
+                (length_amplitude 3200 600 (target diff_pair))
+                (length_gap 1400 (target diff_pair))
+              )
+            )
+            (net N1 (pins U1-1 U2-1)
+              (circuit
+                (length_amplitude 750 120 (target diff_pair_skew))
+                (length_gap 450 (target diff_pair_skew))
+              )
+            )
+            """);
+
+    RoutingBoard board = loadBoardFromString(dsn);
+
+    // Export to DSN
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    DsnWriter.write(board, out, "test_roundtrip_multitarget", false);
+    String exportedDsn = out.toString(StandardCharsets.UTF_8);
+
+    assertTrue(
+        exportedDsn.contains("(target diff_pair)"),
+        "Exported DSN must serialize (target diff_pair)");
+    assertTrue(
+        exportedDsn.contains("(target diff_pair_skew)"),
+        "Exported DSN must serialize (target diff_pair_skew)");
+
+    // Reload and verify
+    RoutingBoard reloaded = loadBoardFromString(exportedDsn);
+    app.freerouting.rules.NetClass reloadedClass = reloaded.rules.netClasses.get("HIGH_SPEED");
+    assertNotNull(reloadedClass);
+
+    NetMeanderConstraint singleTrack =
+        reloadedClass.getMeanderConstraint(NetMeanderConstraint.MeanderTarget.SINGLE_TRACK);
+    assertNotNull(singleTrack);
+    assertEquals(
+        1800.0,
+        reloaded.communication.coordinateTransform.boardToDsn(singleTrack.maxAmplitude()),
+        1e-4);
+
+    NetMeanderConstraint diffPair =
+        reloadedClass.getMeanderConstraint(NetMeanderConstraint.MeanderTarget.DIFF_PAIR);
+    assertNotNull(diffPair);
+    assertEquals(
+        3200.0,
+        reloaded.communication.coordinateTransform.boardToDsn(diffPair.maxAmplitude()),
+        1e-4);
+    assertEquals(
+        1400.0, reloaded.communication.coordinateTransform.boardToDsn(diffPair.gap()), 1e-4);
+
+    Net reloadedN1 = reloaded.rules.nets.get("N1", 1);
+    assertNotNull(reloadedN1);
+    assertTrue(
+        reloadedN1.hasExplicitMeanderConstraint(NetMeanderConstraint.MeanderTarget.DIFF_PAIR_SKEW));
+    NetMeanderConstraint skew =
+        reloadedN1.getMeanderConstraint(NetMeanderConstraint.MeanderTarget.DIFF_PAIR_SKEW);
+    assertNotNull(skew);
+    assertEquals(
+        750.0, reloaded.communication.coordinateTransform.boardToDsn(skew.maxAmplitude()), 1e-4);
+    assertEquals(450.0, reloaded.communication.coordinateTransform.boardToDsn(skew.gap()), 1e-4);
+  }
 }

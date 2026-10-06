@@ -12,9 +12,11 @@ import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.util.TextManager;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.EnumMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Locale;
+import java.util.Map;
 
 /** Describes properties for an individual electrical net. */
 public class Net implements Comparable<Net>, ItemInfoPrinter.Printable, Serializable {
@@ -46,9 +48,12 @@ public class Net implements Comparable<Net>, ItemInfoPrinter.Printable, Serializ
   private NetLengthConstraint lengthConstraint;
 
   /**
-   * Optional explicit meander (length tuning) constraint for this net, or null if inheriting from
-   * netClass.
+   * Optional explicit meander (length tuning) constraints for this net by target, or empty if
+   * inheriting from netClass.
    */
+  private Map<NetMeanderConstraint.MeanderTarget, NetMeanderConstraint> meanderConstraints =
+      new EnumMap<>(NetMeanderConstraint.MeanderTarget.class);
+
   private NetMeanderConstraint meanderConstraint;
 
   /** Creates a new net. */
@@ -158,32 +163,111 @@ public class Net implements Comparable<Net>, ItemInfoPrinter.Printable, Serializ
   }
 
   /**
-   * Returns the effective meander constraint of this net. If an explicit net-level constraint is
-   * present, it is merged with any inherited net-class constraint; otherwise falls back to the
-   * net-class constraint.
+   * Returns the effective meander constraint of this net for the specified target. If an explicit
+   * net-level constraint is present, it is merged with any inherited net-class constraint;
+   * otherwise falls back to the net-class constraint.
+   */
+  public NetMeanderConstraint getMeanderConstraint(NetMeanderConstraint.MeanderTarget target) {
+    if (target == null) {
+      target = NetMeanderConstraint.MeanderTarget.SINGLE_TRACK;
+    }
+    NetMeanderConstraint classConstraint =
+        (this.netClass != null) ? this.netClass.getMeanderConstraint(target) : null;
+    NetMeanderConstraint explicit = getExplicitMeanderConstraint(target);
+    return NetMeanderConstraint.merge(explicit, classConstraint);
+  }
+
+  /**
+   * Returns the effective single-track meander constraint of this net. If an explicit net-level
+   * constraint is present, it is merged with any inherited net-class constraint; otherwise falls
+   * back to the net-class constraint.
    */
   public NetMeanderConstraint getMeanderConstraint() {
-    NetMeanderConstraint classConstraint =
-        (this.netClass != null) ? this.netClass.getMeanderConstraint() : null;
-    return NetMeanderConstraint.merge(this.meanderConstraint, classConstraint);
+    return getMeanderConstraint(NetMeanderConstraint.MeanderTarget.SINGLE_TRACK);
   }
 
-  /** Sets the explicit meander constraint for this net. Pass null to inherit from net-class. */
+  /**
+   * Sets the explicit meander constraint for this net for the specified target. Pass null to
+   * inherit from net-class.
+   */
+  public void setMeanderConstraint(
+      NetMeanderConstraint.MeanderTarget target, NetMeanderConstraint constraint) {
+    if (target == null) {
+      target = NetMeanderConstraint.MeanderTarget.SINGLE_TRACK;
+    }
+    if (this.meanderConstraints == null) {
+      this.meanderConstraints = new EnumMap<>(NetMeanderConstraint.MeanderTarget.class);
+    }
+    if (constraint == null) {
+      this.meanderConstraints.remove(target);
+      if (target == NetMeanderConstraint.MeanderTarget.SINGLE_TRACK) {
+        this.meanderConstraint = null;
+      }
+    } else {
+      NetMeanderConstraint tagged = constraint.withTarget(target);
+      this.meanderConstraints.put(target, tagged);
+      if (target == NetMeanderConstraint.MeanderTarget.SINGLE_TRACK) {
+        this.meanderConstraint = tagged;
+      }
+    }
+  }
+
+  /**
+   * Sets the explicit single-track meander constraint for this net. Pass null to inherit from
+   * net-class.
+   */
   public void setMeanderConstraint(NetMeanderConstraint constraint) {
-    this.meanderConstraint = constraint;
+    setMeanderConstraint(NetMeanderConstraint.MeanderTarget.SINGLE_TRACK, constraint);
   }
 
-  /** Returns true if this net has an explicit net-level meander constraint configured. */
+  /** Returns true if this net has an explicit net-level meander constraint for the given target. */
+  public boolean hasExplicitMeanderConstraint(NetMeanderConstraint.MeanderTarget target) {
+    return getExplicitMeanderConstraint(target) != null;
+  }
+
+  /**
+   * Returns true if this net has an explicit net-level single-track meander constraint configured.
+   */
   public boolean hasExplicitMeanderConstraint() {
+    return hasExplicitMeanderConstraint(NetMeanderConstraint.MeanderTarget.SINGLE_TRACK);
+  }
+
+  /**
+   * Returns true if this net has an explicit net-level meander constraint configured for any
+   * target.
+   */
+  public boolean hasAnyExplicitMeanderConstraint() {
+    if (this.meanderConstraints != null && !this.meanderConstraints.isEmpty()) {
+      return true;
+    }
     return this.meanderConstraint != null;
   }
 
   /**
-   * Returns the explicit net-level meander constraint of this net, or null if inheriting from the
-   * net class.
+   * Returns the explicit net-level meander constraint of this net for the given target, or null if
+   * inheriting from the net class.
+   */
+  public NetMeanderConstraint getExplicitMeanderConstraint(
+      NetMeanderConstraint.MeanderTarget target) {
+    if (target == null) {
+      target = NetMeanderConstraint.MeanderTarget.SINGLE_TRACK;
+    }
+    if (this.meanderConstraints == null) {
+      this.meanderConstraints = new EnumMap<>(NetMeanderConstraint.MeanderTarget.class);
+    }
+    NetMeanderConstraint constraint = this.meanderConstraints.get(target);
+    if (constraint == null && target == NetMeanderConstraint.MeanderTarget.SINGLE_TRACK) {
+      return this.meanderConstraint;
+    }
+    return constraint;
+  }
+
+  /**
+   * Returns the explicit net-level single-track meander constraint of this net, or null if
+   * inheriting from the net class.
    */
   public NetMeanderConstraint getExplicitMeanderConstraint() {
-    return this.meanderConstraint;
+    return getExplicitMeanderConstraint(NetMeanderConstraint.MeanderTarget.SINGLE_TRACK);
   }
 
   /** Returns the pins and conduction areas of this net. */

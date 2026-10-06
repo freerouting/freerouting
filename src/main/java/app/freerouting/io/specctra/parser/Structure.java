@@ -647,12 +647,20 @@ public class Structure extends ScopeKeyword {
         boardRules.setDefaultTraceHalfWidths(traceHalfwidth);
       }
     }
-    NetMeanderConstraint defaultMeander =
-        Rule.buildMeanderConstraint(
-            null, null, boardConstructionInfo.defaultRules, scopeParameter.coordinateTransform);
-    if (defaultMeander != null) {
-      boardRules.setDefaultMeanderConstraint(
-          NetMeanderConstraint.merge(defaultMeander, boardRules.getDefaultMeanderConstraint()));
+    for (NetMeanderConstraint.MeanderTarget target : NetMeanderConstraint.MeanderTarget.values()) {
+      NetMeanderConstraint defaultMeander =
+          Rule.buildMeanderConstraint(
+              null,
+              null,
+              boardConstructionInfo.defaultRules,
+              scopeParameter.coordinateTransform,
+              target);
+      if (defaultMeander != null) {
+        boardRules.setDefaultMeanderConstraint(
+            target,
+            NetMeanderConstraint.merge(
+                defaultMeander, boardRules.getDefaultMeanderConstraint(target)));
+      }
     }
     for (LayerRule layerRule : boardConstructionInfo.layerDependentRules) {
       int layerIndex = scopeParameter.layerStructure.getNo(layerRule.layerName);

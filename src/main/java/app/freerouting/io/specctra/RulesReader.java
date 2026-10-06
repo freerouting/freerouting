@@ -305,12 +305,16 @@ public final class RulesReader {
       }
     }
     if (layerIndex < 0) {
-      NetMeanderConstraint meanderConstraint =
-          Rule.buildMeanderConstraint(null, null, rules, coordinateTransform);
-      if (meanderConstraint != null) {
-        board.rules.setDefaultMeanderConstraint(
-            NetMeanderConstraint.merge(
-                meanderConstraint, board.rules.getDefaultMeanderConstraint()));
+      for (NetMeanderConstraint.MeanderTarget target :
+          NetMeanderConstraint.MeanderTarget.values()) {
+        NetMeanderConstraint meanderConstraint =
+            Rule.buildMeanderConstraint(null, null, rules, coordinateTransform, target);
+        if (meanderConstraint != null) {
+          board.rules.setDefaultMeanderConstraint(
+              target,
+              NetMeanderConstraint.merge(
+                  meanderConstraint, board.rules.getDefaultMeanderConstraint(target)));
+        }
       }
     }
   }
