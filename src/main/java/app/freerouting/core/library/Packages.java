@@ -37,17 +37,6 @@ public class Packages implements Serializable {
         otherSidePackage = currentPackage;
       }
     }
-    String baseName = name.replaceAll("::\\d+$", "");
-    if (!baseName.equalsIgnoreCase(name)) {
-      for (Package currentPackage : packages) {
-        if (currentPackage != null && currentPackage.name.equalsIgnoreCase(baseName)) {
-          if (currentPackage.isFront == isFront) {
-            return currentPackage;
-          }
-          otherSidePackage = currentPackage;
-        }
-      }
-    }
     return otherSidePackage;
   }
 
