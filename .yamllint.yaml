@@ -27,7 +27,6 @@ rules:
     required: false
 
 ignore: |
-  src_v19/
   fixtures/
   integrations/
   examples/

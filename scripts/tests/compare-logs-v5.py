@@ -42,7 +42,7 @@ def compare_logs(log1, log2):
         lines1 = [l for l in raw1 if l]
         lines2 = [l for l in raw2 if l]
 
-        out.write(f"Current: {len(lines1)} entries, V1.9: {len(lines2)} entries\n\n")
+        out.write(f"Current: {len(lines1)} entries, Baseline: {len(lines2)} entries\n\n")
 
         # Find first divergence
         mismatch_idx = -1
@@ -58,30 +58,30 @@ def compare_logs(log1, log2):
             return
 
         out.write(f"First mismatch at position #{mismatch_idx+1}\n\n")
-        out.write(f"Current: {lines1[mismatch_idx]}\n\n")
-        out.write(f"V1.9:    {lines2[mismatch_idx]}\n\n")
+        out.write(f"Current:  {lines1[mismatch_idx]}\n\n")
+        out.write(f"Baseline: {lines2[mismatch_idx]}\n\n")
 
-        # Show next 20 entries from current that DON'T appear in v1.9 at similar position
-        # Find if the v1.9 entry appears later in current, and vice versa
-        v19_entry_norm = normalize_line(lines2[mismatch_idx])
-        out.write(f"V1.9 entry (norm): {v19_entry_norm}\n\n")
+        # Show next 20 entries from current that DON'T appear in baseline at similar position
+        # Find if the baseline entry appears later in current, and vice versa
+        baseline_entry_norm = normalize_line(lines2[mismatch_idx])
+        out.write(f"Baseline entry (norm): {baseline_entry_norm}\n\n")
 
-        # Find where v1.9's mismatch entry appears in current
+        # Find where baseline's mismatch entry appears in current
         for j in range(mismatch_idx, min(mismatch_idx+100, len(lines1))):
-            if normalize_line(lines1[j]) == v19_entry_norm:
-                out.write(f"V1.9's mismatch entry appears in current at position #{j+1} (offset +{j-mismatch_idx})\n")
+            if normalize_line(lines1[j]) == baseline_entry_norm:
+                out.write(f"Baseline's mismatch entry appears in current at position #{j+1} (offset +{j-mismatch_idx})\n")
                 break
         else:
-            out.write("V1.9's mismatch entry NOT found in current within next 100 entries\n")
+            out.write("Baseline's mismatch entry NOT found in current within next 100 entries\n")
 
-        # Show 30 entries of current starting from mismatch, vs 30 of v1.9
+        # Show 30 entries of current starting from mismatch, vs 30 of baseline
         out.write("\n--- Current entries from mismatch (30 entries) ---\n")
         for j in range(mismatch_idx, min(mismatch_idx+30, len(lines1))):
             k = extract_door_key(lines1[j])
             ev = extract_field(lines1[j], 'expansion_value')
             out.write(f"  [{j+1}] sec={k[0]} door={str(k[1])[:40]} from_door={str(k[2])[:40]} fsec={k[3]} ev={ev}\n")
 
-        out.write("\n--- V1.9 entries from mismatch (30 entries) ---\n")
+        out.write("\n--- Baseline entries from mismatch (30 entries) ---\n")
         for j in range(mismatch_idx, min(mismatch_idx+30, len(lines2))):
             k = extract_door_key(lines2[j])
             ev = extract_field(lines2[j], 'expansion_value')

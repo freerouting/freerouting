@@ -133,9 +133,7 @@ commit.
   python scripts/i18n/extract-context.py --check
   ```
 
-The frozen `src_v19/` compatibility source set is compiled for compatibility but is
-excluded from current Checkstyle enforcement. Java text-block formatting is owned by
-Spotless; the project-specific Checkstyle suppression is kept in
+Java text-block formatting is owned by Spotless; the project-specific Checkstyle suppression is kept in
 `config/checkstyle/checkstyle-suppressions.xml` so updates to the upstream Google
 Checkstyle configuration do not overwrite it.
 
