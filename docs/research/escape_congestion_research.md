@@ -250,7 +250,7 @@ Tertiary:  pin_distance_to_centroid DESC (within component, outer pins first)
 
 **Why hardest zone first?** When routes are still clear (early passes), the most congested pins have the most escape options. By the time you get to less congested areas, the board is partially routed but those areas are simpler.
 
-**Risk level:** Medium. This changes routing order and will affect results. Requires regression testing vs v1.9 baseline using `compare-versions.ps1`.
+**Risk level:** Medium. This changes routing order and will affect results. Requires regression testing vs v2.5.0 baseline using `compare-versions.ps1`.
 
 ### 4.4 Directional Escape Bias
 
@@ -366,7 +366,7 @@ For two adjacent components: each routes its outermost pins toward the other, cr
 ### Phase 3: Congestion-Aware Pin Ordering
 **Effort:** 2–3 days | **Risk:** Medium (routing behavior change)
 - Sort `sorted_components` by `zone_congestion_score DESC`
-- Regression test vs v1.9 baseline using `compare-versions.ps1`
+- Regression test vs v2.5.0 baseline using `compare-versions.ps1`
 - Gate behind a `FanoutSettings.orderByCongestion` flag initially
 
 ### Phase 4: Visualization (GUI Overlay)

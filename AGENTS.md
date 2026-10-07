@@ -11,7 +11,8 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
   - Jersey (JAX-RS for API)
   - Log4j (logging)
   - Gson, Jakarta EE APIs, Google Cloud & Sheets APIs, Swagger/OpenAPI.
-- **Python Client Library:** The project ecosystem includes a Python client library for headless interactions and REST API integrations; it is maintained outside this repository (release workflow reference: `docs/developer.md`).
+- **Python Client Library:** The project ecosystem includes a Python client library for headless interactions and REST API integrations located at `c:\Work\freerouting-python-client\` (`freerouting/freerouting-python-client`). Maintained by Andras; agents are permitted to edit files in this folder if needed (release workflow reference: `docs/developer.md`).
+- **C# Port (`freerouting.net`):** Located at `c:\Work\freerouting.net\`, cloned from `experimentaltvcenter/freerouting.net`. This folder contains a C# port of Freerouting maintained by someone else. **Do not edit any files in `c:\Work\freerouting.net\`**.
 - **EDA Integrations:** In-repo integration assets exist under `integrations/` for KiCad, Autodesk Fusion, Target3001!, and EasyEDA; `README.md` and `docs/integrations.md` also document tscircuit and pcb-rnd workflows.
 
 # Architecture & Standards
@@ -21,14 +22,16 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
 - **Separation of Concerns:** The **UI/Visualizer** and the **Routing Engine** are distinct domains. Always maintain a strict boundary between visual representation and core algorithmic logic. UI concerns should not bleed into the geometric models.
 - **Module Boundary Enforcement:** Architectural package boundaries are enforced by strict ArchUnit tests in `src/test/java/app/freerouting/architecture/ModuleBoundariesArchTest.java` and `src/test/java/app/freerouting/io/SpecctraPackageArchTest.java`. Keep every rule green; do not relax strict rules to hide regressions. Accepted boundary debt is documented in `docs/architecture.md` ("Accepted architectural debt"), mirroring the D-code comments in `ModuleBoundariesArchTest.java`.
 - **Repository Package Boundaries:** Keep routing/data logic in `src/main/java/app/freerouting/{autoroute,board,geometry,drc,core,rules}`; keep UI/editor flow in `src/main/java/app/freerouting/{gui,gui/interactive,gui/workspace,gui/rendering,gui/a11y}`; keep REST/API server concerns in `src/main/java/app/freerouting/{api,management}`; keep file-format I/O in `src/main/java/app/freerouting/io/{specctra,specctra/parser}` — the public entry points live in `io.specctra` and grammar internals in `io.specctra.parser`.
+- **Workspace Repositories & Editing Permissions:**
+  - `c:\Work\freerouting`: The primary Java codebase.
+  - `c:\Work\freerouting-python-client`: Python client library for headless interactions and REST API integrations (`freerouting/freerouting-python-client`). Maintained by Andras; agents are permitted to edit files here if needed.
+  - `c:\Work\freerouting.net`: A clone of `experimentaltvcenter/freerouting.net` containing a C# port of Freerouting. Maintained externally by someone else; **do not edit any files in this directory**.
 - **Coding Standards:** Adhere strictly to Clean Code principles and standard Java naming conventions (e.g., CamelCase for classes/methods). Prioritize readability and maintainability without sacrificing the algorithmic performance.
 - **Formatting and quality gates:** Use the repository's pinned Spotless/Google Java Format
   configuration and LF line-ending policy. Do not run `spotlessApply` as an automatic
   cleanup step: it formats every configured Java source and can create hundreds of
   unrelated changes. Prefer `spotlessCheck` and the Checkstyle tasks, and report any
   failure before considering work ready. Never stage files automatically from an agent.
-  The frozen `src_v19/` tree is compiled for compatibility but is not current code to
-  refactor or Checkstyle.
 - **AI/contributor verification:** Before handoff, run
   `./gradlew spotlessCheck checkstyleMain checkstyleTest`,
   `pre-commit run --all-files`,
@@ -41,7 +44,7 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
   **GitHub Actions Polling Rate Rule:** When polling GitHub Actions status checks (e.g. `gh pr checks`, `gh run view`), wait at least 15 seconds between queries to avoid spamming the GitHub API and exhausting rate limits.
   **PR Merge Rule:** **Never merge PRs automatically without explicit user confirmation.** Always present the PR link and check status to the user and wait for their confirmation to merge.
   **PR Reviewer Feedback Loop:** After creating a PR, wait until all automated reviewers (e.g. GitHub Code Quality bot, GitHub Copilot) have completed their reviews before addressing comments or pushing changes (`gh pr view <pr-number> --json comments,reviews`). Do not push fixes prematurely when only the first reviewer (such as the code quality bot) has responded; wait for GitHub Copilot and all other active reviewer bots to finish. Read all remarks, evaluate them objectively, address all valid issues together in local commits, verify quality gates, and push the fixes to the PR branch. For each conversation thread raised by reviewers, reply to the thread and formally resolve it according to the action taken (e.g., mark as addressed with a summary of the fix, won't fix with technical justification, or incorrect with clarifying context).
-- **Legacy Reference Implementation:** The source code of the original v1.9 implementation is available in the `src_v19/` directory. It remains a **historical reference** for understanding original algorithmic decisions and for optional deep-dive investigations. Do not refactor or optimize the v1.9 code directly; modify it only when additional trace logging is needed for a specific comparison. **It is no longer the primary routing-parity baseline for current development.**
+- **Legacy Reference Implementation:** The historical v1.9 reference implementation is preserved in Git tag `v1.9.0` for optional deep-dive archaeology. The in-tree v1.9 source directory and build tasks have been removed; use git worktrees or `scripts/benchmark/Build-Baseline.ps1` when historical comparisons are needed.
 - **Logging & Debugging:** Use the `FRLogger` class for logging. The method `trace(String method, String operation, String message, String impactedItems, Point[] impactedPoints)` should be used for detailed algorithmic steps, especially in routing logic, to facilitate debugging and performance analysis. Logs should be structured and informative, including impacted nets and impacted points in the routing process. When comparing against a baseline build, keep diagnostic payloads synchronized between the WIP tree and that baseline before drawing conclusions from log diffs.
   - For parity investigations, keep diagnostic payloads synchronized between WIP and the baseline under comparison. If WIP emits a debug marker (for example `[assign_raw]` with section/door identity), add the same marker fields to the baseline instrumentation before drawing conclusions from log diffs.
 - **`WorkspaceSettings` / GUI Session State:** `WorkspaceSettings` extends `GuiSettingsSource` (which implements `SettingsSource` at priority 65) and is the **sole** live source of GUI state in the `SettingsMerger` pipeline. Key invariants:
@@ -59,15 +62,14 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
 - **Measure Every Routing Change:** Whenever you apply a routing improvement, test and measure before and after the change on the same boards, with the same settings and worker count. Record the exact improvements and regressions (unrouted connections, clearance violations, boards that became clean or stopped being clean, CPU/wall time), and only keep the change if the measured result justifies it.
 - **Safety First:** Be *extremely careful* when modifying the routing algorithms. Even minor changes can lead to severe regressions in trace optimization, clearance violations, or routing completion rates.
 - **Regressions Prevention:** Before refactoring any core routing logic, you **must** verify your changes against the existing test suite to prevent trace regressions. Always run reproduction tests on actual PCB design files (`.dsn`) if an issue is reported (see `src/test/java/app/freerouting/fixtures/RoutingFixtureTest.java` and fixtures in `fixtures/`).
-- **Baseline Performance:** The primary performance and correctness baseline for current development is stable **Freerouting v2.3.0** (already on par with, and slightly better than, historical v1.9). Any WIP / feature-branch implementation should match or exceed v2.3.0 routing quality on the agreed golden fixtures.
-  - Prefer a WIP-vs-v2.3.0 compare workflow (adapted from or replacing `scripts/tests/compare-versions.ps1`, which still targets v1.9 via `buildBothVersions` / `freerouting-v190.log`).
+- **Baseline Performance:** The primary performance and correctness baseline for current development is stable **Freerouting v2.5.0** (declared in `scripts/benchmark/baselines/baseline-manifest.json`). Any WIP / feature-branch implementation should match or exceed v2.5.0 routing quality on the agreed golden fixtures.
+  - Run compare workflows via `scripts/tests/compare-versions.ps1` (defaults to comparing current WIP against the v2.5.0 baseline build or binary).
   - When investigating regressions, compare clearance violations using `DesignRulesChecker.getAllClearanceViolations()` (do not trust `BoardStatistics.clearanceViolations.totalCount` alone — it is incomplete).
   - TRACE logs for baseline comparisons should use clear WIP vs baseline filenames; keep files manageable with net filters (`-DebugFilterByNet`), `max_passes`, and `max_items` as needed.
   - For deterministic parity work, locate the first meaningful mismatch in normalized routing streams (for example `RAW_SECTION` selection records) and treat that position as the investigation anchor.
   - Classify divergence before fixing: distinguish numeric-only drift from behavioral ordering/tie-break divergence by suppressing volatile values (for example `expansion_value` and `sorting_value`) and comparing decision continuity.
   - Preferred remediation sequence: (1) synchronize instrumentation payloads in WIP and baseline, (2) diff around the first normalized mismatch with stable identifiers (section, door, from_door, net), (3) apply the smallest possible ordering/tie-break fix in WIP, (4) rerun comparisons to confirm the mismatch moves later or disappears without introducing violations.
-  - Exit criteria for parity investigations: no new clearance violations (full DRC), no regression in routing completion vs v2.3.0, and stable or improved compare metrics across repeated runs and at least two `max_items` checkpoints.
-  - The v1.9 tree (`src_v19/`) may still be used for historical algorithm archaeology; it is not required for routine WIP gates.
+  - Exit criteria for parity investigations: no new clearance violations (full DRC), no regression in routing completion vs v2.5.0, and stable or improved compare metrics across repeated runs and at least two `max_items` checkpoints.
 - **Algorithm Performance Metrics:** When optimizing routing algorithms, focus on key performance metrics such as:
   - **Clearance Violations:** (Critical priority) Ensure that no routing changes introduce new clearance violations.
   - **Routing Completion Rate:** (High priority) The percentage of successfully routed nets.
@@ -113,9 +115,7 @@ Execute the following commands from the root directory using the Gradle Wrapper:
 - **Run Fast + Slow Tests:** `./gradlew testAll`
 - **Run Full Verification Suite:** `./gradlew check`
 - **Build the Executable JAR:** `./gradlew executableJar` (Find the result in `build/libs/freerouting-current-executable.jar`)
-- **Build Both Current + v1.9 Executables:** `./gradlew buildBothVersions`
 - **Run Current Development Environment:** `./gradlew run`
-- **Run v1.9 Compatibility Build:** `./gradlew runV19`
 - **Gradle Build Scan:** Gradle Build Scan is activated and available after builds complete on GitHub Actions (inspect the Develocity link printed in CI summaries and build results).
 
 # Communication Style

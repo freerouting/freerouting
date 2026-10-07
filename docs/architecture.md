@@ -76,7 +76,6 @@ flowchart TD
 | `docs/` | User documentation, developer notes, issue analyses, and design references. |
 | `integrations/` | Packaging and integration assets for external PCB tool workflows. |
 | `scripts/` | Automation, benchmarking, and comparison scripts. |
-| `src_v19/` | The v1.9 historical reference tree, used for optional algorithm archaeology; it is not the routine parity baseline. |
 
 ## Navigation Guide
 
@@ -461,12 +460,11 @@ Tests follow the production layout where practical.
 
 For routing regressions, fixture tests are usually the most informative starting point because they exercise file loading, routing, and scoring together.
 
-## Legacy Reference Tree
+## Baseline & Historical Reference
 
-`src_v19/` is the historical v1.9 codebase. Use it to compare routing decisions, understand older implementation choices, and verify parity during refactoring.
+The release baseline for routing quality and benchmark comparisons is **v2.5.0**, declared in `scripts/benchmark/baselines/baseline-manifest.json` and tracked under `scripts/benchmark/binaries/freerouting-2.5.0.jar`.
 
-- Treat it as reference material rather than the primary implementation target.
-- Modify it only when you need additional trace logging for comparison work.
+The historical v1.9 reference implementation is preserved in Git tag `v1.9.0` for optional algorithm archaeology. For comparison work, use `scripts/benchmark/Build-Baseline.ps1` or git worktrees.
 
 ## Terminology / Glossary
 
