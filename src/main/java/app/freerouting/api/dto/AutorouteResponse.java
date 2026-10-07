@@ -19,47 +19,75 @@ import java.util.Map;
         "Single-turn autorouting response containing routed outputs, status, and DRC metrics")
 public class AutorouteResponse {
 
-  @SerializedName("job_id")
-  @Schema(description = "Unique ID of the executed routing job")
+  @SerializedName(
+      value = "job_id",
+      alternate = {"jobId"})
+  @Schema(name = "job_id", description = "Unique ID of the executed routing job")
   public String jobId;
 
-  @SerializedName("session_id")
-  @Schema(description = "Session ID under which the job ran")
+  @SerializedName(
+      value = "session_id",
+      alternate = {"sessionId"})
+  @Schema(name = "session_id", description = "Session ID under which the job ran")
   public String sessionId;
 
   @SerializedName("status")
-  @Schema(description = "Final job status (e.g. COMPLETED, TIMED_OUT, CANCELLED, FAILED)")
+  @Schema(
+      name = "status",
+      description = "Final job status (e.g. COMPLETED, TIMED_OUT, CANCELLED, FAILED)")
   public RoutingJobState status;
 
-  @SerializedName("duration_seconds")
-  @Schema(description = "Elapsed execution time in seconds")
+  @SerializedName(
+      value = "duration_seconds",
+      alternate = {"durationSeconds"})
+  @Schema(name = "duration_seconds", description = "Elapsed execution time in seconds")
   public double durationSeconds;
 
-  @SerializedName("unrouted_connections")
-  @Schema(description = "Number of remaining unrouted connections / air-lines")
+  @SerializedName(
+      value = "unrouted_connections",
+      alternate = {"unroutedConnections"})
+  @Schema(
+      name = "unrouted_connections",
+      description = "Number of remaining unrouted connections / air-lines")
   public int unroutedConnections;
 
-  @SerializedName("clearance_violations")
-  @Schema(description = "Total clearance violations detected")
+  @SerializedName(
+      value = "clearance_violations",
+      alternate = {"clearanceViolations"})
+  @Schema(name = "clearance_violations", description = "Total clearance violations detected")
   public int clearanceViolations;
 
-  @SerializedName("normalized_score")
-  @Schema(description = "V2 router board score (0.0 to 1000.0, higher is better)")
+  @SerializedName(
+      value = "normalized_score",
+      alternate = {"normalizedScore"})
+  @Schema(
+      name = "normalized_score",
+      description = "V2 router board score (0.0 to 1000.0, higher is better)")
   public Float normalizedScore;
 
-  @SerializedName("optimizer_score")
-  @Schema(description = "V2 optimizer board score (0.0 to 1000.0, higher is better)")
+  @SerializedName(
+      value = "optimizer_score",
+      alternate = {"optimizerScore"})
+  @Schema(
+      name = "optimizer_score",
+      description = "V2 optimizer board score (0.0 to 1000.0, higher is better)")
   public Float optimizerScore;
 
   @SerializedName("outputs")
-  @Schema(description = "Map of generated output format names to their text or Base64 content")
+  @Schema(
+      name = "outputs",
+      description = "Map of generated output format names to their text or Base64 content")
   public Map<String, String> outputs = new LinkedHashMap<>();
 
-  @SerializedName("drc_summary")
-  @Schema(description = "Diagnostic DRC summary with root causes and layout hints if requested")
+  @SerializedName(
+      value = "drc_summary",
+      alternate = {"drcSummary"})
+  @Schema(
+      name = "drc_summary",
+      description = "Diagnostic DRC summary with root causes and layout hints if requested")
   public DrcSummaryResponse drcSummary;
 
   @SerializedName("message")
-  @Schema(description = "Status or informational message")
+  @Schema(name = "message", description = "Status or informational message")
   public String message;
 }

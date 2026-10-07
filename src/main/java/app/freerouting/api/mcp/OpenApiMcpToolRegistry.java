@@ -356,7 +356,8 @@ public final class OpenApiMcpToolRegistry {
     if ("/v1/sessions/create".equals(cleanPath) && "POST".equalsIgnoreCase(method)) {
       return "create_session";
     }
-    if ("/v1/sessions".equals(cleanPath) && "GET".equalsIgnoreCase(method)) {
+    if (("/v1/sessions".equals(cleanPath) || "/v1/sessions/list".equals(cleanPath))
+        && "GET".equalsIgnoreCase(method)) {
       return "list_sessions";
     }
     if (cleanPath.startsWith("/v1/sessions/")

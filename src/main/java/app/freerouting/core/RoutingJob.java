@@ -584,6 +584,11 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     logEntryAddedEventListeners.add(listener);
   }
 
+  /** Unregisters a listener for new log entries. */
+  public void removeLogEntryAddedEventListener(RoutingJobLogEntryAddedEventListener listener) {
+    logEntryAddedEventListeners.remove(listener);
+  }
+
   /** Notifies listeners that a log entry was added. */
   public void fireLogEntryAddedEvent(LogEntry logEntry) {
     RoutingJobLogEntryAddedEvent event = new RoutingJobLogEntryAddedEvent(this, this, logEntry);

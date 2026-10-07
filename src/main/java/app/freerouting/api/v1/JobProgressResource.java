@@ -7,6 +7,7 @@ import app.freerouting.api.BaseController;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.Session;
+import app.freerouting.core.events.RoutingJobLogEntryAddedEventListener;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.jobs.RoutingJobScheduler;
 import app.freerouting.management.sessions.SessionManager;
@@ -33,6 +34,7 @@ import jakarta.ws.rs.sse.SseEventSink;
 import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * JAX-RS resource for the routing job API.
@@ -397,7 +399,17 @@ public class JobProgressResource extends BaseController {
       return;
     }
 
-    // Create a scheduled executor for periodic updates
+    // If the job has already reached a terminal state, close the connection immediately
+    if (job.state != null && job.state.isTerminal()) {
+      try {
+        eventSink.close();
+      } catch (Exception e) {
+        FRLogger.error("Error closing SSE event sink", e);
+      }
+      return;
+    }
+
+    // Create a scheduled executor for periodic updates and terminal state checks
     ScheduledExecutorService executor =
         Executors.newSingleThreadScheduledExecutor(
             r -> {
@@ -406,8 +418,10 @@ public class JobProgressResource extends BaseController {
               return t;
             });
 
-    // stream a new log entry when the job logsEntryAdded event was fired
-    job.addLogEntryAddedEventListener(
+    RoutingJobLogEntryAddedEventListener[] listenerHolder =
+        new RoutingJobLogEntryAddedEventListener[1];
+
+    listenerHolder[0] =
         e -> {
           try {
             var result = e.getLogEntry();
@@ -419,8 +433,9 @@ public class JobProgressResource extends BaseController {
 
             eventSink.send(event);
 
-            // Close the connection if the job is completed or cancelled
-            if (job.state == RoutingJobState.COMPLETED || job.state == RoutingJobState.CANCELLED) {
+            // Close the connection if the job reached a terminal state
+            if (job.state != null && job.state.isTerminal()) {
+              job.removeLogEntryAddedEventListener(listenerHolder[0]);
               try {
                 eventSink.close();
               } catch (Exception closeEx) {
@@ -430,6 +445,7 @@ public class JobProgressResource extends BaseController {
             }
           } catch (Exception ex) {
             FRLogger.error("Error while streaming logs", ex);
+            job.removeLogEntryAddedEventListener(listenerHolder[0]);
             try {
               eventSink.close();
             } catch (Exception closeEx) {
@@ -437,7 +453,26 @@ public class JobProgressResource extends BaseController {
             }
             executor.shutdown();
           }
-        });
+        };
+
+    job.addLogEntryAddedEventListener(listenerHolder[0]);
+
+    // Periodically verify if job reached a terminal state even if no new log entries were added
+    executor.scheduleAtFixedRate(
+        () -> {
+          if (job.state != null && job.state.isTerminal()) {
+            job.removeLogEntryAddedEventListener(listenerHolder[0]);
+            try {
+              eventSink.close();
+            } catch (Exception closeEx) {
+              FRLogger.error("Error closing SSE event sink", closeEx);
+            }
+            executor.shutdown();
+          }
+        },
+        200,
+        200,
+        TimeUnit.MILLISECONDS);
 
     // Log the API call
     FRAnalytics.apiEndpointCalled(
