@@ -280,6 +280,9 @@ public final class BatchOptimizer extends NamedAlgorithm {
     if (this.job != null && this.job.board != null) {
       this.board = this.job.board;
     }
+    if (this.thread != null) {
+      this.thread.resetStopAutoRouterRequest();
+    }
 
     job.logDebug(
         "Before optimization: Via count: "
@@ -990,17 +993,21 @@ public final class BatchOptimizer extends NamedAlgorithm {
       if (this.workerBoard == null) {
         return;
       }
-      boolean restored =
-          transferOwnership ? this.workerBoard.popSnapshot() : this.workerBoard.undo(null);
+      if (!transferOwnership) {
+        // Discard the private candidate wholesale. Undoing its items cannot make it a
+        // pristine baseline (leaves incremented item ids and failure history) and is
+        // wasted work when the candidate will not be reused.
+        this.workerBoard = null;
+        this.baselineBoard = null;
+        return;
+      }
+      boolean restored = this.workerBoard.popSnapshot();
       this.workerBoard.clearTransientAutorouteState();
       if (!restored) {
         FRLogger.warn("BatchOptimizer: failed to restore the worker-board snapshot");
-        this.workerBoard = null;
-        this.baselineBoard = null;
-      } else if (transferOwnership) {
-        this.workerBoard = null;
-        this.baselineBoard = null;
       }
+      this.workerBoard = null;
+      this.baselineBoard = null;
     }
   }
 
@@ -1066,9 +1073,17 @@ public final class BatchOptimizer extends NamedAlgorithm {
 
         FloatPoint position = getItemPosition(item);
 
+        RoutingJob candidateJob = new RoutingJob();
+        candidateJob.name = job.name;
+        candidateJob.shortName = job.shortName;
+        candidateJob.routerSettings = job.routerSettings.clone();
+        candidateJob.thread = thread;
+        candidateJob.board = workerBoard;
+        candidateJob.timeoutAt = job.timeoutAt;
+
         ItemRouteResult result =
             optRouteItemOnBoard(
-                job,
+                candidateJob,
                 workerBoard,
                 item,
                 baselineTraceLength,

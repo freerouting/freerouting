@@ -126,6 +126,10 @@ public final class RoutingPipeline {
       return;
     }
 
+    if (this.job.thread != null) {
+      this.job.thread.resetStopAutoRouterRequest();
+    }
+
     this.job.stage = RoutingStage.OPTIMIZATION;
     for (StageListener listener : this.stageListeners) {
       listener.beforeOptimization(this.optimizer);
