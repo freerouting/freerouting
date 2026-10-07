@@ -98,6 +98,13 @@ public class DefaultSettings implements SettingsSource {
    */
   public static final double DEFAULT_NECK_WIDTH_UM = 0.0;
 
+  /** Default via cost factor on pure-SMD nets. */
+  public static final double DEFAULT_SMD_NET_VIA_COST_FACTOR = 0.1;
+
+  /** Default routing fallback strategies, in order ("none" disables them). */
+  public static final String DEFAULT_FALLBACK_STRATEGIES =
+      "fanout-retry,short-escape,open-escape,no-fanout";
+
   /** Current default router score formula. */
   public static final RouterScoringVersion DEFAULT_ROUTER_SCORING_VERSION =
       RouterScoringVersion.V2_CONTINUOUS;
@@ -164,6 +171,8 @@ public class DefaultSettings implements SettingsSource {
     settings.automaticNeckdown = true;
     settings.autorouter.saveIntermediateStages = false;
     settings.autorouter.ignoreNetClasses = new String[0];
+    settings.autorouter.smdNetViaCostFactor = DEFAULT_SMD_NET_VIA_COST_FACTOR;
+    settings.autorouter.fallbackStrategies = DEFAULT_FALLBACK_STRATEGIES;
     settings.maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
     settings.autorouter.maxThreads = settings.maxThreads;
     settings.copperToEdgeClearanceUm = DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM;
@@ -190,6 +199,7 @@ public class DefaultSettings implements SettingsSource {
     settings.fanout.pinSortingOrder = "outer_first";
     settings.fanout.maxItems = Integer.MAX_VALUE;
     settings.fanout.fallbackToBoardVias = true;
+    settings.fanout.retryWithoutEscapeWindow = false;
 
     // Optimizer defaults
     settings.optimizer.enabled = true;

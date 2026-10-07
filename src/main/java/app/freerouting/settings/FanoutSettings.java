@@ -105,6 +105,13 @@ public class FanoutSettings implements Serializable, Cloneable {
   @SerializedName("timeout")
   public String timeoutString;
 
+  /**
+   * Whether to retry an SMD pin whose windowed escape attempt fails without the escape length
+   * window. Default false; the routing fallback strategy "fanout-retry" sets it.
+   */
+  @SerializedName("retry_without_escape_window")
+  public Boolean retryWithoutEscapeWindow;
+
   /** No-arg constructor required for deserialisation and {@link #clone()}. */
   public FanoutSettings() {}
 

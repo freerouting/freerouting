@@ -63,6 +63,7 @@ final class AutorouteBatchLoop {
 
     router.fireTaskStateChangedEvent(
         new TaskStateChangedEvent(router, TaskState.STARTED, 0, router.board.getHash()));
+    router.lastStopReason = BatchAutorouter.StopReason.COMPLETED;
 
     int optimizerThreads =
         (settings.optimizer != null && settings.optimizer.maxThreads != null)
@@ -322,6 +323,7 @@ final class AutorouteBatchLoop {
       if (router.settings.autorouter.maxPasses != null
           && router.settings.autorouter.maxPasses > 0
           && currentPass > router.settings.autorouter.maxPasses) {
+        router.lastStopReason = BatchAutorouter.StopReason.MAX_PASSES;
         thread.requestStopAutoRouter();
         break;
       }
@@ -358,6 +360,7 @@ final class AutorouteBatchLoop {
             if (boardToRestore == null) {
               job.logInfo(
                   "The router was not able to improve the board, stopping the auto-router.");
+              router.lastStopReason = BatchAutorouter.StopReason.NO_IMPROVEMENT;
               thread.requestStopAutoRouter();
               break;
             }
@@ -365,6 +368,7 @@ final class AutorouteBatchLoop {
             int boardToRestoreRank = bh.getRank(boardToRestore);
 
             if (boardToRestoreRank > BOARD_RANK_LIMIT) {
+              router.lastStopReason = BatchAutorouter.StopReason.NO_IMPROVEMENT;
               thread.requestStopAutoRouter();
               break;
             }
@@ -544,6 +548,7 @@ final class AutorouteBatchLoop {
                     + "(e.g. check pad clearances, trace width rules, and available routing "
                     + "space):\n"
                     + report);
+            router.lastStopReason = BatchAutorouter.StopReason.STAGNATION;
             thread.requestStopAutoRouter();
             break;
           }
@@ -575,6 +580,7 @@ final class AutorouteBatchLoop {
                   + "The following connections could not be routed -- please review your design "
                   + "(e.g. check pad clearances, trace width rules, and available routing space):\n"
                   + report);
+          router.lastStopReason = BatchAutorouter.StopReason.STAGNATION;
           thread.requestStopAutoRouter();
           break;
         }
@@ -593,6 +599,14 @@ final class AutorouteBatchLoop {
       if (continueAutorouting && !router.thread.isStopAutoRouterRequested()) {
         currentPass++;
       }
+    }
+
+    if (router.lastStopReason == BatchAutorouter.StopReason.COMPLETED
+        && router.thread.isStopAutoRouterRequested()) {
+      router.lastStopReason =
+          job != null && job.state == RoutingJobState.TIMED_OUT
+              ? BatchAutorouter.StopReason.TIMED_OUT
+              : BatchAutorouter.StopReason.CANCELLED;
     }
 
     // Ensure we finish with the best board ever seen during this routing session.

@@ -85,7 +85,7 @@ public class MazeSearchEngine {
         new TreeSet<>() {
           @Override
           public boolean add(MazeListElement element) {
-            if (ctrl.isFanout && ctrl.fanoutStartPinCenter != null) {
+            if (ctrl.isFanout && !ctrl.ignoreEscapeWindow && ctrl.fanoutStartPinCenter != null) {
               app.freerouting.geometry.planar.FloatPoint pinCenterFloat =
                   ctrl.fanoutStartPinCenter.toFloat();
               boolean onStartLayer =

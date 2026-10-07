@@ -93,6 +93,42 @@ public final class RoutingResultManifest {
 
     @SerializedName("optimizer")
     public PhaseDetail optimizer = new PhaseDetail();
+
+    @SerializedName("fallback")
+    public FallbackDetail fallback;
+  }
+
+  /** Routing fallback attempts (default first) and final choice. */
+  public static class FallbackDetail {
+    @SerializedName("chosen")
+    public String chosen;
+
+    @SerializedName("attempts")
+    public java.util.List<FallbackAttempt> attempts = new java.util.ArrayList<>();
+  }
+
+  /** One routing attempt of the fallback. */
+  public static class FallbackAttempt {
+    @SerializedName("strategy")
+    public String strategy;
+
+    @SerializedName("stop_reason")
+    public String stopReason;
+
+    @SerializedName("unrouted")
+    public int unrouted;
+
+    @SerializedName("new_or_changed_violations")
+    public int newOrChangedViolations;
+
+    @SerializedName("clearance_violations")
+    public int clearanceViolations;
+
+    @SerializedName("router_score")
+    public float routerScore;
+
+    @SerializedName("duration_seconds")
+    public float durationSeconds;
   }
 
   /** Duration and pass count for one routing stage. */

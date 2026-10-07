@@ -113,6 +113,9 @@ public class AutorouteControl {
   /** The minimal cost value of all cheap vias. */
   public double minCheapViaCost;
 
+  /** Fanout without the escape length window. */
+  public boolean ignoreEscapeWindow = false;
+
   /** Creates a new instance of AutorouteControl for the input net. */
   public AutorouteControl(RoutingBoard board, int netNumber, RouterSettings settings) {
     this(board, settings, settings.getTraceCosts());
@@ -292,7 +295,13 @@ public class AutorouteControl {
     if (pureSmdNet) {
       // Pure SMD boards need a much cheaper via escape to avoid exhausting the local pad channel
       // before the search commits to a layer change.
-      viaCostFactor *= 0.1;
+      double smdFactor =
+          (this.settings != null
+                  && this.settings.autorouter != null
+                  && this.settings.autorouter.smdNetViaCostFactor != null)
+              ? this.settings.autorouter.smdNetViaCostFactor
+              : 0.1;
+      viaCostFactor *= smdFactor;
     }
     minNormalViaCost = viaCosts * viaCostFactor;
     minCheapViaCost = 0.8 * minNormalViaCost;

@@ -52,6 +52,38 @@ public class AutorouterSettings implements Serializable, Cloneable {
       example = "[\"kicad_default\"]")
   public String[] ignoreNetClasses;
 
+  /**
+   * Comma-separated routing fallback strategies, tried in order when the pass loop gives up with
+   * unrouted connections or new clearance violations; "none" disables the fallback.
+   */
+  @SerializedName("fallback_strategies")
+  @Schema(
+      description =
+          "Comma-separated routing fallback strategies tried if pass loop gives up with unrouted"
+              + " connections; 'none' disables fallback",
+      example = "fanout-retry,short-escape,open-escape,no-fanout")
+  public String fallbackStrategies;
+
+  /** Wall-clock budget in seconds for all fallback attempts together. */
+  @SerializedName("fallback_max_seconds")
+  @Schema(description = "Wall-clock budget in seconds for all fallback attempts together")
+  public Double fallbackMaxSeconds;
+
+  /** Via cost factor on pure-SMD nets. */
+  @SerializedName("smd_net_via_cost_factor")
+  @Schema(description = "Via cost factor on pure-SMD nets")
+  public Double smdNetViaCostFactor;
+
+  /** When true, allows placing vias directly inside pads. */
+  @SerializedName("via_in_pad")
+  @Schema(description = "When true, allows placing vias directly inside pads")
+  public Boolean viaInPad;
+
+  /** When true, prefers placing vias at pad center of gravity. */
+  @SerializedName("via_centre_of_gravity")
+  @Schema(description = "When true, prefers placing vias at pad center of gravity")
+  public Boolean viaCentreOfGravity;
+
   @Override
   public AutorouterSettings clone() {
     try {

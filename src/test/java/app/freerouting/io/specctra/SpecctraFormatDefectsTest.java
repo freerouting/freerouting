@@ -19,7 +19,6 @@ import app.freerouting.io.FileFormat;
 import app.freerouting.io.specctra.parser.IJFlexScanner;
 import app.freerouting.io.specctra.parser.Keyword;
 import app.freerouting.io.specctra.parser.SpecctraDsnStreamReader;
-import app.freerouting.management.HeadlessBoardManager;
 import app.freerouting.rules.NetClass;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -33,6 +32,14 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 /** Tests verifying fixes for Specctra DSN & SES format and via-rule defects. */
 class SpecctraFormatDefectsTest {
+
+  private static RoutingBoard loadBoard(String dsn) {
+    BoardReadResult result =
+        DsnReader.readBoard(
+            new ByteArrayInputStream(dsn.getBytes(StandardCharsets.UTF_8)), null, null);
+    assertTrue(result instanceof BoardReadResult.Success);
+    return (RoutingBoard) ((BoardReadResult.Success) result).board();
+  }
 
   @Test
   void testIdentifierTypeStripsQuotesCorrectly_FR030() {
@@ -126,13 +133,7 @@ class SpecctraFormatDefectsTest {
           (library (padstack V (shape (circle top 0.6)) (shape (circle bottom 0.6))))
           (network (net N)))
         """;
-    RoutingJob job = new RoutingJob();
-    HeadlessBoardManager manager = new HeadlessBoardManager(job);
-    assertTrue(
-        manager.loadFromSpecctraDsn(
-                new ByteArrayInputStream(dsn.getBytes(StandardCharsets.UTF_8)), null, null)
-            instanceof BoardReadResult.Success);
-    BasicBoard board = manager.getRoutingBoard();
+    BasicBoard board = loadBoard(dsn);
 
     String ses =
         """
@@ -168,11 +169,7 @@ class SpecctraFormatDefectsTest {
           (library (padstack V (shape (circle top 0.6)) (shape (circle bottom 0.6))))
           (network (net N)))
         """;
-    RoutingJob job = new RoutingJob();
-    HeadlessBoardManager manager = new HeadlessBoardManager(job);
-    manager.loadFromSpecctraDsn(
-        new ByteArrayInputStream(dsn.getBytes(StandardCharsets.UTF_8)), null, null);
-    BasicBoard board = manager.getRoutingBoard();
+    BasicBoard board = loadBoard(dsn);
 
     String invalidSes = "(session units (routes (resolution mm 0)))";
     assertThrows(
@@ -199,11 +196,7 @@ class SpecctraFormatDefectsTest {
           (network (net N) (net D)
             (class diff D (circuit (use_via V)) (rule (width 160) (clearance 160)))))
         """;
-    RoutingJob job = new RoutingJob();
-    HeadlessBoardManager manager = new HeadlessBoardManager(job);
-    manager.loadFromSpecctraDsn(
-        new ByteArrayInputStream(dsn.getBytes(StandardCharsets.UTF_8)), null, null);
-    BasicBoard board = manager.getRoutingBoard();
+    BasicBoard board = loadBoard(dsn);
 
     String ses =
         """
@@ -266,11 +259,7 @@ class SpecctraFormatDefectsTest {
             (class power N
               (circuit (use_via "Via[0-1]_635:304.8_um")))))
         """;
-    RoutingJob job = new RoutingJob();
-    HeadlessBoardManager manager = new HeadlessBoardManager(job);
-    manager.loadFromSpecctraDsn(
-        new ByteArrayInputStream(dsn.getBytes(StandardCharsets.UTF_8)), null, null);
-    BasicBoard board = manager.getRoutingBoard();
+    BasicBoard board = loadBoard(dsn);
 
     NetClass powerClass = board.rules.netClasses.get("power");
     assertNotNull(powerClass);
@@ -297,11 +286,7 @@ class SpecctraFormatDefectsTest {
             (class c3 N3 (circuit (use_via V)))
             (class_class (classes c1 c2 c3) (rule (clearance 0.35)))))
         """;
-    RoutingJob job = new RoutingJob();
-    HeadlessBoardManager manager = new HeadlessBoardManager(job);
-    manager.loadFromSpecctraDsn(
-        new ByteArrayInputStream(dsn.getBytes(StandardCharsets.UTF_8)), null, null);
-    BasicBoard board = manager.getRoutingBoard();
+    BasicBoard board = loadBoard(dsn);
 
     NetClass c1 = board.rules.netClasses.get("c1");
     NetClass c2 = board.rules.netClasses.get("c2");
@@ -336,11 +321,7 @@ class SpecctraFormatDefectsTest {
             (rule (width 0.2) (clearance 0.1)))
           (network (net N)))
         """;
-    RoutingJob job = new RoutingJob();
-    HeadlessBoardManager manager = new HeadlessBoardManager(job);
-    manager.loadFromSpecctraDsn(
-        new ByteArrayInputStream(dsn.getBytes(StandardCharsets.UTF_8)), null, null);
-    RoutingBoard board = (RoutingBoard) manager.getRoutingBoard();
+    RoutingBoard board = loadBoard(dsn);
     BoardStatistics stats = new BoardStatistics(board, Unit.MM, false, false);
     IntBox bb = board.getBoundingBox();
 

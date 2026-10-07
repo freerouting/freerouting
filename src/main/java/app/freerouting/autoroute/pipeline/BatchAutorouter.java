@@ -113,6 +113,31 @@ public final class BatchAutorouter extends NamedAlgorithm {
   BoardStatistics progressStatistics;
   int progressItemsSinceStatistics;
 
+  /** Why the last {@link #runBatchLoop()} ended; the routing fallback retries only some. */
+  public enum StopReason {
+    /** Nothing was left to route (or the pass loop never ran). */
+    COMPLETED,
+    /** The configured maximum number of passes was reached. */
+    MAX_PASSES,
+    /** The score stopped improving with connections still open. */
+    STAGNATION,
+    /** No earlier board could be restored to improve on. */
+    NO_IMPROVEMENT,
+    /** The job timed out. */
+    TIMED_OUT,
+    /** The board's work budget ran out (a fallback attempt's quota). */
+    WORK_LIMIT,
+    /** The job was stopped from outside. */
+    CANCELLED,
+  }
+
+  public StopReason lastStopReason = StopReason.COMPLETED;
+
+  /** Returns why the last pass loop ended. */
+  public StopReason getLastStopReason() {
+    return this.lastStopReason;
+  }
+
   /** Creates a BatchAutorouter for the given routing job. */
   public BatchAutorouter(RoutingJob job) {
     this(
@@ -125,6 +150,19 @@ public final class BatchAutorouter extends NamedAlgorithm {
         job.routerSettings.tracePullTightAccuracy != null
             ? job.routerSettings.tracePullTightAccuracy
             : 500);
+    this.job = job;
+  }
+
+  /** Creates a BatchAutorouter for the given job with an explicit board and settings. */
+  public BatchAutorouter(RoutingJob job, RoutingBoard board, RouterSettings settings) {
+    this(
+        job != null ? job.thread : null,
+        board,
+        settings,
+        !settings.isFanoutEnabled(),
+        true,
+        settings.getStartRipupCosts(),
+        settings.tracePullTightAccuracy != null ? settings.tracePullTightAccuracy : 500);
     this.job = job;
   }
 
