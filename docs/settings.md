@@ -127,6 +127,7 @@ The primary way to configure Freerouting is through a JSON settings file. This f
 - **`default_undesired_direction_trace_cost`**: Cost factor for routing traces in undesired directions.
 - **`autorouter`**: Batch autorouter stage knobs. Canonical CLI is
   `--router.autorouter.max_passes`. Flat keys (`--router.max_passes`, `-mp`,
+  `FREEROUTING__ROUTER__MAX_PASSES`) still apply and warn until they are removed.
     - **`enabled`**: Whether the autorouter stage runs after fanout.
     - **`algorithm`**: Algorithm identifier (`freerouting-router` by default; legacy identifiers such as `freerouting-router-v19` safely normalize to `freerouting-router`).
     - **`max_passes`**: Maximum autorouter passes. `0` means no limit.

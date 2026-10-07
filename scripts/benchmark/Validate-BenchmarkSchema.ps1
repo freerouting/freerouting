@@ -153,28 +153,32 @@ foreach ($run in $runs) {
 
 $ManifestPath = Join-Path $PSScriptRoot "baselines\baseline-manifest.json"
 $baselineVersion = "2.5.0"
+$baselineJarFilename = "freerouting-2.5.0.jar"
 if (Test-Path $ManifestPath) {
     $manifest = Get-Content $ManifestPath -Raw | ConvertFrom-Json
     if ($manifest.release_baseline -and $manifest.release_baseline.version) {
         $baselineVersion = [string]$manifest.release_baseline.version
     }
+    if ($manifest.release_baseline -and $manifest.release_baseline.jar_path) {
+        $baselineJarFilename = [System.IO.Path]::GetFileName([string]$manifest.release_baseline.jar_path)
+    }
 }
-$baselineRegex = [regex]::Escape($baselineVersion)
 
 $currentRuns = @($runs | Where-Object {
         (Test-PropertyPath $_ "binary") -and (
             ((Test-PropertyPath $_ "binary.filename") -and
                 ([string]$_.binary.filename -match "(?i)current")) -or
             ((Test-PropertyPath $_ "binary.version_label") -and
-                ([string]$_.binary.version_label -notmatch "^(?i)($baselineRegex|1[._-]?9|v190)"))
+                ([string]$_.binary.version_label -ine $baselineVersion) -and
+                ([string]$_.binary.version_label -notmatch "^(?i)(1[._-]?9|v190)"))
         )
     })
 $baselineRuns = @($runs | Where-Object {
         (Test-PropertyPath $_ "binary") -and (
             ((Test-PropertyPath $_ "binary.version_label") -and
-                ([string]$_.binary.version_label -match "(?i)$baselineRegex")) -or
+                ([string]$_.binary.version_label -ieq $baselineVersion)) -or
             ((Test-PropertyPath $_ "binary.filename") -and
-                ([string]$_.binary.filename -match "(?i)$baselineRegex"))
+                ([System.IO.Path]::GetFileName([string]$_.binary.filename) -ieq $baselineJarFilename))
         )
     })
 

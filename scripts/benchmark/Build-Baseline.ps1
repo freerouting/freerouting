@@ -15,7 +15,8 @@
 
 .PARAMETER OutputJarPath
     Path where the compiled baseline JAR should be saved.
-    Defaults to scripts/benchmark/binaries/freerouting-baseline-instrumented.jar.
+    Defaults to the manifest release_baseline.jar_path (e.g. scripts/benchmark/binaries/freerouting-2.5.0.jar)
+    when no patch is supplied, or scripts/benchmark/binaries/freerouting-baseline-instrumented.jar when patched.
 
 .EXAMPLE
     .\Build-Baseline.ps1
@@ -44,7 +45,13 @@ if (-not $GitTag) {
 }
 
 if (-not $OutputJarPath) {
-    $OutputJarPath = Join-Path $PSScriptRoot "binaries\freerouting-baseline-instrumented.jar"
+    if ($PatchPath) {
+        $OutputJarPath = Join-Path $PSScriptRoot "binaries\freerouting-baseline-instrumented.jar"
+    } elseif ($manifest -and $manifest.release_baseline -and $manifest.release_baseline.jar_path) {
+        $OutputJarPath = Join-Path $RepoRoot $manifest.release_baseline.jar_path
+    } else {
+        $OutputJarPath = Join-Path $PSScriptRoot "binaries\freerouting-$($GitTag.TrimStart('v')).jar"
+    }
 }
 
 Write-Output "Building baseline from git tag: $GitTag"
@@ -64,7 +71,10 @@ try {
         throw "Failed to create worktree for tag $GitTag"
     }
 
-    if ($PatchPath -and (Test-Path $PatchPath)) {
+    if ($PatchPath) {
+        if (-not (Test-Path $PatchPath)) {
+            throw "Specified patch file does not exist: $PatchPath"
+        }
         Write-Output "Applying diagnostic patch: $PatchPath"
         $resolvedPatch = (Resolve-Path $PatchPath).Path
         git -C $worktreeDir apply $resolvedPatch

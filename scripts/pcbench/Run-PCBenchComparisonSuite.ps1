@@ -42,7 +42,7 @@ $phaseNum = 0
 foreach ($v in $versions) {
     $phaseNum++
     Write-Host "`n========================================================================" -ForegroundColor Cyan
-    Write-Host " [Phase $phaseNum/3] Starting PCBench for $($v.Label)..." -ForegroundColor Cyan
+    Write-Host " [Phase $phaseNum/$($versions.Count)] Starting PCBench for $($v.Label)..." -ForegroundColor Cyan
     Write-Host " JAR: $($v.Jar)" -ForegroundColor Gray
     Write-Host "========================================================================`n" -ForegroundColor Cyan
 
