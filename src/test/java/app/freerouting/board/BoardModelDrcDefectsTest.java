@@ -405,4 +405,86 @@ public class BoardModelDrcDefectsTest {
     Set<Item> ringItems = t1.getConnectionItems(Item.StopConnectionOption.NONE);
     assertEquals(4, ringItems.size());
   }
+
+  @Test
+  void testBorrowedFanoutViaTakesNetViaClearance_FR080() throws IOException {
+    String dsn =
+        """
+        (pcb t (resolution um 1)
+          (structure (layer top (type signal)) (layer bottom (type signal))
+            (boundary (rect pcb 0 0 20000 10000)) (via "V1") (rule (width 200) (clearance 200)))
+          (library
+            (padstack "V1" (shape (circle top 800)) (shape (circle bottom 800)) (attach off))
+            (padstack "V2" (shape (circle top 1000)) (shape (circle bottom 1000)) (attach off)))
+          (network (net A) (net P)
+            (class kicad_default A (circuit (use_via "V1")) (rule (width 200) (clearance 200)))
+            (class POWER P (circuit (use_via "V2")) (rule (width 300) (clearance 300)))))
+        """;
+    RoutingBoard board = createBoardFromDsn(dsn);
+    app.freerouting.rules.Net powerNet = board.rules.nets.get(2);
+    app.freerouting.rules.NetClass powerClass = powerNet.getNetClass();
+    int powerViaClearance =
+        powerClass.defaultItemClearanceClasses.get(
+            app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.VIA);
+    app.freerouting.rules.ViaRule boardDefaultViaRule = board.rules.viaRules.firstElement();
+    app.freerouting.rules.ViaInfo boardVia = boardDefaultViaRule.getVia(0);
+    assertTrue(powerViaClearance != boardVia.getClearanceClassIndex());
+
+    app.freerouting.rules.ViaRule powerViaRule = powerClass.getViaRule();
+    assertNotNull(powerViaRule);
+
+    app.freerouting.rules.ViaRule combined =
+        RoutingBoard.fanoutFallbackViaRule(
+            powerViaRule, boardDefaultViaRule, powerViaClearance, board.rules);
+
+    boolean foundBorrowed = false;
+    for (int i = 0; i < combined.viaCount(); i++) {
+      app.freerouting.rules.ViaInfo v = combined.getVia(i);
+      if (v.getPadstack() == boardVia.getPadstack()) {
+        assertEquals(powerViaClearance, v.getClearanceClassIndex());
+        foundBorrowed = true;
+      }
+    }
+    assertTrue(foundBorrowed);
+    assertEquals(
+        boardVia.getClearanceClassIndex(), boardDefaultViaRule.getVia(0).getClearanceClassIndex());
+  }
+
+  @Test
+  void testDestinationOnlyOnInactiveLayersFailsBeforeSearching_FR081() throws IOException {
+    String dsn =
+        """
+        (pcb inactive (resolution um 1)
+          (structure (layer top (type signal)) (layer bottom (type signal))
+            (boundary (rect pcb 0 0 20000 10000)) (via V) (rule (width 200) (clearance 200)))
+          (placement (component A (place A1 3000 5000 front 0)) (component B (place B1 17000 5000 front 0)))
+          (library (image A (pin S 1 0 0)) (image B (pin T 1 0 0))
+            (padstack S (shape (circle top 600)) (shape (circle bottom 600)))
+            (padstack T (shape (circle bottom 600)))
+            (padstack V (shape (circle top 600)) (shape (circle bottom 600)) (attach off)))
+          (network (net N (pins A1-1 B1-1))))
+        """;
+    RoutingBoard board = createBoardFromDsn(dsn);
+    Pin[] pins =
+        board.getPins().stream()
+            .sorted(java.util.Comparator.comparingDouble(p -> p.getCenter().toFloat().x))
+            .toArray(Pin[]::new);
+    assertEquals(2, pins.length);
+
+    app.freerouting.settings.RouterSettings routerSettings =
+        new app.freerouting.settings.RouterSettings();
+    app.freerouting.autoroute.maze.AutorouteControl control =
+        new app.freerouting.autoroute.maze.AutorouteControl(
+            board, 1, routerSettings, 5, routerSettings.getTraceCosts());
+    control.layerActive[1] = false; // bottom layer inactive
+
+    app.freerouting.autoroute.maze.AutorouteEngine engine =
+        board.initAutoroute(1, control.traceClearanceClassIndex, null, null, false);
+    app.freerouting.autoroute.maze.MazeSearchEngine search =
+        app.freerouting.autoroute.maze.MazeSearchEngine.getInstance(
+            java.util.Set.of(pins[0]), java.util.Set.of(pins[1]), engine, control);
+    // Pin B1 only exists on layer 1 (bottom), which is inactive: search engine must refuse
+    // before starting search rather than exhausting the board
+    org.junit.jupiter.api.Assertions.assertNull(search);
+  }
 }

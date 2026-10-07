@@ -651,6 +651,9 @@ public class MazeSearchEngine {
     }
     boolean result = false;
     for (TargetItemExpansionDoor toDoor : listElement.nextRoom.getTargetDoors()) {
+      if (toDoor.room != null && !ctrl.layerActive[toDoor.room.getLayer()]) {
+        continue;
+      }
       if (toDoor == listElement.door) {
         continue;
       }
@@ -987,13 +990,22 @@ public class MazeSearchEngine {
       }
       ItemAutorouteInfo currentInfo = currentItem.getAutorouteInfo();
       currentInfo.setStartInfo(false);
+      boolean anyInactive = false;
+      boolean anyActive = false;
       for (int i = 0; i < currentItem.treeShapeCount(this.searchTree); i++) {
         TileShape currentTreeShape = currentItem.getTreeShape(this.searchTree, i);
         if (currentTreeShape != null) {
           destinationDistance.join(currentTreeShape.boundingBox(), currentItem.shapeLayer(i));
         }
+        if (this.ctrl.layerActive[currentItem.shapeLayer(i)]) {
+          anyActive = true;
+        } else {
+          anyInactive = true;
+        }
       }
-      destinationOk = true;
+      if (anyActive || !anyInactive) {
+        destinationOk = true;
+      }
     }
     if (!destinationOk && this.ctrl.isFanout) {
       // destination set is not needed for fanout

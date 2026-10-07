@@ -1044,21 +1044,20 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     if (routerSettings.fanout != null
         && Boolean.TRUE.equals(routerSettings.fanout.fallbackToBoardVias)
         && ctrlSettings.viaRule != null) {
-      app.freerouting.rules.ViaRule combinedViaRule =
-          new app.freerouting.rules.ViaRule(ctrlSettings.viaRule.name + "_fallback");
-      for (int i = 0; i < ctrlSettings.viaRule.viaCount(); i++) {
-        combinedViaRule.appendVia(ctrlSettings.viaRule.getVia(i));
-      }
-      if (!this.rules.viaRules.isEmpty()) {
-        app.freerouting.rules.ViaRule defaultViaRule = this.rules.viaRules.firstElement();
-        for (int i = 0; i < defaultViaRule.viaCount(); i++) {
-          app.freerouting.rules.ViaInfo defaultVia = defaultViaRule.getVia(i);
-          if (!combinedViaRule.contains(defaultVia)) {
-            combinedViaRule.appendVia(defaultVia);
-          }
-        }
-      }
-      ctrlSettings.viaRule = combinedViaRule;
+      app.freerouting.rules.NetClass pinNetClass =
+          this.rules.nets.get(pinNetNo) != null
+              ? this.rules.nets.get(pinNetNo).getNetClass()
+              : null;
+      Integer netViaClearance =
+          pinNetClass != null
+              ? pinNetClass.defaultItemClearanceClasses.get(
+                  app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.VIA)
+              : null;
+      app.freerouting.rules.ViaRule boardDefaultViaRule =
+          !this.rules.viaRules.isEmpty() ? this.rules.viaRules.firstElement() : null;
+      ctrlSettings.viaRule =
+          fanoutFallbackViaRule(
+              ctrlSettings.viaRule, boardDefaultViaRule, netViaClearance, this.rules);
       ctrlSettings.rebuildViaInfo(this, routerSettings.getViaCosts(), pinNetNo);
     }
     Component pinComponent = this.components.get(pin.getComponentId());
@@ -1135,6 +1134,47 @@ public class RoutingBoard extends BasicBoard implements Serializable {
           timeLimitToPreventEndlessLoop);
     }
     return result;
+  }
+
+  public static app.freerouting.rules.ViaRule fanoutFallbackViaRule(
+      app.freerouting.rules.ViaRule netRule,
+      app.freerouting.rules.ViaRule boardRule,
+      Integer netViaClearance,
+      app.freerouting.rules.BoardRules rules) {
+    app.freerouting.rules.ViaRule combined =
+        new app.freerouting.rules.ViaRule(netRule.name + "_fallback");
+    for (int i = 0; i < netRule.viaCount(); i++) {
+      combined.appendVia(netRule.getVia(i));
+    }
+    if (boardRule == null) {
+      return combined;
+    }
+    for (int i = 0; i < boardRule.viaCount(); i++) {
+      app.freerouting.rules.ViaInfo boardVia = boardRule.getVia(i);
+      if (netViaClearance != null && netViaClearance != boardVia.getClearanceClassIndex()) {
+        boolean present = false;
+        for (int j = 0; j < combined.viaCount(); j++) {
+          app.freerouting.rules.ViaInfo existing = combined.getVia(j);
+          if (existing.getPadstack() == boardVia.getPadstack()
+              && existing.getClearanceClassIndex() == netViaClearance) {
+            present = true;
+            break;
+          }
+        }
+        if (!present) {
+          combined.appendVia(
+              new app.freerouting.rules.ViaInfo(
+                  boardVia.getName(),
+                  boardVia.getPadstack(),
+                  netViaClearance,
+                  boardVia.attachSmdAllowed(),
+                  rules));
+        }
+      } else if (!combined.contains(boardVia)) {
+        combined.appendVia(boardVia);
+      }
+    }
+    return combined;
   }
 
   /**
