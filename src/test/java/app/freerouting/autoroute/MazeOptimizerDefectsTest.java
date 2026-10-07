@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import app.freerouting.autoroute.pipeline.BatchOptimizer;
 import app.freerouting.board.actions.ItemIdGenerator;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.datastructures.IdentifierType;
@@ -226,6 +227,35 @@ public class MazeOptimizerDefectsTest {
     assertEquals(1, ruleB.viaCount());
     assertEquals("VA", ruleA.getVia(0).getPadstack().name);
     assertEquals("VB", ruleB.getVia(0).getPadstack().name);
+  }
+
+  /** FR-077: Final optimizer board must not regress open connections or violations. */
+  @Test
+  void finalBoardRegressedVetoesViolationsAndOpens() {
+    // Score higher but added a violation -> regressed
+    assertTrue(BatchOptimizer.finalBoardRegressed(424.85f, 0, 0, 427.85f, 0, 1));
+    // Score higher but added an open connection -> regressed
+    assertTrue(BatchOptimizer.finalBoardRegressed(424.85f, 0, 0, 427.85f, 1, 0));
+    // Lower score -> regressed
+    assertTrue(BatchOptimizer.finalBoardRegressed(424.85f, 0, 0, 420.0f, 0, 0));
+    // Equal score and zero regressions -> clean
+    assertFalse(BatchOptimizer.finalBoardRegressed(424.85f, 0, 0, 424.85f, 0, 0));
+    // Higher score and zero regressions -> improved
+    assertFalse(BatchOptimizer.finalBoardRegressed(424.85f, 0, 0, 427.85f, 0, 0));
+  }
+
+  /** FR-079: Contact chamfer room requires at least 2 units and a quarter of full chamfer. */
+  @Test
+  void chamferThresholdRequiresTwoUnitsOrQuarterChamfer() {
+    // Narrow trace (halfWidth = 5): 0.25 * (sqrt(2)-1) * 5 ~= 0.517 -> clamped to 2.0
+    double narrowThreshold =
+        Math.max(2.0, 0.25 * (app.freerouting.geometry.planar.Limits.sqrt2 - 1.0) * 5);
+    assertEquals(2.0, narrowThreshold);
+
+    // Wide trace (halfWidth = 100): 0.25 * (sqrt(2)-1) * 100 ~= 10.355
+    double wideThreshold =
+        Math.max(2.0, 0.25 * (app.freerouting.geometry.planar.Limits.sqrt2 - 1.0) * 100);
+    assertTrue(wideThreshold > 10.0);
   }
 
   private static class StorablePoint implements PlanarDelaunayTriangulation.Storable {

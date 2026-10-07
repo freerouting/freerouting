@@ -487,15 +487,33 @@ public final class BatchOptimizer extends NamedAlgorithm {
 
     this.currentPosition = null;
 
-    // Restore best board achieved if final state regressed below best score
-    float finalBoardScore = this.board.getStatistics().getOptimizerScore(job.routerSettings);
-    if (finalBoardScore < this.bestScore && this.bestBoard != null) {
+    // Restore best board achieved if final state regressed below best score or added
+    // violations/opens
+    BoardStatistics endStats = this.board.getStatistics();
+    float finalBoardScore = endStats.getOptimizerScore(job.routerSettings);
+    int finalIncomplete = endStats.connections.incompleteCount;
+    int finalViolations = endStats.clearanceViolations.totalCount;
+
+    boolean regressed =
+        finalBoardRegressed(
+            this.bestScore,
+            this.bestIncompleteCount,
+            this.bestClearanceViolationCount,
+            finalBoardScore,
+            finalIncomplete,
+            finalViolations);
+
+    if (regressed && this.bestBoard != null) {
       job.logInfo(
           String.format(
               Locale.US,
-              "Restoring best board achieved (score %.2f vs final %.2f).",
+              "Restoring best board achieved (score %.2f vs final %.2f, incomplete connections %d vs %d, clearance violations %d vs %d).",
               this.bestScore,
-              finalBoardScore));
+              finalBoardScore,
+              this.bestIncompleteCount,
+              finalIncomplete,
+              this.bestClearanceViolationCount,
+              finalViolations));
       restoreIncumbentBoard();
     }
     this.bestBoard = null;
@@ -585,6 +603,23 @@ public final class BatchOptimizer extends NamedAlgorithm {
       return "OPTIMIZER_SCORE_NOT_IMPROVED";
     }
     return null;
+  }
+
+  /**
+   * Checks whether the final board at the end of the optimizer regressed compared to the best
+   * accepted incumbent board. Replaced if score is lower, or if incomplete connections or clearance
+   * violations increased (FR-077).
+   */
+  public static boolean finalBoardRegressed(
+      float bestScore,
+      int bestIncomplete,
+      int bestViolations,
+      float finalScore,
+      int finalIncomplete,
+      int finalViolations) {
+    return finalScore < bestScore
+        || finalIncomplete > bestIncomplete
+        || finalViolations > bestViolations;
   }
 
   private List<Integer> prepareCandidateItems() {
@@ -800,11 +835,6 @@ public final class BatchOptimizer extends NamedAlgorithm {
       BoardStatistics boardStatisticsAfter = this.board.getStatistics();
       this.fireBoardUpdatedEvent(boardStatisticsAfter, routerCounters, this.board);
       routeImproved = winningCandidate.result.improvementPercentage();
-    }
-
-    if (this.useIncreasedRipupCosts && (routeImproved == 0.0f)) {
-      this.useIncreasedRipupCosts = false;
-      routeImproved = -1.0f; // to keep the optimizer going with lower ripup costs
     }
 
     double routeoptimizerPassDuration = FRLogger.traceExit(optimizationPassId);

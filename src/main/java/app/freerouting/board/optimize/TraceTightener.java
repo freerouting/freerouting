@@ -59,6 +59,17 @@ public abstract class TraceTightener {
   protected Set<Pin> contactPins;
   protected int minTranslateDist;
 
+  /**
+   * The minimum room an acute-angle chamfer at a contact with another trace needs. If translateDist
+   * is below this threshold, the chamfer would run through the neighboring corner and walk the
+   * junction into a 1-unit staircase trace (FR-079). Requires at least 2 units and at least a
+   * quarter of the full chamfer ((sqrt(2) - 1) * half_width / 4).
+   */
+  protected double getMinContactChamferRoom() {
+    return Math.max(
+        2.0, 0.25 * (app.freerouting.geometry.planar.Limits.sqrt2 - 1.0) * this.currentHalfWidth);
+  }
+
   /** Creates a new instance of TraceTightener. */
   TraceTightener(
       RoutingBoard board,
