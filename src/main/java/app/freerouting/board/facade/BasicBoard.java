@@ -101,6 +101,7 @@ public class BasicBoard implements Serializable {
 
   private transient Set<Integer> normalizeSuppressedNetNos = new HashSet<>();
   private transient int revision;
+  private transient long netAssignmentChangeCount;
   private transient BoardItemRepository itemRepository;
   private transient BoardConnectivityQueries connectivityQueries;
   private transient BoardSnapshotManager snapshotManager;
@@ -168,6 +169,19 @@ public class BasicBoard implements Serializable {
   /** Increment revision. */
   public void incrementRevision() {
     revision++;
+  }
+
+  /**
+   * Incremented whenever an item's nets change without a search-tree update (e.g. assignNetNo,
+   * removeFromNet), for caches of net-dependent queries.
+   */
+  public long getNetAssignmentChangeCount() {
+    return netAssignmentChangeCount;
+  }
+
+  public void noteNetAssignmentChanged() {
+    netAssignmentChangeCount++;
+    itemList.noteContentChange();
   }
 
   /** Serialize. */
@@ -714,6 +728,11 @@ public class BasicBoard implements Serializable {
     return getItemRepository().getPins();
   }
 
+  /** Returns the count of all pins on the board without collecting them. */
+  public int getPinCount() {
+    return getItemRepository().getPinCount();
+  }
+
   /** Returns the list of all pins on the board with only 1 layer. */
   public Collection<Pin> getSmdPins() {
     return getItemRepository().getSmdPins();
@@ -722,6 +741,11 @@ public class BasicBoard implements Serializable {
   /** Returns the list of all vias on the board. */
   public Collection<Via> getVias() {
     return getItemRepository().getVias();
+  }
+
+  /** Returns the count of all vias on the board without collecting them. */
+  public int getViaCount() {
+    return getItemRepository().getViaCount();
   }
 
   /** Returns the list of all traces on the board. */

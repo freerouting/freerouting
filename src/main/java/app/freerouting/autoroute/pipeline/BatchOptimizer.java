@@ -286,7 +286,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
 
     job.logDebug(
         "Before optimization: Via count: "
-            + board.getVias().size()
+            + board.getViaCount()
             + ", trace length: "
             + Math.round(board.cumulativeTraceLength()));
 

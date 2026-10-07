@@ -13,8 +13,10 @@ import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.logger.FRLogger;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * Owns the item-list access and search-tree/observer bookkeeping for a {@link BasicBoard}.
@@ -25,6 +27,10 @@ import java.util.LinkedList;
 public final class BoardItemRepository {
 
   private final BasicBoard board;
+  private BoardOutline outline;
+  private long outlineStamp = -1;
+  private Map<Integer, Item> idMap;
+  private long idMapStamp = -1;
 
   BoardItemRepository(BasicBoard board) {
     this.board = board;
@@ -32,28 +38,73 @@ public final class BoardItemRepository {
 
   /** Returns the outline item, if one is present. */
   BoardOutline getOutline() {
+    long stamp = board.itemList.getVersion();
+    if (stamp != outlineStamp) {
+      outline = findOutline();
+      outlineStamp = stamp;
+    }
+    return outline;
+  }
+
+  private BoardOutline findOutline() {
     Iterator<UndoableObjects.UndoableObjectNode> iterator = board.itemList.startReadObject();
     for (; ; ) {
       UndoableObjects.Storable currentItem = board.itemList.readObject(iterator);
       if (currentItem == null) {
         return null;
       }
-      if (currentItem instanceof BoardOutline outline) {
-        return outline;
+      if (currentItem instanceof BoardOutline currentOutline) {
+        return currentOutline;
       }
     }
   }
 
   /** Returns the item with the requested ID, if one is present. */
   Item getItem(int id) {
+    long stamp = board.itemList.getVersion();
+    if (idMap == null || stamp != idMapStamp) {
+      idMap = new HashMap<>();
+      Iterator<UndoableObjects.UndoableObjectNode> iterator = board.itemList.startReadObject();
+      for (; ; ) {
+        UndoableObjects.Storable currentItem = board.itemList.readObject(iterator);
+        if (currentItem == null) {
+          break;
+        }
+        if (currentItem instanceof Item item) {
+          idMap.put(item.getId(), item);
+        }
+      }
+      idMapStamp = stamp;
+    }
+    return idMap.get(id);
+  }
+
+  /** Counts the vias on the board without collecting them. */
+  int getViaCount() {
+    int result = 0;
     Iterator<UndoableObjects.UndoableObjectNode> iterator = board.itemList.startReadObject();
     for (; ; ) {
-      Item currentItem = (Item) board.itemList.readObject(iterator);
+      UndoableObjects.Storable currentItem = board.itemList.readObject(iterator);
       if (currentItem == null) {
-        return null;
+        return result;
       }
-      if (currentItem.getId() == id) {
-        return currentItem;
+      if (currentItem instanceof Via) {
+        result++;
+      }
+    }
+  }
+
+  /** Counts the pins on the board without collecting them. */
+  int getPinCount() {
+    int result = 0;
+    Iterator<UndoableObjects.UndoableObjectNode> iterator = board.itemList.startReadObject();
+    for (; ; ) {
+      UndoableObjects.Storable currentItem = board.itemList.readObject(iterator);
+      if (currentItem == null) {
+        return result;
+      }
+      if (currentItem instanceof Pin) {
+        result++;
       }
     }
   }
@@ -136,7 +187,7 @@ public final class BoardItemRepository {
     if (item == null) {
       return;
     }
-    if (isItemActivityDebugCandidate(item)) {
+    if (FRLogger.isTraceEnabled() && isItemActivityDebugCandidate(item)) {
       FRLogger.trace(
           "ITEM_ACTIVITY action=INSERT"
               + ", id="
@@ -172,7 +223,7 @@ public final class BoardItemRepository {
     if (item == null) {
       return;
     }
-    if (isItemActivityDebugCandidate(item)) {
+    if (FRLogger.isTraceEnabled() && isItemActivityDebugCandidate(item)) {
       FRLogger.trace(
           "ITEM_ACTIVITY action=REMOVE"
               + ", id="

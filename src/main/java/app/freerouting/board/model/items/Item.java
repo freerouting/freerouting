@@ -1000,6 +1000,9 @@ public abstract class Item
           newNetNoArr.length - foundIndex);
     }
     this.netNumbers = newNetNoArr;
+    if (this.board != null) {
+      this.board.noteNetAssignmentChanged();
+    }
     return true;
   }
 
@@ -1021,6 +1024,9 @@ public abstract class Item
       return;
     }
     clearanceClassIndex = index;
+    if (this.board != null) {
+      this.board.itemList.noteContentChange();
+    }
   }
 
   /** Changes the clearance class of this item and updates the search tree. */
@@ -1066,6 +1072,9 @@ public abstract class Item
       }
       netNumbers[0] = netNumber;
     }
+    if (this.board != null) {
+      this.board.noteNetAssignmentChanged();
+    }
     if (this instanceof Pin) {
       board.invalidateEdgePinNetCache();
     }
@@ -1081,6 +1090,9 @@ public abstract class Item
     }
     board.itemList.saveForUndo(this);
     this.netNumbers = netNumbers.clone();
+    if (this.board != null) {
+      this.board.noteNetAssignmentChanged();
+    }
     if (this instanceof Pin) {
       board.invalidateEdgePinNetCache();
     }

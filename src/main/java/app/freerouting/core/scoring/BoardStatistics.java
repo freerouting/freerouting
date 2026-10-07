@@ -190,7 +190,7 @@ public class BoardStatistics implements Serializable {
     this.components.totalCount = board.components.count();
 
     // Pads
-    this.pads.totalCount = board.getPins().size();
+    this.pads.totalCount = board.getPinCount();
 
     // Nets
     this.nets.totalCount = board.rules.nets.maxNetNumber();
@@ -349,7 +349,7 @@ public class BoardStatistics implements Serializable {
     }
 
     // Vias
-    this.vias.totalCount = board.getVias().size();
+    this.vias.totalCount = board.getViaCount();
     this.vias.throughHoleCount = 0;
     this.vias.blindCount = 0;
     this.vias.buriedCount = 0;
