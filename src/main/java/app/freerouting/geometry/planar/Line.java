@@ -562,6 +562,8 @@ public class Line implements Comparable<Line>, Serializable {
     IntPoint ipa = (IntPoint) a;
     IntPoint ipb = (IntPoint) b;
 
-    return (float) Math.sqrt((ipb.x - ipa.x) * (ipb.x - ipa.x) + (ipb.y - ipa.y) * (ipb.y - ipa.y));
+    double dx = (double) ipb.x - ipa.x;
+    double dy = (double) ipb.y - ipa.y;
+    return (float) Math.sqrt(dx * dx + dy * dy);
   }
 }

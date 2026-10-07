@@ -29,7 +29,7 @@ public abstract sealed class Point implements Serializable permits IntPoint, Rat
       y = y.negate();
       z = z.negate();
     }
-    if (x.mod(z).signum() == 0) {
+    if (x.mod(z).signum() == 0 && y.mod(z).signum() == 0) {
       // x and y can be divided by z
       x = x.divide(z);
       y = y.divide(z);

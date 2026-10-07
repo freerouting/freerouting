@@ -90,7 +90,11 @@ public final class IntOctagon extends RegularTileShape implements Serializable {
 
   @Override
   public boolean isEmpty() {
-    return this == EMPTY;
+    return this == EMPTY
+        || leftX > rightX
+        || bottomY > topY
+        || lowerLeftDiagonalX > upperRightDiagonalX
+        || upperLeftDiagonalX > lowerRightDiagonalX;
   }
 
   @Override
@@ -125,7 +129,7 @@ public final class IntOctagon extends RegularTileShape implements Serializable {
 
   @Override
   public int dimension() {
-    if (this == EMPTY) {
+    if (this == EMPTY || this.isEmpty()) {
       return -1;
     }
     int result;

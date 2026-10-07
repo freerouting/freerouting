@@ -450,7 +450,7 @@ public abstract sealed class TileShape extends PolylineShape implements ConvexSh
     FloatPoint fromPointF = fromPoint.toFloat();
     int result = 0;
     int cornerCount = borderLineCount();
-    double minDist = Double.MIN_VALUE;
+    double minDist = Double.MAX_VALUE;
     for (int i = 0; i < cornerCount; i++) {
       double currentDistance = cornerApprox(i).distance(fromPointF);
       if (currentDistance < minDist) {

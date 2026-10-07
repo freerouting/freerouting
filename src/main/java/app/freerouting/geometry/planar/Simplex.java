@@ -219,7 +219,7 @@ public final class Simplex extends TileShape implements Serializable {
         precalculatedFloatCorners[i] = lines[i].intersectionApprox(prev);
       }
     }
-    return precalculatedFloatCorners;
+    return precalculatedFloatCorners.clone();
   }
 
   /**
