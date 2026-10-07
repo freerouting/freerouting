@@ -90,7 +90,14 @@ class FootprintImageVariantKeepoutTest extends RoutingFixtureTest {
     assertEquals("ceoloide:switch_choc_v1_v2", switchS1.getPackage().name);
     assertEquals("ceoloide:switch_choc_v1_v2::1", switchS4.getPackage().name);
 
-    // 5. Verify SES serialization retains exact component identifiers
+    // 5. Verify fallback behavior: only unmapped ::suffix falls back to base package
+    Package nonExistentVariant =
+        job.board.library.packages.get("ceoloide:mounting_hole_npth::999", true);
+    assertNotNull(
+        nonExistentVariant, "Unregistered variant suffix ::999 must fall back to base package");
+    assertEquals(smallMhPkg, nonExistentVariant);
+
+    // 6. Verify SES serialization retains exact component identifiers
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     SesWriter.write(job.board, out, "corney_island_wireless.dsn");
     String ses = out.toString(StandardCharsets.UTF_8);
@@ -103,6 +110,37 @@ class FootprintImageVariantKeepoutTest extends RoutingFixtureTest {
         ses.contains("(component \"ceoloide:mounting_hole_npth::1\"")
             || ses.contains("(component ceoloide:mounting_hole_npth::1"),
         "SES must contain variant mounting hole component scope");
+  }
+
+  @Test
+  void testLegacySesRoutesViolateCorrectedLargeKeepout() throws Exception {
+    TestingSettings settings = new TestingSettings();
+    settings.setFanoutEnabled(false);
+    settings.setRouterEnabled(false);
+    settings.setOptimizerEnabled(false);
+    settings.setJobTimeoutString("00:01:00");
+
+    RoutingJob job = getRoutingJob("corney_island_wireless.dsn", settings);
+    job = runRoutingJob(job);
+
+    java.nio.file.Path sesPath = java.nio.file.Path.of("fixtures", "corney_island_wireless.ses");
+    try (java.io.InputStream is = java.nio.file.Files.newInputStream(sesPath)) {
+      app.freerouting.io.specctra.SesReader.read(is, job.board);
+    }
+
+    Component mh5 = job.board.components.get("MH5");
+    assertNotNull(mh5, "MH5 must exist");
+
+    int mh5Violations = 0;
+    for (Item item : job.board.getItems()) {
+      if (item instanceof ObstacleArea area && item.getComponentId() == mh5.id) {
+        mh5Violations += area.clearanceViolations().size();
+      }
+    }
+
+    assertTrue(
+        mh5Violations > 0,
+        "Old routes from buggy run must violate the corrected 4.8 mm keepout of MH5");
   }
 
   private List<Circle> getComponentKeepoutCircles(RoutingJob job, int componentId) {

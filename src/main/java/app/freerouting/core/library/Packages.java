@@ -37,7 +37,37 @@ public class Packages implements Serializable {
         otherSidePackage = currentPackage;
       }
     }
-    return otherSidePackage;
+    if (otherSidePackage != null) {
+      return otherSidePackage;
+    }
+    // Safe fallback: only if no package with the exact name was found on either side
+    String baseName = name.replaceAll("::\\d+$", "");
+    if (!baseName.equalsIgnoreCase(name)) {
+      for (Package currentPackage : packages) {
+        if (currentPackage != null && currentPackage.name.equalsIgnoreCase(baseName)) {
+          if (currentPackage.isFront == isFront) {
+            FRLogger.warn(
+                "Package '"
+                    + name
+                    + "' not found; falling back to base package '"
+                    + baseName
+                    + "'");
+            return currentPackage;
+          }
+          otherSidePackage = currentPackage;
+        }
+      }
+      if (otherSidePackage != null) {
+        FRLogger.warn(
+            "Package '"
+                + name
+                + "' not found; falling back to other-side base package '"
+                + baseName
+                + "'");
+        return otherSidePackage;
+      }
+    }
+    return null;
   }
 
   /** Returns the package with the specified ID. Package IDs start at 1. */
