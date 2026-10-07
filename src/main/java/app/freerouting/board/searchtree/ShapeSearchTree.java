@@ -57,6 +57,10 @@ public class ShapeSearchTree extends MinAreaTree {
   protected final ThreadLocal<ArrayStack<TreeNode>> completeShapeStack =
       ThreadLocal.withInitial(() -> new ArrayStack<>(10000));
 
+  /** Reusable result list for spatial overlap queries, isolated per caller thread. */
+  private final ThreadLocal<List<Leaf>> queryLeafBuffer =
+      ThreadLocal.withInitial(() -> new ArrayList<>(128));
+
   /**
    * The clearance class number for which the shapes of this tree is compensated. If
    * compensatedClearanceClassNo = 0, the shapes are not compensated.
@@ -467,35 +471,40 @@ public class ShapeSearchTree extends MinAreaTree {
       FRLogger.warn("ShapeSearchTree.overlaps: shape not bounded");
       return;
     }
-    Collection<Leaf> tmpList = this.overlapsUnlocked(bounds);
+    List<Leaf> tmpList = queryLeafBuffer.get();
+    tmpList.clear();
     boolean is45Degree = shape instanceof IntOctagon;
-
-    for (Leaf currentLeaf : tmpList) {
-      SearchTreeObject currentObject = (SearchTreeObject) currentLeaf.object;
-      int shapeIndex = currentLeaf.shapeIndexInObject;
-      boolean ignoreObject = layer >= 0 && currentObject.shapeLayer(shapeIndex) != layer;
-      if (!ignoreObject) {
-        for (int i = 0; i < ignoreNetNos.length; i++) {
-          if (!currentObject.isObstacle(ignoreNetNos[i])) {
-            ignoreObject = true;
+    try {
+      this.overlapsUnlocked(bounds, tmpList);
+      for (Leaf currentLeaf : tmpList) {
+        SearchTreeObject currentObject = (SearchTreeObject) currentLeaf.object;
+        int shapeIndex = currentLeaf.shapeIndexInObject;
+        boolean ignoreObject = layer >= 0 && currentObject.shapeLayer(shapeIndex) != layer;
+        if (!ignoreObject) {
+          for (int i = 0; i < ignoreNetNos.length; i++) {
+            if (!currentObject.isObstacle(ignoreNetNos[i])) {
+              ignoreObject = true;
+            }
+          }
+        }
+        if (!ignoreObject) {
+          TileShape currentShape = currentObject.getTreeShape(this, currentLeaf.shapeIndexInObject);
+          boolean addItem;
+          if (is45Degree && currentShape instanceof IntOctagon) {
+            // in this case the check for intersection is redundant and
+            // therefore skipped for performance reasons
+            addItem = true;
+          } else {
+            addItem = currentShape.intersects(shape);
+          }
+          if (addItem) {
+            TreeEntry newEntry = new TreeEntry(currentObject, shapeIndex);
+            treeEntries.add(newEntry);
           }
         }
       }
-      if (!ignoreObject) {
-        TileShape currentShape = currentObject.getTreeShape(this, currentLeaf.shapeIndexInObject);
-        boolean addItem;
-        if (is45Degree && currentShape instanceof IntOctagon) {
-          // in this case the check for intersection is redundant and
-          // therefore skipped for performance reasons
-          addItem = true;
-        } else {
-          addItem = currentShape.intersects(shape);
-        }
-        if (addItem) {
-          TreeEntry newEntry = new TreeEntry(currentObject, shapeIndex);
-          treeEntries.add(newEntry);
-        }
-      }
+    } finally {
+      tmpList.clear();
     }
   }
 
@@ -547,29 +556,35 @@ public class ShapeSearchTree extends MinAreaTree {
     // a factor less than sqr2 has evtl. be added because
     // enlarging is not symmetric.
     RegularTileShape offsetBounds = (RegularTileShape) bounds.offset(maxClearance);
-    Collection<Leaf> tmpList = overlapsUnlocked(offsetBounds);
+    List<Leaf> tmpList = queryLeafBuffer.get();
+    tmpList.clear();
     // sort the found items by its clearances to clearanceClassIndex on layer layer
     Set<EntrySortedByClearance> sortedItems = new TreeSet<>();
     int nextEntryId = 0;
-
-    for (Leaf currentLeaf : tmpList) {
-      Item currentItem = (Item) currentLeaf.object;
-      int shapeIndex = currentLeaf.shapeIndexInObject;
-      boolean ignoreItem = layer >= 0 && currentItem.shapeLayer(shapeIndex) != layer;
-      if (!ignoreItem) {
-        for (int i = 0; i < ignoreNetNos.length; i++) {
-          if (!currentItem.isObstacle(ignoreNetNos[i])) {
-            ignoreItem = true;
+    try {
+      overlapsUnlocked(offsetBounds, tmpList);
+      for (Leaf currentLeaf : tmpList) {
+        Item currentItem = (Item) currentLeaf.object;
+        int shapeIndex = currentLeaf.shapeIndexInObject;
+        boolean ignoreItem = layer >= 0 && currentItem.shapeLayer(shapeIndex) != layer;
+        if (!ignoreItem) {
+          for (int i = 0; i < ignoreNetNos.length; i++) {
+            if (!currentItem.isObstacle(ignoreNetNos[i])) {
+              ignoreItem = true;
+            }
           }
         }
+        if (!ignoreItem) {
+          int currentClearance =
+              clMatrix.getValue(
+                  clearanceClassIndex, currentItem.clearanceClassIndex(), layer, true);
+          EntrySortedByClearance sortedOb =
+              new EntrySortedByClearance(currentLeaf, currentClearance, nextEntryId++);
+          sortedItems.add(sortedOb);
+        }
       }
-      if (!ignoreItem) {
-        int currentClearance =
-            clMatrix.getValue(clearanceClassIndex, currentItem.clearanceClassIndex(), layer, true);
-        EntrySortedByClearance sortedOb =
-            new EntrySortedByClearance(currentLeaf, currentClearance, nextEntryId++);
-        sortedItems.add(sortedOb);
-      }
+    } finally {
+      tmpList.clear();
     }
     int currentHalfClearance = 0;
     ConvexShape currentOffsetShape = shape;

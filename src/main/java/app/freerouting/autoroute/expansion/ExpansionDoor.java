@@ -38,12 +38,30 @@ public class ExpansionDoor implements ExpandableObject {
     this.dimension = firstRoom.getShape().intersection(secondRoom.getShape()).dimension();
   }
 
+  private TileShape cachedShape;
+  private TileShape cachedFirstRoomShape;
+  private TileShape cachedSecondRoomShape;
+  private FloatLine[] cachedSectionSegments;
+  private TileShape cachedSectionShape;
+  private double cachedSectionOffset;
+  private int cachedSectionCount;
+
   /** Calculates the intersection of the shapes of the 2 rooms belonging to this door. */
   @Override
   public TileShape getShape() {
     TileShape firstShape = firstRoom.getShape();
     TileShape secondShape = secondRoom.getShape();
-    return firstShape.intersection(secondShape);
+    TileShape cached = cachedShape;
+    if (cached != null
+        && firstShape == cachedFirstRoomShape
+        && secondShape == cachedSecondRoomShape) {
+      return cached;
+    }
+    TileShape result = firstShape.intersection(secondShape);
+    cachedFirstRoomShape = firstShape;
+    cachedSecondRoomShape = secondShape;
+    cachedShape = result;
+    return result;
   }
 
   /**
@@ -103,12 +121,19 @@ public class ExpansionDoor implements ExpandableObject {
 
   /** Calculates the Line segments of the sections of this door. */
   public FloatLine[] getSectionSegments(double offsetParam) {
-    double offset = offsetParam + AutorouteEngine.TRACE_WIDTH_TOLERANCE;
     TileShape doorShape = this.getShape();
-    {
-      if (doorShape.isEmpty()) {
-        return new FloatLine[0];
+    FloatLine[] cached = cachedSectionSegments;
+    if (cached != null
+        && doorShape == cachedSectionShape
+        && Double.doubleToLongBits(offsetParam) == Double.doubleToLongBits(cachedSectionOffset)) {
+      if (cachedSectionCount > 0) {
+        this.allocateSections(cachedSectionCount);
       }
+      return cached;
+    }
+    double offset = offsetParam + AutorouteEngine.TRACE_WIDTH_TOLERANCE;
+    if (doorShape.isEmpty()) {
+      return new FloatLine[0];
     }
     FloatLine doorLineSegment;
     FloatLine shrinkedLineSegment;
@@ -139,7 +164,12 @@ public class ExpansionDoor implements ExpandableObject {
     int sectionCount =
         (int) (doorLineSegment.b.distance(doorLineSegment.a) / maxDoorSectionWidth) + 1;
     this.allocateSections(sectionCount);
-    return shrinkedLineSegment.divideSegmentIntoSections(sectionCount);
+    FloatLine[] result = shrinkedLineSegment.divideSegmentIntoSections(sectionCount);
+    cachedSectionShape = doorShape;
+    cachedSectionOffset = offsetParam;
+    cachedSectionCount = sectionCount;
+    cachedSectionSegments = result;
+    return result;
   }
 
   /**

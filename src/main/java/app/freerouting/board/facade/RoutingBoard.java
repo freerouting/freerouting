@@ -22,6 +22,7 @@ import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.board.model.structure.Layer;
 import app.freerouting.board.model.structure.LayerStructure;
 import app.freerouting.board.model.structure.ShapeEntrySide;
+import app.freerouting.board.optimize.ShoveCheckCache;
 import app.freerouting.board.optimize.TraceShover;
 import app.freerouting.board.optimize.TraceTightener;
 import app.freerouting.board.searchtree.SearchTreeObject;
@@ -52,6 +53,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -72,6 +74,9 @@ public class RoutingBoard extends BasicBoard implements Serializable {
 
   private transient Item shoveFailingObstacle;
   private transient int shoveFailingLayer = -1;
+  private transient long shoveFailingObstacleWrites;
+  private transient long shoveFailingLayerWrites;
+  private transient List<Item> shoveCacheObstacles;
   private transient RoutingBoardOperations operations;
   private transient RoutingBoardSearchFacade searchFacade;
   private transient RoutingBoardUndoFacade undoFacade;
@@ -1453,6 +1458,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
 
   public void setShoveFailingObstacle(Item item) {
     shoveFailingObstacle = item;
+    shoveFailingObstacleWrites++;
   }
 
   public int getShoveFailingLayer() {
@@ -1461,11 +1467,33 @@ public class RoutingBoard extends BasicBoard implements Serializable {
 
   public void setShoveFailingLayer(int layer) {
     shoveFailingLayer = layer;
+    shoveFailingLayerWrites++;
   }
 
   private void clearShoveFailingObstacle() {
     shoveFailingObstacle = null;
     shoveFailingLayer = -1;
+    shoveFailingObstacleWrites++;
+    shoveFailingLayerWrites++;
+  }
+
+  public long getShoveFailingObstacleWrites() {
+    return shoveFailingObstacleWrites;
+  }
+
+  public long getShoveFailingLayerWrites() {
+    return shoveFailingLayerWrites;
+  }
+
+  public List<Item> getShoveCacheObstacles() {
+    if (shoveCacheObstacles == null) {
+      shoveCacheObstacles = new java.util.ArrayList<>();
+    }
+    return shoveCacheObstacles;
+  }
+
+  public ShoveCheckCache getShoveChecks() {
+    return ShoveCheckCache.forThread();
   }
 
   /**
