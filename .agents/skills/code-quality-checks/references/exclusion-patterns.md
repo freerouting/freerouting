@@ -11,7 +11,6 @@ This document contains the complete exclusion patterns for code quality tools in
 ./build/
 ./.gradle/
 ./logs/
-./src_v19/
 ./examples/
 ./results/
 ./scripts/benchmark/results/
@@ -56,9 +55,6 @@ OFFSETS
 - `./src/main/resources/app/freerouting/helpset/de/`
 - `./src/main/resources/app/freerouting/helpset/es/`
 - `./src/main/resources/app/freerouting/helpset/fr/`
-- `./src_v19/main/resources/app/freerouting/helpset/de/`
-- `./src_v19/main/resources/app/freerouting/helpset/es/`
-- `./src_v19/main/resources/app/freerouting/helpset/fr/`
 
 **Localized Properties Files:**
 - `*_ar.properties`, `*_bn.properties`, `*_de.properties`
@@ -98,7 +94,6 @@ OFFSETS
    - `./examples/` - Example files
    - `./results/` - Test results
    - `./scripts/benchmark/results/` - Benchmark results
-   - `./src_v19/` - Legacy reference implementation
 
 4. **Exclude Configuration Files:**
    - `.gitignore` - Git ignore patterns (contains non-word patterns)
