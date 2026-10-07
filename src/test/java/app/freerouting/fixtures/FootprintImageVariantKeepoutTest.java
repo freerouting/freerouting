@@ -21,10 +21,14 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 /**
- * Regression test verifying that footprint instances with image variations (e.g. suffix "::1")
- * retain their independent package identities, keepout dimensions, and back-side placements.
+ * Regression test for Issue #951: Verifies that footprint instances with image variations (e.g.
+ * suffix "::1") retain their independent package identities, keepout dimensions, and back-side
+ * placements.
  */
 class FootprintImageVariantKeepoutTest extends RoutingFixtureTest {
+
+  private static final String DSN_FIXTURE = "Issue951-corney_island_wireless.dsn";
+  private static final String SES_FIXTURE = "Issue951-corney_island_wireless.ses";
 
   @Test
   void testFootprintImageVariantsPreserveDistinctKeepoutsAndPlacement() throws IOException {
@@ -34,7 +38,7 @@ class FootprintImageVariantKeepoutTest extends RoutingFixtureTest {
     settings.setOptimizerEnabled(false);
     settings.setJobTimeoutString("00:01:00");
 
-    RoutingJob job = getRoutingJob("corney_island_wireless.dsn", settings);
+    RoutingJob job = getRoutingJob(DSN_FIXTURE, settings);
     job = runRoutingJob(job);
 
     assertNotNull(job.board, "Board should load successfully");
@@ -99,7 +103,7 @@ class FootprintImageVariantKeepoutTest extends RoutingFixtureTest {
 
     // 6. Verify SES serialization retains exact component identifiers
     ByteArrayOutputStream out = new ByteArrayOutputStream();
-    SesWriter.write(job.board, out, "corney_island_wireless.dsn");
+    SesWriter.write(job.board, out, DSN_FIXTURE);
     String ses = out.toString(StandardCharsets.UTF_8);
 
     assertTrue(
@@ -120,10 +124,10 @@ class FootprintImageVariantKeepoutTest extends RoutingFixtureTest {
     settings.setOptimizerEnabled(false);
     settings.setJobTimeoutString("00:01:00");
 
-    RoutingJob job = getRoutingJob("corney_island_wireless.dsn", settings);
+    RoutingJob job = getRoutingJob(DSN_FIXTURE, settings);
     job = runRoutingJob(job);
 
-    java.nio.file.Path sesPath = java.nio.file.Path.of("fixtures", "corney_island_wireless.ses");
+    java.nio.file.Path sesPath = java.nio.file.Path.of("fixtures", SES_FIXTURE);
     try (java.io.InputStream is = java.nio.file.Files.newInputStream(sesPath)) {
       app.freerouting.io.specctra.SesReader.read(is, job.board);
     }
