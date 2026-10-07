@@ -317,10 +317,6 @@ public class ConductionArea extends ObstacleArea implements Connectable {
 
   @Override
   public Item copy(int id) {
-    if (this.netCount() != 1) {
-      FRLogger.warn("ConductionArea.copy not yet implemented for areas with more than 1 net");
-      return null;
-    }
     return new ConductionArea(
         getRelativeArea(),
         getLayer(),

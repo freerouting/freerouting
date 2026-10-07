@@ -852,6 +852,7 @@ public class HeadlessBoardManager implements BoardManager {
     }
     this.board.expandBoundingBoxToIncludeAllItems();
     this.board.reduceNetsOfRouteItems();
+    this.board.connectNetlessPadsToTheirFootprintsNet();
     validatePowerPlanes();
     validateBoardDesignErrors();
     // NOTE: The full-board DRC (getAllClearanceViolations) is O(n²) and is deferred to the
@@ -894,6 +895,8 @@ public class HeadlessBoardManager implements BoardManager {
                   }
                 }
                 loadedBoard.unfixableClearanceViolationsCount = unfixable;
+                loadedBoard.clearanceBaseline =
+                    new app.freerouting.drc.ClearanceBaseline(violations);
                 if (!violations.isEmpty()) {
                   warnPreExistingClearanceViolations(loadedBoard, violations);
                 }

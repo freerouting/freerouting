@@ -34,7 +34,7 @@ public class BoardOutline extends Item implements Serializable {
   private static final int HALF_WIDTH = 100;
 
   /** The board shapes inside the outline curves. */
-  private final PolylineShape[] shapes;
+  private PolylineShape[] shapes;
 
   /**
    * The board shape outside the outline curves, where a keepout will be generated The outline
@@ -263,9 +263,11 @@ public class BoardOutline extends Item implements Serializable {
 
   @Override
   public void translateBy(Vector vector) {
-    for (PolylineShape currentShape : this.shapes) {
-      currentShape = currentShape.translateBy(vector);
+    PolylineShape[] newShapes = new PolylineShape[this.shapes.length];
+    for (int i = 0; i < this.shapes.length; i++) {
+      newShapes[i] = this.shapes[i].translateBy(vector);
     }
+    this.shapes = newShapes;
     if (keepoutArea != null) {
       keepoutArea = keepoutArea.translateBy(vector);
     }
@@ -275,9 +277,11 @@ public class BoardOutline extends Item implements Serializable {
 
   @Override
   public void turn90Degree(int factor, IntPoint pole) {
-    for (PolylineShape currentShape : this.shapes) {
-      currentShape = currentShape.turn90Degree(factor, pole);
+    PolylineShape[] newShapes = new PolylineShape[this.shapes.length];
+    for (int i = 0; i < this.shapes.length; i++) {
+      newShapes[i] = this.shapes[i].turn90Degree(factor, pole);
     }
+    this.shapes = newShapes;
     if (keepoutArea != null) {
       keepoutArea = keepoutArea.turn90Degree(factor, pole);
     }
@@ -288,9 +292,11 @@ public class BoardOutline extends Item implements Serializable {
   @Override
   public void rotateApprox(double angleInDegree, FloatPoint pole) {
     double angle = Math.toRadians(angleInDegree);
-    for (PolylineShape currentShape : this.shapes) {
-      currentShape = currentShape.rotateApprox(angle, pole);
+    PolylineShape[] newShapes = new PolylineShape[this.shapes.length];
+    for (int i = 0; i < this.shapes.length; i++) {
+      newShapes[i] = this.shapes[i].rotateApprox(angle, pole);
     }
+    this.shapes = newShapes;
     if (keepoutArea != null) {
       keepoutArea = keepoutArea.rotateApprox(angle, pole);
     }
@@ -300,9 +306,11 @@ public class BoardOutline extends Item implements Serializable {
 
   @Override
   public void changePlacementSide(IntPoint pole) {
-    for (PolylineShape currentShape : this.shapes) {
-      currentShape = currentShape.mirrorVertical(pole);
+    PolylineShape[] newShapes = new PolylineShape[this.shapes.length];
+    for (int i = 0; i < this.shapes.length; i++) {
+      newShapes[i] = this.shapes[i].mirrorVertical(pole);
     }
+    this.shapes = newShapes;
     if (keepoutArea != null) {
       keepoutArea = keepoutArea.mirrorVertical(pole);
     }

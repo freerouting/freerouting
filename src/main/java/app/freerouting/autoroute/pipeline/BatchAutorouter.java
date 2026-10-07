@@ -312,6 +312,20 @@ public final class BatchAutorouter extends NamedAlgorithm {
    */
   public static AutorouteAttemptResult enforceStrictDrc(
       app.freerouting.board.facade.RoutingBoard board, int routeNetNo, int maxItemIdBefore) {
+    return enforceStrictDrc(board, routeNetNo, maxItemIdBefore, false);
+  }
+
+  /**
+   * Strict-DRC enforcement: if any trace/via inserted by the connection that just routed (item id
+   * above {@code maxItemIdBefore}) carries a clearance violation, rip the whole set of new items
+   * and report the connection FAILED. If {@code checkShovedItems} is true, also checks other nets'
+   * traces/vias rebuilt during shove.
+   */
+  public static AutorouteAttemptResult enforceStrictDrc(
+      app.freerouting.board.facade.RoutingBoard board,
+      int routeNetNo,
+      int maxItemIdBefore,
+      boolean checkShovedItems) {
     List<Item> newItems = new ArrayList<>();
     boolean hasViolation = false;
     for (Item currentItem : board.getConnectableItems(routeNetNo)) {
@@ -325,15 +339,45 @@ public final class BatchAutorouter extends NamedAlgorithm {
         hasViolation = true;
       }
     }
+    List<Item> shovedViolators = null;
+    if (checkShovedItems) {
+      shovedViolators = shovedItemsInViolation(board, routeNetNo, maxItemIdBefore);
+      hasViolation |= !shovedViolators.isEmpty();
+    }
     if (!hasViolation) {
       return null;
     }
     board.removeItems(newItems);
+    if (shovedViolators != null && !shovedViolators.isEmpty()) {
+      board.removeItems(shovedItemsInViolation(board, routeNetNo, maxItemIdBefore));
+    }
     return new AutorouteAttemptResult(
         AutorouteAttemptState.FAILED,
         "strict_drc: connection ripped because "
             + newItems.size()
             + " new item(s) included clearance violations");
+  }
+
+  /** The traces and vias of other nets created after maxItemIdBefore that violate clearance. */
+  private static List<Item> shovedItemsInViolation(
+      app.freerouting.board.facade.RoutingBoard board, int routeNetNo, int maxItemIdBefore) {
+    List<Item> result = new ArrayList<>();
+    Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.startReadObject();
+    for (; ; ) {
+      UndoableObjects.Storable currentObject = board.itemList.readObject(it);
+      if (currentObject == null) {
+        break;
+      }
+      if (currentObject instanceof Item shoved
+          && (shoved instanceof Trace || shoved instanceof app.freerouting.board.model.items.Via)
+          && shoved.getId() > maxItemIdBefore
+          && !shoved.containsNet(routeNetNo)
+          && !shoved.isUserFixed()
+          && !shoved.clearanceViolations().isEmpty()) {
+        result.add(shoved);
+      }
+    }
+    return result;
   }
 
   public boolean isFanoutTimedOut() {

@@ -49,6 +49,7 @@ import app.freerouting.rules.Net;
 import app.freerouting.rules.ViaInfo;
 import app.freerouting.settings.RouterSettings;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
@@ -266,22 +267,23 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       }
     }
 
-    IntOctagon tidyRegion;
+    IntOctagon[] tidyRegion = new IntOctagon[1];
     boolean calculateTidyRegion;
     if (tidyWidth < Integer.MAX_VALUE) {
-      tidyRegion = IntOctagon.EMPTY;
+      tidyRegion[0] = IntOctagon.EMPTY;
       calculateTidyRegion = tidyWidth > 0;
     } else {
-      tidyRegion = null;
+      tidyRegion[0] = null;
       calculateTidyRegion = false;
     }
     startMarkingChangedArea();
-    if (!DrillItemMover.insert(
+    if (!DrillItemMover.insertJoiningTidyRegion(
         drillItem, vector, maxRecursionDepth, maxViaRecursionDepth, tidyRegion, this)) {
       return false;
     }
-    if (calculateTidyRegion) {
-      tidyRegion = tidyRegion.enlarge(tidyWidth);
+    IntOctagon finalTidyRegion = tidyRegion[0];
+    if (calculateTidyRegion && finalTidyRegion != null) {
+      finalTidyRegion = finalTidyRegion.enlarge(tidyWidth);
     }
     int[] optNetNoArr;
     if (maxRecursionDepth <= 0) {
@@ -290,7 +292,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     } else {
       optNetNoArr = new int[0];
     }
-    optChangedArea(optNetNoArr, tidyRegion, pullTightAccuracy, null, null, pullTightTimeLimit);
+    optChangedArea(optNetNoArr, finalTidyRegion, pullTightAccuracy, null, null, pullTightTimeLimit);
     return true;
   }
 
@@ -1374,11 +1376,65 @@ public class RoutingBoard extends BasicBoard implements Serializable {
           }
         }
         if (somethingChanged) {
+          result = true;
           break;
         }
       }
     }
     return result;
+  }
+
+  /**
+   * Connects netless pads whose copper overlaps a netted pad to that pad's net. If a netless pad
+   * bridges pads of multiple nets within its own footprint, it becomes a net tie carrying all of
+   * those nets.
+   *
+   * @return the number of pads assigned to a net.
+   */
+  public int connectNetlessPadsToTheirFootprintsNet() {
+    int assigned = 0;
+    int tiePads = 0;
+    for (Pin pin : new ArrayList<>(getPins())) {
+      if (pin.netCount() != 0) {
+        continue;
+      }
+      SortedSet<Integer> nets = new TreeSet<>();
+      boolean ownFootprint = true;
+      for (Pin other : pin.overlappingNettedPins()) {
+        ownFootprint &= other.getComponentId() == pin.getComponentId();
+        for (int i = 0; i < other.netCount(); i++) {
+          nets.add(other.getNetNumber(i));
+        }
+      }
+      if (nets.isEmpty()) {
+        continue;
+      }
+      if (nets.size() == 1) {
+        pin.assignNetNo(nets.first());
+      } else if (ownFootprint) {
+        int[] netArr = new int[nets.size()];
+        int idx = 0;
+        for (int net : nets) {
+          netArr[idx++] = net;
+        }
+        pin.assignNetNumbers(netArr);
+        tiePads++;
+      } else {
+        continue;
+      }
+      assigned++;
+    }
+    if (assigned > 0) {
+      FRLogger.info(
+          assigned
+              + " netless pad(s) overlapping a netted pad take that pad's net"
+              + (tiePads > 0
+                  ? "; "
+                      + tiePads
+                      + " of them bridge pads of several nets and carry all of them (net ties)."
+                  : "."));
+    }
+    return assigned;
   }
 
   /** Returns the obstacle responsible for the last shove to fail. */

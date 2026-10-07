@@ -397,6 +397,10 @@ public class BoardStatistics implements Serializable {
         }
       }
       this.clearanceViolations.unfixableCount = unfixable;
+      this.clearanceViolations.newOrChangedCount =
+          board.clearanceBaseline != null
+              ? board.clearanceBaseline.countNewOrChanged(violationsList)
+              : null;
       this.clearanceViolations.routerIntroducedCount =
           Math.max(
               0, this.clearanceViolations.totalCount - board.preExistingClearanceViolationsCount);
@@ -404,6 +408,7 @@ public class BoardStatistics implements Serializable {
       this.clearanceViolations.totalCount = 0;
       this.clearanceViolations.preExistingCount = 0;
       this.clearanceViolations.unfixableCount = 0;
+      this.clearanceViolations.newOrChangedCount = 0;
       this.clearanceViolations.routerIntroducedCount = 0;
       this.clearanceViolations.totalViolationUm = 0.0;
       this.clearanceViolations.minViolationUm = 0.0;

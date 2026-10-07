@@ -263,7 +263,8 @@ public class NetClass implements Serializable, ItemInfoPrinter.Printable {
       return false;
     }
     int firstInnerLayerNo = 1;
-    while (!this.boardLayerStructure.layers[firstInnerLayerNo].isSignal) {
+    while (firstInnerLayerNo < traceHalfWidthArr.length - 1
+        && !this.boardLayerStructure.layers[firstInnerLayerNo].isSignal) {
       ++firstInnerLayerNo;
     }
     if (firstInnerLayerNo >= traceHalfWidthArr.length - 1) {

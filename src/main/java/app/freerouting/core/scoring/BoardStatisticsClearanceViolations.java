@@ -18,6 +18,9 @@ public class BoardStatisticsClearanceViolations implements Serializable {
   @SerializedName("router_introduced_count")
   public Integer routerIntroducedCount = 0;
 
+  @SerializedName("new_or_changed_count")
+  public Integer newOrChangedCount;
+
   @SerializedName("total_violation_um")
   public Double totalViolationUm;
 

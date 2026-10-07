@@ -217,6 +217,7 @@ public class ComponentOutline extends Item implements Serializable {
 
   @Override
   public void clearDerivedData() {
+    super.clearDerivedData();
     precalculatedAbsoluteArea = null;
   }
 

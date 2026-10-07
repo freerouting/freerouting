@@ -250,7 +250,7 @@ final class AutorouteConnectionRouter {
       return null;
     }
     AutorouteAttemptResult rejection =
-        BatchAutorouter.enforceStrictDrc(router.board, routeNetNo, maxItemIdBefore);
+        BatchAutorouter.enforceStrictDrc(router.board, routeNetNo, maxItemIdBefore, true);
     if (rejection != null) {
       FRLogger.trace(
           "AutorouteConnectionRouter.apply_strict_drc",

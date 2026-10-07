@@ -5,6 +5,7 @@ import app.freerouting.board.actions.ItemSelectionFilter;
 import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.model.structure.Component;
 import app.freerouting.board.model.structure.FixedState;
+import app.freerouting.board.searchtree.SearchTreeObject;
 import app.freerouting.core.library.LogicalPart;
 import app.freerouting.core.library.Package;
 import app.freerouting.core.library.Padstack;
@@ -24,8 +25,10 @@ import app.freerouting.util.TextManager;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
@@ -43,6 +46,7 @@ public class Pin extends DrillItem implements Serializable {
   private Pin changedTo = this;
 
   private transient Shape[] precalculatedShapes;
+  private transient List<Pin> overlappingPins;
 
   /**
    * Creates a new instance of Pin with the input parameters. (toLayer - fromLayer + 1) shapes must
@@ -475,6 +479,88 @@ public class Pin extends DrillItem implements Serializable {
   public void clearDerivedData() {
     super.clearDerivedData();
     this.precalculatedShapes = null;
+    this.overlappingPins = null;
+  }
+
+  @Override
+  public Set<Item> getNormalContacts() {
+    Set<Item> result = super.getNormalContacts();
+    if (this.board == null) {
+      return result;
+    }
+    if (this.overlappingPins == null) {
+      this.overlappingPins = overlappingPins();
+    }
+    for (Pin other : this.overlappingPins) {
+      if (other.sharesNet(this)) {
+        result.add(other);
+      }
+    }
+    return result;
+  }
+
+  private List<Pin> overlappingPins() {
+    List<Pin> result = new ArrayList<>();
+    IntBox box = this.boundingBox();
+    for (SearchTreeObject obj : this.board.overlappingObjects(box, -1)) {
+      if (!(obj instanceof Pin other)
+          || other == this
+          || !other.sharesNet(this)
+          || !other.sharesLayer(this)
+          || !box.intersects(other.boundingBox())) {
+        continue;
+      }
+      boolean overlaps = false;
+      for (int i = 0; i < tileShapeCount() && !overlaps; i++) {
+        Shape mine = getShape(i);
+        for (int j = 0; j < other.tileShapeCount() && !overlaps; j++) {
+          Shape theirs = other.getShape(j);
+          overlaps =
+              mine != null
+                  && theirs != null
+                  && shapeLayer(i) == other.shapeLayer(j)
+                  && mine.intersects(theirs);
+        }
+      }
+      if (overlaps) {
+        result.add(other);
+      }
+    }
+    return result;
+  }
+
+  /** Returns all pins with at least one net whose copper overlaps this netless pin's copper. */
+  public List<Pin> overlappingNettedPins() {
+    List<Pin> result = new ArrayList<>();
+    if (this.board == null || this.netCount() != 0) {
+      return result;
+    }
+    IntBox box = this.boundingBox();
+    for (SearchTreeObject obj : this.board.overlappingObjects(box, -1)) {
+      if (!(obj instanceof Pin other)
+          || other == this
+          || other.netCount() == 0
+          || !other.sharesLayer(this)
+          || !box.intersects(other.boundingBox())) {
+        continue;
+      }
+      boolean overlaps = false;
+      for (int i = 0; i < tileShapeCount() && !overlaps; i++) {
+        Shape mine = getShape(i);
+        for (int j = 0; j < other.tileShapeCount() && !overlaps; j++) {
+          Shape theirs = other.getShape(j);
+          overlaps =
+              mine != null
+                  && theirs != null
+                  && shapeLayer(i) == other.shapeLayer(j)
+                  && mine.intersects(theirs);
+        }
+      }
+      if (overlaps) {
+        result.add(other);
+      }
+    }
+    return result;
   }
 
   /** Return all Pins, that can be swapped with this pin. */
