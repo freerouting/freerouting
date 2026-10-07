@@ -228,13 +228,11 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
           return FileFormat.FRB;
         }
 
-        // If the first few bytes are 0x0A or 0x13, ignore them
-        while (buffer[0] == (byte) 0x0A || buffer[0] == (byte) 0x0D) {
-          buffer[0] = buffer[1];
-          buffer[1] = buffer[2];
-          buffer[2] = buffer[3];
-          buffer[3] = buffer[4];
-          buffer[4] = buffer[5];
+        // The signature follows all leading line breaks and blanks.
+        java.util.Arrays.fill(buffer, (byte) 0);
+        if (firstNonWs >= 0) {
+          System.arraycopy(
+              content, firstNonWs, buffer, 0, Math.min(6, content.length - firstNonWs));
         }
 
         // Check if the file is a DSN file (it starts with "(pcb" or "(PCB")

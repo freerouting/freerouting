@@ -175,14 +175,11 @@ final class AutorouteConnectionRouter {
       Map<Item, Integer> ripupCosts,
       int ripupPassNo,
       TimeLimit timeLimit) {
-    int boardResolution = Math.max(1, router.board.communication.resolution);
     int neckWidth =
         (int)
             Math.round(
-                Unit.scale(
-                    router.settings.getNeckWidthUm() * boardResolution,
-                    Unit.UM,
-                    router.board.communication.unit));
+                router.board.communication.physicalToBoard(
+                    router.settings.getNeckWidthUm(), Unit.UM));
     int neckHalfWidth = Math.max(1, neckWidth / 2);
     boolean narrowerSomewhere = false;
     for (int i = 0; i < originalControl.layerCount; i++) {

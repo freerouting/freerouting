@@ -386,14 +386,8 @@ public class HeadlessBoardManager implements BoardManager {
       return;
     }
 
-    int boardResolution = Math.max(1, this.board.communication.resolution);
     int configuredClearanceBoardUnits =
-        (int)
-            Math.round(
-                Unit.scale(
-                    configuredClearanceUm * boardResolution,
-                    Unit.UM,
-                    this.board.communication.unit));
+        (int) Math.round(this.board.communication.physicalToBoard(configuredClearanceUm, Unit.UM));
     boolean changed = configuredClearanceBoardUnits != this.board.rules.getHoleClearance();
     this.board.rules.setHoleClearance(configuredClearanceBoardUnits);
     int holeKeepouts = 0;
@@ -532,14 +526,8 @@ public class HeadlessBoardManager implements BoardManager {
       return;
     }
 
-    int boardResolution = Math.max(1, this.board.communication.resolution);
     int configuredClearanceBoardUnits =
-        (int)
-            Math.round(
-                Unit.scale(
-                    configuredClearanceUm * boardResolution,
-                    Unit.UM,
-                    this.board.communication.unit));
+        (int) Math.round(this.board.communication.physicalToBoard(configuredClearanceUm, Unit.UM));
 
     if (usesDefaultEdgeClearanceValue) {
       // The default value is only a guess. Never demand more edge clearance than the input already

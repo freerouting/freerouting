@@ -123,6 +123,13 @@ public class Library extends ScopeKeyword {
       while (nextToken != Keyword.CLOSED_BRACKET) {
         Object prevToken = nextToken;
         nextToken = scanner.nextToken();
+        if (nextToken == null) {
+          FRLogger.warn(
+              "Library.read_padstack_scope: unexpected end of file at '"
+                  + scanner.getScopeIdentifier()
+                  + "'");
+          return false;
+        }
         if (prevToken == Keyword.OPEN_BRACKET) {
           if (nextToken == Keyword.SHAPE) {
             Shape currentShape = Shape.readScope(scanner, layerStructure);

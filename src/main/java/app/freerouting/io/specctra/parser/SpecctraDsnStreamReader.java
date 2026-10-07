@@ -7,11 +7,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
 
 @SuppressWarnings("all")
@@ -590,9 +587,9 @@ public class SpecctraDsnStreamReader implements IJFlexScanner {
   /** zzAtEOF == true <=> the scanner is at the EOF */
   private boolean zzAtEOF;
 
-  private Character[] stringSkipTrailing = {8, 32};
-  private Character[] stringSkipTrailingNewLines = {8, 10, 13, 32};
-  private Character[] stringStopAt = {8, 10, 13, 32, 40, 41};
+  private Character[] stringSkipTrailing = {8, 9, 32};
+  private Character[] stringSkipTrailingNewLines = {8, 9, 10, 13, 32};
+  private Character[] stringStopAt = {8, 9, 10, 13, 32, 40, 41};
   private Character[] stringStopAtQuotes = {10, 13, 34};
 
   /**
@@ -1484,7 +1481,7 @@ public class SpecctraDsnStreamReader implements IJFlexScanner {
         case 15:
           {
             // we need to parse the text value as double
-            return Double.valueOf(yytext());
+            return readFloatingToken();
           }
         case 205:
           break;
@@ -1736,45 +1733,92 @@ public class SpecctraDsnStreamReader implements IJFlexScanner {
     return nextString(ignoreNewline, ' ');
   }
 
+  private double readFloatingToken() throws IOException {
+    boolean hasExp = false;
+    for (int i = zzStartRead; i < zzMarkedPos; i++) {
+      char c = zzBuffer[i];
+      if (c == 'e' || c == 'E') {
+        hasExp = true;
+        break;
+      }
+    }
+    if (hasExp) {
+      while (true) {
+        if (zzMarkedPos >= zzEndRead) {
+          zzCurrentPos = zzMarkedPos;
+          if (zzAtEOF || zzRefill()) {
+            break;
+          }
+        }
+        char c = zzBuffer[zzMarkedPos];
+        if (c < '0' || c > '9') {
+          break;
+        }
+        zzMarkedPos++;
+      }
+    }
+    return Double.parseDouble(new String(zzBuffer, zzStartRead, zzMarkedPos - zzStartRead));
+  }
+
+  private boolean hasStringChar(int offset) {
+    while (zzMarkedPos + offset >= zzEndRead) {
+      if (zzAtEOF) {
+        return false;
+      }
+      int currentOffset = zzCurrentPos - zzStartRead;
+      zzCurrentPos = Math.max(zzCurrentPos, zzMarkedPos + offset);
+      boolean endOfInput;
+      try {
+        endOfInput = zzRefill();
+      } catch (IOException e) {
+        return false;
+      }
+      zzCurrentPos = zzStartRead + currentOffset;
+      if (endOfInput) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   public String nextString(boolean ignoreNewline, char leading) {
     stringBuffer.setLength(0);
     int i = 0;
-
-    List<Character> skipLeading = null;
-
-    if (ignoreNewline) {
-      // let's ignore the leading spaces, tabs and new lines
-      skipLeading = new ArrayList<>(Arrays.asList(stringSkipTrailingNewLines));
-    } else {
-      // let's ignore the leading spaces, tabs
-      skipLeading = new ArrayList<>(Arrays.asList(stringSkipTrailing));
-    }
-    skipLeading.add(Character.valueOf(leading));
-
-    while ((zzMarkedPos + i < zzBuffer.length)
-        && (skipLeading.contains(zzBuffer[zzMarkedPos + i]))) {
+    while (hasStringChar(i)) {
+      char c = zzBuffer[zzMarkedPos + i];
+      if (!(c == ' '
+          || c == '\t'
+          || c == '\b'
+          || c == leading
+          || (ignoreNewline && (c == '\n' || c == '\r')))) {
+        break;
+      }
       i++;
     }
 
-    boolean skipLastChar = false;
-    List<Character> stopAt = null;
-    if (zzBuffer[zzMarkedPos + i] == 34) {
-      stopAt = new ArrayList<>(Arrays.asList(stringStopAtQuotes));
-      i++;
-      skipLastChar = true;
-    } else {
-      stopAt = new ArrayList<>(Arrays.asList(stringStopAt));
-      stopAt.add(Character.valueOf(leading));
-    }
-
-    // read the actual string until we have a space/tab/new line
-    while ((zzMarkedPos + i < zzBuffer.length) && (!stopAt.contains(zzBuffer[zzMarkedPos + i]))) {
-      stringBuffer.append(zzBuffer[zzMarkedPos + i]);
+    boolean quoted = hasStringChar(i) && zzBuffer[zzMarkedPos + i] == '"';
+    if (quoted) {
       i++;
     }
-
-    if (skipLastChar) {
+    while (hasStringChar(i)) {
+      char c = zzBuffer[zzMarkedPos + i];
+      if (quoted
+          ? (c == '\n' || c == '\r' || c == '"')
+          : (c == ' '
+              || c == '\t'
+              || c == '\b'
+              || c == '\n'
+              || c == '\r'
+              || c == '('
+              || c == ')'
+              || c == leading)) {
+        break;
+      }
+      stringBuffer.append(c);
       i++;
+    }
+    if (quoted && hasStringChar(i)) {
+      i++; // the closing quote
     }
 
     if (i > 0) {
@@ -1828,6 +1872,15 @@ public class SpecctraDsnStreamReader implements IJFlexScanner {
 
   public Double nextDouble() {
     String s = nextString();
+
+    if (s.contains("e") || s.contains("E")) {
+      try {
+        double value = Double.parseDouble(s);
+        return Double.isFinite(value) ? value : null;
+      } catch (NumberFormatException _) {
+        return null;
+      }
+    }
 
     if (nf == null) {
       nf = NumberFormat.getInstance(Locale.US);

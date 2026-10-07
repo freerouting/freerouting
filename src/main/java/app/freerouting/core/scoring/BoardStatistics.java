@@ -138,10 +138,10 @@ public class BoardStatistics implements Serializable {
     // Board
     this.board.boundingBox =
         new Rectangle2D.Float(
-            (float) bb.ur.x,
-            (float) board.getBoundingBox().ur.y,
-            (float) board.getBoundingBox().ll.x,
-            (float) board.getBoundingBox().ll.y);
+            (float) bb.ll.x,
+            (float) bb.ll.y,
+            (float) (bb.ur.x - bb.ll.x),
+            (float) (bb.ur.y - bb.ll.y));
     this.board.size =
         new Rectangle2D.Float(
             0,

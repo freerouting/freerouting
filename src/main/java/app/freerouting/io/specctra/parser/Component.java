@@ -353,7 +353,7 @@ public class Component extends ScopeKeyword {
     boolean result = false;
     for (; ; ) {
       Object nextToken = scanner.nextToken();
-      if (nextToken == CLOSED_BRACKET) {
+      if (nextToken == null || nextToken == CLOSED_BRACKET) {
         break;
       }
       if (nextToken == POSITION) {

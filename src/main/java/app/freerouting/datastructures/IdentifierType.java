@@ -23,10 +23,10 @@ public class IdentifierType {
   /** Writes name after putting it into quotes, if it contains reserved characters or blanks. */
   public void write(String name, OutputStreamWriter file) {
     // remove the double quotes from the identifiers
-    while ((name.length() > 2)
+    while ((name.length() >= 2)
         && (name.charAt(0) == '"')
         && (name.charAt(name.length() - 1) == '"')) {
-      name = name.substring(1, name.length() - 2);
+      name = name.substring(1, name.length() - 1);
     }
 
     try {

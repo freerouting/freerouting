@@ -684,7 +684,7 @@ public class Wiring extends ScopeKeyword {
       int[] netNumbers = new int[foundNets.size()];
       int currentIndex = 0;
       for (app.freerouting.rules.Net currentNet : foundNets) {
-        netNumbers[currentIndex] = currentNet.netNumber;
+        netNumbers[currentIndex++] = currentNet.netNumber;
         netClass = currentNet.getNetClass();
       }
       int clearanceClassIndex = -1;
