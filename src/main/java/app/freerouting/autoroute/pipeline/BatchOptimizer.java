@@ -760,6 +760,8 @@ public final class BatchOptimizer extends NamedAlgorithm {
         List<Integer> chunk = candidateItemIds.subList(i, end);
         List<Future<CandidateResult>> futures = new ArrayList<>(chunk.size());
 
+        BoardStatistics.OptimizerMetrics chunkBaselineMetrics =
+            BoardStatistics.OptimizerMetrics.of(this.board);
         for (int itemId : chunk) {
           futures.add(
               pool.submit(
@@ -772,7 +774,8 @@ public final class BatchOptimizer extends NamedAlgorithm {
                       this.useIncreasedRipupCosts,
                       this.thread,
                       this.deadlineMs,
-                      this.workerBoardStates)));
+                      this.workerBoardStates,
+                      chunkBaselineMetrics)));
         }
 
         for (Future<CandidateResult> future : futures) {
@@ -891,11 +894,34 @@ public final class BatchOptimizer extends NamedAlgorithm {
       boolean useIncreasedRipupCosts,
       StoppableThread thread,
       Long deadlineMs) {
-    BoardStatistics boardStatisticsBefore = new BoardStatistics(routingBoard, null, false);
+    return optRouteItemOnBoard(
+        job,
+        routingBoard,
+        item,
+        baselineTraceLength,
+        withPreferredDirections,
+        useIncreasedRipupCosts,
+        thread,
+        deadlineMs,
+        null);
+  }
+
+  static ItemRouteResult optRouteItemOnBoard(
+      RoutingJob job,
+      RoutingBoard routingBoard,
+      Item item,
+      double baselineTraceLength,
+      boolean withPreferredDirections,
+      boolean useIncreasedRipupCosts,
+      StoppableThread thread,
+      Long deadlineMs,
+      BoardStatistics.OptimizerMetrics baselineMetrics) {
+    BoardStatistics.OptimizerMetrics metricsBefore =
+        baselineMetrics != null
+            ? baselineMetrics
+            : BoardStatistics.OptimizerMetrics.of(routingBoard);
     double baseline =
-        baselineTraceLength > 0
-            ? baselineTraceLength
-            : boardStatisticsBefore.traces.totalWeightedLength;
+        baselineTraceLength > 0 ? baselineTraceLength : metricsBefore.totalWeightedLength();
     RouterCounters routerCountersBefore = new RouterCounters();
     routerCountersBefore.incompleteCount = calculateIncompleteCount(routingBoard);
 
@@ -950,17 +976,18 @@ public final class BatchOptimizer extends NamedAlgorithm {
         routingBoard,
         job.routerSettings);
 
-    BoardStatistics boardStatisticsAfter = new BoardStatistics(routingBoard, null, false);
+    BoardStatistics.OptimizerMetrics metricsAfter =
+        BoardStatistics.OptimizerMetrics.of(routingBoard);
     RouterCounters routerCountersAfter = new RouterCounters();
     routerCountersAfter.incompleteCount = calculateIncompleteCount(routingBoard);
 
     ItemRouteResult result =
         new ItemRouteResult(
             item.getId(),
-            boardStatisticsBefore.items.viaCount,
-            boardStatisticsAfter.items.viaCount,
+            metricsBefore.viaCount(),
+            metricsAfter.viaCount(),
             baseline,
-            boardStatisticsAfter.traces.totalWeightedLength,
+            metricsAfter.totalWeightedLength(),
             routerCountersBefore.incompleteCount,
             routerCountersAfter.incompleteCount);
     boolean routeImproved =
@@ -1051,6 +1078,30 @@ public final class BatchOptimizer extends NamedAlgorithm {
     private final StoppableThread thread;
     private final Long deadlineMs;
     private final ThreadLocal<WorkerBoardState> workerBoardStates;
+    private final BoardStatistics.OptimizerMetrics baselineMetrics;
+
+    OptimizeCandidateTask(
+        RoutingJob job,
+        RoutingBoard baselineBoard,
+        int itemId,
+        double baselineTraceLength,
+        boolean withPreferredDirections,
+        boolean useIncreasedRipupCosts,
+        StoppableThread thread,
+        Long deadlineMs,
+        ThreadLocal<WorkerBoardState> workerBoardStates,
+        BoardStatistics.OptimizerMetrics baselineMetrics) {
+      this.job = job;
+      this.baselineBoard = baselineBoard;
+      this.itemId = itemId;
+      this.baselineTraceLength = baselineTraceLength;
+      this.withPreferredDirections = withPreferredDirections;
+      this.useIncreasedRipupCosts = useIncreasedRipupCosts;
+      this.thread = thread;
+      this.deadlineMs = deadlineMs;
+      this.workerBoardStates = workerBoardStates;
+      this.baselineMetrics = baselineMetrics;
+    }
 
     OptimizeCandidateTask(
         RoutingJob job,
@@ -1062,15 +1113,17 @@ public final class BatchOptimizer extends NamedAlgorithm {
         StoppableThread thread,
         Long deadlineMs,
         ThreadLocal<WorkerBoardState> workerBoardStates) {
-      this.job = job;
-      this.baselineBoard = baselineBoard;
-      this.itemId = itemId;
-      this.baselineTraceLength = baselineTraceLength;
-      this.withPreferredDirections = withPreferredDirections;
-      this.useIncreasedRipupCosts = useIncreasedRipupCosts;
-      this.thread = thread;
-      this.deadlineMs = deadlineMs;
-      this.workerBoardStates = workerBoardStates;
+      this(
+          job,
+          baselineBoard,
+          itemId,
+          baselineTraceLength,
+          withPreferredDirections,
+          useIncreasedRipupCosts,
+          thread,
+          deadlineMs,
+          workerBoardStates,
+          null);
     }
 
     @Override
@@ -1120,7 +1173,8 @@ public final class BatchOptimizer extends NamedAlgorithm {
                 withPreferredDirections,
                 useIncreasedRipupCosts,
                 thread,
-                deadlineMs);
+                deadlineMs,
+                baselineMetrics);
 
         long cpuUsed = 0;
         long allocUsed = 0;

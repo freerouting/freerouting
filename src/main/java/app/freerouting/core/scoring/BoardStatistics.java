@@ -868,4 +868,47 @@ public class BoardStatistics implements Serializable {
     @SerializedName("escaped_count")
     public int escapedCount;
   }
+
+  /** Lightweight metrics for optimizer evaluation without building full {@link BoardStatistics}. */
+  public record OptimizerMetrics(int viaCount, float totalLength, float totalWeightedLength) {
+    public static OptimizerMetrics of(BasicBoard board) {
+      int viaCount = 0;
+      float totalLength = 0.0f;
+      float totalWeightedLength = 0.0f;
+      int defaultClearanceClass = BoardRules.defaultClearanceClass();
+
+      Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.startReadObject();
+      for (; ; ) {
+        UndoableObjects.Storable currentItem = board.itemList.readObject(it);
+        if (currentItem == null) {
+          break;
+        }
+        if (currentItem instanceof Via) {
+          viaCount++;
+        } else if (currentItem instanceof Trace currentTrace) {
+          totalLength += (float) currentTrace.getLength();
+          FixedState fixedState = currentTrace.getFixedState();
+          if (fixedState == FixedState.UNFIXED || fixedState == FixedState.SHOVE_FIXED) {
+            double weightedTraceLength =
+                currentTrace.getLength()
+                    * (currentTrace.getHalfWidth()
+                        + board.clearanceValue(
+                            currentTrace.clearanceClassIndex(),
+                            defaultClearanceClass,
+                            currentTrace.getLayer()));
+            if (fixedState == FixedState.SHOVE_FIXED) {
+              weightedTraceLength /= 2;
+            }
+            totalWeightedLength += (float) weightedTraceLength;
+          }
+        }
+      }
+      Unit unit = board.communication.unit;
+      if (unit != null && unit != Unit.MM) {
+        totalLength = (float) Unit.scale(totalLength, unit, Unit.MM);
+        totalWeightedLength = (float) Unit.scale(totalWeightedLength, unit, Unit.MM);
+      }
+      return new OptimizerMetrics(viaCount, totalLength, totalWeightedLength);
+    }
+  }
 }
