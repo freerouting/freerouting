@@ -14,9 +14,8 @@ import java.util.List;
 
 /** Mutable router configuration assembled from the configured settings sources. */
 public class RouterSettings implements Serializable, Cloneable {
-  // Current algorithm identifier and legacy compatibility token.
+  // Current algorithm identifier.
   public static final String ALGORITHM_CURRENT = "freerouting-router";
-  public static final String ALGORITHM_V19 = "freerouting-router-v19";
   public static final double MIN_BEND_COST = 0.0;
   public static final double MAX_BEND_COST = 9.9;
 
