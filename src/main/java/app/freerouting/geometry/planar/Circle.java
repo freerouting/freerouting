@@ -146,7 +146,22 @@ public class Circle implements ConvexShape, Serializable {
    * the tile is at most maxSegmentLength.
    */
   public TileShape boundingTile(int maxSegmentLength) {
+    if (maxSegmentLength <= 0) {
+      return this.boundingOctagon();
+    }
     int quadrantDivisionCount = this.radius / maxSegmentLength + 1;
+    return boundingTileWithDivisions(quadrantDivisionCount);
+  }
+
+  /**
+   * Creates a conservative bounding convex polygon (Simplex) around this circle with the specified
+   * number of divisions per quadrant. Total number of polygon sides is {@code 4 *
+   * quadrantDivisionCount}.
+   *
+   * @param quadrantDivisionCount number of segment divisions per quadrant
+   * @return a circumscribed TileShape enclosing the circle
+   */
+  public TileShape boundingTileWithDivisions(int quadrantDivisionCount) {
     if (quadrantDivisionCount <= 2) {
       return this.boundingOctagon();
     }
@@ -158,8 +173,8 @@ public class Circle implements ConvexShape, Serializable {
         borderDelta = new IntVector(this.radius, 0);
       } else {
         double currentAngle = i * Math.PI / (2.0 * quadrantDivisionCount);
-        int currentX = (int) Math.ceil(Math.sin(currentAngle) * this.radius);
-        int currentY = (int) Math.ceil(Math.cos(currentAngle) * this.radius);
+        int currentX = (int) Math.ceil(Math.cos(currentAngle) * this.radius);
+        int currentY = (int) Math.ceil(Math.sin(currentAngle) * this.radius);
         borderDelta = new IntVector(currentX, currentY);
       }
       Point currentA = this.center.translateBy(borderDelta);
@@ -311,7 +326,17 @@ public class Circle implements ConvexShape, Serializable {
   @Override
   public TileShape[] splitToConvex() {
     TileShape[] result = new TileShape[1];
-    result[0] = this.boundingTile();
+    // Approximate circular keepouts and areas with a conservative circumscribed 64-gon
+    // (16 divisions per quadrant) when the radius is large enough (>= 16 coordinate units).
+    // An octagonal approximation introduces up to ~8.24% radial overshoot at corner vertices,
+    // which for multi-millimeter mounting holes exceeds standard PCB clearance rules and causes
+    // false-positive DRC violations. A 64-gon bounds the radial error to <= 0.12% (~3 um for a
+    // 5 mm hole) while remaining convex and strictly circumscribed.
+    if (this.radius >= 16) {
+      result[0] = this.boundingTileWithDivisions(16);
+    } else {
+      result[0] = this.boundingOctagon();
+    }
     return result;
   }
 
