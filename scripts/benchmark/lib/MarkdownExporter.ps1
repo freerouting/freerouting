@@ -143,12 +143,16 @@ function Export-MarkdownReport {
 
     # --- Multi-Tier Summary Tables ---
     $catalogLookup = @{}
+    $catalogBudgetLookup = @{}
     $catalogPath = Join-Path $FixturesDir "PCBench\catalog.json"
     if (Test-Path $catalogPath) {
         try {
             $cat = Get-Content $catalogPath -Raw | ConvertFrom-Json
             foreach ($b in $cat.boards) {
                 $catalogLookup[$b.board_id] = $b.tier
+                if ($b.timeout_budget) {
+                    $catalogBudgetLookup[$b.board_id] = $b.timeout_budget
+                }
             }
         } catch {}
     }
@@ -322,11 +326,146 @@ function Export-MarkdownReport {
         return $tableSb.ToString()
     }
 
+    $buildTimeoutSummaryFn = {
+        param(
+            [System.Collections.IEnumerable]$TargetRuns
+        )
+
+        $runsList = @($TargetRuns)
+        if ($runsList.Count -eq 0) { return "" }
+
+        $groupedByFixture = $runsList | Group-Object -Property { $_.fixture.relative_path }
+        $versionGroups = @($runsList | Group-Object -Property { $_.binary.version_label } | Sort-Object -Property Name)
+
+        $totalTimeoutsAcrossAll = 0
+        $versionTimeoutData = @{}
+        $budgetSet = [System.Collections.Generic.HashSet[string]]::new()
+
+        foreach ($verGroup in $versionGroups) {
+            $version = $verGroup.Name
+            $vData = @{
+                Total = 0
+                Autorouter = 0
+                Optimizer = 0
+                Fanout = 0
+                Budgets = [System.Collections.Generic.HashSet[string]]::new()
+            }
+
+            foreach ($fixtureGroup in $groupedByFixture) {
+                $versionRuns = $fixtureGroup.Group | Where-Object { $_.binary.version_label -eq $version }
+                if (-not $versionRuns) { continue }
+                $latestRun = $versionRuns | Sort-Object -Property { $_.run_at } -Descending | Select-Object -First 1
+
+                # Budget determination
+                $budget = $null
+                $rel = [string]$latestRun.fixture.relative_path
+                if ($rel -match 'PCBench[/\\]([^/\\]+)') {
+                    $boardId = $Matches[1]
+                    if ($catalogBudgetLookup.ContainsKey($boardId)) {
+                        $budget = [string]$catalogBudgetLookup[$boardId]
+                    }
+                }
+                if (-not $budget -and $latestRun.settings_snapshot -and $latestRun.settings_snapshot.job_timeout) {
+                    $budget = [string]$latestRun.settings_snapshot.job_timeout
+                }
+                if (-not $budget) {
+                    $budget = "00:30:00"
+                }
+
+                [void]$vData.Budgets.Add($budget)
+
+                if (-not (Test-RunIsTimedOut $latestRun)) { continue }
+
+                $vData.Total++
+                $totalTimeoutsAcrossAll++
+
+                # Stage determination
+                $optDur = if ($latestRun.phases.optimizer -and $latestRun.phases.optimizer.duration_seconds) {
+                    [double]$latestRun.phases.optimizer.duration_seconds
+                } else { 0.0 }
+                $unrouted = if ($latestRun.quality.unrouted_connections -ne $null) {
+                    [int]$latestRun.quality.unrouted_connections
+                } elseif ($latestRun.quality.final_unrouted -ne $null) {
+                    [int]$latestRun.quality.final_unrouted
+                } else { -1 }
+                $viol = if ($latestRun.quality.router_introduced_violations -ne $null) {
+                    [int]$latestRun.quality.router_introduced_violations
+                } elseif ($latestRun.quality.clearance_violations -ne $null) {
+                    [int]$latestRun.quality.clearance_violations
+                } else { 0 }
+
+                if ($optDur -gt 0 -or ($latestRun.exit.code -eq 0 -and $unrouted -eq 0 -and $viol -le 0)) {
+                    $vData.Optimizer++
+                } elseif ($latestRun.phases.fanout -and $latestRun.phases.fanout.timed_out -eq $true) {
+                    $vData.Fanout++
+                } else {
+                    $vData.Autorouter++
+                }
+            }
+
+            $versionTimeoutData[$version] = $vData
+        }
+
+        # Show this summary only if there is at least one timeout
+        if ($totalTimeoutsAcrossAll -eq 0) {
+            return ""
+        }
+
+        $formatBudgetRangeFn = {
+            param($Budgets)
+            if ($null -eq $Budgets -or $Budgets.Count -eq 0) { return "-" }
+            $minutes = [System.Collections.Generic.List[int]]::new()
+            foreach ($b in $Budgets) {
+                try {
+                    $ts = [timespan]::Parse($b)
+                    [void]$minutes.Add([int]$ts.TotalMinutes)
+                } catch {}
+            }
+            if ($minutes.Count -eq 0) { return "-" }
+            $min = ($minutes | Measure-Object -Minimum).Minimum
+            $max = ($minutes | Measure-Object -Maximum).Maximum
+            if ($min -eq $max) {
+                return "${min}m"
+            } else {
+                return "${min}m-${max}m"
+            }
+        }
+
+        $headers = @("Version", "Total Timeouts", "Fanout", "Auto-router", "Optimizer", "Job Timeout Budget")
+        $alignments = @("L", "R", "R", "R", "R", "R")
+
+        $rows = [System.Collections.ArrayList]::new()
+        foreach ($verGroup in $versionGroups) {
+            $ver = $verGroup.Name
+            $vData = $versionTimeoutData[$ver]
+            $budgetRangeStr = & $formatBudgetRangeFn $vData.Budgets
+            [void]$rows.Add(@(
+                $ver,
+                $vData.Total,
+                $vData.Fanout,
+                $vData.Autorouter,
+                $vData.Optimizer,
+                $budgetRangeStr
+            ))
+        }
+
+        $toSb = [System.Text.StringBuilder]::new()
+        [void]$toSb.AppendLine("### Timeout Summary")
+        [void]$toSb.AppendLine("Breakdown of timeouts by routing stage and configured job timeout budget across all benchmark fixtures.")
+        [void]$toSb.AppendLine()
+        [void]$toSb.AppendLine((Format-MarkdownTable $headers $alignments $rows))
+        [void]$toSb.AppendLine()
+        return $toSb.ToString()
+    }
+
     [void]$sb.AppendLine("## Summary")
     [void]$sb.AppendLine()
 
     # 1. Overall Summary Table
     [void]$sb.Append((& $buildSummaryTableFn "Summary Table (All Tiers Combined)" $runs "Comprehensive performance across all benchmark fixtures."))
+
+    # 1b. Timeout Summary (if any timeouts exist)
+    [void]$sb.Append((& $buildTimeoutSummaryFn $runs))
 
     # Segment by Tier
     $tierBuckets = [ordered]@{

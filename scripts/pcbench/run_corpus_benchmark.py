@@ -772,6 +772,7 @@ def main() -> int:
     parser.add_argument("--version-label", default="v2.3.1-SNAPSHOT")
     parser.add_argument("--filter", default="", help="Filter fixtures by substring/pattern")
     parser.add_argument("--force", action="store_true", help="Force rerun even if already in benchmarks.json")
+    parser.add_argument("--timeout", default="01:30:00", help="Job timeout budget for all tiers (default: 01:30:00)")
     args = parser.parse_args()
     try:
         tier_order = parse_tier_order(args.tier)
@@ -868,7 +869,7 @@ def main() -> int:
     for b in boards:
         b_id = b.get("board_id")
         b_dir = fixtures_dir / b_id
-        budget = b.get("timeout_budget", "00:05:00")
+        budget = args.timeout
 
         if not args.force:
             is_already_run = any(

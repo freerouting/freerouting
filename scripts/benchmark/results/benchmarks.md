@@ -1,5 +1,5 @@
 # Freerouting Nightly Benchmarks Report
-Generated on: 2026-10-08 03:47:48
+Generated on: 2026-10-08 09:53:19
 System: AMD Ryzen 5 3600 6-Core Processor (6 Cores, 31.9 GB RAM)
 
 This report lists the latest benchmark run results for each Freerouting version and fixture combination.
@@ -15,6 +15,17 @@ Comprehensive performance across all benchmark fixtures.
 | 2.4.1     |     1157 |  358/1157 ( 30.9%) |  600/1157 ( 51.9%) |   78/1157 (  6.7%) |    0/1157 (  0.0%) |     3251.0 |      943.9 |
 | 2.5.0     |     1157 |  865/1157 ( 74.8%) |  868/1157 ( 75.0%) |   84/1157 (  7.3%) |    0/1157 (  0.0%) |     3116.6 |      968.8 |
 | 2.6.0-RC1 |     1157 |  975/1157 ( 84.3%) |  976/1157 ( 84.4%) |  146/1157 ( 12.6%) |    0/1157 (  0.0%) |     3744.9 |  **972.3** |
+
+
+### Timeout Summary
+Breakdown of timeouts by routing stage and configured job timeout budget across all benchmark fixtures.
+
+| Version   | Total Timeouts | Fanout             | Auto-router | Optimizer | Job Timeout Budget |
+| :-------- | -------------: | -----------------: | ----------: | --------: | -----------------: |
+| 1.9.0     |             28 |                  0 |          28 |         0 |             5m-45m |
+| 2.4.1     |             78 |                  0 |          77 |         1 |             5m-45m |
+| 2.5.0     |             84 |                  0 |          54 |        30 |             5m-45m |
+| 2.6.0-RC1 |            146 |                  0 |         119 |        27 |             5m-45m |
 
 
 ### Tier A: Canary Gate
@@ -34,7 +45,7 @@ Standard 2-4 layer boards evaluated for routine optimization progress.
 | Version   | Fixtures | Clean (0 DRC)      | Fully-Routed       | Timeouts           | Failures           | Total Time | Avg. Score |
 | :-------- | -------: | -----------------: | -----------------: | -----------------: | -----------------: | ---------: | ---------: |
 | 1.9.0     |      560 |   65/ 560 ( 11.6%) |  187/ 560 ( 33.4%) |    3/ 560 (  0.5%) |    4/ 560 (  0.7%) |      852.9 |      930.8 |
-| 2.4.1     |      560 |   19/ 560 (  3.4%) |  161/ 560 ( 28.8%) |   48/ 560 (  8.6%) |    0/ 560 (  0.0%) |     1308.7 |      916.5 |
+| 2.4.1     |      560 |   19/ 560 (  3.4%) |  161/ 560 ( 28.7%) |   48/ 560 (  8.6%) |    0/ 560 (  0.0%) |     1308.7 |      916.5 |
 | 2.5.0     |      560 |  343/ 560 ( 61.3%) |  345/ 560 ( 61.6%) |   38/ 560 (  6.8%) |    0/ 560 (  0.0%) |     1248.0 |      954.9 |
 | 2.6.0-RC1 |      560 |  434/ 560 ( 77.5%) |  435/ 560 ( 77.7%) |   85/ 560 ( 15.2%) |    0/ 560 (  0.0%) |     1583.7 |  **958.8** |
 
@@ -63,6 +74,18 @@ High net-count and large surface-area stress boards.
 
 ## Group: [PCBench](../fixtures/PCBench)
 
+### Fixture: [unrouted.dsn](../fixtures/PCBench/1-Wire-Wing-pcb_1-Wire_Wing/unrouted.dsn)
+
+Size: 15.8 kB · Layers: 2 · Nets: 60 · Components: 23 · Dimensions: 69.85 x 21.59 mm (15.08 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       6.87 |    18.89 |     25.76 |   0+  0+  0 |        2 |          0 |   947 |       107 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      17.58 |      N/A |     17.58 |   0+  4+  0 |        0 |          0 |  1000 |       624 |    16410.8 |    4 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       3.45 |       4.11 |     5.67 |     13.23 |   0+  5+  3 |        0 |          0 |  1000 |       582 |     1819.7 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       3.72 |       4.08 |     8.02 |     15.82 |   0+  5+  3 |        0 |          0 |  1000 |       336 |     1723.0 |    2 / 0 |       |
+
+
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/16x12-bits-I2C_I2C_Servo/unrouted.dsn)
 
 Size: 23.1 kB · Layers: 2 · Nets: 24 · Components: 55 · Dimensions: 73.66 x 45.72 mm (33.68 cm²) · CAD: KiCad's Pcbnew (v)
@@ -83,20 +106,8 @@ Size: 36.9 kB · Layers: 4 · Nets: 20 · Components: 108 · Dimensions: 36.8 x 
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
 | 1.9.0     | N/A  |                N/A |        N/A |      85.26 |    18.20 |    103.46 |   0+  0+  0 |        8 |          0 |   933 |        38 |     4096.0 |    0 / 0 |         |
 | 2.4.1     | N/A  |                N/A |        N/A |     302.23 |      N/A |    302.23 |   0+  1+  0 |        0 |         45 |   999 |       511 |   459352.2 |    3 / 0 | TIMEOUT |
-| 2.5.0     | N/A  |                N/A |      33.00 |     169.75 |   259.42 |    462.17 |   0+ 23+  1 |        0 |          0 |  1000 |      1453 |    49744.5 |    2 / 0 |         |
+| 2.5.0     | N/A  |                N/A |      33.00 |     169.75 |   259.42 |    462.17 |   0+ 23+  1 |        0 |          0 |  1000 |      1453 |    49744.4 |    2 / 0 |         |
 | 2.6.0-RC1 | N/A  |                N/A |      18.00 |      95.89 |    80.02 |    193.91 |   0+ 21+  1 |        0 |          0 |  1000 |      1203 |    35283.6 |    2 / 0 |         |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/1-Wire-Wing-pcb_1-Wire_Wing/unrouted.dsn)
-
-Size: 15.8 kB · Layers: 2 · Nets: 60 · Components: 23 · Dimensions: 69.85 x 21.59 mm (15.08 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       6.87 |    18.89 |     25.76 |   0+  0+  0 |        2 |          0 |   947 |       107 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      17.58 |      N/A |     17.58 |   0+  4+  0 |        0 |          0 |  1000 |       624 |    16410.8 |    4 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       3.45 |       4.11 |     5.67 |     13.23 |   0+  5+  3 |        0 |          0 |  1000 |       582 |     1819.7 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       3.72 |       4.08 |     8.02 |     15.82 |   0+  5+  3 |        0 |          0 |  1000 |       336 |     1723.1 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/2d_conduction_sk9822-matrix/unrouted.dsn)
@@ -123,6 +134,18 @@ Size: 19 kB · Layers: 4 · Nets: 182 · Components: 46 · Dimensions: 62.23 x 2
 | 2.6.0-RC1 | N/A  |                N/A |       6.99 |      18.55 |    17.99 |     43.53 |   0+  6+  1 |        0 |          0 |  1000 |       971 |    10090.9 |    8 / 0 |       |
 
 
+### Fixture: [unrouted.dsn](../fixtures/PCBench/4-port-usb-hub_4port-usb-hub/unrouted.dsn)
+
+Size: 31.1 kB · Layers: 2 · Nets: 15 · Components: 48 · Dimensions: 64.77 x 46.99 mm (30.44 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |      17.67 |    75.51 |     93.18 |   0+  0+  0 |        0 |          0 |  1000 |        84 |     4096.0 |    1 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      47.01 |      N/A |     47.01 |   0+ 13+  0 |        0 |          0 |  1000 |       516 |    73725.9 |    4 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       4.78 |      12.27 |   155.95 |    173.00 |   0+  5+  5 |        0 |          0 |  1000 |       846 |     4534.1 |    3 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |      16.52 |      48.18 |   117.39 |    182.09 |   0+  8+  4 |        0 |          0 |  1000 |       997 |     6628.5 |    3 / 0 |       |
+
+
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/4N35-TTL-Serial-Optoisolator_4N35-TTL-Serial-Optoisolator/unrouted.dsn)
 
 Size: 10.2 kB · Layers: 2 · Nets: 0 · Components: 17 · Dimensions: 40.64 x 22.86 mm (9.29 cm²) · CAD: KiCad's Pcbnew (v)
@@ -133,18 +156,6 @@ Size: 10.2 kB · Layers: 2 · Nets: 0 · Components: 17 · Dimensions: 40.64 x 2
 | 2.4.1     | N/A  |                N/A |        N/A |       7.64 |      N/A |      7.64 |   0+  3+  0 |        0 |          0 |  1000 |       252 |     1762.7 |    4 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       1.21 |       8.40 |     0.00 |      9.61 |   0+  2+  0 |        0 |          0 |  1000 |       153 |       81.4 |    3 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.05 |       1.19 |     0.00 |      1.24 |   0+  2+  0 |        0 |          0 |  1000 |        95 |       76.5 |    3 / 0 |       |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/4-port-usb-hub_4port-usb-hub/unrouted.dsn)
-
-Size: 31.1 kB · Layers: 2 · Nets: 15 · Components: 48 · Dimensions: 64.77 x 46.99 mm (30.44 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |      17.67 |    75.51 |     93.18 |   0+  0+  0 |        0 |          0 |  1000 |        84 |     4096.0 |    1 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      47.01 |      N/A |     47.01 |   0+ 13+  0 |        0 |          0 |  1000 |       516 |    73726.0 |    4 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       4.78 |      12.27 |   155.95 |    173.00 |   0+  5+  5 |        0 |          0 |  1000 |       846 |     4534.1 |    3 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |      16.52 |      48.18 |   117.39 |    182.09 |   0+  8+  4 |        0 |          0 |  1000 |       997 |     6628.5 |    3 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/59pct_keyboard/unrouted.dsn)
@@ -166,7 +177,7 @@ Size: 17.5 kB · Layers: 2 · Nets: 12 · Components: 30 · Dimensions: 39.17 x 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |      11.57 |     2.77 |     14.34 |   0+  0+  0 |        1 |          0 |   984 |        71 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      28.24 |      N/A |     28.24 |   0+  4+  0 |        0 |          0 |  1000 |       303 |    28098.9 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      28.24 |      N/A |     28.24 |   0+  4+  0 |        0 |          0 |  1000 |       303 |    28098.8 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |      32.13 |       9.17 |    50.70 |     92.00 |   0+  4+  3 |        0 |          0 |  1000 |       537 |     1839.8 |    3 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       7.11 |      12.92 |    49.91 |     69.94 |   0+  4+  3 |        0 |          0 |  1000 |       688 |     1751.2 |    3 / 0 |       |
 
@@ -178,14 +189,14 @@ Size: 11.3 kB · Layers: 2 · Nets: 0 · Components: 19 · Dimensions: 40.64 x 2
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       2.61 |     4.18 |      6.79 |   0+  0+  0 |        0 |          0 |  1000 |       163 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       7.93 |      N/A |      7.93 |   0+  1+  0 |        0 |          4 |   999 |       318 |    11412.7 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       7.93 |      N/A |      7.93 |   0+  1+  0 |        0 |          4 |   999 |       318 |    11412.6 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.06 |       1.77 |    28.05 |     29.88 |   0+  3+  5 |        0 |          0 |  1000 |       181 |      393.7 |    3 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.20 |       9.99 |    14.48 |     24.67 |   0+  3+  4 |        0 |          0 |  1000 |       158 |      370.4 |    3 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/6volt-5W-solar-cc_6vleadacidsolar/unrouted.dsn)
 
-Size: 23.3 kB · Layers: 2 · Nets: 10 · Components: 65 · Dimensions: 50.0 x 50.0 mm (25.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 23.3 kB · Layers: 2 · Nets: 10 · Components: 65 · Dimensions: 50 x 50 mm (25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -203,13 +214,13 @@ Size: 85.1 kB · Layers: 2 · Nets: 87 · Components: 191 · Dimensions: 95.89 x
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
 | 1.9.0     | N/A  |                N/A |        N/A |     192.09 |      N/A |    192.09 |   0+ 18+  3 |        0 |         32 |     0 |         0 |        0.0 |    5 / 0 | FAILED, TIMEOUT |
 | 2.4.1     | N/A  |                N/A |        N/A |     910.17 |      N/A |    910.17 |   0+  9+  0 |        4 |         32 |   987 |       606 |  1686882.8 |    3 / 0 |                 |
-| 2.5.0     | N/A  |                N/A |      49.63 |     220.66 |    70.21 |    340.50 |   0+ 12+  1 |        0 |          0 |  1000 |       833 |   111482.0 |    2 / 0 |                 |
+| 2.5.0     | N/A  |                N/A |      49.63 |     220.66 |    70.21 |    340.50 |   0+ 12+  1 |        0 |          0 |  1000 |       833 |   111481.9 |    2 / 0 |                 |
 | 2.6.0-RC1 | N/A  |                N/A |      85.74 |     256.43 |   860.87 |   1203.04 |   0+ 11+  2 |        0 |          0 |  1000 |      1439 |   106058.7 |    2 / 0 | TIMEOUT         |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/8088_sbc2_pcb_8088_sbc2/unrouted.dsn)
 
-Size: 68 kB · Layers: 2 · Nets: 82 · Components: 65 · Dimensions: 200.0 x 100.0 mm (200.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 68 kB · Layers: 2 · Nets: 82 · Components: 65 · Dimensions: 200 x 100 mm (200 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -221,7 +232,7 @@ Size: 68 kB · Layers: 2 · Nets: 82 · Components: 65 · Dimensions: 200.0 x 10
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/96boards-robomezzi_96boards-robomezzi/unrouted.dsn)
 
-Size: 67.6 kB · Layers: 4 · Nets: 165 · Components: 119 · Dimensions: 85.0 x 54.0 mm (45.9 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 67.6 kB · Layers: 4 · Nets: 165 · Components: 119 · Dimensions: 85 x 54 mm (45.9 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -233,7 +244,7 @@ Size: 67.6 kB · Layers: 4 · Nets: 165 · Components: 119 · Dimensions: 85.0 x
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/96boards-sensors_Sensors/unrouted.dsn)
 
-Size: 44.5 kB · Layers: 2 · Nets: 14 · Components: 93 · Dimensions: 85.0 x 54.0 mm (45.9 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 44.5 kB · Layers: 2 · Nets: 14 · Components: 93 · Dimensions: 85 x 54 mm (45.9 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -262,14 +273,14 @@ Size: 15.1 kB · Layers: 2 · Nets: 3 · Components: 16 · Dimensions: 17.78 x 3
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       1.00 |     4.74 |      5.74 |   0+  0+  0 |        0 |          0 |  1000 |       188 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      11.77 |      N/A |     11.77 |   0+  1+  0 |        1 |         60 |   944 |       330 |    19716.3 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      11.77 |      N/A |     11.77 |   0+  1+  0 |        1 |         60 |   944 |       330 |    19716.2 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       1.15 |       0.72 |     3.23 |      5.10 |   0+  2+  3 |        0 |          0 |  1000 |       280 |      306.9 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       1.36 |       0.58 |     3.21 |      5.15 |   0+  2+  3 |        0 |          0 |  1000 |       263 |      294.1 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/abus-cfa1000-display-grabber_acs-display-grabber/unrouted.dsn)
 
-Size: 36.3 kB · Layers: 2 · Nets: 21 · Components: 47 · Dimensions: 100.0 x 100.0 mm (100.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 36.3 kB · Layers: 2 · Nets: 21 · Components: 47 · Dimensions: 100 x 100 mm (100 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -281,7 +292,7 @@ Size: 36.3 kB · Layers: 2 · Nets: 21 · Components: 47 · Dimensions: 100.0 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/ADC-DAC-16bit_ADC-DAC-16bit/unrouted.dsn)
 
-Size: 16.4 kB · Layers: 2 · Nets: 9 · Components: 17 · Dimensions: 23.7 x 22.0 mm (5.21 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 16.4 kB · Layers: 2 · Nets: 9 · Components: 17 · Dimensions: 23.7 x 22 mm (5.21 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -293,7 +304,7 @@ Size: 16.4 kB · Layers: 2 · Nets: 9 · Components: 17 · Dimensions: 23.7 x 22
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/ADC-PCM4202_ADC-PCM4202/unrouted.dsn)
 
-Size: 50.4 kB · Layers: 2 · Nets: 61 · Components: 237 · Dimensions: 100.0 x 100.0 mm (100.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 50.4 kB · Layers: 2 · Nets: 61 · Components: 237 · Dimensions: 100 x 100 mm (100 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -305,7 +316,7 @@ Size: 50.4 kB · Layers: 2 · Nets: 61 · Components: 237 · Dimensions: 100.0 x
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/ADC-PCM4202-SE_ADC-PCM4202-SE/unrouted.dsn)
 
-Size: 48.5 kB · Layers: 2 · Nets: 59 · Components: 230 · Dimensions: 100.0 x 100.0 mm (100.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 48.5 kB · Layers: 2 · Nets: 59 · Components: 230 · Dimensions: 100 x 100 mm (100 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -365,7 +376,7 @@ Size: 26.8 kB · Layers: 2 · Nets: 40 · Components: 24 · Dimensions: 73.75 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/AmpOne_dev-AmpOne/unrouted.dsn)
 
-Size: 42.5 kB · Layers: 2 · Nets: 62 · Components: 164 · Dimensions: 100.0 x 100.0 mm (100.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 42.5 kB · Layers: 2 · Nets: 62 · Components: 164 · Dimensions: 100 x 100 mm (100 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -377,19 +388,19 @@ Size: 42.5 kB · Layers: 2 · Nets: 62 · Components: 164 · Dimensions: 100.0 x
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/analog_esr_meter_esr_meter_rev_a/unrouted.dsn)
 
-Size: 115.8 kB · Layers: 2 · Nets: 23 · Components: 71 · Dimensions: 645.94 x 78.18 mm (505.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 115.8 kB · Layers: 2 · Nets: 23 · Components: 71 · Dimensions: 645.94 x 78.18 mm (505 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       2.31 |    13.51 |     15.82 |   0+  0+  0 |        0 |          4 |   999 |       139 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       8.94 |      N/A |      8.94 |   0+  2+  0 |        0 |          4 |  1000 |       278 |     9957.6 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       8.94 |      N/A |      8.94 |   0+  2+  0 |        0 |          4 |  1000 |       278 |     9957.5 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       1.10 |       3.79 |     2.20 |      7.09 |   0+  2+  1 |        0 |          0 |  1000 |       196 |      940.6 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.45 |       2.32 |     1.63 |      4.40 |   0+  2+  1 |        0 |          0 |  1000 |        93 |      864.0 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/analog_esr_meter_esr_meter_rev_b/unrouted.dsn)
 
-Size: 116.2 kB · Layers: 2 · Nets: 23 · Components: 88 · Dimensions: 645.94 x 78.18 mm (505.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 116.2 kB · Layers: 2 · Nets: 23 · Components: 88 · Dimensions: 645.94 x 78.18 mm (505 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -455,7 +466,7 @@ Size: 57.1 kB · Layers: 2 · Nets: 62 · Components: 60 · Dimensions: 99.45 x 
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |      20.75 |     5.08 |     25.83 |   0+  0+  0 |       12 |          0 |   887 |        46 |     4096.0 |    5 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |     111.49 |      N/A |    111.49 |   0+  1+  0 |       22 |          0 |   789 |       564 |   199708.6 |    4 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       1.44 |      60.38 |     0.00 |     61.82 |   0+ 18+  0 |        3 |          0 |   971 |       172 |    12659.1 |    5 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       1.44 |      60.38 |     0.00 |     61.82 |   0+ 18+  0 |        3 |          0 |   971 |       172 |    12659.0 |    5 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.82 |      17.51 |     0.00 |     18.33 |   0+ 18+  0 |        2 |          0 |   981 |       234 |    52658.7 |    5 / 0 |       |
 
 
@@ -467,7 +478,7 @@ Size: 38.9 kB · Layers: 2 · Nets: 22 · Components: 27 · Dimensions: 63.5 x 6
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       1.79 |     5.57 |      7.36 |   0+  0+  0 |        0 |          0 |  1000 |       127 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      11.96 |      N/A |     11.96 |   0+ 13+  0 |        0 |          0 |  1000 |       353 |    15848.5 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       8.40 |       1.55 |     5.15 |     15.10 |   0+  2+  1 |        0 |          0 |  1000 |       155 |      554.7 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       8.40 |       1.55 |     5.15 |     15.10 |   0+  2+  1 |        0 |          0 |  1000 |       155 |      554.6 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       1.09 |       2.59 |     9.77 |     13.45 |   0+  2+  2 |        0 |          0 |  1000 |       174 |      577.0 |    2 / 0 |       |
 
 
@@ -485,14 +496,14 @@ Size: 27.8 kB · Layers: 2 · Nets: 14 · Components: 12 · Dimensions: 25.4 x 1
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/APC_AtariPunkConsole/unrouted.dsn)
 
-Size: 19 kB · Layers: 2 · Nets: 16 · Components: 30 · Dimensions: 90.0 x 43.0 mm (38.7 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 19 kB · Layers: 2 · Nets: 16 · Components: 30 · Dimensions: 90 x 43 mm (38.7 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       1.08 |     3.29 |      4.37 |   0+  0+  0 |        0 |          0 |  1000 |        76 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |       2.81 |      N/A |      2.81 |   0+  2+  0 |        0 |          0 |  1000 |       188 |     1998.9 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.72 |       1.58 |     1.84 |      4.14 |   0+  2+  1 |        0 |          0 |  1000 |       126 |      309.3 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       4.63 |       8.92 |     3.59 |     17.14 |   0+  2+  2 |        0 |          0 |  1000 |       302 |      368.5 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       4.63 |       8.92 |     3.59 |     17.14 |   0+  2+  2 |        0 |          0 |  1000 |       302 |      368.4 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/APM-RPi-Shield_APM-RPi-Shield/unrouted.dsn)
@@ -533,7 +544,7 @@ Size: 33.7 kB · Layers: 2 · Nets: 0 · Components: 29 · Dimensions: 99.06 x 4
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Arduino_Lipo_Storage_Discharger_Lipo_Storage_Discharger/unrouted.dsn)
 
-Size: 41.3 kB · Layers: 2 · Nets: 31 · Components: 42 · Dimensions: 99.0 x 49.0 mm (48.51 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 41.3 kB · Layers: 2 · Nets: 31 · Components: 42 · Dimensions: 99 x 49 mm (48.51 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -543,26 +554,14 @@ Size: 41.3 kB · Layers: 2 · Nets: 31 · Components: 42 · Dimensions: 99.0 x 4
 | 2.6.0-RC1 | N/A  |                N/A |       1.37 |       5.22 |     4.25 |     10.84 |   0+  4+  1 |        0 |          0 |  1000 |       176 |     1112.3 |    2 / 0 |       |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/ArduinoDueClone_ATSAM3X8EA/unrouted.dsn)
-
-Size: 61.6 kB · Layers: 2 · Nets: 18 · Components: 75 · Dimensions: 160.0 x 100.0 mm (160.0 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
-| 1.9.0     | N/A  |                N/A |        N/A |     136.08 |     9.16 |    145.24 |   0+  0+  0 |      104 |        137 |   425 |        63 |     4096.0 |    0 / 0 |         |
-| 2.4.1     | N/A  |                N/A |        N/A |     301.54 |      N/A |    301.54 |   0+  5+  0 |       92 |          0 |   457 |       314 |   506371.6 |    3 / 0 |         |
-| 2.5.0     | N/A  |                N/A |      58.15 |     541.90 |      N/A |    600.05 |   0+ 10+  0 |       70 |          0 |   587 |       220 |   221382.5 |    2 / 0 | TIMEOUT |
-| 2.6.0-RC1 | N/A  |                N/A |      43.03 |     557.87 |      N/A |    600.90 |   0+  9+  0 |       40 |          0 |   764 |       253 |   168946.5 |    2 / 0 | TIMEOUT |
-
-
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/arduino-led-driver_arduino-led-driver/unrouted.dsn)
 
-Size: 36.6 kB · Layers: 2 · Nets: 57 · Components: 118 · Dimensions: 0.0 x 0.0 mm (0.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 36.6 kB · Layers: 2 · Nets: 57 · Components: 118 · Dimensions: 0 x 0 mm (0 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
 | 1.9.0     | N/A  |                N/A |        N/A |      72.68 |   270.50 |    343.18 |   0+  0+  0 |        0 |          0 |  1000 |       117 |     4096.0 |    0 / 0 |         |
-| 2.4.1     | N/A  |                N/A |        N/A |     305.14 |      N/A |    305.14 |   0+  6+  0 |        2 |          0 |   990 |       529 |   671050.3 |    3 / 0 |         |
+| 2.4.1     | N/A  |                N/A |        N/A |     305.14 |      N/A |    305.14 |   0+  6+  0 |        2 |          0 |   990 |       529 |   671050.2 |    3 / 0 |         |
 | 2.5.0     | N/A  |                N/A |      15.09 |     314.44 |     0.00 |    329.53 |   0+ 20+  0 |        1 |          0 |   995 |       194 |    70490.9 |    2 / 0 |         |
 | 2.6.0-RC1 | N/A  |                N/A |       6.71 |     120.52 |   472.71 |    599.94 |   0+ 11+  2 |        0 |          0 |  1000 |      1596 |    39115.2 |    2 / 0 | TIMEOUT |
 
@@ -579,6 +578,18 @@ Size: 24.3 kB · Layers: 2 · Nets: 3 · Components: 15 · Dimensions: 71.12 x 5
 | 2.6.0-RC1 | N/A  |                N/A |       1.78 |       6.69 |     1.11 |      9.58 |   0+  3+  1 |        0 |          0 |  1000 |        92 |      302.1 |    2 / 0 |       |
 
 
+### Fixture: [unrouted.dsn](../fixtures/PCBench/ArduinoDueClone_ATSAM3X8EA/unrouted.dsn)
+
+Size: 61.6 kB · Layers: 2 · Nets: 18 · Components: 75 · Dimensions: 160 x 100 mm (160 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
+| 1.9.0     | N/A  |                N/A |        N/A |     136.08 |     9.16 |    145.24 |   0+  0+  0 |      104 |        137 |   425 |        63 |     4096.0 |    0 / 0 |         |
+| 2.4.1     | N/A  |                N/A |        N/A |     301.54 |      N/A |    301.54 |   0+  5+  0 |       92 |          0 |   457 |       314 |   506371.6 |    3 / 0 |         |
+| 2.5.0     | N/A  |                N/A |      58.15 |     541.90 |      N/A |    600.05 |   0+ 10+  0 |       70 |          0 |   587 |       220 |   221382.5 |    2 / 0 | TIMEOUT |
+| 2.6.0-RC1 | N/A  |                N/A |      43.03 |     557.87 |      N/A |    600.90 |   0+  9+  0 |       40 |          0 |   764 |       253 |   168946.5 |    2 / 0 | TIMEOUT |
+
+
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/arf154_arf154/unrouted.dsn)
 
 Size: 23.1 kB · Layers: 4 · Nets: 22 · Components: 30 · Dimensions: 18.29 x 46.23 mm (8.46 cm²) · CAD: KiCad's Pcbnew (v)
@@ -593,7 +604,7 @@ Size: 23.1 kB · Layers: 4 · Nets: 22 · Components: 30 · Dimensions: 18.29 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Aria_Aria/unrouted.dsn)
 
-Size: 65.8 kB · Layers: 4 · Nets: 162 · Components: 91 · Dimensions: 86.06 x 27.0 mm (23.24 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 65.8 kB · Layers: 4 · Nets: 162 · Components: 91 · Dimensions: 86.06 x 27 mm (23.24 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -617,7 +628,7 @@ Size: 12.2 kB · Layers: 2 · Nets: 8 · Components: 17 · Dimensions: 35.56 x 3
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/ATmega32_ExploreUltraAvrDevKit__autosave-MCU_BaseBoard/unrouted.dsn)
 
-Size: 116.1 kB · Layers: 2 · Nets: 139 · Components: 149 · Dimensions: 180.0 x 125.0 mm (225.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 116.1 kB · Layers: 2 · Nets: 139 · Components: 149 · Dimensions: 180 x 125 mm (225 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -629,7 +640,7 @@ Size: 116.1 kB · Layers: 2 · Nets: 139 · Components: 149 · Dimensions: 180.0
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/ATmega32_ExploreUltraAvrDevKit_40pin_AVRMCU/unrouted.dsn)
 
-Size: 17.9 kB · Layers: 2 · Nets: 0 · Components: 21 · Dimensions: 40.0 x 75.0 mm (30.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 17.9 kB · Layers: 2 · Nets: 0 · Components: 21 · Dimensions: 40 x 75 mm (30 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -641,7 +652,7 @@ Size: 17.9 kB · Layers: 2 · Nets: 0 · Components: 21 · Dimensions: 40.0 x 75
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/ATMEGA328-Motor-Board_ATMEGA328_Motor_Board/unrouted.dsn)
 
-Size: 73.1 kB · Layers: 2 · Nets: 46 · Components: 259 · Dimensions: 77.0 x 100.0 mm (77.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 73.1 kB · Layers: 2 · Nets: 46 · Components: 259 · Dimensions: 77 x 100 mm (77 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -689,7 +700,7 @@ Size: 27.3 kB · Layers: 2 · Nets: 71 · Components: 12 · Dimensions: 76.2 x 5
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Atreus_54percent_rev/unrouted.dsn)
 
-Size: 58.1 kB · Layers: 2 · Nets: 151 · Components: 191 · Dimensions: 277.0 x 110.75 mm (306.78 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 58.1 kB · Layers: 2 · Nets: 151 · Components: 191 · Dimensions: 277 x 110.75 mm (306.78 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -725,19 +736,19 @@ Size: 28.3 kB · Layers: 2 · Nets: 5 · Components: 20 · Dimensions: 25.65 x 6
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/audprog_audprog_v2/unrouted.dsn)
 
-Size: 25.1 kB · Layers: 2 · Nets: 19 · Components: 33 · Dimensions: 45.0 x 30.0 mm (13.5 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 25.1 kB · Layers: 2 · Nets: 19 · Components: 33 · Dimensions: 45 x 30 mm (13.5 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |      11.69 |    73.15 |     84.84 |   0+  0+  0 |        0 |          0 |  1000 |       182 |     4096.0 |   48 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |       9.92 |      N/A |      9.92 |   0+  3+  0 |        0 |          0 |  1000 |       349 |    19249.4 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       3.73 |       2.86 |    14.12 |     20.71 |   0+  3+  1 |        0 |          0 |  1000 |       313 |     1223.6 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       3.73 |       2.86 |    14.12 |     20.71 |   0+  3+  1 |        0 |          0 |  1000 |       313 |     1223.5 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       7.33 |       3.60 |     9.45 |     20.38 |   0+  3+  1 |        0 |          0 |  1000 |       257 |     1203.7 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/autohat-board_autohat-rig/unrouted.dsn)
 
-Size: 78.6 kB · Layers: 2 · Nets: 75 · Components: 96 · Dimensions: 75.4 x 114.0 mm (85.96 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 78.6 kB · Layers: 2 · Nets: 75 · Components: 96 · Dimensions: 75.4 x 114 mm (85.96 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -767,7 +778,7 @@ Size: 3.8 kB · Layers: 2 · Nets: 0 · Components: 2 · Dimensions: 17.01 x 34.
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       1.56 |     5.00 |      6.56 |   0+  0+  0 |        0 |          0 |  1000 |        86 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |       7.70 |      N/A |      7.70 |   0+  1+  0 |        2 |          0 |   667 |       224 |     6060.7 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       1.07 |       1.61 |     2.94 |      5.62 |   0+  2+  5 |        0 |          0 |  1000 |       124 |      246.4 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       1.07 |       1.61 |     2.94 |      5.62 |   0+  2+  5 |        0 |          0 |  1000 |       124 |      246.3 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       1.21 |       2.09 |     5.67 |      8.97 |   0+  2+  5 |        0 |          0 |  1000 |       161 |      244.6 |    2 / 0 |       |
 
 
@@ -795,18 +806,6 @@ Size: 32 kB · Layers: 2 · Nets: 35 · Components: 34 · Dimensions: 68.58 x 53
 | 2.6.0-RC1 | N/A  |                N/A |       0.08 |      10.62 |     0.00 |     10.70 |   0+  3+  0 |        0 |          0 |  1000 |       153 |      447.4 |    2 / 0 |       |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/avr_ledprojector_avr_ledprojection/unrouted.dsn)
-
-Size: 21.3 kB · Layers: 2 · Nets: 0 · Components: 111 · Dimensions: 50.0 x 50.0 mm (25.0 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |      33.16 |    14.68 |     47.84 |   0+  0+  0 |        2 |          0 |   986 |        82 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      80.42 |      N/A |     80.42 |   0+  1+  0 |        2 |          0 |   985 |       288 |   197017.8 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |      11.11 |      12.81 |    23.25 |     47.17 |   0+  5+  1 |        0 |          0 |  1000 |       574 |     3999.5 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |      10.59 |      13.29 |    16.36 |     40.24 |   0+  6+  1 |        0 |          0 |  1000 |       638 |     3972.4 |    2 / 0 |       |
-
-
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/avr_ledprojector_avr_ledprojection-0402/unrouted.dsn)
 
 Size: 20.8 kB · Layers: 2 · Nets: 0 · Components: 91 · Dimensions: 25.4 x 34.54 mm (8.77 cm²) · CAD: KiCad's Pcbnew (v)
@@ -817,6 +816,18 @@ Size: 20.8 kB · Layers: 2 · Nets: 0 · Components: 91 · Dimensions: 25.4 x 34
 | 2.4.1     | N/A  |                N/A |        N/A |     170.07 |      N/A |    170.07 |   0+  1+  0 |        2 |          2 |   985 |       322 |   361758.0 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |      15.61 |      31.12 |     2.53 |     49.26 |   0+ 16+  1 |        0 |          0 |  1000 |       190 |     9862.4 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |      18.59 |      27.18 |   106.68 |    152.45 |   0+ 16+  4 |        0 |          0 |  1000 |       961 |     9695.1 |    2 / 0 |       |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/avr_ledprojector_avr_ledprojection/unrouted.dsn)
+
+Size: 21.3 kB · Layers: 2 · Nets: 0 · Components: 111 · Dimensions: 50 x 50 mm (25 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |      33.16 |    14.68 |     47.84 |   0+  0+  0 |        2 |          0 |   986 |        82 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      80.42 |      N/A |     80.42 |   0+  1+  0 |        2 |          0 |   985 |       288 |   197017.8 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |      11.11 |      12.81 |    23.25 |     47.17 |   0+  5+  1 |        0 |          0 |  1000 |       574 |     3999.5 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |      10.59 |      13.29 |    16.36 |     40.24 |   0+  6+  1 |        0 |          0 |  1000 |       638 |     3972.4 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/avr-divecomputer_dc/unrouted.dsn)
@@ -839,7 +850,7 @@ Size: 20.8 kB · Layers: 2 · Nets: 0 · Components: 19 · Dimensions: 159.38 x 
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |      42.78 |     9.97 |     52.75 |   0+  0+  0 |        1 |          0 |   994 |       168 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |     241.01 |      N/A |    241.01 |   0+  1+  0 |        1 |          0 |   992 |       483 |   398617.1 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       4.01 |     277.03 |     0.00 |    281.04 |   0+ 26+  0 |        3 |          0 |   975 |       254 |    83631.7 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       4.01 |     277.03 |     0.00 |    281.04 |   0+ 26+  0 |        3 |          0 |   975 |       254 |    83631.6 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.49 |      75.41 |    26.34 |    102.24 |   0+  6+  1 |        0 |          0 |  1000 |      1034 |    14245.2 |    2 / 0 |       |
 
 
@@ -857,7 +868,7 @@ Size: 53.7 kB · Layers: 2 · Nets: 0 · Components: 70 · Dimensions: 71.75 x 9
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/AVR-ISP_level-shifter_AVR-ISP_level-shifter/unrouted.dsn)
 
-Size: 11.5 kB · Layers: 2 · Nets: 4 · Components: 27 · Dimensions: 44.0 x 20.0 mm (8.8 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 11.5 kB · Layers: 2 · Nets: 4 · Components: 27 · Dimensions: 44 x 20 mm (8.8 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -869,7 +880,7 @@ Size: 11.5 kB · Layers: 2 · Nets: 4 · Components: 27 · Dimensions: 44.0 x 20
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/AVR-ISP_pogo-plug_1.27mm_AVR-ISP_pogo-plug_1.27mm/unrouted.dsn)
 
-Size: 7.1 kB · Layers: 2 · Nets: 0 · Components: 4 · Dimensions: 12.0 x 19.0 mm (2.28 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 7.1 kB · Layers: 2 · Nets: 0 · Components: 4 · Dimensions: 12 x 19 mm (2.28 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -899,7 +910,7 @@ Size: 49.6 kB · Layers: 2 · Nets: 36 · Components: 35 · Dimensions: 96.52 x 
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       3.82 |    25.76 |     29.58 |   0+  0+  0 |        0 |          0 |  1000 |       100 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      11.35 |      N/A |     11.35 |   0+  5+  0 |        0 |          0 |  1000 |       409 |    19997.4 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       1.68 |       4.57 |    12.56 |     18.81 |   0+  3+  1 |        0 |          0 |  1000 |       219 |     1408.6 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       1.68 |       4.57 |    12.56 |     18.81 |   0+  3+  1 |        0 |          0 |  1000 |       219 |     1408.5 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       5.94 |      11.03 |    19.75 |     36.72 |   0+  3+  1 |        0 |          0 |  1000 |       273 |     1477.8 |    2 / 0 |       |
 
 
@@ -917,7 +928,7 @@ Size: 18.2 kB · Layers: 2 · Nets: 27 · Components: 55 · Dimensions: 70.1 x 2
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/badge2015_badge2015/unrouted.dsn)
 
-Size: 34.2 kB · Layers: 2 · Nets: 47 · Components: 57 · Dimensions: 38.1 x 0.0 mm (0.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 34.2 kB · Layers: 2 · Nets: 47 · Components: 57 · Dimensions: 38.1 x 0 mm (0 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -929,7 +940,7 @@ Size: 34.2 kB · Layers: 2 · Nets: 47 · Components: 57 · Dimensions: 38.1 x 0
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/badge2016_Badge_init/unrouted.dsn)
 
-Size: 58.9 kB · Layers: 2 · Nets: 7 · Components: 650 · Dimensions: 100.0 x 57.4 mm (57.4 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 58.9 kB · Layers: 2 · Nets: 7 · Components: 650 · Dimensions: 100 x 57.4 mm (57.4 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -941,7 +952,7 @@ Size: 58.9 kB · Layers: 2 · Nets: 7 · Components: 650 · Dimensions: 100.0 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/balena-rover-wide-hat_resin-rover/unrouted.dsn)
 
-Size: 115.2 kB · Layers: 2 · Nets: 75 · Components: 116 · Dimensions: 85.0 x 58.0 mm (49.3 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 115.2 kB · Layers: 2 · Nets: 75 · Components: 116 · Dimensions: 85 x 58 mm (49.3 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -989,7 +1000,7 @@ Size: 27.7 kB · Layers: 2 · Nets: 5 · Components: 27 · Dimensions: 66.94 x 4
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/battmanpi_battmanpi/unrouted.dsn)
 
-Size: 34.9 kB · Layers: 2 · Nets: 0 · Components: 80 · Dimensions: 65.0 x 56.0 mm (36.4 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 34.9 kB · Layers: 2 · Nets: 0 · Components: 80 · Dimensions: 65 x 56 mm (36.4 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -1049,7 +1060,7 @@ Size: 32.2 kB · Layers: 2 · Nets: 37 · Components: 112 · Dimensions: 25.4 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/beast-phat_beast-phat/unrouted.dsn)
 
-Size: 30 kB · Layers: 2 · Nets: 40 · Components: 19 · Dimensions: 65.0 x 69.5 mm (45.17 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 30 kB · Layers: 2 · Nets: 40 · Components: 19 · Dimensions: 65 x 69.5 mm (45.17 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -1092,7 +1103,7 @@ Size: 12.9 kB · Layers: 2 · Nets: 2 · Components: 16 · Dimensions: 31.75 x 3
 | 1.9.0     | N/A  |                N/A |        N/A |       3.69 |    23.27 |     26.96 |   0+  0+  0 |        0 |         12 |   992 |       140 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      30.41 |      N/A |     30.41 |   0+  1+  0 |        0 |         12 |   997 |       284 |    76354.9 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       1.29 |       0.67 |     1.56 |      3.52 |   0+  2+  1 |        0 |          0 |  1000 |       151 |      420.0 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       2.37 |       0.53 |     2.07 |      4.97 |   0+  2+  1 |        0 |          0 |  1000 |       171 |      376.3 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       2.37 |       0.53 |     2.07 |      4.97 |   0+  2+  1 |        0 |          0 |  1000 |       171 |      376.2 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/beryl_rain_beryl_rain/unrouted.dsn)
@@ -1121,7 +1132,7 @@ Size: 10.8 kB · Layers: 2 · Nets: 25 · Components: 4 · Dimensions: 31.98 x 2
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/bikedar_bikedar/unrouted.dsn)
 
-Size: 51.9 kB · Layers: 4 · Nets: 17 · Components: 52 · Dimensions: 50.0 x 50.0 mm (25.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 51.9 kB · Layers: 4 · Nets: 17 · Components: 52 · Dimensions: 50 x 50 mm (25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -1157,7 +1168,7 @@ Size: 55.6 kB · Layers: 2 · Nets: 11 · Components: 45 · Dimensions: 76.2 x 5
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/BirthdayCakeKeyboard_10Key/unrouted.dsn)
 
-Size: 33.8 kB · Layers: 2 · Nets: 50 · Components: 65 · Dimensions: 73.0 x 102.5 mm (74.83 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 33.8 kB · Layers: 2 · Nets: 50 · Components: 65 · Dimensions: 73 x 102.5 mm (74.83 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -1169,7 +1180,7 @@ Size: 33.8 kB · Layers: 2 · Nets: 50 · Components: 65 · Dimensions: 73.0 x 1
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Biscay_Blueeye_mcu/unrouted.dsn)
 
-Size: 21.9 kB · Layers: 2 · Nets: 14 · Components: 19 · Dimensions: 50.0 x 50.0 mm (25.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 21.9 kB · Layers: 2 · Nets: 14 · Components: 19 · Dimensions: 50 x 50 mm (25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -1179,21 +1190,9 @@ Size: 21.9 kB · Layers: 2 · Nets: 14 · Components: 19 · Dimensions: 50.0 x 5
 | 2.6.0-RC1 | N/A  |                N/A |       3.45 |      12.85 |     7.35 |     23.65 |   0+  7+  1 |        0 |          0 |  1000 |       175 |     2783.2 |    2 / 0 |       |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/Biscay_Blueeye_sipm/unrouted.dsn)
-
-Size: 33.5 kB · Layers: 4 · Nets: 84 · Components: 145 · Dimensions: 50.0 x 50.0 mm (25.0 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |      34.27 |   900.21 |    934.48 |   0+  0+  0 |        0 |          0 |  1000 |       174 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |     334.57 |      N/A |    334.57 |   0+  1+  0 |        6 |          0 |   974 |       364 |   678333.9 |    4 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       9.45 |      10.93 |    85.94 |    106.32 |   0+  4+  1 |        0 |          0 |  1000 |       944 |     7818.4 |    8 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       9.26 |      20.54 |    54.74 |     84.54 |   0+  4+  1 |        0 |          0 |  1000 |      1096 |     9124.7 |    8 / 0 |       |
-
-
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Biscay_Blueeye_sipm-comp/unrouted.dsn)
 
-Size: 36.9 kB · Layers: 2 · Nets: 12 · Components: 57 · Dimensions: 50.0 x 50.0 mm (25.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 36.9 kB · Layers: 2 · Nets: 12 · Components: 57 · Dimensions: 50 x 50 mm (25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -1205,7 +1204,7 @@ Size: 36.9 kB · Layers: 2 · Nets: 12 · Components: 57 · Dimensions: 50.0 x 5
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Biscay_Blueeye_sipm-fpga/unrouted.dsn)
 
-Size: 31.2 kB · Layers: 2 · Nets: 6 · Components: 24 · Dimensions: 50.0 x 50.0 mm (25.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 31.2 kB · Layers: 2 · Nets: 6 · Components: 24 · Dimensions: 50 x 50 mm (25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -1213,6 +1212,18 @@ Size: 31.2 kB · Layers: 2 · Nets: 6 · Components: 24 · Dimensions: 50.0 x 50
 | 2.4.1     | N/A  |                N/A |        N/A |      63.67 |      N/A |     63.67 |   0+  2+  0 |        6 |          0 |   947 |       348 |   140850.3 |    3 / 0 | TIMEOUT |
 | 2.5.0     | N/A  |                N/A |      12.03 |      24.68 |    24.34 |     61.05 |   0+  6+  1 |        0 |          0 |  1000 |       527 |    10398.2 |    2 / 0 |         |
 | 2.6.0-RC1 | N/A  |                N/A |      14.61 |      33.32 |    20.24 |     68.17 |   0+  6+  1 |        0 |          0 |  1000 |       678 |     9996.6 |    2 / 0 |         |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/Biscay_Blueeye_sipm/unrouted.dsn)
+
+Size: 33.5 kB · Layers: 4 · Nets: 84 · Components: 145 · Dimensions: 50 x 50 mm (25 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |      34.27 |   900.21 |    934.48 |   0+  0+  0 |        0 |          0 |  1000 |       174 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |     334.57 |      N/A |    334.57 |   0+  1+  0 |        6 |          0 |   974 |       364 |   678333.9 |    4 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       9.45 |      10.93 |    85.94 |    106.32 |   0+  4+  1 |        0 |          0 |  1000 |       944 |     7818.4 |    8 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       9.26 |      20.54 |    54.74 |     84.54 |   0+  4+  1 |        0 |          0 |  1000 |      1096 |     9124.7 |    8 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/bishboria_ErgoDox/unrouted.dsn)
@@ -1241,7 +1252,7 @@ Size: 20.2 kB · Layers: 2 · Nets: 7 · Components: 30 · Dimensions: 73.39 x 6
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/blackmagic-isolated_mmp/unrouted.dsn)
 
-Size: 26.6 kB · Layers: 2 · Nets: 39 · Components: 39 · Dimensions: 15.25 x 50.0 mm (7.62 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 26.6 kB · Layers: 2 · Nets: 39 · Components: 39 · Dimensions: 15.25 x 50 mm (7.62 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -1253,7 +1264,7 @@ Size: 26.6 kB · Layers: 2 · Nets: 39 · Components: 39 · Dimensions: 15.25 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/BLDC-controller_BLDC_controller/unrouted.dsn)
 
-Size: 50.5 kB · Layers: 4 · Nets: 20 · Components: 262 · Dimensions: 49.0 x 32.0 mm (15.68 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 50.5 kB · Layers: 4 · Nets: 20 · Components: 262 · Dimensions: 49 x 32 mm (15.68 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -1265,7 +1276,7 @@ Size: 50.5 kB · Layers: 4 · Nets: 20 · Components: 262 · Dimensions: 49.0 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/bldc-gimbal-1d_gimbal-board/unrouted.dsn)
 
-Size: 22.5 kB · Layers: 2 · Nets: 12 · Components: 34 · Dimensions: 81.0 x 25.0 mm (20.25 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 22.5 kB · Layers: 2 · Nets: 12 · Components: 34 · Dimensions: 81 x 25 mm (20.25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -1277,7 +1288,7 @@ Size: 22.5 kB · Layers: 2 · Nets: 12 · Components: 34 · Dimensions: 81.0 x 2
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/bldc-gimbal-1d_r1_gimbal-board/unrouted.dsn)
 
-Size: 25.2 kB · Layers: 2 · Nets: 12 · Components: 34 · Dimensions: 79.0 x 45.0 mm (35.55 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 25.2 kB · Layers: 2 · Nets: 12 · Components: 34 · Dimensions: 79 x 45 mm (35.55 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -1308,12 +1319,12 @@ Size: 13.3 kB · Layers: 2 · Nets: 8 · Components: 16 · Dimensions: 27.94 x 2
 | 1.9.0     | N/A  |                N/A |        N/A |       2.20 |     4.79 |      6.99 |   0+  0+  0 |        0 |          6 |   996 |        64 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      24.02 |      N/A |     24.02 |   0+  1+  0 |        0 |          6 |   999 |       260 |    49743.4 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       1.63 |       1.40 |     7.23 |     10.26 |   0+  3+  3 |        0 |          0 |  1000 |       306 |      883.7 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       5.64 |       2.51 |     4.50 |     12.65 |   0+  4+  1 |        0 |          0 |  1000 |       148 |      680.7 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       5.64 |       2.51 |     4.50 |     12.65 |   0+  4+  1 |        0 |          0 |  1000 |       148 |      680.6 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/blink-errr_blink-errr/unrouted.dsn)
 
-Size: 20.9 kB · Layers: 2 · Nets: 5 · Components: 10 · Dimensions: 17.0 x 0.0 mm (0.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 20.9 kB · Layers: 2 · Nets: 5 · Components: 10 · Dimensions: 17 x 0 mm (0 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -1332,12 +1343,12 @@ Size: 15.4 kB · Layers: 2 · Nets: 0 · Components: 37 · Dimensions: 23.57 x 2
 | 1.9.0     | N/A  |                N/A |        N/A |      41.61 |     6.56 |     48.17 |   0+  0+  0 |        4 |         14 |   931 |       140 |     4096.0 |  126 / 0 |         |
 | 2.4.1     | N/A  |                N/A |        N/A |     127.16 |      N/A |    127.16 |   0+  1+  0 |        2 |          2 |   964 |       361 |   221543.2 |    3 / 0 |         |
 | 2.5.0     | N/A  |                N/A |      38.05 |      92.56 |     0.00 |    130.61 |   0+ 30+  0 |        1 |          2 |   982 |       257 |    31469.0 |    3 / 0 |         |
-| 2.6.0-RC1 | N/A  |                N/A |       9.08 |      73.72 |    17.09 |     99.89 |   0+ 23+  1 |        0 |          2 |   928 |       872 |   154577.3 |    3 / 0 | TIMEOUT |
+| 2.6.0-RC1 | N/A  |                N/A |       9.08 |      73.72 |    17.09 |     99.89 |   0+ 23+  1 |        0 |          2 |   928 |       872 |   154577.2 |    3 / 0 | TIMEOUT |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/blinky-badge_blinky/unrouted.dsn)
 
-Size: 20.9 kB · Layers: 2 · Nets: 10 · Components: 18 · Dimensions: 40.0 x 39.88 mm (15.95 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 20.9 kB · Layers: 2 · Nets: 10 · Components: 18 · Dimensions: 40 x 39.88 mm (15.95 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -1349,7 +1360,7 @@ Size: 20.9 kB · Layers: 2 · Nets: 10 · Components: 18 · Dimensions: 40.0 x 3
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/BlueBerry-Zero_blueberry/unrouted.dsn)
 
-Size: 33.6 kB · Layers: 2 · Nets: 63 · Components: 50 · Dimensions: 65.0 x 30.0 mm (19.5 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 33.6 kB · Layers: 2 · Nets: 63 · Components: 50 · Dimensions: 65 x 30 mm (19.5 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -1385,13 +1396,13 @@ Size: 22.4 kB · Layers: 2 · Nets: 9 · Components: 21 · Dimensions: 91.44 x 3
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/bms-8s50-ic_bms-8s50-ic/unrouted.dsn)
 
-Size: 116.5 kB · Layers: 2 · Nets: 66 · Components: 168 · Dimensions: 110.0 x 60.0 mm (66.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 116.5 kB · Layers: 2 · Nets: 66 · Components: 168 · Dimensions: 110 x 60 mm (66 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
 | 1.9.0     | N/A  |                N/A |        N/A |     900.14 |    73.60 |    973.74 |   0+  0+  0 |       58 |        162 |   827 |       112 |     4096.0 |    1 / 0 |         |
 | 2.4.1     | N/A  |                N/A |        N/A |     905.30 |      N/A |    905.30 |   0+  4+  0 |       54 |        128 |   837 |       647 |  1138407.1 |    3 / 0 |         |
-| 2.5.0     | N/A  |                N/A |      35.37 |    1165.13 |      N/A |   1200.50 |   0+ 15+  0 |       67 |         44 |   801 |       348 |   632222.3 |    3 / 0 | TIMEOUT |
+| 2.5.0     | N/A  |                N/A |      35.37 |    1165.13 |      N/A |   1200.50 |   0+ 15+  0 |       67 |         44 |   801 |       348 |   632222.2 |    3 / 0 | TIMEOUT |
 | 2.6.0-RC1 | N/A  |                N/A |      24.26 |    1177.08 |      N/A |   1201.34 |   0+ 16+  0 |       61 |         44 |   818 |       437 |   635736.2 |    3 / 0 | TIMEOUT |
 
 
@@ -1409,7 +1420,7 @@ Size: 33 kB · Layers: 2 · Nets: 0 · Components: 134 · Dimensions: 67.94 x 75
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/bmw-ibus-bluetooth_bmw_bt_cdcemu_analog/unrouted.dsn)
 
-Size: 69.4 kB · Layers: 2 · Nets: 18 · Components: 51 · Dimensions: 49.0 x 30.0 mm (14.7 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 69.4 kB · Layers: 2 · Nets: 18 · Components: 51 · Dimensions: 49 x 30 mm (14.7 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -1421,7 +1432,7 @@ Size: 69.4 kB · Layers: 2 · Nets: 18 · Components: 51 · Dimensions: 49.0 x 3
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/bmw-ibus-bluetooth_bmw_bt_cdcemu_digital/unrouted.dsn)
 
-Size: 46.9 kB · Layers: 2 · Nets: 34 · Components: 58 · Dimensions: 60.0 x 40.0 mm (24.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 46.9 kB · Layers: 2 · Nets: 34 · Components: 58 · Dimensions: 60 x 40 mm (24 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -1469,19 +1480,19 @@ Size: 50.6 kB · Layers: 2 · Nets: 19 · Components: 36 · Dimensions: 104.14 x
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/boatcontrol_CommonCathode60A/unrouted.dsn)
 
-Size: 29.1 kB · Layers: 4 · Nets: 0 · Components: 18 · Dimensions: 153.0 x 114.0 mm (174.42 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 29.1 kB · Layers: 4 · Nets: 0 · Components: 18 · Dimensions: 153 x 114 mm (174.42 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       4.07 |     3.51 |      7.58 |   0+  0+  0 |       99 |        256 |     0 |       140 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      49.13 |      N/A |     49.13 |   0+  1+  0 |       98 |        256 |   132 |       238 |    70981.6 |    4 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       0.21 |      10.34 |     1.20 |     11.75 |   0+  2+  1 |        0 |          0 |  1000 |       134 |     1108.3 |    8 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       0.21 |      10.34 |     1.20 |     11.75 |   0+  2+  1 |        0 |          0 |  1000 |       134 |     1108.2 |    8 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.14 |       7.18 |    10.25 |     17.57 |   0+  2+  2 |        0 |          0 |  1000 |       403 |     1290.8 |    8 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/boatcontrol_NonLatchingNO30A/unrouted.dsn)
 
-Size: 40.2 kB · Layers: 4 · Nets: 32 · Components: 27 · Dimensions: 153.0 x 114.0 mm (174.42 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 40.2 kB · Layers: 4 · Nets: 32 · Components: 27 · Dimensions: 153 x 114 mm (174.42 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -1493,7 +1504,7 @@ Size: 40.2 kB · Layers: 4 · Nets: 32 · Components: 27 · Dimensions: 153.0 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/bobc_control_panel/unrouted.dsn)
 
-Size: 23.8 kB · Layers: 2 · Nets: 0 · Components: 35 · Dimensions: 91.0 x 73.0 mm (66.43 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 23.8 kB · Layers: 2 · Nets: 0 · Components: 35 · Dimensions: 91 x 73 mm (66.43 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -1517,7 +1528,7 @@ Size: 11.8 kB · Layers: 2 · Nets: 0 · Components: 13 · Dimensions: 40.64 x 4
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/bobc_led_clock/unrouted.dsn)
 
-Size: 59.6 kB · Layers: 2 · Nets: 0 · Components: 65 · Dimensions: 100.0 x 50.0 mm (50.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 59.6 kB · Layers: 2 · Nets: 0 · Components: 65 · Dimensions: 100 x 50 mm (50 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -1529,7 +1540,7 @@ Size: 59.6 kB · Layers: 2 · Nets: 0 · Components: 65 · Dimensions: 100.0 x 5
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/bobc_matrix_clock/unrouted.dsn)
 
-Size: 20.1 kB · Layers: 2 · Nets: 93 · Components: 36 · Dimensions: 100.0 x 98.0 mm (98.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 20.1 kB · Layers: 2 · Nets: 93 · Components: 36 · Dimensions: 100 x 98 mm (98 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -1541,7 +1552,7 @@ Size: 20.1 kB · Layers: 2 · Nets: 93 · Components: 36 · Dimensions: 100.0 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/bobc_mbeduinopresso/unrouted.dsn)
 
-Size: 48.3 kB · Layers: 2 · Nets: 0 · Components: 37 · Dimensions: 100.0 x 87.0 mm (87.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 48.3 kB · Layers: 2 · Nets: 0 · Components: 37 · Dimensions: 100 x 87 mm (87 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -1565,7 +1576,7 @@ Size: 32 kB · Layers: 2 · Nets: 0 · Components: 33 · Dimensions: 50.8 x 17.7
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Box0-hv-analog-breakoutboard_breakout/unrouted.dsn)
 
-Size: 23.6 kB · Layers: 2 · Nets: 28 · Components: 57 · Dimensions: 70.0 x 50.0 mm (35.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 23.6 kB · Layers: 2 · Nets: 28 · Components: 57 · Dimensions: 70 x 50 mm (35 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -1595,7 +1606,7 @@ Size: 4.5 kB · Layers: 2 · Nets: 0 · Components: 2 · Dimensions: 15.24 x 17.
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       0.96 |     2.21 |      3.17 |   0+  0+  0 |        0 |          0 |  1000 |       157 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |       3.38 |      N/A |      3.38 |   0+  4+  0 |        0 |          0 |  1000 |       183 |     2223.8 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       1.74 |       0.59 |     1.73 |      4.06 |   0+  2+  2 |        0 |          0 |  1000 |       133 |      210.4 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       1.74 |       0.59 |     1.73 |      4.06 |   0+  2+  2 |        0 |          0 |  1000 |       133 |      210.3 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       1.09 |       1.20 |     5.54 |      7.83 |   0+  2+  2 |        0 |          0 |  1000 |       123 |      225.5 |    2 / 0 |       |
 
 
@@ -1649,7 +1660,7 @@ Size: 5 kB · Layers: 2 · Nets: 1 · Components: 2 · Dimensions: 12.7 x 13.97 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/breakout-boards_usb-5v-3v3/unrouted.dsn)
 
-Size: 8.4 kB · Layers: 2 · Nets: 5 · Components: 10 · Dimensions: 25.0 x 18.0 mm (4.5 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 8.4 kB · Layers: 2 · Nets: 5 · Components: 10 · Dimensions: 25 x 18 mm (4.5 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -1673,7 +1684,7 @@ Size: 24 kB · Layers: 2 · Nets: 0 · Components: 17 · Dimensions: 50.04 x 35.
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Brushless_ESC_Brushless_ESC/unrouted.dsn)
 
-Size: 39.4 kB · Layers: 2 · Nets: 26 · Components: 77 · Dimensions: 63.0 x 36.0 mm (22.68 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 39.4 kB · Layers: 2 · Nets: 26 · Components: 77 · Dimensions: 63 x 36 mm (22.68 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -1697,7 +1708,7 @@ Size: 40.1 kB · Layers: 2 · Nets: 29 · Components: 79 · Dimensions: 50.04 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/bt-tnc_bttnc2/unrouted.dsn)
 
-Size: 62.1 kB · Layers: 2 · Nets: 95 · Components: 105 · Dimensions: 70.0 x 40.01 mm (28.01 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 62.1 kB · Layers: 2 · Nets: 95 · Components: 105 · Dimensions: 70 x 40.01 mm (28.01 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -1709,7 +1720,7 @@ Size: 62.1 kB · Layers: 2 · Nets: 95 · Components: 105 · Dimensions: 70.0 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/bt-tnc_tnc/unrouted.dsn)
 
-Size: 37.8 kB · Layers: 2 · Nets: 0 · Components: 55 · Dimensions: 56.57 x 31.0 mm (17.54 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 37.8 kB · Layers: 2 · Nets: 0 · Components: 55 · Dimensions: 56.57 x 31 mm (17.54 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -1721,7 +1732,7 @@ Size: 37.8 kB · Layers: 2 · Nets: 0 · Components: 55 · Dimensions: 56.57 x 3
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/BUF-DiffToSE-ADAU1966_BUF-DiffToSE-ADAU1966/unrouted.dsn)
 
-Size: 29.9 kB · Layers: 2 · Nets: 64 · Components: 165 · Dimensions: 100.0 x 100.0 mm (100.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 29.9 kB · Layers: 2 · Nets: 64 · Components: 165 · Dimensions: 100 x 100 mm (100 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -1757,19 +1768,19 @@ Size: 84.6 kB · Layers: 2 · Nets: 71 · Components: 138 · Dimensions: 111.12 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/busblaster-to-swd_busblaster-to-swd/unrouted.dsn)
 
-Size: 14.2 kB · Layers: 2 · Nets: 2 · Components: 7 · Dimensions: 22.0 x 35.0 mm (7.7 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 14.2 kB · Layers: 2 · Nets: 2 · Components: 7 · Dimensions: 22 x 35 mm (7.7 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       0.98 |     3.94 |      4.92 |   0+  0+  0 |        0 |          0 |  1000 |        74 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       5.14 |      N/A |      5.14 |   0+  3+  0 |        0 |          0 |  1000 |       214 |     3773.5 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       5.14 |      N/A |      5.14 |   0+  3+  0 |        0 |          0 |  1000 |       214 |     3773.4 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       1.33 |       2.84 |    19.38 |     23.55 |   0+  3+  5 |        0 |          0 |  1000 |       267 |      565.3 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.60 |       3.57 |     7.71 |     11.88 |   0+  3+  5 |        0 |          0 |  1000 |       173 |      575.0 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/bypass_crossmix_bypass_crossmix/unrouted.dsn)
 
-Size: 25.9 kB · Layers: 2 · Nets: 33 · Components: 61 · Dimensions: 70.0 x 50.0 mm (35.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 25.9 kB · Layers: 2 · Nets: 33 · Components: 61 · Dimensions: 70 x 50 mm (35 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -1779,9 +1790,45 @@ Size: 25.9 kB · Layers: 2 · Nets: 33 · Components: 61 · Dimensions: 70.0 x 5
 | 2.6.0-RC1 | N/A  |                N/A |       4.57 |       9.66 |     7.64 |     21.87 |   0+  4+  1 |        0 |          0 |  1000 |       323 |     2101.6 |    2 / 0 |       |
 
 
+### Fixture: [unrouted.dsn](../fixtures/PCBench/C-BISCUIT_buck-reg-5v/unrouted.dsn)
+
+Size: 21.1 kB · Layers: 2 · Nets: 2 · Components: 32 · Dimensions: 77.6 x 31.8 mm (24.68 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       2.92 |    25.44 |     28.36 |   0+  0+  0 |        0 |          0 |  1000 |       145 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       3.55 |      N/A |      3.55 |   0+  2+  0 |        0 |          0 |  1000 |       246 |     5550.7 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       2.69 |       1.51 |    25.41 |     29.61 |   0+  2+  4 |        0 |          0 |  1000 |       439 |      632.9 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       6.78 |       1.19 |    13.35 |     21.32 |   0+  2+  4 |        0 |          0 |  1000 |       346 |      594.9 |    2 / 0 |       |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/C-BISCUIT_crowbar/unrouted.dsn)
+
+Size: 14.4 kB · Layers: 2 · Nets: 3 · Components: 13 · Dimensions: 13 x 37.2 mm (4.84 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       0.54 |     4.11 |      4.65 |   0+  0+  0 |        0 |          0 |  1000 |        70 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       2.60 |      N/A |      2.60 |   0+  3+  0 |        0 |          0 |  1000 |       154 |     1559.5 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       4.38 |       0.39 |     6.02 |     10.79 |   0+  2+  4 |        0 |          0 |  1000 |       187 |      192.8 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       2.97 |       0.48 |     4.80 |      8.25 |   0+  2+  4 |        0 |          0 |  1000 |       143 |      186.1 |    2 / 0 |       |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/CAL430FR_CAL430F_watch/unrouted.dsn)
+
+Size: 9.3 kB · Layers: 2 · Nets: 18 · Components: 8 · Dimensions: 36 x 45.5 mm (16.38 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       2.79 |     3.79 |      6.58 |   0+  0+  0 |        0 |          0 |  1000 |        52 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       6.29 |      N/A |      6.29 |   0+  5+  0 |        0 |          0 |  1000 |       160 |     6489.2 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       5.70 |       2.20 |    12.33 |     20.23 |   0+  4+  4 |        0 |          0 |  1000 |       259 |     1236.3 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       5.44 |       1.69 |     5.52 |     12.65 |   0+  4+  4 |        0 |          0 |  1000 |       129 |     1190.1 |    2 / 0 |       |
+
+
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/CAL430FR_CAL430F/unrouted.dsn)
 
-Size: 31.5 kB · Layers: 2 · Nets: 11 · Components: 30 · Dimensions: 36.0 x 36.0 mm (12.96 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 31.5 kB · Layers: 2 · Nets: 11 · Components: 30 · Dimensions: 36 x 36 mm (12.96 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -1791,18 +1838,6 @@ Size: 31.5 kB · Layers: 2 · Nets: 11 · Components: 30 · Dimensions: 36.0 x 3
 | 2.6.0-RC1 | N/A  |                N/A |       6.69 |      86.68 |      N/A |     93.37 |   0+  8+  0 |        1 |          0 |   884 |       282 |   220530.5 |    2 / 0 | TIMEOUT |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/CAL430FR_CAL430F_watch/unrouted.dsn)
-
-Size: 9.3 kB · Layers: 2 · Nets: 18 · Components: 8 · Dimensions: 36.0 x 45.5 mm (16.38 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       2.79 |     3.79 |      6.58 |   0+  0+  0 |        0 |          0 |  1000 |        52 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       6.29 |      N/A |      6.29 |   0+  5+  0 |        0 |          0 |  1000 |       160 |     6489.3 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       5.70 |       2.20 |    12.33 |     20.23 |   0+  4+  4 |        0 |          0 |  1000 |       259 |     1236.3 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       5.44 |       1.69 |     5.52 |     12.65 |   0+  4+  4 |        0 |          0 |  1000 |       129 |     1190.1 |    2 / 0 |       |
-
-
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Camera-Modules_LG-G2-Camera-Shim/unrouted.dsn)
 
 Size: 10 kB · Layers: 2 · Nets: 0 · Components: 4 · Dimensions: 18.54 x 9.65 mm (1.79 cm²) · CAD: KiCad's Pcbnew (v)
@@ -1810,9 +1845,9 @@ Size: 10 kB · Layers: 2 · Nets: 0 · Components: 4 · Dimensions: 18.54 x 9.65
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       9.17 |     0.73 |      9.90 |   0+  0+  0 |        2 |          0 |   938 |       166 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      60.58 |      N/A |     60.58 |   0+ 14+  0 |        4 |          0 |   870 |       827 |   113619.7 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      60.58 |      N/A |     60.58 |   0+ 14+  0 |        4 |          0 |   870 |       827 |   113619.6 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       8.15 |       0.62 |    56.59 |     65.36 |   0+  2+  2 |        0 |          0 |  1000 |       605 |     1555.6 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       6.14 |       0.29 |    17.23 |     23.66 |   0+  2+  2 |        0 |          0 |  1000 |       445 |     1464.6 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       6.14 |       0.29 |    17.23 |     23.66 |   0+  2+  2 |        0 |          0 |  1000 |       445 |     1464.5 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Camera-Modules_LG-G2-G3-13M-Breakout/unrouted.dsn)
@@ -1829,7 +1864,7 @@ Size: 11.9 kB · Layers: 2 · Nets: 1 · Components: 8 · Dimensions: 45.72 x 68
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/can_firewall_hardware_CAN_Firewall/unrouted.dsn)
 
-Size: 66.9 kB · Layers: 2 · Nets: 78 · Components: 80 · Dimensions: 68.0 x 58.0 mm (39.44 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 66.9 kB · Layers: 2 · Nets: 78 · Components: 80 · Dimensions: 68 x 58 mm (39.44 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -1851,18 +1886,6 @@ Size: 23 kB · Layers: 2 · Nets: 25 · Components: 28 · Dimensions: 93.98 x 22
 | 2.6.0-RC1 | N/A  |                N/A |       1.60 |       5.37 |    12.38 |     19.35 |   0+  2+  4 |        0 |          2 |  1000 |       406 |      774.3 |    3 / 0 |       |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/CapPCB_CapPcb/unrouted.dsn)
-
-Size: 14.3 kB · Layers: 2 · Nets: 2 · Components: 7 · Dimensions: 26.42 x 12.7 mm (3.36 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       0.87 |     2.66 |      3.53 |   0+  0+  0 |        0 |          8 |   973 |        30 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       3.38 |      N/A |      3.38 |   0+  1+  0 |        0 |          8 |   990 |       184 |     2388.9 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       0.10 |       0.90 |     1.10 |      2.10 |   0+  2+  1 |        0 |          0 |  1000 |        58 |      133.4 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       0.49 |       1.59 |     2.23 |      4.31 |   0+  2+  1 |        0 |          0 |  1000 |        77 |      153.6 |    2 / 0 |       |
-
-
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/cap-soil-moisture-v2_soil-moisture2x4/unrouted.dsn)
 
 Size: 40.9 kB · Layers: 2 · Nets: 15 · Components: 21 · Dimensions: 44.85 x 44.83 mm (20.11 cm²) · CAD: KiCad's Pcbnew (v)
@@ -1875,33 +1898,33 @@ Size: 40.9 kB · Layers: 2 · Nets: 15 · Components: 21 · Dimensions: 44.85 x 
 | 2.6.0-RC1 | N/A  |                N/A |       0.02 |       1.24 |     0.00 |      1.26 |   0+  2+  0 |        0 |          0 |  1000 |        25 |       65.7 |    2 / 0 |       |
 
 
+### Fixture: [unrouted.dsn](../fixtures/PCBench/CapPCB_CapPcb/unrouted.dsn)
+
+Size: 14.3 kB · Layers: 2 · Nets: 2 · Components: 7 · Dimensions: 26.42 x 12.7 mm (3.36 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       0.87 |     2.66 |      3.53 |   0+  0+  0 |        0 |          8 |   973 |        30 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       3.38 |      N/A |      3.38 |   0+  1+  0 |        0 |          8 |   990 |       184 |     2388.9 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       0.10 |       0.90 |     1.10 |      2.10 |   0+  2+  1 |        0 |          0 |  1000 |        58 |      133.3 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       0.49 |       1.59 |     2.23 |      4.31 |   0+  2+  1 |        0 |          0 |  1000 |        77 |      153.6 |    2 / 0 |       |
+
+
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/card_card/unrouted.dsn)
 
-Size: 11 kB · Layers: 2 · Nets: 7 · Components: 10 · Dimensions: 55.0 x 85.0 mm (46.75 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 11 kB · Layers: 2 · Nets: 7 · Components: 10 · Dimensions: 55 x 85 mm (46.75 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       3.76 |     0.49 |      4.25 |   0+  0+  0 |        4 |         25 |   821 |       174 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      30.35 |      N/A |     30.35 |   0+  1+  0 |        4 |         21 |   828 |       327 |    44364.7 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       2.50 |      41.70 |     0.00 |     44.20 |   0+ 18+  0 |        4 |          0 |   833 |       184 |    10946.0 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       0.44 |      20.94 |     0.00 |     21.38 |   0+ 18+  0 |        4 |          0 |   750 |       212 |    49698.0 |    2 / 0 |       |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/CATS_PiHat_v2/unrouted.dsn)
-
-Size: 38.5 kB · Layers: 2 · Nets: 34 · Components: 36 · Dimensions: 64.0 x 55.0 mm (35.2 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |      10.02 |   104.64 |    114.66 |   0+  0+  0 |        0 |          0 |  1000 |       182 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      60.79 |      N/A |     60.79 |   0+  1+  0 |        6 |          0 |   922 |       345 |   157147.1 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       4.91 |      14.78 |    17.83 |     37.52 |   0+  4+  2 |        0 |          0 |  1000 |       554 |     2958.6 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       7.97 |      10.30 |    16.43 |     34.70 |   0+  4+  2 |        0 |          0 |  1000 |       534 |     2753.5 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       0.44 |      20.94 |     0.00 |     21.38 |   0+ 18+  0 |        4 |          0 |   750 |       212 |    49697.9 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/cat-trainer_feather32u4_mma8452_pcb/unrouted.dsn)
 
-Size: 18.5 kB · Layers: 2 · Nets: 28 · Components: 11 · Dimensions: 56.0 x 57.0 mm (31.92 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 18.5 kB · Layers: 2 · Nets: 28 · Components: 11 · Dimensions: 56 x 57 mm (31.92 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -1923,28 +1946,16 @@ Size: 40.8 kB · Layers: 2 · Nets: 20 · Components: 28 · Dimensions: 69.85 x 
 | 2.6.0-RC1 | N/A  |                N/A |       0.13 |       4.79 |     0.00 |      4.92 |   0+  2+  0 |        0 |          0 |  1000 |        57 |      656.2 |    2 / 0 |       |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/C-BISCUIT_buck-reg-5v/unrouted.dsn)
+### Fixture: [unrouted.dsn](../fixtures/PCBench/CATS_PiHat_v2/unrouted.dsn)
 
-Size: 21.1 kB · Layers: 2 · Nets: 2 · Components: 32 · Dimensions: 77.6 x 31.8 mm (24.68 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       2.92 |    25.44 |     28.36 |   0+  0+  0 |        0 |          0 |  1000 |       145 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       3.55 |      N/A |      3.55 |   0+  2+  0 |        0 |          0 |  1000 |       246 |     5550.7 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       2.69 |       1.51 |    25.41 |     29.61 |   0+  2+  4 |        0 |          0 |  1000 |       439 |      632.9 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       6.78 |       1.19 |    13.35 |     21.32 |   0+  2+  4 |        0 |          0 |  1000 |       346 |      594.9 |    2 / 0 |       |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/C-BISCUIT_crowbar/unrouted.dsn)
-
-Size: 14.4 kB · Layers: 2 · Nets: 3 · Components: 13 · Dimensions: 13.0 x 37.2 mm (4.84 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 38.5 kB · Layers: 2 · Nets: 34 · Components: 36 · Dimensions: 64 x 55 mm (35.2 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       0.54 |     4.11 |      4.65 |   0+  0+  0 |        0 |          0 |  1000 |        70 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       2.60 |      N/A |      2.60 |   0+  3+  0 |        0 |          0 |  1000 |       154 |     1559.5 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       4.38 |       0.39 |     6.02 |     10.79 |   0+  2+  4 |        0 |          0 |  1000 |       187 |      192.8 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       2.97 |       0.48 |     4.80 |      8.25 |   0+  2+  4 |        0 |          0 |  1000 |       143 |      186.1 |    2 / 0 |       |
+| 1.9.0     | N/A  |                N/A |        N/A |      10.02 |   104.64 |    114.66 |   0+  0+  0 |        0 |          0 |  1000 |       182 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      60.79 |      N/A |     60.79 |   0+  1+  0 |        6 |          0 |   922 |       345 |   157147.1 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       4.91 |      14.78 |    17.83 |     37.52 |   0+  4+  2 |        0 |          0 |  1000 |       554 |     2958.6 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       7.97 |      10.30 |    16.43 |     34.70 |   0+  4+  2 |        0 |          0 |  1000 |       534 |     2753.5 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/cdi-tach_cdi-tach/unrouted.dsn)
@@ -1961,7 +1972,7 @@ Size: 76.3 kB · Layers: 2 · Nets: 18 · Components: 70 · Dimensions: 201.38 x
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/cdm324_backpack_cdm324/unrouted.dsn)
 
-Size: 14.4 kB · Layers: 2 · Nets: 13 · Components: 29 · Dimensions: 25.0 x 25.0 mm (6.25 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 14.4 kB · Layers: 2 · Nets: 13 · Components: 29 · Dimensions: 25 x 25 mm (6.25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -1980,7 +1991,7 @@ Size: 4.5 kB · Layers: 2 · Nets: 1 · Components: 12 · Dimensions: 19.05 x 19
 | 1.9.0     | N/A  |                N/A |        N/A |       0.36 |     0.31 |      0.67 |   0+  0+  0 |        0 |          0 |  1000 |        62 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |       0.80 |      N/A |      0.80 |   0+  2+  0 |        0 |          0 |  1000 |         0 |        0.0 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.04 |       0.72 |     0.00 |      0.76 |   0+  2+  0 |        0 |          0 |  1000 |       117 |       15.3 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       0.05 |       3.47 |     0.00 |      3.52 |   0+  2+  0 |        0 |          0 |  1000 |        47 |       29.5 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       0.05 |       3.47 |     0.00 |      3.52 |   0+  2+  0 |        0 |          0 |  1000 |        47 |       29.4 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/chip_lcd_dip_CHIP_LCD_DIP/unrouted.dsn)
@@ -1997,7 +2008,7 @@ Size: 45.5 kB · Layers: 2 · Nets: 5 · Components: 26 · Dimensions: 41.4 x 61
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/ChirpHardware_chirp/unrouted.dsn)
 
-Size: 23.8 kB · Layers: 4 · Nets: 38 · Components: 40 · Dimensions: 53.4 x 49.0 mm (26.17 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 23.8 kB · Layers: 4 · Nets: 38 · Components: 40 · Dimensions: 53.4 x 49 mm (26.17 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -2009,7 +2020,7 @@ Size: 23.8 kB · Layers: 4 · Nets: 38 · Components: 40 · Dimensions: 53.4 x 4
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/ciurlys_ciurlys/unrouted.dsn)
 
-Size: 14.5 kB · Layers: 2 · Nets: 9 · Components: 17 · Dimensions: 41.0 x 12.0 mm (4.92 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 14.5 kB · Layers: 2 · Nets: 9 · Components: 17 · Dimensions: 41 x 12 mm (4.92 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -2033,7 +2044,7 @@ Size: 44.3 kB · Layers: 2 · Nets: 46 · Components: 68 · Dimensions: 57.78 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Class_D_Amp_class_D_ampl/unrouted.dsn)
 
-Size: 81.9 kB · Layers: 2 · Nets: 59 · Components: 89 · Dimensions: 140.5 x 79.0 mm (111.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 81.9 kB · Layers: 2 · Nets: 59 · Components: 89 · Dimensions: 140.5 x 79 mm (111 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -2076,12 +2087,12 @@ Size: 12.6 kB · Layers: 2 · Nets: 2 · Components: 11 · Dimensions: 105.41 x 
 | 1.9.0     | N/A  |                N/A |        N/A |       5.15 |    33.48 |     38.63 |   0+  0+  0 |        0 |          0 |  1000 |       139 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      25.41 |      N/A |     25.41 |   0+  1+  0 |        1 |          0 |   979 |       318 |    39181.0 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       1.62 |      11.01 |    29.63 |     42.26 |   0+  4+  5 |        0 |          0 |  1000 |       611 |     2654.3 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       1.67 |       9.40 |    14.09 |     25.16 |   0+  4+  3 |        0 |          0 |  1000 |       515 |     2384.4 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       1.67 |       9.40 |    14.09 |     25.16 |   0+  4+  3 |        0 |          0 |  1000 |       515 |     2384.3 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/clunet-switch1_switch/unrouted.dsn)
 
-Size: 46.6 kB · Layers: 2 · Nets: 28 · Components: 36 · Dimensions: 0.0 x 0.0 mm (0.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 46.6 kB · Layers: 2 · Nets: 28 · Components: 36 · Dimensions: 0 x 0 mm (0 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -2089,18 +2100,6 @@ Size: 46.6 kB · Layers: 2 · Nets: 28 · Components: 36 · Dimensions: 0.0 x 0.
 | 2.4.1     | N/A  |                N/A |        N/A |      26.83 |      N/A |     26.83 |   0+  1+  0 |        1 |          6 |   980 |       267 |    55921.0 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       2.59 |       2.28 |     5.74 |     10.61 |   0+  2+  1 |        0 |          0 |  1000 |       109 |     1019.5 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       4.91 |       3.55 |     9.86 |     18.32 |   0+  2+  2 |        0 |          0 |  1000 |       386 |     1174.2 |    2 / 0 |       |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/cnlohr_wiflier/unrouted.dsn)
-
-Size: 26.6 kB · Layers: 2 · Nets: 0 · Components: 57 · Dimensions: 37.75 x 21.5 mm (8.12 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
-| 1.9.0     | N/A  |                N/A |        N/A |      90.79 |     9.52 |    100.31 |   0+  0+  0 |       17 |          7 |   865 |        40 |     4096.0 |  387 / 0 |         |
-| 2.4.1     | N/A  |                N/A |        N/A |     301.59 |      N/A |    301.59 |   0+ 12+  0 |       36 |         16 |   673 |       396 |   544594.1 |    3 / 0 |         |
-| 2.5.0     | N/A  |                N/A |      31.90 |     198.99 |     0.00 |    230.89 |   0+ 18+  0 |       33 |          0 |   701 |       203 |    94721.1 |    2 / 0 |         |
-| 2.6.0-RC1 | N/A  |                N/A |      10.92 |     174.98 |      N/A |    185.90 |   0+ 26+  0 |       10 |          0 |   855 |       318 |   260395.9 |    2 / 0 | TIMEOUT |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/cnlohr_wiflier_B/unrouted.dsn)
@@ -2115,9 +2114,21 @@ Size: 28.4 kB · Layers: 2 · Nets: 0 · Components: 61 · Dimensions: 37.75 x 2
 | 2.6.0-RC1 | N/A  |                N/A |      14.75 |     158.16 |      N/A |    172.91 |   0+ 23+  0 |        5 |          0 |   958 |       256 |   246383.6 |    2 / 0 | TIMEOUT |
 
 
+### Fixture: [unrouted.dsn](../fixtures/PCBench/cnlohr_wiflier/unrouted.dsn)
+
+Size: 26.6 kB · Layers: 2 · Nets: 0 · Components: 57 · Dimensions: 37.75 x 21.5 mm (8.12 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
+| 1.9.0     | N/A  |                N/A |        N/A |      90.79 |     9.52 |    100.31 |   0+  0+  0 |       17 |          7 |   865 |        40 |     4096.0 |  387 / 0 |         |
+| 2.4.1     | N/A  |                N/A |        N/A |     301.59 |      N/A |    301.59 |   0+ 12+  0 |       36 |         16 |   672 |       396 |   544594.1 |    3 / 0 |         |
+| 2.5.0     | N/A  |                N/A |      31.90 |     198.99 |     0.00 |    230.89 |   0+ 18+  0 |       33 |          0 |   701 |       203 |    94721.1 |    2 / 0 |         |
+| 2.6.0-RC1 | N/A  |                N/A |      10.92 |     174.98 |      N/A |    185.90 |   0+ 26+  0 |       10 |          0 |   855 |       318 |   260395.9 |    2 / 0 | TIMEOUT |
+
+
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/cobwebb-junction-box_CobwebbJunctionBox/unrouted.dsn)
 
-Size: 10.6 kB · Layers: 2 · Nets: 9 · Components: 8 · Dimensions: 150.0 x 50.0 mm (75.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 10.6 kB · Layers: 2 · Nets: 9 · Components: 8 · Dimensions: 150 x 50 mm (75 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -2133,19 +2144,19 @@ Size: 11.8 kB · Layers: 4 · Nets: 18 · Components: 6 · Dimensions: 58.42 x 3
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |      17.17 |     0.44 |     17.61 |   0+  0+  0 |        8 |          0 |   727 |       157 |     4096.0 |    0 / 0 |       |
+| 1.9.0     | N/A  |                N/A |        N/A |      17.17 |     0.44 |     17.61 |   0+  0+  0 |        8 |          0 |   726 |       157 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      20.82 |      N/A |     20.82 |   0+  8+  0 |        0 |          0 |  1000 |       339 |    24820.3 |    4 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       3.42 |       5.24 |     7.03 |     15.69 |   0+  2+  1 |        0 |          0 |  1000 |       289 |      982.1 |    8 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       1.15 |       2.20 |     4.43 |      7.78 |   0+  2+  1 |        0 |          0 |  1000 |       404 |      950.7 |    8 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       1.15 |       2.20 |     4.43 |      7.78 |   0+  2+  1 |        0 |          0 |  1000 |       404 |      950.6 |    8 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/constant-current-h-bridge_constant_current_source/unrouted.dsn)
 
-Size: 38.8 kB · Layers: 2 · Nets: 25 · Components: 46 · Dimensions: 0.0 x 0.0 mm (0.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 38.8 kB · Layers: 2 · Nets: 25 · Components: 46 · Dimensions: 0 x 0 mm (0 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |      10.45 |     4.61 |     15.06 |   0+  0+  0 |        3 |          0 |   969 |       192 |     4096.0 |    0 / 0 |       |
+| 1.9.0     | N/A  |                N/A |        N/A |      10.45 |     4.61 |     15.06 |   0+  0+  0 |        3 |          0 |   968 |       192 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      58.28 |      N/A |     58.28 |   0+  1+  0 |        2 |          0 |   977 |       278 |   122100.9 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       4.06 |       8.20 |     6.36 |     18.62 |   0+  3+  1 |        0 |          0 |  1000 |       379 |     2917.7 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       1.88 |       5.43 |     5.52 |     12.83 |   0+  3+  1 |        0 |          0 |  1000 |       403 |     2880.5 |    2 / 0 |       |
@@ -2177,7 +2188,7 @@ Size: 8.7 kB · Layers: 2 · Nets: 0 · Components: 6 · Dimensions: 49.53 x 20.
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/CoreOne-xCORE200-Original_CoreOne/unrouted.dsn)
 
-Size: 100.7 kB · Layers: 4 · Nets: 133 · Components: 389 · Dimensions: 100.0 x 100.0 mm (100.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 100.7 kB · Layers: 4 · Nets: 133 · Components: 389 · Dimensions: 100 x 100 mm (100 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -2189,7 +2200,7 @@ Size: 100.7 kB · Layers: 4 · Nets: 133 · Components: 389 · Dimensions: 100.0
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/CPU-Power-Supply-Mod_CPU_Power_Supply_Mod/unrouted.dsn)
 
-Size: 21.6 kB · Layers: 2 · Nets: 0 · Components: 38 · Dimensions: 0.0 x 0.0 mm (0.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 21.6 kB · Layers: 2 · Nets: 0 · Components: 38 · Dimensions: 0 x 0 mm (0 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -2201,7 +2212,7 @@ Size: 21.6 kB · Layers: 2 · Nets: 0 · Components: 38 · Dimensions: 0.0 x 0.0
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/crossover-schiit-stack_xover4schiit/unrouted.dsn)
 
-Size: 6.1 kB · Layers: 2 · Nets: 0 · Components: 4 · Dimensions: 28.0 x 53.0 mm (14.84 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 6.1 kB · Layers: 2 · Nets: 0 · Components: 4 · Dimensions: 28 x 53 mm (14.84 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -2237,7 +2248,7 @@ Size: 6.6 kB · Layers: 2 · Nets: 23 · Components: 6 · Dimensions: 27.94 x 27
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Curryboard_Curryboard/unrouted.dsn)
 
-Size: 39.8 kB · Layers: 2 · Nets: 11 · Components: 60 · Dimensions: 50.0 x 49.99 mm (25.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 39.8 kB · Layers: 2 · Nets: 11 · Components: 60 · Dimensions: 50 x 49.99 mm (25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -2249,19 +2260,19 @@ Size: 39.8 kB · Layers: 2 · Nets: 11 · Components: 60 · Dimensions: 50.0 x 4
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/custom_cpu--ALU_custom_cpu--ALU/unrouted.dsn)
 
-Size: 25.2 kB · Layers: 2 · Nets: 44 · Components: 25 · Dimensions: 100.0 x 60.0 mm (60.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 25.2 kB · Layers: 2 · Nets: 44 · Components: 25 · Dimensions: 100 x 60 mm (60 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       6.90 |    55.29 |     62.19 |   0+  0+  0 |        0 |          0 |  1000 |        61 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      21.37 |      N/A |     21.37 |   0+  4+  0 |        0 |          4 |  1000 |       221 |    21547.4 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      21.37 |      N/A |     21.37 |   0+  4+  0 |        0 |          4 |  1000 |       221 |    21547.3 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.58 |      28.70 |     3.11 |     32.39 |   0+ 16+  1 |        0 |          0 |  1000 |       176 |     4000.6 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.57 |      19.50 |    29.41 |     49.48 |   0+ 16+  3 |        0 |          0 |  1000 |       607 |     3836.8 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/custom_cpu--register_custom_cpu--register/unrouted.dsn)
 
-Size: 25.3 kB · Layers: 2 · Nets: 37 · Components: 47 · Dimensions: 100.0 x 63.0 mm (63.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 25.3 kB · Layers: 2 · Nets: 37 · Components: 47 · Dimensions: 100 x 63 mm (63 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -2285,7 +2296,7 @@ Size: 10.6 kB · Layers: 2 · Nets: 9 · Components: 7 · Dimensions: 22.05 x 31
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/DAC-ADAU1966_DAC-ADAU1966/unrouted.dsn)
 
-Size: 66.3 kB · Layers: 4 · Nets: 113 · Components: 306 · Dimensions: 100.0 x 100.0 mm (100.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 66.3 kB · Layers: 4 · Nets: 113 · Components: 306 · Dimensions: 100 x 100 mm (100 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes           |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
@@ -2309,7 +2320,7 @@ Size: 18.1 kB · Layers: 4 · Nets: 13 · Components: 36 · Dimensions: 25.4 x 5
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/data-manager_data-manager/unrouted.dsn)
 
-Size: 54.3 kB · Layers: 2 · Nets: 49 · Components: 38 · Dimensions: 74.0 x 38.0 mm (28.12 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 54.3 kB · Layers: 2 · Nets: 49 · Components: 38 · Dimensions: 74 x 38 mm (28.12 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -2357,7 +2368,7 @@ Size: 84.6 kB · Layers: 2 · Nets: 124 · Components: 129 · Dimensions: 152.67
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/decelerator4030_decelerator4030/unrouted.dsn)
 
-Size: 103.7 kB · Layers: 2 · Nets: 0 · Components: 180 · Dimensions: 0.0 x 0.0 mm (0.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 103.7 kB · Layers: 2 · Nets: 0 · Components: 180 · Dimensions: 0 x 0 mm (0 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes           |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
@@ -2365,18 +2376,6 @@ Size: 103.7 kB · Layers: 2 · Nets: 0 · Components: 180 · Dimensions: 0.0 x 0
 | 2.4.1     | N/A  |                N/A |        N/A |     904.83 |      N/A |    904.83 |   0+  1+  0 |      611 |          0 |   263 |       456 |  1173944.6 |    3 / 0 |                 |
 | 2.5.0     | N/A  |                N/A |     284.53 |     918.77 |      N/A |   1203.30 |   0+  2+  0 |      458 |          0 |   395 |       615 |   547565.1 |    2 / 0 | TIMEOUT         |
 | 2.6.0-RC1 | N/A  |                N/A |     246.33 |     955.30 |      N/A |   1201.63 |   0+  3+  0 |      477 |          0 |   370 |       522 |   519310.0 |    2 / 0 | TIMEOUT         |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/Dekada_dekada/unrouted.dsn)
-
-Size: 15.2 kB · Layers: 2 · Nets: 41 · Components: 43 · Dimensions: 49.8 x 33.0 mm (16.43 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       1.80 |    12.55 |     14.35 |   0+  0+  0 |        0 |          6 |   999 |       128 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      70.00 |      N/A |     70.00 |   0+  1+  0 |        0 |          8 |   999 |       300 |   158697.9 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       2.40 |       2.60 |     0.00 |      5.00 |   0+  2+  0 |        0 |          0 |  1000 |        95 |      400.1 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       1.20 |       1.12 |     0.00 |      2.32 |   0+  2+  0 |        0 |          0 |  1000 |        68 |      175.7 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Dekada_dekada_1210_example/unrouted.dsn)
@@ -2393,19 +2392,31 @@ Size: 15.5 kB · Layers: 2 · Nets: 41 · Components: 43 · Dimensions: 51.8 x 3
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Dekada_dekada_TopoR_curves/unrouted.dsn)
 
-Size: 15 kB · Layers: 2 · Nets: 41 · Components: 43 · Dimensions: 49.8 x 33.0 mm (16.43 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 15 kB · Layers: 2 · Nets: 41 · Components: 43 · Dimensions: 49.8 x 33 mm (16.43 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       1.19 |     9.22 |     10.41 |   0+  0+  0 |        0 |          6 |   999 |        43 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      67.75 |      N/A |     67.75 |   0+  1+  0 |        0 |          8 |   999 |       320 |   160864.6 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       1.67 |       3.74 |     0.00 |      5.41 |   0+  2+  0 |        0 |          0 |  1000 |       111 |      417.2 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       4.01 |       2.01 |     0.00 |      6.02 |   0+  2+  0 |        0 |          0 |  1000 |       101 |      346.3 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       4.01 |       2.01 |     0.00 |      6.02 |   0+  2+  0 |        0 |          0 |  1000 |       101 |      346.2 |    2 / 0 |       |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/Dekada_dekada/unrouted.dsn)
+
+Size: 15.2 kB · Layers: 2 · Nets: 41 · Components: 43 · Dimensions: 49.8 x 33 mm (16.43 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       1.80 |    12.55 |     14.35 |   0+  0+  0 |        0 |          6 |   999 |       128 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      70.00 |      N/A |     70.00 |   0+  1+  0 |        0 |          8 |   999 |       300 |   158697.9 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       2.40 |       2.60 |     0.00 |      5.00 |   0+  2+  0 |        0 |          0 |  1000 |        95 |      400.1 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       1.20 |       1.12 |     0.00 |      2.32 |   0+  2+  0 |        0 |          0 |  1000 |        68 |      175.7 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/denbit_basic/unrouted.dsn)
 
-Size: 27 kB · Layers: 2 · Nets: 12 · Components: 21 · Dimensions: 50.0 x 50.0 mm (25.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 27 kB · Layers: 2 · Nets: 12 · Components: 21 · Dimensions: 50 x 50 mm (25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -2417,7 +2428,7 @@ Size: 27 kB · Layers: 2 · Nets: 12 · Components: 21 · Dimensions: 50.0 x 50.
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/DerKnopf_digi-pot/unrouted.dsn)
 
-Size: 21.5 kB · Layers: 2 · Nets: 22 · Components: 16 · Dimensions: 25.0 x 31.0 mm (7.75 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 21.5 kB · Layers: 2 · Nets: 22 · Components: 16 · Dimensions: 25 x 31 mm (7.75 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -2453,7 +2464,7 @@ Size: 10.3 kB · Layers: 2 · Nets: 0 · Components: 14 · Dimensions: 55.25 x 2
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/DerKnopf_remote-control/unrouted.dsn)
 
-Size: 21.1 kB · Layers: 2 · Nets: 5 · Components: 13 · Dimensions: 13.0 x 0.0 mm (0.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 21.1 kB · Layers: 2 · Nets: 5 · Components: 13 · Dimensions: 13 x 0 mm (0 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -2484,7 +2495,7 @@ Size: 19.4 kB · Layers: 2 · Nets: 13 · Components: 30 · Dimensions: 12.7 x 9
 | 1.9.0     | N/A  |                N/A |        N/A |       2.09 |    26.42 |     28.51 |   0+  0+  0 |        0 |          0 |  1000 |        91 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      15.24 |      N/A |     15.24 |   0+  3+  0 |        0 |          0 |  1000 |       288 |     7201.8 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       3.75 |       1.76 |     5.51 |     11.02 |   0+  2+  1 |        0 |          0 |  1000 |       268 |      608.6 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       2.31 |       1.43 |     5.30 |      9.04 |   0+  2+  1 |        0 |          0 |  1000 |       244 |      541.6 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       2.31 |       1.43 |     5.30 |      9.04 |   0+  2+  1 |        0 |          0 |  1000 |       244 |      541.5 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/digital_clock_led_clock_3_and_4_digit/unrouted.dsn)
@@ -2511,6 +2522,18 @@ Size: 63.6 kB · Layers: 2 · Nets: 58 · Components: 138 · Dimensions: 152.62 
 | 2.6.0-RC1 | N/A  |                N/A |       2.33 |      42.62 |     6.34 |     51.29 |   0+  8+  1 |        0 |          0 |  1000 |       453 |     7795.1 |    2 / 0 |       |
 
 
+### Fixture: [unrouted.dsn](../fixtures/PCBench/disco-dongle_DiscoDongle/unrouted.dsn)
+
+Size: 13.6 kB · Layers: 2 · Nets: 24 · Components: 22 · Dimensions: 49.4 x 15.8 mm (7.81 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       9.18 |     0.89 |     10.07 |   0+  0+  0 |        2 |          2 |   954 |        94 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      60.57 |      N/A |     60.57 |   0+  1+  0 |        0 |          4 |   999 |       466 |   128744.9 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       6.63 |       9.48 |   110.22 |    126.33 |   0+  6+  3 |        0 |          0 |  1000 |       608 |     2136.7 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |      11.17 |       8.15 |    19.11 |     38.43 |   0+  7+  3 |        0 |          0 |  1000 |       432 |     1826.9 |    2 / 0 |       |
+
+
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/DiscoDanceFloorV1_BusTerminator/unrouted.dsn)
 
 Size: 7 kB · Layers: 2 · Nets: 6 · Components: 8 · Dimensions: 18.61 x 17.02 mm (3.17 cm²) · CAD: KiCad's Pcbnew (v)
@@ -2535,33 +2558,21 @@ Size: 12.6 kB · Layers: 2 · Nets: 25 · Components: 21 · Dimensions: 58.42 x 
 | 2.6.0-RC1 | N/A  |                N/A |       5.19 |       9.99 |    34.56 |     49.74 |   0+  4+  5 |        0 |          0 |  1000 |       622 |     1502.8 |    2 / 0 |       |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/disco-dongle_DiscoDongle/unrouted.dsn)
-
-Size: 13.6 kB · Layers: 2 · Nets: 24 · Components: 22 · Dimensions: 49.4 x 15.8 mm (7.81 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       9.18 |     0.89 |     10.07 |   0+  0+  0 |        2 |          2 |   954 |        94 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      60.57 |      N/A |     60.57 |   0+  1+  0 |        0 |          4 |   999 |       466 |   128744.9 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       6.63 |       9.48 |   110.22 |    126.33 |   0+  6+  3 |        0 |          0 |  1000 |       608 |     2136.7 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |      11.17 |       8.15 |    19.11 |     38.43 |   0+  7+  3 |        0 |          0 |  1000 |       432 |     1826.9 |    2 / 0 |       |
-
-
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/divergence_meter_dm_control/unrouted.dsn)
 
-Size: 79.7 kB · Layers: 2 · Nets: 54 · Components: 107 · Dimensions: 89.0 x 47.0 mm (41.83 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 79.7 kB · Layers: 2 · Nets: 54 · Components: 107 · Dimensions: 89 x 47 mm (41.83 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |      20.23 |   349.38 |    369.61 |   0+  0+  0 |        0 |         18 |   998 |       128 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |     302.76 |      N/A |    302.76 |   0+  1+  0 |        8 |         24 |   959 |       302 |   461796.1 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       5.86 |      10.69 |    43.48 |     60.03 |   0+  3+  1 |        0 |          0 |  1000 |       914 |     6861.8 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       4.63 |      10.19 |    10.37 |     25.19 |   0+  3+  1 |        0 |          0 |  1000 |       655 |     6557.7 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       4.63 |      10.19 |    10.37 |     25.19 |   0+  3+  1 |        0 |          0 |  1000 |       655 |     6557.6 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/divergence_meter_dm_nixiebrd/unrouted.dsn)
 
-Size: 40 kB · Layers: 2 · Nets: 34 · Components: 51 · Dimensions: 188.5 x 42.0 mm (79.17 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 40 kB · Layers: 2 · Nets: 34 · Components: 51 · Dimensions: 188.5 x 42 mm (79.17 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -2597,7 +2608,7 @@ Size: 46.9 kB · Layers: 2 · Nets: 99 · Components: 115 · Dimensions: 271.99 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/domotics_in-board/unrouted.dsn)
 
-Size: 14.5 kB · Layers: 2 · Nets: 6 · Components: 14 · Dimensions: 60.0 x 80.0 mm (48.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 14.5 kB · Layers: 2 · Nets: 6 · Components: 14 · Dimensions: 60 x 80 mm (48 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -2609,7 +2620,7 @@ Size: 14.5 kB · Layers: 2 · Nets: 6 · Components: 14 · Dimensions: 60.0 x 80
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/domotics_out-board/unrouted.dsn)
 
-Size: 18.2 kB · Layers: 2 · Nets: 6 · Components: 22 · Dimensions: 60.0 x 80.0 mm (48.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 18.2 kB · Layers: 2 · Nets: 6 · Components: 22 · Dimensions: 60 x 80 mm (48 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -2633,13 +2644,13 @@ Size: 28 kB · Layers: 2 · Nets: 24 · Components: 25 · Dimensions: 80.55 x 75
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/domotics_relay-board/unrouted.dsn)
 
-Size: 23.7 kB · Layers: 2 · Nets: 29 · Components: 26 · Dimensions: 60.0 x 80.0 mm (48.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 23.7 kB · Layers: 2 · Nets: 29 · Components: 26 · Dimensions: 60 x 80 mm (48 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       1.72 |     1.48 |      3.20 |   0+  0+  0 |        1 |         52 |   968 |       121 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      11.34 |      N/A |     11.34 |   0+  1+  0 |        1 |         52 |   971 |       263 |    16523.4 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       0.02 |       2.66 |     3.06 |      5.74 |   0+  3+  2 |        0 |         34 |   993 |       212 |      440.7 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       0.02 |       2.66 |     3.06 |      5.74 |   0+  3+  2 |        0 |         34 |   993 |       212 |      440.6 |    3 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.03 |       3.63 |     3.33 |      6.99 |   0+  3+  2 |        0 |         34 |   993 |       185 |      434.8 |    3 / 0 |       |
 
 
@@ -2657,7 +2668,7 @@ Size: 99.8 kB · Layers: 2 · Nets: 116 · Components: 433 · Dimensions: 436.82
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/DoroidOscillo-Board_Android_Oscilloscope/unrouted.dsn)
 
-Size: 63.1 kB · Layers: 4 · Nets: 39 · Components: 134 · Dimensions: 70.0 x 43.0 mm (30.1 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 63.1 kB · Layers: 4 · Nets: 39 · Components: 134 · Dimensions: 70 x 43 mm (30.1 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -2669,7 +2680,7 @@ Size: 63.1 kB · Layers: 4 · Nets: 39 · Components: 134 · Dimensions: 70.0 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/DPS-1200FB_Adapter_Adapter/unrouted.dsn)
 
-Size: 37 kB · Layers: 2 · Nets: 2 · Components: 22 · Dimensions: 84.0 x 81.0 mm (68.04 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 37 kB · Layers: 2 · Nets: 2 · Components: 22 · Dimensions: 84 x 81 mm (68.04 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -2681,7 +2692,7 @@ Size: 37 kB · Layers: 2 · Nets: 2 · Components: 22 · Dimensions: 84.0 x 81.0
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/draco_draco/unrouted.dsn)
 
-Size: 79.5 kB · Layers: 4 · Nets: 0 · Components: 172 · Dimensions: 47.5 x 62.0 mm (29.45 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 79.5 kB · Layers: 4 · Nets: 0 · Components: 172 · Dimensions: 47.5 x 62 mm (29.45 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -2693,7 +2704,7 @@ Size: 79.5 kB · Layers: 4 · Nets: 0 · Components: 172 · Dimensions: 47.5 x 6
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/drawduino_drawduino/unrouted.dsn)
 
-Size: 35.9 kB · Layers: 2 · Nets: 6 · Components: 9 · Dimensions: 15.0 x 95.0 mm (14.25 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 35.9 kB · Layers: 2 · Nets: 6 · Components: 9 · Dimensions: 15 x 95 mm (14.25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -2705,7 +2716,7 @@ Size: 35.9 kB · Layers: 2 · Nets: 6 · Components: 9 · Dimensions: 15.0 x 95.
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/DronPi_dronPi/unrouted.dsn)
 
-Size: 75.6 kB · Layers: 2 · Nets: 103 · Components: 141 · Dimensions: 0.0 x 0.0 mm (0.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 75.6 kB · Layers: 2 · Nets: 103 · Components: 141 · Dimensions: 0 x 0 mm (0 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -2729,14 +2740,14 @@ Size: 34.3 kB · Layers: 2 · Nets: 40 · Components: 88 · Dimensions: 141.83 x
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/DSP-ADAU1452_DSP-ADAU1452/unrouted.dsn)
 
-Size: 79.4 kB · Layers: 4 · Nets: 116 · Components: 377 · Dimensions: 100.0 x 100.0 mm (100.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 79.4 kB · Layers: 4 · Nets: 116 · Components: 377 · Dimensions: 100 x 100 mm (100 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes           |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
 | 1.9.0     | N/A  |                N/A |        N/A |        N/A |      N/A |       N/A |   0+ 16+  1 |       55 |          0 |     0 |         0 |        0.0 |  354 / 0 | FAILED, TIMEOUT |
 | 2.4.1     | N/A  |                N/A |        N/A |    1818.59 |      N/A |   1818.59 |   0+  4+  0 |       36 |          0 |   935 |       636 |  2660612.2 |    3 / 0 |                 |
 | 2.5.0     | N/A  |                N/A |      55.64 |    2646.28 |      N/A |   2701.92 |   0+ 13+  0 |       38 |          0 |   932 |       509 |  1164862.8 |    2 / 0 | TIMEOUT         |
-| 2.6.0-RC1 | N/A  |                N/A |      49.78 |    2655.78 |      N/A |   2705.56 |   0+  9+  0 |       32 |          0 |   943 |       427 |   691879.9 |    2 / 0 | TIMEOUT         |
+| 2.6.0-RC1 | N/A  |                N/A |      49.78 |    2655.78 |      N/A |   2705.56 |   0+  9+  0 |       32 |          0 |   942 |       427 |   691879.9 |    2 / 0 | TIMEOUT         |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/DualLM317BenchSupply_DualLM317BenchSupply/unrouted.dsn)
@@ -2753,26 +2764,26 @@ Size: 45.3 kB · Layers: 2 · Nets: 0 · Components: 52 · Dimensions: 99.06 x 9
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/dust_sensor_dust_sensor/unrouted.dsn)
 
-Size: 30.7 kB · Layers: 2 · Nets: 25 · Components: 32 · Dimensions: 50.0 x 45.0 mm (22.5 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 30.7 kB · Layers: 2 · Nets: 25 · Components: 32 · Dimensions: 50 x 45 mm (22.5 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |      16.66 |     2.17 |     18.83 |   0+  0+  0 |        2 |          0 |   968 |        45 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      89.69 |      N/A |     89.69 |   0+  1+  0 |        1 |          0 |   983 |       329 |   146976.6 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      89.69 |      N/A |     89.69 |   0+  1+  0 |        1 |          0 |   983 |       329 |   146976.5 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       6.30 |      36.38 |    84.12 |    126.80 |   0+  6+  4 |        0 |          0 |  1000 |       716 |     5106.9 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       3.55 |      22.15 |    83.54 |    109.24 |   0+  4+  4 |        0 |          0 |  1000 |       729 |     4445.1 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/dustbox_Dustbox/unrouted.dsn)
 
-Size: 14.5 kB · Layers: 2 · Nets: 13 · Components: 19 · Dimensions: 58.0 x 58.0 mm (33.64 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 14.5 kB · Layers: 2 · Nets: 13 · Components: 19 · Dimensions: 58 x 58 mm (33.64 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       0.61 |     1.12 |      1.73 |   0+  0+  0 |        0 |          0 |  1000 |        27 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |       1.67 |      N/A |      1.67 |   0+  2+  0 |        0 |          0 |  1000 |        25 |      265.7 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.07 |       3.11 |     0.00 |      3.18 |   0+  2+  0 |        0 |          0 |  1000 |       134 |       87.5 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       0.03 |       3.62 |     0.00 |      3.65 |   0+  2+  0 |        0 |          0 |  1000 |       149 |       66.6 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       0.03 |       3.62 |     0.00 |      3.65 |   0+  2+  0 |        0 |          0 |  1000 |       149 |       66.5 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/DustSensorShield_DustSensorShield/unrouted.dsn)
@@ -2801,7 +2812,7 @@ Size: 59.4 kB · Layers: 2 · Nets: 27 · Components: 51 · Dimensions: 55.88 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/eBUS-Adapter_Groeger/unrouted.dsn)
 
-Size: 21.6 kB · Layers: 2 · Nets: 8 · Components: 14 · Dimensions: 38.0 x 38.0 mm (14.44 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 21.6 kB · Layers: 2 · Nets: 8 · Components: 14 · Dimensions: 38 x 38 mm (14.44 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -2813,13 +2824,13 @@ Size: 21.6 kB · Layers: 2 · Nets: 8 · Components: 14 · Dimensions: 38.0 x 38
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/eBUS-Adapter_Henning/unrouted.dsn)
 
-Size: 28.4 kB · Layers: 2 · Nets: 15 · Components: 21 · Dimensions: 68.0 x 38.0 mm (25.84 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 28.4 kB · Layers: 2 · Nets: 15 · Components: 21 · Dimensions: 68 x 38 mm (25.84 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       1.02 |     2.58 |      3.60 |   0+  0+  0 |        0 |          0 |  1000 |        78 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |       2.58 |      N/A |      2.58 |   0+  2+  0 |        0 |          0 |  1000 |        96 |     1466.1 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       0.06 |       3.02 |     0.00 |      3.08 |   0+  2+  0 |        0 |          0 |  1000 |        81 |      131.5 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       0.06 |       3.02 |     0.00 |      3.08 |   0+  2+  0 |        0 |          0 |  1000 |        81 |      131.4 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.03 |       3.11 |     0.00 |      3.14 |   0+  2+  0 |        0 |          0 |  1000 |        89 |      200.5 |    2 / 0 |       |
 
 
@@ -2847,18 +2858,6 @@ Size: 49.4 kB · Layers: 2 · Nets: 0 · Components: 65 · Dimensions: 86.36 x 5
 | 2.6.0-RC1 | N/A  |                N/A |       3.84 |     119.81 |     0.00 |    123.65 |   0+ 18+  0 |        8 |          0 |   805 |       313 |   218141.6 |    2 / 0 |         |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/eeg_brainboard_wearable/unrouted.dsn)
-
-Size: 41.7 kB · Layers: 4 · Nets: 11 · Components: 59 · Dimensions: 40.0 x 50.8 mm (20.32 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
-| 1.9.0     | N/A  |                N/A |        N/A |      36.53 |    15.02 |     51.55 |   0+  0+  0 |        1 |          4 |   993 |       140 |     4096.0 |    0 / 0 |         |
-| 2.4.1     | N/A  |                N/A |        N/A |     301.07 |      N/A |    301.07 |   0+ 16+  0 |       28 |          4 |   748 |       356 |   531781.8 |    4 / 0 | TIMEOUT |
-| 2.5.0     | N/A  |                N/A |      23.06 |     356.58 |     0.00 |    379.64 |   0+ 19+  0 |       16 |          4 |   856 |       265 |   152452.6 |    9 / 0 |         |
-| 2.6.0-RC1 | N/A  |                N/A |      15.85 |      21.48 |    92.23 |    129.56 |   0+  9+  3 |        0 |          4 |  1000 |      1435 |    12336.0 |    9 / 0 |         |
-
-
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/eeg_brainboard_wearable_v2/unrouted.dsn)
 
 Size: 64.7 kB · Layers: 4 · Nets: 39 · Components: 134 · Dimensions: 61.06 x 54.61 mm (33.34 cm²) · CAD: KiCad's Pcbnew (v)
@@ -2869,6 +2868,18 @@ Size: 64.7 kB · Layers: 4 · Nets: 39 · Components: 134 · Dimensions: 61.06 x
 | 2.4.1     | N/A  |                N/A |        N/A |     303.26 |      N/A |    303.26 |   0+  3+  0 |       42 |          6 |   840 |       417 |   602988.5 |    4 / 0 |         |
 | 2.5.0     | N/A  |                N/A |      24.97 |     577.72 |      N/A |    602.69 |   0+ 14+  0 |       21 |          0 |   920 |       268 |   208452.1 |    8 / 0 | TIMEOUT |
 | 2.6.0-RC1 | N/A  |                N/A |      13.26 |     266.99 |      N/A |    280.25 |   0+ 14+  0 |        6 |          0 |   977 |       408 |   207860.1 |    8 / 0 | TIMEOUT |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/eeg_brainboard_wearable/unrouted.dsn)
+
+Size: 41.7 kB · Layers: 4 · Nets: 11 · Components: 59 · Dimensions: 40 x 50.8 mm (20.32 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
+| 1.9.0     | N/A  |                N/A |        N/A |      36.53 |    15.02 |     51.55 |   0+  0+  0 |        1 |          4 |   993 |       140 |     4096.0 |    0 / 0 |         |
+| 2.4.1     | N/A  |                N/A |        N/A |     301.07 |      N/A |    301.07 |   0+ 16+  0 |       28 |          4 |   748 |       356 |   531781.8 |    4 / 0 | TIMEOUT |
+| 2.5.0     | N/A  |                N/A |      23.06 |     356.58 |     0.00 |    379.64 |   0+ 19+  0 |       16 |          4 |   856 |       265 |   152452.6 |    9 / 0 |         |
+| 2.6.0-RC1 | N/A  |                N/A |      15.85 |      21.48 |    92.23 |    129.56 |   0+  9+  3 |        0 |          4 |  1000 |      1435 |    12336.0 |    9 / 0 |         |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/eeg_brainboardv0/unrouted.dsn)
@@ -2945,19 +2956,19 @@ Size: 40.3 kB · Layers: 2 · Nets: 5 · Components: 65 · Dimensions: 85.34 x 3
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/elbsupply_elbsupply/unrouted.dsn)
 
-Size: 64.7 kB · Layers: 2 · Nets: 62 · Components: 103 · Dimensions: 105.0 x 64.4 mm (67.62 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 64.7 kB · Layers: 2 · Nets: 62 · Components: 103 · Dimensions: 105 x 64.4 mm (67.62 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |      45.69 |    20.88 |     66.57 |   0+  0+  0 |        4 |         56 |   976 |        42 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      96.63 |      N/A |     96.63 |   0+  7+  0 |        0 |          7 |  1000 |       331 |   221058.7 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |      11.96 |      47.39 |    80.60 |    139.95 |   0+  8+  1 |        0 |          7 |  1000 |       909 |    15281.6 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |      11.96 |      47.39 |    80.60 |    139.95 |   0+  8+  1 |        0 |          7 |  1000 |       909 |    15281.5 |    3 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       5.19 |      88.25 |    91.76 |    185.20 |   0+ 16+  2 |        0 |          7 |  1000 |      1495 |   105386.4 |    3 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/elec_power_dispatch/unrouted.dsn)
 
-Size: 86.4 kB · Layers: 2 · Nets: 58 · Components: 97 · Dimensions: 78.0 x 63.5 mm (49.53 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 86.4 kB · Layers: 2 · Nets: 58 · Components: 97 · Dimensions: 78 x 63.5 mm (49.53 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -2969,7 +2980,7 @@ Size: 86.4 kB · Layers: 2 · Nets: 58 · Components: 97 · Dimensions: 78.0 x 6
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/elec_turbo_brushless/unrouted.dsn)
 
-Size: 93.1 kB · Layers: 2 · Nets: 58 · Components: 98 · Dimensions: 70.0 x 50.0 mm (35.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 93.1 kB · Layers: 2 · Nets: 58 · Components: 98 · Dimensions: 70 x 50 mm (35 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -2981,7 +2992,7 @@ Size: 93.1 kB · Layers: 2 · Nets: 58 · Components: 98 · Dimensions: 70.0 x 5
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/elec-power-bms_OSBMS Balancer Rev1/unrouted.dsn)
 
-Size: 27.8 kB · Layers: 2 · Nets: 53 · Components: 74 · Dimensions: 49.0 x 49.0 mm (24.01 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 27.8 kB · Layers: 2 · Nets: 53 · Components: 74 · Dimensions: 49 x 49 mm (24.01 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -2993,19 +3004,19 @@ Size: 27.8 kB · Layers: 2 · Nets: 53 · Components: 74 · Dimensions: 49.0 x 4
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/elec-power-bms_rLoopPowerBms/unrouted.dsn)
 
-Size: 33.6 kB · Layers: 2 · Nets: 41 · Components: 87 · Dimensions: 70.0 x 60.0 mm (42.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 33.6 kB · Layers: 2 · Nets: 41 · Components: 87 · Dimensions: 70 x 60 mm (42 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
 | 1.9.0     | N/A  |                N/A |        N/A |     104.62 |    12.94 |    117.56 |   0+  0+  0 |        6 |          1 |   959 |       201 |     4096.0 |   80 / 0 |         |
 | 2.4.1     | N/A  |                N/A |        N/A |     301.66 |      N/A |    301.66 |   0+ 14+  0 |        6 |          1 |   958 |       559 |   557371.9 |    3 / 0 |         |
-| 2.5.0     | N/A  |                N/A |      30.55 |     409.51 |     0.00 |    440.06 |   0+ 24+  0 |        5 |          1 |   965 |       263 |   159796.3 |    3 / 0 |         |
+| 2.5.0     | N/A  |                N/A |      30.55 |     409.51 |     0.00 |    440.06 |   0+ 24+  0 |        5 |          1 |   965 |       263 |   159796.2 |    3 / 0 |         |
 | 2.6.0-RC1 | N/A  |                N/A |      36.03 |     148.69 |      N/A |    184.72 |   0+ 13+  0 |        4 |          0 |   937 |       318 |   211614.0 |    2 / 0 | TIMEOUT |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Electronics-MainBoard_MainBoard/unrouted.dsn)
 
-Size: 79.7 kB · Layers: 2 · Nets: 32 · Components: 89 · Dimensions: 120.0 x 68.0 mm (81.6 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 79.7 kB · Layers: 2 · Nets: 32 · Components: 89 · Dimensions: 120 x 68 mm (81.6 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -3017,7 +3028,7 @@ Size: 79.7 kB · Layers: 2 · Nets: 32 · Components: 89 · Dimensions: 120.0 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/EncoderBoard_Enc_Pan_Led/unrouted.dsn)
 
-Size: 21.7 kB · Layers: 2 · Nets: 19 · Components: 58 · Dimensions: 42.0 x 34.0 mm (14.28 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 21.7 kB · Layers: 2 · Nets: 19 · Components: 58 · Dimensions: 42 x 34 mm (14.28 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -3034,7 +3045,7 @@ Size: 26.4 kB · Layers: 2 · Nets: 29 · Components: 48 · Dimensions: 88.9 x 4
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |      25.89 |     4.36 |     30.25 |   0+  0+  0 |        2 |          0 |   977 |       156 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |     192.20 |      N/A |    192.20 |   0+  1+  0 |        6 |          0 |   929 |       420 |   357276.3 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |     192.20 |      N/A |    192.20 |   0+  1+  0 |        6 |          0 |   929 |       420 |   357276.2 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       4.81 |      73.32 |     0.00 |     78.13 |   0+ 19+  0 |        5 |          0 |   941 |       202 |    27806.0 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       6.26 |      25.86 |    50.48 |     82.60 |   0+  5+  4 |        0 |          0 |  1000 |       895 |     8447.2 |    2 / 0 |       |
 
@@ -3077,13 +3088,13 @@ Size: 28.4 kB · Layers: 2 · Nets: 19 · Components: 50 · Dimensions: 39.37 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/esp_hat_esp_hat/unrouted.dsn)
 
-Size: 37.3 kB · Layers: 2 · Nets: 14 · Components: 113 · Dimensions: 73.0 x 30.0 mm (21.9 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 37.3 kB · Layers: 2 · Nets: 14 · Components: 113 · Dimensions: 73 x 30 mm (21.9 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |      62.61 |    28.01 |     90.62 |   0+  0+  0 |       23 |         48 |   872 |       149 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |     301.35 |      N/A |    301.35 |   0+  1+  0 |       29 |        112 |   818 |       586 |   491488.3 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |      18.66 |     176.62 |     0.00 |    195.28 |   0+ 18+  0 |        9 |          2 |   945 |       244 |    68691.5 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |      18.66 |     176.62 |     0.00 |    195.28 |   0+ 18+  0 |        9 |          2 |   945 |       244 |    68691.4 |    3 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       2.13 |      86.98 |     0.00 |     89.11 |   0+ 18+  0 |        3 |          2 |   951 |       318 |   259853.3 |    3 / 0 |       |
 
 
@@ -3123,6 +3134,54 @@ Size: 13.3 kB · Layers: 2 · Nets: 15 · Components: 9 · Dimensions: 36.58 x 4
 | 2.6.0-RC1 | N/A  |                N/A |       0.86 |       1.21 |     1.07 |      3.14 |   0+  4+  1 |        0 |          0 |  1000 |        70 |      307.8 |    2 / 0 |       |
 
 
+### Fixture: [unrouted.dsn](../fixtures/PCBench/ESP-12-breakout_ESP12E-breakout/unrouted.dsn)
+
+Size: 21.8 kB · Layers: 2 · Nets: 7 · Components: 17 · Dimensions: 31.62 x 26.67 mm (8.43 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       2.81 |     0.83 |      3.64 |   0+  0+  0 |        3 |          0 |   905 |       188 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       5.07 |      N/A |      5.07 |   0+  3+  0 |        0 |          0 |  1000 |       196 |     4715.3 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       4.01 |       1.63 |     2.89 |      8.53 |   0+  2+  2 |        0 |          0 |  1000 |       183 |      419.3 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       2.69 |       1.12 |     4.82 |      8.63 |   0+  2+  2 |        0 |          0 |  1000 |       170 |      402.3 |    2 / 0 |       |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/ESP-Breakout_ESP-Breakout/unrouted.dsn)
+
+Size: 14.5 kB · Layers: 2 · Nets: 12 · Components: 17 · Dimensions: 50.8 x 20.32 mm (10.32 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       1.77 |    11.07 |     12.84 |   0+  0+  0 |        0 |          0 |  1000 |        82 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       7.50 |      N/A |      7.50 |   0+  2+  0 |        0 |          0 |  1000 |       228 |     7152.1 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       2.94 |       0.73 |     9.82 |     13.49 |   0+  2+  4 |        0 |          0 |  1000 |       369 |      610.1 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       2.44 |       0.99 |    13.60 |     17.03 |   0+  2+  4 |        0 |          0 |  1000 |       264 |      609.2 |    2 / 0 |       |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/esp-leipa_esp-12/unrouted.dsn)
+
+Size: 22.2 kB · Layers: 2 · Nets: 4 · Components: 9 · Dimensions: 26.67 x 44.45 mm (11.85 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       2.35 |    24.83 |     27.18 |   0+  0+  0 |        0 |          0 |  1000 |        87 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       6.58 |      N/A |      6.58 |   0+  3+  0 |        0 |          0 |  1000 |       227 |     5411.4 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       2.01 |       4.84 |     8.46 |     15.31 |   0+  5+  2 |        0 |          0 |  1000 |       552 |     1136.8 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       2.20 |       5.92 |    10.62 |     18.74 |   0+  4+  2 |        0 |          0 |  1000 |       293 |      938.3 |    2 / 0 |       |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/esp-serial-terminal_esp-com/unrouted.dsn)
+
+Size: 28.2 kB · Layers: 2 · Nets: 0 · Components: 27 · Dimensions: 66.23 x 34.56 mm (22.89 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       7.03 |     1.18 |      8.21 |   0+  0+  0 |        2 |          0 |   969 |       139 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      11.06 |      N/A |     11.06 |   0+  4+  0 |        0 |          0 |  1000 |       359 |    14014.2 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |      15.94 |       3.47 |    16.53 |     35.94 |   0+  3+  2 |        0 |          0 |  1000 |       372 |     1766.8 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       6.72 |       2.41 |    24.64 |     33.77 |   0+  3+  4 |        0 |          0 |  1000 |       422 |     1759.8 |    2 / 0 |       |
+
+
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/ESP07-Breakout_ESP07-Breakout/unrouted.dsn)
 
 Size: 27.4 kB · Layers: 2 · Nets: 6 · Components: 25 · Dimensions: 31.75 x 49.53 mm (15.73 cm²) · CAD: KiCad's Pcbnew (v)
@@ -3159,21 +3218,9 @@ Size: 6.9 kB · Layers: 2 · Nets: 20 · Components: 9 · Dimensions: 26.67 x 34
 | 2.6.0-RC1 | N/A  |                N/A |       3.33 |       3.91 |     0.00 |      7.24 |   0+  6+  0 |        0 |          0 |  1000 |       160 |      270.3 |    2 / 0 |       |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/ESP-12-breakout_ESP12E-breakout/unrouted.dsn)
-
-Size: 21.8 kB · Layers: 2 · Nets: 7 · Components: 17 · Dimensions: 31.62 x 26.67 mm (8.43 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       2.81 |     0.83 |      3.64 |   0+  0+  0 |        3 |          0 |   905 |       188 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       5.07 |      N/A |      5.07 |   0+  3+  0 |        0 |          0 |  1000 |       196 |     4715.3 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       4.01 |       1.63 |     2.89 |      8.53 |   0+  2+  2 |        0 |          0 |  1000 |       183 |      419.3 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       2.69 |       1.12 |     4.82 |      8.63 |   0+  2+  2 |        0 |          0 |  1000 |       170 |      402.3 |    2 / 0 |       |
-
-
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/ESP32-board_esp32_board/unrouted.dsn)
 
-Size: 52.6 kB · Layers: 2 · Nets: 18 · Components: 53 · Dimensions: 32.0 x 91.0 mm (29.12 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 52.6 kB · Layers: 2 · Nets: 18 · Components: 53 · Dimensions: 32 x 91 mm (29.12 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -3185,7 +3232,7 @@ Size: 52.6 kB · Layers: 2 · Nets: 18 · Components: 53 · Dimensions: 32.0 x 9
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/esp32-cantroller_EltekController/unrouted.dsn)
 
-Size: 86.2 kB · Layers: 2 · Nets: 19 · Components: 36 · Dimensions: 65.0 x 37.5 mm (24.38 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 86.2 kB · Layers: 2 · Nets: 19 · Components: 36 · Dimensions: 65 x 37.5 mm (24.38 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -3197,7 +3244,7 @@ Size: 86.2 kB · Layers: 2 · Nets: 19 · Components: 36 · Dimensions: 65.0 x 3
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/esp32-ethernet_esp32-ethernet/unrouted.dsn)
 
-Size: 38.9 kB · Layers: 2 · Nets: 24 · Components: 40 · Dimensions: 54.0 x 40.0 mm (21.6 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 38.9 kB · Layers: 2 · Nets: 24 · Components: 40 · Dimensions: 54 x 40 mm (21.6 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -3243,18 +3290,6 @@ Size: 30.5 kB · Layers: 2 · Nets: 34 · Components: 30 · Dimensions: 48.49 x 
 | 2.6.0-RC1 | N/A  |                N/A |       3.84 |       5.14 |     7.10 |     16.08 |   0+  2+  1 |        0 |          0 |  1000 |       346 |     1941.1 |    2 / 0 |       |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/esp8266_32x32panel_esp_12_f_595/unrouted.dsn)
-
-Size: 19.5 kB · Layers: 2 · Nets: 0 · Components: 26 · Dimensions: 85.72 x 29.21 mm (25.04 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
-| 1.9.0     | N/A  |                N/A |        N/A |      43.09 |     9.11 |     52.20 |   0+  0+  0 |        1 |          0 |   991 |        86 |     4096.0 |    0 / 0 |         |
-| 2.4.1     | N/A  |                N/A |        N/A |      96.09 |      N/A |     96.09 |   0+  1+  0 |        1 |          8 |   988 |       327 |   157745.4 |    5 / 0 |         |
-| 2.5.0     | N/A  |                N/A |      12.01 |      55.81 |   231.80 |    299.62 |   0+  8+  5 |        0 |          0 |  1000 |      1021 |     7423.8 |    2 / 0 | TIMEOUT |
-| 2.6.0-RC1 | N/A  |                N/A |       4.24 |      43.27 |   198.50 |    246.01 |   0+  8+  4 |        0 |          0 |  1000 |       994 |     7104.1 |    2 / 0 |         |
-
-
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/esp8266_32x32panel_esp_12_f_595_ORDERED/unrouted.dsn)
 
 Size: 19.6 kB · Layers: 2 · Nets: 4 · Components: 26 · Dimensions: 85.72 x 29.21 mm (25.04 cm²) · CAD: KiCad's Pcbnew (v)
@@ -3267,16 +3302,16 @@ Size: 19.6 kB · Layers: 2 · Nets: 4 · Components: 26 · Dimensions: 85.72 x 2
 | 2.6.0-RC1 | N/A  |                N/A |       6.12 |      45.10 |   169.12 |    220.34 |   0+  8+  4 |        0 |          0 |  1000 |       985 |     7216.4 |    2 / 0 |         |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/esp8266_envmonitor_environment-monitor/unrouted.dsn)
+### Fixture: [unrouted.dsn](../fixtures/PCBench/esp8266_32x32panel_esp_12_f_595/unrouted.dsn)
 
-Size: 18.7 kB · Layers: 2 · Nets: 4 · Components: 14 · Dimensions: 31.11 x 43.18 mm (13.43 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 19.5 kB · Layers: 2 · Nets: 0 · Components: 26 · Dimensions: 85.72 x 29.21 mm (25.04 cm²) · CAD: KiCad's Pcbnew (v)
 
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       4.78 |     6.60 |     11.38 |   0+  0+  0 |        0 |          0 |  1000 |       156 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      22.68 |      N/A |     22.68 |   0+  1+  0 |        1 |          0 |   962 |       567 |    37606.6 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       2.61 |       2.54 |     1.04 |      6.19 |   0+  4+  1 |        0 |          0 |  1000 |       124 |      519.4 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       1.58 |       3.23 |     1.54 |      6.35 |   0+  4+  1 |        0 |          0 |  1000 |        87 |      496.0 |    2 / 0 |       |
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
+| 1.9.0     | N/A  |                N/A |        N/A |      43.09 |     9.11 |     52.20 |   0+  0+  0 |        1 |          0 |   991 |        86 |     4096.0 |    0 / 0 |         |
+| 2.4.1     | N/A  |                N/A |        N/A |      96.09 |      N/A |     96.09 |   0+  1+  0 |        1 |          8 |   988 |       327 |   157745.4 |    5 / 0 |         |
+| 2.5.0     | N/A  |                N/A |      12.01 |      55.81 |   231.80 |    299.62 |   0+  8+  5 |        0 |          0 |  1000 |      1021 |     7423.8 |    2 / 0 | TIMEOUT |
+| 2.6.0-RC1 | N/A  |                N/A |       4.24 |      43.27 |   198.50 |    246.01 |   0+  8+  4 |        0 |          0 |  1000 |       994 |     7104.1 |    2 / 0 |         |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/esp8266_envmonitor_environment-monitor-1.2/unrouted.dsn)
@@ -3303,6 +3338,18 @@ Size: 18.7 kB · Layers: 2 · Nets: 4 · Components: 14 · Dimensions: 31.11 x 4
 | 2.6.0-RC1 | N/A  |                N/A |       1.82 |       1.94 |     1.55 |      5.31 |   0+  4+  1 |        0 |          0 |  1000 |       118 |      494.8 |    2 / 0 |       |
 
 
+### Fixture: [unrouted.dsn](../fixtures/PCBench/esp8266_envmonitor_environment-monitor/unrouted.dsn)
+
+Size: 18.7 kB · Layers: 2 · Nets: 4 · Components: 14 · Dimensions: 31.11 x 43.18 mm (13.43 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       4.78 |     6.60 |     11.38 |   0+  0+  0 |        0 |          0 |  1000 |       156 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      22.68 |      N/A |     22.68 |   0+  1+  0 |        1 |          0 |   962 |       567 |    37606.6 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       2.61 |       2.54 |     1.04 |      6.19 |   0+  4+  1 |        0 |          0 |  1000 |       124 |      519.4 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       1.58 |       3.23 |     1.54 |      6.35 |   0+  4+  1 |        0 |          0 |  1000 |        87 |      496.0 |    2 / 0 |       |
+
+
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/esp8266_esp-output/unrouted.dsn)
 
 Size: 28.3 kB · Layers: 2 · Nets: 44 · Components: 70 · Dimensions: 158.6 x 51.8 mm (82.15 cm²) · CAD: KiCad's Pcbnew (v)
@@ -3322,7 +3369,7 @@ Size: 9.4 kB · Layers: 2 · Nets: 0 · Components: 20 · Dimensions: 12.45 x 15
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |      11.61 |     1.18 |     12.79 |   0+  0+  0 |        4 |          4 |   898 |        60 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      39.46 |      N/A |     39.46 |   0+  1+  0 |        5 |          5 |   840 |       276 |    68424.5 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      39.46 |      N/A |     39.46 |   0+  1+  0 |        5 |          5 |   840 |       276 |    68424.4 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       4.06 |       5.00 |     0.00 |      9.06 |   0+ 18+  0 |        1 |          0 |   968 |       153 |     1835.1 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       2.98 |       3.50 |     8.04 |     14.52 |   0+ 13+  3 |        0 |          0 |  1000 |       271 |     1439.4 |    2 / 0 |       |
 
@@ -3365,14 +3412,14 @@ Size: 6.3 kB · Layers: 2 · Nets: 3 · Components: 5 · Dimensions: 22.1 x 21.4
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/esp8266-12f-board_esp8266/unrouted.dsn)
 
-Size: 17.7 kB · Layers: 2 · Nets: 1 · Components: 15 · Dimensions: 32.0 x 39.0 mm (12.48 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 17.7 kB · Layers: 2 · Nets: 1 · Components: 15 · Dimensions: 32 x 39 mm (12.48 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       1.58 |     2.33 |      3.91 |   0+  0+  0 |        0 |          0 |  1000 |       158 |     4096.0 |   11 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |       3.89 |      N/A |      3.89 |   0+  2+  0 |        0 |          0 |  1000 |       112 |     2143.5 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       6.38 |       1.41 |     8.63 |     16.42 |   0+  2+  3 |        0 |          0 |  1000 |       149 |      327.9 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       3.20 |       1.26 |     6.76 |     11.22 |   0+  2+  3 |        0 |          0 |  1000 |       184 |      321.7 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       3.20 |       1.26 |     6.76 |     11.22 |   0+  2+  3 |        0 |          0 |  1000 |       184 |      321.6 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/esp8266-external-temp-sensor_external-temp-sensor/unrouted.dsn)
@@ -3389,19 +3436,19 @@ Size: 15.6 kB · Layers: 2 · Nets: 2 · Components: 14 · Dimensions: 29.46 x 3
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/ESP8266-MQTT-battery-monitor-hw_battery-monitor/unrouted.dsn)
 
-Size: 23.7 kB · Layers: 2 · Nets: 15 · Components: 49 · Dimensions: 50.0 x 50.0 mm (25.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 23.7 kB · Layers: 2 · Nets: 15 · Components: 49 · Dimensions: 50 x 50 mm (25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       4.29 |     3.80 |      8.09 |   0+  0+  0 |        1 |          0 |   986 |        40 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      14.74 |      N/A |     14.74 |   0+  5+  0 |        0 |          0 |  1000 |       224 |    25774.3 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       3.16 |      10.87 |    80.81 |     94.84 |   0+  8+  2 |        0 |          0 |  1000 |       661 |     2224.9 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       3.16 |      10.87 |    80.81 |     94.84 |   0+  8+  2 |        0 |          0 |  1000 |       661 |     2224.8 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       3.29 |       4.66 |     5.78 |     13.73 |   0+  3+  1 |        0 |          0 |  1000 |       398 |     1233.3 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/ESP8266-WS2811-LEDs_ws2811controller_panels/unrouted.dsn)
 
-Size: 6.1 kB · Layers: 2 · Nets: 0 · Components: 8 · Dimensions: 25.0 x 27.0 mm (6.75 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 6.1 kB · Layers: 2 · Nets: 0 · Components: 8 · Dimensions: 25 x 27 mm (6.75 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -3423,21 +3470,9 @@ Size: 18.1 kB · Layers: 2 · Nets: 0 · Components: 39 · Dimensions: 85.6 x 85
 | 2.6.0-RC1 | N/A  |                N/A |       4.19 |      25.30 |    34.92 |     64.41 |   0+  5+  2 |        0 |          0 |  1000 |       546 |     3241.3 |    2 / 0 |       |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/ESP-Breakout_ESP-Breakout/unrouted.dsn)
-
-Size: 14.5 kB · Layers: 2 · Nets: 12 · Components: 17 · Dimensions: 50.8 x 20.32 mm (10.32 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       1.77 |    11.07 |     12.84 |   0+  0+  0 |        0 |          0 |  1000 |        82 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       7.50 |      N/A |      7.50 |   0+  2+  0 |        0 |          0 |  1000 |       228 |     7152.1 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       2.94 |       0.73 |     9.82 |     13.49 |   0+  2+  4 |        0 |          0 |  1000 |       369 |      610.1 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       2.44 |       0.99 |    13.60 |     17.03 |   0+  2+  4 |        0 |          0 |  1000 |       264 |      609.2 |    2 / 0 |       |
-
-
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/espeverywhere__autosave-espeverywhere_breakout/unrouted.dsn)
 
-Size: 7 kB · Layers: 2 · Nets: 0 · Components: 3 · Dimensions: 33.0 x 12.0 mm (3.96 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 7 kB · Layers: 2 · Nets: 0 · Components: 3 · Dimensions: 33 x 12 mm (3.96 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -3449,7 +3484,7 @@ Size: 7 kB · Layers: 2 · Nets: 0 · Components: 3 · Dimensions: 33.0 x 12.0 m
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/espeverywhere_espeverywhere/unrouted.dsn)
 
-Size: 31.2 kB · Layers: 2 · Nets: 27 · Components: 41 · Dimensions: 45.0 x 48.0 mm (21.6 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 31.2 kB · Layers: 2 · Nets: 27 · Components: 41 · Dimensions: 45 x 48 mm (21.6 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -3485,7 +3520,7 @@ Size: 20.5 kB · Layers: 2 · Nets: 16 · Components: 14 · Dimensions: 41.28 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/ESPkit-01_espkit-01/unrouted.dsn)
 
-Size: 18.7 kB · Layers: 2 · Nets: 20 · Components: 24 · Dimensions: 20.0 x 35.7 mm (7.14 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 18.7 kB · Layers: 2 · Nets: 20 · Components: 24 · Dimensions: 20 x 35.7 mm (7.14 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -3495,33 +3530,21 @@ Size: 18.7 kB · Layers: 2 · Nets: 20 · Components: 24 · Dimensions: 20.0 x 3
 | 2.6.0-RC1 | N/A  |                N/A |       1.40 |       3.02 |    26.15 |     30.57 |   0+  6+  5 |        0 |          0 |  1000 |       702 |    19942.2 |    2 / 0 |       |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/esp-leipa_esp-12/unrouted.dsn)
-
-Size: 22.2 kB · Layers: 2 · Nets: 4 · Components: 9 · Dimensions: 26.67 x 44.45 mm (11.85 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       2.35 |    24.83 |     27.18 |   0+  0+  0 |        0 |          0 |  1000 |        87 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       6.58 |      N/A |      6.58 |   0+  3+  0 |        0 |          0 |  1000 |       227 |     5411.4 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       2.01 |       4.84 |     8.46 |     15.31 |   0+  5+  2 |        0 |          0 |  1000 |       552 |     1136.9 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       2.20 |       5.92 |    10.62 |     18.74 |   0+  4+  2 |        0 |          0 |  1000 |       293 |      938.3 |    2 / 0 |       |
-
-
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/ESPLux_Board/unrouted.dsn)
 
-Size: 28.3 kB · Layers: 2 · Nets: 18 · Components: 33 · Dimensions: 70.0 x 43.0 mm (30.1 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 28.3 kB · Layers: 2 · Nets: 18 · Components: 33 · Dimensions: 70 x 43 mm (30.1 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       8.31 |    50.06 |     58.37 |   0+  0+  0 |        0 |          0 |  1000 |       117 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |     142.82 |      N/A |    142.82 |   0+  2+  0 |        0 |          8 |   999 |       338 |   273074.4 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       3.21 |       5.00 |     5.49 |     13.70 |   0+  3+  1 |        0 |          0 |  1000 |       301 |     1105.6 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       3.21 |       5.00 |     5.49 |     13.70 |   0+  3+  1 |        0 |          0 |  1000 |       301 |     1105.5 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       2.21 |       3.47 |    11.80 |     17.48 |   0+  3+  1 |        0 |          0 |  1000 |       304 |     1055.9 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/ESProto-One_ESProto/unrouted.dsn)
 
-Size: 17 kB · Layers: 2 · Nets: 27 · Components: 32 · Dimensions: 50.0 x 40.0 mm (20.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 17 kB · Layers: 2 · Nets: 27 · Components: 32 · Dimensions: 50 x 40 mm (20 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -3529,18 +3552,6 @@ Size: 17 kB · Layers: 2 · Nets: 27 · Components: 32 · Dimensions: 50.0 x 40.
 | 2.4.1     | N/A  |                N/A |        N/A |       7.79 |      N/A |      7.79 |   0+  2+  0 |        0 |          0 |  1000 |       212 |     4853.4 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.74 |      15.39 |     0.00 |     16.13 |   0+  2+  0 |        0 |          0 |  1000 |       164 |      435.8 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.21 |       3.84 |     0.00 |      4.05 |   0+  2+  0 |        0 |          0 |  1000 |        97 |      371.8 |    2 / 0 |       |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/esp-serial-terminal_esp-com/unrouted.dsn)
-
-Size: 28.2 kB · Layers: 2 · Nets: 0 · Components: 27 · Dimensions: 66.23 x 34.56 mm (22.89 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       7.03 |     1.18 |      8.21 |   0+  0+  0 |        2 |          0 |   969 |       139 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      11.06 |      N/A |     11.06 |   0+  4+  0 |        0 |          0 |  1000 |       359 |    14014.2 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |      15.94 |       3.47 |    16.53 |     35.94 |   0+  3+  2 |        0 |          0 |  1000 |       372 |     1766.8 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       6.72 |       2.41 |    24.64 |     33.77 |   0+  3+  4 |        0 |          0 |  1000 |       422 |     1759.8 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/EtherCAT_shield_v1_EtherCAT_shield_v1/unrouted.dsn)
@@ -3569,7 +3580,7 @@ Size: 66.3 kB · Layers: 4 · Nets: 93 · Components: 318 · Dimensions: 49.53 x
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/EUC-VESC_electronics_sept/unrouted.dsn)
 
-Size: 75.8 kB · Layers: 4 · Nets: 102 · Components: 577 · Dimensions: 100.0 x 150.0 mm (150.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 75.8 kB · Layers: 4 · Nets: 102 · Components: 577 · Dimensions: 100 x 150 mm (150 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -3586,14 +3597,14 @@ Size: 17.4 kB · Layers: 2 · Nets: 23 · Components: 30 · Dimensions: 97.5 x 4
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       4.79 |     2.22 |      7.01 |   0+  0+  0 |        1 |          6 |   979 |       112 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      47.54 |      N/A |     47.54 |   0+  1+  0 |        0 |         12 |   999 |       325 |    99058.7 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      47.54 |      N/A |     47.54 |   0+  1+  0 |        0 |         12 |   998 |       325 |    99058.6 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |      11.31 |       3.05 |     3.95 |     18.31 |   0+  2+  2 |        0 |          0 |  1000 |       408 |      881.1 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       1.36 |       1.55 |     5.52 |      8.43 |   0+  2+  2 |        0 |          0 |  1000 |       311 |      830.3 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       1.36 |       1.55 |     5.52 |      8.43 |   0+  2+  2 |        0 |          0 |  1000 |       311 |      830.2 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/everled_everled/unrouted.dsn)
 
-Size: 16.8 kB · Layers: 2 · Nets: 6 · Components: 9 · Dimensions: 25.0 x 30.0 mm (7.5 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 16.8 kB · Layers: 2 · Nets: 6 · Components: 9 · Dimensions: 25 x 30 mm (7.5 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -3629,7 +3640,7 @@ Size: 43.1 kB · Layers: 2 · Nets: 62 · Components: 129 · Dimensions: 285.75 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/f4fc_f4fc/unrouted.dsn)
 
-Size: 53.3 kB · Layers: 4 · Nets: 63 · Components: 63 · Dimensions: 36.0 x 36.0 mm (12.96 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 53.3 kB · Layers: 4 · Nets: 63 · Components: 63 · Dimensions: 36 x 36 mm (12.96 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -3641,7 +3652,7 @@ Size: 53.3 kB · Layers: 4 · Nets: 63 · Components: 63 · Dimensions: 36.0 x 3
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/fan_controller_fan_controller/unrouted.dsn)
 
-Size: 28.6 kB · Layers: 2 · Nets: 31 · Components: 66 · Dimensions: 60.0 x 37.0 mm (22.2 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 28.6 kB · Layers: 2 · Nets: 31 · Components: 66 · Dimensions: 60 x 37 mm (22.2 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -3689,7 +3700,7 @@ Size: 30.1 kB · Layers: 2 · Nets: 8 · Components: 37 · Dimensions: 56.77 x 5
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/filament_extruder_sensor/unrouted.dsn)
 
-Size: 11 kB · Layers: 2 · Nets: 3 · Components: 6 · Dimensions: 25.0 x 80.0 mm (20.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 11 kB · Layers: 2 · Nets: 3 · Components: 6 · Dimensions: 25 x 80 mm (20 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -3707,13 +3718,13 @@ Size: 92 kB · Layers: 2 · Nets: 33 · Components: 9 · Dimensions: 68.53 x 53.
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       1.19 |     1.68 |      2.87 |   0+  0+  0 |        0 |          0 |  1000 |       164 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |       3.11 |      N/A |      3.11 |   0+  2+  0 |        0 |          0 |  1000 |        88 |     2489.8 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       2.14 |       2.09 |     1.82 |      6.05 |   0+  2+  1 |        0 |          0 |  1000 |       114 |      512.0 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       2.14 |       2.09 |     1.82 |      6.05 |   0+  2+  1 |        0 |          0 |  1000 |       114 |      511.9 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       2.23 |       1.06 |     2.85 |      6.14 |   0+  2+  1 |        0 |          0 |  1000 |       167 |      489.5 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/firefly-jar_solar_lamp/unrouted.dsn)
 
-Size: 25.8 kB · Layers: 2 · Nets: 9 · Components: 11 · Dimensions: 68.07 x 0.0 mm (0.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 25.8 kB · Layers: 2 · Nets: 9 · Components: 11 · Dimensions: 68.07 x 0 mm (0 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -3749,7 +3760,7 @@ Size: 34.8 kB · Layers: 2 · Nets: 50 · Components: 49 · Dimensions: 60.96 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/flatpack2-adapter_EltekFlatpack2/unrouted.dsn)
 
-Size: 54.1 kB · Layers: 2 · Nets: 0 · Components: 17 · Dimensions: 163.75 x 131.0 mm (214.51 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 54.1 kB · Layers: 2 · Nets: 0 · Components: 17 · Dimensions: 163.75 x 131 mm (214.51 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -3761,7 +3772,7 @@ Size: 54.1 kB · Layers: 2 · Nets: 0 · Components: 17 · Dimensions: 163.75 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/flip32plus_flip32/unrouted.dsn)
 
-Size: 42.7 kB · Layers: 2 · Nets: 0 · Components: 60 · Dimensions: 36.0 x 36.0 mm (12.96 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 42.7 kB · Layers: 2 · Nets: 0 · Components: 60 · Dimensions: 36 x 36 mm (12.96 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -3779,7 +3790,7 @@ Size: 41.9 kB · Layers: 4 · Nets: 54 · Components: 104 · Dimensions: 36.91 x
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |      24.25 |    44.95 |     69.20 |   0+  0+  0 |        1 |          8 |   995 |       206 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |     303.08 |      N/A |    303.08 |   0+  1+  0 |        0 |         48 |   999 |       349 |   703788.8 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |      42.57 |      40.28 |   142.88 |    225.73 |   0+  3+  1 |        0 |          0 |  1000 |       874 |    11224.6 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |      42.57 |      40.28 |   142.88 |    225.73 |   0+  3+  1 |        0 |          0 |  1000 |       874 |    11224.5 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |      23.43 |      24.25 |   106.78 |    154.46 |   0+  3+  1 |        0 |          0 |  1000 |      1124 |     9845.7 |    2 / 0 |       |
 
 
@@ -3795,18 +3806,6 @@ Size: 54.7 kB · Layers: 4 · Nets: 72 · Components: 143 · Dimensions: 42.93 x
 | 2.6.0-RC1 | N/A  |                N/A |      58.23 |     182.13 |      N/A |    240.36 |   0+ 11+  0 |        5 |          0 |   930 |       465 |   501566.7 |    2 / 0 | TIMEOUT |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/FogDrive_attiny45/unrouted.dsn)
-
-Size: 23.8 kB · Layers: 2 · Nets: 3 · Components: 9 · Dimensions: 19.05 x 20.32 mm (3.87 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       0.50 |     0.46 |      0.96 |   0+  0+  0 |        0 |          0 |  1000 |        39 |     4096.0 |    5 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       2.62 |      N/A |      2.62 |   0+  1+  0 |        0 |          4 |   998 |        34 |      923.7 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       0.07 |       1.35 |     0.00 |      1.42 |   0+  2+  0 |        0 |          0 |  1000 |       131 |       17.5 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       0.02 |       1.45 |     0.00 |      1.47 |   0+  2+  0 |        0 |          0 |  1000 |        97 |       23.8 |    2 / 0 |       |
-
-
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/FogDrive_attiny45_slim/unrouted.dsn)
 
 Size: 22.9 kB · Layers: 2 · Nets: 3 · Components: 9 · Dimensions: 16.51 x 19.05 mm (3.15 cm²) · CAD: KiCad's Pcbnew (v)
@@ -3817,6 +3816,18 @@ Size: 22.9 kB · Layers: 2 · Nets: 3 · Components: 9 · Dimensions: 16.51 x 19
 | 2.4.1     | N/A  |                N/A |        N/A |       1.78 |      N/A |      1.78 |   0+  1+  0 |        0 |          2 |   999 |        29 |      389.7 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.09 |       1.53 |     0.00 |      1.62 |   0+  2+  0 |        0 |          0 |  1000 |       134 |       22.9 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.23 |       1.61 |     0.00 |      1.84 |   0+  2+  0 |        0 |          0 |  1000 |       141 |       30.5 |    2 / 0 |       |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/FogDrive_attiny45/unrouted.dsn)
+
+Size: 23.8 kB · Layers: 2 · Nets: 3 · Components: 9 · Dimensions: 19.05 x 20.32 mm (3.87 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       0.50 |     0.46 |      0.96 |   0+  0+  0 |        0 |          0 |  1000 |        39 |     4096.0 |    5 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       2.62 |      N/A |      2.62 |   0+  1+  0 |        0 |          4 |   998 |        34 |      923.7 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       0.07 |       1.35 |     0.00 |      1.42 |   0+  2+  0 |        0 |          0 |  1000 |       131 |       17.5 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       0.02 |       1.45 |     0.00 |      1.47 |   0+  2+  0 |        0 |          0 |  1000 |        97 |       23.8 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/fp2_extension_sample_fp2_usb_breakout/unrouted.dsn)
@@ -3831,9 +3842,21 @@ Size: 3.3 kB · Layers: 2 · Nets: 4 · Components: 2 · Dimensions: 17.79 x 23.
 | 2.6.0-RC1 | N/A  |                N/A |       0.58 |       0.33 |     1.22 |      2.13 |   0+  2+  2 |        0 |          0 |  1000 |       110 |       57.5 |    2 / 0 |       |
 
 
+### Fixture: [unrouted.dsn](../fixtures/PCBench/free-of-charge_BMS/unrouted.dsn)
+
+Size: 43 kB · Layers: 2 · Nets: 0 · Components: 100 · Dimensions: 88.9 x 33.02 mm (29.35 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
+| 1.9.0     | N/A  |                N/A |        N/A |      87.64 |    27.30 |    114.94 |   0+  0+  0 |        6 |          0 |   972 |       210 |     4096.0 |    0 / 0 |         |
+| 2.4.1     | N/A  |                N/A |        N/A |     303.39 |      N/A |    303.39 |   0+  7+  0 |       16 |          0 |   925 |       453 |   525431.7 |    3 / 0 | TIMEOUT |
+| 2.5.0     | N/A  |                N/A |      16.31 |     360.73 |     0.00 |    377.04 |   0+ 29+  0 |       26 |          0 |   878 |       276 |   180243.4 |    2 / 0 |         |
+| 2.6.0-RC1 | N/A  |                N/A |      13.72 |      18.05 |      N/A |     31.77 |   0+  1+  0 |        2 |          0 |   863 |       409 |   299688.3 |    2 / 0 | TIMEOUT |
+
+
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/freeDSP-CLASSIC-SMD-BALANCED_FreeDSP_BAL/unrouted.dsn)
 
-Size: 98.4 kB · Layers: 2 · Nets: 101 · Components: 215 · Dimensions: 100.0 x 100.0 mm (100.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 98.4 kB · Layers: 2 · Nets: 101 · Components: 215 · Dimensions: 100 x 100 mm (100 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -3845,26 +3868,14 @@ Size: 98.4 kB · Layers: 2 · Nets: 101 · Components: 215 · Dimensions: 100.0 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/freeDSPx-AMP-x4_freeDSPx-AMPx4/unrouted.dsn)
 
-Size: 57.2 kB · Layers: 2 · Nets: 72 · Components: 283 · Dimensions: 60.0 x 100.0 mm (60.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 57.2 kB · Layers: 2 · Nets: 72 · Components: 283 · Dimensions: 60 x 100 mm (60 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
 | 1.9.0     | N/A  |                N/A |        N/A |     297.07 |    69.22 |    366.29 |   0+  0+  0 |       16 |        168 |   947 |       219 |     4096.0 |    0 / 0 |         |
 | 2.4.1     | N/A  |                N/A |        N/A |     905.41 |      N/A |    905.41 |   0+ 18+  0 |       14 |        168 |   956 |       499 |  1533207.0 |    4 / 0 |         |
 | 2.5.0     | N/A  |                N/A |      26.49 |     487.08 |     0.00 |    513.57 |   0+ 18+  0 |       29 |         64 |   912 |       282 |   226822.4 |    3 / 0 |         |
-| 2.6.0-RC1 | N/A  |                N/A |      15.82 |     409.56 |      N/A |    425.38 |   0+ 14+  0 |       32 |         64 |   903 |       382 |   578512.3 |    4 / 0 | TIMEOUT |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/free-of-charge_BMS/unrouted.dsn)
-
-Size: 43 kB · Layers: 2 · Nets: 0 · Components: 100 · Dimensions: 88.9 x 33.02 mm (29.35 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
-| 1.9.0     | N/A  |                N/A |        N/A |      87.64 |    27.30 |    114.94 |   0+  0+  0 |        6 |          0 |   972 |       210 |     4096.0 |    0 / 0 |         |
-| 2.4.1     | N/A  |                N/A |        N/A |     303.39 |      N/A |    303.39 |   0+  7+  0 |       16 |          0 |   925 |       453 |   525431.7 |    3 / 0 | TIMEOUT |
-| 2.5.0     | N/A  |                N/A |      16.31 |     360.73 |     0.00 |    377.04 |   0+ 29+  0 |       26 |          0 |   878 |       276 |   180243.4 |    2 / 0 |         |
-| 2.6.0-RC1 | N/A  |                N/A |      13.72 |      18.05 |      N/A |     31.77 |   0+  1+  0 |        2 |          0 |   863 |       409 |   299688.3 |    2 / 0 | TIMEOUT |
+| 2.6.0-RC1 | N/A  |                N/A |      15.82 |     409.56 |      N/A |    425.38 |   0+ 14+  0 |       32 |         64 |   903 |       382 |   578512.2 |    4 / 0 | TIMEOUT |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/FreeSmartEEG__autosave-AD7779 for Intel Edison umdk/unrouted.dsn)
@@ -3881,7 +3892,7 @@ Size: 39 kB · Layers: 2 · Nets: 15 · Components: 83 · Dimensions: 70.91 x 12
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/freeUSBi_USBi_Programmer/unrouted.dsn)
 
-Size: 22.4 kB · Layers: 2 · Nets: 31 · Components: 24 · Dimensions: 40.0 x 40.0 mm (16.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 22.4 kB · Layers: 2 · Nets: 31 · Components: 24 · Dimensions: 40 x 40 mm (16 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -3900,12 +3911,12 @@ Size: 12.9 kB · Layers: 2 · Nets: 36 · Components: 31 · Dimensions: 137.16 x
 | 1.9.0     | N/A  |                N/A |        N/A |      18.03 |     1.75 |     19.78 |   0+  0+  0 |        4 |         36 |   895 |        68 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |     130.66 |      N/A |    130.66 |   0+  1+  0 |        0 |         36 |   995 |       294 |   265904.7 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       8.15 |      11.20 |    14.72 |     34.07 |   0+  7+  1 |        0 |          0 |  1000 |       497 |     3378.5 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       6.26 |      11.38 |    21.97 |     39.61 |   0+  7+  1 |        0 |          0 |  1000 |       534 |     3274.0 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       6.26 |      11.38 |    21.97 |     39.61 |   0+  7+  1 |        0 |          0 |  1000 |       534 |     3273.9 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/front-end-modules_LimeSDR_Sony/unrouted.dsn)
 
-Size: 81.1 kB · Layers: 6 · Nets: 352 · Components: 529 · Dimensions: 56.76 x 40.0 mm (22.7 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 81.1 kB · Layers: 6 · Nets: 352 · Components: 529 · Dimensions: 56.76 x 40 mm (22.7 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -3971,13 +3982,13 @@ Size: 10.8 kB · Layers: 2 · Nets: 10 · Components: 22 · Dimensions: 81.28 x 
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
 | 1.9.0     | N/A  |                N/A |        N/A |       3.26 |    61.17 |     64.43 |   0+  0+  0 |        0 |          4 |   999 |       151 |     4096.0 | 2036 / 0 |         |
 | 2.4.1     | N/A  |                N/A |        N/A |      61.55 |      N/A |     61.55 |   0+  1+  0 |        1 |          0 |   985 |       320 |   108220.3 |    3 / 0 | TIMEOUT |
-| 2.5.0     | N/A  |                N/A |      17.51 |       4.32 |    26.09 |     47.92 |   0+  2+  1 |        0 |          0 |  1000 |       391 |     1555.3 |    2 / 0 |         |
+| 2.5.0     | N/A  |                N/A |      17.51 |       4.32 |    26.09 |     47.92 |   0+  2+  1 |        0 |          0 |  1000 |       391 |     1555.2 |    2 / 0 |         |
 | 2.6.0-RC1 | N/A  |                N/A |       7.82 |       4.64 |    33.06 |     45.52 |   0+  2+  2 |        0 |          0 |  1000 |       388 |     1445.9 |    2 / 0 |         |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/gamelights_leds/unrouted.dsn)
 
-Size: 12.5 kB · Layers: 2 · Nets: 3 · Components: 15 · Dimensions: 24.3 x 24.0 mm (5.83 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 12.5 kB · Layers: 2 · Nets: 3 · Components: 15 · Dimensions: 24.3 x 24 mm (5.83 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -3989,7 +4000,7 @@ Size: 12.5 kB · Layers: 2 · Nets: 3 · Components: 15 · Dimensions: 24.3 x 24
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/gdrom_adapter_board_adapter/unrouted.dsn)
 
-Size: 23.9 kB · Layers: 2 · Nets: 5 · Components: 10 · Dimensions: 100.0 x 80.0 mm (80.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 23.9 kB · Layers: 2 · Nets: 5 · Components: 10 · Dimensions: 100 x 80 mm (80 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -4013,7 +4024,7 @@ Size: 17.5 kB · Layers: 2 · Nets: 8 · Components: 20 · Dimensions: 86.61 x 5
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/gpsclock_clock/unrouted.dsn)
 
-Size: 11.5 kB · Layers: 2 · Nets: 0 · Components: 10 · Dimensions: 48.26 x 78.74 mm (38.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 11.5 kB · Layers: 2 · Nets: 0 · Components: 10 · Dimensions: 48.26 x 78.74 mm (38 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -4030,14 +4041,14 @@ Size: 54 kB · Layers: 2 · Nets: 34 · Components: 92 · Dimensions: 25.4 x 64.
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
 | 1.9.0     | N/A  |                N/A |        N/A |     208.70 |    46.24 |    254.94 |   0+  0+  0 |        5 |          7 |   976 |       208 |     4096.0 |    2 / 0 |         |
-| 2.4.1     | N/A  |                N/A |        N/A |     303.67 |      N/A |    303.67 |   0+  4+  0 |       33 |         76 |   821 |       388 |   535632.3 |    3 / 0 |         |
+| 2.4.1     | N/A  |                N/A |        N/A |     303.67 |      N/A |    303.67 |   0+  4+  0 |       33 |         76 |   821 |       388 |   535632.2 |    3 / 0 |         |
 | 2.5.0     | N/A  |                N/A |      41.46 |     499.30 |     0.00 |    540.76 |   0+ 30+  0 |       11 |          0 |   941 |       297 |   260842.1 |    2 / 0 |         |
 | 2.6.0-RC1 | N/A  |                N/A |      36.02 |     131.18 |      N/A |    167.20 |   0+ 10+  0 |        5 |          1 |   920 |       366 |   320778.9 |    4 / 0 | TIMEOUT |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/guitar_fret/unrouted.dsn)
 
-Size: 21.5 kB · Layers: 2 · Nets: 13 · Components: 51 · Dimensions: 0.0 x 0.0 mm (0.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 21.5 kB · Layers: 2 · Nets: 13 · Components: 51 · Dimensions: 0 x 0 mm (0 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -4085,7 +4096,7 @@ Size: 33 kB · Layers: 2 · Nets: 13 · Components: 32 · Dimensions: 36.83 x 19
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/hackaday_esp-14_power_meter__autosave-esp-14/unrouted.dsn)
 
-Size: 6.3 kB · Layers: 2 · Nets: 22 · Components: 3 · Dimensions: 30.0 x 37.0 mm (11.1 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 6.3 kB · Layers: 2 · Nets: 22 · Components: 3 · Dimensions: 30 x 37 mm (11.1 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -4109,7 +4120,7 @@ Size: 20.6 kB · Layers: 2 · Nets: 6 · Components: 14 · Dimensions: 67.31 x 9
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/hamityanik_ULP-Weather-Logger/unrouted.dsn)
 
-Size: 45.2 kB · Layers: 2 · Nets: 12 · Components: 94 · Dimensions: 37.0 x 66.0 mm (24.42 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 45.2 kB · Layers: 2 · Nets: 12 · Components: 94 · Dimensions: 37 x 66 mm (24.42 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -4133,7 +4144,7 @@ Size: 65.4 kB · Layers: 4 · Nets: 85 · Components: 173 · Dimensions: 53.3 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Hangul-Clock_Hangul/unrouted.dsn)
 
-Size: 25.1 kB · Layers: 2 · Nets: 65 · Components: 87 · Dimensions: 99.0 x 99.0 mm (98.01 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 25.1 kB · Layers: 2 · Nets: 65 · Components: 87 · Dimensions: 99 x 99 mm (98.01 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -4157,7 +4168,7 @@ Size: 32.2 kB · Layers: 2 · Nets: 0 · Components: 159 · Dimensions: 136.91 x
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Hardware_Playground_buck_led_driver/unrouted.dsn)
 
-Size: 19.5 kB · Layers: 2 · Nets: 7 · Components: 13 · Dimensions: 25.0 x 17.0 mm (4.25 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 19.5 kB · Layers: 2 · Nets: 7 · Components: 13 · Dimensions: 25 x 17 mm (4.25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -4179,18 +4190,6 @@ Size: 93.4 kB · Layers: 2 · Nets: 0 · Components: 140 · Dimensions: 99.95 x 
 | 2.6.0-RC1 | N/A  |                N/A |       8.09 |       0.18 |      N/A |      8.27 |   0+  1+  0 |       40 |          5 |   404 |       372 |   286362.9 |   23 / 0 | TIMEOUT |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/Hardware_Playground_esp8266_uno/unrouted.dsn)
-
-Size: 44.3 kB · Layers: 2 · Nets: 10 · Components: 126 · Dimensions: 68.53 x 53.47 mm (36.64 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |      11.74 |     9.79 |     21.53 |   0+  0+  0 |        1 |          0 |   994 |        53 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      74.46 |      N/A |     74.46 |   0+ 18+  0 |        1 |          0 |   993 |       403 |   165081.5 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       3.61 |      11.72 |     6.24 |     21.57 |   0+  5+  1 |        0 |          0 |  1000 |       570 |     6005.1 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       3.15 |      21.60 |     7.50 |     32.25 |   0+  8+  1 |        0 |          0 |  1000 |       433 |     7911.8 |    2 / 0 |       |
-
-
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Hardware_Playground_esp8266_uno_relay/unrouted.dsn)
 
 Size: 64 kB · Layers: 2 · Nets: 3 · Components: 295 · Dimensions: 68.75 x 53.25 mm (36.61 cm²) · CAD: KiCad's Pcbnew (v)
@@ -4201,6 +4200,18 @@ Size: 64 kB · Layers: 2 · Nets: 3 · Components: 295 · Dimensions: 68.75 x 53
 | 2.4.1     | N/A  |                N/A |        N/A |      33.64 |      N/A |     33.64 |   0+  1+  0 |        1 |         56 |   991 |       276 |    70425.0 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.95 |       5.64 |     0.00 |      6.59 |   0+  2+  0 |        0 |          0 |  1000 |        81 |     1393.5 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.64 |       4.11 |     0.00 |      4.75 |   0+  2+  0 |        0 |          0 |  1000 |       128 |     1458.3 |    2 / 0 |       |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/Hardware_Playground_esp8266_uno/unrouted.dsn)
+
+Size: 44.3 kB · Layers: 2 · Nets: 10 · Components: 126 · Dimensions: 68.53 x 53.47 mm (36.64 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |      11.74 |     9.79 |     21.53 |   0+  0+  0 |        1 |          0 |   994 |        53 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      74.46 |      N/A |     74.46 |   0+ 18+  0 |        1 |          0 |   993 |       403 |   165081.5 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       3.61 |      11.72 |     6.24 |     21.57 |   0+  5+  1 |        0 |          0 |  1000 |       570 |     6005.1 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       3.15 |      21.60 |     7.50 |     32.25 |   0+  8+  1 |        0 |          0 |  1000 |       433 |     7911.8 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Hardware_Playground_heater_actuator_node/unrouted.dsn)
@@ -4223,7 +4234,7 @@ Size: 6.2 kB · Layers: 2 · Nets: 0 · Components: 22 · Dimensions: 9.91 x 12.
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       0.68 |     0.05 |      0.73 |   0+  0+  0 |        1 |          6 |   906 |        54 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |       7.48 |      N/A |      7.48 |   0+  2+  0 |        0 |         16 |   990 |       256 |     6706.6 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       3.11 |       0.44 |     4.60 |      8.15 |   0+  2+  3 |        0 |          0 |  1000 |       137 |      117.6 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       3.11 |       0.44 |     4.60 |      8.15 |   0+  2+  3 |        0 |          0 |  1000 |       137 |      117.5 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       1.71 |       0.15 |     1.91 |      3.77 |   0+  2+  3 |        0 |          0 |  1000 |       155 |      106.8 |    2 / 0 |       |
 
 
@@ -4248,12 +4259,12 @@ Size: 106.6 kB · Layers: 2 · Nets: 0 · Components: 142 · Dimensions: 92.2 x 
 | 1.9.0     | N/A  |                N/A |        N/A |       4.25 |    30.38 |     34.63 |   0+  0+  0 |        0 |          1 |  1000 |       129 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      25.04 |      N/A |     25.04 |   0+  2+  0 |        0 |          1 |  1000 |       267 |    49566.3 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       1.66 |       4.30 |     9.82 |     15.78 |   0+  2+  2 |        0 |          1 |  1000 |       594 |     1960.3 |    3 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       1.48 |       3.25 |     7.89 |     12.62 |   0+  2+  2 |        0 |          1 |  1000 |       660 |     1798.6 |    3 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       1.48 |       3.25 |     7.89 |     12.62 |   0+  2+  2 |        0 |          1 |  1000 |       660 |     1798.5 |    3 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Hardware_Playground_livolo_1_channel_1way_eu_switch/unrouted.dsn)
 
-Size: 52.4 kB · Layers: 2 · Nets: 15 · Components: 31 · Dimensions: 43.0 x 43.4 mm (18.66 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 52.4 kB · Layers: 2 · Nets: 15 · Components: 31 · Dimensions: 43 x 43.4 mm (18.66 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -4373,7 +4384,7 @@ Size: 47.4 kB · Layers: 2 · Nets: 0 · Components: 41 · Dimensions: 11.31 x 1
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Hardware_Playground_orange_pi_zero_node/unrouted.dsn)
 
-Size: 36.1 kB · Layers: 2 · Nets: 45 · Components: 164 · Dimensions: 46.0 x 48.0 mm (22.08 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 36.1 kB · Layers: 2 · Nets: 45 · Components: 164 · Dimensions: 46 x 48 mm (22.08 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -4397,7 +4408,7 @@ Size: 29.1 kB · Layers: 2 · Nets: 17 · Components: 95 · Dimensions: 50.5 x 3
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Hardware_Playground_rfm69w_adapter/unrouted.dsn)
 
-Size: 25.4 kB · Layers: 2 · Nets: 8 · Components: 87 · Dimensions: 20.0 x 16.0 mm (3.2 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 25.4 kB · Layers: 2 · Nets: 8 · Components: 87 · Dimensions: 20 x 16 mm (3.2 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -4407,21 +4418,9 @@ Size: 25.4 kB · Layers: 2 · Nets: 8 · Components: 87 · Dimensions: 20.0 x 16
 | 2.6.0-RC1 | N/A  |                N/A |       5.23 |       7.76 |     1.26 |     14.25 |   0+  9+  1 |        0 |          0 |  1000 |       281 |    38236.4 |    2 / 0 |       |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/Hardware_Playground_rpi_zero/unrouted.dsn)
-
-Size: 44.1 kB · Layers: 2 · Nets: 32 · Components: 169 · Dimensions: 65.0 x 30.0 mm (19.5 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |      13.16 |    23.01 |     36.17 |   0+  0+  0 |        1 |          0 |   994 |       188 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      99.82 |      N/A |     99.82 |   0+ 18+  0 |        2 |          0 |   988 |       281 |   175454.7 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       1.36 |      10.22 |    23.28 |     34.86 |   0+  2+  2 |        0 |          0 |  1000 |       777 |     4352.7 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       2.14 |      16.21 |    23.52 |     41.87 |   0+  2+  2 |        0 |          0 |  1000 |       677 |     4108.9 |    2 / 0 |       |
-
-
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Hardware_Playground_rpi_zero_ws2812/unrouted.dsn)
 
-Size: 25.3 kB · Layers: 2 · Nets: 0 · Components: 40 · Dimensions: 65.0 x 30.0 mm (19.5 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 25.3 kB · Layers: 2 · Nets: 0 · Components: 40 · Dimensions: 65 x 30 mm (19.5 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -4429,6 +4428,18 @@ Size: 25.3 kB · Layers: 2 · Nets: 0 · Components: 40 · Dimensions: 65.0 x 30
 | 2.4.1     | N/A  |                N/A |        N/A |       5.07 |      N/A |      5.07 |   0+  3+  0 |        0 |          0 |  1000 |       162 |     4182.8 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       3.75 |       6.17 |    17.13 |     27.05 |   0+  2+  1 |        0 |          0 |  1000 |        98 |      443.3 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       1.39 |       1.34 |     7.19 |      9.92 |   0+  2+  1 |        0 |          0 |  1000 |       101 |      396.6 |    2 / 0 |       |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/Hardware_Playground_rpi_zero/unrouted.dsn)
+
+Size: 44.1 kB · Layers: 2 · Nets: 32 · Components: 169 · Dimensions: 65 x 30 mm (19.5 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |      13.16 |    23.01 |     36.17 |   0+  0+  0 |        1 |          0 |   994 |       188 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      99.82 |      N/A |     99.82 |   0+ 18+  0 |        2 |          0 |   988 |       281 |   175454.7 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       1.36 |      10.22 |    23.28 |     34.86 |   0+  2+  2 |        0 |          0 |  1000 |       777 |     4352.7 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       2.14 |      16.21 |    23.52 |     41.87 |   0+  2+  2 |        0 |          0 |  1000 |       677 |     4108.9 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Hardware_Playground_samd51_micropython/unrouted.dsn)
@@ -4481,13 +4492,13 @@ Size: 39.4 kB · Layers: 2 · Nets: 13 · Components: 78 · Dimensions: 38.9 x 2
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Hardware_Playground_serial_gw_maple_mini/unrouted.dsn)
 
-Size: 49 kB · Layers: 2 · Nets: 33 · Components: 189 · Dimensions: 70.01 x 50.0 mm (35.01 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 49 kB · Layers: 2 · Nets: 33 · Components: 189 · Dimensions: 70.01 x 50 mm (35.01 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |      18.11 |   155.67 |    173.78 |   0+  0+  0 |        0 |          0 |  1000 |        61 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      45.88 |      N/A |     45.88 |   0+  7+  0 |        0 |          0 |  1000 |       286 |    74792.0 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       0.69 |      13.02 |    12.97 |     26.68 |   0+  7+  2 |        0 |          0 |  1000 |       404 |     4639.5 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       0.69 |      13.02 |    12.97 |     26.68 |   0+  7+  2 |        0 |          0 |  1000 |       404 |     4639.4 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.84 |      10.13 |    10.90 |     21.87 |   0+  7+  2 |        0 |          0 |  1000 |       488 |     4313.0 |    2 / 0 |       |
 
 
@@ -4517,7 +4528,7 @@ Size: 37.7 kB · Layers: 2 · Nets: 0 · Components: 57 · Dimensions: 43.43 x 4
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Hardware_Playground_usb_shield/unrouted.dsn)
 
-Size: 28.2 kB · Layers: 2 · Nets: 0 · Components: 201 · Dimensions: 70.05 x 30.0 mm (21.02 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 28.2 kB · Layers: 2 · Nets: 0 · Components: 201 · Dimensions: 70.05 x 30 mm (21.02 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -4529,7 +4540,7 @@ Size: 28.2 kB · Layers: 2 · Nets: 0 · Components: 201 · Dimensions: 70.05 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Hardware_Playground_wifi_lights/unrouted.dsn)
 
-Size: 30.1 kB · Layers: 2 · Nets: 8 · Components: 33 · Dimensions: 46.5 x 48.0 mm (22.32 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 30.1 kB · Layers: 2 · Nets: 8 · Components: 33 · Dimensions: 46.5 x 48 mm (22.32 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -4547,20 +4558,8 @@ Size: 35.6 kB · Layers: 2 · Nets: 8 · Components: 118 · Dimensions: 44.8 x 2
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |      35.87 |     6.90 |     42.77 |   0+  0+  0 |        5 |         11 |   967 |       181 |     4096.0 |    1 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |     301.57 |      N/A |    301.57 |   0+  1+  0 |        3 |          0 |   977 |       375 |   571203.1 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       7.65 |      62.33 |     0.00 |     69.98 |   0+ 27+  0 |        2 |          0 |   985 |       234 |    36813.6 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       7.65 |      62.33 |     0.00 |     69.98 |   0+ 27+  0 |        2 |          0 |   984 |       234 |    36813.6 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       8.72 |     103.53 |     0.00 |    112.25 |   0+ 25+  0 |        3 |          0 |   969 |       312 |   162331.1 |    2 / 0 |       |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/hardware-designs_cc430-debug-board/unrouted.dsn)
-
-Size: 14.5 kB · Layers: 2 · Nets: 0 · Components: 14 · Dimensions: 49.0 x 36.0 mm (17.64 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |      15.65 |    45.49 |     61.14 |   0+  0+  0 |        0 |         11 |   998 |       145 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      20.22 |      N/A |     20.22 |   0+ 13+  0 |        0 |          0 |  1000 |       286 |    30950.8 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       4.04 |      10.96 |    35.00 |     50.00 |   0+  5+  3 |        0 |          0 |  1000 |       402 |     2709.3 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       5.87 |      10.62 |     5.31 |     21.80 |   0+  5+  1 |        0 |          0 |  1000 |       142 |     2392.9 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/hardware-designs_c-trigger/unrouted.dsn)
@@ -4573,6 +4572,18 @@ Size: 5.5 kB · Layers: 2 · Nets: 0 · Components: 8 · Dimensions: 46.23 x 10.
 | 2.4.1     | N/A  |                N/A |        N/A |       0.93 |      N/A |      0.93 |   0+  2+  0 |        0 |          0 |  1000 |         0 |        0.0 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.03 |       0.61 |     0.00 |      0.64 |   0+  2+  0 |        0 |          0 |  1000 |        26 |       34.0 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.16 |       1.35 |     0.00 |      1.51 |   0+  2+  0 |        0 |          0 |  1000 |       120 |       16.8 |    2 / 0 |       |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/hardware-designs_cc430-debug-board/unrouted.dsn)
+
+Size: 14.5 kB · Layers: 2 · Nets: 0 · Components: 14 · Dimensions: 49 x 36 mm (17.64 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |      15.65 |    45.49 |     61.14 |   0+  0+  0 |        0 |         11 |   998 |       145 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      20.22 |      N/A |     20.22 |   0+ 13+  0 |        0 |          0 |  1000 |       286 |    30950.8 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       4.04 |      10.96 |    35.00 |     50.00 |   0+  5+  3 |        0 |          0 |  1000 |       402 |     2709.3 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       5.87 |      10.62 |     5.31 |     21.80 |   0+  5+  1 |        0 |          0 |  1000 |       142 |     2392.9 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/hardware-designs_energy-harvester/unrouted.dsn)
@@ -4601,19 +4612,19 @@ Size: 5.5 kB · Layers: 2 · Nets: 0 · Components: 7 · Dimensions: 46.23 x 15.
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/hardware-designs_nixie-combo/unrouted.dsn)
 
-Size: 22 kB · Layers: 2 · Nets: 0 · Components: 27 · Dimensions: 99.0 x 70.0 mm (69.3 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 22 kB · Layers: 2 · Nets: 0 · Components: 27 · Dimensions: 99 x 70 mm (69.3 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       8.11 |    51.31 |     59.42 |   0+  0+  0 |        0 |          0 |  1000 |       122 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      26.87 |      N/A |     26.87 |   0+  5+  0 |        0 |          0 |  1000 |       306 |    32497.1 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       4.31 |      38.06 |    55.55 |     97.92 |   0+  5+  3 |        0 |          0 |  1000 |       608 |     4410.5 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       4.31 |      38.06 |    55.55 |     97.92 |   0+  5+  3 |        0 |          0 |  1000 |       608 |     4410.4 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       2.58 |      27.50 |    53.98 |     84.06 |   0+  5+  3 |        0 |          0 |  1000 |       745 |     4122.4 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/hardware-designs_nixie-power/unrouted.dsn)
 
-Size: 17.1 kB · Layers: 2 · Nets: 0 · Components: 24 · Dimensions: 49.0 x 49.0 mm (24.01 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 17.1 kB · Layers: 2 · Nets: 0 · Components: 24 · Dimensions: 49 x 49 mm (24.01 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -4661,7 +4672,7 @@ Size: 10.9 kB · Layers: 2 · Nets: 0 · Components: 18 · Dimensions: 46.23 x 1
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/hardware-designs_spirit1-board/unrouted.dsn)
 
-Size: 13.9 kB · Layers: 2 · Nets: 0 · Components: 23 · Dimensions: 27.0 x 24.0 mm (6.48 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 13.9 kB · Layers: 2 · Nets: 0 · Components: 23 · Dimensions: 27 x 24 mm (6.48 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -4702,7 +4713,7 @@ Size: 6.4 kB · Layers: 2 · Nets: 3 · Components: 14 · Dimensions: 7.62 x 18.
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       1.73 |     0.41 |      2.14 |   0+  0+  0 |        1 |         12 |   928 |        44 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       9.74 |      N/A |      9.74 |   0+  1+  0 |        1 |         10 |   937 |       222 |    15376.1 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       9.74 |      N/A |      9.74 |   0+  1+  0 |        1 |         10 |   937 |       222 |    15376.0 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.73 |       0.25 |     1.97 |      2.95 |   0+  2+  3 |        0 |          0 |  1000 |       141 |      196.3 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       1.11 |       0.28 |     2.01 |      3.40 |   0+  2+  3 |        0 |          0 |  1000 |        96 |      159.7 |    2 / 0 |       |
 
@@ -4740,12 +4751,12 @@ Size: 28.7 kB · Layers: 2 · Nets: 38 · Components: 51 · Dimensions: 173.74 x
 | 1.9.0     | N/A  |                N/A |        N/A |       4.01 |   171.44 |    175.45 |   0+  0+  0 |        0 |          0 |  1000 |       184 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      22.46 |      N/A |     22.46 |   0+  4+  0 |        0 |          0 |  1000 |       356 |    32926.3 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       4.98 |       9.95 |    72.75 |     87.68 |   0+  4+  7 |        0 |          0 |  1000 |       587 |     2884.1 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       5.00 |      18.65 |    59.78 |     83.43 |   0+  4+  7 |        0 |          0 |  1000 |       773 |     2752.0 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       5.00 |      18.65 |    59.78 |     83.43 |   0+  4+  7 |        0 |          0 |  1000 |       773 |     2751.9 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/helmholtz-servo_CurrentServo/unrouted.dsn)
 
-Size: 54.4 kB · Layers: 2 · Nets: 42 · Components: 102 · Dimensions: 130.0 x 85.0 mm (110.5 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 54.4 kB · Layers: 2 · Nets: 42 · Components: 102 · Dimensions: 130 x 85 mm (110.5 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -4757,7 +4768,7 @@ Size: 54.4 kB · Layers: 2 · Nets: 42 · Components: 102 · Dimensions: 130.0 x
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/HES-V2__autosave-hes/unrouted.dsn)
 
-Size: 23.9 kB · Layers: 2 · Nets: 20 · Components: 18 · Dimensions: 0.0 x 0.0 mm (0.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 23.9 kB · Layers: 2 · Nets: 20 · Components: 18 · Dimensions: 0 x 0 mm (0 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -4769,7 +4780,7 @@ Size: 23.9 kB · Layers: 2 · Nets: 20 · Components: 18 · Dimensions: 0.0 x 0.
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/HES-V2_hes/unrouted.dsn)
 
-Size: 23.8 kB · Layers: 2 · Nets: 20 · Components: 18 · Dimensions: 0.0 x 0.0 mm (0.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 23.8 kB · Layers: 2 · Nets: 20 · Components: 18 · Dimensions: 0 x 0 mm (0 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -4781,7 +4792,7 @@ Size: 23.8 kB · Layers: 2 · Nets: 20 · Components: 18 · Dimensions: 0.0 x 0.
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/HID_PID_controller/unrouted.dsn)
 
-Size: 42.3 kB · Layers: 2 · Nets: 0 · Components: 62 · Dimensions: 50.0 x 50.0 mm (25.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 42.3 kB · Layers: 2 · Nets: 0 · Components: 62 · Dimensions: 50 x 50 mm (25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -4793,7 +4804,7 @@ Size: 42.3 kB · Layers: 2 · Nets: 0 · Components: 62 · Dimensions: 50.0 x 50
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/HIDIRT-for-STM32F103C8T6-DevBoard_STM32F103C8T6-DEV-BOARD-addon/unrouted.dsn)
 
-Size: 37.7 kB · Layers: 2 · Nets: 17 · Components: 33 · Dimensions: 53.0 x 61.0 mm (32.33 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 37.7 kB · Layers: 2 · Nets: 17 · Components: 33 · Dimensions: 53 x 61 mm (32.33 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -4829,12 +4840,12 @@ Size: 35.5 kB · Layers: 2 · Nets: 1 · Components: 24 · Dimensions: 49.95 x 9
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/HillhacksLantern_LEDLantern/unrouted.dsn)
 
-Size: 41.8 kB · Layers: 2 · Nets: 10 · Components: 22 · Dimensions: 20.0 x 121.0 mm (24.2 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 41.8 kB · Layers: 2 · Nets: 10 · Components: 22 · Dimensions: 20 x 121 mm (24.2 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       1.21 |     7.00 |      8.21 |   0+  0+  0 |        0 |          0 |  1000 |       142 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       9.56 |      N/A |      9.56 |   0+  1+  0 |        2 |          0 |   905 |       276 |    12505.2 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       9.56 |      N/A |      9.56 |   0+  1+  0 |        2 |          0 |   905 |       276 |    12505.1 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       1.57 |       4.76 |     4.39 |     10.72 |   0+  2+  2 |        0 |          0 |  1000 |       234 |      436.9 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       2.84 |       3.53 |     3.23 |      9.60 |   0+  2+  2 |        0 |          0 |  1000 |       131 |      426.5 |    2 / 0 |       |
 
@@ -4889,7 +4900,7 @@ Size: 46 kB · Layers: 2 · Nets: 25 · Components: 292 · Dimensions: 121.92 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Horticulture_Light_EQ_3-Band_light/unrouted.dsn)
 
-Size: 39.6 kB · Layers: 2 · Nets: 40 · Components: 390 · Dimensions: 551.18 x 12.7 mm (70.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 39.6 kB · Layers: 2 · Nets: 40 · Components: 390 · Dimensions: 551.18 x 12.7 mm (70 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -4901,7 +4912,7 @@ Size: 39.6 kB · Layers: 2 · Nets: 40 · Components: 390 · Dimensions: 551.18 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/hotstick_Wand/unrouted.dsn)
 
-Size: 16 kB · Layers: 4 · Nets: 6 · Components: 20 · Dimensions: 50.0 x 7.0 mm (3.5 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 16 kB · Layers: 4 · Nets: 6 · Components: 20 · Dimensions: 50 x 7 mm (3.5 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -4925,7 +4936,7 @@ Size: 21 kB · Layers: 2 · Nets: 4 · Components: 28 · Dimensions: 49.53 x 49.
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/HW-AC-Emeter_ac-power-monitor/unrouted.dsn)
 
-Size: 33.7 kB · Layers: 2 · Nets: 20 · Components: 62 · Dimensions: 100.0 x 50.0 mm (50.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 33.7 kB · Layers: 2 · Nets: 20 · Components: 62 · Dimensions: 100 x 50 mm (50 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -4935,21 +4946,9 @@ Size: 33.7 kB · Layers: 2 · Nets: 20 · Components: 62 · Dimensions: 100.0 x 
 | 2.6.0-RC1 | N/A  |                N/A |      11.79 |      14.56 |    52.40 |     78.75 |   0+  4+  1 |        0 |          0 |  1000 |       578 |     2790.1 |    2 / 0 |       |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/HW-ESP8266_Roomba_ESP8266_Roomba/unrouted.dsn)
-
-Size: 56.4 kB · Layers: 2 · Nets: 31 · Components: 68 · Dimensions: 100.0 x 30.01 mm (30.01 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
-| 1.9.0     | N/A  |                N/A |        N/A |      56.96 |    25.20 |     82.16 |   0+  0+  0 |        5 |         58 |   961 |       206 |     4096.0 |    0 / 0 |         |
-| 2.4.1     | N/A  |                N/A |        N/A |     302.73 |      N/A |    302.73 |   0+  1+  0 |        4 |         58 |   968 |       462 |   499486.5 |    3 / 0 | TIMEOUT |
-| 2.5.0     | N/A  |                N/A |       4.92 |     150.54 |     0.00 |    155.46 |   0+ 18+  0 |       20 |          0 |   853 |       236 |    63079.6 |    2 / 0 |         |
-| 2.6.0-RC1 | N/A  |                N/A |       2.56 |      61.43 |      N/A |     63.99 |   0+  8+  0 |       17 |          0 |   860 |       291 |   206430.3 |    2 / 0 | TIMEOUT |
-
-
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/HW-ESP8266_Roomba_ESP8266_Roomba_panel_x_3/unrouted.dsn)
 
-Size: 52.6 kB · Layers: 2 · Nets: 31 · Components: 68 · Dimensions: 100.0 x 30.03 mm (30.03 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 52.6 kB · Layers: 2 · Nets: 31 · Components: 68 · Dimensions: 100 x 30.03 mm (30.03 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -4959,9 +4958,21 @@ Size: 52.6 kB · Layers: 2 · Nets: 31 · Components: 68 · Dimensions: 100.0 x 
 | 2.6.0-RC1 | N/A  |                N/A |       3.53 |      29.07 |      N/A |     32.60 |   0+  5+  0 |       15 |          0 |   802 |       317 |   222577.7 |    2 / 0 | TIMEOUT |
 
 
+### Fixture: [unrouted.dsn](../fixtures/PCBench/HW-ESP8266_Roomba_ESP8266_Roomba/unrouted.dsn)
+
+Size: 56.4 kB · Layers: 2 · Nets: 31 · Components: 68 · Dimensions: 100 x 30.01 mm (30.01 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
+| 1.9.0     | N/A  |                N/A |        N/A |      56.96 |    25.20 |     82.16 |   0+  0+  0 |        5 |         58 |   961 |       206 |     4096.0 |    0 / 0 |         |
+| 2.4.1     | N/A  |                N/A |        N/A |     302.73 |      N/A |    302.73 |   0+  1+  0 |        4 |         58 |   968 |       462 |   499486.5 |    3 / 0 | TIMEOUT |
+| 2.5.0     | N/A  |                N/A |       4.92 |     150.54 |     0.00 |    155.46 |   0+ 18+  0 |       20 |          0 |   853 |       236 |    63079.6 |    2 / 0 |         |
+| 2.6.0-RC1 | N/A  |                N/A |       2.56 |      61.43 |      N/A |     63.99 |   0+  8+  0 |       17 |          0 |   860 |       291 |   206430.3 |    2 / 0 | TIMEOUT |
+
+
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/hwstar_ac-power-monitor/unrouted.dsn)
 
-Size: 33.7 kB · Layers: 2 · Nets: 20 · Components: 62 · Dimensions: 100.0 x 50.0 mm (50.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 33.7 kB · Layers: 2 · Nets: 20 · Components: 62 · Dimensions: 100 x 50 mm (50 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -4973,7 +4984,7 @@ Size: 33.7 kB · Layers: 2 · Nets: 20 · Components: 62 · Dimensions: 100.0 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/HY-AI7688H-RevA_HY-AI7688H/unrouted.dsn)
 
-Size: 108.7 kB · Layers: 2 · Nets: 26 · Components: 217 · Dimensions: 97.0 x 82.0 mm (79.54 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 108.7 kB · Layers: 2 · Nets: 26 · Components: 217 · Dimensions: 97 x 82 mm (79.54 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -5002,14 +5013,14 @@ Size: 8.1 kB · Layers: 2 · Nets: 3 · Components: 6 · Dimensions: 21.59 x 21.
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       0.69 |     0.89 |      1.58 |   0+  0+  0 |        0 |          0 |  1000 |        65 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       2.41 |      N/A |      2.41 |   0+  2+  0 |        0 |          0 |  1000 |       213 |      438.3 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       2.41 |      N/A |      2.41 |   0+  2+  0 |        0 |          0 |  1000 |       213 |      438.2 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.10 |       5.57 |     0.00 |      5.67 |   0+  2+  0 |        0 |          0 |  1000 |       137 |       73.4 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.12 |       2.22 |     0.00 |      2.34 |   0+  2+  0 |        0 |          0 |  1000 |        58 |       27.9 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/i2lcd__autosave-i2lcd/unrouted.dsn)
 
-Size: 18 kB · Layers: 2 · Nets: 5 · Components: 22 · Dimensions: 44.0 x 25.0 mm (11.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 18 kB · Layers: 2 · Nets: 5 · Components: 22 · Dimensions: 44 x 25 mm (11 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -5021,7 +5032,7 @@ Size: 18 kB · Layers: 2 · Nets: 5 · Components: 22 · Dimensions: 44.0 x 25.0
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/i2lcd_i2lcd/unrouted.dsn)
 
-Size: 17.9 kB · Layers: 2 · Nets: 5 · Components: 22 · Dimensions: 44.0 x 25.0 mm (11.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 17.9 kB · Layers: 2 · Nets: 5 · Components: 22 · Dimensions: 44 x 25 mm (11 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -5033,7 +5044,7 @@ Size: 17.9 kB · Layers: 2 · Nets: 5 · Components: 22 · Dimensions: 44.0 x 25
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/ice40_stm32_fsmc_test_pcb_fsmc_ice40/unrouted.dsn)
 
-Size: 48.3 kB · Layers: 2 · Nets: 7 · Components: 44 · Dimensions: 76.2 x 48.0 mm (36.58 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 48.3 kB · Layers: 2 · Nets: 7 · Components: 44 · Dimensions: 76.2 x 48 mm (36.58 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -5045,7 +5056,7 @@ Size: 48.3 kB · Layers: 2 · Nets: 7 · Components: 44 · Dimensions: 76.2 x 48
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/iCE40-DIO_ICE40-DIO_Rev_A/unrouted.dsn)
 
-Size: 114.5 kB · Layers: 2 · Nets: 15 · Components: 51 · Dimensions: 50.0 x 50.0 mm (25.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 114.5 kB · Layers: 2 · Nets: 15 · Components: 51 · Dimensions: 50 x 50 mm (25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -5057,7 +5068,7 @@ Size: 114.5 kB · Layers: 2 · Nets: 15 · Components: 51 · Dimensions: 50.0 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/iCE40-IO_ICE40-IO_Rev_A/unrouted.dsn)
 
-Size: 119.7 kB · Layers: 2 · Nets: 20 · Components: 43 · Dimensions: 45.0 x 50.0 mm (22.5 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 119.7 kB · Layers: 2 · Nets: 20 · Components: 43 · Dimensions: 45 x 50 mm (22.5 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -5069,7 +5080,7 @@ Size: 119.7 kB · Layers: 2 · Nets: 20 · Components: 43 · Dimensions: 45.0 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/icehat_icehat/unrouted.dsn)
 
-Size: 35.7 kB · Layers: 4 · Nets: 59 · Components: 40 · Dimensions: 65.0 x 30.0 mm (19.5 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 35.7 kB · Layers: 4 · Nets: 59 · Components: 40 · Dimensions: 65 x 30 mm (19.5 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -5093,7 +5104,7 @@ Size: 7.6 kB · Layers: 2 · Nets: 2 · Components: 8 · Dimensions: 35.39 x 31.
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/IGN01A_IGN01A/unrouted.dsn)
 
-Size: 19.1 kB · Layers: 2 · Nets: 4 · Components: 24 · Dimensions: 50.0 x 45.0 mm (22.5 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 19.1 kB · Layers: 2 · Nets: 4 · Components: 24 · Dimensions: 50 x 45 mm (22.5 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -5117,7 +5128,7 @@ Size: 20.4 kB · Layers: 2 · Nets: 0 · Components: 19 · Dimensions: 201.93 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/induction-hob_temperature-sender/unrouted.dsn)
 
-Size: 29.6 kB · Layers: 2 · Nets: 10 · Components: 44 · Dimensions: 50.0 x 25.0 mm (12.5 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 29.6 kB · Layers: 2 · Nets: 10 · Components: 44 · Dimensions: 50 x 25 mm (12.5 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -5213,7 +5224,7 @@ Size: 15.7 kB · Layers: 2 · Nets: 57 · Components: 11 · Dimensions: 29.21 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/iotuz-esp32-hardware_IoTuz/unrouted.dsn)
 
-Size: 110.8 kB · Layers: 2 · Nets: 52 · Components: 154 · Dimensions: 150.0 x 95.0 mm (142.5 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 110.8 kB · Layers: 2 · Nets: 52 · Components: 154 · Dimensions: 150 x 95 mm (142.5 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -5237,7 +5248,7 @@ Size: 126.7 kB · Layers: 2 · Nets: 12 · Components: 36 · Dimensions: 21.59 x
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/IR-Transponder-ATTiny85-v2_Transponder_v2/unrouted.dsn)
 
-Size: 12.4 kB · Layers: 2 · Nets: 8 · Components: 12 · Dimensions: 19.0 x 23.0 mm (4.37 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 12.4 kB · Layers: 2 · Nets: 8 · Components: 12 · Dimensions: 19 x 23 mm (4.37 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -5245,6 +5256,18 @@ Size: 12.4 kB · Layers: 2 · Nets: 8 · Components: 12 · Dimensions: 19.0 x 23
 | 2.4.1     | N/A  |                N/A |        N/A |      11.16 |      N/A |     11.16 |   0+  1+  0 |        1 |          0 |   937 |       220 |    10773.9 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       1.58 |       0.75 |     3.54 |      5.87 |   0+  2+  2 |        0 |          0 |  1000 |       120 |      185.1 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.97 |       0.25 |     2.02 |      3.24 |   0+  2+  2 |        0 |          0 |  1000 |        60 |      173.7 |    2 / 0 |       |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/ISO-port_ch340-usb-serial-isolated/unrouted.dsn)
+
+Size: 21.7 kB · Layers: 2 · Nets: 0 · Components: 39 · Dimensions: 50 x 50 mm (25 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       3.90 |    15.04 |     18.94 |   0+  0+  0 |        0 |          0 |  1000 |        62 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      54.79 |      N/A |     54.79 |   0+  1+  0 |        1 |          0 |   983 |       283 |    87626.6 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       1.69 |       2.94 |    11.48 |     16.11 |   0+  5+  2 |        0 |          0 |  1000 |       559 |     1564.7 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       3.21 |       3.00 |     8.91 |     15.12 |   0+  5+  2 |        0 |          0 |  1000 |       379 |     1215.9 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/iso50_pcb/unrouted.dsn)
@@ -5259,21 +5282,9 @@ Size: 52 kB · Layers: 2 · Nets: 70 · Components: 105 · Dimensions: 274.92 x 
 | 2.6.0-RC1 | N/A  |                N/A |       3.02 |     179.69 |      N/A |    182.71 |   0+ 14+  0 |       23 |          3 |   822 |       479 |   734318.6 |  324 / 0 | TIMEOUT |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/ISO-port_ch340-usb-serial-isolated/unrouted.dsn)
-
-Size: 21.7 kB · Layers: 2 · Nets: 0 · Components: 39 · Dimensions: 50.0 x 50.0 mm (25.0 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       3.90 |    15.04 |     18.94 |   0+  0+  0 |        0 |          0 |  1000 |        62 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      54.79 |      N/A |     54.79 |   0+  1+  0 |        1 |          0 |   983 |       283 |    87626.6 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       1.69 |       2.94 |    11.48 |     16.11 |   0+  5+  2 |        0 |          0 |  1000 |       559 |     1564.7 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       3.21 |       3.00 |     8.91 |     15.12 |   0+  5+  2 |        0 |          0 |  1000 |       379 |     1215.9 |    2 / 0 |       |
-
-
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/jadonk_PocketBone/unrouted.dsn)
 
-Size: 77.9 kB · Layers: 4 · Nets: 344 · Components: 65 · Dimensions: 55.0 x 35.0 mm (19.25 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 77.9 kB · Layers: 4 · Nets: 344 · Components: 65 · Dimensions: 55 x 35 mm (19.25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -5393,7 +5404,7 @@ Size: 20 kB · Layers: 2 · Nets: 66 · Components: 11 · Dimensions: 51.82 x 30
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kassenautomat.mdb-interface_mdb-interface/unrouted.dsn)
 
-Size: 57.8 kB · Layers: 2 · Nets: 45 · Components: 80 · Dimensions: 100.0 x 100.0 mm (100.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 57.8 kB · Layers: 2 · Nets: 45 · Components: 80 · Dimensions: 100 x 100 mm (100 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -5405,11 +5416,11 @@ Size: 57.8 kB · Layers: 2 · Nets: 45 · Components: 80 · Dimensions: 100.0 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Kefersender_UKW TX/unrouted.dsn)
 
-Size: 26.9 kB · Layers: 2 · Nets: 19 · Components: 40 · Dimensions: 38.5 x 27.0 mm (10.39 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 26.9 kB · Layers: 2 · Nets: 19 · Components: 40 · Dimensions: 38.5 x 27 mm (10.39 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |      13.23 |     1.31 |     14.54 |   0+  0+  0 |       10 |          9 |   845 |       186 |     4096.0 |    0 / 0 |       |
+| 1.9.0     | N/A  |                N/A |        N/A |      13.23 |     1.31 |     14.54 |   0+  0+  0 |       10 |          9 |   844 |       186 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      66.52 |      N/A |     66.52 |   0+  1+  0 |        7 |         10 |   891 |       562 |   148395.4 |    4 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       2.49 |       1.90 |    10.58 |     14.97 |   0+  2+  2 |        0 |          0 |  1000 |       330 |     1062.3 |    5 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       3.12 |       1.98 |    16.28 |     21.38 |   0+  2+  4 |        0 |          0 |  1000 |       354 |     1132.8 |    5 / 0 |       |
@@ -5429,7 +5440,7 @@ Size: 11.6 kB · Layers: 2 · Nets: 19 · Components: 18 · Dimensions: 46.99 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/keyboard_converter_adapter_ibm4704_converter_adapter_ibm4704/unrouted.dsn)
 
-Size: 8.6 kB · Layers: 2 · Nets: 7 · Components: 10 · Dimensions: 30.5 x 29.0 mm (8.85 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 8.6 kB · Layers: 2 · Nets: 7 · Components: 10 · Dimensions: 30.5 x 29 mm (8.85 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -5441,7 +5452,7 @@ Size: 8.6 kB · Layers: 2 · Nets: 7 · Components: 10 · Dimensions: 30.5 x 29.
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/keyboard_converter_converter/unrouted.dsn)
 
-Size: 20.2 kB · Layers: 2 · Nets: 9 · Components: 61 · Dimensions: 26.0 x 37.0 mm (9.62 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 20.2 kB · Layers: 2 · Nets: 9 · Components: 61 · Dimensions: 26 x 37 mm (9.62 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -5453,7 +5464,7 @@ Size: 20.2 kB · Layers: 2 · Nets: 9 · Components: 61 · Dimensions: 26.0 x 37
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Keyboard_PCB_Keyboard/unrouted.dsn)
 
-Size: 67.3 kB · Layers: 2 · Nets: 121 · Components: 391 · Dimensions: 290.0 x 190.0 mm (551.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 67.3 kB · Layers: 2 · Nets: 121 · Components: 391 · Dimensions: 290 x 190 mm (551 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -5495,7 +5506,7 @@ Size: 8.9 kB · Layers: 2 · Nets: 1 · Components: 7 · Dimensions: 72.39 x 20.
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       0.69 |     1.24 |      1.93 |   0+  0+  0 |        0 |          0 |  1000 |       137 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |       3.08 |      N/A |      3.08 |   0+  3+  0 |        0 |          0 |  1000 |       102 |     3026.4 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       4.31 |      11.40 |    10.10 |     25.81 |   0+  2+  4 |        0 |          0 |  1000 |       172 |      366.5 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       4.31 |      11.40 |    10.10 |     25.81 |   0+  2+  4 |        0 |          0 |  1000 |       172 |      366.4 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.82 |       1.43 |     7.38 |      9.63 |   0+  2+  4 |        0 |          0 |  1000 |       167 |      331.6 |    2 / 0 |       |
 
 
@@ -5513,7 +5524,7 @@ Size: 37.4 kB · Layers: 2 · Nets: 11 · Components: 29 · Dimensions: 59.06 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kicad-guitar-preamp_Preamp-Instructables/unrouted.dsn)
 
-Size: 19.7 kB · Layers: 2 · Nets: 3 · Components: 11 · Dimensions: 0.0 x 0.0 mm (0.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 19.7 kB · Layers: 2 · Nets: 3 · Components: 11 · Dimensions: 0 x 0 mm (0 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -5525,7 +5536,7 @@ Size: 19.7 kB · Layers: 2 · Nets: 3 · Components: 11 · Dimensions: 0.0 x 0.0
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/KiCad-Library_Teensy_test_layout/unrouted.dsn)
 
-Size: 161.3 kB · Layers: 2 · Nets: 248 · Components: 1441 · Dimensions: 254.0 x 127.0 mm (322.58 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 161.3 kB · Layers: 2 · Nets: 248 · Components: 1441 · Dimensions: 254 x 127 mm (322.58 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes           |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
@@ -5542,7 +5553,7 @@ Size: 8.6 kB · Layers: 2 · Nets: 1 · Components: 11 · Dimensions: 45.97 x 24
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       1.06 |     0.23 |      1.29 |   0+  0+  0 |        1 |          0 |   947 |       124 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       5.52 |      N/A |      5.52 |   0+  1+  0 |        1 |          0 |   947 |       278 |     7273.5 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       5.52 |      N/A |      5.52 |   0+  1+  0 |        1 |          0 |   947 |       278 |     7273.4 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.02 |       1.22 |     0.00 |      1.24 |   0+  3+  0 |        0 |          0 |  1000 |        28 |      130.4 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.02 |       1.26 |     0.00 |      1.28 |   0+  3+  0 |        0 |          0 |  1000 |        94 |      105.5 |    2 / 0 |       |
 
@@ -5573,7 +5584,7 @@ Size: 12.8 kB · Layers: 2 · Nets: 21 · Components: 9 · Dimensions: 50.8 x 40
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kicad-projects_BatCharge/unrouted.dsn)
 
-Size: 10.9 kB · Layers: 2 · Nets: 8 · Components: 11 · Dimensions: 20.65 x 20.0 mm (4.13 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 10.9 kB · Layers: 2 · Nets: 8 · Components: 11 · Dimensions: 20.65 x 20 mm (4.13 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -5633,7 +5644,7 @@ Size: 18.3 kB · Layers: 2 · Nets: 11 · Components: 21 · Dimensions: 45.72 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kit2-led-cube_led_cube/unrouted.dsn)
 
-Size: 12.8 kB · Layers: 2 · Nets: 17 · Components: 41 · Dimensions: 40.0 x 40.0 mm (16.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 12.8 kB · Layers: 2 · Nets: 17 · Components: 41 · Dimensions: 40 x 40 mm (16 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -5645,7 +5656,7 @@ Size: 12.8 kB · Layers: 2 · Nets: 17 · Components: 41 · Dimensions: 40.0 x 4
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace__autosave-nunchuk_breakout/unrouted.dsn)
 
-Size: 17.6 kB · Layers: 2 · Nets: 3 · Components: 14 · Dimensions: 39.0 x 18.0 mm (7.02 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 17.6 kB · Layers: 2 · Nets: 3 · Components: 14 · Dimensions: 39 x 18 mm (7.02 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -5657,7 +5668,7 @@ Size: 17.6 kB · Layers: 2 · Nets: 3 · Components: 14 · Dimensions: 39.0 x 18
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace__autosave-postcard/unrouted.dsn)
 
-Size: 19.2 kB · Layers: 2 · Nets: 10 · Components: 23 · Dimensions: 100.0 x 100.0 mm (100.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 19.2 kB · Layers: 2 · Nets: 10 · Components: 23 · Dimensions: 100 x 100 mm (100 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -5729,19 +5740,19 @@ Size: 26.9 kB · Layers: 2 · Nets: 10 · Components: 22 · Dimensions: 45.5 x 4
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_40-channel-hv-switching-board/unrouted.dsn)
 
-Size: 59.8 kB · Layers: 4 · Nets: 109 · Components: 204 · Dimensions: 84.0 x 92.0 mm (77.28 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 59.8 kB · Layers: 4 · Nets: 109 · Components: 204 · Dimensions: 84 x 92 mm (77.28 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |     388.00 |   298.15 |    686.15 |   0+  0+  0 |        1 |          0 |   998 |       244 |     4096.0 |    2 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |     912.55 |      N/A |    912.55 |   0+  4+  0 |       30 |          0 |   934 |       772 |  1674060.5 |    4 / 0 |       |
-| 2.5.0     | N/A  |                N/A |      13.96 |     123.29 |   484.40 |    621.65 |   0+  5+  2 |        0 |          0 |  1000 |      1569 |    51622.3 |   10 / 0 |       |
+| 2.5.0     | N/A  |                N/A |      13.96 |     123.29 |   484.40 |    621.65 |   0+  5+  2 |        0 |          0 |  1000 |      1569 |    51622.2 |   10 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |      12.36 |      84.78 |    23.79 |    120.93 |   0+  5+  1 |        0 |          0 |  1000 |       877 |    41735.1 |    8 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_8_switch_array/unrouted.dsn)
 
-Size: 35 kB · Layers: 2 · Nets: 17 · Components: 36 · Dimensions: 45.5 x 71.0 mm (32.3 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 35 kB · Layers: 2 · Nets: 17 · Components: 36 · Dimensions: 45.5 x 71 mm (32.3 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -5753,7 +5764,7 @@ Size: 35 kB · Layers: 2 · Nets: 17 · Components: 36 · Dimensions: 45.5 x 71.
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_antenna_analyser/unrouted.dsn)
 
-Size: 39 kB · Layers: 2 · Nets: 51 · Components: 34 · Dimensions: 100.0 x 50.0 mm (50.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 39 kB · Layers: 2 · Nets: 51 · Components: 34 · Dimensions: 100 x 50 mm (50 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -5765,12 +5776,12 @@ Size: 39 kB · Layers: 2 · Nets: 51 · Components: 34 · Dimensions: 100.0 x 50
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_aquarius/unrouted.dsn)
 
-Size: 48.2 kB · Layers: 2 · Nets: 34 · Components: 79 · Dimensions: 74.0 x 120.0 mm (88.8 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 48.2 kB · Layers: 2 · Nets: 34 · Components: 79 · Dimensions: 74 x 120 mm (88.8 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |      64.00 |   264.30 |    328.30 |   0+  0+  0 |        0 |          0 |  1000 |       190 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      98.20 |      N/A |     98.20 |   0+  7+  0 |        0 |          0 |  1000 |       618 |   199445.6 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      98.20 |      N/A |     98.20 |   0+  7+  0 |        0 |          0 |  1000 |       618 |   199445.5 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |      47.47 |      73.28 |   116.29 |    237.04 |   0+  7+  1 |        0 |          0 |  1000 |      1043 |    19275.5 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |      32.73 |     103.78 |    51.06 |    187.57 |   0+  8+  1 |        0 |          0 |  1000 |       884 |    20896.0 |    2 / 0 |       |
 
@@ -5801,7 +5812,7 @@ Size: 10.6 kB · Layers: 2 · Nets: 4 · Components: 16 · Dimensions: 68.58 x 5
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_BalthazarKeyboard3-keycaps/unrouted.dsn)
 
-Size: 61.4 kB · Layers: 4 · Nets: 94 · Components: 199 · Dimensions: 290.58 x 127.0 mm (369.04 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 61.4 kB · Layers: 4 · Nets: 94 · Components: 199 · Dimensions: 290.58 x 127 mm (369.04 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -5813,13 +5824,13 @@ Size: 61.4 kB · Layers: 4 · Nets: 94 · Components: 199 · Dimensions: 290.58 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_BalthazarPSU3/unrouted.dsn)
 
-Size: 60.2 kB · Layers: 4 · Nets: 52 · Components: 84 · Dimensions: 0.0 x 0.0 mm (0.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 60.2 kB · Layers: 4 · Nets: 52 · Components: 84 · Dimensions: 0 x 0 mm (0 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |      19.39 |    10.86 |     30.25 |   0+  0+  0 |        3 |        101 |   973 |        65 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |     301.71 |      N/A |    301.71 |   0+  1+  0 |        0 |         78 |   996 |       357 |   772453.8 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       7.26 |      27.71 |    54.91 |     89.88 |   0+  5+  2 |        0 |         30 |   998 |       865 |     6856.3 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       7.26 |      27.71 |    54.91 |     89.88 |   0+  5+  2 |        0 |         30 |   998 |       865 |     6856.2 |    3 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       5.22 |      13.45 |    77.04 |     95.71 |   0+  5+  4 |        0 |         30 |   998 |      1178 |     7113.8 |    3 / 0 |       |
 
 
@@ -5837,7 +5848,7 @@ Size: 9.3 kB · Layers: 2 · Nets: 1 · Components: 4 · Dimensions: 16.51 x 21.
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_beehive/unrouted.dsn)
 
-Size: 75.1 kB · Layers: 2 · Nets: 39 · Components: 32 · Dimensions: 76.0 x 85.0 mm (64.6 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 75.1 kB · Layers: 2 · Nets: 39 · Components: 32 · Dimensions: 76 x 85 mm (64.6 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -5854,7 +5865,7 @@ Size: 48.9 kB · Layers: 2 · Nets: 10 · Components: 29 · Dimensions: 61.72 x 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       1.39 |     0.93 |      2.32 |   0+  0+  0 |        1 |          2 |   976 |       168 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      13.04 |      N/A |     13.04 |   0+  1+  0 |        1 |          6 |   976 |       289 |    30348.6 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      13.04 |      N/A |     13.04 |   0+  1+  0 |        1 |          6 |   976 |       289 |    30348.5 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       1.16 |       2.55 |     1.95 |      5.66 |   0+  2+  1 |        0 |          0 |  1000 |        83 |      490.8 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       1.01 |       1.85 |     1.67 |      4.53 |   0+  2+  1 |        0 |          0 |  1000 |       162 |      451.6 |    2 / 0 |       |
 
@@ -5878,7 +5889,7 @@ Size: 16 kB · Layers: 2 · Nets: 9 · Components: 20 · Dimensions: 12.7 x 20.8
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |      14.58 |     2.27 |     16.85 |   0+  0+  0 |        5 |         37 |   859 |        39 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      48.42 |      N/A |     48.42 |   0+  1+  0 |        6 |         40 |   845 |       298 |    94944.4 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      48.42 |      N/A |     48.42 |   0+  1+  0 |        6 |         40 |   844 |       298 |    94944.4 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       7.08 |      20.01 |     0.00 |     27.09 |   0+ 18+  0 |       11 |          0 |   728 |       141 |     8122.9 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       1.71 |       9.50 |     0.00 |     11.21 |   0+ 18+  0 |        2 |          0 |   728 |       178 |    36501.5 |    2 / 0 |       |
 
@@ -5897,7 +5908,7 @@ Size: 15.4 kB · Layers: 2 · Nets: 40 · Components: 6 · Dimensions: 53.09 x 5
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_CA3306E/unrouted.dsn)
 
-Size: 15.8 kB · Layers: 2 · Nets: 0 · Components: 10 · Dimensions: 65.0 x 30.0 mm (19.5 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 15.8 kB · Layers: 2 · Nets: 0 · Components: 10 · Dimensions: 65 x 30 mm (19.5 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -5909,7 +5920,7 @@ Size: 15.8 kB · Layers: 2 · Nets: 0 · Components: 10 · Dimensions: 65.0 x 30
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_CH330/unrouted.dsn)
 
-Size: 11.4 kB · Layers: 2 · Nets: 3 · Components: 9 · Dimensions: 10.0 x 10.0 mm (1.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 11.4 kB · Layers: 2 · Nets: 3 · Components: 9 · Dimensions: 10 x 10 mm (1 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -5957,7 +5968,7 @@ Size: 94.8 kB · Layers: 2 · Nets: 9 · Components: 30 · Dimensions: 86.8 x 45
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_Control%20Board/unrouted.dsn)
 
-Size: 41.1 kB · Layers: 2 · Nets: 112 · Components: 90 · Dimensions: 154.0 x 175.0 mm (269.5 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 41.1 kB · Layers: 2 · Nets: 112 · Components: 90 · Dimensions: 154 x 175 mm (269.5 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -5981,7 +5992,7 @@ Size: 44.8 kB · Layers: 2 · Nets: 28 · Components: 22 · Dimensions: 48.26 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_d20_r0.1/unrouted.dsn)
 
-Size: 74.1 kB · Layers: 4 · Nets: 0 · Components: 91 · Dimensions: 39.25 x 31.0 mm (12.17 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 74.1 kB · Layers: 4 · Nets: 0 · Components: 91 · Dimensions: 39.25 x 31 mm (12.17 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -6029,7 +6040,7 @@ Size: 114.7 kB · Layers: 4 · Nets: 93 · Components: 152 · Dimensions: 36.07 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_DIY_detector/unrouted.dsn)
 
-Size: 45.1 kB · Layers: 2 · Nets: 9 · Components: 35 · Dimensions: 75.0 x 26.0 mm (19.5 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 45.1 kB · Layers: 2 · Nets: 9 · Components: 35 · Dimensions: 75 x 26 mm (19.5 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -6053,7 +6064,7 @@ Size: 46.3 kB · Layers: 2 · Nets: 16 · Components: 58 · Dimensions: 68.58 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_dropbot_control_board/unrouted.dsn)
 
-Size: 84 kB · Layers: 4 · Nets: 70 · Components: 141 · Dimensions: 115.0 x 92.0 mm (105.8 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 84 kB · Layers: 4 · Nets: 70 · Components: 141 · Dimensions: 115 x 92 mm (105.8 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -6065,7 +6076,7 @@ Size: 84 kB · Layers: 4 · Nets: 70 · Components: 141 · Dimensions: 115.0 x 9
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_dropbot-front-panel/unrouted.dsn)
 
-Size: 42.6 kB · Layers: 4 · Nets: 7 · Components: 29 · Dimensions: 108.0 x 68.75 mm (74.25 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 42.6 kB · Layers: 4 · Nets: 7 · Components: 29 · Dimensions: 108 x 68.75 mm (74.25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -6099,18 +6110,6 @@ Size: 209.5 kB · Layers: 4 · Nets: 219 · Components: 194 · Dimensions: 216.4
 | 2.6.0-RC1 | N/A  |                N/A |      61.28 |    1143.73 |      N/A |   1205.01 |   0+ 15+  0 |        1 |          5 |   998 |       497 |   524692.3 |    3 / 0 | TIMEOUT         |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_esp8266/unrouted.dsn)
-
-Size: 39.1 kB · Layers: 2 · Nets: 0 · Components: 30 · Dimensions: 50.0 x 50.0 mm (25.0 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       1.70 |     5.44 |      7.14 |   0+  0+  0 |        0 |          0 |  1000 |        32 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       5.91 |      N/A |      5.91 |   0+  3+  0 |        0 |          2 |  1000 |       181 |     4089.1 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       0.09 |      12.80 |     0.00 |     12.89 |   0+  2+  0 |        0 |          0 |  1000 |       109 |      738.2 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       0.05 |       3.81 |     0.00 |      3.86 |   0+  2+  0 |        0 |          0 |  1000 |       142 |      411.3 |    2 / 0 |       |
-
-
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_esp8266-12-breakout/unrouted.dsn)
 
 Size: 17.3 kB · Layers: 2 · Nets: 2 · Components: 15 · Dimensions: 32.39 x 39.37 mm (12.75 cm²) · CAD: KiCad's Pcbnew (v)
@@ -6118,7 +6117,7 @@ Size: 17.3 kB · Layers: 2 · Nets: 2 · Components: 15 · Dimensions: 32.39 x 3
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       1.97 |    16.76 |     18.73 |   0+  0+  0 |        0 |          0 |  1000 |        30 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       6.11 |      N/A |      6.11 |   0+  3+  0 |        0 |          0 |  1000 |       156 |     9620.6 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       6.11 |      N/A |      6.11 |   0+  3+  0 |        0 |          0 |  1000 |       156 |     9620.5 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       3.23 |       7.78 |    28.69 |     39.70 |   0+  2+  5 |        0 |          0 |  1000 |       372 |      941.5 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       2.56 |       3.94 |    11.48 |     17.98 |   0+  4+  2 |        0 |          0 |  1000 |       343 |      798.6 |    2 / 0 |       |
 
@@ -6131,13 +6130,25 @@ Size: 27.9 kB · Layers: 2 · Nets: 6 · Components: 22 · Dimensions: 69.5 x 27
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       1.10 |    10.41 |     11.51 |   0+  0+  0 |        0 |          1 |   999 |       116 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |       4.94 |      N/A |      4.94 |   0+  2+  0 |        0 |          1 |  1000 |       178 |     3835.9 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       1.09 |       0.75 |     5.05 |      6.89 |   0+  2+  3 |        0 |          1 |  1000 |       222 |      486.5 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       1.09 |       0.75 |     5.05 |      6.89 |   0+  2+  3 |        0 |          1 |  1000 |       222 |      486.4 |    3 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       1.32 |       0.84 |     1.58 |      3.74 |   0+  2+  1 |        0 |          1 |  1000 |        82 |      389.9 |    3 / 0 |       |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_esp8266/unrouted.dsn)
+
+Size: 39.1 kB · Layers: 2 · Nets: 0 · Components: 30 · Dimensions: 50 x 50 mm (25 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       1.70 |     5.44 |      7.14 |   0+  0+  0 |        0 |          0 |  1000 |        32 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       5.91 |      N/A |      5.91 |   0+  3+  0 |        0 |          2 |  1000 |       181 |     4089.1 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       0.09 |      12.80 |     0.00 |     12.89 |   0+  2+  0 |        0 |          0 |  1000 |       109 |      738.2 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       0.05 |       3.81 |     0.00 |      3.86 |   0+  2+  0 |        0 |          0 |  1000 |       142 |      411.3 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_ESPTINY86_Mixtape_version2/unrouted.dsn)
 
-Size: 56 kB · Layers: 2 · Nets: 17 · Components: 34 · Dimensions: 99.0 x 64.81 mm (64.16 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 56 kB · Layers: 2 · Nets: 17 · Components: 34 · Dimensions: 99 x 64.81 mm (64.16 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -6185,7 +6196,7 @@ Size: 21.3 kB · Layers: 2 · Nets: 4 · Components: 7 · Dimensions: 48.89 x 29
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_filaSens/unrouted.dsn)
 
-Size: 25.5 kB · Layers: 2 · Nets: 2 · Components: 16 · Dimensions: 50.0 x 20.0 mm (10.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 25.5 kB · Layers: 2 · Nets: 2 · Components: 16 · Dimensions: 50 x 20 mm (10 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -6197,7 +6208,7 @@ Size: 25.5 kB · Layers: 2 · Nets: 2 · Components: 16 · Dimensions: 50.0 x 20
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_firefly/unrouted.dsn)
 
-Size: 104.8 kB · Layers: 4 · Nets: 21 · Components: 80 · Dimensions: 85.0 x 70.5 mm (59.92 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 104.8 kB · Layers: 4 · Nets: 21 · Components: 80 · Dimensions: 85 x 70.5 mm (59.92 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -6205,6 +6216,18 @@ Size: 104.8 kB · Layers: 4 · Nets: 21 · Components: 80 · Dimensions: 85.0 x 
 | 2.4.1     | N/A  |                N/A |        N/A |     103.41 |      N/A |    103.41 |   0+  1+  0 |        1 |        163 |   988 |       348 |   249415.3 |    4 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       3.21 |       9.18 |     5.25 |     17.64 |   0+  4+  1 |        0 |         40 |   999 |       559 |     5456.1 |    9 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       3.92 |       9.25 |    13.41 |     26.58 |   0+  4+  1 |        0 |         40 |   999 |       993 |     4749.0 |    9 / 0 |       |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_flypi_v2/unrouted.dsn)
+
+Size: 55.9 kB · Layers: 2 · Nets: 14 · Components: 35 · Dimensions: 76 x 85 mm (64.6 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       3.72 |    18.45 |     22.17 |   0+  0+  0 |        0 |          0 |  1000 |        95 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       9.22 |      N/A |      9.22 |   0+  4+  0 |        0 |          0 |  1000 |       251 |    13946.2 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       0.09 |      12.27 |     8.77 |     21.13 |   0+  4+  2 |        0 |          0 |  1000 |       456 |     2027.6 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       0.05 |      14.43 |    14.93 |     29.41 |   0+  5+  2 |        0 |          0 |  1000 |       502 |     2103.4 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_flypi/unrouted.dsn)
@@ -6217,18 +6240,6 @@ Size: 54.2 kB · Layers: 2 · Nets: 59 · Components: 53 · Dimensions: 57.2 x 1
 | 2.4.1     | N/A  |                N/A |        N/A |     301.67 |      N/A |    301.67 |   0+  1+  0 |        0 |         20 |   999 |       370 |   750563.0 |    3 / 0 | TIMEOUT |
 | 2.5.0     | N/A  |                N/A |       4.91 |      20.22 |    18.43 |     43.56 |   0+  5+  1 |        0 |          0 |  1000 |       902 |     8294.5 |    2 / 0 |         |
 | 2.6.0-RC1 | N/A  |                N/A |       1.74 |      14.40 |    16.94 |     33.08 |   0+  4+  2 |        0 |          0 |  1000 |       969 |     5603.7 |    2 / 0 |         |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_flypi_v2/unrouted.dsn)
-
-Size: 55.9 kB · Layers: 2 · Nets: 14 · Components: 35 · Dimensions: 76.0 x 85.0 mm (64.6 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       3.72 |    18.45 |     22.17 |   0+  0+  0 |        0 |          0 |  1000 |        95 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       9.22 |      N/A |      9.22 |   0+  4+  0 |        0 |          0 |  1000 |       251 |    13946.2 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       0.09 |      12.27 |     8.77 |     21.13 |   0+  4+  2 |        0 |          0 |  1000 |       456 |     2027.6 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       0.05 |      14.43 |    14.93 |     29.41 |   0+  5+  2 |        0 |          0 |  1000 |       502 |     2103.4 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_gas_sensor/unrouted.dsn)
@@ -6245,7 +6256,7 @@ Size: 33.1 kB · Layers: 2 · Nets: 3 · Components: 15 · Dimensions: 45.5 x 32
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_GPSMux/unrouted.dsn)
 
-Size: 18.4 kB · Layers: 2 · Nets: 8 · Components: 20 · Dimensions: 20.0 x 26.0 mm (5.2 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 18.4 kB · Layers: 2 · Nets: 8 · Components: 20 · Dimensions: 20 x 26 mm (5.2 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -6274,14 +6285,14 @@ Size: 33.1 kB · Layers: 2 · Nets: 13 · Components: 32 · Dimensions: 36.83 x 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |     300.26 |     7.81 |    308.07 |   0+  0+  0 |       32 |        124 |   636 |       107 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |     301.33 |      N/A |    301.33 |   0+ 11+  0 |       42 |        126 |   547 |       335 |   444141.3 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |     301.33 |      N/A |    301.33 |   0+ 11+  0 |       42 |        126 |   546 |       335 |   444141.3 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       6.29 |      63.57 |     0.00 |     69.86 |   0+ 20+  0 |       12 |          0 |   873 |       190 |    27220.8 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       6.03 |      38.77 |     0.00 |     44.80 |   0+ 19+  0 |        1 |          0 |   989 |       246 |   104484.1 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_hbridge_driver/unrouted.dsn)
 
-Size: 54.8 kB · Layers: 2 · Nets: 14 · Components: 37 · Dimensions: 71.0 x 45.5 mm (32.3 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 54.8 kB · Layers: 2 · Nets: 14 · Components: 37 · Dimensions: 71 x 45.5 mm (32.3 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -6293,7 +6304,7 @@ Size: 54.8 kB · Layers: 2 · Nets: 14 · Components: 37 · Dimensions: 71.0 x 4
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_hp_led_switch/unrouted.dsn)
 
-Size: 31 kB · Layers: 2 · Nets: 14 · Components: 30 · Dimensions: 45.5 x 71.0 mm (32.3 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 31 kB · Layers: 2 · Nets: 14 · Components: 30 · Dimensions: 45.5 x 71 mm (32.3 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -6317,19 +6328,19 @@ Size: 22.8 kB · Layers: 2 · Nets: 4 · Components: 12 · Dimensions: 48.5 x 27
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_ideal_diode/unrouted.dsn)
 
-Size: 22.4 kB · Layers: 2 · Nets: 4 · Components: 54 · Dimensions: 40.0 x 25.0 mm (10.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 22.4 kB · Layers: 2 · Nets: 4 · Components: 54 · Dimensions: 40 x 25 mm (10 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       1.64 |    18.69 |     20.33 |   0+  0+  0 |        0 |         18 |   993 |       153 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      52.38 |      N/A |     52.38 |   0+  1+  0 |        0 |         18 |   998 |       272 |    97371.6 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       2.53 |       1.29 |     1.28 |      5.10 |   0+  2+  1 |        0 |          0 |  1000 |       150 |      406.8 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       0.90 |       0.75 |     2.26 |      3.91 |   0+  2+  2 |        0 |          0 |  1000 |       149 |      367.3 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       0.90 |       0.75 |     2.26 |      3.91 |   0+  2+  2 |        0 |          0 |  1000 |       149 |      367.2 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_ir_sensor/unrouted.dsn)
 
-Size: 16.4 kB · Layers: 2 · Nets: 2 · Components: 5 · Dimensions: 32.0 x 100.0 mm (32.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 16.4 kB · Layers: 2 · Nets: 2 · Components: 5 · Dimensions: 32 x 100 mm (32 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -6348,24 +6359,12 @@ Size: 56.2 kB · Layers: 2 · Nets: 10 · Components: 17 · Dimensions: 85.09 x 
 | 1.9.0     | N/A  |                N/A |        N/A |       1.84 |     4.78 |      6.62 |   0+  0+  0 |        0 |          0 |  1000 |       128 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |       3.58 |      N/A |      3.58 |   0+  3+  0 |        0 |          0 |  1000 |       305 |     4633.4 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.03 |      21.72 |     0.00 |     21.75 |   0+  4+  0 |        0 |          0 |  1000 |       119 |      908.4 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       0.05 |       8.17 |     0.00 |      8.22 |   0+  4+  0 |        0 |          0 |  1000 |       111 |      666.7 |    2 / 0 |       |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_LED%20Zappelin/unrouted.dsn)
-
-Size: 52.7 kB · Layers: 2 · Nets: 39 · Components: 45 · Dimensions: 125.0 x 75.0 mm (93.75 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       6.94 |     3.12 |     10.06 |   0+  0+  0 |        1 |          0 |   992 |        79 |     4096.0 |    3 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      28.21 |      N/A |     28.21 |   0+ 18+  0 |        1 |          0 |   989 |       372 |    43070.4 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       0.06 |       6.28 |     0.00 |      6.34 |   0+  4+  0 |        0 |          0 |  1000 |       175 |     1643.7 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       0.02 |       5.43 |     0.00 |      5.45 |   0+  4+  0 |        0 |          0 |  1000 |       130 |     1467.1 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       0.05 |       8.17 |     0.00 |      8.22 |   0+  4+  0 |        0 |          0 |  1000 |       111 |      666.6 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_led_driver/unrouted.dsn)
 
-Size: 91 kB · Layers: 2 · Nets: 12 · Components: 26 · Dimensions: 75.0 x 50.0 mm (37.5 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 91 kB · Layers: 2 · Nets: 12 · Components: 26 · Dimensions: 75 x 50 mm (37.5 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -6373,6 +6372,18 @@ Size: 91 kB · Layers: 2 · Nets: 12 · Components: 26 · Dimensions: 75.0 x 50.
 | 2.4.1     | N/A  |                N/A |        N/A |      19.76 |      N/A |     19.76 |   0+  1+  0 |        0 |          4 |   999 |       286 |    50553.1 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       1.14 |       1.73 |     1.72 |      4.59 |   0+  2+  1 |        0 |          0 |  1000 |       177 |      572.7 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.51 |       1.20 |     1.15 |      2.86 |   0+  2+  1 |        0 |          0 |  1000 |        65 |      541.2 |    2 / 0 |       |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_LED%20Zappelin/unrouted.dsn)
+
+Size: 52.7 kB · Layers: 2 · Nets: 39 · Components: 45 · Dimensions: 125 x 75 mm (93.75 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       6.94 |     3.12 |     10.06 |   0+  0+  0 |        1 |          0 |   992 |        79 |     4096.0 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      28.21 |      N/A |     28.21 |   0+ 18+  0 |        1 |          0 |   989 |       372 |    43070.4 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       0.06 |       6.28 |     0.00 |      6.34 |   0+  4+  0 |        0 |          0 |  1000 |       175 |     1643.7 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       0.02 |       5.43 |     0.00 |      5.45 |   0+  4+  0 |        0 |          0 |  1000 |       130 |     1467.1 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_level_shifter/unrouted.dsn)
@@ -6389,7 +6400,7 @@ Size: 23.7 kB · Layers: 2 · Nets: 0 · Components: 25 · Dimensions: 45.5 x 48
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_Minisumo_V2.1/unrouted.dsn)
 
-Size: 53.4 kB · Layers: 4 · Nets: 51 · Components: 31 · Dimensions: 95.0 x 78.0 mm (74.1 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 53.4 kB · Layers: 4 · Nets: 51 · Components: 31 · Dimensions: 95 x 78 mm (74.1 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -6401,7 +6412,7 @@ Size: 53.4 kB · Layers: 4 · Nets: 51 · Components: 31 · Dimensions: 95.0 x 7
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_minisumo_v3/unrouted.dsn)
 
-Size: 62.6 kB · Layers: 4 · Nets: 56 · Components: 30 · Dimensions: 98.91 x 78.0 mm (77.15 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 62.6 kB · Layers: 4 · Nets: 56 · Components: 30 · Dimensions: 98.91 x 78 mm (77.15 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -6437,7 +6448,7 @@ Size: 152.2 kB · Layers: 4 · Nets: 118 · Components: 97 · Dimensions: 166.9 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_nunchuk_breakout/unrouted.dsn)
 
-Size: 18 kB · Layers: 2 · Nets: 3 · Components: 14 · Dimensions: 39.0 x 18.0 mm (7.02 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 18 kB · Layers: 2 · Nets: 3 · Components: 14 · Dimensions: 39 x 18 mm (7.02 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -6449,7 +6460,7 @@ Size: 18 kB · Layers: 2 · Nets: 3 · Components: 14 · Dimensions: 39.0 x 18.0
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_Oak/unrouted.dsn)
 
-Size: 118.5 kB · Layers: 2 · Nets: 77 · Components: 76 · Dimensions: 100.0 x 40.0 mm (40.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 118.5 kB · Layers: 2 · Nets: 77 · Components: 76 · Dimensions: 100 x 40 mm (40 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -6461,7 +6472,7 @@ Size: 118.5 kB · Layers: 2 · Nets: 77 · Components: 76 · Dimensions: 100.0 x
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_OpenSpritzer_1.3/unrouted.dsn)
 
-Size: 70.5 kB · Layers: 2 · Nets: 39 · Components: 30 · Dimensions: 57.5 x 85.0 mm (48.88 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 70.5 kB · Layers: 2 · Nets: 39 · Components: 30 · Dimensions: 57.5 x 85 mm (48.88 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -6473,7 +6484,7 @@ Size: 70.5 kB · Layers: 2 · Nets: 39 · Components: 30 · Dimensions: 57.5 x 8
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_OSO-BOOK-C1/unrouted.dsn)
 
-Size: 69.2 kB · Layers: 2 · Nets: 41 · Components: 37 · Dimensions: 85.0 x 115.0 mm (97.75 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 69.2 kB · Layers: 2 · Nets: 41 · Components: 37 · Dimensions: 85 x 115 mm (97.75 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -6485,7 +6496,7 @@ Size: 69.2 kB · Layers: 2 · Nets: 41 · Components: 37 · Dimensions: 85.0 x 1
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_OtterCastAudioV2/unrouted.dsn)
 
-Size: 85.8 kB · Layers: 4 · Nets: 266 · Components: 226 · Dimensions: 25.0 x 49.27 mm (12.32 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 85.8 kB · Layers: 4 · Nets: 266 · Components: 226 · Dimensions: 25 x 49.27 mm (12.32 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -6557,7 +6568,7 @@ Size: 37.3 kB · Layers: 2 · Nets: 5 · Components: 28 · Dimensions: 45.19 x 5
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_peltier/unrouted.dsn)
 
-Size: 59.9 kB · Layers: 2 · Nets: 16 · Components: 40 · Dimensions: 71.0 x 45.5 mm (32.3 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 59.9 kB · Layers: 2 · Nets: 16 · Components: 40 · Dimensions: 71 x 45.5 mm (32.3 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -6569,7 +6580,7 @@ Size: 59.9 kB · Layers: 2 · Nets: 16 · Components: 40 · Dimensions: 71.0 x 4
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_piezo_amplifier/unrouted.dsn)
 
-Size: 59.1 kB · Layers: 2 · Nets: 29 · Components: 43 · Dimensions: 0.0 x 0.0 mm (0.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 59.1 kB · Layers: 2 · Nets: 29 · Components: 43 · Dimensions: 0 x 0 mm (0 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -6588,12 +6599,12 @@ Size: 42.3 kB · Layers: 2 · Nets: 9 · Components: 24 · Dimensions: 26.67 x 4
 | 1.9.0     | N/A  |                N/A |        N/A |       2.68 |     6.26 |      8.94 |   0+  0+  0 |        0 |          8 |   996 |        58 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      26.36 |      N/A |     26.36 |   0+  2+  0 |        0 |          8 |   999 |       287 |    59077.6 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.55 |       2.11 |     1.88 |      4.54 |   0+  3+  1 |        0 |          0 |  1000 |       179 |      496.1 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       0.70 |       2.95 |     2.09 |      5.74 |   0+  3+  1 |        0 |          0 |  1000 |       213 |      489.7 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       0.70 |       2.95 |     2.09 |      5.74 |   0+  3+  1 |        0 |          0 |  1000 |       213 |      489.6 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_pmt_combiner/unrouted.dsn)
 
-Size: 59.4 kB · Layers: 2 · Nets: 16 · Components: 19 · Dimensions: 80.0 x 64.5 mm (51.6 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 59.4 kB · Layers: 2 · Nets: 16 · Components: 19 · Dimensions: 80 x 64.5 mm (51.6 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -6605,7 +6616,7 @@ Size: 59.4 kB · Layers: 2 · Nets: 16 · Components: 19 · Dimensions: 80.0 x 6
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_postcard/unrouted.dsn)
 
-Size: 19.2 kB · Layers: 2 · Nets: 10 · Components: 23 · Dimensions: 100.0 x 100.0 mm (100.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 19.2 kB · Layers: 2 · Nets: 10 · Components: 23 · Dimensions: 100 x 100 mm (100 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -6641,7 +6652,7 @@ Size: 18 kB · Layers: 2 · Nets: 72 · Components: 27 · Dimensions: 143.61 x 3
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_Potentiometer_mount_4LED/unrouted.dsn)
 
-Size: 8.9 kB · Layers: 2 · Nets: 12 · Components: 7 · Dimensions: 40.0 x 30.0 mm (12.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 8.9 kB · Layers: 2 · Nets: 12 · Components: 7 · Dimensions: 40 x 30 mm (12 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -6653,7 +6664,7 @@ Size: 8.9 kB · Layers: 2 · Nets: 12 · Components: 7 · Dimensions: 40.0 x 30.
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_Potentiometer_mount_8LED/unrouted.dsn)
 
-Size: 8 kB · Layers: 2 · Nets: 12 · Components: 11 · Dimensions: 80.0 x 40.0 mm (32.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 8 kB · Layers: 2 · Nets: 12 · Components: 11 · Dimensions: 80 x 40 mm (32 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -6725,7 +6736,7 @@ Size: 14 kB · Layers: 2 · Nets: 26 · Components: 7 · Dimensions: 64.01 x 56.
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_sensor/unrouted.dsn)
 
-Size: 51.6 kB · Layers: 2 · Nets: 34 · Components: 68 · Dimensions: 62.0 x 65.0 mm (40.3 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 51.6 kB · Layers: 2 · Nets: 34 · Components: 68 · Dimensions: 62 x 65 mm (40.3 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -6761,7 +6772,7 @@ Size: 3.8 kB · Layers: 2 · Nets: 8 · Components: 48 · Dimensions: 83.32 x 63
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_spike_n_hold/unrouted.dsn)
 
-Size: 86.6 kB · Layers: 2 · Nets: 26 · Components: 54 · Dimensions: 63.0 x 110.5 mm (69.61 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 86.6 kB · Layers: 2 · Nets: 26 · Components: 54 · Dimensions: 63 x 110.5 mm (69.61 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -6773,7 +6784,7 @@ Size: 86.6 kB · Layers: 2 · Nets: 26 · Components: 54 · Dimensions: 63.0 x 1
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_Spikeling_ESP32/unrouted.dsn)
 
-Size: 68 kB · Layers: 2 · Nets: 44 · Components: 43 · Dimensions: 120.0 x 80.0 mm (96.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 68 kB · Layers: 2 · Nets: 44 · Components: 43 · Dimensions: 120 x 80 mm (96 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -6785,7 +6796,7 @@ Size: 68 kB · Layers: 2 · Nets: 44 · Components: 43 · Dimensions: 120.0 x 80
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_Spikeling_V2.1/unrouted.dsn)
 
-Size: 93.5 kB · Layers: 2 · Nets: 60 · Components: 51 · Dimensions: 120.0 x 80.0 mm (96.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 93.5 kB · Layers: 2 · Nets: 60 · Components: 51 · Dimensions: 120 x 80 mm (96 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -6797,7 +6808,7 @@ Size: 93.5 kB · Layers: 2 · Nets: 60 · Components: 51 · Dimensions: 120.0 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_Spikeling_V2.2/unrouted.dsn)
 
-Size: 93.2 kB · Layers: 2 · Nets: 60 · Components: 51 · Dimensions: 120.0 x 80.0 mm (96.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 93.2 kB · Layers: 2 · Nets: 60 · Components: 51 · Dimensions: 120 x 80 mm (96 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -6809,7 +6820,7 @@ Size: 93.2 kB · Layers: 2 · Nets: 60 · Components: 51 · Dimensions: 120.0 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_Spikeling_V2.2c/unrouted.dsn)
 
-Size: 86 kB · Layers: 2 · Nets: 60 · Components: 52 · Dimensions: 120.0 x 80.0 mm (96.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 86 kB · Layers: 2 · Nets: 60 · Components: 52 · Dimensions: 120 x 80 mm (96 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -6821,7 +6832,7 @@ Size: 86 kB · Layers: 2 · Nets: 60 · Components: 52 · Dimensions: 120.0 x 80
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_ss_relay/unrouted.dsn)
 
-Size: 23 kB · Layers: 2 · Nets: 22 · Components: 36 · Dimensions: 98.0 x 78.0 mm (76.44 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 23 kB · Layers: 2 · Nets: 22 · Components: 36 · Dimensions: 98 x 78 mm (76.44 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -6833,7 +6844,7 @@ Size: 23 kB · Layers: 2 · Nets: 22 · Components: 36 · Dimensions: 98.0 x 78.
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_stack-light/unrouted.dsn)
 
-Size: 103.3 kB · Layers: 2 · Nets: 91 · Components: 131 · Dimensions: 132.0 x 60.0 mm (79.2 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 103.3 kB · Layers: 2 · Nets: 91 · Components: 131 · Dimensions: 132 x 60 mm (79.2 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -6857,7 +6868,7 @@ Size: 57.3 kB · Layers: 2 · Nets: 40 · Components: 67 · Dimensions: 98.76 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_sympetrum-v2%20NFF1.1/unrouted.dsn)
 
-Size: 40.3 kB · Layers: 2 · Nets: 66 · Components: 49 · Dimensions: 40.0 x 65.0 mm (26.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 40.3 kB · Layers: 2 · Nets: 66 · Components: 49 · Dimensions: 40 x 65 mm (26 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -6869,7 +6880,7 @@ Size: 40.3 kB · Layers: 2 · Nets: 66 · Components: 49 · Dimensions: 40.0 x 6
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_sympetrum-v2%20NFF1/unrouted.dsn)
 
-Size: 33.1 kB · Layers: 2 · Nets: 63 · Components: 47 · Dimensions: 50.0 x 50.0 mm (25.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 33.1 kB · Layers: 2 · Nets: 63 · Components: 47 · Dimensions: 50 x 50 mm (25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -6893,11 +6904,11 @@ Size: 49.5 kB · Layers: 4 · Nets: 7 · Components: 89 · Dimensions: 71.12 x 2
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_teensy-fx/unrouted.dsn)
 
-Size: 66.6 kB · Layers: 4 · Nets: 63 · Components: 82 · Dimensions: 60.0 x 100.0 mm (60.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 66.6 kB · Layers: 4 · Nets: 63 · Components: 82 · Dimensions: 60 x 100 mm (60 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
-| 1.9.0     | N/A  |                N/A |        N/A |     228.06 |    30.98 |    259.04 |   0+  0+  0 |        5 |          0 |   971 |       243 |     4096.0 |    0 / 0 |         |
+| 1.9.0     | N/A  |                N/A |        N/A |     228.06 |    30.98 |    259.04 |   0+  0+  0 |        5 |          0 |   970 |       243 |     4096.0 |    0 / 0 |         |
 | 2.4.1     | N/A  |                N/A |        N/A |     303.24 |      N/A |    303.24 |   0+  3+  0 |       12 |          0 |   918 |       518 |   340495.0 |    3 / 0 |         |
 | 2.5.0     | N/A  |                N/A |      11.57 |     589.85 |      N/A |    601.42 |   0+ 10+  0 |       18 |          0 |   878 |       324 |   181413.3 |    2 / 0 | TIMEOUT |
 | 2.6.0-RC1 | N/A  |                N/A |       1.80 |       0.16 |      N/A |      1.96 |   0+  1+  0 |       19 |          0 |    48 |       471 |   226026.6 |    2 / 0 | TIMEOUT |
@@ -6941,7 +6952,7 @@ Size: 28.2 kB · Layers: 2 · Nets: 25 · Components: 52 · Dimensions: 58.17 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_tomu/unrouted.dsn)
 
-Size: 14.5 kB · Layers: 2 · Nets: 5 · Components: 16 · Dimensions: 13.0 x 11.0 mm (1.43 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 14.5 kB · Layers: 2 · Nets: 5 · Components: 16 · Dimensions: 13 x 11 mm (1.43 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -6949,6 +6960,18 @@ Size: 14.5 kB · Layers: 2 · Nets: 5 · Components: 16 · Dimensions: 13.0 x 11
 | 2.4.1     | N/A  |                N/A |        N/A |      44.41 |      N/A |     44.41 |   0+  1+  0 |        6 |         20 |   810 |       385 |    96204.2 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |      16.30 |      16.63 |     0.00 |     32.93 |   0+ 18+  0 |        6 |          0 |   814 |       106 |     7864.3 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       5.47 |       6.48 |     0.00 |     11.95 |   0+ 18+  0 |        6 |          0 |   752 |       144 |    34585.5 |    2 / 0 |       |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_training_board_v02/unrouted.dsn)
+
+Size: 77.5 kB · Layers: 2 · Nets: 69 · Components: 76 · Dimensions: 100 x 100 mm (100 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       2.93 |    12.65 |     15.58 |   0+  0+  0 |        0 |          0 |  1000 |        90 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      16.75 |      N/A |     16.75 |   0+  3+  0 |        0 |          0 |  1000 |       244 |    20368.0 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       0.09 |      11.35 |     0.00 |     11.44 |   0+  3+  0 |        0 |          0 |  1000 |       115 |     1437.5 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       0.16 |      17.25 |     0.00 |     17.41 |   0+  3+  0 |        0 |          0 |  1000 |       162 |     1497.8 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_training_board/unrouted.dsn)
@@ -6961,18 +6984,6 @@ Size: 68.1 kB · Layers: 2 · Nets: 62 · Components: 77 · Dimensions: 99.08 x 
 | 2.4.1     | N/A  |                N/A |        N/A |      23.30 |      N/A |     23.30 |   0+ 18+  0 |        1 |          0 |   990 |       285 |    44534.8 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.06 |       7.80 |     0.00 |      7.86 |   0+  3+  0 |        0 |          0 |  1000 |       136 |     1636.4 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.03 |       5.22 |     0.00 |      5.25 |   0+  3+  0 |        0 |          0 |  1000 |       125 |     1324.7 |    2 / 0 |       |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_training_board_v02/unrouted.dsn)
-
-Size: 77.5 kB · Layers: 2 · Nets: 69 · Components: 76 · Dimensions: 100.0 x 100.0 mm (100.0 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       2.93 |    12.65 |     15.58 |   0+  0+  0 |        0 |          0 |  1000 |        90 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      16.75 |      N/A |     16.75 |   0+  3+  0 |        0 |          0 |  1000 |       244 |    20368.0 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       0.09 |      11.35 |     0.00 |     11.44 |   0+  3+  0 |        0 |          0 |  1000 |       115 |     1437.5 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       0.16 |      17.25 |     0.00 |     17.41 |   0+  3+  0 |        0 |          0 |  1000 |       162 |     1497.8 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_trans_switch_volt_amp/unrouted.dsn)
@@ -6989,7 +7000,7 @@ Size: 45.2 kB · Layers: 2 · Nets: 108 · Components: 20 · Dimensions: 111.51 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_TS100C/unrouted.dsn)
 
-Size: 59.9 kB · Layers: 4 · Nets: 79 · Components: 64 · Dimensions: 84.0 x 10.0 mm (8.4 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 59.9 kB · Layers: 4 · Nets: 79 · Components: 64 · Dimensions: 84 x 10 mm (8.4 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -7013,7 +7024,7 @@ Size: 23.8 kB · Layers: 2 · Nets: 24 · Components: 21 · Dimensions: 35.56 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_tt_nano_HAT_b2/unrouted.dsn)
 
-Size: 28.4 kB · Layers: 2 · Nets: 31 · Components: 25 · Dimensions: 34.0 x 59.0 mm (20.06 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 28.4 kB · Layers: 2 · Nets: 31 · Components: 25 · Dimensions: 34 x 59 mm (20.06 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -7049,7 +7060,7 @@ Size: 23.1 kB · Layers: 2 · Nets: 12 · Components: 44 · Dimensions: 89.43 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_Unifying/unrouted.dsn)
 
-Size: 126.6 kB · Layers: 4 · Nets: 261 · Components: 132 · Dimensions: 0.0 x 0.0 mm (0.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 126.6 kB · Layers: 4 · Nets: 261 · Components: 132 · Dimensions: 0 x 0 mm (0 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -7059,9 +7070,21 @@ Size: 126.6 kB · Layers: 4 · Nets: 261 · Components: 132 · Dimensions: 0.0 x
 | 2.6.0-RC1 | N/A  |                N/A |       7.90 |     484.15 |      N/A |    492.05 |   0+ 15+  0 |       15 |          8 |   880 |       488 |   593112.6 |    3 / 0 | TIMEOUT |
 
 
+### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_USB-C-Screen-Adapter-LDR6023SS/unrouted.dsn)
+
+Size: 35.7 kB · Layers: 2 · Nets: 19 · Components: 42 · Dimensions: 31 x 34.35 mm (10.65 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |      55.32 |    13.45 |     68.77 |   0+  0+  0 |        3 |          4 |   972 |        46 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      76.78 |      N/A |     76.78 |   0+  9+  0 |        0 |          6 |  1000 |       320 |   134574.5 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       6.21 |      63.66 |     0.00 |     69.87 |   0+ 21+  0 |        2 |          0 |   980 |       198 |    30574.4 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       6.22 |      31.60 |   181.22 |    219.04 |   0+ 18+ 10 |        0 |          0 |  1000 |      1474 |    21535.6 |    2 / 0 |       |
+
+
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_USB-C-Screen-Adapter/unrouted.dsn)
 
-Size: 61.7 kB · Layers: 4 · Nets: 33 · Components: 65 · Dimensions: 40.0 x 20.8 mm (8.32 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 61.7 kB · Layers: 4 · Nets: 33 · Components: 65 · Dimensions: 40 x 20.8 mm (8.32 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -7071,16 +7094,16 @@ Size: 61.7 kB · Layers: 4 · Nets: 33 · Components: 65 · Dimensions: 40.0 x 2
 | 2.6.0-RC1 | N/A  |                N/A |       2.03 |       0.22 |      N/A |      2.25 |   0+  1+  0 |        1 |          0 |   184 |       401 |   232558.8 |    2 / 0 | TIMEOUT |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_USB-C-Screen-Adapter-LDR6023SS/unrouted.dsn)
+### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_USB-LED-Otter/unrouted.dsn)
 
-Size: 35.7 kB · Layers: 2 · Nets: 19 · Components: 42 · Dimensions: 31.0 x 34.35 mm (10.65 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 18.8 kB · Layers: 2 · Nets: 28 · Components: 14 · Dimensions: 12 x 15 mm (1.8 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |      55.32 |    13.45 |     68.77 |   0+  0+  0 |        3 |          4 |   972 |        46 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      76.78 |      N/A |     76.78 |   0+  9+  0 |        0 |          6 |  1000 |       320 |   134574.5 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       6.21 |      63.66 |     0.00 |     69.87 |   0+ 21+  0 |        2 |          0 |   980 |       198 |    30574.4 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       6.22 |      31.60 |   181.22 |    219.04 |   0+ 18+ 10 |        0 |          0 |  1000 |      1474 |    21535.6 |    2 / 0 |       |
+| 1.9.0     | N/A  |                N/A |        N/A |       6.13 |     0.98 |      7.11 |   0+  0+  0 |        1 |          2 |   965 |       114 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      60.64 |      N/A |     60.64 |   0+ 16+  0 |        5 |         11 |   827 |       233 |    82220.8 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |      14.86 |       7.71 |     0.00 |     22.57 |   0+ 19+  0 |        2 |          0 |   932 |       171 |     9056.8 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       2.70 |       7.82 |     0.00 |     10.52 |   0+ 18+  0 |        1 |          0 |   897 |       213 |    28326.0 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_USBee32-S2/unrouted.dsn)
@@ -7107,21 +7130,9 @@ Size: 27.6 kB · Layers: 2 · Nets: 26 · Components: 26 · Dimensions: 29.97 x 
 | 2.6.0-RC1 | N/A  |                N/A |       1.14 |      13.18 |     0.00 |     14.32 |   0+ 18+  0 |        2 |          0 |   872 |       202 |    46575.6 |    2 / 0 |       |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_USB-LED-Otter/unrouted.dsn)
-
-Size: 18.8 kB · Layers: 2 · Nets: 28 · Components: 14 · Dimensions: 12.0 x 15.0 mm (1.8 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       6.13 |     0.98 |      7.11 |   0+  0+  0 |        1 |          2 |   965 |       114 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      60.64 |      N/A |     60.64 |   0+ 16+  0 |        5 |         11 |   827 |       233 |    82220.8 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |      14.86 |       7.71 |     0.00 |     22.57 |   0+ 19+  0 |        2 |          0 |   932 |       171 |     9056.8 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       2.70 |       7.82 |     0.00 |     10.52 |   0+ 18+  0 |        1 |          0 |   897 |       213 |    28326.0 |    2 / 0 |       |
-
-
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_XassetteAsterisk/unrouted.dsn)
 
-Size: 101 kB · Layers: 2 · Nets: 46 · Components: 145 · Dimensions: 56.0 x 56.0 mm (31.36 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 101 kB · Layers: 2 · Nets: 46 · Components: 145 · Dimensions: 56 x 56 mm (31.36 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes           |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
@@ -7133,7 +7144,7 @@ Size: 101 kB · Layers: 2 · Nets: 46 · Components: 145 · Dimensions: 56.0 x 5
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/KiwiSDR_PCB_ant/unrouted.dsn)
 
-Size: 18.3 kB · Layers: 2 · Nets: 0 · Components: 85 · Dimensions: 138.0 x 38.0 mm (52.44 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 18.3 kB · Layers: 2 · Nets: 0 · Components: 85 · Dimensions: 138 x 38 mm (52.44 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -7145,14 +7156,14 @@ Size: 18.3 kB · Layers: 2 · Nets: 0 · Components: 85 · Dimensions: 138.0 x 3
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/klangorium_logic_noise_playground/unrouted.dsn)
 
-Size: 72.8 kB · Layers: 2 · Nets: 45 · Components: 160 · Dimensions: 200.0 x 100.0 mm (200.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 72.8 kB · Layers: 2 · Nets: 45 · Components: 160 · Dimensions: 200 x 100 mm (200 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |      16.77 |   410.30 |    427.07 |   0+  0+  0 |        0 |          0 |  1000 |        89 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      88.88 |      N/A |     88.88 |   0+  3+  0 |        0 |          0 |  1000 |       303 |   172281.0 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.05 |      20.10 |    23.95 |     44.10 |   0+  6+  2 |        0 |          0 |  1000 |      1074 |     9325.0 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       0.04 |      19.53 |    27.19 |     46.76 |   0+  6+  2 |        0 |          0 |  1000 |      1166 |     8804.3 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       0.04 |      19.53 |    27.19 |     46.76 |   0+  6+  2 |        0 |          0 |  1000 |      1166 |     8804.2 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/komputer-klavier_KomputerKlavier/unrouted.dsn)
@@ -7241,19 +7252,19 @@ Size: 31.3 kB · Layers: 2 · Nets: 22 · Components: 39 · Dimensions: 34.5 x 6
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/lattice-ice40-hx8kevb-sdram_hx8kevb-sdram/unrouted.dsn)
 
-Size: 25.8 kB · Layers: 2 · Nets: 1 · Components: 17 · Dimensions: 56.0 x 74.1 mm (41.5 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 25.8 kB · Layers: 2 · Nets: 1 · Components: 17 · Dimensions: 56 x 74.1 mm (41.5 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |      21.72 |     5.92 |     27.64 |   0+  0+  0 |        5 |          0 |   945 |        60 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      45.46 |      N/A |     45.46 |   0+ 18+  0 |        1 |          0 |   988 |       356 |   106558.8 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       8.32 |      15.52 |    39.06 |     62.90 |   0+  4+  2 |        0 |          0 |  1000 |       777 |     4043.4 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       8.32 |      15.52 |    39.06 |     62.90 |   0+  4+  2 |        0 |          0 |  1000 |       777 |     4043.3 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       4.34 |       8.78 |     8.44 |     21.56 |   0+  5+  1 |        0 |          0 |  1000 |       648 |     3512.9 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/LAUNCHXL-F28027-isolation-PCB_project1/unrouted.dsn)
 
-Size: 10.5 kB · Layers: 2 · Nets: 1 · Components: 19 · Dimensions: 49.5 x 20.0 mm (9.9 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 10.5 kB · Layers: 2 · Nets: 1 · Components: 19 · Dimensions: 49.5 x 20 mm (9.9 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -7277,7 +7288,7 @@ Size: 11.6 kB · Layers: 2 · Nets: 4 · Components: 6 · Dimensions: 42.16 x 24
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/lea-m8f-board_lea-m8f/unrouted.dsn)
 
-Size: 20.7 kB · Layers: 2 · Nets: 11 · Components: 33 · Dimensions: 0.0 x 0.0 mm (0.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 20.7 kB · Layers: 2 · Nets: 11 · Components: 33 · Dimensions: 0 x 0 mm (0 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -7301,7 +7312,7 @@ Size: 26 kB · Layers: 2 · Nets: 13 · Components: 63 · Dimensions: 99.7 x 49.
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/LED_Clock_AM_led_clock/unrouted.dsn)
 
-Size: 62.2 kB · Layers: 2 · Nets: 24 · Components: 65 · Dimensions: 100.0 x 50.0 mm (50.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 62.2 kB · Layers: 2 · Nets: 24 · Components: 65 · Dimensions: 100 x 50 mm (50 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -7311,16 +7322,16 @@ Size: 62.2 kB · Layers: 2 · Nets: 24 · Components: 65 · Dimensions: 100.0 x 
 | 2.6.0-RC1 | N/A  |                N/A |      12.11 |      92.40 |   196.04 |    300.55 |   0+  7+  2 |        0 |          0 |  1000 |       964 |    16045.0 |    2 / 0 | TIMEOUT |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/LED_port-status_LED_port-status/unrouted.dsn)
+### Fixture: [unrouted.dsn](../fixtures/PCBench/LED_port-status_LED_port-status-CA-CC-combo/unrouted.dsn)
 
-Size: 7.3 kB · Layers: 2 · Nets: 17 · Components: 21 · Dimensions: 23.75 x 12.5 mm (2.97 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 12 kB · Layers: 2 · Nets: 0 · Components: 15 · Dimensions: 23.75 x 8.97 mm (2.13 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |      18.81 |     3.05 |     21.86 |   0+  0+  0 |       62 |        208 |   327 |       163 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      60.76 |      N/A |     60.76 |   0+ 17+  0 |       62 |        128 |   382 |       388 |    88641.5 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       4.60 |      28.57 |     0.00 |     33.17 |   0+ 30+  0 |       64 |          0 |   373 |       141 |    11729.1 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       2.62 |       5.84 |    14.01 |     22.47 |   0+  8+  3 |        0 |          0 |  1000 |       405 |     6650.9 |    2 / 0 |       |
+| 1.9.0     | N/A  |                N/A |        N/A |       1.60 |     4.64 |      6.24 |   0+  0+  0 |        0 |          0 |  1000 |        42 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       9.08 |      N/A |      9.08 |   0+  1+  0 |        1 |          0 |   944 |       265 |    14720.3 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       1.88 |       0.59 |     0.00 |      2.47 |   0+  4+  0 |        0 |          0 |  1000 |       104 |      365.5 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       3.18 |       3.86 |     0.00 |      7.04 |   0+ 10+  0 |        0 |          0 |  1000 |        88 |      784.8 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/LED_port-status_LED_port-status-CA/unrouted.dsn)
@@ -7335,16 +7346,16 @@ Size: 11.9 kB · Layers: 2 · Nets: 0 · Components: 13 · Dimensions: 23.75 x 8
 | 2.6.0-RC1 | N/A  |                N/A |       3.44 |       1.33 |     0.00 |      4.77 |   0+  2+  0 |        0 |          0 |  1000 |        77 |      272.0 |    2 / 0 |       |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/LED_port-status_LED_port-status-CA-CC-combo/unrouted.dsn)
+### Fixture: [unrouted.dsn](../fixtures/PCBench/LED_port-status_LED_port-status/unrouted.dsn)
 
-Size: 12 kB · Layers: 2 · Nets: 0 · Components: 15 · Dimensions: 23.75 x 8.97 mm (2.13 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 7.3 kB · Layers: 2 · Nets: 17 · Components: 21 · Dimensions: 23.75 x 12.5 mm (2.97 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       1.60 |     4.64 |      6.24 |   0+  0+  0 |        0 |          0 |  1000 |        42 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       9.08 |      N/A |      9.08 |   0+  1+  0 |        1 |          0 |   944 |       265 |    14720.3 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       1.88 |       0.59 |     0.00 |      2.47 |   0+  4+  0 |        0 |          0 |  1000 |       104 |      365.5 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       3.18 |       3.86 |     0.00 |      7.04 |   0+ 10+  0 |        0 |          0 |  1000 |        88 |      784.8 |    2 / 0 |       |
+| 1.9.0     | N/A  |                N/A |        N/A |      18.81 |     3.05 |     21.86 |   0+  0+  0 |       62 |        208 |   327 |       163 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      60.76 |      N/A |     60.76 |   0+ 17+  0 |       62 |        128 |   382 |       388 |    88641.5 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       4.60 |      28.57 |     0.00 |     33.17 |   0+ 30+  0 |       64 |          0 |   373 |       141 |    11729.1 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       2.62 |       5.84 |    14.01 |     22.47 |   0+  8+  3 |        0 |          0 |  1000 |       405 |     6650.9 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/LED-grid-8x8_LED grid 8x8/unrouted.dsn)
@@ -7361,7 +7372,7 @@ Size: 17.4 kB · Layers: 2 · Nets: 37 · Components: 11 · Dimensions: 68.58 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/LED-Square_PT4115_LED-Square_PT4115/unrouted.dsn)
 
-Size: 19.7 kB · Layers: 2 · Nets: 0 · Components: 30 · Dimensions: 50.0 x 50.0 mm (25.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 19.7 kB · Layers: 2 · Nets: 0 · Components: 30 · Dimensions: 50 x 50 mm (25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -7373,7 +7384,7 @@ Size: 19.7 kB · Layers: 2 · Nets: 0 · Components: 30 · Dimensions: 50.0 x 50
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/LED-strip_PWM_LED-strip_PWM/unrouted.dsn)
 
-Size: 15.6 kB · Layers: 2 · Nets: 0 · Components: 16 · Dimensions: 29.65 x 10.0 mm (2.96 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 15.6 kB · Layers: 2 · Nets: 0 · Components: 16 · Dimensions: 29.65 x 10 mm (2.96 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -7457,13 +7468,13 @@ Size: 12.1 kB · Layers: 2 · Nets: 15 · Components: 8 · Dimensions: 66.04 x 5
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/linklayer_contact/unrouted.dsn)
 
-Size: 29.4 kB · Layers: 2 · Nets: 46 · Components: 40 · Dimensions: 36.0 x 61.1 mm (22.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 29.4 kB · Layers: 2 · Nets: 46 · Components: 40 · Dimensions: 36 x 61.1 mm (22 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       7.76 |     1.99 |      9.75 |   0+  0+  0 |        3 |          0 |   955 |       128 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      47.30 |      N/A |     47.30 |   0+  1+  0 |        1 |          0 |   985 |       368 |   110839.4 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       3.02 |       3.11 |     3.67 |      9.80 |   0+  3+  1 |        0 |          0 |  1000 |       199 |     1476.1 |    2 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      47.30 |      N/A |     47.30 |   0+  1+  0 |        1 |          0 |   984 |       368 |   110839.4 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       3.02 |       3.11 |     3.67 |      9.80 |   0+  3+  1 |        0 |          0 |  1000 |       199 |     1476.0 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       4.13 |       3.29 |     1.87 |      9.29 |   0+  3+  1 |        0 |          0 |  1000 |       162 |     1364.0 |    2 / 0 |       |
 
 
@@ -7481,7 +7492,7 @@ Size: 24.4 kB · Layers: 2 · Nets: 19 · Components: 31 · Dimensions: 32.26 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/LizardBoard_lizard/unrouted.dsn)
 
-Size: 10.2 kB · Layers: 2 · Nets: 11 · Components: 11 · Dimensions: 11.0 x 43.75 mm (4.81 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 10.2 kB · Layers: 2 · Nets: 11 · Components: 11 · Dimensions: 11 x 43.75 mm (4.81 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -7499,20 +7510,20 @@ Size: 54.6 kB · Layers: 2 · Nets: 14 · Components: 58 · Dimensions: 76.2 x 4
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
 | 1.9.0     | N/A  |                N/A |        N/A |      55.63 |    34.31 |     89.94 |   0+  0+  0 |        2 |          1 |   991 |        84 |     4096.0 |    0 / 0 |         |
 | 2.4.1     | N/A  |                N/A |        N/A |     239.04 |      N/A |    239.04 |   0+ 13+  0 |        0 |          0 |  1000 |       404 |   526291.4 |    3 / 0 |         |
-| 2.5.0     | N/A  |                N/A |      24.22 |      79.15 |   497.50 |    600.87 |   0+  8+  6 |        0 |          0 |  1000 |      1509 |    30736.4 |    2 / 0 | TIMEOUT |
+| 2.5.0     | N/A  |                N/A |      24.22 |      79.15 |   497.50 |    600.87 |   0+  8+  6 |        0 |          0 |  1000 |      1509 |    30736.3 |    2 / 0 | TIMEOUT |
 | 2.6.0-RC1 | N/A  |                N/A |      25.57 |     116.98 |   175.98 |    318.53 |   0+ 11+  2 |        0 |          0 |  1000 |      1855 |    38252.6 |    2 / 0 |         |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/LogicBoxen_LogicBoxen/unrouted.dsn)
 
-Size: 23.1 kB · Layers: 2 · Nets: 37 · Components: 47 · Dimensions: 50.0 x 35.0 mm (17.5 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 23.1 kB · Layers: 2 · Nets: 37 · Components: 47 · Dimensions: 50 x 35 mm (17.5 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |      40.43 |   170.64 |    211.07 |   0+  0+  0 |        0 |          0 |  1000 |       129 |     4096.0 |    1 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      56.53 |      N/A |     56.53 |   0+ 13+  0 |        0 |          0 |  1000 |       313 |   104038.7 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       9.40 |      28.30 |   189.29 |    226.99 |   0+  6+  4 |        0 |          0 |  1000 |       831 |     7381.8 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |      13.04 |      32.18 |   220.03 |    265.25 |   0+ 10+  5 |        0 |          0 |  1000 |      1042 |     8296.2 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |      13.04 |      32.18 |   220.03 |    265.25 |   0+ 10+  5 |        0 |          0 |  1000 |      1042 |     8296.1 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/LoLin_Designs_LoLin/unrouted.dsn)
@@ -7541,7 +7552,7 @@ Size: 25.8 kB · Layers: 2 · Nets: 8 · Components: 20 · Dimensions: 49.1 x 28
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/LoRaCatKitty_NodeLoRaGroveKitty/unrouted.dsn)
 
-Size: 44.1 kB · Layers: 2 · Nets: 52 · Components: 42 · Dimensions: 50.0 x 50.0 mm (25.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 44.1 kB · Layers: 2 · Nets: 52 · Components: 42 · Dimensions: 50 x 50 mm (25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -7553,7 +7564,7 @@ Size: 44.1 kB · Layers: 2 · Nets: 52 · Components: 42 · Dimensions: 50.0 x 5
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/LoRaCatTrack_GPSLoRa/unrouted.dsn)
 
-Size: 30.3 kB · Layers: 2 · Nets: 37 · Components: 32 · Dimensions: 80.0 x 55.0 mm (44.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 30.3 kB · Layers: 2 · Nets: 37 · Components: 32 · Dimensions: 80 x 55 mm (44 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -7565,7 +7576,7 @@ Size: 30.3 kB · Layers: 2 · Nets: 37 · Components: 32 · Dimensions: 80.0 x 5
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/LoRaPP_loramod/unrouted.dsn)
 
-Size: 29 kB · Layers: 4 · Nets: 37 · Components: 78 · Dimensions: 50.0 x 18.0 mm (9.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 29 kB · Layers: 4 · Nets: 37 · Components: 78 · Dimensions: 50 x 18 mm (9 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -7577,7 +7588,7 @@ Size: 29 kB · Layers: 4 · Nets: 37 · Components: 78 · Dimensions: 50.0 x 18.
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/LoRaWAN_GPS_lorawan_gps/unrouted.dsn)
 
-Size: 37.4 kB · Layers: 2 · Nets: 25 · Components: 120 · Dimensions: 95.0 x 20.0 mm (19.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 37.4 kB · Layers: 2 · Nets: 25 · Components: 120 · Dimensions: 95 x 20 mm (19 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -7601,7 +7612,7 @@ Size: 39.3 kB · Layers: 2 · Nets: 33 · Components: 62 · Dimensions: 25.4 x 5
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/low-power-counter_lpcounter/unrouted.dsn)
 
-Size: 65 kB · Layers: 2 · Nets: 0 · Components: 29 · Dimensions: 85.0 x 54.0 mm (45.9 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 65 kB · Layers: 2 · Nets: 0 · Components: 29 · Dimensions: 85 x 54 mm (45.9 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -7613,7 +7624,7 @@ Size: 65 kB · Layers: 2 · Nets: 0 · Components: 29 · Dimensions: 85.0 x 54.0
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/LPC2148_Stick__autosave-LPC2148_stick/unrouted.dsn)
 
-Size: 64.6 kB · Layers: 2 · Nets: 63 · Components: 73 · Dimensions: 132.0 x 51.0 mm (67.32 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 64.6 kB · Layers: 2 · Nets: 63 · Components: 73 · Dimensions: 132 x 51 mm (67.32 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -7625,7 +7636,7 @@ Size: 64.6 kB · Layers: 2 · Nets: 63 · Components: 73 · Dimensions: 132.0 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/LPC2148_Stick_LPC2148_stick/unrouted.dsn)
 
-Size: 64.6 kB · Layers: 2 · Nets: 63 · Components: 73 · Dimensions: 132.0 x 51.0 mm (67.32 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 64.6 kB · Layers: 2 · Nets: 63 · Components: 73 · Dimensions: 132 x 51 mm (67.32 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -7637,7 +7648,7 @@ Size: 64.6 kB · Layers: 2 · Nets: 63 · Components: 73 · Dimensions: 132.0 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/LSU_4-9_O2_Sensor_Controller_LO2SC/unrouted.dsn)
 
-Size: 21.7 kB · Layers: 2 · Nets: 9 · Components: 28 · Dimensions: 24.0 x 0.0 mm (0.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 21.7 kB · Layers: 2 · Nets: 9 · Components: 28 · Dimensions: 24 x 0 mm (0 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -7661,7 +7672,7 @@ Size: 38.4 kB · Layers: 2 · Nets: 17 · Components: 47 · Dimensions: 49.8 x 4
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/LVDS2TMDS_LVDS2TMDS/unrouted.dsn)
 
-Size: 9.3 kB · Layers: 2 · Nets: 29 · Components: 26 · Dimensions: 43.75 x 19.0 mm (8.31 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 9.3 kB · Layers: 2 · Nets: 29 · Components: 26 · Dimensions: 43.75 x 19 mm (8.31 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -7673,19 +7684,19 @@ Size: 9.3 kB · Layers: 2 · Nets: 29 · Components: 26 · Dimensions: 43.75 x 1
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Lys_Lys/unrouted.dsn)
 
-Size: 53.4 kB · Layers: 2 · Nets: 36 · Components: 78 · Dimensions: 53.0 x 79.0 mm (41.87 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 53.4 kB · Layers: 2 · Nets: 36 · Components: 78 · Dimensions: 53 x 79 mm (41.87 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
 | 1.9.0     | N/A  |                N/A |        N/A |     170.24 |   106.56 |    276.80 |   0+  0+  0 |        3 |       1249 |   945 |       258 |     4096.0 |  164 / 0 |         |
 | 2.4.1     | N/A  |                N/A |        N/A |     306.95 |      N/A |    306.95 |   0+  1+  0 |       87 |       1252 |   737 |       312 |   537075.8 |    3 / 0 | TIMEOUT |
-| 2.5.0     | N/A  |                N/A |       9.34 |     408.82 |     0.00 |    418.16 |   0+ 18+  0 |        3 |         47 |   988 |       237 |    90650.5 |    3 / 0 |         |
+| 2.5.0     | N/A  |                N/A |       9.34 |     408.82 |     0.00 |    418.16 |   0+ 18+  0 |        3 |         47 |   988 |       237 |    90650.4 |    3 / 0 |         |
 | 2.6.0-RC1 | N/A  |                N/A |       6.31 |      66.85 |      N/A |     73.16 |   0+ 11+  0 |        0 |          2 |   989 |       310 |   147170.2 |    3 / 0 | TIMEOUT |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/m2-electronics_m2fc/unrouted.dsn)
 
-Size: 81.6 kB · Layers: 4 · Nets: 150 · Components: 351 · Dimensions: 100.0 x 70.0 mm (70.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 81.6 kB · Layers: 4 · Nets: 150 · Components: 351 · Dimensions: 100 x 70 mm (70 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -7695,21 +7706,9 @@ Size: 81.6 kB · Layers: 4 · Nets: 150 · Components: 351 · Dimensions: 100.0 
 | 2.6.0-RC1 | N/A  |                N/A |     102.36 |     319.86 |  1237.44 |   1659.66 |   0+ 13+  2 |        0 |          0 |  1000 |      1456 |   139200.9 |    8 / 0 |       |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/m2-electronics_m2pa/unrouted.dsn)
-
-Size: 10.4 kB · Layers: 2 · Nets: 7 · Components: 20 · Dimensions: 60.0 x 39.0 mm (23.4 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       1.79 |     8.05 |      9.84 |   0+  0+  0 |        0 |         60 |   963 |        61 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      40.02 |      N/A |     40.02 |   0+  1+  0 |        0 |         60 |   989 |       319 |    86180.5 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       1.22 |       1.13 |     5.15 |      7.50 |   0+  2+  2 |        0 |          0 |  1000 |       222 |      416.6 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       1.70 |       0.91 |     2.42 |      5.03 |   0+  2+  2 |        0 |          0 |  1000 |       249 |      261.6 |    2 / 0 |       |
-
-
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/m2-electronics_m2pa-instrument/unrouted.dsn)
 
-Size: 10.4 kB · Layers: 2 · Nets: 7 · Components: 20 · Dimensions: 60.0 x 39.0 mm (23.4 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 10.4 kB · Layers: 2 · Nets: 7 · Components: 20 · Dimensions: 60 x 39 mm (23.4 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -7721,7 +7720,7 @@ Size: 10.4 kB · Layers: 2 · Nets: 7 · Components: 20 · Dimensions: 60.0 x 39
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/m2-electronics_m2pa-m3mount/unrouted.dsn)
 
-Size: 12.7 kB · Layers: 2 · Nets: 7 · Components: 23 · Dimensions: 47.0 x 28.0 mm (13.16 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 12.7 kB · Layers: 2 · Nets: 7 · Components: 23 · Dimensions: 47 x 28 mm (13.16 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -7733,7 +7732,7 @@ Size: 12.7 kB · Layers: 2 · Nets: 7 · Components: 23 · Dimensions: 47.0 x 28
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/m2-electronics_m2pa-tiny/unrouted.dsn)
 
-Size: 9.5 kB · Layers: 2 · Nets: 7 · Components: 19 · Dimensions: 44.75 x 16.0 mm (7.16 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 9.5 kB · Layers: 2 · Nets: 7 · Components: 19 · Dimensions: 44.75 x 16 mm (7.16 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -7741,6 +7740,18 @@ Size: 9.5 kB · Layers: 2 · Nets: 7 · Components: 19 · Dimensions: 44.75 x 16
 | 2.4.1     | N/A  |                N/A |        N/A |      31.16 |      N/A |     31.16 |   0+  1+  0 |        0 |         64 |   988 |       311 |    79135.8 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.81 |       1.34 |     3.97 |      6.12 |   0+  2+  2 |        0 |          0 |  1000 |       182 |      392.0 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.72 |       0.34 |     0.70 |      1.76 |   0+  2+  1 |        0 |          0 |  1000 |        17 |      120.1 |    2 / 0 |       |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/m2-electronics_m2pa/unrouted.dsn)
+
+Size: 10.4 kB · Layers: 2 · Nets: 7 · Components: 20 · Dimensions: 60 x 39 mm (23.4 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       1.79 |     8.05 |      9.84 |   0+  0+  0 |        0 |         60 |   963 |        61 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      40.02 |      N/A |     40.02 |   0+  1+  0 |        0 |         60 |   989 |       319 |    86180.5 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       1.22 |       1.13 |     5.15 |      7.50 |   0+  2+  2 |        0 |          0 |  1000 |       222 |      416.6 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       1.70 |       0.91 |     2.42 |      5.03 |   0+  2+  2 |        0 |          0 |  1000 |       249 |      261.6 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/m2-electronics_m2pogo/unrouted.dsn)
@@ -7757,19 +7768,19 @@ Size: 5.4 kB · Layers: 2 · Nets: 4 · Components: 8 · Dimensions: 44.4 x 81.8
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/m2-electronics_m2r/unrouted.dsn)
 
-Size: 32.7 kB · Layers: 2 · Nets: 50 · Components: 105 · Dimensions: 56.0 x 56.0 mm (31.36 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 32.7 kB · Layers: 2 · Nets: 50 · Components: 105 · Dimensions: 56 x 56 mm (31.36 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
 | 1.9.0     | N/A  |                N/A |        N/A |      27.15 |   255.39 |    282.54 |   0+  0+  0 |        0 |         10 |   999 |       153 |     4096.0 |  546 / 0 |         |
-| 2.4.1     | N/A  |                N/A |        N/A |     102.81 |      N/A |    102.81 |   0+  7+  0 |        0 |         10 |  1000 |       345 |   200051.1 |    3 / 0 |         |
+| 2.4.1     | N/A  |                N/A |        N/A |     102.81 |      N/A |    102.81 |   0+  7+  0 |        0 |         10 |  1000 |       345 |   200051.0 |    3 / 0 |         |
 | 2.5.0     | N/A  |                N/A |      11.39 |      90.50 |   195.33 |    297.22 |   0+  8+  2 |        0 |          0 |  1000 |       850 |    11478.8 |    2 / 0 | TIMEOUT |
 | 2.6.0-RC1 | N/A  |                N/A |      17.83 |      65.22 |   163.66 |    246.71 |   0+  8+  2 |        0 |          0 |  1000 |       958 |    10442.5 |    2 / 0 |         |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/m2-electronics_m2rl/unrouted.dsn)
 
-Size: 15.7 kB · Layers: 2 · Nets: 25 · Components: 31 · Dimensions: 40.0 x 34.0 mm (13.6 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 15.7 kB · Layers: 2 · Nets: 25 · Components: 31 · Dimensions: 40 x 34 mm (13.6 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -7815,21 +7826,9 @@ Size: 21.6 kB · Layers: 2 · Nets: 28 · Components: 35 · Dimensions: 99.8 x 5
 | 2.6.0-RC1 | N/A  |                N/A |       1.45 |       9.88 |    35.64 |     46.97 |   0+  4+  6 |        0 |          0 |  1000 |       821 |     2628.7 |    2 / 0 |       |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/magic-table_etch-a-sketch/unrouted.dsn)
-
-Size: 23.8 kB · Layers: 2 · Nets: 0 · Components: 31 · Dimensions: 98.0 x 75.0 mm (73.5 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       1.79 |     7.57 |      9.36 |   0+  0+  0 |        0 |         52 |   986 |        77 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      21.18 |      N/A |     21.18 |   0+  1+  0 |        0 |         52 |   993 |       229 |    29589.3 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       0.07 |       2.05 |     0.00 |      2.12 |   0+  2+  0 |        0 |         52 |   986 |        90 |      256.2 |    3 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       0.08 |       2.35 |     0.00 |      2.43 |   0+  2+  0 |        0 |         52 |   986 |       105 |      174.3 |    3 / 0 |       |
-
-
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/magic-table_etch-a-sketch_cyclone/unrouted.dsn)
 
-Size: 23.3 kB · Layers: 2 · Nets: 0 · Components: 31 · Dimensions: 98.0 x 75.0 mm (73.5 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 23.3 kB · Layers: 2 · Nets: 0 · Components: 31 · Dimensions: 98 x 75 mm (73.5 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -7837,6 +7836,18 @@ Size: 23.3 kB · Layers: 2 · Nets: 0 · Components: 31 · Dimensions: 98.0 x 75
 | 2.4.1     | N/A  |                N/A |        N/A |      10.98 |      N/A |     10.98 |   0+  1+  0 |        1 |          0 |   975 |       261 |    15315.1 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.53 |       7.59 |     0.00 |      8.12 |   0+  2+  0 |        0 |          0 |  1000 |       137 |      312.0 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.05 |       1.39 |     0.00 |      1.44 |   0+  2+  0 |        0 |          0 |  1000 |        99 |      152.2 |    2 / 0 |       |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/magic-table_etch-a-sketch/unrouted.dsn)
+
+Size: 23.8 kB · Layers: 2 · Nets: 0 · Components: 31 · Dimensions: 98 x 75 mm (73.5 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       1.79 |     7.57 |      9.36 |   0+  0+  0 |        0 |         52 |   986 |        77 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      21.18 |      N/A |     21.18 |   0+  1+  0 |        0 |         52 |   993 |       229 |    29589.3 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       0.07 |       2.05 |     0.00 |      2.12 |   0+  2+  0 |        0 |         52 |   986 |        90 |      256.2 |    3 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       0.08 |       2.35 |     0.00 |      2.43 |   0+  2+  0 |        0 |         52 |   986 |       105 |      174.3 |    3 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/MagSpoofPI_MagSpoofinThePi/unrouted.dsn)
@@ -7877,7 +7888,7 @@ Size: 37.8 kB · Layers: 2 · Nets: 5 · Components: 16 · Dimensions: 92.71 x 6
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/MAPone_MAP_append/unrouted.dsn)
 
-Size: 51.6 kB · Layers: 2 · Nets: 6 · Components: 37 · Dimensions: 70.0 x 30.0 mm (21.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 51.6 kB · Layers: 2 · Nets: 6 · Components: 37 · Dimensions: 70 x 30 mm (21 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -7889,7 +7900,7 @@ Size: 51.6 kB · Layers: 2 · Nets: 6 · Components: 37 · Dimensions: 70.0 x 30
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/MAPone_MAPone/unrouted.dsn)
 
-Size: 51.8 kB · Layers: 2 · Nets: 6 · Components: 37 · Dimensions: 70.0 x 30.0 mm (21.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 51.8 kB · Layers: 2 · Nets: 6 · Components: 37 · Dimensions: 70 x 30 mm (21 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -7913,7 +7924,7 @@ Size: 11.6 kB · Layers: 2 · Nets: 4 · Components: 8 · Dimensions: 34.8 x 18.
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/mavbridge_mavbridge/unrouted.dsn)
 
-Size: 17.1 kB · Layers: 2 · Nets: 7 · Components: 38 · Dimensions: 34.0 x 23.75 mm (8.07 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 17.1 kB · Layers: 2 · Nets: 7 · Components: 38 · Dimensions: 34 x 23.75 mm (8.07 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -7925,7 +7936,7 @@ Size: 17.1 kB · Layers: 2 · Nets: 7 · Components: 38 · Dimensions: 34.0 x 23
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/MAVRIC_Hardware__autosave-Motherboard/unrouted.dsn)
 
-Size: 49.2 kB · Layers: 2 · Nets: 131 · Components: 53 · Dimensions: 144.0 x 55.0 mm (79.2 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 49.2 kB · Layers: 2 · Nets: 131 · Components: 53 · Dimensions: 144 x 55 mm (79.2 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -7942,14 +7953,14 @@ Size: 20.8 kB · Layers: 2 · Nets: 2 · Components: 15 · Dimensions: 38.23 x 3
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       4.99 |     1.55 |      6.54 |   0+  0+  0 |        3 |          0 |   923 |        50 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      19.33 |      N/A |     19.33 |   0+  5+  0 |        0 |          0 |  1000 |       216 |    20999.6 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      19.33 |      N/A |     19.33 |   0+  5+  0 |        0 |          0 |  1000 |       216 |    20999.5 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       3.71 |       6.57 |    24.67 |     34.95 |   0+  3+  3 |        0 |          0 |  1000 |       477 |     1444.2 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       4.27 |       4.92 |    25.60 |     34.79 |   0+  3+  3 |        0 |          0 |  1000 |       389 |     1343.9 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/MAVRIC_Hardware_Motherboard/unrouted.dsn)
 
-Size: 49.2 kB · Layers: 2 · Nets: 131 · Components: 53 · Dimensions: 144.0 x 55.0 mm (79.2 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 49.2 kB · Layers: 2 · Nets: 131 · Components: 53 · Dimensions: 144 x 55 mm (79.2 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -7961,7 +7972,7 @@ Size: 49.2 kB · Layers: 2 · Nets: 131 · Components: 53 · Dimensions: 144.0 x
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/MAVRIC_Hardware_pcieduino/unrouted.dsn)
 
-Size: 23.4 kB · Layers: 2 · Nets: 0 · Components: 32 · Dimensions: 50.95 x 30.0 mm (15.29 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 23.4 kB · Layers: 2 · Nets: 0 · Components: 32 · Dimensions: 50.95 x 30 mm (15.29 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -8002,7 +8013,7 @@ Size: 32.1 kB · Layers: 2 · Nets: 12 · Components: 45 · Dimensions: 51.8 x 2
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       9.23 |   119.88 |    129.11 |   0+  0+  0 |        0 |          2 |   999 |        76 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      98.72 |      N/A |     98.72 |   0+  1+  0 |        5 |         13 |   921 |       403 |   185728.3 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      98.72 |      N/A |     98.72 |   0+  1+  0 |        5 |         13 |   921 |       403 |   185728.2 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       7.88 |      54.00 |     0.00 |     61.88 |   0+ 18+  0 |        4 |          0 |   938 |       159 |    18123.0 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       4.91 |       5.85 |    29.70 |     40.46 |   0+  3+  2 |        0 |          0 |  1000 |       557 |     2299.3 |    2 / 0 |       |
 
@@ -8021,19 +8032,19 @@ Size: 26.7 kB · Layers: 2 · Nets: 4 · Components: 9 · Dimensions: 54.3 x 68.
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/MeArm-Wireless-PCB_MeArmWireless/unrouted.dsn)
 
-Size: 32.7 kB · Layers: 2 · Nets: 13 · Components: 31 · Dimensions: 65.0 x 56.0 mm (36.4 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 32.7 kB · Layers: 2 · Nets: 13 · Components: 31 · Dimensions: 65 x 56 mm (36.4 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |      11.59 |    87.01 |     98.60 |   0+  0+  0 |        0 |          8 |   999 |       200 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |     238.28 |      N/A |    238.28 |   0+  1+  0 |        0 |         16 |   999 |       564 |   555632.3 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |     238.28 |      N/A |    238.28 |   0+  1+  0 |        0 |         16 |   999 |       564 |   555632.2 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       2.56 |      13.31 |    15.40 |     31.27 |   0+  5+  1 |        0 |          0 |  1000 |       613 |     3861.7 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       5.76 |      14.02 |    13.22 |     33.00 |   0+  5+  1 |        0 |          0 |  1000 |       621 |     3609.4 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       5.76 |      14.02 |    13.22 |     33.00 |   0+  5+  1 |        0 |          0 |  1000 |       621 |     3609.3 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Mechaduino-DR_Mechaduino DR 1.01/unrouted.dsn)
 
-Size: 56 kB · Layers: 2 · Nets: 10 · Components: 70 · Dimensions: 57.0 x 57.0 mm (32.49 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 56 kB · Layers: 2 · Nets: 10 · Components: 70 · Dimensions: 57 x 57 mm (32.49 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -8045,7 +8056,7 @@ Size: 56 kB · Layers: 2 · Nets: 10 · Components: 70 · Dimensions: 57.0 x 57.
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/mechkeys_1800-controller/unrouted.dsn)
 
-Size: 37 kB · Layers: 2 · Nets: 19 · Components: 80 · Dimensions: 100.0 x 45.0 mm (45.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 37 kB · Layers: 2 · Nets: 19 · Components: 80 · Dimensions: 100 x 45 mm (45 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -8115,6 +8126,18 @@ Size: 80.6 kB · Layers: 2 · Nets: 108 · Components: 339 · Dimensions: 367.75
 | 2.6.0-RC1 | N/A  |                N/A |      10.91 |     740.24 |   449.78 |   1200.93 |   0+ 13+  1 |        0 |         32 |   999 |      2144 |   279591.3 |    3 / 0 | TIMEOUT         |
 
 
+### Fixture: [unrouted.dsn](../fixtures/PCBench/mechkeys_lfk78-jtag/unrouted.dsn)
+
+Size: 4.8 kB · Layers: 2 · Nets: 10 · Components: 2 · Dimensions: 18.42 x 15.24 mm (2.81 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       0.90 |     0.90 |      1.80 |   0+  0+  0 |        0 |          0 |  1000 |        53 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       1.37 |      N/A |      1.37 |   0+  2+  0 |        0 |          0 |  1000 |        35 |      405.9 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       0.01 |       4.22 |     0.88 |      5.11 |   0+  2+  1 |        0 |          0 |  1000 |        47 |       97.2 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       0.02 |       1.15 |     1.15 |      2.32 |   0+  2+  2 |        0 |          0 |  1000 |        60 |       99.2 |    2 / 0 |       |
+
+
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/mechkeys_LFK78/unrouted.dsn)
 
 Size: 82.6 kB · Layers: 2 · Nets: 98 · Components: 517 · Dimensions: 367.75 x 92.5 mm (340.17 cm²) · CAD: KiCad's Pcbnew (v)
@@ -8125,18 +8148,6 @@ Size: 82.6 kB · Layers: 2 · Nets: 98 · Components: 517 · Dimensions: 367.75 
 | 2.4.1     | N/A  |                N/A |        N/A |    1806.12 |      N/A |   1806.12 |   0+  4+  0 |      115 |          8 |   829 |       864 |  2810588.2 |    3 / 0 | TIMEOUT |
 | 2.5.0     | N/A  |                N/A |       7.67 |    2694.99 |      N/A |   2702.66 |   0+ 13+  0 |      103 |          4 |   846 |       515 |  1013011.5 |    9 / 0 | TIMEOUT |
 | 2.6.0-RC1 | N/A  |                N/A |       7.52 |     897.14 |  1796.72 |   2701.38 |   0+ 10+  1 |        0 |          2 |  1000 |      1918 |   274364.2 |    7 / 0 | TIMEOUT |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/mechkeys_lfk78-jtag/unrouted.dsn)
-
-Size: 4.8 kB · Layers: 2 · Nets: 10 · Components: 2 · Dimensions: 18.42 x 15.24 mm (2.81 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       0.90 |     0.90 |      1.80 |   0+  0+  0 |        0 |          0 |  1000 |        53 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       1.37 |      N/A |      1.37 |   0+  2+  0 |        0 |          0 |  1000 |        35 |      405.9 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       0.01 |       4.22 |     0.88 |      5.11 |   0+  2+  1 |        0 |          0 |  1000 |        47 |       97.2 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       0.02 |       1.15 |     1.15 |      2.32 |   0+  2+  2 |        0 |          0 |  1000 |        60 |       99.3 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/mechkeys_MF68+10/unrouted.dsn)
@@ -8159,25 +8170,25 @@ Size: 52.9 kB · Layers: 4 · Nets: 0 · Components: 73 · Dimensions: 54.61 x 8
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
 | 1.9.0     | N/A  |                N/A |        N/A |     280.86 |    58.67 |    339.53 |   0+  0+  0 |        3 |        175 |   983 |       241 |     4096.0 |    1 / 0 |         |
 | 2.4.1     | N/A  |                N/A |        N/A |     302.53 |      N/A |    302.53 |   0+  3+  0 |       70 |         97 |   714 |       424 |   489048.9 |    4 / 0 |         |
-| 2.5.0     | N/A  |                N/A |      64.48 |     537.78 |      N/A |    602.26 |   0+ 11+  0 |       33 |         59 |   865 |       320 |   149915.1 |    9 / 0 | TIMEOUT |
+| 2.5.0     | N/A  |                N/A |      64.48 |     537.78 |      N/A |    602.26 |   0+ 11+  0 |       33 |         59 |   865 |       320 |   149915.0 |    9 / 0 | TIMEOUT |
 | 2.6.0-RC1 | N/A  |                N/A |      62.92 |     539.85 |      N/A |    602.77 |   0+  8+  0 |       24 |         60 |   902 |       416 |   142440.0 |    9 / 0 | TIMEOUT |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/medusa_medusa_rs422_rx/unrouted.dsn)
 
-Size: 17.2 kB · Layers: 2 · Nets: 4 · Components: 46 · Dimensions: 71.5 x 42.0 mm (30.03 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 17.2 kB · Layers: 2 · Nets: 4 · Components: 46 · Dimensions: 71.5 x 42 mm (30.03 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       3.98 |     1.55 |      5.53 |   0+  0+  0 |        2 |          0 |   973 |       148 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      12.84 |      N/A |     12.84 |   0+  5+  0 |        0 |          0 |  1000 |       243 |    21225.8 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       7.55 |       6.33 |    67.83 |     81.71 |   0+  4+  3 |        0 |          0 |  1000 |       512 |     1494.1 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       7.55 |       6.33 |    67.83 |     81.71 |   0+  4+  3 |        0 |          0 |  1000 |       512 |     1494.0 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       5.29 |       3.27 |    21.06 |     29.62 |   0+  4+  2 |        0 |          0 |  1000 |       374 |     1211.0 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/medusa_medusa_rs422_tx/unrouted.dsn)
 
-Size: 25 kB · Layers: 2 · Nets: 0 · Components: 46 · Dimensions: 72.0 x 67.0 mm (48.24 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 25 kB · Layers: 2 · Nets: 0 · Components: 46 · Dimensions: 72 x 67 mm (48.24 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -8201,7 +8212,7 @@ Size: 15.5 kB · Layers: 2 · Nets: 1 · Components: 32 · Dimensions: 48.87 x 5
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/memsarray_mems_array/unrouted.dsn)
 
-Size: 41.7 kB · Layers: 4 · Nets: 131 · Components: 61 · Dimensions: 350.0 x 190.0 mm (665.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 41.7 kB · Layers: 4 · Nets: 131 · Components: 61 · Dimensions: 350 x 190 mm (665 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -8235,18 +8246,6 @@ Size: 7.7 kB · Layers: 2 · Nets: 5 · Components: 9 · Dimensions: 14.73 x 11.
 | 2.6.0-RC1 | N/A  |                N/A |       5.10 |       1.13 |     2.35 |      8.58 |   0+  2+  2 |        0 |          0 |  1000 |       148 |      170.9 |    2 / 0 |       |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/Microdox-PCB_Microdox/unrouted.dsn)
-
-Size: 21 kB · Layers: 2 · Nets: 34 · Components: 38 · Dimensions: 153.31 x 135.48 mm (207.7 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
-| 1.9.0     | N/A  |                N/A |        N/A |      62.68 |    10.15 |     72.83 |   0+  0+  0 |       14 |         12 |   946 |       174 |     4096.0 |    0 / 0 |         |
-| 2.4.1     | N/A  |                N/A |        N/A |     717.66 |      N/A |    717.66 |   0+  1+  0 |       14 |         12 |   916 |       410 |   975645.3 |    3 / 0 |         |
-| 2.5.0     | N/A  |                N/A |       0.30 |     344.43 |     0.00 |    344.73 |   0+ 18+  0 |       17 |          0 |   898 |       264 |   206870.1 |    2 / 0 |         |
-| 2.6.0-RC1 | N/A  |                N/A |       0.08 |     313.14 |      N/A |    313.22 |   0+ 17+  0 |       17 |          0 |   898 |       343 |   550861.6 |    2 / 0 | TIMEOUT |
-
-
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Microdox-PCB_Microdox-LEDs/unrouted.dsn)
 
 Size: 27.8 kB · Layers: 2 · Nets: 41 · Components: 47 · Dimensions: 153.31 x 135.48 mm (207.7 cm²) · CAD: KiCad's Pcbnew (v)
@@ -8271,6 +8270,18 @@ Size: 18 kB · Layers: 2 · Nets: 29 · Components: 36 · Dimensions: 153.31 x 1
 | 2.6.0-RC1 | N/A  |                N/A |       0.03 |      79.14 |     0.00 |     79.17 |   0+ 24+  0 |        1 |          0 |   994 |       414 |   158002.0 |    2 / 0 |       |
 
 
+### Fixture: [unrouted.dsn](../fixtures/PCBench/Microdox-PCB_Microdox/unrouted.dsn)
+
+Size: 21 kB · Layers: 2 · Nets: 34 · Components: 38 · Dimensions: 153.31 x 135.48 mm (207.7 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
+| 1.9.0     | N/A  |                N/A |        N/A |      62.68 |    10.15 |     72.83 |   0+  0+  0 |       14 |         12 |   946 |       174 |     4096.0 |    0 / 0 |         |
+| 2.4.1     | N/A  |                N/A |        N/A |     717.66 |      N/A |    717.66 |   0+  1+  0 |       14 |         12 |   916 |       410 |   975645.3 |    3 / 0 |         |
+| 2.5.0     | N/A  |                N/A |       0.30 |     344.43 |     0.00 |    344.73 |   0+ 18+  0 |       17 |          0 |   898 |       264 |   206870.1 |    2 / 0 |         |
+| 2.6.0-RC1 | N/A  |                N/A |       0.08 |     313.14 |      N/A |    313.22 |   0+ 17+  0 |       17 |          0 |   898 |       343 |   550861.6 |    2 / 0 | TIMEOUT |
+
+
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Microdox-PCB_pcbbackup/unrouted.dsn)
 
 Size: 27.8 kB · Layers: 2 · Nets: 41 · Components: 47 · Dimensions: 153.31 x 135.48 mm (207.7 cm²) · CAD: KiCad's Pcbnew (v)
@@ -8291,8 +8302,8 @@ Size: 21.5 kB · Layers: 2 · Nets: 34 · Components: 38 · Dimensions: 153.31 x
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
 | 1.9.0     | N/A  |                N/A |        N/A |     184.05 |    12.63 |    196.68 |   0+  0+  0 |       13 |         12 |   950 |        90 |     4096.0 |    0 / 0 |         |
 | 2.4.1     | N/A  |                N/A |        N/A |     821.31 |      N/A |    821.31 |   0+  1+  0 |       13 |         12 |   920 |       415 |  1098980.6 |    3 / 0 |         |
-| 2.5.0     | N/A  |                N/A |       0.39 |     317.67 |     0.00 |    318.06 |   0+ 18+  0 |       17 |          0 |   897 |       247 |   199740.4 |    2 / 0 |         |
-| 2.6.0-RC1 | N/A  |                N/A |       0.04 |     305.67 |      N/A |    305.71 |   0+ 17+  0 |       17 |          0 |   897 |       325 |   522199.6 |    2 / 0 | TIMEOUT |
+| 2.5.0     | N/A  |                N/A |       0.39 |     317.67 |     0.00 |    318.06 |   0+ 18+  0 |       17 |          0 |   896 |       247 |   199740.4 |    2 / 0 |         |
+| 2.6.0-RC1 | N/A  |                N/A |       0.04 |     305.67 |      N/A |    305.71 |   0+ 17+  0 |       17 |          0 |   896 |       325 |   522199.6 |    2 / 0 | TIMEOUT |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/MicroMaple_MicroMaple/unrouted.dsn)
@@ -8307,18 +8318,6 @@ Size: 33 kB · Layers: 2 · Nets: 8 · Components: 39 · Dimensions: 38.1 x 38.1
 | 2.6.0-RC1 | N/A  |                N/A |       9.26 |     454.02 |   136.82 |    600.10 |   0+ 40+  1 |        0 |          0 |  1000 |      1597 |   136957.9 |    2 / 0 | TIMEOUT |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/microphone_preamp/unrouted.dsn)
-
-Size: 13 kB · Layers: 2 · Nets: 10 · Components: 26 · Dimensions: 61.4 x 17.2 mm (10.56 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       1.70 |    14.10 |     15.80 |   0+  0+  0 |        0 |          0 |  1000 |       170 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       3.97 |      N/A |      3.97 |   0+  2+  0 |        0 |          0 |  1000 |       186 |     3164.9 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       8.60 |       4.91 |    13.49 |     27.00 |   0+  3+  3 |        0 |          0 |  1000 |       224 |      638.4 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       6.28 |       3.10 |    12.11 |     21.49 |   0+  3+  3 |        0 |          0 |  1000 |       256 |      572.9 |    2 / 0 |       |
-
-
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/microphone_preamp-power/unrouted.dsn)
 
 Size: 7.6 kB · Layers: 2 · Nets: 6 · Components: 11 · Dimensions: 61.4 x 17.2 mm (10.56 cm²) · CAD: KiCad's Pcbnew (v)
@@ -8329,6 +8328,18 @@ Size: 7.6 kB · Layers: 2 · Nets: 6 · Components: 11 · Dimensions: 61.4 x 17.
 | 2.4.1     | N/A  |                N/A |        N/A |       8.48 |      N/A |      8.48 |   0+  1+  0 |        0 |          4 |   998 |       268 |    18948.4 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       1.05 |       0.44 |     0.92 |      2.41 |   0+  2+  2 |        0 |          2 |   999 |        46 |      130.7 |    3 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       1.49 |       0.88 |     2.19 |      4.56 |   0+  2+  3 |        0 |          2 |   999 |       135 |      164.2 |    3 / 0 |       |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/microphone_preamp/unrouted.dsn)
+
+Size: 13 kB · Layers: 2 · Nets: 10 · Components: 26 · Dimensions: 61.4 x 17.2 mm (10.56 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       1.70 |    14.10 |     15.80 |   0+  0+  0 |        0 |          0 |  1000 |       170 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       3.97 |      N/A |      3.97 |   0+  2+  0 |        0 |          0 |  1000 |       186 |     3164.9 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       8.60 |       4.91 |    13.49 |     27.00 |   0+  3+  3 |        0 |          0 |  1000 |       224 |      638.4 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       6.28 |       3.10 |    12.11 |     21.49 |   0+  3+  3 |        0 |          0 |  1000 |       256 |      572.9 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/mightyduino_mightyduino/unrouted.dsn)
@@ -8345,7 +8356,7 @@ Size: 24 kB · Layers: 2 · Nets: 7 · Components: 24 · Dimensions: 46.23 x 23.
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/mini_ice40_mini_ice40/unrouted.dsn)
 
-Size: 34.3 kB · Layers: 4 · Nets: 79 · Components: 33 · Dimensions: 0.0 x 0.0 mm (0.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 34.3 kB · Layers: 4 · Nets: 79 · Components: 33 · Dimensions: 0 x 0 mm (0 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -8357,7 +8368,7 @@ Size: 34.3 kB · Layers: 4 · Nets: 79 · Components: 33 · Dimensions: 0.0 x 0.
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/mini_mass_prog_bench_prog_rig/unrouted.dsn)
 
-Size: 112.4 kB · Layers: 4 · Nets: 287 · Components: 441 · Dimensions: 600.0 x 110.0 mm (660.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 112.4 kB · Layers: 4 · Nets: 287 · Components: 441 · Dimensions: 600 x 110 mm (660 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -8367,6 +8378,42 @@ Size: 112.4 kB · Layers: 4 · Nets: 287 · Components: 441 · Dimensions: 600.0
 | 2.6.0-RC1 | N/A  |                N/A |      36.04 |    2676.82 |      N/A |   2712.86 |   0+  7+  0 |        5 |          0 |   993 |       803 |   797073.9 |    2 / 0 | TIMEOUT |
 
 
+### Fixture: [unrouted.dsn](../fixtures/PCBench/Mini-Ultra-8-MHz_RS-MINI-ULTRA-8M/unrouted.dsn)
+
+Size: 32.2 kB · Layers: 2 · Nets: 9 · Components: 24 · Dimensions: 18.41 x 39.37 mm (7.25 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       3.44 |    57.41 |     60.85 |   0+  0+  0 |        0 |          7 |   997 |       117 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      30.43 |      N/A |     30.43 |   0+  1+  0 |        1 |          7 |   981 |       330 |    83269.6 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       2.81 |       5.96 |    10.39 |     19.16 |   0+  7+  2 |        0 |          0 |  1000 |       448 |     2572.5 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       5.04 |       9.40 |     9.35 |     23.79 |   0+  3+  2 |        0 |          0 |  1000 |       536 |     2231.4 |    2 / 0 |       |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/mini-whip_mini-whip-power-feed/unrouted.dsn)
+
+Size: 9.3 kB · Layers: 2 · Nets: 5 · Components: 14 · Dimensions: 62 x 25 mm (15.5 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       1.91 |     0.19 |      2.10 |   0+  0+  0 |        3 |          0 |   826 |        38 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       9.91 |      N/A |      9.91 |   0+  1+  0 |        0 |          6 |   997 |       275 |    26906.8 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       4.00 |       1.92 |     6.39 |     12.31 |   0+  2+  2 |        0 |          0 |  1000 |       171 |      223.9 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       6.20 |       1.63 |     4.47 |     12.30 |   0+  2+  2 |        0 |          0 |  1000 |       171 |      209.7 |    2 / 0 |       |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/mini-whip_mini-whip/unrouted.dsn)
+
+Size: 8.9 kB · Layers: 2 · Nets: 8 · Components: 17 · Dimensions: 91 x 32 mm (29.12 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       0.97 |     0.30 |      1.27 |   0+  0+  0 |        3 |          0 |   857 |        60 |     4096.0 |   36 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       2.02 |      N/A |      2.02 |   0+  2+  0 |        0 |          0 |  1000 |        94 |      464.3 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       1.43 |       0.45 |     2.79 |      4.67 |   0+  2+  2 |        0 |          0 |  1000 |       161 |      173.8 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       1.62 |       0.47 |     3.09 |      5.18 |   0+  2+  2 |        0 |          0 |  1000 |       148 |      171.6 |    2 / 0 |       |
+
+
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/miniboard-opamp_miniboard-opamp/unrouted.dsn)
 
 Size: 10 kB · Layers: 2 · Nets: 14 · Components: 26 · Dimensions: 35.56 x 21.59 mm (7.68 cm²) · CAD: KiCad's Pcbnew (v)
@@ -8374,7 +8421,7 @@ Size: 10 kB · Layers: 2 · Nets: 14 · Components: 26 · Dimensions: 35.56 x 21
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       3.68 |     0.64 |      4.32 |   0+  0+  0 |        1 |          4 |   967 |       180 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      28.03 |      N/A |     28.03 |   0+  1+  0 |        0 |         20 |   996 |       439 |    77893.2 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      28.03 |      N/A |     28.03 |   0+  1+  0 |        0 |         20 |   996 |       439 |    77893.1 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       1.24 |       0.58 |     3.74 |      5.56 |   0+  2+  2 |        0 |          0 |  1000 |       166 |      338.3 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       2.71 |       0.75 |     6.88 |     10.34 |   0+  2+  2 |        0 |          0 |  1000 |       161 |      340.3 |    2 / 0 |       |
 
@@ -8387,7 +8434,7 @@ Size: 24 kB · Layers: 2 · Nets: 1 · Components: 27 · Dimensions: 39.05 x 19.
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |      12.39 |     1.37 |     13.76 |   0+  0+  0 |        2 |          0 |   958 |       170 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      73.99 |      N/A |     73.99 |   0+  1+  0 |        0 |          8 |   999 |       310 |   189554.5 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       3.85 |      12.18 |     5.75 |     21.78 |   0+  6+  1 |        0 |          0 |  1000 |       201 |     2154.5 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       3.85 |      12.18 |     5.75 |     21.78 |   0+  6+  1 |        0 |          0 |  1000 |       201 |     2154.4 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       4.58 |      10.52 |     8.67 |     23.77 |   0+  5+  1 |        0 |          0 |  1000 |       328 |     1915.0 |    2 / 0 |       |
 
 
@@ -8399,13 +8446,13 @@ Size: 49.7 kB · Layers: 2 · Nets: 36 · Components: 54 · Dimensions: 101.6 x 
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       4.17 |    33.13 |     37.30 |   0+  0+  0 |        0 |          0 |  1000 |       148 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |       9.35 |      N/A |      9.35 |   0+  3+  0 |        0 |          0 |  1000 |       352 |    16002.0 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       0.28 |      20.29 |     0.00 |     20.57 |   0+  4+  0 |        0 |          0 |  1000 |       137 |     1536.9 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       0.28 |      20.29 |     0.00 |     20.57 |   0+  4+  0 |        0 |          0 |  1000 |       137 |     1536.8 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.09 |      19.14 |     0.00 |     19.23 |   0+  4+  0 |        0 |          0 |  1000 |       162 |     1363.5 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/minima-hardware_FrontPanel/unrouted.dsn)
 
-Size: 64.4 kB · Layers: 2 · Nets: 26 · Components: 49 · Dimensions: 140.0 x 62.0 mm (86.8 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 64.4 kB · Layers: 2 · Nets: 26 · Components: 49 · Dimensions: 140 x 62 mm (86.8 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -8423,7 +8470,7 @@ Size: 47.9 kB · Layers: 2 · Nets: 84 · Components: 15 · Dimensions: 58.42 x 
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       6.79 |    29.52 |     36.31 |   0+  0+  0 |        0 |          0 |  1000 |        72 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |       6.48 |      N/A |      6.48 |   0+  4+  0 |        0 |          0 |  1000 |       144 |     9870.1 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       1.34 |      14.48 |     2.24 |     18.06 |   0+  4+  1 |        0 |          0 |  1000 |       114 |     1068.9 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       1.34 |      14.48 |     2.24 |     18.06 |   0+  4+  1 |        0 |          0 |  1000 |       114 |     1068.8 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.88 |       4.72 |     3.67 |      9.27 |   0+  4+  1 |        0 |          0 |  1000 |       161 |      954.8 |    2 / 0 |       |
 
 
@@ -8441,7 +8488,7 @@ Size: 24.3 kB · Layers: 2 · Nets: 39 · Components: 29 · Dimensions: 83.82 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Minitel_video_output_stage/unrouted.dsn)
 
-Size: 26.3 kB · Layers: 2 · Nets: 14 · Components: 21 · Dimensions: 78.74 x 66.04 mm (52.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 26.3 kB · Layers: 2 · Nets: 14 · Components: 21 · Dimensions: 78.74 x 66.04 mm (52 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -8449,42 +8496,6 @@ Size: 26.3 kB · Layers: 2 · Nets: 14 · Components: 21 · Dimensions: 78.74 x 
 | 2.4.1     | N/A  |                N/A |        N/A |       3.33 |      N/A |      3.33 |   0+  2+  0 |        0 |          0 |  1000 |       122 |     2016.4 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.04 |       4.51 |     0.00 |      4.55 |   0+  2+  0 |        0 |          0 |  1000 |        81 |      214.0 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.04 |       7.75 |     0.00 |      7.79 |   0+  2+  0 |        0 |          0 |  1000 |        50 |      175.9 |    2 / 0 |       |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/Mini-Ultra-8-MHz_RS-MINI-ULTRA-8M/unrouted.dsn)
-
-Size: 32.2 kB · Layers: 2 · Nets: 9 · Components: 24 · Dimensions: 18.41 x 39.37 mm (7.25 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       3.44 |    57.41 |     60.85 |   0+  0+  0 |        0 |          7 |   997 |       117 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      30.43 |      N/A |     30.43 |   0+  1+  0 |        1 |          7 |   981 |       330 |    83269.6 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       2.81 |       5.96 |    10.39 |     19.16 |   0+  7+  2 |        0 |          0 |  1000 |       448 |     2572.5 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       5.04 |       9.40 |     9.35 |     23.79 |   0+  3+  2 |        0 |          0 |  1000 |       536 |     2231.4 |    2 / 0 |       |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/mini-whip_mini-whip/unrouted.dsn)
-
-Size: 8.9 kB · Layers: 2 · Nets: 8 · Components: 17 · Dimensions: 91.0 x 32.0 mm (29.12 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       0.97 |     0.30 |      1.27 |   0+  0+  0 |        3 |          0 |   857 |        60 |     4096.0 |   36 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       2.02 |      N/A |      2.02 |   0+  2+  0 |        0 |          0 |  1000 |        94 |      464.3 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       1.43 |       0.45 |     2.79 |      4.67 |   0+  2+  2 |        0 |          0 |  1000 |       161 |      173.8 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       1.62 |       0.47 |     3.09 |      5.18 |   0+  2+  2 |        0 |          0 |  1000 |       148 |      171.6 |    2 / 0 |       |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/mini-whip_mini-whip-power-feed/unrouted.dsn)
-
-Size: 9.3 kB · Layers: 2 · Nets: 5 · Components: 14 · Dimensions: 62.0 x 25.0 mm (15.5 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       1.91 |     0.19 |      2.10 |   0+  0+  0 |        3 |          0 |   826 |        38 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       9.91 |      N/A |      9.91 |   0+  1+  0 |        0 |          6 |   997 |       275 |    26906.8 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       4.00 |       1.92 |     6.39 |     12.31 |   0+  2+  2 |        0 |          0 |  1000 |       171 |      223.9 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       6.20 |       1.63 |     4.47 |     12.30 |   0+  2+  2 |        0 |          0 |  1000 |       171 |      209.7 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/MixSID_mixsid/unrouted.dsn)
@@ -8530,7 +8541,7 @@ Size: 61.2 kB · Layers: 2 · Nets: 3 · Components: 26 · Dimensions: 111.76 x 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       7.55 |    22.15 |     29.70 |   0+  0+  0 |        4 |        128 |   957 |        37 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      29.02 |      N/A |     29.02 |   0+  1+  0 |        4 |        128 |   965 |       269 |    58245.9 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      29.02 |      N/A |     29.02 |   0+  1+  0 |        4 |        128 |   965 |       269 |    58245.8 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.07 |       4.57 |     0.00 |      4.64 |   0+  2+  0 |        0 |         64 |   990 |       105 |      926.7 |    3 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.07 |       6.00 |     0.00 |      6.07 |   0+  2+  0 |        0 |         64 |   990 |       130 |      973.6 |    3 / 0 |       |
 
@@ -8549,7 +8560,7 @@ Size: 15.2 kB · Layers: 2 · Nets: 18 · Components: 9 · Dimensions: 99.72 x 4
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/MonApollo_analog-board/unrouted.dsn)
 
-Size: 146.7 kB · Layers: 2 · Nets: 303 · Components: 506 · Dimensions: 200.0 x 150.0 mm (300.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 146.7 kB · Layers: 2 · Nets: 303 · Components: 506 · Dimensions: 200 x 150 mm (300 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes           |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
@@ -8561,7 +8572,7 @@ Size: 146.7 kB · Layers: 2 · Nets: 303 · Components: 506 · Dimensions: 200.0
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/MonApollo_digital-board/unrouted.dsn)
 
-Size: 81.7 kB · Layers: 2 · Nets: 227 · Components: 240 · Dimensions: 200.0 x 150.0 mm (300.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 81.7 kB · Layers: 2 · Nets: 227 · Components: 240 · Dimensions: 200 x 150 mm (300 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -8585,7 +8596,7 @@ Size: 37 kB · Layers: 2 · Nets: 35 · Components: 107 · Dimensions: 37.85 x 2
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/moonpunchorg_pcieduino/unrouted.dsn)
 
-Size: 23.4 kB · Layers: 2 · Nets: 0 · Components: 32 · Dimensions: 50.95 x 30.0 mm (15.29 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 23.4 kB · Layers: 2 · Nets: 0 · Components: 32 · Dimensions: 50.95 x 30 mm (15.29 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -8597,7 +8608,7 @@ Size: 23.4 kB · Layers: 2 · Nets: 0 · Components: 32 · Dimensions: 50.95 x 3
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/mosavr_pcie_pi_module/unrouted.dsn)
 
-Size: 26.5 kB · Layers: 2 · Nets: 39 · Components: 15 · Dimensions: 100.0 x 68.91 mm (68.91 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 26.5 kB · Layers: 2 · Nets: 39 · Components: 15 · Dimensions: 100 x 68.91 mm (68.91 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -8609,7 +8620,7 @@ Size: 26.5 kB · Layers: 2 · Nets: 39 · Components: 15 · Dimensions: 100.0 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/mosavr_pcie1x_backplane/unrouted.dsn)
 
-Size: 12.5 kB · Layers: 2 · Nets: 64 · Components: 8 · Dimensions: 93.0 x 46.0 mm (42.78 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 12.5 kB · Layers: 2 · Nets: 64 · Components: 8 · Dimensions: 93 x 46 mm (42.78 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -8633,7 +8644,7 @@ Size: 24.6 kB · Layers: 2 · Nets: 2 · Components: 34 · Dimensions: 97.04 x 5
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/motor-3xdrv8833-hw_ver1/unrouted.dsn)
 
-Size: 49.2 kB · Layers: 2 · Nets: 34 · Components: 73 · Dimensions: 61.0 x 59.0 mm (35.99 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 49.2 kB · Layers: 2 · Nets: 34 · Components: 73 · Dimensions: 61 x 59 mm (35.99 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -8645,7 +8656,7 @@ Size: 49.2 kB · Layers: 2 · Nets: 34 · Components: 73 · Dimensions: 61.0 x 5
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/motor-high-current-sensors_CurrentSensorPCB_line/unrouted.dsn)
 
-Size: 69.7 kB · Layers: 2 · Nets: 76 · Components: 222 · Dimensions: 182.75 x 54.0 mm (98.69 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 69.7 kB · Layers: 2 · Nets: 76 · Components: 222 · Dimensions: 182.75 x 54 mm (98.69 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -8657,7 +8668,7 @@ Size: 69.7 kB · Layers: 2 · Nets: 76 · Components: 222 · Dimensions: 182.75 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/mppt-2420-hc_mppt-2420-hc/unrouted.dsn)
 
-Size: 199 kB · Layers: 4 · Nets: 42 · Components: 172 · Dimensions: 100.0 x 100.0 mm (100.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 199 kB · Layers: 4 · Nets: 42 · Components: 172 · Dimensions: 100 x 100 mm (100 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -8669,7 +8680,7 @@ Size: 199 kB · Layers: 4 · Nets: 42 · Components: 172 · Dimensions: 100.0 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/mppt-2420-hpx_mppt-2420-hpx/unrouted.dsn)
 
-Size: 175.9 kB · Layers: 4 · Nets: 94 · Components: 191 · Dimensions: 120.0 x 100.0 mm (120.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 175.9 kB · Layers: 4 · Nets: 94 · Components: 191 · Dimensions: 120 x 100 mm (120 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -8703,6 +8714,18 @@ Size: 10 kB · Layers: 2 · Nets: 6 · Components: 13 · Dimensions: 43.05 x 25.
 | 2.6.0-RC1 | N/A  |                N/A |       0.16 |       3.12 |     0.00 |      3.28 |   0+  2+  0 |        0 |          0 |  1000 |       145 |       96.0 |    2 / 0 |       |
 
 
+### Fixture: [unrouted.dsn](../fixtures/PCBench/MYS-PMS7003_MYS-PMS7003/unrouted.dsn)
+
+Size: 69.3 kB · Layers: 2 · Nets: 15 · Components: 43 · Dimensions: 107 x 68 mm (72.76 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |      17.97 |   232.36 |    250.33 |   0+  0+  0 |        0 |          6 |   998 |        84 |     4096.0 |    4 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      84.18 |      N/A |     84.18 |   0+  1+  0 |        3 |          6 |   967 |       301 |   184406.0 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       4.20 |      30.49 |    20.25 |     54.94 |   0+  5+  1 |        0 |          0 |  1000 |       990 |     8111.1 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       1.42 |      68.03 |    66.08 |    135.53 |   0+ 20+  2 |        0 |          0 |  1000 |      1539 |    20971.3 |    2 / 0 |       |
+
+
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/MySensorIRBlaster_IR Blaster/unrouted.dsn)
 
 Size: 31.7 kB · Layers: 2 · Nets: 16 · Components: 54 · Dimensions: 47.79 x 24.01 mm (11.47 cm²) · CAD: KiCad's Pcbnew (v)
@@ -8717,7 +8740,7 @@ Size: 31.7 kB · Layers: 2 · Nets: 16 · Components: 54 · Dimensions: 47.79 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/MySensors_SecureKeyfob_MySensors_RNDKeyfob/unrouted.dsn)
 
-Size: 32.2 kB · Layers: 2 · Nets: 4 · Components: 26 · Dimensions: 27.0 x 42.9 mm (11.58 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 32.2 kB · Layers: 2 · Nets: 4 · Components: 26 · Dimensions: 27 x 42.9 mm (11.58 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -8729,7 +8752,7 @@ Size: 32.2 kB · Layers: 2 · Nets: 4 · Components: 26 · Dimensions: 27.0 x 42
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/MySensorsNode_LE-BOX-0028/unrouted.dsn)
 
-Size: 65.4 kB · Layers: 2 · Nets: 19 · Components: 66 · Dimensions: 76.0 x 96.0 mm (72.96 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 65.4 kB · Layers: 2 · Nets: 19 · Components: 66 · Dimensions: 76 x 96 mm (72.96 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -8737,42 +8760,6 @@ Size: 65.4 kB · Layers: 2 · Nets: 19 · Components: 66 · Dimensions: 76.0 x 9
 | 2.4.1     | N/A  |                N/A |        N/A |     213.01 |      N/A |    213.01 |   0+  1+  0 |        2 |         28 |   984 |       353 |   438916.9 |    3 / 0 |         |
 | 2.5.0     | N/A  |                N/A |       5.53 |      70.87 |   273.79 |    350.19 |   0+ 10+  3 |        0 |          4 |  1000 |      1318 |    24620.5 |    3 / 0 |         |
 | 2.6.0-RC1 | N/A  |                N/A |       5.01 |      74.00 |   521.38 |    600.39 |   0+  7+  3 |        0 |          4 |  1000 |      1696 |    18671.8 |    3 / 0 | TIMEOUT |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/MYS-PMS7003_MYS-PMS7003/unrouted.dsn)
-
-Size: 69.3 kB · Layers: 2 · Nets: 15 · Components: 43 · Dimensions: 107.0 x 68.0 mm (72.76 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |      17.97 |   232.36 |    250.33 |   0+  0+  0 |        0 |          6 |   998 |        84 |     4096.0 |    4 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      84.18 |      N/A |     84.18 |   0+  1+  0 |        3 |          6 |   967 |       301 |   184406.0 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       4.20 |      30.49 |    20.25 |     54.94 |   0+  5+  1 |        0 |          0 |  1000 |       990 |     8111.1 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       1.42 |      68.03 |    66.08 |    135.53 |   0+ 20+  2 |        0 |          0 |  1000 |      1539 |    20971.3 |    2 / 0 |       |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/MySRaspiGW_MySRaspiGW/unrouted.dsn)
-
-Size: 4.4 kB · Layers: 2 · Nets: 2 · Components: 5 · Dimensions: 11.5 x 11.9 mm (1.37 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       2.43 |     0.07 |      2.50 |   0+  0+  0 |        1 |          0 |   897 |       127 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      16.37 |      N/A |     16.37 |   0+  1+  0 |        3 |          3 |   691 |       226 |    12884.4 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       1.38 |       2.37 |     0.00 |      3.75 |   0+ 18+  0 |        1 |          0 |   897 |       153 |      398.2 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       0.81 |       0.69 |     6.63 |      8.13 |   0+  3+  3 |        0 |          0 |  1000 |       166 |      225.0 |    2 / 0 |       |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/MySRaspiGW_MySRaspiGW_PA_LNA/unrouted.dsn)
-
-Size: 4.5 kB · Layers: 2 · Nets: 2 · Components: 5 · Dimensions: 11.5 x 11.9 mm (1.37 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       1.45 |     0.14 |      1.59 |   0+  0+  0 |        1 |          0 |   897 |        41 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       9.37 |      N/A |      9.37 |   0+  1+  0 |        2 |          3 |   793 |       244 |    11744.2 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       3.56 |      17.30 |     0.00 |     20.86 |   0+ 18+  0 |        1 |          0 |   897 |       116 |      978.1 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       5.64 |       0.76 |     2.19 |      8.59 |   0+  3+  2 |        0 |          0 |  1000 |       173 |      555.7 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/MySRaspiGW_MySRaspiGW_PA_LNA_Pimoroni/unrouted.dsn)
@@ -8787,6 +8774,18 @@ Size: 4.5 kB · Layers: 2 · Nets: 2 · Components: 5 · Dimensions: 11.8 x 15.5
 | 2.6.0-RC1 | N/A  |                N/A |       3.01 |       0.63 |     4.64 |      8.28 |   0+  2+  2 |        0 |          0 |  1000 |       175 |      266.1 |    2 / 0 |       |
 
 
+### Fixture: [unrouted.dsn](../fixtures/PCBench/MySRaspiGW_MySRaspiGW_PA_LNA/unrouted.dsn)
+
+Size: 4.5 kB · Layers: 2 · Nets: 2 · Components: 5 · Dimensions: 11.5 x 11.9 mm (1.37 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       1.45 |     0.14 |      1.59 |   0+  0+  0 |        1 |          0 |   897 |        41 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       9.37 |      N/A |      9.37 |   0+  1+  0 |        2 |          3 |   793 |       244 |    11744.2 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       3.56 |      17.30 |     0.00 |     20.86 |   0+ 18+  0 |        1 |          0 |   897 |       116 |      978.0 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       5.64 |       0.76 |     2.19 |      8.59 |   0+  3+  2 |        0 |          0 |  1000 |       173 |      555.7 |    2 / 0 |       |
+
+
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/MySRaspiGW_MySRaspiGW_Pimoroni/unrouted.dsn)
 
 Size: 4.5 kB · Layers: 2 · Nets: 2 · Components: 5 · Dimensions: 11.5 x 16.2 mm (1.86 cm²) · CAD: KiCad's Pcbnew (v)
@@ -8797,6 +8796,18 @@ Size: 4.5 kB · Layers: 2 · Nets: 2 · Components: 5 · Dimensions: 11.5 x 16.2
 | 2.4.1     | N/A  |                N/A |        N/A |       6.98 |      N/A |      6.98 |   0+  1+  0 |        1 |          0 |   897 |       206 |     7766.0 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       3.03 |       8.27 |     0.00 |     11.30 |   0+ 18+  0 |        1 |          0 |   897 |       182 |     1073.0 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       1.42 |       0.85 |     2.94 |      5.21 |   0+  3+  1 |        0 |          0 |  1000 |       176 |      362.5 |    2 / 0 |       |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/MySRaspiGW_MySRaspiGW/unrouted.dsn)
+
+Size: 4.4 kB · Layers: 2 · Nets: 2 · Components: 5 · Dimensions: 11.5 x 11.9 mm (1.37 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       2.43 |     0.07 |      2.50 |   0+  0+  0 |        1 |          0 |   897 |       127 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      16.37 |      N/A |     16.37 |   0+  1+  0 |        3 |          3 |   691 |       226 |    12884.4 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       1.38 |       2.37 |     0.00 |      3.75 |   0+ 18+  0 |        1 |          0 |   897 |       153 |      398.2 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       0.81 |       0.69 |     6.63 |      8.13 |   0+  3+  3 |        0 |          0 |  1000 |       166 |      225.0 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/nan-15_pcb/unrouted.dsn)
@@ -8830,8 +8841,8 @@ Size: 21.1 kB · Layers: 2 · Nets: 6 · Components: 15 · Dimensions: 35.8 x 17
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |      44.47 |     2.76 |     47.23 |   0+  0+  0 |        2 |          0 |   959 |        65 |     4096.0 |    2 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      61.97 |      N/A |     61.97 |   0+  8+  0 |        5 |         56 |   864 |       280 |    76087.7 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       6.20 |      57.42 |     0.00 |     63.62 |   0+ 18+  0 |        3 |          0 |   923 |       197 |    17860.6 |    2 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      61.97 |      N/A |     61.97 |   0+  8+  0 |        5 |         56 |   864 |       280 |    76087.6 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       6.20 |      57.42 |     0.00 |     63.62 |   0+ 18+  0 |        3 |          0 |   923 |       197 |    17860.5 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       7.97 |      47.63 |    94.41 |    150.01 |   0+ 22+  4 |        0 |          0 |  1000 |      1040 |    89542.8 |    2 / 0 |       |
 
 
@@ -8873,19 +8884,19 @@ Size: 10.1 kB · Layers: 2 · Nets: 3 · Components: 13 · Dimensions: 54.02 x 6
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/NavigationThing_NavigationThing/unrouted.dsn)
 
-Size: 51.3 kB · Layers: 2 · Nets: 24 · Components: 39 · Dimensions: 64.0 x 58.0 mm (37.12 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 51.3 kB · Layers: 2 · Nets: 24 · Components: 39 · Dimensions: 64 x 58 mm (37.12 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |      10.04 |     7.98 |     18.02 |   0+  0+  0 |        1 |          1 |   987 |        67 |     4096.0 | 1718 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      81.71 |      N/A |     81.71 |   0+  1+  0 |        1 |          1 |   985 |       305 |   140478.8 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       3.60 |      11.98 |    19.57 |     35.15 |   0+  3+  1 |        0 |          0 |  1000 |       453 |     2702.2 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       3.33 |       7.09 |    26.55 |     36.97 |   0+  3+  2 |        0 |          0 |  1000 |       628 |     2515.5 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       3.33 |       7.09 |    26.55 |     36.97 |   0+  3+  2 |        0 |          0 |  1000 |       628 |     2515.4 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/NavigationThing_NavigationThingBacklight/unrouted.dsn)
 
-Size: 4.5 kB · Layers: 2 · Nets: 4 · Components: 6 · Dimensions: 22.0 x 8.0 mm (1.76 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 4.5 kB · Layers: 2 · Nets: 4 · Components: 6 · Dimensions: 22 x 8 mm (1.76 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -8897,14 +8908,14 @@ Size: 4.5 kB · Layers: 2 · Nets: 4 · Components: 6 · Dimensions: 22.0 x 8.0 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/NeoWall_NeoWall/unrouted.dsn)
 
-Size: 19.3 kB · Layers: 2 · Nets: 4 · Components: 15 · Dimensions: 70.0 x 70.0 mm (49.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 19.3 kB · Layers: 2 · Nets: 4 · Components: 15 · Dimensions: 70 x 70 mm (49 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       5.78 |     0.43 |      6.21 |   0+  0+  0 |        1 |          0 |   958 |        56 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |       5.40 |      N/A |      5.40 |   0+  3+  0 |        0 |          0 |  1000 |       172 |     5477.9 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       1.43 |       2.05 |    12.69 |     16.17 |   0+  2+  8 |        0 |          0 |  1000 |       264 |      522.0 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       5.05 |       8.31 |    24.22 |     37.58 |   0+  2+  8 |        0 |          0 |  1000 |       314 |      510.2 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       5.05 |       8.31 |    24.22 |     37.58 |   0+  2+  8 |        0 |          0 |  1000 |       314 |      510.1 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Neptune-Hardware_DataAcquisitionBoard/unrouted.dsn)
@@ -8921,7 +8932,7 @@ Size: 9.2 kB · Layers: 2 · Nets: 11 · Components: 15 · Dimensions: 99.06 x 6
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/newer-motor-controllers_busparts/unrouted.dsn)
 
-Size: 91.7 kB · Layers: 4 · Nets: 55 · Components: 760 · Dimensions: 102.0 x 100.0 mm (102.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 91.7 kB · Layers: 4 · Nets: 55 · Components: 760 · Dimensions: 102 x 100 mm (102 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes           |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
@@ -8933,7 +8944,7 @@ Size: 91.7 kB · Layers: 4 · Nets: 55 · Components: 760 · Dimensions: 102.0 x
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/newer-motor-controllers_design3/unrouted.dsn)
 
-Size: 33.9 kB · Layers: 4 · Nets: 9 · Components: 32 · Dimensions: 100.0 x 50.0 mm (50.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 33.9 kB · Layers: 4 · Nets: 9 · Components: 32 · Dimensions: 100 x 50 mm (50 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -8945,7 +8956,7 @@ Size: 33.9 kB · Layers: 4 · Nets: 9 · Components: 32 · Dimensions: 100.0 x 5
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/newer-motor-controllers_si31-3/unrouted.dsn)
 
-Size: 92.8 kB · Layers: 4 · Nets: 55 · Components: 760 · Dimensions: 102.0 x 100.0 mm (102.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 92.8 kB · Layers: 4 · Nets: 55 · Components: 760 · Dimensions: 102 x 100 mm (102 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes           |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
@@ -8962,7 +8973,7 @@ Size: 34.9 kB · Layers: 4 · Nets: 86 · Components: 57 · Dimensions: 69.09 x 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
 | 1.9.0     | N/A  |                N/A |        N/A |     114.53 |     2.58 |    117.11 |   0+  0+  0 |       59 |         10 |   482 |        35 |     4096.0 |    0 / 0 |         |
-| 2.4.1     | N/A  |                N/A |        N/A |     301.95 |      N/A |    301.95 |   0+ 15+  0 |       52 |          0 |   498 |       302 |   481971.3 |    4 / 0 |         |
+| 2.4.1     | N/A  |                N/A |        N/A |     301.95 |      N/A |    301.95 |   0+ 15+  0 |       52 |          0 |   498 |       302 |   481971.2 |    4 / 0 |         |
 | 2.5.0     | N/A  |                N/A |      16.33 |     585.09 |      N/A |    601.42 |   0+ 23+  0 |        3 |          0 |   971 |       213 |   139643.1 |    8 / 0 | TIMEOUT |
 | 2.6.0-RC1 | N/A  |                N/A |      10.42 |     589.67 |      N/A |    600.09 |   0+ 14+  0 |       12 |          0 |   884 |       296 |   110977.9 |    8 / 0 | TIMEOUT |
 
@@ -8981,12 +8992,12 @@ Size: 32.7 kB · Layers: 2 · Nets: 45 · Components: 26 · Dimensions: 90.17 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/nichiden27_PISCIUM/unrouted.dsn)
 
-Size: 26.5 kB · Layers: 2 · Nets: 108 · Components: 73 · Dimensions: 119.38 x 78.74 mm (94.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 26.5 kB · Layers: 2 · Nets: 108 · Components: 73 · Dimensions: 119.38 x 78.74 mm (94 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       4.49 |     5.29 |      9.78 |   0+  0+  0 |        1 |          2 |   991 |       205 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      20.59 |      N/A |     20.59 |   0+ 18+  0 |        1 |          2 |   991 |       267 |    43957.5 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      20.59 |      N/A |     20.59 |   0+ 18+  0 |        1 |          2 |   991 |       267 |    43957.4 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.07 |       9.09 |     2.16 |     11.32 |   0+  2+  1 |        0 |          0 |  1000 |       112 |     1410.1 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.03 |       7.79 |     8.78 |     16.60 |   0+  2+  2 |        0 |          0 |  1000 |       363 |     1355.2 |    2 / 0 |       |
 
@@ -9005,7 +9016,7 @@ Size: 25.7 kB · Layers: 2 · Nets: 9 · Components: 25 · Dimensions: 49.53 x 4
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/nikon_gps_nikon_gps/unrouted.dsn)
 
-Size: 23.9 kB · Layers: 2 · Nets: 6 · Components: 34 · Dimensions: 28.0 x 28.0 mm (7.84 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 23.9 kB · Layers: 2 · Nets: 6 · Components: 34 · Dimensions: 28 x 28 mm (7.84 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -9023,7 +9034,7 @@ Size: 13.5 kB · Layers: 2 · Nets: 18 · Components: 24 · Dimensions: 93.98 x 
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       2.05 |     7.23 |      9.28 |   0+  0+  0 |        0 |          0 |  1000 |        70 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |       3.99 |      N/A |      3.99 |   0+  2+  0 |        0 |          0 |  1000 |       128 |     2605.2 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       0.21 |       6.25 |     4.14 |     10.60 |   0+  2+  1 |        0 |          0 |  1000 |       157 |      488.2 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       0.21 |       6.25 |     4.14 |     10.60 |   0+  2+  1 |        0 |          0 |  1000 |       157 |      488.1 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.01 |      15.62 |     4.63 |     20.26 |   0+  2+  1 |        0 |          0 |  1000 |       134 |      473.0 |    2 / 0 |       |
 
 
@@ -9036,7 +9047,7 @@ Size: 8.1 kB · Layers: 2 · Nets: 3 · Components: 7 · Dimensions: 18.29 x 15.
 | 1.9.0     | N/A  |                N/A |        N/A |       0.94 |     1.42 |      2.36 |   0+  0+  0 |        0 |          1 |   999 |        71 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |       9.95 |      N/A |      9.95 |   0+  1+  0 |        0 |          1 |  1000 |       273 |    11703.0 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       1.07 |       1.05 |     1.67 |      3.79 |   0+  2+  1 |        0 |          0 |  1000 |       172 |      147.3 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       1.66 |       0.46 |     1.93 |      4.05 |   0+  2+  1 |        0 |          0 |  1000 |       258 |      144.3 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       1.66 |       0.46 |     1.93 |      4.05 |   0+  2+  1 |        0 |          0 |  1000 |       258 |      144.2 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/nodemcu-backstage_NodeMCU Backstage/unrouted.dsn)
@@ -9071,7 +9082,7 @@ Size: 13.3 kB · Layers: 2 · Nets: 6 · Components: 16 · Dimensions: 19.84 x 2
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       0.98 |     2.53 |      3.51 |   0+  0+  0 |        0 |          2 |   998 |        30 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      14.15 |      N/A |     14.15 |   0+  1+  0 |        0 |          2 |   999 |       289 |    16466.1 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       2.19 |       1.09 |     2.99 |      6.27 |   0+  2+  2 |        0 |          0 |  1000 |       189 |      293.2 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       2.19 |       1.09 |     2.99 |      6.27 |   0+  2+  2 |        0 |          0 |  1000 |       189 |      293.1 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       1.38 |       0.70 |     1.92 |      4.00 |   0+  2+  2 |        0 |          0 |  1000 |       177 |      269.9 |    2 / 0 |       |
 
 
@@ -9095,7 +9106,7 @@ Size: 43.7 kB · Layers: 2 · Nets: 18 · Components: 24 · Dimensions: 104.14 x
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |      23.20 |   283.52 |    306.72 |   0+  0+  0 |        0 |          0 |  1000 |       173 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |     301.91 |      N/A |    301.91 |   0+ 21+  0 |       11 |          0 |   901 |       371 |   394086.6 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       0.04 |     389.64 |     0.00 |    389.68 |   0+ 34+  0 |        4 |          0 |   964 |       252 |   103114.0 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       0.04 |     389.64 |     0.00 |    389.68 |   0+ 34+  0 |        4 |          0 |   964 |       252 |   103113.9 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.05 |      51.16 |    44.31 |     95.52 |   0+  6+  2 |        0 |          0 |  1000 |      1310 |    13650.1 |    2 / 0 |       |
 
 
@@ -9137,7 +9148,7 @@ Size: 18.1 kB · Layers: 2 · Nets: 8 · Components: 3 · Dimensions: 25.02 x 21
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/nrf2rfm69_nrf2rfm69/unrouted.dsn)
 
-Size: 19 kB · Layers: 2 · Nets: 8 · Components: 5 · Dimensions: 16.46 x 30.0 mm (4.94 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 19 kB · Layers: 2 · Nets: 8 · Components: 5 · Dimensions: 16.46 x 30 mm (4.94 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -9168,7 +9179,7 @@ Size: 13.2 kB · Layers: 2 · Nets: 11 · Components: 54 · Dimensions: 17.25 x 
 | 1.9.0     | N/A  |                N/A |        N/A |       7.55 |     2.09 |      9.64 |   0+  0+  0 |        5 |         18 |   942 |       172 |     4096.0 |   38 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      83.02 |      N/A |     83.02 |   0+  1+  0 |       19 |         51 |   714 |       291 |   140795.9 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       3.61 |      27.97 |     0.00 |     31.58 |   0+ 19+  0 |        2 |          0 |   970 |       144 |     8980.6 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       0.81 |      12.66 |     0.00 |     13.47 |   0+ 18+  0 |        2 |          0 |   970 |       185 |    33083.4 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       0.81 |      12.66 |     0.00 |     13.47 |   0+ 18+  0 |        2 |          0 |   970 |       185 |    33083.3 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/nunchuk_rf_hw_NunchukRF_V3/unrouted.dsn)
@@ -9207,9 +9218,21 @@ Size: 13.6 kB · Layers: 2 · Nets: 6 · Components: 11 · Dimensions: 50.04 x 5
 | 2.6.0-RC1 | N/A  |                N/A |       2.30 |      11.52 |     0.00 |     13.82 |   0+  6+  0 |        0 |          0 |  1000 |       143 |      562.0 |    2 / 0 |       |
 
 
+### Fixture: [unrouted.dsn](../fixtures/PCBench/omega-dock-new_omega-dock-new/unrouted.dsn)
+
+Size: 25.5 kB · Layers: 2 · Nets: 29 · Components: 21 · Dimensions: 42.9 x 26.4 mm (11.33 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       1.69 |    18.74 |     20.43 |   0+  0+  0 |        0 |          0 |  1000 |       166 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      43.81 |      N/A |     43.81 |   0+  1+  0 |        0 |         70 |   991 |       233 |    61633.6 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       2.62 |       1.81 |     9.29 |     13.72 |   0+  2+  4 |        0 |          0 |  1000 |       196 |      522.4 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       3.17 |       3.28 |     9.03 |     15.48 |   0+  2+  4 |        0 |          0 |  1000 |       230 |      531.5 |    2 / 0 |       |
+
+
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Omega2-Berrydock_berrydock-mini/unrouted.dsn)
 
-Size: 59.8 kB · Layers: 2 · Nets: 55 · Components: 88 · Dimensions: 50.0 x 50.0 mm (25.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 59.8 kB · Layers: 2 · Nets: 55 · Components: 88 · Dimensions: 50 x 50 mm (25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -9229,18 +9252,6 @@ Size: 20.5 kB · Layers: 2 · Nets: 0 · Components: 17 · Dimensions: 38.1 x 60
 | 2.4.1     | N/A  |                N/A |        N/A |      12.39 |      N/A |     12.39 |   0+  3+  0 |        0 |          0 |  1000 |       213 |    13328.5 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       1.40 |       2.43 |     5.93 |      9.76 |   0+  2+  1 |        0 |          0 |  1000 |       201 |      603.4 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       3.23 |       3.45 |     9.89 |     16.57 |   0+  2+  1 |        0 |          0 |  1000 |       157 |      588.4 |    2 / 0 |       |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/omega-dock-new_omega-dock-new/unrouted.dsn)
-
-Size: 25.5 kB · Layers: 2 · Nets: 29 · Components: 21 · Dimensions: 42.9 x 26.4 mm (11.33 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       1.69 |    18.74 |     20.43 |   0+  0+  0 |        0 |          0 |  1000 |       166 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      43.81 |      N/A |     43.81 |   0+  1+  0 |        0 |         70 |   991 |       233 |    61633.6 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       2.62 |       1.81 |     9.29 |     13.72 |   0+  2+  4 |        0 |          0 |  1000 |       196 |      522.4 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       3.17 |       3.28 |     9.03 |     15.48 |   0+  2+  4 |        0 |          0 |  1000 |       230 |      531.5 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/one-shift-register_one-shift-register/unrouted.dsn)
@@ -9279,6 +9290,42 @@ Size: 55.2 kB · Layers: 2 · Nets: 0 · Components: 89 · Dimensions: 99.69 x 9
 | 2.6.0-RC1 | N/A  |                N/A |       0.55 |       9.80 |     8.12 |     18.47 |   0+  3+  1 |        0 |          0 |  1000 |       367 |     1886.5 |    2 / 0 |       |
 
 
+### Fixture: [unrouted.dsn](../fixtures/PCBench/open-source-multimeter_board/unrouted.dsn)
+
+Size: 23.8 kB · Layers: 2 · Nets: 1 · Components: 23 · Dimensions: 29.72 x 83.06 mm (24.69 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
+| 1.9.0     | N/A  |                N/A |        N/A |      46.58 |     0.70 |     47.28 |   0+  0+  0 |       66 |          0 |   259 |       104 |     4096.0 |    0 / 0 |         |
+| 2.4.1     | N/A  |                N/A |        N/A |      61.19 |      N/A |     61.19 |   0+  0+  0 |       65 |          0 |   265 |       337 |    80492.1 |    3 / 0 |         |
+| 2.5.0     | N/A  |                N/A |      72.80 |     117.56 |     0.00 |    190.36 |   0+ 32+  0 |        1 |          0 |   988 |       190 |    54747.8 |    2 / 0 |         |
+| 2.6.0-RC1 | N/A  |                N/A |      35.23 |      63.88 |      N/A |     99.11 |   0+ 14+  0 |        1 |          0 |   926 |       279 |   174949.2 |    2 / 0 | TIMEOUT |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/Open-Source-Power-Supply_PowerSupply_PCB_backup/unrouted.dsn)
+
+Size: 107 kB · Layers: 2 · Nets: 20 · Components: 55 · Dimensions: 86.99 x 83.19 mm (72.37 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       3.41 |    21.81 |     25.22 |   0+  0+  0 |        0 |          0 |  1000 |        44 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      16.35 |      N/A |     16.35 |   0+  4+  0 |        0 |          0 |  1000 |       176 |    14479.3 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       1.64 |       8.94 |     5.07 |     15.65 |   0+  3+  1 |        0 |          0 |  1000 |       360 |     1319.3 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       3.71 |       7.50 |     9.31 |     20.52 |   0+  3+  1 |        0 |          0 |  1000 |       288 |     1121.1 |    2 / 0 |       |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/Open-Source-Power-Supply_PowerSupply_PCB/unrouted.dsn)
+
+Size: 114.7 kB · Layers: 2 · Nets: 20 · Components: 50 · Dimensions: 86.99 x 83.19 mm (72.37 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       2.96 |     5.40 |      8.36 |   0+  0+  0 |        1 |          0 |   986 |        35 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      10.12 |      N/A |     10.12 |   0+  3+  0 |        0 |          0 |  1000 |       176 |    11045.1 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       2.48 |       4.63 |     6.92 |     14.03 |   0+  3+  1 |        0 |          0 |  1000 |       137 |     1006.8 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       6.42 |       9.16 |     7.21 |     22.79 |   0+  3+  1 |        0 |          0 |  1000 |       189 |     1112.2 |    2 / 0 |       |
+
+
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/OpenAVRc_Mega_2560 core mini_full_2.0/unrouted.dsn)
 
 Size: 81.1 kB · Layers: 2 · Nets: 32 · Components: 110 · Dimensions: 89.54 x 59.69 mm (53.45 cm²) · CAD: KiCad's Pcbnew (v)
@@ -9299,7 +9346,7 @@ Size: 24.6 kB · Layers: 2 · Nets: 0 · Components: 30 · Dimensions: 44.45 x 5
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       2.71 |    20.95 |     23.66 |   0+  0+  0 |        0 |          4 |  1000 |        69 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      12.70 |      N/A |     12.70 |   0+  5+  0 |        0 |          2 |  1000 |       240 |    13700.6 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       5.55 |      10.40 |     5.96 |     21.91 |   0+  5+  1 |        0 |          2 |  1000 |       273 |     1524.4 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       5.55 |      10.40 |     5.96 |     21.91 |   0+  5+  1 |        0 |          2 |  1000 |       273 |     1524.3 |    3 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       1.76 |       4.29 |     7.73 |     13.78 |   0+  5+  1 |        0 |          2 |  1000 |       362 |     1387.1 |    3 / 0 |       |
 
 
@@ -9317,7 +9364,7 @@ Size: 90.5 kB · Layers: 2 · Nets: 0 · Components: 670 · Dimensions: 96.52 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/OpenHardwareExG_ActiveElectrode_OpenHardwareExG_ActiveElectrode/unrouted.dsn)
 
-Size: 11.1 kB · Layers: 4 · Nets: 0 · Components: 14 · Dimensions: 0.0 x 9.65 mm (0.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 11.1 kB · Layers: 4 · Nets: 0 · Components: 14 · Dimensions: 0 x 9.65 mm (0 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -9325,30 +9372,6 @@ Size: 11.1 kB · Layers: 4 · Nets: 0 · Components: 14 · Dimensions: 0.0 x 9.6
 | 2.4.1     | N/A  |                N/A |        N/A |      39.71 |      N/A |     39.71 |   0+  1+  0 |        3 |          0 |   846 |       234 |    51182.9 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |      14.10 |       4.78 |    26.75 |     45.63 |   0+  9+  5 |        0 |          0 |  1000 |       580 |     2766.4 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |      11.93 |       8.63 |    34.51 |     55.07 |   0+  9+  5 |        0 |          0 |  1000 |       576 |     2687.9 |    2 / 0 |       |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/OpenHardwareExG_Shield_OpenHardwareExG_Shield/unrouted.dsn)
-
-Size: 51.4 kB · Layers: 4 · Nets: 82 · Components: 204 · Dimensions: 125.09 x 59.69 mm (74.67 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |      89.01 |    61.04 |    150.05 |   0+  0+  0 |        2 |          0 |   993 |        78 |     4096.0 |   25 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |     554.33 |      N/A |    554.33 |   0+ 20+  0 |        2 |          0 |   993 |       402 |   931122.9 |    4 / 0 |       |
-| 2.5.0     | N/A  |                N/A |      15.45 |     235.20 |     0.00 |    250.65 |   0+ 20+  0 |        2 |          0 |   993 |       404 |   107748.6 |    8 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |      13.20 |     212.96 |    89.25 |    315.41 |   0+ 21+  1 |        0 |          0 |  1000 |      1393 |   100206.0 |    8 / 0 |       |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/OpenHardwareExG_Shield_OpenHardwareExG_Shield_Test_Board/unrouted.dsn)
-
-Size: 38.2 kB · Layers: 4 · Nets: 0 · Components: 139 · Dimensions: 147.32 x 81.28 mm (119.74 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |      26.74 |   305.68 |    332.42 |   0+  0+  0 |        0 |          0 |  1000 |       117 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |     230.05 |      N/A |    230.05 |   0+ 22+  0 |        2 |          0 |   989 |       404 |   348451.3 |    4 / 0 |       |
-| 2.5.0     | N/A  |                N/A |      14.43 |      47.24 |     3.50 |     65.17 |   0+  4+  1 |        0 |          0 |  1000 |       267 |    13472.2 |    8 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       9.92 |      42.31 |    48.63 |    100.86 |   0+  3+  2 |        0 |          0 |  1000 |      1020 |    14531.0 |    8 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/OpenHardwareExG_Shield_OpenHardwareExG_Shield_Test_Board_all_panelled/unrouted.dsn)
@@ -9363,57 +9386,45 @@ Size: 38.3 kB · Layers: 4 · Nets: 0 · Components: 139 · Dimensions: 147.32 x
 | 2.6.0-RC1 | N/A  |                N/A |      13.51 |      88.80 |    51.31 |    153.62 |   0+  3+  2 |        0 |          0 |  1000 |       936 |    15345.2 |    8 / 0 |       |
 
 
+### Fixture: [unrouted.dsn](../fixtures/PCBench/OpenHardwareExG_Shield_OpenHardwareExG_Shield_Test_Board/unrouted.dsn)
+
+Size: 38.2 kB · Layers: 4 · Nets: 0 · Components: 139 · Dimensions: 147.32 x 81.28 mm (119.74 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |      26.74 |   305.68 |    332.42 |   0+  0+  0 |        0 |          0 |  1000 |       117 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |     230.05 |      N/A |    230.05 |   0+ 22+  0 |        2 |          0 |   989 |       404 |   348451.2 |    4 / 0 |       |
+| 2.5.0     | N/A  |                N/A |      14.43 |      47.24 |     3.50 |     65.17 |   0+  4+  1 |        0 |          0 |  1000 |       267 |    13472.2 |    8 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       9.92 |      42.31 |    48.63 |    100.86 |   0+  3+  2 |        0 |          0 |  1000 |      1020 |    14531.0 |    8 / 0 |       |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/OpenHardwareExG_Shield_OpenHardwareExG_Shield/unrouted.dsn)
+
+Size: 51.4 kB · Layers: 4 · Nets: 82 · Components: 204 · Dimensions: 125.09 x 59.69 mm (74.67 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |      89.01 |    61.04 |    150.05 |   0+  0+  0 |        2 |          0 |   993 |        78 |     4096.0 |   25 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |     554.33 |      N/A |    554.33 |   0+ 20+  0 |        2 |          0 |   993 |       402 |   931122.9 |    4 / 0 |       |
+| 2.5.0     | N/A  |                N/A |      15.45 |     235.20 |     0.00 |    250.65 |   0+ 20+  0 |        2 |          0 |   993 |       404 |   107748.6 |    8 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |      13.20 |     212.96 |    89.25 |    315.41 |   0+ 21+  1 |        0 |          0 |  1000 |      1393 |   100205.9 |    8 / 0 |       |
+
+
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/OpenMPPT_OpenMPPT/unrouted.dsn)
 
-Size: 28.2 kB · Layers: 2 · Nets: 12 · Components: 42 · Dimensions: 74.8 x 47.0 mm (35.16 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 28.2 kB · Layers: 2 · Nets: 12 · Components: 42 · Dimensions: 74.8 x 47 mm (35.16 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
 | 1.9.0     | N/A  |                N/A |        N/A |      10.36 |     4.21 |     14.57 |   0+  0+  0 |        1 |         38 |   979 |       124 |     4096.0 |    0 / 0 |         |
 | 2.4.1     | N/A  |                N/A |        N/A |     301.06 |      N/A |    301.06 |   0+  1+  0 |        0 |         38 |   997 |       343 |   694550.9 |    3 / 0 | TIMEOUT |
 | 2.5.0     | N/A  |                N/A |      10.57 |       9.32 |    49.87 |     69.76 |   0+  6+  2 |        0 |          0 |  1000 |       746 |     4103.3 |    2 / 0 |         |
-| 2.6.0-RC1 | N/A  |                N/A |       8.89 |      13.33 |    35.21 |     57.43 |   0+  3+  2 |        0 |          0 |  1000 |       534 |     3115.0 |    2 / 0 |         |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/open-source-multimeter_board/unrouted.dsn)
-
-Size: 23.8 kB · Layers: 2 · Nets: 1 · Components: 23 · Dimensions: 29.72 x 83.06 mm (24.69 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
-| 1.9.0     | N/A  |                N/A |        N/A |      46.58 |     0.70 |     47.28 |   0+  0+  0 |       66 |          0 |   259 |       104 |     4096.0 |    0 / 0 |         |
-| 2.4.1     | N/A  |                N/A |        N/A |      61.19 |      N/A |     61.19 |   0+  0+  0 |       65 |          0 |   265 |       337 |    80492.1 |    3 / 0 |         |
-| 2.5.0     | N/A  |                N/A |      72.80 |     117.56 |     0.00 |    190.36 |   0+ 32+  0 |        1 |          0 |   988 |       190 |    54747.9 |    2 / 0 |         |
-| 2.6.0-RC1 | N/A  |                N/A |      35.23 |      63.88 |      N/A |     99.11 |   0+ 14+  0 |        1 |          0 |   926 |       279 |   174949.2 |    2 / 0 | TIMEOUT |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/Open-Source-Power-Supply_PowerSupply_PCB/unrouted.dsn)
-
-Size: 114.7 kB · Layers: 2 · Nets: 20 · Components: 50 · Dimensions: 86.99 x 83.19 mm (72.37 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       2.96 |     5.40 |      8.36 |   0+  0+  0 |        1 |          0 |   986 |        35 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      10.12 |      N/A |     10.12 |   0+  3+  0 |        0 |          0 |  1000 |       176 |    11045.1 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       2.48 |       4.63 |     6.92 |     14.03 |   0+  3+  1 |        0 |          0 |  1000 |       137 |     1006.8 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       6.42 |       9.16 |     7.21 |     22.79 |   0+  3+  1 |        0 |          0 |  1000 |       189 |     1112.3 |    2 / 0 |       |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/Open-Source-Power-Supply_PowerSupply_PCB_backup/unrouted.dsn)
-
-Size: 107 kB · Layers: 2 · Nets: 20 · Components: 55 · Dimensions: 86.99 x 83.19 mm (72.37 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       3.41 |    21.81 |     25.22 |   0+  0+  0 |        0 |          0 |  1000 |        44 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      16.35 |      N/A |     16.35 |   0+  4+  0 |        0 |          0 |  1000 |       176 |    14479.3 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       1.64 |       8.94 |     5.07 |     15.65 |   0+  3+  1 |        0 |          0 |  1000 |       360 |     1319.3 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       3.71 |       7.50 |     9.31 |     20.52 |   0+  3+  1 |        0 |          0 |  1000 |       288 |     1121.1 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       8.89 |      13.33 |    35.21 |     57.43 |   0+  3+  2 |        0 |          0 |  1000 |       534 |     3114.9 |    2 / 0 |         |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/OpenTheremin_V3_Shield_OpenThereminCC/unrouted.dsn)
 
-Size: 45.5 kB · Layers: 2 · Nets: 30 · Components: 109 · Dimensions: 60.0 x 100.0 mm (60.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 45.5 kB · Layers: 2 · Nets: 30 · Components: 109 · Dimensions: 60 x 100 mm (60 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -9461,7 +9472,7 @@ Size: 83.8 kB · Layers: 2 · Nets: 33 · Components: 78 · Dimensions: 172.5 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/OpenVNAVI_motor unit/unrouted.dsn)
 
-Size: 7.3 kB · Layers: 2 · Nets: 2 · Components: 6 · Dimensions: 17.53 x 17.14 mm (3.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 7.3 kB · Layers: 2 · Nets: 2 · Components: 6 · Dimensions: 17.53 x 17.14 mm (3 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -9507,21 +9518,9 @@ Size: 206.4 kB · Layers: 8 · Nets: 328 · Components: 275 · Dimensions: 86.36
 | 2.6.0-RC1 | N/A  |                N/A |    1204.20 |       3.13 |      N/A |   1207.33 |   0+  1+  0 |      477 |          0 |   465 |       270 |   284524.0 |   14 / 0 | TIMEOUT         |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/ottawa-badges-2016_ottawa-badges-2016/unrouted.dsn)
-
-Size: 60.7 kB · Layers: 2 · Nets: 33 · Components: 105 · Dimensions: 49.0 x 100.0 mm (49.0 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |      28.50 |    30.26 |     58.76 |   0+  0+  0 |        1 |         50 |   987 |       173 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |     230.26 |      N/A |    230.26 |   0+  1+  0 |        1 |         58 |   991 |       436 |   362172.2 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |      13.81 |      67.49 |    65.09 |    146.39 |   0+  5+  1 |        0 |         50 |   993 |      1029 |    13918.4 |    3 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |      13.18 |      64.81 |    76.39 |    154.38 |   0+  6+  2 |        0 |          2 |  1000 |      1397 |    14171.3 |    3 / 0 |       |
-
-
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/ottawa-badges-2016_ottawa-badge-tagger-2016/unrouted.dsn)
 
-Size: 21.6 kB · Layers: 2 · Nets: 3 · Components: 14 · Dimensions: 24.0 x 50.0 mm (12.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 21.6 kB · Layers: 2 · Nets: 3 · Components: 14 · Dimensions: 24 x 50 mm (12 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -9531,9 +9530,21 @@ Size: 21.6 kB · Layers: 2 · Nets: 3 · Components: 14 · Dimensions: 24.0 x 50
 | 2.6.0-RC1 | N/A  |                N/A |       1.16 |       0.73 |    11.61 |     13.50 |   0+  2+  2 |        0 |          0 |  1000 |       216 |      357.7 |    2 / 0 |       |
 
 
+### Fixture: [unrouted.dsn](../fixtures/PCBench/ottawa-badges-2016_ottawa-badges-2016/unrouted.dsn)
+
+Size: 60.7 kB · Layers: 2 · Nets: 33 · Components: 105 · Dimensions: 49 x 100 mm (49 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |      28.50 |    30.26 |     58.76 |   0+  0+  0 |        1 |         50 |   987 |       173 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |     230.26 |      N/A |    230.26 |   0+  1+  0 |        1 |         58 |   991 |       436 |   362172.2 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |      13.81 |      67.49 |    65.09 |    146.39 |   0+  5+  1 |        0 |         50 |   993 |      1029 |    13918.4 |    3 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |      13.18 |      64.81 |    76.39 |    154.38 |   0+  6+  2 |        0 |          2 |  1000 |      1397 |    14171.3 |    3 / 0 |       |
+
+
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/ourglass__autosave-watch-v4/unrouted.dsn)
 
-Size: 29.6 kB · Layers: 4 · Nets: 11 · Components: 43 · Dimensions: 35.08 x 14.0 mm (4.91 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 29.6 kB · Layers: 4 · Nets: 11 · Components: 43 · Dimensions: 35.08 x 14 mm (4.91 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -9545,7 +9556,7 @@ Size: 29.6 kB · Layers: 4 · Nets: 11 · Components: 43 · Dimensions: 35.08 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/ourglass_watch-v4/unrouted.dsn)
 
-Size: 29.6 kB · Layers: 4 · Nets: 11 · Components: 43 · Dimensions: 35.08 x 14.0 mm (4.91 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 29.6 kB · Layers: 4 · Nets: 11 · Components: 43 · Dimensions: 35.08 x 14 mm (4.91 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -9569,7 +9580,7 @@ Size: 33.2 kB · Layers: 2 · Nets: 31 · Components: 83 · Dimensions: 100.08 x
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Own-Mailbox-Hardware_eth/unrouted.dsn)
 
-Size: 82.1 kB · Layers: 4 · Nets: 82 · Components: 99 · Dimensions: 50.0 x 50.0 mm (25.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 82.1 kB · Layers: 4 · Nets: 82 · Components: 99 · Dimensions: 50 x 50 mm (25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -9579,21 +9590,9 @@ Size: 82.1 kB · Layers: 4 · Nets: 82 · Components: 99 · Dimensions: 50.0 x 5
 | 2.6.0-RC1 | N/A  |                N/A |      28.15 |     181.98 |      N/A |    210.13 |   0+  6+  0 |        1 |          0 |   887 |       498 |   213705.9 |    2 / 0 | TIMEOUT |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/Own-Mailbox-Hardware_mailbox/unrouted.dsn)
-
-Size: 81.7 kB · Layers: 4 · Nets: 82 · Components: 99 · Dimensions: 50.0 x 50.0 mm (25.0 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
-| 1.9.0     | N/A  |                N/A |        N/A |     117.00 |    73.13 |    190.13 |   0+  0+  0 |        1 |          0 |   996 |       237 |     4096.0 |    0 / 0 |         |
-| 2.4.1     | N/A  |                N/A |        N/A |     303.69 |      N/A |    303.69 |   0+  1+  0 |       39 |         10 |   822 |       514 |   386440.1 |    3 / 0 |         |
-| 2.5.0     | N/A  |                N/A |      93.68 |     244.43 |   260.79 |    598.90 |   0+ 11+  1 |        0 |          0 |  1000 |      1282 |    78072.2 |    2 / 0 | TIMEOUT |
-| 2.6.0-RC1 | N/A  |                N/A |      37.37 |     170.21 |    36.79 |    244.37 |   0+ 14+  1 |        0 |          0 |  1000 |       886 |   226448.8 |    2 / 0 | TIMEOUT |
-
-
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Own-Mailbox-Hardware_mailbox-before/unrouted.dsn)
 
-Size: 153 kB · Layers: 4 · Nets: 196 · Components: 154 · Dimensions: 50.0 x 50.0 mm (25.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 153 kB · Layers: 4 · Nets: 196 · Components: 154 · Dimensions: 50 x 50 mm (25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -9603,9 +9602,21 @@ Size: 153 kB · Layers: 4 · Nets: 196 · Components: 154 · Dimensions: 50.0 x 
 | 2.6.0-RC1 | N/A  |                N/A |      42.47 |      99.30 |   664.25 |    806.02 |   0+ 16+  2 |        0 |          0 |  1000 |      1276 |    55365.2 |    2 / 0 |         |
 
 
+### Fixture: [unrouted.dsn](../fixtures/PCBench/Own-Mailbox-Hardware_mailbox/unrouted.dsn)
+
+Size: 81.7 kB · Layers: 4 · Nets: 82 · Components: 99 · Dimensions: 50 x 50 mm (25 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
+| 1.9.0     | N/A  |                N/A |        N/A |     117.00 |    73.13 |    190.13 |   0+  0+  0 |        1 |          0 |   996 |       237 |     4096.0 |    0 / 0 |         |
+| 2.4.1     | N/A  |                N/A |        N/A |     303.69 |      N/A |    303.69 |   0+  1+  0 |       39 |         10 |   822 |       514 |   386440.1 |    3 / 0 |         |
+| 2.5.0     | N/A  |                N/A |      93.68 |     244.43 |   260.79 |    598.90 |   0+ 11+  1 |        0 |          0 |  1000 |      1282 |    78072.2 |    2 / 0 | TIMEOUT |
+| 2.6.0-RC1 | N/A  |                N/A |      37.37 |     170.21 |    36.79 |    244.37 |   0+ 14+  1 |        0 |          0 |  1000 |       886 |   226448.8 |    2 / 0 | TIMEOUT |
+
+
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Own-Mailbox-Hardware_pierre/unrouted.dsn)
 
-Size: 144.9 kB · Layers: 4 · Nets: 146 · Components: 141 · Dimensions: 50.0 x 50.0 mm (25.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 144.9 kB · Layers: 4 · Nets: 146 · Components: 141 · Dimensions: 50 x 50 mm (25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -9617,7 +9628,7 @@ Size: 144.9 kB · Layers: 4 · Nets: 146 · Components: 141 · Dimensions: 50.0 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/ozinverter_ozinverterkicad/unrouted.dsn)
 
-Size: 54.6 kB · Layers: 2 · Nets: 40 · Components: 68 · Dimensions: 169.44 x 86.0 mm (145.72 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 54.6 kB · Layers: 2 · Nets: 40 · Components: 68 · Dimensions: 169.44 x 86 mm (145.72 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -9629,7 +9640,7 @@ Size: 54.6 kB · Layers: 2 · Nets: 40 · Components: 68 · Dimensions: 169.44 x
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/P8000_WDC_Emulator_P8000_WDC_Emulator/unrouted.dsn)
 
-Size: 88.4 kB · Layers: 2 · Nets: 73 · Components: 214 · Dimensions: 144.0 x 160.4 mm (230.98 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 88.4 kB · Layers: 2 · Nets: 73 · Components: 214 · Dimensions: 144 x 160.4 mm (230.98 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -9646,14 +9657,14 @@ Size: 9.1 kB · Layers: 2 · Nets: 2 · Components: 7 · Dimensions: 258.63 x 21
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       0.94 |     1.09 |      2.03 |   0+  0+  0 |        0 |          0 |  1000 |        65 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       3.31 |      N/A |      3.31 |   0+  2+  0 |        0 |          0 |  1000 |        84 |     1515.4 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       3.31 |      N/A |      3.31 |   0+  2+  0 |        0 |          0 |  1000 |        84 |     1515.3 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       1.43 |       1.14 |     0.00 |      2.57 |   0+  2+  0 |        0 |          0 |  1000 |        44 |      209.1 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.97 |       0.86 |     0.00 |      1.83 |   0+  2+  0 |        0 |          0 |  1000 |       109 |      191.1 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Paperino_HW_paperino_module/unrouted.dsn)
 
-Size: 12.9 kB · Layers: 2 · Nets: 10 · Components: 20 · Dimensions: 25.4 x 22.0 mm (5.59 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 12.9 kB · Layers: 2 · Nets: 10 · Components: 20 · Dimensions: 25.4 x 22 mm (5.59 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -9665,7 +9676,7 @@ Size: 12.9 kB · Layers: 2 · Nets: 10 · Components: 20 · Dimensions: 25.4 x 2
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Paperino_HW_Paperino_shield/unrouted.dsn)
 
-Size: 10 kB · Layers: 2 · Nets: 13 · Components: 7 · Dimensions: 70.0 x 36.9 mm (25.83 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 10 kB · Layers: 2 · Nets: 13 · Components: 7 · Dimensions: 70 x 36.9 mm (25.83 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -9677,7 +9688,7 @@ Size: 10 kB · Layers: 2 · Nets: 13 · Components: 7 · Dimensions: 70.0 x 36.9
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/PCB_constant_current_ac_hv/unrouted.dsn)
 
-Size: 15.8 kB · Layers: 2 · Nets: 1 · Components: 12 · Dimensions: 81.0 x 22.0 mm (17.82 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 15.8 kB · Layers: 2 · Nets: 1 · Components: 12 · Dimensions: 81 x 22 mm (17.82 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -9695,13 +9706,13 @@ Size: 65 kB · Layers: 4 · Nets: 51 · Components: 115 · Dimensions: 58.42 x 6
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
 | 1.9.0     | N/A  |                N/A |        N/A |     242.02 |   115.25 |    357.27 |   0+  0+  0 |        7 |        140 |   966 |       192 |     4096.0 |    2 / 0 |         |
 | 2.4.1     | N/A  |                N/A |        N/A |     303.25 |      N/A |    303.25 |   0+  3+  0 |       59 |        150 |   785 |       347 |   522543.4 |    4 / 0 | TIMEOUT |
-| 2.5.0     | N/A  |                N/A |     111.66 |     488.49 |      N/A |    600.15 |   0+  9+  0 |       30 |          0 |   892 |       318 |   175365.3 |    8 / 0 | TIMEOUT |
-| 2.6.0-RC1 | N/A  |                N/A |      48.58 |     130.40 |      N/A |    178.98 |   0+  6+  0 |        3 |          0 |   975 |       455 |   260863.3 |    8 / 0 | TIMEOUT |
+| 2.5.0     | N/A  |                N/A |     111.66 |     488.49 |      N/A |    600.15 |   0+  9+  0 |       30 |          0 |   892 |       318 |   175365.2 |    8 / 0 | TIMEOUT |
+| 2.6.0-RC1 | N/A  |                N/A |      48.58 |     130.40 |      N/A |    178.98 |   0+  6+  0 |        3 |          0 |   975 |       455 |   260863.2 |    8 / 0 | TIMEOUT |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/PCB_serie_led_strip/unrouted.dsn)
 
-Size: 6 kB · Layers: 2 · Nets: 11 · Components: 12 · Dimensions: 91.0 x 10.0 mm (9.1 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 6 kB · Layers: 2 · Nets: 11 · Components: 12 · Dimensions: 91 x 10 mm (9.1 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -9713,7 +9724,7 @@ Size: 6 kB · Layers: 2 · Nets: 11 · Components: 12 · Dimensions: 91.0 x 10.0
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/PCB_small_halogen_replacement/unrouted.dsn)
 
-Size: 19.9 kB · Layers: 2 · Nets: 34 · Components: 43 · Dimensions: 40.0 x 50.0 mm (20.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 19.9 kB · Layers: 2 · Nets: 34 · Components: 43 · Dimensions: 40 x 50 mm (20 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -9725,7 +9736,7 @@ Size: 19.9 kB · Layers: 2 · Nets: 34 · Components: 43 · Dimensions: 40.0 x 5
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/pcb-covox-amp_pcb-covox-amp/unrouted.dsn)
 
-Size: 31.1 kB · Layers: 2 · Nets: 16 · Components: 45 · Dimensions: 78.0 x 56.0 mm (43.68 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 31.1 kB · Layers: 2 · Nets: 16 · Components: 45 · Dimensions: 78 x 56 mm (43.68 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -9737,7 +9748,7 @@ Size: 31.1 kB · Layers: 2 · Nets: 16 · Components: 45 · Dimensions: 78.0 x 5
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/pcb-covox-amp-v2_pcb-covox-amp-v2/unrouted.dsn)
 
-Size: 35.7 kB · Layers: 2 · Nets: 27 · Components: 61 · Dimensions: 87.0 x 56.0 mm (48.72 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 35.7 kB · Layers: 2 · Nets: 27 · Components: 61 · Dimensions: 87 x 56 mm (48.72 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -9749,7 +9760,7 @@ Size: 35.7 kB · Layers: 2 · Nets: 27 · Components: 61 · Dimensions: 87.0 x 5
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/pcb-ice40-vga_VGA expansion/unrouted.dsn)
 
-Size: 13.2 kB · Layers: 2 · Nets: 38 · Components: 24 · Dimensions: 76.2 x 48.0 mm (36.58 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 13.2 kB · Layers: 2 · Nets: 38 · Components: 24 · Dimensions: 76.2 x 48 mm (36.58 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -9771,6 +9782,18 @@ Size: 9.5 kB · Layers: 2 · Nets: 0 · Components: 14 · Dimensions: 45.72 x 12
 | 2.6.0-RC1 | N/A  |                N/A |       2.52 |      13.27 |    35.85 |     51.64 |   0+ 14+ 11 |        0 |          0 |  1000 |       599 |     3412.6 |    2 / 0 |       |
 
 
+### Fixture: [unrouted.dsn](../fixtures/PCBench/pcb-usb-ft245r-parallel-adapter_pcb-usb-ft245r-parallel-adapter/unrouted.dsn)
+
+Size: 19 kB · Layers: 2 · Nets: 15 · Components: 23 · Dimensions: 49 x 57 mm (27.93 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       2.49 |     1.73 |      4.22 |   0+  0+  0 |        2 |          4 |   967 |       116 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      35.54 |      N/A |     35.54 |   0+  1+  0 |        0 |          4 |  1000 |       390 |    95942.8 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       1.22 |       0.91 |     6.61 |      8.74 |   0+  2+  1 |        0 |          0 |  1000 |       231 |      503.2 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       1.41 |       2.47 |     3.47 |      7.35 |   0+  2+  1 |        0 |          0 |  1000 |       111 |      492.9 |    2 / 0 |       |
+
+
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/pcbproject_opensda_project_opensda/unrouted.dsn)
 
 Size: 29.1 kB · Layers: 2 · Nets: 24 · Components: 50 · Dimensions: 66.04 x 38.1 mm (25.16 cm²) · CAD: KiCad's Pcbnew (v)
@@ -9781,18 +9804,6 @@ Size: 29.1 kB · Layers: 2 · Nets: 24 · Components: 50 · Dimensions: 66.04 x 
 | 2.4.1     | N/A  |                N/A |        N/A |     238.49 |      N/A |    238.49 |   0+  1+  0 |       30 |         15 |   638 |       517 |   434549.9 |    3 / 0 |         |
 | 2.5.0     | N/A  |                N/A |       3.43 |     140.54 |     0.00 |    143.97 |   0+ 18+  0 |       24 |          8 |   711 |       228 |    56102.3 |    3 / 0 |         |
 | 2.6.0-RC1 | N/A  |                N/A |       2.21 |      82.09 |      N/A |     84.30 |   0+ 16+  0 |       19 |          8 |   675 |       334 |   292881.9 |    3 / 0 | TIMEOUT |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/pcb-usb-ft245r-parallel-adapter_pcb-usb-ft245r-parallel-adapter/unrouted.dsn)
-
-Size: 19 kB · Layers: 2 · Nets: 15 · Components: 23 · Dimensions: 49.0 x 57.0 mm (27.93 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       2.49 |     1.73 |      4.22 |   0+  0+  0 |        2 |          4 |   967 |       116 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      35.54 |      N/A |     35.54 |   0+  1+  0 |        0 |          4 |  1000 |       390 |    95942.8 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       1.22 |       0.91 |     6.61 |      8.74 |   0+  2+  1 |        0 |          0 |  1000 |       231 |      503.3 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       1.41 |       2.47 |     3.47 |      7.35 |   0+  2+  1 |        0 |          0 |  1000 |       111 |      492.9 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/PCIE-to-MXM-Adapter_PCIEx1toMXM3.0/unrouted.dsn)
@@ -9809,7 +9820,7 @@ Size: 75.2 kB · Layers: 2 · Nets: 107 · Components: 34 · Dimensions: 170.17 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/PDB_OSD_HARDWARE_Quadcopter Power Board/unrouted.dsn)
 
-Size: 36.5 kB · Layers: 4 · Nets: 42 · Components: 140 · Dimensions: 38.0 x 44.6 mm (16.95 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 36.5 kB · Layers: 4 · Nets: 42 · Components: 140 · Dimensions: 38 x 44.6 mm (16.95 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -9826,14 +9837,14 @@ Size: 75 kB · Layers: 2 · Nets: 421 · Components: 457 · Dimensions: 68.58 x 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |      18.99 |  1064.93 |   1083.92 |   0+  0+  0 |        0 |          0 |  1000 |        67 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |     174.12 |      N/A |    174.12 |   0+  2+  0 |        0 |          8 |  1000 |       324 |   150823.3 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |     174.12 |      N/A |    174.12 |   0+  2+  0 |        0 |          8 |  1000 |       324 |   150823.2 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |      17.22 |      25.74 |     0.00 |     42.96 |   0+  2+  0 |        0 |          0 |  1000 |       203 |     8847.3 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |      18.63 |      22.58 |     0.00 |     41.21 |   0+  2+  0 |        0 |          0 |  1000 |       146 |     7536.6 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/pesho_pesho/unrouted.dsn)
 
-Size: 31.4 kB · Layers: 2 · Nets: 46 · Components: 60 · Dimensions: 132.5 x 65.0 mm (86.12 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 31.4 kB · Layers: 2 · Nets: 46 · Components: 60 · Dimensions: 132.5 x 65 mm (86.12 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -9845,7 +9856,7 @@ Size: 31.4 kB · Layers: 2 · Nets: 46 · Components: 60 · Dimensions: 132.5 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/PGA2311_pga2311/unrouted.dsn)
 
-Size: 21 kB · Layers: 2 · Nets: 3 · Components: 26 · Dimensions: 50.0 x 50.0 mm (25.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 21 kB · Layers: 2 · Nets: 3 · Components: 26 · Dimensions: 50 x 50 mm (25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -9857,7 +9868,7 @@ Size: 21 kB · Layers: 2 · Nets: 3 · Components: 26 · Dimensions: 50.0 x 50.0
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Phased-Array-Microphone-using-FPGA_SateliteMicrophone/unrouted.dsn)
 
-Size: 13.6 kB · Layers: 2 · Nets: 4 · Components: 21 · Dimensions: 16.0 x 40.0 mm (6.4 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 13.6 kB · Layers: 2 · Nets: 4 · Components: 21 · Dimensions: 16 x 40 mm (6.4 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -9876,12 +9887,12 @@ Size: 21.7 kB · Layers: 2 · Nets: 27 · Components: 42 · Dimensions: 11.62 x 
 | 1.9.0     | N/A  |                N/A |        N/A |      22.62 |     1.98 |     24.60 |   0+  0+  0 |        7 |          0 |   894 |        80 |     4096.0 |    2 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |     125.57 |      N/A |    125.57 |   0+  1+  0 |        4 |         31 |   936 |       348 |   251121.8 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |      12.14 |      59.81 |     0.00 |     71.95 |   0+ 20+  0 |        4 |          0 |   939 |       178 |    20403.8 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       1.20 |      29.32 |     0.00 |     30.52 |   0+ 26+  0 |        2 |          0 |   955 |       258 |   112580.5 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       1.20 |      29.32 |     0.00 |     30.52 |   0+ 26+  0 |        2 |          0 |   955 |       258 |   112580.4 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/phone_rtty_interface_phone_rtty_rev_a/unrouted.dsn)
 
-Size: 78.8 kB · Layers: 2 · Nets: 14 · Components: 35 · Dimensions: 50.0 x 50.0 mm (25.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 78.8 kB · Layers: 2 · Nets: 14 · Components: 35 · Dimensions: 50 x 50 mm (25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -9893,7 +9904,7 @@ Size: 78.8 kB · Layers: 2 · Nets: 14 · Components: 35 · Dimensions: 50.0 x 5
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/phone_rtty_interface_phone_rtty_rev_b/unrouted.dsn)
 
-Size: 52.5 kB · Layers: 2 · Nets: 15 · Components: 38 · Dimensions: 50.0 x 50.0 mm (25.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 52.5 kB · Layers: 2 · Nets: 15 · Components: 38 · Dimensions: 50 x 50 mm (25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -9905,7 +9916,7 @@ Size: 52.5 kB · Layers: 2 · Nets: 15 · Components: 38 · Dimensions: 50.0 x 5
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Photodiode_dethead/unrouted.dsn)
 
-Size: 15.6 kB · Layers: 2 · Nets: 8 · Components: 22 · Dimensions: 50.0 x 23.0 mm (11.5 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 15.6 kB · Layers: 2 · Nets: 8 · Components: 22 · Dimensions: 50 x 23 mm (11.5 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -9934,14 +9945,38 @@ Size: 14.3 kB · Layers: 2 · Nets: 15 · Components: 11 · Dimensions: 33.02 x 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       0.79 |     0.83 |      1.62 |   0+  0+  0 |        0 |          0 |  1000 |        54 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       1.59 |      N/A |      1.59 |   0+  2+  0 |        0 |          0 |  1000 |        46 |      561.1 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       1.59 |      N/A |      1.59 |   0+  2+  0 |        0 |          0 |  1000 |        46 |      561.0 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.24 |       2.47 |     0.00 |      2.71 |   0+  2+  0 |        0 |          0 |  1000 |       156 |       82.9 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.05 |       4.22 |     0.00 |      4.27 |   0+  2+  0 |        0 |          0 |  1000 |       145 |      146.8 |    2 / 0 |       |
 
 
+### Fixture: [unrouted.dsn](../fixtures/PCBench/Pi-Zero-SD-and-Audio-Out_BaseBoard/unrouted.dsn)
+
+Size: 32.2 kB · Layers: 2 · Nets: 19 · Components: 57 · Dimensions: 64 x 40 mm (25.6 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |      52.92 |     9.74 |     62.66 |   0+  0+  0 |        8 |         35 |   941 |        35 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |     301.98 |      N/A |    301.98 |   0+  1+  0 |        0 |         40 |   998 |       295 |   505148.2 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       6.95 |      27.11 |   274.09 |    308.15 |   0+  7+  7 |        0 |         32 |   995 |      1317 |    12157.0 |    3 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       4.09 |      16.48 |    16.13 |     36.70 |   0+  5+  1 |        0 |         32 |   995 |       789 |     6729.9 |    3 / 0 |       |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/pi-zero-stepper-board_pi-zero-stepper-board/unrouted.dsn)
+
+Size: 53.1 kB · Layers: 2 · Nets: 39 · Components: 25 · Dimensions: 83.82 x 74.3 mm (62.28 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |      16.46 |     2.43 |     18.89 |   0+  0+  0 |        1 |          0 |   986 |       179 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      24.23 |      N/A |     24.23 |   0+  1+  0 |        1 |          0 |   986 |       280 |    46968.1 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       0.02 |      14.19 |     6.33 |     20.54 |   0+  3+  1 |        0 |          0 |  1000 |       380 |     2892.1 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       0.02 |      11.40 |     4.63 |     16.05 |   0+  3+  1 |        0 |          0 |  1000 |       417 |     2723.5 |    2 / 0 |       |
+
+
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/PiBook_pibook/unrouted.dsn)
 
-Size: 73.7 kB · Layers: 2 · Nets: 24 · Components: 174 · Dimensions: 85.0 x 85.0 mm (72.25 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 73.7 kB · Layers: 2 · Nets: 24 · Components: 174 · Dimensions: 85 x 85 mm (72.25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -9953,7 +9988,7 @@ Size: 73.7 kB · Layers: 2 · Nets: 24 · Components: 174 · Dimensions: 85.0 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/piboy-zero_piggrl_zero_baseboard/unrouted.dsn)
 
-Size: 50 kB · Layers: 2 · Nets: 35 · Components: 62 · Dimensions: 101.0 x 43.9 mm (44.34 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 50 kB · Layers: 2 · Nets: 35 · Components: 62 · Dimensions: 101 x 43.9 mm (44.34 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -9989,7 +10024,7 @@ Size: 56.1 kB · Layers: 2 · Nets: 66 · Components: 76 · Dimensions: 129.48 x
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/pico-pi-rel_pico-pi/unrouted.dsn)
 
-Size: 70.3 kB · Layers: 4 · Nets: 71 · Components: 98 · Dimensions: 65.0 x 30.0 mm (19.5 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 70.3 kB · Layers: 4 · Nets: 71 · Components: 98 · Dimensions: 65 x 30 mm (19.5 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -10001,7 +10036,7 @@ Size: 70.3 kB · Layers: 4 · Nets: 71 · Components: 98 · Dimensions: 65.0 x 3
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/PiPlay_AudioHAT/unrouted.dsn)
 
-Size: 28.7 kB · Layers: 2 · Nets: 15 · Components: 43 · Dimensions: 65.0 x 30.0 mm (19.5 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 28.7 kB · Layers: 2 · Nets: 15 · Components: 43 · Dimensions: 65 x 30 mm (19.5 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -10013,7 +10048,7 @@ Size: 28.7 kB · Layers: 2 · Nets: 15 · Components: 43 · Dimensions: 65.0 x 3
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/PiPlay_SDHat/unrouted.dsn)
 
-Size: 20.5 kB · Layers: 2 · Nets: 6 · Components: 23 · Dimensions: 65.0 x 30.0 mm (19.5 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 20.5 kB · Layers: 2 · Nets: 6 · Components: 23 · Dimensions: 65 x 30 mm (19.5 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -10037,7 +10072,7 @@ Size: 5.1 kB · Layers: 2 · Nets: 5 · Components: 4 · Dimensions: 36.83 x 26.
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/PiZeroHub_PiZeroHub/unrouted.dsn)
 
-Size: 29.6 kB · Layers: 2 · Nets: 24 · Components: 37 · Dimensions: 65.0 x 26.0 mm (16.9 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 29.6 kB · Layers: 2 · Nets: 24 · Components: 37 · Dimensions: 65 x 26 mm (16.9 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -10045,30 +10080,6 @@ Size: 29.6 kB · Layers: 2 · Nets: 24 · Components: 37 · Dimensions: 65.0 x 2
 | 2.4.1     | N/A  |                N/A |        N/A |     168.20 |      N/A |    168.20 |   0+  1+  0 |        0 |          8 |   999 |       707 |   417359.1 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       5.75 |      27.42 |    43.63 |     76.80 |   0+  6+  2 |        0 |          0 |  1000 |       690 |     3605.5 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       5.42 |      11.24 |    50.12 |     66.78 |   0+  6+  3 |        0 |          0 |  1000 |       702 |     3408.0 |    2 / 0 |       |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/Pi-Zero-SD-and-Audio-Out_BaseBoard/unrouted.dsn)
-
-Size: 32.2 kB · Layers: 2 · Nets: 19 · Components: 57 · Dimensions: 64.0 x 40.0 mm (25.6 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |      52.92 |     9.74 |     62.66 |   0+  0+  0 |        8 |         35 |   941 |        35 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |     301.98 |      N/A |    301.98 |   0+  1+  0 |        0 |         40 |   998 |       295 |   505148.2 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       6.95 |      27.11 |   274.09 |    308.15 |   0+  7+  7 |        0 |         32 |   995 |      1317 |    12157.0 |    3 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       4.09 |      16.48 |    16.13 |     36.70 |   0+  5+  1 |        0 |         32 |   995 |       789 |     6729.9 |    3 / 0 |       |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/pi-zero-stepper-board_pi-zero-stepper-board/unrouted.dsn)
-
-Size: 53.1 kB · Layers: 2 · Nets: 39 · Components: 25 · Dimensions: 83.82 x 74.3 mm (62.28 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |      16.46 |     2.43 |     18.89 |   0+  0+  0 |        1 |          0 |   986 |       179 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      24.23 |      N/A |     24.23 |   0+  1+  0 |        1 |          0 |   986 |       280 |    46968.1 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       0.02 |      14.19 |     6.33 |     20.54 |   0+  3+  1 |        0 |          0 |  1000 |       380 |     2892.1 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       0.02 |      11.40 |     4.63 |     16.05 |   0+  3+  1 |        0 |          0 |  1000 |       417 |     2723.5 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Planet_Vocab/unrouted.dsn)
@@ -10083,18 +10094,6 @@ Size: 15.7 kB · Layers: 2 · Nets: 0 · Components: 33 · Dimensions: 53.34 x 6
 | 2.6.0-RC1 | N/A  |                N/A |       0.03 |       2.64 |     0.00 |      2.67 |   0+  3+  0 |        0 |          0 |  1000 |       140 |      324.4 |    2 / 0 |       |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/PmodHDMIIn_PmodHDMIIn/unrouted.dsn)
-
-Size: 21.5 kB · Layers: 2 · Nets: 11 · Components: 33 · Dimensions: 43.18 x 34.29 mm (14.81 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       9.73 |    67.67 |     77.40 |   0+  0+  0 |        0 |          0 |  1000 |       143 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      85.29 |      N/A |     85.29 |   0+ 18+  0 |        1 |          0 |   989 |       387 |    85858.7 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       5.46 |      13.76 |    28.88 |     48.10 |   0+  4+  2 |        0 |          0 |  1000 |       784 |     3713.5 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       2.96 |       6.04 |     6.24 |     15.24 |   0+  4+  1 |        0 |          0 |  1000 |       667 |     3162.4 |    2 / 0 |       |
-
-
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/pmod-rgmii_pmod-rgmii-RTL8211E-module/unrouted.dsn)
 
 Size: 36.3 kB · Layers: 4 · Nets: 0 · Components: 70 · Dimensions: 57.08 x 83.8 mm (47.83 cm²) · CAD: KiCad's Pcbnew (v)
@@ -10105,6 +10104,18 @@ Size: 36.3 kB · Layers: 4 · Nets: 0 · Components: 70 · Dimensions: 57.08 x 8
 | 2.4.1     | N/A  |                N/A |        N/A |     304.68 |      N/A |    304.68 |   0+  4+  0 |       27 |          0 |   830 |       337 |   363071.0 |    4 / 0 |         |
 | 2.5.0     | N/A  |                N/A |      31.81 |     519.71 |     0.00 |    551.52 |   0+ 18+  0 |       15 |          0 |   906 |       281 |   177958.5 |    8 / 0 |         |
 | 2.6.0-RC1 | N/A  |                N/A |      11.45 |      45.69 |      N/A |     57.14 |   0+  2+  0 |        9 |          0 |   943 |       367 |   256595.0 |    8 / 0 | TIMEOUT |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/PmodHDMIIn_PmodHDMIIn/unrouted.dsn)
+
+Size: 21.5 kB · Layers: 2 · Nets: 11 · Components: 33 · Dimensions: 43.18 x 34.29 mm (14.81 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       9.73 |    67.67 |     77.40 |   0+  0+  0 |        0 |          0 |  1000 |       143 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      85.29 |      N/A |     85.29 |   0+ 18+  0 |        1 |          0 |   989 |       387 |    85858.7 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       5.46 |      13.76 |    28.88 |     48.10 |   0+  4+  2 |        0 |          0 |  1000 |       784 |     3713.5 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       2.96 |       6.04 |     6.24 |     15.24 |   0+  4+  1 |        0 |          0 |  1000 |       667 |     3162.4 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/pmtoy-hardware-pcb_PMToy/unrouted.dsn)
@@ -10121,7 +10132,7 @@ Size: 41 kB · Layers: 2 · Nets: 26 · Components: 52 · Dimensions: 48.26 x 41
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/PocketBone_pocketbone-kicad/unrouted.dsn)
 
-Size: 77.9 kB · Layers: 4 · Nets: 344 · Components: 65 · Dimensions: 55.0 x 35.0 mm (19.25 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 77.9 kB · Layers: 4 · Nets: 344 · Components: 65 · Dimensions: 55 x 35 mm (19.25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -10133,7 +10144,7 @@ Size: 77.9 kB · Layers: 4 · Nets: 344 · Components: 65 · Dimensions: 55.0 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/pocketbone-kicad_pocketbone-kicad/unrouted.dsn)
 
-Size: 56.4 kB · Layers: 4 · Nets: 33 · Components: 65 · Dimensions: 55.0 x 35.0 mm (19.25 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 56.4 kB · Layers: 4 · Nets: 33 · Components: 65 · Dimensions: 55 x 35 mm (19.25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -10145,7 +10156,7 @@ Size: 56.4 kB · Layers: 4 · Nets: 33 · Components: 65 · Dimensions: 55.0 x 3
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/PoEPi-hardware__autosave-pizero-poe/unrouted.dsn)
 
-Size: 72.7 kB · Layers: 2 · Nets: 66 · Components: 85 · Dimensions: 93.8 x 30.0 mm (28.14 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 72.7 kB · Layers: 2 · Nets: 66 · Components: 85 · Dimensions: 93.8 x 30 mm (28.14 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -10157,7 +10168,7 @@ Size: 72.7 kB · Layers: 2 · Nets: 66 · Components: 85 · Dimensions: 93.8 x 3
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/PoEPi-hardware_pizero-poe/unrouted.dsn)
 
-Size: 70.2 kB · Layers: 2 · Nets: 61 · Components: 77 · Dimensions: 81.8 x 30.0 mm (24.54 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 70.2 kB · Layers: 2 · Nets: 61 · Components: 77 · Dimensions: 81.8 x 30 mm (24.54 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -10181,7 +10192,7 @@ Size: 20.6 kB · Layers: 2 · Nets: 5 · Components: 29 · Dimensions: 34.29 x 1
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/poncho_fpga_fpga-dongle/unrouted.dsn)
 
-Size: 92.9 kB · Layers: 2 · Nets: 72 · Components: 114 · Dimensions: 85.8 x 137.0 mm (117.55 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 92.9 kB · Layers: 2 · Nets: 72 · Components: 114 · Dimensions: 85.8 x 137 mm (117.55 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes           |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
@@ -10193,7 +10204,7 @@ Size: 92.9 kB · Layers: 2 · Nets: 72 · Components: 114 · Dimensions: 85.8 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/ponchoeduciaaiot_ponchoeduciaaiot/unrouted.dsn)
 
-Size: 69.9 kB · Layers: 2 · Nets: 83 · Components: 43 · Dimensions: 87.0 x 81.2 mm (70.64 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 69.9 kB · Layers: 2 · Nets: 83 · Components: 43 · Dimensions: 87 x 81.2 mm (70.64 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -10265,7 +10276,7 @@ Size: 17.8 kB · Layers: 2 · Nets: 2 · Components: 18 · Dimensions: 48.26 x 4
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/powersupply_5v_v1_powersupply_5v_v1/unrouted.dsn)
 
-Size: 30.4 kB · Layers: 2 · Nets: 7 · Components: 57 · Dimensions: 160.1 x 100.0 mm (160.1 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 30.4 kB · Layers: 2 · Nets: 7 · Components: 57 · Dimensions: 160.1 x 100 mm (160.1 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -10289,7 +10300,7 @@ Size: 23.1 kB · Layers: 2 · Nets: 19 · Components: 15 · Dimensions: 40.64 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Practicas-Curso-Kicad_Ejercicio_2/unrouted.dsn)
 
-Size: 22.3 kB · Layers: 2 · Nets: 19 · Components: 15 · Dimensions: 0.0 x 0.0 mm (0.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 22.3 kB · Layers: 2 · Nets: 19 · Components: 15 · Dimensions: 0 x 0 mm (0 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -10409,7 +10420,7 @@ Size: 21.4 kB · Layers: 2 · Nets: 0 · Components: 121 · Dimensions: 40.64 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/ProtoHead_v4_Protohead_v4_FAB_rc1/unrouted.dsn)
 
-Size: 11 kB · Layers: 2 · Nets: 11 · Components: 7 · Dimensions: 53.0 x 14.0 mm (7.42 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 11 kB · Layers: 2 · Nets: 11 · Components: 7 · Dimensions: 53 x 14 mm (7.42 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -10421,7 +10432,7 @@ Size: 11 kB · Layers: 2 · Nets: 11 · Components: 7 · Dimensions: 53.0 x 14.0
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Prototyping_Workshop_Prototyping_PCB/unrouted.dsn)
 
-Size: 56.4 kB · Layers: 2 · Nets: 33 · Components: 47 · Dimensions: 160.0 x 32.59 mm (52.14 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 56.4 kB · Layers: 2 · Nets: 33 · Components: 47 · Dimensions: 160 x 32.59 mm (52.14 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -10433,7 +10444,7 @@ Size: 56.4 kB · Layers: 2 · Nets: 33 · Components: 47 · Dimensions: 160.0 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/PSU-5V-6V-Dual9V_PSU-5V-6V-Dual9V/unrouted.dsn)
 
-Size: 27.5 kB · Layers: 2 · Nets: 20 · Components: 103 · Dimensions: 100.0 x 100.0 mm (100.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 27.5 kB · Layers: 2 · Nets: 20 · Components: 103 · Dimensions: 100 x 100 mm (100 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -10462,7 +10473,7 @@ Size: 32.5 kB · Layers: 2 · Nets: 0 · Components: 41 · Dimensions: 33.02 x 5
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |      26.55 |     8.52 |     35.07 |   0+  0+  0 |        1 |          0 |   989 |       163 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      43.26 |      N/A |     43.26 |   0+  4+  0 |        0 |          0 |  1000 |       365 |    49225.0 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      43.26 |      N/A |     43.26 |   0+  4+  0 |        0 |          0 |  1000 |       365 |    49224.9 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       8.46 |      10.10 |    38.13 |     56.69 |   0+  5+  2 |        0 |          0 |  1000 |       496 |     3356.7 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |      12.51 |      17.11 |    12.38 |     42.00 |   0+  5+  1 |        0 |          0 |  1000 |       613 |     3665.3 |    2 / 0 |       |
 
@@ -10481,7 +10492,7 @@ Size: 13.8 kB · Layers: 2 · Nets: 0 · Components: 16 · Dimensions: 25.4 x 10
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/pwm-2420-lus_pwm-2420-lus/unrouted.dsn)
 
-Size: 173.8 kB · Layers: 2 · Nets: 47 · Components: 130 · Dimensions: 90.0 x 85.0 mm (76.5 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 173.8 kB · Layers: 2 · Nets: 47 · Components: 130 · Dimensions: 90 x 85 mm (76.5 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -10493,7 +10504,7 @@ Size: 173.8 kB · Layers: 2 · Nets: 47 · Components: 130 · Dimensions: 90.0 x
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/PWRmeter_PWMeter/unrouted.dsn)
 
-Size: 24.1 kB · Layers: 2 · Nets: 12 · Components: 20 · Dimensions: 100.0 x 50.0 mm (50.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 24.1 kB · Layers: 2 · Nets: 12 · Components: 20 · Dimensions: 100 x 50 mm (50 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -10505,7 +10516,7 @@ Size: 24.1 kB · Layers: 2 · Nets: 12 · Components: 20 · Dimensions: 100.0 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/qrp_swr_meter_swr_meter_rev_a/unrouted.dsn)
 
-Size: 36.4 kB · Layers: 2 · Nets: 13 · Components: 26 · Dimensions: 51.5 x 77.0 mm (39.66 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 36.4 kB · Layers: 2 · Nets: 13 · Components: 26 · Dimensions: 51.5 x 77 mm (39.66 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -10529,7 +10540,7 @@ Size: 22.9 kB · Layers: 2 · Nets: 19 · Components: 33 · Dimensions: 87.12 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/R1002_R1002/unrouted.dsn)
 
-Size: 17.3 kB · Layers: 2 · Nets: 0 · Components: 13 · Dimensions: 47.0 x 33.3 mm (15.65 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 17.3 kB · Layers: 2 · Nets: 0 · Components: 13 · Dimensions: 47 x 33.3 mm (15.65 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -10541,19 +10552,19 @@ Size: 17.3 kB · Layers: 2 · Nets: 0 · Components: 13 · Dimensions: 47.0 x 33
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/R1007_R1007/unrouted.dsn)
 
-Size: 21.7 kB · Layers: 4 · Nets: 4 · Components: 36 · Dimensions: 69.0 x 38.6 mm (26.63 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 21.7 kB · Layers: 4 · Nets: 4 · Components: 36 · Dimensions: 69 x 38.6 mm (26.63 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       8.60 |    84.94 |     93.54 |   0+  0+  0 |        0 |          4 |   999 |       118 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      16.71 |      N/A |     16.71 |   0+  3+  0 |        0 |          4 |  1000 |       276 |    27847.4 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       5.75 |       3.47 |     5.90 |     15.12 |   0+  3+  1 |        0 |          0 |  1000 |       347 |     1974.1 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       5.75 |       3.47 |     5.90 |     15.12 |   0+  3+  1 |        0 |          0 |  1000 |       347 |     1974.0 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       2.60 |       3.50 |     5.77 |     11.87 |   0+  3+  1 |        0 |          0 |  1000 |       398 |     1779.0 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Radar-System_fmcw_radar/unrouted.dsn)
 
-Size: 22.8 kB · Layers: 4 · Nets: 18 · Components: 30 · Dimensions: 51.0 x 25.0 mm (12.75 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 22.8 kB · Layers: 4 · Nets: 18 · Components: 30 · Dimensions: 51 x 25 mm (12.75 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -10565,7 +10576,7 @@ Size: 22.8 kB · Layers: 4 · Nets: 18 · Components: 30 · Dimensions: 51.0 x 2
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/radio_antenna-iridium/unrouted.dsn)
 
-Size: 27.8 kB · Layers: 4 · Nets: 21 · Components: 37 · Dimensions: 60.0 x 60.0 mm (36.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 27.8 kB · Layers: 4 · Nets: 21 · Components: 37 · Dimensions: 60 x 60 mm (36 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -10577,7 +10588,7 @@ Size: 27.8 kB · Layers: 4 · Nets: 21 · Components: 37 · Dimensions: 60.0 x 6
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/radio_saw_dcc6c/unrouted.dsn)
 
-Size: 6.8 kB · Layers: 4 · Nets: 4 · Components: 7 · Dimensions: 28.4 x 20.0 mm (5.68 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 6.8 kB · Layers: 4 · Nets: 4 · Components: 7 · Dimensions: 28.4 x 20 mm (5.68 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -10589,7 +10600,7 @@ Size: 6.8 kB · Layers: 4 · Nets: 4 · Components: 7 · Dimensions: 28.4 x 20.0
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Radio-FM-TEA5767_radio tea5767/unrouted.dsn)
 
-Size: 29.6 kB · Layers: 2 · Nets: 0 · Components: 33 · Dimensions: 0.0 x 0.0 mm (0.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 29.6 kB · Layers: 2 · Nets: 0 · Components: 33 · Dimensions: 0 x 0 mm (0 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -10619,7 +10630,7 @@ Size: 8.7 kB · Layers: 2 · Nets: 0 · Components: 4 · Dimensions: 6.35 x 21.8
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       0.54 |     0.46 |      1.00 |   0+  0+  0 |        0 |          0 |  1000 |        64 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |       3.70 |      N/A |      3.70 |   0+  2+  0 |        0 |          8 |   990 |       136 |     1769.4 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       1.83 |       2.25 |     3.42 |      7.50 |   0+  2+  2 |        0 |          0 |  1000 |        86 |      128.3 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       1.83 |       2.25 |     3.42 |      7.50 |   0+  2+  2 |        0 |          0 |  1000 |        86 |      128.2 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       2.07 |       0.91 |     3.57 |      6.55 |   0+  2+  2 |        0 |          0 |  1000 |       156 |      137.2 |    2 / 0 |       |
 
 
@@ -10631,37 +10642,13 @@ Size: 8.1 kB · Layers: 2 · Nets: 0 · Components: 4 · Dimensions: 4.83 x 23.6
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       0.70 |     0.87 |      1.57 |   0+  0+  0 |        0 |          2 |   995 |        65 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |       2.00 |      N/A |      2.00 |   0+  1+  0 |        0 |         11 |   986 |        20 |      145.0 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       0.89 |       2.17 |     4.63 |      7.69 |   0+  2+  4 |        0 |          0 |  1000 |        96 |       98.4 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       0.89 |       2.17 |     4.63 |      7.69 |   0+  2+  4 |        0 |          0 |  1000 |        96 |       98.3 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       2.48 |       1.54 |     5.69 |      9.71 |   0+  2+  4 |        0 |          0 |  1000 |       165 |       94.9 |    2 / 0 |       |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/raspberrypi-3-usb-hub_usb_hub/unrouted.dsn)
-
-Size: 22.3 kB · Layers: 2 · Nets: 25 · Components: 21 · Dimensions: 127.0 x 60.96 mm (77.42 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       3.58 |     1.72 |      5.30 |   0+  0+  0 |       10 |         12 |   790 |       202 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      27.27 |      N/A |     27.27 |   0+  1+  0 |       10 |         12 |   772 |       231 |    33268.7 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       0.06 |       2.20 |     5.20 |      7.46 |   0+  2+  2 |        0 |          0 |  1000 |       404 |      638.6 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       0.19 |       2.51 |     4.18 |      6.88 |   0+  2+  2 |        0 |          0 |  1000 |       334 |      628.3 |    2 / 0 |       |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/RaspberryPi-PoE_PoELLi_PI/unrouted.dsn)
-
-Size: 45.8 kB · Layers: 2 · Nets: 50 · Components: 46 · Dimensions: 85.0 x 56.0 mm (47.6 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |      10.26 |    21.38 |     31.64 |   0+  0+  0 |        3 |          0 |   953 |        52 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       9.05 |      N/A |      9.05 |   0+  2+  0 |        0 |          1 |  1000 |       196 |    11319.5 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       5.45 |      10.95 |     9.70 |     26.10 |   0+  2+  1 |        0 |          0 |  1000 |       319 |     1069.2 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       3.01 |       2.44 |     6.20 |     11.65 |   0+  2+  1 |        0 |          0 |  1000 |       278 |      999.0 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/raspberry-pi-rfm69_rfm69-rpi/unrouted.dsn)
 
-Size: 40.4 kB · Layers: 2 · Nets: 44 · Components: 21 · Dimensions: 65.0 x 56.0 mm (36.4 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 40.4 kB · Layers: 2 · Nets: 44 · Components: 21 · Dimensions: 65 x 56 mm (36.4 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -10673,7 +10660,7 @@ Size: 40.4 kB · Layers: 2 · Nets: 44 · Components: 21 · Dimensions: 65.0 x 5
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Raspberry-Pi-Soft-Power-Controller_Switching Supply TPS563208 MCI/unrouted.dsn)
 
-Size: 7.6 kB · Layers: 2 · Nets: 2 · Components: 10 · Dimensions: 45.0 x 20.0 mm (9.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 7.6 kB · Layers: 2 · Nets: 2 · Components: 10 · Dimensions: 45 x 20 mm (9 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -10690,14 +10677,38 @@ Size: 17.5 kB · Layers: 2 · Nets: 3 · Components: 27 · Dimensions: 64.6 x 28
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       1.64 |     6.91 |      8.55 |   0+  0+  0 |        0 |          0 |  1000 |        53 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       3.99 |      N/A |      3.99 |   0+  2+  0 |        0 |          0 |  1000 |       208 |     2294.3 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       3.99 |      N/A |      3.99 |   0+  2+  0 |        0 |          0 |  1000 |       208 |     2294.2 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       1.90 |       1.70 |     5.96 |      9.56 |   0+  4+  3 |        0 |          0 |  1000 |       197 |      476.0 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       1.71 |       1.92 |     6.12 |      9.75 |   0+  4+  3 |        0 |          0 |  1000 |       147 |      458.3 |    2 / 0 |       |
 
 
+### Fixture: [unrouted.dsn](../fixtures/PCBench/raspberrypi-3-usb-hub_usb_hub/unrouted.dsn)
+
+Size: 22.3 kB · Layers: 2 · Nets: 25 · Components: 21 · Dimensions: 127 x 60.96 mm (77.42 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       3.58 |     1.72 |      5.30 |   0+  0+  0 |       10 |         12 |   790 |       202 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      27.27 |      N/A |     27.27 |   0+  1+  0 |       10 |         12 |   772 |       231 |    33268.7 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       0.06 |       2.20 |     5.20 |      7.46 |   0+  2+  2 |        0 |          0 |  1000 |       404 |      638.6 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       0.19 |       2.51 |     4.18 |      6.88 |   0+  2+  2 |        0 |          0 |  1000 |       334 |      628.3 |    2 / 0 |       |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/RaspberryPi-PoE_PoELLi_PI/unrouted.dsn)
+
+Size: 45.8 kB · Layers: 2 · Nets: 50 · Components: 46 · Dimensions: 85 x 56 mm (47.6 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |      10.26 |    21.38 |     31.64 |   0+  0+  0 |        3 |          0 |   953 |        52 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       9.05 |      N/A |      9.05 |   0+  2+  0 |        0 |          1 |  1000 |       196 |    11319.5 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       5.45 |      10.95 |     9.70 |     26.10 |   0+  2+  1 |        0 |          0 |  1000 |       319 |     1069.2 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       3.01 |       2.44 |     6.20 |     11.65 |   0+  2+  1 |        0 |          0 |  1000 |       278 |      999.0 |    2 / 0 |       |
+
+
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/raspican_raspican/unrouted.dsn)
 
-Size: 29.9 kB · Layers: 2 · Nets: 32 · Components: 22 · Dimensions: 85.0 x 56.0 mm (47.6 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 29.9 kB · Layers: 2 · Nets: 32 · Components: 22 · Dimensions: 85 x 56 mm (47.6 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -10709,7 +10720,7 @@ Size: 29.9 kB · Layers: 2 · Nets: 32 · Components: 22 · Dimensions: 85.0 x 5
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/RASPMINI_RASPmini/unrouted.dsn)
 
-Size: 26.4 kB · Layers: 2 · Nets: 19 · Components: 15 · Dimensions: 65.0 x 56.0 mm (36.4 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 26.4 kB · Layers: 2 · Nets: 19 · Components: 15 · Dimensions: 65 x 56 mm (36.4 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -10728,7 +10739,7 @@ Size: 22.4 kB · Layers: 2 · Nets: 0 · Components: 17 · Dimensions: 102.87 x 
 | 1.9.0     | N/A  |                N/A |        N/A |      12.60 |     2.39 |     14.99 |   0+  0+  0 |        1 |          0 |   984 |        84 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      19.63 |      N/A |     19.63 |   0+  1+  0 |        1 |          0 |   976 |       273 |    24231.1 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.14 |       8.82 |    23.59 |     32.55 |   0+  5+  4 |        0 |          0 |  1000 |       422 |     1815.2 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       0.12 |       9.75 |    29.03 |     38.90 |   0+  5+  4 |        0 |          0 |  1000 |       414 |     1750.1 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       0.12 |       9.75 |    29.03 |     38.90 |   0+  5+  4 |        0 |          0 |  1000 |       414 |     1750.0 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/RC2014_RC2014 IDE/unrouted.dsn)
@@ -10805,7 +10816,7 @@ Size: 23.4 kB · Layers: 2 · Nets: 26 · Components: 123 · Dimensions: 210.82 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/red-scout_red-scout-aa/unrouted.dsn)
 
-Size: 25.6 kB · Layers: 2 · Nets: 26 · Components: 41 · Dimensions: 60.0 x 97.5 mm (58.5 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 25.6 kB · Layers: 2 · Nets: 26 · Components: 41 · Dimensions: 60 x 97.5 mm (58.5 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -10841,7 +10852,7 @@ Size: 19.5 kB · Layers: 2 · Nets: 0 · Components: 40 · Dimensions: 28.75 x 4
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/ReST32_ReST SD-Module/unrouted.dsn)
 
-Size: 19.2 kB · Layers: 2 · Nets: 1 · Components: 15 · Dimensions: 33.0 x 40.0 mm (13.2 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 19.2 kB · Layers: 2 · Nets: 1 · Components: 15 · Dimensions: 33 x 40 mm (13.2 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -10853,13 +10864,13 @@ Size: 19.2 kB · Layers: 2 · Nets: 1 · Components: 15 · Dimensions: 33.0 x 40
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/ReST32_ReST/unrouted.dsn)
 
-Size: 78.9 kB · Layers: 2 · Nets: 77 · Components: 163 · Dimensions: 100.0 x 100.0 mm (100.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 78.9 kB · Layers: 2 · Nets: 77 · Components: 163 · Dimensions: 100 x 100 mm (100 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
 | 1.9.0     | N/A  |                N/A |        N/A |     136.41 |   156.50 |    292.91 |   0+  0+  0 |        5 |          0 |   986 |        88 |     4096.0 |    0 / 0 |         |
 | 2.4.1     | N/A  |                N/A |        N/A |     906.91 |      N/A |    906.91 |   0+ 19+  0 |        1 |          4 |   997 |      1340 |  1612021.0 |    3 / 0 | TIMEOUT |
-| 2.5.0     | N/A  |                N/A |      12.43 |     376.47 |     0.00 |    388.90 |   0+ 20+  0 |        1 |          0 |   997 |       501 |   169529.1 |    2 / 0 |         |
+| 2.5.0     | N/A  |                N/A |      12.43 |     376.47 |     0.00 |    388.90 |   0+ 20+  0 |        1 |          0 |   997 |       501 |   169529.0 |    2 / 0 |         |
 | 2.6.0-RC1 | N/A  |                N/A |      26.18 |     623.69 |   282.82 |    932.69 |   0+ 29+  2 |        0 |          0 |  1000 |      1483 |   214944.1 |    2 / 0 |         |
 
 
@@ -10944,7 +10955,7 @@ Size: 8 kB · Layers: 2 · Nets: 0 · Components: 15 · Dimensions: 30.8 x 52.8 
 | 1.9.0     | N/A  |                N/A |        N/A |      21.01 |     0.19 |     21.20 |   0+  0+  0 |       16 |          6 |   534 |        30 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      60.39 |      N/A |     60.39 |   0+ 10+  0 |       13 |         14 |   564 |       236 |    39970.5 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.77 |      22.95 |     0.00 |     23.72 |   0+ 28+  0 |        3 |          6 |   898 |       192 |     9290.5 |    3 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       0.67 |       4.61 |    14.88 |     20.16 |   0+  6+  3 |        0 |          2 |   999 |       620 |     1961.9 |    3 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       0.67 |       4.61 |    14.88 |     20.16 |   0+  6+  3 |        0 |          2 |   999 |       620 |     1961.8 |    3 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/retroreflectors_TANGOFLOCK/unrouted.dsn)
@@ -10966,14 +10977,14 @@ Size: 44.4 kB · Layers: 4 · Nets: 57 · Components: 98 · Dimensions: 46.61 x 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |      48.46 |   316.21 |    364.67 |   0+  0+  0 |        0 |         99 |   996 |       186 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |     310.03 |      N/A |    310.03 |   0+  1+  0 |        0 |        138 |   998 |       352 |   535623.3 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |     310.03 |      N/A |    310.03 |   0+  1+  0 |        0 |        138 |   998 |       352 |   535623.2 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |      25.29 |      34.74 |    29.63 |     89.66 |   0+  8+  1 |        0 |          0 |  1000 |       543 |    21574.5 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |      18.76 |      33.24 |    74.79 |    126.79 |   0+  8+  1 |        0 |          0 |  1000 |      1197 |    20250.5 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/rf-biscuit_rf_biscuit/unrouted.dsn)
 
-Size: 16.6 kB · Layers: 2 · Nets: 15 · Components: 64 · Dimensions: 37.0 x 24.0 mm (8.88 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 16.6 kB · Layers: 2 · Nets: 15 · Components: 64 · Dimensions: 37 x 24 mm (8.88 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -10991,7 +11002,7 @@ Size: 54.4 kB · Layers: 2 · Nets: 59 · Components: 102 · Dimensions: 83.82 x
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
 | 1.9.0     | N/A  |                N/A |        N/A |      20.78 |   304.96 |    325.74 |   0+  0+  0 |        0 |          0 |  1000 |       138 |     4096.0 |    3 / 0 |         |
 | 2.4.1     | N/A  |                N/A |        N/A |      87.33 |      N/A |     87.33 |   0+  5+  0 |        0 |          0 |  1000 |       356 |   174962.4 |    3 / 0 |         |
-| 2.5.0     | N/A  |                N/A |      11.83 |      49.20 |   238.07 |    299.10 |   0+  5+  2 |        0 |          0 |  1000 |       927 |    10393.2 |    2 / 0 | TIMEOUT |
+| 2.5.0     | N/A  |                N/A |      11.83 |      49.20 |   238.07 |    299.10 |   0+  5+  2 |        0 |          0 |  1000 |       927 |    10393.1 |    2 / 0 | TIMEOUT |
 | 2.6.0-RC1 | N/A  |                N/A |      25.98 |      44.47 |   229.71 |    300.16 |   0+  5+  2 |        0 |          0 |  1000 |       843 |    10977.2 |    2 / 0 | TIMEOUT |
 
 
@@ -11003,13 +11014,13 @@ Size: 41.9 kB · Layers: 2 · Nets: 33 · Components: 88 · Dimensions: 83.82 x 
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |      59.79 |     6.45 |     66.24 |   0+  0+  0 |       13 |         10 |   890 |       107 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |     231.37 |      N/A |    231.37 |   0+  1+  0 |       12 |         10 |   897 |       347 |   384660.4 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       4.60 |      36.99 |     0.00 |     41.59 |   0+ 18+  0 |       16 |         10 |   861 |       193 |    17170.9 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       4.60 |      36.99 |     0.00 |     41.59 |   0+ 18+  0 |       16 |         10 |   861 |       193 |    17170.8 |    3 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       1.77 |      73.45 |     0.00 |     75.22 |   0+ 18+  0 |       14 |         10 |   801 |       291 |   100228.9 |    3 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/rfidBoard_POE/unrouted.dsn)
 
-Size: 62.7 kB · Layers: 4 · Nets: 69 · Components: 127 · Dimensions: 100.0 x 50.0 mm (50.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 62.7 kB · Layers: 4 · Nets: 69 · Components: 127 · Dimensions: 100 x 50 mm (50 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -11021,7 +11032,7 @@ Size: 62.7 kB · Layers: 4 · Nets: 69 · Components: 127 · Dimensions: 100.0 x
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/rfidBoard_rfid/unrouted.dsn)
 
-Size: 20.4 kB · Layers: 2 · Nets: 31 · Components: 34 · Dimensions: 75.0 x 50.0 mm (37.5 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 20.4 kB · Layers: 2 · Nets: 31 · Components: 34 · Dimensions: 75 x 50 mm (37.5 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -11029,6 +11040,18 @@ Size: 20.4 kB · Layers: 2 · Nets: 31 · Components: 34 · Dimensions: 75.0 x 5
 | 2.4.1     | N/A  |                N/A |        N/A |       7.65 |      N/A |      7.65 |   0+  2+  0 |        0 |          0 |  1000 |       221 |     7171.6 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       5.41 |       0.67 |    12.46 |     18.54 |   0+  2+  2 |        0 |          0 |  1000 |       390 |      671.3 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |      14.40 |       3.56 |    11.56 |     29.52 |   0+  2+  2 |        0 |          0 |  1000 |       382 |      700.0 |    2 / 0 |       |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/RFM69-PowerMonitor_RFM69-PowerMonitor/unrouted.dsn)
+
+Size: 33.1 kB · Layers: 2 · Nets: 12 · Components: 19 · Dimensions: 29 x 57 mm (16.53 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       1.24 |     4.39 |      5.63 |   0+  0+  0 |        0 |          0 |  1000 |       122 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      15.72 |      N/A |     15.72 |   0+  1+  0 |        1 |          0 |   964 |       237 |    19623.4 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       2.30 |       4.71 |     6.96 |     13.97 |   0+  2+  2 |        0 |          0 |  1000 |       157 |      466.0 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       3.40 |       2.15 |     4.80 |     10.35 |   0+  2+  2 |        0 |          0 |  1000 |       150 |      436.5 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/RFM69HCW_ATSHA204A_Breakout_RFM69HCW_ATSHA204A_Breakout/unrouted.dsn)
@@ -11041,30 +11064,6 @@ Size: 13.7 kB · Layers: 2 · Nets: 0 · Components: 9 · Dimensions: 29.21 x 24
 | 2.4.1     | N/A  |                N/A |        N/A |      11.29 |      N/A |     11.29 |   0+  1+  0 |        1 |          2 |   959 |       335 |    20543.7 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.77 |       0.41 |     1.10 |      2.28 |   0+  2+  2 |        0 |          0 |  1000 |       166 |      254.6 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.96 |       0.40 |     1.33 |      2.69 |   0+  2+  2 |        0 |          0 |  1000 |        85 |      221.0 |    2 / 0 |       |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/RFM69-PowerMonitor_RFM69-PowerMonitor/unrouted.dsn)
-
-Size: 33.1 kB · Layers: 2 · Nets: 12 · Components: 19 · Dimensions: 29.0 x 57.0 mm (16.53 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       1.24 |     4.39 |      5.63 |   0+  0+  0 |        0 |          0 |  1000 |       122 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      15.72 |      N/A |     15.72 |   0+  1+  0 |        1 |          0 |   964 |       237 |    19623.4 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       2.30 |       4.71 |     6.96 |     13.97 |   0+  2+  2 |        0 |          0 |  1000 |       157 |      466.0 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       3.40 |       2.15 |     4.80 |     10.35 |   0+  2+  2 |        0 |          0 |  1000 |       150 |      436.5 |    2 / 0 |       |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/rgb2ypbpr_rgb2ypbpr/unrouted.dsn)
-
-Size: 94.4 kB · Layers: 2 · Nets: 16 · Components: 49 · Dimensions: 70.8 x 89.2 mm (63.15 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       5.73 |    32.56 |     38.29 |   0+  0+  0 |        0 |          2 |   999 |       152 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |     141.94 |      N/A |    141.94 |   0+  2+  0 |        0 |          6 |   999 |       339 |   328663.7 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       0.43 |       4.86 |     6.97 |     12.26 |   0+  4+  1 |        0 |          0 |  1000 |       505 |     2023.7 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       0.44 |       8.70 |     4.80 |     13.94 |   0+  4+  1 |        0 |          0 |  1000 |       234 |     1976.5 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/rgb-led_rgb_led/unrouted.dsn)
@@ -11081,7 +11080,7 @@ Size: 8.7 kB · Layers: 2 · Nets: 0 · Components: 9 · Dimensions: 55.12 x 45.
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/rgb-led_rgb-led-v2/unrouted.dsn)
 
-Size: 21.9 kB · Layers: 2 · Nets: 5 · Components: 22 · Dimensions: 90.0 x 50.0 mm (45.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 21.9 kB · Layers: 2 · Nets: 5 · Components: 22 · Dimensions: 90 x 50 mm (45 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -11091,16 +11090,28 @@ Size: 21.9 kB · Layers: 2 · Nets: 5 · Components: 22 · Dimensions: 90.0 x 50
 | 2.6.0-RC1 | N/A  |                N/A |       0.07 |      17.05 |     2.62 |     19.74 |   0+  2+  1 |        0 |          0 |  1000 |       162 |      782.3 |    2 / 0 |       |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/RGBMatrixPanelCPLD-PhotonBackpack_RGBMatrixPanel_CPLD/unrouted.dsn)
+### Fixture: [unrouted.dsn](../fixtures/PCBench/rgb-strip-controller__autosave-rgb-strip/unrouted.dsn)
 
-Size: 45 kB · Layers: 2 · Nets: 29 · Components: 52 · Dimensions: 71.12 x 59.69 mm (42.45 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 31 kB · Layers: 2 · Nets: 6 · Components: 20 · Dimensions: 41.66 x 40.54 mm (16.89 cm²) · CAD: KiCad's Pcbnew (v)
 
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
-| 1.9.0     | N/A  |                N/A |        N/A |      77.14 |    12.12 |     89.26 |   0+  0+  0 |        4 |         80 |   963 |       203 |     4096.0 |    0 / 0 |         |
-| 2.4.1     | N/A  |                N/A |        N/A |     302.43 |      N/A |    302.43 |   0+  1+  0 |        2 |         80 |   983 |       424 |   404702.9 |    3 / 0 |         |
-| 2.5.0     | N/A  |                N/A |      15.72 |     219.53 |     0.00 |    235.25 |   0+ 20+  0 |        7 |          0 |   953 |       204 |    68617.2 |    2 / 0 |         |
-| 2.6.0-RC1 | N/A  |                N/A |       5.82 |      16.71 |      N/A |     22.53 |   0+  2+  0 |        8 |          0 |   777 |       290 |   218884.5 |    2 / 0 | TIMEOUT |
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       1.24 |     1.59 |      2.83 |   0+  0+  0 |        1 |          0 |   966 |        36 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       4.56 |      N/A |      4.56 |   0+  2+  0 |        0 |          0 |  1000 |       283 |     2075.8 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       0.06 |       3.80 |     0.00 |      3.86 |   0+  2+  0 |        0 |          0 |  1000 |       220 |      255.3 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       0.09 |       8.08 |     0.00 |      8.17 |   0+  2+  0 |        0 |          0 |  1000 |       230 |      312.6 |    2 / 0 |       |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/rgb2ypbpr_rgb2ypbpr/unrouted.dsn)
+
+Size: 94.4 kB · Layers: 2 · Nets: 16 · Components: 49 · Dimensions: 70.8 x 89.2 mm (63.15 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       5.73 |    32.56 |     38.29 |   0+  0+  0 |        0 |          2 |   999 |       152 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |     141.94 |      N/A |    141.94 |   0+  2+  0 |        0 |          6 |   999 |       339 |   328663.7 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       0.43 |       4.86 |     6.97 |     12.26 |   0+  4+  1 |        0 |          0 |  1000 |       505 |     2023.7 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       0.44 |       8.70 |     4.80 |     13.94 |   0+  4+  1 |        0 |          0 |  1000 |       234 |     1976.5 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/RGBMatrixPanelCPLD-PhotonBackpack_RGBMatrixPanel_CPLD_negative/unrouted.dsn)
@@ -11127,16 +11138,16 @@ Size: 29.9 kB · Layers: 2 · Nets: 21 · Components: 28 · Dimensions: 71.12 x 
 | 2.6.0-RC1 | N/A  |                N/A |       6.13 |      11.38 |    12.50 |     30.01 |   0+ 10+  2 |        0 |          0 |  1000 |       443 |     3552.0 |    2 / 0 |       |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/rgb-strip-controller__autosave-rgb-strip/unrouted.dsn)
+### Fixture: [unrouted.dsn](../fixtures/PCBench/RGBMatrixPanelCPLD-PhotonBackpack_RGBMatrixPanel_CPLD/unrouted.dsn)
 
-Size: 31 kB · Layers: 2 · Nets: 6 · Components: 20 · Dimensions: 41.66 x 40.54 mm (16.89 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 45 kB · Layers: 2 · Nets: 29 · Components: 52 · Dimensions: 71.12 x 59.69 mm (42.45 cm²) · CAD: KiCad's Pcbnew (v)
 
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       1.24 |     1.59 |      2.83 |   0+  0+  0 |        1 |          0 |   966 |        36 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       4.56 |      N/A |      4.56 |   0+  2+  0 |        0 |          0 |  1000 |       283 |     2075.8 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       0.06 |       3.80 |     0.00 |      3.86 |   0+  2+  0 |        0 |          0 |  1000 |       220 |      255.3 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       0.09 |       8.08 |     0.00 |      8.17 |   0+  2+  0 |        0 |          0 |  1000 |       230 |      312.6 |    2 / 0 |       |
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
+| 1.9.0     | N/A  |                N/A |        N/A |      77.14 |    12.12 |     89.26 |   0+  0+  0 |        4 |         80 |   963 |       203 |     4096.0 |    0 / 0 |         |
+| 2.4.1     | N/A  |                N/A |        N/A |     302.43 |      N/A |    302.43 |   0+  1+  0 |        2 |         80 |   983 |       424 |   404702.9 |    3 / 0 |         |
+| 2.5.0     | N/A  |                N/A |      15.72 |     219.53 |     0.00 |    235.25 |   0+ 20+  0 |        7 |          0 |   953 |       204 |    68617.2 |    2 / 0 |         |
+| 2.6.0-RC1 | N/A  |                N/A |       5.82 |      16.71 |      N/A |     22.53 |   0+  2+  0 |        8 |          0 |   777 |       290 |   218884.5 |    2 / 0 | TIMEOUT |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/rjw57_cpu-board/unrouted.dsn)
@@ -11177,7 +11188,7 @@ Size: 16.5 kB · Layers: 2 · Nets: 2 · Components: 8 · Dimensions: 68.9 x 53.
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/RoBoC_CameraAdaptor/unrouted.dsn)
 
-Size: 8.5 kB · Layers: 2 · Nets: 4 · Components: 6 · Dimensions: 0.0 x 0.0 mm (0.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 8.5 kB · Layers: 2 · Nets: 4 · Components: 6 · Dimensions: 0 x 0 mm (0 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -11195,13 +11206,13 @@ Size: 53.5 kB · Layers: 2 · Nets: 32 · Components: 94 · Dimensions: 49.53 x 
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
 | 1.9.0     | N/A  |                N/A |        N/A |     182.32 |    40.37 |    222.69 |   0+  0+  0 |        1 |          0 |   994 |       127 |     4096.0 |    1 / 0 |         |
 | 2.4.1     | N/A  |                N/A |        N/A |     305.38 |      N/A |    305.38 |   0+  3+  0 |       27 |          2 |   849 |       351 |   393660.9 |    3 / 0 |         |
-| 2.5.0     | N/A  |                N/A |      17.76 |     202.99 |   380.17 |    600.92 |   0+ 14+  3 |        0 |          0 |  1000 |      1645 |    56447.0 |    2 / 0 | TIMEOUT |
+| 2.5.0     | N/A  |                N/A |      17.76 |     202.99 |   380.17 |    600.92 |   0+ 14+  3 |        0 |          0 |  1000 |      1645 |    56446.9 |    2 / 0 | TIMEOUT |
 | 2.6.0-RC1 | N/A  |                N/A |      29.58 |     158.35 |   413.07 |    601.00 |   0+ 21+  3 |        0 |          0 |  1000 |      1543 |    57928.5 |    2 / 0 | TIMEOUT |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/rodi-pcb_rodi-pcb/unrouted.dsn)
 
-Size: 41.1 kB · Layers: 2 · Nets: 43 · Components: 81 · Dimensions: 50.0 x 50.0 mm (25.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 41.1 kB · Layers: 2 · Nets: 43 · Components: 81 · Dimensions: 50 x 50 mm (25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -11213,12 +11224,12 @@ Size: 41.1 kB · Layers: 2 · Nets: 43 · Components: 81 · Dimensions: 50.0 x 5
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/roomba-ESP12E_roomba-esp/unrouted.dsn)
 
-Size: 16.4 kB · Layers: 2 · Nets: 2 · Components: 11 · Dimensions: 33.0 x 40.0 mm (13.2 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 16.4 kB · Layers: 2 · Nets: 2 · Components: 11 · Dimensions: 33 x 40 mm (13.2 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       3.86 |    12.15 |     16.01 |   0+  0+  0 |        0 |          2 |   999 |        87 |     4096.0 |  150 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      12.43 |      N/A |     12.43 |   0+  3+  0 |        0 |          2 |  1000 |       208 |     9909.7 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      12.43 |      N/A |     12.43 |   0+  3+  0 |        0 |          2 |  1000 |       208 |     9909.6 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       2.48 |       7.57 |    12.68 |     22.73 |   0+  4+  4 |        0 |          0 |  1000 |       340 |     1096.7 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       1.41 |       2.46 |    12.97 |     16.84 |   0+  4+  5 |        0 |          0 |  1000 |       349 |     1073.6 |    2 / 0 |       |
 
@@ -11231,7 +11242,7 @@ Size: 5.6 kB · Layers: 2 · Nets: 4 · Components: 6 · Dimensions: 17.17 x 20.
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       0.86 |     5.64 |      6.50 |   0+  0+  0 |        0 |          0 |  1000 |        28 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |       4.19 |      N/A |      4.19 |   0+  1+  0 |        0 |         18 |   988 |       168 |     3292.0 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       0.74 |       0.70 |     2.98 |      4.42 |   0+  2+  3 |        0 |          0 |  1000 |       129 |      120.6 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       0.74 |       0.70 |     2.98 |      4.42 |   0+  2+  3 |        0 |          0 |  1000 |       129 |      120.5 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       3.77 |       3.64 |     1.86 |      9.27 |   0+  2+  3 |        0 |          0 |  1000 |       115 |      117.7 |    2 / 0 |       |
 
 
@@ -11243,7 +11254,7 @@ Size: 8.6 kB · Layers: 2 · Nets: 21 · Components: 2 · Dimensions: 50.8 x 45.
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       1.07 |     1.57 |      2.64 |   0+  0+  0 |        0 |          0 |  1000 |        45 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |       3.15 |      N/A |      3.15 |   0+  3+  0 |        0 |          0 |  1000 |       174 |     2382.6 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       0.09 |       5.39 |     1.22 |      6.70 |   0+  3+  1 |        0 |          0 |  1000 |       113 |      363.2 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       0.09 |       5.39 |     1.22 |      6.70 |   0+  3+  1 |        0 |          0 |  1000 |       113 |      363.1 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.02 |       5.21 |     2.06 |      7.29 |   0+  3+  2 |        0 |          0 |  1000 |       126 |      360.3 |    2 / 0 |       |
 
 
@@ -11261,7 +11272,7 @@ Size: 19.2 kB · Layers: 2 · Nets: 1 · Components: 26 · Dimensions: 40.64 x 5
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/roz_roz-power-board/unrouted.dsn)
 
-Size: 41.8 kB · Layers: 2 · Nets: 28 · Components: 87 · Dimensions: 80.0 x 42.0 mm (33.6 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 41.8 kB · Layers: 2 · Nets: 28 · Components: 87 · Dimensions: 80 x 42 mm (33.6 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -11278,7 +11289,7 @@ Size: 27.3 kB · Layers: 2 · Nets: 13 · Components: 11 · Dimensions: 39.62 x 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       0.63 |     1.21 |      1.84 |   0+  0+  0 |        0 |          0 |  1000 |       186 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       1.55 |      N/A |      1.55 |   0+  2+  0 |        0 |          0 |  1000 |        58 |     1012.7 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       1.55 |      N/A |      1.55 |   0+  2+  0 |        0 |          0 |  1000 |        58 |     1012.6 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.04 |       1.62 |     0.00 |      1.66 |   0+  2+  0 |        0 |          0 |  1000 |       133 |      172.6 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.02 |       1.57 |     0.00 |      1.59 |   0+  2+  0 |        0 |          0 |  1000 |        98 |      138.3 |    2 / 0 |       |
 
@@ -11321,7 +11332,7 @@ Size: 7.7 kB · Layers: 2 · Nets: 1 · Components: 3 · Dimensions: 35.56 x 11.
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/rufs_aprs_tracker/unrouted.dsn)
 
-Size: 29.2 kB · Layers: 2 · Nets: 13 · Components: 43 · Dimensions: 77.0 x 42.2 mm (32.49 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 29.2 kB · Layers: 2 · Nets: 13 · Components: 43 · Dimensions: 77 x 42.2 mm (32.49 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -11338,8 +11349,8 @@ Size: 8.3 kB · Layers: 2 · Nets: 9 · Components: 4 · Dimensions: 48.3 x 30.7
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       1.30 |     2.78 |      4.08 |   0+  0+  0 |        0 |          0 |  1000 |        73 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       4.17 |      N/A |      4.17 |   0+  3+  0 |        0 |          0 |  1000 |       132 |     2809.9 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       4.85 |       3.13 |    10.31 |     18.29 |   0+  2+  5 |        0 |          0 |  1000 |       229 |      307.2 |    2 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       4.17 |      N/A |      4.17 |   0+  3+  0 |        0 |          0 |  1000 |       132 |     2809.8 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       4.85 |       3.13 |    10.31 |     18.29 |   0+  2+  5 |        0 |          0 |  1000 |       229 |      307.1 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       1.12 |       1.09 |    16.73 |     18.94 |   0+  2+  5 |        0 |          0 |  1000 |       272 |      279.1 |    2 / 0 |       |
 
 
@@ -11357,7 +11368,7 @@ Size: 7.7 kB · Layers: 2 · Nets: 1 · Components: 3 · Dimensions: 35.56 x 11.
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/rufs_smart_psu/unrouted.dsn)
 
-Size: 18.9 kB · Layers: 2 · Nets: 17 · Components: 26 · Dimensions: 21.0 x 75.0 mm (15.75 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 18.9 kB · Layers: 2 · Nets: 17 · Components: 26 · Dimensions: 21 x 75 mm (15.75 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -11381,19 +11392,19 @@ Size: 17.9 kB · Layers: 2 · Nets: 8 · Components: 22 · Dimensions: 37.8 x 22
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/rvi_v2x_hardware_V2X/unrouted.dsn)
 
-Size: 108.1 kB · Layers: 2 · Nets: 116 · Components: 198 · Dimensions: 85.0 x 56.0 mm (47.6 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 108.1 kB · Layers: 2 · Nets: 116 · Components: 198 · Dimensions: 85 x 56 mm (47.6 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
 | 1.9.0     | N/A  |                N/A |        N/A |     696.73 |   167.20 |    863.93 |   0+  0+  0 |       10 |         15 |   972 |       320 |     4096.0 |   23 / 0 |         |
-| 2.4.1     | N/A  |                N/A |        N/A |     908.40 |      N/A |    908.40 |   0+  4+  0 |       38 |         21 |   895 |      1266 |  1519402.8 |    3 / 0 |         |
-| 2.5.0     | N/A  |                N/A |      34.85 |    1168.19 |      N/A |   1203.04 |   0+ 12+  0 |       87 |          0 |   759 |       378 |   418249.3 |    2 / 0 | TIMEOUT |
+| 2.4.1     | N/A  |                N/A |        N/A |     908.40 |      N/A |    908.40 |   0+  4+  0 |       38 |         21 |   894 |      1266 |  1519402.8 |    3 / 0 |         |
+| 2.5.0     | N/A  |                N/A |      34.85 |    1168.19 |      N/A |   1203.04 |   0+ 12+  0 |       87 |          0 |   759 |       378 |   418249.2 |    2 / 0 | TIMEOUT |
 | 2.6.0-RC1 | N/A  |                N/A |      55.91 |    1145.26 |      N/A |   1201.17 |   0+ 13+  0 |       81 |          0 |   776 |       437 |   415310.4 |    2 / 0 | TIMEOUT |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/RX5808_diversityModule/unrouted.dsn)
 
-Size: 27 kB · Layers: 2 · Nets: 23 · Components: 44 · Dimensions: 56.5 x 25.0 mm (14.12 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 27 kB · Layers: 2 · Nets: 23 · Components: 44 · Dimensions: 56.5 x 25 mm (14.12 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -11405,12 +11416,12 @@ Size: 27 kB · Layers: 2 · Nets: 23 · Components: 44 · Dimensions: 56.5 x 25.
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/RX5808_rx5808_4button/unrouted.dsn)
 
-Size: 38.1 kB · Layers: 2 · Nets: 20 · Components: 54 · Dimensions: 50.0 x 29.5 mm (14.75 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 38.1 kB · Layers: 2 · Nets: 20 · Components: 54 · Dimensions: 50 x 29.5 mm (14.75 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |      14.03 |   288.02 |    302.05 |   0+  0+  0 |        0 |          2 |  1000 |       167 |     4096.0 |    4 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |     124.40 |      N/A |    124.40 |   0+  1+  0 |        1 |         11 |   989 |       382 |   278586.3 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |     124.40 |      N/A |    124.40 |   0+  1+  0 |        1 |         11 |   989 |       382 |   278586.2 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       6.51 |      52.83 |     0.00 |     59.34 |   0+ 18+  0 |        1 |          0 |   990 |       172 |    14328.8 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       4.51 |      20.42 |    38.03 |     62.96 |   0+  7+  2 |        0 |          0 |  1000 |       855 |     6979.9 |    2 / 0 |       |
 
@@ -11429,19 +11440,19 @@ Size: 30.5 kB · Layers: 4 · Nets: 47 · Components: 51 · Dimensions: 32.77 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/S1G-Mod_JST_Adapter/unrouted.dsn)
 
-Size: 9.9 kB · Layers: 2 · Nets: 13 · Components: 7 · Dimensions: 30.75 x 28.0 mm (8.61 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 9.9 kB · Layers: 2 · Nets: 13 · Components: 7 · Dimensions: 30.75 x 28 mm (8.61 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       0.32 |     0.35 |      0.67 |   0+  0+  0 |        0 |          0 |  1000 |        33 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |       6.54 |      N/A |      6.54 |   0+  1+  0 |        0 |          2 |   999 |       155 |     1230.4 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       1.50 |       0.45 |     0.00 |      1.95 |   0+  2+  0 |        0 |          0 |  1000 |       121 |       67.3 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       1.50 |       0.45 |     0.00 |      1.95 |   0+  2+  0 |        0 |          0 |  1000 |       121 |       67.2 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.78 |       0.25 |     0.00 |      1.03 |   0+  2+  0 |        0 |          0 |  1000 |        76 |       83.7 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/S1G-Mod_S1G_Mod_868/unrouted.dsn)
 
-Size: 59.8 kB · Layers: 4 · Nets: 91 · Components: 91 · Dimensions: 60.0 x 33.3 mm (19.98 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 59.8 kB · Layers: 4 · Nets: 91 · Components: 91 · Dimensions: 60 x 33.3 mm (19.98 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -11471,8 +11482,20 @@ Size: 50.9 kB · Layers: 2 · Nets: 41 · Components: 154 · Dimensions: 73.15 x
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
 | 1.9.0     | N/A  |                N/A |        N/A |     448.44 |    99.41 |    547.85 |   0+  0+  0 |        8 |        164 |   966 |       127 |     4096.0 |    1 / 0 |         |
 | 2.4.1     | N/A  |                N/A |        N/A |     902.53 |      N/A |    902.53 |   0+  7+  0 |       48 |        167 |   819 |       475 |   995322.9 |    3 / 0 |         |
-| 2.5.0     | N/A  |                N/A |      11.59 |     675.72 |     0.00 |    687.31 |   0+ 18+  0 |       79 |         24 |   707 |       333 |   343522.3 |    4 / 0 |         |
+| 2.5.0     | N/A  |                N/A |      11.59 |     675.72 |     0.00 |    687.31 |   0+ 18+  0 |       79 |         24 |   707 |       333 |   343522.2 |    4 / 0 |         |
 | 2.6.0-RC1 | N/A  |                N/A |       7.03 |     596.86 |      N/A |    603.89 |   0+ 17+  0 |       44 |         24 |   836 |       509 |   460707.6 |    3 / 0 | TIMEOUT |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/sb-serial-usb_ch340/unrouted.dsn)
+
+Size: 15.1 kB · Layers: 2 · Nets: 4 · Components: 19 · Dimensions: 20 x 45 mm (9 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       6.77 |     0.86 |      7.63 |   0+  0+  0 |        2 |          0 |   955 |       137 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      19.64 |      N/A |     19.64 |   0+  6+  0 |        0 |          0 |  1000 |       240 |    20983.0 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       1.63 |       4.41 |    30.26 |     36.30 |   0+  5+  3 |        0 |          0 |  1000 |       358 |     1539.3 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       4.54 |      12.39 |    31.08 |     48.01 |   0+  5+  3 |        0 |          0 |  1000 |       411 |     1463.8 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/sbc_sbc/unrouted.dsn)
@@ -11484,19 +11507,7 @@ Size: 54.5 kB · Layers: 4 · Nets: 51 · Components: 91 · Dimensions: 67.9 x 3
 | 1.9.0     | N/A  |                N/A |        N/A |     301.11 |    76.16 |    377.27 |   0+  0+  0 |       20 |         25 |   949 |       163 |     4096.0 |    1 / 0 |         |
 | 2.4.1     | N/A  |                N/A |        N/A |     303.80 |      N/A |    303.80 |   0+  1+  0 |       98 |         24 |   681 |      1245 |   468963.0 |    5 / 0 |         |
 | 2.5.0     | N/A  |                N/A |     419.44 |     184.51 |      N/A |    603.95 |   0+  1+  0 |       81 |          0 |   737 |       282 |   146511.4 |    5 / 0 | TIMEOUT |
-| 2.6.0-RC1 | N/A  |                N/A |     309.03 |     293.52 |      N/A |    602.55 |   0+  2+  0 |       43 |          0 |   860 |       425 |   171876.6 |    5 / 0 | TIMEOUT |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/sb-serial-usb_ch340/unrouted.dsn)
-
-Size: 15.1 kB · Layers: 2 · Nets: 4 · Components: 19 · Dimensions: 20.0 x 45.0 mm (9.0 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       6.77 |     0.86 |      7.63 |   0+  0+  0 |        2 |          0 |   955 |       137 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      19.64 |      N/A |     19.64 |   0+  6+  0 |        0 |          0 |  1000 |       240 |    20983.0 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       1.63 |       4.41 |    30.26 |     36.30 |   0+  5+  3 |        0 |          0 |  1000 |       358 |     1539.3 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       4.54 |      12.39 |    31.08 |     48.01 |   0+  5+  3 |        0 |          0 |  1000 |       411 |     1463.8 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |     309.03 |     293.52 |      N/A |    602.55 |   0+  2+  0 |       43 |          0 |   860 |       425 |   171876.5 |    5 / 0 | TIMEOUT |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/scimpy_amp/unrouted.dsn)
@@ -11549,7 +11560,7 @@ Size: 22.6 kB · Layers: 2 · Nets: 14 · Components: 35 · Dimensions: 59.18 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/SensebenderMicro2_SensebenderMicro2/unrouted.dsn)
 
-Size: 28.3 kB · Layers: 2 · Nets: 17 · Components: 86 · Dimensions: 21.5 x 32.0 mm (6.88 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 28.3 kB · Layers: 2 · Nets: 17 · Components: 86 · Dimensions: 21.5 x 32 mm (6.88 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -11567,7 +11578,7 @@ Size: 24.8 kB · Layers: 2 · Nets: 11 · Components: 17 · Dimensions: 33.02 x 
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       1.43 |     6.11 |      7.54 |   0+  0+  0 |        0 |          0 |  1000 |       198 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |       6.62 |      N/A |      6.62 |   0+  2+  0 |        0 |          0 |  1000 |       178 |     3241.0 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       6.78 |      10.34 |     6.78 |     23.90 |   0+  2+  2 |        0 |          0 |  1000 |       278 |      339.5 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       6.78 |      10.34 |     6.78 |     23.90 |   0+  2+  2 |        0 |          0 |  1000 |       278 |      339.4 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       3.16 |       1.62 |     7.21 |     11.99 |   0+  2+  2 |        0 |          0 |  1000 |       124 |      304.9 |    2 / 0 |       |
 
 
@@ -11585,7 +11596,7 @@ Size: 22.7 kB · Layers: 2 · Nets: 13 · Components: 19 · Dimensions: 30.23 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Sensory_Adaptation_Bot_sa_bot/unrouted.dsn)
 
-Size: 62.3 kB · Layers: 2 · Nets: 27 · Components: 67 · Dimensions: 120.0 x 120.0 mm (144.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 62.3 kB · Layers: 2 · Nets: 27 · Components: 67 · Dimensions: 120 x 120 mm (144 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -11597,7 +11608,7 @@ Size: 62.3 kB · Layers: 2 · Nets: 27 · Components: 67 · Dimensions: 120.0 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/server_lader_server_lader/unrouted.dsn)
 
-Size: 38.2 kB · Layers: 2 · Nets: 27 · Components: 66 · Dimensions: 100.0 x 80.0 mm (80.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 38.2 kB · Layers: 2 · Nets: 27 · Components: 66 · Dimensions: 100 x 80 mm (80 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -11717,7 +11728,7 @@ Size: 19.7 kB · Layers: 2 · Nets: 4 · Components: 31 · Dimensions: 25.4 x 25
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/slushengine-modelx_slushengine_modelx/unrouted.dsn)
 
-Size: 118.8 kB · Layers: 2 · Nets: 120 · Components: 223 · Dimensions: 261.0 x 100.0 mm (261.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 118.8 kB · Layers: 2 · Nets: 120 · Components: 223 · Dimensions: 261 x 100 mm (261 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes           |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
@@ -11739,9 +11750,45 @@ Size: 37 kB · Layers: 2 · Nets: 0 · Components: 46 · Dimensions: 57.78 x 53.
 | 2.6.0-RC1 | N/A  |                N/A |       0.03 |       3.66 |     0.00 |      3.69 |   0+  3+  0 |        0 |          0 |  1000 |        87 |      581.0 |    2 / 0 |       |
 
 
+### Fixture: [unrouted.dsn](../fixtures/PCBench/smart-meter_SmartMeter/unrouted.dsn)
+
+Size: 37.3 kB · Layers: 2 · Nets: 36 · Components: 260 · Dimensions: 64.14 x 72.39 mm (46.43 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
+| 1.9.0     | N/A  |                N/A |        N/A |      36.53 |    29.43 |     65.96 |   0+  0+  0 |        2 |          7 |   992 |        45 |     4096.0 |    0 / 0 |         |
+| 2.4.1     | N/A  |                N/A |        N/A |     349.97 |      N/A |    349.97 |   0+ 23+  0 |        1 |          7 |   996 |       520 |   569434.0 |    3 / 0 |         |
+| 2.5.0     | N/A  |                N/A |       6.32 |     193.06 |     0.00 |    199.38 |   0+ 18+  0 |        6 |          0 |   977 |       282 |   107143.3 |    2 / 0 |         |
+| 2.6.0-RC1 | N/A  |                N/A |       3.57 |      97.79 |      N/A |    101.36 |   0+ 10+  0 |        2 |          0 |   981 |       423 |   450282.0 |    2 / 0 | TIMEOUT |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/Smart-Watch_BON-PCB/unrouted.dsn)
+
+Size: 4.1 kB · Layers: 2 · Nets: 1 · Components: 13 · Dimensions: 35.56 x 35.56 mm (12.65 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       0.40 |     0.47 |      0.87 |   0+  0+  0 |        0 |          6 |   992 |        44 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       1.84 |      N/A |      1.84 |   0+  1+  0 |        0 |          6 |   997 |        17 |      374.7 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       0.07 |       1.32 |     0.00 |      1.39 |   0+  2+  0 |        0 |          4 |   997 |        50 |       21.1 |    3 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       0.02 |       0.88 |     0.00 |      0.90 |   0+  2+  0 |        0 |          4 |   997 |        48 |       56.5 |    3 / 0 |       |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/Smart-Watch_SmartWatch/unrouted.dsn)
+
+Size: 37 kB · Layers: 4 · Nets: 1 · Components: 89 · Dimensions: 35.56 x 35.56 mm (12.65 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
+| 1.9.0     | N/A  |                N/A |        N/A |      30.35 |   306.00 |    336.35 |   0+  0+  0 |        0 |          4 |  1000 |       134 |     4096.0 |  120 / 0 |         |
+| 2.4.1     | N/A  |                N/A |        N/A |     301.59 |      N/A |    301.59 |   0+  4+  0 |       68 |          9 |   612 |       336 |   488364.2 |    4 / 0 |         |
+| 2.5.0     | N/A  |                N/A |      42.44 |     561.78 |      N/A |    604.22 |   0+ 13+  0 |       13 |          0 |   926 |       275 |   128337.6 |    5 / 0 | TIMEOUT |
+| 2.6.0-RC1 | N/A  |                N/A |      20.23 |      18.40 |    78.59 |    117.22 |   0+  3+  1 |        0 |          0 |  1000 |      1202 |    11784.6 |    5 / 0 |         |
+
+
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/SmartLaserCO2-PCB__autosave-SmartLaserShield/unrouted.dsn)
 
-Size: 23 kB · Layers: 2 · Nets: 0 · Components: 40 · Dimensions: 79.0 x 53.0 mm (41.87 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 23 kB · Layers: 2 · Nets: 0 · Components: 40 · Dimensions: 79 x 53 mm (41.87 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -11765,7 +11812,7 @@ Size: 9.6 kB · Layers: 2 · Nets: 0 · Components: 5 · Dimensions: 36.5 x 37.5
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/SmartLaserCO2-PCB_OptAdjust/unrouted.dsn)
 
-Size: 6.9 kB · Layers: 2 · Nets: 0 · Components: 7 · Dimensions: 42.0 x 42.0 mm (17.64 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 6.9 kB · Layers: 2 · Nets: 0 · Components: 7 · Dimensions: 42 x 42 mm (17.64 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -11777,14 +11824,14 @@ Size: 6.9 kB · Layers: 2 · Nets: 0 · Components: 7 · Dimensions: 42.0 x 42.0
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/SmartLaserCO2-PCB_SmartLaserShield/unrouted.dsn)
 
-Size: 23 kB · Layers: 2 · Nets: 0 · Components: 40 · Dimensions: 79.0 x 53.0 mm (41.87 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 23 kB · Layers: 2 · Nets: 0 · Components: 40 · Dimensions: 79 x 53 mm (41.87 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       4.80 |    42.97 |     47.77 |   0+  0+  0 |        0 |          0 |  1000 |        61 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      17.39 |      N/A |     17.39 |   0+  3+  0 |        0 |          0 |  1000 |       277 |    26581.5 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       3.76 |      60.30 |     3.92 |     67.98 |   0+ 20+  1 |        0 |          0 |  1000 |       191 |     8003.8 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       1.97 |      10.71 |    14.57 |     27.25 |   0+  3+  1 |        0 |          0 |  1000 |       376 |     2003.3 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       1.97 |      10.71 |    14.57 |     27.25 |   0+  3+  1 |        0 |          0 |  1000 |       376 |     2003.2 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/SmartLaserCO2-PCB_WaterCool/unrouted.dsn)
@@ -11801,7 +11848,7 @@ Size: 7.1 kB · Layers: 2 · Nets: 0 · Components: 9 · Dimensions: 36.58 x 37.
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/SmartLaserMiniShield_SmartLaserMiniShield/unrouted.dsn)
 
-Size: 22.3 kB · Layers: 2 · Nets: 0 · Components: 33 · Dimensions: 81.0 x 51.5 mm (41.72 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 22.3 kB · Layers: 2 · Nets: 0 · Components: 33 · Dimensions: 81 x 51.5 mm (41.72 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -11809,54 +11856,6 @@ Size: 22.3 kB · Layers: 2 · Nets: 0 · Components: 33 · Dimensions: 81.0 x 51
 | 2.4.1     | N/A  |                N/A |        N/A |       8.40 |      N/A |      8.40 |   0+  3+  0 |        0 |          0 |  1000 |       219 |    13549.0 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       1.98 |      14.49 |    11.97 |     28.44 |   0+ 17+  1 |        0 |          0 |  1000 |       407 |     3431.2 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       5.10 |       9.59 |    16.08 |     30.77 |   0+  2+  1 |        0 |          0 |  1000 |       238 |     1047.8 |    2 / 0 |       |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/smart-meter_SmartMeter/unrouted.dsn)
-
-Size: 37.3 kB · Layers: 2 · Nets: 36 · Components: 260 · Dimensions: 64.14 x 72.39 mm (46.43 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
-| 1.9.0     | N/A  |                N/A |        N/A |      36.53 |    29.43 |     65.96 |   0+  0+  0 |        2 |          7 |   992 |        45 |     4096.0 |    0 / 0 |         |
-| 2.4.1     | N/A  |                N/A |        N/A |     349.97 |      N/A |    349.97 |   0+ 23+  0 |        1 |          7 |   996 |       520 |   569434.0 |    3 / 0 |         |
-| 2.5.0     | N/A  |                N/A |       6.32 |     193.06 |     0.00 |    199.38 |   0+ 18+  0 |        6 |          0 |   977 |       282 |   107143.3 |    2 / 0 |         |
-| 2.6.0-RC1 | N/A  |                N/A |       3.57 |      97.79 |      N/A |    101.36 |   0+ 10+  0 |        2 |          0 |   981 |       423 |   450282.0 |    2 / 0 | TIMEOUT |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/Smart-Watch_BON-PCB/unrouted.dsn)
-
-Size: 4.1 kB · Layers: 2 · Nets: 1 · Components: 13 · Dimensions: 35.56 x 35.56 mm (12.65 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       0.40 |     0.47 |      0.87 |   0+  0+  0 |        0 |          6 |   993 |        44 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       1.84 |      N/A |      1.84 |   0+  1+  0 |        0 |          6 |   997 |        17 |      374.7 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       0.07 |       1.32 |     0.00 |      1.39 |   0+  2+  0 |        0 |          4 |   997 |        50 |       21.1 |    3 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       0.02 |       0.88 |     0.00 |      0.90 |   0+  2+  0 |        0 |          4 |   997 |        48 |       56.5 |    3 / 0 |       |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/Smart-Watch_SmartWatch/unrouted.dsn)
-
-Size: 37 kB · Layers: 4 · Nets: 1 · Components: 89 · Dimensions: 35.56 x 35.56 mm (12.65 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
-| 1.9.0     | N/A  |                N/A |        N/A |      30.35 |   306.00 |    336.35 |   0+  0+  0 |        0 |          4 |  1000 |       134 |     4096.0 |  120 / 0 |         |
-| 2.4.1     | N/A  |                N/A |        N/A |     301.59 |      N/A |    301.59 |   0+  4+  0 |       68 |          9 |   612 |       336 |   488364.2 |    4 / 0 |         |
-| 2.5.0     | N/A  |                N/A |      42.44 |     561.78 |      N/A |    604.22 |   0+ 13+  0 |       13 |          0 |   926 |       275 |   128337.6 |    5 / 0 | TIMEOUT |
-| 2.6.0-RC1 | N/A  |                N/A |      20.23 |      18.40 |    78.59 |    117.22 |   0+  3+  1 |        0 |          0 |  1000 |      1202 |    11784.6 |    5 / 0 |         |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/SMDBreakouts_smd_breakout/unrouted.dsn)
-
-Size: 21.5 kB · Layers: 2 · Nets: 16 · Components: 8 · Dimensions: 21.59 x 21.46 mm (4.63 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       1.24 |     3.40 |      4.64 |   0+  0+  0 |        0 |          0 |  1000 |        72 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       4.81 |      N/A |      4.81 |   0+  2+  0 |        0 |          0 |  1000 |       222 |     5029.5 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       4.97 |       0.98 |     9.87 |     15.82 |   0+  2+  3 |        0 |          0 |  1000 |       304 |      685.9 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       4.97 |       0.96 |    10.48 |     16.41 |   0+  2+  3 |        0 |          0 |  1000 |       222 |      667.9 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/SMDBreakouts_smd_breakout_quad/unrouted.dsn)
@@ -11871,33 +11870,33 @@ Size: 21.5 kB · Layers: 2 · Nets: 16 · Components: 8 · Dimensions: 21.59 x 2
 | 2.6.0-RC1 | N/A  |                N/A |       3.14 |       0.64 |    17.75 |     21.53 |   0+  2+  3 |        0 |          0 |  1000 |       214 |      712.3 |    2 / 0 |       |
 
 
+### Fixture: [unrouted.dsn](../fixtures/PCBench/SMDBreakouts_smd_breakout/unrouted.dsn)
+
+Size: 21.5 kB · Layers: 2 · Nets: 16 · Components: 8 · Dimensions: 21.59 x 21.46 mm (4.63 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       1.24 |     3.40 |      4.64 |   0+  0+  0 |        0 |          0 |  1000 |        72 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       4.81 |      N/A |      4.81 |   0+  2+  0 |        0 |          0 |  1000 |       222 |     5029.5 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       4.97 |       0.98 |     9.87 |     15.82 |   0+  2+  3 |        0 |          0 |  1000 |       304 |      685.9 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       4.97 |       0.96 |    10.48 |     16.41 |   0+  2+  3 |        0 |          0 |  1000 |       222 |      667.9 |    2 / 0 |       |
+
+
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/sms-cart-32k_cart/unrouted.dsn)
 
-Size: 21.1 kB · Layers: 2 · Nets: 0 · Components: 7 · Dimensions: 66.04 x 40.0 mm (26.42 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 21.1 kB · Layers: 2 · Nets: 0 · Components: 7 · Dimensions: 66.04 x 40 mm (26.42 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |      32.05 |     1.65 |     33.70 |   0+  0+  0 |        4 |          0 |   905 |       158 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      20.83 |      N/A |     20.83 |   0+  4+  0 |        0 |          0 |  1000 |       239 |    14836.9 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       3.26 |      27.95 |    10.64 |     41.85 |   0+  6+  2 |        0 |          0 |  1000 |       284 |     4463.3 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       3.26 |      27.95 |    10.64 |     41.85 |   0+  6+  2 |        0 |          0 |  1000 |       284 |     4463.2 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       3.32 |      29.92 |    13.44 |     46.68 |   0+  6+  2 |        0 |          0 |  1000 |       270 |     4206.2 |    2 / 0 |       |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/smt-zvs-driver_IH10/unrouted.dsn)
-
-Size: 20 kB · Layers: 2 · Nets: 0 · Components: 28 · Dimensions: 23.75 x 3.0 mm (0.71 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       3.83 |    73.20 |     77.03 |   0+  0+  0 |        0 |        464 |   886 |       191 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      75.55 |      N/A |     75.55 |   0+  1+  0 |        0 |        462 |   958 |       321 |   188753.7 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       1.91 |      11.60 |     2.32 |     15.83 |   0+  2+  1 |        0 |          0 |  1000 |       173 |     1525.1 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       1.28 |       1.06 |     1.07 |      3.41 |   0+  2+  1 |        0 |          0 |  1000 |       101 |      274.4 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/smt-zvs-driver_IH10-mc/unrouted.dsn)
 
-Size: 15 kB · Layers: 2 · Nets: 0 · Components: 30 · Dimensions: 23.75 x 3.0 mm (0.71 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 15 kB · Layers: 2 · Nets: 0 · Components: 30 · Dimensions: 23.75 x 3 mm (0.71 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -11909,7 +11908,7 @@ Size: 15 kB · Layers: 2 · Nets: 0 · Components: 30 · Dimensions: 23.75 x 3.0
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/smt-zvs-driver_IH10-sl/unrouted.dsn)
 
-Size: 13.3 kB · Layers: 2 · Nets: 0 · Components: 27 · Dimensions: 23.75 x 3.0 mm (0.71 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 13.3 kB · Layers: 2 · Nets: 0 · Components: 27 · Dimensions: 23.75 x 3 mm (0.71 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -11919,9 +11918,21 @@ Size: 13.3 kB · Layers: 2 · Nets: 0 · Components: 27 · Dimensions: 23.75 x 3
 | 2.6.0-RC1 | N/A  |                N/A |       0.85 |       0.33 |     1.16 |      2.34 |   0+  2+  2 |        0 |          0 |  1000 |       165 |      311.8 |    2 / 0 |       |
 
 
+### Fixture: [unrouted.dsn](../fixtures/PCBench/smt-zvs-driver_IH10/unrouted.dsn)
+
+Size: 20 kB · Layers: 2 · Nets: 0 · Components: 28 · Dimensions: 23.75 x 3 mm (0.71 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       3.83 |    73.20 |     77.03 |   0+  0+  0 |        0 |        464 |   886 |       191 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      75.55 |      N/A |     75.55 |   0+  1+  0 |        0 |        462 |   958 |       321 |   188753.7 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       1.91 |      11.60 |     2.32 |     15.83 |   0+  2+  1 |        0 |          0 |  1000 |       173 |     1525.1 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       1.28 |       1.06 |     1.07 |      3.41 |   0+  2+  1 |        0 |          0 |  1000 |       101 |      274.4 |    2 / 0 |       |
+
+
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/SNAP-Badge_SNAP_badge/unrouted.dsn)
 
-Size: 58.9 kB · Layers: 2 · Nets: 59 · Components: 157 · Dimensions: 63.5 x 127.0 mm (80.64 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 58.9 kB · Layers: 2 · Nets: 59 · Components: 157 · Dimensions: 63.5 x 127 mm (80.64 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes           |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
@@ -11933,7 +11944,7 @@ Size: 58.9 kB · Layers: 2 · Nets: 59 · Components: 157 · Dimensions: 63.5 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/snappi-zero_snappi-zero/unrouted.dsn)
 
-Size: 21.3 kB · Layers: 2 · Nets: 3 · Components: 13 · Dimensions: 65.0 x 33.0 mm (21.45 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 21.3 kB · Layers: 2 · Nets: 3 · Components: 13 · Dimensions: 65 x 33 mm (21.45 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -11967,21 +11978,9 @@ Size: 88 kB · Layers: 4 · Nets: 74 · Components: 132 · Dimensions: 143.76 x 
 | 2.6.0-RC1 | N/A  |                N/A |       7.29 |     594.36 |      N/A |    601.65 |   0+ 15+  0 |        6 |         12 |   975 |       441 |   146317.2 |    3 / 0 | TIMEOUT |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/Solare-BQ24210_Solare-BQ24210/unrouted.dsn)
-
-Size: 18 kB · Layers: 2 · Nets: 8 · Components: 15 · Dimensions: 27.1 x 15.9 mm (4.31 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       3.97 |     0.35 |      4.32 |   0+  0+  0 |        1 |          0 |   952 |        44 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       6.45 |      N/A |      6.45 |   0+  2+  0 |        0 |          0 |  1000 |       207 |     2916.9 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |      10.91 |       3.21 |    11.80 |     25.92 |   0+  2+  2 |        0 |          0 |  1000 |       198 |      282.8 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       4.25 |       0.53 |    15.22 |     20.00 |   0+  2+  4 |        0 |          0 |  1000 |       209 |      291.5 |    2 / 0 |       |
-
-
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/solar-lanterns_proto1/unrouted.dsn)
 
-Size: 9.9 kB · Layers: 2 · Nets: 6 · Components: 12 · Dimensions: 40.0 x 20.0 mm (8.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 9.9 kB · Layers: 2 · Nets: 6 · Components: 12 · Dimensions: 40 x 20 mm (8 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -11993,7 +11992,7 @@ Size: 9.9 kB · Layers: 2 · Nets: 6 · Components: 12 · Dimensions: 40.0 x 20.
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/solar-lora_solar-lora/unrouted.dsn)
 
-Size: 35.8 kB · Layers: 2 · Nets: 18 · Components: 64 · Dimensions: 60.0 x 60.0 mm (36.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 35.8 kB · Layers: 2 · Nets: 18 · Components: 64 · Dimensions: 60 x 60 mm (36 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -12001,6 +12000,18 @@ Size: 35.8 kB · Layers: 2 · Nets: 18 · Components: 64 · Dimensions: 60.0 x 6
 | 2.4.1     | N/A  |                N/A |        N/A |     178.44 |      N/A |    178.44 |   0+  1+  0 |       16 |         11 |   846 |       346 |   358408.1 |    3 / 0 |         |
 | 2.5.0     | N/A  |                N/A |       3.46 |     152.43 |     0.00 |    155.89 |   0+ 18+  0 |       25 |          0 |   760 |       249 |    56245.4 |    2 / 0 |         |
 | 2.6.0-RC1 | N/A  |                N/A |       3.62 |      67.80 |      N/A |     71.42 |   0+  8+  0 |       23 |          0 |   779 |       320 |   163537.2 |    2 / 0 | TIMEOUT |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/Solare-BQ24210_Solare-BQ24210/unrouted.dsn)
+
+Size: 18 kB · Layers: 2 · Nets: 8 · Components: 15 · Dimensions: 27.1 x 15.9 mm (4.31 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       3.97 |     0.35 |      4.32 |   0+  0+  0 |        1 |          0 |   952 |        44 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       6.45 |      N/A |      6.45 |   0+  2+  0 |        0 |          0 |  1000 |       207 |     2916.9 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |      10.91 |       3.21 |    11.80 |     25.92 |   0+  2+  2 |        0 |          0 |  1000 |       198 |      282.8 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       4.25 |       0.53 |    15.22 |     20.00 |   0+  2+  4 |        0 |          0 |  1000 |       209 |      291.5 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/sonic3_feram_adapter_sonic3_feram_adapter/unrouted.dsn)
@@ -12017,13 +12028,13 @@ Size: 11.7 kB · Layers: 2 · Nets: 26 · Components: 6 · Dimensions: 17.78 x 3
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/SparkSwitch_SparkProtectionSwitch/unrouted.dsn)
 
-Size: 6.8 kB · Layers: 2 · Nets: 7 · Components: 15 · Dimensions: 40.0 x 32.0 mm (12.8 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 6.8 kB · Layers: 2 · Nets: 7 · Components: 15 · Dimensions: 40 x 32 mm (12.8 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       2.12 |     0.26 |      2.38 |   0+  0+  0 |        1 |          0 |   944 |        47 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |       2.30 |      N/A |      2.30 |   0+  2+  0 |        0 |          0 |  1000 |       328 |     2492.8 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       2.62 |       0.65 |     5.13 |      8.40 |   0+  2+  2 |        0 |          0 |  1000 |       149 |      207.3 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       2.62 |       0.65 |     5.13 |      8.40 |   0+  2+  2 |        0 |          0 |  1000 |       149 |      207.2 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       2.40 |       0.91 |     3.24 |      6.55 |   0+  2+  2 |        0 |          0 |  1000 |       151 |      202.0 |    2 / 0 |       |
 
 
@@ -12041,7 +12052,7 @@ Size: 61.2 kB · Layers: 2 · Nets: 34 · Components: 120 · Dimensions: 77.2 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/SPEX_HAB_Mainboard_Hardware__autosave-Spex-Mainboard-Hardware/unrouted.dsn)
 
-Size: 74.3 kB · Layers: 4 · Nets: 93 · Components: 134 · Dimensions: 100.0 x 80.0 mm (80.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 74.3 kB · Layers: 4 · Nets: 93 · Components: 134 · Dimensions: 100 x 80 mm (80 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -12060,24 +12071,12 @@ Size: 66.1 kB · Layers: 2 · Nets: 34 · Components: 123 · Dimensions: 77.2 x 
 | 1.9.0     | N/A  |                N/A |        N/A |      90.02 |    42.07 |    132.09 |   0+  0+  0 |        1 |         28 |   993 |       158 |     4096.0 |    2 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |     304.79 |      N/A |    304.79 |   0+ 11+  0 |        2 |         28 |   989 |       517 |   525694.4 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |      12.18 |     193.32 |     0.00 |    205.50 |   0+ 18+  0 |        1 |          0 |   995 |       262 |    57429.2 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |      10.89 |     133.37 |   294.78 |    439.04 |   0+ 11+  2 |        0 |          0 |  1000 |      1371 |    40319.4 |    2 / 0 |       |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/SPEX_HAB_Mainboard_Hardware_Spex-Mainboard-Hardware/unrouted.dsn)
-
-Size: 76.8 kB · Layers: 4 · Nets: 93 · Components: 134 · Dimensions: 100.0 x 80.0 mm (80.0 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
-| 1.9.0     | N/A  |                N/A |        N/A |     103.23 |   261.72 |    364.95 |   0+  0+  0 |        0 |         12 |  1000 |       115 |     4096.0 |    0 / 0 |         |
-| 2.4.1     | N/A  |                N/A |        N/A |     309.46 |      N/A |    309.46 |   0+  3+  0 |        4 |          0 |   985 |       521 |   526603.7 |    4 / 0 | TIMEOUT |
-| 2.5.0     | N/A  |                N/A |      11.77 |      43.10 |   494.03 |    548.90 |   0+  3+  2 |        0 |          0 |  1000 |      1116 |    18329.1 |    8 / 0 |         |
-| 2.6.0-RC1 | N/A  |                N/A |      12.48 |      53.05 |   376.89 |    442.42 |   0+  3+  2 |        0 |          0 |  1000 |      1106 |    17437.4 |    8 / 0 |         |
+| 2.6.0-RC1 | N/A  |                N/A |      10.89 |     133.37 |   294.78 |    439.04 |   0+ 11+  2 |        0 |          0 |  1000 |      1371 |    40319.3 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/SPEX_HAB_Mainboard_Hardware_Spex-Mainboard-Hardware_rev1/unrouted.dsn)
 
-Size: 76.8 kB · Layers: 4 · Nets: 93 · Components: 134 · Dimensions: 100.0 x 80.0 mm (80.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 76.8 kB · Layers: 4 · Nets: 93 · Components: 134 · Dimensions: 100 x 80 mm (80 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -12087,16 +12086,16 @@ Size: 76.8 kB · Layers: 4 · Nets: 93 · Components: 134 · Dimensions: 100.0 x
 | 2.6.0-RC1 | N/A  |                N/A |      16.78 |      86.62 |   371.27 |    474.67 |   0+  3+  2 |        0 |          0 |  1000 |      1284 |    18559.5 |    8 / 0 |         |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/SpindleController_spindle_controller/unrouted.dsn)
+### Fixture: [unrouted.dsn](../fixtures/PCBench/SPEX_HAB_Mainboard_Hardware_Spex-Mainboard-Hardware/unrouted.dsn)
 
-Size: 127.2 kB · Layers: 2 · Nets: 28 · Components: 69 · Dimensions: 66.26 x 114.35 mm (75.77 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 76.8 kB · Layers: 4 · Nets: 93 · Components: 134 · Dimensions: 100 x 80 mm (80 cm²) · CAD: KiCad's Pcbnew (v)
 
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       4.80 |    10.43 |     15.23 |   0+  0+  0 |        1 |          5 |   988 |       207 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      50.43 |      N/A |     50.43 |   0+  1+  0 |        1 |          4 |   990 |       495 |    74847.6 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       1.54 |      24.45 |     0.00 |     25.99 |   0+ 25+  0 |        1 |          4 |   988 |       220 |     5764.5 |    3 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       0.35 |      22.01 |     0.00 |     22.36 |   0+ 25+  0 |        1 |          4 |   988 |       149 |    28728.4 |    3 / 0 |       |
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
+| 1.9.0     | N/A  |                N/A |        N/A |     103.23 |   261.72 |    364.95 |   0+  0+  0 |        0 |         12 |  1000 |       115 |     4096.0 |    0 / 0 |         |
+| 2.4.1     | N/A  |                N/A |        N/A |     309.46 |      N/A |    309.46 |   0+  3+  0 |        4 |          0 |   985 |       521 |   526603.7 |    4 / 0 | TIMEOUT |
+| 2.5.0     | N/A  |                N/A |      11.77 |      43.10 |   494.03 |    548.90 |   0+  3+  2 |        0 |          0 |  1000 |      1116 |    18329.1 |    8 / 0 |         |
+| 2.6.0-RC1 | N/A  |                N/A |      12.48 |      53.05 |   376.89 |    442.42 |   0+  3+  2 |        0 |          0 |  1000 |      1106 |    17437.4 |    8 / 0 |         |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/SPI-shift-register-CS_SPI shift register CS/unrouted.dsn)
@@ -12109,6 +12108,18 @@ Size: 16.3 kB · Layers: 2 · Nets: 0 · Components: 22 · Dimensions: 114.3 x 2
 | 2.4.1     | N/A  |                N/A |        N/A |      33.15 |      N/A |     33.15 |   0+  1+  0 |        1 |         22 |   984 |       336 |    43433.5 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.03 |      25.68 |     2.82 |     28.53 |   0+ 18+  1 |        0 |          0 |  1000 |       324 |     6292.0 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.08 |      12.96 |     3.98 |     17.02 |   0+  5+  1 |        0 |          0 |  1000 |       296 |     1631.7 |    2 / 0 |       |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/SpindleController_spindle_controller/unrouted.dsn)
+
+Size: 127.2 kB · Layers: 2 · Nets: 28 · Components: 69 · Dimensions: 66.26 x 114.35 mm (75.77 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       4.80 |    10.43 |     15.23 |   0+  0+  0 |        1 |          5 |   988 |       207 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      50.43 |      N/A |     50.43 |   0+  1+  0 |        1 |          4 |   990 |       495 |    74847.6 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       1.54 |      24.45 |     0.00 |     25.99 |   0+ 25+  0 |        1 |          4 |   988 |       220 |     5764.5 |    3 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       0.35 |      22.01 |     0.00 |     22.36 |   0+ 25+  0 |        1 |          4 |   988 |       149 |    28728.4 |    3 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/spisolator_spisolator/unrouted.dsn)
@@ -12137,7 +12148,7 @@ Size: 14.3 kB · Layers: 2 · Nets: 35 · Components: 51 · Dimensions: 106.68 x
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/srambo_1_srambo_1/unrouted.dsn)
 
-Size: 31.1 kB · Layers: 2 · Nets: 5 · Components: 30 · Dimensions: 113.0 x 42.0 mm (47.46 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 31.1 kB · Layers: 2 · Nets: 5 · Components: 30 · Dimensions: 113 x 42 mm (47.46 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -12149,13 +12160,13 @@ Size: 31.1 kB · Layers: 2 · Nets: 5 · Components: 30 · Dimensions: 113.0 x 4
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/ssr-wifi_adapter/unrouted.dsn)
 
-Size: 24.1 kB · Layers: 2 · Nets: 0 · Components: 25 · Dimensions: 83.0 x 86.0 mm (71.38 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 24.1 kB · Layers: 2 · Nets: 0 · Components: 25 · Dimensions: 83 x 86 mm (71.38 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       2.93 |     5.00 |      7.93 |   0+  0+  0 |        0 |          0 |  1000 |        61 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |       6.46 |      N/A |      6.46 |   0+  2+  0 |        0 |          0 |  1000 |       142 |     5872.8 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       2.29 |      10.81 |     7.56 |     20.66 |   0+  4+  2 |        0 |          0 |  1000 |       279 |     1080.9 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       2.29 |      10.81 |     7.56 |     20.66 |   0+  4+  2 |        0 |          0 |  1000 |       279 |     1080.8 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.67 |       7.05 |    14.90 |     22.62 |   0+  3+  3 |        0 |          0 |  1000 |       289 |      956.2 |    2 / 0 |       |
 
 
@@ -12173,7 +12184,7 @@ Size: 6.3 kB · Layers: 2 · Nets: 18 · Components: 3 · Dimensions: 15.24 x 22
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/starfish_starfish/unrouted.dsn)
 
-Size: 33.9 kB · Layers: 2 · Nets: 12 · Components: 41 · Dimensions: 38.0 x 24.0 mm (9.12 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 33.9 kB · Layers: 2 · Nets: 12 · Components: 41 · Dimensions: 38 x 24 mm (9.12 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -12185,7 +12196,7 @@ Size: 33.9 kB · Layers: 2 · Nets: 12 · Components: 41 · Dimensions: 38.0 x 2
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Starling__autosave-Starling WiPSU ver_0.1/unrouted.dsn)
 
-Size: 28.8 kB · Layers: 2 · Nets: 9 · Components: 26 · Dimensions: 60.0 x 19.55 mm (11.73 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 28.8 kB · Layers: 2 · Nets: 9 · Components: 26 · Dimensions: 60 x 19.55 mm (11.73 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -12233,7 +12244,7 @@ Size: 6.5 kB · Layers: 2 · Nets: 5 · Components: 9 · Dimensions: 15.24 x 24.
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/StickIt-MB_StickIt-Hat/unrouted.dsn)
 
-Size: 42 kB · Layers: 2 · Nets: 11 · Components: 42 · Dimensions: 65.0 x 56.0 mm (36.4 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 42 kB · Layers: 2 · Nets: 11 · Components: 42 · Dimensions: 65 x 56 mm (36.4 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -12257,7 +12268,7 @@ Size: 5.1 kB · Layers: 2 · Nets: 0 · Components: 2 · Dimensions: 34.8 x 15.2
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/stm32_ccd_camera_ccd/unrouted.dsn)
 
-Size: 21.3 kB · Layers: 2 · Nets: 36 · Components: 30 · Dimensions: 18.5 x 0.0 mm (0.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 21.3 kB · Layers: 2 · Nets: 36 · Components: 30 · Dimensions: 18.5 x 0 mm (0 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -12269,14 +12280,14 @@ Size: 21.3 kB · Layers: 2 · Nets: 36 · Components: 30 · Dimensions: 18.5 x 0
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/stm32_mech_keyboard_TCKB/unrouted.dsn)
 
-Size: 80.9 kB · Layers: 2 · Nets: 66 · Components: 242 · Dimensions: 285.0 x 94.6 mm (269.61 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 80.9 kB · Layers: 2 · Nets: 66 · Components: 242 · Dimensions: 285 x 94.6 mm (269.61 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes           |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
 | 1.9.0     | N/A  |                N/A |        N/A |        N/A |      N/A |       N/A |   0+  9+  1 |       33 |         46 |     0 |         0 |        0.0 |    3 / 0 | FAILED, TIMEOUT |
 | 2.4.1     | N/A  |                N/A |        N/A |     905.68 |      N/A |    905.68 |   0+  3+  0 |       52 |         46 |   841 |       591 |  1004334.0 |    3 / 0 | TIMEOUT         |
 | 2.5.0     | N/A  |                N/A |      13.14 |    1189.56 |      N/A |   1202.70 |   0+  7+  0 |       76 |          0 |   769 |       416 |   402097.5 |    2 / 0 | TIMEOUT         |
-| 2.6.0-RC1 | N/A  |                N/A |       9.43 |    1191.25 |      N/A |   1200.68 |   0+  7+  0 |       76 |          0 |   769 |       490 |   395900.3 |    2 / 0 | TIMEOUT         |
+| 2.6.0-RC1 | N/A  |                N/A |       9.43 |    1191.25 |      N/A |   1200.68 |   0+  7+  0 |       76 |          0 |   769 |       490 |   395900.2 |    2 / 0 | TIMEOUT         |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/stm32_nucleo-64_proto_shield_nucleo_pb/unrouted.dsn)
@@ -12289,30 +12300,6 @@ Size: 37.5 kB · Layers: 2 · Nets: 32 · Components: 273 · Dimensions: 91.44 x
 | 2.4.1     | N/A  |                N/A |        N/A |     120.77 |      N/A |    120.77 |   0+ 18+  0 |        2 |          0 |   994 |       301 |   238719.2 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       3.58 |      13.18 |     1.50 |     18.26 |   0+  4+  1 |        0 |          0 |  1000 |       225 |     6670.4 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       4.51 |      18.45 |    29.13 |     52.09 |   0+  4+  2 |        0 |          0 |  1000 |      1052 |     6626.5 |    2 / 0 |       |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/STM32F303_LQFP48_STM32_LQFP48/unrouted.dsn)
-
-Size: 43.2 kB · Layers: 2 · Nets: 2 · Components: 19 · Dimensions: 50.0 x 26.0 mm (13.0 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
-| 1.9.0     | N/A  |                N/A |        N/A |      28.87 |     4.17 |     33.04 |   0+  0+  0 |        2 |         45 |   959 |       144 |     4096.0 |    0 / 0 |         |
-| 2.4.1     | N/A  |                N/A |        N/A |      60.95 |      N/A |     60.95 |   0+  3+  0 |        9 |         80 |   844 |       248 |    78206.7 |    3 / 0 | TIMEOUT |
-| 2.5.0     | N/A  |                N/A |      22.99 |     102.56 |     0.00 |    125.55 |   0+ 24+  0 |        1 |          0 |   984 |       188 |    24156.6 |    2 / 0 |         |
-| 2.6.0-RC1 | N/A  |                N/A |      17.75 |      70.55 |    79.11 |    167.41 |   0+ 11+  2 |        0 |          0 |  1000 |       894 |    11321.8 |    2 / 0 |         |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/STM32F373_LQFP48_STM32_LQFP48/unrouted.dsn)
-
-Size: 42.3 kB · Layers: 2 · Nets: 2 · Components: 20 · Dimensions: 50.0 x 26.4 mm (13.2 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |      22.49 |    41.22 |     63.71 |   0+  0+  0 |        0 |          4 |   999 |       136 |     4096.0 |    3 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      60.41 |      N/A |     60.41 |   0+  1+  0 |        0 |         90 |   991 |       379 |   128614.4 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |      23.03 |      63.91 |   258.42 |    345.36 |   0+ 23+  6 |        0 |          0 |  1000 |      1268 |    16892.3 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |      16.56 |      79.58 |   235.32 |    331.46 |   0+ 18+  8 |        0 |          0 |  1000 |      1399 |    12742.4 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/stm32-lpc__autosave-stm32-lpc/unrouted.dsn)
@@ -12351,6 +12338,30 @@ Size: 37.6 kB · Layers: 2 · Nets: 63 · Components: 57 · Dimensions: 85.2 x 4
 | 2.6.0-RC1 | N/A  |                N/A |       7.96 |      17.14 |   138.00 |    163.10 |   0+  5+  3 |        0 |         15 |   999 |      1191 |     6127.7 |    3 / 0 |       |
 
 
+### Fixture: [unrouted.dsn](../fixtures/PCBench/STM32F303_LQFP48_STM32_LQFP48/unrouted.dsn)
+
+Size: 43.2 kB · Layers: 2 · Nets: 2 · Components: 19 · Dimensions: 50 x 26 mm (13 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
+| 1.9.0     | N/A  |                N/A |        N/A |      28.87 |     4.17 |     33.04 |   0+  0+  0 |        2 |         45 |   959 |       144 |     4096.0 |    0 / 0 |         |
+| 2.4.1     | N/A  |                N/A |        N/A |      60.95 |      N/A |     60.95 |   0+  3+  0 |        9 |         80 |   844 |       248 |    78206.7 |    3 / 0 | TIMEOUT |
+| 2.5.0     | N/A  |                N/A |      22.99 |     102.56 |     0.00 |    125.55 |   0+ 24+  0 |        1 |          0 |   984 |       188 |    24156.6 |    2 / 0 |         |
+| 2.6.0-RC1 | N/A  |                N/A |      17.75 |      70.55 |    79.11 |    167.41 |   0+ 11+  2 |        0 |          0 |  1000 |       894 |    11321.8 |    2 / 0 |         |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/STM32F373_LQFP48_STM32_LQFP48/unrouted.dsn)
+
+Size: 42.3 kB · Layers: 2 · Nets: 2 · Components: 20 · Dimensions: 50 x 26.4 mm (13.2 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |      22.49 |    41.22 |     63.71 |   0+  0+  0 |        0 |          4 |   999 |       136 |     4096.0 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      60.41 |      N/A |     60.41 |   0+  1+  0 |        0 |         90 |   991 |       379 |   128614.4 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |      23.03 |      63.91 |   258.42 |    345.36 |   0+ 23+  6 |        0 |          0 |  1000 |      1268 |    16892.3 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |      16.56 |      79.58 |   235.32 |    331.46 |   0+ 18+  8 |        0 |          0 |  1000 |      1399 |    12742.4 |    2 / 0 |       |
+
+
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/stubby_hex/unrouted.dsn)
 
 Size: 43.4 kB · Layers: 2 · Nets: 0 · Components: 60 · Dimensions: 49.53 x 49.53 mm (24.53 cm²) · CAD: KiCad's Pcbnew (v)
@@ -12377,7 +12388,7 @@ Size: 47.6 kB · Layers: 2 · Nets: 0 · Components: 74 · Dimensions: 49.53 x 4
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/SunLeaf_SunLeaf_V2/unrouted.dsn)
 
-Size: 75 kB · Layers: 4 · Nets: 90 · Components: 158 · Dimensions: 77.5 x 40.0 mm (31.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 75 kB · Layers: 4 · Nets: 90 · Components: 158 · Dimensions: 77.5 x 40 mm (31 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -12413,7 +12424,7 @@ Size: 13.4 kB · Layers: 2 · Nets: 25 · Components: 17 · Dimensions: 29.34 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/sweet-sixteen_sweet-sixteen/unrouted.dsn)
 
-Size: 61.3 kB · Layers: 2 · Nets: 164 · Components: 87 · Dimensions: 116.0 x 105.0 mm (121.8 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 61.3 kB · Layers: 2 · Nets: 164 · Components: 87 · Dimensions: 116 x 105 mm (121.8 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -12425,12 +12436,12 @@ Size: 61.3 kB · Layers: 2 · Nets: 164 · Components: 87 · Dimensions: 116.0 x
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/SynthDrumTrigger_Synth Drum Trigger/unrouted.dsn)
 
-Size: 9.4 kB · Layers: 2 · Nets: 15 · Components: 31 · Dimensions: 52.0 x 48.0 mm (24.96 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 9.4 kB · Layers: 2 · Nets: 15 · Components: 31 · Dimensions: 52 x 48 mm (24.96 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       1.00 |     2.90 |      3.90 |   0+  0+  0 |        0 |          0 |  1000 |        64 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       6.94 |      N/A |      6.94 |   0+  1+  0 |        1 |          0 |   974 |       292 |    10952.1 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       6.94 |      N/A |      6.94 |   0+  1+  0 |        1 |          0 |   974 |       292 |    10952.0 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.20 |       3.39 |     0.00 |      3.59 |   0+  2+  0 |        0 |          0 |  1000 |       207 |       98.7 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.06 |       2.10 |     0.00 |      2.16 |   0+  2+  0 |        0 |          0 |  1000 |        58 |      127.5 |    2 / 0 |       |
 
@@ -12473,7 +12484,7 @@ Size: 15.1 kB · Layers: 2 · Nets: 8 · Components: 12 · Dimensions: 20.27 x 1
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/TCKB_Kicad_TCKB/unrouted.dsn)
 
-Size: 98.7 kB · Layers: 2 · Nets: 92 · Components: 383 · Dimensions: 285.0 x 94.6 mm (269.61 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 98.7 kB · Layers: 2 · Nets: 92 · Components: 383 · Dimensions: 285 x 94.6 mm (269.61 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes           |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
@@ -12515,7 +12526,7 @@ Size: 25.3 kB · Layers: 2 · Nets: 47 · Components: 19 · Dimensions: 68.58 x 
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       3.00 |    15.93 |     18.93 |   0+  0+  0 |        0 |          0 |  1000 |       152 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      21.81 |      N/A |     21.81 |   0+  1+  0 |        1 |          6 |   959 |       247 |    28036.7 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       0.07 |       7.01 |    20.47 |     27.55 |   0+  4+  2 |        0 |          0 |  1000 |       472 |     1407.3 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       0.07 |       7.01 |    20.47 |     27.55 |   0+  4+  2 |        0 |          0 |  1000 |       472 |     1407.2 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.05 |       5.76 |    19.74 |     25.55 |   0+  4+  2 |        0 |          0 |  1000 |       619 |     1291.1 |    2 / 0 |       |
 
 
@@ -12538,7 +12549,7 @@ Size: 38.6 kB · Layers: 2 · Nets: 88 · Components: 42 · Dimensions: 92.96 x 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |      11.50 |    63.31 |     74.81 |   0+  0+  0 |        0 |          0 |  1000 |        52 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      21.34 |      N/A |     21.34 |   0+  5+  0 |        0 |          0 |  1000 |       292 |    51933.4 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      21.34 |      N/A |     21.34 |   0+  5+  0 |        0 |          0 |  1000 |       292 |    51933.3 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.32 |      32.36 |     0.00 |     32.68 |   0+  3+  0 |        0 |          0 |  1000 |       175 |     2771.2 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.08 |      24.52 |     0.00 |     24.60 |   0+  3+  0 |        0 |          0 |  1000 |       136 |     2505.7 |    2 / 0 |       |
 
@@ -12615,18 +12626,6 @@ Size: 18.9 kB · Layers: 2 · Nets: 14 · Components: 8 · Dimensions: 80.26 x 3
 | 2.6.0-RC1 | N/A  |                N/A |       5.12 |       6.80 |     1.71 |     13.63 |   0+  2+  1 |        0 |          0 |  1000 |       148 |      402.2 |    2 / 0 |       |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/TeensyProtoboard_TeensyProtoboard/unrouted.dsn)
-
-Size: 18.1 kB · Layers: 2 · Nets: 3 · Components: 43 · Dimensions: 48.26 x 62.23 mm (30.03 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       2.72 |     9.18 |     11.90 |   0+  0+  0 |        0 |          0 |  1000 |        50 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      10.38 |      N/A |     10.38 |   0+  2+  0 |        0 |          0 |  1000 |       167 |    13110.9 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       2.88 |       7.95 |     2.79 |     13.62 |   0+  2+  1 |        0 |          0 |  1000 |       106 |      777.4 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       1.45 |       4.21 |     8.67 |     14.33 |   0+  2+  2 |        0 |          0 |  1000 |       144 |      763.7 |    2 / 0 |       |
-
-
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/teensy-touch_teensy-touch/unrouted.dsn)
 
 Size: 13.1 kB · Layers: 2 · Nets: 20 · Components: 15 · Dimensions: 66.04 x 59.94 mm (39.58 cm²) · CAD: KiCad's Pcbnew (v)
@@ -12636,7 +12635,7 @@ Size: 13.1 kB · Layers: 2 · Nets: 20 · Components: 15 · Dimensions: 66.04 x 
 | 1.9.0     | N/A  |                N/A |        N/A |       3.40 |    10.25 |     13.65 |   0+  0+  0 |        0 |          0 |  1000 |       105 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      11.85 |      N/A |     11.85 |   0+  5+  0 |        0 |          0 |  1000 |       169 |     4932.2 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.89 |       5.78 |     9.35 |     16.02 |   0+  5+  1 |        0 |          0 |  1000 |       319 |     1289.7 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       2.08 |       7.27 |     5.09 |     14.44 |   0+  4+  1 |        0 |          0 |  1000 |       177 |      640.6 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       2.08 |       7.27 |     5.09 |     14.44 |   0+  4+  1 |        0 |          0 |  1000 |       177 |      640.5 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/teensy-weather-badge_teensyi2c/unrouted.dsn)
@@ -12660,7 +12659,19 @@ Size: 15.5 kB · Layers: 2 · Nets: 28 · Components: 12 · Dimensions: 50.95 x 
 | 1.9.0     | N/A  |                N/A |        N/A |       1.50 |     5.96 |      7.46 |   0+  0+  0 |        0 |          0 |  1000 |       158 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      10.35 |      N/A |     10.35 |   0+  1+  0 |        1 |          0 |   942 |       228 |    11034.0 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.46 |       3.76 |     3.80 |      8.02 |   0+  2+  1 |        0 |          0 |  1000 |       138 |      338.5 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       0.43 |       1.59 |     7.79 |      9.81 |   0+  2+  3 |        0 |          0 |  1000 |       212 |      305.2 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       0.43 |       1.59 |     7.79 |      9.81 |   0+  2+  3 |        0 |          0 |  1000 |       212 |      305.1 |    2 / 0 |       |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/TeensyProtoboard_TeensyProtoboard/unrouted.dsn)
+
+Size: 18.1 kB · Layers: 2 · Nets: 3 · Components: 43 · Dimensions: 48.26 x 62.23 mm (30.03 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       2.72 |     9.18 |     11.90 |   0+  0+  0 |        0 |          0 |  1000 |        50 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      10.38 |      N/A |     10.38 |   0+  2+  0 |        0 |          0 |  1000 |       167 |    13110.9 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       2.88 |       7.95 |     2.79 |     13.62 |   0+  2+  1 |        0 |          0 |  1000 |       106 |      777.4 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       1.45 |       4.21 |     8.67 |     14.33 |   0+  2+  2 |        0 |          0 |  1000 |       144 |      763.7 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/temp_logger_esp8266_temp_logger/unrouted.dsn)
@@ -12711,21 +12722,9 @@ Size: 39.8 kB · Layers: 2 · Nets: 7 · Components: 20 · Dimensions: 43.18 x 2
 | 2.6.0-RC1 | N/A  |                N/A |       1.42 |       5.55 |    19.61 |     26.58 |   0+  4+  2 |        0 |          0 |  1000 |       835 |    62010.1 |    2 / 0 |       |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/thegrid_pole/unrouted.dsn)
-
-Size: 34.1 kB · Layers: 2 · Nets: 3 · Components: 25 · Dimensions: 15.0 x 39.0 mm (5.85 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |      12.64 |     1.30 |     13.94 |   0+  0+  0 |        3 |         12 |   949 |        66 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      60.95 |      N/A |     60.95 |   0+  1+  0 |        0 |         23 |   997 |       312 |   139425.8 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       5.68 |       3.37 |    44.42 |     53.47 |   0+  2+  3 |        0 |          0 |  1000 |       463 |     1097.2 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       6.99 |      22.98 |    21.24 |     51.21 |   0+ 19+  3 |        0 |          0 |  1000 |       490 |     4635.2 |    2 / 0 |       |
-
-
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/thegrid_pole_panellised/unrouted.dsn)
 
-Size: 36.1 kB · Layers: 2 · Nets: 3 · Components: 50 · Dimensions: 15.0 x 39.0 mm (5.85 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 36.1 kB · Layers: 2 · Nets: 3 · Components: 50 · Dimensions: 15 x 39 mm (5.85 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -12735,9 +12734,21 @@ Size: 36.1 kB · Layers: 2 · Nets: 3 · Components: 50 · Dimensions: 15.0 x 39
 | 2.6.0-RC1 | N/A  |                N/A |       1.57 |       6.72 |     9.16 |     17.45 |   0+  6+  2 |        0 |         23 |   998 |       646 |    14992.0 |    3 / 0 |       |
 
 
+### Fixture: [unrouted.dsn](../fixtures/PCBench/thegrid_pole/unrouted.dsn)
+
+Size: 34.1 kB · Layers: 2 · Nets: 3 · Components: 25 · Dimensions: 15 x 39 mm (5.85 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |      12.64 |     1.30 |     13.94 |   0+  0+  0 |        3 |         12 |   949 |        66 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      60.95 |      N/A |     60.95 |   0+  1+  0 |        0 |         23 |   997 |       312 |   139425.8 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       5.68 |       3.37 |    44.42 |     53.47 |   0+  2+  3 |        0 |          0 |  1000 |       463 |     1097.2 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       6.99 |      22.98 |    21.24 |     51.21 |   0+ 19+  3 |        0 |          0 |  1000 |       490 |     4635.2 |    2 / 0 |       |
+
+
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/thegrid_shield/unrouted.dsn)
 
-Size: 41.9 kB · Layers: 2 · Nets: 38 · Components: 29 · Dimensions: 50.0 x 50.0 mm (25.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 41.9 kB · Layers: 2 · Nets: 38 · Components: 29 · Dimensions: 50 x 50 mm (25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -12761,7 +12772,7 @@ Size: 22.5 kB · Layers: 2 · Nets: 32 · Components: 54 · Dimensions: 49.78 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Theia_Theia/unrouted.dsn)
 
-Size: 14.5 kB · Layers: 2 · Nets: 0 · Components: 16 · Dimensions: 54.0 x 40.0 mm (21.6 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 14.5 kB · Layers: 2 · Nets: 0 · Components: 16 · Dimensions: 54 x 40 mm (21.6 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -12797,7 +12808,7 @@ Size: 17.8 kB · Layers: 2 · Nets: 8 · Components: 45 · Dimensions: 24.38 x 3
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/ThinkerShield_ThinkerShield/unrouted.dsn)
 
-Size: 27.9 kB · Layers: 2 · Nets: 8 · Components: 48 · Dimensions: 69.0 x 69.0 mm (47.61 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 27.9 kB · Layers: 2 · Nets: 8 · Components: 48 · Dimensions: 69 x 69 mm (47.61 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -12814,7 +12825,7 @@ Size: 36.2 kB · Layers: 2 · Nets: 23 · Components: 17 · Dimensions: 81.91 x 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       4.63 |     1.50 |      6.13 |   0+  0+  0 |        2 |          0 |   964 |        76 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      14.06 |      N/A |     14.06 |   0+  3+  0 |        0 |          0 |  1000 |       219 |    11870.1 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      14.06 |      N/A |     14.06 |   0+  3+  0 |        0 |          0 |  1000 |       219 |    11870.0 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.09 |       3.84 |     3.08 |      7.01 |   0+  3+  1 |        0 |          0 |  1000 |       125 |      857.9 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.03 |       9.28 |     3.05 |     12.36 |   0+  3+  1 |        0 |          0 |  1000 |       196 |      872.9 |    2 / 0 |       |
 
@@ -12833,7 +12844,7 @@ Size: 48.6 kB · Layers: 4 · Nets: 49 · Components: 104 · Dimensions: 40.05 x
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/timecircuits-hardware_BTTF-TimeCircuits/unrouted.dsn)
 
-Size: 41.8 kB · Layers: 2 · Nets: 58 · Components: 102 · Dimensions: 320.0 x 50.0 mm (160.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 41.8 kB · Layers: 2 · Nets: 58 · Components: 102 · Dimensions: 320 x 50 mm (160 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -12864,7 +12875,7 @@ Size: 25.6 kB · Layers: 2 · Nets: 19 · Components: 36 · Dimensions: 41.28 x 
 | 1.9.0     | N/A  |                N/A |        N/A |      26.48 |     6.89 |     33.37 |   0+  0+  0 |        1 |         21 |   978 |        75 |     4096.0 |  163 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      93.66 |      N/A |     93.66 |   0+  1+  0 |        3 |         21 |   943 |       318 |   149504.3 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       2.20 |      52.66 |     0.00 |     54.86 |   0+ 18+  0 |        2 |         13 |   960 |       143 |    19553.7 |    3 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       1.13 |      49.69 |     0.00 |     50.82 |   0+ 23+  0 |        2 |         14 |   961 |       257 |   105711.5 |    3 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       1.13 |      49.69 |     0.00 |     50.82 |   0+ 23+  0 |        2 |         14 |   961 |       257 |   105711.4 |    3 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/tinyFISH_tinyBRUSH/unrouted.dsn)
@@ -12881,7 +12892,7 @@ Size: 10.9 kB · Layers: 2 · Nets: 9 · Components: 24 · Dimensions: 13.03 x 9
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/tinyFISH_tinyFISH/unrouted.dsn)
 
-Size: 49.8 kB · Layers: 2 · Nets: 22 · Components: 88 · Dimensions: 20.0 x 20.0 mm (4.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 49.8 kB · Layers: 2 · Nets: 22 · Components: 88 · Dimensions: 20 x 20 mm (4 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -12905,7 +12916,7 @@ Size: 11.8 kB · Layers: 2 · Nets: 0 · Components: 16 · Dimensions: 36.83 x 1
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/tinymuseum_museum/unrouted.dsn)
 
-Size: 17.9 kB · Layers: 2 · Nets: 2 · Components: 18 · Dimensions: 60.0 x 45.5 mm (27.3 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 17.9 kB · Layers: 2 · Nets: 2 · Components: 18 · Dimensions: 60 x 45.5 mm (27.3 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -12917,7 +12928,7 @@ Size: 17.9 kB · Layers: 2 · Nets: 2 · Components: 18 · Dimensions: 60.0 x 45
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/TinySimon_TinySimon/unrouted.dsn)
 
-Size: 20.6 kB · Layers: 2 · Nets: 8 · Components: 20 · Dimensions: 14.33 x 0.0 mm (0.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 20.6 kB · Layers: 2 · Nets: 8 · Components: 20 · Dimensions: 14.33 x 0 mm (0 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -12929,7 +12940,7 @@ Size: 20.6 kB · Layers: 2 · Nets: 8 · Components: 20 · Dimensions: 14.33 x 0
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/TinyTracker_ub-minimal/unrouted.dsn)
 
-Size: 28.4 kB · Layers: 4 · Nets: 34 · Components: 65 · Dimensions: 38.0 x 16.0 mm (6.08 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 28.4 kB · Layers: 4 · Nets: 34 · Components: 65 · Dimensions: 38 x 16 mm (6.08 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -12941,12 +12952,12 @@ Size: 28.4 kB · Layers: 4 · Nets: 34 · Components: 65 · Dimensions: 38.0 x 1
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/TLPHnodeV2_TLPHnodeV2/unrouted.dsn)
 
-Size: 44.1 kB · Layers: 4 · Nets: 11 · Components: 35 · Dimensions: 28.0 x 20.5 mm (5.74 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 44.1 kB · Layers: 4 · Nets: 11 · Components: 35 · Dimensions: 28 x 20.5 mm (5.74 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |      14.84 |     4.65 |     19.49 |   0+  0+  0 |        2 |          7 |   975 |        85 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |     302.09 |      N/A |    302.09 |   0+  2+  0 |        0 |          7 |   999 |       375 |   620510.3 |    4 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |     302.09 |      N/A |    302.09 |   0+  2+  0 |        0 |          7 |   999 |       375 |   620510.2 |    4 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       4.28 |      27.98 |    11.69 |     43.95 |   0+ 15+  1 |        0 |          0 |  1000 |       431 |    10572.1 |    8 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       5.06 |       2.33 |     7.60 |     14.99 |   0+  2+  1 |        0 |          0 |  1000 |       473 |     1594.0 |    8 / 0 |       |
 
@@ -12977,7 +12988,7 @@ Size: 10 kB · Layers: 2 · Nets: 7 · Components: 22 · Dimensions: 18.16 x 18.
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/tmk_HHKB_controller/unrouted.dsn)
 
-Size: 42.2 kB · Layers: 2 · Nets: 35 · Components: 95 · Dimensions: 141.5 x 36.0 mm (50.94 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 42.2 kB · Layers: 2 · Nets: 35 · Components: 95 · Dimensions: 141.5 x 36 mm (50.94 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -12989,7 +13000,7 @@ Size: 42.2 kB · Layers: 2 · Nets: 35 · Components: 95 · Dimensions: 141.5 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/TOBS_HybridChargeController/unrouted.dsn)
 
-Size: 63.5 kB · Layers: 2 · Nets: 39 · Components: 103 · Dimensions: 87.0 x 87.0 mm (75.69 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 63.5 kB · Layers: 2 · Nets: 39 · Components: 103 · Dimensions: 87 x 87 mm (75.69 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -13001,7 +13012,7 @@ Size: 63.5 kB · Layers: 2 · Nets: 39 · Components: 103 · Dimensions: 87.0 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/ToslinkCNC__autosave-ToslinkCNC_OneAxis/unrouted.dsn)
 
-Size: 30.3 kB · Layers: 2 · Nets: 7 · Components: 43 · Dimensions: 50.0 x 52.0 mm (26.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 30.3 kB · Layers: 2 · Nets: 7 · Components: 43 · Dimensions: 50 x 52 mm (26 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -13013,7 +13024,7 @@ Size: 30.3 kB · Layers: 2 · Nets: 7 · Components: 43 · Dimensions: 50.0 x 52
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/ToslinkCNC_Toslink PlanetCNC ECO shield/unrouted.dsn)
 
-Size: 12.6 kB · Layers: 2 · Nets: 0 · Components: 5 · Dimensions: 59.05 x 60.0 mm (35.43 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 12.6 kB · Layers: 2 · Nets: 0 · Components: 5 · Dimensions: 59.05 x 60 mm (35.43 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -13030,26 +13041,26 @@ Size: 17 kB · Layers: 2 · Nets: 0 · Components: 20 · Dimensions: 82.1 x 53.7
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       6.95 |    55.86 |     62.81 |   0+  0+  0 |        0 |          0 |  1000 |       110 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      47.45 |      N/A |     47.45 |   0+  1+  0 |        3 |          0 |   949 |       360 |    87531.2 |    3 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      47.45 |      N/A |     47.45 |   0+  1+  0 |        3 |          0 |   949 |       360 |    87531.1 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       2.03 |      16.94 |    72.48 |     91.45 |   0+  6+  4 |        0 |          0 |  1000 |       963 |     5100.8 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       1.52 |      13.15 |    60.73 |     75.40 |   0+  6+  4 |        0 |          0 |  1000 |      1081 |     4715.3 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/TPS63001-Breakout_TPS63001 Breakout 25x25/unrouted.dsn)
 
-Size: 11.7 kB · Layers: 2 · Nets: 7 · Components: 14 · Dimensions: 25.0 x 25.0 mm (6.25 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 11.7 kB · Layers: 2 · Nets: 7 · Components: 14 · Dimensions: 25 x 25 mm (6.25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       1.81 |     0.26 |      2.07 |   0+  0+  0 |        1 |          6 |   948 |       104 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      11.31 |      N/A |     11.31 |   0+  1+  0 |        1 |          8 |   952 |       219 |    21023.3 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       1.91 |       9.41 |     2.99 |     14.31 |   0+ 16+  2 |        0 |          0 |  1000 |       159 |     1885.1 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       3.51 |       0.50 |     1.00 |      5.01 |   0+  2+  1 |        0 |          0 |  1000 |       102 |      236.4 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       3.51 |       0.50 |     1.00 |      5.01 |   0+  2+  1 |        0 |          0 |  1000 |       102 |      236.3 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/TPS63001-Breakout_TPS63001 Breakout/unrouted.dsn)
 
-Size: 12.9 kB · Layers: 2 · Nets: 7 · Components: 16 · Dimensions: 20.5 x 20.0 mm (4.1 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 12.9 kB · Layers: 2 · Nets: 7 · Components: 16 · Dimensions: 20.5 x 20 mm (4.1 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -13061,7 +13072,7 @@ Size: 12.9 kB · Layers: 2 · Nets: 7 · Components: 16 · Dimensions: 20.5 x 20
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/TripleDelay2399_TripleDelay2399/unrouted.dsn)
 
-Size: 43.1 kB · Layers: 2 · Nets: 0 · Components: 157 · Dimensions: 85.0 x 80.0 mm (68.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 43.1 kB · Layers: 2 · Nets: 0 · Components: 157 · Dimensions: 85 x 80 mm (68 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -13080,7 +13091,7 @@ Size: 49.4 kB · Layers: 4 · Nets: 71 · Components: 128 · Dimensions: 54.99 x
 | 1.9.0     | N/A  |                N/A |        N/A |     188.61 |    59.47 |    248.08 |   0+  0+  0 |        3 |          9 |   987 |        76 |     4096.0 |    0 / 0 |         |
 | 2.4.1     | N/A  |                N/A |        N/A |     307.12 |      N/A |    307.12 |   0+  6+  0 |        3 |         15 |   986 |       511 |   412904.7 |    3 / 0 | TIMEOUT |
 | 2.5.0     | N/A  |                N/A |      35.72 |     452.62 |     0.00 |    488.34 |   0+ 18+  0 |       14 |          0 |   934 |       293 |   166382.8 |    2 / 0 |         |
-| 2.6.0-RC1 | N/A  |                N/A |      19.96 |     189.49 |      N/A |    209.45 |   0+ 10+  0 |       16 |          0 |   925 |       356 |   227227.1 |    2 / 0 | TIMEOUT |
+| 2.6.0-RC1 | N/A  |                N/A |      19.96 |     189.49 |      N/A |    209.45 |   0+ 10+  0 |       16 |          0 |   925 |       356 |   227227.0 |    2 / 0 | TIMEOUT |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/TTNEnschedeMote_ArduinoNanoRN2483/unrouted.dsn)
@@ -13097,14 +13108,14 @@ Size: 13.1 kB · Layers: 2 · Nets: 2 · Components: 6 · Dimensions: 46.99 x 33
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/TurbiGnUSB_Turbidignusb/unrouted.dsn)
 
-Size: 21.5 kB · Layers: 2 · Nets: 10 · Components: 29 · Dimensions: 30.0 x 80.0 mm (24.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 21.5 kB · Layers: 2 · Nets: 10 · Components: 29 · Dimensions: 30 x 80 mm (24 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       2.85 |    44.16 |     47.01 |   0+  0+  0 |        0 |          0 |  1000 |        59 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |       6.91 |      N/A |      6.91 |   0+  3+  0 |        0 |          0 |  1000 |       239 |     8143.6 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       2.41 |      28.80 |     3.62 |     34.83 |   0+  4+  2 |        0 |          0 |  1000 |       192 |     2015.6 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       1.77 |      20.83 |     5.77 |     28.37 |   0+  4+  2 |        0 |          0 |  1000 |       201 |     1934.6 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       1.77 |      20.83 |     5.77 |     28.37 |   0+  4+  2 |        0 |          0 |  1000 |       201 |     1934.5 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/two-daisy-chained-shift-registers_two-shift-registers/unrouted.dsn)
@@ -13121,19 +13132,19 @@ Size: 31 kB · Layers: 2 · Nets: 53 · Components: 42 · Dimensions: 68.58 x 53
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/TX5823_TX5823/unrouted.dsn)
 
-Size: 70.9 kB · Layers: 4 · Nets: 90 · Components: 98 · Dimensions: 50.0 x 50.0 mm (25.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 70.9 kB · Layers: 4 · Nets: 90 · Components: 98 · Dimensions: 50 x 50 mm (25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
 | 1.9.0     | N/A  |                N/A |        N/A |     181.24 |    41.68 |    222.92 |   0+  0+  0 |        7 |        364 |   949 |        89 |     4096.0 |    2 / 0 |         |
-| 2.4.1     | N/A  |                N/A |        N/A |     303.95 |      N/A |    303.95 |   0+  8+  0 |        4 |        368 |   975 |       514 |   591430.3 |    3 / 0 |         |
+| 2.4.1     | N/A  |                N/A |        N/A |     303.95 |      N/A |    303.95 |   0+  8+  0 |        4 |        368 |   975 |       514 |   591430.2 |    3 / 0 |         |
 | 2.5.0     | N/A  |                N/A |      40.96 |     236.81 |     0.00 |    277.77 |   0+ 20+  0 |        3 |          0 |   986 |       251 |    73641.7 |    2 / 0 |         |
 | 2.6.0-RC1 | N/A  |                N/A |      21.12 |      57.80 |      N/A |     78.92 |   0+ 17+  0 |        2 |          0 |   986 |       384 |   226596.6 |    2 / 0 | TIMEOUT |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/type5_type5/unrouted.dsn)
 
-Size: 13.2 kB · Layers: 2 · Nets: 55 · Components: 4 · Dimensions: 85.0 x 70.0 mm (59.5 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 13.2 kB · Layers: 2 · Nets: 55 · Components: 4 · Dimensions: 85 x 70 mm (59.5 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -13145,7 +13156,7 @@ Size: 13.2 kB · Layers: 2 · Nets: 55 · Components: 4 · Dimensions: 85.0 x 70
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/typec-charger_TypeC-DC-Charger/unrouted.dsn)
 
-Size: 53 kB · Layers: 4 · Nets: 59 · Components: 99 · Dimensions: 48.0 x 56.0 mm (26.88 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 53 kB · Layers: 4 · Nets: 59 · Components: 99 · Dimensions: 48 x 56 mm (26.88 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -13181,7 +13192,7 @@ Size: 24 kB · Layers: 2 · Nets: 9 · Components: 22 · Dimensions: 26.61 x 14.
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/uedaino_uedaino/unrouted.dsn)
 
-Size: 25.2 kB · Layers: 2 · Nets: 2 · Components: 31 · Dimensions: 50.0 x 65.0 mm (32.5 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 25.2 kB · Layers: 2 · Nets: 2 · Components: 31 · Dimensions: 50 x 65 mm (32.5 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -13193,7 +13204,7 @@ Size: 25.2 kB · Layers: 2 · Nets: 2 · Components: 31 · Dimensions: 50.0 x 65
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/uext-esp32_UEXT_ESP32/unrouted.dsn)
 
-Size: 19 kB · Layers: 2 · Nets: 32 · Components: 10 · Dimensions: 26.5 x 24.0 mm (6.36 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 19 kB · Layers: 2 · Nets: 32 · Components: 10 · Dimensions: 26.5 x 24 mm (6.36 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -13217,7 +13228,7 @@ Size: 27.2 kB · Layers: 2 · Nets: 11 · Components: 17 · Dimensions: 40.64 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/UltrasonicSystem_Schematic/unrouted.dsn)
 
-Size: 75.6 kB · Layers: 2 · Nets: 67 · Components: 94 · Dimensions: 145.0 x 110.0 mm (159.5 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 75.6 kB · Layers: 2 · Nets: 67 · Components: 94 · Dimensions: 145 x 110 mm (159.5 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -13229,14 +13240,14 @@ Size: 75.6 kB · Layers: 2 · Nets: 67 · Components: 94 · Dimensions: 145.0 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/UniversalBoard4Nucleo_Nucleo_Universal_Board/unrouted.dsn)
 
-Size: 25.3 kB · Layers: 2 · Nets: 0 · Components: 68 · Dimensions: 70.0 x 57.54 mm (40.28 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 25.3 kB · Layers: 2 · Nets: 0 · Components: 68 · Dimensions: 70 x 57.54 mm (40.28 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       4.16 |    29.65 |     33.81 |   0+  0+  0 |        0 |          0 |  1000 |        67 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      35.40 |      N/A |     35.40 |   0+ 18+  0 |        1 |          0 |   989 |       246 |    51329.4 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.04 |       6.30 |     2.13 |      8.47 |   0+  2+  1 |        0 |          0 |  1000 |       236 |     1289.2 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       0.04 |       4.52 |     7.27 |     11.83 |   0+  2+  2 |        0 |          0 |  1000 |       366 |     1348.3 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       0.04 |       4.52 |     7.27 |     11.83 |   0+  2+  2 |        0 |          0 |  1000 |       366 |     1348.2 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/UProgrammer-Hardware_Programmer/unrouted.dsn)
@@ -13260,12 +13271,12 @@ Size: 36.2 kB · Layers: 2 · Nets: 57 · Components: 91 · Dimensions: 74.4 x 9
 | 1.9.0     | N/A  |                N/A |        N/A |      10.68 |   301.65 |    312.33 |   0+  0+  0 |        0 |          0 |  1000 |       114 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      39.84 |      N/A |     39.84 |   0+  3+  0 |        0 |          0 |  1000 |       294 |    88396.6 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       7.30 |      13.76 |    52.19 |     73.25 |   0+  4+  1 |        0 |          0 |  1000 |       748 |     5064.9 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |      10.94 |      21.49 |    47.99 |     80.42 |   0+  4+  1 |        0 |          0 |  1000 |       764 |     4701.5 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |      10.94 |      21.49 |    47.99 |     80.42 |   0+  4+  1 |        0 |          0 |  1000 |       764 |     4701.4 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/usb_rs232c_usb_rs232c_rev_a/unrouted.dsn)
 
-Size: 20 kB · Layers: 2 · Nets: 0 · Components: 33 · Dimensions: 34.7 x 14.4 mm (5.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 20 kB · Layers: 2 · Nets: 0 · Components: 33 · Dimensions: 34.7 x 14.4 mm (5 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -13275,21 +13286,9 @@ Size: 20 kB · Layers: 2 · Nets: 0 · Components: 33 · Dimensions: 34.7 x 14.4
 | 2.6.0-RC1 | N/A  |                N/A |       6.14 |       3.06 |     6.89 |     16.09 |   0+  4+  2 |        0 |          0 |  1000 |       450 |     1278.5 |    2 / 0 |       |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/usb2serial-CH340G_USB2TTL-CH340G/unrouted.dsn)
-
-Size: 14 kB · Layers: 2 · Nets: 9 · Components: 20 · Dimensions: 18.0 x 25.0 mm (4.5 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       2.48 |     1.58 |      4.06 |   0+  0+  0 |        1 |          0 |   973 |        72 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |       7.31 |      N/A |      7.31 |   0+  2+  0 |        0 |          0 |  1000 |       218 |     6698.0 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       1.75 |       0.71 |     3.26 |      5.72 |   0+  2+  2 |        0 |          0 |  1000 |       242 |      524.2 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       2.12 |       0.73 |     7.36 |     10.21 |   0+  2+  2 |        0 |          0 |  1000 |       201 |      551.1 |    2 / 0 |       |
-
-
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/USB-Adapter_USB Adapter/unrouted.dsn)
 
-Size: 12.9 kB · Layers: 2 · Nets: 10 · Components: 19 · Dimensions: 47.0 x 23.0 mm (10.81 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 12.9 kB · Layers: 2 · Nets: 10 · Components: 19 · Dimensions: 47 x 23 mm (10.81 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -13311,9 +13310,33 @@ Size: 9.6 kB · Layers: 2 · Nets: 7 · Components: 10 · Dimensions: 21.84 x 15
 | 2.6.0-RC1 | N/A  |                N/A |       8.62 |       4.80 |     2.26 |     15.68 |   0+  7+  1 |        0 |          0 |  1000 |       156 |     1947.8 |    2 / 0 |       |
 
 
+### Fixture: [unrouted.dsn](../fixtures/PCBench/USB-TypeC-breakout-board_USB-TypeC-breakout-board/unrouted.dsn)
+
+Size: 8 kB · Layers: 2 · Nets: 16 · Components: 2 · Dimensions: 50 x 50 mm (25 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |      14.77 |     0.41 |     15.18 |   0+  0+  0 |        4 |          0 |   848 |        84 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      61.09 |      N/A |     61.09 |   0+ 16+  0 |        3 |          0 |   882 |       299 |    73782.9 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       2.74 |       7.31 |    24.95 |     35.00 |   0+ 10+  5 |        0 |          0 |  1000 |       657 |     3396.2 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       1.62 |       7.07 |    39.42 |     48.11 |   0+ 10+  5 |        0 |          0 |  1000 |       566 |     3250.3 |    2 / 0 |       |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/usb2serial-CH340G_USB2TTL-CH340G/unrouted.dsn)
+
+Size: 14 kB · Layers: 2 · Nets: 9 · Components: 20 · Dimensions: 18 x 25 mm (4.5 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       2.48 |     1.58 |      4.06 |   0+  0+  0 |        1 |          0 |   973 |        72 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |       7.31 |      N/A |      7.31 |   0+  2+  0 |        0 |          0 |  1000 |       218 |     6698.0 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       1.75 |       0.71 |     3.26 |      5.72 |   0+  2+  2 |        0 |          0 |  1000 |       242 |      524.2 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       2.12 |       0.73 |     7.36 |     10.21 |   0+  2+  2 |        0 |          0 |  1000 |       201 |      551.1 |    2 / 0 |       |
+
+
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/USBtin_USBtin/unrouted.dsn)
 
-Size: 64 kB · Layers: 2 · Nets: 18 · Components: 21 · Dimensions: 32.0 x 65.0 mm (20.8 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 64 kB · Layers: 2 · Nets: 18 · Components: 21 · Dimensions: 32 x 65 mm (20.8 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -13321,18 +13344,6 @@ Size: 64 kB · Layers: 2 · Nets: 18 · Components: 21 · Dimensions: 32.0 x 65.
 | 2.4.1     | N/A  |                N/A |        N/A |      15.06 |      N/A |     15.06 |   0+  1+  0 |        2 |          0 |   951 |       230 |    20498.2 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       0.03 |       3.98 |     1.13 |      5.14 |   0+  2+  1 |        0 |          0 |  1000 |       217 |      417.7 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.09 |       4.86 |     3.34 |      8.29 |   0+  2+  2 |        0 |          0 |  1000 |       139 |      459.9 |    2 / 0 |       |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/USB-TypeC-breakout-board_USB-TypeC-breakout-board/unrouted.dsn)
-
-Size: 8 kB · Layers: 2 · Nets: 16 · Components: 2 · Dimensions: 50.0 x 50.0 mm (25.0 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |      14.77 |     0.41 |     15.18 |   0+  0+  0 |        4 |          0 |   848 |        84 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      61.09 |      N/A |     61.09 |   0+ 16+  0 |        3 |          0 |   882 |       299 |    73782.9 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       2.74 |       7.31 |    24.95 |     35.00 |   0+ 10+  5 |        0 |          0 |  1000 |       657 |     3396.3 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       1.62 |       7.07 |    39.42 |     48.11 |   0+ 10+  5 |        0 |          0 |  1000 |       566 |     3250.4 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/uSKY_uSKY/unrouted.dsn)
@@ -13361,19 +13372,19 @@ Size: 32.6 kB · Layers: 2 · Nets: 26 · Components: 57 · Dimensions: 63.55 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/vatx_vatx/unrouted.dsn)
 
-Size: 39.8 kB · Layers: 2 · Nets: 7 · Components: 31 · Dimensions: 50.0 x 50.1 mm (25.05 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 39.8 kB · Layers: 2 · Nets: 7 · Components: 31 · Dimensions: 50 x 50.1 mm (25.05 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0     | N/A  |                N/A |        N/A |       4.31 |     1.29 |      5.60 |   0+  0+  0 |        1 |          8 |   978 |       152 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |      22.68 |      N/A |     22.68 |   0+  1+  0 |        1 |          8 |   978 |       385 |    56871.3 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       1.39 |      10.83 |     0.00 |     12.22 |   0+ 18+  0 |        1 |          0 |   979 |       117 |     3611.9 |    2 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       1.39 |      10.83 |     0.00 |     12.22 |   0+ 18+  0 |        1 |          0 |   979 |       117 |     3611.8 |    2 / 0 |       |
 | 2.6.0-RC1 | N/A  |                N/A |       0.23 |       2.00 |     3.64 |      5.87 |   0+  6+  1 |        0 |          0 |  1000 |       174 |     7378.6 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/VB-IoT1_VB-IoT1_v1/unrouted.dsn)
 
-Size: 184.5 kB · Layers: 4 · Nets: 93 · Components: 178 · Dimensions: 66.0 x 86.0 mm (56.76 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 184.5 kB · Layers: 4 · Nets: 93 · Components: 178 · Dimensions: 66 x 86 mm (56.76 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes           |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
@@ -13385,7 +13396,7 @@ Size: 184.5 kB · Layers: 4 · Nets: 93 · Components: 178 · Dimensions: 66.0 x
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/VC4000MultiROM_MultiRomCard/unrouted.dsn)
 
-Size: 39.6 kB · Layers: 2 · Nets: 80 · Components: 55 · Dimensions: 160.0 x 100.0 mm (160.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 39.6 kB · Layers: 2 · Nets: 80 · Components: 55 · Dimensions: 160 x 100 mm (160 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -13397,7 +13408,7 @@ Size: 39.6 kB · Layers: 2 · Nets: 80 · Components: 55 · Dimensions: 160.0 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/vdcmon_vdcmon/unrouted.dsn)
 
-Size: 19.5 kB · Layers: 2 · Nets: 16 · Components: 48 · Dimensions: 70.0 x 60.0 mm (42.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 19.5 kB · Layers: 2 · Nets: 16 · Components: 48 · Dimensions: 70 x 60 mm (42 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -13409,7 +13420,7 @@ Size: 19.5 kB · Layers: 2 · Nets: 16 · Components: 48 · Dimensions: 70.0 x 6
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Vento_Vento/unrouted.dsn)
 
-Size: 74 kB · Layers: 4 · Nets: 64 · Components: 97 · Dimensions: 81.0 x 27.0 mm (21.87 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 74 kB · Layers: 4 · Nets: 64 · Components: 97 · Dimensions: 81 x 27 mm (21.87 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -13433,7 +13444,7 @@ Size: 30.9 kB · Layers: 4 · Nets: 43 · Components: 90 · Dimensions: 50.8 x 5
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/VM-sensor-PT1000_vm-sensor-pt100/unrouted.dsn)
 
-Size: 38.9 kB · Layers: 2 · Nets: 6 · Components: 27 · Dimensions: 36.0 x 50.5 mm (18.18 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 38.9 kB · Layers: 2 · Nets: 6 · Components: 27 · Dimensions: 36 x 50.5 mm (18.18 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -13455,18 +13466,6 @@ Size: 78.7 kB · Layers: 4 · Nets: 22 · Components: 289 · Dimensions: 55.88 x
 | 2.6.0-RC1 | N/A  |                N/A |      12.61 |     391.90 |      N/A |    404.51 |   0+  8+  0 |        7 |          0 |   975 |       414 |   317849.0 |   14 / 0 | TIMEOUT |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/wavegen_waveform-generator/unrouted.dsn)
-
-Size: 49.7 kB · Layers: 2 · Nets: 43 · Components: 57 · Dimensions: 50.8 x 50.8 mm (25.81 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |      44.49 |   268.14 |    312.63 |   0+  0+  0 |        0 |          0 |  1000 |        97 |     4096.0 |    1 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |     301.90 |      N/A |    301.90 |   0+ 17+  0 |       13 |          0 |   881 |       370 |   539602.4 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       6.69 |     106.62 |     0.00 |    113.31 |   0+ 21+  0 |        9 |          0 |   918 |       251 |    53056.2 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       7.09 |      20.93 |   249.00 |    277.02 |   0+  8+  9 |        0 |          0 |  1000 |      1736 |    13947.4 |    2 / 0 |       |
-
-
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/wavegen_waveform-generator-rev1/unrouted.dsn)
 
 Size: 44.3 kB · Layers: 2 · Nets: 33 · Components: 53 · Dimensions: 50.8 x 50.8 mm (25.81 cm²) · CAD: KiCad's Pcbnew (v)
@@ -13479,16 +13478,16 @@ Size: 44.3 kB · Layers: 2 · Nets: 33 · Components: 53 · Dimensions: 50.8 x 5
 | 2.6.0-RC1 | N/A  |                N/A |       2.36 |     175.52 |     0.00 |    177.88 |   0+ 30+  0 |        6 |          0 |   820 |       304 |   195321.7 |    2 / 0 |       |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/wavegen_wavegen/unrouted.dsn)
+### Fixture: [unrouted.dsn](../fixtures/PCBench/wavegen_waveform-generator/unrouted.dsn)
 
-Size: 44.3 kB · Layers: 2 · Nets: 33 · Components: 53 · Dimensions: 50.8 x 50.8 mm (25.81 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 49.7 kB · Layers: 2 · Nets: 43 · Components: 57 · Dimensions: 50.8 x 50.8 mm (25.81 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |      36.33 |     5.94 |     42.27 |   0+  0+  0 |        4 |          2 |   966 |       185 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |     210.96 |      N/A |    210.96 |   0+  1+  0 |        4 |          1 |   962 |       436 |   335676.1 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       4.93 |     101.13 |     0.00 |    106.06 |   0+ 18+  0 |        9 |          0 |   915 |       209 |    37389.5 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       5.42 |     113.47 |     0.00 |    118.89 |   0+ 30+  0 |        6 |          0 |   820 |       311 |   189625.2 |    2 / 0 |       |
+| 1.9.0     | N/A  |                N/A |        N/A |      44.49 |   268.14 |    312.63 |   0+  0+  0 |        0 |          0 |  1000 |        97 |     4096.0 |    1 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |     301.90 |      N/A |    301.90 |   0+ 17+  0 |       13 |          0 |   881 |       370 |   539602.4 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       6.69 |     106.62 |     0.00 |    113.31 |   0+ 21+  0 |        9 |          0 |   918 |       251 |    53056.2 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       7.09 |      20.93 |   249.00 |    277.02 |   0+  8+  9 |        0 |          0 |  1000 |      1736 |    13947.4 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/wavegen_wavegen-alt/unrouted.dsn)
@@ -13503,9 +13502,21 @@ Size: 45.6 kB · Layers: 2 · Nets: 43 · Components: 53 · Dimensions: 50.8 x 5
 | 2.6.0-RC1 | N/A  |                N/A |      37.83 |      83.27 |   150.49 |    271.59 |   0+  7+  4 |        0 |          0 |  1000 |      1452 |    16608.1 |    2 / 0 |         |
 
 
+### Fixture: [unrouted.dsn](../fixtures/PCBench/wavegen_wavegen/unrouted.dsn)
+
+Size: 44.3 kB · Layers: 2 · Nets: 33 · Components: 53 · Dimensions: 50.8 x 50.8 mm (25.81 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |      36.33 |     5.94 |     42.27 |   0+  0+  0 |        4 |          2 |   966 |       185 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |     210.96 |      N/A |    210.96 |   0+  1+  0 |        4 |          1 |   962 |       436 |   335676.1 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       4.93 |     101.13 |     0.00 |    106.06 |   0+ 18+  0 |        9 |          0 |   915 |       209 |    37389.5 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       5.42 |     113.47 |     0.00 |    118.89 |   0+ 30+  0 |        6 |          0 |   820 |       311 |   189625.2 |    2 / 0 |       |
+
+
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/WeatherSpot_vreg_pressure/unrouted.dsn)
 
-Size: 4.3 kB · Layers: 2 · Nets: 5 · Components: 6 · Dimensions: 16.0 x 14.01 mm (2.24 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 4.3 kB · Layers: 2 · Nets: 5 · Components: 6 · Dimensions: 16 x 14.01 mm (2.24 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -13553,7 +13564,7 @@ Size: 31.1 kB · Layers: 2 · Nets: 0 · Components: 69 · Dimensions: 85.73 x 8
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/wifi_pants_wifi_pants/unrouted.dsn)
 
-Size: 38.8 kB · Layers: 2 · Nets: 39 · Components: 132 · Dimensions: 65.0 x 30.0 mm (19.5 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 38.8 kB · Layers: 2 · Nets: 39 · Components: 132 · Dimensions: 65 x 30 mm (19.5 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -13584,24 +13595,12 @@ Size: 29.3 kB · Layers: 2 · Nets: 15 · Components: 52 · Dimensions: 31.75 x 
 | 1.9.0     | N/A  |                N/A |        N/A |     244.93 |     5.30 |    250.23 |   0+  0+  0 |       50 |         48 |   535 |       187 |     4096.0 |    0 / 0 |         |
 | 2.4.1     | N/A  |                N/A |        N/A |     301.12 |      N/A |    301.12 |   0+  6+  0 |       45 |          0 |   565 |       284 |   333954.8 |    3 / 0 |         |
 | 2.5.0     | N/A  |                N/A |       8.36 |     316.31 |     0.00 |    324.67 |   0+ 18+  0 |       40 |          0 |   614 |       233 |   166194.7 |    2 / 0 |         |
-| 2.6.0-RC1 | N/A  |                N/A |       3.87 |     215.88 |      N/A |    219.75 |   0+ 20+  0 |       35 |          0 |   662 |       310 |   280714.3 |    2 / 0 | TIMEOUT |
-
-
-### Fixture: [unrouted.dsn](../fixtures/PCBench/wifiLCD_wifilcd/unrouted.dsn)
-
-Size: 18.9 kB · Layers: 2 · Nets: 9 · Components: 23 · Dimensions: 30.0 x 41.0 mm (12.3 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       4.97 |    45.74 |     50.71 |   0+  0+  0 |        0 |          0 |  1000 |       151 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      61.10 |      N/A |     61.10 |   0+  1+  0 |        0 |          4 |   999 |       339 |   103557.4 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       6.01 |       4.12 |    26.32 |     36.45 |   0+  3+  5 |        0 |          0 |  1000 |       499 |     1605.2 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       5.93 |       9.45 |    15.40 |     30.78 |   0+  3+  2 |        0 |          0 |  1000 |       352 |     1438.4 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       3.87 |     215.88 |      N/A |    219.75 |   0+ 20+  0 |       35 |          0 |   662 |       310 |   280714.2 |    2 / 0 | TIMEOUT |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Wifi-Play-Board_Wifi_PB/unrouted.dsn)
 
-Size: 100.7 kB · Layers: 2 · Nets: 70 · Components: 207 · Dimensions: 100.0 x 49.7 mm (49.7 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 100.7 kB · Layers: 2 · Nets: 70 · Components: 207 · Dimensions: 100 x 49.7 mm (49.7 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -13609,6 +13608,18 @@ Size: 100.7 kB · Layers: 2 · Nets: 70 · Components: 207 · Dimensions: 100.0 
 | 2.4.1     | N/A  |                N/A |        N/A |     817.27 |      N/A |    817.27 |   0+ 20+  0 |        0 |          8 |  1000 |       605 |  1428512.6 |    3 / 0 |         |
 | 2.5.0     | N/A  |                N/A |      15.83 |     168.27 |  1019.55 |   1203.65 |   0+ 13+  3 |        0 |          0 |  1000 |      1445 |    61316.8 |    2 / 0 | TIMEOUT |
 | 2.6.0-RC1 | N/A  |                N/A |      11.23 |     135.85 |   207.28 |    354.36 |   0+ 13+  1 |        0 |          0 |  1000 |      1514 |    61613.3 |    2 / 0 |         |
+
+
+### Fixture: [unrouted.dsn](../fixtures/PCBench/wifiLCD_wifilcd/unrouted.dsn)
+
+Size: 18.9 kB · Layers: 2 · Nets: 9 · Components: 23 · Dimensions: 30 x 41 mm (12.3 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       4.97 |    45.74 |     50.71 |   0+  0+  0 |        0 |          0 |  1000 |       151 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      61.10 |      N/A |     61.10 |   0+  1+  0 |        0 |          4 |   999 |       339 |   103557.4 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       6.01 |       4.12 |    26.32 |     36.45 |   0+  3+  5 |        0 |          0 |  1000 |       499 |     1605.2 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       5.93 |       9.45 |    15.40 |     30.78 |   0+  3+  2 |        0 |          0 |  1000 |       352 |     1438.4 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Wkaku_wkaku/unrouted.dsn)
@@ -13625,7 +13636,7 @@ Size: 28.1 kB · Layers: 2 · Nets: 14 · Components: 17 · Dimensions: 45.21 x 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/wordclock_ledboard2/unrouted.dsn)
 
-Size: 22.2 kB · Layers: 2 · Nets: 100 · Components: 109 · Dimensions: 161.0 x 170.0 mm (273.7 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 22.2 kB · Layers: 2 · Nets: 100 · Components: 109 · Dimensions: 161 x 170 mm (273.7 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -13644,12 +13655,12 @@ Size: 15.8 kB · Layers: 2 · Nets: 17 · Components: 25 · Dimensions: 105.55 x
 | 1.9.0     | N/A  |                N/A |        N/A |       2.50 |     1.15 |      3.65 |   0+  0+  0 |        1 |          0 |   979 |       141 |     4096.0 |    0 / 0 |       |
 | 2.4.1     | N/A  |                N/A |        N/A |       5.64 |      N/A |      5.64 |   0+  2+  0 |        0 |          0 |  1000 |       240 |     8322.0 |    3 / 0 |       |
 | 2.5.0     | N/A  |                N/A |       3.14 |       6.03 |    28.43 |     37.60 |   0+  3+  7 |        0 |          0 |  1000 |       358 |      957.2 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       5.13 |       1.85 |    17.15 |     24.13 |   0+  3+  7 |        0 |          0 |  1000 |       442 |      911.7 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       5.13 |       1.85 |    17.15 |     24.13 |   0+  3+  7 |        0 |          0 |  1000 |       442 |      911.6 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/WS2811LEDMatrix_matrixcontrol/unrouted.dsn)
 
-Size: 34.4 kB · Layers: 2 · Nets: 30 · Components: 43 · Dimensions: 50.0 x 50.0 mm (25.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 34.4 kB · Layers: 2 · Nets: 30 · Components: 43 · Dimensions: 50 x 50 mm (25 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -13709,7 +13720,7 @@ Size: 5.3 kB · Layers: 2 · Nets: 7 · Components: 11 · Dimensions: 15.49 x 35
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/xwhatits-capsense-controller_amkey-usb/unrouted.dsn)
 
-Size: 30.2 kB · Layers: 2 · Nets: 0 · Components: 39 · Dimensions: 123.0 x 82.25 mm (101.17 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 30.2 kB · Layers: 2 · Nets: 0 · Components: 39 · Dimensions: 123 x 82.25 mm (101.17 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -13745,7 +13756,7 @@ Size: 32 kB · Layers: 2 · Nets: 0 · Components: 92 · Dimensions: 119.75 x 32
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/xwhatits-capsense-controller_model-f-3178-adaptor/unrouted.dsn)
 
-Size: 7 kB · Layers: 2 · Nets: 0 · Components: 2 · Dimensions: 127.0 x 6.5 mm (8.26 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 7 kB · Layers: 2 · Nets: 0 · Components: 2 · Dimensions: 127 x 6.5 mm (8.26 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -13757,7 +13768,7 @@ Size: 7 kB · Layers: 2 · Nets: 0 · Components: 2 · Dimensions: 127.0 x 6.5 m
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/xwhatits-capsense-controller_model-f-usb/unrouted.dsn)
 
-Size: 31.8 kB · Layers: 2 · Nets: 0 · Components: 92 · Dimensions: 140.0 x 28.5 mm (39.9 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 31.8 kB · Layers: 2 · Nets: 0 · Components: 92 · Dimensions: 140 x 28.5 mm (39.9 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -13781,7 +13792,7 @@ Size: 21.5 kB · Layers: 2 · Nets: 0 · Components: 21 · Dimensions: 45.25 x 2
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/yamsek.kicad_i2c_bridge_primary/unrouted.dsn)
 
-Size: 10.7 kB · Layers: 2 · Nets: 4 · Components: 17 · Dimensions: 16.0 x 28.0 mm (4.48 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 10.7 kB · Layers: 2 · Nets: 4 · Components: 17 · Dimensions: 16 x 28 mm (4.48 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -13793,7 +13804,7 @@ Size: 10.7 kB · Layers: 2 · Nets: 4 · Components: 17 · Dimensions: 16.0 x 28
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/yamsek.kicad_i2c_bridge_secondary/unrouted.dsn)
 
-Size: 10.1 kB · Layers: 2 · Nets: 1 · Components: 14 · Dimensions: 16.0 x 28.0 mm (4.48 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 10.1 kB · Layers: 2 · Nets: 1 · Components: 14 · Dimensions: 16 x 28 mm (4.48 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -13805,7 +13816,7 @@ Size: 10.1 kB · Layers: 2 · Nets: 1 · Components: 14 · Dimensions: 16.0 x 28
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/yamsek.kicad_matrix_attiny861a/unrouted.dsn)
 
-Size: 10.1 kB · Layers: 2 · Nets: 8 · Components: 10 · Dimensions: 16.0 x 29.0 mm (4.64 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 10.1 kB · Layers: 2 · Nets: 8 · Components: 10 · Dimensions: 16 x 29 mm (4.64 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -13817,7 +13828,7 @@ Size: 10.1 kB · Layers: 2 · Nets: 8 · Components: 10 · Dimensions: 16.0 x 29
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/yamsek.kicad_matrix_mcp23017/unrouted.dsn)
 
-Size: 10.8 kB · Layers: 2 · Nets: 17 · Components: 11 · Dimensions: 16.0 x 29.0 mm (4.64 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 10.8 kB · Layers: 2 · Nets: 17 · Components: 11 · Dimensions: 16 x 29 mm (4.64 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -13841,7 +13852,7 @@ Size: 46.2 kB · Layers: 2 · Nets: 35 · Components: 192 · Dimensions: 148.09 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Youyue-858D-plus-FAN-speed-mod_youyue-858d-plus-fan-speed-mod/unrouted.dsn)
 
-Size: 9.9 kB · Layers: 2 · Nets: 7 · Components: 22 · Dimensions: 17.0 x 30.4 mm (5.17 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 9.9 kB · Layers: 2 · Nets: 7 · Components: 22 · Dimensions: 17 x 30.4 mm (5.17 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
@@ -13863,18 +13874,6 @@ Size: 10.9 kB · Layers: 2 · Nets: 21 · Components: 14 · Dimensions: 20.3 x 4
 | 2.6.0-RC1 | N/A  |                N/A |       0.52 |       3.93 |     6.70 |     11.15 |   0+  4+  2 |        0 |          0 |  1000 |       232 |      708.5 |    2 / 0 |       |
 
 
-### Fixture: [unrouted.dsn](../fixtures/PCBench/z2amiller_sensorboard/unrouted.dsn)
-
-Size: 16.1 kB · Layers: 2 · Nets: 8 · Components: 25 · Dimensions: 48.9 x 19.31 mm (9.44 cm²) · CAD: KiCad's Pcbnew (v)
-
-| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
-| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
-| 1.9.0     | N/A  |                N/A |        N/A |       1.79 |    25.61 |     27.40 |   0+  0+  0 |        0 |          0 |  1000 |       183 |     4096.0 |    0 / 0 |       |
-| 2.4.1     | N/A  |                N/A |        N/A |      13.31 |      N/A |     13.31 |   0+  3+  0 |        0 |          0 |  1000 |       265 |    14610.8 |    3 / 0 |       |
-| 2.5.0     | N/A  |                N/A |       8.40 |       6.37 |    23.30 |     38.07 |   0+  3+  4 |        0 |          0 |  1000 |       467 |     1155.8 |    2 / 0 |       |
-| 2.6.0-RC1 | N/A  |                N/A |       8.88 |       2.78 |    24.27 |     35.93 |   0+  2+  4 |        0 |          0 |  1000 |       355 |      805.8 |    2 / 0 |       |
-
-
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/z2amiller_sensorboard_programmer/unrouted.dsn)
 
 Size: 7.4 kB · Layers: 2 · Nets: 7 · Components: 8 · Dimensions: 26.03 x 18.41 mm (4.79 cm²) · CAD: KiCad's Pcbnew (v)
@@ -13887,9 +13886,21 @@ Size: 7.4 kB · Layers: 2 · Nets: 7 · Components: 8 · Dimensions: 26.03 x 18.
 | 2.6.0-RC1 | N/A  |                N/A |       0.68 |       0.72 |     0.73 |      2.13 |   0+  2+  1 |        0 |          0 |  1000 |        46 |      108.8 |    2 / 0 |       |
 
 
+### Fixture: [unrouted.dsn](../fixtures/PCBench/z2amiller_sensorboard/unrouted.dsn)
+
+Size: 16.1 kB · Layers: 2 · Nets: 8 · Components: 25 · Dimensions: 48.9 x 19.31 mm (9.44 cm²) · CAD: KiCad's Pcbnew (v)
+
+| Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
+| :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
+| 1.9.0     | N/A  |                N/A |        N/A |       1.79 |    25.61 |     27.40 |   0+  0+  0 |        0 |          0 |  1000 |       183 |     4096.0 |    0 / 0 |       |
+| 2.4.1     | N/A  |                N/A |        N/A |      13.31 |      N/A |     13.31 |   0+  3+  0 |        0 |          0 |  1000 |       265 |    14610.8 |    3 / 0 |       |
+| 2.5.0     | N/A  |                N/A |       8.40 |       6.37 |    23.30 |     38.07 |   0+  3+  4 |        0 |          0 |  1000 |       467 |     1155.8 |    2 / 0 |       |
+| 2.6.0-RC1 | N/A  |                N/A |       8.88 |       2.78 |    24.27 |     35.93 |   0+  2+  4 |        0 |          0 |  1000 |       355 |      805.8 |    2 / 0 |       |
+
+
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/zx-sizif-128_sizif128/unrouted.dsn)
 
-Size: 129.8 kB · Layers: 2 · Nets: 28 · Components: 112 · Dimensions: 140.0 x 85.0 mm (119.0 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 129.8 kB · Layers: 2 · Nets: 28 · Components: 112 · Dimensions: 140 x 85 mm (119 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -13901,7 +13912,7 @@ Size: 129.8 kB · Layers: 2 · Nets: 28 · Components: 112 · Dimensions: 140.0 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/zx-sizif-512-ext_sizif512ext/unrouted.dsn)
 
-Size: 194.2 kB · Layers: 2 · Nets: 45 · Components: 156 · Dimensions: 213.0 x 64.0 mm (136.32 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 194.2 kB · Layers: 2 · Nets: 45 · Components: 156 · Dimensions: 213 x 64 mm (136.32 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
@@ -13925,7 +13936,7 @@ Size: 15 kB · Layers: 2 · Nets: 4 · Components: 11 · Dimensions: 21.9 x 29.5
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/zx-sizif-xxs_sizif-xxs/unrouted.dsn)
 
-Size: 89.5 kB · Layers: 2 · Nets: 23 · Components: 95 · Dimensions: 100.0 x 24.48 mm (24.48 cm²) · CAD: KiCad's Pcbnew (v)
+Size: 89.5 kB · Layers: 2 · Nets: 23 · Components: 95 · Dimensions: 100 x 24.48 mm (24.48 cm²) · CAD: KiCad's Pcbnew (v)
 
 | Version   | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
 | :-------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |

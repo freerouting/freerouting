@@ -6,7 +6,7 @@ param(
     [string]  $OutputsDir     = "$PSScriptRoot\outputs",
     [string]  $WebsiteHtml    = "$PSScriptRoot\..\..\website\benchmarks.html",
     [int]     $MaxPasses      = 500,
-    [string]  $MaxTime        = "00:30:00",
+    [string]  $MaxTime        = "01:30:00",
     [int]     $MaxThreads     = 1,
     [string]  $HeapMax        = "8g",
     [string]  $LogLevel       = "INFO",
