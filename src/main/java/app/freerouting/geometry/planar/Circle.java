@@ -162,17 +162,18 @@ public class Circle implements ConvexShape, Serializable {
    * @return a circumscribed TileShape enclosing the circle
    */
   public TileShape boundingTileWithDivisions(int quadrantDivisionCount) {
-    if (quadrantDivisionCount <= 2) {
+    if (this.radius <= 0 || quadrantDivisionCount <= 2) {
       return this.boundingOctagon();
     }
-    Line[] tangentLineArr = new Line[quadrantDivisionCount * 4];
-    for (int i = 0; i < quadrantDivisionCount; i++) {
+    int divisions = Math.min(64, quadrantDivisionCount);
+    Line[] tangentLineArr = new Line[divisions * 4];
+    for (int i = 0; i < divisions; i++) {
       // calculate the tangential points in the first quadrant
       Vector borderDelta;
       if (i == 0) {
         borderDelta = new IntVector(this.radius, 0);
       } else {
-        double currentAngle = i * Math.PI / (2.0 * quadrantDivisionCount);
+        double currentAngle = i * Math.PI / (2.0 * divisions);
         int currentX = (int) Math.ceil(Math.cos(currentAngle) * this.radius);
         int currentY = (int) Math.ceil(Math.sin(currentAngle) * this.radius);
         borderDelta = new IntVector(currentX, currentY);
@@ -181,9 +182,9 @@ public class Circle implements ConvexShape, Serializable {
       Point currentB = currentA.turn90Degree(1, this.center);
       Direction currentDirection = Direction.getInstance(currentB.differenceBy(this.center));
       Line currentTangent = new Line(currentA, currentDirection);
-      tangentLineArr[quadrantDivisionCount + i] = currentTangent;
-      tangentLineArr[2 * quadrantDivisionCount + i] = currentTangent.turn90Degree(1, this.center);
-      tangentLineArr[3 * quadrantDivisionCount + i] = currentTangent.turn90Degree(2, this.center);
+      tangentLineArr[divisions + i] = currentTangent;
+      tangentLineArr[2 * divisions + i] = currentTangent.turn90Degree(1, this.center);
+      tangentLineArr[3 * divisions + i] = currentTangent.turn90Degree(2, this.center);
       tangentLineArr[i] = currentTangent.turn90Degree(3, this.center);
     }
     return TileShape.getInstance(tangentLineArr);

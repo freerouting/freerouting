@@ -83,4 +83,16 @@ class Issue954CircularKeepoutClearanceTest extends RoutingFixtureTest {
         violationCount,
         "invalid-polygon64.dsn (true clearance 0.145 mm vs 0.200 mm rule) must report 2 violations");
   }
+
+  @Test
+  @DisplayName("Autorouting on board with circular keepouts routes cleanly")
+  void testCorneyIslandWirelessAutoroute() {
+    TestingSettings settings = new TestingSettings();
+    settings.setMaxPasses(1);
+    RoutingJob job = getRoutingJob("Issue368-CorneyIslandWireless_input_design.dsn", settings);
+    job = runRoutingJob(job);
+    assertRoutingResult(job, "Issue368-CorneyIslandWireless_input_design.dsn")
+        .exactClearanceViolations(0)
+        .check();
+  }
 }

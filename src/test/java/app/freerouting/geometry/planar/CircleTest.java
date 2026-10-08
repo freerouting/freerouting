@@ -75,4 +75,27 @@ class CircleTest {
     assertInstanceOf(Simplex.class, poly64);
     assertEquals(64, poly64.borderLineCount());
   }
+
+  @Test
+  void testZeroOrSmallRadiusReturnsOctagon() {
+    Circle zeroCircle = new Circle(Point.ZERO, 0);
+    TileShape shape0 = zeroCircle.splitToConvex()[0];
+    assertInstanceOf(IntOctagon.class, shape0);
+
+    TileShape shape0Div = zeroCircle.boundingTileWithDivisions(16);
+    assertInstanceOf(IntOctagon.class, shape0Div);
+
+    Circle smallCircle = new Circle(Point.ZERO, 15);
+    TileShape shapeSmall = smallCircle.splitToConvex()[0];
+    assertInstanceOf(IntOctagon.class, shapeSmall);
+  }
+
+  @Test
+  void testExcessiveDivisionsCapped() {
+    Circle circle = new Circle(Point.ZERO, 5000);
+    TileShape capped = circle.boundingTileWithDivisions(1000);
+    assertInstanceOf(Simplex.class, capped);
+    // 64 divisions per quadrant = 256 sides maximum
+    assertEquals(256, capped.borderLineCount());
+  }
 }
