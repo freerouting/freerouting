@@ -125,7 +125,7 @@ class Issue952FanoutIgnoredNetClassTest extends RoutingFixtureTest {
 
     RoutingJob job = getRoutingJob("Issue558-dev-board.dsn", testSettingsSource);
     job.routerSettings.autorouter.ignoreNetClasses =
-        new String[] {"kicad_default", "Power,Default"};
+        new String[] {"default", "kicad_default", "Power,Default"};
 
     runRoutingJob(job);
     assertNotNull(job.board);
