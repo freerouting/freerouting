@@ -864,6 +864,9 @@ public final class BatchOptimizer extends NamedAlgorithm {
             ? baselineTraceLength
             : boardStatisticsBefore.traces.totalWeightedLength;
     RouterCounters routerCountersBefore = new RouterCounters();
+    if (item.hasIgnoredNets()) {
+      return new ItemRouteResult(item.getId());
+    }
     routerCountersBefore.incompleteCount = calculateIncompleteCount(routingBoard);
 
     Set<Item> rippedItems = new TreeSet<>();
@@ -1167,7 +1170,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
           break;
         }
         if (currentItem instanceof Via currentVia) {
-          if (!currentVia.isUserFixed()) {
+          if (!currentVia.isUserFixed() && !currentVia.hasIgnoredNets()) {
             FloatPoint currentViaCenter = currentVia.getCenter().toFloat();
             int currentViaMinLayer = currentVia.firstLayer();
             if (currentViaCenter.x > minItemCoor.x
@@ -1196,7 +1199,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
           break;
         }
         if (currentItem instanceof Trace currentTrace) {
-          if (!currentTrace.isShoveFixed()) {
+          if (!currentTrace.isShoveFixed() && !currentTrace.hasIgnoredNets()) {
             FloatPoint firstCorner = currentTrace.firstCorner().toFloat();
             FloatPoint lastCorner = currentTrace.lastCorner().toFloat();
             FloatPoint compareCorner;
