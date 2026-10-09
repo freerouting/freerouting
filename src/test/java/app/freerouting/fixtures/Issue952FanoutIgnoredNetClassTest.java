@@ -1,12 +1,20 @@
 package app.freerouting.fixtures;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import app.freerouting.autoroute.pipeline.BatchOptimizer;
+import app.freerouting.board.actions.ItemIdGenerator;
+import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.core.RoutingJob;
+import app.freerouting.core.StoppableThread;
+import app.freerouting.io.specctra.SesReader;
+import app.freerouting.management.HeadlessBoardManager;
 import app.freerouting.rules.Net;
 import app.freerouting.settings.sources.TestingSettings;
+import java.io.InputStream;
 import java.util.Collection;
 import org.junit.jupiter.api.Test;
 
@@ -173,5 +181,54 @@ class Issue952FanoutIgnoredNetClassTest extends RoutingFixtureTest {
     // Confirm that other nets were actually routed
     long totalTraces = job.board.getTraces().size();
     assertTrue(totalTraces > 0, "Non-ignored nets should have traces routed");
+  }
+
+  @Test
+  void optimizerSkipsCandidatesFromIgnoredNetClass() throws Exception {
+    TestingSettings settings = new TestingSettings();
+    RoutingJob job = getRoutingJob("Issue508-DAC2020_bm08.dsn", settings);
+    HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
+    boardManager.loadFromSpecctraDsn(job.input.getData(), null, new ItemIdGenerator());
+    RoutingBoard board = boardManager.getRoutingBoard();
+    try (InputStream sesStream =
+        app.freerouting.TestFixtures.resolvePath("Issue508-DAC2020_bm08-routed.ses")
+            .toUri()
+            .toURL()
+            .openStream()) {
+      SesReader.read(sesStream, board);
+    }
+    board.finishAutoroute();
+    job.board = board;
+    job.thread =
+        new StoppableThread() {
+          @Override
+          protected void threadAction() {}
+        };
+
+    assertFalse(board.getTraces().isEmpty());
+
+    // Before ignoring, traces belong to active net class
+    assertFalse(board.getTraces().iterator().next().hasIgnoredNets());
+
+    // Mark kicad_default as ignored
+    board.rules.netClasses.get(0).isIgnoredByAutorouter = true;
+
+    // All traces now report having an ignored net
+    assertTrue(board.getTraces().iterator().next().hasIgnoredNets());
+
+    final int tracesBefore = board.getTraces().size();
+    final int viasBefore = board.getVias().size();
+
+    settings.setOptimizerMaxPasses(1);
+    BatchOptimizer optimizer = BatchOptimizer.create(job);
+    optimizer.runBatchLoop();
+
+    // Board remains untouched because all candidate traces were filtered out
+    assertEquals(
+        tracesBefore,
+        board.getTraces().size(),
+        "Optimizer must not modify traces of ignored net class");
+    assertEquals(
+        viasBefore, board.getVias().size(), "Optimizer must not modify vias of ignored net class");
   }
 }
