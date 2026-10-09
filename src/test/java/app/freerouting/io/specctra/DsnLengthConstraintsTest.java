@@ -8,7 +8,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.Freerouting;
 import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.drc.NetIncompletes;
+import app.freerouting.geometry.planar.Point;
+import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.NetLengthConstraint;
@@ -17,6 +22,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -294,7 +301,7 @@ class DsnLengthConstraintsTest {
   }
 
   @Test
-  void testNetIncompletesLengthViolationCalculation() throws Exception {
+  void testNetIncompletesLengthViolationCalculationForUnroutedNet() throws Exception {
     String dsn =
         createDsn(
             """
@@ -311,6 +318,89 @@ class DsnLengthConstraintsTest {
         new NetIncompletes(net.netNumber, board.getConnectableItems(net.netNumber), board);
     // Unrouted net has no completed trace, but has incompletes airlines
     // When incompletes exist, min length violation is suppressed (per DRC design)
+    assertEquals(1, incompletes.count());
     assertEquals(0.0, incompletes.getLengthViolation(), 1e-4);
+  }
+
+  @Test
+  void testNetIncompletesLengthViolationCalculationForRoutedNetExceedingMax() throws Exception {
+    String dsn =
+        createDsn(
+            """
+            (net N1 (pins U1-1 U2-1)
+              (circuit (length 5000 2000))
+            )
+            """);
+
+    RoutingBoard board = loadBoardFromString(dsn);
+    Net net = board.rules.nets.get("N1", 1);
+    assertNotNull(net);
+
+    List<Item> connectable = new ArrayList<>(board.getConnectableItems(net.netNumber));
+    assertEquals(2, connectable.size());
+    Pin pin1 = (Pin) connectable.get(0);
+    Pin pin2 = (Pin) connectable.get(1);
+    Point p1 = pin1.getCenter();
+    Point p2 = pin2.getCenter();
+
+    // Route a straight trace between U1-1 (2000, 5000) and U2-1 (8000, 5000), total length = 6000
+    // um
+    board.insertTraceWithoutCleaning(
+        new Polyline(p1, p2),
+        0,
+        net.getNetClass().getTraceHalfWidth(0),
+        new int[] {net.netNumber},
+        net.getNetClass().getTraceClearanceClass(),
+        FixedState.UNFIXED);
+
+    NetIncompletes routedIncompletes =
+        new NetIncompletes(net.netNumber, board.getConnectableItems(net.netNumber), board);
+    assertEquals(0, routedIncompletes.count());
+
+    // Trace length = 6000 um, max constraint = 5000 um -> violation = +1000 um
+    double violationDsn =
+        board.communication.coordinateTransform.boardToDsn(routedIncompletes.getLengthViolation());
+    assertEquals(1000.0, violationDsn, 1e-4);
+  }
+
+  @Test
+  void testNetIncompletesLengthViolationCalculationForRoutedNetBelowMin() throws Exception {
+    String dsn =
+        createDsn(
+            """
+            (net N1 (pins U1-1 U2-1)
+              (circuit (length 10000 8000))
+            )
+            """);
+
+    RoutingBoard board = loadBoardFromString(dsn);
+    Net net = board.rules.nets.get("N1", 1);
+    assertNotNull(net);
+
+    List<Item> connectable = new ArrayList<>(board.getConnectableItems(net.netNumber));
+    assertEquals(2, connectable.size());
+    Pin pin1 = (Pin) connectable.get(0);
+    Pin pin2 = (Pin) connectable.get(1);
+    Point p1 = pin1.getCenter();
+    Point p2 = pin2.getCenter();
+
+    // Route a straight trace between U1-1 (2000, 5000) and U2-1 (8000, 5000), total length = 6000
+    // um
+    board.insertTraceWithoutCleaning(
+        new Polyline(p1, p2),
+        0,
+        net.getNetClass().getTraceHalfWidth(0),
+        new int[] {net.netNumber},
+        net.getNetClass().getTraceClearanceClass(),
+        FixedState.UNFIXED);
+
+    NetIncompletes routedIncompletes =
+        new NetIncompletes(net.netNumber, board.getConnectableItems(net.netNumber), board);
+    assertEquals(0, routedIncompletes.count());
+
+    // Trace length = 6000 um, min constraint = 8000 um -> violation = 6000 - 8000 = -2000 um
+    double violationDsn =
+        board.communication.coordinateTransform.boardToDsn(routedIncompletes.getLengthViolation());
+    assertEquals(-2000.0, violationDsn, 1e-4);
   }
 }

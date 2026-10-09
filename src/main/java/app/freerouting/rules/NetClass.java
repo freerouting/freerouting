@@ -11,6 +11,8 @@ import java.util.Locale;
 /** Describes routing rules for individual nets. */
 public class NetClass implements Serializable, ItemInfoPrinter.Printable {
 
+  private static final long serialVersionUID = -2517890090941902562L;
+
   private final ClearanceMatrix clearanceMatrix;
   private final LayerStructure boardLayerStructure;
   private final int[] traceHalfWidthArr;

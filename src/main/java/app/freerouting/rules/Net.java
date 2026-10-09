@@ -19,6 +19,8 @@ import java.util.Locale;
 /** Describes properties for an individual electrical net. */
 public class Net implements Comparable<Net>, ItemInfoPrinter.Printable, Serializable {
 
+  private static final long serialVersionUID = -9190109295479590428L;
+
   /** The name of the net. */
   public final String name;
 

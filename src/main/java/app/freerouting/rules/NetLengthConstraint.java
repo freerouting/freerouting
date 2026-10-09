@@ -13,6 +13,8 @@ import java.io.Serializable;
  */
 public record NetLengthConstraint(double minLength, double maxLength) implements Serializable {
 
+  private static final long serialVersionUID = 1L;
+
   /** Unconstrained length instance with no minimum and no maximum limit. */
   public static final NetLengthConstraint UNCONSTRAINED = new NetLengthConstraint(0.0, 0.0);
 
