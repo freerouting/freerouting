@@ -428,6 +428,14 @@ class KiCadIpcBoardReader:
         except Exception as e:
             logger.warning(f"Could not read pads via IPC: {e}")
 
+        copper_layer_names = []
+        for lid in layer_id_to_index.keys():
+            try:
+                copper_layer_names.append(self.board.get_layer_name(lid))
+            except Exception:
+                # Layer name lookup may fail if layer ID is invalid or board API raises
+                pass
+
         # 2. Extract footprints
         try:
             footprints = self.board.get_footprints()
@@ -473,14 +481,20 @@ class KiCadIpcBoardReader:
                 if not fp_pads:
                     fp_pads = pads_by_footprint.get(fp_id, [])
                 for pad in fp_pads:
-                    pad_dict = self._serialize_pad(pad, fp.position, rotation_deg)
+                    pad_dict = self._serialize_pad(pad, fp.position, rotation_deg, copper_layer_names)
                     comp_dict["pads"].append(pad_dict)
 
                 data["components"].append(comp_dict)
         except Exception as e:
             logger.warning(f"Could not read footprints via IPC: {e}")
 
-    def _serialize_pad(self, pad: Any, fp_pos: Any, fp_rot_deg: float) -> Dict[str, Any]:
+    def _serialize_pad(
+        self,
+        pad: Any,
+        fp_pos: Any,
+        fp_rot_deg: float,
+        copper_layer_names: Optional[List[str]] = None,
+    ) -> Dict[str, Any]:
         """Serializes a single pad object."""
         net_name = pad.net.name if pad.net and pad.net.name else ""
         pad_num = str(pad.number) if pad.number is not None else ""
@@ -498,8 +512,20 @@ class KiCadIpcBoardReader:
                 drill_x = getattr(ps.drill.diameter, "x", getattr(ps.drill.diameter, "x_nm", 0))
                 drill_mm = drill_x / 1e6
 
+            # Layers
+            layers = []
+            if hasattr(ps, "layers") and ps.layers:
+                for l_enum in ps.layers:
+                    try:
+                        layers.append(self.board.get_layer_name(l_enum))
+                    except Exception:
+                        # Layer name lookup failed for enum value; skip
+                        pass
+
+            has_copper = bool(copper_layer_names and any(l in copper_layer_names for l in layers))
+
             # Determine shape and size from copper layers
-            if ps.copper_layers:
+            if ps.copper_layers and has_copper:
                 first_cl = ps.copper_layers[0]
                 shape_val = getattr(first_cl, "shape", None)
                 shape_str = str(shape_val).upper()
@@ -515,16 +541,14 @@ class KiCadIpcBoardReader:
                     size_y = getattr(first_cl.size, "y", getattr(first_cl.size, "y_nm", 1000000))
                     size_x_mm = size_x / 1e6
                     size_y_mm = size_y / 1e6
+            elif drill_mm > 0:
+                shape_name = "circle"
+                size_x_mm = drill_mm
+                size_y_mm = drill_mm
 
-            # Layers
-            layers = []
-            for l_enum in ps.layers:
-                try:
-                    layers.append(self.board.get_layer_name(l_enum))
-                except Exception:
-                    # Layer name lookup failed for enum value; skip
-                    pass
-            if not layers:
+            if copper_layer_names and drill_mm > 0 and not has_copper:
+                layers = list(copper_layer_names)
+            elif not layers:
                 layers = ["F.Cu"]
 
         # Calculate relative offset from component origin

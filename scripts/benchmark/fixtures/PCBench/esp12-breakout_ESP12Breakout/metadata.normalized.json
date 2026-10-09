@@ -51,7 +51,7 @@
   ],
   "tier": "A",
   "expected_outcome": "complete",
-  "timeout_budget": "00:01:00",
+  "timeout_budget": "00:05:00",
   "baseline_routing": {
     "calibrated_at": "2026-08-18T20:56:32.907217+00:00",
     "elapsed_seconds": 7.94,

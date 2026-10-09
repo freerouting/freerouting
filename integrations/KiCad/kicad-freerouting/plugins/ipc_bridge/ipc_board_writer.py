@@ -66,11 +66,18 @@ class KiCadIpcBoardWriter:
 
         # 1. Map net names to Net objects
         net_map: Dict[str, Any] = {}
+        unassigned_net: Optional[Any] = None
         try:
             for net in self.board.get_nets():
                 if net.name:
                     net_map[net.name] = net
-            logger.info(f"Available nets in KiCad board: {list(net_map.keys())}")
+                else:
+                    unassigned_net = net
+                    net_map[""] = net
+                    net_map["<no net>"] = net
+            logger.info(f"Indexed {len(net_map)} nets from KiCad board.")
+            if logger.isEnabledFor(logging.DEBUG):
+                logger.debug(f"Available nets in KiCad board: {list(net_map.keys())}")
         except Exception as e:
             logger.warning(f"Could not enumerate nets via IPC: {e}")
 
@@ -95,6 +102,7 @@ class KiCadIpcBoardWriter:
 
         # 3. Begin atomic transaction
         logger.info("Beginning atomic commit on KiCad board...")
+        commit = None
         try:
             commit = self.board.begin_commit()
         except Exception as e:
@@ -153,7 +161,10 @@ class KiCadIpcBoardWriter:
                 net_name = tr.get("netName", "")
                 net_obj = net_map.get(net_name)
                 if not net_obj:
-                    raise ValueError(f"Net '{net_name}' from routed trace does not exist on board; aborting write-back.")
+                    if not net_name:
+                        net_obj = unassigned_net or net_map.get("") or net_map.get("<no net>")
+                    if not net_obj:
+                        raise ValueError(f"Net '{net_name}' from routed trace does not exist on board; aborting write-back.")
                 layer_idx = tr.get("layerIndex", 0)
                 layer_enum = index_to_layer_enum.get(layer_idx, BL_F_Cu)
                 width_mm = float(tr.get("width", 0.25))
@@ -180,7 +191,10 @@ class KiCadIpcBoardWriter:
                 net_name = vj.get("netName", "")
                 net_obj = net_map.get(net_name)
                 if not net_obj:
-                    raise ValueError(f"Net '{net_name}' for via does not exist on board; aborting write-back.")
+                    if not net_name:
+                        net_obj = unassigned_net or net_map.get("") or net_map.get("<no net>")
+                    if not net_obj:
+                        raise ValueError(f"Net '{net_name}' for via does not exist on board; aborting write-back.")
                 pos = vj.get("position", {})
                 dia_mm = float(vj.get("diameter", 0.6))
                 drill_mm = float(vj.get("drill", 0.3))
@@ -216,8 +230,9 @@ class KiCadIpcBoardWriter:
                     f"Creating {created_tracks_count} track segments and "
                     f"{created_vias_count} vias via IPC..."
                 )
-                for idx, itm in enumerate(items_to_create):
-                    logger.info(f"Item {idx} before create: {itm.proto}")
+                if logger.isEnabledFor(logging.DEBUG):
+                    for idx, itm in enumerate(items_to_create):
+                        logger.debug(f"Item {idx} before create: {itm.proto}")
                 self.board.create_items(items_to_create)
 
             self.board.push_commit(commit, message=commit_message)
@@ -232,9 +247,10 @@ class KiCadIpcBoardWriter:
 
         except Exception as e:
             logger.error(f"Error during board write-back transaction: {e}", exc_info=True)
-            logger.info("Dropping (rolling back) open commit transaction...")
-            try:
-                self.board.drop_commit(commit)
-            except Exception as drop_err:
-                logger.warning(f"Could not drop commit: {drop_err}")
+            if commit is not None:
+                logger.info("Dropping (rolling back) open commit transaction...")
+                try:
+                    self.board.drop_commit(commit)
+                except Exception as drop_err:
+                    logger.warning(f"Could not drop commit: {drop_err}")
             raise

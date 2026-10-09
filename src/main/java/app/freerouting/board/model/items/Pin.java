@@ -167,7 +167,8 @@ public class Pin extends DrillItem implements Serializable {
     if (this.precalculatedShapes == null) {
       // all shapes have to be calculated  at once, because otherwise calculation
       // of fromLayer and toLayer may not be correct
-      this.precalculatedShapes = new Shape[padstack.toLayer() - padstack.fromLayer() + 1];
+      int shapeCount = Math.max(0, padstack.toLayer() - padstack.fromLayer() + 1);
+      this.precalculatedShapes = new Shape[shapeCount];
 
       Component component = board.components.get(this.getComponentId());
       if (component == null) {

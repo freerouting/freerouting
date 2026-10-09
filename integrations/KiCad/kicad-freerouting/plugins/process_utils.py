@@ -17,11 +17,22 @@ import shlex
 import subprocess
 import threading
 import textwrap
+import sys
 
-import wx
+try:
+    import wx
+except ImportError:
+    wx = None
 
-
-from .gui_helpers import wx_caption, wx_show_error
+try:
+    from gui_helpers import wx_caption, wx_show_error
+except Exception:
+    try:
+        from .gui_helpers import wx_caption, wx_show_error
+    except Exception:
+        wx_caption = "Freerouting"
+        def wx_show_error(text):
+            print(f"Error: {text}", file=sys.stderr)
 
 
 # ------------------------------------------------------------------
@@ -413,6 +424,12 @@ class LogTailer(threading.Thread):
         self.job_prefix = f"[{job_id[:6].upper()}]" if job_id else ""
         self.on_log_line = on_log_line
         self._stop_event = threading.Event()
+        self.seek_pos = 0
+        if self.log_path.is_file():
+            try:
+                self.seek_pos = self.log_path.stat().st_size
+            except Exception:
+                self.seek_pos = 0
 
     def stop(self):
         """Signal the tailer thread to stop."""
@@ -420,12 +437,7 @@ class LogTailer(threading.Thread):
 
     def run(self):
         """Read newly appended lines from log_path and invoke on_log_line."""
-        seek_pos = 0
-        if self.log_path.is_file():
-            try:
-                seek_pos = self.log_path.stat().st_size
-            except Exception:
-                seek_pos = 0
+        seek_pos = self.seek_pos
 
         skip_keywords = (
             "GET v1/",

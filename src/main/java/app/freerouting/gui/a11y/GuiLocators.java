@@ -78,6 +78,29 @@ public final class GuiLocators {
   public static final String TOOLBAR_DISPLAY_ALL = "toolbar.display.all";
   public static final String TOOLBAR_DELETE_TRACKS = "toolbar.delete_tracks";
 
+  // ---- Inspect toolbar (shown while items are selected) ----
+  /** Inspect toolbar cancel action. */
+  public static final String INSPECT_CANCEL = "inspect.cancel";
+
+  /** Inspect toolbar info action. */
+  public static final String INSPECT_INFO = "inspect.info";
+
+  /** Inspect toolbar extend-selection actions. */
+  public static final String INSPECT_EXTEND_NETS = "inspect.extend.nets";
+
+  public static final String INSPECT_EXTEND_CONNECTED_SETS = "inspect.extend.connected_sets";
+  public static final String INSPECT_EXTEND_CONNECTIONS = "inspect.extend.connections";
+  public static final String INSPECT_EXTEND_COMPONENTS = "inspect.extend.components";
+
+  /** Inspect toolbar violations toggle. */
+  public static final String INSPECT_VIOLATIONS = "inspect.violations";
+
+  /** Inspect toolbar zoom actions. */
+  public static final String INSPECT_ZOOM_SELECTION = "inspect.zoom.selection";
+
+  public static final String INSPECT_ZOOM_ALL = "inspect.zoom.all";
+  public static final String INSPECT_ZOOM_REGION = "inspect.zoom.region";
+
   // ---- Menus (wired in Phase 2 part B; declared now for a complete registry) ----
   public static final String MENU_BAR = "menu.bar";
   public static final String MENU_FILE = "menu.file";

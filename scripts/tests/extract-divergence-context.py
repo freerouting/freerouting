@@ -48,28 +48,28 @@ def normalize(entry):
     """Create a normalized key for comparison."""
     return (entry['sec'], entry['from_sec'], entry['door'], entry['from_door'])
 
-def find_divergence(log_curr, log_v19):
+def find_divergence(log_curr, log_baseline):
     print(f"Loading {log_curr}...")
     curr = extract_raw_sections(log_curr)
     print(f"  {len(curr)} RAW_SECTION entries")
 
-    print(f"Loading {log_v19}...")
-    v19 = extract_raw_sections(log_v19)
-    print(f"  {len(v19)} RAW_SECTION entries")
+    print(f"Loading {log_baseline}...")
+    baseline = extract_raw_sections(log_baseline)
+    print(f"  {len(baseline)} RAW_SECTION entries")
 
-    min_len = min(len(curr), len(v19))
+    min_len = min(len(curr), len(baseline))
     print(f"\nComparing first {min_len} entries for divergence...")
 
     for i in range(min_len):
         c = curr[i]
-        v = v19[i]
+        b = baseline[i]
         nc = normalize(c)
-        nv = normalize(v)
+        nb = normalize(b)
 
-        if nc != nv:
+        if nc != nb:
             print(f"\n*** FIRST DIVERGENCE AT POSITION {i} ***")
-            print(f"Current[{i}]:  sec={c['sec']} door={c['door']} from_door={c['from_door']} ev={c['ev']}")
-            print(f"V1.9   [{i}]:  sec={v['sec']} door={v['door']} from_door={v['from_door']} ev={v['ev']}")
+            print(f"Current [{i}]:  sec={c['sec']} door={c['door']} from_door={c['from_door']} ev={c['ev']}")
+            print(f"Baseline[{i}]:  sec={b['sec']} door={b['door']} from_door={b['from_door']} ev={b['ev']}")
 
             # Show context: 5 entries before and after
             print(f"\n--- Context: entries {max(0,i-5)} to {min(min_len-1,i+10)} ---")
@@ -79,10 +79,10 @@ def find_divergence(log_curr, log_v19):
                 e = curr[j]
                 print(f"  {marker} [{j:4d}] sec={e['sec']} door={e['door'][:60]} from_door={e['from_door'][:50]} ev={e['ev']}")
 
-            print("\nV1.9:")
-            for j in range(max(0,i-5), min(len(v19), i+11)):
+            print("\nBaseline:")
+            for j in range(max(0,i-5), min(len(baseline), i+11)):
                 marker = ">>>" if j == i else "   "
-                e = v19[j]
+                e = baseline[j]
                 print(f"  {marker} [{j:4d}] sec={e['sec']} door={e['door'][:60]} from_door={e['from_door'][:50]} ev={e['ev']}")
 
             return i
@@ -92,5 +92,5 @@ def find_divergence(log_curr, log_v19):
 
 if __name__ == '__main__':
     curr_log = sys.argv[1] if len(sys.argv) > 1 else 'logs/freerouting-current.log'
-    v19_log = sys.argv[2] if len(sys.argv) > 2 else 'logs/freerouting-v190.log'
-    find_divergence(curr_log, v19_log)
+    baseline_log = sys.argv[2] if len(sys.argv) > 2 else 'logs/freerouting-v250.log'
+    find_divergence(curr_log, baseline_log)

@@ -59,8 +59,8 @@ These tests verify the plugin's internal logic without needing KiCad:
 
 ```bash
 # Run unit tests only
-cd integrations/KiCad/kicad-freerouting
-python -m pytest tests/ -v -m "not integration"
+cd integrations/KiCad
+python -m unittest discover -s tests/ -v
 ```
 
 ### Level 2: Integration Tests (KiCad 10+ required)
