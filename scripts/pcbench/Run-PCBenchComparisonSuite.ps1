@@ -1,10 +1,10 @@
 <#
 .SYNOPSIS
-    Runs PCBench suite across multiple versions sequentially: 2.4.0-RC1, 2.2.4, and 2.3.0.
+    Runs PCBench suite across multiple versions sequentially: current and 2.5.0 baseline.
 
 .DESCRIPTION
     Compiles or verifies binaries, executes run_corpus_benchmark.py for the current branch
-    as 2.4.0-RC1, followed by freerouting-2.2.4.jar, followed by freerouting-2.3.0.jar.
+    followed by freerouting-2.5.0.jar.
     Regenerates reports after each version and on completion.
 #>
 param(
@@ -22,16 +22,12 @@ $runScript = Join-Path $scriptDir "run_corpus_benchmark.py"
 
 $versions = @(
     @{
-        Label = "2.4.0-RC1"
+        Label = "current"
         Jar   = (Join-Path $benchmarkBinDir "freerouting-current.jar")
     },
     @{
-        Label = "2.2.4"
-        Jar   = (Join-Path $benchmarkBinDir "freerouting-2.2.4.jar")
-    },
-    @{
-        Label = "2.3.0"
-        Jar   = (Join-Path $benchmarkBinDir "freerouting-2.3.0.jar")
+        Label = "2.5.0"
+        Jar   = (Join-Path $benchmarkBinDir "freerouting-2.5.0.jar")
     }
 )
 
@@ -46,7 +42,7 @@ $phaseNum = 0
 foreach ($v in $versions) {
     $phaseNum++
     Write-Host "`n========================================================================" -ForegroundColor Cyan
-    Write-Host " [Phase $phaseNum/3] Starting PCBench for $($v.Label)..." -ForegroundColor Cyan
+    Write-Host " [Phase $phaseNum/$($versions.Count)] Starting PCBench for $($v.Label)..." -ForegroundColor Cyan
     Write-Host " JAR: $($v.Jar)" -ForegroundColor Gray
     Write-Host "========================================================================`n" -ForegroundColor Cyan
 

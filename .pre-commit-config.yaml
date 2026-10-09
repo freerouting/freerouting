@@ -2,7 +2,7 @@
 # Pre-commit hooks for Freerouting (Java project)
 # This configuration defines hooks that run automatically on git commit
 # to ensure code quality and consistency.
-exclude: ^(src_v19/|docs/(issues|reference)/|.*fixtures/|examples/|.*/results/|\.DS_Store$|.*\.run/|.*\.(hs|dsn|ses|TAG|http|gradle)$|.*/OFFSETS$)
+exclude: ^(docs/(issues|reference)/|.*fixtures/|examples/|.*/results/|\.DS_Store$|.*\.run/|.*\.(hs|dsn|ses|TAG|http|gradle)$|.*/OFFSETS$)
 repos:
   # Markdown formatting
   - repo: https://github.com/executablebooks/mdformat
@@ -67,7 +67,7 @@ repos:
     hooks:
       - id: codespell
         name: CodeSpell
-        exclude: ^(src_v19/|fixtures/|docs/reference/|scripts/i18n/|scripts/benchmark/fixtures/|website/|config/checkstyle/|build/|\.gradle/|logs/|src/main/resources/app/freerouting/helpset/(de|es|fr)/|src_v19/main/resources/app/freerouting/helpset/(de|es|fr)/|.*\.(dsn|ses|frb|png|jpe?g|svg|pdf|flex|class|jar|brd|exe|dll|so)$|src/main/resources/app/freerouting/[^/]*_.*\.properties$)
+        exclude: ^(fixtures/|docs/reference/|scripts/i18n/|scripts/benchmark/fixtures/|website/|config/checkstyle/|build/|\.gradle/|logs/|src/main/resources/app/freerouting/helpset/(de|es|fr)/|.*\.(dsn|ses|frb|png|jpe?g|svg|pdf|flex|class|jar|brd|exe|dll|so)$|src/main/resources/app/freerouting/[^/]*_.*\.properties$)
         additional_dependencies:
           - tomli
 

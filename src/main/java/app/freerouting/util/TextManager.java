@@ -36,8 +36,18 @@ public class TextManager {
    * @param locale the locale for message lookup
    */
   public TextManager(Class baseClass, Locale locale) {
+    this(baseClass.getName(), locale);
+  }
+
+  /**
+   * Creates a text manager for the given base resource bundle name and locale.
+   *
+   * @param baseName the resource bundle base name
+   * @param locale the locale for message lookup
+   */
+  public TextManager(String baseName, Locale locale) {
     this.currentLocale = locale;
-    loadResourceBundle(baseClass.getName());
+    loadResourceBundle(baseName);
   }
 
   /** Formats an instant using the default timestamp pattern. */

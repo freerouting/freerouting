@@ -1,60 +1,39 @@
 package app.freerouting;
 
 import app.freerouting.analytics.FRAnalytics;
-import app.freerouting.analytics.NetworkProxyConfig;
-import app.freerouting.analytics.ProcessEnvironmentDetector;
-import app.freerouting.analytics.model.ActorType;
-import app.freerouting.analytics.model.JobLifecycleStatus;
-import app.freerouting.analytics.model.PipelineType;
 import app.freerouting.api.AppContextListener;
 import app.freerouting.api.mcp.McpApplication;
 import app.freerouting.api.mcp.McpContextListener;
 import app.freerouting.api.mcp.McpWebSocketEndpoint;
+import app.freerouting.cli.BenchmarkAndCompareCommands;
 import app.freerouting.constants.Constants;
-import app.freerouting.core.RoutingJob;
-import app.freerouting.core.RoutingJobState;
-import app.freerouting.core.results.RoutingResultManifest;
-import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.gui.board.GuiManager;
 import app.freerouting.gui.support.DefaultExceptionHandler;
-import app.freerouting.io.FileFormat;
-import app.freerouting.io.kicad.KiCadDrcReport;
-import app.freerouting.io.specctra.SesImportSummary;
-import app.freerouting.io.specctra.SesReader;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.BoardLoader;
-import app.freerouting.management.sessions.SessionManager;
 import app.freerouting.settings.ApiServerSettings;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.McpServerSettings;
-import app.freerouting.settings.RuntimeEnvironment;
 import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.CliSettings;
 import app.freerouting.settings.sources.DefaultSettings;
-import app.freerouting.settings.sources.DsnFileSettings;
 import app.freerouting.settings.sources.EnvironmentVariablesSource;
 import app.freerouting.settings.sources.JsonFileSettings;
+import app.freerouting.startup.AnalyticsBootstrap;
+import app.freerouting.startup.GlobalSettingsBootstrap;
+import app.freerouting.startup.LoggingBootstrap;
+import app.freerouting.startup.UserDataPathResolver;
 import app.freerouting.util.TextManager;
 import app.freerouting.util.VersionChecker;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.AccessDeniedException;
-import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
-import java.time.Instant;
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.LoggerContext;
 import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
 import org.eclipse.jetty.ee10.servlet.ServletHolder;
 import org.eclipse.jetty.ee10.websocket.jakarta.server.config.JakartaWebSocketServletContainerInitializer;
@@ -83,426 +62,11 @@ public class Freerouting {
   private static java.io.PrintStream originalSystemOut;
 
   private static boolean initializeCli(GlobalSettings globalSettings) {
-    if ((globalSettings.initialInputFile == null) || (globalSettings.initialOutputFile == null)) {
-      FRLogger.error(
-          "Both an input file and an output file must be specified with command line arguments "
-              + "if you are running in CLI mode.",
-          null);
-      return false;
-    }
-
-    // Start a new Freerouting session
-    var cliSession =
-        SessionManager.getInstance()
-            .createSession(
-                UUID.fromString(globalSettings.userProfileSettings.userId),
-                "Freerouting/" + globalSettings.version);
-
-    // Create a new routing job
-    RoutingJob routingJob = new RoutingJob(cliSession.id);
-
-    // Load the input file
-    DsnFileSettings inputFileSettings = null;
-    try {
-      routingJob.setInput(globalSettings.initialInputFile);
-      inputFileSettings =
-          new DsnFileSettings(routingJob.input.getData(), routingJob.input.getFilename());
-    } catch (Exception e) {
-      FRLogger.error("Couldn't load the input file '" + globalSettings.initialInputFile + "'", e);
-    }
-
-    if (routingJob.input == null) {
-      FRLogger.warn(
-          "Couldn't read the input file '" + globalSettings.initialInputFile + "', aborting.");
-      return false;
-    }
-
-    cliSession.addJob(routingJob);
-
-    var desiredOutputFile = new File(globalSettings.initialOutputFile);
-    if ((desiredOutputFile != null) && desiredOutputFile.exists()) {
-      if (!desiredOutputFile.delete()) {
-        FRLogger.warn("Couldn't delete the file '" + globalSettings.initialOutputFile + "'");
-      }
-    }
-
-    routingJob.tryToSetOutputFile(new File(globalSettings.initialOutputFile));
-
-    var settingsMerger = globalSettings.settingsMergerProtype.clone();
-    settingsMerger.addOrReplaceSources(
-        new DsnFileSettings(routingJob.input.getData(), routingJob.input.getFilename()));
-
-    if (globalSettings.initialRulesFile != null) {
-      try {
-        routingJob.setRules(globalSettings.initialRulesFile);
-        if (routingJob.rules != null && routingJob.rules.getData() != null) {
-          settingsMerger.addOrReplaceSources(
-              new app.freerouting.settings.sources.RulesFileSettings(
-                  routingJob.rules.getData(), routingJob.rules.getFilename()));
-        }
-      } catch (Exception e) {
-        FRLogger.warn(
-            "Couldn't load rules file '"
-                + globalSettings.initialRulesFile
-                + "': "
-                + e.getMessage());
-      }
-    }
-
-    routingJob.routerSettings = settingsMerger.merge();
-    routingJob.drcSettings = Freerouting.globalSettings.drcSettings.clone();
-    routingJob.state = RoutingJobState.READY_TO_START;
-
-    // Wait for the RoutingJobScheduler to finish (success, timeout, cancel, or error).
-    while (!isCliTerminalState(routingJob.state)) {
-      try {
-        Thread.sleep(500);
-      } catch (InterruptedException _) {
-        routingJob.state = RoutingJobState.CANCELLED;
-        break;
-      }
-    }
-
-    boolean outputWritten = writeCliOutputIfAvailable(globalSettings, routingJob);
-    int cliExitCode = computeCliExitCode(routingJob, outputWritten);
-    writeCliResultManifestIfRequested(globalSettings, routingJob, outputWritten, cliExitCode);
-
-    if (outputWritten
-        && (globalSettings.statistics.jobsCompleted >= 5)
-        && globalSettings.userProfileSettings.userEmail.isEmpty()) {
-      String nl = System.lineSeparator();
-      IO.println(
-          nl
-              + "╔══════════════════════════════════════════════════════════════════╗"
-              + nl
-              + "║           Thank you for using Freerouting!                       ║"
-              + nl
-              + "║                                                                  ║"
-              + nl
-              + "║  If you would like to support the project, please visit          ║"
-              + nl
-              + "║  https://www.freerouting.app/donate.html                         ║"
-              + nl
-              + "║  Every contribution helps keep this project open and active!     ║"
-              + nl
-              + "╚══════════════════════════════════════════════════════════════════╝");
-    }
-
-    // Emit consolidated batch job summary telemetry for CLI batch execution
-    try {
-      JobLifecycleStatus status =
-          switch (routingJob.state) {
-            case COMPLETED ->
-                (cliExitCode == 0 ? JobLifecycleStatus.SUCCEEDED : JobLifecycleStatus.FAILED);
-            case TIMED_OUT -> JobLifecycleStatus.TIMED_OUT;
-            case CANCELLED -> JobLifecycleStatus.CANCELLED;
-            default -> JobLifecycleStatus.FAILED;
-          };
-      String failureReason =
-          cliExitCode != 0 ? "CLI exit code " + cliExitCode + " (" + routingJob.state + ")" : null;
-      var stats = routingJob.board != null ? routingJob.board.getStatistics() : null;
-      Integer netsTotal = stats != null && stats.nets != null ? stats.nets.totalCount : null;
-      Integer netsIncomplete =
-          stats != null && stats.connections != null ? stats.connections.incompleteCount : null;
-      Integer clearanceViolations =
-          stats != null && stats.clearanceViolations != null
-              ? stats.clearanceViolations.totalCount
-              : null;
-      Float normalizedScore =
-          stats != null && routingJob.routerSettings != null
-              ? stats.getRouterScore(routingJob.routerSettings)
-              : null;
-      int totalPasses =
-          routingJob.routerSettings != null
-                  && routingJob.routerSettings.autorouter.maxPasses != null
-              ? routingJob.routerSettings.autorouter.maxPasses
-              : 0;
-      double runtimeSeconds =
-          routingJob.startedAt != null
-              ? java.time.Duration.between(routingJob.startedAt, java.time.Instant.now()).toMillis()
-                  / 1000.0
-              : 0.0;
-      String inputBasename =
-          globalSettings.initialInputFile != null
-              ? java.nio.file.Path.of(globalSettings.initialInputFile).getFileName().toString()
-              : "unknown.dsn";
-
-      FRAnalytics.recordBatchJobSummary(
-          routingJob.id.toString(),
-          cliSession.id.toString(),
-          inputBasename,
-          cliExitCode,
-          status,
-          failureReason,
-          netsTotal,
-          netsIncomplete,
-          clearanceViolations,
-          normalizedScore,
-          totalPasses,
-          runtimeSeconds,
-          routingJob.resourceUsage.cpuTimeUsed,
-          routingJob.resourceUsage.peakMemoryUsed,
-          routingJob.getDetectedHost(),
-          null);
-      FRAnalytics.flush(1500);
-    } catch (Throwable ex) {
-      FRLogger.warn("Failed to record batch job summary: " + ex.getMessage());
-    }
-
-    globalSettings.cliExitCode = cliExitCode;
-    return cliExitCode == 0;
-  }
-
-  private static boolean isCliTerminalState(RoutingJobState state) {
-    return state == RoutingJobState.COMPLETED
-        || state == RoutingJobState.TERMINATED
-        || state == RoutingJobState.TIMED_OUT
-        || state == RoutingJobState.CANCELLED;
-  }
-
-  private static boolean writeCliOutputIfAvailable(
-      GlobalSettings globalSettings, RoutingJob routingJob) {
-    if (routingJob.output == null || routingJob.output.getData() == null) {
-      return false;
-    }
-    if (routingJob.state != RoutingJobState.COMPLETED
-        && routingJob.state != RoutingJobState.TIMED_OUT) {
-      return false;
-    }
-
-    boolean anyWritten = false;
-    try {
-      Path outputFilePath = Path.of(globalSettings.initialOutputFile);
-      FRLogger.info(
-          "Saving output file '"
-              + outputFilePath.toAbsolutePath()
-              + "' ("
-              + routingJob.output.format
-              + ")...");
-      Files.write(outputFilePath, routingJob.output.getData().readAllBytes());
-      if (Files.exists(outputFilePath) && Files.size(outputFilePath) > 0) {
-        FRLogger.info(
-            "Successfully saved output file '"
-                + outputFilePath.toAbsolutePath()
-                + "' ("
-                + Files.size(outputFilePath)
-                + " bytes).");
-        anyWritten = true;
-      }
-    } catch (IOException e) {
-      FRLogger.error("Couldn't save the output file '" + globalSettings.initialOutputFile + "'", e);
-    }
-
-    // Write any additional output files specified via -do (multi-format support)
-    if (globalSettings.additionalOutputFiles != null
-        && !globalSettings.additionalOutputFiles.isEmpty()
-        && routingJob.board != null) {
-      for (String addPathStr : globalSettings.additionalOutputFiles) {
-        try {
-          Path addPath = Path.of(addPathStr);
-          FileFormat fmt = RoutingJob.getFileFormat(addPath);
-          if (fmt == FileFormat.UNKNOWN) {
-            String lower = addPathStr.toLowerCase(Locale.ROOT);
-            if (lower.endsWith(".drc.json") || lower.endsWith(".drc")) {
-              fmt = FileFormat.DRC_JSON;
-            }
-          }
-          if (fmt != FileFormat.UNKNOWN) {
-            var outResult =
-                app.freerouting.io.MultiOutputGenerator.generateOutputs(
-                    routingJob.board,
-                    routingJob.name,
-                    java.util.Set.of(fmt),
-                    routingJob.drcSettings,
-                    false);
-            byte[] bytes = outResult.getFile(fmt);
-            if (bytes != null) {
-              if (addPath.getParent() != null) {
-                Files.createDirectories(addPath.getParent());
-              }
-              Files.write(addPath, bytes);
-              FRLogger.info(
-                  "Successfully saved additional output file '"
-                      + addPath.toAbsolutePath()
-                      + "' ("
-                      + Files.size(addPath)
-                      + " bytes).");
-              anyWritten = true;
-            }
-          }
-        } catch (Exception ex) {
-          FRLogger.error("Failed to write additional output file '" + addPathStr + "'", ex);
-        }
-      }
-    }
-
-    return anyWritten;
-  }
-
-  private static int computeCliExitCode(RoutingJob routingJob, boolean outputWritten) {
-    if (routingJob.state == RoutingJobState.COMPLETED && outputWritten) {
-      return 0;
-    }
-    if (routingJob.state == RoutingJobState.TIMED_OUT && outputWritten) {
-      return 0;
-    }
-    return 1;
-  }
-
-  private static void writeCliResultManifestIfRequested(
-      GlobalSettings globalSettings, RoutingJob routingJob, boolean outputWritten, int exitCode) {
-    if (routingJob.routerSettings == null
-        || routingJob.routerSettings.resultJsonPath == null
-        || routingJob.routerSettings.resultJsonPath.isBlank()) {
-      return;
-    }
-    try {
-      RoutingResultManifest manifest =
-          RoutingResultManifest.fromJob(
-              routingJob,
-              globalSettings.initialInputFile,
-              outputWritten,
-              exitCode,
-              globalSettings.runtimeEnvironment.cpuScore);
-      RoutingResultManifest.write(Path.of(routingJob.routerSettings.resultJsonPath), manifest);
-    } catch (IOException e) {
-      FRLogger.error(
-          "Couldn't write routing result manifest to '"
-              + routingJob.routerSettings.resultJsonPath
-              + "'",
-          e);
-    }
+    return app.freerouting.cli.CliRunner.initializeCli(globalSettings);
   }
 
   private static boolean initializeDrc(GlobalSettings globalSettings) {
-    if (globalSettings.initialInputFile == null) {
-      FRLogger.error("An input file must be specified with -de argument in DRC mode.", null);
-      return false;
-    }
-
-    // Start a new Freerouting session
-    var drcSession =
-        SessionManager.getInstance()
-            .createSession(
-                UUID.fromString(globalSettings.userProfileSettings.userId),
-                "Freerouting/" + globalSettings.version);
-
-    // Create a new routing job (but won't route it)
-    RoutingJob drcJob = new RoutingJob(drcSession.id);
-    drcJob.drc = globalSettings.drcReportFile;
-    try {
-      FRLogger.info("Loading DSN file for DRC: " + globalSettings.initialInputFile);
-      drcJob.setInput(globalSettings.initialInputFile);
-    } catch (Exception e) {
-      FRLogger.error("Couldn't load the input file '" + globalSettings.initialInputFile + "'", e);
-      System.exit(1);
-    }
-
-    // Load the board without routing
-    if (!BoardLoader.loadBoardIfNeeded(drcJob)) {
-      FRLogger.error("Failed to load board for DRC check", null);
-      System.exit(1);
-    }
-
-    // Load rules file if specified for DRC
-    if (globalSettings.initialRulesFile != null) {
-      try {
-        java.io.File rulesFile = new java.io.File(globalSettings.initialRulesFile);
-        if (rulesFile.exists()) {
-          FRLogger.info("Loading RULES file for DRC: " + globalSettings.initialRulesFile);
-          try (java.io.FileInputStream rulesStream = new java.io.FileInputStream(rulesFile)) {
-            String designName = drcJob.name != null ? drcJob.name : "board";
-            app.freerouting.io.specctra.RulesReader.read(
-                rulesStream, designName, drcJob.board, drcJob.routerSettings);
-            FRLogger.info("RULES file loaded for DRC successfully");
-          }
-        } else {
-          FRLogger.warn("RULES file for DRC not found: " + globalSettings.initialRulesFile);
-        }
-      } catch (Exception e) {
-        FRLogger.error("Failed to load RULES file for DRC", e);
-      }
-    }
-
-    // Load session file if specified for DRC
-    if (globalSettings.designSessionFilename != null) {
-      try {
-        java.io.File sessionFile = new java.io.File(globalSettings.designSessionFilename);
-        if (sessionFile.exists()) {
-          if (globalSettings.designSessionFilename.toLowerCase().endsWith(".json")) {
-            FRLogger.info(
-                "Loading KiCad JSON session file for DRC: " + globalSettings.designSessionFilename);
-            try (java.io.FileReader jsonReader = new java.io.FileReader(sessionFile)) {
-              app.freerouting.io.kicad.KiCadJsonReader.importSession(jsonReader, drcJob.board);
-              FRLogger.info("KiCad JSON session file loaded for DRC successfully");
-            }
-          } else {
-            FRLogger.info("Loading SES file for DRC: " + globalSettings.designSessionFilename);
-            try (java.io.FileInputStream sesStream = new java.io.FileInputStream(sessionFile)) {
-              SesImportSummary summary = SesReader.read(sesStream, drcJob.board);
-              FRLogger.info(
-                  "SES file loaded for DRC: "
-                      + summary.wiresImported()
-                      + " wires, "
-                      + summary.viasImported()
-                      + " vias imported"
-                      + (summary.errorsEncountered() > 0
-                          ? " (" + summary.errorsEncountered() + " errors)"
-                          : ""));
-            }
-          }
-        } else {
-          FRLogger.warn("Session file for DRC not found: " + globalSettings.designSessionFilename);
-        }
-      } catch (Exception e) {
-        FRLogger.error("Failed to load session file for DRC", e);
-      }
-    }
-
-    // Run DRC check
-    DesignRulesChecker drcChecker =
-        new DesignRulesChecker(drcJob.board, globalSettings.drcSettings);
-
-    // Determine coordinate unit (default to mm)
-    String coordinateUnit = "mm";
-
-    // Generate DRC report
-    String sourceFileName = new File(globalSettings.initialInputFile).getName();
-    KiCadDrcReport report = drcChecker.generateReport(sourceFileName, coordinateUnit);
-
-    // Calculate final quality score for DRC report
-    try {
-      var settingsMerger = globalSettings.settingsMergerProtype.clone();
-      settingsMerger.addOrReplaceSources(
-          new DsnFileSettings(drcJob.input.getData(), drcJob.input.getFilename()));
-      var routerSettings = settingsMerger.merge();
-      var finalStats = drcJob.board.getStatistics();
-      report.qualityScore = (double) finalStats.getRouterScore(routerSettings);
-      report.optimizerScore = (double) finalStats.getOptimizerScore(routerSettings);
-    } catch (Exception e) {
-      FRLogger.warn("Failed to calculate quality score for DRC report: " + e.getMessage());
-    }
-
-    String drcReportJson = app.freerouting.util.gson.GsonProvider.GSON.toJson(report);
-
-    // Output the DRC report
-    if (drcJob.drc != null) {
-      String outputFileName = drcJob.drc.getAbsolutePath();
-      // Write to file
-      try {
-        Path outputFilePath = Path.of(outputFileName);
-        Files.write(outputFilePath, drcReportJson.getBytes(StandardCharsets.UTF_8));
-        FRLogger.info("DRC report written to: " + outputFileName);
-      } catch (IOException e) {
-        FRLogger.error("Couldn't save the DRC report to '" + outputFileName + "'", e);
-        System.exit(1);
-      }
-    } else {
-      // Print to console
-      IO.println(drcReportJson);
-    }
-
-    return true;
+    return app.freerouting.cli.DrcRunner.initializeDrc(globalSettings);
   }
 
   private static void shutdownApplication() {
@@ -929,100 +493,11 @@ public class Freerouting {
   }
 
   private static Path resolveLogPath(String input, Path defaultDir) {
-    if (input == null || input.isBlank()) {
-      return defaultDir.resolve("freerouting.log").normalize().toAbsolutePath();
-    }
-
-    // In Windows the leading "." character means current directory
-    if (input.startsWith(".")) {
-      var currentDir = Path.of(System.getProperty("user.dir"));
-      input = currentDir + input.substring(1);
-    }
-
-    Path path = Path.of(input).normalize().toAbsolutePath();
-    boolean isFile = path.getFileName().toString().toLowerCase().endsWith(".log");
-    String filename = isFile ? path.getFileName().toString() : "freerouting.log";
-    Path folderPath = isFile ? path.getParent() : path;
-
-    // Check if the directory exists, and create it if needed
-    if (folderPath != null && !folderPath.toFile().exists()) {
-      try {
-        Files.createDirectories(folderPath);
-      } catch (IOException e) {
-        // Failed to create directory, fallback to default
-        return defaultDir.resolve(filename).normalize().toAbsolutePath();
-      }
-    }
-
-    return folderPath.resolve(filename).normalize().toAbsolutePath();
+    return app.freerouting.startup.LoggingBootstrap.resolveLogPath(input, defaultDir);
   }
 
   private static boolean compareBoardFiles(String file1Path, String file2Path) {
-    FRLogger.info("Starting comparison of board files: " + file1Path + " and " + file2Path);
-    try {
-      java.io.File file1 = new java.io.File(file1Path);
-      java.io.File file2 = new java.io.File(file2Path);
-      if (!file1.exists()) {
-        FRLogger.error("Comparison file 1 does not exist: " + file1Path, null);
-        return false;
-      }
-      if (!file2.exists()) {
-        FRLogger.error("Comparison file 2 does not exist: " + file2Path, null);
-        return false;
-      }
-
-      app.freerouting.board.facade.RoutingBoard board1 = loadBoardFromFile(file1);
-      app.freerouting.board.facade.RoutingBoard board2 = loadBoardFromFile(file2);
-
-      if (board1 == null || board2 == null) {
-        FRLogger.error("Failed to load one or both boards for comparison.", null);
-        return false;
-      }
-
-      app.freerouting.board.state.BoardComparator.ComparisonResult result =
-          app.freerouting.board.state.BoardComparator.compare(board1, board2, 1e-3);
-
-      IO.println(result.report);
-
-      if (result.areEqual) {
-        FRLogger.info("SUCCESS: Boards are identical.");
-      } else {
-        FRLogger.warn("WARNING: Differences detected between the loaded boards.");
-      }
-      return result.areEqual;
-    } catch (Exception e) {
-      FRLogger.error("Error during board files comparison: " + e.getMessage(), e);
-      return false;
-    }
-  }
-
-  private static app.freerouting.board.facade.RoutingBoard loadBoardFromFile(java.io.File file)
-      throws Exception {
-    try (java.io.InputStream is = new java.io.FileInputStream(file)) {
-      if (file.getName().toLowerCase().endsWith(".json")) {
-        try (java.io.Reader r =
-            new java.io.InputStreamReader(is, java.nio.charset.StandardCharsets.UTF_8)) {
-          app.freerouting.io.BoardReadResult readResult =
-              app.freerouting.io.kicad.KiCadJsonReader.readBoard(r, null, null);
-          if (readResult instanceof app.freerouting.io.BoardReadResult.Success success) {
-            return (app.freerouting.board.facade.RoutingBoard) success.board();
-          } else if (readResult
-              instanceof app.freerouting.io.BoardReadResult.OutlineMissing outlineMissing) {
-            return (app.freerouting.board.facade.RoutingBoard) outlineMissing.board();
-          }
-        }
-      } else {
-        app.freerouting.io.BoardReadResult readResult =
-            app.freerouting.io.specctra.DsnReader.readBoard(is, null, null, file.getName());
-        if (readResult instanceof app.freerouting.io.BoardReadResult.Success success) {
-          return (app.freerouting.board.facade.RoutingBoard) success.board();
-        } else if (readResult
-            instanceof app.freerouting.io.BoardReadResult.OutlineMissing outlineMissing) {
-          return (app.freerouting.board.facade.RoutingBoard) outlineMissing.board();
-        }
-      }
-    }
-    return null;
+    return app.freerouting.cli.BenchmarkAndCompareCommands.compareBoardFiles(file1Path, file2Path);
   }
 
   /**
@@ -1053,197 +528,12 @@ public class Freerouting {
       System.setOut(System.err);
     }
 
-    // CRITICAL: Set up logging configuration BEFORE any logging occurs
-    // This must happen before FRLogger.traceEntry() or any other logging call
+    // Set up user-data path and logging configuration BEFORE any logging occurs
+    UserDataPathResolver.ResolvedUserDataPath userdataPath =
+        UserDataPathResolver.resolveAndLock(args);
 
-    // the first thing we need to do is to determine the user directory, because all
-    // settings and logs will be located there
-    // 1, set it to the OS standard user data directory by default
-    Path userdataPath = app.freerouting.settings.AppPaths.getDefaultUserDataPath();
-    String userdataPathSource = "default (OS standard user-data path)";
-    // 2, check if we need to override it with the "FREEROUTING__USER_DATA_PATH"
-    // environment variable value
-    if (System.getenv("FREEROUTING__USER_DATA_PATH") != null) {
-      userdataPath = Path.of(System.getenv("FREEROUTING__USER_DATA_PATH"));
-      userdataPathSource = "environment variable FREEROUTING__USER_DATA_PATH";
-    } else if (System.getenv("FREEROUTING__LOGGING__FILE__LOCATION") != null) {
-      userdataPath = Path.of(System.getenv("FREEROUTING__LOGGING__FILE__LOCATION"));
-      userdataPathSource =
-          "environment variable FREEROUTING__LOGGING__FILE__LOCATION (deprecated fallback)";
-    }
-    // 3, check if we need to override it with the "--user_data_path={directory}"
-    // command line argument
-    if (args.length > 0 && Arrays.stream(args).anyMatch(s -> s.startsWith("--user_data_path="))) {
-      var userDataPathArg =
-          Arrays.stream(args).filter(s -> s.startsWith("--user_data_path=")).findFirst();
-
-      if (userDataPathArg.isPresent()) {
-        userdataPath = Path.of(userDataPathArg.get().substring("--user_data_path=".length()));
-        userdataPathSource = "CLI argument --user_data_path";
-      }
-    }
-    // 4, create the directory if it doesn't exist yet; directory creation is also
-    // attempted lazily when the first write happens (in saveAsJson), so a failure
-    // here is non-fatal – but we print a warning to stderr because logging is not
-    // initialised at this point.
-    if (!userdataPath.toFile().exists()) {
-      if (!userdataPath.toFile().mkdirs()) {
-        System.err.println(
-            "WARNING: Could not create user-data directory '"
-                + userdataPath
-                + "' (source: "
-                + userdataPathSource
-                + "). "
-                + "Freerouting will attempt to create it when writing files. "
-                + "If this persists, check permissions for the specified path.");
-      }
-    } else {
-      // Directory exists — proactively check read and write permissions so that
-      // permission problems are surfaced immediately rather than at first I/O.
-      if (!userdataPath.toFile().canRead()) {
-        System.err.println(
-            "WARNING: User-data directory '"
-                + userdataPath
-                + "' (source: "
-                + userdataPathSource
-                + ") exists but is NOT READABLE. "
-                + "freerouting.json cannot be loaded. "
-                + "Check that the process has read permission on the directory. "
-                + "In Docker deployments, verify the volume mount and file ownership.");
-      }
-      if (!userdataPath.toFile().canWrite()) {
-        System.err.println(
-            "WARNING: User-data directory '"
-                + userdataPath
-                + "' (source: "
-                + userdataPathSource
-                + ") exists but is NOT WRITABLE. "
-                + "freerouting.json cannot be saved and settings won't be persisted. "
-                + "Check that the process has write permission on the directory. "
-                + "In Docker deployments, verify the volume mount and file ownership.");
-      }
-    }
-    // capture for later use once logging is available
-    final String resolvedUserdataPathSource = userdataPathSource;
-    // 5, always register the resolved path with GlobalSettings – even when the
-    // directory could not be created yet.  saveAsJson() calls
-    // Files.createDirectories() before each write, so the directory will be
-    // created on demand.  Prior to this fix the path was silently ignored (and
-    // the default temp-dir path was locked in) whenever mkdirs() returned false.
-    GlobalSettings.setUserDataPath(userdataPath);
-    // 6, make sure that this setting can't be changed later on
-    GlobalSettings.lockUserDataPath();
-
-    // Parse logging settings from environment variables and command line arguments
-    // These will be used to configure log4j2 BEFORE it initializes
-    boolean fileLoggingEnabled = true;
-    boolean consoleLoggingEnabled = true;
-    String fileLoggingLevel = "DEBUG";
-
-    if (System.getenv("FREEROUTING__LOGGING__FILE__ENABLED") != null) {
-      fileLoggingEnabled =
-          Boolean.parseBoolean(System.getenv("FREEROUTING__LOGGING__FILE__ENABLED"));
-    }
-    String consoleLoggingLevel = "INFO";
-    if (System.getenv("FREEROUTING__LOGGING__CONSOLE__ENABLED") != null) {
-      consoleLoggingEnabled =
-          Boolean.parseBoolean(System.getenv("FREEROUTING__LOGGING__CONSOLE__ENABLED"));
-    }
-    if (System.getenv("FREEROUTING__LOGGING__FILE__LEVEL") != null) {
-      fileLoggingLevel = System.getenv("FREEROUTING__LOGGING__FILE__LEVEL");
-    }
-    if (System.getenv("FREEROUTING__LOGGING__CONSOLE__LEVEL") != null) {
-      consoleLoggingLevel = System.getenv("FREEROUTING__LOGGING__CONSOLE__LEVEL");
-    }
-    String fileLoggingLocation = null;
-    if (System.getenv("FREEROUTING__LOGGING__FILE__LOCATION") != null) {
-      fileLoggingLocation = System.getenv("FREEROUTING__LOGGING__FILE__LOCATION");
-    }
-    String fileLoggingPattern = null;
-    if (System.getenv("FREEROUTING__LOGGING__FILE__PATTERN") != null) {
-      fileLoggingPattern = System.getenv("FREEROUTING__LOGGING__FILE__PATTERN");
-    }
-
-    if (args.length > 0) {
-      for (String arg : args) {
-        if (arg.startsWith("--logging.file.enabled=")) {
-          fileLoggingEnabled =
-              Boolean.parseBoolean(arg.substring("--logging.file.enabled=".length()));
-        } else if (arg.startsWith("--logging.console.enabled=")) {
-          consoleLoggingEnabled =
-              Boolean.parseBoolean(arg.substring("--logging.console.enabled=".length()));
-        } else if (arg.startsWith("--logging.file.level=")) {
-          fileLoggingLevel = arg.substring("--logging.file.level=".length());
-        } else if (arg.startsWith("--logging.console.level=")) {
-          consoleLoggingLevel = arg.substring("--logging.console.level=".length());
-        } else if (arg.startsWith("--logging.file.location=")) {
-          fileLoggingLocation = arg.substring("--logging.file.location=".length());
-        } else if (arg.startsWith("-l=")) {
-          fileLoggingLocation = arg.substring("-l=".length());
-        } else if ("-l".equals(arg)) {
-          int index = Arrays.asList(args).indexOf("-l");
-          if (index >= 0 && index < args.length - 1) {
-            fileLoggingLocation = args[index + 1];
-          }
-        } else if (arg.startsWith("--logging.file.pattern=")) {
-          fileLoggingPattern = arg.substring("--logging.file.pattern=".length());
-        } else if (arg.startsWith("--debug.enable_detailed_logging=")) {
-          boolean detailed =
-              Boolean.parseBoolean(arg.substring("--debug.enable_detailed_logging=".length()));
-          if (detailed) {
-            fileLoggingLevel = "TRACE";
-            FRLogger.granularTraceEnabled = true;
-          }
-        } else if ("-dl".equals(arg)) {
-          fileLoggingEnabled = false;
-        } else if ("-ll".equals(arg)) {
-          // simple peek for -ll
-          int index = Arrays.asList(args).indexOf("-ll");
-          if (index >= 0 && index < args.length - 1) {
-            consoleLoggingLevel = args[index + 1];
-          }
-        }
-      }
-    }
-
-    // Resolve the log file location
-    Path defaultLogDir =
-        userdataPathSource.startsWith("default")
-            ? app.freerouting.settings.AppPaths.getDefaultLogDirectory()
-            : userdataPath;
-    if (fileLoggingLocation == null || fileLoggingLocation.isBlank()) {
-      fileLoggingLocation = resolveLogPath(null, defaultLogDir).toString();
-    } else {
-      fileLoggingLocation = resolveLogPath(fileLoggingLocation, defaultLogDir).toString();
-    }
-
-    // Set system properties for log4j2 ConfigurationFactory to read
-    // This MUST happen before any logging calls
-
-    // Disable JNDI lookups — Freerouting does not use them, and the java.naming module
-    // is intentionally excluded from the jlink runtime to reduce attack surface
-    // (Log4Shell / CVE-2021-44228). Without this property Log4j2 tries to load
-    // javax.naming.Context at bootstrap and emits a noisy WARN for every lookup plugin.
-    System.setProperty("log4j2.disableJndi", "true");
-
-    System.setProperty(
-        "log4j2.configurationFactory", "app.freerouting.logger.Log4j2ConfigurationFactory");
-    System.setProperty(
-        "freerouting.logging.console.enabled", String.valueOf(consoleLoggingEnabled));
-    System.setProperty("freerouting.logging.console.level", consoleLoggingLevel);
-    System.setProperty("freerouting.logging.file.enabled", String.valueOf(fileLoggingEnabled));
-    System.setProperty("freerouting.logging.file.level", fileLoggingLevel);
-    System.setProperty("freerouting.logging.file.location", fileLoggingLocation);
-
-    if (fileLoggingPattern != null) {
-      System.setProperty("freerouting.logging.file.pattern", fileLoggingPattern);
-    }
-
-    // FORCE RECONFIGURATION
-    // Log4j2 might have initialized early (before we set these properties).
-    // We force it to reload the configuration using our Factory, which will now see
-    // the correct properties.
-    ((LoggerContext) LogManager.getContext(false)).reconfigure();
+    LoggingBootstrap.LoggingConfig loggingConfig =
+        LoggingBootstrap.initialize(args, userdataPath.path(), userdataPath.source());
 
     // NOW we can start logging - log4j2 will initialize with our configuration
     FRLogger.traceEntry("MainApplication.main()");
@@ -1263,72 +553,14 @@ public class Freerouting {
         "[startup] user-data path : "
             + GlobalSettings.getUserDataPath()
             + "  (source: "
-            + resolvedUserdataPathSource
+            + userdataPath.source()
             + ")");
-    FRLogger.debug("[startup] log file       : " + fileLoggingLocation);
+    FRLogger.debug("[startup] log file       : " + loggingConfig.fileLoggingLocation());
     Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
 
-    try {
-      globalSettings = GlobalSettings.load();
-      FRLogger.debug("Settings loaded from '" + GlobalSettings.getConfigurationFilePath() + "'.");
-    } catch (NoSuchFileException _) {
-      // Normal first-run condition — the file does not exist yet and will be
-      // created below with default values.
-      FRLogger.debug(
-          "No freerouting.json found at '"
-              + GlobalSettings.getConfigurationFilePath()
-              + "' — will create one with default settings.");
-    } catch (AccessDeniedException e) {
-      FRLogger.warn(
-          "Cannot read freerouting.json at '"
-              + GlobalSettings.getConfigurationFilePath()
-              + "': "
-              + e.getReason()
-              + ". The file and/or its parent directory may have incorrect permissions. "
-              + "Check that the process has read access. "
-              + "In Docker deployments, verify the volume mount configuration. "
-              + "Freerouting will start with default settings.");
-    } catch (IOException e) {
-      FRLogger.warn(
-          "Failed to load freerouting.json from '"
-              + GlobalSettings.getConfigurationFilePath()
-              + "': "
-              + e.getMessage()
-              + ". Freerouting will start with default settings.");
-    }
-
-    // Detect stale logging.file.location in the loaded JSON.
-    // Old versions of Freerouting stored the absolute log path in freerouting.json and
-    // applied it at startup, potentially redirecting the log away from the volume mount.
-    // The current code does NOT re-apply the stored path (logging is already configured
-    // above via system properties), but we warn if we detect a mismatch so operators
-    // can spot a stale config.
-    if (globalSettings != null
-        && globalSettings.logging.file.location != null
-        && !globalSettings.logging.file.location.isBlank()
-        && !globalSettings.logging.file.location.equals(fileLoggingLocation)) {
-      FRLogger.warn(
-          "[startup] freerouting.json contains a stale 'logging.file.location' value: '"
-              + globalSettings.logging.file.location
-              + "'. "
-              + "The actual log file is being written to '"
-              + fileLoggingLocation
-              + "' (as resolved at startup). "
-              + "The stale value will be corrected in freerouting.json on next save. "
-              + "If you see this in Docker, the old JSON was written by an earlier version that "
-              + "stored the host path; the fix is to delete freerouting.json so it is regenerated "
-              + "with the correct path.");
-    }
-    // Always keep the stored log path in sync with the resolved path so the JSON
-    // self-heals and old images that do apply the stored path will get the right value.
-    if (globalSettings != null) {
-      globalSettings.logging.file.location = fileLoggingLocation;
-    }
+    globalSettings = GlobalSettingsBootstrap.initialize(args, loggingConfig.fileLoggingLocation());
 
     // Warn if mcp_server.stdio was set in freerouting.json but not via CLI/env.
-    // The stdout redirect must happen before logging is initialised, so the JSON setting
-    // is too late and is silently ignored.  Operators who set it only in JSON would get
-    // non-JSON protocol noise on stdout, breaking the MCP stdio transport.
     if (!isStdioMode
         && globalSettings != null
         && globalSettings.mcpServerSettings != null
@@ -1343,52 +575,6 @@ public class Freerouting {
           """);
     }
 
-    if ((globalSettings == null)
-        || !GlobalSettings.getReleaseSafeVersion().equals(globalSettings.version)) {
-      // let's see if we can preserve the user ID
-      String userId =
-          globalSettings == null
-              ? UUID.randomUUID().toString()
-              : globalSettings.userProfileSettings.userId;
-
-      globalSettings = new GlobalSettings();
-      globalSettings.userProfileSettings.userId = userId;
-      globalSettings.version = GlobalSettings.getReleaseSafeVersion();
-      // Stamp the correct log path into the new settings object too.
-      globalSettings.logging.file.location = fileLoggingLocation;
-
-      // save the default values
-      try {
-        GlobalSettings.saveAsJson(globalSettings);
-        FRLogger.debug(
-            "Default settings saved to '" + GlobalSettings.getConfigurationFilePath() + "'.");
-      } catch (AccessDeniedException e) {
-        FRLogger.warn(
-            "Cannot write freerouting.json to '"
-                + GlobalSettings.getConfigurationFilePath()
-                + "': "
-                + e.getReason()
-                + ". The directory and/or file may have incorrect permissions. "
-                + "Check that the process has write access. "
-                + "In Docker deployments, verify the volume mount configuration. "
-                + "Settings won't be persisted across restarts.");
-      } catch (IOException e) {
-        FRLogger.warn(
-            "Failed to save freerouting.json to '"
-                + GlobalSettings.getConfigurationFilePath()
-                + "': "
-                + e.getMessage()
-                + ". Settings won't be persisted across restarts.");
-      }
-    }
-
-    // apply environment variables to the settings
-    globalSettings.applyNonRouterEnvironmentVariables();
-
-    // Note: Logging is already configured via system properties set earlier
-    // No need to call ApplyLoggingSettings() - it would cause runtime manipulation
-    // errors
-
     // if we don't have a GUI enabled then we must use the console as our output
     if ((!globalSettings.guiSettings.isEnabled) && (System.console() == null)) {
       FRLogger.warn(
@@ -1396,67 +582,19 @@ public class Freerouting {
               + "Freerouting is in the log.");
     }
 
-    // get environment parameters and save them in the settings
-    globalSettings.runtimeEnvironment.freeroutingVersion =
-        Constants.FREEROUTING_VERSION + "," + Constants.FREEROUTING_BUILD_DATE;
-    globalSettings.runtimeEnvironment.appStartedAt = Instant.now();
-    globalSettings.runtimeEnvironment.commandLineArguments =
-        app.freerouting.settings.RuntimeEnvironment.sanitizeCommandLineArguments(args);
-    globalSettings.runtimeEnvironment.architecture =
-        System.getProperty("os.name")
-            + ","
-            + System.getProperty("os.arch")
-            + ","
-            + System.getProperty("os.version");
-    globalSettings.runtimeEnvironment.java =
-        System.getProperty("java.version") + "," + System.getProperty("java.vendor");
-    globalSettings.runtimeEnvironment.systemLanguage =
-        Locale.getDefault().getLanguage() + "," + Locale.getDefault();
-    globalSettings.runtimeEnvironment.cpuCores = Runtime.getRuntime().availableProcessors();
-    globalSettings.runtimeEnvironment.ram = (int) (Runtime.getRuntime().maxMemory() / 1024 / 1024);
-    globalSettings.runtimeEnvironment.cpuScore = RuntimeEnvironment.measureCpuScore();
-    FRLogger.debug("Version: " + globalSettings.runtimeEnvironment.freeroutingVersion);
-    FRLogger.debug(
-        "Command line arguments: '" + globalSettings.runtimeEnvironment.commandLineArguments + "'");
-    FRLogger.debug("Architecture: " + globalSettings.runtimeEnvironment.architecture);
-    FRLogger.debug("Java: " + globalSettings.runtimeEnvironment.java);
-    FRLogger.debug("System Language: " + globalSettings.runtimeEnvironment.systemLanguage);
-    FRLogger.info(
-        "Hardware: "
-            + globalSettings.runtimeEnvironment.cpuCores
-            + " CPU cores, "
-            + globalSettings.runtimeEnvironment.cpuScore
-            + " CPU score, "
-            + globalSettings.runtimeEnvironment.ram
-            + " MB RAM");
-    FRLogger.debug("UTC Time: " + globalSettings.runtimeEnvironment.appStartedAt);
-
-    // parse the command line arguments (for the non-router settings)
-    globalSettings.applyCommandLineArguments(args);
-
     if (globalSettings.compareFile1 != null && globalSettings.compareFile2 != null) {
       boolean success = compareBoardFiles(globalSettings.compareFile1, globalSettings.compareFile2);
       System.exit(success ? 0 : 1);
     }
 
     if (globalSettings.calculateBenchmarkScores) {
-      if (globalSettings.benchmarkScoresInput == null
-          || globalSettings.benchmarkScoresOutput == null) {
-        FRLogger.error(
-            "Both --input=<path> and --output=<path> must be specified with"
-                + " --calculate-benchmark-scores",
-            null);
-        System.exit(1);
-      }
       int exitCode =
-          app.freerouting.core.scoring.BenchmarkScoreCalculator.run(
-              Path.of(globalSettings.benchmarkScoresInput),
-              Path.of(globalSettings.benchmarkScoresOutput));
+          BenchmarkAndCompareCommands.calculateBenchmarkScores(
+              globalSettings.benchmarkScoresInput, globalSettings.benchmarkScoresOutput);
       System.exit(exitCode);
     }
 
     FRLogger.debug("GUI Language: " + globalSettings.currentLocale);
-
     FRLogger.debug("Host: " + globalSettings.runtimeEnvironment.host);
 
     // Get some useful information if we are running in a GUI
@@ -1484,93 +622,7 @@ public class Freerouting {
       }
     }
 
-    boolean allowAnalytics = false;
-
-    // configure corporate proxy and truststores
-    NetworkProxyConfig.configure(globalSettings.networkSettings);
-
-    // initialize analytics
-    FRAnalytics.setAccessKey(
-        Constants.FREEROUTING_VERSION, globalSettings.usageAndDiagnosticData.loggerKey);
-
-    // this option allows us to disable analytics for some users (enabled for all if
-    // it is set to 1, otherwise it is disabled for every Nth user)
-    int analyticsModulo = 1;
-    String userIdString =
-        globalSettings.userProfileSettings.userId.length() >= 4
-            ? globalSettings.userProfileSettings.userId.substring(0, 4)
-            : "0000";
-    int userIdValue = Integer.parseInt(userIdString, 16);
-
-    // if the user has disabled analytics, we don't need to check the modulo
-    allowAnalytics =
-        !globalSettings.usageAndDiagnosticData.disableAnalytics
-            && (globalSettings.userProfileSettings.isTelemetryAllowed);
-
-    if (!allowAnalytics) {
-      FRLogger.debug("Analytics are disabled");
-    }
-    FRAnalytics.setEnabled(allowAnalytics);
-    FRAnalytics.setUserId(
-        globalSettings.userProfileSettings.userId, globalSettings.userProfileSettings.userEmail);
-
-    boolean isMcpEnabled = globalSettings.mcpServerSettings.isEnabled;
-    boolean isMcpStdio = Boolean.TRUE.equals(globalSettings.mcpServerSettings.isStdioMode);
-    boolean isApiEnabled = globalSettings.apiServerSettings.isEnabled;
-    boolean isGuiEnabled = globalSettings.guiSettings.isEnabled;
-    boolean hasInitialInput = globalSettings.initialInputFile != null;
-
-    PipelineType detectedPipeline =
-        ProcessEnvironmentDetector.detectPipelineType(
-            isMcpEnabled, isMcpStdio, isApiEnabled, isGuiEnabled, hasInitialInput);
-
-    ActorType detectedActor =
-        ProcessEnvironmentDetector.detectActorType(
-            detectedPipeline, isGuiEnabled, width == 0 && height == 0, String.join(" ", args));
-
-    String detectedHost =
-        (globalSettings.runtimeEnvironment.host != null
-                && !globalSettings.runtimeEnvironment.host.isBlank()
-                && !"N/A".equals(globalSettings.runtimeEnvironment.host))
-            ? globalSettings.runtimeEnvironment.host
-            : "Freerouting";
-
-    globalSettings.runtimeEnvironment.pipelineType = detectedPipeline.name();
-    globalSettings.runtimeEnvironment.actorType = detectedActor.name();
-
-    FRAnalytics.setExecutionContext(detectedPipeline, detectedActor, detectedHost, "");
-
-    FRAnalytics.identify();
-    if (!globalSettings.userProfileSettings.userEmail.isBlank()) {
-      FRAnalytics.refreshIdentity();
-    }
-    Runtime.getRuntime()
-        .addShutdownHook(
-            new Thread(() -> FRAnalytics.flush(1500), "freerouting-analytics-shutdown-flush"));
-    try {
-      Thread.sleep(1000);
-    } catch (Exception _) {
-      // Ignore interruption during the analytics startup delay.
-    }
-    FRAnalytics.setAppLocation("app.freerouting.gui", "Freerouting");
-    FRAnalytics.appStarted(
-        Constants.FREEROUTING_VERSION,
-        Constants.FREEROUTING_BUILD_DATE + " 00:00",
-        String.join(" ", args),
-        System.getProperty("os.name"),
-        System.getProperty("os.arch"),
-        System.getProperty("os.version"),
-        System.getProperty("java.version"),
-        System.getProperty("java.vendor"),
-        Locale.getDefault(),
-        globalSettings.currentLocale,
-        globalSettings.runtimeEnvironment.cpuCores,
-        globalSettings.runtimeEnvironment.ram,
-        globalSettings.runtimeEnvironment.cpuScore,
-        globalSettings.runtimeEnvironment.host,
-        width,
-        height,
-        dpi);
+    AnalyticsBootstrap.initialize(globalSettings, args, true, width, height, dpi);
 
     // check for new version
     VersionChecker checker = new VersionChecker(Constants.FREEROUTING_VERSION);
@@ -1581,7 +633,7 @@ public class Freerouting {
     // Check if the user requested help
     if (globalSettings.showHelpOption) {
       TextManager ctm = new TextManager(Freerouting.class, globalSettings.currentLocale);
-      IO.print(ctm.getText("command_line_help"));
+      System.out.print(ctm.getText("command_line_help"));
       System.exit(0);
     }
 

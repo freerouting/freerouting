@@ -1,9 +1,8 @@
 package app.freerouting.management.sessions;
 
-import static app.freerouting.Freerouting.globalSettings;
-
 import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.core.Session;
+import app.freerouting.settings.GlobalSettings;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
@@ -103,7 +102,10 @@ public final class SessionManager {
       }
     }
     sessions.put(session.id.toString(), session);
-    globalSettings.statistics.incrementSessionsTotal();
+    GlobalSettings settings = GlobalSettings.current();
+    if (settings != null && settings.statistics != null) {
+      settings.statistics.incrementSessionsTotal();
+    }
     FRAnalytics.recordSessionLifecycle(
         session.id.toString(),
         "SESSION_CREATED",

@@ -8,7 +8,7 @@ This document defines how any LLM coding agent runs the self-improving routing o
 - Zero new clearance violations vs baseline (hard reject).
 - Do not run `spotlessApply` automatically; use `spotlessCheck`.
 - Do not stage or commit unless `Close-Experiment.ps1 -Accept` succeeds.
-- v1.9 (`src_v19/`) is reference only — do not refactor it.
+- Baseline is v2.5.0 as declared in `baseline-manifest.json`.
 - Use `DesignRulesChecker.getAllClearanceViolations()` for violation counts, not incomplete outline counts alone.
 
 ## Lifecycle

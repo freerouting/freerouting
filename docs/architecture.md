@@ -25,6 +25,7 @@ flowchart TD
         A11Y["**gui.a11y**\nAccessibility locators"]
         API["**api.v1**\nREST / HTTP"]
         MCP["**api.mcp**\nMCP JSON-RPC + SSE + WS"]
+        CLI["**cli**\nNative CLI entry point"]
     end
 
     subgraph services ["Shared Services"]
@@ -58,6 +59,7 @@ flowchart TD
     A11Y -. helpers .-> GUI
     API --> MGMT
     MCP --> API
+    CLI --> MGMT
     MGMT <--> CORE
     CFG --> AR
     CORE --> AR
@@ -74,7 +76,6 @@ flowchart TD
 | `docs/` | User documentation, developer notes, issue analyses, and design references. |
 | `integrations/` | Packaging and integration assets for external PCB tool workflows. |
 | `scripts/` | Automation, benchmarking, and comparison scripts. |
-| `src_v19/` | The v1.9 historical reference tree, used for optional algorithm archaeology; it is not the routine parity baseline. |
 
 ## Navigation Guide
 
@@ -93,6 +94,8 @@ Use the table below to jump to the package most likely to own the behavior you a
 | Runtime settings and settings sources | `app.freerouting.settings` |
 | Router or optimizer board scores | `app.freerouting.core.scoring` (`BoardStatistics.getRouterScore` / `getOptimizerScore`) |
 | Geometry, shapes, points, and planar math | `app.freerouting.geometry.planar` |
+| CLI entry point and native execution | `app.freerouting.cli` |
+| Startup bootstrap, settings initialization, and CPU calibration | `app.freerouting.startup` |
 
 ## Module Boundaries (ArchUnit)
 
@@ -102,6 +105,7 @@ Architectural boundaries are codified in `src/test/java/app/freerouting/architec
   - `rules`, `drc`, `geometry`, and `datastructures` must not depend on `gui`/`gui.interactive` or `api`.
   - `settings`, `logger`, and `debug` must not depend on `gui`/`gui.interactive`, `api`, `management`, or `analytics`.
   - `core`, `board`, and `autoroute` must not depend on `gui`/`gui.interactive`.
+  - `cli` and `startup` must not depend on `gui`/`gui.interactive` or `api`.
   - `api`, `management`, and `analytics` must not depend on `GuiBoardManager` or `InteractiveState`, nor on `gui`/`gui.rendering` types.
 - **Strict boundaries (continued):**
   - `gui.interactive` concrete state classes must only be used from within the GUI layer.
@@ -440,6 +444,13 @@ File parsing and export live in `io.specctra`.
 
 When diagnosing a load or export issue, begin here.
 
+### Native CLI and Startup Path
+
+The headless command-line interface and bootstrap orchestration live in `app.freerouting.cli` and `app.freerouting.startup`.
+
+- `app.freerouting.cli` contains `FreeroutingCli`, the native CLI entry point built for GraalVM native image execution without GUI or server dependencies.
+- `app.freerouting.startup` contains `GlobalSettingsBootstrap`, coordinating decoupled settings initialization, system environment setup, and lazy CPU benchmarking.
+
 ## Test Layout
 
 Tests follow the production layout where practical.
@@ -453,12 +464,11 @@ Tests follow the production layout where practical.
 
 For routing regressions, fixture tests are usually the most informative starting point because they exercise file loading, routing, and scoring together.
 
-## Legacy Reference Tree
+## Baseline & Historical Reference
 
-`src_v19/` is the historical v1.9 codebase. Use it to compare routing decisions, understand older implementation choices, and verify parity during refactoring.
+The release baseline for routing quality and benchmark comparisons is **v2.5.0**, declared in `scripts/benchmark/baselines/baseline-manifest.json` and tracked under `scripts/benchmark/binaries/freerouting-2.5.0.jar`.
 
-- Treat it as reference material rather than the primary implementation target.
-- Modify it only when you need additional trace logging for comparison work.
+The historical v1.9 reference implementation is preserved in Git tag `v1.9.0` for optional algorithm archaeology. For comparison work, use `scripts/benchmark/Build-Baseline.ps1` or git worktrees.
 
 ## Terminology / Glossary
 

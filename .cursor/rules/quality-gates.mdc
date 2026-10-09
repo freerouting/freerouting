@@ -16,4 +16,3 @@ alwaysApply: true
   on Windows, or the equivalent `./gradlew` command elsewhere.
 - Run `python scripts/i18n/extract-context.py --check` when Java or translation sources
   change.
-- Do not refactor or format `src_v19/`; it is a frozen compatibility reference.
