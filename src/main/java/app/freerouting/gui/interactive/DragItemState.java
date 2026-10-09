@@ -3,6 +3,7 @@ package app.freerouting.gui.interactive;
 import app.freerouting.board.actions.MoveComponent;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.structure.AngleRestriction;
+import app.freerouting.board.model.structure.Component;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
@@ -96,6 +97,13 @@ public class DragItemState extends DragState {
               ? hdlg.getRoutingBoard().getComponentItems(itemToMove.getComponentId())
               : List.of(itemToMove);
       IntBox oldBox = hdlg.getRoutingBoard().getBoundingBox(movedItems);
+      if (itemToMove.getComponentId() > 0) {
+        Component comp = hdlg.getRoutingBoard().components.get(itemToMove.getComponentId());
+        if (comp != null) {
+          IntPoint p = comp.getLocation().toFloat().round();
+          oldBox = oldBox.union(new IntBox(p, p));
+        }
+      }
 
       if (!moveComponent.insert(
           hdlg.getWorkspaceSettings().getTracePullTightRegionWidth(),
@@ -105,6 +113,13 @@ public class DragItemState extends DragState {
       }
 
       IntBox newBox = hdlg.getRoutingBoard().getBoundingBox(movedItems);
+      if (itemToMove.getComponentId() > 0) {
+        Component comp = hdlg.getRoutingBoard().components.get(itemToMove.getComponentId());
+        if (comp != null) {
+          IntPoint p = comp.getLocation().toFloat().round();
+          newBox = newBox.union(new IntBox(p, p));
+        }
+      }
       IntBox changedBox = oldBox.union(newBox);
       IntBox updateBox = hdlg.getRoutingBoard().getGraphicsUpdateBox();
       if (updateBox != null && !updateBox.isEmpty()) {
@@ -116,8 +131,7 @@ public class DragItemState extends DragState {
       Rectangle screenRect = hdlg.graphicsContext.coordinateTransform.boardToScreen(offsetBox);
       int padding = 20;
       if (itemToMove.getComponentId() > 0) {
-        app.freerouting.board.model.structure.Component comp =
-            hdlg.getRoutingBoard().components.get(itemToMove.getComponentId());
+        Component comp = hdlg.getRoutingBoard().components.get(itemToMove.getComponentId());
         if (comp != null && comp.getPartNumber() != null && !comp.getPartNumber().isEmpty()) {
           padding = Math.max(padding, comp.getPartNumber().length() * 8);
         }

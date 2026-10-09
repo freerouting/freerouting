@@ -82,4 +82,64 @@ class GuiBoardPresentationControllerTest {
 
     assertEquals(expectedScreenRect, actual);
   }
+
+  @Test
+  void repaintWithPaintImmediatelyPaintsWholePanelImmediately() {
+    GuiBoardManager manager = mock(GuiBoardManager.class);
+    BoardPanel panel = mock(BoardPanel.class);
+    when(manager.getPanel()).thenReturn(panel);
+    when(manager.isPaintImmediately()).thenReturn(true);
+
+    GuiBoardPresentationController controller = new GuiBoardPresentationController(manager);
+    controller.repaint();
+
+    verify(panel).paintImmediately(any(Rectangle.class));
+    verify(panel, never()).repaint();
+  }
+
+  @Test
+  void repaintWithRectangleDelegatesToPaintImmediatelyWhenConfigured() {
+    GuiBoardManager manager = mock(GuiBoardManager.class);
+    BoardPanel panel = mock(BoardPanel.class);
+    when(manager.getPanel()).thenReturn(panel);
+    when(manager.isPaintImmediately()).thenReturn(true);
+
+    GuiBoardPresentationController controller = new GuiBoardPresentationController(manager);
+    Rectangle rect = new Rectangle(10, 20, 100, 200);
+    controller.repaint(rect);
+
+    verify(panel).paintImmediately(rect);
+    verify(panel, never()).repaint(any(Rectangle.class));
+  }
+
+  @Test
+  void repaintWithRectangleIgnoresNullOrNonPositiveDimensions() {
+    GuiBoardManager manager = mock(GuiBoardManager.class);
+    BoardPanel panel = mock(BoardPanel.class);
+    when(manager.getPanel()).thenReturn(panel);
+
+    GuiBoardPresentationController controller = new GuiBoardPresentationController(manager);
+    controller.repaint((Rectangle) null);
+    controller.repaint(new Rectangle(0, 0, 0, 100));
+    controller.repaint(new Rectangle(0, 0, 100, 0));
+    controller.repaint(new Rectangle(0, 0, -5, -5));
+
+    verify(panel, never()).repaint(any(Rectangle.class));
+    verify(panel, never()).paintImmediately(any(Rectangle.class));
+  }
+
+  @Test
+  void repaintThrottlesWhenReadOnly() {
+    GuiBoardManager manager = mock(GuiBoardManager.class);
+    BoardPanel panel = mock(BoardPanel.class);
+    when(manager.getPanel()).thenReturn(panel);
+    when(manager.isPaintImmediately()).thenReturn(false);
+    when(manager.isBoardReadOnly()).thenReturn(true);
+
+    GuiBoardPresentationController controller = new GuiBoardPresentationController(manager);
+    controller.repaint();
+    controller.repaint();
+
+    verify(panel, org.mockito.Mockito.atMostOnce()).repaint();
+  }
 }

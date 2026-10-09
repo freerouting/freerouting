@@ -16,6 +16,7 @@ import static org.mockito.Mockito.when;
 
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.DrillItem;
+import app.freerouting.board.model.items.ObstacleArea;
 import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.model.structure.Component;
 import app.freerouting.board.model.structure.Layer;
@@ -168,5 +169,28 @@ class MoveComponentTest {
             anyInt(),
             anyInt(),
             anyInt());
+  }
+
+  @Test
+  void moveComponentWithoutDrillItemsComputesCenterAndMovesSuccessfully() {
+    Component comp =
+        board.components.add("R1", new IntPoint(100, 200), 0, true, null, null, false, "RES_0805");
+    ObstacleArea smdPad = mock(ObstacleArea.class);
+    smdPad.board = board;
+    when(smdPad.getComponentId()).thenReturn(comp.id);
+    when(smdPad.boundingBox()).thenReturn(new IntBox(80, 180, 120, 220));
+
+    doReturn(List.of(smdPad)).when(board).getComponentItems(comp.id);
+    doReturn(true).when(board).checkMoveItem(eq(smdPad), any(Vector.class), anyCollection());
+
+    Vector moveVector = new IntVector(300, 400);
+    MoveComponent moveComponent = new MoveComponent(smdPad, moveVector, 99, 5);
+
+    assertEquals(-1.0, moveComponent.getMinDrillItemWidthWithTraces());
+    assertTrue(moveComponent.check());
+    assertTrue(moveComponent.insert(100, 50));
+
+    verify(smdPad).moveBy(moveVector);
+    assertEquals(new IntPoint(400, 600), comp.getLocation());
   }
 }
