@@ -62,27 +62,28 @@ public final class Circuit {
   }
 
   static LengthMatchingRule readLengthScope(IJFlexScanner scanner) {
-    LengthMatchingRule result;
-    double[] lengthArr = new double[2];
-    Object nextToken = null;
-    for (int i = 0; i < 2; i++) {
-      try {
-        nextToken = scanner.nextToken();
-      } catch (IOException e) {
-        FRLogger.error("Circuit.read_length_scope: IO error scanning file", e);
-        return null;
-      }
-      if (nextToken instanceof Double double1) {
-        lengthArr[i] = double1;
-      } else if (nextToken instanceof Integer integer) {
-        lengthArr[i] = integer;
-      } else {
-        FRLogger.warn(
-            "Circuit.read_length_scope: number expected at '" + scanner.getScopeIdentifier() + "'");
-        return null;
-      }
+    double maxLength = -1;
+    double minLength = 0;
+    Object nextToken;
+
+    try {
+      nextToken = scanner.nextToken();
+    } catch (IOException e) {
+      FRLogger.error("Circuit.read_length_scope: IO error scanning file", e);
+      return null;
     }
-    result = new LengthMatchingRule(lengthArr[0], lengthArr[1]);
+
+    if (nextToken instanceof Double doubleVal) {
+      maxLength = doubleVal;
+    } else if (nextToken instanceof Integer intVal) {
+      maxLength = intVal;
+    } else {
+      FRLogger.warn(
+          "Circuit.read_length_scope: number expected at '" + scanner.getScopeIdentifier() + "'");
+      return null;
+    }
+
+    boolean minLengthRead = false;
     for (; ; ) {
       Object prevToken = nextToken;
       try {
@@ -102,11 +103,22 @@ public final class Circuit {
         // end of scope
         break;
       }
+      if (!minLengthRead && prevToken != Keyword.OPEN_BRACKET) {
+        if (nextToken instanceof Double doubleVal) {
+          minLength = doubleVal;
+          minLengthRead = true;
+          continue;
+        } else if (nextToken instanceof Integer intVal) {
+          minLength = intVal;
+          minLengthRead = true;
+          continue;
+        }
+      }
       if (prevToken == Keyword.OPEN_BRACKET) {
         ScopeKeyword.skipScope(scanner);
       }
     }
-    return result;
+    return new LengthMatchingRule(maxLength, minLength);
   }
 
   /** A maxLength of -1 indicates that no maximum length is defined. */
@@ -130,7 +142,7 @@ public final class Circuit {
   }
 
   /** A maxLength of -1 indicates that no maximum length is defined. */
-  private static class LengthMatchingRule {
+  static class LengthMatchingRule {
 
     public final double maxLength;
     public final double minLength;
