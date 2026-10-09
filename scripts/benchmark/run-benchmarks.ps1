@@ -6,7 +6,7 @@ param(
     [string]  $OutputsDir     = "$PSScriptRoot\outputs",
     [string]  $WebsiteHtml    = "$PSScriptRoot\..\..\website\benchmarks.html",
     [int]     $MaxPasses      = 500,
-    [string]  $MaxTime        = "01:30:00",
+    [string]  $MaxTime        = "08:00:00",
     [int]     $MaxThreads     = 1,
     [string]  $HeapMax        = "8g",
     [string]  $LogLevel       = "INFO",
@@ -75,9 +75,12 @@ foreach ($key in @($cache.Keys)) {
 
 function Update-BenchmarkReports {
     param([Hashtable]$Cache)
+    Write-Host "Updating benchmark reports..."
     $normalizedScores = Invoke-BenchmarkScoreRecalculator -JsonPath $JsonPath -BinariesDir $BinariesDir
+    Write-Host "  -> Exporting Markdown report and chart data..."
     Export-MarkdownReport $Cache $MdPath $ChartDataPath -NormalizedScores $normalizedScores
     if (-not $SkipWebsiteUpdate) {
+        Write-Host "  -> Updating website benchmarks HTML..."
         Update-BenchmarksHtml $Cache $WebsiteHtml -NormalizedScores $normalizedScores
     }
 }

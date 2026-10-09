@@ -127,6 +127,7 @@ function Export-MarkdownReport {
     )
 
     $runs = Get-ActiveBenchmarkRuns $Cache $FixturesDir
+    Write-Host "     Processing $($runs.Count) active benchmark runs across fixtures..."
 
     $grouped = $runs | Group-Object -Property { $_.fixture.relative_path } | Sort-Object -Property Name
     $groupedByFolder = $runs | Group-Object -Property { $_.fixture.group } | Sort-Object -Property Name
@@ -341,6 +342,44 @@ function Export-MarkdownReport {
         $versionTimeoutData = @{}
         $budgetSet = [System.Collections.Generic.HashSet[string]]::new()
 
+        $manifestBudgetCache = @{}
+        $getRunBudgetFn = {
+            param($r)
+            if ($r.job_timeout) { return [string]$r.job_timeout }
+            if ($r.settings_snapshot -and $r.settings_snapshot.job_timeout) {
+                return [string]$r.settings_snapshot.job_timeout
+            }
+            if ($r.result_json) {
+                $rjRel = [string]$r.result_json
+                if ($manifestBudgetCache.ContainsKey($rjRel)) {
+                    return [string]$manifestBudgetCache[$rjRel]
+                }
+                $manifestFull = Resolve-BenchmarkStoredPath $rjRel
+                if (-not $manifestFull -or -not (Test-Path $manifestFull)) {
+                    $benchmarkDir = Split-Path (Get-BenchmarkFixturesDir) -Parent
+                    $manifestFull = Join-Path $benchmarkDir ($rjRel -replace '/', '\')
+                }
+                if ($manifestFull -and (Test-Path $manifestFull)) {
+                    try {
+                        $content = [System.IO.File]::ReadAllText($manifestFull)
+                        if ($content -match 'job_timeout.:\s*.([^`"]+)') {
+                            $found = $Matches[1]
+                            $manifestBudgetCache[$rjRel] = $found
+                            return [string]$found
+                        }
+                    } catch {}
+                }
+            }
+            $rel = [string]$r.fixture.relative_path
+            if ($rel -match 'PCBench[/\\]([^/\\]+)') {
+                $boardId = $Matches[1]
+                if ($catalogBudgetLookup.ContainsKey($boardId)) {
+                    return [string]$catalogBudgetLookup[$boardId]
+                }
+            }
+            return "00:30:00"
+        }
+
         foreach ($verGroup in $versionGroups) {
             $version = $verGroup.Name
             $vData = @{
@@ -356,28 +395,14 @@ function Export-MarkdownReport {
                 if (-not $versionRuns) { continue }
                 $latestRun = $versionRuns | Sort-Object -Property { $_.run_at } -Descending | Select-Object -First 1
 
-                # Budget determination
-                $budget = $null
-                $rel = [string]$latestRun.fixture.relative_path
-                if ($rel -match 'PCBench[/\\]([^/\\]+)') {
-                    $boardId = $Matches[1]
-                    if ($catalogBudgetLookup.ContainsKey($boardId)) {
-                        $budget = [string]$catalogBudgetLookup[$boardId]
-                    }
-                }
-                if (-not $budget -and $latestRun.settings_snapshot -and $latestRun.settings_snapshot.job_timeout) {
-                    $budget = [string]$latestRun.settings_snapshot.job_timeout
-                }
-                if (-not $budget) {
-                    $budget = "00:30:00"
-                }
-
-                [void]$vData.Budgets.Add($budget)
-
                 if (-not (Test-RunIsTimedOut $latestRun)) { continue }
 
                 $vData.Total++
                 $totalTimeoutsAcrossAll++
+
+                # Budget determination for timed-out run
+                $budget = & $getRunBudgetFn $latestRun
+                [void]$vData.Budgets.Add($budget)
 
                 # Stage determination
                 $optDur = if ($latestRun.phases.optimizer -and $latestRun.phases.optimizer.duration_seconds) {
@@ -400,6 +425,17 @@ function Export-MarkdownReport {
                     $vData.Fanout++
                 } else {
                     $vData.Autorouter++
+                }
+            }
+
+            if ($vData.Budgets.Count -eq 0) {
+                foreach ($fixtureGroup in $groupedByFixture) {
+                    $versionRuns = $fixtureGroup.Group | Where-Object { $_.binary.version_label -eq $version }
+                    if ($versionRuns) {
+                        $sampleRun = $versionRuns | Sort-Object -Property { $_.run_at } -Descending | Select-Object -First 1
+                        [void]$vData.Budgets.Add((& $getRunBudgetFn $sampleRun))
+                        break
+                    }
                 }
             }
 
@@ -488,6 +524,7 @@ function Export-MarkdownReport {
     $downArrowRed = "$([char]0x2193)$([char]::ConvertFromUtf32(0x1F53B))" # ↓🔻
 
     # --- Per-Group and Per-Fixture sections ---
+    Write-Host "     Rendering summary tables and detail tables for $($groupedByFolder.Count) fixture groups..."
     foreach ($folderGroup in $groupedByFolder) {
         $folderName = $folderGroup.Name
         [void]$sb.AppendLine("## Group: [$folderName](../fixtures/$folderName)")
@@ -590,7 +627,7 @@ function Export-MarkdownReport {
                 $errs = if ($run.log_analysis.error_count -ne $null) { $run.log_analysis.error_count } else { 0 }
                 $warnErrStr = "$warns / $errs"
 
-                # Check / parse notes from cache, fallback to log if not cached yet
+                # Check / parse notes from cache, fallback to log only when necessary (failures, timeouts, or errors)
                 $loadError = $null
                 $exceptions = $null
                 $logTimedOut = $null
@@ -609,12 +646,64 @@ function Export-MarkdownReport {
                 } else {
                     $null
                 }
-                if (($loadError -eq $null -or $exceptions -eq $null -or $logTimedOut -eq $null) -and
+                $hasErrorSignal = ($run.exit.crashed -eq $true) -or
+                    ($run.exit.code -ne $null -and $run.exit.code -ne 0) -or
+                    ($run.exit.state -eq "FAILED") -or
+                    (Test-RunIsTimedOut $run) -or
+                    ($run.log_analysis.error_count -and $run.log_analysis.error_count -gt 0)
+
+                if ($hasErrorSignal -and ($loadError -eq $null -or $exceptions -eq $null -or $logTimedOut -eq $null) -and
                     $storedLogPath -and (Test-Path $storedLogPath)) {
-                    $logMetrics = Get-PhaseMetrics $storedLogPath $run.binary.version_label
-                    $loadError = $logMetrics.load_error
-                    $exceptions = $logMetrics.exceptions
-                    $logTimedOut = $logMetrics.timed_out
+                    # Fast inspection of small files or tail of large files
+                    try {
+                        $logFileItem = Get-Item $storedLogPath
+                        $tailLines = if ($logFileItem.Length -le 2MB) {
+                            Get-Content -Path $storedLogPath -Tail 500 -ErrorAction SilentlyContinue
+                        } else {
+                            # For large/multi-GB log files, read only the last 256KB
+                            $fs = [System.IO.File]::OpenRead($storedLogPath)
+                            try {
+                                $seekPos = [math]::Max(0L, $fs.Length - 262144L)
+                                [void]$fs.Seek($seekPos, [System.IO.SeekOrigin]::Begin)
+                                $reader = [System.IO.StreamReader]::new($fs)
+                                $tailText = $reader.ReadToEnd()
+                                $tailText -split "`r?`n"
+                            } finally {
+                                $fs.Dispose()
+                            }
+                        }
+
+                        $foundLoadError = $false
+                        $foundExceptions = [System.Collections.Generic.HashSet[string]]::new()
+                        $foundTimedOut = $false
+
+                        foreach ($l in $tailLines) {
+                            if ($l -match 'Failed to load board|Couldn''t read the input file|Couldn''t load the input file|Cannot load board') {
+                                $foundLoadError = $true
+                            }
+                            if ($l -match 'timed_out|timed out|with timeout:|TIMED_OUT') {
+                                $foundTimedOut = $true
+                            }
+                            if ($l -match '\b([A-Z]\w*(?:Exception|Error))\b') {
+                                $matchesObject = [regex]::Matches($l, '\b([A-Z]\w*(?:Exception|Error))\b')
+                                foreach ($m in $matchesObject) {
+                                    $exc = $m.Groups[1].Value
+                                    if ($exc -notin @('Exception', 'Error', 'StandardError', 'ExecutionError')) {
+                                        [void]$foundExceptions.Add($exc)
+                                    }
+                                }
+                            }
+                        }
+
+                        $loadError = $foundLoadError
+                        $exceptions = @($foundExceptions)
+                        $logTimedOut = $foundTimedOut
+                    } catch {
+                        $loadError = $false
+                        $exceptions = @()
+                        $logTimedOut = $false
+                    }
+
                     # Cache in-memory for the duration of this report run
                     if ($run.log_analysis.PSObject.Properties['load_error'] -eq $null) {
                         $run.log_analysis | Add-Member -NotePropertyName "load_error" -NotePropertyValue $loadError

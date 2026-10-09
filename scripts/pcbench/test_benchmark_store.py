@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import tempfile
+import threading
 import unittest
 from pathlib import Path
+from typing import Any
 
 import run_corpus_benchmark as store
 
@@ -93,6 +95,150 @@ class BenchmarkStoreTest(unittest.TestCase):
 
             self.assertEqual(attempts["count"], 3)
             self.assertEqual(destination.read_text(encoding="utf-8"), "new\n")
+
+    def test_dashboard_separators_are_155_characters_long(self) -> None:
+        import io
+        import threading
+        import collections
+        from unittest.mock import patch
+
+        captured = io.StringIO()
+        status_lock = threading.Lock()
+        worker_status = {
+            1: {"board": "board-A", "start": 0.0, "last_line": "Routing...", "active": True},
+            2: {"board": "Idle", "start": 0.0, "last_line": "Idle", "active": False},
+        }
+        messages = collections.deque(["[1/10] board-A: CLEAN (5.2s)"])
+
+        with patch("sys.stdout", captured):
+            store.render_dashboard(
+                completed=1,
+                total=10,
+                t_start=0.0,
+                worker_status=worker_status,
+                recent_messages=messages,
+                status_lock=status_lock,
+                version_label="2.6.0-RC2",
+                in_place=False,
+                target_workers=4,
+            )
+
+        output = captured.getvalue()
+        # Strip ANSI escape codes to inspect clean characters
+        import re
+        plain = re.sub(r"\033\[[0-9;]*m", "", output)
+        lines = [line for line in plain.splitlines() if line.strip()]
+
+        # Top separator
+        self.assertEqual(lines[0], "=" * 155)
+        # Separator after header
+        self.assertEqual(lines[2], "-" * 155)
+        # Separator after active workers (header + 2 workers)
+        self.assertEqual(lines[6], "-" * 155)
+        # Bottom separator
+        self.assertEqual(lines[9], "=" * 155)
+
+        # Header contains target workers and +/- hint
+        self.assertIn("Workers: 2 (target 4)", lines[1])
+        self.assertIn("[+ / - adjust workers | ESC / Q to stop]", lines[1])
+
+    def test_dynamic_worker_scaling_increments_and_decrements_gracefully(self) -> None:
+        import queue
+        import time
+
+        task_queue: queue.Queue[str] = queue.Queue()
+        for i in range(6):
+            task_queue.put(f"task-{i}")
+
+        result_queue: queue.Queue[tuple[str, int]] = queue.Queue()
+        worker_status: dict[int, dict[str, Any]] = {}
+        status_lock = threading.Lock()
+        cancel_event = threading.Event()
+        force_kill_event = threading.Event()
+        worker_lock = threading.Lock()
+        target_workers = 2
+        active_worker_threads = 0
+        worker_threads: list[threading.Thread] = []
+
+        def mock_worker_func(wid: int) -> None:
+            nonlocal active_worker_threads
+            while not cancel_event.is_set() and not force_kill_event.is_set():
+                with worker_lock:
+                    if active_worker_threads > target_workers:
+                        active_worker_threads -= 1
+                        with status_lock:
+                            worker_status.pop(wid, None)
+                        return
+
+                try:
+                    task = task_queue.get(timeout=0.05)
+                except queue.Empty:
+                    with worker_lock:
+                        active_worker_threads -= 1
+                        with status_lock:
+                            worker_status.pop(wid, None)
+                    return
+
+                with status_lock:
+                    worker_status[wid]["active"] = True
+                    worker_status[wid]["board"] = task
+                time.sleep(0.02)
+                result_queue.put((task, wid))
+                task_queue.task_done()
+                with status_lock:
+                    worker_status[wid]["active"] = False
+
+            with worker_lock:
+                active_worker_threads -= 1
+                with status_lock:
+                    worker_status.pop(wid, None)
+
+        def spawn_worker_if_needed() -> None:
+            nonlocal active_worker_threads
+            while (
+                active_worker_threads < target_workers
+                and not task_queue.empty()
+                and not cancel_event.is_set()
+                and not force_kill_event.is_set()
+            ):
+                with status_lock:
+                    used = set(worker_status.keys())
+                    wid = 1
+                    while wid in used:
+                        wid += 1
+                    worker_status[wid] = {"active": False, "board": "Idle"}
+                active_worker_threads += 1
+                t = threading.Thread(target=mock_worker_func, args=(wid,), daemon=True)
+                worker_threads.append(t)
+                t.start()
+
+        # Start with 2 workers
+        with worker_lock:
+            spawn_worker_if_needed()
+        self.assertEqual(active_worker_threads, 2)
+
+        # Increase target to 3
+        with worker_lock:
+            target_workers = 3
+            spawn_worker_if_needed()
+        self.assertEqual(active_worker_threads, 3)
+
+        # Decrease target to 1
+        with worker_lock:
+            target_workers = 1
+
+        # Wait for all tasks to be processed
+        results = []
+        for _ in range(6):
+            res = result_queue.get(timeout=2.0)
+            results.append(res)
+
+        for t in worker_threads:
+            t.join(timeout=1.0)
+
+        self.assertEqual(len(results), 6)
+        self.assertEqual(active_worker_threads, 0)
+        self.assertEqual(len(worker_status), 0)
 
 
 if __name__ == "__main__":
