@@ -27,15 +27,15 @@
 
 .EXAMPLE
     # 1. Test the UI directly without any server or admin key:
-    .\scripts\tests\test_microsurvey.ps1 -Mode LocalMock
+    ./scripts/tests/test_microsurvey.ps1 -Mode LocalMock
 
 .EXAMPLE
     # 2. Clear previous survey answer cache:
-    .\scripts\tests\test_microsurvey.ps1 -Mode ClearCache
+    ./scripts/tests/test_microsurvey.ps1 -Mode ClearCache
 
 .EXAMPLE
     # 3. Publish a survey to the local API server:
-    .\scripts\tests\test_microsurvey.ps1 -Mode ApiPublish -AdminKey "test-admin-secret"
+    ./scripts/tests/test_microsurvey.ps1 -Mode ApiPublish -AdminKey "test-admin-secret"
 #>
 
 [CmdletBinding()]

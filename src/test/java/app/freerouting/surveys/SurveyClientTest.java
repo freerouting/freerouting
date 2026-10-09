@@ -145,7 +145,8 @@ class SurveyClientTest {
   @Test
   void localActiveSurveyOverrideParsesWithoutNetwork() {
     String json =
-        "{\"schema_version\":1,\"id\":\"local-s1\",\"topic\":\"Local\",\"question\":\"Testing?\",\"options\":[\"A\",\"B\"]}";
+        "{\"schema_version\":1,\"id\":\"local-s1\",\"topic\":\"Local\","
+            + "\"question\":\"Testing?\",\"options\":[\"A\",\"B\"]}";
     System.setProperty(SurveyClient.ACTIVE_SURVEY_PROP, json);
     try {
       SurveyClient localClient = new SurveyClient("http://127.0.0.1:1/v1/");
@@ -167,7 +168,8 @@ class SurveyClientTest {
     java.nio.file.Path tempFile = java.nio.file.Files.createTempFile("survey-test", ".json");
     try {
       String json =
-          "{\"schema_version\":1,\"id\":\"file-s1\",\"topic\":\"FromFile\",\"question\":\"From File?\",\"options\":[\"Yes\",\"No\"]}";
+          "{\"schema_version\":1,\"id\":\"file-s1\",\"topic\":\"FromFile\","
+              + "\"question\":\"From File?\",\"options\":[\"Yes\",\"No\"]}";
       java.nio.file.Files.writeString(tempFile, json);
       System.setProperty(SurveyClient.ACTIVE_SURVEY_PROP, tempFile.toAbsolutePath().toString());
 

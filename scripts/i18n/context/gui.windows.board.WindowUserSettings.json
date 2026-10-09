@@ -13,6 +13,26 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
+      "allow_surveys",
+      "allow_telemetry"
+    ],
+    "ui_role": "label"
+  },
+  "allow_surveys": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.windows.board.WindowUserSettings"
+    ],
+    "english_hash": "3b6527eae997a9f03f323c469a89f44af77a2de1a6f0d89997eae44249a1911d",
+    "grammatical_role": "fragment",
+    "has_placeholders": false,
+    "is_html": true,
+    "java_class": "app.freerouting.gui.windows.board.WindowUserSettings",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "allow_contact",
       "allow_telemetry"
     ],
     "ui_role": "label"
@@ -31,7 +51,8 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "allow_contact"
+      "allow_contact",
+      "allow_surveys"
     ],
     "ui_role": "label"
   },

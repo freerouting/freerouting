@@ -116,7 +116,7 @@ Run the included cross-platform testing utility from the repository root:
 
 - **Windows (PowerShell):**
   ```powershell
-  .\scripts\tests\test_microsurvey.ps1 -Mode LocalMock
+  ./scripts/tests/test_microsurvey.ps1 -Mode LocalMock
   ```
 - **Linux / macOS (Bash):**
   ```bash
@@ -159,7 +159,7 @@ Start Freerouting with the API server enabled and an admin key configured:
 
 ```powershell
 # In Terminal 1: Start Freerouting with API server and admin secret
-.\scripts\tests\test_microsurvey.ps1 -Mode StartServer -AdminKey "my-local-secret"
+./scripts/tests/test_microsurvey.ps1 -Mode StartServer -AdminKey "my-local-secret"
 ```
 
 Or manually:
@@ -173,7 +173,7 @@ In another terminal, publish the sample survey:
 
 ```powershell
 # Using the test script:
-.\scripts\tests\test_microsurvey.ps1 -Mode ApiPublish -AdminKey "my-local-secret"
+./scripts/tests/test_microsurvey.ps1 -Mode ApiPublish -AdminKey "my-local-secret"
 
 # Or using curl / Invoke-RestMethod:
 Invoke-RestMethod -Uri "http://localhost:37864/v1/surveys/active" -Method POST `
@@ -183,13 +183,13 @@ Invoke-RestMethod -Uri "http://localhost:37864/v1/surveys/active" -Method POST `
 
 #### Step 3: Inspect the Active Survey
 ```powershell
-.\scripts\tests\test_microsurvey.ps1 -Mode ApiGet
+./scripts/tests/test_microsurvey.ps1 -Mode ApiGet
 # Or: curl http://localhost:37864/v1/surveys/active
 ```
 
 #### Step 4: Retire the Active Survey
 ```powershell
-.\scripts\tests\test_microsurvey.ps1 -Mode ApiRetire -AdminKey "my-local-secret"
+./scripts/tests/test_microsurvey.ps1 -Mode ApiRetire -AdminKey "my-local-secret"
 # Or: curl -X DELETE http://localhost:37864/v1/surveys/active -H "X-Survey-Admin-Key: my-local-secret"
 ```
 
@@ -207,7 +207,7 @@ Freerouting guarantees that a user is **never asked the same question twice**. O
 
 > [!TIP]
 > - **During Development:** Set `FREEROUTING__SURVEYS__IGNORE_CACHE=true` (or use `test_microsurvey.ps1 -Mode LocalMock`) to keep surveys appearing across launches without having to clear the cache.
-> - **To Clear Cache Manually:** Run `.\scripts\tests\test_microsurvey.ps1 -Mode ClearCache` or delete the platform cache file listed above.
+> - **To Clear Cache Manually:** Run `./scripts/tests/test_microsurvey.ps1 -Mode ClearCache` or delete the platform cache file listed above.
 
 ---
 
