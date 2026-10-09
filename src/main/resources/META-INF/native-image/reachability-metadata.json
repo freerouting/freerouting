@@ -69,6 +69,10 @@
       "serializable": true
     },
     {
+      "type": "app.freerouting.board.actions.ItemSelectionFilter",
+      "serializable": true
+    },
+    {
       "type": "app.freerouting.board.facade.BasicBoard",
       "serializable": true
     },
@@ -77,11 +81,35 @@
       "serializable": true
     },
     {
+      "type": "app.freerouting.board.model.items.BoardItemType",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.board.model.items.ComponentObstacleArea",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.board.model.items.ComponentOutline",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.board.model.items.ConductionArea",
+      "serializable": true
+    },
+    {
       "type": "app.freerouting.board.model.items.DrillItem",
       "serializable": true
     },
     {
       "type": "app.freerouting.board.model.items.Item",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.board.model.items.Item$StopConnectionOption",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.board.model.items.ObstacleArea",
       "serializable": true
     },
     {
@@ -94,6 +122,10 @@
     },
     {
       "type": "app.freerouting.board.model.items.Via",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.board.model.items.ViaObstacleArea",
       "serializable": true
     },
     {
@@ -165,11 +197,23 @@
       "serializable": true
     },
     {
+      "type": "app.freerouting.core.library.LogicalPart",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.core.library.LogicalPart$PartPin",
+      "serializable": true
+    },
+    {
       "type": "app.freerouting.core.library.LogicalParts",
       "serializable": true
     },
     {
       "type": "app.freerouting.core.library.Package",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.core.library.Package$Keepout",
       "serializable": true
     },
     {
@@ -330,6 +374,10 @@
       ]
     },
     {
+      "type": "app.freerouting.core.scoring.BenchmarkScoreCalculator",
+      "serializable": true
+    },
+    {
       "type": "app.freerouting.core.scoring.BoardStatistics",
       "fields": [
         {
@@ -380,7 +428,8 @@
         {
           "name": "vias"
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.core.scoring.BoardStatistics$BoardStatisticsFanout",
@@ -411,7 +460,8 @@
         {
           "name": "totalCount"
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.core.scoring.BoardStatisticsBoard",
@@ -425,7 +475,8 @@
         {
           "name": "size"
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.core.scoring.BoardStatisticsBounds",
@@ -439,7 +490,8 @@
         {
           "name": "minViaCount"
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.core.scoring.BoardStatisticsClearanceViolations",
@@ -468,7 +520,8 @@
         {
           "name": "unfixableCount"
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.core.scoring.BoardStatisticsComponents",
@@ -476,7 +529,8 @@
         {
           "name": "totalCount"
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.core.scoring.BoardStatisticsConnections",
@@ -487,7 +541,8 @@
         {
           "name": "maximumCount"
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.core.scoring.BoardStatisticsDifficulty",
@@ -507,7 +562,8 @@
         {
           "name": "signalLayerCount"
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.core.scoring.BoardStatisticsItems",
@@ -536,7 +592,8 @@
         {
           "name": "viaCount"
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.core.scoring.BoardStatisticsLayers",
@@ -547,7 +604,8 @@
         {
           "name": "totalCount"
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.core.scoring.BoardStatisticsNets",
@@ -558,7 +616,8 @@
         {
           "name": "totalCount"
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.core.scoring.BoardStatisticsPads",
@@ -566,7 +625,8 @@
         {
           "name": "totalCount"
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.core.scoring.BoardStatisticsTraces",
@@ -598,7 +658,8 @@
         {
           "name": "totalWeightedLength"
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.core.scoring.BoardStatisticsVias",
@@ -615,7 +676,8 @@
         {
           "name": "totalCount"
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.datastructures.UndoableObjects",
@@ -623,6 +685,10 @@
     },
     {
       "type": "app.freerouting.datastructures.UndoableObjects$UndoableObjectNode",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.geometry.planar.BigIntDirection",
       "serializable": true
     },
     {
@@ -634,7 +700,27 @@
       "serializable": true
     },
     {
+      "type": "app.freerouting.geometry.planar.Direction",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.geometry.planar.Ellipse",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.geometry.planar.FloatPoint",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.geometry.planar.FortyfiveDegreeDirection",
+      "serializable": true
+    },
+    {
       "type": "app.freerouting.geometry.planar.IntBox",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.geometry.planar.IntDirection",
       "serializable": true
     },
     {
@@ -654,6 +740,14 @@
       "serializable": true
     },
     {
+      "type": "app.freerouting.geometry.planar.LineSegment",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.geometry.planar.LineSegment[]",
+      "serializable": true
+    },
+    {
       "type": "app.freerouting.geometry.planar.Line[]",
       "serializable": true
     },
@@ -666,11 +760,19 @@
       "serializable": true
     },
     {
+      "type": "app.freerouting.geometry.planar.Polygon",
+      "serializable": true
+    },
+    {
       "type": "app.freerouting.geometry.planar.PolygonShape",
       "serializable": true
     },
     {
       "type": "app.freerouting.geometry.planar.Polyline",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.geometry.planar.PolylineArea",
       "serializable": true
     },
     {
@@ -682,11 +784,27 @@
       "serializable": true
     },
     {
+      "type": "app.freerouting.geometry.planar.Polyline[]",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.geometry.planar.RationalPoint",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.geometry.planar.RationalVector",
+      "serializable": true
+    },
+    {
       "type": "app.freerouting.geometry.planar.RegularTileShape",
       "serializable": true
     },
     {
       "type": "app.freerouting.geometry.planar.Shape[]",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.geometry.planar.Side",
       "serializable": true
     },
     {
@@ -698,7 +816,15 @@
       "serializable": true
     },
     {
+      "type": "app.freerouting.geometry.planar.TileShape[]",
+      "serializable": true
+    },
+    {
       "type": "app.freerouting.geometry.planar.Vector",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.geometry.planar.Vector[]",
       "serializable": true
     },
     {
@@ -743,6 +869,10 @@
       "serializable": true
     },
     {
+      "type": "app.freerouting.rules.DefaultItemClearanceClasses$ItemClass",
+      "serializable": true
+    },
+    {
       "type": "app.freerouting.rules.Net",
       "serializable": true
     },
@@ -755,6 +885,14 @@
       "serializable": true
     },
     {
+      "type": "app.freerouting.rules.NetLengthConstraint",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.rules.Net[]",
+      "serializable": true
+    },
+    {
       "type": "app.freerouting.rules.Nets",
       "serializable": true
     },
@@ -763,11 +901,19 @@
       "serializable": true
     },
     {
+      "type": "app.freerouting.rules.ViaInfo[]",
+      "serializable": true
+    },
+    {
       "type": "app.freerouting.rules.ViaInfos",
       "serializable": true
     },
     {
       "type": "app.freerouting.rules.ViaRule",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.rules.ViaRule[]",
       "serializable": true
     },
     {
@@ -788,7 +934,8 @@
           "name": "<init>",
           "parameterTypes": []
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.settings.ApiServerSettings",
@@ -823,7 +970,8 @@
           "name": "<init>",
           "parameterTypes": []
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.settings.AutorouterSettings",
@@ -855,7 +1003,8 @@
           "name": "<init>",
           "parameterTypes": []
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.settings.DebugSettings",
@@ -875,7 +1024,8 @@
         {
           "name": "traceInsertionDelay"
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.settings.DesignRulesCheckerSettings",
@@ -898,7 +1048,8 @@
           "name": "<init>",
           "parameterTypes": []
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.settings.FanoutSettings",
@@ -945,7 +1096,8 @@
           "name": "<init>",
           "parameterTypes": []
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.settings.FeatureFlagsSettings",
@@ -968,7 +1120,8 @@
           "name": "<init>",
           "parameterTypes": []
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.settings.GlobalSettings",
@@ -1066,7 +1219,8 @@
           "name": "<init>",
           "parameterTypes": []
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.settings.GoogleSheetsProviderSettings",
@@ -1083,7 +1237,8 @@
           "name": "<init>",
           "parameterTypes": []
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.settings.GuiApplicationSettings",
@@ -1112,7 +1267,8 @@
           "name": "<init>",
           "parameterTypes": []
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.settings.LayerSettings",
@@ -1138,7 +1294,8 @@
           "name": "<init>",
           "parameterTypes": []
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.settings.LayerSettings[]"
@@ -1158,7 +1315,8 @@
           "name": "<init>",
           "parameterTypes": []
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.settings.LoggingSettings$ConsoleLoggingSettings",
@@ -1233,7 +1391,8 @@
           "name": "<init>",
           "parameterTypes": []
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.settings.NetworkSettings",
@@ -1259,7 +1418,8 @@
           "name": "<init>",
           "parameterTypes": []
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.settings.OptimizerScoreSettings",
@@ -1288,7 +1448,8 @@
           "name": "<init>",
           "parameterTypes": []
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.settings.OptimizerScoringVersion",
@@ -1355,7 +1516,8 @@
           "name": "<init>",
           "parameterTypes": []
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.settings.RateLimitSettings",
@@ -1375,7 +1537,8 @@
           "name": "<init>",
           "parameterTypes": []
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.settings.RouterScoreSettings",
@@ -1410,7 +1573,8 @@
           "name": "<init>",
           "parameterTypes": []
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.settings.RouterScoringVersion",
@@ -1498,7 +1662,8 @@
           "name": "<init>",
           "parameterTypes": []
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.settings.RoutingCostSettings",
@@ -1542,7 +1707,8 @@
           "name": "<init>",
           "parameterTypes": []
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.settings.RuntimeEnvironment",
@@ -1583,7 +1749,8 @@
         {
           "name": "systemLanguage"
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.settings.SettingsMerger"
@@ -1612,7 +1779,8 @@
           "name": "<init>",
           "parameterTypes": []
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.settings.UsageAndDiagnosticDataSettings",
@@ -1638,7 +1806,8 @@
           "name": "<init>",
           "parameterTypes": []
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "app.freerouting.settings.UserProfileSettings",
@@ -1661,7 +1830,8 @@
           "name": "<init>",
           "parameterTypes": []
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "boolean"
@@ -1865,7 +2035,8 @@
             "java.lang.String"
           ]
         }
-      ]
+      ],
+      "serializable": true
     },
     {
       "type": "java.lang.Class",
@@ -1877,7 +2048,23 @@
       ]
     },
     {
+      "type": "java.lang.Double",
+      "serializable": true
+    },
+    {
       "type": "java.lang.Enum",
+      "serializable": true
+    },
+    {
+      "type": "java.lang.Float",
+      "serializable": true
+    },
+    {
+      "type": "java.lang.Integer",
+      "serializable": true
+    },
+    {
+      "type": "java.lang.Long",
       "serializable": true
     },
     {
@@ -1892,7 +2079,12 @@
       "serializable": true
     },
     {
-      "type": "java.lang.String[]"
+      "type": "java.lang.String[]",
+      "serializable": true
+    },
+    {
+      "type": "java.lang.String[][]",
+      "serializable": true
     },
     {
       "type": "java.lang.reflect.RecordComponent"
@@ -1923,7 +2115,16 @@
           "name": "<init>",
           "parameterTypes": []
         }
-      ]
+      ],
+      "serializable": true
+    },
+    {
+      "type": "java.util.HashMap",
+      "serializable": true
+    },
+    {
+      "type": "java.util.HashSet",
+      "serializable": true
     },
     {
       "type": "java.util.LinkedList",
@@ -1936,6 +2137,14 @@
     },
     {
       "type": "java.util.Locale"
+    },
+    {
+      "type": "java.util.TreeMap",
+      "serializable": true
+    },
+    {
+      "type": "java.util.TreeSet",
+      "serializable": true
     },
     {
       "type": "java.util.Vector",

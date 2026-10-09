@@ -36,8 +36,8 @@ public final class BoardSnapshotManager {
       }
       objectStream.close();
       return outputStream.toByteArray();
-    } catch (Exception exception) {
-      FRLogger.error("Couldn't serialize board", exception);
+    } catch (Throwable throwable) {
+      FRLogger.error("Couldn't serialize board", throwable);
       return null;
     }
   }
@@ -48,8 +48,8 @@ public final class BoardSnapshotManager {
       ByteArrayInputStream inputStream = new ByteArrayInputStream(objectByteArray);
       ObjectInputStream objectStream = new app.freerouting.util.SafeObjectInputStream(inputStream);
       return (BasicBoard) objectStream.readObject();
-    } catch (Exception exception) {
-      FRLogger.error("Couldn't deserialize board", exception);
+    } catch (Throwable throwable) {
+      FRLogger.error("Couldn't deserialize board", throwable);
       return null;
     }
   }
@@ -57,16 +57,20 @@ public final class BoardSnapshotManager {
   /** Returns an MD5 hash of the board trace-state profile. */
   String getHash() {
     try {
+      byte[] serialized = serialize(true);
+      if (serialized == null) {
+        return null;
+      }
       MessageDigest digest = MessageDigest.getInstance("MD5");
-      digest.update(serialize(true));
+      digest.update(serialized);
       byte[] hashedBytes = digest.digest();
       StringBuilder result = new StringBuilder();
       for (byte hashedByte : hashedBytes) {
         result.append(Integer.toString((hashedByte & 0xff) + 0x100, 16).substring(1));
       }
       return result.toString();
-    } catch (Exception exception) {
-      FRLogger.error("Couldn't calculate hash for board", exception);
+    } catch (Throwable throwable) {
+      FRLogger.error("Couldn't calculate hash for board", throwable);
       return null;
     }
   }
