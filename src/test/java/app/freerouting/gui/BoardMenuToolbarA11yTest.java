@@ -20,6 +20,7 @@ import java.util.Locale;
 import javax.accessibility.AccessibleRole;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -158,12 +159,15 @@ class BoardMenuToolbarA11yTest {
   @Test
   void inspectToolbarActionsAreGroupedSeparatorsAndAccessible() {
     List<String> actions = new ArrayList<>();
-    JPanel toolbar =
+    JToolBar toolbar =
         GuiA11yHarness.onEdt(
             () -> BoardToolbarInspectedItem.createComponentOnly(Locale.ENGLISH, actions::add));
 
     GuiA11yHarness.onEdt(
         () -> {
+          GuiA11yHarness.requireAccessibleName(
+              GuiA11yHarness.findByLocator(toolbar, GuiLocators.TOOLBAR_ROOT),
+              GuiLocators.TOOLBAR_ROOT);
           String[] locators = {
             GuiLocators.INSPECT_CANCEL,
             GuiLocators.INSPECT_INFO,
@@ -184,7 +188,38 @@ class BoardMenuToolbarA11yTest {
           }
           assertEquals(Arrays.asList(locators), actions);
 
+          long separatorCount =
+              Arrays.stream(toolbar.getComponents())
+                  .filter(
+                      c -> c instanceof javax.swing.JSeparator || c instanceof JToolBar.Separator)
+                  .count();
+          assertEquals(
+              3, separatorCount, "Expect exactly 3 group separators between 4 action groups");
+
           GuiA11yHarness.requireUniqueSiblingNames(toolbar);
+          GuiA11yHarness.requireNoLeakedGuiResources();
+        });
+  }
+
+  @Test
+  void inspectToolbarLocatorsRemainStableWhenAccessibleNamesAreHungarian() {
+    JToolBar english =
+        GuiA11yHarness.onEdt(
+            () -> BoardToolbarInspectedItem.createComponentOnly(Locale.ENGLISH, null));
+    JToolBar hungarian =
+        GuiA11yHarness.onEdt(
+            () -> BoardToolbarInspectedItem.createComponentOnly(Locale.forLanguageTag("hu"), null));
+
+    GuiA11yHarness.onEdt(
+        () -> {
+          String englishName =
+              GuiA11yHarness.accessibleName(
+                  GuiA11yHarness.findByLocator(english, GuiLocators.INSPECT_CANCEL));
+          String hungarianName =
+              GuiA11yHarness.accessibleName(
+                  GuiA11yHarness.findByLocator(hungarian, GuiLocators.INSPECT_CANCEL));
+          assertNotEquals(englishName, hungarianName);
+          assertEquals("A jelenlegi kijelölés megszüntetése (Esc).", hungarianName);
           GuiA11yHarness.requireNoLeakedGuiResources();
         });
   }

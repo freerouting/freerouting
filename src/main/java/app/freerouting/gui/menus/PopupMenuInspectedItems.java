@@ -73,14 +73,14 @@ public class PopupMenuInspectedItems extends PopupMenuDisplay {
         () -> boardPanel.boardHandling.extendSelectionToWholeComponents());
 
     this.insert(new JSeparator(), baseIndex);
-    clampHeaderToItemWidth(extendHeader);
     compactVerticalSpacing();
+    clampHeaderToItemWidth(extendHeader);
   }
 
   /**
    * Tightens row height across the whole popup (own items and the inherited display rows) so the
-   * extended group and the display group stay visually uniform. LAF default margins read loose at
-   * scaled font sizes.
+   * extended group and the display group stay visually uniform. Look-and-feel default margins read
+   * loose at scaled font sizes.
    */
   private void compactVerticalSpacing() {
     Insets compact = new Insets(1, 2, 1, 2);

@@ -1007,7 +1007,8 @@ public class BoardFrame extends WindowBase {
     if (canCompensate && viewPosition != null) {
       int verticalShift = scrollPane.getY() - scrollPaneYBefore;
       if (verticalShift != 0) {
-        boardPanel.setViewportPosition(new Point(viewPosition.x, viewPosition.y + verticalShift));
+        int newY = Math.max(0, viewPosition.y + verticalShift);
+        boardPanel.setViewportPosition(new Point(viewPosition.x, newY));
       }
     }
   }
