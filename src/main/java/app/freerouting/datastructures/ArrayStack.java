@@ -1,8 +1,12 @@
 package app.freerouting.datastructures;
 
+import app.freerouting.logger.FRLogger;
+
 /** Implementation of a stack as an array. */
 @SuppressWarnings("unchecked")
 public class ArrayStack<T> {
+
+  private static final int MAX_STACK_DEPTH = 40_000;
 
   private int level = -1;
   private T[] nodeArr;
@@ -17,6 +21,9 @@ public class ArrayStack<T> {
 
   /** Sets the stack to empty. */
   public void reset() {
+    for (int i = 0; i <= level; i++) {
+      nodeArr[i] = null;
+    }
     level = -1;
   }
 
@@ -38,12 +45,20 @@ public class ArrayStack<T> {
       return null;
     }
     T result = nodeArr[level];
+    nodeArr[level] = null;
     --level;
     return result;
   }
 
   private void reallocate() {
-    T[] newArray = (T[]) new Object[4 * this.nodeArr.length];
+    int oldLength = this.nodeArr.length;
+    if (oldLength >= MAX_STACK_DEPTH) {
+      throw new IllegalStateException(
+          "ArrayStack maximum depth of " + MAX_STACK_DEPTH + " exceeded");
+    }
+    int newLength = Math.min(MAX_STACK_DEPTH, 4 * oldLength);
+    FRLogger.debug("ArrayStack capacity grew from " + oldLength + " to " + newLength);
+    T[] newArray = (T[]) new Object[newLength];
     System.arraycopy(nodeArr, 0, newArray, 0, nodeArr.length);
     this.nodeArr = newArray;
   }

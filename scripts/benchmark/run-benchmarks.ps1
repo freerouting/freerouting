@@ -25,7 +25,6 @@ param(
     [switch]  $SkipWebsiteUpdate,
     [string]  $FilterFixture  = "*",
     [string]  $FilterBinary   = "*",
-    [ValidateSet("A", "B", "C", "D")]
     [string]  $FilterTier     = ""
 )
 
@@ -53,6 +52,9 @@ Get-ChildItem $libDir -Filter "*.ps1" | ForEach-Object {
 $null = New-Item -ItemType Directory -Force -Path $ResultsDir -ErrorAction SilentlyContinue
 $null = New-Item -ItemType Directory -Force -Path $LogsDir -ErrorAction SilentlyContinue
 $null = New-Item -ItemType Directory -Force -Path $OutputsDir -ErrorAction SilentlyContinue
+
+# Clean up any stray SES files created in the repository root due to '+' filename splitting
+Get-ChildItem -Path "." -Filter "*--unrouted--*.ses" -File -ErrorAction SilentlyContinue | Remove-Item -Force -ErrorAction SilentlyContinue
 
 $JsonPath = Join-Path $ResultsDir "benchmarks.json"
 $MdPath = Join-Path $ResultsDir "benchmarks.md"
@@ -112,7 +114,7 @@ $allBinaries = @(Get-ChildItem $BinariesDir -Filter "*.jar")
 $binaries = @($allBinaries | Where-Object { $_.Name -like $FilterBinary })
 $tierByBoardId = @{}
 $catalogPath = Join-Path $FixturesDir "PCBench\catalog.json"
-if ($FilterTier -and (Test-Path $catalogPath)) {
+if (Test-Path $catalogPath) {
     try {
         $catalog = Get-Content $catalogPath -Raw | ConvertFrom-Json
         foreach ($board in @($catalog.boards)) {
@@ -123,16 +125,49 @@ if ($FilterTier -and (Test-Path $catalogPath)) {
         exit 1
     }
 }
+
+$tierTokens = @($FilterTier.Split(",") | ForEach-Object { $_.Trim().ToUpperInvariant() } | Where-Object { $_ })
+if ($tierTokens.Count -eq 0 -or ($tierTokens.Count -eq 1 -and $tierTokens[0] -eq "ALL")) {
+    $tierOrder = @("A", "D", "C", "B")
+    $filterToTierOrder = $false
+} else {
+    $allowedTiers = @("A", "B", "C", "D")
+    $tierOrder = @()
+    foreach ($tierToken in $tierTokens) {
+        if ($tierToken -eq "ALL") {
+            Write-Error "Tier 'All' cannot be combined with named tiers."
+            exit 1
+        }
+        if ($allowedTiers -notcontains $tierToken) {
+            Write-Error "Unknown tier '$tierToken'. Use A, B, C, D, or a comma-separated list."
+            exit 1
+        }
+        if ($tierOrder -notcontains $tierToken) {
+            $tierOrder += $tierToken
+        }
+    }
+    $filterToTierOrder = $true
+}
+$tierRank = @{}
+for ($tierIndex = 0; $tierIndex -lt $tierOrder.Count; $tierIndex++) {
+    $tierRank[$tierOrder[$tierIndex]] = $tierIndex
+}
+
 $fixtures = @(Get-ChildItem $FixturesDir -Recurse -Filter "*.dsn" | Where-Object {
     $fixtureMatchesName =
         $_.Name -like $FilterFixture -or
         ($_.FullName -replace '\\', '/') -like "*$($FilterFixture -replace '\\', '/')*"
     $fixtureGroup = Split-Path (Split-Path $_.FullName -Parent) -Leaf
-    $fixtureMatchesTier =
-        (-not $FilterTier) -or
-        ($tierByBoardId.ContainsKey($fixtureGroup) -and $tierByBoardId[$fixtureGroup] -eq $FilterTier)
+    $fixtureTier = $tierByBoardId[$fixtureGroup]
+    $fixtureMatchesTier = (-not $filterToTierOrder) -or ($tierRank.ContainsKey([string]$fixtureTier))
     $fixtureMatchesName -and $fixtureMatchesTier -and (Test-IsActiveBenchmarkFixtureFile $_)
-})
+} | Sort-Object @{
+    Expression = {
+        $fixtureGroup = Split-Path (Split-Path $_.FullName -Parent) -Leaf
+        $fixtureTier = [string]$tierByBoardId[$fixtureGroup]
+        if ($tierRank.ContainsKey($fixtureTier)) { $tierRank[$fixtureTier] } else { 99 }
+    }
+}, Name)
 
 if ($binaries.Count -eq 0) {
     Write-Error "No Freerouting binaries found in: $BinariesDir"

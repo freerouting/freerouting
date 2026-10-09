@@ -10,15 +10,29 @@
 #     Freerouting's log output in the terminal window.
 # ---------------------------------------------------------------------------
 
+from pathlib import Path
 import platform
+import re
 import shlex
 import subprocess
 import threading
 import textwrap
+import sys
 
-import wx
+try:
+    import wx
+except ImportError:
+    wx = None
 
-from .gui_helpers import wx_caption, wx_show_error
+try:
+    from gui_helpers import wx_caption, wx_show_error
+except Exception:
+    try:
+        from .gui_helpers import wx_caption, wx_show_error
+    except Exception:
+        wx_caption = "Freerouting"
+        def wx_show_error(text):
+            print(f"Error: {text}", file=sys.stderr)
 
 
 # ------------------------------------------------------------------
@@ -128,6 +142,14 @@ class StatusIndicator(wx.Panel):
         self.Refresh()
         self.Update()
 
+    def pulse(self):
+        """Advance the spinner animation by one frame if currently in-progress."""
+        if self._status == STATUS_IN_PROGRESS:
+            self._spin_phase = (self._spin_phase + 1) % len(self._SPIN_CHARS)
+            self._symbol_label.SetLabel(self._SPIN_CHARS[self._spin_phase])
+            self._symbol_label.Refresh()
+            self._symbol_label.Update()
+
 
 class ProcessDialog(wx.Dialog):
     """Modal dialog shown while Freerouting is running.
@@ -167,14 +189,17 @@ class ProcessDialog(wx.Dialog):
         self.SetForegroundColour(win_fg)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
-
-        # --- status indicators (vertical stack) ---
         indicator_sizer = wx.BoxSizer(wx.VERTICAL)
 
+        # --- routing mode indicator ---
+        self.mode_indicator = StatusIndicator(self, "Plugin Mode: DSN + API (legacy)", STATUS_UNDETERMINED)
+        indicator_sizer.Add(self.mode_indicator, 0, wx.ALIGN_LEFT | wx.LEFT | wx.TOP | wx.RIGHT, 10)
+
+        # --- status indicators (vertical stack) ---
         self.java_indicator = StatusIndicator(self, "Detecting Java 25+ JRE", STATUS_UNDETERMINED)
         indicator_sizer.Add(self.java_indicator, 0, wx.ALIGN_LEFT | wx.LEFT | wx.TOP | wx.RIGHT, 10)
 
-        self.json_api_indicator = StatusIndicator(self, "Checking JSON/API bridge availability", STATUS_UNDETERMINED)
+        self.json_api_indicator = StatusIndicator(self, "Checking IPC / API bridge availability", STATUS_UNDETERMINED)
         indicator_sizer.Add(self.json_api_indicator, 0, wx.ALIGN_LEFT | wx.LEFT | wx.TOP | wx.RIGHT, 10)
 
         self.api_indicator = StatusIndicator(self, "Starting up Freerouting API", STATUS_UNDETERMINED)
@@ -191,12 +216,26 @@ class ProcessDialog(wx.Dialog):
 
         sizer.Add(indicator_sizer, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.TOP | wx.BOTTOM, 10)
 
-        # --- message text (optional) ---
-        if text:
-            self.text = wx.StaticText(self, wx.ID_ANY, text, wx.DefaultPosition, wx.DefaultSize, 0)
-            self.text.SetForegroundColour(win_fg)
-            self.text.Wrap(-1)
-            sizer.Add(self.text, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 10)
+        # --- message text / live progress detail ---
+        self.message_label = wx.StaticText(
+            self, wx.ID_ANY, text or "", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTER_HORIZONTAL
+        )
+        self.message_label.SetForegroundColour(win_fg)
+        self.message_label.Wrap(320)
+        sizer.Add(self.message_label, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.LEFT | wx.RIGHT | wx.TOP, 8)
+
+        self.detail_label = wx.StaticText(
+            self, wx.ID_ANY, "", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTER_HORIZONTAL
+        )
+        self.detail_label.SetForegroundColour(wx.Colour(160, 160, 160))
+        detail_font = self.detail_label.GetFont()
+        detail_font.SetPointSize(max(detail_font.GetPointSize() - 1, 8))
+        self.detail_label.SetFont(detail_font)
+        self.detail_label.Wrap(320)
+        sizer.Add(self.detail_label, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.LEFT | wx.RIGHT | wx.BOTTOM, 8)
+
+        # Alias for backwards compatibility
+        self.text = self.message_label
 
         self.line = wx.StaticLine(self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL)
         sizer.Add(self.line, 0, wx.EXPAND | wx.ALL, 5)
@@ -211,22 +250,36 @@ class ProcessDialog(wx.Dialog):
         # Enforce a minimum size so all indicators and the button are visible
         min_size = self.GetBestSize()
         min_size.SetHeight(max(min_size.GetHeight(), 300))
-        min_size.SetWidth(max(min_size.GetWidth(), 300))
+        min_size.SetWidth(max(min_size.GetWidth(), 340))
         self.SetMinSize(min_size)
         self.SetSize(min_size)
         self.Centre(wx.BOTH)
 
         self.bttn.Bind(wx.EVT_BUTTON, self._on_click)
 
-    # -- public API -------------------------------------------------------
+    def set_routing_mode_label(self, mode_str):
+        """Update the routing mode indicator."""
+        if hasattr(self, "mode_indicator") and self.mode_indicator:
+            # Set text on the inner label
+            if hasattr(self.mode_indicator, "_label"):
+                self.mode_indicator._label.SetLabel(mode_str)
+            self.mode_indicator.set_status(STATUS_UNDETERMINED)
+            self.mode_indicator.Layout()
+            self.Layout()
 
     def set_java_status(self, status):
         """Update the Java detection indicator."""
         self.java_indicator.set_status(status)
 
     def set_json_api_status(self, status):
-        """Update the JSON/API bridge indicator."""
+        """Update the JSON/API or IPC bridge indicator."""
         self.json_api_indicator.set_status(status)
+
+    def set_ipc_indicator_label(self, label):
+        """Update the label of the second indicator (e.g. for IPC vs JSON)."""
+        if hasattr(self.json_api_indicator, "_label"):
+            self.json_api_indicator._label.SetLabel(label)
+            self.json_api_indicator.Layout()
 
     def hide_json_api_indicator(self):
         """Hide the JSON/API indicator when running in DSN mode."""
@@ -249,9 +302,61 @@ class ProcessDialog(wx.Dialog):
         """Update the 'Receiving the results' indicator."""
         self.receiving_indicator.set_status(status)
 
+    def set_message(self, text, tooltip=None):
+        """Update the informational message or heading."""
+        if hasattr(self, "message_label") and self.message_label:
+            try:
+                self.message_label.SetLabel(text)
+                if tooltip:
+                    self.message_label.SetToolTip(tooltip)
+                self.message_label.Wrap(320)
+                self.Layout()
+                self.Refresh()
+                self.Update()
+            except Exception:
+                # Dialog or widget may have been hidden or destroyed during message dispatch
+                pass
+
+    def set_detail(self, text, tooltip=None):
+        """Update the live progress detail line with a tooltip."""
+        if hasattr(self, "detail_label") and self.detail_label:
+            try:
+                self.detail_label.SetLabel(text)
+                if tooltip:
+                    self.detail_label.SetToolTip(tooltip)
+                elif text:
+                    self.detail_label.SetToolTip(text)
+                self.detail_label.Wrap(320)
+                self.Layout()
+                self.Refresh()
+                self.Update()
+            except Exception:
+                # Detail label may have been destroyed during background stream update
+                pass
+
     def terminate(self):
         """Close the dialog with the "programmatic termination" result."""
-        self.EndModal(self.result_terminate)
+        try:
+            if self and hasattr(self, "IsModal") and self.IsModal():
+                self.EndModal(self.result_terminate)
+        except Exception:
+            # Dialog may have already been closed or destroyed
+            pass
+
+    def pulse(self):
+        """Advance any active in-progress indicator animation and update display."""
+        for indicator in (
+            getattr(self, "mode_indicator", None),
+            getattr(self, "java_indicator", None),
+            getattr(self, "json_api_indicator", None),
+            getattr(self, "api_indicator", None),
+            getattr(self, "sending_indicator", None),
+            getattr(self, "routing_indicator", None),
+            getattr(self, "receiving_indicator", None),
+        ):
+            if indicator and getattr(indicator, "_status", None) == STATUS_IN_PROGRESS:
+                indicator.pulse()
+        self.Update()
 
     def show_and_paint(self):
         """Show the dialog and force an immediate synchronous paint.
@@ -263,24 +368,133 @@ class ProcessDialog(wx.Dialog):
         """
         self.Show()
         self.Raise()
+        self.Layout()
         self.Update()    # flush pending layout synchronously
         self.Refresh()   # mark the window dirty
         # One round-trip through the event loop to dispatch the paint event
         app = wx.GetApp()
         if app:
             app.ProcessPendingEvents()
+            try:
+                wx.YieldIfNeeded()
+            except Exception:
+                # YieldIfNeeded can raise if another yield is active
+                pass
 
     # -- internal ---------------------------------------------------------
 
     def _on_click(self, event):
-        self.EndModal(self.result_button)
+        try:
+            if self and hasattr(self, "IsModal") and self.IsModal():
+                self.EndModal(self.result_button)
+        except Exception:
+            # Modal loop may have already ended
+            pass
+
+
+def clean_log_line(raw_line):
+    """Clean a Freerouting log line for display in the progress dialog.
+
+    Strips timestamp, log level, and thread/context identifiers like
+    '2026-09-17 16:02:01.320 INFO [91E51A\\6F17D8] ' and returns
+    (cleaned_summary, full_line).
+    """
+    raw_stripped = raw_line.strip()
+    cleaned = re.sub(
+        r"^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}(?:\.\d+)?\s+(?:INFO|WARN|WARNING|DEBUG|ERROR|TRACE)\s+(?:\[[^\]]*\]\s*)?",
+        "",
+        raw_stripped,
+    ).strip()
+    if not cleaned:
+        cleaned = raw_stripped
+    return cleaned, raw_stripped
+
+
+class LogTailer(threading.Thread):
+    """Background thread that tails a log file and dispatches matching lines.
+
+    Used by API-based routing modes (IPC + API, JSON + API) to stream real-time
+    progress lines to the dialog's detail label.
+    """
+
+    def __init__(self, log_path, job_id=None, on_log_line=None):
+        super().__init__()
+        self.daemon = True
+        self.log_path = Path(log_path)
+        self.job_prefix = f"[{job_id[:6].upper()}]" if job_id else ""
+        self.on_log_line = on_log_line
+        self._stop_event = threading.Event()
+        self.seek_pos = 0
+        if self.log_path.is_file():
+            try:
+                self.seek_pos = self.log_path.stat().st_size
+            except Exception:
+                self.seek_pos = 0
+
+    def stop(self):
+        """Signal the tailer thread to stop."""
+        self._stop_event.set()
+
+    def run(self):
+        """Read newly appended lines from log_path and invoke on_log_line."""
+        seek_pos = self.seek_pos
+
+        skip_keywords = (
+            "GET v1/",
+            "POST v1/",
+            "PUT v1/",
+            "DELETE v1/",
+            "API key validation",
+            "cid=",
+            "HttpChannel",
+            "org.eclipse.jetty",
+        )
+
+        while not self._stop_event.is_set():
+            try:
+                if self.log_path.is_file():
+                    current_size = self.log_path.stat().st_size
+                    if current_size < seek_pos:
+                        seek_pos = 0
+                    if current_size > seek_pos:
+                        with open(self.log_path, "r", encoding="utf-8", errors="replace") as f:
+                            f.seek(seek_pos)
+                            while True:
+                                line_start = f.tell()
+                                line = f.readline()
+                                if not line:
+                                    break
+                                if not line.endswith("\n"):
+                                    # Incomplete line still being written; retry next cycle
+                                    seek_pos = line_start
+                                    break
+                                seek_pos = f.tell()
+                                stripped = line.strip()
+                                if not stripped:
+                                    continue
+                                if any(k in stripped for k in skip_keywords):
+                                    continue
+                                if (
+                                    (self.job_prefix and self.job_prefix in stripped)
+                                    or "Pass #" in stripped
+                                    or "items remaining" in stripped
+                                    or "Auto-routing" in stripped
+                                    or "Batch optimization" in stripped
+                                    or "completed" in stripped.lower()
+                                ):
+                                    if self.on_log_line:
+                                        self.on_log_line(stripped)
+            except Exception:
+                # File access error or concurrent truncation during log tailing; retry next iteration
+                pass
+            self._stop_event.wait(0.2)
 
 
 class ProcessThread(threading.Thread):
     """Run an external command in a daemon thread.
 
-    The subprocess inherits the parent's stdout/stderr so that
-    Freerouting's console output is visible in the terminal window.
+    The subprocess inherits the parent's stdout/stderr, or optionally
+    captures stdout to stream lines to an output handler.
     ``show_error()`` can still display a diagnostic dialog if the
     process fails to start or exits with a non-zero code.
 
@@ -290,22 +504,60 @@ class ProcessThread(threading.Thread):
         error: Exception object if the process could not be started.
     """
 
-    def __init__(self, command, on_complete=None):
+    def __init__(self, command, on_complete=None, output_handler=None):
         super().__init__()
         self.setDaemon(True)
         self.command = command
         self.on_complete = on_complete
+        self.output_handler = output_handler
         self.process = None
         self.error = None
+        self.cancelled = False
+        self.last_output_lines = []
+        self._lock = threading.Lock()
 
     # -- public API -------------------------------------------------------
 
     def run(self):
         """Execute the command."""
         try:
-            self.process = subprocess.Popen(
-                self.command,
-            )
+            popen_kwargs = {}
+            if platform.system() == "Windows":
+                # Suppress the empty console window on Windows across all modes
+                popen_kwargs["creationflags"] = getattr(subprocess, "CREATE_NO_WINDOW", 0x08000000)
+            else:
+                popen_kwargs["start_new_session"] = True
+
+            if self.output_handler is not None:
+                popen_kwargs["stdout"] = subprocess.PIPE
+                popen_kwargs["stderr"] = subprocess.STDOUT
+                popen_kwargs["text"] = True
+                popen_kwargs["bufsize"] = 1
+
+            with self._lock:
+                if self.cancelled:
+                    return
+                self.process = subprocess.Popen(
+                    self.command,
+                    **popen_kwargs
+                )
+
+            if self.output_handler is not None and self.process.stdout is not None:
+                for line in iter(self.process.stdout.readline, ""):
+                    if self.cancelled:
+                        break
+                    line_str = line.strip()
+                    if line_str:
+                        self.last_output_lines.append(line_str)
+                        if len(self.last_output_lines) > 20:
+                            self.last_output_lines.pop(0)
+                        self.output_handler(line_str)
+                try:
+                    self.process.stdout.close()
+                except (OSError, ValueError):
+                    # Stream may already be closed or broken during process shutdown
+                    pass
+
             self.process.wait()
         except FileNotFoundError:
             self.error = (
@@ -313,22 +565,28 @@ class ProcessThread(threading.Thread):
                 "Make sure the executable is in your PATH."
             )
         except Exception as e:
-            self.error = e
+            if not self.cancelled:
+                self.error = e
         finally:
-            if self.on_complete is not None:
-                self.on_complete()
+            callback = None
+            with self._lock:
+                if not self.cancelled:
+                    callback = self.on_complete
+                    self.on_complete = None
+            if callback is not None:
+                callback()
 
     def has_ok(self):
-        """Return ``True`` if the process exited with code 0."""
-        return self.has_process() and self.process.returncode == 0
+        """Return ``True`` if the process exited with code 0 and was not cancelled."""
+        return self.has_process() and self.process.returncode == 0 and not self.cancelled
 
     def has_code(self):
-        """Return ``True`` if the process exited with a non-zero code."""
-        return self.has_process() and self.process.returncode != 0
+        """Return ``True`` if the process exited with a non-zero code (and wasn't cancelled)."""
+        return self.has_process() and self.process.returncode != 0 and not self.cancelled
 
     def has_error(self):
-        """Return ``True`` if the process could not be started."""
-        return self.error is not None
+        """Return ``True`` if the process could not be started (and wasn't cancelled)."""
+        return self.error is not None and not self.cancelled
 
     def has_process(self):
         """Return ``True`` if the process was started."""
@@ -336,17 +594,29 @@ class ProcessThread(threading.Thread):
 
     def terminate(self):
         """Send SIGTERM, then SIGKILL if the process doesn't exit."""
-        if self.has_process() and self.process.poll() is None:
+        proc = None
+        with self._lock:
+            self.cancelled = True
+            self.on_complete = None
+            proc = self.process
+
+        if proc is not None and proc.poll() is None:
             try:
-                self.process.terminate()
-                self.process.wait(timeout=5)
+                proc.terminate()
+                proc.wait(timeout=3)
             except subprocess.TimeoutExpired:
-                self.process.kill()
+                try:
+                    proc.kill()
+                except OSError:
+                    # Process may have already exited before kill was delivered
+                    pass
             except Exception as e:
                 print(f"Error terminating process: {e}")
 
     def show_error(self):
         """Display a diagnostic dialog with command, exit code, and output."""
+        if self.cancelled:
+            return
         if platform.system() == "Windows":
             cmd_str = subprocess.list2cmdline(self.command)
         else:
@@ -362,6 +632,14 @@ class ProcessThread(threading.Thread):
                 error:
                 {self.error}"""))
         elif self.has_code():
+            diag_lines = "\n".join(self.last_output_lines[-10:]) if self.last_output_lines else ""
+            if diag_lines:
+                output_desc = f"output:\n{diag_lines}"
+            elif self.output_handler is not None:
+                output_desc = "(no output was captured)"
+            else:
+                output_desc = "(console output was shown in the terminal window)"
+
             wx_show_error(textwrap.dedent(f"""
                 Program failure:
                 ---
@@ -369,4 +647,4 @@ class ProcessThread(threading.Thread):
                 {cmd_str}
                 ---
                 exit code: {self.process.returncode}
-                (console output was shown in the terminal window)"""))
+                {output_desc}"""))

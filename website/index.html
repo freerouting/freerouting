@@ -167,12 +167,12 @@
         <!-- Key Impact Metrics Strip -->
         <div class="metrics-strip">
             <div class="metric-card">
-                <div class="metric-number">105,000+</div>
-                <div class="metric-label">Monthly Routing Sessions</div>
-            </div>
-            <div class="metric-card">
                 <div class="metric-number">1,100+</div>
                 <div class="metric-label">Automated PCB Benchmarks</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-number" id="live-board-counter" aria-live="polite">1,596,066</div>
+                <div class="metric-label">Boards Completed</div>
             </div>
             <div class="metric-card">
                 <div class="metric-number">36</div>
@@ -392,7 +392,9 @@
             <p style="font-size: 0.9em; color: #9ca3af; margin-top: 1em;">
                 Maintained by <strong>Andras Fuchs</strong> &bull; <strong>Foxy Laboratories OÜ</strong><br>
                 Tartu maantee 67 1-13b, 10115 Tallinn, Harju, Estonia<br>
-                Contact: <a href="mailto:info@freerouting.app">info@freerouting.app</a>
+                Contact: <a href="mailto:info@freerouting.app">info@freerouting.app</a> &bull;
+                <a href="https://x.com/freeroutingPCB" target="_blank" rel="noopener noreferrer">@freeroutingPCB</a> &bull;
+                <a href="https://www.linkedin.com/in/andrasfuchs/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
             </p>
         </div>
 
@@ -442,6 +444,65 @@
             });
         }
     });
+
+    // Live Board Routing Counter Animation
+    (function() {
+        const BASE_TIMESTAMP = Date.UTC(2026, 9, 1, 0, 0, 0); // 2026-10-01 00:00:00 UTC
+        const BASE_BOARDS = 1596066;                           // Total up to 2026-10-01
+        const BOARDS_PER_DAY = 29696;                          // October 2026 rate
+        const BOARDS_PER_MS = BOARDS_PER_DAY / (24 * 60 * 60 * 1000);
+
+        const counterElement = document.getElementById('live-board-counter');
+        if (!counterElement) return;
+
+        function formatNumber(num) {
+            return Math.floor(num).toLocaleString('en-US');
+        }
+
+        function calculateLiveTotal() {
+            const elapsedMs = Math.max(0, Date.now() - BASE_TIMESTAMP);
+            return BASE_BOARDS + (elapsedMs * BOARDS_PER_MS);
+        }
+
+        const targetLiveCount = calculateLiveTotal();
+        const rollDuration = 1800; // 1.8s speed-up roll on load
+        const startValue = Math.max(0, targetLiveCount - 1500);
+        const animationStartTime = performance.now();
+
+        function easeOutExpo(x) {
+            return x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
+        }
+
+        let isRolling = true;
+
+        function updateCounter(now) {
+            if (isRolling) {
+                const elapsed = now - animationStartTime;
+                const progress = Math.min(1, elapsed / rollDuration);
+                const easedProgress = easeOutExpo(progress);
+                const displayValue = startValue + (targetLiveCount - startValue) * easedProgress;
+                counterElement.textContent = formatNumber(displayValue);
+
+                if (progress >= 1) {
+                    isRolling = false;
+                }
+                requestAnimationFrame(updateCounter);
+            } else {
+                const currentLive = calculateLiveTotal();
+                const currentFormatted = formatNumber(currentLive);
+                if (counterElement.textContent !== currentFormatted) {
+                    counterElement.textContent = currentFormatted;
+                    counterElement.classList.add('pulse-tick');
+                    setTimeout(function() {
+                        counterElement.classList.remove('pulse-tick');
+                    }, 200);
+                }
+                requestAnimationFrame(updateCounter);
+            }
+        }
+
+        requestAnimationFrame(updateCounter);
+    })();
 </script>
 
 </body>

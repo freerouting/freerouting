@@ -1,4 +1,4 @@
-name: Update the snapshot build
+name: 'Distribution: Snapshot Installers'
 
 on:
   push:
@@ -6,21 +6,32 @@ on:
       - master
   workflow_dispatch: # Allows you to run this workflow manually
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
-  build-and-test:
+  test:
+    name: 'Test & Verify'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up JDK
         uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: '25'
-          cache: 'gradle'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          build-scan-publish: true
+          build-scan-terms-of-use-url: 'https://gradle.com/help/legal-terms-of-use'
+          build-scan-terms-of-use-agree: 'yes'
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -28,13 +39,380 @@ jobs:
       - name: Build and Run Tests
         run: ./gradlew build
 
-  delete-old-snapshot-assets:
+  setup-snapshot:
     runs-on: [ ubuntu-latest ]
     timeout-minutes: 10
+    permissions: {}
+    outputs:
+      snapshot_version: ${{ steps.version.outputs.snapshot_version }}
+    steps:
+      - name: Generate SNAPSHOT Version
+        id: version
+        run: echo "snapshot_version=SNAPSHOT-$(date -u +'%Y%m%d_%H%M00')" >> "$GITHUB_OUTPUT"
+
+  build-jar:
+    name: 'Build JAR'
+    needs: [ test, setup-snapshot ]
+    runs-on: [ ubuntu-latest ]
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '25'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          build-scan-publish: true
+          build-scan-terms-of-use-url: 'https://gradle.com/help/legal-terms-of-use'
+          build-scan-terms-of-use-agree: 'yes'
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Grant execute permission for build scripts
+        run: chmod +x scripts/build/*.sh
+      - name: Build with Gradle
+        run: ./gradlew dist
+      - name: Create Distribution
+        run: scripts/build/create-distribution-jar.sh "${{ needs.setup-snapshot.outputs.snapshot_version }}"
+      - name: Upload JAR Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: snapshot-dist-jar
+          path: './scripts/build/freerouting-${{ needs.setup-snapshot.outputs.snapshot_version }}.jar'
+          retention-days: 1
+
+  build-ubuntu-x64:
+    needs: [ test, setup-snapshot ]
+    runs-on: [ ubuntu-latest ]
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '25'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          build-scan-publish: true
+          build-scan-terms-of-use-url: 'https://gradle.com/help/legal-terms-of-use'
+          build-scan-terms-of-use-agree: 'yes'
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Grant execute permission for build scripts
+        run: chmod +x scripts/build/*.sh
+      - name: Build with Gradle
+        run: ./gradlew dist
+      - name: Create Distribution
+        run: scripts/build/create-distribution-SNAPSHOT-linux-x64.sh "${{ needs.setup-snapshot.outputs.snapshot_version }}"
+      - name: Upload Snapshot Linux Dist Zip Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: snapshot-linux-dist-zip
+          path: './scripts/build/freerouting-${{ needs.setup-snapshot.outputs.snapshot_version }}-linux-x64.zip'
+          retention-days: 1
+
+  build-appimage:
+    name: 'Build AppImage'
+    needs: [ test, setup-snapshot, build-ubuntu-x64 ]
+    runs-on: [ ubuntu-latest ]
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+      - name: Download Snapshot Linux Dist Zip
+        uses: actions/download-artifact@v4
+        with:
+          name: snapshot-linux-dist-zip
+          path: .
+      - name: Grant execute permission for build scripts
+        run: chmod +x scripts/build/*.sh scripts/build/appimage/*.sh
+      - name: Build AppImage via Arch Container
+        run: |
+          docker run --rm \
+            -v "$PWD":/workspace \
+            -w /workspace \
+            -e GITHUB_REPOSITORY="${{ github.repository }}" \
+            -e SNAPSHOT_VERSION="${{ needs.setup-snapshot.outputs.snapshot_version }}" \
+            docker.io/pkgforge/archlinux:latest \
+            /bin/sh -c "chmod +x ./scripts/build/*.sh ./scripts/build/appimage/*.sh && \
+              /bin/sh ./scripts/build/appimage/install-dependencies.sh && \
+              /bin/sh ./scripts/build/create-distribution-SNAPSHOT-appimage.sh x86_64 \"\$SNAPSHOT_VERSION\""
+      - name: Upload Snapshot AppImage Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: snapshot-dist-appimage
+          path: |
+            ./dist/freerouting-${{ needs.setup-snapshot.outputs.snapshot_version }}-x86_64.AppImage
+            ./dist/freerouting-${{ needs.setup-snapshot.outputs.snapshot_version }}-x86_64.AppImage.zsync
+          retention-days: 1
+
+  build-windows-x64:
+    needs: [ test, setup-snapshot ]
+    runs-on: [ windows-latest ]
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '25'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          build-scan-publish: true
+          build-scan-terms-of-use-url: 'https://gradle.com/help/legal-terms-of-use'
+          build-scan-terms-of-use-agree: 'yes'
+      - name: Build with Gradle
+        run: .\gradlew.bat dist --no-daemon
+      - name: Create Distribution
+        run: .\scripts\build\create-distribution-SNAPSHOT-windows-x64.bat "${{ needs.setup-snapshot.outputs.snapshot_version }}"
+      - name: Upload Snapshot Windows MSI Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: snapshot-dist-windows
+          path: './scripts/build/freerouting-${{ needs.setup-snapshot.outputs.snapshot_version }}-windows-x64.msi'
+          retention-days: 1
+
+  build-macos-arm64:
+    needs: [ test, setup-snapshot ]
+    runs-on: [ macos-15 ]
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '25'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          build-scan-publish: true
+          build-scan-terms-of-use-url: 'https://gradle.com/help/legal-terms-of-use'
+          build-scan-terms-of-use-agree: 'yes'
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Grant execute permission for build scripts
+        run: chmod +x scripts/build/*.sh
+      - name: Build with Gradle
+        run: ./gradlew dist
+      - name: Create Distribution
+        run: scripts/build/create-distribution-SNAPSHOT-macos-arm64.sh "${{ needs.setup-snapshot.outputs.snapshot_version }}" "${{ secrets.APPLE_DEVELOPER_ID }}"
+      - name: Upload Snapshot macOS ARM64 DMG Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: snapshot-dist-macos-arm64
+          path: './scripts/build/freerouting-${{ needs.setup-snapshot.outputs.snapshot_version }}-macos-arm64.dmg'
+          retention-days: 1
+
+  build-macos-x64:
+    needs: [ test, setup-snapshot ]
+    runs-on: [ macos-15-intel ]
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '25'
+          architecture: 'x64'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          build-scan-publish: true
+          build-scan-terms-of-use-url: 'https://gradle.com/help/legal-terms-of-use'
+          build-scan-terms-of-use-agree: 'yes'
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Grant execute permission for build scripts
+        run: chmod +x scripts/build/*.sh
+      - name: Build with Gradle
+        run: ./gradlew dist
+      - name: Create Distribution
+        run: scripts/build/create-distribution-SNAPSHOT-macos-x64.sh "${{ needs.setup-snapshot.outputs.snapshot_version }}" "${{ secrets.APPLE_DEVELOPER_ID }}"
+      - name: Upload Snapshot macOS x64 DMG Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: snapshot-dist-macos-x64
+          path: './scripts/build/freerouting-${{ needs.setup-snapshot.outputs.snapshot_version }}-macos-x64.dmg'
+          retention-days: 1
+
+  build-native-cli:
+    name: 'Build Native CLI (${{ matrix.platform }}-${{ matrix.arch }})'
+    needs: [ test, setup-snapshot ]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux
+            arch: x64
+            runner: ubuntu-22.04
+            binary-name: freerouting-cli
+            archive-ext: tar.gz
+            use-tar: true
+          - platform: linux
+            arch: arm64
+            runner: ubuntu-24.04-arm
+            binary-name: freerouting-cli
+            archive-ext: tar.gz
+            use-tar: true
+          - platform: macos
+            arch: arm64
+            runner: macos-15
+            binary-name: freerouting-cli
+            archive-ext: tar.gz
+            use-tar: true
+          - platform: macos
+            arch: x64
+            runner: macos-15-intel
+            binary-name: freerouting-cli
+            archive-ext: tar.gz
+            use-tar: true
+          - platform: windows
+            arch: x64
+            runner: windows-latest
+            binary-name: freerouting-cli.exe
+            archive-ext: zip
+            use-tar: false
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set up Oracle GraalVM JDK 25
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '25'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          native-image-job-reports: 'true'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          build-scan-publish: false
+      - name: Make gradlew executable
+        if: runner.os != 'Windows'
+        run: chmod +x gradlew
+      - name: Build PGO Instrumented Executable
+        shell: bash
+        run: ./gradlew nativeCompile --pgo-instrument
+      - name: Run Golden Workload to Generate PGO Profile
+        shell: bash
+        run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            ./build/native/nativeCompile/freerouting-cli-instrumented.exe -de fixtures/Issue508-DAC2020_bm01.dsn -do build/train_pgo.ses -mp 1
+          else
+            ./build/native/nativeCompile/freerouting-cli-instrumented -de fixtures/Issue508-DAC2020_bm01.dsn -do build/train_pgo.ses -mp 1
+          fi
+          mkdir -p src/pgo-profiles/main
+          cp default.iprof src/pgo-profiles/main/default.iprof
+      - name: Build Final PGO-Optimized Native Binary
+        shell: bash
+        run: ./gradlew nativeCompile
+      - name: Smoke Test - Help Option
+        shell: bash
+        run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            ./build/native/nativeCompile/freerouting-cli.exe --help
+          else
+            ./build/native/nativeCompile/freerouting-cli --help
+          fi
+      - name: Smoke Test - Autorouting Benchmark
+        shell: bash
+        run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            ./build/native/nativeCompile/freerouting-cli.exe -de fixtures/Issue508-DAC2020_bm01.dsn -do build/test_smoke.ses -mp 1
+          else
+            ./build/native/nativeCompile/freerouting-cli -de fixtures/Issue508-DAC2020_bm01.dsn -do build/test_smoke.ses -mp 1
+          fi
+          test -s build/test_smoke.ses
+      - name: Smoke Test - DRC Report Mode
+        shell: bash
+        run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            ./build/native/nativeCompile/freerouting-cli.exe -de fixtures/Issue508-DAC2020_bm01.dsn -s build/test_smoke.ses -drc build/test_smoke_drc.json
+          else
+            ./build/native/nativeCompile/freerouting-cli -de fixtures/Issue508-DAC2020_bm01.dsn -s build/test_smoke.ses -drc build/test_smoke_drc.json
+          fi
+          test -s build/test_smoke_drc.json
+      - name: Smoke Test - Compare Boards Mode
+        shell: bash
+        run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            ./build/native/nativeCompile/freerouting-cli.exe --compare-boards=fixtures/Issue508-DAC2020_bm01.dsn,fixtures/Issue508-DAC2020_bm01.dsn
+          else
+            ./build/native/nativeCompile/freerouting-cli --compare-boards=fixtures/Issue508-DAC2020_bm01.dsn,fixtures/Issue508-DAC2020_bm01.dsn
+          fi
+      - name: Package Native Executable Archive
+        shell: bash
+        run: |
+          VER="${{ needs.setup-snapshot.outputs.snapshot_version }}"
+          ARCHIVE_NAME="freerouting-cli-${VER}-${{ matrix.platform }}-${{ matrix.arch }}.${{ matrix.archive-ext }}"
+          mkdir -p build/dist
+          cd build/native/nativeCompile
+          if [ "${{ matrix.use-tar }}" = "true" ]; then
+            tar -czvf "../../dist/${ARCHIVE_NAME}" "${{ matrix.binary-name }}"
+          else
+            7z a "../../dist/${ARCHIVE_NAME}" "${{ matrix.binary-name }}"
+          fi
+          cd ../../dist
+          if command -v sha256sum >/dev/null 2>&1; then
+            sha256sum "${ARCHIVE_NAME}" > "${ARCHIVE_NAME}.sha256"
+          else
+            shasum -a 256 "${ARCHIVE_NAME}" > "${ARCHIVE_NAME}.sha256"
+          fi
+      - name: Upload Native Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: snapshot-native-cli-${{ matrix.platform }}-${{ matrix.arch }}
+          path: |
+            build/dist/freerouting-cli-${{ needs.setup-snapshot.outputs.snapshot_version }}-${{ matrix.platform }}-${{ matrix.arch }}.${{ matrix.archive-ext }}
+            build/dist/freerouting-cli-${{ needs.setup-snapshot.outputs.snapshot_version }}-${{ matrix.platform }}-${{ matrix.arch }}.${{ matrix.archive-ext }}.sha256
+          retention-days: 1
+
+  publish-snapshot:
+    name: 'Publish Release Assets'
+    needs:
+      - setup-snapshot
+      - build-jar
+      - build-windows-x64
+      - build-ubuntu-x64
+      - build-macos-arm64
+      - build-macos-x64
+      - build-appimage
+      - build-native-cli
+    runs-on: [ ubuntu-latest ]
+    timeout-minutes: 30
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - name: Download all built artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./staging
+          merge-multiple: true
+
+      - name: List downloaded assets
+        run: ls -la ./staging
+
       - name: Delete old SNAPSHOT assets
         uses: mknejp/delete-release-assets@v1
         with:
@@ -45,107 +423,114 @@ jobs:
             freerouting-SNAPSHOT.zip
             freerouting-SNAPSHOT.tar.gz
             freerouting-SNAPSHOT-*.*
+            freerouting-cli-SNAPSHOT-*.*
 
-  build-jar:
-    needs: [ build-and-test, delete-old-snapshot-assets ]
-    runs-on: [ windows-latest ]
-    timeout-minutes: 30
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK
-        uses: actions/setup-java@v5
+      # Upload assets in the defined popularity order:
+      # 1. JAR
+      # 2. Windows MSI
+      # 3. Linux ZIP
+      # 4. macOS ARM64 DMG
+      # 5. macOS x64 DMG
+      # 6. AppImage
+      # 7. AppImage zsync
+      # 8. Native CLI Windows x64 ZIP
+      # 9. Native CLI Linux x64 TAR.GZ
+      # 10. Native CLI Linux ARM64 TAR.GZ
+      # 11. Native CLI macOS ARM64 TAR.GZ
+      # 12. Native CLI macOS x64 TAR.GZ
+      # 13. Native CLI Checksums
+      - name: Upload JAR
+        uses: AButler/upload-release-assets@v4.0
         with:
-          distribution: 'temurin'
-          java-version: '25'
-          cache: 'gradle'
-      - name: Build with Gradle
-        run: .\gradlew.bat dist --no-daemon
-      - name: Create Distribution
-        run: .\scripts\build\create-distribution-jar.bat "SNAPSHOT-$(([datetime]::now).tostring('yyyyMMdd_HHmm00'))"
-      - uses: AButler/upload-release-assets@v3.0
-        with:
-          files: './scripts/build/freerouting-SNAPSHOT-*.jar'
+          files: './staging/freerouting-${{ needs.setup-snapshot.outputs.snapshot_version }}.jar'
           release-tag: SNAPSHOT
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
-  build-ubuntu-x64:
-    needs: [ build-and-test, delete-old-snapshot-assets ]
-    runs-on: [ ubuntu-latest ]
-    timeout-minutes: 30
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK
-        uses: actions/setup-java@v5
+      - name: Upload Windows MSI
+        uses: AButler/upload-release-assets@v4.0
         with:
-          distribution: 'temurin'
-          java-version: '25'
-          cache: 'gradle'
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-      - name: Grant execute permission for build scripts
-        run: chmod +x scripts/build/*.sh
-      - name: Build with Gradle
-        run: ./gradlew dist
-      - name: Create Distribution
-        run: scripts/build/create-distribution-SNAPSHOT-linux-x64.sh SNAPSHOT-$(date +"%Y%m%d_%H%M00")
-      - uses: AButler/upload-release-assets@v3.0
-        with:
-          files: './scripts/build/freerouting-SNAPSHOT-*-linux-x64.zip'
+          files: './staging/freerouting-${{ needs.setup-snapshot.outputs.snapshot_version }}-windows-x64.msi'
           release-tag: SNAPSHOT
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
-  build-windows-x64:
-    needs: [ build-and-test, delete-old-snapshot-assets ]
-    runs-on: [ windows-latest ]
-    timeout-minutes: 30
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK
-        uses: actions/setup-java@v5
+      - name: Upload Linux ZIP
+        uses: AButler/upload-release-assets@v4.0
         with:
-          distribution: 'temurin'
-          java-version: '25'
-          cache: 'gradle'
-      - name: Build with Gradle
-        run: .\gradlew.bat dist --no-daemon
-      - name: Create Distribution
-        run: .\scripts\build\create-distribution-SNAPSHOT-windows-x64.bat "SNAPSHOT-$(([datetime]::now).tostring("yyyyMMdd_HHmm00"))"
-      - uses: AButler/upload-release-assets@v3.0
-        with:
-          files: './scripts/build/freerouting-SNAPSHOT-*-windows-x64.msi'
+          files: './staging/freerouting-${{ needs.setup-snapshot.outputs.snapshot_version }}-linux-x64.zip'
           release-tag: SNAPSHOT
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
-  build-macos-arm64:
-    needs: [ build-and-test, delete-old-snapshot-assets ]
-    runs-on: [ macos-latest ]
-    timeout-minutes: 30
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK
-        uses: actions/setup-java@v5
+      - name: Upload macOS ARM64 DMG
+        uses: AButler/upload-release-assets@v4.0
         with:
-          distribution: 'temurin'
-          java-version: '25'
-          cache: 'gradle'
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-      - name: Grant execute permission for build scripts
-        run: chmod +x scripts/build/*.sh
-      - name: Build with Gradle
-        run: ./gradlew dist
-      - name: Create Distribution
-        run: scripts/build/create-distribution-SNAPSHOT-macos-arm64.sh SNAPSHOT-$(date +"%Y%m%d_%H%M00") "${{ secrets.APPLE_DEVELOPER_ID }}"
-      - uses: AButler/upload-release-assets@v3.0
+          files: './staging/freerouting-${{ needs.setup-snapshot.outputs.snapshot_version }}-macos-arm64.dmg'
+          release-tag: SNAPSHOT
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload macOS x64 DMG
+        uses: AButler/upload-release-assets@v4.0
         with:
-          files: './scripts/build/freerouting-SNAPSHOT-*-macos-arm64.dmg'
+          files: './staging/freerouting-${{ needs.setup-snapshot.outputs.snapshot_version }}-macos-x64.dmg'
+          release-tag: SNAPSHOT
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload AppImage
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-${{ needs.setup-snapshot.outputs.snapshot_version }}-x86_64.AppImage'
+          release-tag: SNAPSHOT
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload AppImage zsync
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-${{ needs.setup-snapshot.outputs.snapshot_version }}-x86_64.AppImage.zsync'
+          release-tag: SNAPSHOT
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate Combined Native Checksums
+        run: |
+          cd ./staging
+          cat freerouting-cli-*.sha256 > "freerouting-cli-${{ needs.setup-snapshot.outputs.snapshot_version }}-checksums.txt"
+
+      - name: Upload Native CLI Windows x64 ZIP
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-cli-${{ needs.setup-snapshot.outputs.snapshot_version }}-windows-x64.zip'
+          release-tag: SNAPSHOT
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Native CLI Linux x64 TAR.GZ
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-cli-${{ needs.setup-snapshot.outputs.snapshot_version }}-linux-x64.tar.gz'
+          release-tag: SNAPSHOT
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Native CLI Linux ARM64 TAR.GZ
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-cli-${{ needs.setup-snapshot.outputs.snapshot_version }}-linux-arm64.tar.gz'
+          release-tag: SNAPSHOT
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Native CLI macOS ARM64 TAR.GZ
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-cli-${{ needs.setup-snapshot.outputs.snapshot_version }}-macos-arm64.tar.gz'
+          release-tag: SNAPSHOT
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Native CLI macOS x64 TAR.GZ
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-cli-${{ needs.setup-snapshot.outputs.snapshot_version }}-macos-x64.tar.gz'
+          release-tag: SNAPSHOT
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Native CLI Checksums
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-cli-${{ needs.setup-snapshot.outputs.snapshot_version }}-checksums.txt'
           release-tag: SNAPSHOT
           repo-token: ${{ secrets.GITHUB_TOKEN }}

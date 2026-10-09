@@ -29,6 +29,11 @@ public final class IntBox extends RegularTileShape implements Serializable {
   }
 
   @Override
+  public String toString() {
+    return "IntBox(ll=" + ll + ", ur=" + ur + ")";
+  }
+
+  @Override
   public boolean isIntOctagon() {
     return true;
   }

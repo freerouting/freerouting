@@ -17,15 +17,34 @@ public class Session implements Serializable {
   @SerializedName("host")
   public final String host;
 
+  /**
+   * Hashed API key used for internal telemetry attribution. Marked transient to avoid exposing in
+   * API responses.
+   */
+  public final transient String apiKeyHash;
+
   public transient boolean isPrimary;
 
   /**
    * Creates a new session.
    *
    * @param userId The user ID that the session belongs to.
+   * @param host The client host identifier.
    */
   public Session(UUID userId, String host) {
+    this(userId, host, null);
+  }
+
+  /**
+   * Creates a new session with an associated API key hash.
+   *
+   * @param userId The user ID that the session belongs to.
+   * @param host The client host identifier.
+   * @param apiKeyHash The SHA-256 hash of the caller's API key, or {@code null}.
+   */
+  public Session(UUID userId, String host, String apiKeyHash) {
     this.userId = userId;
+    this.apiKeyHash = apiKeyHash;
 
     // Normalise: treat null or blank as the safe default
     if (host == null || host.isBlank()) {

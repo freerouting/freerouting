@@ -8,9 +8,9 @@ plugins {
     id 'maven-publish'
     id 'checkstyle'
     id "com.vanniktech.maven.publish" version "0.37.0"
-    id 'io.github.ben-manes.versions' version '0.61.0'
-    id 'org.openrewrite.rewrite' version '7.38.0'
-    id "com.diffplug.spotless" version "8.9.0"
+    id 'io.github.ben-manes.versions' version '0.64.0'
+    id "com.diffplug.spotless" version "8.10.3"
+    id 'org.graalvm.buildtools.native' version '1.1.13'
 }
 
 checkstyle {
@@ -34,14 +34,6 @@ java.toolchain {
 }
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-
-sourceSets {
-    rewriteRecipes {
-        java {
-            srcDirs = ['src/rewrite/java']
-        }
-    }
-}
 
 
 tasks.withType(JavaCompile).configureEach {
@@ -91,12 +83,12 @@ tasks.named('check') {
 spotless {
     lineEndings = 'UNIX'
     java {
-        // Explicit targets: main + test only. Excludes src_v19 (reference baseline) and
-        // build/generated-src (VersionInfo.java regenerated on every build).
+        // Explicit targets: main + test only. Excludes build/generated-src
+        // (VersionInfo.java regenerated on every build).
         target 'src/main/java/**/*.java', 'src/test/java/**/*.java'
         removeUnusedImports()
-        // 1.28.0+ required for Java 25 (see diffplug/spotless#2468).
-        googleJavaFormat('1.28.0').reorderImports(true)
+        // Spotless 8.9 on JVM 25 requires google-java-format >= 1.30.0.
+        googleJavaFormat('1.30.0').reorderImports(true)
     }
 }
 
@@ -130,6 +122,10 @@ tasks.named("dependencyUpdates").configure {
 // https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
 configurations {
     mockitoAgent
+    cliRuntimeClasspath {
+        canBeResolved = true
+        canBeConsumed = false
+    }
 }
 
 repositories {
@@ -138,10 +134,10 @@ repositories {
     }
 
     mavenCentral()
-    // Adding mirror repositories
+    // Fallback mirror for runner/network environments that receive a transient Maven Central 403.
     maven {
-        name = 'MirrorRepo1'
-        url = 'https://repo1.maven.org/maven2' // Replace with actual mirror URL
+        name = 'MavenCentralGoogleMirror'
+        url = 'https://maven-central.storage-download.googleapis.com/maven2'
     }
 
     google()
@@ -181,23 +177,23 @@ dependencies {
     implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.9'
 
     // Add Jetty dependencies
-    implementation 'org.eclipse.jetty.ee10:jetty-ee10-servlet:12.1.12'
-    implementation 'org.eclipse.jetty.ee10.websocket:jetty-ee10-websocket-jakarta-server:12.1.12'
-    implementation 'org.eclipse.jetty:jetty-server:12.1.12'
-    implementation 'org.eclipse.jetty:jetty-util:12.1.12'
-    implementation 'org.eclipse.jetty:jetty-security:12.1.12'
+    implementation 'org.eclipse.jetty.ee10:jetty-ee10-servlet:12.1.13'
+    implementation 'org.eclipse.jetty.ee10.websocket:jetty-ee10-websocket-jakarta-server:12.1.13'
+    implementation 'org.eclipse.jetty:jetty-server:12.1.13'
+    implementation 'org.eclipse.jetty:jetty-util:12.1.13'
+    implementation 'org.eclipse.jetty:jetty-security:12.1.13'
 
     // Add SLF4J API and binding dependencies for Jersey logging
-    implementation 'org.slf4j:slf4j-api:2.0.18'
-    implementation 'org.slf4j:slf4j-nop:2.0.18'
+    implementation 'org.slf4j:slf4j-api:2.0.20'
+    implementation 'org.slf4j:slf4j-nop:2.0.20'
 
     // Add Google Cloud BigQuery dependencies for telemetry
-    implementation 'com.google.auth:google-auth-library-oauth2-http:1.51.0'
-    implementation 'com.google.api:gax:2.84.0'
+    implementation 'com.google.auth:google-auth-library-oauth2-http:1.53.0'
+    implementation 'com.google.api:gax:2.86.0'
     implementation 'com.google.api-client:google-api-client-appengine:2.9.1'
-    implementation 'com.google.cloud:google-cloud-core:2.74.0'
-    implementation 'com.google.cloud:google-cloud-core-http:2.74.0'
-    implementation 'com.google.cloud:google-cloud-bigquery:2.70.0'
+    implementation 'com.google.cloud:google-cloud-core:2.76.0'
+    implementation 'com.google.cloud:google-cloud-core-http:2.76.0'
+    implementation 'com.google.cloud:google-cloud-bigquery:2.72.0'
 
     // Add Google Sheets API dependencies for API key validation
     implementation 'com.google.api-client:google-api-client:2.9.1'
@@ -205,7 +201,7 @@ dependencies {
 
     // Security constraints for transitive dependencies
     constraints {
-        implementation('io.netty:netty-common:4.1.118.Final') {
+        implementation('io.netty:netty-common:4.2.18.Final') {
             because 'CVE-2024-47535 and CVE-2025-25193: DoS vulnerability in Netty on Windows'
         }
     }
@@ -215,32 +211,23 @@ dependencies {
     implementation 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.55'
     implementation 'io.swagger.core.v3:swagger-core-jakarta:2.2.55'
 
-    // OpenRewrite (all versions verified current as of Aug 2026; rewrite-migrate-java
-    // transitively provides org.openrewrite:rewrite-gradle for the MigrateToGradle9 recipe):
-    rewrite 'org.openrewrite.recipe:rewrite-static-analysis:2.40.0'
-    rewrite 'org.openrewrite.recipe:rewrite-migrate-java:3.41.0'
-    rewrite 'org.openrewrite.recipe:rewrite-recommendations:1.15.0'
-    rewrite 'org.openrewrite.recipe:rewrite-testing-frameworks:3.43.0'
 
-    rewriteRecipesImplementation 'org.openrewrite.recipe:rewrite-static-analysis:2.40.0'
-    rewriteRecipesImplementation 'org.openrewrite:rewrite-java:8.88.0'
-    rewriteRecipesImplementation 'org.openrewrite:rewrite-core:8.88.0'
-    rewrite sourceSets.rewriteRecipes.output
-    testImplementation sourceSets.rewriteRecipes.output
-    testImplementation 'org.openrewrite:rewrite-java:8.88.0'
-    testImplementation 'org.openrewrite:rewrite-core:8.88.0'
-    testImplementation 'org.openrewrite:rewrite-java-25:8.88.0'
-
+    // Dedicated lightweight runtime classpath for standalone headless CLI native image
+    cliRuntimeClasspath 'org.apache.logging.log4j:log4j-core:2.26.1'
+    cliRuntimeClasspath 'org.apache.logging.log4j:log4j-api:2.26.1'
+    cliRuntimeClasspath 'org.slf4j:slf4j-api:2.0.20'
+    cliRuntimeClasspath 'org.slf4j:slf4j-nop:2.0.20'
+    cliRuntimeClasspath 'com.google.code.gson:gson:2.14.0'
 
     // ArchUnit: package-architecture enforcement
-    testImplementation 'com.tngtech.archunit:archunit-junit5:1.5.0'
+    testImplementation 'com.tngtech.archunit:archunit-junit5:1.5.1'
 
     // Mockito: mocking framework for unit tests
-    testImplementation 'org.mockito:mockito-core:5.23.0'
-    testImplementation 'org.mockito:mockito-junit-jupiter:5.23.0'
+    testImplementation 'org.mockito:mockito-core:5.24.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.24.0'
     // Separate non-transitive configuration so Mockito can be attached as a -javaagent
     // (required for Java 21+ inline-mock-maker, per Mockito docs section 0.3)
-    mockitoAgent('org.mockito:mockito-core:5.23.0') { transitive = false }
+    mockitoAgent('org.mockito:mockito-core:5.24.0') { transitive = false }
 }
 
 ext {
@@ -371,99 +358,6 @@ tasks.matching { it.name == 'sourcesJar' }.configureEach {
     dependsOn 'writeVersionInfo'
 }
 
-// ==================== V1.9 BUILD CONFIGURATION ====================
-
-// V1.9 Source Set
-sourceSets {
-    v19 {
-        java {
-            srcDirs = ['src_v19/main/java', layout.buildDirectory.dir("generated-src-v19")]
-        }
-        resources {
-            // Use v1.9 resources if they exist, otherwise fall back to current resources
-            srcDirs = fileTree('src_v19/main/resources').isEmpty() ?
-                      ['src/main/resources'] :
-                      ['src_v19/main/resources']
-        }
-        compileClasspath += sourceSets.main.compileClasspath
-        runtimeClasspath += sourceSets.main.runtimeClasspath
-    }
-}
-
-// The v1.9 source tree is a frozen compatibility baseline and is intentionally
-// excluded from current Checkstyle enforcement.
-tasks.matching { it.name == 'checkstyleV19' }.configureEach {
-    enabled = false
-}
-
-// V1.9 Version Info Generator
-tasks.register('writeVersionInfoV19') {
-    def outputDir = layout.buildDirectory.dir("generated-src-v19/app/freerouting/constants")
-    def versionId = "1.9.0"
-    def buildDateValue = buildDate
-
-    inputs.property("versionId", versionId)
-    inputs.property("buildDate", buildDateValue)
-    outputs.dir(outputDir)
-
-    doLast {
-        def buildInfoCode = outputDir.get().file("Constants.java").asFile
-        buildInfoCode.getParentFile().mkdirs()
-        buildInfoCode.write(
-                """
-            package app.freerouting.constants;
-
-            /** Build metadata constants. */
-            public final class Constants {
-              public static final String FREEROUTING_VERSION = \"${versionId}\";
-              public static final String FREEROUTING_BUILD_DATE = \"${buildDateValue}\";
-            }
-            """.stripIndent().trim()
-        )
-    }
-}
-
-compileV19Java.dependsOn 'writeVersionInfoV19'
-
-// V1.9 Executable JAR
-tasks.register('executableV19Jar', Jar) {
-    archiveBaseName = 'freerouting-1.9.0'
-    archiveClassifier = 'executable'
-
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-
-    from {
-        configurations.runtimeClasspath.collect { zipTree(it) }
-    } {
-        exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA'
-    }
-
-    from files(sourceSets.v19.output)
-
-    manifest {
-        attributes manifestAttributes + ['Main-Class': 'app.freerouting.gui.MainApplication']
-    }
-}
-
-executableV19Jar.dependsOn compileV19Java
-
-// Build both versions
-tasks.register('buildBothVersions') {
-    group = 'build'
-    description = 'Builds both current and v1.9 executable JARs'
-    dependsOn executableJar, executableV19Jar
-}
-
-// Run v1.9 version
-tasks.register('runV19', JavaExec) {
-    group = 'application'
-    description = 'Run v1.9 version'
-    classpath = sourceSets.v19.runtimeClasspath
-    mainClass = project.mainClassName
-}
-
-// ==================== END V1.9 CONFIGURATION ====================
-
 
 tasks.register('dist', Copy) {
     dependsOn executableJar
@@ -474,21 +368,6 @@ tasks.register('dist', Copy) {
     into 'build/dist/'
 }
 
-tasks.register('distV19', Copy) {
-    group = 'distribution'
-    description = 'Copy v1.9 executable JAR to dist folder'
-    dependsOn executableV19Jar
-    from 'build/libs/freerouting-1.9.0-executable.jar'
-    into 'build/dist/'
-}
-
-tasks.register('distBoth', Copy) {
-    group = 'distribution'
-    description = 'Copy both current and v1.9 executable JARs to dist folder'
-    dependsOn executableJar, executableV19Jar
-    from 'build/libs/freerouting-current-executable.jar', 'build/libs/freerouting-1.9.0-executable.jar'
-    into 'build/dist/'
-}
 
 tasks.register('run', JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
@@ -498,6 +377,11 @@ tasks.register('run', JavaExec) {
     // arguments to pass to the application
     //    args 'appArg1'
     // jvmArgs 'arg1'
+}
+
+tasks.register('runCli', JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'app.freerouting.cli.FreeroutingCli'
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -651,102 +535,26 @@ tasks.named('testSerial') {
     mustRunAfter(tasks.named('testSlow'))
 }
 
-rewrite {
-    // Fail fast on misspelled / nonexistent recipe names instead of silently skipping them.
-    failOnInvalidActiveRecipes = true
-
-    // Protect the v1.9 reference implementation (src_v19 source set) — it must stay unmodified.
-    exclusion("src_v19/**")
-    exclusion("**/src_v19/**")
-    exclusion("**/geometry/**")
-    exclusion("**/board/**")
-    exclusion("**/drc/**")
-    exclusion("**/autoroute/**")
-    exclusion("**/management/**")
-    exclusion("**/io/**")
-    exclusion("**/interactive/**")
-    exclusion("**/gui/**")
-
-
-tasks.register('phase2GenerateFieldMap', Exec) {
-    group = 'rewrite'
-    description = 'Generate field rename map before running rewriteRun'
-    def pkgs = System.getProperty('rewrite.targetPackages', '')
-    if (pkgs) {
-        def pkgList = pkgs.split(',').collect { it.trim() }
-        commandLine 'powershell', '-NoProfile', '-File', 'scripts/rewrite/generate-field-rename-map.ps1', '-TargetPackages', pkgList.join(',')
-    } else {
-        commandLine 'powershell', '-NoProfile', '-File', 'scripts/rewrite/generate-field-rename-map.ps1'
+graalvmNative {
+    binaries {
+        main {
+            imageName = 'freerouting-cli'
+            mainClass = 'app.freerouting.cli.FreeroutingCli'
+            classpath = configurations.cliRuntimeClasspath + sourceSets.main.output
+            buildArgs.addAll(
+                '--no-fallback',
+                '-H:+ReportExceptionStackTraces',
+                '-march=compatibility',
+                '--enable-url-protocols=https,http'
+            )
+        }
     }
-}
-
-tasks.register('phase2FieldReferenceRenames', Exec) {
-    group = 'rewrite'
-    description = 'Apply cross-file field reference renames from build/field-renames.tsv'
-    def pkgs = System.getProperty('rewrite.targetPackages', '')
-    if (pkgs) {
-        def pkgList = pkgs.split(',').collect { it.trim() }
-        commandLine 'powershell', '-NoProfile', '-File', 'scripts/rewrite/apply-field-reference-renames.ps1', '-TargetPackages', pkgList.join(',')
-    } else {
-        commandLine 'powershell', '-NoProfile', '-File', 'scripts/rewrite/apply-field-reference-renames.ps1'
+    metadataRepository {
+        enabled = false
     }
-}
-
-tasks.register('phase2aFieldsPost') {
-    group = 'rewrite'
-    description = 'Post-steps after Phase2aFields: field reference fallback + spotlessApply'
-    dependsOn(tasks.named('phase2FieldReferenceRenames'), tasks.named('spotlessApply'))
-}
-
-tasks.register('phase2fPost') {
-    group = 'rewrite'
-    description = 'Post-steps after Phase2fLocalVariables: spotlessApply only'
-    dependsOn(tasks.named('spotlessApply'))
-}
-
-tasks.register('phase2Naming') {
-    group = 'rewrite'
-    description = 'Phase 2 post-steps: field reference fallback + spotlessApply (run rewriteRun first)'
-    dependsOn(tasks.named('phase2FieldReferenceRenames'), tasks.named('spotlessApply'))
-}
-
-tasks.named('spotlessApply').configure { mustRunAfter(tasks.named('phase2FieldReferenceRenames')) }
-
-['rewriteRun', 'rewriteDryRun', 'rewriteDiscover'].each { taskName ->
-    tasks.matching { it.name == taskName }.configureEach {
-        dependsOn(tasks.named('compileRewriteRecipesJava'))
+    metadataCopy {
+        inputTaskNames.add("runCli")
+        outputDirectories.add("src/main/resources/META-INF/native-image")
+        mergeWithExisting = true
     }
-}
-
-
-    // --- PHASE 1: Hygiene (run first to reduce noise) ---
-    // Curated composite in rewrite.yml: CommonStaticAnalysis minus MethodNameCasing
-    // (inconsistent renames across widened-access overrides) and WriteOctalValuesAsDecimal.
-    // activeRecipe("app.freerouting.Phase1Hygiene")
-    // Formatting guardrail: ./gradlew spotlessApply (enforced by spotlessCheck in check)
-
-    // --- PHASE 2: Naming Convention (snake_case -> camelCase) ---
-    // WARNING: renaming private fields breaks Java-serialization compatibility of saved
-    // .frb GUI session files (renamed fields deserialize to defaults).
-    // activeRecipe("org.openrewrite.staticanalysis.RenameLocalVariablesToCamelCase")
-    // activeRecipe("org.openrewrite.staticanalysis.RenamePrivateFieldsToCamelCase")
-
-    // --- PHASE 3: Testing Modernization (JUnit 5 / Jupiter) ---
-    // activeRecipe("org.openrewrite.java.testing.junit5.JUnit5BestPractices")
-
-    // --- PHASE 4: Build System (Gradle 9) ---
-    // activeRecipe("org.openrewrite.gradle.MigrateToGradle9")
-
-    // --- PHASE 5: The Big Upgrade (Java 25) ---
-    // Note: This includes the logic from 17 and 21 automatically.
-    // activeRecipe("org.openrewrite.java.migrate.UpgradeToJava25")
-
-    // --- PHASE 6: Modern Java Features (Optional Polish) ---
-    // activeRecipe("org.openrewrite.staticanalysis.InstanceOfPatternMatch")
-    // activeRecipe("org.openrewrite.java.migrate.lang.UseTextBlocks")
-    // activeRecipe("org.openrewrite.java.migrate.SwitchPatternMatching")
-
-    // --- Configuration ---
-    checkstyleConfigFile = file("config/checkstyle/google_checks.xml")
-    setExportDatatables(true)
 }

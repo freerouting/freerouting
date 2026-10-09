@@ -52,7 +52,7 @@ class BenchmarkScoreCalculatorTest {
               }
             },
             {
-              "cache_key": "run-legacy-v19",
+              "cache_key": "run-legacy-difficulty-fallback",
               "exit": { "code": 0, "state": "COMPLETED", "crashed": false, "timed_out": false },
               "phases": {
                 "autorouter": {
@@ -108,8 +108,9 @@ class BenchmarkScoreCalculatorTest {
     assertTrue(withViolations.routerScore > 0.0f && withViolations.routerScore < 1000.0f);
     assertFalse(withViolations.isFailed);
 
-    // Legacy v1.9: difficulty correctly calculated from pins * layers = 100
-    BenchmarkScoreCalculator.BenchmarkScoreResult legacy = scores.get("run-legacy-v19");
+    // Legacy schema fallback: difficulty correctly calculated from pins * layers = 100
+    BenchmarkScoreCalculator.BenchmarkScoreResult legacy =
+        scores.get("run-legacy-difficulty-fallback");
     assertTrue(legacy.routerScore > 900.0f && legacy.routerScore < 1000.0f);
     assertFalse(legacy.isFailed);
 

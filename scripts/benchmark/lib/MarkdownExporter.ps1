@@ -92,6 +92,16 @@ function Get-RunScoreValue {
     return $null
 }
 
+function Test-RunIsTimedOut {
+    param($Run)
+
+    if ($null -eq $Run -or $null -eq $Run.exit) { return $false }
+    if ($Run.exit.timed_out -eq $true) { return $true }
+    if ($Run.exit.state -eq "TIMED_OUT") { return $true }
+    if ($Run.log_analysis -and $Run.log_analysis.timed_out -eq $true) { return $true }
+    return $false
+}
+
 function Test-RunIsFailed {
     param($Run, [hashtable]$NormalizedScores = $null)
 
@@ -187,7 +197,7 @@ function Export-MarkdownReport {
                 $fixtureCount++
 
                 $failed = Test-RunIsFailed $latestRun $NormalizedScores
-                $isTimeout = $latestRun.exit.timed_out -eq $true
+                $isTimeout = (Test-RunIsTimedOut $latestRun)
                 if ($isTimeout) { $timeouts++ }
                 if ($failed) { $failures++ }
 
@@ -203,9 +213,23 @@ function Export-MarkdownReport {
 
                 $score = Get-RunScoreValue $latestRun $NormalizedScores
 
+                $unfixable = if ($latestRun.quality.unfixable_clearance_violations -ne $null) {
+                    [int]$latestRun.quality.unfixable_clearance_violations
+                } else { 0 }
+
+                $routerViol = if ($latestRun.quality.router_introduced_violations -ne $null) {
+                    [int]$latestRun.quality.router_introduced_violations
+                } else { $null }
+
+                $isClean = if ($routerViol -ne $null) {
+                    $routerViol -eq 0
+                } else {
+                    $violations -ne $null -and $violations -le $unfixable
+                }
+
                 if (-not $failed -and $unrouted -ne $null -and $unrouted -eq 0) {
                     $allRouted++
-                    if ($violations -ne $null -and $violations -eq 0) {
+                    if ($isClean) {
                         $perfects++
                     }
                 }
@@ -474,7 +498,7 @@ function Export-MarkdownReport {
                 if ($run.exit.crashed -eq $true -or ($run.exit.code -ne $null -and $run.exit.code -ne 0 -and $run.exit.state -eq "FAILED")) {
                     $notes += "FAILED"
                 }
-                if ($run.exit.timed_out -eq $true -or $logTimedOut -eq $true) {
+                if ((Test-RunIsTimedOut $run) -or $logTimedOut -eq $true) {
                     $notes += "TIMEOUT"
                 }
                 if ($loadError -eq $true) {

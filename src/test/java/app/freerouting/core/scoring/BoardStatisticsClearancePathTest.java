@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 class BoardStatisticsClearancePathTest {
 
   private static final String VIOLATION_FIXTURE =
-      "Issue575-drc_dev-board_4_hole_clearance_violations.dsn";
+      "Issue575-drc_BBD_Mars-64_6_track_1_hole_clearance_violations.dsn";
 
   @BeforeEach
   void setUp() {
@@ -38,7 +38,7 @@ class BoardStatisticsClearancePathTest {
     BoardStatistics stats = new BoardStatistics(board);
 
     assertEquals(fullDrcCount, stats.clearanceViolations.totalCount.intValue());
-    assertEquals(2, fullDrcCount);
+    assertEquals(67, fullDrcCount);
   }
 
   @Test

@@ -42,9 +42,40 @@ public final class FoundConnectionInserter {
     if (connection == null || connection.connectionItems == null) {
       return null;
     }
-    int currentLayer = connection.targetLayer;
+    PlannedConnection.Segment[] segments =
+        new PlannedConnection.Segment[connection.connectionItems.size()];
+    int segmentIndex = 0;
+    for (FoundConnectionLocator.ResultItem item : connection.connectionItems) {
+      segments[segmentIndex++] = new PlannedConnection.Segment(item.corners, item.layer);
+    }
+    return insertSegments(
+        board,
+        ctrl,
+        connection.startItem,
+        connection.targetItem,
+        connection.startLayer,
+        connection.targetLayer,
+        segments);
+  }
+
+  /**
+   * Inserts an already found connection. {@code startItem} and {@code targetItem} belong to {@code
+   * board}. Returns null when a via or trace cannot be inserted.
+   */
+  public static FoundConnectionInserter insertSegments(
+      RoutingBoard board,
+      AutorouteControl ctrl,
+      Item startItem,
+      Item targetItem,
+      int startLayer,
+      int targetLayer,
+      PlannedConnection.Segment[] segments) {
+    if (segments == null) {
+      return null;
+    }
+    int currentLayer = targetLayer;
     FoundConnectionInserter newInstance = new FoundConnectionInserter(board, ctrl);
-    for (FoundConnectionLocatorAnyAngle.ResultItem currentNewItem : connection.connectionItems) {
+    for (PlannedConnection.Segment currentNewItem : segments) {
       if (true) {
         Point startCorner = currentNewItem.corners.length > 0 ? currentNewItem.corners[0] : null;
         Point endCorner =
@@ -71,15 +102,15 @@ public final class FoundConnectionInserter {
         return null;
       }
     }
-    if (!newInstance.insertVia(newInstance.lastCorner, currentLayer, connection.startLayer)) {
+    if (!newInstance.insertVia(newInstance.lastCorner, currentLayer, startLayer)) {
       return null;
     }
-    if (connection.targetItem instanceof PolylineTrace toTrace) {
+    if (targetItem instanceof PolylineTrace toTrace) {
       if (newInstance.firstCorner != null) {
         board.connectToTrace(
             newInstance.firstCorner,
             toTrace,
-            ctrl.traceHalfWidth[connection.startLayer],
+            ctrl.traceHalfWidth[startLayer],
             ctrl.traceClearanceClassIndex);
       } else {
         FRLogger.warn(
@@ -89,12 +120,12 @@ public final class FoundConnectionInserter {
                 + "This may indicate a degenerate route segment.");
       }
     }
-    if (connection.startItem instanceof PolylineTrace toTrace) {
+    if (startItem instanceof PolylineTrace toTrace) {
       if (newInstance.lastCorner != null) {
         board.connectToTrace(
             newInstance.lastCorner,
             toTrace,
-            ctrl.traceHalfWidth[connection.targetLayer],
+            ctrl.traceHalfWidth[targetLayer],
             ctrl.traceClearanceClassIndex);
       } else {
         FRLogger.warn(
@@ -124,7 +155,7 @@ public final class FoundConnectionInserter {
    * Inserts the trace by shoving aside obstacle traces and vias. Returns false, that was not
    * possible for the whole trace.
    */
-  private boolean insertTrace(FoundConnectionLocatorAnyAngle.ResultItem trace) {
+  private boolean insertTrace(PlannedConnection.Segment trace) {
     if (trace.corners.length == 1) {
       // Single-point trace: the start and end are the same location (already at the target).
       // Set both firstCorner and lastCorner so that connect_to_trace is not called with null.
@@ -209,7 +240,7 @@ public final class FoundConnectionInserter {
       }
       if (!neckdownInserted
           && okPoint != insertPolyline.lastCorner()
-          && ctrl.isFanout
+          && (ctrl.isFanout || ctrl.withNeckdown)
           && currentCornerArr.length == 2) {
         microNeckdownInserted =
             insertFanoutMicroNeckdown(

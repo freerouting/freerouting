@@ -1,9 +1,7 @@
-# EasyEDA Freerouting Launcher
+# EasyEDA Freerouting Integration
 
-Freerouting Launcher is a legacy tool to launch freerouting in headless mode.
+Freerouting Launcher is a legacy tool used to launch Freerouting in headless mode, emulating an EasyEDA autorouter server.
 
-Also, it can emulate itself as a EasyEDA auto-router server.
+EasyEDA now supports direct integration via the modern Freerouting API for a streamlined autorouting experience.
 
-EasyEDA developers are moving to Freerouting API use for better user experience.
-
-See https://github.com/easyeda/eext-freerouting-intergration for details.
+For extension details, see https://github.com/easyeda/eext-freerouting-intergration.

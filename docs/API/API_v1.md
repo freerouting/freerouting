@@ -630,4 +630,8 @@ You will receive a unique API key that you can use to authenticate your requests
 
 I also send you a detailed getting started guide to help you integrate the API into your workflows.
 
-If you have any questions or need further assistance, please don't hesitate to contact me at [info@freerouting.app](mailto:info@freerouting.app).
+If you have any questions or need further assistance, please don't hesitate to reach out:
+- **Email**: [info@freerouting.app](mailto:info@freerouting.app)
+- **Twitter/X**: [@freeroutingPCB](https://x.com/freeroutingPCB) or [@andrasfuchs](https://x.com/andrasfuchs)
+- **LinkedIn**: [Andras Fuchs](https://www.linkedin.com/in/andrasfuchs/)
+- **Discussions**: [GitHub Discussions](https://github.com/freerouting/freerouting/discussions)

@@ -42,6 +42,9 @@ public class RouterSettingsTypeAdapterFactory implements TypeAdapterFactory {
 
             // Serialize using default delegate adapter
             JsonElement tree = delegate.toJsonTree(value);
+            if (value.layers != null && tree.isJsonObject()) {
+              tree.getAsJsonObject().add("layers", gson.toJsonTree(value.layers));
+            }
 
             elementAdapter.write(out, tree);
           }

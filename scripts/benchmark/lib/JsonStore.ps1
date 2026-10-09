@@ -166,9 +166,8 @@ FLOAT_KEYS = {
     'normalized_score',
 }
 
-def render(value, level=0, key=None):
-    indent = '  ' * level
-    child_indent = '  ' * (level + 1)
+def render(value, key=None):
+    # Compact JSON: pretty-printed results exceeded GitHub's 100 MB blob limit.
     if value is None:
         return 'null'
     if isinstance(value, bool):
@@ -182,19 +181,12 @@ def render(value, level=0, key=None):
     if isinstance(value, str):
         return json.dumps(value, ensure_ascii=False)
     if isinstance(value, list):
-        if not value:
-            return '[]'
-        return '[\n' + ',\n'.join(
-            child_indent + render(item, level + 1) for item in value
-        ) + '\n' + indent + ']'
+        return '[' + ','.join(render(item) for item in value) + ']'
     if isinstance(value, dict):
-        if not value:
-            return '{}'
-        return '{\n' + ',\n'.join(
-            child_indent + json.dumps(str(key), ensure_ascii=False) + ': ' +
-            render(item, level + 1, key)
-            for key, item in value.items()
-        ) + '\n' + indent + '}'
+        return '{' + ','.join(
+            json.dumps(str(k), ensure_ascii=False) + ':' + render(item, k)
+            for k, item in value.items()
+        ) + '}'
     raise TypeError(type(value).__name__)
 
 p = sys.argv[1]
@@ -204,10 +196,36 @@ with open(p, 'w', encoding='utf-8', newline='\n') as f:
     f.write(render(data) + '\n')
 "@
         python -c $pyFormatScript $tempPath
-        if (Test-Path -LiteralPath $jsonFullPath) {
-            [System.IO.File]::Replace($tempPath, $jsonFullPath, $backupPath, $true)
-        } else {
-            [System.IO.File]::Move($tempPath, $jsonFullPath)
+        # File.Replace throws a wrapped IOException when Windows still has the
+        # destination open (indexer, antivirus, or an editor). The formatted temp
+        # file stays put across retries.
+        $maxAttempts = 40
+        for ($attempt = 1; $attempt -le $maxAttempts; $attempt++) {
+            try {
+                if (Test-Path -LiteralPath $jsonFullPath) {
+                    if (Test-Path -LiteralPath $backupPath) {
+                        Remove-Item -LiteralPath $backupPath -Force -ErrorAction SilentlyContinue
+                    }
+                    [System.IO.File]::Replace($tempPath, $jsonFullPath, $backupPath, $true)
+                } else {
+                    [System.IO.File]::Move($tempPath, $jsonFullPath)
+                }
+                break
+            } catch {
+                $inner = $_.Exception
+                while ($null -ne $inner.InnerException) {
+                    $inner = $inner.InnerException
+                }
+                $locked = ($inner -is [System.IO.IOException]) -or ($inner -is [System.UnauthorizedAccessException])
+                if (-not $locked -or $attempt -ge $maxAttempts) {
+                    Write-Error "Failed to write benchmarks.json atomically: $_"
+                    break
+                }
+                if ($attempt -eq 1) {
+                    Write-Host "benchmarks.json is in use. Retrying the save..."
+                }
+                Start-Sleep -Milliseconds ([Math]::Min(250 * $attempt, 1000))
+            }
         }
     } catch {
         Write-Error "Failed to write benchmarks.json atomically: $_"

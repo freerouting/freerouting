@@ -4,11 +4,7 @@ import static java.util.Collections.shuffle;
 
 import app.freerouting.autoroute.AutorouteAttemptResult;
 import app.freerouting.autoroute.AutorouteAttemptState;
-import app.freerouting.autoroute.BoardHistory;
 import app.freerouting.autoroute.PerformanceProfiler;
-import app.freerouting.autoroute.events.BoardUpdatedEvent;
-import app.freerouting.autoroute.events.BoardUpdatedEventListener;
-import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Trace;
@@ -20,131 +16,26 @@ import app.freerouting.geometry.planar.Point;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-/** Executes one single-threaded or multi-threaded autoroute pass. */
+/** Executes one autoroute pass on the calling thread. */
 final class AutoroutePassRunner {
 
-  private static final int TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP = 1000;
-
   private final BatchAutorouter router;
+  private Set<Integer> previousIncompleteNets = Collections.emptySet();
+  private int previousIncompleteCount = -1;
+  private int stagnationCount = 0;
 
   AutoroutePassRunner(BatchAutorouter router) {
     this.router = router;
-  }
-
-  boolean runMultiThread(int passNo) {
-    try {
-      List<Item> autorouteItemList = router.getAutorouteItems(router.board);
-
-      if (autorouteItemList.isEmpty()) {
-        router.airLine = null;
-        return false;
-      }
-
-      BatchAutorouterThread[] autorouterThreads =
-          new BatchAutorouterThread[router.job.routerSettings.maxThreads];
-      final BoardHistory boardHistory = new BoardHistory(router.job.routerSettings);
-
-      for (int threadIndex = 0; threadIndex < router.job.routerSettings.maxThreads; threadIndex++) {
-        PerformanceProfiler.start("board.deepCopy");
-        RoutingBoard clonedBoard = router.board.deepCopy();
-        PerformanceProfiler.end("board.deepCopy");
-
-        List<Item> clonedAutorouteItemList = new ArrayList<>(router.getAutorouteItems(clonedBoard));
-        shuffle(clonedAutorouteItemList, router.random);
-
-        autorouterThreads[threadIndex] =
-            new BatchAutorouterThread(
-                clonedBoard,
-                clonedAutorouteItemList,
-                passNo,
-                router.job.routerSettings,
-                router.startRipupCosts,
-                router.tracePullTightAccuracy,
-                router.removeUnconnectedVias,
-                true);
-        autorouterThreads[threadIndex].setName(
-            "Router thread #" + passNo + "." + router.threadIndexToLetter(threadIndex));
-        autorouterThreads[threadIndex].setDaemon(true);
-        autorouterThreads[threadIndex].setPriority(Thread.MIN_PRIORITY);
-      }
-
-      autorouterThreads[0].addBoardUpdatedEventListener(
-          new BoardUpdatedEventListener() {
-            @Override
-            public void onBoardUpdatedEvent(BoardUpdatedEvent event) {
-              router.airLine = autorouterThreads[0].latestAirLine;
-              router.fireBoardUpdatedEvent(
-                  event.getBoardStatistics(), event.getRouterCounters(), event.getBoard());
-            }
-          });
-
-      for (BatchAutorouterThread autorouterThread : autorouterThreads) {
-        autorouterThread.start();
-      }
-
-      for (int threadIndex = 0; threadIndex < router.job.routerSettings.maxThreads; threadIndex++) {
-        BatchAutorouterThread autorouterThread = autorouterThreads[threadIndex];
-        try {
-          autorouterThread.join(TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
-        } catch (InterruptedException e) {
-          router.job.logError(
-              "Autorouter thread #"
-                  + passNo
-                  + "."
-                  + router.threadIndexToLetter(threadIndex)
-                  + " was interrupted",
-              e);
-          router.thread.requestStop();
-          break;
-        }
-
-        boardHistory.add(autorouterThread.getBoard());
-        BoardStatistics clonedBoardStatistics = autorouterThread.getBoard().getStatistics();
-        float clonedBoardScore = clonedBoardStatistics.getRouterScore(router.job.routerSettings);
-
-        router.job.logDebug(
-            "Router thread #"
-                + passNo
-                + "."
-                + router.threadIndexToLetter(threadIndex)
-                + " finished with score: "
-                + FRLogger.formatScore(
-                    clonedBoardScore,
-                    clonedBoardStatistics.connections.incompleteCount,
-                    clonedBoardStatistics.clearanceViolations.totalCount));
-
-        router.job.resourceUsage.cpuTimeUsed += autorouterThread.cpuTimeUsed;
-        router.job.resourceUsage.maxMemoryUsed += autorouterThread.maxMemoryUsed;
-      }
-
-      BatchAutorouterThread bestThread = autorouterThreads[0];
-      float bestScore = -Float.MAX_VALUE;
-      for (BatchAutorouterThread autorouterThread : autorouterThreads) {
-        BoardStatistics stats = autorouterThread.getBoard().getStatistics();
-        float score = stats.getRouterScore(router.job.routerSettings);
-        if (score > bestScore) {
-          bestScore = score;
-          bestThread = autorouterThread;
-        }
-      }
-
-      router.board = boardHistory.restoreBestBoard();
-      boardHistory.clear();
-
-      boolean anyProgress = bestThread.getRoutedCount() > 0 || bestThread.getFailedCount() > 0;
-      router.airLine = null;
-      return anyProgress;
-    } catch (Exception e) {
-      router.job.logError("Something went wrong during the auto-routing", e);
-      router.airLine = null;
-      return false;
-    }
   }
 
   boolean runSingleThread(int passNo) {
@@ -162,6 +53,10 @@ final class AutoroutePassRunner {
       if (autorouteItemList.isEmpty()) {
         router.airLine = null;
         return false;
+      }
+
+      if (passNo > 1) {
+        reorderSingleThreadItems(autorouteItemList, passNo);
       }
 
       long initialProgressStatisticsStart =
@@ -269,6 +164,20 @@ final class AutoroutePassRunner {
                 currentItem, passNo, autorouterResult.state, autorouterResult.details);
             router.job.logDebug("Autorouter " + autorouterResult.details);
             int failureCount = router.board.failureLog.getFailureCount(currentItem);
+            if (failureCount >= 2) {
+              int netNo = currentItem.getNetNumber(i);
+              List<Item> tracesToRip = new ArrayList<>();
+              for (Item netItem : router.board.getConnectableItems(netNo)) {
+                if ((netItem instanceof Trace || netItem instanceof Via)
+                    && !netItem.isUserFixed()
+                    && netItem.netCount() == 1) {
+                  tracesToRip.add(netItem);
+                }
+              }
+              if (!tracesToRip.isEmpty()) {
+                router.board.removeItems(tracesToRip);
+              }
+            }
             if (itemsToGoCount <= 5 || failureCount >= 3) {
               router.job.logDebug(
                   "Pass #"
@@ -316,8 +225,19 @@ final class AutoroutePassRunner {
       routerCounters.rippedCount = rippedItemCount;
       routerCounters.failedToBeRoutedCount = notRouted;
       routerCounters.routedCount = routed;
-      routerCounters.incompleteCount = router.calculateIncompleteCount(router.board);
+      Set<Integer> currentIncompleteNets = new TreeSet<>();
+      routerCounters.incompleteCount =
+          router.calculateIncompleteCount(router.board, currentIncompleteNets);
       router.fireBoardUpdatedEvent(boardStatistics, routerCounters, router.board);
+
+      if (this.previousIncompleteCount >= 0
+          && routerCounters.incompleteCount >= this.previousIncompleteCount) {
+        this.stagnationCount++;
+      } else {
+        this.stagnationCount = 0;
+      }
+      this.previousIncompleteCount = routerCounters.incompleteCount;
+      this.previousIncompleteNets = currentIncompleteNets;
 
       long passDuration = System.currentTimeMillis() - passStartTime;
       int currentRipupCost = router.startRipupCosts * passNo;
@@ -332,6 +252,74 @@ final class AutoroutePassRunner {
       router.airLine = null;
       return false;
     }
+  }
+
+  private void reorderSingleThreadItems(List<Item> autorouteItemList, int passNo) {
+    List<Item> planeItems = new ArrayList<>();
+    List<Item> signalItems = new ArrayList<>();
+    for (Item item : autorouteItemList) {
+      if (router.isPlaneItem(item, router.board)) {
+        planeItems.add(item);
+      } else {
+        signalItems.add(item);
+      }
+    }
+
+    if (signalItems.isEmpty()) {
+      return;
+    }
+
+    Comparator<Item> deterministicItemComparator =
+        Comparator.comparingInt((Item item) -> item.netCount() > 0 ? item.getNetNumber(0) : 0)
+            .thenComparingInt(Item::getId);
+
+    if (this.stagnationCount >= 2) {
+      signalItems.sort(deterministicItemComparator);
+      long seed = (long) passNo * 1000003L + router.board.rules.nets.maxNetNumber();
+      shuffle(signalItems, new Random(seed));
+      router.job.logDebug(
+          "Pass #"
+              + passNo
+              + ": applied deterministic permutation to "
+              + signalItems.size()
+              + " signal items (stagnation count: "
+              + this.stagnationCount
+              + ").");
+    } else if (!this.previousIncompleteNets.isEmpty()) {
+      List<Item> persistentItems = new ArrayList<>();
+      List<Item> otherItems = new ArrayList<>();
+      for (Item item : signalItems) {
+        boolean isPersistent = false;
+        for (int i = 0; i < item.netCount(); i++) {
+          if (this.previousIncompleteNets.contains(item.getNetNumber(i))) {
+            isPersistent = true;
+            break;
+          }
+        }
+        if (isPersistent) {
+          persistentItems.add(item);
+        } else {
+          otherItems.add(item);
+        }
+      }
+      persistentItems.sort(deterministicItemComparator);
+      otherItems.sort(deterministicItemComparator);
+      signalItems.clear();
+      signalItems.addAll(persistentItems);
+      signalItems.addAll(otherItems);
+    } else {
+      signalItems.sort(deterministicItemComparator);
+    }
+
+    autorouteItemList.clear();
+    autorouteItemList.addAll(planeItems);
+    autorouteItemList.addAll(signalItems);
+  }
+
+  void resetAntiOscillationState() {
+    this.previousIncompleteNets = Collections.emptySet();
+    this.previousIncompleteCount = -1;
+    this.stagnationCount = 0;
   }
 
   private void logIncompleteDetails(

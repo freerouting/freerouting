@@ -89,9 +89,16 @@ public class Padstack implements Comparable<Padstack>, ItemInfoPrinter.Printable
           double drillDia = Double.parseDouble(drillStr);
           int lastUnderscore = name.lastIndexOf('_', colonIndex);
           if (lastUnderscore >= 0) {
-            String outerStr =
-                name.substring(lastUnderscore + 1, colonIndex).replaceAll("[^0-9.]", "");
-            double outerDia = Double.parseDouble(outerStr);
+            String outerStr = name.substring(lastUnderscore + 1, colonIndex);
+            double outerDia;
+            if (outerStr.contains("x")) {
+              String[] parts = outerStr.split("x");
+              double w = Double.parseDouble(parts[0].replaceAll("[^0-9.]", ""));
+              double h = Double.parseDouble(parts[1].replaceAll("[^0-9.]", ""));
+              outerDia = Math.min(w, h);
+            } else {
+              outerDia = Double.parseDouble(outerStr.replaceAll("[^0-9.]", ""));
+            }
             if (outerDia > 0) {
               double actualOuterRadius = getSmallestRadius();
               if (actualOuterRadius > 0) {
@@ -101,7 +108,7 @@ public class Padstack implements Comparable<Padstack>, ItemInfoPrinter.Printable
               }
             }
           }
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
           // Ignore
         }
       }

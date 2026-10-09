@@ -16,7 +16,6 @@ import app.freerouting.core.RoutingJob;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.UndoableObjects;
-import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.logger.FRLogger;
@@ -52,6 +51,11 @@ public final class BatchAutorouter extends NamedAlgorithm {
   static final int STAGNATION_PASS_LIMIT = 10;
   // Number of no-improvement passes before attempting a one-time fanout-tail cleanup.
   static final int FANOUT_RECOVERY_STAGNATION_PASSES = 3;
+  // Last-mile rip-up: when only a few connections remain, remove foreign traces and vias
+  // that cross those airlines so the next passes can escape a local blockage.
+  static final int LAST_MILE_INCOMPLETE_LIMIT = 8;
+  static final int LAST_MILE_STAGNATION_PASSES = 3;
+  static final int LAST_MILE_MAX_ATTEMPTS = 2;
   // Progress statistics are informational only; avoid rebuilding the expensive snapshot for
   // every item while keeping the GUI reasonably current on large boards.
   static final int PROGRESS_STATISTICS_ITEM_INTERVAL = 10;
@@ -64,6 +68,7 @@ public final class BatchAutorouter extends NamedAlgorithm {
       Boolean.getBoolean("freerouting.benchmark.retain_autoroute_database");
 
   final boolean removeUnconnectedVias;
+  final boolean preferredDirections;
   final AutorouteControl.ExpansionCostFactor[] traceCosts;
   final boolean retainAutorouteDatabase;
   final int startRipupCosts;
@@ -71,6 +76,8 @@ public final class BatchAutorouter extends NamedAlgorithm {
   // Reusable collections to reduce memory churn (thread-safe as each thread has
   // its own BatchAutorouter instance)
   private final List<Item> reusableAutorouteItemList = new ArrayList<>();
+  private final List<Item> reusablePlaneItemList = new ArrayList<>();
+  private final List<Item> reusableSignalItemList = new ArrayList<>();
   private final Set<Item> reusableHandledItems = new TreeSet<>();
   private final AutorouteConnectionRouter connectionRouter;
   private final AutoroutePassRunner passRunner;
@@ -135,6 +142,7 @@ public final class BatchAutorouter extends NamedAlgorithm {
     this.random = new Random(0);
 
     this.removeUnconnectedVias = removeUnconnectedVias;
+    this.preferredDirections = withPreferredDirections;
     if (withPreferredDirections) {
       this.traceCosts = this.settings.getTraceCosts();
     } else {
@@ -345,6 +353,8 @@ public final class BatchAutorouter extends NamedAlgorithm {
   List<Item> getAutorouteItems(RoutingBoard board) {
     // Reuse instance collections to reduce memory allocation
     reusableAutorouteItemList.clear();
+    reusablePlaneItemList.clear();
+    reusableSignalItemList.clear();
     reusableHandledItems.clear();
     List<Item> autorouteItemList = reusableAutorouteItemList;
     Set<Item> handledItems = reusableHandledItems;
@@ -358,6 +368,12 @@ public final class BatchAutorouter extends NamedAlgorithm {
         // This is a connectable item, like PolylineTrace or Pin
         if (!currentItem.isRoutable()) {
           if (!handledItems.contains(currentItem)) {
+
+            boolean needsRouting = false;
+            boolean hasPlaneNet = false;
+            String queuedNetName = null;
+            int queuedConnected = 0;
+            int queuedTotal = 0;
 
             // Let's go through all nets of this item
             for (int i = 0; i < currentItem.netCount(); i++) {
@@ -374,42 +390,66 @@ public final class BatchAutorouter extends NamedAlgorithm {
               // auto-router's to-do list
               if ((connectedSet.size() < netItemCount) && (!currentItem.hasIgnoredNets())) {
                 Net net = board.rules.nets.get(currentNetNumber);
-                // For plane nets: skip items whose connected set already contains a
-                // ConductionArea (copper pour). These items would immediately return
-                // CONNECTED_TO_PLANE in autorouteItem(), wasting time and causing
-                // spurious normalizeTraces() failures on nearby stub geometry.
-                // Items not yet connected to the plane are still enqueued so they can
-                // be routed to the pour in this pass.
-                if (net != null && net.containsPlane()) {
+                boolean isPlane = net != null && net.containsPlane();
+                if (isPlane) {
                   boolean alreadyConnectedToPlane =
                       connectedSet.stream().anyMatch(ConductionArea.class::isInstance);
                   if (alreadyConnectedToPlane) {
                     continue;
                   }
+                  hasPlaneNet = true;
                 }
-                autorouteItemList.add(currentItem);
-                String netName = net != null ? net.name : "net#" + currentNetNumber;
-                FRLogger.debug(
-                    "Queuing item for routing: "
-                        + currentItem.getClass().getSimpleName()
-                        + " on net '"
-                        + netName
-                        + "' (connected: "
-                        + connectedSet.size()
-                        + "/"
-                        + netItemCount
-                        + ")");
+                needsRouting = true;
+                if (queuedNetName == null) {
+                  queuedNetName = net != null ? net.name : "net#" + currentNetNumber;
+                  queuedConnected = connectedSet.size();
+                  queuedTotal = netItemCount;
+                }
               }
+            }
+
+            if (needsRouting) {
+              if (hasPlaneNet) {
+                reusablePlaneItemList.add(currentItem);
+              } else {
+                reusableSignalItemList.add(currentItem);
+              }
+              FRLogger.debug(
+                  "Queuing item for routing: "
+                      + currentItem.getClass().getSimpleName()
+                      + " on net '"
+                      + queuedNetName
+                      + "' (connected: "
+                      + queuedConnected
+                      + "/"
+                      + queuedTotal
+                      + ", plane: "
+                      + hasPlaneNet
+                      + ")");
             }
           }
         }
       }
     }
+    // Route power plane-nets first: placing short stubs and vias early leaves escape
+    // corridors open around pads and prevents signal traces from blocking via placement.
+    autorouteItemList.addAll(reusablePlaneItemList);
+    autorouteItemList.addAll(reusableSignalItemList);
     return autorouteItemList;
   }
 
-  boolean autoroutePassMultiThread(int passNo) {
-    return passRunner.runMultiThread(passNo);
+  /** Returns true if the given item belongs to at least one net with containsPlane = true. */
+  boolean isPlaneItem(Item item, RoutingBoard board) {
+    if (item == null || board == null) {
+      return false;
+    }
+    for (int i = 0; i < item.netCount(); i++) {
+      Net net = board.rules.nets.get(item.getNetNumber(i));
+      if (net != null && net.containsPlane()) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -418,6 +458,12 @@ public final class BatchAutorouter extends NamedAlgorithm {
    */
   boolean autoroutePass(int passNo) {
     return passRunner.runSingleThread(passNo);
+  }
+
+  void resetAntiOscillationState() {
+    if (this.passRunner != null) {
+      this.passRunner.resetAntiOscillationState();
+    }
   }
 
   @Override
@@ -477,6 +523,7 @@ public final class BatchAutorouter extends NamedAlgorithm {
    * Returns true if the board is completed.
    */
   public boolean runBatchLoop() {
+    this.board.awaitPostLoad();
     return batchLoop.run();
   }
 
@@ -526,40 +573,23 @@ public final class BatchAutorouter extends NamedAlgorithm {
     return this.airLine;
   }
 
-  /**
-   * Return an uppercase one-letter, two-letter or three-letter string based on the thread index (0
-   * = A, 1 = B, 2 = C, ..., 26 = AA, 27 = AB, ...).
-   *
-   * @param threadIndex the thread index.
-   * @return the letter label for the thread index.
-   */
-  String threadIndexToLetter(int threadIndex) {
-    if (threadIndex < 0) {
-      return "";
-    }
-    if (threadIndex < 26) {
-      return String.valueOf((char) ('A' + threadIndex));
-    } else if (threadIndex < 26 * 26) {
-      int firstLetterIndex = threadIndex / 26;
-      int secondLetterIndex = threadIndex % 26;
-      return String.valueOf((char) ('A' + firstLetterIndex)) + (char) ('A' + secondLetterIndex);
-    } else {
-      int firstLetterIndex = threadIndex / (26 * 26);
-      int secondLetterIndex = (threadIndex / 26) % 26;
-      int thirdLetterIndex = threadIndex % 26;
-      return String.valueOf((char) ('A' + firstLetterIndex))
-          + (char) ('A' + secondLetterIndex)
-          + (char) ('A' + thirdLetterIndex);
-    }
+  int calculateIncompleteCount(RoutingBoard board) {
+    return calculateIncompleteCount(board, null);
   }
 
-  int calculateIncompleteCount(RoutingBoard board) {
+  /**
+   * Counts incomplete connections once. When {@code incompleteNets} is non-null, also records every
+   * net that still has an incomplete connection from that same scan.
+   */
+  int calculateIncompleteCount(RoutingBoard board, Set<Integer> incompleteNets) {
     long drcStart = BENCHMARK_PROFILE_ENABLED ? System.nanoTime() : 0;
-    DesignRulesChecker tempDrc = new DesignRulesChecker(board, null);
-    tempDrc.calculateAllIncompletes();
+    int incompleteCount = board.routingLedger().incompleteCount();
     if (BENCHMARK_PROFILE_ENABLED) {
       this.profileIncompleteDrcNanos += System.nanoTime() - drcStart;
     }
-    return tempDrc.getIncompleteCount();
+    if (incompleteNets != null) {
+      incompleteNets.addAll(board.routingLedger().incompleteNetNumbers());
+    }
+    return incompleteCount;
   }
 }

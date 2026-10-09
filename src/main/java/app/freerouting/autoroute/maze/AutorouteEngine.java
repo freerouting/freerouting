@@ -234,34 +234,12 @@ public class AutorouteEngine {
           "No new connections were made between " + describeConnection(startSet, destSet) + ".");
     }
 
-    // Delete the ripped connections.
-    SortedSet<Item> rippedConnections = new TreeSet<>();
-    Set<Integer> changedNets = new TreeSet<>();
-    Item.StopConnectionOption stopConnectionOption;
-    if (ctrl.removeUnconnectedVias) {
-      stopConnectionOption = Item.StopConnectionOption.NONE;
-    } else {
-      stopConnectionOption = Item.StopConnectionOption.FANOUT_VIA;
-    }
-
-    for (Item currentRippedItem : rippedItemList) {
-      rippedConnections.addAll(currentRippedItem.getConnectionItems(stopConnectionOption));
-      for (int i = 0; i < currentRippedItem.netCount(); i++) {
-        changedNets.add(currentRippedItem.getNetNumber(i));
-      }
-    }
-
-    // let the observers know the changes in the board database.
+    // Delete the ripped connections while observers see the insert that follows.
     boolean observersActivated = !this.board.observersActive();
     if (observersActivated) {
       this.board.startNotifyObservers();
     }
-
-    board.removeItems(rippedConnections);
-
-    for (int currentNetNumber : changedNets) {
-      this.board.removeTraceTails(currentNetNumber, stopConnectionOption);
-    }
+    ripConnections(board, rippedItemList, ctrl.removeUnconnectedVias);
     FoundConnectionInserter insertFoundConnectionAlgo =
         FoundConnectionInserter.getInstance(autorouteResult, board, ctrl);
 
@@ -277,6 +255,33 @@ public class AutorouteEngine {
     }
 
     return new AutorouteAttemptResult(AutorouteAttemptState.ROUTED);
+  }
+
+  /**
+   * Removes the connections of {@code rippedItems} the same way a commit does after the maze.
+   * Returns the nets whose tails were removed.
+   */
+  public static Set<Integer> ripConnections(
+      RoutingBoard board, Collection<Item> rippedItems, boolean removeUnconnectedVias) {
+    SortedSet<Item> rippedConnections = new TreeSet<>();
+    Set<Integer> changedNets = new TreeSet<>();
+    Item.StopConnectionOption stopConnectionOption =
+        removeUnconnectedVias
+            ? Item.StopConnectionOption.NONE
+            : Item.StopConnectionOption.FANOUT_VIA;
+    if (rippedItems != null) {
+      for (Item currentRippedItem : rippedItems) {
+        rippedConnections.addAll(currentRippedItem.getConnectionItems(stopConnectionOption));
+        for (int i = 0; i < currentRippedItem.netCount(); i++) {
+          changedNets.add(currentRippedItem.getNetNumber(i));
+        }
+      }
+    }
+    board.removeItems(rippedConnections);
+    for (int currentNetNumber : changedNets) {
+      board.removeTraceTails(currentNetNumber, stopConnectionOption);
+    }
+    return changedNets;
   }
 
   private static String describeConnection(Set<Item> startSet, Set<Item> destSet) {

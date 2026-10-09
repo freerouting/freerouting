@@ -21,15 +21,26 @@ from pathlib import Path
 
 logger = logging.getLogger("freerouting")
 
-from .config import (
-    ADOPTIUM_API_URL,
-    JAVA_MIN_MAJOR_VERSION,
-    JRE_GLOB_PATTERN,
-    JRE_TEMP_FOLDER,
-    JRE_VERSION_REGEX,
-    MAC_HOMEBREW_JAVA_PATH,
-)
-from .gui_helpers import wx_show_error, wx_show_warning
+try:
+    from .config import (
+        ADOPTIUM_API_URL,
+        JAVA_MIN_MAJOR_VERSION,
+        JRE_GLOB_PATTERN,
+        JRE_TEMP_FOLDER,
+        JRE_VERSION_REGEX,
+        MAC_HOMEBREW_JAVA_PATH,
+    )
+    from .gui_helpers import wx_show_error
+except (ImportError, ValueError):
+    from config import (
+        ADOPTIUM_API_URL,
+        JAVA_MIN_MAJOR_VERSION,
+        JRE_GLOB_PATTERN,
+        JRE_TEMP_FOLDER,
+        JRE_VERSION_REGEX,
+        MAC_HOMEBREW_JAVA_PATH,
+    )
+    from gui_helpers import wx_show_error
 
 
 def detect_os_architecture():
@@ -74,13 +85,19 @@ def get_java_version(java_path):
         Version string like ``"25.0.1"`` or ``"0.0.0.0"`` on failure.
     """
     try:
+        run_kwargs = {}
+        if platform.system() == "Windows":
+            run_kwargs["creationflags"] = getattr(subprocess, "CREATE_NO_WINDOW", 0x08000000)
+
         result = subprocess.run(
             [java_path, "-version"],
             check=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
+            **run_kwargs,
         )
+
         java_versions = [
             re.search(r"([0-9\._]+)", v).group(1).replace('"', "")
             for v in result.stderr.splitlines()
@@ -233,11 +250,17 @@ def install_java_jre_25():
 
     logger.info("Extracting...")
     try:
+        run_kwargs = {}
+        if platform.system() == "Windows":
+            run_kwargs["creationflags"] = getattr(subprocess, "CREATE_NO_WINDOW", 0x08000000)
+
         subprocess.run(
             ["tar", "-xf", file_name, "-C", str(JRE_TEMP_FOLDER)],
             check=True,
+            **run_kwargs,
         )
         logger.info("Extraction complete.")
+
     except (FileNotFoundError, subprocess.CalledProcessError) as e:
         logger.error(f"Failed to extract: {e}")
         wx_show_error(textwrap.dedent(f"""

@@ -6,11 +6,13 @@
 # ---------------------------------------------------------------------------
 
 import json
+import platform
 import subprocess
 import textwrap
 import threading
 import time
 import logging
+
 
 from pathlib import Path
 
@@ -99,6 +101,8 @@ class JsonApiRouter:
             str(self.plugin.java_path),
             "-jar",
             str(self.plugin.module_path),
+            "-host",
+            "KiCad",
             "--api_server.enabled=true",
             "--api_server.endpoints=http://127.0.0.1:37864",
             "--api_server.authentication.enabled=false",
@@ -107,7 +111,7 @@ class JsonApiRouter:
         ]
         logger.info(f"Built API server command: {' '.join(self.plugin.module_command)}")
 
-    def _start_api_server(self):
+    def _start_api_server(self, pump_callback=None):
         """Launch the Freerouting API server and wait for it to be ready.
 
         Returns:
@@ -115,27 +119,44 @@ class JsonApiRouter:
         """
         logger.info("Starting Freerouting API server...")
         try:
+            popen_kwargs = {}
+            if platform.system() == "Windows":
+                popen_kwargs["creationflags"] = getattr(subprocess, "CREATE_NO_WINDOW", 0x08000000)
+            else:
+                popen_kwargs["start_new_session"] = True
+
             self._api_process = subprocess.Popen(
                 self.plugin.module_command,
+                **popen_kwargs,
             )
         except Exception as e:
+
             logger.error(f"Failed to start Freerouting API server: {e}", exc_info=True)
             wx_show_error(f"Failed to start Freerouting API server:\n{e}")
             return False
 
         client = FreeroutingApiClient()
-        for attempt in range(API_SERVER_STARTUP_TIMEOUT):
-            time.sleep(1)
-            if client.health_check():
-                logger.info("Freerouting API server is ready.")
-                return True
-            if self._api_process.poll() is not None:
-                logger.error(f"Freerouting API server exited prematurely (exit code {self._api_process.returncode}).")
-                wx_show_error(textwrap.dedent(f"""
-                    Freerouting API server exited prematurely
-                    (exit code {self._api_process.returncode}).
-                """))
-                return False
+        poll_interval = 0.1
+        max_attempts = int(API_SERVER_STARTUP_TIMEOUT / poll_interval)
+        for i in range(max_attempts):
+            if pump_callback:
+                try:
+                    pump_callback()
+                except Exception:
+                    # Ignore UI pump exceptions if dialog is closed or destroyed
+                    pass
+            time.sleep(poll_interval)
+            if i % 5 == 0:
+                if client.health_check():
+                    logger.info("Freerouting API server is ready.")
+                    return True
+                if self._api_process.poll() is not None:
+                    logger.error(f"Freerouting API server exited prematurely (exit code {self._api_process.returncode}).")
+                    wx_show_error(textwrap.dedent(f"""
+                        Freerouting API server exited prematurely
+                        (exit code {self._api_process.returncode}).
+                    """))
+                    return False
 
         logger.error("Freerouting API server did not become ready in time.")
         wx_show_error("Freerouting API server did not become ready in time.")
@@ -403,6 +424,7 @@ class JsonApiRouter:
         try:
             pcbnew.Refresh()
         except Exception:
+            # Refresh may fail in headless mode or if UI window is not yet attached
             pass
 
     # ------------------------------------------------------------------

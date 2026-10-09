@@ -52,7 +52,10 @@ public class McpControllerV1 extends BaseController {
 
   private static final String JSONRPC_VERSION = "2.0";
   private static final HttpClient HTTP_CLIENT =
-      HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build();
+      HttpClient.newBuilder()
+          .version(HttpClient.Version.HTTP_1_1)
+          .connectTimeout(Duration.ofSeconds(10))
+          .build();
   private static volatile String detectedClientInfo = "MCP-Client/1.0";
 
   @Context private Application application;
@@ -389,7 +392,7 @@ public class McpControllerV1 extends BaseController {
     }
     URI uri = buildUriWithQuery(resolvedPath, query);
 
-    HttpRequest.Builder builder = HttpRequest.newBuilder(uri);
+    HttpRequest.Builder builder = HttpRequest.newBuilder(uri).version(HttpClient.Version.HTTP_1_1);
     forwardHeaders(builder, correlationId);
 
     JsonElement bodyElement = arguments.get("body");
@@ -405,7 +408,28 @@ public class McpControllerV1 extends BaseController {
       builder.method(method, HttpRequest.BodyPublishers.noBody());
     }
 
-    return HTTP_CLIENT.send(builder.build(), HttpResponse.BodyHandlers.ofString());
+    return sendLoopbackRequest(builder.build());
+  }
+
+  private static HttpResponse<String> sendLoopbackRequest(HttpRequest request)
+      throws IOException, InterruptedException {
+    try {
+      return HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+    } catch (IOException e) {
+      FRLogger.warn(
+          "Initial loopback HTTP request to "
+              + request.uri()
+              + " failed ("
+              + e.getMessage()
+              + "); retrying with a fresh HttpClient");
+      try (HttpClient freshClient =
+          HttpClient.newBuilder()
+              .version(HttpClient.Version.HTTP_1_1)
+              .connectTimeout(Duration.ofSeconds(10))
+              .build()) {
+        return freshClient.send(request, HttpResponse.BodyHandlers.ofString());
+      }
+    }
   }
 
   private void forwardHeaders(HttpRequest.Builder builder, String correlationId) {
@@ -597,14 +621,14 @@ public class McpControllerV1 extends BaseController {
         requestBodyObj.addProperty("job_id", jobId);
         requestBodyObj.addProperty("data", base64Data);
 
-        HttpRequest.Builder builder = HttpRequest.newBuilder(uri);
+        HttpRequest.Builder builder =
+            HttpRequest.newBuilder(uri).version(HttpClient.Version.HTTP_1_1);
         forwardHeaders(builder, correlationId);
         builder.header("Content-Type", MediaType.APPLICATION_JSON);
         builder.POST(
             HttpRequest.BodyPublishers.ofString(requestBodyObj.toString(), StandardCharsets.UTF_8));
 
-        HttpResponse<String> response =
-            HTTP_CLIENT.send(builder.build(), HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = sendLoopbackRequest(builder.build());
         payload.addProperty("status", response.statusCode());
         payload.addProperty("contentType", "application/json");
         isError = response.statusCode() >= 400;
@@ -630,12 +654,12 @@ public class McpControllerV1 extends BaseController {
       try {
         final java.nio.file.Path outputPath = validateSandboxPath(filePath);
         URI uri = buildUriWithQuery("/v1/jobs/" + jobId + "/output", new JsonObject());
-        HttpRequest.Builder builder = HttpRequest.newBuilder(uri);
+        HttpRequest.Builder builder =
+            HttpRequest.newBuilder(uri).version(HttpClient.Version.HTTP_1_1);
         forwardHeaders(builder, correlationId);
         builder.GET();
 
-        HttpResponse<String> response =
-            HTTP_CLIENT.send(builder.build(), HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = sendLoopbackRequest(builder.build());
         payload.addProperty("status", response.statusCode());
         payload.addProperty("contentType", "application/json");
         isError = response.statusCode() >= 400;

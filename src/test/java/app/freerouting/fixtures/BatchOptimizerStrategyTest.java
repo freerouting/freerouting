@@ -110,7 +110,7 @@ class BatchOptimizerStrategyTest extends RoutingFixtureTest {
 
     // Capture pre-optimization score (final so Checkstyle is satisfied)
     final float scoreBeforeOptimization =
-        preOptimizationStats.getNormalizedScore(job.routerSettings.scoring);
+        preOptimizationStats.getRouterScore(job.routerSettings.scoring);
 
     // Run optimizer only (no fanout, no autorouter)
     BatchOptimizer optimizer = BatchOptimizer.create(job);
@@ -118,7 +118,7 @@ class BatchOptimizerStrategyTest extends RoutingFixtureTest {
 
     // --- Assertions ---
     BoardStatistics statsAfter = new BoardStatistics(job.board);
-    float scoreAfterOptimization = statsAfter.getNormalizedScore(job.routerSettings.scoring);
+    float scoreAfterOptimization = statsAfter.getRouterScore(job.routerSettings.scoring);
 
     // (1) No new unrouted connections
     assertEquals(

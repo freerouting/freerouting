@@ -49,7 +49,7 @@ public class ApiUsageFilter implements ContainerRequestFilter, ContainerResponse
   private static final String PROFILE_ID_HEADER = "Freerouting-Profile-ID";
   private static final String PROFILE_EMAIL_HEADER = "Freerouting-Profile-Email";
 
-  static String hashBearerToken(String authorizationHeader) {
+  public static String hashBearerToken(String authorizationHeader) {
     if (authorizationHeader == null || !authorizationHeader.startsWith(BEARER_PREFIX)) {
       return null;
     }

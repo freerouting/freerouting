@@ -15,7 +15,6 @@ import app.freerouting.core.StoppableThread;
 import app.freerouting.core.results.RoutingResultManifest;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.UndoableObjects;
-import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.sources.DefaultSettings;
@@ -62,6 +61,8 @@ public final class BatchOptimizer extends NamedAlgorithm {
   protected final AtomicLong workerCpuNanos = new AtomicLong(0);
   protected final AtomicLong workerAllocBytes = new AtomicLong(0);
   protected volatile FloatPoint currentPosition = null;
+  private final ThreadLocal<WorkerBoardState> workerBoardStates =
+      ThreadLocal.withInitial(WorkerBoardState::new);
 
   /**
    * Creates a new instance of BatchOptimizer, which is used to optimize the board.
@@ -276,6 +277,10 @@ public final class BatchOptimizer extends NamedAlgorithm {
 
   /** Optimize the route on the board. */
   public void runBatchLoop() {
+    if (this.job != null && this.job.board != null) {
+      this.board = this.job.board;
+    }
+
     job.logDebug(
         "Before optimization: Via count: "
             + board.getVias().size()
@@ -392,7 +397,6 @@ public final class BatchOptimizer extends NamedAlgorithm {
       float scoreBeforePass = board.getStatistics().getOptimizerScore(job.routerSettings);
 
       String currentBoardHash = this.board.getHash();
-      job.setCurrentPass(currentPass);
       this.fireTaskStateChangedEvent(
           new TaskStateChangedEvent(this, TaskState.RUNNING, currentPass, currentBoardHash));
 
@@ -729,7 +733,8 @@ public final class BatchOptimizer extends NamedAlgorithm {
                       withPreferredDirections,
                       this.useIncreasedRipupCosts,
                       this.thread,
-                      this.deadlineMs)));
+                      this.deadlineMs,
+                      this.workerBoardStates)));
         }
 
         for (Future<CandidateResult> future : futures) {
@@ -828,18 +833,23 @@ public final class BatchOptimizer extends NamedAlgorithm {
       return new ItemRouteResult(item.getId());
     }
 
+    double baseline =
+        this.minCumulativeTraceLength > 0
+            ? this.minCumulativeTraceLength
+            : routingBoard.getStatistics().traces.totalWeightedLength;
+
     return optRouteItemOnBoard(
         job,
         routingBoard,
         item,
-        this.minCumulativeTraceLength,
+        baseline,
         withPreferredDirections,
         this.useIncreasedRipupCosts,
         this.thread,
         this.deadlineMs);
   }
 
-  private static ItemRouteResult optRouteItemOnBoard(
+  static ItemRouteResult optRouteItemOnBoard(
       RoutingJob job,
       RoutingBoard routingBoard,
       Item item,
@@ -849,6 +859,10 @@ public final class BatchOptimizer extends NamedAlgorithm {
       StoppableThread thread,
       Long deadlineMs) {
     BoardStatistics boardStatisticsBefore = new BoardStatistics(routingBoard, null, false);
+    double baseline =
+        baselineTraceLength > 0
+            ? baselineTraceLength
+            : boardStatisticsBefore.traces.totalWeightedLength;
     RouterCounters routerCountersBefore = new RouterCounters();
     routerCountersBefore.incompleteCount = calculateIncompleteCount(routingBoard);
 
@@ -912,8 +926,8 @@ public final class BatchOptimizer extends NamedAlgorithm {
             item.getId(),
             boardStatisticsBefore.items.viaCount,
             boardStatisticsAfter.items.viaCount,
-            baselineTraceLength,
-            boardStatisticsAfter.traces.totalLength,
+            baseline,
+            boardStatisticsAfter.traces.totalWeightedLength,
             routerCountersBefore.incompleteCount,
             routerCountersAfter.incompleteCount);
     boolean routeImproved =
@@ -954,6 +968,42 @@ public final class BatchOptimizer extends NamedAlgorithm {
     }
   }
 
+  /**
+   * Reuses one candidate board on each executor thread while the baseline board remains unchanged.
+   * A candidate that is not selected is undone in place; an improved candidate transfers ownership
+   * of the worker board to the result and removes the snapshot without undoing its changes.
+   */
+  private static final class WorkerBoardState {
+    private RoutingBoard baselineBoard;
+    private RoutingBoard workerBoard;
+
+    RoutingBoard acquire(RoutingBoard baselineBoard) {
+      if (this.workerBoard == null || this.baselineBoard != baselineBoard) {
+        this.baselineBoard = baselineBoard;
+        this.workerBoard = baselineBoard.deepCopy();
+      }
+      this.workerBoard.generateSnapshot();
+      return this.workerBoard;
+    }
+
+    void finish(boolean transferOwnership) {
+      if (this.workerBoard == null) {
+        return;
+      }
+      boolean restored =
+          transferOwnership ? this.workerBoard.popSnapshot() : this.workerBoard.undo(null);
+      this.workerBoard.clearTransientAutorouteState();
+      if (!restored) {
+        FRLogger.warn("BatchOptimizer: failed to restore the worker-board snapshot");
+        this.workerBoard = null;
+        this.baselineBoard = null;
+      } else if (transferOwnership) {
+        this.workerBoard = null;
+        this.baselineBoard = null;
+      }
+    }
+  }
+
   private static final class OptimizeCandidateTask implements Callable<CandidateResult> {
     private final RoutingJob job;
     private final RoutingBoard baselineBoard;
@@ -963,6 +1013,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
     private final boolean useIncreasedRipupCosts;
     private final StoppableThread thread;
     private final Long deadlineMs;
+    private final ThreadLocal<WorkerBoardState> workerBoardStates;
 
     OptimizeCandidateTask(
         RoutingJob job,
@@ -972,7 +1023,8 @@ public final class BatchOptimizer extends NamedAlgorithm {
         boolean withPreferredDirections,
         boolean useIncreasedRipupCosts,
         StoppableThread thread,
-        Long deadlineMs) {
+        Long deadlineMs,
+        ThreadLocal<WorkerBoardState> workerBoardStates) {
       this.job = job;
       this.baselineBoard = baselineBoard;
       this.itemId = itemId;
@@ -981,6 +1033,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
       this.useIncreasedRipupCosts = useIncreasedRipupCosts;
       this.thread = thread;
       this.deadlineMs = deadlineMs;
+      this.workerBoardStates = workerBoardStates;
     }
 
     @Override
@@ -1000,45 +1053,57 @@ public final class BatchOptimizer extends NamedAlgorithm {
       } catch (Throwable ignored) {
       }
 
-      RoutingBoard workerBoard = baselineBoard.deepCopy();
-      Item item = workerBoard.getItem(itemId);
-      if (item == null) {
-        return new CandidateResult(new ItemRouteResult(itemId), null, null, 0, 0);
-      }
-
-      FloatPoint position = getItemPosition(item);
-
-      ItemRouteResult result =
-          optRouteItemOnBoard(
-              job,
-              workerBoard,
-              item,
-              baselineTraceLength,
-              withPreferredDirections,
-              useIncreasedRipupCosts,
-              thread,
-              deadlineMs);
-
-      long cpuUsed = 0;
-      long allocUsed = 0;
-      if (mxBean != null) {
-        try {
-          long cpuEnd = mxBean.getThreadCpuTime(Thread.currentThread().threadId());
-          if (cpuStart >= 0 && cpuEnd >= cpuStart) {
-            cpuUsed = cpuEnd - cpuStart;
-          }
-          long allocEnd = mxBean.getThreadAllocatedBytes(Thread.currentThread().threadId());
-          if (allocStart >= 0 && allocEnd >= allocStart) {
-            allocUsed = allocEnd - allocStart;
-          }
-        } catch (Throwable ignored) {
+      WorkerBoardState workerBoardState = workerBoardStates.get();
+      RoutingBoard workerBoard = workerBoardState.acquire(baselineBoard);
+      boolean snapshotFinished = false;
+      try {
+        Item item = workerBoard.getItem(itemId);
+        if (item == null) {
+          workerBoardState.finish(false);
+          snapshotFinished = true;
+          return new CandidateResult(new ItemRouteResult(itemId), null, null, 0, 0);
         }
-      }
 
-      if (result.improved()) {
-        return new CandidateResult(result, workerBoard, position, cpuUsed, allocUsed);
-      } else {
+        FloatPoint position = getItemPosition(item);
+
+        ItemRouteResult result =
+            optRouteItemOnBoard(
+                job,
+                workerBoard,
+                item,
+                baselineTraceLength,
+                withPreferredDirections,
+                useIncreasedRipupCosts,
+                thread,
+                deadlineMs);
+
+        long cpuUsed = 0;
+        long allocUsed = 0;
+        if (mxBean != null) {
+          try {
+            long cpuEnd = mxBean.getThreadCpuTime(Thread.currentThread().threadId());
+            if (cpuStart >= 0 && cpuEnd >= cpuStart) {
+              cpuUsed = cpuEnd - cpuStart;
+            }
+            long allocEnd = mxBean.getThreadAllocatedBytes(Thread.currentThread().threadId());
+            if (allocStart >= 0 && allocEnd >= allocStart) {
+              allocUsed = allocEnd - allocStart;
+            }
+          } catch (Throwable ignored) {
+          }
+        }
+
+        boolean improved = result.improved();
+        workerBoardState.finish(improved);
+        snapshotFinished = true;
+        if (improved) {
+          return new CandidateResult(result, workerBoard, position, cpuUsed, allocUsed);
+        }
         return new CandidateResult(result, null, position, cpuUsed, allocUsed);
+      } finally {
+        if (!snapshotFinished) {
+          workerBoardState.finish(false);
+        }
       }
     }
   }
@@ -1077,9 +1142,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
   }
 
   private static int calculateIncompleteCount(RoutingBoard board) {
-    DesignRulesChecker tempDrc = new DesignRulesChecker(board, null);
-    tempDrc.calculateAllIncompletes();
-    return tempDrc.getIncompleteCount();
+    return board.routingLedger().incompleteCount();
   }
 
   /** Reads the vias and traces on the board in ascending x order. */

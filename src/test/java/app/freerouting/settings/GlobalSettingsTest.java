@@ -98,13 +98,16 @@ class GlobalSettingsTest {
   }
 
   @Test
-  void applyCommandLineArgumentsNestedAutorouterMaxPasses() {
+  @SuppressWarnings("deprecation") // CLI flags write into the JSON/CLI routerSettings bridge.
+  void applyCommandLineArgumentsNestedAutorouterMaxThreads() {
     GlobalSettings settings = new GlobalSettings();
-    String[] args = new String[] {"--router.autorouter.max_passes=20"};
+    String[] args =
+        new String[] {"--router.autorouter.max_threads=1", "--router.optimizer.max_threads=4"};
 
     settings.applyCommandLineArguments(args);
 
-    assertEquals(20, settings.getMaxPasses());
+    assertEquals(1, settings.routerSettings.autorouter.maxThreads);
+    assertEquals(4, settings.routerSettings.optimizer.maxThreads);
     assertEquals(0, FRLogger.getLogEntries().getWarningCount());
   }
 

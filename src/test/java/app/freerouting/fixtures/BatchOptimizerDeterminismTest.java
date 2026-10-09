@@ -42,7 +42,7 @@ class BatchOptimizerDeterminismTest extends RoutingFixtureTest {
     loadBoard(setupJob);
 
     // Run fanout + autoroute so that the board has routed connections to optimize
-    setupJob.routerSettings.maxThreads = 1;
+    setupJob.routerSettings.setMaxThreads(1);
     new BatchAutorouter(setupJob).runBatchLoop();
     setupJob.board.finishAutoroute();
 
@@ -84,13 +84,13 @@ class BatchOptimizerDeterminismTest extends RoutingFixtureTest {
     loadBoard(job);
 
     // Route initially so the board has routed connections
-    job.routerSettings.maxThreads = 1;
+    job.routerSettings.setMaxThreads(1);
     new BatchAutorouter(job).runBatchLoop();
     job.board.finishAutoroute();
 
-    BoardStatistics statsBefore = job.board.getStatistics();
-    String initialHash = job.board.getHash();
-    float initialScore = statsBefore.getNormalizedScore(job.routerSettings.scoring);
+    final BoardStatistics statsBefore = job.board.getStatistics();
+    final String initialHash = job.board.getHash();
+    final float initialScore = statsBefore.getRouterScore(job.routerSettings.scoring);
 
     // Configure optimizer with 0 passes so no items can improve
     job.routerSettings.optimizer.maxPasses = 0;
@@ -98,7 +98,7 @@ class BatchOptimizerDeterminismTest extends RoutingFixtureTest {
     optimizer.runBatchLoop();
 
     BoardStatistics statsAfter = job.board.getStatistics();
-    float finalScore = statsAfter.getNormalizedScore(job.routerSettings.scoring);
+    float finalScore = statsAfter.getRouterScore(job.routerSettings.scoring);
 
     assertEquals(initialScore, finalScore, 0.001);
     assertEquals(initialHash, job.board.getHash());

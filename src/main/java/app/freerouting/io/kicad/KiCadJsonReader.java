@@ -44,6 +44,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -51,6 +52,8 @@ import java.util.Map;
  * RoutingBoard}.
  */
 public final class KiCadJsonReader {
+
+  public static final String BOARD_EDGE_CLEARANCE_CLASS_NAME = "board_edge";
 
   private KiCadJsonReader() {}
 
@@ -123,12 +126,18 @@ public final class KiCadJsonReader {
       List<KiCadBoardJson.NetClassJson> additionalNetClasses =
           nonDefaultNetClasses(boardJson.netClasses);
 
-      int clearanceClassCount = Math.max(2, additionalNetClasses.size() + 2);
+      boolean hasEdgeClearance = boardJson.outline != null && boardJson.outline.clearance > 0;
+      int edgeClassOffset = hasEdgeClearance ? 1 : 0;
+
+      int clearanceClassCount = Math.max(2, additionalNetClasses.size() + 2 + edgeClassOffset);
       String[] clearanceClassNames = new String[clearanceClassCount];
       clearanceClassNames[0] = "null";
       clearanceClassNames[1] = "default";
       for (int i = 0; i < additionalNetClasses.size(); i++) {
         clearanceClassNames[i + 2] = additionalNetClasses.get(i).name;
+      }
+      if (hasEdgeClearance) {
+        clearanceClassNames[clearanceClassCount - 1] = BOARD_EDGE_CLEARANCE_CLASS_NAME;
       }
 
       ClearanceMatrix clearanceMatrix =
@@ -151,6 +160,15 @@ public final class KiCadJsonReader {
         int clVal = (int) Math.round(nc.clearance * scaleFactor);
         clearanceMatrix.setValue(clNo, clNo, clVal);
         clearanceMatrix.setValue(1, clNo, clVal); // spacing between default and class
+      }
+
+      if (hasEdgeClearance) {
+        int boardEdgeClassNo = clearanceMatrix.getNo(BOARD_EDGE_CLEARANCE_CLASS_NAME);
+        int edgeClVal = (int) Math.round(boardJson.outline.clearance * scaleFactor);
+        for (int c = 1; c < clearanceClassCount; c++) {
+          clearanceMatrix.setValue(boardEdgeClassNo, c, edgeClVal);
+          clearanceMatrix.setValue(c, boardEdgeClassNo, edgeClVal);
+        }
       }
 
       for (KiCadBoardJson.CustomClearanceRuleJson rule : boardJson.clearanceRules) {
@@ -307,7 +325,8 @@ public final class KiCadJsonReader {
         boundingBox = outline.boundingBox().offset(1000);
       }
 
-      final int outlineClearanceNo = 1; // Default clearance class
+      final int outlineClearanceNo =
+          hasEdgeClearance ? clearanceMatrix.getNo(BOARD_EDGE_CLEARANCE_CLASS_NAME) : 1;
 
       // 6. Communication object setup
       final CoordinateTransform coordinateTransform = new CoordinateTransform(scaleFactor, 0, 0);
@@ -379,13 +398,7 @@ public final class KiCadJsonReader {
 
       ConvexShape[] defViaShapeArr = new ConvexShape[layerCount];
       double defRadius = defViaDia * scaleFactor / 2.0;
-      ConvexShape defViaShape =
-          new IntBox(
-                  (int) Math.round(-defRadius),
-                  (int) Math.round(-defRadius),
-                  (int) Math.round(defRadius),
-                  (int) Math.round(defRadius))
-              .toSimplex();
+      ConvexShape defViaShape = new Circle(IntPoint.ZERO, (int) Math.round(defRadius));
       for (int li = 0; li < layerCount; li++) {
         defViaShapeArr[li] = defViaShape;
       }
@@ -415,13 +428,7 @@ public final class KiCadJsonReader {
 
         ConvexShape[] viaShapeArr = new ConvexShape[layerCount];
         double radius = viaDia * scaleFactor / 2.0;
-        ConvexShape viaShape =
-            new IntBox(
-                    (int) Math.round(-radius),
-                    (int) Math.round(-radius),
-                    (int) Math.round(radius),
-                    (int) Math.round(radius))
-                .toSimplex();
+        ConvexShape viaShape = new Circle(IntPoint.ZERO, (int) Math.round(radius));
         for (int li = 0; li < layerCount; li++) {
           viaShapeArr[li] = viaShape;
         }
@@ -505,7 +512,7 @@ public final class KiCadJsonReader {
         List<Package.Pin> packagePins = new ArrayList<>();
         for (KiCadBoardJson.PadJson pad : comp.pads) {
           // Define a default pad shape
-          ConvexShape[] shapes = new ConvexShape[layerCount];
+          final ConvexShape[] shapes = new ConvexShape[layerCount];
           double dx = pad.size.x * scaleFactor / 2.0;
           double dy = pad.size.y * scaleFactor / 2.0;
           ConvexShape padShape;
@@ -536,28 +543,46 @@ public final class KiCadJsonReader {
           // Standardize pad's layer mappings
           int startLayer = 0;
           int endLayer = layerCount - 1;
+          boolean hasMatchedCopperLayer = false;
           if (pad.layers != null && !pad.layers.isEmpty()) {
-            // Find active layers by name matching
             int lowestIdx = layerCount - 1;
             int highestIdx = 0;
             for (String layerName : pad.layers) {
+              if ("*.Cu".equalsIgnoreCase(layerName) || "all".equalsIgnoreCase(layerName)) {
+                lowestIdx = 0;
+                highestIdx = layerCount - 1;
+                hasMatchedCopperLayer = true;
+                break;
+              }
               for (int li = 0; li < layerCount; li++) {
                 if (boardLayers[li].name.equalsIgnoreCase(layerName)) {
                   lowestIdx = Math.min(lowestIdx, li);
                   highestIdx = Math.max(highestIdx, li);
+                  hasMatchedCopperLayer = true;
                 }
               }
             }
-            startLayer = lowestIdx;
-            endLayer = highestIdx;
+            if (hasMatchedCopperLayer) {
+              startLayer = lowestIdx;
+              endLayer = highestIdx;
+            }
+          }
+
+          boolean isDrillable = pad.drill > 0.0;
+          // If no copper layers matched explicitly:
+          // - If it has a drill hole (e.g. NPTH mounting hole), it spans all layers.
+          // - Otherwise, default to package-relative layer 0. When placed on the back side,
+          //   DrillItem automatically mirrors layer 0 to the bottom layer.
+          if (!hasMatchedCopperLayer && !isDrillable) {
+            startLayer = 0;
+            endLayer = 0;
           }
 
           for (int li = startLayer; li <= endLayer; li++) {
             shapes[li] = padShape;
           }
 
-          boolean isDrillable = pad.drill > 0.0;
-          String padstackName = getDescriptivePadstackName(pad, boardLayers, layerCount);
+          String padstackName = getDescriptivePadstackName(pad, layerCount, startLayer, endLayer);
           Padstack padstack = padstacks.get(padstackName);
           if (padstack == null) {
             padstack = padstacks.add(padstackName, shapes, isDrillable, false);
@@ -626,7 +651,7 @@ public final class KiCadJsonReader {
             board.components.add(
                 comp.reference,
                 position,
-                -comp.rotation,
+                comp.rotation,
                 isFront,
                 componentPackage,
                 componentPackage,
@@ -639,8 +664,7 @@ public final class KiCadJsonReader {
           Net targetNet = boardRules.nets.get(pad.netName, 1);
           int netNumber = targetNet != null ? targetNet.netNumber : 0;
           int[] netNumbers = netNumber > 0 ? new int[] {netNumber} : new int[0];
-          board.insertPin(
-              boardComp.id, padIndex, netNumbers, outlineClearanceNo, FixedState.SYSTEM_FIXED);
+          board.insertPin(boardComp.id, padIndex, netNumbers, 1, FixedState.SYSTEM_FIXED);
         }
       }
 
@@ -694,13 +718,7 @@ public final class KiCadJsonReader {
         // Dynamically create via padstack
         ConvexShape[] shapes = new ConvexShape[layerCount];
         double radius = vj.diameter * scaleFactor / 2.0;
-        ConvexShape viaShape =
-            new IntBox(
-                    (int) Math.round(-radius),
-                    (int) Math.round(-radius),
-                    (int) Math.round(radius),
-                    (int) Math.round(radius))
-                .toSimplex();
+        ConvexShape viaShape = new Circle(IntPoint.ZERO, (int) Math.round(radius));
 
         for (int li = vj.startLayerIndex; li <= vj.endLayerIndex; li++) {
           shapes[li] = viaShape;
@@ -828,13 +846,7 @@ public final class KiCadJsonReader {
 
         ConvexShape[] shapes = new ConvexShape[layerCount];
         double radius = vj.diameter * scaleFactor / 2.0;
-        ConvexShape viaShape =
-            new IntBox(
-                    (int) Math.round(-radius),
-                    (int) Math.round(-radius),
-                    (int) Math.round(radius),
-                    (int) Math.round(radius))
-                .toSimplex();
+        ConvexShape viaShape = new Circle(IntPoint.ZERO, (int) Math.round(radius));
 
         for (int li = vj.startLayerIndex; li <= vj.endLayerIndex; li++) {
           if (li >= 0 && li < layerCount) {
@@ -855,7 +867,7 @@ public final class KiCadJsonReader {
   }
 
   private static String getDescriptivePadstackName(
-      KiCadBoardJson.PadJson pad, Layer[] boardLayers, int layerCount) {
+      KiCadBoardJson.PadJson pad, int layerCount, int startLayer, int endLayer) {
     String shapeStr = "Round";
     if (pad.shape != null) {
       if ("circle".equalsIgnoreCase(pad.shape) || "round".equalsIgnoreCase(pad.shape)) {
@@ -869,23 +881,38 @@ public final class KiCadJsonReader {
       }
     }
 
-    String layerType = "A";
-    if (pad.layers != null && pad.layers.size() == 1) {
-      String layerName = pad.layers.get(0);
-      if (boardLayers[0].name.equalsIgnoreCase(layerName)) {
-        layerType = "T";
-      } else if (boardLayers[layerCount - 1].name.equalsIgnoreCase(layerName)) {
-        layerType = "B";
-      }
+    String layerType;
+    if (startLayer == 0 && endLayer == layerCount - 1) {
+      layerType = "A";
+    } else if (startLayer == 0 && endLayer == 0) {
+      layerType = "T";
+    } else if (startLayer == layerCount - 1 && endLayer == layerCount - 1) {
+      layerType = "B";
+    } else if (startLayer == endLayer) {
+      layerType = "L" + (startLayer + 1);
+    } else {
+      layerType = String.format(Locale.ROOT, "L%d-L%d", startLayer + 1, endLayer + 1);
     }
 
+    String drillSuffix =
+        pad.drill > 0.0 ? String.format(Locale.ROOT, ":%.0f", pad.drill * 1000.0) : "";
     if ("Round".equals(shapeStr)) {
-      return String.format("%s[%s]Pad_%.0f_um", shapeStr, layerType, pad.size.x * 1000.0);
+      return String.format(
+          Locale.ROOT,
+          "%s[%s]Pad_%.0f%s_um",
+          shapeStr,
+          layerType,
+          pad.size.x * 1000.0,
+          drillSuffix);
     } else {
       return String.format(
-              "%s[%s]Pad_%.0fxf_%.0f_um",
-              shapeStr, layerType, pad.size.x * 1000.0, pad.size.y * 1000.0)
-          .replace("xf_", "x");
+          Locale.ROOT,
+          "%s[%s]Pad_%.0fx%.0f%s_um",
+          shapeStr,
+          layerType,
+          pad.size.x * 1000.0,
+          pad.size.y * 1000.0,
+          drillSuffix);
     }
   }
 

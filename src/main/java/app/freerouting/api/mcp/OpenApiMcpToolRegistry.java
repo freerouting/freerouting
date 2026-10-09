@@ -438,6 +438,11 @@ public final class OpenApiMcpToolRegistry {
     }
     if (cleanPath.startsWith("/v1/jobs/")
         && cleanPath.endsWith("/settings")
+        && "GET".equalsIgnoreCase(method)) {
+      return "get_effective_settings";
+    }
+    if (cleanPath.startsWith("/v1/jobs/")
+        && cleanPath.endsWith("/settings")
         && "POST".equalsIgnoreCase(method)) {
       return "update_job_settings";
     }

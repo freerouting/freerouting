@@ -26,7 +26,7 @@ The primary way to configure Freerouting is through a JSON settings file. This f
   },
   "gui": {
     "enabled": true,
-    "input_directory": "C:\\Work\\freerouting\\tests",
+    "input_directory": "",
     "dialog_confirmation_timeout": 5
   },
   "router": {
@@ -42,6 +42,8 @@ The primary way to configure Freerouting is through a JSON settings file. This f
     "allowed_via_types": true,
     "via_costs": 50,
     "plane_via_costs": 5,
+    "plane_nets": ["GND", "VCC"],
+    "plane_as_obstacle": false,
     "start_ripup_costs": 100,
     "automatic_neckdown": true
   },
@@ -69,7 +71,8 @@ The primary way to configure Freerouting is through a JSON settings file. This f
       "enabled": false,
       "requests_per_window": 120,
       "window_seconds": 60
-    }
+    },
+    "max_parallel_jobs": 5
   },
   "mcp_server": {
     "enabled": false,
@@ -125,24 +128,30 @@ The primary way to configure Freerouting is through a JSON settings file. This f
 - **`autorouter`**: Batch autorouter stage knobs. Canonical CLI is
   `--router.autorouter.max_passes`. Flat keys (`--router.max_passes`, `-mp`,
   `FREEROUTING__ROUTER__MAX_PASSES`) still apply and warn until they are removed.
-  The v1.9 compatibility build also accepts the nested `--router.autorouter.*`
-  flags (it maps them onto the same flat knobs), so shared benchmark commands can
-  use one flag set for both jars.
     - **`enabled`**: Whether the autorouter stage runs after fanout.
-    - **`algorithm`**: Algorithm identifier (`freerouting-router` by default).
+    - **`algorithm`**: Algorithm identifier (`freerouting-router` by default; legacy identifiers such as `freerouting-router-v19` safely normalize to `freerouting-router`).
     - **`max_passes`**: Maximum autorouter passes. `0` means no limit.
     - **`max_items`**: Maximum items attempted in the autorouter stage.
     - **`save_intermediate_stages`**: Save board snapshots between passes.
     - **`ignore_net_classes`**: Net class names the autorouter should skip.
+    - **`max_threads`**: Canonical CLI is `--router.autorouter.max_threads`. The autorouter pass
+      does not read it. Fanout is also single-threaded. The optimizer pool uses
+      `--router.optimizer.max_threads`. The legacy flat `--router.max_threads` remains as a
+      fallback / GUI knob and is still copied onto both pools.
 - **`result_json`**: Optional path for a machine-readable routing result manifest written at the
   end of a headless `-de`/`-do` run. Used by the benchmark and autopilot harnesses. Equivalent CLI
   flag: `--router.result_json=<path>`.
-- **`max_threads`**: Shared worker-thread cap for autorouter pass parallelism and optimizer GUI workers.
+- **`max_threads`**: Legacy flat / GUI worker-thread cap. `setMaxThreads()` still copies this
+  value into both `autorouter.max_threads` and `optimizer.max_threads`. Prefer the nested CLI
+  flags (`--router.autorouter.max_threads`, `--router.optimizer.max_threads`) when the two pools
+  must differ. `-mt` sets **optimizer** threads only.
 - **`improvement_threshold`**: Minimum improvement required to continue routing.
 - **`trace_pull_tight_accuracy`**: Accuracy for pulling traces tight.
 - **`allowed_via_types`**: Enables or disables the use of different via types.
 - **`via_costs`**: Cost factor for using vias.
 - **`plane_via_costs`**: Cost factor for using vias on plane layers.
+- **`plane_nets`**: Explicit array of net names to treat as power-plane nets, enabling plane-routing mode and discounted plane via costs for these nets.
+- **`plane_as_obstacle`**: Boolean controlling whether conduction areas (copper pours) act as obstacles blocking foreign traces from passing through. Default is `false` (foreign traces may route through fills).
 - **`start_ripup_costs`**: Cost factor for ripping up existing traces.
 - **`automatic_neckdown`**: Enables or disables automatic neckdown of traces.
 - **`layers`**: An array of layer-specific settings (transient, typically set via CLI or loaded from board files). Each element contains:
@@ -178,10 +187,13 @@ Configures the optional route-optimization stage that runs after autorouting.
 - **`enabled`**: Whether to run the optimizer. Default is `true`.
 - **`max_passes`**: Maximum number of optimizer passes.
 - **`max_items`**: Maximum number of item optimization attempts.
-- **`max_threads`**: Maximum optimizer worker count for the GUI path when the
-  `feature_flags.multi_threading` flag is enabled. It also controls autorouter pass parallelism
-  in `BatchAutorouterThread`. Headless and API jobs always use the single-threaded
-  `BatchOptimizer`; this setting does not enable parallel optimizer workers there.
+- **`max_threads`**: Optimizer worker-thread cap. Canonical CLI is
+  `--router.optimizer.max_threads`. The default is the JVM-visible processor count minus one
+  (`Runtime.getRuntime().availableProcessors() - 1`), with a minimum of one worker. Headless,
+  API, and GUI all use this pool (`BatchOptimizer`). Independent of
+  `feature_flags.multi_threading` (that GUI flag does **not** disable optimizer workers) and of
+  `--router.autorouter.max_threads`. Each in-flight worker `deepCopy()`s the board, so peak heap
+  scales with this value.
 - **`improvement_threshold`**: Minimum **relative** optimizer-score percentage gain required to
   continue after a pass (default `2.5`, representing 2.5%). `BatchOptimizer` compares
   `((scoreAfter - scoreBefore) / scoreBefore) * 100`. Benchmark calibration across golden fixtures
@@ -206,6 +218,7 @@ Configures the SMD-pin fanout pre-pass stage.
 
 - **`enabled`**: Whether to run the fanout pre-pass at all. Default is `true`.
 - **`max_passes`**: Maximum number of fanout passes. Default is `20`.
+- **`timeout`**: Optional wall-clock budget for the fanout stage (`HH:MM:SS`). When unset, fanout has no stage timeout of its own. `router.job_timeout` still covers fanout, autorouting, and optimization together.
 - **`max_milliseconds_per_pin`**: Base time budget in milliseconds per SMD pin in pass 1. Scales with pass number. Default is `10000`.
 - **`ripup_allowed`**: Whether fanout can rip up existing traces. Default is `true`.
 - **`min_escape_length_mm`**: The minimum physical escape trace length in millimeters. Default is `2.5`. Landing vias and escape stubs are not placed closer than this distance from the pin center.
@@ -226,7 +239,9 @@ Configures the SMD-pin fanout pre-pass stage.
 
 #### **`feature_flags` Section**
 
-- **`multi_threading`**: Enables or disables multi-threaded routing.
+- **`multi_threading`**: GUI opt-in for experimental multi-thread **autorouter** UI. It does
+  **not** gate the optimizer worker pool (`optimizer.max_threads`) and does not change the
+  production maze path, which still runs a single-thread pass.
 - **`inspection_mode`**: Enables or disables inspection mode in the GUI.
 - **`other_menu`**: Enables or disables the "Other" menu in the GUI.
 - **`save_jobs`**: Enables or disables saving routing jobs to disk.
@@ -238,13 +253,15 @@ Configures the SMD-pin fanout pre-pass stage.
 - **`endpoints`**: A list of endpoints that the API server will listen on. Each endpoint is specified as
   `[protocol]://[host]:[port]`.
   When set via CLI or environment variable, provide a **comma-separated string** of endpoint URLs:
-  - CLI: `--api_server-endpoints=http://0.0.0.0:37864,http://127.0.0.1:37864`
+  - CLI: `--api_server.endpoints=http://0.0.0.0:37864,http://127.0.0.1:37864`
   - Env var: `FREEROUTING__API_SERVER__ENDPOINTS=http://0.0.0.0:37864,http://127.0.0.1:37864`
 - *`cors_origins`*: A comma-separated list of origins for the `Access-Control-Allow-Origin` CORS header. Set to `*` to accept all origins (this can be a security risk). When CORS is enabled, the server automatically allows the following request headers in preflight responses: `Content-Type`, `Accept`, `Origin`, `X-Requested-With`, `Authorization`, `Freerouting-Profile-ID`, `Freerouting-Profile-Email`, and `Freerouting-Environment-Host`. This ensures browser-based clients (e.g. EasyEDA at `https://pro.lceda.cn`) can authenticate successfully without being blocked by CORS preflight checks.
 - **`rate_limit`**: Fixed-window throttling for API requests.
   - `enabled`: Enable/disable API-side rate limiting.
   - `requests_per_window`: Maximum accepted requests per identity in each window.
   - `window_seconds`: Window duration in seconds.
+- **`max_parallel_jobs`**: Maximum number of routing jobs the scheduler runs concurrently (default: `CPU cores - 1`, minimum `1`). Setting to `0` or omitting triggers auto-detection. Useful for self-hosted instances that size job concurrency to their hardware and JVM heap.
+  - Env var: `FREEROUTING__API_SERVER__MAX_PARALLEL_JOBS=10`
 
 #### **`mcp_server` Section**
 
@@ -291,9 +308,9 @@ java -jar freerouting.jar --gui.enabled=false --router.autorouter.max_passes=200
 **List-valued settings** (e.g. `api_server.endpoints`, `mcp_server.endpoints`) must be passed as a **comma-separated string**; whitespace around commas is ignored:
 
 ```bash
-java -jar freerouting.jar --api_server-endpoints=http://0.0.0.0:37864
-java -jar freerouting.jar --api_server-endpoints=http://0.0.0.0:37864,http://127.0.0.1:37864
-java -jar freerouting.jar --mcp_server-enabled=true --mcp_server-endpoints=http://127.0.0.1:37964 --mcp_server-target_api_base_url=http://127.0.0.1:37864
+java -jar freerouting.jar --api_server.endpoints=http://0.0.0.0:37864
+java -jar freerouting.jar --api_server.endpoints=http://0.0.0.0:37864,http://127.0.0.1:37864
+java -jar freerouting.jar --mcp_server.enabled=true --mcp_server.endpoints=http://127.0.0.1:37964 --mcp_server.target_api_base_url=http://127.0.0.1:37864
 java -jar freerouting.jar --api_server.rate_limit.enabled=true --api_server.rate_limit.requests_per_window=120 --api_server.rate_limit.window_seconds=60
 java -jar freerouting.jar --mcp_server.rate_limit.enabled=true --mcp_server.rate_limit.requests_per_window=60 --mcp_server.rate_limit.window_seconds=60
 ```

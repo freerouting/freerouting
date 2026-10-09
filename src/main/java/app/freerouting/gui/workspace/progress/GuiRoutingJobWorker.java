@@ -578,6 +578,10 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
       globalSettings.statistics.incrementJobsCompleted();
       FRAnalytics.autorouterStarted();
 
+      String inputFormat =
+          routingJob.input != null && routingJob.input.format != null
+              ? routingJob.input.format.name()
+              : null;
       FRAnalytics.recordJobLifecycle(
           routingJob.id.toString(),
           routingJob.sessionId != null ? routingJob.sessionId.toString() : null,
@@ -594,7 +598,9 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
           null,
           routingJob.getDetectedHost(),
           null,
-          null);
+          routingJob.userId,
+          routingJob.apiKeyHash,
+          inputFormat);
 
       TextManager tm = new TextManager(ScreenMessages.class, sessionPort.locale());
       String startMessage = tm.getText("batch_autorouter_start_message");
@@ -710,6 +716,11 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
             ? finalBoardStats.getRouterScore(routingJob.routerSettings)
             : null;
 
+    String inputFormat =
+        routingJob.input != null && routingJob.input.format != null
+            ? routingJob.input.format.name()
+            : null;
+
     FRAnalytics.recordJobLifecycle(
         routingJob.id.toString(),
         routingJob.sessionId != null ? routingJob.sessionId.toString() : null,
@@ -726,7 +737,9 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
         (double) routingJob.resourceUsage.peakMemoryUsed,
         routingJob.getDetectedHost(),
         null,
-        null);
+        routingJob.userId,
+        routingJob.apiKeyHash,
+        inputFormat);
 
     FRLogger.traceExit("BatchAutorouterThread.thread_action()");
   }
