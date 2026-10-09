@@ -223,41 +223,6 @@ public class Library extends ScopeKeyword {
     return true;
   }
 
-  private static boolean arePackagePinsIdentical(
-      app.freerouting.core.library.Package pkg1, app.freerouting.core.library.Package.Pin[] p2) {
-    if (pkg1 == null || p2 == null) {
-      return (pkg1 == null) == (p2 == null);
-    }
-    if (pkg1.pinCount() != p2.length) {
-      return false;
-    }
-    for (int i = 0; i < p2.length; i++) {
-      app.freerouting.core.library.Package.Pin pin1 = pkg1.getPin(i);
-      app.freerouting.core.library.Package.Pin pin2 = p2[i];
-      if (pin1 == null || pin2 == null) {
-        if (pin1 != pin2) {
-          return false;
-        }
-        continue;
-      }
-      if (!pin1.name.equals(pin2.name)) {
-        return false;
-      }
-      if (pin1.padstackId != pin2.padstackId) {
-        return false;
-      }
-      app.freerouting.geometry.planar.FloatPoint loc1 = pin1.relativeLocation.toFloat();
-      app.freerouting.geometry.planar.FloatPoint loc2 = pin2.relativeLocation.toFloat();
-      if (Math.abs(loc1.x - loc2.x) > 0.001 || Math.abs(loc1.y - loc2.y) > 0.001) {
-        return false;
-      }
-      if (Math.abs(pin1.rotationInDegree - pin2.rotationInDegree) > 0.001) {
-        return false;
-      }
-    }
-    return true;
-  }
-
   @Override
   public boolean readScope(ReadScopeParameter scopeParameter) {
     RoutingBoard board = scopeParameter.boardHandling.getRoutingBoard();
@@ -406,47 +371,16 @@ public class Library extends ScopeKeyword {
             new app.freerouting.core.library.Package.Keepout(
                 currentKeepout.areaName, currentArea, currentLayer.no);
       }
-      String basePackageName =
-          currentPackage.name != null ? currentPackage.name.replaceAll("::\\d+$", "") : "Package";
-      int suffix = 0;
-      while (true) {
-        String testName = suffix == 0 ? basePackageName : basePackageName + "::" + suffix;
-        try {
-          app.freerouting.core.library.Package existingPkg =
-              board.library.packages.get(testName, currentPackage.isFront);
-          if (existingPkg == null || !existingPkg.name.equalsIgnoreCase(testName)) {
-            board.library.packages.add(
-                testName,
-                pins,
-                outlines,
-                outlineWidths,
-                outlineIsClosed,
-                keepouts,
-                viaKeepouts,
-                placeKeepoutArr,
-                currentPackage.isFront);
-            break;
-          } else {
-            if (arePackagePinsIdentical(existingPkg, pins)) {
-              break;
-            }
-          }
-        } catch (Exception e) {
-          FRLogger.error("Library.read_scope package deduplication error, falling back", e);
-          board.library.packages.add(
-              currentPackage.name,
-              pins,
-              outlines,
-              outlineWidths,
-              outlineIsClosed,
-              keepouts,
-              viaKeepouts,
-              placeKeepoutArr,
-              currentPackage.isFront);
-          break;
-        }
-        suffix++;
-      }
+      board.library.packages.add(
+          currentPackage.name != null ? currentPackage.name : "Package",
+          pins,
+          outlines,
+          outlineWidths,
+          outlineIsClosed,
+          keepouts,
+          viaKeepouts,
+          placeKeepoutArr,
+          currentPackage.isFront);
     }
     return true;
   }
