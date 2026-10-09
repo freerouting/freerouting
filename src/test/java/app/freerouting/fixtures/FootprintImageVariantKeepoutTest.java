@@ -1,6 +1,7 @@
 package app.freerouting.fixtures;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -11,11 +12,15 @@ import app.freerouting.board.model.structure.Component;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.library.Package;
 import app.freerouting.geometry.planar.Circle;
+import app.freerouting.io.specctra.SesReader;
 import app.freerouting.io.specctra.SesWriter;
 import app.freerouting.settings.sources.TestingSettings;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -68,8 +73,8 @@ class FootprintImageVariantKeepoutTest extends RoutingFixtureTest {
     List<Circle> mh1Circles = getComponentKeepoutCircles(job, mh1.id);
     List<Circle> mh5Circles = getComponentKeepoutCircles(job, mh5.id);
 
-    assertTrue(!mh1Circles.isEmpty(), "MH1 must have keepout circles");
-    assertTrue(!mh5Circles.isEmpty(), "MH5 must have keepout circles");
+    assertFalse(mh1Circles.isEmpty(), "MH1 must have keepout circles");
+    assertFalse(mh5Circles.isEmpty(), "MH5 must have keepout circles");
 
     int mh1Radius = mh1Circles.getFirst().radius;
     int mh5Radius = mh5Circles.getFirst().radius;
@@ -127,9 +132,9 @@ class FootprintImageVariantKeepoutTest extends RoutingFixtureTest {
     RoutingJob job = getRoutingJob(DSN_FIXTURE, settings);
     job = runRoutingJob(job);
 
-    java.nio.file.Path sesPath = java.nio.file.Path.of("fixtures", SES_FIXTURE);
-    try (java.io.InputStream is = java.nio.file.Files.newInputStream(sesPath)) {
-      app.freerouting.io.specctra.SesReader.read(is, job.board);
+    Path sesPath = Path.of("fixtures", SES_FIXTURE);
+    try (InputStream is = Files.newInputStream(sesPath)) {
+      SesReader.read(is, job.board);
     }
 
     Component mh5 = job.board.components.get("MH5");

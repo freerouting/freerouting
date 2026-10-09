@@ -4,9 +4,12 @@ import app.freerouting.geometry.planar.Shape;
 import app.freerouting.logger.FRLogger;
 import java.io.Serializable;
 import java.util.Vector;
+import java.util.regex.Pattern;
 
 /** Describes a library of component packages. */
 public class Packages implements Serializable {
+
+  private static final Pattern SUFFIX_PATTERN = Pattern.compile("::\\d+$");
 
   final Padstacks padstackList;
 
@@ -41,7 +44,7 @@ public class Packages implements Serializable {
       return otherSidePackage;
     }
     // Safe fallback: only if no package with the exact name was found on either side
-    String baseName = name.replaceAll("::\\d+$", "");
+    String baseName = SUFFIX_PATTERN.matcher(name).replaceFirst("");
     if (!baseName.equalsIgnoreCase(name)) {
       for (Package currentPackage : packages) {
         if (currentPackage != null && currentPackage.name.equalsIgnoreCase(baseName)) {
