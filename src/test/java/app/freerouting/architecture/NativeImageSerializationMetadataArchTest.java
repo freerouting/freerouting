@@ -67,7 +67,7 @@ class NativeImageSerializationMetadataArchTest {
         new ClassFileImporter()
             .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)
             .importPackages(
-                "app.freerouting.board.model.items",
+                "app.freerouting.board",
                 "app.freerouting.geometry.planar",
                 "app.freerouting.rules",
                 "app.freerouting.core.library");

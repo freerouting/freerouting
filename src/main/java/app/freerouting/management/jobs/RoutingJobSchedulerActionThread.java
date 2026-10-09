@@ -267,11 +267,15 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
           job.userId,
           job.apiKeyHash,
           inputFormat);
+    } catch (VirtualMachineError fatal) {
+      throw fatal;
     } catch (Throwable t) {
       FRLogger.error("Uncaught exception in routing job '" + job.shortName + "'", t);
       job.finishedAt = Instant.now();
       synchronized (terminalStateLock) {
-        job.state = RoutingJobState.TERMINATED;
+        if (job.state == RoutingJobState.RUNNING || job.state == RoutingJobState.STOPPING) {
+          job.state = RoutingJobState.TERMINATED;
+        }
       }
       job.logError("Job '" + job.shortName + "' terminated due to an error: " + t.getMessage(), t);
     }

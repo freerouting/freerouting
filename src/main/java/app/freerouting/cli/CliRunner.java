@@ -101,6 +101,7 @@ public final class CliRunner {
         break;
       }
       if (routingJob.thread != null
+          && routingJob.thread.getState() != Thread.State.NEW
           && !routingJob.thread.isAlive()
           && !isCliTerminalState(routingJob.state)) {
         FRLogger.error(

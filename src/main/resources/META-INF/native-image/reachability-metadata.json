@@ -69,11 +69,23 @@
       "serializable": true
     },
     {
+      "type": "app.freerouting.board.actions.ForcedPadRouter$CheckDrillResult",
+      "serializable": true
+    },
+    {
       "type": "app.freerouting.board.actions.ItemSelectionFilter",
       "serializable": true
     },
     {
+      "type": "app.freerouting.board.actions.ItemSelectionFilter$SelectableChoices",
+      "serializable": true
+    },
+    {
       "type": "app.freerouting.board.facade.BasicBoard",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.board.facade.BasicBoard$DominantSide",
       "serializable": true
     },
     {
@@ -129,6 +141,10 @@
       "serializable": true
     },
     {
+      "type": "app.freerouting.board.model.structure.AngleRestriction",
+      "serializable": true
+    },
+    {
       "type": "app.freerouting.board.model.structure.BoardOutline",
       "serializable": true
     },
@@ -166,6 +182,14 @@
     },
     {
       "type": "app.freerouting.board.state.Communication$SpecctraParserInfo",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.board.state.Communication$SpecctraParserInfo$WriteResolution",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.board.state.CoordinateTransform",
       "serializable": true
     },
     {

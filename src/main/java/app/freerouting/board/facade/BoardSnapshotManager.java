@@ -36,6 +36,8 @@ public final class BoardSnapshotManager {
       }
       objectStream.close();
       return outputStream.toByteArray();
+    } catch (VirtualMachineError fatal) {
+      throw fatal;
     } catch (Throwable throwable) {
       FRLogger.error("Couldn't serialize board", throwable);
       return null;
@@ -48,6 +50,8 @@ public final class BoardSnapshotManager {
       ByteArrayInputStream inputStream = new ByteArrayInputStream(objectByteArray);
       ObjectInputStream objectStream = new app.freerouting.util.SafeObjectInputStream(inputStream);
       return (BasicBoard) objectStream.readObject();
+    } catch (VirtualMachineError fatal) {
+      throw fatal;
     } catch (Throwable throwable) {
       FRLogger.error("Couldn't deserialize board", throwable);
       return null;
@@ -69,6 +73,8 @@ public final class BoardSnapshotManager {
         result.append(Integer.toString((hashedByte & 0xff) + 0x100, 16).substring(1));
       }
       return result.toString();
+    } catch (VirtualMachineError fatal) {
+      throw fatal;
     } catch (Throwable throwable) {
       FRLogger.error("Couldn't calculate hash for board", throwable);
       return null;

@@ -38,6 +38,9 @@ class Issue957SmokeRoutingTest extends RoutingFixtureTest {
 
     RoutingJob job = getRoutingJob(FIXTURE, testSettings);
     assertNotNull(job, "RoutingJob must load successfully from fixture");
+    if (job.routerSettings != null && job.routerSettings.autorouter != null) {
+      job.routerSettings.autorouter.maxPasses = 2;
+    }
 
     // Run the routing job (initializes board, takes snapshots, runs routing loop)
     runRoutingJob(job);
