@@ -343,4 +343,12 @@ class GlobalSettingsCommandLineTest {
           "Expected translated cancel text in " + expectedLanguage);
     }
   }
+
+  @Test
+  void apiServerMaxParallelJobsViaCli() {
+    String[] args = {"--api_server.max_parallel_jobs=8"};
+    settings.applyCommandLineArguments(args);
+
+    assertEquals(8, settings.apiServerSettings.maxParallelJobs);
+  }
 }

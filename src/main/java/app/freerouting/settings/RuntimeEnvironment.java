@@ -44,6 +44,14 @@ public class RuntimeEnvironment implements Serializable {
   @SerializedName("cpu_score")
   public int cpuScore;
 
+  /** Returns the measured CPU score, computing it lazily if not yet calibrated. */
+  public synchronized int getCpuScore() {
+    if (this.cpuScore <= 0) {
+      this.cpuScore = measureCpuScore();
+    }
+    return this.cpuScore;
+  }
+
   @SerializedName("host")
   public transient String host = "N/A";
 

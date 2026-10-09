@@ -11,6 +11,7 @@ import app.freerouting.analytics.dto.Traits;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.settings.GlobalSettings;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -97,5 +98,57 @@ class RoutingJobSchedulerActionThreadTest {
     assertTrue(
         trackedEvents.contains("Auto-router Finished"),
         "Should have tracked 'Auto-router Finished'");
+  }
+
+  @Test
+  void jobClockStopBecomesTimedOut() {
+    RoutingJobSchedulerActionThread action = stoppedJob(RoutingJobState.RUNNING, true);
+    action.assignTerminalState();
+    assertEquals(RoutingJobState.TIMED_OUT, action.job.state);
+  }
+
+  @Test
+  void finishedJobStaysCompletedWhenTheMonitorAssignsTimeout() {
+    RoutingJob job = new RoutingJob();
+    job.state = RoutingJobState.COMPLETED;
+    RoutingJobSchedulerActionThread action = new RoutingJobSchedulerActionThread(job);
+    action.markTimedOutIfStillActive();
+    assertEquals(RoutingJobState.COMPLETED, job.state);
+  }
+
+  @Test
+  void stopBeforeTheJobClockCompletes() {
+    RoutingJobSchedulerActionThread action = stoppedJob(RoutingJobState.RUNNING, false);
+    action.assignTerminalState();
+    assertEquals(RoutingJobState.COMPLETED, action.job.state);
+  }
+
+  @Test
+  void userCancelWinsOverTheExpiredJobClock() {
+    RoutingJobSchedulerActionThread action = stoppedJob(RoutingJobState.STOPPING, true);
+    action.job.setCancelledByUser(true);
+    action.assignTerminalState();
+    assertEquals(RoutingJobState.CANCELLED, action.job.state);
+  }
+
+  @Test
+  void monitorTimeoutIsKeptWhenThePipelineFinishes() {
+    RoutingJob job = new RoutingJob();
+    job.state = RoutingJobState.RUNNING;
+    RoutingJobSchedulerActionThread action = new RoutingJobSchedulerActionThread(job);
+    action.markTimedOutIfStillActive();
+    action.assignTerminalState();
+    assertEquals(RoutingJobState.TIMED_OUT, job.state);
+  }
+
+  private static RoutingJobSchedulerActionThread stoppedJob(
+      RoutingJobState state, boolean clockExpired) {
+    RoutingJob job = new RoutingJob();
+    job.state = state;
+    job.timeoutAt = clockExpired ? Instant.now().minusSeconds(5) : Instant.now().plusSeconds(3600);
+    RoutingJobSchedulerActionThread action = new RoutingJobSchedulerActionThread(job);
+    job.thread = action;
+    action.requestStop();
+    return action;
   }
 }

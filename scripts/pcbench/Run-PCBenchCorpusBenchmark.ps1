@@ -8,7 +8,8 @@
     writes records to benchmarks.json, and regenerates Markdown & HTML summaries.
 
 .PARAMETER Tier
-    Filter by tier: "A", "B", "C", "D", or "All" (default: "All").
+    Filter by tier. Default "All" runs A, then D, then C, then B.
+    A comma-separated list keeps that order, for example "C,A".
 
 .PARAMETER Workers
     Number of parallel routing workers (default: 4).
@@ -17,18 +18,37 @@
     Limit execution to first N boards (default: 0 for all).
 
 .PARAMETER VersionLabel
-    Version label for the binary (default: "v2.3.1-SNAPSHOT").
+    Version label for the binary (default from manifest: "2.5.0").
 #>
 param(
     [string]$Tier = "All",
     [int]$Workers = 8,
     [int]$MaxBoards = 0,
-    [string]$VersionLabel = "v2.3.1-SNAPSHOT",
+    [string]$VersionLabel = "",
     [string]$JarPath = "",
     [switch]$Force
 )
 
 $ErrorActionPreference = "Stop"
+
+$ManifestPath = Join-Path $PSScriptRoot "..\benchmark\baselines\baseline-manifest.json"
+if (Test-Path $ManifestPath) {
+    $manifest = Get-Content $ManifestPath -Raw | ConvertFrom-Json
+    if (-not $VersionLabel -and $manifest.release_baseline -and $manifest.release_baseline.version) {
+        $VersionLabel = [string]$manifest.release_baseline.version
+    }
+    if (-not $JarPath -and $manifest.release_baseline -and $manifest.release_baseline.jar_path) {
+        $JarPath = Join-Path $PSScriptRoot "..\..\$($manifest.release_baseline.jar_path)"
+    }
+}
+
+if (-not $VersionLabel) {
+    $VersionLabel = "2.5.0"
+}
+
+if (-not $JarPath) {
+    $JarPath = Join-Path $PSScriptRoot "..\benchmark\binaries\freerouting-2.5.0.jar"
+}
 
 $script = Join-Path $PSScriptRoot "run_corpus_benchmark.py"
 $pyArgs = @(

@@ -6,6 +6,7 @@ import app.freerouting.board.model.items.DrillItem;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.ObstacleArea;
 import app.freerouting.board.model.items.Trace;
+import app.freerouting.board.model.structure.BoardOutline;
 import app.freerouting.board.model.structure.Component;
 import app.freerouting.datastructures.Signum;
 import app.freerouting.datastructures.TimeLimit;
@@ -245,6 +246,10 @@ public class MoveComponent {
       } else {
         itemGroupArr[i].item.moveBy(this.translateVector);
       }
+    }
+    BoardOutline outline = board.getOutline();
+    if (outline != null) {
+      outline.invalidateEdgePinNets();
     }
     return true;
   }

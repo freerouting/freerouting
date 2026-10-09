@@ -1,4 +1,4 @@
-name: Auto Triage Issues and PRs
+name: 'Triage: Issues & Pull Requests'
 
 on:
   issues:

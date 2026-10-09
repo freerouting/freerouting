@@ -89,7 +89,7 @@ final class AutorouteConnectionRouter {
       byte[] strictDrcBoardSnapshot = isStrictPass ? router.board.serialize(false) : null;
 
       long mazeSearchStart = BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
-      AutorouteAttemptResult autorouteResult =
+      final AutorouteAttemptResult autorouteResult =
           autorouteEngine.autorouteConnection(
               routeStartSet, routeDestSet, autorouteControl, rippedItemList, ripupCosts);
       if (BatchAutorouter.isBenchmarkProfileEnabled()) {

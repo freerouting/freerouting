@@ -26,7 +26,7 @@ The primary way to configure Freerouting is through a JSON settings file. This f
   },
   "gui": {
     "enabled": true,
-    "input_directory": "C:\\Work\\freerouting\\tests",
+    "input_directory": "",
     "dialog_confirmation_timeout": 5
   },
   "router": {
@@ -71,7 +71,8 @@ The primary way to configure Freerouting is through a JSON settings file. This f
       "enabled": false,
       "requests_per_window": 120,
       "window_seconds": 60
-    }
+    },
+    "max_parallel_jobs": 5
   },
   "mcp_server": {
     "enabled": false,
@@ -127,20 +128,16 @@ The primary way to configure Freerouting is through a JSON settings file. This f
 - **`autorouter`**: Batch autorouter stage knobs. Canonical CLI is
   `--router.autorouter.max_passes`. Flat keys (`--router.max_passes`, `-mp`,
   `FREEROUTING__ROUTER__MAX_PASSES`) still apply and warn until they are removed.
-  The v1.9 compatibility build also accepts the nested `--router.autorouter.*`
-  flags (it maps them onto the same flat knobs), so shared benchmark commands can
-  use one flag set for both jars.
     - **`enabled`**: Whether the autorouter stage runs after fanout.
-    - **`algorithm`**: Algorithm identifier (`freerouting-router` by default).
+    - **`algorithm`**: Algorithm identifier (`freerouting-router` by default; legacy identifiers such as `freerouting-router-v19` safely normalize to `freerouting-router`).
     - **`max_passes`**: Maximum autorouter passes. `0` means no limit.
     - **`max_items`**: Maximum items attempted in the autorouter stage.
     - **`save_intermediate_stages`**: Save board snapshots between passes.
     - **`ignore_net_classes`**: Net class names the autorouter should skip.
-    - **`max_threads`**: Worker-thread cap for a multi-thread autorouter pass. Canonical CLI is
-      `--router.autorouter.max_threads`. Independent of `--router.optimizer.max_threads`. The
-      production batch loop still runs a single-thread pass; this value is what
-      `AutoroutePassRunner.runMultiThread` would use. The legacy flat `--router.max_threads`
-      remains as a fallback / GUI knob.
+    - **`max_threads`**: Canonical CLI is `--router.autorouter.max_threads`. The autorouter pass
+      does not read it. Fanout is also single-threaded. The optimizer pool uses
+      `--router.optimizer.max_threads`. The legacy flat `--router.max_threads` remains as a
+      fallback / GUI knob and is still copied onto both pools.
 - **`result_json`**: Optional path for a machine-readable routing result manifest written at the
   end of a headless `-de`/`-do` run. Used by the benchmark and autopilot harnesses. Equivalent CLI
   flag: `--router.result_json=<path>`.
@@ -221,6 +218,7 @@ Configures the SMD-pin fanout pre-pass stage.
 
 - **`enabled`**: Whether to run the fanout pre-pass at all. Default is `true`.
 - **`max_passes`**: Maximum number of fanout passes. Default is `20`.
+- **`timeout`**: Optional wall-clock budget for the fanout stage (`HH:MM:SS`). When unset, fanout has no stage timeout of its own. `router.job_timeout` still covers fanout, autorouting, and optimization together.
 - **`max_milliseconds_per_pin`**: Base time budget in milliseconds per SMD pin in pass 1. Scales with pass number. Default is `10000`.
 - **`ripup_allowed`**: Whether fanout can rip up existing traces. Default is `true`.
 - **`min_escape_length_mm`**: The minimum physical escape trace length in millimeters. Default is `2.5`. Landing vias and escape stubs are not placed closer than this distance from the pin center.
@@ -262,6 +260,8 @@ Configures the SMD-pin fanout pre-pass stage.
   - `enabled`: Enable/disable API-side rate limiting.
   - `requests_per_window`: Maximum accepted requests per identity in each window.
   - `window_seconds`: Window duration in seconds.
+- **`max_parallel_jobs`**: Maximum number of routing jobs the scheduler runs concurrently (default: `CPU cores - 1`, minimum `1`). Setting to `0` or omitting triggers auto-detection. Useful for self-hosted instances that size job concurrency to their hardware and JVM heap.
+  - Env var: `FREEROUTING__API_SERVER__MAX_PARALLEL_JOBS=10`
 
 #### **`mcp_server` Section**
 

@@ -161,7 +161,7 @@ Without this step:
 
 ```toml
 [tool.codespell]
-SKIP="doxygen,doc,.git,.cache,dist,build,gradlew,gradlew.bat,libs,codespell,Makefile,*.pdf,*.dsn,*.ses,*.frb,*.flex,*.bin,*.exe,*.dll,*.so,*.class,*.jar,*.brd,.DS_Store,*.iml,*.ipr,*.iws,.idea/,./fixtures,./build,./.gradle,.gitignore,./logs,./docs/reference,./src_v19,./examples,./results,./scripts/benchmark/results,./src/main/resources/app/freerouting/helpset/de,./src/main/resources/app/freerouting/helpset/es,./src/main/resources/app/freerouting/helpset/fr,./src_v19/main/resources/app/freerouting/helpset/de,./src_v19/main/resources/app/freerouting/helpset/es,./src_v19/main/resources/app/freerouting/helpset/fr,*_ar.properties,*_bn.properties,*_de.properties,*_es.properties,*_fr.properties,*_hi.properties,*_it.properties,*_ja.properties,*_ko.properties,*_pt.properties,*_ru.properties,*_zh.properties,*_zh_tw.properties,*.TAB,OFFSETS,.run,*.ulp"
+SKIP="doxygen,doc,.git,.cache,dist,build,gradlew,gradlew.bat,libs,codespell,Makefile,*.pdf,*.dsn,*.ses,*.frb,*.flex,*.bin,*.exe,*.dll,*.so,*.class,*.jar,*.brd,.DS_Store,*.iml,*.ipr,*.iws,.idea/,./fixtures,./build,./.gradle,.gitignore,./logs,./docs/reference,./examples,./results,./scripts/benchmark/results,./src/main/resources/app/freerouting/helpset/de,./src/main/resources/app/freerouting/helpset/es,./src/main/resources/app/freerouting/helpset/fr,*_ar.properties,*_bn.properties,*_de.properties,*_es.properties,*_fr.properties,*_hi.properties,*_it.properties,*_ja.properties,*_ko.properties,*_pt.properties,*_ru.properties,*_zh.properties,*_zh_tw.properties,*.TAB,OFFSETS,.run,*.ulp"
 
 check-hidden = true
 quiet-level = 2
@@ -179,7 +179,7 @@ ignore-words-list = "slave,master,ue,wan,nto,abd,te,fo,cas,ro,inout,snd,ser,weer
   hooks:
     - id: codespell
       name: CodeSpell
-      exclude: ^(fixtures/|\.git/|\.gitignore$|build/|\.gradle/|logs/|docs/reference/|src_v19/|\.DS_Store$|examples/|results/|scripts/benchmark/results/|^\.run/|.*\.ulp$|src/main/resources/app/freerouting/helpset/de/|src/main/resources/app/freerouting/helpset/es/|src/main/resources/app/freerouting/helpset/fr/|src_v19/main/resources/app/freerouting/helpset/de/|src_v19/main/resources/app/freerouting/helpset/es/|src_v19/main/resources/app/freerouting/helpset/fr/|.*\.dsn$|.*\.ses$|.*\.pdf$|.*\.flex$|.*\.TAB$|^OFFSETS$)
+      exclude: ^(fixtures/|\.git/|\.gitignore$|build/|\.gradle/|logs/|docs/reference/|\.DS_Store$|examples/|results/|scripts/benchmark/results/|^\.run/|.*\.ulp$|src/main/resources/app/freerouting/helpset/de/|src/main/resources/app/freerouting/helpset/es/|src/main/resources/app/freerouting/helpset/fr/|.*\.dsn$|.*\.ses$|.*\.pdf$|.*\.flex$|.*\.TAB$|^OFFSETS$)
       additional_dependencies:
         - tomli
 ```

@@ -18,6 +18,13 @@ public class DesignRulesCheckerSettings implements Serializable {
   @SerializedName("include_errors")
   public boolean includeErrors = true;
 
+  /**
+   * Clearance violation shortfall tolerance in micrometers. Shortfalls less than or equal to this
+   * threshold are treated as rounding/discretization noise rather than violations.
+   */
+  @SerializedName("clearance_tolerance_um")
+  public double clearanceToleranceUm = 1.0;
+
   /** Creates a copy of this design-rule-checker configuration. */
   @Override
   public DesignRulesCheckerSettings clone() {
@@ -25,6 +32,7 @@ public class DesignRulesCheckerSettings implements Serializable {
     clone.enabled = this.enabled;
     clone.includeWarnings = this.includeWarnings;
     clone.includeErrors = this.includeErrors;
+    clone.clearanceToleranceUm = this.clearanceToleranceUm;
     return clone;
   }
 }

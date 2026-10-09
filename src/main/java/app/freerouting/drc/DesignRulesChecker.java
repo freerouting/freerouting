@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Design Rules Checker that centralizes DRC functionality. This class is responsible for detecting
@@ -991,6 +992,23 @@ public class DesignRulesChecker {
         "Incomplete Count",
         new Point[0]);
 
+    return result;
+  }
+
+  /**
+   * Returns the net numbers that still have at least one incomplete connection. Uses the incomplete
+   * state already computed by {@link #calculateAllIncompletes()} or {@link #getIncompleteCount()}.
+   */
+  public Set<Integer> incompleteNetNumbers() {
+    if (netIncompletes == null) {
+      calculateAllIncompletes();
+    }
+    Set<Integer> result = new TreeSet<>();
+    for (int i = 0; i < netIncompletes.length; i++) {
+      if (this.netIncompletes[i].count() > 0) {
+        result.add(i + 1);
+      }
+    }
     return result;
   }
 

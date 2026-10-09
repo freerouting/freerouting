@@ -1,5 +1,5 @@
-build
-out
+/build
+/out
 /.nb-gradle/
 .gradle/
 .idea/
@@ -39,7 +39,7 @@ gha-creds-*.json
 /scripts/benchmark/outputs
 /scripts/benchmark/.user_data/
 /scripts/benchmark/results/comparison-*/
-/scripts/benchmark/binaries/freerouting-current-*.jar
+/scripts/benchmark/binaries/*.jar
 /scripts/i18n/__pycache__
 /scripts/i18n/.*progress.json
 
@@ -52,3 +52,13 @@ gha-creds-*.json
 /scripts/pcbench/cache/
 /scripts/pcbench/__pycache__/
 scripts/benchmark/results/.benchmark.lock
+scripts/benchmark/results/run-journal.jsonl
+scripts/benchmark/results/.benchmarks.json.*.tmp
+
+# GraalVM PGO profiles
+*.iprof
+/src/pgo-profiles/
+
+# Python bytecode and cache
+__pycache__/
+*.pyc

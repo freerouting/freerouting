@@ -1,7 +1,5 @@
 package app.freerouting.management.jobs;
 
-import static app.freerouting.Freerouting.globalSettings;
-
 import app.freerouting.board.actions.ItemIdGenerator;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
@@ -15,7 +13,9 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.management.HeadlessBoardManager;
 import app.freerouting.management.sessions.SessionManager;
 import app.freerouting.settings.GlobalSettings;
+import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.ApiSettings;
+import app.freerouting.settings.sources.DefaultSettings;
 import app.freerouting.settings.sources.DsnFileSettings;
 import app.freerouting.settings.sources.RulesFileSettings;
 import app.freerouting.util.TextManager;
@@ -31,6 +31,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 /**
  * This singleton class is responsible for managing the jobs that will be processed by the router.
@@ -42,7 +43,6 @@ public final class RoutingJobScheduler {
   private static final int MAX_QUEUED_JOBS = 5_000;
   private static final RoutingJobScheduler instance = new RoutingJobScheduler();
   public final LinkedList<RoutingJob> jobs = new LinkedList<>();
-  private final int maxParallelJobs = 5;
 
   // Private constructor to prevent instantiation
   private RoutingJobScheduler() {
@@ -77,7 +77,7 @@ public final class RoutingJobScheduler {
                                     .filter(j -> j.state == RoutingJobState.RUNNING)
                                     .count();
 
-                        if (parallelJobs < maxParallelJobs) {
+                        if (parallelJobs < getMaxParallelJobs()) {
                           if ((job.input == null) || (job.input.getData() == null)) {
                             FRLogger.warn("RoutingJob input is null, it is skipped.");
                             job.state = RoutingJobState.INVALID;
@@ -100,7 +100,11 @@ public final class RoutingJobScheduler {
                               }
                               job.board = boardManager.getRoutingBoard();
 
-                              var settingsMerger = globalSettings.settingsMergerProtype.clone();
+                              GlobalSettings gs = globalSettings();
+                              var settingsMerger =
+                                  gs != null && gs.settingsMergerProtype != null
+                                      ? gs.settingsMergerProtype.clone()
+                                      : new SettingsMerger(new DefaultSettings());
 
                               if (isDsn) {
                                 settingsMerger.addOrReplaceSources(
@@ -115,8 +119,8 @@ public final class RoutingJobScheduler {
                               if (job.rules != null && job.rules.getData() != null) {
                                 rulesData = job.rules.getData().readAllBytes();
                                 rulesFilename = job.rules.getFilename();
-                              } else if (globalSettings.initialRulesFile != null) {
-                                java.io.File rf = new java.io.File(globalSettings.initialRulesFile);
+                              } else if (gs != null && gs.initialRulesFile != null) {
+                                java.io.File rf = new java.io.File(gs.initialRulesFile);
                                 if (rf.exists()) {
                                   try {
                                     rulesData = Files.readAllBytes(rf.toPath());
@@ -194,9 +198,9 @@ public final class RoutingJobScheduler {
                                   && job.initialSession.getData() != null) {
                                 sessionBytesToLoad = job.initialSession.getData().readAllBytes();
                                 sessionFilenameToLoad = job.initialSession.getFilename();
-                              } else if (globalSettings.designSessionFilename != null) {
+                              } else if (gs != null && gs.designSessionFilename != null) {
                                 java.io.File sessionFile =
-                                    new java.io.File(globalSettings.designSessionFilename);
+                                    new java.io.File(gs.designSessionFilename);
                                 if (sessionFile.exists()) {
                                   try {
                                     sessionBytesToLoad = Files.readAllBytes(sessionFile.toPath());
@@ -207,8 +211,7 @@ public final class RoutingJobScheduler {
                                   }
                                 } else {
                                   FRLogger.warn(
-                                      "Session file not found: "
-                                          + globalSettings.designSessionFilename);
+                                      "Session file not found: " + gs.designSessionFilename);
                                 }
                               }
 
@@ -313,6 +316,38 @@ public final class RoutingJobScheduler {
     return instance;
   }
 
+  /**
+   * Returns the default maximum number of routing jobs that may run concurrently, calculated
+   * dynamically as {@code max(1, CPU cores - 1)}.
+   *
+   * @return The default maximum number of parallel jobs.
+   */
+  public static int defaultMaxParallelJobs() {
+    return Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
+  }
+
+  /**
+   * Returns the maximum number of routing jobs that may run concurrently, taken from the
+   * api_server.max_parallel_jobs setting. Falls back to {@link #defaultMaxParallelJobs()} when the
+   * settings are not loaded yet or the configured value is not positive.
+   *
+   * @return The maximum number of parallel jobs.
+   */
+  private static GlobalSettings globalSettings() {
+    return GlobalSettings.current();
+  }
+
+  public int getMaxParallelJobs() {
+    GlobalSettings gs = globalSettings();
+    if ((gs != null)
+        && (gs.apiServerSettings != null)
+        && (gs.apiServerSettings.maxParallelJobs != null)
+        && (gs.apiServerSettings.maxParallelJobs > 0)) {
+      return gs.apiServerSettings.maxParallelJobs;
+    }
+    return defaultMaxParallelJobs();
+  }
+
   private String uuidToShortCode(UUID uuid) {
     return uuid.toString().substring(0, 6).toUpperCase();
   }
@@ -360,7 +395,10 @@ public final class RoutingJobScheduler {
       this.jobs.add(job);
     }
 
-    globalSettings.statistics.incrementJobsStarted();
+    GlobalSettings gs = globalSettings();
+    if (gs != null && gs.statistics != null) {
+      gs.statistics.incrementJobsStarted();
+    }
 
     return job;
   }
@@ -371,7 +409,8 @@ public final class RoutingJobScheduler {
    * @param job the job to save
    */
   public void saveJob(RoutingJob job) {
-    if (globalSettings.featureFlags.saveJobs) {
+    GlobalSettings gs = globalSettings();
+    if (gs != null && gs.featureFlags != null && gs.featureFlags.saveJobs) {
       String sessionIdString = "null";
       String userIdString = "null";
 
@@ -409,28 +448,32 @@ public final class RoutingJobScheduler {
     Files.createDirectories(userFolderPath);
 
     // Check if we already have a directory that has a name with the ending of
-    // sessionFolder
-    Path sessionFolderPath =
-        Files.list(userFolderPath)
-            .filter(Files::isDirectory)
-            .filter(p -> p.getFileName().toString().endsWith(sessionFolder))
-            .findFirst()
-            .orElse(null);
+    // sessionFolder. Streams over directories must be closed to prevent FD leaks.
+    Path sessionFolderPath;
+    try (Stream<Path> dirs = Files.list(userFolderPath)) {
+      sessionFolderPath =
+          dirs.filter(Files::isDirectory)
+              .filter(p -> p.getFileName().toString().endsWith(sessionFolder))
+              .findFirst()
+              .orElse(null);
+    }
 
     if (sessionFolderPath == null) {
       // List all directories in the user folder and check if they start with a number
       // If they do, then they are job folders, and we can get the highest number and
       // increment it
-      int jobFolderCount =
-          Files.list(userFolderPath)
-              .filter(Files::isDirectory)
-              .map(Path::getFileName)
-              .map(Path::toString)
-              .map(s -> s.split("_")[0]) // Extract the numeric prefix before the underscore
-              .filter(s -> s.matches("\\d+")) // Ensure it is numeric
-              .mapToInt(Integer::parseInt)
-              .max()
-              .orElse(0);
+      int jobFolderCount;
+      try (Stream<Path> dirs = Files.list(userFolderPath)) {
+        jobFolderCount =
+            dirs.filter(Files::isDirectory)
+                .map(Path::getFileName)
+                .map(Path::toString)
+                .map(s -> s.split("_")[0]) // Extract the numeric prefix before the underscore
+                .filter(s -> s.matches("\\d+")) // Ensure it is numeric
+                .mapToInt(Integer::parseInt)
+                .max()
+                .orElse(0);
+      }
 
       sessionFolderPath =
           userFolderPath.resolve("%04d".formatted(jobFolderCount + 1) + "_" + sessionFolder);

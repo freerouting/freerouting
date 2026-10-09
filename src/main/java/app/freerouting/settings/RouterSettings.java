@@ -14,9 +14,8 @@ import java.util.List;
 
 /** Mutable router configuration assembled from the configured settings sources. */
 public class RouterSettings implements Serializable, Cloneable {
-  // Current algorithm identifier and legacy compatibility token.
+  // Current algorithm identifier.
   public static final String ALGORITHM_CURRENT = "freerouting-router";
-  public static final String ALGORITHM_V19 = "freerouting-router-v19";
   public static final double MIN_BEND_COST = 0.0;
   public static final double MAX_BEND_COST = 9.9;
 
@@ -32,6 +31,14 @@ public class RouterSettings implements Serializable, Cloneable {
 
   @SerializedName("hole_clearance_um")
   public Double holeClearanceUm;
+
+  /**
+   * Clearance violation shortfall tolerance in micrometers. Clearance shortfalls (expected -
+   * actual) less than or equal to this threshold are treated as floating-point
+   * rounding/discretization noise rather than electrical clearance violations.
+   */
+  @SerializedName("clearance_tolerance_um")
+  public Double clearanceToleranceUm;
 
   /**
    * Explicit list of net names to treat as power-plane nets, enabling plane-routing mode and
@@ -220,9 +227,9 @@ public class RouterSettings implements Serializable, Cloneable {
   }
 
   /**
-   * Worker-thread cap for a multi-thread autorouter pass. Prefers {@code autorouter.maxThreads}
-   * (canonical CLI {@code --router.autorouter.max_threads}) and falls back to the legacy flat
-   * {@code router.maxThreads}.
+   * Resolves {@code --router.autorouter.max_threads}. The autorouter pass does not read this value.
+   * Prefers {@code autorouter.maxThreads} and falls back to the legacy flat {@code
+   * router.maxThreads}.
    */
   public int getAutorouterMaxThreads() {
     Integer configured =
@@ -612,6 +619,7 @@ public class RouterSettings implements Serializable, Cloneable {
     }
     result.copperToEdgeClearanceUm = this.copperToEdgeClearanceUm;
     result.holeClearanceUm = this.holeClearanceUm;
+    result.clearanceToleranceUm = this.clearanceToleranceUm;
     result.planeNets = this.planeNets != null ? this.planeNets.clone() : null;
     result.planeAsObstacle = this.planeAsObstacle;
     result.neckWidthUm = this.neckWidthUm;

@@ -15,7 +15,6 @@ import app.freerouting.core.StoppableThread;
 import app.freerouting.core.results.RoutingResultManifest;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.UndoableObjects;
-import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.sources.DefaultSettings;
@@ -398,7 +397,6 @@ public final class BatchOptimizer extends NamedAlgorithm {
       float scoreBeforePass = board.getStatistics().getOptimizerScore(job.routerSettings);
 
       String currentBoardHash = this.board.getHash();
-      job.setCurrentPass(currentPass);
       this.fireTaskStateChangedEvent(
           new TaskStateChangedEvent(this, TaskState.RUNNING, currentPass, currentBoardHash));
 
@@ -1144,9 +1142,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
   }
 
   private static int calculateIncompleteCount(RoutingBoard board) {
-    DesignRulesChecker tempDrc = new DesignRulesChecker(board, null);
-    tempDrc.calculateAllIncompletes();
-    return tempDrc.getIncompleteCount();
+    return board.routingLedger().incompleteCount();
   }
 
   /** Reads the vias and traces on the board in ascending x order. */

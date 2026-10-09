@@ -1,7 +1,8 @@
 package app.freerouting.debug;
 
-import app.freerouting.Freerouting;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.settings.DebugSettings;
+import app.freerouting.settings.GlobalSettings;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -53,9 +54,15 @@ public final class DebugControl {
     }
   }
 
+  private static DebugSettings getDebugSettings() {
+    GlobalSettings settings = GlobalSettings.current();
+    return settings != null ? settings.debugSettings : null;
+  }
+
   /** Resets the execution state. Starts in PAUSED mode if single stepping is enabled. */
   public void reset() {
-    if (Freerouting.globalSettings.debugSettings.singleStepExecution) {
+    DebugSettings ds = getDebugSettings();
+    if (ds != null && ds.singleStepExecution) {
       pause();
     } else {
       resume();
@@ -115,8 +122,12 @@ public final class DebugControl {
    * @return true if the items should be processed/logged, false otherwise.
    */
   public boolean isInterested(String impactedItems) {
+    DebugSettings ds = getDebugSettings();
+    if (ds == null) {
+      return false;
+    }
     int netNumber = getNetNumber(impactedItems);
-    return Freerouting.globalSettings.debugSettings.isNetPermitted(netNumber, null);
+    return ds.isNetPermitted(netNumber, null);
   }
 
   /**
@@ -148,21 +159,20 @@ public final class DebugControl {
    * @param impactedItems Description of items involved (e.g. "Net #1, Trace...")
    */
   public boolean check(String operation, String impactedItems) {
-
-    if (Freerouting.globalSettings == null || Freerouting.globalSettings.debugSettings == null) {
+    DebugSettings ds = getDebugSettings();
+    if (ds == null) {
       return false;
     }
 
     // We defer to check(int, String) for checking enablement flags (step/delay).
     // BUT invalid optimization: we want to SKIP parsing if disabled.
-    if (!Freerouting.globalSettings.debugSettings.singleStepExecution
-        && Freerouting.globalSettings.debugSettings.traceInsertionDelay == 0) {
+    if (!ds.singleStepExecution && ds.traceInsertionDelay == 0) {
       return false;
     }
 
     int netNumber = getNetNumber(impactedItems);
 
-    if (!Freerouting.globalSettings.debugSettings.isNetPermitted(netNumber, null)) {
+    if (!ds.isNetPermitted(netNumber, null)) {
       return false;
     }
 
@@ -178,13 +188,16 @@ public final class DebugControl {
    * @return true if the operation should be processed/logged, false otherwise.
    */
   public boolean check(String operation, int netNumber, String netName) {
-    if (!Freerouting.globalSettings.debugSettings.singleStepExecution
-        && Freerouting.globalSettings.debugSettings.traceInsertionDelay == 0) {
+    DebugSettings ds = getDebugSettings();
+    if (ds == null) {
       return false;
     }
 
-    if (netNumber >= 0
-        && !Freerouting.globalSettings.debugSettings.isNetPermitted(netNumber, netName)) {
+    if (!ds.singleStepExecution && ds.traceInsertionDelay == 0) {
+      return false;
+    }
+
+    if (netNumber >= 0 && !ds.isNetPermitted(netNumber, netName)) {
       return false;
     }
 
@@ -193,16 +206,16 @@ public final class DebugControl {
     }
 
     // Handle Delay
-    if (Freerouting.globalSettings.debugSettings.traceInsertionDelay > 0) {
+    if (ds.traceInsertionDelay > 0) {
       try {
-        Thread.sleep(Freerouting.globalSettings.debugSettings.traceInsertionDelay);
+        Thread.sleep(ds.traceInsertionDelay);
       } catch (InterruptedException e) {
         Thread.currentThread().interrupt();
       }
     }
 
     // Handle Single Stepping
-    if (Freerouting.globalSettings.debugSettings.singleStepExecution) {
+    if (ds.singleStepExecution) {
 
       // Logic for Fast Forwarding
       if (isFastForwarding.get()) {
@@ -267,7 +280,12 @@ public final class DebugControl {
       return false;
     }
 
-    for (String filterOp : Freerouting.globalSettings.debugSettings.operationFilters) {
+    DebugSettings ds = getDebugSettings();
+    if (ds == null || ds.operationFilters == null) {
+      return false;
+    }
+
+    for (String filterOp : ds.operationFilters) {
       if (operation.equalsIgnoreCase(filterOp)) {
         return true;
       }

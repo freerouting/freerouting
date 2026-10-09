@@ -39,7 +39,9 @@ class ModuleBoundariesArchTest {
     "app.freerouting.util..",
     "app.freerouting.io..",
     "app.freerouting.core..",
-    "app.freerouting.analytics.."
+    "app.freerouting.analytics..",
+    "app.freerouting.cli..",
+    "app.freerouting.startup.."
   };
 
   private JavaClasses importMainClasses() {
@@ -304,6 +306,21 @@ class ModuleBoundariesArchTest {
         .dependOnClassesThat()
         .resideInAnyPackage("app.freerouting.gui..")
         .because("pipeline/support packages must not depend on the GUI layer (SoC plan §1.1)")
+        .check(classes);
+  }
+
+  @Test
+  void cliAndStartupMustStayIndependentFromUiAndApiServers() {
+    JavaClasses classes = importMainClasses();
+    noClasses()
+        .that()
+        .resideInAnyPackage("app.freerouting.cli..", "app.freerouting.startup..")
+        .should()
+        .dependOnClassesThat()
+        .resideInAnyPackage("app.freerouting.gui..", "app.freerouting.api..", "javax.swing..")
+        .because(
+            "CLI and startup modules must remain clean of GUI and embedded API server dependencies"
+                + " for native image compilation")
         .check(classes);
   }
 }

@@ -12,6 +12,9 @@ public class BoardStatisticsClearanceViolations implements Serializable {
   @SerializedName("pre_existing_count")
   public Integer preExistingCount = 0;
 
+  @SerializedName("unfixable_count")
+  public Integer unfixableCount = 0;
+
   @SerializedName("router_introduced_count")
   public Integer routerIntroducedCount = 0;
 

@@ -5,5 +5,11 @@
   "jar_path": "scripts/benchmark/binaries/freerouting-current.jar",
   "created_at": null,
   "benchmarks_json": "scripts/benchmark/results/benchmarks.json",
-  "noise_floor_json": "scripts/benchmark/baselines/noise_floor.json"
+  "noise_floor_json": "scripts/benchmark/baselines/noise_floor.json",
+  "release_baseline": {
+    "version": "2.5.0",
+    "git_tag": "v2.5.0",
+    "jar_path": "scripts/benchmark/binaries/freerouting-2.5.0.jar",
+    "canonical_log": "freerouting-v250.log"
+  }
 }

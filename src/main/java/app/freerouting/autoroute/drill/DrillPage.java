@@ -78,7 +78,7 @@ public class DrillPage implements ExpandableObject {
           continue;
         }
         if (currentItem instanceof Pin pin) {
-          if (attachSmd && pin.drillAllowed()) {
+          if (attachSmd && pin.drillAllowed() && pin.containsNet(this.netNumber)) {
             continue;
           }
         }
