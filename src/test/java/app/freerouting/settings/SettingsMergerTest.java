@@ -158,7 +158,7 @@ class SettingsMergerTest {
                 "FREEROUTING__ROUTER__MAX_PASSES", "150",
                 "FREEROUTING__ROUTER__OPTIMIZER__MAX_THREADS", "6",
                 "FREEROUTING__ROUTER__VIAS_ALLOWED", "false",
-                "FREEROUTING__ROUTER__ALGORITHM", "freerouting-router-v19"));
+                "FREEROUTING__ROUTER__ALGORITHM", "custom-router"));
 
     DefaultSettings defaults = new DefaultSettings();
     EnvironmentVariablesSource envSource = new EnvironmentVariablesSource(env);
@@ -171,7 +171,7 @@ class SettingsMergerTest {
     // Note: viasAllowed might not be set correctly due to field name vs
     // serialization name mismatch
     // assertFalse(merged.viasAllowed);
-    assertEquals("freerouting-router-v19", merged.autorouter.algorithm);
+    assertEquals("custom-router", merged.autorouter.algorithm);
   }
 
   @Test

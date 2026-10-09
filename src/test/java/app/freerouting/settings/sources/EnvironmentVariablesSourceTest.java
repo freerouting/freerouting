@@ -207,13 +207,13 @@ class EnvironmentVariablesSourceTest {
   @Test
   void stringSettings() {
     Map<String, String> env = new HashMap<>();
-    env.put("FREEROUTING__ROUTER__ALGORITHM", "freerouting-router-v19");
+    env.put("FREEROUTING__ROUTER__ALGORITHM", "custom-router");
 
     EnvironmentVariablesSource source = new EnvironmentVariablesSource(env);
     RouterSettings settings = source.getSettings();
 
     assertNotNull(settings);
-    assertEquals("freerouting-router-v19", settings.autorouter.algorithm);
+    assertEquals("custom-router", settings.autorouter.algorithm);
     assertEquals(1, source.getParsedCount());
   }
 

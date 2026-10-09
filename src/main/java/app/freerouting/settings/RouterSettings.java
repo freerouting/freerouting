@@ -14,9 +14,8 @@ import java.util.List;
 
 /** Mutable router configuration assembled from the configured settings sources. */
 public class RouterSettings implements Serializable, Cloneable {
-  // Current algorithm identifier and legacy compatibility token.
+  // Current algorithm identifier.
   public static final String ALGORITHM_CURRENT = "freerouting-router";
-  public static final String ALGORITHM_V19 = "freerouting-router-v19";
   public static final double MIN_BEND_COST = 0.0;
   public static final double MAX_BEND_COST = 9.9;
 
@@ -228,9 +227,9 @@ public class RouterSettings implements Serializable, Cloneable {
   }
 
   /**
-   * Worker-thread cap for a multi-thread autorouter pass. Prefers {@code autorouter.maxThreads}
-   * (canonical CLI {@code --router.autorouter.max_threads}) and falls back to the legacy flat
-   * {@code router.maxThreads}.
+   * Resolves {@code --router.autorouter.max_threads}. The autorouter pass does not read this value.
+   * Prefers {@code autorouter.maxThreads} and falls back to the legacy flat {@code
+   * router.maxThreads}.
    */
   public int getAutorouterMaxThreads() {
     Integer configured =

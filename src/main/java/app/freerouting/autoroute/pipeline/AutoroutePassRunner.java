@@ -4,11 +4,7 @@ import static java.util.Collections.shuffle;
 
 import app.freerouting.autoroute.AutorouteAttemptResult;
 import app.freerouting.autoroute.AutorouteAttemptState;
-import app.freerouting.autoroute.BoardHistory;
 import app.freerouting.autoroute.PerformanceProfiler;
-import app.freerouting.autoroute.events.BoardUpdatedEvent;
-import app.freerouting.autoroute.events.BoardUpdatedEventListener;
-import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Trace;
@@ -29,12 +25,9 @@ import java.util.Random;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
-/** Executes one single-threaded or multi-threaded autoroute pass. */
+/** Executes one autoroute pass on the calling thread. */
 final class AutoroutePassRunner {
-
-  private static final int TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP = 1000;
 
   private final BatchAutorouter router;
   private Set<Integer> previousIncompleteNets = Collections.emptySet();
@@ -43,125 +36,6 @@ final class AutoroutePassRunner {
 
   AutoroutePassRunner(BatchAutorouter router) {
     this.router = router;
-  }
-
-  boolean runMultiThread(int passNo) {
-    try {
-      List<Item> autorouteItemList = router.getAutorouteItems(router.board);
-
-      if (autorouteItemList.isEmpty()) {
-        router.airLine = null;
-        return false;
-      }
-
-      int threadCount = Math.max(1, router.job.routerSettings.getAutorouterMaxThreads());
-      BatchAutorouterThread[] autorouterThreads = new BatchAutorouterThread[threadCount];
-      final BoardHistory boardHistory = new BoardHistory(router.job.routerSettings);
-
-      for (int threadIndex = 0; threadIndex < threadCount; threadIndex++) {
-        PerformanceProfiler.start("board.deepCopy");
-        RoutingBoard clonedBoard = router.board.deepCopy();
-        PerformanceProfiler.end("board.deepCopy");
-
-        List<Item> clonedAutorouteItemList = new ArrayList<>(router.getAutorouteItems(clonedBoard));
-        Map<Boolean, List<Item>> partitioned =
-            clonedAutorouteItemList.stream()
-                .collect(Collectors.partitioningBy(item -> router.isPlaneItem(item, clonedBoard)));
-        List<Item> planeItems = partitioned.get(true);
-        List<Item> signalItems = partitioned.get(false);
-        shuffle(planeItems, router.random);
-        shuffle(signalItems, router.random);
-        clonedAutorouteItemList.clear();
-        clonedAutorouteItemList.addAll(planeItems);
-        clonedAutorouteItemList.addAll(signalItems);
-
-        autorouterThreads[threadIndex] =
-            new BatchAutorouterThread(
-                clonedBoard,
-                clonedAutorouteItemList,
-                passNo,
-                router.job.routerSettings,
-                router.startRipupCosts,
-                router.tracePullTightAccuracy,
-                router.removeUnconnectedVias,
-                true);
-        autorouterThreads[threadIndex].setName(
-            "Router thread #" + passNo + "." + router.threadIndexToLetter(threadIndex));
-        autorouterThreads[threadIndex].setDaemon(true);
-        autorouterThreads[threadIndex].setPriority(Thread.MIN_PRIORITY);
-      }
-
-      autorouterThreads[0].addBoardUpdatedEventListener(
-          new BoardUpdatedEventListener() {
-            @Override
-            public void onBoardUpdatedEvent(BoardUpdatedEvent event) {
-              router.airLine = autorouterThreads[0].latestAirLine;
-              router.fireBoardUpdatedEvent(
-                  event.getBoardStatistics(), event.getRouterCounters(), event.getBoard());
-            }
-          });
-
-      for (BatchAutorouterThread autorouterThread : autorouterThreads) {
-        autorouterThread.start();
-      }
-
-      for (int threadIndex = 0; threadIndex < threadCount; threadIndex++) {
-        BatchAutorouterThread autorouterThread = autorouterThreads[threadIndex];
-        try {
-          autorouterThread.join(TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
-        } catch (InterruptedException e) {
-          router.job.logError(
-              "Autorouter thread #"
-                  + passNo
-                  + "."
-                  + router.threadIndexToLetter(threadIndex)
-                  + " was interrupted",
-              e);
-          router.thread.requestStop();
-          break;
-        }
-
-        boardHistory.add(autorouterThread.getBoard());
-        BoardStatistics clonedBoardStatistics = autorouterThread.getBoard().getStatistics();
-        float clonedBoardScore = clonedBoardStatistics.getRouterScore(router.job.routerSettings);
-
-        router.job.logDebug(
-            "Router thread #"
-                + passNo
-                + "."
-                + router.threadIndexToLetter(threadIndex)
-                + " finished with score: "
-                + FRLogger.formatScore(
-                    clonedBoardScore,
-                    clonedBoardStatistics.connections.incompleteCount,
-                    clonedBoardStatistics.clearanceViolations.totalCount));
-
-        router.job.resourceUsage.cpuTimeUsed += autorouterThread.cpuTimeUsed;
-        router.job.resourceUsage.maxMemoryUsed += autorouterThread.maxMemoryUsed;
-      }
-
-      BatchAutorouterThread bestThread = autorouterThreads[0];
-      float bestScore = -Float.MAX_VALUE;
-      for (BatchAutorouterThread autorouterThread : autorouterThreads) {
-        BoardStatistics stats = autorouterThread.getBoard().getStatistics();
-        float score = stats.getRouterScore(router.job.routerSettings);
-        if (score > bestScore) {
-          bestScore = score;
-          bestThread = autorouterThread;
-        }
-      }
-
-      router.board = boardHistory.restoreBestBoard();
-      boardHistory.clear();
-
-      boolean anyProgress = bestThread.getRoutedCount() > 0 || bestThread.getFailedCount() > 0;
-      router.airLine = null;
-      return anyProgress;
-    } catch (Exception e) {
-      router.job.logError("Something went wrong during the auto-routing", e);
-      router.airLine = null;
-      return false;
-    }
   }
 
   boolean runSingleThread(int passNo) {

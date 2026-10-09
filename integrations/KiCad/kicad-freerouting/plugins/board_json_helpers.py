@@ -562,19 +562,38 @@ def _collect_components(board, data, layer_id_to_index):
                         drill_val = drill_size.x / 1e6
 
                 pad_layers = []
+                had_copper_layers = False
                 if hasattr(pad, "GetLayerSet"):
                     pad_layer_set = pad.GetLayerSet()
                     for layer_id in layer_id_to_index.keys():
                         if pad_layer_set.Contains(layer_id):
                             pad_layers.append(_to_str(board.GetLayerName(layer_id)))
+                            had_copper_layers = True
                 else:
-                    pad_layers.append(_to_str(board.GetLayerName(pad.GetLayer())))
+                    layer_name = _to_str(board.GetLayerName(pad.GetLayer()))
+                    pad_layers.append(layer_name)
+                    if pad.GetLayer() in layer_id_to_index:
+                        had_copper_layers = True
+
+                if drill_val > 0 and not had_copper_layers:
+                    pad_layers = [_to_str(board.GetLayerName(lid)) for lid in layer_id_to_index.keys()]
+
+                pad_sz_x = pad_size.x / 1e6 if hasattr(pad_size, "x") else 0.0
+                pad_sz_y = pad_size.y / 1e6 if hasattr(pad_size, "y") else 0.0
+                if drill_val > 0 and not had_copper_layers:
+                    pad_sz_x = drill_val
+                    pad_sz_y = drill_val
+                    shape_str = "circle"
+                elif drill_val > 0 and pad_sz_x == 0.0 and pad_sz_y == 0.0:
+                    pad_sz_x = drill_val
+                    pad_sz_y = drill_val
+                    shape_str = "circle"
 
                 component["pads"].append({
                     "name": _to_str(pad.GetPadName()),
                     "netName": _to_str(pad_net.GetNetname()) if pad_net else "",
                     "shape": shape_str,
-                    "size": {"x": pad_size.x / 1e6, "y": pad_size.y / 1e6},
+                    "size": {"x": pad_sz_x, "y": pad_sz_y},
                     "offset": {
                         "x": local_dx,
                         "y": local_dy,

@@ -1,5 +1,5 @@
 # Compare Freerouting Versions Script
-# Runs both current and v1.9 executables with identical arguments
+# Runs both WIP and baseline (v2.5.0) executables with identical arguments
 #
 # Usage:
 #   .\compare-versions.ps1
@@ -21,7 +21,9 @@ param(
     [string]$DebugFilterByNet = "",
     [string]$LogNameSuffix = "",
     [switch]$DisableOptimizer,
-    [string]$PinSortingOrder = ""
+    [string]$PinSortingOrder = "",
+    [string]$BaselineJar = "",
+    [string]$BaselineLog = ""
 )
 
 # Colors for output
@@ -31,7 +33,7 @@ $InfoColor = "Cyan"
 $WarningColor = "Yellow"
 
 Write-Host "`n==================================================" -ForegroundColor $InfoColor
-Write-Host "  Freerouting Version Comparison Test" -ForegroundColor $InfoColor
+Write-Host "  Freerouting Version Comparison Test (WIP vs Baseline)" -ForegroundColor $InfoColor
 Write-Host "==================================================" -ForegroundColor $InfoColor
 
 # Check if input file exists
@@ -44,10 +46,29 @@ if (-not (Test-Path $de)) {
 $InputFileAbs = Resolve-Path $de
 $OutputFileAbs = $do
 
-# Rebuild executables
-Write-Host "Building executables..." -ForegroundColor $InfoColor
-Push-Location "$PSScriptRoot\..\.."
-& .\gradlew.bat buildBothVersions
+$RepoRoot = Resolve-Path (Join-Path $PSScriptRoot "..\..")
+
+# Resolve Baseline JAR from manifest if not provided
+if (-not $BaselineJar) {
+    $ManifestPath = Join-Path $RepoRoot "scripts\benchmark\baselines\baseline-manifest.json"
+    if (Test-Path $ManifestPath) {
+        $manifest = Get-Content $ManifestPath -Raw | ConvertFrom-Json
+        if ($manifest.release_baseline -and $manifest.release_baseline.jar_path) {
+            $BaselineJar = Join-Path $RepoRoot $manifest.release_baseline.jar_path
+        }
+    }
+}
+if (-not $BaselineJar) {
+    $BaselineJar = Join-Path $RepoRoot "scripts\benchmark\binaries\freerouting-2.5.0.jar"
+}
+if (-not [System.IO.Path]::IsPathRooted($BaselineJar)) {
+    $BaselineJar = Join-Path $RepoRoot $BaselineJar
+}
+
+# Rebuild current executable
+Write-Host "Building current executable..." -ForegroundColor $InfoColor
+Push-Location $RepoRoot
+& .\gradlew.bat executableJar
 $GradleExitCode = $LASTEXITCODE
 Pop-Location
 if ($GradleExitCode -ne 0) {
@@ -56,16 +77,15 @@ if ($GradleExitCode -ne 0) {
 }
 
 # JAR files
-$CurrentJar = "$PSScriptRoot\..\..\build\libs\freerouting-current-executable.jar"
-$V19Jar = "$PSScriptRoot\..\..\build\libs\freerouting-1.9.0-executable.jar"
+$CurrentJar = Join-Path $RepoRoot "build\libs\freerouting-current-executable.jar"
 
 # Check if JARs exist
 if (-not (Test-Path $CurrentJar)) {
-    Write-Host "ERROR: Current JAR not found. Run: .\gradlew.bat executableJar" -ForegroundColor $ErrorColor
+    Write-Host "ERROR: Current JAR not found at $CurrentJar. Run: .\gradlew.bat executableJar" -ForegroundColor $ErrorColor
     exit 1
 }
-if (-not (Test-Path $V19Jar)) {
-    Write-Host "ERROR: V1.9 JAR not found. Run: .\gradlew.bat executableV19Jar" -ForegroundColor $ErrorColor
+if (-not (Test-Path $BaselineJar)) {
+    Write-Host "ERROR: Baseline JAR not found at $BaselineJar. Check scripts\benchmark\binaries\ or run Build-Baseline.ps1" -ForegroundColor $ErrorColor
     exit 1
 }
 
@@ -92,9 +112,9 @@ $RunSuffix = if ([string]::IsNullOrWhiteSpace($LogNameSuffix)) {
     $LogNameSuffix
 }
 $CurrentLogFile = Join-Path $LogBaseDir "freerouting-current-$RunSuffix.log"
-$V19LogFile = Join-Path $LogBaseDir "freerouting-v190-$RunSuffix.log"
+$BaselineLogFile = if ($BaselineLog) { $BaselineLog } else { Join-Path $LogBaseDir "freerouting-baseline-$RunSuffix.log" }
 $CurrentLogFileCanonical = Join-Path $LogBaseDir "freerouting-current.log"
-$V19LogFileCanonical = Join-Path $LogBaseDir "freerouting-v190.log"
+$BaselineLogFileCanonical = Join-Path $LogBaseDir "freerouting-v250.log"
 
 # Calculate Output Files
 $OutputDirectory = Split-Path $OutputFileAbs -Parent
@@ -102,7 +122,7 @@ $OutputBaseName = [System.IO.Path]::GetFileNameWithoutExtension($OutputFileAbs)
 $OutputExtension = [System.IO.Path]::GetExtension($OutputFileAbs)
 
 $CurrentOutputFile = Join-Path $OutputDirectory "$($OutputBaseName)-current$($OutputExtension)"
-$V19OutputFile = Join-Path $OutputDirectory "$($OutputBaseName)-v190$($OutputExtension)"
+$BaselineOutputFile = Join-Path $OutputDirectory "$($OutputBaseName)-baseline$($OutputExtension)"
 
 $OptimizerEnabled = if ($DisableOptimizer) { "false" } else { "true" }
 $BaseArgs = @(
@@ -289,16 +309,16 @@ $CurrentResult = Invoke-Version -VersionName "Current Version" `
     -OutputFile $CurrentOutputFile `
     -Color $InfoColor
 
-# Run V1.9 Version
-$V19Result = Invoke-Version -VersionName "V1.9 Version" `
-    -JarPath $V19Jar `
-    -LogPath $V19LogFile `
-    -OutputFile $V19OutputFile `
+# Run Baseline Version
+$BaselineResult = Invoke-Version -VersionName "Baseline Version" `
+    -JarPath $BaselineJar `
+    -LogPath $BaselineLogFile `
+    -OutputFile $BaselineOutputFile `
     -Color $SuccessColor
 
 # Best-effort compatibility sync for tooling that expects canonical filenames.
 Sync-CanonicalLog -Source $CurrentLogFile -Canonical $CurrentLogFileCanonical
-Sync-CanonicalLog -Source $V19LogFile -Canonical $V19LogFileCanonical
+Sync-CanonicalLog -Source $BaselineLogFile -Canonical $BaselineLogFileCanonical
 
 # Summary
 Write-Host "`n==================================================" -ForegroundColor $InfoColor
@@ -312,8 +332,8 @@ Write-Host "  Max Items:   $max_items"
 Write-Host "  Max Threads: $max_threads"
 Write-Host "  Timeout:     $job_timeout"
 
-if ($CurrentResult -and $V19Result) {
-    $Results = @($CurrentResult, $V19Result)
+if ($CurrentResult -and $BaselineResult) {
+    $Results = @($CurrentResult, $BaselineResult)
 
     foreach ($Res in $Results) {
         if ($Res) {
@@ -327,8 +347,8 @@ if ($CurrentResult -and $V19Result) {
     }
 
     Write-Host "`nCompare logs:" -ForegroundColor $InfoColor
-    Write-Host "  code --diff `"$($CurrentResult.LogFile)`" `"$($V19Result.LogFile)`"" -ForegroundColor Yellow
+    Write-Host "  code --diff `"$($CurrentResult.LogFile)`" `"$($BaselineResult.LogFile)`"" -ForegroundColor Yellow
     Write-Host "`nCanonical log aliases (best-effort):" -ForegroundColor $InfoColor
     Write-Host "  $CurrentLogFileCanonical" -ForegroundColor Gray
-    Write-Host "  $V19LogFileCanonical" -ForegroundColor Gray
+    Write-Host "  $BaselineLogFileCanonical" -ForegroundColor Gray
 }
