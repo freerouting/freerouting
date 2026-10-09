@@ -81,7 +81,17 @@ class Issue954CircularKeepoutClearanceTest extends RoutingFixtureTest {
     assertEquals(
         2,
         violationCount,
-        "invalid-polygon64.dsn (true clearance 0.145 mm vs 0.200 mm rule) must report 2 violations");
+        "invalid-polygon64.dsn (clearance 0.145 mm vs 0.200 mm rule) must report 2 violations");
+  }
+
+  @Test
+  @DisplayName("Issue #954: autorouter completes routing around circular keepout with 0 violations")
+  void testCircleKeepoutAutoroute() {
+    TestingSettings settings = new TestingSettings();
+    settings.setMaxPasses(1);
+    RoutingJob job = getRoutingJob("Issue954-circle.dsn", settings);
+    job = runRoutingJob(job);
+    assertRoutingResult(job, "Issue954-circle.dsn").exactClearanceViolations(0).check();
   }
 
   @Test

@@ -59,6 +59,28 @@ class CircleTest {
     assertFalse(
         sixtyFourGon.contains(testPoint),
         "Refined 64-gon must correctly exclude the point at 1.04 * radius");
+
+    assertTrue(sixtyFourGon.contains(center), "64-gon must contain circle center");
+    assertTrue(
+        sixtyFourGon.contains(new IntPoint(center.x + radius, center.y)),
+        "64-gon must contain boundary point at 0 degrees");
+    assertTrue(
+        sixtyFourGon.contains(new IntPoint(center.x, center.y + radius)),
+        "64-gon must contain boundary point at 90 degrees");
+    assertTrue(
+        sixtyFourGon.contains(new IntPoint(center.x - radius, center.y)),
+        "64-gon must contain boundary point at 180 degrees");
+    assertTrue(
+        sixtyFourGon.contains(new IntPoint(center.x, center.y - radius)),
+        "64-gon must contain boundary point at 270 degrees");
+
+    double circleArea = circle.area();
+    double polyArea = sixtyFourGon.area();
+    assertTrue(
+        polyArea >= circleArea,
+        "Circumscribed polygon area must be greater than or equal to circle area");
+    assertTrue(
+        polyArea < circleArea * 1.002, "Circumscribed 64-gon area overshoot must be <= 0.2%");
   }
 
   @Test
