@@ -110,7 +110,7 @@ public class Library extends ScopeKeyword {
     try {
       Object nextToken = scanner.nextToken();
       if (nextToken instanceof String string) {
-        padstackName = string.replaceAll("\\.\\d+", "");
+        padstackName = string;
         scanner.setScopeIdentifier(padstackName);
       } else {
         FRLogger.warn(
@@ -318,16 +318,16 @@ public class Library extends ScopeKeyword {
         int relY =
             (int) Math.round(scopeParameter.coordinateTransform.dsnToBoard(pinInfo.relCoor[1]));
         Vector relCoor = new IntVector(relX, relY);
-        String cleanedLookupName =
-            pinInfo.padstackName != null ? pinInfo.padstackName.replaceAll("\\.\\d+", "") : null;
-        Padstack boardPadstack = board.library.padstacks.get(cleanedLookupName);
+        Padstack boardPadstack = board.library.padstacks.get(pinInfo.padstackName);
+        if (boardPadstack == null && pinInfo.padstackName != null) {
+          boardPadstack =
+              board.library.padstacks.get(pinInfo.padstackName.replaceAll("\\.\\d+", ""));
+        }
         if (boardPadstack == null) {
           FRLogger.warn(
               "Library.read_scope: board padstack '"
                   + pinInfo.padstackName
-                  + "' (cleaned: '"
-                  + cleanedLookupName
-                  + "') not found at '"
+                  + "' not found at '"
                   + scopeParameter.scanner.getScopeIdentifier()
                   + "'");
           return false;

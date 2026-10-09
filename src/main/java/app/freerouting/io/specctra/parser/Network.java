@@ -1296,9 +1296,11 @@ public class Network extends ScopeKeyword {
       int foundPadstackCount = 0;
       for (int i = 0; i < viaPadstacks.length; i++) {
         String currentPadstackName = it.next();
-        String cleanedName =
-            currentPadstackName != null ? currentPadstackName.replaceAll("\\.\\d+", "") : null;
-        Padstack currentPadstack = board.library.padstacks.get(cleanedName);
+        Padstack currentPadstack = board.library.padstacks.get(currentPadstackName);
+        if (currentPadstack == null && currentPadstackName != null) {
+          currentPadstack =
+              board.library.padstacks.get(currentPadstackName.replaceAll("\\.\\d+", ""));
+        }
         if (currentPadstack != null) {
           viaPadstacks[foundPadstackCount] = currentPadstack;
           ++foundPadstackCount;
