@@ -10,7 +10,7 @@ plugins {
     id "com.vanniktech.maven.publish" version "0.37.0"
     id 'io.github.ben-manes.versions' version '0.64.0'
     id "com.diffplug.spotless" version "8.10.3"
-    id 'org.graalvm.buildtools.native' version '1.1.13'
+    id 'org.graalvm.buildtools.native' version '1.1.14'
 }
 
 checkstyle {
@@ -166,14 +166,14 @@ dependencies {
     implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.5'
 
     // Add Jersey dependencies
-    implementation 'org.glassfish.jersey.core:jersey-common:4.0.2'
-    implementation 'org.glassfish.jersey.core:jersey-client:4.0.2'
-    implementation 'org.glassfish.jersey.core:jersey-server:4.0.2'
-    implementation 'org.glassfish.jersey.inject:jersey-hk2:4.0.2'
-    implementation 'org.glassfish.jersey.media:jersey-media-json-binding:4.0.2'
-    implementation 'org.glassfish.jersey.media:jersey-media-sse:4.0.2'
-    implementation 'org.glassfish.jersey.media:jersey-media-json-jackson:4.0.2'
-    implementation 'org.glassfish.jersey.containers:jersey-container-servlet:4.0.2'
+    implementation 'org.glassfish.jersey.core:jersey-common:4.0.3'
+    implementation 'org.glassfish.jersey.core:jersey-client:4.0.3'
+    implementation 'org.glassfish.jersey.core:jersey-server:4.0.3'
+    implementation 'org.glassfish.jersey.inject:jersey-hk2:4.0.3'
+    implementation 'org.glassfish.jersey.media:jersey-media-json-binding:4.0.3'
+    implementation 'org.glassfish.jersey.media:jersey-media-sse:4.0.3'
+    implementation 'org.glassfish.jersey.media:jersey-media-json-jackson:4.0.3'
+    implementation 'org.glassfish.jersey.containers:jersey-container-servlet:4.0.3'
     implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.9'
 
     // Add Jetty dependencies
@@ -188,12 +188,12 @@ dependencies {
     implementation 'org.slf4j:slf4j-nop:2.0.20'
 
     // Add Google Cloud BigQuery dependencies for telemetry
-    implementation 'com.google.auth:google-auth-library-oauth2-http:1.53.0'
-    implementation 'com.google.api:gax:2.86.0'
+    implementation 'com.google.auth:google-auth-library-oauth2-http:1.54.0'
+    implementation 'com.google.api:gax:2.87.0'
     implementation 'com.google.api-client:google-api-client-appengine:2.9.1'
-    implementation 'com.google.cloud:google-cloud-core:2.76.0'
-    implementation 'com.google.cloud:google-cloud-core-http:2.76.0'
-    implementation 'com.google.cloud:google-cloud-bigquery:2.72.0'
+    implementation 'com.google.cloud:google-cloud-core:2.77.0'
+    implementation 'com.google.cloud:google-cloud-core-http:2.77.0'
+    implementation 'com.google.cloud:google-cloud-bigquery:2.73.0'
 
     // Add Google Sheets API dependencies for API key validation
     implementation 'com.google.api-client:google-api-client:2.9.1'
