@@ -8,11 +8,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import app.freerouting.autoroute.pipeline.BatchOptimizer;
 import app.freerouting.board.actions.ItemIdGenerator;
 import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.Trace;
+import app.freerouting.board.model.items.Via;
+import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.StoppableThread;
+import app.freerouting.core.library.Padstack;
 import app.freerouting.io.specctra.SesReader;
 import app.freerouting.management.HeadlessBoardManager;
 import app.freerouting.rules.Net;
+import app.freerouting.rules.NetClass;
 import app.freerouting.settings.sources.TestingSettings;
 import java.io.InputStream;
 import java.util.Collection;
@@ -230,5 +235,65 @@ class Issue952FanoutIgnoredNetClassTest extends RoutingFixtureTest {
         "Optimizer must not modify traces of ignored net class");
     assertEquals(
         viasBefore, board.getVias().size(), "Optimizer must not modify vias of ignored net class");
+  }
+
+  @Test
+  void mixedNetConnectionWithIgnoredNetIsProtectedFromOptimizerRipup() throws Exception {
+    TestingSettings settings = new TestingSettings();
+    RoutingJob job = getRoutingJob("Issue508-DAC2020_bm08.dsn", settings);
+    HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
+    boardManager.loadFromSpecctraDsn(job.input.getData(), null, new ItemIdGenerator());
+    RoutingBoard board = boardManager.getRoutingBoard();
+    try (InputStream sesStream =
+        app.freerouting.TestFixtures.resolvePath("Issue508-DAC2020_bm08-routed.ses")
+            .toUri()
+            .toURL()
+            .openStream()) {
+      SesReader.read(sesStream, board);
+    }
+    board.finishAutoroute();
+    job.board = board;
+    job.thread =
+        new StoppableThread() {
+          @Override
+          protected void threadAction() {}
+        };
+
+    // Add an ignored net class and a net belonging to it
+    NetClass ignoredClass = board.rules.getNewNetClass("IgnoredClass");
+    ignoredClass.isIgnoredByAutorouter = true;
+    Net ignoredNet = board.rules.nets.add("IGNORED_MIXED", 1, false);
+    ignoredNet.setClass(ignoredClass);
+
+    // Pick an active-net trace (which does not have ignored nets itself)
+    Trace activeTrace = board.getTraces().iterator().next();
+    assertFalse(activeTrace.hasIgnoredNets());
+    int activeNetNo = activeTrace.getNetNumber(0);
+
+    // Insert an unfixed via touching the active trace that shares its net and also has the ignored
+    // net
+    Padstack padstack = board.rules.viaRules.firstElement().getVia(0).getPadstack();
+    Via mixedVia =
+        board.insertVia(
+            padstack,
+            activeTrace.firstCorner(),
+            new int[] {activeNetNo, ignoredNet.netNumber},
+            0,
+            FixedState.UNFIXED,
+            true);
+    assertNotNull(mixedVia);
+    assertTrue(mixedVia.hasIgnoredNets());
+    assertTrue(mixedVia.isOnTheBoard());
+
+    final int viasBefore = board.getVias().size();
+
+    settings.setOptimizerMaxPasses(1);
+    BatchOptimizer optimizer = BatchOptimizer.create(job);
+    optimizer.runBatchLoop();
+
+    // Verify the mixed-net via was not ripped up or deleted by the optimizer
+    assertTrue(
+        mixedVia.isOnTheBoard(), "Mixed-net via containing ignored net must remain on the board");
+    assertEquals(viasBefore, board.getVias().size(), "Optimizer must not delete mixed-net vias");
   }
 }

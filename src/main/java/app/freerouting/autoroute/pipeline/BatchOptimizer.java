@@ -888,7 +888,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
     }
 
     for (Item currentItem : rippedConnections) {
-      if (currentItem.isUserFixed()) {
+      if (currentItem.isUserFixed() || currentItem.hasIgnoredNets()) {
         return new ItemRouteResult(item.getId());
       }
     }
