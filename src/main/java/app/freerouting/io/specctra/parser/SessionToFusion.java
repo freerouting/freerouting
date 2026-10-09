@@ -443,7 +443,7 @@ public class SessionToFusion {
     if (nameParts.length > 1) {
       try {
         double parsedDrill = Double.parseDouble(nameParts[1]);
-        if (parsedDrill > 0) {
+        if (Double.isFinite(parsedDrill) && parsedDrill > 0) {
           drillString = nameParts[1];
         }
       } catch (NumberFormatException _) {

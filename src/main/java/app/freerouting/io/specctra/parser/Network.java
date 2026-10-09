@@ -271,8 +271,14 @@ public class Network extends ScopeKeyword {
       scanner.setScopeIdentifier(padstackName);
       Padstack viaPadstack = board.library.getViaPadstack(padstackName);
       if (viaPadstack == null) {
+        viaPadstack = board.library.getViaPadstack(padstackName.replaceAll("\\.\\d+", ""));
+      }
+      if (viaPadstack == null) {
         // The padstack may not yet be inserted into the list of via padstacks
         viaPadstack = board.library.padstacks.get(padstackName);
+        if (viaPadstack == null) {
+          viaPadstack = board.library.padstacks.get(padstackName.replaceAll("\\.\\d+", ""));
+        }
         if (viaPadstack == null) {
           FRLogger.warn(
               "Network.read_via_info: padstack not found at '"

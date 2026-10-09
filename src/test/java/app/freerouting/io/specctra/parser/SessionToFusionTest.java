@@ -212,6 +212,54 @@ class SessionToFusionTest {
         script.contains("CHANGE DRILL 0;\n"), "Script must never output invalid pad drill '0'");
     assertFalse(
         script.contains("CHANGE DRILL 0.0;\n"), "Script must never output invalid pad drill '0.0'");
+    java.util.regex.Matcher matcher =
+        java.util.regex.Pattern.compile("CHANGE DRILL ([0-9.]+);").matcher(script);
+    assertTrue(matcher.find(), "Script must emit a CHANGE DRILL command");
+    double emittedDrill = Double.parseDouble(matcher.group(1));
+    assertTrue(emittedDrill > 0, "Emitted fallback drill diameter must be strictly positive");
+  }
+
+  @Test
+  void testSessionToFusionFallbackWhenViaDrillInNameIsNonFinite() throws Exception {
+    RoutingBoard board = DsnTestFixtures.loadBoard("Issue143-rpi_splitter.dsn");
+
+    app.freerouting.core.library.Padstack defaultPadstack =
+        board.library.padstacks.get("Round1$13.779528");
+    org.junit.jupiter.api.Assertions.assertNotNull(defaultPadstack);
+
+    app.freerouting.geometry.planar.ConvexShape[] shapes =
+        new app.freerouting.geometry.planar.ConvexShape[board.layerStructure.layers.length];
+    for (int i = 0; i < shapes.length; i++) {
+      shapes[i] = defaultPadstack.getShape(i);
+    }
+    app.freerouting.core.library.Padstack nonFiniteDrillPadstack =
+        board.library.padstacks.add("Round1$Infinity", shapes, true, false);
+
+    board.insertVia(
+        nonFiniteDrillPadstack,
+        app.freerouting.geometry.planar.Point.getInstance(3000, 3000),
+        new int[] {1},
+        1,
+        app.freerouting.board.model.structure.FixedState.USER_FIXED,
+        true);
+
+    ByteArrayOutputStream sesOut = new ByteArrayOutputStream();
+    SesWriter.write(board, sesOut, "Issue143-rpi_splitter.dsn");
+
+    ByteArrayOutputStream scrOut = new ByteArrayOutputStream();
+    InputStream sesIn = new ByteArrayInputStream(sesOut.toByteArray());
+
+    boolean success = SesReader.saveSpecctraSessionSesAsFusionScriptScr(sesIn, scrOut, board);
+    assertTrue(success, "SessionToFusion export should succeed");
+
+    String script = scrOut.toString(StandardCharsets.UTF_8);
+
+    assertFalse(script.contains("Infinity"), "Script must never output non-finite drill");
+    java.util.regex.Matcher matcher =
+        java.util.regex.Pattern.compile("CHANGE DRILL ([0-9.]+);").matcher(script);
+    assertTrue(matcher.find(), "Script must emit a CHANGE DRILL command");
+    double emittedDrill = Double.parseDouble(matcher.group(1));
+    assertTrue(emittedDrill > 0, "Emitted fallback drill diameter must be strictly positive");
   }
 
   @Test
