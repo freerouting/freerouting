@@ -209,7 +209,6 @@ public final class GuiDefaultsFile {
 
     writeFrameScope(this.boardFrame.selectParameterWindow, "select_parameter");
     writeFrameScope(this.boardFrame.routeParameterWindow, "route_parameter");
-    writeFrameScope(this.boardFrame.routeParameterWindow.manualRuleWindow, "manual_rules");
     writeFrameScope(this.boardFrame.moveParameterWindow, "move_parameter");
     writeFrameScope(this.boardFrame.clearanceMatrixWindow, "clearanceMatrix");
     writeFrameScope(this.boardFrame.viaWindow, "viaRules");
@@ -258,6 +257,11 @@ public final class GuiDefaultsFile {
       }
     }
     JFrame currentFrame;
+    if (frame == Keyword.MANUAL_RULES) {
+      // The manual-rules popup window was replaced by an inline panel.
+      // Skip the saved scope without failing on legacy defaults files.
+      return true;
+    }
     switch (frame) {
       case BOARD_FRAME -> currentFrame = this.boardFrame;
       case COLOR_MANAGER -> currentFrame = this.boardFrame.colorManager;
@@ -266,7 +270,6 @@ public final class GuiDefaultsFile {
 
       case SELECT_PARAMETER -> currentFrame = this.boardFrame.selectParameterWindow;
       case ROUTE_PARAMETER -> currentFrame = this.boardFrame.routeParameterWindow;
-      case MANUAL_RULES -> currentFrame = this.boardFrame.routeParameterWindow.manualRuleWindow;
       case MOVE_PARAMETER -> currentFrame = this.boardFrame.moveParameterWindow;
       case CLEARANCE_MATRIX -> currentFrame = this.boardFrame.clearanceMatrixWindow;
       case VIA_RULES -> currentFrame = this.boardFrame.viaWindow;
