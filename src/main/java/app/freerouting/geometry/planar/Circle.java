@@ -165,7 +165,7 @@ public class Circle implements ConvexShape, Serializable {
     if (this.radius <= 0 || quadrantDivisionCount <= 2) {
       return this.boundingOctagon();
     }
-    int divisions = Math.min(64, quadrantDivisionCount);
+    int divisions = quadrantDivisionCount;
     Line[] tangentLineArr = new Line[divisions * 4];
     for (int i = 0; i < divisions; i++) {
       // calculate the tangential points in the first quadrant
@@ -179,8 +179,13 @@ public class Circle implements ConvexShape, Serializable {
         borderDelta = new IntVector(currentX, currentY);
       }
       Point currentA = this.center.translateBy(borderDelta);
-      Point currentB = currentA.turn90Degree(1, this.center);
-      Direction currentDirection = Direction.getInstance(currentB.differenceBy(this.center));
+      Direction currentDirection;
+      if (i == 0) {
+        currentDirection = Direction.UP;
+      } else {
+        double currentAngle = i * Math.PI / (2.0 * divisions);
+        currentDirection = Direction.getInstanceApprox(currentAngle + Math.PI / 2.0);
+      }
       Line currentTangent = new Line(currentA, currentDirection);
       tangentLineArr[divisions + i] = currentTangent;
       tangentLineArr[2 * divisions + i] = currentTangent.turn90Degree(1, this.center);
@@ -329,10 +334,15 @@ public class Circle implements ConvexShape, Serializable {
     TileShape[] result = new TileShape[1];
     // Approximate circular keepouts and areas with a conservative circumscribed 64-gon
     // (16 divisions per quadrant) when the radius is large enough (>= 16 coordinate units).
-    // An octagonal approximation introduces up to ~8.24% radial overshoot at corner vertices,
-    // which for multi-millimeter mounting holes exceeds standard PCB clearance rules and causes
-    // false-positive DRC violations. A 64-gon bounds the radial error to <= 0.12% (~3 um for a
-    // 5 mm hole) while remaining convex and strictly circumscribed.
+    // An octagonal approximation introduces ~8.24% radial overshoot at corner vertices,
+    // which for multi-millimeter mounting holes (e.g. ~206 um on a 5 mm hole) exceeds standard
+    // PCB clearance rules and causes false-positive DRC violations.
+    // In continuous Euclidean space, a regular 64-gon corner overshoot is 1/cos(2.8125 deg) - 1
+    // ~= 0.12% (~3 um on a 5 mm hole). On discrete integer coordinates, independent ceil()
+    // operations add up to O(1/radius) discretization error, yielding ~0.124% error at
+    // radius 25000, ~0.135% at radius 5000, and ~5-6% near the cutoff (radius 16-17), which is
+    // still strictly superior to the coarse octagon's 8.24%. Tiny circles (radius < 16) retain
+    // boundingOctagon() to avoid degenerate near-collinear sides.
     if (this.radius >= 16) {
       result[0] = this.boundingTileWithDivisions(16);
     } else {

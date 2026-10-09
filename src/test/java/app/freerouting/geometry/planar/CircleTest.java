@@ -113,11 +113,49 @@ class CircleTest {
   }
 
   @Test
-  void testExcessiveDivisionsCapped() {
-    Circle circle = new Circle(Point.ZERO, 5000);
-    TileShape capped = circle.boundingTileWithDivisions(1000);
-    assertInstanceOf(Simplex.class, capped);
-    // 64 divisions per quadrant = 256 sides maximum
-    assertEquals(256, capped.borderLineCount());
+  void testCutoffOvershootAndFallback() {
+    // Radius < 16 falls back to coarse octagon
+    Circle belowCutoff = new Circle(Point.ZERO, 15);
+    assertInstanceOf(IntOctagon.class, belowCutoff.splitToConvex()[0]);
+
+    // Radius at cutoff (16) and just above (17) uses 64-gon Simplex
+    for (int r : new int[] {16, 17}) {
+      Circle atCutoff = new Circle(Point.ZERO, r);
+      TileShape shape = atCutoff.splitToConvex()[0];
+      assertInstanceOf(Simplex.class, shape);
+      assertTrue(
+          shape.borderLineCount() > 8 && shape.borderLineCount() <= 64,
+          "Polygon near cutoff must have between 8 and 64 sides after redundant lines removal");
+
+      double maxCornerDist = 0;
+      for (FloatPoint corner : shape.cornerApproxArr()) {
+        double dist = Math.sqrt(corner.x * corner.x + corner.y * corner.y);
+        maxCornerDist = Math.max(maxCornerDist, dist);
+      }
+      // Corner overshoot near cutoff (~5-6%) must be strictly superior to octagon (~8.24%)
+      assertTrue(
+          maxCornerDist / r < 1.065,
+          "Corner overshoot near cutoff must be strictly less than octagon's 1.0824");
+    }
+
+    // Large circle (25000 units = 2.5 mm radius) approaches theoretical 0.12% error
+    Circle largeCircle = new Circle(Point.ZERO, 25000);
+    TileShape largeShape = largeCircle.splitToConvex()[0];
+    double maxLargeCornerDist = 0;
+    for (FloatPoint corner : largeShape.cornerApproxArr()) {
+      double dist = Math.sqrt(corner.x * corner.x + corner.y * corner.y);
+      maxLargeCornerDist = Math.max(maxLargeCornerDist, dist);
+    }
+    assertTrue(
+        maxLargeCornerDist / 25000.0 < 1.0013, "Large circle corner overshoot must be <= 0.13%");
+  }
+
+  @Test
+  void testBoundingTileRespectsMaxSegmentLength() {
+    Circle circle = new Circle(Point.ZERO, 10000);
+    // Request segment length of 100 -> 10000 / 100 + 1 = 101 divisions per quadrant -> 404 sides
+    TileShape shape = circle.boundingTile(100);
+    assertInstanceOf(Simplex.class, shape);
+    assertEquals(404, shape.borderLineCount(), "boundingTile must not cap divisions to 64");
   }
 }
