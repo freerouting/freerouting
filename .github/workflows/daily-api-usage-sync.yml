@@ -1,9 +1,6 @@
 name: Daily API Key Usage Sync
 
 on:
-  schedule:
-    # Run every day at 03:00 UTC
-    - cron: '0 3 * * *'
   workflow_dispatch:
     inputs:
       dry_run:
@@ -22,10 +19,10 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.12'
           cache: 'pip'
@@ -38,7 +35,8 @@ jobs:
       - name: Run Sync Script
         env:
           FREEROUTING__USAGE_AND_DIAGNOSTIC_DATA__BIGQUERY_SERVICE_ACCOUNT_KEY: ${{ secrets.FREEROUTING_BIGQUERY_SERVICE_ACCOUNT_KEY }}
-          FREEROUTING_API_KEY_SPREADSHEET_ID: ${{ secrets.FREEROUTING_API_KEY_SPREADSHEET_ID }}
+          FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__SHEET_URL: ${{ secrets.FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__SHEET_URL }}
+          FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__GOOGLE_API_KEY: ${{ secrets.FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__GOOGLE_API_KEY }}
         run: |
           EXTRA_ARGS=""
           if [ "${{ inputs.dry_run }}" = "true" ]; then

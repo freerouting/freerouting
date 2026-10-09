@@ -1,7 +1,5 @@
 package app.freerouting.analytics;
 
-import static app.freerouting.Freerouting.globalSettings;
-
 import app.freerouting.analytics.dto.Properties;
 import app.freerouting.analytics.dto.Traits;
 import app.freerouting.analytics.model.ActorType;
@@ -9,6 +7,7 @@ import app.freerouting.analytics.model.JobLifecycleStatus;
 import app.freerouting.analytics.model.PipelineType;
 import app.freerouting.constants.Constants;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.settings.GlobalSettings;
 import app.freerouting.util.gson.GsonProvider;
 import java.time.Instant;
 import java.util.HashMap;
@@ -23,6 +22,7 @@ public final class FRAnalytics {
 
   private static final HashMap<String, String> appLocationTable;
   private static AnalyticsClient analytics;
+  private static GlobalSettings globalSettings;
   private static String permanentUserId;
   private static String permanentUserEmail;
   private static String appPreviousLocation = "";
@@ -40,6 +40,15 @@ public final class FRAnalytics {
   private static ActorType currentActorType = ActorType.AUTOMATED_BATCH;
   private static String currentIntegrationTool = "Freerouting";
   private static String currentIntegrationVersion = "";
+
+  /**
+   * Sets the active global settings reference for analytics trait and event generation.
+   *
+   * @param settings the active global settings
+   */
+  public static void setGlobalSettings(GlobalSettings settings) {
+    globalSettings = settings;
+  }
 
   static {
     appLocationTable = new HashMap<String, String>();
@@ -314,6 +323,9 @@ public final class FRAnalytics {
   }
 
   private static boolean isEventTrackingEnabled(String action) {
+    if (globalSettings == null) {
+      return true;
+    }
     return switch (action) {
       case "Window Changed" -> globalSettings.usageAndDiagnosticData.trackWindowChanged;
       case "Button Clicked" -> globalSettings.usageAndDiagnosticData.trackButtonClicked;
@@ -339,23 +351,33 @@ public final class FRAnalytics {
     traits.put("anonymous", "true");
     traits.put("user_id", permanentUserId);
     traits.put("user_email", permanentUserEmail);
-    String firstSeen = globalSettings.statistics.startTime;
+    String firstSeen = (globalSettings != null) ? globalSettings.statistics.startTime : null;
     if (firstSeen == null || firstSeen.isBlank()) {
       firstSeen = Instant.now().toString();
     }
     traits.put("first_seen", firstSeen);
-    traits.put("client_version", globalSettings.version);
+    traits.put(
+        "client_version",
+        globalSettings != null ? globalSettings.version : Constants.FREEROUTING_VERSION);
     traits.put("os_name", System.getProperty("os.name"));
     traits.put("os_version", System.getProperty("os.version"));
     traits.put("system_language", Locale.getDefault().toString());
-    traits.put("gui_language", globalSettings.currentLocale.toString());
+    traits.put(
+        "gui_language",
+        (globalSettings != null && globalSettings.currentLocale != null)
+            ? globalSettings.currentLocale.toString()
+            : Locale.getDefault().toString());
     traits.put("pipeline", currentPipeline.name());
     traits.put("actor_type", currentActorType.name());
     traits.put("integration_tool", currentIntegrationTool);
     traits.put(
-        "allow_telemetry", Boolean.toString(globalSettings.userProfileSettings.isTelemetryAllowed));
+        "allow_telemetry",
+        Boolean.toString(
+            globalSettings != null && globalSettings.userProfileSettings.isTelemetryAllowed));
     traits.put(
-        "allow_contact", Boolean.toString(globalSettings.userProfileSettings.isContactAllowed));
+        "allow_contact",
+        Boolean.toString(
+            globalSettings != null && globalSettings.userProfileSettings.isContactAllowed));
     return traits;
   }
 
@@ -505,14 +527,16 @@ public final class FRAnalytics {
     properties.put("total_route_optimizer_runtime", String.valueOf(totalRouteOptimizerRuntime));
     properties.put(
         "application_runtime", String.valueOf(Instant.now().getEpochSecond() - appStartedAt));
-    properties.put("statistics_start_time", globalSettings.statistics.startTime);
-    properties.put("statistics_end_time", globalSettings.statistics.endTime);
-    properties.put(
-        "statistics_sessions_total", String.valueOf(globalSettings.statistics.sessionsTotal));
-    properties.put(
-        "statistics_jobs_started", String.valueOf(globalSettings.statistics.jobsStarted));
-    properties.put(
-        "statistics_jobs_completed", String.valueOf(globalSettings.statistics.jobsCompleted));
+    if (globalSettings != null) {
+      properties.put("statistics_start_time", globalSettings.statistics.startTime);
+      properties.put("statistics_end_time", globalSettings.statistics.endTime);
+      properties.put(
+          "statistics_sessions_total", String.valueOf(globalSettings.statistics.sessionsTotal));
+      properties.put(
+          "statistics_jobs_started", String.valueOf(globalSettings.statistics.jobsStarted));
+      properties.put(
+          "statistics_jobs_completed", String.valueOf(globalSettings.statistics.jobsCompleted));
+    }
 
     trackAnonymousAction(permanentUserId, "Application Closed", properties);
     flush(1000);
@@ -535,7 +559,9 @@ public final class FRAnalytics {
     sessionCount++;
 
     Map<String, String> properties = new HashMap<>();
-    properties.put("settings", GsonProvider.GSON.toJson(globalSettings));
+    if (globalSettings != null) {
+      properties.put("settings", GsonProvider.GSON.toJson(globalSettings));
+    }
     properties.put("session_count", String.valueOf(sessionCount));
 
     trackAnonymousAction(permanentUserId, "Auto-router Started", properties);
@@ -587,7 +613,9 @@ public final class FRAnalytics {
     routeOptimizerStartedAt = Instant.now().getEpochSecond();
 
     Map<String, String> properties = new HashMap<>();
-    properties.put("settings", GsonProvider.GSON.toJson(globalSettings));
+    if (globalSettings != null) {
+      properties.put("settings", GsonProvider.GSON.toJson(globalSettings));
+    }
     properties.put("session_count", String.valueOf(sessionCount));
     trackAnonymousAction(permanentUserId, "Route Optimizer Started", properties);
   }
@@ -599,7 +627,9 @@ public final class FRAnalytics {
     totalRouteOptimizerRuntime += routeOptimizerRuntime;
 
     Map<String, String> properties = new HashMap<>();
-    properties.put("settings", GsonProvider.GSON.toJson(globalSettings));
+    if (globalSettings != null) {
+      properties.put("settings", GsonProvider.GSON.toJson(globalSettings));
+    }
     properties.put("session_count", String.valueOf(sessionCount));
     properties.put("route_optimizer_runtime", String.valueOf(routeOptimizerRuntime));
 

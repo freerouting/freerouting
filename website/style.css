@@ -389,6 +389,11 @@ main {
     color: var(--gold-primary);
     line-height: 1.1;
     margin-bottom: 0.2em;
+    transition: transform 0.15s ease-out;
+}
+
+.metric-number.pulse-tick {
+    transform: scale(1.05);
 }
 
 .metric-label {

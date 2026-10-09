@@ -7,8 +7,12 @@
 # logic without a display.
 # ---------------------------------------------------------------------------
 
-import wx
-import wx.aui
+import sys
+try:
+    import wx
+    import wx.aui
+except ImportError:
+    wx = None
 
 # ------------------------------------------------------------------
 # Shared wx.App instance
@@ -16,11 +20,13 @@ import wx.aui
 # KiCad's Python console uses the "Phoenix" wxPython build.  A single
 # wx.App must exist before any GUI widgets are created.  We create one
 # lazily if KiCad hasn't already done so.
-if "phoenix" in wx.PlatformInfo:
+if wx and "phoenix" in getattr(wx, "PlatformInfo", []):
     if not wx.GetApp():
         theApp = wx.App()
     else:
         theApp = wx.GetApp()
+else:
+    theApp = None
 
 
 # ------------------------------------------------------------------
@@ -36,6 +42,10 @@ def wx_safe_invoke(function, *args, **kwargs):
     close dialogs.  Wraps ``wx.CallAfter`` with safety guards so that calls
     on destroyed C++ wx objects are cleanly dropped instead of crashing KiCad.
     """
+    if not wx:
+        function(*args, **kwargs)
+        return
+
     def _safe_wrapper():
         target = getattr(function, "__self__", None)
         if target is not None:
@@ -69,6 +79,10 @@ def wx_show_warning(text):
 
     Returns the user's choice (``wx.ID_YES`` or ``wx.ID_NO``).
     """
+    if not wx:
+        print(f"Warning: {text}", file=sys.stderr)
+        return 0
+
     style = wx.YES_NO | wx.ICON_WARNING
     dialog = wx.MessageDialog(None, message=text, caption=wx_caption, style=style)
     result = dialog.ShowModal()
@@ -78,6 +92,10 @@ def wx_show_warning(text):
 
 def wx_show_error(text):
     """Display an error dialog with an OK button.  Blocks until dismissed."""
+    if not wx:
+        print(f"Error: {text}", file=sys.stderr)
+        return
+
     style = wx.OK | wx.ICON_ERROR
     dialog = wx.MessageDialog(None, message=text, caption=wx_caption, style=style)
     dialog.ShowModal()
@@ -91,5 +109,8 @@ def has_pcbnew_api():
     Specctra DSN/SES import/export functions.  This guard prevents
     crashes when those functions are missing.
     """
-    import pcbnew
-    return hasattr(pcbnew, "ExportSpecctraDSN") and hasattr(pcbnew, "ImportSpecctraSES")
+    try:
+        import pcbnew
+        return hasattr(pcbnew, "ExportSpecctraDSN") and hasattr(pcbnew, "ImportSpecctraSES")
+    except ImportError:
+        return False

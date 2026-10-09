@@ -151,16 +151,35 @@ foreach ($run in $runs) {
     }
 }
 
+$ManifestPath = Join-Path $PSScriptRoot "baselines\baseline-manifest.json"
+$baselineVersion = "2.5.0"
+$baselineJarFilename = "freerouting-2.5.0.jar"
+if (Test-Path $ManifestPath) {
+    $manifest = Get-Content $ManifestPath -Raw | ConvertFrom-Json
+    if ($manifest.release_baseline -and $manifest.release_baseline.version) {
+        $baselineVersion = [string]$manifest.release_baseline.version
+    }
+    if ($manifest.release_baseline -and $manifest.release_baseline.jar_path) {
+        $baselineJarFilename = [System.IO.Path]::GetFileName([string]$manifest.release_baseline.jar_path)
+    }
+}
+
 $currentRuns = @($runs | Where-Object {
         (Test-PropertyPath $_ "binary") -and (
             ((Test-PropertyPath $_ "binary.filename") -and
                 ([string]$_.binary.filename -match "(?i)current")) -or
             ((Test-PropertyPath $_ "binary.version_label") -and
-                ([string]$_.binary.version_label -notmatch "(?i)(1[._-]?9|v190)"))
+                ([string]$_.binary.version_label -ine $baselineVersion) -and
+                ([string]$_.binary.version_label -notmatch "^(?i)(1[._-]?9|v190)"))
         )
     })
-$v19Runs = @($runs | Where-Object {
-        Test-IsLegacyRun $_
+$baselineRuns = @($runs | Where-Object {
+        (Test-PropertyPath $_ "binary") -and (
+            ((Test-PropertyPath $_ "binary.version_label") -and
+                ([string]$_.binary.version_label -ieq $baselineVersion)) -or
+            ((Test-PropertyPath $_ "binary.filename") -and
+                ([System.IO.Path]::GetFileName([string]$_.binary.filename) -ieq $baselineJarFilename))
+        )
     })
 
 $currentByFixture = @{}
@@ -192,7 +211,7 @@ $parityPaths = @(
     "bounds.min_bend_count"
 )
 $pairedCount = 0
-foreach ($run in $v19Runs) {
+foreach ($run in $baselineRuns) {
     if (Test-IsHistoricalRun $run) {
         continue
     }
@@ -208,7 +227,7 @@ foreach ($run in $v19Runs) {
     foreach ($path in $parityPaths) {
         if ((Test-PropertyPath $currentRun $path) -ne (Test-PropertyPath $run $path)) {
             [void]$errors.Add(
-                "$fixturePath has unequal current/v1.9 presence for '$path'")
+                "$fixturePath has unequal current/$baselineVersion presence for '$path'")
         }
     }
 }
@@ -218,10 +237,10 @@ if ($errors.Count -gt 0) {
     exit 1
 }
 
-if ($v19Runs.Count -gt 0 -and $pairedCount -eq 0) {
-    Write-Warning "No current/v1.9 fixture pairs were found; only per-run schema was validated."
+if ($baselineRuns.Count -gt 0 -and $pairedCount -eq 0) {
+    Write-Warning "No current/$baselineVersion fixture pairs were found; only per-run schema was validated."
 }
 
-$message = "Benchmark schema valid: {0} runs, {1} current/v1.9 fixture pairs." `
-    -f $runs.Count, $pairedCount
+$message = "Benchmark schema valid: {0} runs, {1} current/{2} fixture pairs." `
+    -f $runs.Count, $pairedCount, $baselineVersion
 Write-Output $message

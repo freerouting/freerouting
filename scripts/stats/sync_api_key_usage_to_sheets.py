@@ -39,6 +39,8 @@ else:
 
 DEFAULT_PROJECT_ID = "freerouting-analytics"
 DEFAULT_DATASET_ID = "freerouting_application"
+SHEET_URL_ENV = "FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__SHEET_URL"
+GOOGLE_API_KEY_ENV = "FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__GOOGLE_API_KEY"
 
 METRIC_COLUMNS = [
     "Sessions Created",
@@ -96,15 +98,15 @@ def query_bigquery_stats(
         profile_id,
         environment_host,
         api_route,
-        REGEXP_EXTRACT(api_path, r'v1/jobs/([a-f0-9\-]+)/') AS job_id,
-        http_status,
-        PARSE_TIMESTAMP('%Y-%m-%d %H:%M:%E*S UTC', timestamp) AS event_time
+        REGEXP_EXTRACT(api_path, r'v1/jobs/([a-f0-9-]+)/') AS job_id,
+        SAFE_CAST(http_status AS INT64) AS http_status,
+        timestamp AS event_time
       FROM `{project_id}.{dataset_id}.api_usage`
       WHERE api_key_hash IS NOT NULL
     ),
     completed_jobs AS (
       SELECT DISTINCT
-        job_id
+        CAST(job_id AS STRING) AS job_id
       FROM `{project_id}.{dataset_id}.job_lifecycle`
       WHERE status IN ('SUCCEEDED', 'COMPLETED')
     )
@@ -113,13 +115,13 @@ def query_bigquery_stats(
       ARRAY_AGG(r.environment_host IGNORE NULLS ORDER BY r.event_time DESC LIMIT 1)[SAFE_OFFSET(0)] AS last_environment_host,
       COUNT(DISTINCT CASE WHEN r.api_route IN ('POST v1/sessions/create', 'POST /v1/sessions/create') AND r.http_status = 200 THEN r.event_time END) AS sessions_created,
       COUNT(DISTINCT CASE WHEN (
-        r.api_route IN ('PUT v1/jobs/{id}/start', 'POST /v1/jobs/{jobId}/start')
+        r.api_route IN ('PUT v1/jobs/{{id}}/start', 'POST /v1/jobs/{{jobId}}/start')
         OR r.api_route IN ('POST v1/autoroute', 'POST /v1/autoroute')
       ) AND r.http_status IN (200, 202) THEN COALESCE(r.job_id, CAST(r.event_time AS STRING)) END) AS boards_started,
       GREATEST(
-        COUNT(DISTINCT CASE WHEN r.api_route IN ('PUT v1/jobs/{id}/start', 'POST /v1/jobs/{jobId}/start') AND r.http_status IN (200, 202) AND c.job_id IS NOT NULL THEN r.job_id END),
+        COUNT(DISTINCT CASE WHEN r.api_route IN ('PUT v1/jobs/{{id}}/start', 'POST /v1/jobs/{{jobId}}/start') AND r.http_status IN (200, 202) AND c.job_id IS NOT NULL THEN r.job_id END),
         COUNT(DISTINCT CASE WHEN (
-          r.api_route IN ('GET v1/jobs/{id}/output', 'GET v1/jobs/{id}/output/json', 'GET /v1/jobs/{jobId}/output', 'GET /v1/jobs/{jobId}/output/json', 'GET /v1/jobs/{jobId}/output/file')
+          r.api_route IN ('GET v1/jobs/{{id}}/output', 'GET v1/jobs/{{id}}/output/json', 'GET /v1/jobs/{{jobId}}/output', 'GET /v1/jobs/{{jobId}}/output/json', 'GET /v1/jobs/{{jobId}}/output/file')
           OR r.api_route IN ('POST v1/autoroute', 'POST /v1/autoroute')
         ) AND r.http_status = 200 THEN COALESCE(r.job_id, CAST(r.event_time AS STRING)) END)
       ) AS boards_completed,
@@ -150,19 +152,45 @@ def query_bigquery_stats(
     return stats_by_hash
 
 
+def open_worksheet(credentials: Any, google_api_key: Optional[str], spreadsheet_id_or_url: str):
+    """Open the first worksheet.
+
+    The service account can write cells. The Google API key matches the app and can
+    read a sheet that is shared publicly when the service account cannot open it.
+    """
+    clients = []
+    if credentials is not None:
+        clients.append(gspread.authorize(credentials))
+    if google_api_key:
+        clients.append(gspread.api_key(google_api_key))
+    if not clients:
+        raise ValueError(
+            "Google Sheets credentials are required. Set "
+            f"{GOOGLE_API_KEY_ENV} or provide a service account key."
+        )
+
+    last_error: Optional[Exception] = None
+    for client in clients:
+        try:
+            if spreadsheet_id_or_url.startswith("https://"):
+                return client.open_by_url(spreadsheet_id_or_url).sheet1
+            return client.open_by_key(spreadsheet_id_or_url).sheet1
+        except Exception as exc:
+            last_error = exc
+    if last_error is None:
+        raise RuntimeError("Failed to open the Google Sheet.")
+    raise last_error
+
+
 def sync_to_google_sheet(
     credentials: Any,
     spreadsheet_id_or_url: str,
     stats_by_hash: Dict[str, Dict[str, Any]],
     dry_run: bool = False,
+    google_api_key: Optional[str] = None,
 ) -> None:
     """Match API keys from the sheet, compute SHA-256, and update columns."""
-    gc = gspread.authorize(credentials)
-
-    if spreadsheet_id_or_url.startswith("https://"):
-        sheet = gc.open_by_url(spreadsheet_id_or_url).sheet1
-    else:
-        sheet = gc.open_by_key(spreadsheet_id_or_url).sheet1
+    sheet = open_worksheet(credentials, google_api_key, spreadsheet_id_or_url)
 
     all_values = sheet.get_all_values()
     if not all_values:
@@ -191,6 +219,9 @@ def sync_to_google_sheet(
 
     if missing_cols and not dry_run:
         start_col = len(headers) + 1
+        columns_needed = start_col + len(missing_cols) - 1
+        if sheet.col_count < columns_needed:
+            sheet.add_cols(columns_needed - sheet.col_count)
         for i, col_name in enumerate(missing_cols):
             col_indices[col_name] = len(headers) + i
             sheet.update_cell(1, start_col + i, col_name)
@@ -261,8 +292,12 @@ def main() -> None:
         "--spreadsheet-id",
         "-s",
         help="Google Sheets Spreadsheet ID or full URL",
-        default=os.environ.get("FREEROUTING_API_KEY_SPREADSHEET_ID")
-        or os.environ.get("FREEROUTING_API_KEY_SPREADSHEET_URL"),
+        default=os.environ.get(SHEET_URL_ENV),
+    )
+    parser.add_argument(
+        "--google-api-key",
+        help="Google API key for the Sheets API",
+        default=os.environ.get(GOOGLE_API_KEY_ENV),
     )
     parser.add_argument(
         "--service-account-key",
@@ -299,7 +334,7 @@ def main() -> None:
     if not args.spreadsheet_id:
         print(
             "Error: Spreadsheet ID or URL is required.\n"
-            "Specify via --spreadsheet-id <ID> or set FREEROUTING_API_KEY_SPREADSHEET_ID env var.",
+            f"Specify via --spreadsheet-id <ID> or set {SHEET_URL_ENV}.",
             file=sys.stderr,
         )
         sys.exit(1)
@@ -316,6 +351,7 @@ def main() -> None:
             spreadsheet_id_or_url=args.spreadsheet_id,
             stats_by_hash=stats,
             dry_run=args.dry_run,
+            google_api_key=args.google_api_key,
         )
     except Exception as exc:
         print(f"Error during sync: {exc}", file=sys.stderr)

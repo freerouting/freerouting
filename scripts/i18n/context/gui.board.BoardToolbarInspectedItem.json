@@ -45,9 +45,7 @@
   },
   "cancel": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.board.BoardToolbarInspectedItem"
-    ],
+    "code_references": [],
     "english_hash": "19766ed6ccb2f4a32778eed80d1928d2c87a18d7c275ccb163ec6709d3eb2e27",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -61,9 +59,7 @@
   },
   "cancel_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.board.BoardToolbarInspectedItem"
-    ],
+    "code_references": [],
     "english_hash": "62a99fabaf9748244ce99d73038e94151502aaa63343027dec245a3a4f383f2c",
     "grammatical_role": "full_sentence",
     "has_placeholders": false,
@@ -79,9 +75,7 @@
   },
   "components": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.board.BoardToolbarInspectedItem"
-    ],
+    "code_references": [],
     "english_hash": "a150ce22160259313c47bc66940b905a9c2196924fd447f802cff12dbb1e9702",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -95,9 +89,7 @@
   },
   "components_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.board.BoardToolbarInspectedItem"
-    ],
+    "code_references": [],
     "english_hash": "1b008e027477313a4d87806f8883e378510a4c37bad4e789f4b21ca348b6a4a8",
     "grammatical_role": "full_sentence",
     "has_placeholders": false,
@@ -113,9 +105,7 @@
   },
   "conn_sets": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.board.BoardToolbarInspectedItem"
-    ],
+    "code_references": [],
     "english_hash": "bc073f24b610fdf2bf5a86e38a27512a67c893bbdb11a85ae8fc564d0e8a5d41",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -133,9 +123,7 @@
   },
   "conn_sets_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.board.BoardToolbarInspectedItem"
-    ],
+    "code_references": [],
     "english_hash": "f3ab5afa202f850d5e46079a33c314164d58513f891fa043945501cbd7ef0cae",
     "grammatical_role": "full_sentence",
     "has_placeholders": false,
@@ -151,9 +139,7 @@
   },
   "connections": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.board.BoardToolbarInspectedItem"
-    ],
+    "code_references": [],
     "english_hash": "dc273117482b4429ada500ecd2e0c75532454194892cb901ca64cc7df369fdf6",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -167,9 +153,7 @@
   },
   "connections_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.board.BoardToolbarInspectedItem"
-    ],
+    "code_references": [],
     "english_hash": "7042b14c351bec5fef19145eeb1365e38fac459c8ad64a39d3083d1079e222a9",
     "grammatical_role": "full_sentence",
     "has_placeholders": false,
@@ -243,6 +227,20 @@
     ],
     "ui_role": "tooltip"
   },
+  "extend_selection": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [],
+    "english_hash": "4344fe6e1f29ed34f023d7e211d772ebd98ed0a3cb53d28d6fb8cc3e6cc90b53",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.board.BoardToolbarInspectedItem",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
   "fanout": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
@@ -305,9 +303,7 @@
   },
   "info": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.board.BoardToolbarInspectedItem"
-    ],
+    "code_references": [],
     "english_hash": "170322a32f3c35b2c61576a5553d352d7b3c8ae7086dab78f15fc891a28c067c",
     "grammatical_role": "fragment",
     "has_placeholders": false,
@@ -321,9 +317,7 @@
   },
   "info_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.board.BoardToolbarInspectedItem"
-    ],
+    "code_references": [],
     "english_hash": "1182974e9ab2bf162d447fe05abefdee99beb3f73bb5733e4bd7bd6a833e8f89",
     "grammatical_role": "full_sentence",
     "has_placeholders": false,
@@ -339,9 +333,7 @@
   },
   "nets": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.board.BoardToolbarInspectedItem"
-    ],
+    "code_references": [],
     "english_hash": "fe4b48433a7d485451ac87a293f2d0fd2aeb641dbb140fa9be0b6ea2d05ee16d",
     "grammatical_role": "fragment",
     "has_placeholders": false,
@@ -355,9 +347,7 @@
   },
   "nets_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.board.BoardToolbarInspectedItem"
-    ],
+    "code_references": [],
     "english_hash": "2dceb3624852bb5b0b172b97ce922feb4277d1b5e1bb919cebe24a5a3db47f41",
     "grammatical_role": "full_sentence",
     "has_placeholders": false,
@@ -515,6 +505,22 @@
     ],
     "ui_role": "tooltip"
   },
+  "toolbar_accessible_name": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.board.BoardToolbarInspectedItem"
+    ],
+    "english_hash": "3c7910aeaad3bafa0bfbed705ed919b0945c53f63f2e1d8bcfd0c5c1aa96fb21",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.board.BoardToolbarInspectedItem",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
   "unfix": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
@@ -547,9 +553,7 @@
   },
   "violations": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.board.BoardToolbarInspectedItem"
-    ],
+    "code_references": [],
     "english_hash": "3f75292067cb23efc6a84fe4be1cbc3b84485e8fdab47f52b5b4e0b67d673415",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -563,9 +567,7 @@
   },
   "violations_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.board.BoardToolbarInspectedItem"
-    ],
+    "code_references": [],
     "english_hash": "48dc174034cdd9f5185c90470bafbc7b9da8c71953f4118246c6e65ba898731c",
     "grammatical_role": "full_sentence",
     "has_placeholders": false,
@@ -581,9 +583,7 @@
   },
   "zoom_all": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.board.BoardToolbarInspectedItem"
-    ],
+    "code_references": [],
     "english_hash": "e728ff2614a0168ff3ec7e71028fc128f573ce423b25e0038b23ece4aefa79e6",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -603,9 +603,7 @@
   },
   "zoom_all_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.board.BoardToolbarInspectedItem"
-    ],
+    "code_references": [],
     "english_hash": "4bae4d31395443c999e1ad0385d83074e86c070081d04364c0c114b8ab4ecc7d",
     "grammatical_role": "full_sentence",
     "has_placeholders": false,
@@ -621,9 +619,7 @@
   },
   "zoom_region": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.board.BoardToolbarInspectedItem"
-    ],
+    "code_references": [],
     "english_hash": "b01d43939561f3f4d6ac72772721b1f11b9b2d60e1b40e48009a0c7804a1105a",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -643,9 +639,7 @@
   },
   "zoom_region_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.board.BoardToolbarInspectedItem"
-    ],
+    "code_references": [],
     "english_hash": "6fe2f4df44b86971bec7ae4ba4d134144a71d63f9f95376f6f60df57fa913b26",
     "grammatical_role": "full_sentence",
     "has_placeholders": false,
@@ -661,9 +655,7 @@
   },
   "zoom_selection": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.board.BoardToolbarInspectedItem"
-    ],
+    "code_references": [],
     "english_hash": "327118f03bc8e53d9962ddcf78d910d71b2ff81c266bf25bf4719a61d0cc865c",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -683,9 +675,7 @@
   },
   "zoom_selection_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.board.BoardToolbarInspectedItem"
-    ],
+    "code_references": [],
     "english_hash": "21ea9865b7e543600e53a418c2c7d84b49be2b047c4dca3f3548de79ca3c46cd",
     "grammatical_role": "full_sentence",
     "has_placeholders": false,

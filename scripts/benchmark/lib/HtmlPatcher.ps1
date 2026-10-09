@@ -76,7 +76,7 @@ function Update-BenchmarksHtml {
                 $latestRun = $versionRuns | Sort-Object -Property { $_.run_at } -Descending | Select-Object -First 1
                 $fixtureCount++
                 $failed = Test-RunIsFailed $latestRun $NormalizedScores
-                $isTimeout = $latestRun.exit.timed_out -eq $true
+                $isTimeout = (Test-RunIsTimedOut $latestRun)
                 if ($isTimeout) { $timeouts++ }
                 if ($failed) { $failures++ }
 

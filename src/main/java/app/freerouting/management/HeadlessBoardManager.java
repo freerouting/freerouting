@@ -98,6 +98,13 @@ public class HeadlessBoardManager implements BoardManager {
   private static final String HOLE_EDGE_CLEARANCE_CLASS_NAME = "hole_edge";
 
   /**
+   * True once {@link #applyCopperToEdgeClearanceOverride()} has assigned the {@code board_edge}
+   * class to the outline of the current board. The override runs again after the pins are inserted,
+   * so the default value can be capped by the real pin-to-outline gaps.
+   */
+  private boolean edgeClearanceAppliedByOverride;
+
+  /**
    * Listener for autorouter thread events during automated routing operations.
    *
    * <p>Receives notifications about:
@@ -352,6 +359,7 @@ public class HeadlessBoardManager implements BoardManager {
             outlineClClassNo,
             rules,
             boardCommunication);
+    this.edgeClearanceAppliedByOverride = false;
     applyCopperToEdgeClearanceOverride();
     applyHoleClearanceOverride();
     applyPlaneNetsOverride();
@@ -518,7 +526,9 @@ public class HeadlessBoardManager implements BoardManager {
         Math.abs(configuredClearanceUm - DefaultSettings.DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM)
             < 1e-9;
     // Keep explicit DSN outline-clearance classes untouched when only the global default is active.
-    if (usesDefaultEdgeClearanceValue && !usesFallbackOutlineClass) {
+    if (usesDefaultEdgeClearanceValue
+        && !usesFallbackOutlineClass
+        && !edgeClearanceAppliedByOverride) {
       return;
     }
 
@@ -530,6 +540,22 @@ public class HeadlessBoardManager implements BoardManager {
                     configuredClearanceUm * boardResolution,
                     Unit.UM,
                     this.board.communication.unit));
+
+    if (usesDefaultEdgeClearanceValue) {
+      // The default value is only a guess. Never demand more edge clearance than the input already
+      // has: a pin that is closer to the outline than the default would block every connection.
+      double minimumPinGap = outline.minimumPinGap();
+      if (minimumPinGap < configuredClearanceBoardUnits) {
+        int cappedClearanceBoardUnits = (int) Math.max(0, Math.floor(minimumPinGap));
+        FRLogger.debug(
+            "Copper-to-edge clearance capped from "
+                + configuredClearanceBoardUnits
+                + " to "
+                + cappedClearanceBoardUnits
+                + " board units because a pin is closer to the board outline.");
+        configuredClearanceBoardUnits = cappedClearanceBoardUnits;
+      }
+    }
 
     var matrix = this.board.rules.clearanceMatrix;
     int boardEdgeClassNo = matrix.getNo(BOARD_EDGE_CLEARANCE_CLASS_NAME);
@@ -554,6 +580,7 @@ public class HeadlessBoardManager implements BoardManager {
       this.board.searchTreeManager.remove(outline);
     }
     outline.setClearanceClassIndex(boardEdgeClassNo);
+    edgeClearanceAppliedByOverride = true;
     outline.clearDerivedData();
     if (this.board.searchTreeManager != null) {
       this.board.searchTreeManager.insert(outline);
