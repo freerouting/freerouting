@@ -237,18 +237,37 @@ class DsnRouter:
 
         logger.info("Importing Specctra SES into KiCad...")
         try:
+            try:
+                from .router_ipc import sanitize_ses_file
+            except ImportError:
+                from router_ipc import sanitize_ses_file
+            sanitize_ses_file(Path(self.plugin.module_output))
+        except Exception as se:
+            logger.debug(f"Could not sanitize SES file: {se}")
+
+        board = getattr(self.plugin, "board", None)
+        if board is None and hasattr(pcbnew, "GetBoard"):
+            try:
+                board = pcbnew.GetBoard()
+            except Exception:
+                # pcbnew.GetBoard() may fail if no active board is open or in headless mode
+                pass
+
+        ok = False
+        # 1. Try standard active-frame pcbnew.ImportSpecctraSES(filename) first
+        try:
             logger.info("Trying standard pcbnew.ImportSpecctraSES(filename)...")
             ok = pcbnew.ImportSpecctraSES(str(self.plugin.module_output))
-        except TypeError:
+        except Exception as fe:
+            logger.debug(f"pcbnew.ImportSpecctraSES(filename) failed: {fe}")
+
+        # 2. If not succeeded, fall back to pcbnew.ImportSpecctraSES(board, filename)
+        if not ok and board is not None:
             try:
-                logger.info("Trying pcbnew.ImportSpecctraSES(board, filename) fallback...")
-                ok = pcbnew.ImportSpecctraSES(self.plugin.board, str(self.plugin.module_output))
-            except Exception as e:
-                logger.error(f"Failed pcbnew.ImportSpecctraSES(board, filename): {e}", exc_info=True)
-                ok = False
-        except Exception as e:
-            logger.error(f"Failed pcbnew.ImportSpecctraSES(filename): {e}", exc_info=True)
-            ok = False
+                logger.info("Trying fallback pcbnew.ImportSpecctraSES(board, filename)...")
+                ok = pcbnew.ImportSpecctraSES(board, str(self.plugin.module_output))
+            except Exception as be:
+                logger.debug(f"pcbnew.ImportSpecctraSES(board, filename) failed: {be}")
 
         if ok:
             logger.info("SES import succeeded.")

@@ -25,14 +25,14 @@ import app.freerouting.util.TextManager;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -44,6 +44,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 import javax.swing.plaf.FontUIResource;
 
 /** Manages GUI initialization and board frame creation for the Freerouting application. */
@@ -199,67 +200,44 @@ public class GuiManager {
 
               @Override
               public void autorouterAborted() {
-                exportBoardToFile(globalSettings.initialOutputFile);
+                exportBoardToFile(
+                    newFrame,
+                    globalSettings.initialOutputFile,
+                    globalSettings.guiSettings.exitWhenFinished);
               }
 
               @Override
               public void autorouterFinished() {
-                exportBoardToFile(globalSettings.initialOutputFile);
-              }
-
-              private void exportBoardToFile(String filename) {
-                if (filename == null) {
-                  FRLogger.warn("Couldn't export board, filename not specified");
-                  return;
-                }
-
-                var filenameLowerCase = filename.toLowerCase();
-
-                if (!(filenameLowerCase.endsWith(".dsn")
-                    || filenameLowerCase.endsWith(".ses")
-                    || filenameLowerCase.endsWith(".scr"))) {
-                  FRLogger.warn(
-                      "Couldn't export board to '" + filename + "', unsupported extension");
-                  return;
-                }
-
-                FRLogger.info("Saving '" + filename + "'...");
-                try {
-                  String filenameOnly = new File(filename).getName();
-                  String designName = filenameOnly.substring(0, filenameOnly.length() - 4);
-                  String extension = filenameOnly.substring(filenameOnly.length() - 4);
-
-                  try (OutputStream outputStream = new FileOutputStream(filename)) {
-                    switch (extension) {
-                      case ".dsn" ->
-                          newFrame.boardPanel.boardHandling.saveAsSpecctraDesignDsn(
-                              outputStream, designName, false);
-                      case ".ses" ->
-                          newFrame.boardPanel.boardHandling.saveAsSpecctraSessionSes(
-                              outputStream, designName);
-                      case ".scr" -> {
-                        ByteArrayOutputStream sessionOutputStream = new ByteArrayOutputStream();
-                        newFrame.boardPanel.boardHandling.saveAsSpecctraSessionSes(
-                            sessionOutputStream, filename);
-                        InputStream inputStream =
-                            new ByteArrayInputStream(sessionOutputStream.toByteArray());
-                        newFrame.boardPanel.boardHandling.saveSpecctraSessionSesAsFusionScriptScr(
-                            inputStream, outputStream);
-                      }
-                      default -> {
-                        // The output extension was validated before opening the stream.
-                      }
-                    }
-                  }
-
-                  if (globalSettings.guiSettings.exitWhenFinished) {
-                    System.exit(0);
-                  }
-                } catch (Exception e) {
-                  FRLogger.error("Couldn't export board to file", e);
-                }
+                exportBoardToFile(
+                    newFrame,
+                    globalSettings.initialOutputFile,
+                    globalSettings.guiSettings.exitWhenFinished);
               }
             };
+
+        newFrame.addWindowListener(
+            new WindowAdapter() {
+              @Override
+              public void windowClosing(WindowEvent evt) {
+                if (newFrame.getDefaultCloseOperation() == WindowConstants.DO_NOTHING_ON_CLOSE) {
+                  return;
+                }
+                if (globalSettings.initialOutputFile != null
+                    && newFrame.boardPanel != null
+                    && newFrame.boardPanel.boardHandling != null) {
+                  newFrame.boardPanel.boardHandling.stopAutorouterAndRouteOptimizer();
+                  if (newFrame.boardPanel.boardHandling.isBoardChanged()
+                      || !newFrame
+                          .boardPanel
+                          .boardHandling
+                          .getRoutingBoard()
+                          .getTraces()
+                          .isEmpty()) {
+                    exportBoardToFile(newFrame, globalSettings.initialOutputFile, false);
+                  }
+                }
+              }
+            });
       }
 
       // start the auto-router automatically if both input and output files were
@@ -540,5 +518,96 @@ public class GuiManager {
       FRLogger.error("Error reading rules file '" + rulesFileName + "'.", e);
     }
     return false;
+  }
+
+  /**
+   * Exports the current state of the board in {@code newFrame} to {@code filename}.
+   *
+   * @param newFrame the board frame containing the board to export
+   * @param filename the path of the destination file
+   * @param exitWhenFinished whether to exit the JVM after export
+   */
+  public static void exportBoardToFile(
+      BoardFrame newFrame, String filename, boolean exitWhenFinished) {
+    if (filename == null) {
+      FRLogger.warn("Couldn't export board, filename not specified");
+      return;
+    }
+
+    var filenameLowerCase = filename.toLowerCase();
+
+    if (!(filenameLowerCase.endsWith(".dsn")
+        || filenameLowerCase.endsWith(".ses")
+        || filenameLowerCase.endsWith(".scr")
+        || filenameLowerCase.endsWith(".json"))) {
+      FRLogger.warn("Couldn't export board to '" + filename + "', unsupported extension");
+      return;
+    }
+
+    FRLogger.info("Saving '" + filename + "'...");
+    try {
+      String filenameOnly = new File(filename).getName();
+      int dotIdx = filenameOnly.lastIndexOf('.');
+      String designName = dotIdx > 0 ? filenameOnly.substring(0, dotIdx) : filenameOnly;
+      String extension = dotIdx >= 0 ? filenameOnly.substring(dotIdx).toLowerCase() : "";
+
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      boolean saved = false;
+      switch (extension) {
+        case ".dsn" ->
+            saved =
+                newFrame.boardPanel.boardHandling.saveAsSpecctraDesignDsn(baos, designName, false);
+        case ".ses" -> {
+          saved =
+              newFrame.boardPanel.boardHandling.saveHeadlessSpecctraSessionSes(baos, designName);
+          if (!saved) {
+            saved = newFrame.boardPanel.boardHandling.saveAsSpecctraSessionSes(baos, designName);
+          }
+        }
+        case ".scr" -> {
+          ByteArrayOutputStream sessionOutputStream = new ByteArrayOutputStream();
+          saved =
+              newFrame.boardPanel.boardHandling.saveHeadlessSpecctraSessionSes(
+                  sessionOutputStream, filename);
+          if (!saved) {
+            saved =
+                newFrame.boardPanel.boardHandling.saveAsSpecctraSessionSes(
+                    sessionOutputStream, filename);
+          }
+          if (saved) {
+            InputStream inputStream = new ByteArrayInputStream(sessionOutputStream.toByteArray());
+            saved =
+                newFrame.boardPanel.boardHandling.saveSpecctraSessionSesAsFusionScriptScr(
+                    inputStream, baos);
+          }
+        }
+        case ".json" -> {
+          String jsonContent =
+              app.freerouting.io.kicad.KiCadJsonWriter.write(
+                  newFrame.boardPanel.boardHandling.getRoutingBoard(), designName);
+          if (jsonContent != null && !jsonContent.isEmpty()) {
+            baos.write(jsonContent.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+            saved = true;
+          }
+        }
+        default -> {
+          // The output extension was validated before opening the stream.
+        }
+      }
+
+      if (saved && baos.size() > 0) {
+        java.nio.file.Files.write(new File(filename).toPath(), baos.toByteArray());
+        FRLogger.info("Saved " + baos.size() + " bytes to '" + filename + "'.");
+      } else {
+        FRLogger.warn(
+            "Board export produced 0 bytes or failed; not overwriting '" + filename + "'.");
+      }
+
+      if (exitWhenFinished) {
+        System.exit(0);
+      }
+    } catch (Exception e) {
+      FRLogger.error("Couldn't export board to file", e);
+    }
   }
 }

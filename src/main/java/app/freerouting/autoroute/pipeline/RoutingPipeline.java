@@ -84,6 +84,9 @@ public final class RoutingPipeline {
 
   /** Runs the configured stages in order. */
   public void run() {
+    if (this.job != null && this.job.board != null) {
+      this.job.board.awaitPostLoad();
+    }
     runRoutingStage();
     runOptimizationStage();
     this.job.stage = RoutingStage.IDLE;

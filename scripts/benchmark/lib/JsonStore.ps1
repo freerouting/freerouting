@@ -196,10 +196,36 @@ with open(p, 'w', encoding='utf-8', newline='\n') as f:
     f.write(render(data) + '\n')
 "@
         python -c $pyFormatScript $tempPath
-        if (Test-Path -LiteralPath $jsonFullPath) {
-            [System.IO.File]::Replace($tempPath, $jsonFullPath, $backupPath, $true)
-        } else {
-            [System.IO.File]::Move($tempPath, $jsonFullPath)
+        # File.Replace throws a wrapped IOException when Windows still has the
+        # destination open (indexer, antivirus, or an editor). The formatted temp
+        # file stays put across retries.
+        $maxAttempts = 40
+        for ($attempt = 1; $attempt -le $maxAttempts; $attempt++) {
+            try {
+                if (Test-Path -LiteralPath $jsonFullPath) {
+                    if (Test-Path -LiteralPath $backupPath) {
+                        Remove-Item -LiteralPath $backupPath -Force -ErrorAction SilentlyContinue
+                    }
+                    [System.IO.File]::Replace($tempPath, $jsonFullPath, $backupPath, $true)
+                } else {
+                    [System.IO.File]::Move($tempPath, $jsonFullPath)
+                }
+                break
+            } catch {
+                $inner = $_.Exception
+                while ($null -ne $inner.InnerException) {
+                    $inner = $inner.InnerException
+                }
+                $locked = ($inner -is [System.IO.IOException]) -or ($inner -is [System.UnauthorizedAccessException])
+                if (-not $locked -or $attempt -ge $maxAttempts) {
+                    Write-Error "Failed to write benchmarks.json atomically: $_"
+                    break
+                }
+                if ($attempt -eq 1) {
+                    Write-Host "benchmarks.json is in use. Retrying the save..."
+                }
+                Start-Sleep -Milliseconds ([Math]::Min(250 * $attempt, 1000))
+            }
         }
     } catch {
         Write-Error "Failed to write benchmarks.json atomically: $_"

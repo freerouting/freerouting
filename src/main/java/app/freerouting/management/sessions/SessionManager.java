@@ -1,9 +1,8 @@
 package app.freerouting.management.sessions;
 
-import static app.freerouting.Freerouting.globalSettings;
-
 import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.core.Session;
+import app.freerouting.settings.GlobalSettings;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
@@ -82,7 +81,19 @@ public final class SessionManager {
    * @return the newly created session
    */
   public Session createSession(UUID userId, String host) {
-    Session session = new Session(userId, host);
+    return createSession(userId, host, null);
+  }
+
+  /**
+   * Creates and registers a session for a user with an associated API key hash.
+   *
+   * @param userId the session owner's identifier
+   * @param host the client host identifier
+   * @param apiKeyHash the SHA-256 hash of the caller's API key, or {@code null}
+   * @return the newly created session
+   */
+  public Session createSession(UUID userId, String host, String apiKeyHash) {
+    Session session = new Session(userId, host, apiKeyHash);
     if (sessions.size() >= MAX_SESSIONS) {
       var iterator = sessions.keySet().iterator();
       if (iterator.hasNext()) {
@@ -91,14 +102,18 @@ public final class SessionManager {
       }
     }
     sessions.put(session.id.toString(), session);
-    globalSettings.statistics.incrementSessionsTotal();
+    GlobalSettings settings = GlobalSettings.current();
+    if (settings != null && settings.statistics != null) {
+      settings.statistics.incrementSessionsTotal();
+    }
     FRAnalytics.recordSessionLifecycle(
         session.id.toString(),
         "SESSION_CREATED",
         FRAnalytics.getCurrentPipeline(),
         FRAnalytics.getCurrentActorType(),
         host,
-        userId);
+        userId,
+        apiKeyHash);
     return session;
   }
 

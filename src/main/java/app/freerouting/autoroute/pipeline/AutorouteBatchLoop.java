@@ -2,6 +2,9 @@ package app.freerouting.autoroute.pipeline;
 
 import static app.freerouting.autoroute.pipeline.BatchAutorouter.BOARD_RANK_LIMIT;
 import static app.freerouting.autoroute.pipeline.BatchAutorouter.FANOUT_RECOVERY_STAGNATION_PASSES;
+import static app.freerouting.autoroute.pipeline.BatchAutorouter.LAST_MILE_INCOMPLETE_LIMIT;
+import static app.freerouting.autoroute.pipeline.BatchAutorouter.LAST_MILE_MAX_ATTEMPTS;
+import static app.freerouting.autoroute.pipeline.BatchAutorouter.LAST_MILE_STAGNATION_PASSES;
 import static app.freerouting.autoroute.pipeline.BatchAutorouter.MAXIMUM_TRIES_ON_THE_SAME_BOARD;
 import static app.freerouting.autoroute.pipeline.BatchAutorouter.STAGNATION_PASS_LIMIT;
 import static app.freerouting.autoroute.pipeline.BatchAutorouter.STAGNATION_SCORE_THRESHOLD;
@@ -66,15 +69,14 @@ final class AutorouteBatchLoop {
             ? Math.max(1, settings.optimizer.maxThreads)
             : 1;
     job.logInfo(
-        "Pipeline thread limits: autorouter.max_threads="
-            + settings.getAutorouterMaxThreads()
-            + ", optimizer.max_threads="
+        "Pipeline thread limits: autorouter pass is single-threaded, optimizer.max_threads="
             + optimizerThreads
             + ".");
 
     // Capture initial state for session summary
     router.sessionStartTime = Instant.now();
     router.initialUnroutedCount = calculateIncompleteCount(router.board);
+    router.resetAntiOscillationState();
 
     final BoardHistory bh = new BoardHistory(job.routerSettings);
 
@@ -287,6 +289,7 @@ final class AutorouteBatchLoop {
     int currentPass = 1;
     int consecutiveNoImprovementPasses = 0;
     boolean fanoutRecoveryApplied = false;
+    int lastMileAttempts = 0;
     float lastBestScore = Float.NEGATIVE_INFINITY; // score at last board-restore or improvement
     float globalBestScore = Float.NEGATIVE_INFINITY; // best score seen across all passes
     int passOfBestScore = 0; // pass where globalBestScore was achieved
@@ -368,6 +371,7 @@ final class AutorouteBatchLoop {
 
             router.board = boardToRestore;
             board = router.board;
+            router.resetAntiOscillationState();
             var boardStatistics = router.board.getStatistics();
             // Reset pass-local stagnation counter when restoring a previous board state
             consecutiveNoImprovementPasses = 0;
@@ -500,6 +504,28 @@ final class AutorouteBatchLoop {
                     + ".");
           }
 
+          int incompleteNow = boardStatisticsAfter.connections.incompleteCount;
+          if (incompleteNow > 0
+              && incompleteNow <= LAST_MILE_INCOMPLETE_LIMIT
+              && lastMileAttempts < LAST_MILE_MAX_ATTEMPTS
+              && consecutiveNoImprovementPasses >= LAST_MILE_STAGNATION_PASSES) {
+            int removed = LastMileBlockerRipup.ripBlockers(router.board);
+            lastMileAttempts++;
+            if (removed > 0) {
+              boardStatisticsAfter = new BoardStatistics(router.board);
+              boardScoreAfter = boardStatisticsAfter.getRouterScore(job.routerSettings);
+              lastBestScore = boardScoreAfter;
+              consecutiveNoImprovementPasses = 0;
+              alreadyRoutedBoardHashes.clear();
+              job.logInfo(
+                  "Last-mile rip-up removed "
+                      + removed
+                      + " blocking trace(s) or via(s) around "
+                      + incompleteNow
+                      + " remaining connection(s).");
+            }
+          }
+
           if (consecutiveNoImprovementPasses >= STAGNATION_PASS_LIMIT) {
             String report = buildUnroutedConnectionsReport();
             job.logInfo(
@@ -601,11 +627,8 @@ final class AutorouteBatchLoop {
         router.settings.getRunRouter()
             && (router.settings.autorouter.maxPasses == null
                 || router.settings.autorouter.maxPasses >= 0);
-    if (wasRouterRun
-        && !(router.removeUnconnectedVias
-            || continueAutorouting
-            || router.thread.isStopAutoRouterRequested())) {
-      // clean up the route if the board is completed and if fanout is used.
+    if (wasRouterRun && !router.thread.isStopAutoRouterRequested()) {
+      // clean up dangling tails and unused orphan fanout vias when autorouting finishes normally.
       removeTails(Item.StopConnectionOption.NONE);
     }
 

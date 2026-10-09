@@ -172,7 +172,7 @@ function Get-PhaseMetrics {
         if ($line -match 'Failed to load board|Couldn''t read the input file|Couldn''t load the input file|Cannot load board') {
             $loadError = $true
         }
-        if ($line -match 'timed_out|timed out|with timeout:') {
+        if ($line -match 'timed_out|timed out|with timeout:|TIMED_OUT') {
             $logTimedOut = $true
         }
         if ($line -match '\b([A-Z]\w*(?:Exception|Error))\b') {

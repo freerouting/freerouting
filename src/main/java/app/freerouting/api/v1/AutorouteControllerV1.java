@@ -3,6 +3,7 @@ package app.freerouting.api.v1;
 import static app.freerouting.util.gson.GsonProvider.GSON;
 
 import app.freerouting.analytics.FRAnalytics;
+import app.freerouting.api.ApiUsageFilter;
 import app.freerouting.api.BaseController;
 import app.freerouting.api.dto.AutorouteRequest;
 import app.freerouting.api.dto.AutorouteResponse;
@@ -123,8 +124,11 @@ public class AutorouteControllerV1 extends BaseController {
       host = "Agent/1.0";
     }
 
+    String authHeader = httpHeaders != null ? httpHeaders.getHeaderString("Authorization") : null;
+    String apiKeyHash = ApiUsageFilter.hashBearerToken(authHeader);
+
     // 1. Create or retrieve session
-    Session session = SessionManager.getInstance().createSession(userId, host);
+    Session session = SessionManager.getInstance().createSession(userId, host, apiKeyHash);
     if (session == null) {
       return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
           .entity("{\"error\":\"Failed to create session for autorouting.\"}")
@@ -171,6 +175,8 @@ public class AutorouteControllerV1 extends BaseController {
 
     // 3. Create RoutingJob
     RoutingJob job = new RoutingJob(session.id);
+    job.userId = session.userId;
+    job.apiKeyHash = session.apiKeyHash;
     if (request.routerSettings != null) {
       job.routerSettings = request.routerSettings;
     }

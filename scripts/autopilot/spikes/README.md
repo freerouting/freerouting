@@ -16,8 +16,8 @@ Routes `DAC2020_bm01.dsn` and `ecc83-pp.dsn` via CLI (`--router.result_json`) an
 ./scripts/autopilot/spikes/Invoke-PCBenchConversionPoC.ps1
 ```
 
-Uses the local clone at `C:\Work\PCBench` and KiCad 10 at
-`C:\Program Files\KiCad\10.0\bin\kicad-cli.exe`. Strips and converts three stratified boards;
+Uses the local clone at `C:\Work\PCBench` (override with `-PCBenchRoot <path>`) and KiCad 10 at
+`C:\Program Files\KiCad\10.0\bin\kicad-cli.exe` (override with `$env:FREEROUTING_KICAD_CLI`). Strips and converts three stratified boards;
 records KiCad version and conversion success.
 
 ## Prerequisites

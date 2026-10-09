@@ -478,4 +478,306 @@ class KiCadJsonReaderTest {
     assertEquals("KiCadNightly", board.communication.specctraParserInfo.hostCad);
     assertEquals("11.0.0-rc1", board.communication.specctraParserInfo.hostVersion);
   }
+
+  @Test
+  void testBoardEdgeClearanceClassConfiguredFromOutline() {
+    String json =
+        """
+        {
+          "designName": "EdgeClearanceBoard",
+          "unit": "MM",
+          "resolution": 1000.0,
+          "layers": [
+            {"index": 0, "name": "F.Cu", "type": "signal"},
+            {"index": 1, "name": "B.Cu", "type": "signal"}
+          ],
+          "outline": {
+            "corners": [
+              {"x": 0.0, "y": 0.0},
+              {"x": 50.0, "y": 0.0},
+              {"x": 50.0, "y": 50.0},
+              {"x": 0.0, "y": 50.0}
+            ],
+            "clearance": 0.5
+          }
+        }
+        """;
+
+    BoardReadResult result = KiCadJsonReader.readBoard(new StringReader(json), null, null);
+    assertInstanceOf(BoardReadResult.Success.class, result);
+    BoardReadResult.Success success = (BoardReadResult.Success) result;
+    RoutingBoard board = (RoutingBoard) success.board();
+
+    assertNotNull(board);
+    var outline = board.getOutline();
+    assertNotNull(outline);
+
+    int edgeClassNo =
+        board.rules.clearanceMatrix.getNo(KiCadJsonReader.BOARD_EDGE_CLEARANCE_CLASS_NAME);
+    assertTrue(edgeClassNo > 1, "board_edge class should have index > 1");
+    assertEquals(edgeClassNo, outline.clearanceClassIndex());
+
+    // 0.5 mm * 1000.0 resolution = 500 board units
+    assertEquals(500, board.rules.clearanceMatrix.getValue(edgeClassNo, 1, 0, false));
+    assertEquals(500, board.rules.clearanceMatrix.getValue(1, edgeClassNo, 0, false));
+  }
+
+  @Test
+  void testBoardEdgeClearanceDefaultWhenUnset() {
+    String json =
+        """
+        {
+          "designName": "DefaultEdgeBoard",
+          "unit": "MM",
+          "resolution": 1000.0,
+          "layers": [
+            {"index": 0, "name": "F.Cu", "type": "signal"}
+          ],
+          "outline": {
+            "corners": [
+              {"x": 0.0, "y": 0.0},
+              {"x": 20.0, "y": 0.0},
+              {"x": 20.0, "y": 20.0},
+              {"x": 0.0, "y": 20.0}
+            ]
+          }
+        }
+        """;
+
+    BoardReadResult result = KiCadJsonReader.readBoard(new StringReader(json), null, null);
+    assertInstanceOf(BoardReadResult.Success.class, result);
+    BoardReadResult.Success success = (BoardReadResult.Success) result;
+    RoutingBoard board = (RoutingBoard) success.board();
+
+    assertNotNull(board);
+    var outline = board.getOutline();
+    assertNotNull(outline);
+
+    assertEquals(1, outline.clearanceClassIndex(), "Outline should use default clearance class 1");
+  }
+
+  @Test
+  void testNpthMountingHoleNonCopperLayers() {
+    String json =
+        """
+        {
+          "designName": "NpthTestBoard",
+          "unit": "MM",
+          "resolution": 1000.0,
+          "layers": [
+            {"index": 0, "name": "F.Cu", "type": "signal"},
+            {"index": 1, "name": "In1.Cu", "type": "signal"},
+            {"index": 2, "name": "In2.Cu", "type": "signal"},
+            {"index": 3, "name": "B.Cu", "type": "signal"}
+          ],
+          "netClasses": [
+            {
+              "name": "Default",
+              "clearance": 0.25,
+              "traceWidth": 0.25,
+              "viaDiameter": 0.8,
+              "viaDrill": 0.4,
+              "netNames": ["Default"]
+            }
+          ],
+          "nets": [],
+          "components": [
+            {
+              "reference": "MTH1",
+              "value": "MTH 6-32_NPTH",
+              "footprint": "MountingHole:NPTH",
+              "position": {"x": 20.0, "y": 20.0},
+              "rotation": 0.0,
+              "layer": "F.Cu",
+              "pads": [
+                {
+                  "name": "",
+                  "netName": "",
+                  "shape": "circle",
+                  "size": {"x": 3.81, "y": 3.81},
+                  "offset": {"x": 0.0, "y": 0.0},
+                  "position": {"x": 20.0, "y": 20.0},
+                  "drill": 3.81,
+                  "layers": ["F.Mask", "B.Mask"]
+                }
+              ]
+            }
+          ],
+          "outline": {
+            "corners": [
+              {"x": 0.0, "y": 0.0},
+              {"x": 100.0, "y": 0.0},
+              {"x": 100.0, "y": 100.0},
+              {"x": 0.0, "y": 100.0}
+            ]
+          }
+        }
+        """;
+
+    BoardReadResult result = KiCadJsonReader.readBoard(new StringReader(json), null, null);
+    assertInstanceOf(BoardReadResult.Success.class, result);
+    BoardReadResult.Success success = (BoardReadResult.Success) result;
+    RoutingBoard board = (RoutingBoard) success.board();
+
+    assertNotNull(board);
+    assertEquals(1, board.components.count());
+    var pin = board.getPin(1, 0);
+    assertNotNull(pin);
+    assertEquals(4, pin.tileShapeCount(), "NPTH pin should span all 4 copper layers");
+    assertEquals(0, pin.firstLayer());
+    assertEquals(3, pin.lastLayer());
+    assertEquals(
+        1905.0,
+        pin.getPadstack().getDrillRadius(),
+        0.01,
+        "Drill radius should match 3.81 mm drill diameter (1905 um)");
+  }
+
+  @Test
+  void testNonCopperPadWithoutDrill() {
+    String json =
+        """
+        {
+          "designName": "MaskOnlyTestBoard",
+          "unit": "MM",
+          "resolution": 1000.0,
+          "layers": [
+            {"index": 0, "name": "F.Cu", "type": "signal"},
+            {"index": 1, "name": "B.Cu", "type": "signal"}
+          ],
+          "netClasses": [
+            {
+              "name": "Default",
+              "clearance": 0.25,
+              "traceWidth": 0.25,
+              "viaDiameter": 0.8,
+              "viaDrill": 0.4,
+              "netNames": ["Default"]
+            }
+          ],
+          "nets": [],
+          "components": [
+            {
+              "reference": "LOGO1",
+              "value": "Logo",
+              "footprint": "Symbol:Logo",
+              "position": {"x": 10.0, "y": 10.0},
+              "rotation": 0.0,
+              "layer": "F.Cu",
+              "pads": [
+                {
+                  "name": "1",
+                  "netName": "",
+                  "shape": "circle",
+                  "size": {"x": 1.0, "y": 1.0},
+                  "offset": {"x": 0.0, "y": 0.0},
+                  "position": {"x": 10.0, "y": 10.0},
+                  "drill": 0.0,
+                  "layers": ["F.SilkS"]
+                }
+              ]
+            }
+          ],
+          "outline": {
+            "corners": [
+              {"x": 0.0, "y": 0.0},
+              {"x": 50.0, "y": 0.0},
+              {"x": 50.0, "y": 50.0},
+              {"x": 0.0, "y": 50.0}
+            ]
+          }
+        }
+        """;
+
+    BoardReadResult result = KiCadJsonReader.readBoard(new StringReader(json), null, null);
+    assertInstanceOf(BoardReadResult.Success.class, result);
+    BoardReadResult.Success success = (BoardReadResult.Success) result;
+    RoutingBoard board = (RoutingBoard) success.board();
+
+    assertNotNull(board);
+    assertEquals(1, board.components.count());
+    var pin = board.getPin(1, 0);
+    assertNotNull(pin);
+    assertEquals(
+        1, pin.tileShapeCount(), "Non-drilled pad on front layer should span exactly 1 layer");
+    assertEquals(
+        0, pin.firstLayer(), "Non-drilled pad on front component should be on layer 0 (F.Cu)");
+    assertEquals(
+        0, pin.lastLayer(), "Non-drilled pad on front component should be on layer 0 (F.Cu)");
+  }
+
+  @Test
+  void testNonCopperPadOnBackComponent() {
+    String json =
+        """
+        {
+          "designName": "BackMaskTestBoard",
+          "unit": "MM",
+          "resolution": 1000.0,
+          "layers": [
+            {"index": 0, "name": "F.Cu", "type": "signal"},
+            {"index": 1, "name": "In1.Cu", "type": "signal"},
+            {"index": 2, "name": "In2.Cu", "type": "signal"},
+            {"index": 3, "name": "B.Cu", "type": "signal"}
+          ],
+          "netClasses": [
+            {
+              "name": "Default",
+              "clearance": 0.25,
+              "traceWidth": 0.25,
+              "viaDiameter": 0.8,
+              "viaDrill": 0.4,
+              "netNames": ["Default"]
+            }
+          ],
+          "nets": [],
+          "components": [
+            {
+              "reference": "LOGO_BOT",
+              "value": "Logo",
+              "footprint": "Symbol:Logo",
+              "position": {"x": 10.0, "y": 10.0},
+              "rotation": 0.0,
+              "layer": "B.Cu",
+              "pads": [
+                {
+                  "name": "1",
+                  "netName": "",
+                  "shape": "circle",
+                  "size": {"x": 1.0, "y": 1.0},
+                  "offset": {"x": 0.0, "y": 0.0},
+                  "position": {"x": 10.0, "y": 10.0},
+                  "drill": 0.0,
+                  "layers": ["B.SilkS"]
+                }
+              ]
+            }
+          ],
+          "outline": {
+            "corners": [
+              {"x": 0.0, "y": 0.0},
+              {"x": 50.0, "y": 0.0},
+              {"x": 50.0, "y": 50.0},
+              {"x": 0.0, "y": 50.0}
+            ]
+          }
+        }
+        """;
+
+    BoardReadResult result = KiCadJsonReader.readBoard(new StringReader(json), null, null);
+    assertInstanceOf(BoardReadResult.Success.class, result);
+    BoardReadResult.Success success = (BoardReadResult.Success) result;
+    RoutingBoard board = (RoutingBoard) success.board();
+
+    assertNotNull(board);
+    assertEquals(1, board.components.count());
+    var pin = board.getPin(1, 0);
+    assertNotNull(pin);
+    assertEquals(
+        1, pin.tileShapeCount(), "Non-drilled pad on back layer should span exactly 1 layer");
+    assertEquals(
+        3, pin.firstLayer(), "Non-drilled pad on back component should be on layer 3 (B.Cu)");
+    assertEquals(
+        3, pin.lastLayer(), "Non-drilled pad on back component should be on layer 3 (B.Cu)");
+  }
 }

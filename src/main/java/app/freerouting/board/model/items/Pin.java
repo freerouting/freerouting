@@ -167,7 +167,8 @@ public class Pin extends DrillItem implements Serializable {
     if (this.precalculatedShapes == null) {
       // all shapes have to be calculated  at once, because otherwise calculation
       // of fromLayer and toLayer may not be correct
-      this.precalculatedShapes = new Shape[padstack.toLayer() - padstack.fromLayer() + 1];
+      int shapeCount = Math.max(0, padstack.toLayer() - padstack.fromLayer() + 1);
+      this.precalculatedShapes = new Shape[shapeCount];
 
       Component component = board.components.get(this.getComponentId());
       if (component == null) {
@@ -355,13 +356,101 @@ public class Pin extends DrillItem implements Serializable {
       return false;
     }
     if (!other.sharesNet(this)) {
+      if (other instanceof Pin otherPin) {
+        if (this.getComponentId() > 0
+            && this.getComponentId() == otherPin.getComponentId()
+            && this.netCount() == 0
+            && otherPin.netCount() == 0
+            && isSameLogicalPad(this, otherPin)) {
+          // Netless sub-pads of the same logical pad (e.g. composite pads with @1, @2)
+          // do not violate clearance against each other.
+          return false;
+        }
+      }
       return true;
     }
     if (other instanceof Trace) {
       return false;
     }
+    if (other instanceof Pin) {
+      // Pins sharing the same electrical net (e.g. composite pads, thermal vias in pad,
+      // stitching vias, or internally connected pins across components) are electrically
+      // connected and do not violate clearance against each other.
+      return false;
+    }
     // Same-net vias must be allowed to contact SMD pins during fanout.
     return !this.drillAllowed() || !(other instanceof Via);
+  }
+
+  private static boolean isSameLogicalPad(Pin pin1, Pin pin2) {
+    if (pin1.board == null || pin1.board.components == null) {
+      return false;
+    }
+    Component comp = pin1.board.components.get(pin1.getComponentId());
+    if (comp == null || comp.getPackage() == null) {
+      return false;
+    }
+    Package pkg = comp.getPackage();
+    if (pin1.pinIndex >= pkg.pinCount() || pin2.pinIndex >= pkg.pinCount()) {
+      return false;
+    }
+    String name1 = pkg.getPin(pin1.pinIndex).name;
+    String name2 = pkg.getPin(pin2.pinIndex).name;
+    if (name1 == null || name2 == null) {
+      return false;
+    }
+    String base1 = getBasePinName(name1);
+    String base2 = getBasePinName(name2);
+    return !base1.isEmpty() && base1.equals(base2);
+  }
+
+  /**
+   * Normalizes a pin name by stripping composite sub-pad suffixes (such as {@code @1}, {@code #1},
+   * {@code _1}, or {@code -1}) to identify the base logical pad.
+   */
+  public static String getBasePinName(String pinName) {
+    if (pinName == null) {
+      return "";
+    }
+    int atIdx = pinName.indexOf('@');
+    if (atIdx > 0) {
+      return pinName.substring(0, atIdx);
+    }
+    if (atIdx == 0) {
+      return "@";
+    }
+    int hashIdx = pinName.indexOf('#');
+    if (hashIdx > 0) {
+      return pinName.substring(0, hashIdx);
+    }
+    if (hashIdx == 0) {
+      return "#";
+    }
+    // Handle composite sub-pad suffixes with numeric segment, e.g. "pad_1_1", "1_1", "1-1"
+    int lastUnderscore = pinName.lastIndexOf('_');
+    if (lastUnderscore > 0 && lastUnderscore < pinName.length() - 1) {
+      String suffix = pinName.substring(lastUnderscore + 1);
+      if (isAllDigits(suffix)) {
+        return pinName.substring(0, lastUnderscore);
+      }
+    }
+    int lastHyphen = pinName.lastIndexOf('-');
+    if (lastHyphen > 0 && lastHyphen < pinName.length() - 1) {
+      String suffix = pinName.substring(lastHyphen + 1);
+      if (isAllDigits(suffix)) {
+        return pinName.substring(0, lastHyphen);
+      }
+    }
+    return pinName;
+  }
+
+  private static boolean isAllDigits(String str) {
+    for (int i = 0; i < str.length(); i++) {
+      if (!Character.isDigit(str.charAt(i))) {
+        return false;
+      }
+    }
+    return true;
   }
 
   @Override

@@ -204,7 +204,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     Padstack padstack = getPadstack();
     int fromLayer = padstack.fromLayer();
     int toLayer = padstack.toLayer();
-    return toLayer - fromLayer + 1;
+    return Math.max(0, toLayer - fromLayer + 1);
   }
 
   @Override

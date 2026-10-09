@@ -16,7 +16,6 @@ import app.freerouting.core.RoutingJob;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.UndoableObjects;
-import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.logger.FRLogger;
@@ -52,6 +51,11 @@ public final class BatchAutorouter extends NamedAlgorithm {
   static final int STAGNATION_PASS_LIMIT = 10;
   // Number of no-improvement passes before attempting a one-time fanout-tail cleanup.
   static final int FANOUT_RECOVERY_STAGNATION_PASSES = 3;
+  // Last-mile rip-up: when only a few connections remain, remove foreign traces and vias
+  // that cross those airlines so the next passes can escape a local blockage.
+  static final int LAST_MILE_INCOMPLETE_LIMIT = 8;
+  static final int LAST_MILE_STAGNATION_PASSES = 3;
+  static final int LAST_MILE_MAX_ATTEMPTS = 2;
   // Progress statistics are informational only; avoid rebuilding the expensive snapshot for
   // every item while keeping the GUI reasonably current on large boards.
   static final int PROGRESS_STATISTICS_ITEM_INTERVAL = 10;
@@ -64,6 +68,7 @@ public final class BatchAutorouter extends NamedAlgorithm {
       Boolean.getBoolean("freerouting.benchmark.retain_autoroute_database");
 
   final boolean removeUnconnectedVias;
+  final boolean preferredDirections;
   final AutorouteControl.ExpansionCostFactor[] traceCosts;
   final boolean retainAutorouteDatabase;
   final int startRipupCosts;
@@ -137,6 +142,7 @@ public final class BatchAutorouter extends NamedAlgorithm {
     this.random = new Random(0);
 
     this.removeUnconnectedVias = removeUnconnectedVias;
+    this.preferredDirections = withPreferredDirections;
     if (withPreferredDirections) {
       this.traceCosts = this.settings.getTraceCosts();
     } else {
@@ -446,16 +452,18 @@ public final class BatchAutorouter extends NamedAlgorithm {
     return false;
   }
 
-  boolean autoroutePassMultiThread(int passNo) {
-    return passRunner.runMultiThread(passNo);
-  }
-
   /**
    * Auto-routes one ripup pass of all items of the board. Returns false, if the board is already
    * completely routed.
    */
   boolean autoroutePass(int passNo) {
     return passRunner.runSingleThread(passNo);
+  }
+
+  void resetAntiOscillationState() {
+    if (this.passRunner != null) {
+      this.passRunner.resetAntiOscillationState();
+    }
   }
 
   @Override
@@ -515,6 +523,7 @@ public final class BatchAutorouter extends NamedAlgorithm {
    * Returns true if the board is completed.
    */
   public boolean runBatchLoop() {
+    this.board.awaitPostLoad();
     return batchLoop.run();
   }
 
@@ -564,40 +573,23 @@ public final class BatchAutorouter extends NamedAlgorithm {
     return this.airLine;
   }
 
-  /**
-   * Return an uppercase one-letter, two-letter or three-letter string based on the thread index (0
-   * = A, 1 = B, 2 = C, ..., 26 = AA, 27 = AB, ...).
-   *
-   * @param threadIndex the thread index.
-   * @return the letter label for the thread index.
-   */
-  String threadIndexToLetter(int threadIndex) {
-    if (threadIndex < 0) {
-      return "";
-    }
-    if (threadIndex < 26) {
-      return String.valueOf((char) ('A' + threadIndex));
-    } else if (threadIndex < 26 * 26) {
-      int firstLetterIndex = threadIndex / 26;
-      int secondLetterIndex = threadIndex % 26;
-      return String.valueOf((char) ('A' + firstLetterIndex)) + (char) ('A' + secondLetterIndex);
-    } else {
-      int firstLetterIndex = threadIndex / (26 * 26);
-      int secondLetterIndex = (threadIndex / 26) % 26;
-      int thirdLetterIndex = threadIndex % 26;
-      return String.valueOf((char) ('A' + firstLetterIndex))
-          + (char) ('A' + secondLetterIndex)
-          + (char) ('A' + thirdLetterIndex);
-    }
+  int calculateIncompleteCount(RoutingBoard board) {
+    return calculateIncompleteCount(board, null);
   }
 
-  int calculateIncompleteCount(RoutingBoard board) {
+  /**
+   * Counts incomplete connections once. When {@code incompleteNets} is non-null, also records every
+   * net that still has an incomplete connection from that same scan.
+   */
+  int calculateIncompleteCount(RoutingBoard board, Set<Integer> incompleteNets) {
     long drcStart = BENCHMARK_PROFILE_ENABLED ? System.nanoTime() : 0;
-    DesignRulesChecker tempDrc = new DesignRulesChecker(board, null);
-    tempDrc.calculateAllIncompletes();
+    int incompleteCount = board.routingLedger().incompleteCount();
     if (BENCHMARK_PROFILE_ENABLED) {
       this.profileIncompleteDrcNanos += System.nanoTime() - drcStart;
     }
-    return tempDrc.getIncompleteCount();
+    if (incompleteNets != null) {
+      incompleteNets.addAll(board.routingLedger().incompleteNetNumbers());
+    }
+    return incompleteCount;
   }
 }
