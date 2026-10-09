@@ -997,6 +997,10 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       return new AutorouteAttemptResult(
           AutorouteAttemptState.ALREADY_CONNECTED, "The pin '" + pin + "' is already connected.");
     }
+    if (pin.hasIgnoredNets()) {
+      return new AutorouteAttemptResult(
+          AutorouteAttemptState.SKIPPED, "The pin '" + pin + "' belongs to an ignored net class.");
+    }
     int pinNetNo = pin.getNetNumber(0);
     int pinLayer = pin.firstLayer();
     Set<Item> pinConnectedSet = pin.getConnectedSet(pinNetNo);

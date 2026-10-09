@@ -1321,7 +1321,7 @@ public abstract class Item
   public boolean hasIgnoredNets() {
     for (int netNumber : this.netNumbers) {
       Net net = this.board.rules.nets.get(netNumber);
-      if (net.getNetClass().isIgnoredByAutorouter) {
+      if (net != null && net.getNetClass() != null && net.getNetClass().isIgnoredByAutorouter) {
         return true;
       }
     }
