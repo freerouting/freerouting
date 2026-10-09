@@ -487,6 +487,13 @@ public class Network extends ScopeKeyword {
       } else if (currentRule instanceof Rule.ClearanceRule rule) {
         addClearanceRule(board.rules.clearanceMatrix, boardNetClass, rule, -1, coordinateTransform);
         clearanceRuleFound = true;
+      } else if (currentRule instanceof Rule.LengthRule rule) {
+        if (rule.maxLength > 0) {
+          boardNetClass.setMaximumTraceLength(coordinateTransform.dsnToBoard(rule.maxLength));
+        }
+        if (rule.minLength > 0) {
+          boardNetClass.setMinimumTraceLength(coordinateTransform.dsnToBoard(rule.minLength));
+        }
       } else {
         FRLogger.warn(
             "Network.insert_net_class: rule type not yet implemented at '"
@@ -1347,6 +1354,7 @@ public class Network extends ScopeKeyword {
     boolean pinOrderFound = false;
     Collection<Net.Pin> pinList = new LinkedList<>();
     Collection<Rule> netRules = new LinkedList<>();
+    Circuit.ReadScopeResult netCircuit = null;
     Collection<Collection<Net.Pin>> subnetPinLists = new LinkedList<>();
     if (!scopeIsEmpty) {
       for (; ; ) {
@@ -1386,6 +1394,11 @@ public class Network extends ScopeKeyword {
             subnetPinLists.add(currentSubnetPinList);
           } else if (nextToken == Keyword.RULE) {
             netRules.addAll(Rule.readScope(scanner));
+          } else if (nextToken == Keyword.CIRCUIT) {
+            Circuit.ReadScopeResult circuitResult = Circuit.readScope(scanner);
+            if (circuitResult != null) {
+              netCircuit = circuitResult;
+            }
           } else if (nextToken == Keyword.LAYER_RULE) {
             FRLogger.warn(
                 "Network.read_net_scope: layer_rule not yet implemented at '"
@@ -1423,10 +1436,19 @@ public class Network extends ScopeKeyword {
         return false;
       }
       currentSubnet.setPins(currentPinList);
+      app.freerouting.rules.Net boardNet =
+          board.rules.nets.get(currentSubnet.id.name, currentSubnet.id.subnetNumber);
+      if (boardNet != null && netCircuit != null) {
+        double max =
+            (netCircuit.maxLength > 0) ? coordinateTransform.dsnToBoard(netCircuit.maxLength) : 0.0;
+        double min =
+            (netCircuit.minLength > 0) ? coordinateTransform.dsnToBoard(netCircuit.minLength) : 0.0;
+        if (max > 0 || min > 0) {
+          boardNet.setLengthConstraint(new app.freerouting.rules.NetLengthConstraint(min, max));
+        }
+      }
       if (!netRules.isEmpty()) {
         // Evaluate the net rules.
-        app.freerouting.rules.Net boardNet =
-            board.rules.nets.get(currentSubnet.id.name, currentSubnet.id.subnetNumber);
         if (boardNet == null) {
           FRLogger.warn(
               "Network.read_net_scope: board net not found at '"
@@ -1450,6 +1472,14 @@ public class Network extends ScopeKeyword {
             }
             netRule.setTraceHalfWidth(traceHalfwidth);
             boardNet.setClass(netRule);
+          } else if (currentObject instanceof Rule.LengthRule rule) {
+            double max =
+                (rule.maxLength > 0) ? coordinateTransform.dsnToBoard(rule.maxLength) : 0.0;
+            double min =
+                (rule.minLength > 0) ? coordinateTransform.dsnToBoard(rule.minLength) : 0.0;
+            if (max > 0 || min > 0) {
+              boardNet.setLengthConstraint(new app.freerouting.rules.NetLengthConstraint(min, max));
+            }
           } else {
             FRLogger.warn(
                 "Network.read_net_scope: Rule not yet implemented at '"
