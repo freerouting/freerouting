@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import app.freerouting.TestFixtures;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.ObstacleArea;
 import app.freerouting.board.model.structure.Component;
@@ -132,7 +133,7 @@ class FootprintImageVariantKeepoutTest extends RoutingFixtureTest {
     RoutingJob job = getRoutingJob(DSN_FIXTURE, settings);
     job = runRoutingJob(job);
 
-    Path sesPath = Path.of("fixtures", SES_FIXTURE);
+    Path sesPath = TestFixtures.resolvePath(SES_FIXTURE);
     try (InputStream is = Files.newInputStream(sesPath)) {
       SesReader.read(is, job.board);
     }
