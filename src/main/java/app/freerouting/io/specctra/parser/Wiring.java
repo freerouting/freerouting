@@ -657,8 +657,10 @@ public class Wiring extends ScopeKeyword {
         }
       }
       RoutingBoard board = scopeParameter.boardHandling.getRoutingBoard();
-      String cleanedName = padstackName != null ? padstackName.replaceAll("\\.\\d+", "") : null;
-      Padstack currentPadstack = board.library.padstacks.get(cleanedName);
+      Padstack currentPadstack = board.library.padstacks.get(padstackName);
+      if (currentPadstack == null && padstackName != null) {
+        currentPadstack = board.library.padstacks.get(padstackName.replaceAll("\\.\\d+", ""));
+      }
       if (currentPadstack == null) {
         String msg =
             "Wiring: via padstack '"

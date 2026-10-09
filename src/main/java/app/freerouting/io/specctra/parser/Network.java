@@ -276,8 +276,14 @@ public class Network extends ScopeKeyword {
       scanner.setScopeIdentifier(padstackName);
       Padstack viaPadstack = board.library.getViaPadstack(padstackName);
       if (viaPadstack == null) {
+        viaPadstack = board.library.getViaPadstack(padstackName.replaceAll("\\.\\d+", ""));
+      }
+      if (viaPadstack == null) {
         // The padstack may not yet be inserted into the list of via padstacks
         viaPadstack = board.library.padstacks.get(padstackName);
+        if (viaPadstack == null) {
+          viaPadstack = board.library.padstacks.get(padstackName.replaceAll("\\.\\d+", ""));
+        }
         if (viaPadstack == null) {
           FRLogger.warn(
               "Network.read_via_info: padstack not found at '"
@@ -1333,9 +1339,11 @@ public class Network extends ScopeKeyword {
       int foundPadstackCount = 0;
       for (int i = 0; i < viaPadstacks.length; i++) {
         String currentPadstackName = it.next();
-        String cleanedName =
-            currentPadstackName != null ? currentPadstackName.replaceAll("\\.\\d+", "") : null;
-        Padstack currentPadstack = board.library.padstacks.get(cleanedName);
+        Padstack currentPadstack = board.library.padstacks.get(currentPadstackName);
+        if (currentPadstack == null && currentPadstackName != null) {
+          currentPadstack =
+              board.library.padstacks.get(currentPadstackName.replaceAll("\\.\\d+", ""));
+        }
         if (currentPadstack != null) {
           viaPadstacks[foundPadstackCount] = currentPadstack;
           ++foundPadstackCount;

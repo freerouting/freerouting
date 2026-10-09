@@ -1,6 +1,7 @@
 package app.freerouting.management.jobs;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.Freerouting;
@@ -139,6 +140,23 @@ class RoutingJobSchedulerActionThreadTest {
     action.markTimedOutIfStillActive();
     action.assignTerminalState();
     assertEquals(RoutingJobState.TIMED_OUT, job.state);
+  }
+
+  @Test
+  @app.freerouting.logger.AllowErrorLogs(
+      "Verifies that fatal routing pipeline errors are caught and recorded as TERMINATED")
+  void testFatalErrorSetsJobStateToTerminated() {
+    RoutingJob job = new RoutingJob();
+    job.state = RoutingJobState.RUNNING;
+    // routerSettings is null, which causes threadAction() to throw NullPointerException
+    RoutingJobSchedulerActionThread action = new RoutingJobSchedulerActionThread(job);
+    job.thread = action;
+
+    action.threadAction();
+
+    assertEquals(
+        RoutingJobState.TERMINATED, job.state, "Fatal error must set job state to TERMINATED");
+    assertNotNull(job.finishedAt, "Job finishedAt must be recorded on fatal error");
   }
 
   private static RoutingJobSchedulerActionThread stoppedJob(
