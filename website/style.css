@@ -545,10 +545,6 @@ main {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.2em;
-    /* CLS reserve: holds two rows of cards open while integrations-data.js renders. */
-    min-height: 330px;
-    /* Prevent auto rows from stretching to fill the reserved height. */
-    align-content: start;
 }
 
 .eda-card {
@@ -567,40 +563,8 @@ main {
 .eda-header {
     display: flex;
     align-items: center;
-    gap: 0.65em;
+    gap: 0.8em;
     margin-bottom: 0.6em;
-}
-
-.eda-logo {
-    width: 28px;
-    height: 28px;
-    flex-shrink: 0;
-    object-fit: contain;
-    /* Ensure padding and background are completely removed */
-}
-
-/* White silhouette for marks lacking contrast on the dark card background. */
-.eda-logo--mono {
-    filter: brightness(0) invert(1);
-}
-
-
-/* No-JS / crawler fallback list (replaced by JS-rendered cards when JS runs). */
-.eda-noscript-list {
-    margin: 0;
-    padding: 0 0 0 1.2em;
-    color: var(--gold-light);
-    font-size: 0.95em;
-    line-height: 1.9;
-}
-
-.eda-noscript-list a {
-    color: var(--gold-light);
-    text-decoration: underline;
-}
-
-.eda-noscript-list a:hover {
-    color: var(--gold-primary);
 }
 
 .eda-card h3 {
