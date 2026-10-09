@@ -127,14 +127,19 @@ public class MoveComponent {
     return false;
   }
 
+  private static boolean requiresDrillItemMover(DrillItem drillItem) {
+    return hasConnectingTraces(drillItem) || drillItem.netCount() > 1;
+  }
+
   /**
-   * Returns the minimum width of drill items that have connecting traces, or -1.0 if no drill items
-   * have connecting traces.
+   * Returns the minimum width of drill items that have connecting traces or multiple nets, or -1.0
+   * if no such drill items exist.
    */
   public double getMinDrillItemWidthWithTraces() {
     double min = Double.MAX_VALUE;
     for (int i = 0; i < itemGroupArr.length; i++) {
-      if (itemGroupArr[i].item instanceof DrillItem drillItem && hasConnectingTraces(drillItem)) {
+      if (itemGroupArr[i].item instanceof DrillItem drillItem
+          && requiresDrillItemMover(drillItem)) {
         min = Math.min(min, drillItem.minWidth());
       }
     }
@@ -155,8 +160,8 @@ public class MoveComponent {
     for (int i = 0; i < itemGroupArr.length; i++) {
       boolean moveOk;
       if (itemGroupArr[i].item instanceof DrillItem currentDrillItem) {
-        boolean hasTraces = hasConnectingTraces(currentDrillItem);
-        if (hasTraces) {
+        boolean useDrillMover = requiresDrillItemMover(currentDrillItem);
+        if (useDrillMover) {
           if (this.translateVector.lengthApprox() >= currentDrillItem.minWidth()) {
             // a clearance violation with a connecting trace may occur
             moveOk = false;
@@ -175,8 +180,8 @@ public class MoveComponent {
             }
           }
         } else {
-          // DrillItem with no connecting traces can move freely if the target space has no
-          // obstacles
+          // DrillItem with at most 1 net and no connecting traces can move freely if the target
+          // space has no obstacles
           moveOk = board.checkMoveItem(currentDrillItem, this.translateVector, ignoreItems);
           if (!moveOk && this.translateVector.lengthApprox() < currentDrillItem.minWidth()) {
             // Target space has obstacles, check if they can be shoved aside
@@ -222,7 +227,7 @@ public class MoveComponent {
     for (int i = 0; i < itemGroupArr.length; i++) {
       if (itemGroupArr[i].item instanceof DrillItem currentDrillItem) {
         boolean moveOk;
-        if (itemsToShove.contains(currentDrillItem) || hasConnectingTraces(currentDrillItem)) {
+        if (itemsToShove.contains(currentDrillItem) || requiresDrillItemMover(currentDrillItem)) {
           moveOk =
               board.moveDrillItem(
                   currentDrillItem,

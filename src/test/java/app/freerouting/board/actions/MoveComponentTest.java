@@ -193,4 +193,53 @@ class MoveComponentTest {
     verify(smdPad).moveBy(moveVector);
     assertEquals(new IntPoint(400, 600), comp.getLocation());
   }
+
+  @Test
+  void checkUsesDrillItemMoverForMultiNetDrillItemWithoutTraces() {
+    Component comp =
+        board.components.add("U1", new IntPoint(0, 0), 0, true, null, null, false, "ESP32");
+    DrillItem pin1 = mock(DrillItem.class);
+    pin1.board = board;
+    when(pin1.netCount()).thenReturn(2);
+    when(pin1.getComponentId()).thenReturn(comp.id);
+    when(pin1.getCenter()).thenReturn(new IntPoint(0, 0));
+    when(pin1.minWidth()).thenReturn(200.0);
+    when(pin1.getNormalContacts()).thenReturn(Set.of());
+
+    doReturn(List.of(pin1)).when(board).getComponentItems(comp.id);
+
+    MoveComponent moveComponent = new MoveComponent(pin1, new IntVector(50, 0), 99, 5);
+
+    assertEquals(200.0, moveComponent.getMinDrillItemWidthWithTraces());
+    // Move larger than minWidth should be rejected for multi-net drill item
+    MoveComponent largeMove = new MoveComponent(pin1, new IntVector(500, 0), 99, 5);
+    assertFalse(largeMove.check());
+  }
+
+  @Test
+  void insertUsesMoveDrillItemForMultiNetDrillItem() {
+    Component comp =
+        board.components.add("U1", new IntPoint(0, 0), 0, true, null, null, false, "ESP32");
+    DrillItem pin1 = mock(DrillItem.class);
+    pin1.board = board;
+    when(pin1.netCount()).thenReturn(2);
+    when(pin1.getComponentId()).thenReturn(comp.id);
+    when(pin1.getCenter()).thenReturn(new IntPoint(0, 0));
+    when(pin1.minWidth()).thenReturn(200.0);
+    when(pin1.getNormalContacts()).thenReturn(Set.of());
+
+    doReturn(List.of(pin1)).when(board).getComponentItems(comp.id);
+    doReturn(true)
+        .when(board)
+        .moveDrillItem(
+            eq(pin1), any(Vector.class), anyInt(), anyInt(), anyInt(), anyInt(), anyInt());
+
+    Vector vector = new IntVector(50, 0);
+    MoveComponent moveComponent = new MoveComponent(pin1, vector, 99, 5);
+    assertTrue(moveComponent.insert(100, 50));
+
+    verify(board)
+        .moveDrillItem(eq(pin1), eq(vector), anyInt(), anyInt(), anyInt(), anyInt(), anyInt());
+    verify(pin1, never()).moveBy(any(Vector.class));
+  }
 }
