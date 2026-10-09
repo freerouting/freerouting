@@ -11,6 +11,8 @@ import java.util.Locale;
 /** Describes routing rules for individual nets. */
 public class NetClass implements Serializable, ItemInfoPrinter.Printable {
 
+  private static final long serialVersionUID = -2517890090941902562L;
+
   private final ClearanceMatrix clearanceMatrix;
   private final LayerStructure boardLayerStructure;
   private final int[] traceHalfWidthArr;
@@ -179,6 +181,30 @@ public class NetClass implements Serializable, ItemInfoPrinter.Printable {
    */
   public void setMaximumTraceLength(double value) {
     maximumTraceLength = value;
+  }
+
+  /**
+   * Returns the length constraint of this net class as an immutable {@link NetLengthConstraint}.
+   *
+   * @return the net class length constraint
+   */
+  public NetLengthConstraint getLengthConstraint() {
+    return new NetLengthConstraint(this.minimumTraceLength, this.maximumTraceLength);
+  }
+
+  /**
+   * Sets the length constraint of this net class using a {@link NetLengthConstraint}.
+   *
+   * @param constraint the new length constraint, or null for unconstrained
+   */
+  public void setLengthConstraint(NetLengthConstraint constraint) {
+    if (constraint == null) {
+      this.minimumTraceLength = 0;
+      this.maximumTraceLength = 0;
+    } else {
+      this.minimumTraceLength = constraint.minLength();
+      this.maximumTraceLength = constraint.maxLength();
+    }
   }
 
   /** Returns whether the layer with the given index is active for routing. */

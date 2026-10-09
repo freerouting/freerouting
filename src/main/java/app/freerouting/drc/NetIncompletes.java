@@ -151,14 +151,14 @@ public class NetIncompletes {
         netLabel,
         new Point[0]);
 
-    if (groupedNetItems.length <= 1) {
-      this.connectedGroupCount = groupedNetItems.length;
+    if (this.connectedGroupCount <= 1) {
       FRLogger.trace(
           "NetIncompletes.<init>",
           "fully_connected",
           "Net is fully connected or has no routable items: netItems=" + groupedNetItems.length,
           netLabel,
           new Point[0]);
+      calcLengthViolation();
       return;
     }
 
@@ -255,8 +255,8 @@ public class NetIncompletes {
 
   /** Recalculates the length violations. Return false, if the length violation has not changed. */
   boolean calcLengthViolation() {
-    double maxLength = this.net.getNetClass().getMaximumTraceLength();
-    double minLength = this.net.getNetClass().getMinimumTraceLength();
+    double maxLength = this.net.getMaximumTraceLength();
+    double minLength = this.net.getMinimumTraceLength();
     if (maxLength <= 0 && minLength <= 0) {
       this.lengthViolation = 0;
       return false;
@@ -267,7 +267,13 @@ public class NetIncompletes {
       newViolation = traceLength - maxLength;
     }
     if (minLength > 0 && traceLength < minLength && this.incompletes.isEmpty()) {
-      newViolation = traceLength - minLength;
+      if (traceLength <= 0
+          && this.connectedGroupCount <= 1
+          && this.net.getTerminalItems().size() < 2) {
+        // Empty or single-pin unconnected net with no trace has no minimum violation
+      } else {
+        newViolation = traceLength - minLength;
+      }
     }
     double oldViolation = this.lengthViolation;
     this.lengthViolation = newViolation;
