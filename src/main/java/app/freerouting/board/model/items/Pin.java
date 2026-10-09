@@ -8,6 +8,7 @@ import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.core.library.LogicalPart;
 import app.freerouting.core.library.Package;
 import app.freerouting.core.library.Padstack;
+import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.Direction;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -205,44 +206,77 @@ public class Pin extends DrillItem implements Serializable {
         if (currentShape == null) {
           continue;
         }
-        double pinRotation = packagePin.rotationInDegree;
-        if (pinRotation % 90 == 0) {
-          int pinNinetyDegreeFactor = ((int) pinRotation) / 90;
-          if (pinNinetyDegreeFactor != 0) {
-            currentShape =
-                (ConvexShape) currentShape.turn90Degree(pinNinetyDegreeFactor, Point.ZERO);
-          }
-        } else {
-          currentShape =
-              (ConvexShape) currentShape.rotateApprox(Math.toRadians(pinRotation), FloatPoint.ZERO);
-        }
-
-        if (mirrorOnYaxis) {
-          currentShape = (ConvexShape) currentShape.mirrorVertical(Point.ZERO);
-        }
-
-        // translate the shape first relative to the component
-        ConvexShape translatedShape = (ConvexShape) currentShape.translateBy(relLocation);
-
-        if (componentRotation % 90 == 0) {
-          int componentNinetyDegreeFactor = ((int) componentRotation) / 90;
-          if (componentNinetyDegreeFactor != 0) {
-            translatedShape =
-                (ConvexShape) translatedShape.turn90Degree(componentNinetyDegreeFactor, Point.ZERO);
-          }
-        } else {
-          translatedShape =
-              (ConvexShape)
-                  translatedShape.rotateApprox(Math.toRadians(componentRotation), FloatPoint.ZERO);
-        }
-        if (!component.placedOnFront() && board.components.getFlipStyleRotateFirst()) {
-          translatedShape = (ConvexShape) translatedShape.mirrorVertical(Point.ZERO);
-        }
-        this.precalculatedShapes[shapeIndex] =
-            (ConvexShape) translatedShape.translateBy(componentTranslation);
+        this.precalculatedShapes[shapeIndex] = (ConvexShape) transformToBoard(currentShape);
       }
     }
     return this.precalculatedShapes[index];
+  }
+
+  /**
+   * Transforms a shape defined in padstack-relative coordinates to absolute board coordinates
+   * according to this pin's placement, component rotation, mirroring, and translation.
+   */
+  public Shape transformToBoard(Shape padstackShape) {
+    if (padstackShape == null) {
+      return null;
+    }
+    Component component = board.components.get(this.getComponentId());
+    if (component == null) {
+      FRLogger.warn("Pin.transformToBoard: component not found");
+      return null;
+    }
+    Package libPackage = component.getPackage();
+    if (libPackage == null) {
+      FRLogger.warn("Pin.transformToBoard: package not found");
+      return null;
+    }
+    Package.Pin packagePin = libPackage.getPin(this.getPinIndex());
+    if (packagePin == null) {
+      FRLogger.warn("Pin.transformToBoard: pinNo out of range");
+      return null;
+    }
+    Vector relLocation = packagePin.relativeLocation;
+    double componentRotation = component.getRotationInDegree();
+
+    boolean mirrorOnYaxis =
+        !component.placedOnFront() && !board.components.getFlipStyleRotateFirst();
+
+    if (mirrorOnYaxis) {
+      relLocation = packagePin.relativeLocation.mirrorAtYAxis();
+    }
+
+    Vector componentTranslation = component.getLocation().differenceBy(Point.ZERO);
+
+    Area currentArea = padstackShape;
+    double pinRotation = packagePin.rotationInDegree;
+    if (pinRotation % 90 == 0) {
+      int pinNinetyDegreeFactor = ((int) pinRotation) / 90;
+      if (pinNinetyDegreeFactor != 0) {
+        currentArea = currentArea.turn90Degree(pinNinetyDegreeFactor, Point.ZERO);
+      }
+    } else {
+      currentArea = currentArea.rotateApprox(Math.toRadians(pinRotation), FloatPoint.ZERO);
+    }
+
+    if (mirrorOnYaxis) {
+      currentArea = currentArea.mirrorVertical(Point.ZERO);
+    }
+
+    Area translatedArea = currentArea.translateBy(relLocation);
+
+    if (componentRotation % 90 == 0) {
+      int componentNinetyDegreeFactor = ((int) componentRotation) / 90;
+      if (componentNinetyDegreeFactor != 0) {
+        translatedArea = translatedArea.turn90Degree(componentNinetyDegreeFactor, Point.ZERO);
+      }
+    } else {
+      translatedArea =
+          translatedArea.rotateApprox(Math.toRadians(componentRotation), FloatPoint.ZERO);
+    }
+    if (!component.placedOnFront() && board.components.getFlipStyleRotateFirst()) {
+      translatedArea = translatedArea.mirrorVertical(Point.ZERO);
+    }
+    return (Shape) translatedArea.translateBy(componentTranslation);
   }
 
   /** Returns the layer of the padstack shape corresponding to the shape with index index. */

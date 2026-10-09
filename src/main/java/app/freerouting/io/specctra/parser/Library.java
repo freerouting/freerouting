@@ -7,6 +7,7 @@ import app.freerouting.core.library.Padstacks;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.IntVector;
+import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.PolygonShape;
 import app.freerouting.geometry.planar.Simplex;
 import app.freerouting.geometry.planar.TileShape;
@@ -167,26 +168,98 @@ public class Library extends ScopeKeyword {
       return true;
     }
     ConvexShape[] padstackShapes = new ConvexShape[layerStructure.layers.length];
+    ConvexShape[][] auxiliaryShapes = new ConvexShape[layerStructure.layers.length][];
+    boolean hasNonConvex = false;
+
     for (Shape padShape : shapeList) {
       app.freerouting.geometry.planar.Shape currentShape =
           padShape.transformToBoardRel(coordinateTransform);
       ConvexShape convexShape;
+      ConvexShape[] auxShapes = null;
+
       if (currentShape instanceof ConvexShape shape1) {
         convexShape = shape1;
       } else {
+        boolean isNonConvex = false;
+        TileShape[] convexPieces = null;
         if (currentShape instanceof PolygonShape shape) {
-          currentShape = shape.convexHull();
+          if (!shape.isConvex()) {
+            isNonConvex = true;
+          }
+          convexPieces = shape.splitToConvex();
+        } else if (currentShape != null) {
+          convexPieces = currentShape.splitToConvex();
+          if (convexPieces != null && convexPieces.length > 1) {
+            isNonConvex = true;
+          }
         }
-        TileShape[] convexShapes = currentShape.splitToConvex();
-        if (convexShapes.length != 1) {
+
+        if (isNonConvex && convexPieces != null && convexPieces.length > 1) {
+          hasNonConvex = true;
           FRLogger.warn(
-              "Library.read_padstack_scope: convex shape expected at '"
-                  + scanner.getScopeIdentifier()
-                  + "'");
-        }
-        convexShape = convexShapes[0];
-        if (convexShape instanceof Simplex simplex) {
-          convexShape = simplex.simplify();
+              "Library.read_padstack_scope: Padstack '"
+                  + padstackName
+                  + "' contains non-convex custom geometry ("
+                  + convexPieces.length
+                  + " convex tiles). Decomposing into primary core pin and "
+                  + "auxiliary copper obstacles.");
+
+          int coreIndex = -1;
+          for (int p = 0; p < convexPieces.length; p++) {
+            if (convexPieces[p].contains(Point.ZERO)) {
+              coreIndex = p;
+              break;
+            }
+          }
+          if (coreIndex < 0) {
+            double maxArea = -1;
+            for (int p = 0; p < convexPieces.length; p++) {
+              double area = convexPieces[p].boundingBox().area();
+              if (area > maxArea) {
+                maxArea = area;
+                coreIndex = p;
+              }
+            }
+          }
+          if (coreIndex < 0) {
+            coreIndex = 0;
+          }
+
+          convexShape = convexPieces[coreIndex];
+          if (convexShape instanceof Simplex simplex) {
+            convexShape = simplex.simplify();
+          }
+
+          auxShapes = new ConvexShape[convexPieces.length - 1];
+          int auxIdx = 0;
+          for (int p = 0; p < convexPieces.length; p++) {
+            if (p != coreIndex) {
+              ConvexShape piece = convexPieces[p];
+              if (piece instanceof Simplex simplex) {
+                piece = simplex.simplify();
+              }
+              auxShapes[auxIdx++] = piece;
+            }
+          }
+        } else {
+          if (convexPieces != null && convexPieces.length == 1) {
+            convexShape = convexPieces[0];
+          } else {
+            if (currentShape instanceof PolygonShape shape) {
+              currentShape = shape.convexHull();
+            }
+            TileShape[] fallback = currentShape != null ? currentShape.splitToConvex() : null;
+            if (fallback != null && fallback.length != 1) {
+              FRLogger.warn(
+                  "Library.read_padstack_scope: convex shape expected at '"
+                      + scanner.getScopeIdentifier()
+                      + "'");
+            }
+            convexShape = (fallback != null && fallback.length > 0) ? fallback[0] : null;
+          }
+          if (convexShape instanceof Simplex simplex) {
+            convexShape = simplex.simplify();
+          }
         }
       }
       ConvexShape padstackShape = convexShape;
@@ -207,6 +280,9 @@ public class Library extends ScopeKeyword {
 
       if (padShape.layer == Layer.PCB || padShape.layer == Layer.SIGNAL) {
         Arrays.fill(padstackShapes, padstackShape);
+        if (auxShapes != null) {
+          Arrays.fill(auxiliaryShapes, auxShapes);
+        }
       } else {
         int shapeLayer = layerStructure.getNo(padShape.layer.name);
         if (shapeLayer < 0 || shapeLayer >= padstackShapes.length) {
@@ -217,9 +293,17 @@ public class Library extends ScopeKeyword {
           return false;
         }
         padstackShapes[shapeLayer] = padstackShape;
+        if (auxShapes != null) {
+          auxiliaryShapes[shapeLayer] = auxShapes;
+        }
       }
     }
-    boardPadstacks.add(padstackName, padstackShapes, isDrilllable, placedAbsolute);
+    Padstack padstack =
+        boardPadstacks.add(
+            padstackName, padstackShapes, auxiliaryShapes, isDrilllable, placedAbsolute);
+    if (hasNonConvex) {
+      padstack.hasNonConvexGeometry = true;
+    }
     return true;
   }
 

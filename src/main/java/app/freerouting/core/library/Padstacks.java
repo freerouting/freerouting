@@ -52,11 +52,28 @@ public class Padstacks implements Serializable {
 
   /** Appends a new padstack with the input shapes to this padstacks. */
   public Padstack add(
-      String name, ConvexShape[] shapes, boolean drillAllowed, boolean placedAbsolute) {
+      String name,
+      ConvexShape[] shapes,
+      ConvexShape[][] auxiliaryShapes,
+      boolean drillAllowed,
+      boolean placedAbsolute) {
     Padstack newPadstack =
-        new Padstack(name, padstacks.size() + 1, shapes, drillAllowed, placedAbsolute, this);
+        new Padstack(
+            name,
+            padstacks.size() + 1,
+            shapes,
+            auxiliaryShapes,
+            drillAllowed,
+            placedAbsolute,
+            this);
     padstacks.add(newPadstack);
     return newPadstack;
+  }
+
+  /** Appends a new padstack with the input shapes to this padstacks. */
+  public Padstack add(
+      String name, ConvexShape[] shapes, boolean drillAllowed, boolean placedAbsolute) {
+    return add(name, shapes, null, drillAllowed, placedAbsolute);
   }
 
   /**
