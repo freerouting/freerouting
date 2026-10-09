@@ -1,145 +1,155 @@
 package app.freerouting.gui.board;
 
 import app.freerouting.analytics.FRAnalytics;
-import app.freerouting.util.TextManager;
-import java.awt.Dimension;
+import app.freerouting.gui.a11y.A11y;
+import app.freerouting.gui.a11y.GuiLocators;
+import app.freerouting.gui.support.GuiTextManager;
+import java.util.Locale;
+import java.util.function.Consumer;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JToolBar;
 
-/** Describes the toolbar of the board frame, when it is in the inspected item state. */
+/** Describes the toolbar of the board frame when it is in the inspected item state. */
 public class BoardToolbarInspectedItem extends JToolBar {
 
-  private final BoardFrame boardFrame;
-  private final TextManager tm;
-
-  /** Creates a new instance of BoardToolbarInspectedItem. */
+  /** Creates a new instance of BoardToolbarInspectedItem for production frame. */
   public BoardToolbarInspectedItem(BoardFrame boardFrame) {
-    this.boardFrame = boardFrame;
+    this(
+        boardFrame != null ? boardFrame.getLocale() : Locale.getDefault(),
+        locator -> dispatchAction(boardFrame, locator));
+  }
 
-    this.tm = new TextManager(this.getClass(), boardFrame.getLocale());
+  /**
+   * Internal constructor creating a configured inspect toolbar with the specified locale and action
+   * dispatcher.
+   */
+  public BoardToolbarInspectedItem(Locale locale, Consumer<String> actionListener) {
+    setFloatable(false);
+    setRollover(true);
 
-    JButton toolbarCancelButton = new JButton();
-    toolbarCancelButton.setText(tm.getText("cancel"));
-    toolbarCancelButton.setToolTipText(tm.getText("cancel_tooltip"));
-    toolbarCancelButton.addActionListener(_ -> boardFrame.boardPanel.boardHandling.cancelState());
-    toolbarCancelButton.addActionListener(
-        _ -> FRAnalytics.buttonClicked("toolbarCancelButton", toolbarCancelButton.getText()));
+    GuiTextManager tm = new GuiTextManager(this.getClass(), locale);
+    A11y.tag(this, GuiLocators.TOOLBAR_ROOT);
+    A11y.describe(this, tm.getText("toolbar_accessible_name"), null);
 
-    this.add(toolbarCancelButton);
+    // Group 1: Cancel and Info
+    addInspectButton(
+        tm, "cancel", GuiLocators.INSPECT_CANCEL, "toolbarCancelButton", actionListener);
+    addInspectButton(tm, "info", GuiLocators.INSPECT_INFO, "toolbarInfoButton", actionListener);
 
-    JButton toolbarInfoButton = new JButton();
-    toolbarInfoButton.setText(tm.getText("info"));
-    toolbarInfoButton.setToolTipText(tm.getText("info_tooltip"));
-    toolbarInfoButton.addActionListener(
-        _ -> boardFrame.boardPanel.boardHandling.displaySelectedItemInfo());
-    toolbarInfoButton.addActionListener(
-        _ -> FRAnalytics.buttonClicked("toolbarInfoButton", toolbarInfoButton.getText()));
+    addSeparator();
 
-    this.add(toolbarInfoButton);
+    // Group 2: Extend selection
+    addInspectButton(
+        tm, "nets", GuiLocators.INSPECT_EXTEND_NETS, "toolbarWholeNetsButton", actionListener);
+    addInspectButton(
+        tm,
+        "conn_sets",
+        GuiLocators.INSPECT_EXTEND_CONNECTED_SETS,
+        "toolbarWholeConnectedSetsButton",
+        actionListener);
+    addInspectButton(
+        tm,
+        "connections",
+        GuiLocators.INSPECT_EXTEND_CONNECTIONS,
+        "toolbarWholeConnectionsButton",
+        actionListener);
+    addInspectButton(
+        tm,
+        "components",
+        GuiLocators.INSPECT_EXTEND_COMPONENTS,
+        "toolbarWholeGroupsButton",
+        actionListener);
 
-    JLabel separatorAfterInfo = new JLabel();
-    separatorAfterInfo.setMaximumSize(new Dimension(10, 10));
-    separatorAfterInfo.setPreferredSize(new Dimension(10, 10));
-    this.add(separatorAfterInfo);
+    addSeparator();
 
-    JButton toolbarWholeNetsButton = new JButton();
-    toolbarWholeNetsButton.setText(tm.getText("nets"));
-    toolbarWholeNetsButton.setToolTipText(tm.getText("nets_tooltip"));
-    toolbarWholeNetsButton.addActionListener(
-        _ -> boardFrame.boardPanel.boardHandling.extendSelectionToWholeNets());
-    toolbarWholeNetsButton.addActionListener(
-        _ -> FRAnalytics.buttonClicked("toolbarWholeNetsButton", toolbarWholeNetsButton.getText()));
+    // Group 3: Violations
+    addInspectButton(
+        tm, "violations", GuiLocators.INSPECT_VIOLATIONS, "toolbarViolationButton", actionListener);
 
-    this.add(toolbarWholeNetsButton);
+    addSeparator();
 
-    JButton toolbarWholeConnectedSetsButton = new JButton();
-    toolbarWholeConnectedSetsButton.setText(tm.getText("conn_sets"));
-    toolbarWholeConnectedSetsButton.setToolTipText(tm.getText("conn_sets_tooltip"));
-    toolbarWholeConnectedSetsButton.addActionListener(
-        _ -> boardFrame.boardPanel.boardHandling.extendSelectionToWholeConnectedSets());
-    toolbarWholeConnectedSetsButton.addActionListener(
-        _ ->
-            FRAnalytics.buttonClicked(
-                "toolbarWholeConnectedSetsButton", toolbarWholeConnectedSetsButton.getText()));
+    // Group 4: Zoom controls
+    addInspectButton(
+        tm,
+        "zoom_selection",
+        GuiLocators.INSPECT_ZOOM_SELECTION,
+        "toolbarDisplaySelectionButton",
+        actionListener);
+    addInspectButton(
+        tm, "zoom_all", GuiLocators.INSPECT_ZOOM_ALL, "toolbarDisplayAllButton", actionListener);
+    addInspectButton(
+        tm,
+        "zoom_region",
+        GuiLocators.INSPECT_ZOOM_REGION,
+        "toolbarDisplayRegionButton",
+        actionListener);
+  }
 
-    this.add(toolbarWholeConnectedSetsButton);
+  /**
+   * Builds a component-only inspect toolbar for accessibility tests and headless embedders.
+   *
+   * <p>No board, frame, or session state is touched. Actions report their stable locator to the
+   * supplied listener, which makes action paths observable without coupling a test to GUI session
+   * state.
+   *
+   * @param locale locale for translated names and descriptions
+   * @param actionListener receives the locator of an invoked control
+   * @return a reusable inspect toolbar component
+   */
+  public static JToolBar createComponentOnly(Locale locale, Consumer<String> actionListener) {
+    return new BoardToolbarInspectedItem(locale, actionListener);
+  }
 
-    JButton toolbarWholeConnectionsButton = new JButton();
-    toolbarWholeConnectionsButton.setText(tm.getText("connections"));
-    toolbarWholeConnectionsButton.setToolTipText(tm.getText("connections_tooltip"));
-    toolbarWholeConnectionsButton.addActionListener(
-        _ -> boardFrame.boardPanel.boardHandling.extendSelectionToWholeConnections());
-    toolbarWholeConnectionsButton.addActionListener(
-        _ ->
-            FRAnalytics.buttonClicked(
-                "toolbarWholeConnectionsButton", toolbarWholeConnectionsButton.getText()));
+  private void addInspectButton(
+      GuiTextManager tm,
+      String textKey,
+      String locator,
+      String analyticsId,
+      Consumer<String> actionListener) {
+    JButton button = new JButton();
+    tm.setText(button, textKey);
+    tagInspectButton(button, locator);
+    if (actionListener != null) {
+      button.addActionListener(_ -> actionListener.accept(locator));
+    }
+    button.addActionListener(_ -> FRAnalytics.buttonClicked(analyticsId, button.getText()));
+    this.add(button);
+  }
 
-    this.add(toolbarWholeConnectionsButton);
+  private static void tagInspectButton(JButton button, String locator) {
+    A11y.tag(button, locator);
+    String accessibleName =
+        button.getToolTipText() == null || button.getToolTipText().isBlank()
+            ? button.getText()
+            : button.getToolTipText();
+    A11y.describe(button, accessibleName, button.getToolTipText());
+  }
 
-    JButton toolbarWholeGroupsButton = new JButton();
-    toolbarWholeGroupsButton.setText(tm.getText("components"));
-    toolbarWholeGroupsButton.setToolTipText(tm.getText("components_tooltip"));
-    toolbarWholeGroupsButton.addActionListener(
-        _ -> boardFrame.boardPanel.boardHandling.extendSelectionToWholeComponents());
-    toolbarWholeGroupsButton.addActionListener(
-        _ ->
-            FRAnalytics.buttonClicked(
-                "toolbarWholeGroupsButton", toolbarWholeGroupsButton.getText()));
-
-    this.add(toolbarWholeGroupsButton);
-
-    JLabel separatorAfterGroups = new JLabel();
-    separatorAfterGroups.setMaximumSize(new Dimension(10, 10));
-    separatorAfterGroups.setPreferredSize(new Dimension(10, 10));
-    this.add(separatorAfterGroups);
-
-    JButton toolbarViolationButton = new JButton();
-    toolbarViolationButton.setText(tm.getText("violations"));
-    toolbarViolationButton.setToolTipText(tm.getText("violations_tooltip"));
-    toolbarViolationButton.addActionListener(
-        _ -> boardFrame.boardPanel.boardHandling.toggleSelectedItemViolations());
-    toolbarViolationButton.addActionListener(
-        _ -> FRAnalytics.buttonClicked("toolbarViolationButton", toolbarViolationButton.getText()));
-
-    this.add(toolbarViolationButton);
-
-    JLabel separatorAfterViolations = new JLabel();
-    separatorAfterViolations.setMaximumSize(new Dimension(10, 10));
-    separatorAfterViolations.setPreferredSize(new Dimension(10, 10));
-    this.add(separatorAfterViolations);
-
-    JButton toolbarDisplaySelectionButton = new JButton();
-    toolbarDisplaySelectionButton.setText(tm.getText("zoom_selection"));
-    toolbarDisplaySelectionButton.setToolTipText(tm.getText("zoom_selection_tooltip"));
-    toolbarDisplaySelectionButton.addActionListener(
-        _ -> boardFrame.boardPanel.boardHandling.zoomSelection());
-    toolbarDisplaySelectionButton.addActionListener(
-        _ ->
-            FRAnalytics.buttonClicked(
-                "toolbarDisplaySelectionButton", toolbarDisplaySelectionButton.getText()));
-    this.add(toolbarDisplaySelectionButton);
-
-    JButton toolbarDisplayAllButton = new JButton();
-    toolbarDisplayAllButton.setText(tm.getText("zoom_all"));
-    toolbarDisplayAllButton.setToolTipText(tm.getText("zoom_all_tooltip"));
-    toolbarDisplayAllButton.addActionListener(_ -> boardFrame.zoomAll());
-    toolbarDisplayAllButton.addActionListener(
-        _ ->
-            FRAnalytics.buttonClicked(
-                "toolbarDisplayAllButton", toolbarDisplayAllButton.getText()));
-    this.add(toolbarDisplayAllButton);
-
-    JButton toolbarDisplayRegionButton = new JButton();
-    toolbarDisplayRegionButton.setText(tm.getText("zoom_region"));
-    toolbarDisplayRegionButton.setToolTipText(tm.getText("zoom_region_tooltip"));
-    toolbarDisplayRegionButton.addActionListener(
-        _ -> boardFrame.boardPanel.boardHandling.zoomRegion());
-    toolbarDisplayRegionButton.addActionListener(
-        _ ->
-            FRAnalytics.buttonClicked(
-                "toolbarDisplayRegionButton", toolbarDisplayRegionButton.getText()));
-
-    this.add(toolbarDisplayRegionButton);
+  private static void dispatchAction(BoardFrame boardFrame, String locator) {
+    if (boardFrame == null
+        || boardFrame.boardPanel == null
+        || boardFrame.boardPanel.boardHandling == null) {
+      return;
+    }
+    switch (locator) {
+      case GuiLocators.INSPECT_CANCEL -> boardFrame.boardPanel.boardHandling.cancelState();
+      case GuiLocators.INSPECT_INFO ->
+          boardFrame.boardPanel.boardHandling.displaySelectedItemInfo();
+      case GuiLocators.INSPECT_EXTEND_NETS ->
+          boardFrame.boardPanel.boardHandling.extendSelectionToWholeNets();
+      case GuiLocators.INSPECT_EXTEND_CONNECTED_SETS ->
+          boardFrame.boardPanel.boardHandling.extendSelectionToWholeConnectedSets();
+      case GuiLocators.INSPECT_EXTEND_CONNECTIONS ->
+          boardFrame.boardPanel.boardHandling.extendSelectionToWholeConnections();
+      case GuiLocators.INSPECT_EXTEND_COMPONENTS ->
+          boardFrame.boardPanel.boardHandling.extendSelectionToWholeComponents();
+      case GuiLocators.INSPECT_VIOLATIONS ->
+          boardFrame.boardPanel.boardHandling.toggleSelectedItemViolations();
+      case GuiLocators.INSPECT_ZOOM_SELECTION ->
+          boardFrame.boardPanel.boardHandling.zoomSelection();
+      case GuiLocators.INSPECT_ZOOM_ALL -> boardFrame.zoomAll();
+      case GuiLocators.INSPECT_ZOOM_REGION -> boardFrame.boardPanel.boardHandling.zoomRegion();
+      default -> {}
+    }
   }
 }

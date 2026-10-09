@@ -1,0 +1,245 @@
+package app.freerouting.board.actions;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyCollection;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.DrillItem;
+import app.freerouting.board.model.items.ObstacleArea;
+import app.freerouting.board.model.items.Trace;
+import app.freerouting.board.model.structure.Component;
+import app.freerouting.board.model.structure.Layer;
+import app.freerouting.board.model.structure.LayerStructure;
+import app.freerouting.board.state.Communication;
+import app.freerouting.geometry.planar.IntBox;
+import app.freerouting.geometry.planar.IntPoint;
+import app.freerouting.geometry.planar.IntVector;
+import app.freerouting.geometry.planar.PolylineShape;
+import app.freerouting.geometry.planar.TileShape;
+import app.freerouting.geometry.planar.Vector;
+import app.freerouting.rules.BoardRules;
+import app.freerouting.rules.ClearanceMatrix;
+import java.util.List;
+import java.util.Set;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+class MoveComponentTest {
+
+  private RoutingBoard board;
+
+  private RoutingBoard createTestBoard() {
+    Layer layer1 = new Layer("Top", true);
+    LayerStructure layerStructure = new LayerStructure(new Layer[] {layer1});
+    ClearanceMatrix clearanceMatrix = ClearanceMatrix.getDefaultInstance(layerStructure, 10);
+    BoardRules boardRules = new BoardRules(layerStructure, clearanceMatrix);
+    boardRules.createDefaultNetClass();
+    Communication communication = new Communication();
+    return new RoutingBoard(
+        new IntBox(0, 0, 2000000, 2000000),
+        layerStructure,
+        new PolylineShape[] {TileShape.getInstance(0, 0, 2000000, 2000000)},
+        0,
+        boardRules,
+        communication);
+  }
+
+  @BeforeEach
+  void setUp() {
+    board = spy(createTestBoard());
+  }
+
+  @Test
+  void getMinDrillItemWidthWithTracesReturnsNegativeWhenNoConnectedTraces() {
+    Component comp =
+        board.components.add("U1", new IntPoint(0, 0), 0, true, null, null, false, "ESP32");
+    DrillItem pin1 = mock(DrillItem.class);
+    pin1.board = board;
+    when(pin1.getComponentId()).thenReturn(comp.id);
+    when(pin1.getCenter()).thenReturn(new IntPoint(0, 0));
+    when(pin1.minWidth()).thenReturn(200.0);
+    when(pin1.getNormalContacts()).thenReturn(Set.of());
+
+    doReturn(List.of(pin1)).when(board).getComponentItems(comp.id);
+
+    MoveComponent moveComponent = new MoveComponent(pin1, new IntVector(500, 0), 99, 5);
+
+    assertEquals(-1.0, moveComponent.getMinDrillItemWidthWithTraces());
+  }
+
+  @Test
+  void getMinDrillItemWidthWithTracesReturnsWidthWhenTraceConnected() {
+    Component comp =
+        board.components.add("U1", new IntPoint(0, 0), 0, true, null, null, false, "ESP32");
+    DrillItem pin1 = mock(DrillItem.class);
+    pin1.board = board;
+    when(pin1.getComponentId()).thenReturn(comp.id);
+    when(pin1.getCenter()).thenReturn(new IntPoint(0, 0));
+    when(pin1.minWidth()).thenReturn(200.0);
+
+    Trace connectedTrace = mock(Trace.class);
+    when(pin1.getNormalContacts()).thenReturn(Set.of(connectedTrace));
+
+    doReturn(List.of(pin1)).when(board).getComponentItems(comp.id);
+
+    MoveComponent moveComponent = new MoveComponent(pin1, new IntVector(500, 0), 99, 5);
+
+    assertEquals(200.0, moveComponent.getMinDrillItemWidthWithTraces());
+  }
+
+  @Test
+  void checkAllowsMoveLargerThanMinWidthWhenNoConnectingTracesAndSpaceClear() {
+    Component comp =
+        board.components.add("U1", new IntPoint(0, 0), 0, true, null, null, false, "ESP32");
+    DrillItem pin1 = mock(DrillItem.class);
+    pin1.board = board;
+    when(pin1.getComponentId()).thenReturn(comp.id);
+    when(pin1.getCenter()).thenReturn(new IntPoint(0, 0));
+    when(pin1.minWidth()).thenReturn(200.0);
+    when(pin1.getNormalContacts()).thenReturn(Set.of());
+
+    doReturn(List.of(pin1)).when(board).getComponentItems(comp.id);
+    doReturn(true).when(board).checkMoveItem(eq(pin1), any(Vector.class), anyCollection());
+
+    Vector largeVector = new IntVector(1000, 0); // 1000 >= minWidth (200)
+    MoveComponent moveComponent = new MoveComponent(pin1, largeVector, 99, 5);
+
+    assertTrue(moveComponent.check());
+  }
+
+  @Test
+  void checkFailsMoveLargerThanMinWidthWhenConnectingTracePresent() {
+    Component comp =
+        board.components.add("U1", new IntPoint(0, 0), 0, true, null, null, false, "ESP32");
+    DrillItem pin1 = mock(DrillItem.class);
+    pin1.board = board;
+    when(pin1.getComponentId()).thenReturn(comp.id);
+    when(pin1.getCenter()).thenReturn(new IntPoint(0, 0));
+    when(pin1.minWidth()).thenReturn(200.0);
+
+    Trace connectedTrace = mock(Trace.class);
+    when(pin1.getNormalContacts()).thenReturn(Set.of(connectedTrace));
+
+    doReturn(List.of(pin1)).when(board).getComponentItems(comp.id);
+
+    Vector largeVector = new IntVector(1000, 0); // 1000 >= minWidth (200)
+    MoveComponent moveComponent = new MoveComponent(pin1, largeVector, 99, 5);
+
+    assertFalse(moveComponent.check());
+  }
+
+  @Test
+  void insertBypassesMoveDrillItemWhenNoConnectingTracesAndSpaceClear() {
+    Component comp =
+        board.components.add("U1", new IntPoint(0, 0), 0, true, null, null, false, "ESP32");
+    DrillItem pin1 = mock(DrillItem.class);
+    pin1.board = board;
+    when(pin1.getComponentId()).thenReturn(comp.id);
+    when(pin1.getCenter()).thenReturn(new IntPoint(0, 0));
+    when(pin1.minWidth()).thenReturn(200.0);
+    when(pin1.getNormalContacts()).thenReturn(Set.of());
+
+    doReturn(List.of(pin1)).when(board).getComponentItems(comp.id);
+    doReturn(true).when(board).checkMoveItem(eq(pin1), any(Vector.class), anyCollection());
+
+    Vector vector = new IntVector(500, 0);
+    MoveComponent moveComponent = new MoveComponent(pin1, vector, 99, 5);
+
+    assertTrue(moveComponent.check());
+    assertTrue(moveComponent.insert(100, 50));
+
+    verify(pin1).moveBy(vector);
+    verify(board, never())
+        .moveDrillItem(
+            any(DrillItem.class),
+            any(Vector.class),
+            anyInt(),
+            anyInt(),
+            anyInt(),
+            anyInt(),
+            anyInt());
+  }
+
+  @Test
+  void moveComponentWithoutDrillItemsComputesCenterAndMovesSuccessfully() {
+    Component comp =
+        board.components.add("R1", new IntPoint(100, 200), 0, true, null, null, false, "RES_0805");
+    ObstacleArea smdPad = mock(ObstacleArea.class);
+    smdPad.board = board;
+    when(smdPad.getComponentId()).thenReturn(comp.id);
+    when(smdPad.boundingBox()).thenReturn(new IntBox(80, 180, 120, 220));
+
+    doReturn(List.of(smdPad)).when(board).getComponentItems(comp.id);
+    doReturn(true).when(board).checkMoveItem(eq(smdPad), any(Vector.class), anyCollection());
+
+    Vector moveVector = new IntVector(300, 400);
+    MoveComponent moveComponent = new MoveComponent(smdPad, moveVector, 99, 5);
+
+    assertEquals(-1.0, moveComponent.getMinDrillItemWidthWithTraces());
+    assertTrue(moveComponent.check());
+    assertTrue(moveComponent.insert(100, 50));
+
+    verify(smdPad).moveBy(moveVector);
+    assertEquals(new IntPoint(400, 600), comp.getLocation());
+  }
+
+  @Test
+  void checkUsesDrillItemMoverForMultiNetDrillItemWithoutTraces() {
+    Component comp =
+        board.components.add("U1", new IntPoint(0, 0), 0, true, null, null, false, "ESP32");
+    DrillItem pin1 = mock(DrillItem.class);
+    pin1.board = board;
+    when(pin1.netCount()).thenReturn(2);
+    when(pin1.getComponentId()).thenReturn(comp.id);
+    when(pin1.getCenter()).thenReturn(new IntPoint(0, 0));
+    when(pin1.minWidth()).thenReturn(200.0);
+    when(pin1.getNormalContacts()).thenReturn(Set.of());
+
+    doReturn(List.of(pin1)).when(board).getComponentItems(comp.id);
+
+    MoveComponent moveComponent = new MoveComponent(pin1, new IntVector(50, 0), 99, 5);
+
+    assertEquals(200.0, moveComponent.getMinDrillItemWidthWithTraces());
+    // Move larger than minWidth should be rejected for multi-net drill item
+    MoveComponent largeMove = new MoveComponent(pin1, new IntVector(500, 0), 99, 5);
+    assertFalse(largeMove.check());
+  }
+
+  @Test
+  void insertUsesMoveDrillItemForMultiNetDrillItem() {
+    Component comp =
+        board.components.add("U1", new IntPoint(0, 0), 0, true, null, null, false, "ESP32");
+    DrillItem pin1 = mock(DrillItem.class);
+    pin1.board = board;
+    when(pin1.netCount()).thenReturn(2);
+    when(pin1.getComponentId()).thenReturn(comp.id);
+    when(pin1.getCenter()).thenReturn(new IntPoint(0, 0));
+    when(pin1.minWidth()).thenReturn(200.0);
+    when(pin1.getNormalContacts()).thenReturn(Set.of());
+
+    doReturn(List.of(pin1)).when(board).getComponentItems(comp.id);
+    doReturn(true)
+        .when(board)
+        .moveDrillItem(
+            eq(pin1), any(Vector.class), anyInt(), anyInt(), anyInt(), anyInt(), anyInt());
+
+    Vector vector = new IntVector(50, 0);
+    MoveComponent moveComponent = new MoveComponent(pin1, vector, 99, 5);
+    assertTrue(moveComponent.insert(100, 50));
+
+    verify(board)
+        .moveDrillItem(eq(pin1), eq(vector), anyInt(), anyInt(), anyInt(), anyInt(), anyInt());
+    verify(pin1, never()).moveBy(any(Vector.class));
+  }
+}
