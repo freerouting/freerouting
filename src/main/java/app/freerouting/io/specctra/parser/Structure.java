@@ -129,6 +129,10 @@ public class Structure extends ScopeKeyword {
         // keepouts belonging to a component are not written individually.
         continue;
       }
+      if (currentKeepout.name != null && currentKeepout.name.endsWith("_aux")) {
+        // auxiliary companion tiles generated for custom padstacks are not standalone keepouts
+        continue;
+      }
       if (currentKeepout instanceof ConductionArea) {
         // conduction area will be written later.
         continue;

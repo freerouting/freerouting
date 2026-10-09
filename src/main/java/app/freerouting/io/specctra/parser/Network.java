@@ -1069,8 +1069,13 @@ public class Network extends ScopeKeyword {
           }
           for (ConvexShape aux : auxShapes) {
             Shape transformedAux = newPin.transformToBoard(aux);
+            Area auxArea = null;
             if (transformedAux instanceof PolylineShape polyShape) {
-              Area auxArea = new PolylineArea(polyShape, new PolylineShape[0]);
+              auxArea = new PolylineArea(polyShape, new PolylineShape[0]);
+            } else if (transformedAux != null) {
+              auxArea = transformedAux;
+            }
+            if (auxArea != null && !auxArea.isEmpty()) {
               routingBoard.insertObstacle(
                   auxArea,
                   boardLayer,

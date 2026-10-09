@@ -52,7 +52,14 @@ public final class CopyItemState extends InteractiveState {
     currentPosition = startPosition;
     previousPosition = currentPosition;
     for (Item currentItem : itemList) {
-      if (currentItem instanceof DrillItem || currentItem instanceof ObstacleArea) {
+      if (currentItem instanceof DrillItem) {
+        Item newItem = currentItem.copy(0);
+        this.itemList.add(newItem);
+      } else if (currentItem instanceof ObstacleArea obs) {
+        // Skip companion obstacles belonging to a component to prevent duplicate companions on copy
+        if (obs.getComponentId() > 0 && obs.name != null && obs.name.endsWith("_aux")) {
+          continue;
+        }
         Item newItem = currentItem.copy(0);
         this.itemList.add(newItem);
       }
@@ -237,19 +244,30 @@ public final class CopyItemState extends InteractiveState {
         board.insertItem(copiedItem);
         if (copiedItem instanceof Pin copiedPin && copiedPin.getPadstack().hasAuxiliaryShapes()) {
           Padstack padstack = copiedPin.getPadstack();
-          for (int padLayer = copiedPin.firstLayer();
-              padLayer <= copiedPin.lastLayer();
-              padLayer++) {
-            ConvexShape[] auxShapes = padstack.getAuxiliaryShapes(padLayer);
+          Component component = board.components.get(copiedPin.getComponentId());
+          boolean onFront = component == null || component.placedOnFront();
+          boolean absolute = padstack.placedAbsolute;
+          int layerCount = padstack.boardLayerCount();
+
+          for (int boardLayer = copiedPin.firstLayer();
+              boardLayer <= copiedPin.lastLayer();
+              boardLayer++) {
+            int padstackLayer = (onFront || absolute) ? boardLayer : layerCount - boardLayer - 1;
+            ConvexShape[] auxShapes = padstack.getAuxiliaryShapes(padstackLayer);
             if (auxShapes != null) {
               for (ConvexShape auxShape : auxShapes) {
                 if (auxShape != null) {
                   Shape boardShape = copiedPin.transformToBoard(auxShape);
+                  Area area = null;
                   if (boardShape instanceof PolylineShape polyShape) {
-                    Area area = new PolylineArea(polyShape, new PolylineShape[0]);
+                    area = new PolylineArea(polyShape, new PolylineShape[0]);
+                  } else if (boardShape != null) {
+                    area = boardShape;
+                  }
+                  if (area != null && !area.isEmpty()) {
                     board.insertObstacle(
                         area,
-                        padLayer,
+                        boardLayer,
                         copiedPin.netNumbers,
                         copiedPin.clearanceClassIndex(),
                         copiedPin.getComponentId(),

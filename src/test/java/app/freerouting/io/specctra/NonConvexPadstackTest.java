@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.Freerouting;
@@ -342,5 +343,116 @@ class NonConvexPadstackTest {
     assertTrue(
         drc.getAllClearanceViolations().isEmpty(),
         "Reloaded board must have zero clearance violations");
+  }
+
+  @Test
+  void genericDefaultLayerShapeIsOverriddenBySpecificLayerShape() {
+    String dsn =
+        """
+        (pcb "test_layer_override.dsn"
+          (parser (string_quote ") (space_in_quoted_tokens on))
+          (resolution um 10)
+          (unit um)
+          (structure
+            (layer F.Cu (type signal) (property (index 0)))
+            (layer B.Cu (type signal) (property (index 1)))
+            (boundary (path pcb 0 0 0 10000 0 10000 10000 0 10000 0 0))
+            (via "Via[0-1]_800:400_um")
+            (rule (width 200) (clearance 50))
+          )
+          (placement
+            (component "U_TEST:TEST_PKG" (place U1 5000 5000 front 0))
+          )
+          (library
+            (image "U_TEST:TEST_PKG"
+              (pin Override_Pad 1 0 0)
+            )
+            (padstack Override_Pad
+              (shape (rect signal -100 -100 100 100))
+              (shape (rect F.Cu -50 -50 50 50))
+              (attach off)
+            )
+            (padstack "Via[0-1]_800:400_um"
+              (shape (circle F.Cu 800))
+              (shape (circle B.Cu 800))
+              (attach off)
+            )
+          )
+          (network (net NET1 (pins U1-1)))
+        )
+        """;
+
+    InputStream in = new ByteArrayInputStream(dsn.getBytes(StandardCharsets.UTF_8));
+    BoardReadResult result = DsnReader.readBoard(in, null, null);
+    assertInstanceOf(BoardReadResult.Success.class, result);
+    RoutingBoard board = (RoutingBoard) ((BoardReadResult.Success) result).board();
+
+    Padstack padstack = board.library.padstacks.get("Override_Pad");
+    assertNotNull(padstack);
+    // On F.Cu (layer 0), the specific shape (-50..50, max width 1000) should have replaced the
+    // generic default (-100..100, max width 2000) and no auxiliary shape should be created
+    assertNull(padstack.getAuxiliaryShapes(0), "F.Cu should not have auxiliary shapes");
+    assertEquals(
+        1000,
+        Math.round(padstack.getShape(0).maxWidth()),
+        "F.Cu shape must be overridden to 100 um width");
+    // On B.Cu (layer 1), the generic default remains
+    assertEquals(
+        2000,
+        Math.round(padstack.getShape(1).maxWidth()),
+        "B.Cu shape must retain generic default 200 um width");
+  }
+
+  @Test
+  void originContainingShapeIsSelectedAsCorePad() {
+    // Padstack with two explicit shapes on F.Cu: shape 1 does NOT contain origin, shape 2 DOES
+    // contain origin
+    String dsn =
+        """
+        (pcb "test_origin_core.dsn"
+          (parser (string_quote ") (space_in_quoted_tokens on))
+          (resolution um 10)
+          (unit um)
+          (structure
+            (layer F.Cu (type signal) (property (index 0)))
+            (layer B.Cu (type signal) (property (index 1)))
+            (boundary (path pcb 0 0 0 10000 0 10000 10000 0 10000 0 0))
+            (via "Via[0-1]_800:400_um")
+            (rule (width 200) (clearance 50))
+          )
+          (placement
+            (component "U_TEST:TEST_PKG" (place U1 5000 5000 front 0))
+          )
+          (library
+            (image "U_TEST:TEST_PKG"
+              (pin Multi_Tile_Pad 1 0 0)
+            )
+            (padstack Multi_Tile_Pad
+              (shape (rect F.Cu 100 100 200 200))
+              (shape (rect F.Cu -50 -50 50 50))
+              (attach off)
+            )
+            (padstack "Via[0-1]_800:400_um"
+              (shape (circle F.Cu 800))
+              (shape (circle B.Cu 800))
+              (attach off)
+            )
+          )
+          (network (net NET1 (pins U1-1)))
+        )
+        """;
+
+    InputStream in = new ByteArrayInputStream(dsn.getBytes(StandardCharsets.UTF_8));
+    BoardReadResult result = DsnReader.readBoard(in, null, null);
+    assertInstanceOf(BoardReadResult.Success.class, result);
+    RoutingBoard board = (RoutingBoard) ((BoardReadResult.Success) result).board();
+
+    Padstack padstack = board.library.padstacks.get("Multi_Tile_Pad");
+    assertNotNull(padstack);
+    assertTrue(padstack.hasAuxiliaryShapes(), "Padstack must have auxiliary shapes");
+    // Core shape must be the one containing Point.ZERO (-50..50)
+    assertTrue(
+        padstack.getShape(0).contains(app.freerouting.geometry.planar.Point.ZERO),
+        "Core shape must contain origin");
   }
 }

@@ -14,7 +14,6 @@ import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.Area;
-import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
@@ -687,7 +686,7 @@ public class Wiring extends ScopeKeyword {
       int[] netNumbers = new int[foundNets.size()];
       int currentIndex = 0;
       for (app.freerouting.rules.Net currentNet : foundNets) {
-        netNumbers[currentIndex] = currentNet.netNumber;
+        netNumbers[currentIndex++] = currentNet.netNumber;
         netClass = currentNet.getNetClass();
       }
       int clearanceClassIndex = -1;
@@ -709,26 +708,17 @@ public class Wiring extends ScopeKeyword {
         board.insertVia(
             currentPadstack, boardLocation, netNumbers, clearanceClassIndex, fixed, attachAllowed);
         if (currentPadstack.hasAuxiliaryShapes()) {
-          for (int viaLayer = currentPadstack.fromLayer();
-              viaLayer <= currentPadstack.toLayer();
-              viaLayer++) {
-            ConvexShape[] auxShapes = currentPadstack.getAuxiliaryShapes(viaLayer);
-            if (auxShapes != null) {
-              for (ConvexShape aux : auxShapes) {
-                if (aux != null) {
-                  Area area = aux.translateBy(boardLocation.differenceBy(Point.ZERO));
-                  board.insertObstacle(
-                      area,
-                      viaLayer,
-                      netNumbers,
-                      clearanceClassIndex,
-                      0,
-                      currentPadstack.name + "_via_aux",
-                      fixed);
-                }
-              }
-            }
-          }
+          String msg =
+              "Wiring: Via at ("
+                  + boardLocation.x
+                  + ", "
+                  + boardLocation.y
+                  + ") uses non-convex padstack '"
+                  + currentPadstack.name
+                  + "'. Non-convex geometry on vias is not routable and auxiliary companion tiles"
+                  + " are omitted.";
+          FRLogger.warn(msg);
+          scopeParameter.warnings.add(msg);
         }
       }
       return true;
