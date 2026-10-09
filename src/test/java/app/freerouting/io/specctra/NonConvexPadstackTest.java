@@ -11,13 +11,18 @@ import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.ObstacleArea;
 import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.drc.ClearanceViolation;
 import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.geometry.planar.ConvexShape;
+import app.freerouting.geometry.planar.IntPoint;
+import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.io.BoardReadResult;
+import app.freerouting.rules.Net;
 import app.freerouting.settings.GlobalSettings;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
@@ -228,5 +233,114 @@ class NonConvexPadstackTest {
         violations.isEmpty(),
         "Item in concave void should not violate clearance (no convex-hull inflation); got: "
             + violations.size());
+
+    // Verify foreign-net trace crossing the auxiliary copper tile triggers a DRC violation
+    Polyline foreignTrace =
+        new Polyline(new IntPoint[] {new IntPoint(49500, 50200), new IntPoint(49500, 50800)});
+    Net net2 = board.rules.nets.get("NET2", 1);
+    assertNotNull(net2, "NET2 must exist");
+    int clClass = net2.getNetClass().getTraceClearanceClass();
+    board.insertTrace(
+        foreignTrace, 0, 100, new int[] {net2.netNumber}, clClass, FixedState.SYSTEM_FIXED);
+    Collection<ClearanceViolation> violationsAfterTrack = drc.getAllClearanceViolations();
+    assertFalse(
+        violationsAfterTrack.isEmpty(),
+        "Foreign track crossing auxiliary copper tile must trigger clearance violation");
+  }
+
+  @Test
+  void foreignPinOverlappingAuxiliaryTileTriggersClearanceViolation() {
+    // DSN with foreign pin U2 overlapping the auxiliary copper wing of U1 at (4950, 5050)
+    String dsn =
+        """
+        (pcb "test_overlap.dsn"
+          (parser
+            (string_quote ")
+            (space_in_quoted_tokens on)
+            (host_cad "KiCad's Pcbnew")
+            (host_version "10.0.0")
+          )
+          (resolution um 10)
+          (unit um)
+          (structure
+            (layer F.Cu (type signal) (property (index 0)))
+            (layer B.Cu (type signal) (property (index 1)))
+            (boundary (path pcb 0 0 0 10000 0 10000 10000 0 10000 0 0))
+            (via "Via[0-1]_800:400_um")
+            (rule (width 200) (clearance 50))
+          )
+          (placement
+            (component "U_TEST:TEST_PKG" (place U1 5000 5000 front 0))
+            (component "U_VOID:VOID_PKG" (place U2 4950 5050 front 0))
+          )
+          (library
+            (image "U_TEST:TEST_PKG"
+              (pin Custom_L_Pad 1 0 0)
+            )
+            (image "U_VOID:VOID_PKG"
+              (pin Small_Pad 1 0 0)
+            )
+            (padstack Custom_L_Pad
+              (shape (polygon F.Cu 0 -100 -100  100 -100  100 0  0 0  0 100  -100 100))
+              (attach off)
+            )
+            (padstack Small_Pad
+              (shape (rect F.Cu -10 -10 10 10))
+              (attach off)
+            )
+            (padstack "Via[0-1]_800:400_um"
+              (shape (circle F.Cu 800))
+              (shape (circle B.Cu 800))
+              (attach off)
+            )
+          )
+          (network
+            (net NET1 (pins U1-1))
+            (net NET2 (pins U2-1))
+          )
+        )
+        """;
+
+    InputStream in = new ByteArrayInputStream(dsn.getBytes(StandardCharsets.UTF_8));
+    BoardReadResult result = DsnReader.readBoard(in, null, null);
+    assertInstanceOf(BoardReadResult.Success.class, result);
+    RoutingBoard board = (RoutingBoard) ((BoardReadResult.Success) result).board();
+
+    DesignRulesChecker drc = new DesignRulesChecker(board, null);
+    Collection<ClearanceViolation> violations = drc.getAllClearanceViolations();
+    assertFalse(
+        violations.isEmpty(),
+        "Foreign pin overlapping auxiliary copper tile must trigger clearance violation");
+  }
+
+  @Test
+  void dsnExportPreservesAuxiliaryShapesInRoundTrip() throws Exception {
+    InputStream in =
+        new ByteArrayInputStream(DSN_WITH_NON_CONVEX_PAD.getBytes(StandardCharsets.UTF_8));
+    BoardReadResult result = DsnReader.readBoard(in, null, null);
+    assertInstanceOf(BoardReadResult.Success.class, result);
+    RoutingBoard board = (RoutingBoard) ((BoardReadResult.Success) result).board();
+
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    DsnWriter.write(board, out, "roundtrip", false);
+
+    RoutingBoard reloaded = DsnTestFixtures.loadBoard(out.toByteArray());
+    Padstack padstack = reloaded.library.padstacks.get("Custom_L_Pad");
+    assertNotNull(padstack, "Padstack must exist after DSN round trip");
+    assertTrue(padstack.hasNonConvexGeometry(), "Padstack must remain flagged as non-convex");
+    assertTrue(padstack.hasAuxiliaryShapes(), "Padstack must retain auxiliary shapes");
+
+    List<ObstacleArea> auxObstacles =
+        reloaded.getItems().stream()
+            .filter(item -> item instanceof ObstacleArea)
+            .map(item -> (ObstacleArea) item)
+            .filter(obs -> obs.name != null && obs.name.endsWith("_aux"))
+            .toList();
+    assertFalse(auxObstacles.isEmpty(), "Companion obstacles must be recreated after round trip");
+
+    DesignRulesChecker drc = new DesignRulesChecker(reloaded, null);
+    assertTrue(
+        drc.getAllClearanceViolations().isEmpty(),
+        "Reloaded board must have zero clearance violations");
   }
 }

@@ -86,6 +86,15 @@ public class Padstacks implements Serializable {
   }
 
   /**
+   * Appends a new padstack with the input shapes and auxiliary shapes to this padstacks. The
+   * padstack name is generated internally.
+   */
+  public Padstack add(ConvexShape[] shapes, ConvexShape[][] auxiliaryShapes) {
+    String newName = "padstack#" + (padstacks.size() + 1);
+    return add(newName, shapes, auxiliaryShapes, false, false);
+  }
+
+  /**
    * Appends a new padstack with the input shape from one layer to another and null on the other
    * layers. The padstack name is generated internally.
    */

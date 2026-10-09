@@ -15,6 +15,8 @@ import java.util.Locale;
 /** Describes padstack masks for pins or vias located at the origin. */
 public class Padstack implements Comparable<Padstack>, ItemInfoPrinter.Printable, Serializable {
 
+  private static final long serialVersionUID = 6835750667897173121L;
+
   public final String name;
   public final int id;
 

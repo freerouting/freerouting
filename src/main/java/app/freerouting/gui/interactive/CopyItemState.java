@@ -4,13 +4,18 @@ import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.DrillItem;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.ObstacleArea;
+import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Via;
 import app.freerouting.board.model.structure.Component;
 import app.freerouting.core.library.Package;
 import app.freerouting.core.library.Padstack;
+import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Point;
+import app.freerouting.geometry.planar.PolylineArea;
+import app.freerouting.geometry.planar.PolylineShape;
+import app.freerouting.geometry.planar.Shape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.gui.rendering.BoardRenderer;
 import app.freerouting.gui.workspace.GuiBoardManager;
@@ -83,14 +88,26 @@ public final class CopyItemState extends InteractiveState {
     } else {
       // Create a new padstack.
       ConvexShape[] newShapes = new ConvexShape[board.getLayerCount()];
+      ConvexShape[][] newAuxShapes =
+          oldPadstack.hasAuxiliaryShapes() ? new ConvexShape[board.getLayerCount()][] : null;
       int layerDiff = oldLayer - newLayer;
       for (int i = 0; i < newShapes.length; i++) {
-        int newLayerNo = i + layerDiff;
-        if (newLayerNo >= 0 && newLayerNo < newShapes.length) {
-          newShapes[i] = oldPadstack.getShape(i + layerDiff);
+        int oldLayerNo = i + layerDiff;
+        if (oldLayerNo >= 0 && oldLayerNo < newShapes.length) {
+          newShapes[i] = oldPadstack.getShape(oldLayerNo);
+          if (newAuxShapes != null) {
+            newAuxShapes[i] = oldPadstack.getAuxiliaryShapes(oldLayerNo);
+          }
         }
       }
-      newPadstack = board.library.padstacks.add(newShapes);
+      if (newAuxShapes != null) {
+        newPadstack = board.library.padstacks.add(newShapes, newAuxShapes);
+        if (oldPadstack.hasNonConvexGeometry()) {
+          newPadstack.hasNonConvexGeometry = true;
+        }
+      } else {
+        newPadstack = board.library.padstacks.add(newShapes);
+      }
       padstackPairs.put(oldPadstack, newPadstack);
     }
     return newPadstack;
@@ -216,7 +233,34 @@ public final class CopyItemState extends InteractiveState {
           board.generateSnapshot();
           firstTime = false;
         }
-        board.insertItem(currentItem.copy(0));
+        Item copiedItem = currentItem.copy(0);
+        board.insertItem(copiedItem);
+        if (copiedItem instanceof Pin copiedPin && copiedPin.getPadstack().hasAuxiliaryShapes()) {
+          Padstack padstack = copiedPin.getPadstack();
+          for (int padLayer = copiedPin.firstLayer();
+              padLayer <= copiedPin.lastLayer();
+              padLayer++) {
+            ConvexShape[] auxShapes = padstack.getAuxiliaryShapes(padLayer);
+            if (auxShapes != null) {
+              for (ConvexShape auxShape : auxShapes) {
+                if (auxShape != null) {
+                  Shape boardShape = copiedPin.transformToBoard(auxShape);
+                  if (boardShape instanceof PolylineShape polyShape) {
+                    Area area = new PolylineArea(polyShape, new PolylineShape[0]);
+                    board.insertObstacle(
+                        area,
+                        padLayer,
+                        copiedPin.netNumbers,
+                        copiedPin.clearanceClassIndex(),
+                        copiedPin.getComponentId(),
+                        padstack.name + "_aux",
+                        copiedPin.getFixedState());
+                  }
+                }
+              }
+            }
+          }
+        }
       } else {
         allItemsInserted = false;
       }

@@ -15,7 +15,6 @@ import app.freerouting.geometry.planar.Vector;
 import app.freerouting.io.CoordinateTransform;
 import app.freerouting.logger.FRLogger;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -87,6 +86,18 @@ public class Library extends ScopeKeyword {
       scopeParameter.file.write("shape");
       currentShape.writeScope(scopeParameter.file, scopeParameter.identifierType);
       scopeParameter.file.endScope();
+      ConvexShape[] auxShapes = padstack.getAuxiliaryShapes(i);
+      if (auxShapes != null) {
+        for (ConvexShape aux : auxShapes) {
+          if (aux != null) {
+            Shape auxDsnShape = scopeParameter.coordinateTransform.boardToDsnRel(aux, currentLayer);
+            scopeParameter.file.startScope();
+            scopeParameter.file.write("shape");
+            auxDsnShape.writeScope(scopeParameter.file, scopeParameter.identifierType);
+            scopeParameter.file.endScope();
+          }
+        }
+      }
     }
     if (!padstack.attachAllowed) {
       scopeParameter.file.newLine();
@@ -214,7 +225,7 @@ public class Library extends ScopeKeyword {
           if (coreIndex < 0) {
             double maxArea = -1;
             for (int p = 0; p < convexPieces.length; p++) {
-              double area = convexPieces[p].boundingBox().area();
+              double area = convexPieces[p].area();
               if (area > maxArea) {
                 maxArea = area;
                 coreIndex = p;
@@ -279,9 +290,17 @@ public class Library extends ScopeKeyword {
       }
 
       if (padShape.layer == Layer.PCB || padShape.layer == Layer.SIGNAL) {
-        Arrays.fill(padstackShapes, padstackShape);
-        if (auxShapes != null) {
-          Arrays.fill(auxiliaryShapes, auxShapes);
+        for (int l = 0; l < padstackShapes.length; l++) {
+          if (padstackShapes[l] != null) {
+            auxiliaryShapes[l] =
+                appendAuxiliaryShapes(auxiliaryShapes[l], padstackShape, auxShapes);
+            hasNonConvex = true;
+          } else {
+            padstackShapes[l] = padstackShape;
+            if (auxShapes != null) {
+              auxiliaryShapes[l] = auxShapes;
+            }
+          }
         }
       } else {
         int shapeLayer = layerStructure.getNo(padShape.layer.name);
@@ -292,9 +311,15 @@ public class Library extends ScopeKeyword {
                   + "'");
           return false;
         }
-        padstackShapes[shapeLayer] = padstackShape;
-        if (auxShapes != null) {
-          auxiliaryShapes[shapeLayer] = auxShapes;
+        if (padstackShapes[shapeLayer] != null) {
+          auxiliaryShapes[shapeLayer] =
+              appendAuxiliaryShapes(auxiliaryShapes[shapeLayer], padstackShape, auxShapes);
+          hasNonConvex = true;
+        } else {
+          padstackShapes[shapeLayer] = padstackShape;
+          if (auxShapes != null) {
+            auxiliaryShapes[shapeLayer] = auxShapes;
+          }
         }
       }
     }
@@ -305,6 +330,24 @@ public class Library extends ScopeKeyword {
       padstack.hasNonConvexGeometry = true;
     }
     return true;
+  }
+
+  private static ConvexShape[] appendAuxiliaryShapes(
+      ConvexShape[] existing, ConvexShape newShape, ConvexShape[] additionalAux) {
+    int addCount = (newShape != null ? 1 : 0) + (additionalAux != null ? additionalAux.length : 0);
+    int existCount = existing != null ? existing.length : 0;
+    ConvexShape[] combined = new ConvexShape[existCount + addCount];
+    if (existing != null) {
+      System.arraycopy(existing, 0, combined, 0, existCount);
+    }
+    int idx = existCount;
+    if (newShape != null) {
+      combined[idx++] = newShape;
+    }
+    if (additionalAux != null) {
+      System.arraycopy(additionalAux, 0, combined, idx, additionalAux.length);
+    }
+    return combined;
   }
 
   @Override

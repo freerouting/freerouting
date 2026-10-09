@@ -14,6 +14,7 @@ import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.Area;
+import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
@@ -705,6 +706,28 @@ public class Wiring extends ScopeKeyword {
         boolean attachAllowed = scopeParameter.viaAtSmdAllowed && currentPadstack.attachAllowed;
         board.insertVia(
             currentPadstack, boardLocation, netNumbers, clearanceClassIndex, fixed, attachAllowed);
+        if (currentPadstack.hasAuxiliaryShapes()) {
+          for (int viaLayer = currentPadstack.fromLayer();
+              viaLayer <= currentPadstack.toLayer();
+              viaLayer++) {
+            ConvexShape[] auxShapes = currentPadstack.getAuxiliaryShapes(viaLayer);
+            if (auxShapes != null) {
+              for (ConvexShape aux : auxShapes) {
+                if (aux != null) {
+                  Area area = aux.translateBy(boardLocation.differenceBy(Point.ZERO));
+                  board.insertObstacle(
+                      area,
+                      viaLayer,
+                      netNumbers,
+                      clearanceClassIndex,
+                      0,
+                      currentPadstack.name + "_via_aux",
+                      fixed);
+                }
+              }
+            }
+          }
+        }
       }
       return true;
     } catch (IOException e) {

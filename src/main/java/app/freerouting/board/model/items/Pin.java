@@ -37,6 +37,8 @@ import java.util.TreeSet;
  */
 public class Pin extends DrillItem implements Serializable {
 
+  private static final long serialVersionUID = 7212801202299956828L;
+
   /** The index of this pin in its component (starting with 0). */
   public final int pinIndex;
 
@@ -386,8 +388,14 @@ public class Pin extends DrillItem implements Serializable {
 
   @Override
   public boolean isObstacle(Item other) {
-    if (other == this || other instanceof ObstacleArea) {
+    if (other == this) {
       return false;
+    }
+    if (other instanceof ObstacleArea obstacleArea) {
+      if (this.sharesNet(obstacleArea)) {
+        return false;
+      }
+      return obstacleArea.netCount() > 0;
     }
     if (!other.sharesNet(this)) {
       if (other instanceof Pin otherPin) {
