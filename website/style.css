@@ -594,6 +594,15 @@ main {
     line-height: 1.9;
 }
 
+.eda-noscript-list a {
+    color: var(--gold-light);
+    text-decoration: underline;
+}
+
+.eda-noscript-list a:hover {
+    color: var(--gold-primary);
+}
+
 .eda-card h3 {
     font-size: 1.15em;
     color: #ffffff;
@@ -1207,7 +1216,7 @@ main {
 }
 
 /* Third-party trademark disclaimer (nominative fair use notice) */
-.legal-disclaimer {
+.footer-bottom .legal-disclaimer {
     flex-basis: 100%;
     margin-top: 2rem;
     font-size: 0.8rem;

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Single source of truth for the "Universal EDA Compatibility" grid on index.html.
  * To add an integration: drop <id>.svg into assets/logos/eda/ and append one entry here.
  * No other file needs to change.
@@ -54,10 +54,10 @@ const EDA_INTEGRATIONS = [
   },
   {
     id: "specctra",
-    name: "Specctra DSN & SES",
+    name: "Specctra DSN &amp; SES",
     logoStyle: "mono",
     description:
-      "Full compliance with industry-standard .dsn design files and .ses routing session output.",
+      "Full compliance with industry-standard <code>.dsn</code> design files and <code>.ses</code> routing session output.",
     url: null,
   },
 ];
@@ -69,12 +69,13 @@ function renderEdaCards() {
     const title = item.url
       ? `<a class="eda-link" href="${item.url}" target="_blank" rel="noopener noreferrer">${item.name}</a>`
       : item.name;
+    const altText = item.name.replace(/&amp;/g, "&");
     return `
       <div class="eda-card">
         <div class="eda-header">
           <img class="eda-logo eda-logo--${item.logoStyle}"
                src="assets/logos/eda/${item.id}.svg"
-               alt="${item.name} compatibility icon" width="28" height="28" loading="lazy">
+               alt="${altText} compatibility icon" width="28" height="28" loading="lazy">
           <h3>${title}</h3>
         </div>
         <p>${item.description}</p>
@@ -82,4 +83,8 @@ function renderEdaCards() {
   }).join("");
 }
 
-document.addEventListener("DOMContentLoaded", renderEdaCards);
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", renderEdaCards);
+} else {
+  renderEdaCards();
+}
