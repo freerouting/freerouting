@@ -21,10 +21,14 @@ jobs:
       # Project specific
       - uses: actions/checkout@v7
       - run: python -m pip install pre-commit
-      - uses: actions/cache/restore@v6
+      - name: Restore pre-commit cache
+        id: cache-pre-commit
+        uses: actions/cache/restore@v6
         with:
           path: ~/.cache/pre-commit/
           key: pre-commit-4|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml') }}
+          restore-keys: |
+            pre-commit-4|${{ env.pythonLocation }}|
       - name: Run pre-commit hooks
         env:
           SKIP: no-commit-to-branch
@@ -38,8 +42,9 @@ jobs:
         with:
           in: ${{ env.RAW_LOG }}
           # out: ${{ env.CS_XML }}
-      - uses: actions/cache/save@v6
-        if: ${{ ! cancelled() }}
+      - name: Save pre-commit cache
+        uses: actions/cache/save@v6
+        if: ${{ ! cancelled() && steps.cache-pre-commit.outputs.cache-hit != 'true' }}
         with:
           path: ~/.cache/pre-commit/
           key: pre-commit-4|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml') }}
