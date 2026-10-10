@@ -330,6 +330,11 @@ public class Pin extends DrillItem implements Serializable {
     if (other == this) {
       return false;
     }
+    // Nonblocking pours are filled around foreign copper by the EDA tool. Unlike auxiliary
+    // non-convex pad copper, their full area must not obstruct a foreign-net pin.
+    if (other instanceof ConductionArea conductionArea && !conductionArea.getIsObstacle()) {
+      return false;
+    }
     if (other instanceof ObstacleArea obstacleArea) {
       if (this.sharesNet(obstacleArea)) {
         return false;
