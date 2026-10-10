@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.ObstacleArea;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.core.library.Package;
@@ -156,6 +157,36 @@ class Issue955PlacementLifecycleTest {
     copy.assignComponentId(copiedComponent.id);
     assertEquals(oldCenter.translateBy(delta), copy.getCenter());
     assertTrue(copy.getShape(0).contains(copy.getCenter()));
+  }
+
+  @Test
+  void copyRebindingInvalidatesCachedKeepoutGeometry() throws Exception {
+    var board = load();
+    var c = board.components.get(find(board, "2@1").getComponentId());
+    var copy =
+        new ObstacleArea(
+            new Circle(Point.ZERO, 100),
+            0,
+            Vector.ZERO,
+            0,
+            false,
+            1,
+            0,
+            c.id,
+            "copy-keepout",
+            FixedState.UNFIXED,
+            board);
+    final var oldBounds = copy.getArea().boundingBox();
+    var delta = new IntVector(10000, -20000);
+    copy.translateBy(delta);
+    // Populate the preview geometry before binding to the newly created component.
+    copy.getArea();
+    var copiedComponent = board.components.copy(c, delta, c.getPackage());
+    copy.assignComponentId(copiedComponent.id);
+    assertEquals(oldBounds.ll.translateBy(delta), copy.getArea().boundingBox().ll);
+    assertEquals(oldBounds.ur.translateBy(delta), copy.getArea().boundingBox().ur);
+    assertEquals(
+        copy.getArea().boundingBox().ll, ((ObstacleArea) copy.copy(0)).getArea().boundingBox().ll);
   }
 
   @Test

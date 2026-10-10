@@ -137,7 +137,6 @@ public class Pin extends DrillItem implements Serializable {
   public void assignComponentId(int id) {
     super.assignComponentId(id);
     setCenter(null);
-    clearDerivedData();
   }
 
   /** Return the name of this pin in the package of this component. */

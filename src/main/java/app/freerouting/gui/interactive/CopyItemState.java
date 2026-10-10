@@ -237,13 +237,28 @@ public final class CopyItemState extends InteractiveState {
     if (itemList == null) {
       return;
     }
-    for (Item currentItem : itemList) {
-      BoardRenderer.drawOverlayItem(
-          currentItem,
-          graphics,
-          hdlg.graphicsContext,
-          hdlg.graphicsContext.getHighlightColor(),
-          hdlg.graphicsContext.getHighlightColorIntensity());
+    var screenOrigin = hdlg.graphicsContext.coordinateTransform.boardToScreen(FloatPoint.ZERO);
+    var screenOffset =
+        hdlg.graphicsContext.coordinateTransform.boardToScreen(
+            currentPosition.differenceBy(startPosition).toFloat());
+    Graphics componentGraphics = graphics.create();
+    try {
+      componentGraphics.translate(
+          (int) Math.round(screenOffset.getX() - screenOrigin.getX()),
+          (int) Math.round(screenOffset.getY() - screenOrigin.getY()));
+      for (Item currentItem : itemList) {
+        // Component geometry follows its authoritative pose until insertion creates the copy.
+        // A fresh view discards the translated drill-center cache without changing that pose.
+        boolean componentItem = currentItem.getComponentId() > 0;
+        BoardRenderer.drawOverlayItem(
+            componentItem ? currentItem.copy(currentItem.getId()) : currentItem,
+            componentItem ? componentGraphics : graphics,
+            hdlg.graphicsContext,
+            hdlg.graphicsContext.getHighlightColor(),
+            hdlg.graphicsContext.getHighlightColorIntensity());
+      }
+    } finally {
+      componentGraphics.dispose();
     }
   }
 
