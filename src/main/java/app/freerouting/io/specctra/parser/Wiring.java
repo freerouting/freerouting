@@ -686,7 +686,7 @@ public class Wiring extends ScopeKeyword {
       int[] netNumbers = new int[foundNets.size()];
       int currentIndex = 0;
       for (app.freerouting.rules.Net currentNet : foundNets) {
-        netNumbers[currentIndex] = currentNet.netNumber;
+        netNumbers[currentIndex++] = currentNet.netNumber;
         netClass = currentNet.getNetClass();
       }
       int clearanceClassIndex = -1;
@@ -707,6 +707,19 @@ public class Wiring extends ScopeKeyword {
         boolean attachAllowed = scopeParameter.viaAtSmdAllowed && currentPadstack.attachAllowed;
         board.insertVia(
             currentPadstack, boardLocation, netNumbers, clearanceClassIndex, fixed, attachAllowed);
+        if (currentPadstack.hasAuxiliaryShapes()) {
+          String msg =
+              "Wiring: Via at ("
+                  + boardLocation.x
+                  + ", "
+                  + boardLocation.y
+                  + ") uses non-convex padstack '"
+                  + currentPadstack.name
+                  + "'. Non-convex geometry on vias is not routable and auxiliary companion tiles"
+                  + " are omitted.";
+          FRLogger.warn(msg);
+          scopeParameter.warnings.add(msg);
+        }
       }
       return true;
     } catch (IOException e) {
