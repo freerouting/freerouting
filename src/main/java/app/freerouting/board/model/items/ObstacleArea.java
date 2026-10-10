@@ -176,6 +176,12 @@ public class ObstacleArea extends Item implements Serializable {
     if (other.sharesNet(this)) {
       return false;
     }
+    if (other instanceof Pin) {
+      return this.netCount() > 0;
+    }
+    if (other instanceof ObstacleArea otherArea) {
+      return this.netCount() > 0 && otherArea.netCount() > 0;
+    }
     return other instanceof Trace || other instanceof Via;
   }
 

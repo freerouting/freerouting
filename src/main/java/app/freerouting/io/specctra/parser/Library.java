@@ -7,6 +7,7 @@ import app.freerouting.core.library.Padstacks;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.IntVector;
+import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.PolygonShape;
 import app.freerouting.geometry.planar.Simplex;
 import app.freerouting.geometry.planar.TileShape;
@@ -14,7 +15,6 @@ import app.freerouting.geometry.planar.Vector;
 import app.freerouting.io.CoordinateTransform;
 import app.freerouting.logger.FRLogger;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -86,6 +86,18 @@ public class Library extends ScopeKeyword {
       scopeParameter.file.write("shape");
       currentShape.writeScope(scopeParameter.file, scopeParameter.identifierType);
       scopeParameter.file.endScope();
+      ConvexShape[] auxShapes = padstack.getAuxiliaryShapes(i);
+      if (auxShapes != null) {
+        for (ConvexShape aux : auxShapes) {
+          if (aux != null) {
+            Shape auxDsnShape = scopeParameter.coordinateTransform.boardToDsnRel(aux, currentLayer);
+            scopeParameter.file.startScope();
+            scopeParameter.file.write("shape");
+            auxDsnShape.writeScope(scopeParameter.file, scopeParameter.identifierType);
+            scopeParameter.file.endScope();
+          }
+        }
+      }
     }
     if (!padstack.attachAllowed) {
       scopeParameter.file.newLine();
@@ -166,60 +178,165 @@ public class Library extends ScopeKeyword {
               + "'");
       return true;
     }
-    ConvexShape[] padstackShapes = new ConvexShape[layerStructure.layers.length];
+    boolean[] isGenericDefault = new boolean[layerStructure.layers.length];
+    java.util.List<java.util.List<ConvexShape>> layerPieces =
+        new java.util.ArrayList<>(layerStructure.layers.length);
+    for (int i = 0; i < layerStructure.layers.length; i++) {
+      layerPieces.add(new java.util.ArrayList<>());
+    }
+
     for (Shape padShape : shapeList) {
       app.freerouting.geometry.planar.Shape currentShape =
           padShape.transformToBoardRel(coordinateTransform);
-      ConvexShape convexShape;
+      java.util.List<ConvexShape> pieces = new java.util.ArrayList<>();
+
       if (currentShape instanceof ConvexShape shape1) {
-        convexShape = shape1;
+        pieces.add(shape1);
       } else {
+        TileShape[] convexPieces = null;
         if (currentShape instanceof PolygonShape shape) {
-          currentShape = shape.convexHull();
+          convexPieces = shape.splitToConvex();
+        } else if (currentShape != null) {
+          convexPieces = currentShape.splitToConvex();
         }
-        TileShape[] convexShapes = currentShape.splitToConvex();
-        if (convexShapes.length != 1) {
-          FRLogger.warn(
-              "Library.read_padstack_scope: convex shape expected at '"
-                  + scanner.getScopeIdentifier()
-                  + "'");
-        }
-        convexShape = convexShapes[0];
-        if (convexShape instanceof Simplex simplex) {
-          convexShape = simplex.simplify();
+
+        if (convexPieces != null && convexPieces.length > 0) {
+          for (TileShape piece : convexPieces) {
+            ConvexShape convexPiece = piece;
+            if (convexPiece instanceof Simplex simplex) {
+              convexPiece = simplex.simplify();
+            }
+            pieces.add(convexPiece);
+          }
+        } else {
+          if (currentShape instanceof PolygonShape shape) {
+            currentShape = shape.convexHull();
+          }
+          TileShape[] fallback = currentShape != null ? currentShape.splitToConvex() : null;
+          if (fallback != null && fallback.length != 1) {
+            FRLogger.warn(
+                "Library.read_padstack_scope: convex shape expected at '"
+                    + scanner.getScopeIdentifier()
+                    + "'");
+          }
+          ConvexShape fallbackShape =
+              (fallback != null && fallback.length > 0) ? fallback[0] : null;
+          if (fallbackShape instanceof Simplex simplex) {
+            fallbackShape = simplex.simplify();
+          }
+          if (fallbackShape != null) {
+            pieces.add(fallbackShape);
+          }
         }
       }
-      ConvexShape padstackShape = convexShape;
-      if (padstackShape != null) {
-        if (padstackShape.dimension() < 2) {
-          FRLogger.warn(
-              "Library.read_padstack_scope: the shape of padstack '"
-                  + padstackName
-                  + "' is not an area. We will enlarge it as a workaround, but it may "
-                  + "result in unintended consequences.");
-          // enlarge the shape a little bit, so that it is an area
-          padstackShape = padstackShape.offset(1);
-          if (padstackShape.dimension() < 2) {
-            padstackShape = null;
+
+      // Enlarge 1D/0D shapes to at least dimension 2 if needed
+      java.util.List<ConvexShape> validatedPieces = new java.util.ArrayList<>(pieces.size());
+      for (ConvexShape p : pieces) {
+        if (p != null) {
+          if (p.dimension() < 2) {
+            FRLogger.warn(
+                "Library.read_padstack_scope: the shape of padstack '"
+                    + padstackName
+                    + "' is not an area. We will enlarge it as a workaround, but it may "
+                    + "result in unintended consequences.");
+            p = p.offset(1);
+          }
+          if (p.dimension() >= 2) {
+            validatedPieces.add(p);
           }
         }
       }
 
       if (padShape.layer == Layer.PCB || padShape.layer == Layer.SIGNAL) {
-        Arrays.fill(padstackShapes, padstackShape);
+        for (int l = 0; l < layerStructure.layers.length; l++) {
+          if (isGenericDefault[l]) {
+            layerPieces.get(l).addAll(validatedPieces);
+          } else if (layerPieces.get(l).isEmpty()) {
+            layerPieces.get(l).addAll(validatedPieces);
+            isGenericDefault[l] = true;
+          } else {
+            layerPieces.get(l).addAll(validatedPieces);
+          }
+        }
       } else {
         int shapeLayer = layerStructure.getNo(padShape.layer.name);
-        if (shapeLayer < 0 || shapeLayer >= padstackShapes.length) {
+        if (shapeLayer < 0 || shapeLayer >= layerStructure.layers.length) {
           FRLogger.warn(
               "Library.read_padstack_scope: layer number found at '"
                   + scanner.getScopeIdentifier()
                   + "'");
           return false;
         }
-        padstackShapes[shapeLayer] = padstackShape;
+        if (isGenericDefault[shapeLayer]) {
+          layerPieces.get(shapeLayer).clear();
+          isGenericDefault[shapeLayer] = false;
+        }
+        layerPieces.get(shapeLayer).addAll(validatedPieces);
       }
     }
-    boardPadstacks.add(padstackName, padstackShapes, isDrilllable, placedAbsolute);
+
+    ConvexShape[] padstackShapes = new ConvexShape[layerStructure.layers.length];
+    ConvexShape[][] auxiliaryShapes = new ConvexShape[layerStructure.layers.length][];
+    boolean hasNonConvex = false;
+
+    for (int l = 0; l < layerStructure.layers.length; l++) {
+      java.util.List<ConvexShape> pieces = layerPieces.get(l);
+      if (pieces.isEmpty()) {
+        continue;
+      }
+      if (pieces.size() == 1) {
+        padstackShapes[l] = pieces.get(0);
+      } else {
+        hasNonConvex = true;
+        FRLogger.warn(
+            "Library.read_padstack_scope: Padstack '"
+                + padstackName
+                + "' contains non-convex custom geometry ("
+                + pieces.size()
+                + " convex tiles on layer "
+                + l
+                + "). Decomposing into primary core pin and auxiliary copper obstacles.");
+
+        int coreIndex = -1;
+        for (int p = 0; p < pieces.size(); p++) {
+          if (pieces.get(p).contains(Point.ZERO)) {
+            coreIndex = p;
+            break;
+          }
+        }
+        if (coreIndex < 0) {
+          double maxArea = -1;
+          for (int p = 0; p < pieces.size(); p++) {
+            double area = pieces.get(p).area();
+            if (area > maxArea) {
+              maxArea = area;
+              coreIndex = p;
+            }
+          }
+        }
+        if (coreIndex < 0) {
+          coreIndex = 0;
+        }
+
+        padstackShapes[l] = pieces.get(coreIndex);
+        ConvexShape[] aux = new ConvexShape[pieces.size() - 1];
+        int auxIdx = 0;
+        for (int p = 0; p < pieces.size(); p++) {
+          if (p != coreIndex) {
+            aux[auxIdx++] = pieces.get(p);
+          }
+        }
+        auxiliaryShapes[l] = aux;
+      }
+    }
+
+    Padstack padstack =
+        boardPadstacks.add(
+            padstackName, padstackShapes, auxiliaryShapes, isDrilllable, placedAbsolute);
+    if (hasNonConvex) {
+      padstack.hasNonConvexGeometry = true;
+    }
     return true;
   }
 
