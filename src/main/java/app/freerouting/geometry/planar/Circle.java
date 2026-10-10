@@ -146,29 +146,50 @@ public class Circle implements ConvexShape, Serializable {
    * the tile is at most maxSegmentLength.
    */
   public TileShape boundingTile(int maxSegmentLength) {
-    int quadrantDivisionCount = this.radius / maxSegmentLength + 1;
-    if (quadrantDivisionCount <= 2) {
+    if (maxSegmentLength <= 0) {
       return this.boundingOctagon();
     }
-    Line[] tangentLineArr = new Line[quadrantDivisionCount * 4];
-    for (int i = 0; i < quadrantDivisionCount; i++) {
+    int quadrantDivisionCount = this.radius / maxSegmentLength + 1;
+    return boundingTileWithDivisions(quadrantDivisionCount);
+  }
+
+  /**
+   * Creates a conservative bounding convex polygon (Simplex) around this circle with the specified
+   * number of divisions per quadrant. Total number of polygon sides is {@code 4 *
+   * quadrantDivisionCount}.
+   *
+   * @param quadrantDivisionCount number of segment divisions per quadrant
+   * @return a circumscribed TileShape enclosing the circle
+   */
+  public TileShape boundingTileWithDivisions(int quadrantDivisionCount) {
+    if (this.radius <= 0 || quadrantDivisionCount <= 2) {
+      return this.boundingOctagon();
+    }
+    int divisions = quadrantDivisionCount;
+    Line[] tangentLineArr = new Line[divisions * 4];
+    for (int i = 0; i < divisions; i++) {
       // calculate the tangential points in the first quadrant
       Vector borderDelta;
       if (i == 0) {
         borderDelta = new IntVector(this.radius, 0);
       } else {
-        double currentAngle = i * Math.PI / (2.0 * quadrantDivisionCount);
-        int currentX = (int) Math.ceil(Math.sin(currentAngle) * this.radius);
-        int currentY = (int) Math.ceil(Math.cos(currentAngle) * this.radius);
+        double currentAngle = i * Math.PI / (2.0 * divisions);
+        int currentX = (int) Math.ceil(Math.cos(currentAngle) * this.radius);
+        int currentY = (int) Math.ceil(Math.sin(currentAngle) * this.radius);
         borderDelta = new IntVector(currentX, currentY);
       }
       Point currentA = this.center.translateBy(borderDelta);
-      Point currentB = currentA.turn90Degree(1, this.center);
-      Direction currentDirection = Direction.getInstance(currentB.differenceBy(this.center));
+      Direction currentDirection;
+      if (i == 0) {
+        currentDirection = Direction.UP;
+      } else {
+        double currentAngle = i * Math.PI / (2.0 * divisions);
+        currentDirection = Direction.getInstanceApprox(currentAngle + Math.PI / 2.0);
+      }
       Line currentTangent = new Line(currentA, currentDirection);
-      tangentLineArr[quadrantDivisionCount + i] = currentTangent;
-      tangentLineArr[2 * quadrantDivisionCount + i] = currentTangent.turn90Degree(1, this.center);
-      tangentLineArr[3 * quadrantDivisionCount + i] = currentTangent.turn90Degree(2, this.center);
+      tangentLineArr[divisions + i] = currentTangent;
+      tangentLineArr[2 * divisions + i] = currentTangent.turn90Degree(1, this.center);
+      tangentLineArr[3 * divisions + i] = currentTangent.turn90Degree(2, this.center);
       tangentLineArr[i] = currentTangent.turn90Degree(3, this.center);
     }
     return TileShape.getInstance(tangentLineArr);
@@ -311,7 +332,22 @@ public class Circle implements ConvexShape, Serializable {
   @Override
   public TileShape[] splitToConvex() {
     TileShape[] result = new TileShape[1];
-    result[0] = this.boundingTile();
+    // Approximate circular keepouts and areas with a conservative circumscribed 64-gon
+    // (16 divisions per quadrant) when the radius is large enough (>= 16 coordinate units).
+    // An octagonal approximation introduces ~8.24% radial overshoot at corner vertices,
+    // which for multi-millimeter mounting holes (e.g. ~206 um on a 5 mm hole) exceeds standard
+    // PCB clearance rules and causes false-positive DRC violations.
+    // In continuous Euclidean space, a regular 64-gon corner overshoot is 1/cos(2.8125 deg) - 1
+    // ~= 0.12% (~3 um on a 5 mm hole). On discrete integer coordinates, independent ceil()
+    // operations add up to O(1/radius) discretization error, yielding ~0.124% error at
+    // radius 25000, ~0.135% at radius 5000, and ~5-6% near the cutoff (radius 16-17), which is
+    // still strictly superior to the coarse octagon's 8.24%. Tiny circles (radius < 16) retain
+    // boundingOctagon() to avoid degenerate near-collinear sides.
+    if (this.radius >= 16) {
+      result[0] = this.boundingTileWithDivisions(16);
+    } else {
+      result[0] = this.boundingOctagon();
+    }
     return result;
   }
 

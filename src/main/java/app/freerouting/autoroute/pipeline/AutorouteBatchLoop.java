@@ -119,19 +119,26 @@ final class AutorouteBatchLoop {
         float fanoutPeakHeapMbAtStart = AutorouteRuntimeMetrics.currentHeapUsageMb();
         final float[] fanoutPeakHeapMbObserved = new float[] {fanoutPeakHeapMbAtStart};
         // Count pins that actually need fanout. BatchFanout only processes SMD pins that
-        // belong to a net, so exclude netless pins from the total. Among net-connected
-        // pins, count those that are already fully connected (empty unconnected set).
+        // belong to an active (non-ignored) net, so exclude netless and ignored pins from the
+        // total. Among routable pins, count those that are already fully connected (empty
+        // unconnected set).
         int netConnectedSmdPins = 0;
         int alreadyConnectedAtStart = 0;
+        int ignoredSmdPins = 0;
         for (app.freerouting.board.model.items.Pin pin : router.board.getSmdPins()) {
           if (pin.netCount() > 0) {
-            netConnectedSmdPins++;
-            if (pin.getUnconnectedSet(pin.getNetNumber(0)).isEmpty()) {
-              alreadyConnectedAtStart++;
+            if (pin.hasIgnoredNets()) {
+              ignoredSmdPins++;
+            } else {
+              netConnectedSmdPins++;
+              if (pin.getUnconnectedSet(pin.getNetNumber(0)).isEmpty()) {
+                alreadyConnectedAtStart++;
+              }
             }
           }
         }
         int pinsToFanout = netConnectedSmdPins - alreadyConnectedAtStart;
+        int netlessPins = router.board.getSmdPins().size() - netConnectedSmdPins - ignoredSmdPins;
         job.logInfo(
             "Fanout stage started on board '"
                 + router.board.getHash()
@@ -142,8 +149,10 @@ final class AutorouteBatchLoop {
                 + " SMD pins needing fanout ("
                 + alreadyConnectedAtStart
                 + " already connected, "
-                + (router.board.getSmdPins().size() - netConnectedSmdPins)
-                + " netless).");
+                + netlessPins
+                + " netless, "
+                + ignoredSmdPins
+                + " ignored).");
         BatchFanout.FanoutRunSummary fanoutSummary =
             BatchFanout.fanoutBoard(
                 router.board,
