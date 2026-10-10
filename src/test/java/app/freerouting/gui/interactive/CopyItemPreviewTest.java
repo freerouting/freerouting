@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import app.freerouting.TestFixtures;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.ObstacleArea;
 import app.freerouting.board.model.structure.FixedState;
@@ -21,7 +22,6 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Locale;
 import org.junit.jupiter.api.Tag;
@@ -34,7 +34,8 @@ class CopyItemPreviewTest {
   @ParameterizedTest
   @ValueSource(booleans = {false, true})
   void previewFollowsCursorWithoutMovingSourceComponent(boolean keepout) throws Exception {
-    try (var input = Files.newInputStream(Path.of("fixtures/Issue955-rotated-pad-contacts.dsn"))) {
+    try (var input =
+        Files.newInputStream(TestFixtures.resolvePath("Issue955-rotated-pad-contacts.dsn"))) {
       var board = ((BoardReadResult.Success) DsnReader.readBoard(input, null, null)).board();
       var pin =
           board.getPins().stream()

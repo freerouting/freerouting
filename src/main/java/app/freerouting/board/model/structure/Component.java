@@ -20,6 +20,8 @@ import java.util.Locale;
 public class Component
     implements UndoableObjects.Storable, ItemInfoPrinter.Printable, Serializable {
 
+  private static final long serialVersionUID = 8656938804017005076L;
+
   /** The name of the component. */
   public final String name;
 
@@ -37,7 +39,10 @@ public class Component
 
   private final String partNumber;
 
-  /** The location of the component. */
+  /** The integer location of the component (for serialization compatibility and integer grid). */
+  private Point location;
+
+  /** The high-precision location of the component. */
   private FloatPoint exactLocation;
 
   /** The rotation of the library package of the component in degree. */
@@ -65,6 +70,7 @@ public class Component
       String partNumber) {
     this.name = name;
     this.exactLocation = exactLocation;
+    this.location = exactLocation == null ? null : exactLocation.round();
     this.rotationInDegree = rotationInDegree;
     while (this.rotationInDegree >= 360) {
       this.rotationInDegree -= 360;
@@ -80,24 +86,68 @@ public class Component
     this.partNumber = partNumber;
   }
 
+  /**
+   * Creates a new instance of Component with integer location. If onFront is false, the component
+   * will be placed on the back side.
+   */
+  Component(
+      String name,
+      Point location,
+      double rotationInDegree,
+      boolean onFront,
+      Package packageFront,
+      Package packageBack,
+      int id,
+      boolean positionFixed,
+      String partNumber) {
+    this(
+        name,
+        location == null ? null : location.toFloat(),
+        rotationInDegree,
+        onFront,
+        packageFront,
+        packageBack,
+        id,
+        positionFixed,
+        partNumber);
+  }
+
+  @java.io.Serial
+  private void readObject(java.io.ObjectInputStream stream)
+      throws java.io.IOException, ClassNotFoundException {
+    stream.defaultReadObject();
+    if (this.exactLocation == null && this.location != null) {
+      this.exactLocation = this.location.toFloat();
+    } else if (this.location == null && this.exactLocation != null) {
+      this.location = this.exactLocation.round();
+    }
+  }
+
   /** Returns the location of this component. */
   public Point getLocation() {
-    return exactLocation == null ? null : exactLocation.round();
+    if (exactLocation != null) {
+      return exactLocation.round();
+    }
+    return location;
   }
 
   /** Returns the high-precision location of this component, or null if unplaced. */
   public FloatPoint getExactLocation() {
-    return exactLocation;
+    if (exactLocation != null) {
+      return exactLocation;
+    }
+    return location == null ? null : location.toFloat();
   }
 
   /** Shared placement for pads, outlines and keepouts. */
   public PlacementTransform placementTransform(boolean rotateFirst) {
-    return new PlacementTransform(exactLocation, rotationInDegree, !onFront, rotateFirst);
+    return new PlacementTransform(getExactLocation(), rotationInDegree, !onFront, rotateFirst);
   }
 
   /** Restores a pose after a rejected detached-item transform. */
   public void restorePose(Component original) {
     exactLocation = original.exactLocation;
+    location = original.location;
     rotationInDegree = original.rotationInDegree;
     onFront = original.onFront;
   }
@@ -108,7 +158,7 @@ public class Component
   }
 
   public boolean isPlaced() {
-    return exactLocation != null;
+    return exactLocation != null || location != null;
   }
 
   /** If false, the component will be placed on the back side of the board. */
@@ -124,6 +174,10 @@ public class Component
     if (exactLocation != null) {
       FloatPoint vf = vector.toFloat();
       exactLocation = new FloatPoint(exactLocation.x + vf.x, exactLocation.y + vf.y);
+      location = exactLocation.round();
+    } else if (location != null) {
+      location = location.translateBy(vector);
+      exactLocation = location.toFloat();
     }
   }
 
@@ -147,6 +201,10 @@ public class Component
     }
     if (exactLocation != null) {
       this.exactLocation = this.exactLocation.turn90Degree(factor, pole.toFloat());
+      this.location = this.exactLocation.round();
+    } else if (this.location != null) {
+      this.location = this.location.turn90Degree(factor, pole);
+      this.exactLocation = this.location.toFloat();
     }
   }
 
@@ -173,6 +231,11 @@ public class Component
     }
     if (exactLocation != null) {
       this.exactLocation = this.exactLocation.rotate(Math.toRadians(angleInDegree), pole.toFloat());
+      this.location = this.exactLocation.round();
+    } else if (this.location != null) {
+      this.location =
+          this.location.toFloat().rotate(Math.toRadians(angleInDegree), pole.toFloat()).round();
+      this.exactLocation = this.location.toFloat();
     }
   }
 
@@ -191,6 +254,10 @@ public class Component
     this.onFront = !this.onFront;
     if (exactLocation != null) {
       this.exactLocation = new FloatPoint(2 * pole.x - this.exactLocation.x, this.exactLocation.y);
+      this.location = this.exactLocation.round();
+    } else if (this.location != null) {
+      this.location = this.location.mirrorVertical(pole);
+      this.exactLocation = this.location.toFloat();
     }
   }
 

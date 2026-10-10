@@ -12,7 +12,6 @@ import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.PolylineArea;
 import app.freerouting.geometry.planar.PolylineShape;

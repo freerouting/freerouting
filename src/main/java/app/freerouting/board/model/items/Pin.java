@@ -8,7 +8,6 @@ import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.core.library.LogicalPart;
 import app.freerouting.core.library.Package;
 import app.freerouting.core.library.Padstack;
-import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.Direction;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -188,6 +187,7 @@ public class Pin extends DrillItem implements Serializable {
         ConvexShape currentShape = padstack.getShape(padstackLayer);
         if (currentShape == null) {
           continue;
+        }
         this.precalculatedShapes[shapeIndex] = (ConvexShape) transformToBoard(currentShape);
       }
     }
@@ -219,10 +219,7 @@ public class Pin extends DrillItem implements Serializable {
     }
     return component
         .placementTransform(board.components.getFlipStyleRotateFirst())
-        .shape(
-            padstackShape,
-            packagePin.getExactRelativeLocation(),
-            packagePin.rotationInDegree);
+        .shape(padstackShape, packagePin.getExactRelativeLocation(), packagePin.rotationInDegree);
   }
 
   /** Returns the layer of the padstack shape corresponding to the shape with index index. */

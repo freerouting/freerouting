@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import app.freerouting.TestFixtures;
 import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.ObstacleArea;
@@ -25,13 +26,13 @@ import app.freerouting.io.specctra.SesWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 
 /** Regression coverage for precise placement throughout the component lifecycle. */
 class Issue955PlacementLifecycleTest {
   private RoutingBoard load() throws Exception {
-    try (var in = Files.newInputStream(Path.of("fixtures/Issue955-rotated-pad-contacts.dsn"))) {
+    try (var in =
+        Files.newInputStream(TestFixtures.resolvePath("Issue955-rotated-pad-contacts.dsn"))) {
       return (RoutingBoard) ((BoardReadResult.Success) DsnReader.readBoard(in, null, null)).board();
     }
   }
@@ -246,8 +247,6 @@ class Issue955PlacementLifecycleTest {
     var board = load();
     var out = new ByteArrayOutputStream();
     SesWriter.write(board, out, "review.dsn");
-    Files.createDirectories(Path.of("logs/Issue955"));
-    Files.write(Path.of("logs/Issue955/round-trip.ses"), out.toByteArray());
     String placement =
         out.toString(java.nio.charset.StandardCharsets.UTF_8)
             .lines()

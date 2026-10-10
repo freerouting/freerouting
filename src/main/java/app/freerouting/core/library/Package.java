@@ -17,6 +17,8 @@ import java.util.Locale;
  */
 public class Package implements Comparable<Package>, ItemInfoPrinter.Printable, Serializable {
 
+  private static final long serialVersionUID = -8340961798629732334L;
+
   /** The name of the package. */
   public final String name;
 
@@ -130,6 +132,8 @@ public class Package implements Comparable<Package>, ItemInfoPrinter.Printable, 
   /** A padstack instance at a precise package-local position. */
   public static class Pin implements Serializable {
 
+    private static final long serialVersionUID = -7159316874351447008L;
+
     /** The name of the pin. */
     public final String name;
 
@@ -162,7 +166,10 @@ public class Package implements Comparable<Package>, ItemInfoPrinter.Printable, 
 
     /** Returns the high-precision relative location of this pin. */
     public FloatPoint getExactRelativeLocation() {
-      return this.exactRelativeLocation;
+      if (this.exactRelativeLocation != null) {
+        return this.exactRelativeLocation;
+      }
+      return this.relativeLocation != null ? this.relativeLocation.toFloat() : FloatPoint.ZERO;
     }
   }
 
