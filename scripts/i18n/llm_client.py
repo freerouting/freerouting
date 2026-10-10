@@ -9,6 +9,7 @@ import time
 from typing import Any, Dict, List, Optional, Tuple
 
 from i18n_output import err
+from properties_io import unwrap_translation_quotes
 
 DEFAULT_BATCH_SIZE = 15
 DEFAULT_GEMINI_MODEL = "gemini-3.6-flash"
@@ -215,7 +216,32 @@ def _call_gemini(prompt: str, model: str, api_key: str, base_url: str, max_token
         finish_reason = candidates[0].get("finishReason")
         raise ValueError(f"Gemini returned empty text (finishReason={finish_reason})")
 
-    return content.strip("\"'")
+    return content
+
+
+# A backslash that does not start a JSON escape. .properties text is full of them (\#, \:,
+# \=), and a model echoing a segment such as "\#_global_optimal_passes\:\#_prioritized_passes"
+# back inside a JSON object makes the whole response invalid JSON.
+_INVALID_JSON_ESCAPE_RE = re.compile(r'\\(?!["\\/bfnrtu])')
+# An unquoted integer key, as in {0: "..."}.
+_BARE_INT_KEY_RE = re.compile(r'([{,]\s*)(\d+)(\s*:)')
+
+
+def _repair_json(text: str) -> str:
+    """Double backslashes that are not JSON escapes and quote bare integer keys."""
+    return _BARE_INT_KEY_RE.sub(r'\1"\2"\3', _INVALID_JSON_ESCAPE_RE.sub(r"\\\\", text))
+
+
+def _loads_object(text: str) -> Optional[Dict[str, Any]]:
+    """json.loads, retried once on the repaired text."""
+    for candidate in (text, _repair_json(text)):
+        try:
+            parsed = json.loads(candidate)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(parsed, dict):
+            return parsed
+    return None
 
 
 def _extract_json_object(text: str) -> Optional[Dict[str, Any]]:
@@ -223,21 +249,13 @@ def _extract_json_object(text: str) -> Optional[Dict[str, Any]]:
     if text.startswith("```"):
         text = re.sub(r"^```(?:json)?\s*", "", text)
         text = re.sub(r"\s*```$", "", text)
-    try:
-        parsed = json.loads(text)
-        if isinstance(parsed, dict):
-            return parsed
-    except json.JSONDecodeError:
-        pass
+    parsed = _loads_object(text)
+    if parsed is not None:
+        return parsed
 
     match = re.search(r"\{.*\}", text, re.DOTALL)
     if match:
-        try:
-            parsed = json.loads(match.group(0))
-            if isinstance(parsed, dict):
-                return parsed
-        except json.JSONDecodeError:
-            return None
+        return _loads_object(match.group(0))
     return None
 
 
@@ -273,9 +291,10 @@ def translate_batch(
         err("  Failed to parse batch JSON response; will retry keys individually")
         return None, True
 
+    english_by_key = dict(zip(expected_keys, values)) if len(values) == len(expected_keys) else {}
     result: Dict[str, str] = {}
     for key in expected_keys:
         value = parsed.get(key)
         if isinstance(value, str) and value.strip():
-            result[key] = value.strip().strip("\"'")
+            result[key] = unwrap_translation_quotes(value, english_by_key.get(key, ""))
     return result, True
