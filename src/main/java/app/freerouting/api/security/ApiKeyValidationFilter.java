@@ -23,6 +23,7 @@ import java.io.IOException;
  * <ul>
  *   <li><b>/v1/system/*</b> - System monitoring and health check endpoints
  *   <li><b>/v1/analytics/*</b> - Analytics tracking endpoints
+ *   <li><b>/v1/surveys/*</b> - In-app micro-survey endpoints
  *   <li><b>/dev/*</b> - Development and testing endpoints
  *   <li><b>/openapi/*</b> - OpenAPI specification endpoints
  *   <li><b>/swagger-ui</b> - Swagger UI documentation
@@ -93,6 +94,7 @@ public class ApiKeyValidationFilter implements ContainerRequestFilter {
     // Check excluded paths
     return normalizedPath.startsWith("v1/system/")
         || normalizedPath.startsWith("v1/analytics/")
+        || normalizedPath.startsWith("v1/surveys/")
         || normalizedPath.startsWith("dev/")
         || normalizedPath.startsWith("openapi/")
         || "swagger-ui".equals(normalizedPath)

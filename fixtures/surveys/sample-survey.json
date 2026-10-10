@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "id": "survey-sample-feature-x",
+  "topic": "Opinion on Feature X",
+  "question": "How satisfied are you with the routing completion rate on multi-layer boards?",
+  "options": [
+    "Very Satisfied",
+    "Acceptable",
+    "Needs Improvement"
+  ],
+  "min_client_version": "2.5.0",
+  "expires_at_utc": "2029-12-31T23:59:59Z"
+}

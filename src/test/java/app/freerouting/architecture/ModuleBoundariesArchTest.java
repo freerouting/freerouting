@@ -40,6 +40,7 @@ class ModuleBoundariesArchTest {
     "app.freerouting.io..",
     "app.freerouting.core..",
     "app.freerouting.analytics..",
+    "app.freerouting.surveys..",
     "app.freerouting.cli..",
     "app.freerouting.startup.."
   };

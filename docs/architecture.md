@@ -23,6 +23,7 @@ flowchart TD
         GUI["**gui windows/menus/board + workspace + interactive + a11y**\nSwing desktop"]
         RENDER["**gui.rendering**\nGUI-owned board renderer"]
         A11Y["**gui.a11y**\nAccessibility locators"]
+        SURVEY_UI["**gui.surveys**\nSurvey popover · buttons renderer"]
         API["**api.v1**\nREST / HTTP"]
         MCP["**api.mcp**\nMCP JSON-RPC + SSE + WS"]
         CLI["**cli**\nNative CLI entry point"]
@@ -32,6 +33,7 @@ flowchart TD
         direction LR
         MGMT["**management**\nScheduler · sessions"]
         ANALYTICS["**analytics**\nMetrics · telemetry"]
+        SURVEYS["**surveys**\nMicro-surveys · cache · coordinator"]
         CORE["**core**\nJobs · sessions · stats"]
         CFG["**settings**\nConfig merging"]
     end
@@ -55,6 +57,8 @@ flowchart TD
 
     GUI --> MGMT
     GUI --> RENDER --> BOARD
+    GUI --> SURVEY_UI --> SURVEYS
+    SURVEYS -. HTTP .-> API
     RENDER --> AR
     A11Y -. helpers .-> GUI
     API --> MGMT
@@ -93,6 +97,8 @@ Use the table below to jump to the package most likely to own the behavior you a
 | MCP server protocol bridge | `app.freerouting.api.mcp` |
 | Runtime settings and settings sources | `app.freerouting.settings` |
 | Router or optimizer board scores | `app.freerouting.core.scoring` (`BoardStatistics.getRouterScore` / `getOptimizerScore`) |
+| Micro-survey coordinator, local cache, or client | `app.freerouting.surveys` |
+| Micro-survey popover, buttons renderer, or GUI survey presentation | `app.freerouting.gui.surveys` |
 | Geometry, shapes, points, and planar math | `app.freerouting.geometry.planar` |
 | CLI entry point and native execution | `app.freerouting.cli` |
 | Startup bootstrap, settings initialization, and CPU calibration | `app.freerouting.startup` |
@@ -289,6 +295,14 @@ component fabrication labels, dispatch to board-item paint strategies, and adapt
 headless autorouter diagnostic snapshots. `BoardRenderer` and `AutorouteDiagnosticRenderer` are the
 GUI rendering entry points; `BasicBoard` and `autoroute` remain headless and do not own GUI painting.
 
+### `app.freerouting.surveys`
+
+Micro-survey models, local cache, HTTP transport, and survey lifecycle coordinator (`SurveyCoordinator`, `SurveyClient`, `SurveyCache`, `SurveyDefinition`, `SurveyResponsePayload`). Headless service; strictly independent of GUI/Swing.
+
+### `app.freerouting.gui.surveys`
+
+GUI presentation components for micro-surveys, including `SurveyPopover` (non-modal anchor-attached popover with optimistic response feedback) and `SurveyRenderer` / `ButtonsSurveyRenderer`.
+
 ### Notable Nested Packages
 
 Several implementation areas live one level below the top-level package grouping above:
@@ -296,6 +310,8 @@ Several implementation areas live one level below the top-level package grouping
 - `app.freerouting.geometry.planar` contains the actual planar primitives and helper classes; start with [Point.java](../src/main/java/app/freerouting/geometry/planar/Point.java) and [Shape.java](../src/main/java/app/freerouting/geometry/planar/Shape.java).
 - `app.freerouting.io.specctra` contains DSN and SES import/export; parser internals live in `parser/`. Start with [DsnReader.java](../src/main/java/app/freerouting/io/specctra/DsnReader.java), [DsnWriter.java](../src/main/java/app/freerouting/io/specctra/DsnWriter.java), [SesReader.java](../src/main/java/app/freerouting/io/specctra/SesReader.java), and [SesWriter.java](../src/main/java/app/freerouting/io/specctra/SesWriter.java).
 - `app.freerouting.analytics` contains analytics telemetry and dispatch; start with [FRAnalytics.java](../src/main/java/app/freerouting/analytics/FRAnalytics.java).
+- `app.freerouting.surveys` contains the micro-survey coordinator, cache, and HTTP transport; start with [SurveyCoordinator.java](../src/main/java/app/freerouting/surveys/SurveyCoordinator.java).
+- `app.freerouting.gui.surveys` contains the survey popover and button rendering components; start with [SurveyPopover.java](../src/main/java/app/freerouting/gui/surveys/SurveyPopover.java).
 - `app.freerouting.util.gson` contains Gson adapters and JSON provider helpers; start with [GsonProvider.java](../src/main/java/app/freerouting/util/gson/GsonProvider.java).
 - `app.freerouting.core.scoring` contains board statistics and scoring helpers; start with [BoardStatistics.java](../src/main/java/app/freerouting/core/scoring/BoardStatistics.java).
 - `app.freerouting.core.results` contains the headless CLI routing result manifest; start with [RoutingResultManifest.java](../src/main/java/app/freerouting/core/results/RoutingResultManifest.java).

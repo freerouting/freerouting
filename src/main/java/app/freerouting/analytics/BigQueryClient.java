@@ -14,7 +14,10 @@ import com.google.cloud.bigquery.BigQuery;
 import com.google.cloud.bigquery.BigQueryOptions;
 import com.google.cloud.bigquery.InsertAllRequest;
 import com.google.cloud.bigquery.InsertAllResponse;
+import com.google.cloud.bigquery.QueryJobConfiguration;
+import com.google.cloud.bigquery.QueryParameterValue;
 import com.google.cloud.bigquery.TableId;
+import com.google.cloud.bigquery.TableResult;
 import com.google.cloud.http.HttpTransportOptions;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -411,5 +414,82 @@ public class BigQueryClient implements AnalyticsClient {
     }
 
     return fields;
+  }
+
+  /**
+   * BigQuery table that stores micro-survey responses. Rows carry the standard analytics metadata
+   * columns ({@code id}, {@code received_at}, {@code user_id}, {@code event}, ...) plus the
+   * flattened payload columns {@code survey_id}, {@code option} and {@code client_version}.
+   */
+  static final String SURVEY_RESPONSE_TABLE = "survey_response";
+
+  /**
+   * Asynchronously inserts a survey response into the {@code survey_response} BigQuery table. The
+   * caller (SurveyControllerV1) is responsible for the server-side dedup check; this method only
+   * records the answer.
+   *
+   * @param surveyId the survey that was answered
+   * @param userId the anonymous profile UUID
+   * @param option the option the user clicked
+   * @param clientVersion the desktop client version
+   */
+  public void recordSurveyResponse(
+      String surveyId, String userId, String option, String clientVersion) {
+    if (surveyId == null || userId == null || option == null) {
+      return;
+    }
+    Payload payload = new Payload();
+    payload.userId = userId;
+    payload.anonymousId = userId;
+    payload.context = new Context();
+    payload.context.library = new Library();
+    payload.context.library.name = libraryName;
+    payload.context.library.version = libraryVersion;
+    payload.event = SURVEY_RESPONSE_TABLE;
+
+    Properties properties = new Properties();
+    properties.put("survey_id", surveyId);
+    properties.put("option", option);
+    if (clientVersion != null) {
+      properties.put("client_version", clientVersion);
+    }
+    payload.properties = properties;
+
+    sendPayloadAsync(payload);
+  }
+
+  /**
+   * Checks whether a response for the given {@code (surveyId, userId)} has already been recorded.
+   * Enforces server-side deduplication in case the local cache is cleared.
+   *
+   * @return {@code true} if a row already exists; {@code false} if none exists or the lookup could
+   *     not be performed. A transient lookup failure fails open (returns {@code false}) so that a
+   *     real answer is never silently dropped on the server's side; the controller still writes the
+   *     row, and BigQuery's row insertion is idempotent via the row {@code id}.
+   */
+  public boolean hasSurveyResponse(String surveyId, String userId) {
+    if (surveyId == null || userId == null) {
+      return false;
+    }
+    try {
+      String query =
+          "SELECT 1 FROM `"
+              + BIGQUERY_PROJECT_ID
+              + "."
+              + BIGQUERY_DATASET_ID
+              + "."
+              + SURVEY_RESPONSE_TABLE
+              + "` WHERE survey_id = @survey_id AND user_id = @user_id LIMIT 1";
+      QueryJobConfiguration config =
+          QueryJobConfiguration.newBuilder(query)
+              .addNamedParameter("survey_id", QueryParameterValue.string(surveyId))
+              .addNamedParameter("user_id", QueryParameterValue.string(userId))
+              .build();
+      TableResult result = bigQuery.query(config);
+      return result != null && result.getTotalRows() > 0;
+    } catch (Exception e) {
+      FRLogger.warn("Could not check survey_response dedup for survey '" + surveyId + "': " + e);
+      return false;
+    }
   }
 }

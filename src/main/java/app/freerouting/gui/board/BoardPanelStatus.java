@@ -1,21 +1,36 @@
 package app.freerouting.gui.board;
 
+import app.freerouting.Freerouting;
 import app.freerouting.gui.a11y.A11y;
 import app.freerouting.gui.a11y.GuiLocators;
 import app.freerouting.gui.controls.SmartLabel;
 import app.freerouting.gui.support.GuiTextManager;
+import app.freerouting.gui.surveys.ButtonsSurveyRenderer;
+import app.freerouting.gui.surveys.SurveyPopover;
+import app.freerouting.logger.FRLogger;
+import app.freerouting.settings.AppPaths;
+import app.freerouting.settings.GlobalSettings;
+import app.freerouting.surveys.SurveyCache;
+import app.freerouting.surveys.SurveyClient;
+import app.freerouting.surveys.SurveyCoordinator;
+import app.freerouting.surveys.SurveyDefinition;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 /**
@@ -32,6 +47,8 @@ public class BoardPanelStatus extends JPanel {
   public final JLabel currentBoardScore;
   public final JLabel mousePosition;
   public final JLabel unitLabel;
+  public final JButton surveyTriggerButton;
+  private SurveyCoordinator surveyCoordinator;
   // An icon for errors and warnings
   private final JPanel errorsWarningsPanel;
   private final JLabel errorIcon;
@@ -101,7 +118,7 @@ public class BoardPanelStatus extends JPanel {
     JPanel rightMessagePanel = new JPanel(new BorderLayout());
     rightMessagePanel.setMinimumSize(new Dimension(200, 20));
     rightMessagePanel.setOpaque(false);
-    rightMessagePanel.setPreferredSize(new Dimension(450, 20));
+    rightMessagePanel.setPreferredSize(new Dimension(550, 20));
 
     // Initialize current layer label
     currentLayer = new JLabel();
@@ -115,8 +132,8 @@ public class BoardPanelStatus extends JPanel {
 
     // Create cursor panel
     JPanel cursorPanel = new JPanel(new BorderLayout());
-    cursorPanel.setMinimumSize(new Dimension(220, 14));
-    cursorPanel.setPreferredSize(new Dimension(220, 14));
+    cursorPanel.setMinimumSize(new Dimension(220, 20));
+    cursorPanel.setPreferredSize(new Dimension(340, 20));
 
     // Initialize mouse position label
     mousePosition = new JLabel();
@@ -132,13 +149,32 @@ public class BoardPanelStatus extends JPanel {
     unitLabel.setMaximumSize(new Dimension(100, 14));
     unitLabel.setMinimumSize(new Dimension(50, 14));
     unitLabel.setPreferredSize(new Dimension(50, 14));
-    cursorPanel.add(unitLabel, BorderLayout.EAST);
+
+    // Initialize survey trigger pill in status bar (hidden by default)
+    surveyTriggerButton = new JButton();
+    surveyTriggerButton.setVisible(false);
+    surveyTriggerButton.setFocusPainted(false);
+    surveyTriggerButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    surveyTriggerButton.setFont(surveyTriggerButton.getFont().deriveFont(11.0f));
+    surveyTriggerButton.setMargin(new Insets(1, 6, 1, 6));
+    surveyTriggerButton.setBorder(
+        BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(180, 180, 180), 1),
+            BorderFactory.createEmptyBorder(1, 6, 1, 6)));
+
+    JPanel unitAndSurveyPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 4, 0));
+    unitAndSurveyPanel.setOpaque(false);
+    unitAndSurveyPanel.add(unitLabel);
+    unitAndSurveyPanel.add(surveyTriggerButton);
+    cursorPanel.add(unitAndSurveyPanel, BorderLayout.EAST);
 
     rightMessagePanel.add(cursorPanel, BorderLayout.EAST);
 
     add(rightMessagePanel, BorderLayout.EAST);
 
     wireAccessibility(tm);
+
+    initSurveys(createDefaultSurveyCoordinator());
   }
 
   /**
@@ -167,6 +203,9 @@ public class BoardPanelStatus extends JPanel {
     A11y.describe(errorLabel, tm.getText("errors"), null);
     A11y.tag(warningLabel, GuiLocators.STATUS_WARNING_COUNT);
     A11y.describe(warningLabel, tm.getText("warnings"), null);
+
+    A11y.tag(surveyTriggerButton, GuiLocators.STATUS_SURVEY_TRIGGER);
+    A11y.describe(surveyTriggerButton, "Quick Poll", null);
   }
 
   /** Adds mouse listeners for error and warning labels to handle click events. */
@@ -198,6 +237,103 @@ public class BoardPanelStatus extends JPanel {
    */
   public void addErrorOrWarningLabelClickedListener(ErrorOrWarningLabelClickedListener listener) {
     errorOrWarningLabelClickedListeners.add(listener);
+  }
+
+  /**
+   * Initializes the micro-survey trigger button with the provided coordinator. Polls for an
+   * eligible survey asynchronously and displays the trigger pill on the EDT if available.
+   *
+   * @param coordinator the survey coordinator to use
+   */
+  public void initSurveys(SurveyCoordinator coordinator) {
+    this.surveyCoordinator = coordinator;
+    if (this.surveyCoordinator == null) {
+      return;
+    }
+    this.surveyCoordinator
+        .pollForSurvey()
+        .thenAccept(
+            survey -> {
+              if (survey != null) {
+                SwingUtilities.invokeLater(() -> showSurveyTrigger(survey));
+              }
+            });
+  }
+
+  /**
+   * Displays the survey trigger pill for the active survey definition.
+   *
+   * @param survey the survey definition to present
+   */
+  public void showSurveyTrigger(SurveyDefinition survey) {
+    if (survey == null) {
+      return;
+    }
+    String label;
+    if (survey.topic != null && !survey.topic.isBlank()) {
+      String trimmedTopic = survey.topic.trim();
+      if (trimmedTopic.toLowerCase(java.util.Locale.ROOT).startsWith("poll")) {
+        label = trimmedTopic;
+      } else {
+        label = "Poll: " + trimmedTopic;
+      }
+    } else {
+      label = "Quick Poll";
+    }
+
+    if (label.length() > 28) {
+      label = label.substring(0, 25) + "...";
+    }
+
+    surveyTriggerButton.setText(label);
+    surveyTriggerButton.setToolTipText(
+        (survey.question != null && !survey.question.isBlank()) ? survey.question : label);
+    for (var l : surveyTriggerButton.getActionListeners()) {
+      surveyTriggerButton.removeActionListener(l);
+    }
+    surveyTriggerButton.addActionListener(
+        _ -> {
+          SurveyPopover popover =
+              new SurveyPopover(
+                  survey,
+                  surveyCoordinator,
+                  new ButtonsSurveyRenderer(),
+                  () -> surveyTriggerButton.setVisible(false));
+          popover.showAnchoredAbove(surveyTriggerButton);
+        });
+    surveyTriggerButton.setVisible(true);
+    revalidate();
+    repaint();
+  }
+
+  private static SurveyCoordinator createDefaultSurveyCoordinator() {
+    try {
+      if (Freerouting.globalSettings == null) {
+        return null;
+      }
+      String userId =
+          Freerouting.globalSettings.userProfileSettings != null
+                  && Freerouting.globalSettings.userProfileSettings.userId != null
+              ? Freerouting.globalSettings.userProfileSettings.userId.toString()
+              : "";
+      String version = GlobalSettings.getReleaseSafeVersion();
+      SurveyCache cache = new SurveyCache(AppPaths.getDefaultDataDirectory());
+      SurveyClient client = new SurveyClient();
+      return new SurveyCoordinator(
+          client,
+          cache,
+          userId,
+          version,
+          () ->
+              Freerouting.globalSettings != null
+                  && Freerouting.globalSettings.userProfileSettings != null
+                  && Freerouting.globalSettings.userProfileSettings.isSurveysAllowed(
+                      Freerouting.globalSettings.usageAndDiagnosticData != null
+                          && Freerouting.globalSettings.usageAndDiagnosticData.disableAnalytics));
+    } catch (Exception e) {
+      FRLogger.warn("Failed to initialize SurveyCoordinator: " + e.getMessage());
+      return null;
+    }
   }
 
   /**

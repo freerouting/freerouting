@@ -49,9 +49,38 @@ class BoardPanelStatusA11yTest {
           GuiA11yHarness.findByLocator(statusBar, GuiLocators.STATUS_UNIT);
           GuiA11yHarness.findByLocator(statusBar, GuiLocators.STATUS_ERROR_COUNT);
           GuiA11yHarness.findByLocator(statusBar, GuiLocators.STATUS_WARNING_COUNT);
+          GuiA11yHarness.findByLocator(statusBar, GuiLocators.STATUS_SURVEY_TRIGGER);
 
           // No duplicate or empty sibling accessible names anywhere in the status bar.
           GuiA11yHarness.requireUniqueSiblingNames(statusBar);
+        });
+  }
+
+  @Test
+  void surveyTriggerPillBecomesVisibleAndAccessibleWhenSurveyProvided() {
+    BoardPanelStatus statusBar = GuiA11yHarness.onEdt(() -> new BoardPanelStatus(Locale.ENGLISH));
+
+    GuiA11yHarness.onEdt(
+        () -> {
+          Component button =
+              GuiA11yHarness.findByLocator(statusBar, GuiLocators.STATUS_SURVEY_TRIGGER);
+          assertNotNull(button);
+          assertEquals(false, button.isVisible(), "survey trigger should initially be hidden");
+
+          app.freerouting.surveys.SurveyDefinition survey =
+              new app.freerouting.surveys.SurveyDefinition();
+          survey.id = "test-status-poll";
+          survey.topic = "Performance";
+          survey.question = "How is routing performance?";
+          survey.options = new String[] {"Great", "Needs work"};
+
+          statusBar.showSurveyTrigger(survey);
+
+          assertEquals(true, button.isVisible(), "survey trigger should be visible once active");
+          GuiA11yHarness.requireRole(
+              button, GuiLocators.STATUS_SURVEY_TRIGGER, AccessibleRole.PUSH_BUTTON);
+          GuiA11yHarness.requireAccessibleName(button, GuiLocators.STATUS_SURVEY_TRIGGER);
+          assertEquals("Poll: Performance", ((javax.swing.JButton) button).getText());
         });
   }
 

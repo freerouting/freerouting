@@ -103,6 +103,8 @@ The primary way to configure Freerouting is through a JSON settings file. This f
 
 - **`id`**: A unique identifier for the user's profile. This is typically a UUID (Universally Unique Identifier).
 - **`email`**: The user's email address (optional).
+- **`allow_telemetry`**: Whether anonymous diagnostic and usage telemetry is permitted. Defaults to `true`.
+- **`allow_surveys`**: Explicit opt-in/opt-out for occasional in-app micro-surveys. Defaults to `null` (inherits `allow_telemetry` unless telemetry is globally disabled).
 
 #### **`logging` Section**
 
