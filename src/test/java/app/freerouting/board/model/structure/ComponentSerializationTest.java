@@ -42,13 +42,13 @@ class ComponentSerializationTest {
             "C1", new FloatPoint(1234.56, 7890.12), 45.0, true, null, null, 1, false, "CAP-0603");
 
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    try (ObjectOutputStream oos = new ObjectOutputStream(baos)) {
-      oos.writeObject(cmp);
+    try (ObjectOutputStream outputStream = new ObjectOutputStream(baos)) {
+      outputStream.writeObject(cmp);
     }
 
-    try (ObjectInputStream ois =
+    try (ObjectInputStream inputStream =
         new ObjectInputStream(new ByteArrayInputStream(baos.toByteArray()))) {
-      Component reloaded = (Component) ois.readObject();
+      Component reloaded = (Component) inputStream.readObject();
       assertNotNull(reloaded);
       assertEquals("C1", reloaded.name);
       assertNotNull(reloaded.getExactLocation());
@@ -65,13 +65,13 @@ class ComponentSerializationTest {
     Package.Pin pin = new Package.Pin("1", 10, new FloatPoint(15.25, -20.75), 90.0);
 
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    try (ObjectOutputStream oos = new ObjectOutputStream(baos)) {
-      oos.writeObject(pin);
+    try (ObjectOutputStream outputStream = new ObjectOutputStream(baos)) {
+      outputStream.writeObject(pin);
     }
 
-    try (ObjectInputStream ois =
+    try (ObjectInputStream inputStream =
         new ObjectInputStream(new ByteArrayInputStream(baos.toByteArray()))) {
-      Package.Pin reloaded = (Package.Pin) ois.readObject();
+      Package.Pin reloaded = (Package.Pin) inputStream.readObject();
       assertNotNull(reloaded);
       assertEquals("1", reloaded.name);
       assertEquals(10, reloaded.padstackId);
@@ -90,13 +90,13 @@ class ComponentSerializationTest {
         new Component("R1", new IntPoint(1000, 2000), 0.0, true, null, null, 2, false, "RES-0805");
 
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    try (ObjectOutputStream oos = new ObjectOutputStream(baos)) {
-      oos.writeObject(cmp);
+    try (ObjectOutputStream outputStream = new ObjectOutputStream(baos)) {
+      outputStream.writeObject(cmp);
     }
 
-    try (ObjectInputStream ois =
+    try (ObjectInputStream inputStream =
         new ObjectInputStream(new ByteArrayInputStream(baos.toByteArray()))) {
-      Component reloaded = (Component) ois.readObject();
+      Component reloaded = (Component) inputStream.readObject();
       assertNotNull(reloaded);
       assertEquals(new IntPoint(1000, 2000), reloaded.getLocation());
       assertNotNull(reloaded.getExactLocation());
