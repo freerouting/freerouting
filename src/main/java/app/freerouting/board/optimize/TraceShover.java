@@ -716,6 +716,19 @@ public class TraceShover {
       if (foundObstacle instanceof ObstacleArea || foundObstacle instanceof Trace) {
         if (foundObstacle.treeShapeCount(searchTree) == 1) {
           obstacleShape = foundObstacle.getTreeShape(searchTree, 0);
+        } else if (foundObstacle instanceof ObstacleArea area) {
+          // Search-tree sections are an indexing detail, not necessarily a non-convex obstacle.
+          // Recover the whole convex area, with the same compensation applied before partitioning
+          // in ShapeSearchTree.calculateTreeShapes. Do not bridge holes or concave areas.
+          TileShape[] convexShapes = area.splitToConvex();
+          if (convexShapes != null && convexShapes.length == 1) {
+            obstacleShape =
+                (ConvexShape)
+                    convexShapes[0].enlarge(
+                        searchTree.clearanceCompensationValue(area.clearanceClassIndex(), layer));
+          } else {
+            trySpringOver = false;
+          }
         } else {
           trySpringOver = false;
         }
@@ -732,14 +745,23 @@ public class TraceShover {
       int offset = halfWidth + 1;
       offsetShape = (TileShape) obstacleShape.enlarge(offset);
     } else {
-      // enlarge the shape in 2 steps  for symmetry reasons
       int offset = halfWidth + 1;
       double halfClOffset =
           0.5
               * board.clearanceValue(
                   foundObstacle.clearanceClassIndex(), clearanceClassIndex, layer);
-      offsetShape = (TileShape) obstacleShape.enlarge(offset + halfClOffset);
-      offsetShape = (TileShape) offsetShape.enlarge(halfClOffset);
+      if (obstacleShape instanceof TileShape tile && !tile.isIntOctagon()) {
+        // Match the checker's separately rounded half-clearance and width expansions. Combining
+        // width and half-clearance can consume the one-unit guard because Line.translate rounds
+        // the scaled displacement along a coordinate axis. Keeping width separate leaves a gap.
+        offsetShape = (TileShape) obstacleShape.enlarge(halfClOffset);
+        offsetShape = (TileShape) offsetShape.enlarge(halfClOffset);
+        offsetShape = (TileShape) offsetShape.enlarge(offset);
+      } else {
+        // Preserve established offsets for boxes and octagons.
+        offsetShape = (TileShape) obstacleShape.enlarge(offset + halfClOffset);
+        offsetShape = (TileShape) offsetShape.enlarge(halfClOffset);
+      }
     }
     if (this.board.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
       offsetShape = offsetShape.boundingBox();
