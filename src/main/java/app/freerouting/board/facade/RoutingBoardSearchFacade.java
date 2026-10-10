@@ -54,13 +54,19 @@ public final class RoutingBoardSearchFacade {
     if (checkPolyline.lines.length != 3) {
       return 0;
     }
-    TileShape shapeToCheck = checkPolyline.offsetShape(traceHalfWidth, 0);
+    ShapeSearchTree defaultTree = board.searchTreeManager.getDefaultTree();
+    if (defaultTree.isClearanceCompensationUsed()
+        && defaultTree.compensatedClearanceClassNo != clClassNo) {
+      // This API receives a physical width, so an uncompensated tree can check arbitrary
+      // class pairs exactly instead of relying on another class's compensation.
+      defaultTree = board.searchTreeManager.getUncompensatedTree();
+    }
+    int queryHalfWidth = traceHalfWidth + defaultTree.clearanceCompensationValue(clClassNo, layer);
+    TileShape shapeToCheck = checkPolyline.offsetShape(queryHalfWidth, 0);
     FloatPoint fromPoint = lineSegment.startPointApprox();
     FloatPoint toPoint = lineSegment.endPointApprox();
     double lineLength = toPoint.distance(fromPoint);
     double okLength = Integer.MAX_VALUE;
-    ShapeSearchTree defaultTree = board.searchTreeManager.getDefaultTree();
-
     Collection<TreeEntry> obstacleEntries =
         defaultTree.overlappingTreeEntriesWithClearance(shapeToCheck, layer, netNumbers, clClassNo);
 
@@ -81,10 +87,7 @@ public final class RoutingBoardSearchFacade {
       double shortenValue;
       if (defaultTree.isClearanceCompensationUsed()) {
         currentOffsetShape = shapeToCheck;
-        shortenValue =
-            traceHalfWidth
-                + board.rules.clearanceMatrix.clearanceCompensationValue(
-                    currentObstacle.clearanceClassIndex(), layer);
+        shortenValue = queryHalfWidth;
       } else {
         int clearanceValue =
             board.clearanceValue(currentObstacle.clearanceClassIndex(), clClassNo, layer);

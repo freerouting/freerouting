@@ -66,6 +66,25 @@ public class SearchTreeManager {
     return defaultTree;
   }
 
+  /** Returns a managed tree with physical geometry, without angle-restricted bounding shapes. */
+  public synchronized ShapeSearchTree getUncompensatedTree() {
+    for (ShapeSearchTree tree : compensatedSearchTrees) {
+      if (tree.compensatedClearanceClassNo == 0 && tree.getClass() == ShapeSearchTree.class) {
+        return tree;
+      }
+    }
+    ShapeSearchTree tree =
+        new ShapeSearchTree(FortyfiveDegreeBoundingDirections.INSTANCE, board, 0);
+    Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.startReadObject();
+    for (Item item = (Item) board.itemList.readObject(it);
+        item != null;
+        item = (Item) board.itemList.readObject(it)) {
+      tree.insert(item);
+    }
+    compensatedSearchTrees.add(tree);
+    return tree;
+  }
+
   public boolean validateEntries(Item item) {
     boolean result = true;
     for (ShapeSearchTree currentTree : compensatedSearchTrees) {
