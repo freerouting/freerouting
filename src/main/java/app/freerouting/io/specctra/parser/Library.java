@@ -6,11 +6,9 @@ import app.freerouting.core.library.Padstack;
 import app.freerouting.core.library.Padstacks;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.ConvexShape;
-import app.freerouting.geometry.planar.IntVector;
 import app.freerouting.geometry.planar.PolygonShape;
 import app.freerouting.geometry.planar.Simplex;
 import app.freerouting.geometry.planar.TileShape;
-import app.freerouting.geometry.planar.Vector;
 import app.freerouting.io.CoordinateTransform;
 import app.freerouting.logger.FRLogger;
 import java.io.IOException;
@@ -278,11 +276,7 @@ public class Library extends ScopeKeyword {
           new app.freerouting.core.library.Package.Pin[currentPackage.pinInfoArr.length];
       for (int i = 0; i < pins.length; i++) {
         Package.PinInfo pinInfo = currentPackage.pinInfoArr[i];
-        int relX =
-            (int) Math.round(scopeParameter.coordinateTransform.dsnToBoard(pinInfo.relCoor[0]));
-        int relY =
-            (int) Math.round(scopeParameter.coordinateTransform.dsnToBoard(pinInfo.relCoor[1]));
-        Vector relCoor = new IntVector(relX, relY);
+        var exactRel = scopeParameter.coordinateTransform.dsnToBoardRel(pinInfo.relCoor);
         Padstack boardPadstack = board.library.padstacks.get(pinInfo.padstackName);
         if (boardPadstack == null && pinInfo.padstackName != null) {
           boardPadstack =
@@ -299,7 +293,7 @@ public class Library extends ScopeKeyword {
         }
         pins[i] =
             new app.freerouting.core.library.Package.Pin(
-                pinInfo.pinName, boardPadstack.id, relCoor, pinInfo.rotation);
+                pinInfo.pinName, boardPadstack.id, exactRel, pinInfo.rotation);
       }
       app.freerouting.geometry.planar.Shape[] outlines =
           new app.freerouting.geometry.planar.Shape[currentPackage.outline.size()];

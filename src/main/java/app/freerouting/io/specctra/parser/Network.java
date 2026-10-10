@@ -9,7 +9,7 @@ import app.freerouting.core.library.Package;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
-import app.freerouting.geometry.planar.IntPoint;
+import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.io.CoordinateTransform;
@@ -959,18 +959,18 @@ public class Network extends ScopeKeyword {
       return;
     }
 
-    IntPoint componentLocation;
+    FloatPoint exactLocation;
     if (location.coor != null) {
-      componentLocation = scopeParameter.coordinateTransform.dsnToBoard(location.coor).round();
+      exactLocation = scopeParameter.coordinateTransform.dsnToBoard(location.coor);
     } else {
-      componentLocation = null;
+      exactLocation = null;
     }
     double rotationInDegree = location.rotation;
 
     app.freerouting.board.model.structure.Component newComponent =
-        routingBoard.components.add(
+        routingBoard.components.addPrecise(
             location.name,
-            componentLocation,
+            exactLocation,
             rotationInDegree,
             location.isFront,
             currentFrontPackage,
@@ -978,10 +978,10 @@ public class Network extends ScopeKeyword {
             location.positionFixed,
             location.partNumber);
 
-    if (componentLocation == null) {
+    if (!newComponent.isPlaced()) {
       return; // component is not yet placed.
     }
-    Vector componentTranslation = componentLocation.differenceBy(Point.ZERO);
+    Vector componentTranslation = newComponent.getLocation().differenceBy(Point.ZERO);
     FixedState fixedState;
     if (location.positionFixed) {
       fixedState = FixedState.SYSTEM_FIXED;

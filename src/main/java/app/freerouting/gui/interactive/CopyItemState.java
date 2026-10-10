@@ -170,7 +170,6 @@ public final class CopyItemState extends InteractiveState {
             FRLogger.warn("CopyItemState: component not found");
             continue;
           }
-          Point newLocation = oldComponent.getLocation().translateBy(translateVector);
           Package newPackage;
           if (layerChanged) {
             // create a new package with changed layers of the padstacks.
@@ -188,19 +187,14 @@ public final class CopyItemState extends InteractiveState {
                   new Package.Pin(
                       oldPin.name,
                       newPadstack.id,
-                      oldPin.relativeLocation,
+                      oldPin.getExactRelativeLocation(),
                       oldPin.rotationInDegree);
             }
             newPackage = board.library.packages.add(newPinArr);
           } else {
             newPackage = oldComponent.getPackage();
           }
-          Component newComponent =
-              board.components.add(
-                  newLocation,
-                  oldComponent.getRotationInDegree(),
-                  oldComponent.placedOnFront(),
-                  newPackage);
+          Component newComponent = board.components.copy(oldComponent, translateVector, newPackage);
           newCmpNo = newComponent.id;
           cmpNoPairs.put(currentCmpNo, newCmpNo);
         }

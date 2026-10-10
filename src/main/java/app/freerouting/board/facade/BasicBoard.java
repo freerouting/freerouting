@@ -646,6 +646,14 @@ public class BasicBoard implements Serializable {
     }
   }
 
+  /** Detaches a movable item, including a component pin, within an existing move snapshot. */
+  public void detachItemForMove(Item item) {
+    getItemRepository().detachItemForMove(item);
+    if (item instanceof Pin || item instanceof BoardOutline) {
+      invalidateEdgePinNetCache();
+    }
+  }
+
   /**
    * Searches for an item with the specified ID on the board.
    *

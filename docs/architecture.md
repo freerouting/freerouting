@@ -209,6 +209,25 @@ The rule model that defines nets, clearance classes, via rules, layer constraint
 
 Design-rule checking and violation reporting. Use this package when you need to understand why a routed board is still invalid.
 
+### Precise component placement
+
+`Component` retains one precise placement; its integer location is derived. Package pin
+positions retain their fractional offsets. `geometry.planar.PlacementTransform` composes
+pin rotation, package offsets, component rotation, side mirroring and world translation
+before quantizing pad geometry. Pins, component outlines and component keepouts use this
+shared transform. DSN/SES writers and component copies retain the precise pose.
+
+`board.actions.ComponentItemTransform` validates rotations and reflections of detached
+editor selections. It captures their contact graph, transforms copies, and applies a
+uniform grid correction to each connected trace/via group when required by its pin
+anchors. Conflicting anchors, changed contacts, collapsed traces, new angle violations, and new
+clearance violations reject the operation and restore the component poses. It never
+widens contact tolerances. The GUI uses `BasicBoard.detachItemForMove` to remove component items from the board
+and its search trees without granting ordinary deletion permission. It retains ownership
+of the existing move snapshot,
+final insertion, observer notifications and ratsnest updates. Standalone low-level item
+mutators still require callers to manage board search trees and connectivity.
+
 ### `app.freerouting.geometry.planar`
 
 Planar geometry primitives and helper classes used throughout routing and board operations.
