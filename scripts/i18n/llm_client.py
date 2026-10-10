@@ -216,7 +216,7 @@ def _call_gemini(prompt: str, model: str, api_key: str, base_url: str, max_token
         finish_reason = candidates[0].get("finishReason")
         raise ValueError(f"Gemini returned empty text (finishReason={finish_reason})")
 
-    return content.strip("\"'")
+    return content
 
 
 # A backslash that does not start a JSON escape. .properties text is full of them (\#, \:,

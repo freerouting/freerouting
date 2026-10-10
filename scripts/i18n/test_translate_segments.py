@@ -42,6 +42,14 @@ class TranslateBySegmentsTests(unittest.TestCase):
             result = translate.translate_by_segments("Bundle", "key", ENGLISH, {}, "de")
         self.assertEqual(result, "Erste Zeile\\nZweite Zeile")
 
+    def test_plain_text_response_preserves_leading_quote(self) -> None:
+        quoted_english = '"en" for English\\n"de" for German'
+        with patch.object(translate, "translate_batch", return_value=(None, True)), patch.object(
+            translate, "call_llm", side_effect=['"en" für Englisch', '"de" für Deutsch']
+        ):
+            result = translate.translate_by_segments("Bundle", "key", quoted_english, {}, "de")
+        self.assertEqual(result, '"en" für Englisch\\n"de" für Deutsch')
+
 
 if __name__ == "__main__":
     unittest.main()

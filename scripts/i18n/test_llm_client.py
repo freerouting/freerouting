@@ -49,6 +49,22 @@ class LlmClientGeminiTest(unittest.TestCase):
         self.assertEqual(generation_config["thinkingConfig"]["thinkingLevel"], "low")
         self.assertNotIn("thinkingBudget", generation_config.get("thinkingConfig", {}))
 
+    @patch("requests.post")
+    def test_call_gemini_preserves_surrounding_quotes(self, mock_post: MagicMock) -> None:
+        mock_post.return_value.json.return_value = {
+            "candidates": [{"content": {"parts": [{"text": '"en" for English, "de" for German'}]}}]
+        }
+        mock_post.return_value.ok = True
+
+        result = llm_client._call_gemini(
+            "translate language help",
+            "gemini-3.7-flash",
+            "test-key",
+            "https://generativelanguage.googleapis.com/v1beta",
+            500,
+        )
+        self.assertEqual(result, '"en" for English, "de" for German')
+
     def test_call_gemini_requires_api_key(self) -> None:
         with self.assertRaisesRegex(ValueError, "GEMINI_API_KEY is not set"):
             llm_client._call_gemini("prompt", "gemini-3.7-flash", "", "http://example", 100)
