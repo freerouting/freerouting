@@ -373,11 +373,13 @@ public abstract class Item
     if (this.board == null) {
       return result;
     }
-    ShapeSearchTree defaultTree = board.searchTreeManager.getDefaultTree();
-    for (int i = 0; i < tileShapeCount(); i++) {
-      TileShape currentTileShape = getTileShape(i);
+    // Both candidate selection and the narrow phase need physical shapes. Default-tree
+    // shapes may already include compensation; expanding those again creates false DRC.
+    ShapeSearchTree drcTree = board.searchTreeManager.getUncompensatedTree();
+    for (int i = 0; i < treeShapeCount(drcTree); i++) {
+      TileShape currentTileShape = getTreeShape(drcTree, i);
       Collection<TreeEntry> currentOverlappingItems =
-          defaultTree.overlappingTreeEntriesWithClearance(
+          drcTree.overlappingTreeEntriesWithClearance(
               currentTileShape, shapeLayer(i), new int[0], this.clearanceClassIndex);
       for (TreeEntry currentEntry : currentOverlappingItems) {
         if (!(currentEntry.object instanceof Item currentItem) || currentEntry.object == this) {
@@ -435,7 +437,7 @@ public abstract class Item
             TileShape pinTileShape =
                 (this instanceof Pin)
                     ? currentTileShape
-                    : currentItem.getTileShape(currentEntry.shapeIndexInObject);
+                    : currentItem.getTreeShape(drcTree, currentEntry.shapeIndexInObject);
             if (pinTileShape != null && outlineContainsTileShape(outline, pinTileShape)) {
               isObstacle = false;
             }
@@ -445,7 +447,7 @@ public abstract class Item
         if (isObstacle) {
           // Get the two shapes the clearance is calculated between
           TileShape shape1 = currentTileShape;
-          TileShape shape2 = currentItem.getTileShape(currentEntry.shapeIndexInObject);
+          TileShape shape2 = currentItem.getTreeShape(drcTree, currentEntry.shapeIndexInObject);
           if (shape1 == null || shape2 == null) {
             FRLogger.warn(
                 String.format(
@@ -465,18 +467,8 @@ public abstract class Item
               board.rules.clearanceMatrix.getValue(
                   currentItem.clearanceClassIndex, this.clearanceClassIndex, shapeLayer(i), false);
 
-          int clComp1 = 0;
-          int clComp2 = 0;
-          if (this.board.searchTreeManager.isClearanceCompensationUsed()) {
-            clComp1 =
-                defaultTree.clearanceCompensationValue(this.clearanceClassIndex, shapeLayer(i));
-            clComp2 =
-                defaultTree.clearanceCompensationValue(
-                    currentItem.clearanceClassIndex, shapeLayer(i));
-          } else {
-            clComp1 = (int) Math.round(0.5 * minimumClearance);
-            clComp2 = (int) Math.round(minimumClearance - clComp1);
-          }
+          int clComp1 = (int) Math.round(0.5 * minimumClearance);
+          int clComp2 = (int) Math.round(minimumClearance - clComp1);
 
           TileShape enlargedShape1 = (clComp1 > 0) ? (TileShape) shape1.enlarge(clComp1) : shape1;
           TileShape enlargedShape2 = (clComp2 > 0) ? (TileShape) shape2.enlarge(clComp2) : shape2;

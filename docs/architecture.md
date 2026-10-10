@@ -97,6 +97,42 @@ Use the table below to jump to the package most likely to own the behavior you a
 | CLI entry point and native execution | `app.freerouting.cli` |
 | Startup bootstrap, settings initialization, and CPU calibration | `app.freerouting.startup` |
 
+## Clearance-query geometry contracts
+
+`ShapeSearchTree.overlappingTreeEntriesWithClearance` and its item/object wrappers
+share one dispatch under the tree read lock. Queries use raw geometry in an
+uncompensated tree and already compensated geometry in a tree for the query's
+clearance class. The latter performs direct overlap testing; adding explicit
+clearance again would reject usable space. An unmatched query class retains
+conservative explicit checking because a general clearance matrix is not additive.
+Callers needing tight results must select the tree for that query class.
+
+`Item.getTileShape()` returns default-tree geometry, so moved items and net-change
+checks must not compensate it again. `BasicBoard.checkShape`, trace-end pin searches,
+and `ForcedViaInserter` construct physical geometry and prepare it before querying.
+This includes the wider trace launched from a via, as well as the via pad itself.
+Orthogonal via shapes remain `IntBox` instances after compensation: their four-sided
+entry indices and shove policy must not be changed by an octagonal enlargement.
+The optimizer's segment-length check similarly prepares its physical width and uses
+that width when calculating a stopping distance; for a mismatched class it uses an
+uncompensated tree to preserve the actual pairwise rules. `Item.clearanceViolations`
+also queries and measures physical shapes in that tree, applying pairwise clearance
+once. Both use `SearchTreeManager.getUncompensatedTree()`, which supplies general
+geometry rather than the coarser bounding shapes of angle-restricted autoroute trees.
+The managed tree is reused and participates in normal edits and reindexing; it is
+published only after initialization. The normal uncompensated default is reused
+without allocating another tree.
+Detached component transforms initialize this tree before temporarily indexing their
+items, so before/after DRC snapshots contain the same peers even though those items
+are not in the persistent board item list.
+Hole-check shapes already encode hole clearance and use class zero; they retain
+explicit checking. Uncompensated queries retain their symmetric half-clearance
+expansions and safety margin. All-layer queries evaluate each layer's clearance rule.
+
+This contract does not change the separate search/insertion envelope tolerance
+problem (#961), circle discretization (#954), or preserved-junction connectivity
+and normalization (#958/#960). The default tree remains uncompensated.
+
 ## Module Boundaries (ArchUnit)
 
 Architectural boundaries are codified in `src/test/java/app/freerouting/architecture/ModuleBoundariesArchTest.java`.

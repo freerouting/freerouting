@@ -1,0 +1,11 @@
+(pcb clearance_query_repro
+  (resolution um 10) (unit um)
+  (structure
+    (layer F.Cu (type signal) (property (index 0)))
+    (layer B.Cu (type signal) (property (index 1)))
+    (boundary (path pcb 0 0 0 20000 0 20000 -20000 0 -20000 0 0))
+    (via Via100)
+    (rule (width 100) (clearance 200)))
+  (library (padstack Via100 (shape (circle F.Cu 100))
+    (shape (circle B.Cu 100)) (attach off)))
+  (network (net QUERY) (net OTHER)))
