@@ -9,8 +9,14 @@ import app.freerouting.core.library.Package;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
+import app.freerouting.geometry.planar.Area;
+import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
+import app.freerouting.geometry.planar.PolylineArea;
+import app.freerouting.geometry.planar.PolylineShape;
+import app.freerouting.geometry.planar.Shape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.io.CoordinateTransform;
 import app.freerouting.io.KiCadNetClassNames;
@@ -1045,7 +1051,44 @@ public class Network extends ScopeKeyword {
               netClass.defaultItemClearanceClasses.get(DefaultItemClearanceClasses.ItemClass.PIN);
         }
       }
-      routingBoard.insertPin(newComponent.id, i, netNumberArray, clearanceClass, fixedState);
+      Pin newPin =
+          routingBoard.insertPin(newComponent.id, i, netNumberArray, clearanceClass, fixedState);
+      if (currentPadstack.hasAuxiliaryShapes()) {
+        for (int padLayer = 0; padLayer < currentPadstack.boardLayerCount(); padLayer++) {
+          ConvexShape[] auxShapes = currentPadstack.getAuxiliaryShapes(padLayer);
+          if (auxShapes == null || auxShapes.length == 0) {
+            continue;
+          }
+          int boardLayer;
+          if (newComponent.placedOnFront() || currentPadstack.placedAbsolute) {
+            boardLayer = padLayer;
+          } else {
+            boardLayer = currentPadstack.boardLayerCount() - padLayer - 1;
+          }
+          if (boardLayer < 0 || boardLayer >= routingBoard.getLayerCount()) {
+            continue;
+          }
+          for (ConvexShape aux : auxShapes) {
+            Shape transformedAux = newPin.transformToBoard(aux);
+            Area auxArea = null;
+            if (transformedAux instanceof PolylineShape polyShape) {
+              auxArea = new PolylineArea(polyShape, new PolylineShape[0]);
+            } else if (transformedAux != null) {
+              auxArea = transformedAux;
+            }
+            if (auxArea != null && !auxArea.isEmpty()) {
+              routingBoard.insertObstacle(
+                  auxArea,
+                  boardLayer,
+                  netNumberArray,
+                  clearanceClass,
+                  newComponent.id,
+                  currentPin.name + "_aux",
+                  fixedState);
+            }
+          }
+        }
+      }
     }
 
     // insert the keepouts belonging to the package (k = 1 for via keepouts)

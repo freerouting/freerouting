@@ -4,13 +4,18 @@ import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.DrillItem;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.ObstacleArea;
+import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Via;
 import app.freerouting.board.model.structure.Component;
 import app.freerouting.core.library.Package;
 import app.freerouting.core.library.Padstack;
+import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Point;
+import app.freerouting.geometry.planar.PolylineArea;
+import app.freerouting.geometry.planar.PolylineShape;
+import app.freerouting.geometry.planar.Shape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.gui.rendering.BoardRenderer;
 import app.freerouting.gui.workspace.GuiBoardManager;
@@ -47,7 +52,14 @@ public final class CopyItemState extends InteractiveState {
     currentPosition = startPosition;
     previousPosition = currentPosition;
     for (Item currentItem : itemList) {
-      if (currentItem instanceof DrillItem || currentItem instanceof ObstacleArea) {
+      if (currentItem instanceof DrillItem) {
+        Item newItem = currentItem.copy(0);
+        this.itemList.add(newItem);
+      } else if (currentItem instanceof ObstacleArea obs) {
+        // Skip companion obstacles belonging to a component to prevent duplicate companions on copy
+        if (obs.getComponentId() > 0 && obs.name != null && obs.name.endsWith("_aux")) {
+          continue;
+        }
         Item newItem = currentItem.copy(0);
         this.itemList.add(newItem);
       }
@@ -83,14 +95,26 @@ public final class CopyItemState extends InteractiveState {
     } else {
       // Create a new padstack.
       ConvexShape[] newShapes = new ConvexShape[board.getLayerCount()];
+      ConvexShape[][] newAuxShapes =
+          oldPadstack.hasAuxiliaryShapes() ? new ConvexShape[board.getLayerCount()][] : null;
       int layerDiff = oldLayer - newLayer;
       for (int i = 0; i < newShapes.length; i++) {
-        int newLayerNo = i + layerDiff;
-        if (newLayerNo >= 0 && newLayerNo < newShapes.length) {
-          newShapes[i] = oldPadstack.getShape(i + layerDiff);
+        int oldLayerNo = i + layerDiff;
+        if (oldLayerNo >= 0 && oldLayerNo < newShapes.length) {
+          newShapes[i] = oldPadstack.getShape(oldLayerNo);
+          if (newAuxShapes != null) {
+            newAuxShapes[i] = oldPadstack.getAuxiliaryShapes(oldLayerNo);
+          }
         }
       }
-      newPadstack = board.library.padstacks.add(newShapes);
+      if (newAuxShapes != null) {
+        newPadstack = board.library.padstacks.add(newShapes, newAuxShapes);
+        if (oldPadstack.hasNonConvexGeometry()) {
+          newPadstack.hasNonConvexGeometry = true;
+        }
+      } else {
+        newPadstack = board.library.padstacks.add(newShapes);
+      }
       padstackPairs.put(oldPadstack, newPadstack);
     }
     return newPadstack;
@@ -210,7 +234,45 @@ public final class CopyItemState extends InteractiveState {
           board.generateSnapshot();
           firstTime = false;
         }
-        board.insertItem(currentItem.copy(0));
+        Item copiedItem = currentItem.copy(0);
+        board.insertItem(copiedItem);
+        if (copiedItem instanceof Pin copiedPin && copiedPin.getPadstack().hasAuxiliaryShapes()) {
+          Padstack padstack = copiedPin.getPadstack();
+          Component component = board.components.get(copiedPin.getComponentId());
+          boolean onFront = component == null || component.placedOnFront();
+          boolean absolute = padstack.placedAbsolute;
+          int layerCount = padstack.boardLayerCount();
+
+          for (int boardLayer = copiedPin.firstLayer();
+              boardLayer <= copiedPin.lastLayer();
+              boardLayer++) {
+            int padstackLayer = (onFront || absolute) ? boardLayer : layerCount - boardLayer - 1;
+            ConvexShape[] auxShapes = padstack.getAuxiliaryShapes(padstackLayer);
+            if (auxShapes != null) {
+              for (ConvexShape auxShape : auxShapes) {
+                if (auxShape != null) {
+                  Shape boardShape = copiedPin.transformToBoard(auxShape);
+                  Area area = null;
+                  if (boardShape instanceof PolylineShape polyShape) {
+                    area = new PolylineArea(polyShape, new PolylineShape[0]);
+                  } else if (boardShape != null) {
+                    area = boardShape;
+                  }
+                  if (area != null && !area.isEmpty()) {
+                    board.insertObstacle(
+                        area,
+                        boardLayer,
+                        copiedPin.netNumbers,
+                        copiedPin.clearanceClassIndex(),
+                        copiedPin.getComponentId(),
+                        padstack.name + "_aux",
+                        copiedPin.getFixedState());
+                  }
+                }
+              }
+            }
+          }
+        }
       } else {
         allItemsInserted = false;
       }

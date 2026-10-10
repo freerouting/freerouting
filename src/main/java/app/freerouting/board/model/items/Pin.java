@@ -8,6 +8,7 @@ import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.core.library.LogicalPart;
 import app.freerouting.core.library.Package;
 import app.freerouting.core.library.Padstack;
+import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.Direction;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -36,6 +37,8 @@ import java.util.TreeSet;
  * several layers.
  */
 public class Pin extends DrillItem implements Serializable {
+
+  private static final long serialVersionUID = 7212801202299956828L;
 
   /** The index of this pin in its component (starting with 0). */
   public final int pinIndex;
@@ -185,17 +188,41 @@ public class Pin extends DrillItem implements Serializable {
         ConvexShape currentShape = padstack.getShape(padstackLayer);
         if (currentShape == null) {
           continue;
-        }
-        this.precalculatedShapes[shapeIndex] =
-            component
-                .placementTransform(board.components.getFlipStyleRotateFirst())
-                .shape(
-                    currentShape,
-                    packagePin.getExactRelativeLocation(),
-                    packagePin.rotationInDegree);
+        this.precalculatedShapes[shapeIndex] = (ConvexShape) transformToBoard(currentShape);
       }
     }
     return this.precalculatedShapes[index];
+  }
+
+  /**
+   * Transforms a shape defined in padstack-relative coordinates to absolute board coordinates
+   * according to this pin's placement, component rotation, mirroring, and translation.
+   */
+  public Shape transformToBoard(Shape padstackShape) {
+    if (padstackShape == null) {
+      return null;
+    }
+    Component component = board.components.get(this.getComponentId());
+    if (component == null) {
+      FRLogger.warn("Pin.transformToBoard: component not found");
+      return null;
+    }
+    Package libPackage = component.getPackage();
+    if (libPackage == null) {
+      FRLogger.warn("Pin.transformToBoard: package not found");
+      return null;
+    }
+    Package.Pin packagePin = libPackage.getPin(this.getPinIndex());
+    if (packagePin == null) {
+      FRLogger.warn("Pin.transformToBoard: pinNo out of range");
+      return null;
+    }
+    return component
+        .placementTransform(board.components.getFlipStyleRotateFirst())
+        .shape(
+            padstackShape,
+            packagePin.getExactRelativeLocation(),
+            packagePin.rotationInDegree);
   }
 
   /** Returns the layer of the padstack shape corresponding to the shape with index index. */
@@ -303,8 +330,14 @@ public class Pin extends DrillItem implements Serializable {
 
   @Override
   public boolean isObstacle(Item other) {
-    if (other == this || other instanceof ObstacleArea) {
+    if (other == this) {
       return false;
+    }
+    if (other instanceof ObstacleArea obstacleArea) {
+      if (this.sharesNet(obstacleArea)) {
+        return false;
+      }
+      return obstacleArea.netCount() > 0;
     }
     if (!other.sharesNet(this)) {
       if (other instanceof Pin otherPin) {
