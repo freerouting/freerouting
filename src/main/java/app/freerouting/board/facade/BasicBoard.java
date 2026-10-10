@@ -383,6 +383,39 @@ public class BasicBoard implements Serializable {
   }
 
   /**
+   * Inserts an obstacle belonging to a component and associated with specific nets into the board.
+   */
+  public ObstacleArea insertObstacle(
+      Area area,
+      int layer,
+      int[] netNumbers,
+      int clearanceClassIndex,
+      int componentId,
+      String name,
+      FixedState fixedState) {
+    if (area == null) {
+      FRLogger.warn("BasicBoard.insert_obstacle: area is null");
+      return null;
+    }
+    ObstacleArea obs =
+        new ObstacleArea(
+            area,
+            layer,
+            Vector.ZERO,
+            0,
+            false,
+            netNumbers,
+            clearanceClassIndex,
+            0,
+            componentId,
+            name,
+            fixedState,
+            this);
+    insertItem(obs);
+    return obs;
+  }
+
+  /**
    * Inserts an obstacle belonging to a component into the board name is to identify the
    * corresponding ObstacleArea in the component package.
    */

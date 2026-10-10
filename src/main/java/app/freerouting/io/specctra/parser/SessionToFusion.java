@@ -423,6 +423,9 @@ public class SessionToFusion {
     }
 
     Padstack viaPadstack = this.board.library.padstacks.get(padstackName);
+    if (viaPadstack == null && padstackName != null) {
+      viaPadstack = this.board.library.padstacks.get(padstackName.replaceAll("\\.\\d+", ""));
+    }
     if (viaPadstack == null) {
       FRLogger.warn(
           "SessionToFusion.process_via_scope: via padstack not found at '"
@@ -436,12 +439,31 @@ public class SessionToFusion {
 
     String[] nameParts = viaPadstack.name.split("\\$", 3);
 
-    this.outFile.write("CHANGE DRILL ");
+    String drillString = null;
     if (nameParts.length > 1) {
-      this.outFile.write(nameParts[1]);
-    } else {
-      this.outFile.write("0.1");
+      try {
+        double parsedDrill = Double.parseDouble(nameParts[1]);
+        if (Double.isFinite(parsedDrill) && parsedDrill > 0) {
+          drillString = nameParts[1];
+        }
+      } catch (NumberFormatException _) {
+        drillString = null;
+      }
     }
+
+    if (drillString == null) {
+      double drill = viaPadstack.getDrillRadius() * 2 * this.boardScaleFactor;
+      if (drill <= 0) {
+        drill = viaDiameter * 0.5;
+      }
+      if (drill <= 0) {
+        drill = 0.1;
+      }
+      drillString = formatCoordinate(drill);
+    }
+
+    this.outFile.write("CHANGE DRILL ");
+    this.outFile.write(drillString);
     this.outFile.write(";\n");
 
     this.outFile.write("VIA '");
