@@ -35,19 +35,55 @@ class LoggingBootstrapTest {
 
   @Test
   void languageOptionDoesNotSetTheLogLocation() {
-    String language = "zz-freerouting-test-locale";
-    LoggingBootstrap.LoggingConfig config =
-        LoggingBootstrap.initialize(
-            new String[] {NO_FILE_LOG, "-de", "board.dsn", "-l", language},
-            userData,
-            "command line");
+    String languageSpace = "zz-freerouting-test-locale-" + System.nanoTime();
+    Path createdDirSpace = Path.of(System.getProperty("user.dir"), languageSpace);
+    try {
+      LoggingBootstrap.LoggingConfig config =
+          LoggingBootstrap.initialize(
+              new String[] {NO_FILE_LOG, "-de", "board.dsn", "-l", languageSpace},
+              userData,
+              "command line");
 
-    assertEquals(
-        userData.resolve("freerouting.log").toAbsolutePath().toString(),
-        config.fileLoggingLocation());
-    assertFalse(
-        Files.exists(Path.of(System.getProperty("user.dir"), language)),
-        "-l must not create a log directory named after the language");
+      assertEquals(
+          userData.resolve("freerouting.log").toAbsolutePath().toString(),
+          config.fileLoggingLocation());
+      assertFalse(
+          Files.exists(createdDirSpace),
+          "-l must not create a log directory named after the language");
+    } finally {
+      if (Files.exists(createdDirSpace)) {
+        try {
+          Files.deleteIfExists(createdDirSpace);
+        } catch (Exception ignored) {
+          // best-effort test cleanup
+        }
+      }
+    }
+
+    String languageEquals = "zz-freerouting-test-locale-eq-" + System.nanoTime();
+    Path createdDirEquals = Path.of(System.getProperty("user.dir"), languageEquals);
+    try {
+      LoggingBootstrap.LoggingConfig config =
+          LoggingBootstrap.initialize(
+              new String[] {NO_FILE_LOG, "-de", "board.dsn", "-l=" + languageEquals},
+              userData,
+              "command line");
+
+      assertEquals(
+          userData.resolve("freerouting.log").toAbsolutePath().toString(),
+          config.fileLoggingLocation());
+      assertFalse(
+          Files.exists(createdDirEquals),
+          "-l= must not create a log directory named after the language");
+    } finally {
+      if (Files.exists(createdDirEquals)) {
+        try {
+          Files.deleteIfExists(createdDirEquals);
+        } catch (Exception ignored) {
+          // best-effort test cleanup
+        }
+      }
+    }
   }
 
   @Test
