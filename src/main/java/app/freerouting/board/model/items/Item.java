@@ -1024,6 +1024,7 @@ public abstract class Item
   /** Assigns this item to the component with the input component ID. */
   public void assignComponentId(int id) {
     componentId = id;
+    clearDerivedData();
   }
 
   /**

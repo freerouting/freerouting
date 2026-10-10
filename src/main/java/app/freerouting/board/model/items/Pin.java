@@ -8,13 +8,13 @@ import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.core.library.LogicalPart;
 import app.freerouting.core.library.Package;
 import app.freerouting.core.library.Padstack;
-import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.Direction;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Line;
+import app.freerouting.geometry.planar.PlacementTransform;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.Shape;
@@ -69,26 +69,11 @@ public class Pin extends DrillItem implements Serializable {
     Component component = board.components.get(this.getComponentId());
     Package libPackage = component.getPackage();
     Package.Pin packagePin = libPackage.getPin(this.pinIndex);
-    Vector relLocation = packagePin.relativeLocation;
-    double componentRotation = component.getRotationInDegree();
-    if (!component.placedOnFront() && !board.components.getFlipStyleRotateFirst()) {
-      relLocation = packagePin.relativeLocation.mirrorAtYAxis();
-    }
-    if (componentRotation % 90 == 0) {
-      int componentNinetyDegreeFactor = ((int) componentRotation) / 90;
-      if (componentNinetyDegreeFactor != 0) {
-        relLocation = relLocation.turn90Degree(componentNinetyDegreeFactor);
-      }
-    } else {
-      // rotation may be not exact
-      FloatPoint locationApprox = relLocation.toFloat();
-      locationApprox = locationApprox.rotate(Math.toRadians(componentRotation), FloatPoint.ZERO);
-      relLocation = locationApprox.round().differenceBy(Point.ZERO);
-    }
-    if (!component.placedOnFront() && board.components.getFlipStyleRotateFirst()) {
-      relLocation = relLocation.mirrorAtYAxis();
-    }
-    return relLocation;
+    return component
+        .placementTransform(board.components.getFlipStyleRotateFirst())
+        .point(packagePin.getExactRelativeLocation())
+        .round()
+        .differenceBy(component.getLocation());
   }
 
   @Override
@@ -149,6 +134,13 @@ public class Pin extends DrillItem implements Serializable {
         board);
   }
 
+  /** Rebinding a copied pin invalidates both its connection point and its geometry. */
+  @Override
+  public void assignComponentId(int id) {
+    super.assignComponentId(id);
+    setCenter(null);
+  }
+
   /** Return the name of this pin in the package of this component. */
   public String name() {
     Component component = board.components.get(this.getComponentId());
@@ -188,18 +180,6 @@ public class Pin extends DrillItem implements Serializable {
         FRLogger.warn("Pin.get_shape: pinNo out of range");
         return null;
       }
-      Vector relLocation = packagePin.relativeLocation;
-      double componentRotation = component.getRotationInDegree();
-
-      boolean mirrorOnYaxis =
-          !component.placedOnFront() && !board.components.getFlipStyleRotateFirst();
-
-      if (mirrorOnYaxis) {
-        relLocation = packagePin.relativeLocation.mirrorAtYAxis();
-      }
-
-      Vector componentTranslation = component.getLocation().differenceBy(Point.ZERO);
-
       for (int shapeIndex = 0; shapeIndex < this.precalculatedShapes.length; shapeIndex++) {
 
         int padstackLayer = getPadstackLayer(shapeIndex);
@@ -237,48 +217,9 @@ public class Pin extends DrillItem implements Serializable {
       FRLogger.warn("Pin.transformToBoard: pinNo out of range");
       return null;
     }
-    Vector relLocation = packagePin.relativeLocation;
-    double componentRotation = component.getRotationInDegree();
-
-    boolean mirrorOnYaxis =
-        !component.placedOnFront() && !board.components.getFlipStyleRotateFirst();
-
-    if (mirrorOnYaxis) {
-      relLocation = packagePin.relativeLocation.mirrorAtYAxis();
-    }
-
-    Vector componentTranslation = component.getLocation().differenceBy(Point.ZERO);
-
-    Area currentArea = padstackShape;
-    double pinRotation = packagePin.rotationInDegree;
-    if (pinRotation % 90 == 0) {
-      int pinNinetyDegreeFactor = ((int) pinRotation) / 90;
-      if (pinNinetyDegreeFactor != 0) {
-        currentArea = currentArea.turn90Degree(pinNinetyDegreeFactor, Point.ZERO);
-      }
-    } else {
-      currentArea = currentArea.rotateApprox(Math.toRadians(pinRotation), FloatPoint.ZERO);
-    }
-
-    if (mirrorOnYaxis) {
-      currentArea = currentArea.mirrorVertical(Point.ZERO);
-    }
-
-    Area translatedArea = currentArea.translateBy(relLocation);
-
-    if (componentRotation % 90 == 0) {
-      int componentNinetyDegreeFactor = ((int) componentRotation) / 90;
-      if (componentNinetyDegreeFactor != 0) {
-        translatedArea = translatedArea.turn90Degree(componentNinetyDegreeFactor, Point.ZERO);
-      }
-    } else {
-      translatedArea =
-          translatedArea.rotateApprox(Math.toRadians(componentRotation), FloatPoint.ZERO);
-    }
-    if (!component.placedOnFront() && board.components.getFlipStyleRotateFirst()) {
-      translatedArea = translatedArea.mirrorVertical(Point.ZERO);
-    }
-    return (Shape) translatedArea.translateBy(componentTranslation);
+    return component
+        .placementTransform(board.components.getFlipStyleRotateFirst())
+        .shape(padstackShape, packagePin.getExactRelativeLocation(), packagePin.rotationInDegree);
   }
 
   /** Returns the layer of the padstack shape corresponding to the shape with index index. */
@@ -326,7 +267,6 @@ public class Pin extends DrillItem implements Serializable {
     if (!(currentShape instanceof TileShape padShape)) {
       return result;
     }
-    double componentRotation = component.getRotationInDegree();
     Point pinCenter = this.getCenter();
     FloatPoint centerApprox = pinCenter.toFloat();
 
@@ -340,16 +280,15 @@ public class Pin extends DrillItem implements Serializable {
       if (packagePin == null) {
         continue;
       }
-      double currentRotationInDegree = componentRotation + packagePin.rotationInDegree;
-      Direction currentExitDirection;
-      if (currentRotationInDegree % 45 == 0) {
-        int fortyfiveDegreeFactor = ((int) currentRotationInDegree) / 45;
-        currentExitDirection = currentPadstackExitDirection.turn45Degree(fortyfiveDegreeFactor);
-      } else {
-        double currentAngleInRadian =
-            Math.toRadians(currentRotationInDegree) + currentPadstackExitDirection.angleApprox();
-        currentExitDirection = Direction.getInstanceApprox(currentAngleInRadian);
-      }
+      FloatPoint localDirection =
+          PlacementTransform.rotate(
+              currentPadstackExitDirection.getVector().toFloat(), packagePin.rotationInDegree);
+      FloatPoint worldDirection =
+          component
+              .placementTransform(board.components.getFlipStyleRotateFirst())
+              .direction(localDirection);
+      Direction currentExitDirection =
+          Direction.getInstanceApprox(Math.atan2(worldDirection.y, worldDirection.x));
       // calculate the minimum line length from the pin center into currentExitDirection
       int intersectingBorderLineNo =
           padShape.intersectingBorderLineNo(pinCenter, currentExitDirection);

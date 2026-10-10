@@ -123,6 +123,15 @@ public class ObstacleArea extends Item implements Serializable {
         FRLogger.warn("ObstacleArea.get_area: area is null");
         return null;
       }
+      if (getComponentId() > 0) {
+        this.precalculatedAbsoluteArea =
+            board
+                .components
+                .get(getComponentId())
+                .placementTransform(board.components.getFlipStyleRotateFirst())
+                .area(relativeArea);
+        return this.precalculatedAbsoluteArea;
+      }
       Area turnedArea = this.relativeArea;
       if (this.sideChanged && !this.board.components.getFlipStyleRotateFirst()) {
         turnedArea = turnedArea.mirrorVertical(Point.ZERO);
