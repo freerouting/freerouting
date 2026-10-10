@@ -194,7 +194,6 @@ public final class CopyItemState extends InteractiveState {
             FRLogger.warn("CopyItemState: component not found");
             continue;
           }
-          Point newLocation = oldComponent.getLocation().translateBy(translateVector);
           Package newPackage;
           if (layerChanged) {
             // create a new package with changed layers of the padstacks.
@@ -212,19 +211,14 @@ public final class CopyItemState extends InteractiveState {
                   new Package.Pin(
                       oldPin.name,
                       newPadstack.id,
-                      oldPin.relativeLocation,
+                      oldPin.getExactRelativeLocation(),
                       oldPin.rotationInDegree);
             }
             newPackage = board.library.packages.add(newPinArr);
           } else {
             newPackage = oldComponent.getPackage();
           }
-          Component newComponent =
-              board.components.add(
-                  newLocation,
-                  oldComponent.getRotationInDegree(),
-                  oldComponent.placedOnFront(),
-                  newPackage);
+          Component newComponent = board.components.copy(oldComponent, translateVector, newPackage);
           newCmpNo = newComponent.id;
           cmpNoPairs.put(currentCmpNo, newCmpNo);
         }
@@ -305,13 +299,28 @@ public final class CopyItemState extends InteractiveState {
     if (itemList == null) {
       return;
     }
-    for (Item currentItem : itemList) {
-      BoardRenderer.drawOverlayItem(
-          currentItem,
-          graphics,
-          hdlg.graphicsContext,
-          hdlg.graphicsContext.getHighlightColor(),
-          hdlg.graphicsContext.getHighlightColorIntensity());
+    var screenOrigin = hdlg.graphicsContext.coordinateTransform.boardToScreen(FloatPoint.ZERO);
+    var screenOffset =
+        hdlg.graphicsContext.coordinateTransform.boardToScreen(
+            currentPosition.differenceBy(startPosition).toFloat());
+    Graphics componentGraphics = graphics.create();
+    try {
+      componentGraphics.translate(
+          (int) Math.round(screenOffset.getX() - screenOrigin.getX()),
+          (int) Math.round(screenOffset.getY() - screenOrigin.getY()));
+      for (Item currentItem : itemList) {
+        // Component geometry follows its authoritative pose until insertion creates the copy.
+        // A fresh view discards the translated drill-center cache without changing that pose.
+        boolean componentItem = currentItem.getComponentId() > 0;
+        BoardRenderer.drawOverlayItem(
+            componentItem ? currentItem.copy(currentItem.getId()) : currentItem,
+            componentItem ? componentGraphics : graphics,
+            hdlg.graphicsContext,
+            hdlg.graphicsContext.getHighlightColor(),
+            hdlg.graphicsContext.getHighlightColorIntensity());
+      }
+    } finally {
+      componentGraphics.dispose();
     }
   }
 
