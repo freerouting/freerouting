@@ -4,7 +4,9 @@ import app.freerouting.board.actions.ItemInfoPrinter;
 import app.freerouting.core.library.LogicalPart;
 import app.freerouting.core.library.Package;
 import app.freerouting.datastructures.UndoableObjects;
+import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
+import app.freerouting.geometry.planar.PlacementTransform;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.util.TextManager;
@@ -17,6 +19,8 @@ import java.util.Locale;
  */
 public class Component
     implements UndoableObjects.Storable, ItemInfoPrinter.Printable, Serializable {
+
+  private static final long serialVersionUID = 8656938804017005076L;
 
   /** The name of the component. */
   public final String name;
@@ -35,8 +39,11 @@ public class Component
 
   private final String partNumber;
 
-  /** The location of the component. */
+  /** The integer location of the component (for serialization compatibility and integer grid). */
   private Point location;
+
+  /** The high-precision location of the component. */
+  private FloatPoint exactLocation;
 
   /** The rotation of the library package of the component in degree. */
   private double rotationInDegree;
@@ -48,12 +55,12 @@ public class Component
   private boolean onFront;
 
   /**
-   * Creates a new instance of Component with the input parameters. If onFront is false, the
-   * component will be placed on the back side.
+   * Creates a new instance of Component with exact location. If onFront is false, the component
+   * will be placed on the back side.
    */
   Component(
       String name,
-      Point location,
+      FloatPoint exactLocation,
       double rotationInDegree,
       boolean onFront,
       Package packageFront,
@@ -62,7 +69,8 @@ public class Component
       boolean positionFixed,
       String partNumber) {
     this.name = name;
-    this.location = location;
+    this.exactLocation = exactLocation;
+    this.location = exactLocation == null ? null : exactLocation.round();
     this.rotationInDegree = rotationInDegree;
     while (this.rotationInDegree >= 360) {
       this.rotationInDegree -= 360;
@@ -78,9 +86,70 @@ public class Component
     this.partNumber = partNumber;
   }
 
+  /**
+   * Creates a new instance of Component with integer location. If onFront is false, the component
+   * will be placed on the back side.
+   */
+  Component(
+      String name,
+      Point location,
+      double rotationInDegree,
+      boolean onFront,
+      Package packageFront,
+      Package packageBack,
+      int id,
+      boolean positionFixed,
+      String partNumber) {
+    this(
+        name,
+        location == null ? null : location.toFloat(),
+        rotationInDegree,
+        onFront,
+        packageFront,
+        packageBack,
+        id,
+        positionFixed,
+        partNumber);
+  }
+
+  @java.io.Serial
+  private void readObject(java.io.ObjectInputStream stream)
+      throws java.io.IOException, ClassNotFoundException {
+    stream.defaultReadObject();
+    if (this.exactLocation == null && this.location != null) {
+      this.exactLocation = this.location.toFloat();
+    } else if (this.location == null && this.exactLocation != null) {
+      this.location = this.exactLocation.round();
+    }
+  }
+
   /** Returns the location of this component. */
   public Point getLocation() {
+    if (exactLocation != null) {
+      return exactLocation.round();
+    }
     return location;
+  }
+
+  /** Returns the high-precision location of this component, or null if unplaced. */
+  public FloatPoint getExactLocation() {
+    if (exactLocation != null) {
+      return exactLocation;
+    }
+    return location == null ? null : location.toFloat();
+  }
+
+  /** Shared placement for pads, outlines and keepouts. */
+  public PlacementTransform placementTransform(boolean rotateFirst) {
+    return new PlacementTransform(getExactLocation(), rotationInDegree, !onFront, rotateFirst);
+  }
+
+  /** Restores a pose after a rejected detached-item transform. */
+  public void restorePose(Component original) {
+    exactLocation = original.exactLocation;
+    location = original.location;
+    rotationInDegree = original.rotationInDegree;
+    onFront = original.onFront;
   }
 
   /** Returns the rotation of this component in degree. */
@@ -89,7 +158,7 @@ public class Component
   }
 
   public boolean isPlaced() {
-    return location != null;
+    return exactLocation != null || location != null;
   }
 
   /** If false, the component will be placed on the back side of the board. */
@@ -102,31 +171,50 @@ public class Component
    * separately.
    */
   public void translateBy(Vector vector) {
-    if (location != null) {
+    if (exactLocation != null) {
+      FloatPoint vf = vector.toFloat();
+      exactLocation = new FloatPoint(exactLocation.x + vf.x, exactLocation.y + vf.y);
+      location = exactLocation.round();
+    } else if (location != null) {
       location = location.translateBy(vector);
+      exactLocation = location.toFloat();
     }
   }
 
   /** Turns this component by factor times 90 degree around pole. */
   public void turn90Degree(int factor, IntPoint pole) {
+    turn90Degree(factor, pole, false);
+  }
+
+  /** Turns in world coordinates, respecting the board mirror convention. */
+  public void turn90Degree(int factor, IntPoint pole, boolean flipStyleRotateFirst) {
     if (factor == 0) {
       return;
     }
-    this.rotationInDegree = this.rotationInDegree + factor * 90;
+    this.rotationInDegree =
+        this.rotationInDegree + (flipStyleRotateFirst && !onFront ? -factor : factor) * 90;
     while (this.rotationInDegree >= 360) {
       this.rotationInDegree -= 360;
     }
     while (this.rotationInDegree < 0) {
       this.rotationInDegree += 360;
     }
-    if (location != null) {
+    if (exactLocation != null) {
+      this.exactLocation = this.exactLocation.turn90Degree(factor, pole.toFloat());
+      this.location = this.exactLocation.round();
+    } else if (this.location != null) {
       this.location = this.location.turn90Degree(factor, pole);
+      this.exactLocation = this.location.toFloat();
     }
   }
 
   /** Rotates this component by angleInDegree around pole. */
   public void rotate(double angleInDegree, IntPoint pole, boolean flipStyleRotateFirst) {
     if (angleInDegree == 0) {
+      return;
+    }
+    if (angleInDegree % 90 == 0) {
+      turn90Degree((int) (angleInDegree / 90), pole, flipStyleRotateFirst);
       return;
     }
     double turnAngle = angleInDegree;
@@ -141,9 +229,13 @@ public class Component
     while (this.rotationInDegree < 0) {
       this.rotationInDegree += 360;
     }
-    if (location != null) {
+    if (exactLocation != null) {
+      this.exactLocation = this.exactLocation.rotate(Math.toRadians(angleInDegree), pole.toFloat());
+      this.location = this.exactLocation.round();
+    } else if (this.location != null) {
       this.location =
           this.location.toFloat().rotate(Math.toRadians(angleInDegree), pole.toFloat()).round();
+      this.exactLocation = this.location.toFloat();
     }
   }
 
@@ -151,8 +243,22 @@ public class Component
    * Changes the placement side of this component and mirrors it at the vertical line through pole.
    */
   public void changeSide(IntPoint pole) {
+    changeSide(pole, false);
+  }
+
+  /** Reflects the pose in world coordinates, respecting the board mirror convention. */
+  public void changeSide(IntPoint pole, boolean flipStyleRotateFirst) {
+    if (!flipStyleRotateFirst) {
+      rotationInDegree = (360 - rotationInDegree) % 360;
+    }
     this.onFront = !this.onFront;
-    this.location = this.location.mirrorVertical(pole);
+    if (exactLocation != null) {
+      this.exactLocation = new FloatPoint(2 * pole.x - this.exactLocation.x, this.exactLocation.y);
+      this.location = this.exactLocation.round();
+    } else if (this.location != null) {
+      this.location = this.location.mirrorVertical(pole);
+      this.exactLocation = this.location.toFloat();
+    }
   }
 
   /**
@@ -176,7 +282,7 @@ public class Component
     Component result =
         new Component(
             name,
-            location,
+            exactLocation,
             rotationInDegree,
             onFront,
             libPackageFront,
@@ -209,9 +315,9 @@ public class Component
 
     printer.appendBold(tm.getText("component") + " ");
     printer.appendBold(this.name);
-    if (this.location != null) {
+    if (this.exactLocation != null) {
       printer.append(" " + tm.getText("at") + " ");
-      printer.append(this.location.toFloat());
+      printer.append(this.exactLocation);
 
       printer.append(", " + tm.getText("rotation") + " ");
       printer.appendWithoutTransforming(rotationInDegree);

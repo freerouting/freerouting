@@ -172,12 +172,13 @@ public class Package {
       scopeParameter.identifierType.write(currentPadstack.name, scopeParameter.file);
       scopeParameter.file.write(" ");
       scopeParameter.identifierType.write(currentPin.name, scopeParameter.file);
-      double[] relCoor = scopeParameter.coordinateTransform.boardToDsn(currentPin.relativeLocation);
+      double[] relCoor =
+          scopeParameter.coordinateTransform.boardToDsnRel(currentPin.getExactRelativeLocation());
       for (int j = 0; j < relCoor.length; j++) {
         scopeParameter.file.write(" ");
         scopeParameter.file.write(String.valueOf(relCoor[j]));
       }
-      int rotation = (int) Math.round(currentPin.rotationInDegree);
+      double rotation = currentPin.rotationInDegree;
       if (rotation != 0) {
         scopeParameter.file.write("(rotate ");
         scopeParameter.file.write(String.valueOf(rotation));

@@ -61,8 +61,7 @@ public class Component extends ScopeKeyword {
     scopeParameter.file.newLine();
     scopeParameter.identifierType.write(component.name, scopeParameter.file);
     if (component.isPlaced()) {
-      double[] coor =
-          scopeParameter.coordinateTransform.boardToDsn(component.getLocation().toFloat());
+      double[] coor = scopeParameter.coordinateTransform.boardToDsn(component.getExactLocation());
       for (int i = 0; i < coor.length; i++) {
         scopeParameter.file.write(" ");
         scopeParameter.file.write(String.valueOf(coor[i]));
@@ -72,7 +71,7 @@ public class Component extends ScopeKeyword {
       } else {
         scopeParameter.file.write(" back ");
       }
-      int rotation = (int) Math.round(component.getRotationInDegree());
+      double rotation = component.getRotationInDegree();
       scopeParameter.file.write(String.valueOf(rotation));
     }
     if (component.positionFixed) {

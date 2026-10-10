@@ -26,7 +26,6 @@ import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashSet;
-import java.util.Locale;
 import java.util.Set;
 
 /**
@@ -160,9 +159,9 @@ public final class SesWriter {
     file.newLine();
     file.write("(place ");
     identifierType.write(component.name, file);
-    double[] location = coordinateTransform.boardToDsn(component.getLocation().toFloat());
-    final int xcoordinate = (int) Math.round(location[0]);
-    final int ycoordinate = (int) Math.round(location[1]);
+    double[] location = coordinateTransform.boardToDsn(component.getExactLocation());
+    final double xcoordinate = location[0];
+    final double ycoordinate = location[1];
     file.write(" ");
     file.write(String.valueOf(xcoordinate));
     file.write(" ");
@@ -257,15 +256,7 @@ public final class SesWriter {
    * precision ({@code 338.5}), never unnecessary trailing zeros ({@code 338.500}).
    */
   static String formatPlacementRotation(double degrees) {
-    double rounded = Math.rint(degrees * 1000.0) / 1000.0;
-    if (Math.abs(rounded - Math.rint(rounded)) < 1e-9) {
-      return String.format(Locale.ENGLISH, "%.0f", rounded);
-    }
-    String formatted = String.format(Locale.ENGLISH, "%.3f", rounded);
-    if (formatted.contains(".")) {
-      formatted = formatted.replaceAll("0+$", "").replaceAll("\\.$", "");
-    }
-    return formatted;
+    return java.math.BigDecimal.valueOf(degrees).stripTrailingZeros().toPlainString();
   }
 
   private static void writePadstack(
@@ -466,10 +457,10 @@ public final class SesWriter {
     identifierType.write(viaPadstack.name, file);
     file.write(" ");
     double[] location = coordinateTransform.boardToDsn(viaLocation);
-    final int xcoordinate = (int) Math.round(location[0]);
+    final double xcoordinate = location[0];
     file.write(String.valueOf(xcoordinate));
     file.write(" ");
-    final int ycoordinate = (int) Math.round(location[1]);
+    final double ycoordinate = location[1];
     file.write(String.valueOf(ycoordinate));
     writeFixedState(file, via.getFixedState());
     file.endScope();
