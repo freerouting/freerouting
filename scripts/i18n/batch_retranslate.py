@@ -134,10 +134,18 @@ def save_progress(progress: Dict[str, Any]) -> None:
 def is_locale_verified(locale: str, context_dir: Path = DEFAULT_CONTEXT_DIR) -> bool:
     """Check whether a locale already has 100% valid translation files on disk."""
     context = load_context_dir(context_dir)
-    total, missing, pl_v, html_v, esc_v, orphans, stale = validate_locale(
+    total, missing, pl_v, html_v, esc_v, orphans, stale, wrap_v = validate_locale(
         locale, context, verbose=False
     )
-    return total > 0 and missing == 0 and pl_v == 0 and html_v == 0 and esc_v == 0 and orphans == 0
+    return (
+        total > 0
+        and missing == 0
+        and pl_v == 0
+        and html_v == 0
+        and esc_v == 0
+        and orphans == 0
+        and wrap_v == 0
+    )
 
 
 def retranslate_locale(
@@ -177,15 +185,16 @@ def retranslate_locale(
 
     # 5. Validate
     context = load_context_dir(context_dir)
-    total, missing, pl_v, html_v, esc_v, orphans, stale = validate_locale(
+    total, missing, pl_v, html_v, esc_v, orphans, stale, wrap_v = validate_locale(
         locale, context, verbose=False
     )
 
-    is_valid = (missing == 0 and pl_v == 0 and html_v == 0 and esc_v == 0 and orphans == 0)
+    is_valid = missing == 0 and pl_v == 0 and html_v == 0 and esc_v == 0 and orphans == 0 and wrap_v == 0
     if not is_valid:
         err(
             f"  {symbol('fail')} Locale {locale.upper()} validation FAILED: missing={missing}, "
-            f"placeholders={pl_v}, html={html_v}, escapes={esc_v}, orphans={orphans}"
+            f"placeholders={pl_v}, html={html_v}, escapes={esc_v}, orphans={orphans}, "
+            f"llm_scaffolding={wrap_v}"
         )
         return False
 

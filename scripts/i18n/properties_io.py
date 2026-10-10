@@ -106,6 +106,35 @@ def join_property_newlines(segments: List[str]) -> str:
     return PROPERTY_NEWLINE_TOKEN.join(segments)
 
 
+# Scaffolding from an LLM response that must never reach a .properties value: a Markdown
+# code fence, or the numbered JSON object the segment prompts ask for ({"36": "..."}, or
+# the {0: "..."} variant with a bare key).
+LLM_WRAPPER_RE = re.compile(r'```|\{\s*"?\d+"?\s*:\s*"')
+
+
+def find_llm_wrapper_artifacts(english: str, translation: str) -> List[str]:
+    """Return LLM response scaffolding found in a translation but not in its English source."""
+    if LLM_WRAPPER_RE.search(english):
+        return []
+    return [match.group(0) for match in LLM_WRAPPER_RE.finditer(translation)]
+
+
+def unwrap_translation_quotes(translation: str, english: str = "") -> str:
+    """Remove one pair of quotes the model wrapped around a whole translation.
+
+    Only a matching pair that encloses the entire value is removed, and only when the
+    English source is not itself enclosed that way. Stripping every leading and trailing
+    quote character instead turned '"en" for English, "de" for German' into
+    'en" for English, "de" for German' in 28 locales.
+    """
+    text = translation.strip()
+    source = english.strip()
+    if len(text) >= 2 and text[0] == text[-1] and text[0] in "\"'":
+        if not (len(source) >= 2 and source[0] == source[-1] == text[0]):
+            return text[1:-1]
+    return text
+
+
 def sanitize_segment_translation(segment: str) -> str:
     """Force one segment to a single line with no embedded \\n tokens."""
     if not segment:

@@ -27,6 +27,7 @@ from properties_io import (  # noqa: E402
     bundle_name_from_path,
     english_properties_files,
     english_has_property_escapes,
+    find_llm_wrapper_artifacts,
     load_properties,
     locale_properties_path,
     validate_property_escapes,
@@ -50,7 +51,7 @@ def validate_locale(
     *,
     bundles: Optional[List[str]] = None,
     verbose: bool = False,
-) -> Tuple[int, int, int, int, int, int, int]:
+) -> Tuple[int, int, int, int, int, int, int, int]:
     total_keys = 0
     missing_keys = 0
     placeholder_violations = 0
@@ -58,6 +59,7 @@ def validate_locale(
     escape_violations = 0
     orphan_keys = 0
     stale_keys = 0
+    wrapper_violations = 0
 
     allowed_bundles = bundles_to_validate(context, bundles)
 
@@ -111,6 +113,12 @@ def validate_locale(
                         )
                     escape_violations += 1
 
+            artifacts = find_llm_wrapper_artifacts(english_value, locale_value)
+            if artifacts:
+                if verbose:
+                    out(f"  {symbol('fail')} {qualified_key}: LLM response scaffolding {sorted(set(artifacts))}")
+                wrapper_violations += 1
+
             ctx = context.get(qualified_key, {})
             if key in HTML_KEYS or ctx.get("is_html"):
                 html_tags = re.findall(r"</?[a-z][a-z0-9]*\b[^>]*>", english_value)
@@ -132,7 +140,16 @@ def validate_locale(
                     out(f"  {symbol('warn')} {bundle}.{key}: orphan key in {locale}")
                 orphan_keys += 1
 
-    return total_keys, missing_keys, placeholder_violations, html_violations, escape_violations, orphan_keys, stale_keys
+    return (
+        total_keys,
+        missing_keys,
+        placeholder_violations,
+        html_violations,
+        escape_violations,
+        orphan_keys,
+        stale_keys,
+        wrapper_violations,
+    )
 
 
 def main() -> None:
@@ -183,7 +200,7 @@ def main() -> None:
         out(f"  Validating locale: {locale.upper()}")
         out(f"{'=' * 60}")
 
-        total, missing, pl_v, html_v, esc_v, orphans, stale = validate_locale(
+        total, missing, pl_v, html_v, esc_v, orphans, stale, wrap_v = validate_locale(
             locale, context, bundles=args.bundles, verbose=args.verbose
         )
 
@@ -195,8 +212,9 @@ def main() -> None:
         out(f"     Escape sequence violations: {esc_v}")
         out(f"     Orphan keys: {orphans}")
         out(f"     Stale translations: {stale}")
+        out(f"     LLM response scaffolding: {wrap_v}")
 
-        if missing > 0 or pl_v > 0 or html_v > 0 or esc_v > 0:
+        if missing > 0 or pl_v > 0 or html_v > 0 or esc_v > 0 or wrap_v > 0:
             out(f"  {symbol('fail')} VALIDATION FAILED for {locale.upper()}")
             all_passed = False
         else:

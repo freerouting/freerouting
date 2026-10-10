@@ -10,12 +10,14 @@ from properties_io import (
     PROPERTY_NEWLINE_TOKEN,
     _split_property_line,
     count_property_escapes,
+    find_llm_wrapper_artifacts,
     join_property_newlines,
     load_properties,
     normalize_property_escapes,
     sanitize_property_value,
     sanitize_segment_translation,
     split_property_newlines,
+    unwrap_translation_quotes,
     validate_property_escapes,
     write_properties,
 )
@@ -109,6 +111,29 @@ class PropertyEscapeTests(unittest.TestCase):
     def test_count_property_escapes(self) -> None:
         counts = count_property_escapes("a\\n\\nb")
         self.assertEqual(counts["\\n"], 2)
+
+
+class TranslationCleanupTests(unittest.TestCase):
+    def test_unwrap_removes_quotes_the_model_added(self) -> None:
+        self.assertEqual(unwrap_translation_quotes('"Hallo Welt"', "Hello world"), "Hallo Welt")
+
+    def test_unwrap_keeps_a_leading_quote_that_belongs_to_the_text(self) -> None:
+        # Stripping every leading quote produced 'en" für Englisch, ...' in 28 locales.
+        self.assertEqual(
+            unwrap_translation_quotes('"en" für Englisch, "de" für Deutsch.', '"en" for English, "de" for German.'),
+            '"en" für Englisch, "de" für Deutsch.',
+        )
+
+    def test_unwrap_keeps_quotes_when_the_english_is_quoted(self) -> None:
+        self.assertEqual(unwrap_translation_quotes('"zitiert"', '"quoted"'), '"zitiert"')
+
+    def test_wrapper_artifacts_found(self) -> None:
+        leaked = 'Format\\n```json { "36": " \\#_passes." } ```'
+        self.assertEqual(find_llm_wrapper_artifacts("Format\\n\\#_passes.", leaked), ["```", '{ "36": "', "```"])
+        self.assertEqual(find_llm_wrapper_artifacts("Start", '```json { 0: "Start" } ```')[1], '{ 0: "')
+
+    def test_wrapper_artifacts_clean_translation(self) -> None:
+        self.assertEqual(find_llm_wrapper_artifacts("Hello", "Hallo"), [])
 
 
 if __name__ == "__main__":
