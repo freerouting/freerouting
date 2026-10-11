@@ -1,6 +1,13 @@
 package app.freerouting.rules;
 
+import app.freerouting.logger.FRLogger;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -157,5 +164,134 @@ public final class DifferentialPairDetector {
     }
 
     return null;
+  }
+
+  private static final class CandidateKey {
+    private final String baseNameKey;
+    private final SuffixStyle style;
+
+    CandidateKey(String baseNameKey, SuffixStyle style) {
+      this.baseNameKey = baseNameKey;
+      this.style = style;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (!(o instanceof CandidateKey that)) {
+        return false;
+      }
+      return Objects.equals(baseNameKey, that.baseNameKey) && style == that.style;
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(baseNameKey, style);
+    }
+  }
+
+  private static final class CandidateEntry {
+    private final String baseName;
+    private Net positiveNet;
+    private Net negativeNet;
+    private boolean ambiguous;
+
+    CandidateEntry(String baseName) {
+      this.baseName = baseName;
+    }
+  }
+
+  /**
+   * Scans the nets on the board, auto-detects complementary differential pairs based on standard
+   * naming conventions, and returns the detected pairs without modifying the board rules.
+   *
+   * @param boardRules the board rules containing the netlist
+   * @return unmodifiable list of detected DifferentialPair instances
+   */
+  public static List<DifferentialPair> detect(BoardRules boardRules) {
+    if (boardRules == null || boardRules.nets == null || boardRules.differentialPairs == null) {
+      return Collections.emptyList();
+    }
+
+    Map<CandidateKey, CandidateEntry> candidates = new LinkedHashMap<>();
+    int maxNetNumber = boardRules.nets.maxNetNumber();
+
+    for (int i = 1; i <= maxNetNumber; i++) {
+      Net net = boardRules.nets.get(i);
+      if (net == null || !Nets.isNormalNetNumber(net.netNumber)) {
+        continue;
+      }
+      if (boardRules.differentialPairs.findForNet(net) != null) {
+        continue;
+      }
+
+      ExtractedNetInfo info = extract(net.name);
+      if (info == null) {
+        continue;
+      }
+      if (boardRules.differentialPairs.get(info.baseName()) != null) {
+        continue;
+      }
+
+      CandidateKey key = new CandidateKey(info.baseName().toLowerCase(Locale.ROOT), info.style());
+      CandidateEntry entry =
+          candidates.computeIfAbsent(key, k -> new CandidateEntry(info.baseName()));
+
+      if (info.polarity() == Polarity.POSITIVE) {
+        if (entry.positiveNet != null) {
+          entry.ambiguous = true;
+        } else {
+          entry.positiveNet = net;
+        }
+      } else {
+        if (entry.negativeNet != null) {
+          entry.ambiguous = true;
+        } else {
+          entry.negativeNet = net;
+        }
+      }
+    }
+
+    List<DifferentialPair> result = new ArrayList<>();
+    for (CandidateEntry entry : candidates.values()) {
+      if (!entry.ambiguous && entry.positiveNet != null && entry.negativeNet != null) {
+        if (boardRules.differentialPairs.findForNet(entry.positiveNet) == null
+            && boardRules.differentialPairs.findForNet(entry.negativeNet) == null
+            && boardRules.differentialPairs.get(entry.baseName) == null) {
+          result.add(new DifferentialPair(entry.positiveNet, entry.negativeNet, entry.baseName));
+        }
+      }
+    }
+
+    return Collections.unmodifiableList(result);
+  }
+
+  /**
+   * Scans the nets on the board, auto-detects differential pairs based on standard naming
+   * conventions, and registers any newly detected pairs into the board rules.
+   *
+   * @param boardRules the board rules containing nets and the differential pair registry
+   * @return unmodifiable list of newly registered differential pairs
+   */
+  public static List<DifferentialPair> detectAndRegister(BoardRules boardRules) {
+    if (boardRules == null || boardRules.differentialPairs == null) {
+      return Collections.emptyList();
+    }
+
+    List<DifferentialPair> detected = detect(boardRules);
+    for (DifferentialPair pair : detected) {
+      boardRules.differentialPairs.add(pair);
+      FRLogger.info(
+          "Auto-detected differential pair: "
+              + pair.baseName()
+              + " ("
+              + pair.positiveNet().name
+              + ", "
+              + pair.negativeNet().name
+              + ")");
+    }
+    return detected;
   }
 }
