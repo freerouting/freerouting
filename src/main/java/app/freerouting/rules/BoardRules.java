@@ -25,6 +25,7 @@ public class BoardRules implements Serializable {
   public final ViaInfos viaInfos = new ViaInfos();
   public final Vector<ViaRule> viaRules = new Vector<>();
   public final NetClasses netClasses = new NetClasses();
+  public final DifferentialPairs differentialPairs = new DifferentialPairs();
   private final LayerStructure layerStructure;
 
   /** The angle restriction for traces: 90 degree, 45 degree or none. */

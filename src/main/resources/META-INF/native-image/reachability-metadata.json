@@ -905,6 +905,10 @@
       "serializable": true
     },
     {
+      "type": "app.freerouting.rules.DifferentialPairs",
+      "serializable": true
+    },
+    {
       "type": "app.freerouting.rules.MeanderPatternType",
       "serializable": true
     },
