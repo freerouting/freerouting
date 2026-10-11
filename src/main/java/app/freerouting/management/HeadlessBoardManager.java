@@ -34,7 +34,10 @@ import app.freerouting.io.specctra.SesWriter;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.jobs.ThreadActionListener;
 import app.freerouting.rules.BoardRules;
+import app.freerouting.rules.CornerStyle;
 import app.freerouting.rules.DefaultItemClearanceClasses;
+import app.freerouting.rules.MeanderPatternType;
+import app.freerouting.rules.NetMeanderConstraint;
 import app.freerouting.settings.sources.DefaultSettings;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -365,6 +368,7 @@ public class HeadlessBoardManager implements BoardManager {
     applyPlaneNetsOverride();
     applyPlaneAsObstacleOverride();
     applyClearanceToleranceOverride();
+    applyMeanderSettingsOverride();
   }
 
   private void applyHoleClearanceOverride() {
@@ -657,6 +661,115 @@ public class HeadlessBoardManager implements BoardManager {
     FRLogger.debug("Applied clearance tolerance: " + toleranceUm + " um.");
   }
 
+  private void applyMeanderSettingsOverride() {
+    if (this.board == null
+        || this.board.rules == null
+        || this.board.communication == null
+        || this.routingJob == null
+        || this.routingJob.routerSettings == null) {
+      return;
+    }
+
+    int boardResolution = Math.max(1, this.board.communication.resolution);
+    double mmToBoardScale = Unit.scale(boardResolution, Unit.MM, this.board.communication.unit);
+
+    // Ensure default meander constraints are properly scaled to board units
+    this.board.rules.initDefaultMeanderConstraints(mmToBoardScale);
+
+    var settings = this.routingJob.routerSettings;
+    if (settings.meanderMinAmplitudeMm == null
+        && settings.meanderMaxAmplitudeMm == null
+        && settings.meanderSpacingMm == null
+        && settings.meanderCornerStyle == null
+        && settings.meanderRadiusPercentage == null
+        && settings.meanderSingleSided == null) {
+      return;
+    }
+
+    boolean usesDefaultValues =
+        (settings.meanderMinAmplitudeMm == null
+                || Math.abs(
+                        settings.meanderMinAmplitudeMm
+                            - DefaultSettings.DEFAULT_MEANDER_MIN_AMPLITUDE_MM)
+                    < 1e-9)
+            && (settings.meanderMaxAmplitudeMm == null
+                || Math.abs(
+                        settings.meanderMaxAmplitudeMm
+                            - DefaultSettings.DEFAULT_MEANDER_MAX_AMPLITUDE_MM)
+                    < 1e-9)
+            && (settings.meanderSpacingMm == null
+                || Math.abs(settings.meanderSpacingMm - DefaultSettings.DEFAULT_MEANDER_SPACING_MM)
+                    < 1e-9)
+            && (settings.meanderCornerStyle == null
+                || DefaultSettings.DEFAULT_MEANDER_CORNER_STYLE.equalsIgnoreCase(
+                    settings.meanderCornerStyle))
+            && (settings.meanderRadiusPercentage == null
+                || Math.abs(
+                        settings.meanderRadiusPercentage
+                            - DefaultSettings.DEFAULT_MEANDER_RADIUS_PERCENTAGE)
+                    < 1e-9)
+            && (settings.meanderSingleSided == null
+                || settings.meanderSingleSided == DefaultSettings.DEFAULT_MEANDER_SINGLE_SIDED);
+
+    // Keep explicit DSN meander rules untouched when only the global default settings are active.
+    if (usesDefaultValues) {
+      return;
+    }
+
+    double minAmpMm =
+        settings.meanderMinAmplitudeMm != null
+            ? settings.meanderMinAmplitudeMm
+            : DefaultSettings.DEFAULT_MEANDER_MIN_AMPLITUDE_MM;
+    double maxAmpMm =
+        settings.meanderMaxAmplitudeMm != null
+            ? settings.meanderMaxAmplitudeMm
+            : DefaultSettings.DEFAULT_MEANDER_MAX_AMPLITUDE_MM;
+    double spacingMm =
+        settings.meanderSpacingMm != null
+            ? settings.meanderSpacingMm
+            : DefaultSettings.DEFAULT_MEANDER_SPACING_MM;
+    CornerStyle cornerStyle =
+        settings.meanderCornerStyle != null
+            ? CornerStyle.parse(settings.meanderCornerStyle)
+            : CornerStyle.valueOf(DefaultSettings.DEFAULT_MEANDER_CORNER_STYLE);
+    double radiusPct =
+        settings.meanderRadiusPercentage != null
+            ? settings.meanderRadiusPercentage
+            : DefaultSettings.DEFAULT_MEANDER_RADIUS_PERCENTAGE;
+    boolean singleSided =
+        settings.meanderSingleSided != null
+            ? settings.meanderSingleSided
+            : DefaultSettings.DEFAULT_MEANDER_SINGLE_SIDED;
+
+    for (MeanderPatternType type : MeanderPatternType.values()) {
+      double defaultTypeSpacingMm =
+          switch (type) {
+            case DIFF_PAIR -> NetMeanderConstraint.DEFAULT_SPACING_DIFF_PAIR_MM;
+            case DIFF_PAIR_SKEW -> NetMeanderConstraint.DEFAULT_SPACING_DIFF_PAIR_SKEW_MM;
+            case SINGLE_TRACK -> NetMeanderConstraint.DEFAULT_SPACING_SINGLE_TRACK_MM;
+          };
+      double typeSpacingMm =
+          (settings.meanderSpacingMm != null) ? settings.meanderSpacingMm : defaultTypeSpacingMm;
+
+      NetMeanderConstraint constraint =
+          NetMeanderConstraint.ofMm(
+              minAmpMm,
+              maxAmpMm,
+              typeSpacingMm,
+              cornerStyle,
+              radiusPct,
+              singleSided,
+              mmToBoardScale);
+
+      this.board.rules.setDefaultMeanderConstraint(type, constraint);
+      FRLogger.debug(
+          "Applied meander pattern settings to board rules default constraint for "
+              + type
+              + ": "
+              + constraint);
+    }
+  }
+
   /**
    * Returns the current routing job context associated with this board manager.
    *
@@ -855,6 +968,7 @@ public class HeadlessBoardManager implements BoardManager {
       applyPlaneNetsOverride();
       applyPlaneAsObstacleOverride();
       applyClearanceToleranceOverride();
+      applyMeanderSettingsOverride();
     }
   }
 

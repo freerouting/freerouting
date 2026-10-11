@@ -56,6 +56,42 @@ public class RouterSettings implements Serializable, Cloneable {
       alternate = {"conduction_is_obstacle", "planeAsObstacle", "conductionIsObstacle"})
   public Boolean planeAsObstacle;
 
+  /** Minimum amplitude for trace length tuning meanders in millimeters. */
+  @SerializedName(
+      value = "meander_min_amplitude_mm",
+      alternate = {"meanderMinAmplitudeMm"})
+  public Double meanderMinAmplitudeMm;
+
+  /** Maximum amplitude for trace length tuning meanders in millimeters. */
+  @SerializedName(
+      value = "meander_max_amplitude_mm",
+      alternate = {"meanderMaxAmplitudeMm"})
+  public Double meanderMaxAmplitudeMm;
+
+  /** Spacing between parallel meander traces in millimeters. */
+  @SerializedName(
+      value = "meander_spacing_mm",
+      alternate = {"meanderSpacingMm"})
+  public Double meanderSpacingMm;
+
+  /** Corner style for meander turns (FILLET or CHAMFER). */
+  @SerializedName(
+      value = "meander_corner_style",
+      alternate = {"meanderCornerStyle"})
+  public String meanderCornerStyle;
+
+  /** Corner radius percentage for meander turns (0 to 100). */
+  @SerializedName(
+      value = "meander_radius_percentage",
+      alternate = {"meanderRadiusPercentage"})
+  public Double meanderRadiusPercentage;
+
+  /** Whether meanders are restricted to one side of the baseline track. */
+  @SerializedName(
+      value = "meander_single_sided",
+      alternate = {"meanderSingleSided"})
+  public Boolean meanderSingleSided;
+
   /**
    * Opt-in width necking: when a connection fails at its net-class trace width, retry it once with
    * all trace half-widths clamped to this width (in micrometers). Intended for fine-pitch regions
@@ -620,6 +656,12 @@ public class RouterSettings implements Serializable, Cloneable {
     result.copperToEdgeClearanceUm = this.copperToEdgeClearanceUm;
     result.holeClearanceUm = this.holeClearanceUm;
     result.clearanceToleranceUm = this.clearanceToleranceUm;
+    result.meanderMinAmplitudeMm = this.meanderMinAmplitudeMm;
+    result.meanderMaxAmplitudeMm = this.meanderMaxAmplitudeMm;
+    result.meanderSpacingMm = this.meanderSpacingMm;
+    result.meanderCornerStyle = this.meanderCornerStyle;
+    result.meanderRadiusPercentage = this.meanderRadiusPercentage;
+    result.meanderSingleSided = this.meanderSingleSided;
     result.planeNets = this.planeNets != null ? this.planeNets.clone() : null;
     result.planeAsObstacle = this.planeAsObstacle;
     result.neckWidthUm = this.neckWidthUm;
