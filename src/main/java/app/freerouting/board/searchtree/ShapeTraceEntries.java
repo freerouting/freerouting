@@ -444,8 +444,19 @@ public class ShapeTraceEntries {
                 insertEntryPoint(trace, traceLineSegmentNo, projectionSide, projection.toFloat());
               }
             }
-          } else if (contactCount == 0 && offsetShape.containsInside(endCorner)) {
-            shapeContainsTraceTails = true;
+          } else if (contactCount != 1 && offsetShape.containsInside(endCorner)) {
+            shapeContainsTraceTails = contactCount == 0;
+            // Replacement pieces can project a single movable endpoint contact, but cannot
+            // reconstruct an enclosed free endpoint or branching junction. No boundary
+            // crossings must not mean "no obstacle", and partial cutouts must not erase
+            // these endpoints. Reject for every pad/trace check and insertion, even when
+            // other obstacles contribute valid substitute pieces.
+            // Safety policy: refuse an unsupported move rather than risk a collision or lost
+            // connectivity. Excess compensation can enclose a physically movable junction, so
+            // this refusal may require another route or leave a connection unrouted. Recovering
+            // such moves requires topology-preserving reconstruction, not weakening this guard.
+            this.foundObstacle = trace;
+            return false;
           }
         }
         endCorner = trace.lastCorner();

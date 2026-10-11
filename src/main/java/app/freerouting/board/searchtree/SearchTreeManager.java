@@ -66,7 +66,10 @@ public class SearchTreeManager {
     return defaultTree;
   }
 
-  /** Returns a managed tree with physical geometry, without angle-restricted bounding shapes. */
+  /**
+   * Returns a managed general tree without clearance compensation. This avoids the specialized
+   * autoroute trees' area approximations, but retains the general tree's pad and hole envelopes.
+   */
   public synchronized ShapeSearchTree getUncompensatedTree() {
     for (ShapeSearchTree tree : compensatedSearchTrees) {
       if (tree.compensatedClearanceClassNo == 0 && tree.getClass() == ShapeSearchTree.class) {

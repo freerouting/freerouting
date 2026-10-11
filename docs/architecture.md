@@ -103,9 +103,28 @@ Use the table below to jump to the package most likely to own the behavior you a
 share one dispatch under the tree read lock. Queries use raw geometry in an
 uncompensated tree and already compensated geometry in a tree for the query's
 clearance class. The latter performs direct overlap testing; adding explicit
-clearance again would reject usable space. An unmatched query class retains
-conservative explicit checking because a general clearance matrix is not additive.
-Callers needing tight results must select the tree for that query class.
+clearance again would reject usable space. For an unmatched query class, prepared
+shapes may not cover the pairwise requirement. Add only the missing remainder:
+`max(0, clearance(a,b,layer) - compensation(a,layer) - compensation(b,layer))`.
+Existing excess compensation is not removed, so some legal passages may still be
+rejected. Callers with raw geometry can use the general uncompensated tree to
+avoid that excess.
+
+A larger envelope is safe only if its consumers handle enclosed copper correctly.
+`ShapeTraceEntries` rejects a foreign trace when an endpoint strictly inside the
+shove envelope has either no contact or multiple contacts. Replacement pieces can
+project a single movable contact, but cannot preserve an enclosed free endpoint or
+branching junction. A fully enclosed trace can have no boundary crossings and still
+be an obstacle; a partial cutout must not silently erase its endpoint or junction.
+Rejecting during shared obstacle analysis protects both pad and trace
+checking/insertion, including obstacle lists with other valid replacement pieces.
+Same-net copper and supported single-contact replacements retain their existing
+handling. The safety policy deliberately favors refusal over collision or lost
+connectivity. Excess compensation can enclose a physically movable junction, so
+refusal may require another route or leave a connection unrouted. Recovering those
+moves requires topology-preserving reconstruction, not weakening the rejection.
+Insertion failure keeps the existing undo-required API contract; this is
+not a guarantee of rollback after earlier recursive via movements.
 
 `Item.getTileShape()` returns default-tree geometry, so moved items and net-change
 checks must not compensate it again. `BasicBoard.checkShape`, trace-end pin searches,
@@ -116,9 +135,13 @@ entry indices and shove policy must not be changed by an octagonal enlargement.
 The optimizer's segment-length check similarly prepares its physical width and uses
 that width when calculating a stopping distance; for a mismatched class it uses an
 uncompensated tree to preserve the actual pairwise rules. `Item.clearanceViolations`
-also queries and measures physical shapes in that tree, applying pairwise clearance
-once. Both use `SearchTreeManager.getUncompensatedTree()`, which supplies general
-geometry rather than the coarser bounding shapes of angle-restricted autoroute trees.
+also queries and measures uncompensated shapes in that tree, applying pairwise
+clearance once. Both use `SearchTreeManager.getUncompensatedTree()`, which avoids
+specialized autoroute-tree approximations for obstacle areas. This is not exact
+analytic copper geometry: the general tree still uses angle-dependent pad bounds
+and hole-clearance envelopes. Circle obstacle areas retain the existing 64-gon
+approximation; circular pads can still use bounding boxes or octagons. Independent
+physical-distance checks and external EDA DRC provide separate safety evidence.
 The managed tree is reused and participates in normal edits and reindexing; it is
 published only after initialization. The normal uncompensated default is reused
 without allocating another tree.
