@@ -73,7 +73,11 @@ public class ShapeTraceEntries {
     BasicBoard board = trace.board;
     ShapeSearchTree searchTree = board.searchTreeManager.getDefaultTree();
     if (searchTree.isClearanceCompensationUsed()) {
-      double currentOffset = trace.getCompensatedHalfWidth(searchTree) + c_offset_add;
+      double currentOffset =
+          trace.getCompensatedHalfWidth(searchTree)
+              + searchTree.additionalClearance(
+                  clearanceClassIndex, trace.clearanceClassIndex(), trace.getLayer())
+              + c_offset_add;
       offsetShape = shape.offset(currentOffset);
     } else {
       // enlarge the shape in 2 steps  for symmetry reasons
@@ -237,7 +241,11 @@ public class ShapeTraceEntries {
     TileShape offsetShape;
     ShapeSearchTree searchTree = this.board.searchTreeManager.getDefaultTree();
     if (searchTree.isClearanceCompensationUsed()) {
-      double currentOffset = currentTrace.getCompensatedHalfWidth(searchTree) + c_offset_add;
+      double currentOffset =
+          currentTrace.getCompensatedHalfWidth(searchTree)
+              + searchTree.additionalClearance(
+                  clearanceClassIndex, currentTrace.clearanceClassIndex(), layer)
+              + c_offset_add;
       offsetShape = (TileShape) shape.offset(currentOffset);
     } else {
       // enlarge the shape in 2 steps  for symmetry reasons
@@ -328,7 +336,11 @@ public class ShapeTraceEntries {
     ShapeSearchTree searchTree = this.board.searchTreeManager.getDefaultTree();
     TileShape offsetShape;
     if (searchTree.isClearanceCompensationUsed()) {
-      double currentOffset = trace.getCompensatedHalfWidth(searchTree) + c_offset_add;
+      double currentOffset =
+          trace.getCompensatedHalfWidth(searchTree)
+              + searchTree.additionalClearance(
+                  clearanceClassIndex, trace.clearanceClassIndex(), trace.getLayer())
+              + c_offset_add;
       offsetShape = (TileShape) shape.offset(currentOffset);
     } else {
       // enlarge the shape in 2 steps  for symmetry reasons
@@ -393,16 +405,14 @@ public class ShapeTraceEntries {
 
               double viaTraceDiff =
                   viaShape.smallestRadius() - trace.getCompensatedHalfWidth(searchTree);
-              if (!searchTree.isClearanceCompensationUsed()) {
-                int viaClearance =
-                    board.clearanceValue(
-                        contactItem.clearanceClassIndex(), this.clearanceClassIndex, this.layer);
-                int traceClearance =
-                    board.clearanceValue(
-                        trace.clearanceClassIndex(), this.clearanceClassIndex, this.layer);
-                if (traceClearance > viaClearance) {
-                  viaTraceDiff += viaClearance - traceClearance;
-                }
+              int viaClearance =
+                  searchTree.additionalClearance(
+                      contactItem.clearanceClassIndex(), this.clearanceClassIndex, this.layer);
+              int traceClearance =
+                  searchTree.additionalClearance(
+                      trace.clearanceClassIndex(), this.clearanceClassIndex, this.layer);
+              if (traceClearance > viaClearance) {
+                viaTraceDiff += viaClearance - traceClearance;
               }
               if (viaTraceDiff < 0) {
                 // the via is smaller than the trace

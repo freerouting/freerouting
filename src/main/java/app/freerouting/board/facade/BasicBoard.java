@@ -1097,12 +1097,8 @@ public class BasicBoard implements Serializable {
     ShapeSearchTree defaultTree = this.searchTreeManager.getDefaultTree();
     Collection<TreeEntry> treeEntries = new LinkedList<>();
     int[] ignoreNetNos = new int[0];
-    if (defaultTree.isClearanceCompensationUsed()) {
-      defaultTree.overlappingTreeEntries(shape, layer, ignoreNetNos, treeEntries);
-    } else {
-      defaultTree.overlappingTreeEntriesWithClearance(
-          shape, layer, ignoreNetNos, clearanceClassIndex, treeEntries);
-    }
+    defaultTree.overlappingTreeEntriesWithClearance(
+        shape, layer, ignoreNetNos, clearanceClassIndex, treeEntries);
     for (TreeEntry currentTreeEntry : treeEntries) {
       if (!(currentTreeEntry.object instanceof Item currentItem)) {
         continue;

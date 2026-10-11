@@ -117,6 +117,25 @@ public class ShapeSearchTree extends MinAreaTree {
   }
 
   /**
+   * Clearance still needed between two shapes already prepared for this tree. For arbitrary class
+   * matrices, their compensation radii need not add up to the pairwise clearance. Never shrink
+   * prepared shapes when they already provide more clearance than required.
+   */
+  public int additionalClearance(int firstClass, int secondClass, int layer) {
+    if (!isClearanceCompensationUsed()) {
+      return board.clearanceValue(firstClass, secondClass, layer);
+    }
+    // Keep the compensated convention: the callers supply their geometric rounding guards.
+    // The explicit (uncompensated) path retains its existing matrix safety margin.
+    int clearance = board.rules.clearanceMatrix.getValue(firstClass, secondClass, layer, false);
+    return Math.max(
+        0,
+        clearance
+            - clearanceCompensationValue(firstClass, layer)
+            - clearanceCompensationValue(secondClass, layer));
+  }
+
+  /**
    * Changes the tree entries from keepAtStartCount + 1 to newShapeCount - 1 - keepAtEndCount to
    * changedEntries. Special implementation for change_trace for performance reasons
    */
@@ -506,10 +525,10 @@ public class ShapeSearchTree extends MinAreaTree {
    * already compensated geometry for a compensated tree. In the latter case the query and indexed
    * shapes already account for clearance; expanding them again would count it twice. Use a tree
    * compensated for the query's clearance class when querying mixed clearance classes. Compensation
-   * for a different query class need not represent its pairwise clearance rules; those queries
-   * retain conservative explicit clearance checking, as in an uncompensated tree. The explicit path
-   * retains the half-clearance expansions and safety margin. If layer is negative, all layers are
-   * queried.
+   * for a different query class need not represent its pairwise clearance rules; those queries add
+   * only the pairwise clearance not already represented by the two prepared shapes. Excess
+   * compensation remains conservative; prepared shapes are never shrunk. The explicit path retains
+   * the half-clearance expansions and safety margin. If layer is negative, all layers are queried.
    */
   public void overlappingTreeEntriesWithClearance(
       ConvexShape shape,
@@ -585,8 +604,7 @@ public class ShapeSearchTree extends MinAreaTree {
       if (!ignoreItem) {
         if (currentObject instanceof Item currentItem) {
           int currentClearance =
-              clMatrix.getValue(
-                  clearanceClassIndex, currentItem.clearanceClassIndex(), layer, true);
+              additionalClearance(clearanceClassIndex, currentItem.clearanceClassIndex(), layer);
           EntrySortedByClearance sortedOb =
               new EntrySortedByClearance(currentLeaf, currentClearance, nextEntryId++);
           sortedItems.add(sortedOb);
@@ -600,7 +618,8 @@ public class ShapeSearchTree extends MinAreaTree {
     int currentHalfClearance = 0;
     ConvexShape currentOffsetShape = shape;
     for (EntrySortedByClearance tmpEntry : sortedItems) {
-      int tmpHalfClearance = tmpEntry.clearance / 2;
+      int tmpHalfClearance =
+          isClearanceCompensationUsed() ? (tmpEntry.clearance + 1) / 2 : tmpEntry.clearance / 2;
       if (tmpHalfClearance != currentHalfClearance) {
         currentHalfClearance = tmpHalfClearance;
         currentOffsetShape = (ConvexShape) shape.enlarge(currentHalfClearance);

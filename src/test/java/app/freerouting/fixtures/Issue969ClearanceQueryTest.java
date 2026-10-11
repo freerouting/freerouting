@@ -158,21 +158,27 @@ class Issue969ClearanceQueryTest extends RoutingFixtureTest {
       assertInstanceOf(PolylineTrace.class, trace).pullTight(true, 100, null);
       assertTrue(board.searchTreeManager.validateEntries(trace));
     }
-    // Check physical geometry/DRC in the uncompensated default tree as well.
-    board.searchTreeManager.setClearanceCompensationUsed(false);
+    // DRC must measure physical copper without changing the active routing mode.
     assertEquals(0, new DesignRulesChecker(board, null).getAllClearanceViolations().size());
-    assertTrue(
+    assertEquals(compensated, board.searchTreeManager.isClearanceCompensationUsed());
+    var first =
         board.getTraces().stream()
-            .anyMatch(
+            .filter(
                 t ->
                     t.firstCorner().equals(path.firstCorner())
-                        || t.lastCorner().equals(path.firstCorner())));
-    assertTrue(
+                        || t.lastCorner().equals(path.firstCorner()))
+            .findFirst()
+            .orElseThrow();
+    var last =
         board.getTraces().stream()
-            .anyMatch(
+            .filter(
                 t ->
                     t.firstCorner().equals(path.lastCorner())
-                        || t.lastCorner().equals(path.lastCorner())));
+                        || t.lastCorner().equals(path.lastCorner()))
+            .findFirst()
+            .orElseThrow();
+    assertTrue(
+        first.getConnectedSet(1).contains(last), "Cleanup must preserve endpoint connectivity");
   }
 
   @ParameterizedTest
