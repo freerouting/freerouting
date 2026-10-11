@@ -37,28 +37,57 @@ public class DifferentialPairs implements Serializable {
   public synchronized void add(DifferentialPair pair) {
     Objects.requireNonNull(pair, "pair cannot be null");
 
-    DifferentialPair existingPos = pairsByNetNumber.get(pair.positiveNet().netNumber);
-    if (existingPos != null && !existingPos.equals(pair)) {
-      throw new IllegalArgumentException(
-          "Net "
-              + pair.positiveNet().name
-              + " is already registered in pair "
-              + existingPos.baseName());
-    }
-
-    DifferentialPair existingNeg = pairsByNetNumber.get(pair.negativeNet().netNumber);
-    if (existingNeg != null && !existingNeg.equals(pair)) {
-      throw new IllegalArgumentException(
-          "Net "
-              + pair.negativeNet().name
-              + " is already registered in pair "
-              + existingNeg.baseName());
-    }
+    checkNetAvailability(pair.positiveNet(), pair);
+    checkNetAvailability(pair.negativeNet(), pair);
 
     String key = pair.baseName().toLowerCase(Locale.ROOT);
     this.pairsByName.put(key, pair);
-    this.pairsByNetNumber.put(pair.positiveNet().netNumber, pair);
-    this.pairsByNetNumber.put(pair.negativeNet().netNumber, pair);
+    indexSubnets(pair.positiveNet(), pair);
+    indexSubnets(pair.negativeNet(), pair);
+  }
+
+  private void checkNetAvailability(Net net, DifferentialPair pair) {
+    if (net == null) {
+      return;
+    }
+    DifferentialPair existing = pairsByNetNumber.get(net.netNumber);
+    if (existing != null && !existing.equals(pair)) {
+      throw new IllegalArgumentException(
+          "Net " + net.name + " is already registered in pair " + existing.baseName());
+    }
+    if (net.netList != null) {
+      for (Net subnet : net.netList.get(net.name)) {
+        DifferentialPair existingSub = pairsByNetNumber.get(subnet.netNumber);
+        if (existingSub != null && !existingSub.equals(pair)) {
+          throw new IllegalArgumentException(
+              "Net " + subnet.name + " is already registered in pair " + existingSub.baseName());
+        }
+      }
+    }
+  }
+
+  private void indexSubnets(Net net, DifferentialPair pair) {
+    if (net == null) {
+      return;
+    }
+    this.pairsByNetNumber.put(net.netNumber, pair);
+    if (net.netList != null) {
+      for (Net subnet : net.netList.get(net.name)) {
+        this.pairsByNetNumber.put(subnet.netNumber, pair);
+      }
+    }
+  }
+
+  private void removeSubnets(Net net) {
+    if (net == null) {
+      return;
+    }
+    this.pairsByNetNumber.remove(net.netNumber);
+    if (net.netList != null) {
+      for (Net subnet : net.netList.get(net.name)) {
+        this.pairsByNetNumber.remove(subnet.netNumber);
+      }
+    }
   }
 
   /**
@@ -110,8 +139,8 @@ public class DifferentialPairs implements Serializable {
     String key = pair.baseName().toLowerCase(Locale.ROOT);
     DifferentialPair removed = this.pairsByName.remove(key);
     if (removed != null) {
-      this.pairsByNetNumber.remove(pair.positiveNet().netNumber);
-      this.pairsByNetNumber.remove(pair.negativeNet().netNumber);
+      removeSubnets(pair.positiveNet());
+      removeSubnets(pair.negativeNet());
       return true;
     }
     return false;

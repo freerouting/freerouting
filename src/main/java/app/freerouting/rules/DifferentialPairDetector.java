@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 public final class DifferentialPairDetector {
 
   private static final Pattern POWER_RAIL_PATTERN =
-      Pattern.compile("^[+-]?\\d+(\\.\\d+)?[vV]?$", Pattern.CASE_INSENSITIVE);
+      Pattern.compile("^[+-]?\\d+([.vV]\\d*)?[vV]?$", Pattern.CASE_INSENSITIVE);
 
   private DifferentialPairDetector() {}
 
@@ -65,7 +65,7 @@ public final class DifferentialPairDetector {
     int lastSlash = upper.lastIndexOf('/');
     String localName = (lastSlash >= 0) ? upper.substring(lastSlash + 1) : upper;
 
-    // Direct power rail names and voltages (e.g. +5V, -12V, 3V3, 5V)
+    // Direct power rail names and voltages (e.g. +5V, -12V, 3V3, 1V8, 5V)
     if (POWER_RAIL_PATTERN.matcher(localName).matches()) {
       return true;
     }
@@ -75,13 +75,16 @@ public final class DifferentialPairDetector {
         || localName.equals("GROUND")
         || localName.startsWith("GND_")
         || localName.startsWith("GND-")
-        || localName.endsWith("_GND")
+        || localName.endsWith("GND")
         || localName.equals("VCC")
         || localName.startsWith("VCC_")
+        || localName.endsWith("VCC")
         || localName.equals("VDD")
         || localName.startsWith("VDD_")
+        || localName.endsWith("VDD")
         || localName.equals("VSS")
         || localName.startsWith("VSS_")
+        || localName.endsWith("VSS")
         || localName.equals("VBUS")
         || localName.startsWith("VBUS_")
         || localName.equals("VBAT")
@@ -241,13 +244,19 @@ public final class DifferentialPairDetector {
 
       if (info.polarity() == Polarity.POSITIVE) {
         if (entry.positiveNet != null) {
-          entry.ambiguous = true;
+          if (!entry.positiveNet.name.equalsIgnoreCase(net.name)
+              || entry.positiveNet.subnetNumber == net.subnetNumber) {
+            entry.ambiguous = true;
+          }
         } else {
           entry.positiveNet = net;
         }
       } else {
         if (entry.negativeNet != null) {
-          entry.ambiguous = true;
+          if (!entry.negativeNet.name.equalsIgnoreCase(net.name)
+              || entry.negativeNet.subnetNumber == net.subnetNumber) {
+            entry.ambiguous = true;
+          }
         } else {
           entry.negativeNet = net;
         }

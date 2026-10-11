@@ -88,11 +88,20 @@ class DifferentialPairDetectorTest {
   void testPowerAndGroundExclusions() {
     assertTrue(DifferentialPairDetector.isExcludedNet("GND"));
     assertTrue(DifferentialPairDetector.isExcludedNet("GND_EARTH"));
+    assertTrue(DifferentialPairDetector.isExcludedNet("AGND"));
+    assertTrue(DifferentialPairDetector.isExcludedNet("DGND"));
+    assertTrue(DifferentialPairDetector.isExcludedNet("PGND"));
     assertTrue(DifferentialPairDetector.isExcludedNet("VCC"));
+    assertTrue(DifferentialPairDetector.isExcludedNet("AVCC"));
     assertTrue(DifferentialPairDetector.isExcludedNet("+5V"));
     assertTrue(DifferentialPairDetector.isExcludedNet("-12V"));
     assertTrue(DifferentialPairDetector.isExcludedNet("3.3V"));
+    assertTrue(DifferentialPairDetector.isExcludedNet("3V3"));
+    assertTrue(DifferentialPairDetector.isExcludedNet("1V8"));
+    assertTrue(DifferentialPairDetector.isExcludedNet("5V0"));
+    assertTrue(DifferentialPairDetector.isExcludedNet("+3V3"));
     assertTrue(DifferentialPairDetector.isExcludedNet("VDD"));
+    assertTrue(DifferentialPairDetector.isExcludedNet("AVDD"));
     assertTrue(DifferentialPairDetector.isExcludedNet("VSS"));
     assertTrue(DifferentialPairDetector.isExcludedNet("VBUS"));
     assertTrue(DifferentialPairDetector.isExcludedNet("VBAT"));
@@ -101,7 +110,10 @@ class DifferentialPairDetectorTest {
 
     assertNull(DifferentialPairDetector.extract("+5V"));
     assertNull(DifferentialPairDetector.extract("-12V"));
+    assertNull(DifferentialPairDetector.extract("3V3"));
+    assertNull(DifferentialPairDetector.extract("1V8"));
     assertNull(DifferentialPairDetector.extract("GND"));
+    assertNull(DifferentialPairDetector.extract("AGND"));
     assertNull(DifferentialPairDetector.extract("VCC"));
   }
 
@@ -221,5 +233,34 @@ class DifferentialPairDetectorTest {
     assertTrue(detected.isEmpty());
     assertEquals(1, board.rules.differentialPairs.count());
     assertEquals(200.0, board.rules.differentialPairs.get("USB").coupledSpacing());
+  }
+
+  @Test
+  void testSubnetsWithIdenticalNamePairedWithoutAmbiguity() {
+    app.freerouting.board.facade.RoutingBoard board = createTestBoard();
+    // Subnet 1 and Subnet 2 for USB+ and USB-
+    Net usbP1 = board.rules.nets.add("USB+", 1, false);
+    Net usbP2 = board.rules.nets.add("USB+", 2, false);
+    Net usbN1 = board.rules.nets.add("USB-", 1, false);
+    Net usbN2 = board.rules.nets.add("USB-", 2, false);
+
+    java.util.List<DifferentialPair> detected =
+        DifferentialPairDetector.detectAndRegister(board.rules);
+    assertEquals(1, detected.size());
+    assertEquals(1, board.rules.differentialPairs.count());
+
+    DifferentialPair pair = board.rules.differentialPairs.get("USB");
+    assertNotNull(pair);
+
+    // Both subnet 1 and subnet 2 must be found for the pair
+    assertEquals(pair, board.rules.differentialPairs.findForNet(usbP1));
+    assertEquals(pair, board.rules.differentialPairs.findForNet(usbP2));
+    assertEquals(pair, board.rules.differentialPairs.findForNet(usbN1));
+    assertEquals(pair, board.rules.differentialPairs.findForNet(usbN2));
+
+    assertTrue(pair.contains(usbP1));
+    assertTrue(pair.contains(usbP2));
+    assertTrue(pair.contains(usbN1));
+    assertTrue(pair.contains(usbN2));
   }
 }
