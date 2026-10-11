@@ -31,10 +31,13 @@ public final class DifferentialPairDetector {
 
   /** Style of differential pair naming suffix. */
   public enum SuffixStyle {
-    PLUS_MINUS,
     UNDERSCORE_P_N,
+    UNDERSCORE_DP_DM,
+    UNDERSCORE_D_PLUS_MINUS,
+    UNDERSCORE_PLUS_MINUS,
+    UNDERSCORE_POS_NEG,
     DOT_P_N,
-    UNDERSCORE_POS_NEG
+    PLUS_MINUS
   }
 
   /**
@@ -89,6 +92,11 @@ public final class DifferentialPairDetector {
         || localName.startsWith("VBUS_")
         || localName.equals("VBAT")
         || localName.startsWith("VBAT_")
+        || localName.startsWith("BAT")
+        || localName.equals("V+")
+        || localName.equals("V-")
+        || localName.equals("VS+")
+        || localName.equals("VS-")
         || localName.startsWith("VIN")
         || localName.startsWith("VOUT")
         || localName.equals("PWR")
@@ -111,23 +119,9 @@ public final class DifferentialPairDetector {
     }
 
     String trimmed = netName.trim();
-
-    // Style 1: Plus / Minus (+ / -)
-    if (trimmed.endsWith("+")) {
-      String base = trimmed.substring(0, trimmed.length() - 1);
-      if (!base.isEmpty() && !isExcludedNet(base)) {
-        return new ExtractedNetInfo(base, Polarity.POSITIVE, SuffixStyle.PLUS_MINUS);
-      }
-    } else if (trimmed.endsWith("-")) {
-      String base = trimmed.substring(0, trimmed.length() - 1);
-      if (!base.isEmpty() && !isExcludedNet(base)) {
-        return new ExtractedNetInfo(base, Polarity.NEGATIVE, SuffixStyle.PLUS_MINUS);
-      }
-    }
-
     String upper = trimmed.toUpperCase(Locale.ROOT);
 
-    // Style 4: _POS / _NEG
+    // Style 1: _POS / _NEG
     if (upper.endsWith("_POS")) {
       String base = trimmed.substring(0, trimmed.length() - 4);
       if (!base.isEmpty() && !isExcludedNet(base)) {
@@ -140,7 +134,59 @@ public final class DifferentialPairDetector {
       }
     }
 
-    // Style 3: .P / .N
+    // Style 2: _DP / _DM (USB Data Plus / Data Minus)
+    if (upper.endsWith("_DP")) {
+      String base = trimmed.substring(0, trimmed.length() - 3);
+      if (!base.isEmpty() && !isExcludedNet(base)) {
+        return new ExtractedNetInfo(base, Polarity.POSITIVE, SuffixStyle.UNDERSCORE_DP_DM);
+      }
+    } else if (upper.endsWith("_DM")) {
+      String base = trimmed.substring(0, trimmed.length() - 3);
+      if (!base.isEmpty() && !isExcludedNet(base)) {
+        return new ExtractedNetInfo(base, Polarity.NEGATIVE, SuffixStyle.UNDERSCORE_DP_DM);
+      }
+    }
+
+    // Style 3: _D+ / _D- (USB Data + / -)
+    if (upper.endsWith("_D+")) {
+      String base = trimmed.substring(0, trimmed.length() - 3);
+      if (!base.isEmpty() && !isExcludedNet(base)) {
+        return new ExtractedNetInfo(base, Polarity.POSITIVE, SuffixStyle.UNDERSCORE_D_PLUS_MINUS);
+      }
+    } else if (upper.endsWith("_D-")) {
+      String base = trimmed.substring(0, trimmed.length() - 3);
+      if (!base.isEmpty() && !isExcludedNet(base)) {
+        return new ExtractedNetInfo(base, Polarity.NEGATIVE, SuffixStyle.UNDERSCORE_D_PLUS_MINUS);
+      }
+    }
+
+    // Style 4: _+ / _- (Underscore Plus / Minus)
+    if (trimmed.endsWith("_+")) {
+      String base = trimmed.substring(0, trimmed.length() - 2);
+      if (!base.isEmpty() && !isExcludedNet(base)) {
+        return new ExtractedNetInfo(base, Polarity.POSITIVE, SuffixStyle.UNDERSCORE_PLUS_MINUS);
+      }
+    } else if (trimmed.endsWith("_-")) {
+      String base = trimmed.substring(0, trimmed.length() - 2);
+      if (!base.isEmpty() && !isExcludedNet(base)) {
+        return new ExtractedNetInfo(base, Polarity.NEGATIVE, SuffixStyle.UNDERSCORE_PLUS_MINUS);
+      }
+    }
+
+    // Style 5: _P / _N (KiCad standard P / N)
+    if (upper.endsWith("_P")) {
+      String base = trimmed.substring(0, trimmed.length() - 2);
+      if (!base.isEmpty() && !isExcludedNet(base)) {
+        return new ExtractedNetInfo(base, Polarity.POSITIVE, SuffixStyle.UNDERSCORE_P_N);
+      }
+    } else if (upper.endsWith("_N")) {
+      String base = trimmed.substring(0, trimmed.length() - 2);
+      if (!base.isEmpty() && !isExcludedNet(base)) {
+        return new ExtractedNetInfo(base, Polarity.NEGATIVE, SuffixStyle.UNDERSCORE_P_N);
+      }
+    }
+
+    // Style 6: .P / .N (Dot notation)
     if (upper.endsWith(".P")) {
       String base = trimmed.substring(0, trimmed.length() - 2);
       if (!base.isEmpty() && !isExcludedNet(base)) {
@@ -153,16 +199,16 @@ public final class DifferentialPairDetector {
       }
     }
 
-    // Style 2: _P / _N
-    if (upper.endsWith("_P")) {
-      String base = trimmed.substring(0, trimmed.length() - 2);
+    // Style 7: Plus / Minus (+ / -) (KiCad bare +/- notation, e.g. D+ / D-, USB+ / USB-)
+    if (trimmed.endsWith("+")) {
+      String base = trimmed.substring(0, trimmed.length() - 1);
       if (!base.isEmpty() && !isExcludedNet(base)) {
-        return new ExtractedNetInfo(base, Polarity.POSITIVE, SuffixStyle.UNDERSCORE_P_N);
+        return new ExtractedNetInfo(base, Polarity.POSITIVE, SuffixStyle.PLUS_MINUS);
       }
-    } else if (upper.endsWith("_N")) {
-      String base = trimmed.substring(0, trimmed.length() - 2);
+    } else if (trimmed.endsWith("-")) {
+      String base = trimmed.substring(0, trimmed.length() - 1);
       if (!base.isEmpty() && !isExcludedNet(base)) {
-        return new ExtractedNetInfo(base, Polarity.NEGATIVE, SuffixStyle.UNDERSCORE_P_N);
+        return new ExtractedNetInfo(base, Polarity.NEGATIVE, SuffixStyle.PLUS_MINUS);
       }
     }
 

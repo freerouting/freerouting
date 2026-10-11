@@ -55,6 +55,51 @@ class DifferentialPairDetectorTest {
   }
 
   @Test
+  void testUnderscoreDpDmStyleExtraction() {
+    DifferentialPairDetector.ExtractedNetInfo pos = DifferentialPairDetector.extract("USB0_DP");
+    assertNotNull(pos);
+    assertEquals("USB0", pos.baseName());
+    assertEquals(DifferentialPairDetector.Polarity.POSITIVE, pos.polarity());
+    assertEquals(DifferentialPairDetector.SuffixStyle.UNDERSCORE_DP_DM, pos.style());
+
+    DifferentialPairDetector.ExtractedNetInfo neg = DifferentialPairDetector.extract("USB0_DM");
+    assertNotNull(neg);
+    assertEquals("USB0", neg.baseName());
+    assertEquals(DifferentialPairDetector.Polarity.NEGATIVE, neg.polarity());
+    assertEquals(DifferentialPairDetector.SuffixStyle.UNDERSCORE_DP_DM, neg.style());
+  }
+
+  @Test
+  void testUnderscoreDPlusMinusStyleExtraction() {
+    DifferentialPairDetector.ExtractedNetInfo pos = DifferentialPairDetector.extract("USB_D+");
+    assertNotNull(pos);
+    assertEquals("USB", pos.baseName());
+    assertEquals(DifferentialPairDetector.Polarity.POSITIVE, pos.polarity());
+    assertEquals(DifferentialPairDetector.SuffixStyle.UNDERSCORE_D_PLUS_MINUS, pos.style());
+
+    DifferentialPairDetector.ExtractedNetInfo neg = DifferentialPairDetector.extract("USB_D-");
+    assertNotNull(neg);
+    assertEquals("USB", neg.baseName());
+    assertEquals(DifferentialPairDetector.Polarity.NEGATIVE, neg.polarity());
+    assertEquals(DifferentialPairDetector.SuffixStyle.UNDERSCORE_D_PLUS_MINUS, neg.style());
+  }
+
+  @Test
+  void testUnderscorePlusMinusStyleExtraction() {
+    DifferentialPairDetector.ExtractedNetInfo pos = DifferentialPairDetector.extract("DIFF_+");
+    assertNotNull(pos);
+    assertEquals("DIFF", pos.baseName());
+    assertEquals(DifferentialPairDetector.Polarity.POSITIVE, pos.polarity());
+    assertEquals(DifferentialPairDetector.SuffixStyle.UNDERSCORE_PLUS_MINUS, pos.style());
+
+    DifferentialPairDetector.ExtractedNetInfo neg = DifferentialPairDetector.extract("DIFF_-");
+    assertNotNull(neg);
+    assertEquals("DIFF", neg.baseName());
+    assertEquals(DifferentialPairDetector.Polarity.NEGATIVE, neg.polarity());
+    assertEquals(DifferentialPairDetector.SuffixStyle.UNDERSCORE_PLUS_MINUS, neg.style());
+  }
+
+  @Test
   void testUnderscorePosNegStyleExtraction() {
     DifferentialPairDetector.ExtractedNetInfo pos = DifferentialPairDetector.extract("DATA_POS");
     assertNotNull(pos);
@@ -105,6 +150,14 @@ class DifferentialPairDetectorTest {
     assertTrue(DifferentialPairDetector.isExcludedNet("VSS"));
     assertTrue(DifferentialPairDetector.isExcludedNet("VBUS"));
     assertTrue(DifferentialPairDetector.isExcludedNet("VBAT"));
+    assertTrue(DifferentialPairDetector.isExcludedNet("BAT+"));
+    assertTrue(DifferentialPairDetector.isExcludedNet("BAT-"));
+    assertTrue(DifferentialPairDetector.isExcludedNet("BATT+"));
+    assertTrue(DifferentialPairDetector.isExcludedNet("BATT-"));
+    assertTrue(DifferentialPairDetector.isExcludedNet("V+"));
+    assertTrue(DifferentialPairDetector.isExcludedNet("V-"));
+    assertTrue(DifferentialPairDetector.isExcludedNet("VS+"));
+    assertTrue(DifferentialPairDetector.isExcludedNet("VS-"));
     assertTrue(DifferentialPairDetector.isExcludedNet(null));
     assertTrue(DifferentialPairDetector.isExcludedNet(""));
 
@@ -115,6 +168,10 @@ class DifferentialPairDetectorTest {
     assertNull(DifferentialPairDetector.extract("GND"));
     assertNull(DifferentialPairDetector.extract("AGND"));
     assertNull(DifferentialPairDetector.extract("VCC"));
+    assertNull(DifferentialPairDetector.extract("BAT+"));
+    assertNull(DifferentialPairDetector.extract("BAT-"));
+    assertNull(DifferentialPairDetector.extract("V+"));
+    assertNull(DifferentialPairDetector.extract("V-"));
   }
 
   @Test
@@ -123,6 +180,18 @@ class DifferentialPairDetectorTest {
     assertNull(DifferentialPairDetector.extract("ENABLE"));
     assertNull(DifferentialPairDetector.extract("SPI_MISO"));
     assertNull(DifferentialPairDetector.extract("I2C_SDA"));
+    // Words ending in letters p, n, dp, dm without underscore must not be matched
+    assertNull(DifferentialPairDetector.extract("STEP"));
+    assertNull(DifferentialPairDetector.extract("BUTTON"));
+    assertNull(DifferentialPairDetector.extract("OPEN"));
+    assertNull(DifferentialPairDetector.extract("CHIP"));
+    assertNull(DifferentialPairDetector.extract("CHIN"));
+    assertNull(DifferentialPairDetector.extract("MAIN"));
+    assertNull(DifferentialPairDetector.extract("SCAN"));
+    assertNull(DifferentialPairDetector.extract("DRAIN"));
+    assertNull(DifferentialPairDetector.extract("BOOTP"));
+    assertNull(DifferentialPairDetector.extract("USBDM"));
+    assertNull(DifferentialPairDetector.extract("USBDP"));
     assertNull(DifferentialPairDetector.extract(""));
     assertNull(DifferentialPairDetector.extract(null));
   }
@@ -192,6 +261,49 @@ class DifferentialPairDetectorTest {
         DifferentialPairDetector.detectAndRegister(board.rules);
     assertTrue(secondPass.isEmpty());
     assertEquals(2, board.rules.differentialPairs.count());
+  }
+
+  @Test
+  void testDetectAndRegisterUnderscoreVariants() {
+    app.freerouting.board.facade.RoutingBoard board = createTestBoard();
+    Net usbDp = board.rules.nets.add("USB0_DP", 1, false);
+    Net usbDm = board.rules.nets.add("USB0_DM", 1, false);
+    Net ethDp = board.rules.nets.add("ETH_D+", 1, false);
+    Net ethDm = board.rules.nets.add("ETH_D-", 1, false);
+    Net diffP = board.rules.nets.add("DIFF_+", 1, false);
+    Net diffM = board.rules.nets.add("DIFF_-", 1, false);
+    Net pcieP = board.rules.nets.add("PCIE.P", 1, false);
+    Net pcieN = board.rules.nets.add("PCIE.N", 1, false);
+    board.rules.nets.add("STEP", 1, false);
+    board.rules.nets.add("BUTTON", 1, false);
+    board.rules.nets.add("BAT+", 1, false);
+    board.rules.nets.add("BAT-", 1, false);
+
+    java.util.List<DifferentialPair> detected =
+        DifferentialPairDetector.detectAndRegister(board.rules);
+
+    assertEquals(4, detected.size());
+    assertEquals(4, board.rules.differentialPairs.count());
+
+    DifferentialPair usb = board.rules.differentialPairs.get("USB0");
+    assertNotNull(usb);
+    assertEquals(usbDp, usb.positiveNet());
+    assertEquals(usbDm, usb.negativeNet());
+
+    DifferentialPair eth = board.rules.differentialPairs.get("ETH");
+    assertNotNull(eth);
+    assertEquals(ethDp, eth.positiveNet());
+    assertEquals(ethDm, eth.negativeNet());
+
+    DifferentialPair diff = board.rules.differentialPairs.get("DIFF");
+    assertNotNull(diff);
+    assertEquals(diffP, diff.positiveNet());
+    assertEquals(diffM, diff.negativeNet());
+
+    DifferentialPair pcie = board.rules.differentialPairs.get("PCIE");
+    assertNotNull(pcie);
+    assertEquals(pcieP, pcie.positiveNet());
+    assertEquals(pcieN, pcie.negativeNet());
   }
 
   @Test
