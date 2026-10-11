@@ -134,9 +134,11 @@ public class BoardRules implements Serializable {
    */
   public NetMeanderConstraint getMeanderConstraint(Net net, MeanderPatternType fallbackType) {
     if (net != null) {
-      NetMeanderConstraint constraint = net.getMeanderConstraint();
-      if (constraint != null) {
-        return constraint;
+      if (net.hasExplicitMeanderConstraint()) {
+        return net.getExplicitMeanderConstraint();
+      }
+      if (net.getNetClass() != null && net.getNetClass().hasMeanderConstraint()) {
+        return net.getNetClass().getMeanderConstraint();
       }
     }
     return getDefaultMeanderConstraint(fallbackType);
@@ -144,13 +146,20 @@ public class BoardRules implements Serializable {
 
   /**
    * Resolves the effective length-tuning meander constraint for the given net, falling back from
-   * net-specific to net-class to the board default single-track constraint.
+   * net-specific to net-class to the board default constraint (DIFF_PAIR if the net belongs to a
+   * registered differential pair, SINGLE_TRACK otherwise).
    *
    * @param net the net to query
    * @return resolved NetMeanderConstraint
    */
   public NetMeanderConstraint getMeanderConstraint(Net net) {
-    return getMeanderConstraint(net, MeanderPatternType.SINGLE_TRACK);
+    MeanderPatternType defaultType =
+        (net != null
+                && this.differentialPairs != null
+                && this.differentialPairs.findForNet(net) != null)
+            ? MeanderPatternType.DIFF_PAIR
+            : MeanderPatternType.SINGLE_TRACK;
+    return getMeanderConstraint(net, defaultType);
   }
 
   /** Gets the default item clearance class. */
