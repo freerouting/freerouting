@@ -15,6 +15,7 @@ import app.freerouting.board.actions.ForcedViaInserter;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.structure.AngleRestriction;
 import app.freerouting.board.model.structure.FixedState;
+import app.freerouting.board.model.structure.ShapeEntrySide;
 import app.freerouting.board.optimize.TraceShover;
 import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.drc.DesignRulesChecker;
@@ -135,13 +136,18 @@ class Issue969ReviewRegressionTest extends RoutingFixtureTest {
   }
 
   private static void assertViaTraceGaps(RoutingBoard board) {
-    // This fixture's Via100 is a 1000-unit diameter circle. Measure copper independently of DRC.
+    // Measure physical circular pads and segment widths independently of the DRC search tree.
     for (var via : board.getVias()) {
       var center = via.getCenter().toFloat();
       for (var trace : board.getTraces()) {
         if (trace.sharesNet(via)) {
           continue;
         }
+        var pad = via.getPadstack().getShape(trace.getLayer());
+        if (pad == null) {
+          continue;
+        }
+        int radius = assertInstanceOf(Circle.class, pad).radius;
         var polyline = assertInstanceOf(PolylineTrace.class, trace).polyline();
         for (int i = 0; i < polyline.cornerCount() - 1; i++) {
           var a = polyline.cornerApprox(i);
@@ -155,11 +161,11 @@ class Issue969ReviewRegressionTest extends RoutingFixtureTest {
                       1, ((center.x - a.x) * dx + (center.y - a.y) * dy) / (dx * dx + dy * dy)));
           double gap =
               Math.hypot(center.x - a.x - t * dx, center.y - a.y - t * dy)
-                  - 500
+                  - radius
                   - trace.getHalfWidth();
           int required =
               board.rules.clearanceMatrix.getValue(
-                  via.clearanceClassIndex(), trace.clearanceClassIndex(), 0, false);
+                  via.clearanceClassIndex(), trace.clearanceClassIndex(), trace.getLayer(), false);
           assertTrue(gap >= required, () -> "Physical gap " + gap + " is below " + required);
         }
       }
@@ -214,13 +220,33 @@ class Issue969ReviewRegressionTest extends RoutingFixtureTest {
     assertEquals(0, new DesignRulesChecker(board, null).getAllClearanceViolations().size());
   }
 
+  static Stream<Arguments> layeredShoveCases() {
+    var cases = Stream.<Arguments>builder();
+    for (boolean compensated : new boolean[] {false, true}) {
+      for (int turn = 0; turn < 4; turn++) {
+        for (int incomingClass : new int[] {1, 2}) {
+          for (int strictLayer : new int[] {-1, 0, 1}) {
+            cases.add(Arguments.of(compensated, turn, incomingClass, strictLayer));
+          }
+        }
+      }
+    }
+    return cases.build();
+  }
+
   @ParameterizedTest
-  @MethodSource("directionalShoveCases")
-  void recursiveViaShoveUsesEachPairwiseClass(boolean compensated, int turn, int incomingClass)
-      throws Exception {
+  @MethodSource("layeredShoveCases")
+  void recursiveViaShoveUsesEachPairwiseClass(
+      boolean compensated, int turn, int incomingClass, int strictLayer) throws Exception {
     var board = loadBoard(compensated);
     board.rules.setTraceAngleRestriction(AngleRestriction.NINETY_DEGREE);
-    board.rules.clearanceMatrix.setValue(2, 2, 10000);
+    // Both vias span both layers; either layer can impose the limiting separation.
+    board.rules.clearanceMatrix.setValue(2, 2, strictLayer < 0 ? 10000 : 3000);
+    if (strictLayer >= 0) {
+      board.rules.clearanceMatrix.setValue(2, 2, strictLayer, 10000);
+      board.rules.clearanceMatrix.setValue(1, 2, 1 - strictLayer, 2000);
+      board.rules.clearanceMatrix.setValue(2, 1, 1 - strictLayer, 2000);
+    }
     board.rules.nets.add("third", 1, false);
     board.searchTreeManager.clearanceValueChanged();
     var firstCenter = rotatedPoint(100300, -100000, turn);
@@ -244,10 +270,12 @@ class Issue969ReviewRegressionTest extends RoutingFixtureTest {
           continue;
         }
         double gap = a.getCenter().toFloat().distance(b.getCenter().toFloat()) - 1000;
-        assertTrue(
-            gap
-                >= board.rules.clearanceMatrix.getValue(
-                    a.clearanceClassIndex(), b.clearanceClassIndex(), 0, false));
+        for (int layer = 0; layer < 2; layer++) {
+          assertTrue(
+              gap
+                  >= board.rules.clearanceMatrix.getValue(
+                      a.clearanceClassIndex(), b.clearanceClassIndex(), layer, false));
+        }
       }
     }
     assertTrue(first.isOnTheBoard());
@@ -449,6 +477,196 @@ class Issue969ReviewRegressionTest extends RoutingFixtureTest {
     assertEquals(end, trace.lastCorner());
     assertTrue(trace.getConnectedSet(2).contains(via));
     assertEquals(1, board.getVias().size());
+    assertEquals(0, new DesignRulesChecker(board, null).getAllClearanceViolations().size());
+  }
+
+  static Stream<Arguments> recursiveStopCases() {
+    var cases = Stream.<Arguments>builder();
+    for (boolean compensated : new boolean[] {false, true}) {
+      for (int turn = 0; turn < 4; turn++) {
+        for (int displacedClass : new int[] {2, 3}) {
+          cases.add(Arguments.of(compensated, turn, displacedClass));
+        }
+      }
+    }
+    return cases.build();
+  }
+
+  @ParameterizedTest
+  @MethodSource("recursiveStopCases")
+  void recursiveTraceStopRetainsLegalCopper(boolean compensated, int turn, int displacedClass)
+      throws Exception {
+    var board = loadBoard(compensated);
+    board.rules.setTraceAngleRestriction(AngleRestriction.NINETY_DEGREE);
+    var matrix = board.rules.clearanceMatrix;
+    matrix.appendClass("third");
+    matrix.setValue(2, 2, 10000);
+    matrix.setValue(1, 3, 4000);
+    matrix.setValue(3, 1, 4000);
+    matrix.setValue(2, 3, 10000);
+    matrix.setValue(3, 2, 10000);
+    matrix.setValue(3, 3, 10000);
+    board.rules.nets.add("third", 1, false);
+    board.searchTreeManager.clearanceValueChanged();
+    var originalStart = rotatedPoint(100000, -140000, turn);
+    var originalEnd = rotatedPoint(100000, -60000, turn);
+    board.insertTraceWithoutCleaning(
+        new Polyline(originalStart, originalEnd),
+        0,
+        500,
+        new int[] {2},
+        displacedClass,
+        FixedState.UNFIXED);
+    var blockerCenter = rotatedPoint(125000, -88999, turn);
+    final var blocker =
+        board.insertVia(
+            board.library.padstacks.get("Via100"),
+            blockerCenter,
+            new int[] {3},
+            displacedClass,
+            FixedState.UNFIXED,
+            false);
+    var path =
+        new Polyline(rotatedPoint(70000, -100000, turn), rotatedPoint(130000, -100000, turn));
+    var segment = new LineSegment(path, 1);
+    assertEquals(0, new DesignRulesChecker(board, null).getAllClearanceViolations().size());
+    assertEquals(0, TraceShover.check(board, segment, true, 0, new int[] {1}, 500, 2, 0, 0));
+    // The blocker limits the substituted trace, then the incoming trace must stop another
+    // pairwise clearance plus both trace half-widths behind it. Both clearances are 10000.
+    double distance = TraceShover.check(board, segment, true, 0, new int[] {1}, 500, 2, 20, 0);
+    assertEquals(compensated ? 33000 : 32968, distance, 0.01);
+    // Removing only the blocker proves that this is a recursive, finite stopping result.
+    board.removeItem(blocker);
+    assertEquals(
+        Integer.MAX_VALUE,
+        TraceShover.check(board, segment, true, 0, new int[] {1}, 500, 2, 20, 0));
+    board.insertItem(blocker);
+    var stop = rotatedPoint(70000 + (int) distance - 1, -100000, turn);
+    var retainedPath = new Polyline(path.firstCorner(), stop);
+    int width = 500 + board.searchTreeManager.getDefaultTree().clearanceCompensationValue(2, 0);
+    // Match the orthogonal insertion contract used by ShapeAndEntrySide.
+    var shape = retainedPath.offsetShapes(width)[0].boundingBox();
+    var side = new ShapeEntrySide(new LineSegment(retainedPath, 1), shape, true);
+    var shover = new TraceShover(board);
+    assertTrue(shover.check(shape, side, null, 0, new int[] {1}, 2, 20, 0, 0, null));
+    board.startMarkingChangedArea();
+    assertTrue(shover.insert(shape, side, 0, new int[] {1}, 2, null, 20, 0, 0));
+    board.insertTraceWithoutCleaning(retainedPath, 0, 500, new int[] {1}, 2, FixedState.UNFIXED);
+    assertConnectedEndpoints(board, path.firstCorner(), stop, 1);
+    assertConnectedEndpoints(board, originalStart, originalEnd, 2);
+    assertEquals(1, board.getVias().size());
+    assertTrue(blocker.isOnTheBoard());
+    assertEquals(blockerCenter, blocker.getCenter());
+    assertOrthogonalCopper(board);
+    assertViaTraceGaps(board);
+    assertEquals(0, new DesignRulesChecker(board, null).getAllClearanceViolations().size());
+  }
+
+  static Stream<Arguments> attachedViaCases() {
+    var cases = Stream.<Arguments>builder();
+    for (boolean compensated : new boolean[] {false, true}) {
+      for (int turn = 0; turn < 4; turn++) {
+        for (int viaClass : new int[] {1, 2}) {
+          for (int traceClass : new int[] {1, 2}) {
+            cases.add(Arguments.of(compensated, turn, viaClass, traceClass));
+          }
+        }
+      }
+    }
+    return cases.build();
+  }
+
+  @ParameterizedTest
+  @MethodSource("attachedViaCases")
+  void movingAttachedViaRetainsBothNets(boolean compensated, int turn, int viaClass, int traceClass)
+      throws Exception {
+    var board = loadBoard(compensated);
+    board.rules.setTraceAngleRestriction(AngleRestriction.NINETY_DEGREE);
+    board.rules.clearanceMatrix.setValue(2, 2, 10000);
+    board.searchTreeManager.clearanceValueChanged();
+    // A 9000-unit radius covers the attached trace's envelope even when its class needs
+    // 7000 units more clearance than the via. The undersized case is tested separately.
+    var pad =
+        board.library.padstacks.add(
+            new ConvexShape[] {new Circle(Point.ZERO, 9000), new Circle(Point.ZERO, 9000)});
+    var center = rotatedPoint(60000, -100000, turn);
+    var anchor = rotatedPoint(30000, -100000, turn);
+    final var via =
+        board.insertVia(pad, center, new int[] {1}, viaClass, FixedState.UNFIXED, false);
+    board.insertTraceWithoutCleaning(
+        new Polyline(anchor, center), 0, 500, new int[] {1}, traceClass, FixedState.UNFIXED);
+    var otherStart = rotatedPoint(100000, -140000, turn);
+    var otherEnd = rotatedPoint(100000, -60000, turn);
+    board.insertTraceWithoutCleaning(
+        new Polyline(otherStart, otherEnd), 0, 500, new int[] {2}, 2, FixedState.UNFIXED);
+    assertConnectedEndpoints(board, anchor, center, 1);
+    assertEquals(0, new DesignRulesChecker(board, null).getAllClearanceViolations().size());
+    var destination = new IntPoint(100000, -100000);
+    var delta = destination.differenceBy(center);
+    assertTrue(DrillItemMover.check(via, delta, 20, 20, null, board, null));
+    assertTrue(DrillItemMover.insert(via, delta, 20, 20, null, board));
+    assertTrue(via.isOnTheBoard());
+    assertEquals(1, board.getVias().size());
+    assertEquals(destination, via.getCenter());
+    assertConnectedEndpoints(board, anchor, destination, 1);
+    assertTrue(
+        via.getConnectedSet(1).stream()
+            .anyMatch(
+                item ->
+                    item instanceof PolylineTrace trace
+                        && (trace.firstCorner().equals(anchor)
+                            || trace.lastCorner().equals(anchor))));
+    assertConnectedEndpoints(board, otherStart, otherEnd, 2);
+    assertOrthogonalCopper(board);
+    assertViaTraceGaps(board);
+    assertEquals(0, new DesignRulesChecker(board, null).getAllClearanceViolations().size());
+  }
+
+  @ParameterizedTest
+  @MethodSource("attachedViaCases")
+  void sufficientAttachedViaEnvelopeAllowsShoving(
+      boolean compensated, int turn, int viaClass, int traceClass) throws Exception {
+    var board = loadBoard(compensated);
+    board.rules.setTraceAngleRestriction(AngleRestriction.NINETY_DEGREE);
+    board.rules.clearanceMatrix.setValue(2, 2, 10000);
+    board.searchTreeManager.clearanceValueChanged();
+    var pad =
+        board.library.padstacks.add(
+            new ConvexShape[] {new Circle(Point.ZERO, 9000), new Circle(Point.ZERO, 9000)});
+    var center = rotatedPoint(108000, -100000, turn);
+    var anchor = rotatedPoint(150000, -100000, turn);
+    final var attachedVia =
+        board.insertVia(pad, center, new int[] {2}, viaClass, FixedState.UNFIXED, false);
+    board.insertTraceWithoutCleaning(
+        new Polyline(center, anchor), 0, 500, new int[] {2}, traceClass, FixedState.UNFIXED);
+    assertEquals(0, new DesignRulesChecker(board, null).getAllClearanceViolations().size());
+    var incoming =
+        new ViaInfo("test", board.library.padstacks.get("Via100"), 2, false, board.rules);
+    var destination = new IntPoint(100000, -100000);
+    assertTrue(
+        ForcedViaInserter.check(
+            incoming, destination, new int[] {1}, 20, 20, board, new int[] {0, 0}, 2));
+    assertTrue(
+        ForcedViaInserter.insert(
+            incoming, destination, new int[] {1}, 2, new int[] {0, 0}, 20, 20, board));
+    assertEquals(2, board.getVias().size());
+    assertTrue(attachedVia.isOnTheBoard());
+    assertFalse(center.equals(attachedVia.getCenter()), "Attached via must actually be shoved");
+    var insertedVia =
+        board.getVias().stream().filter(v -> v.containsNet(1)).findFirst().orElseThrow();
+    assertEquals(destination, insertedVia.getCenter());
+    double gap = destination.toFloat().distance(attachedVia.getCenter().toFloat()) - 9500;
+    assertTrue(gap >= board.rules.clearanceMatrix.getValue(2, viaClass, 0, false));
+    assertConnectedEndpoints(board, attachedVia.getCenter(), anchor, 2);
+    assertTrue(
+        attachedVia.getConnectedSet(2).stream()
+            .anyMatch(
+                item ->
+                    item instanceof PolylineTrace trace
+                        && (trace.firstCorner().equals(anchor)
+                            || trace.lastCorner().equals(anchor))));
+    assertOrthogonalCopper(board);
+    assertViaTraceGaps(board);
     assertEquals(0, new DesignRulesChecker(board, null).getAllClearanceViolations().size());
   }
 
