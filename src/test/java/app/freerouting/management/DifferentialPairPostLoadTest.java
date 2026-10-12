@@ -52,17 +52,19 @@ class DifferentialPairPostLoadTest {
 
   @Test
   void testDifferentialPairAutoDetectionOnPostLoad() {
-    Net usbP = testBoard.rules.nets.add("USB+", 1, false);
-    Net usbN = testBoard.rules.nets.add("USB-", 1, false);
+    Net usbP = testBoard.rules.nets.add("USB_+", 1, false);
+    Net usbN = testBoard.rules.nets.add("USB_-", 1, false);
     Net clkP = testBoard.rules.nets.add("CLK_P", 1, false);
     Net clkN = testBoard.rules.nets.add("CLK_N", 1, false);
+    Net dP = testBoard.rules.nets.add("D+", 1, false);
+    Net dN = testBoard.rules.nets.add("D-", 1, false);
     Net reset = testBoard.rules.nets.add("RESET", 1, false);
 
     assertTrue(testBoard.rules.differentialPairs.isEmpty());
 
     manager.applyImmediatePostLoadProcessing();
 
-    assertEquals(2, testBoard.rules.differentialPairs.count());
+    assertEquals(3, testBoard.rules.differentialPairs.count());
 
     DifferentialPair usb = testBoard.rules.differentialPairs.get("USB");
     assertNotNull(usb);
@@ -73,6 +75,11 @@ class DifferentialPairPostLoadTest {
     assertNotNull(clk);
     assertEquals(clkP, clk.positiveNet());
     assertEquals(clkN, clk.negativeNet());
+
+    DifferentialPair dPair = testBoard.rules.differentialPairs.get("D");
+    assertNotNull(dPair);
+    assertEquals(dP, dPair.positiveNet());
+    assertEquals(dN, dPair.negativeNet());
 
     assertNull(testBoard.rules.differentialPairs.findForNet(reset));
   }
