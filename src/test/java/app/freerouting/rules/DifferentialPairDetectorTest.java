@@ -31,93 +31,123 @@ class DifferentialPairDetectorTest {
   }
 
   @Test
-  void testUnderscorePnStyleExtraction() {
-    DifferentialPairDetector.ExtractedNetInfo pos = DifferentialPairDetector.extract("CLK_P");
-    assertNotNull(pos);
-    assertEquals("CLK", pos.baseName());
-    assertEquals(DifferentialPairDetector.Polarity.POSITIVE, pos.polarity());
-    assertEquals(DifferentialPairDetector.SuffixStyle.UNDERSCORE_P_N, pos.style());
+  void testPnStyleExtraction() {
+    DifferentialPairDetector.ExtractedNetInfo posUnderscore =
+        DifferentialPairDetector.extract("CLK_P");
+    assertNotNull(posUnderscore);
+    assertEquals("CLK", posUnderscore.baseName());
+    assertEquals(DifferentialPairDetector.Polarity.POSITIVE, posUnderscore.polarity());
+    assertEquals(DifferentialPairDetector.SuffixStyle.P_N, posUnderscore.style());
 
-    DifferentialPairDetector.ExtractedNetInfo neg = DifferentialPairDetector.extract("clk_n");
-    assertNotNull(neg);
-    assertEquals("clk", neg.baseName());
-    assertEquals(DifferentialPairDetector.Polarity.NEGATIVE, neg.polarity());
-    assertEquals(DifferentialPairDetector.SuffixStyle.UNDERSCORE_P_N, neg.style());
+    DifferentialPairDetector.ExtractedNetInfo negUnderscore =
+        DifferentialPairDetector.extract("clk_n");
+    assertNotNull(negUnderscore);
+    assertEquals("clk", negUnderscore.baseName());
+    assertEquals(DifferentialPairDetector.Polarity.NEGATIVE, negUnderscore.polarity());
+    assertEquals(DifferentialPairDetector.SuffixStyle.P_N, negUnderscore.style());
+
+    // Dot delimiter is interchangeable
+    DifferentialPairDetector.ExtractedNetInfo posDot =
+        DifferentialPairDetector.extract("PCIE_TX0.P");
+    assertNotNull(posDot);
+    assertEquals("PCIE_TX0", posDot.baseName());
+    assertEquals(DifferentialPairDetector.Polarity.POSITIVE, posDot.polarity());
+    assertEquals(DifferentialPairDetector.SuffixStyle.P_N, posDot.style());
+
+    DifferentialPairDetector.ExtractedNetInfo negDot =
+        DifferentialPairDetector.extract("PCIE_TX0.N");
+    assertNotNull(negDot);
+    assertEquals("PCIE_TX0", negDot.baseName());
+    assertEquals(DifferentialPairDetector.Polarity.NEGATIVE, negDot.polarity());
+    assertEquals(DifferentialPairDetector.SuffixStyle.P_N, negDot.style());
   }
 
   @Test
-  void testDotPnStyleExtraction() {
-    DifferentialPairDetector.ExtractedNetInfo pos = DifferentialPairDetector.extract("PCIE_TX0.P");
-    assertNotNull(pos);
-    assertEquals("PCIE_TX0", pos.baseName());
-    assertEquals(DifferentialPairDetector.Polarity.POSITIVE, pos.polarity());
-    assertEquals(DifferentialPairDetector.SuffixStyle.DOT_P_N, pos.style());
-
-    DifferentialPairDetector.ExtractedNetInfo neg = DifferentialPairDetector.extract("PCIE_TX0.N");
-    assertNotNull(neg);
-    assertEquals("PCIE_TX0", neg.baseName());
-    assertEquals(DifferentialPairDetector.Polarity.NEGATIVE, neg.polarity());
-    assertEquals(DifferentialPairDetector.SuffixStyle.DOT_P_N, neg.style());
-  }
-
-  @Test
-  void testUnderscoreDpDmStyleExtraction() {
+  void testDpDmStyleExtraction() {
     DifferentialPairDetector.ExtractedNetInfo pos = DifferentialPairDetector.extract("USB0_DP");
     assertNotNull(pos);
     assertEquals("USB0", pos.baseName());
     assertEquals(DifferentialPairDetector.Polarity.POSITIVE, pos.polarity());
-    assertEquals(DifferentialPairDetector.SuffixStyle.UNDERSCORE_DP_DM, pos.style());
+    assertEquals(DifferentialPairDetector.SuffixStyle.DP_DM, pos.style());
 
     DifferentialPairDetector.ExtractedNetInfo neg = DifferentialPairDetector.extract("USB0_DM");
     assertNotNull(neg);
     assertEquals("USB0", neg.baseName());
     assertEquals(DifferentialPairDetector.Polarity.NEGATIVE, neg.polarity());
-    assertEquals(DifferentialPairDetector.SuffixStyle.UNDERSCORE_DP_DM, neg.style());
+    assertEquals(DifferentialPairDetector.SuffixStyle.DP_DM, neg.style());
+
+    // Dot notation for DP/DM
+    DifferentialPairDetector.ExtractedNetInfo dotPos = DifferentialPairDetector.extract("USB0.DP");
+    assertNotNull(dotPos);
+    assertEquals("USB0", dotPos.baseName());
+    assertEquals(DifferentialPairDetector.Polarity.POSITIVE, dotPos.polarity());
+    assertEquals(DifferentialPairDetector.SuffixStyle.DP_DM, dotPos.style());
   }
 
   @Test
-  void testUnderscoreDPlusMinusStyleExtraction() {
+  void testDPlusMinusStyleExtraction() {
     DifferentialPairDetector.ExtractedNetInfo pos = DifferentialPairDetector.extract("USB_D+");
     assertNotNull(pos);
     assertEquals("USB", pos.baseName());
     assertEquals(DifferentialPairDetector.Polarity.POSITIVE, pos.polarity());
-    assertEquals(DifferentialPairDetector.SuffixStyle.UNDERSCORE_D_PLUS_MINUS, pos.style());
+    assertEquals(DifferentialPairDetector.SuffixStyle.D_PLUS_MINUS, pos.style());
 
     DifferentialPairDetector.ExtractedNetInfo neg = DifferentialPairDetector.extract("USB_D-");
     assertNotNull(neg);
     assertEquals("USB", neg.baseName());
     assertEquals(DifferentialPairDetector.Polarity.NEGATIVE, neg.polarity());
-    assertEquals(DifferentialPairDetector.SuffixStyle.UNDERSCORE_D_PLUS_MINUS, neg.style());
+    assertEquals(DifferentialPairDetector.SuffixStyle.D_PLUS_MINUS, neg.style());
+
+    // Dot notation for D+/D-
+    DifferentialPairDetector.ExtractedNetInfo dotPos = DifferentialPairDetector.extract("USB.D+");
+    assertNotNull(dotPos);
+    assertEquals("USB", dotPos.baseName());
+    assertEquals(DifferentialPairDetector.Polarity.POSITIVE, dotPos.polarity());
+    assertEquals(DifferentialPairDetector.SuffixStyle.D_PLUS_MINUS, dotPos.style());
   }
 
   @Test
-  void testUnderscorePlusMinusStyleExtraction() {
+  void testPlusMinusStyleExtraction() {
     DifferentialPairDetector.ExtractedNetInfo pos = DifferentialPairDetector.extract("DIFF_+");
     assertNotNull(pos);
     assertEquals("DIFF", pos.baseName());
     assertEquals(DifferentialPairDetector.Polarity.POSITIVE, pos.polarity());
-    assertEquals(DifferentialPairDetector.SuffixStyle.UNDERSCORE_PLUS_MINUS, pos.style());
+    assertEquals(DifferentialPairDetector.SuffixStyle.PLUS_MINUS, pos.style());
 
     DifferentialPairDetector.ExtractedNetInfo neg = DifferentialPairDetector.extract("DIFF_-");
     assertNotNull(neg);
     assertEquals("DIFF", neg.baseName());
     assertEquals(DifferentialPairDetector.Polarity.NEGATIVE, neg.polarity());
-    assertEquals(DifferentialPairDetector.SuffixStyle.UNDERSCORE_PLUS_MINUS, neg.style());
+    assertEquals(DifferentialPairDetector.SuffixStyle.PLUS_MINUS, neg.style());
+
+    // Dot notation for +/-
+    DifferentialPairDetector.ExtractedNetInfo dotPos = DifferentialPairDetector.extract("DIFF.+");
+    assertNotNull(dotPos);
+    assertEquals("DIFF", dotPos.baseName());
+    assertEquals(DifferentialPairDetector.Polarity.POSITIVE, dotPos.polarity());
+    assertEquals(DifferentialPairDetector.SuffixStyle.PLUS_MINUS, dotPos.style());
   }
 
   @Test
-  void testUnderscorePosNegStyleExtraction() {
+  void testPosNegStyleExtraction() {
     DifferentialPairDetector.ExtractedNetInfo pos = DifferentialPairDetector.extract("DATA_POS");
     assertNotNull(pos);
     assertEquals("DATA", pos.baseName());
     assertEquals(DifferentialPairDetector.Polarity.POSITIVE, pos.polarity());
-    assertEquals(DifferentialPairDetector.SuffixStyle.UNDERSCORE_POS_NEG, pos.style());
+    assertEquals(DifferentialPairDetector.SuffixStyle.POS_NEG, pos.style());
 
     DifferentialPairDetector.ExtractedNetInfo neg = DifferentialPairDetector.extract("DATA_NEG");
     assertNotNull(neg);
     assertEquals("DATA", neg.baseName());
     assertEquals(DifferentialPairDetector.Polarity.NEGATIVE, neg.polarity());
-    assertEquals(DifferentialPairDetector.SuffixStyle.UNDERSCORE_POS_NEG, neg.style());
+    assertEquals(DifferentialPairDetector.SuffixStyle.POS_NEG, neg.style());
+
+    // Dot notation for POS/NEG
+    DifferentialPairDetector.ExtractedNetInfo dotPos = DifferentialPairDetector.extract("DATA.POS");
+    assertNotNull(dotPos);
+    assertEquals("DATA", dotPos.baseName());
+    assertEquals(DifferentialPairDetector.Polarity.POSITIVE, dotPos.polarity());
+    assertEquals(DifferentialPairDetector.SuffixStyle.POS_NEG, dotPos.style());
   }
 
   @Test
