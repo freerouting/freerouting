@@ -7,7 +7,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -213,31 +212,7 @@ public final class DifferentialPairDetector {
     return null;
   }
 
-  private static final class CandidateKey {
-    private final String baseNameKey;
-    private final SuffixStyle style;
-
-    CandidateKey(String baseNameKey, SuffixStyle style) {
-      this.baseNameKey = baseNameKey;
-      this.style = style;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) {
-        return true;
-      }
-      if (!(o instanceof CandidateKey that)) {
-        return false;
-      }
-      return Objects.equals(baseNameKey, that.baseNameKey) && style == that.style;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(baseNameKey, style);
-    }
-  }
+  private record CandidateKey(String baseNameKey, SuffixStyle style) {}
 
   private static final class CandidateEntry {
     private final String baseName;
