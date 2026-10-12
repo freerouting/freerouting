@@ -500,9 +500,14 @@ public final class FoundConnectionInserter {
     candidateHalfWidths.add(Math.max(1, (baseHalfWidth * 3) / 4));
     candidateHalfWidths.add(Math.max(1, (baseHalfWidth * 3) / 5));
     candidateHalfWidths.add(Math.max(1, baseHalfWidth / 2));
+    // neck_width_um is the narrowest trace the user allows; the necked retry already routes at
+    // that width, so narrowing further would produce traces the board house cannot make.
+    int minHalfWidth = AutorouteControl.neckHalfWidth(board, ctrl.settings);
 
     for (int candidateHalfWidth : candidateHalfWidths) {
-      if (candidateHalfWidth <= 0 || candidateHalfWidth >= baseHalfWidth) {
+      if (candidateHalfWidth <= 0
+          || candidateHalfWidth >= baseHalfWidth
+          || candidateHalfWidth < minHalfWidth) {
         continue;
       }
       Point candidateOkPoint =
