@@ -10,18 +10,24 @@ import org.junit.jupiter.api.Test;
 class DifferentialPairDetectorTest {
 
   @Test
-  void testPlusMinusStyleExtraction() {
-    DifferentialPairDetector.ExtractedNetInfo pos = DifferentialPairDetector.extract("USB+");
+  void testBareDPlusMinusStyleExtraction() {
+    DifferentialPairDetector.ExtractedNetInfo pos = DifferentialPairDetector.extract("D+");
     assertNotNull(pos);
-    assertEquals("USB", pos.baseName());
+    assertEquals("D", pos.baseName());
     assertEquals(DifferentialPairDetector.Polarity.POSITIVE, pos.polarity());
-    assertEquals(DifferentialPairDetector.SuffixStyle.PLUS_MINUS, pos.style());
+    assertEquals(DifferentialPairDetector.SuffixStyle.BARE_D_PLUS_MINUS, pos.style());
 
-    DifferentialPairDetector.ExtractedNetInfo neg = DifferentialPairDetector.extract("USB-");
+    DifferentialPairDetector.ExtractedNetInfo neg = DifferentialPairDetector.extract("D-");
     assertNotNull(neg);
-    assertEquals("USB", neg.baseName());
+    assertEquals("D", neg.baseName());
     assertEquals(DifferentialPairDetector.Polarity.NEGATIVE, neg.polarity());
-    assertEquals(DifferentialPairDetector.SuffixStyle.PLUS_MINUS, neg.style());
+    assertEquals(DifferentialPairDetector.SuffixStyle.BARE_D_PLUS_MINUS, neg.style());
+
+    DifferentialPairDetector.ExtractedNetInfo hierPos = DifferentialPairDetector.extract("/USB/D+");
+    assertNotNull(hierPos);
+    assertEquals("/USB/D", hierPos.baseName());
+    assertEquals(DifferentialPairDetector.Polarity.POSITIVE, hierPos.polarity());
+    assertEquals(DifferentialPairDetector.SuffixStyle.BARE_D_PLUS_MINUS, hierPos.style());
   }
 
   @Test
@@ -192,6 +198,21 @@ class DifferentialPairDetectorTest {
     assertNull(DifferentialPairDetector.extract("BOOTP"));
     assertNull(DifferentialPairDetector.extract("USBDM"));
     assertNull(DifferentialPairDetector.extract("USBDP"));
+    // Bare +/- on non-D nets must NOT be matched without an underscore
+    assertNull(DifferentialPairDetector.extract("USB+"));
+    assertNull(DifferentialPairDetector.extract("USB-"));
+    assertNull(DifferentialPairDetector.extract("LED+"));
+    assertNull(DifferentialPairDetector.extract("LED-"));
+    assertNull(DifferentialPairDetector.extract("MOT+"));
+    assertNull(DifferentialPairDetector.extract("MOT-"));
+    assertNull(DifferentialPairDetector.extract("SPK+"));
+    assertNull(DifferentialPairDetector.extract("SPK-"));
+    assertNull(DifferentialPairDetector.extract("IN+"));
+    assertNull(DifferentialPairDetector.extract("IN-"));
+    assertNull(DifferentialPairDetector.extract("OUT+"));
+    assertNull(DifferentialPairDetector.extract("OUT-"));
+    assertNull(DifferentialPairDetector.extract("SENSE+"));
+    assertNull(DifferentialPairDetector.extract("SENSE-"));
     assertNull(DifferentialPairDetector.extract(""));
     assertNull(DifferentialPairDetector.extract(null));
   }
@@ -233,12 +254,16 @@ class DifferentialPairDetectorTest {
   @Test
   void testDetectAndRegisterBasicPairs() {
     app.freerouting.board.facade.RoutingBoard board = createTestBoard();
-    Net usbP = board.rules.nets.add("USB+", 1, false);
-    Net usbN = board.rules.nets.add("USB-", 1, false);
+    Net dP = board.rules.nets.add("D+", 1, false);
+    Net dN = board.rules.nets.add("D-", 1, false);
     Net clkP = board.rules.nets.add("CLK_P", 1, false);
     Net clkN = board.rules.nets.add("CLK_N", 1, false);
     board.rules.nets.add("RESET", 1, false);
     board.rules.nets.add("GND", 1, false);
+    board.rules.nets.add("LED+", 1, false);
+    board.rules.nets.add("LED-", 1, false);
+    board.rules.nets.add("SPK+", 1, false);
+    board.rules.nets.add("SPK-", 1, false);
 
     java.util.List<DifferentialPair> detected =
         DifferentialPairDetector.detectAndRegister(board.rules);
@@ -246,10 +271,10 @@ class DifferentialPairDetectorTest {
     assertEquals(2, detected.size());
     assertEquals(2, board.rules.differentialPairs.count());
 
-    DifferentialPair usb = board.rules.differentialPairs.get("USB");
-    assertNotNull(usb);
-    assertEquals(usbP, usb.positiveNet());
-    assertEquals(usbN, usb.negativeNet());
+    DifferentialPair dPair = board.rules.differentialPairs.get("D");
+    assertNotNull(dPair);
+    assertEquals(dP, dPair.positiveNet());
+    assertEquals(dN, dPair.negativeNet());
 
     DifferentialPair clk = board.rules.differentialPairs.get("CLK");
     assertNotNull(clk);
@@ -309,7 +334,7 @@ class DifferentialPairDetectorTest {
   @Test
   void testMismatchedStylesNotPaired() {
     app.freerouting.board.facade.RoutingBoard board = createTestBoard();
-    board.rules.nets.add("DATA+", 1, false);
+    board.rules.nets.add("DATA_D+", 1, false);
     board.rules.nets.add("DATA_N", 1, false);
 
     java.util.List<DifferentialPair> detected =
@@ -350,29 +375,29 @@ class DifferentialPairDetectorTest {
   @Test
   void testSubnetsWithIdenticalNamePairedWithoutAmbiguity() {
     app.freerouting.board.facade.RoutingBoard board = createTestBoard();
-    // Subnet 1 and Subnet 2 for USB+ and USB-
-    Net usbP1 = board.rules.nets.add("USB+", 1, false);
-    Net usbP2 = board.rules.nets.add("USB+", 2, false);
-    Net usbN1 = board.rules.nets.add("USB-", 1, false);
-    Net usbN2 = board.rules.nets.add("USB-", 2, false);
+    // Subnet 1 and Subnet 2 for D+ and D-
+    Net dP1 = board.rules.nets.add("D+", 1, false);
+    Net dP2 = board.rules.nets.add("D+", 2, false);
+    Net dN1 = board.rules.nets.add("D-", 1, false);
+    Net dN2 = board.rules.nets.add("D-", 2, false);
 
     java.util.List<DifferentialPair> detected =
         DifferentialPairDetector.detectAndRegister(board.rules);
     assertEquals(1, detected.size());
     assertEquals(1, board.rules.differentialPairs.count());
 
-    DifferentialPair pair = board.rules.differentialPairs.get("USB");
+    DifferentialPair pair = board.rules.differentialPairs.get("D");
     assertNotNull(pair);
 
     // Both subnet 1 and subnet 2 must be found for the pair
-    assertEquals(pair, board.rules.differentialPairs.findForNet(usbP1));
-    assertEquals(pair, board.rules.differentialPairs.findForNet(usbP2));
-    assertEquals(pair, board.rules.differentialPairs.findForNet(usbN1));
-    assertEquals(pair, board.rules.differentialPairs.findForNet(usbN2));
+    assertEquals(pair, board.rules.differentialPairs.findForNet(dP1));
+    assertEquals(pair, board.rules.differentialPairs.findForNet(dP2));
+    assertEquals(pair, board.rules.differentialPairs.findForNet(dN1));
+    assertEquals(pair, board.rules.differentialPairs.findForNet(dN2));
 
-    assertTrue(pair.contains(usbP1));
-    assertTrue(pair.contains(usbP2));
-    assertTrue(pair.contains(usbN1));
-    assertTrue(pair.contains(usbN2));
+    assertTrue(pair.contains(dP1));
+    assertTrue(pair.contains(dP2));
+    assertTrue(pair.contains(dN1));
+    assertTrue(pair.contains(dN2));
   }
 }

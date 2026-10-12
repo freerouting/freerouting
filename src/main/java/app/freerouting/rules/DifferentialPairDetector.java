@@ -37,7 +37,7 @@ public final class DifferentialPairDetector {
     UNDERSCORE_PLUS_MINUS,
     UNDERSCORE_POS_NEG,
     DOT_P_N,
-    PLUS_MINUS
+    BARE_D_PLUS_MINUS
   }
 
   /**
@@ -199,17 +199,15 @@ public final class DifferentialPairDetector {
       }
     }
 
-    // Style 7: Plus / Minus (+ / -) (KiCad bare +/- notation, e.g. D+ / D-, USB+ / USB-)
-    if (trimmed.endsWith("+")) {
+    // Style 7: Bare D+ / D- (Scoped exception specifically for USB legacy/standard D+/D-)
+    int lastSlash = upper.lastIndexOf('/');
+    String localUpper = (lastSlash >= 0) ? upper.substring(lastSlash + 1) : upper;
+    if (localUpper.equals("D+")) {
       String base = trimmed.substring(0, trimmed.length() - 1);
-      if (!base.isEmpty() && !isExcludedNet(base)) {
-        return new ExtractedNetInfo(base, Polarity.POSITIVE, SuffixStyle.PLUS_MINUS);
-      }
-    } else if (trimmed.endsWith("-")) {
+      return new ExtractedNetInfo(base, Polarity.POSITIVE, SuffixStyle.BARE_D_PLUS_MINUS);
+    } else if (localUpper.equals("D-")) {
       String base = trimmed.substring(0, trimmed.length() - 1);
-      if (!base.isEmpty() && !isExcludedNet(base)) {
-        return new ExtractedNetInfo(base, Polarity.NEGATIVE, SuffixStyle.PLUS_MINUS);
-      }
+      return new ExtractedNetInfo(base, Polarity.NEGATIVE, SuffixStyle.BARE_D_PLUS_MINUS);
     }
 
     return null;
