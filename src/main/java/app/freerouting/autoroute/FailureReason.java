@@ -1,5 +1,7 @@
 package app.freerouting.autoroute;
 
+import java.io.Serializable;
+
 /**
  * Captures the transient reason why MazeSearchEngine failed to find a route. This is attached to
  * {@link AutorouteAttemptResult} when a connection attempt ends in {@link
@@ -9,7 +11,7 @@ package app.freerouting.autoroute;
  * <p>This record is immutable and short-lived: it is allocated only at give-up time (not per
  * expansion step) so it does not add GC pressure inside the maze search tight loop.
  */
-public record FailureReason(FailureType type, String description) {
+public record FailureReason(FailureType type, String description) implements Serializable {
   /**
    * The coarse category of failure. Future contributors can add new constants here without changing
    * the plumbing that threads {@link FailureReason} up to the unrouted report.

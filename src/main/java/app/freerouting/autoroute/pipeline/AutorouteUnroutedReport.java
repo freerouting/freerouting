@@ -18,7 +18,11 @@ final class AutorouteUnroutedReport {
   private AutorouteUnroutedReport() {}
 
   static String build(RoutingBoard board) {
-    return build(board, Map.of());
+    Map<String, FailureReason> netFailureReasons =
+        (board != null && board.failureLog != null)
+            ? board.failureLog.getNetFailureReasons()
+            : Map.of();
+    return build(board, netFailureReasons);
   }
 
   static String build(RoutingBoard board, Map<String, FailureReason> netFailureReasons) {

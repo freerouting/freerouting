@@ -161,7 +161,12 @@ final class AutoroutePassRunner {
             Net net = router.board.rules.nets.get(currentItem.getNetNumber(i));
             String netName = net != null ? net.name : "net#" + currentItem.getNetNumber(i);
             router.board.failureLog.recordFailure(
-                currentItem, passNo, autorouterResult.state, autorouterResult.details);
+                currentItem,
+                passNo,
+                autorouterResult.state,
+                autorouterResult.details,
+                autorouterResult.failureReason,
+                netName);
             router.job.logDebug("Autorouter " + autorouterResult.details);
             int failureCount = router.board.failureLog.getFailureCount(currentItem);
             if (failureCount >= 2) {
