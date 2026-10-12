@@ -2,29 +2,64 @@ package app.freerouting.autoroute;
 
 import app.freerouting.board.model.items.Item;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Thread-safe logbook for tracking routing failures per item. Helps detect when the router is stuck
- * attempting the same impossible connection repeatedly.
+ * Thread-safe logbook for tracking routing failures per item and per net. Helps detect when the
+ * router is stuck attempting the same impossible connection repeatedly and provides structured
+ * failure diagnostics for unrouted connection reporting.
  */
 public class RoutingFailureLog implements Serializable {
-
-  /** Failure threshold - give up after this many failures for the same item. */
-  public static final int FAILURE_THRESHOLD = 50;
 
   /** Map of item ID to failure information. */
   private final ConcurrentHashMap<Integer, ItemFailureInfo> failures;
 
+  /** Map of net name to latest failure reason. */
+  private final ConcurrentHashMap<String, FailureReason> netFailureReasons;
+
   /** RoutingFailureLog. */
   public RoutingFailureLog() {
     this.failures = new ConcurrentHashMap<>();
+    this.netFailureReasons = new ConcurrentHashMap<>();
   }
 
   /**
-   * Records a routing failure for an item.
+   * Records a routing failure for an item, optionally recording the net-level failure reason.
+   *
+   * @param item The item that failed to route
+   * @param passNo The pass number when the failure occurred
+   * @param state The failure state
+   * @param reason The failure reason details string
+   * @param failureReason The structured failure reason
+   * @param netName The name of the net being routed (optional)
+   */
+  public void recordFailure(
+      Item item,
+      int passNo,
+      AutorouteAttemptState state,
+      String reason,
+      FailureReason failureReason,
+      String netName) {
+    if (item != null) {
+      failures.compute(
+          item.getId(),
+          (key, existing) -> {
+            if (existing == null) {
+              existing = new ItemFailureInfo(item);
+            }
+            existing.recordFailure(passNo, state, reason, failureReason);
+            return existing;
+          });
+    }
+    if (netName != null && failureReason != null) {
+      this.netFailureReasons.put(netName, failureReason);
+    }
+  }
+
+  /**
+   * Records a routing failure for an item without a structured failure reason.
    *
    * @param item The item that failed to route
    * @param passNo The pass number when the failure occurred
@@ -32,58 +67,28 @@ public class RoutingFailureLog implements Serializable {
    * @param reason The failure reason/details
    */
   public void recordFailure(Item item, int passNo, AutorouteAttemptState state, String reason) {
-    if (item == null) {
-      return;
-    }
-
-    failures.compute(
-        item.getId(),
-        (key, existing) -> {
-          if (existing == null) {
-            existing = new ItemFailureInfo(item);
-          }
-          existing.recordFailure(passNo, state, reason);
-          return existing;
-        });
+    recordFailure(item, passNo, state, reason, null, null);
   }
 
   /**
-   * Checks if an item should be skipped due to exceeding the failure threshold.
+   * Explicitly records or updates the latest failure reason for a net.
    *
-   * @param item The item to check
-   * @return true if the item should be skipped
+   * @param netName The net name
+   * @param reason The structured failure reason
    */
-  public boolean shouldSkip(Item item) {
-    if (item == null) {
-      return false;
+  public void recordNetFailure(String netName, FailureReason reason) {
+    if (netName != null && reason != null) {
+      this.netFailureReasons.put(netName, reason);
     }
-
-    ItemFailureInfo info = failures.get(item.getId());
-    return info != null && info.shouldGiveUp();
   }
 
   /**
-   * Gets all items that have exceeded the failure threshold.
+   * Returns an unmodifiable view of the latest failure reasons per net name.
    *
-   * @return List of unroutable items
+   * @return Unmodifiable map of net name to failure reason
    */
-  public List<ItemFailureInfo> getUnroutableItems() {
-    List<ItemFailureInfo> unroutable = new ArrayList<>();
-    for (ItemFailureInfo info : failures.values()) {
-      if (info.shouldGiveUp()) {
-        unroutable.add(info);
-      }
-    }
-    return unroutable;
-  }
-
-  /**
-   * Checks if there are any unroutable items.
-   *
-   * @return true if there are items that exceeded the failure threshold
-   */
-  public boolean hasUnroutableItems() {
-    return failures.values().stream().anyMatch(ItemFailureInfo::shouldGiveUp);
+  public Map<String, FailureReason> getNetFailureReasons() {
+    return Collections.unmodifiableMap(this.netFailureReasons);
   }
 
   /**
@@ -100,9 +105,10 @@ public class RoutingFailureLog implements Serializable {
     return info != null ? info.failureCount : 0;
   }
 
-  /** Clears all failure records. */
+  /** Clears all failure records and net failure reasons. */
   public void clear() {
-    failures.clear();
+    this.failures.clear();
+    this.netFailureReasons.clear();
   }
 
   /** Information about routing failures for a specific item. */
@@ -112,6 +118,7 @@ public class RoutingFailureLog implements Serializable {
     public int failureCount;
     public AutorouteAttemptState lastFailureState;
     public String lastFailureReason;
+    public FailureReason failureReason;
     public long lastAttemptPass;
 
     /** Creates failure tracking info for an item. */
@@ -121,7 +128,25 @@ public class RoutingFailureLog implements Serializable {
       this.failureCount = 0;
       this.lastFailureState = null;
       this.lastFailureReason = "";
+      this.failureReason = null;
       this.lastAttemptPass = 0;
+    }
+
+    /**
+     * Records a failure for this item with structured failure reason (thread-safe).
+     *
+     * @param passNo The pass number
+     * @param state The failure state
+     * @param reason The failure reason details string
+     * @param failureReason The structured failure reason
+     */
+    public synchronized void recordFailure(
+        long passNo, AutorouteAttemptState state, String reason, FailureReason failureReason) {
+      this.failureCount++;
+      this.lastAttemptPass = passNo;
+      this.lastFailureState = state;
+      this.lastFailureReason = reason != null ? reason : "";
+      this.failureReason = failureReason;
     }
 
     /**
@@ -133,19 +158,7 @@ public class RoutingFailureLog implements Serializable {
      */
     public synchronized void recordFailure(
         long passNo, AutorouteAttemptState state, String reason) {
-      this.failureCount++;
-      this.lastAttemptPass = passNo;
-      this.lastFailureState = state;
-      this.lastFailureReason = reason != null ? reason : "";
-    }
-
-    /**
-     * Checks if this item should be given up on (thread-safe).
-     *
-     * @return true if failure count exceeds threshold
-     */
-    public synchronized boolean shouldGiveUp() {
-      return failureCount >= FAILURE_THRESHOLD;
+      recordFailure(passNo, state, reason, null);
     }
 
     @Override

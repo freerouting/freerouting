@@ -323,7 +323,6 @@ final class AutorouteConnectionRouter {
               applyStrictDrcAfterRoute(
                   routeNetNo, maxItemIdBeforeRoute, strictDrcBoardSnapshot, ripupPassNo);
           if (strictResult != null) {
-            recordFailure(strictResult, routeNet, routeNetNo);
             return strictResult;
           }
           return neckedResult;
@@ -335,12 +334,9 @@ final class AutorouteConnectionRouter {
             applyStrictDrcAfterRoute(
                 routeNetNo, maxItemIdBeforeRoute, strictDrcBoardSnapshot, ripupPassNo);
         if (strictResult != null) {
-          recordFailure(strictResult, routeNet, routeNetNo);
           return strictResult;
         }
       }
-
-      recordFailure(autorouteResult, routeNet, routeNetNo);
 
       return autorouteResult;
     } catch (Exception e) {
@@ -351,14 +347,6 @@ final class AutorouteConnectionRouter {
           new FailureReason(
               FailureReason.FailureType.UNEXPECTED_EXCEPTION,
               "Unexpected exception aborted the routing attempt: " + e));
-    }
-  }
-
-  /** Records a FAILED result's reason in the per-net map consumed by the unrouted report. */
-  private void recordFailure(AutorouteAttemptResult result, Net routeNet, int routeNetNo) {
-    if (result.state == AutorouteAttemptState.FAILED && result.failureReason != null) {
-      String netName = routeNet != null ? routeNet.name : "#" + routeNetNo;
-      router.recordNetFailureReason(netName, result.failureReason);
     }
   }
 

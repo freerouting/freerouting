@@ -69,6 +69,28 @@ class AutorouteUnroutedReportTest {
     assertFalse(report.contains("Last failure reason"), () -> report);
   }
 
+  @Test
+  void reasonPrintedFromBoardFailureLog() {
+    RoutingBoard board = loadSampleBoard();
+    String baseline = AutorouteUnroutedReport.build(board);
+    java.util.regex.Matcher matcher =
+        java.util.regex.Pattern.compile("Net '([^']+)'").matcher(baseline);
+    assertTrue(
+        matcher.find(),
+        () -> "Fixture board must have at least one unrouted net, got:\n" + baseline);
+    String netName = matcher.group(1);
+
+    FailureReason reason =
+        new FailureReason(
+            FailureReason.FailureType.START_PIN_ESCAPE_FAILED, "Start pin encapsulated.");
+    board.failureLog.recordNetFailure(netName, reason);
+
+    String report = AutorouteUnroutedReport.build(board);
+    assertTrue(
+        report.contains("Last failure reason (START_PIN_ESCAPE_FAILED): Start pin encapsulated."),
+        () -> "Report should pull failure reason from board.failureLog, got:\n" + report);
+  }
+
   /**
    * The report pipeline must stay reason-agnostic: every {@link FailureReason.FailureType} —
    * including the newer {@code START_PIN_ESCAPE_FAILED} and {@code VIA_PLACEMENT_BLOCKED} — must
