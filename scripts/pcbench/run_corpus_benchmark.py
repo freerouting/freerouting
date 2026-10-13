@@ -127,6 +127,34 @@ def compute_sha256(path: Path) -> str:
     return h.hexdigest()
 
 
+def format_fixture_name(name: str, limit: int = 37) -> str:
+    """Keep short fixture names. Longer names keep the first and last 16 characters."""
+    text = name or ""
+    if len(text) <= limit:
+        return text
+    return f"{text[:16]}...{text[-16:]}"
+
+
+def format_result_timing(seconds: float, suffix: str = "") -> str:
+    """Right-align the seconds so result rows share one time column."""
+    timing = f"({seconds:7.1f}s"
+    if suffix:
+        timing += f", {suffix}"
+    return timing + ")"
+
+
+def format_recent_result(completed: int, total: int, label: str, timing: str, name: str) -> str:
+    """Progress, padded outcome, timing, then the full fixture name."""
+    return f"[{completed:4d}/{total:4d}] {label:<8} {timing} {name}"
+
+
+def format_worker_tag(wid: int, tier: str | None = None) -> str:
+    """Worker index, plus the fixture tier while a board is running."""
+    if tier:
+        return f"[W-{wid:02d} T-{tier}]"
+    return f"[W-{wid:02d}]"
+
+
 def colorize_status_line(msg: str) -> str:
     """Highlight status keywords in color."""
     msg = re.sub(r"\bCLEAN\b", f"{C_BGREEN}CLEAN{C_RESET}", msg)
@@ -198,12 +226,16 @@ def route_single_board(
     git_sha: str,
     jar_sha256: str,
     jar_size: int,
+    tier: str,
     wid: int,
     worker_status: dict[int, dict[str, Any]],
     active_procs: dict[int, subprocess.Popen],
     status_lock: threading.Lock,
     cancel_event: threading.Event,
     force_kill_event: threading.Event,
+    *,
+    reference_seconds: float = 0.0,
+    queued_ids: list[str] | None = None,
 ) -> dict[str, Any] | None:
     """Execute Freerouting on a single PCBench board and return a benchmark run record."""
     if cancel_event.is_set() or force_kill_event.is_set():
@@ -220,10 +252,17 @@ def route_single_board(
     with status_lock:
         worker_status[wid] = {
             "board": board_id,
+            "tier": tier or "?",
             "start": t0,
             "last_line": "Starting autorouter process...",
             "active": True,
+            "reference_seconds": reference_seconds,
         }
+        if queued_ids is not None:
+            try:
+                queued_ids.remove(board_id)
+            except ValueError:
+                pass
 
     # Isolate per-worker user data directory to prevent concurrent write contention on freerouting.json
     worker_user_data_dir = user_data_dir / f"worker-{wid}"
@@ -562,6 +601,83 @@ def route_single_board(
 
 
 _render_lock = threading.Lock()
+# A tier scale needs this much 2.6.0-RC2 time before it replaces the prior of 1.
+MINIMUM_SCALE_REFERENCE_SECONDS = 30 * 60
+
+
+def format_duration(seconds: float) -> str:
+    """Format a duration as H:MM:SS. Hours grow past 24."""
+    whole = max(0, int(round(seconds)))
+    hours, remainder = divmod(whole, 3600)
+    minutes, secs = divmod(remainder, 60)
+    return f"{hours:02d}:{minutes:02d}:{secs:02d}"
+
+
+def duration_scales(completed: list[tuple[str, float, float]]) -> dict[str, float]:
+    """Return per-tier speed ratios and a global ratio under the empty-string key.
+
+    A ratio is actual seconds divided by 2.6.0-RC2 seconds. It stays at 1 until
+    the compared reference time reaches MINIMUM_SCALE_REFERENCE_SECONDS.
+    """
+    totals: dict[str, list[float]] = {}
+    for tier, reference, actual in completed:
+        if reference <= 0:
+            continue
+        for key in (tier, ""):
+            bucket = totals.setdefault(key, [0.0, 0.0])
+            bucket[0] += actual
+            bucket[1] += reference
+    scales = {
+        key: actual / reference
+        for key, (actual, reference) in totals.items()
+        if reference >= MINIMUM_SCALE_REFERENCE_SECONDS
+    }
+    scales.setdefault("", 1.0)
+    return scales
+
+
+def scale_for(scales: dict[str, float], tier: str) -> float:
+    return scales.get(tier, scales.get("", 1.0))
+
+
+def estimate_remaining_seconds(
+    queued: list[tuple[str, float]],
+    running: list[tuple[str, float, float]],
+    completed: list[tuple[str, float, float]],
+    workers: int,
+) -> tuple[float, float]:
+    """Estimate suite seconds left, and the reference-weighted speed ratio.
+
+    Running boards keep only their remaining expected time. Waiting boards go
+    to the worker that becomes free first. Expected time is the 2.6.0-RC2
+    duration times the tier ratio.
+    """
+    scales = duration_scales(completed)
+    slots = max(1, workers)
+    free = [0.0] * slots
+    extras: list[float] = []
+    weighted = 0.0
+    weight = 0.0
+    for index, (tier, reference, elapsed) in enumerate(running):
+        expected = max(0.0, reference) * scale_for(scales, tier)
+        remaining = max(0.0, expected - max(0.0, elapsed))
+        if index < slots:
+            free[index] = remaining
+        else:
+            extras.append(remaining)
+        weighted += max(0.0, reference) * scale_for(scales, tier)
+        weight += max(0.0, reference)
+    for tier, reference in queued:
+        expected = max(0.0, reference) * scale_for(scales, tier)
+        slot = min(range(slots), key=lambda item: free[item])
+        free[slot] += expected
+        weighted += expected
+        weight += max(0.0, reference)
+    eta = max([*free, *extras], default=0.0)
+    shown_scale = weighted / weight if weight else scales.get("", 1.0)
+    return eta, shown_scale
+
+
 
 
 def render_dashboard(
@@ -578,12 +694,34 @@ def render_dashboard(
     in_place: bool = True,
     last_saved_at: float | None = None,
     target_workers: int | None = None,
+    board_reference: dict[str, tuple[str, float]] | None = None,
+    queued_ids: list[str] | None = None,
+    completed_samples: list[tuple[str, float, float]] | None = None,
 ) -> None:
     """Print updated multi-worker dashboard with live logs and recent history."""
-    elapsed = time.perf_counter() - t_start
-    avg_per_board = elapsed / completed if completed > 0 else 0
-    remaining_secs = avg_per_board * (total - completed)
-    eta_str = time.strftime("%H:%M:%S", time.gmtime(remaining_secs))
+    now = time.perf_counter()
+    queued: list[tuple[str, float]] = []
+    running: list[tuple[str, float, float]] = []
+    samples: list[tuple[str, float, float]] = []
+    with status_lock:
+        if queued_ids is not None:
+            for board_id in queued_ids:
+                queued.append((board_reference or {}).get(board_id, ("?", 0.0)))
+        if completed_samples is not None:
+            samples = list(completed_samples)
+        for info in worker_status.values():
+            if not info.get("active"):
+                continue
+            running.append(
+                (
+                    str(info.get("tier") or "?"),
+                    float(info.get("reference_seconds") or 0.0),
+                    max(0.0, now - float(info.get("start", now))),
+                )
+            )
+    slots = target_workers if target_workers is not None else max(1, len(running))
+    remaining_secs, _shown_scale = estimate_remaining_seconds(queued, running, samples, slots)
+    eta_str = format_duration(remaining_secs)
     pct = (completed / total) * 100.0 if total > 0 else 0.0
 
     ver_part = f" | {C_BWHITE}Version:{C_RESET} {C_BCYAN}{version_label}{C_RESET}" if version_label else ""
@@ -606,13 +744,12 @@ def render_dashboard(
     lines.append(
         f"{C_BWHITE}PCBench Benchmark:{C_RESET} {C_BYELLOW}{completed}/{total}{C_RESET} "
         f"({C_BGREEN}{pct:5.1f}%{C_RESET}){ver_part} | "
-        f"{C_BWHITE}ETA:{C_RESET} {C_CYAN}{eta_str}{C_RESET} ({C_YELLOW}{avg_per_board:.1f}s/board{C_RESET}) | "
+        f"{C_BWHITE}ETA:{C_RESET} {C_CYAN}{eta_str}{C_RESET} | "
         f"{C_BWHITE}Workers:{C_RESET} {C_BMAGENTA}{worker_count_str}{C_RESET} | "
         f"{C_BWHITE}Saved:{C_RESET} {C_BYELLOW}{format_saved_age(last_saved_at, time.perf_counter())}{C_RESET}"
         f"{status_hint}"
     )
     lines.append(f"{C_CYAN}{'-' * 155}{C_RESET}")
-    lines.append(f"{C_BWHITE}Active Workers:{C_RESET}")
 
     now = time.perf_counter()
     with status_lock:
@@ -621,21 +758,22 @@ def render_dashboard(
             if info.get("active"):
                 run_sec = int(now - info.get("start", now))
                 dur_str = f"{run_sec // 60:02d}:{run_sec % 60:02d}"
-                board = info.get("board", "unknown")
+                board = format_fixture_name(str(info.get("board", "unknown")))
+                tier = str(info.get("tier") or "?")
                 last = info.get("last_line", "")
                 last_time = info.get("last_line_time")
                 idle_sec = int(now - last_time) if last_time else run_sec
                 idle_str = f" ({idle_sec // 60}m ago)" if idle_sec >= 60 and last else ""
                 lines.append(
-                    f"  {C_BMAGENTA}[Worker {wid:>2}]{C_RESET} "
-                    f"{C_BWHITE}{board:<36}{C_RESET} "
+                    f"  {C_BMAGENTA}{format_worker_tag(wid, tier)}{C_RESET} "
+                    f"{C_BWHITE}{board:<37}{C_RESET} "
                     f"{C_BYELLOW}[{dur_str}]{C_RESET} -> {C_GRAY}{last}{idle_str}{C_RESET}"
                 )
             else:
-                lines.append(f"  {C_BMAGENTA}[Worker {wid:>2}]{C_RESET} {C_DIM}Idle{C_RESET}")
+                lines.append(f"  {C_BMAGENTA}{format_worker_tag(wid)}{C_RESET} {C_DIM}Idle{C_RESET}")
 
     lines.append(f"{C_CYAN}{'-' * 155}{C_RESET}")
-    lines.append(f"{C_BWHITE}Recent Completed (Last 10):{C_RESET}")
+    lines.append(f"{C_BWHITE}Latest results:{C_RESET}")
     if recent_messages:
         for msg in recent_messages:
             lines.append(f"  {colorize_status_line(msg)}")
@@ -769,6 +907,12 @@ def read_jsonl_records(path: Path) -> dict[str, dict[str, Any]]:
     return records
 
 
+def default_worker_count() -> int:
+    """Three quarters of the logical processors, at least one."""
+    processors = os.cpu_count() or 1
+    return max(1, round(processors * 0.75))
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--jar", default="scripts/benchmark/binaries/freerouting-current.jar", type=Path)
@@ -779,12 +923,17 @@ def main() -> int:
         help="Tier filter and run order. Default All runs A, D, C, then B. "
         "A comma-separated list runs those tiers in that order, for example C,A.",
     )
-    parser.add_argument("--workers", default=8, type=int)
+    parser.add_argument(
+        "--workers",
+        default=default_worker_count(),
+        type=int,
+        help="Parallel routing workers (default: round(logical processors * 0.75))",
+    )
     parser.add_argument("--max-boards", default=0, type=int)
     parser.add_argument("--version-label", default="v2.3.1-SNAPSHOT")
     parser.add_argument("--filter", default="", help="Filter fixtures by substring/pattern")
     parser.add_argument("--force", action="store_true", help="Force rerun even if already in benchmarks.json")
-    parser.add_argument("--timeout", default="08:00:00", help="Job timeout budget for all tiers (default: 08:00:00)")
+    parser.add_argument("--timeout", default="06:00:00", help="Job timeout budget for all tiers (default: 06:00:00)")
     args = parser.parse_args()
     try:
         tier_order = parse_tier_order(args.tier)
@@ -844,7 +993,9 @@ def main() -> int:
     boards = catalog.get("boards", [])
     tier_rank = {tier: index for index, tier in enumerate(tier_order)}
     boards = [b for b in boards if b.get("tier") in tier_rank]
-    boards.sort(key=lambda board: tier_rank[board.get("tier")])
+    # tier_index is fixed from the 2.6.0-RC2 runtimes. Odd indexes are the slower
+    # boards and even indexes are the quicker ones, so the average stays stable.
+    boards.sort(key=lambda board: (tier_rank[board.get("tier")], board.get("tier_index", 10**9)))
 
     if args.filter:
         filter_terms = [f.strip().lower() for f in args.filter.split(",") if f.strip()]
@@ -877,11 +1028,15 @@ def main() -> int:
         existing_runs[cache_key] = journal_run
 
     tasks = []
+    board_reference: dict[str, tuple[str, float]] = {}
+    queued_ids: list[str] = []
     already_completed = 0
     for b in boards:
         b_id = b.get("board_id")
         b_dir = fixtures_dir / b_id
         budget = args.timeout
+        board_tier = b.get("tier") or "?"
+        reference_seconds = float(b.get("reference_seconds") or 0.0)
 
         if not args.force:
             is_already_run = any(
@@ -895,7 +1050,23 @@ def main() -> int:
                 continue
 
         if (b_dir / "unrouted.dsn").exists():
-            tasks.append((jar_path, b_dir, output_dir, log_dir, user_data_dir, budget, args.version_label, git_sha, jar_sha256, jar_size))
+            tasks.append(
+                (
+                    jar_path,
+                    b_dir,
+                    output_dir,
+                    log_dir,
+                    user_data_dir,
+                    budget,
+                    args.version_label,
+                    git_sha,
+                    jar_sha256,
+                    jar_size,
+                    board_tier,
+                )
+            )
+            board_reference[b_id] = (board_tier, reference_seconds)
+            queued_ids.append(b_id)
 
     print(
         f"Starting PCBench Corpus Benchmark ({len(boards)} total, {already_completed} already cached, "
@@ -1014,6 +1185,7 @@ def main() -> int:
     unrouted_count = 0
     timeout_count = 0
     error_count = 0
+    completed_samples: list[tuple[str, float, float]] = []
     t_start = time.perf_counter()
 
     tracker = {"completed": 0}
@@ -1042,6 +1214,9 @@ def main() -> int:
             in_place=True,
             last_saved_at=last_corpus_save_at[0],
             target_workers=target_workers,
+            board_reference=board_reference,
+            queued_ids=queued_ids,
+            completed_samples=completed_samples,
         )
 
     def worker_thread_func(wid: int) -> None:
@@ -1083,6 +1258,8 @@ def main() -> int:
                     status_lock,
                     cancel_event,
                     force_kill_event,
+                    reference_seconds=board_reference.get(board_name, ("?", 0.0))[1],
+                    queued_ids=queued_ids,
                 )
             except Exception as exc:
                 err = exc
@@ -1277,8 +1454,7 @@ def main() -> int:
 
             if err is not None:
                 error_count += 1
-                pct = (completed / len(tasks)) * 100.0 if tasks else 0.0
-                msg = f"[{completed:4d}/{len(tasks)} {pct:5.1f}%] {b_name}: ERROR {err}"
+                msg = format_recent_result(completed, len(tasks), "ERROR", f"({err})", b_name)
                 recent_messages.append(msg)
                 try:
                     save_corpus()
@@ -1289,7 +1465,6 @@ def main() -> int:
 
             completed += 1
             tracker["completed"] = completed
-            pct = (completed / len(tasks)) * 100.0
             existing_runs[rec["cache_key"]] = rec
             q = rec.get("quality", {})
             exit_info = rec.get("exit", {})
@@ -1297,6 +1472,9 @@ def main() -> int:
             viol = q.get("clearance_violations")
             router_viol = q.get("router_introduced_violations")
             sec = q.get("wall_clock_seconds", 0.0)
+            sample_tier, sample_reference = board_reference.get(b_name, ("?", 0.0))
+            with status_lock:
+                completed_samples.append((sample_tier, sample_reference, float(sec or 0.0)))
             is_timeout = exit_info.get("timed_out", False)
 
             unfixable_viol = q.get("unfixable_clearance_violations")
@@ -1307,20 +1485,31 @@ def main() -> int:
             else:
                 is_clean = unr == 0 and (viol == 0 or (viol is not None and viol <= unfixable_viol))
 
+            if is_clean:
+                label = "CLEAN"
+                suffix = ""
+            elif unr == 0:
+                label = "ROUTED"
+                suffix = f"viol={viol}"
+            else:
+                label = "UNROUTED"
+                suffix = f"unr={unr}, viol={viol}"
+
             if is_timeout:
                 timeout_count += 1
-                status = f"TIMEOUT ({sec:.1f}s)"
-            elif is_clean:
-                clean_count += 1
-                status = f"CLEAN ({sec:.1f}s)"
-            elif unr == 0:
-                routed_viol_count += 1
-                status = f"ROUTED (viol={viol}, {sec:.1f}s)"
+                suffix = f"{label}, {suffix}" if suffix else label
+                label = "TIMEOUT"
             else:
-                unrouted_count += 1
-                status = f"UNROUTED (unr={unr}, viol={viol}, {sec:.1f}s)"
+                if is_clean:
+                    clean_count += 1
+                elif unr == 0:
+                    routed_viol_count += 1
+                else:
+                    unrouted_count += 1
 
-            msg = f"[{completed:4d}/{len(tasks)} {pct:5.1f}%] {b_name}: {status}"
+            msg = format_recent_result(
+                completed, len(tasks), label, format_result_timing(float(sec or 0.0), suffix), b_name
+            )
             recent_messages.append(msg)
 
             try:
@@ -1330,7 +1519,7 @@ def main() -> int:
             if save_outcome in ("locked", "unsaved"):
                 kept_in = "run-journal.jsonl" if save_outcome == "locked" else "memory"
                 recent_messages.append(
-                    f"[save] {b_name}: benchmarks.json was locked; {status} result kept in {kept_in}"
+                    f"[save] {b_name}: benchmarks.json was locked; {label} result kept in {kept_in}"
                 )
 
             trigger_render()

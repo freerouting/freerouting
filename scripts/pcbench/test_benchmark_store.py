@@ -12,6 +12,40 @@ import run_corpus_benchmark as store
 
 
 class BenchmarkStoreTest(unittest.TestCase):
+    def test_eta_uses_reference_durations_and_tier_scale(self) -> None:
+        self.assertEqual(store.format_duration(3661), "01:01:01")
+        self.assertEqual(store.format_duration(100 * 3600), "100:00:00")
+        self.assertEqual(store.duration_scales([("A", 600, 300)])[""], 1.0)
+
+        eta, scale = store.estimate_remaining_seconds([("A", 10), ("A", 20)], [], [], 1)
+        self.assertEqual(eta, 30)
+        self.assertEqual(scale, 1.0)
+
+        eta, _scale = store.estimate_remaining_seconds([("A", 10), ("A", 10), ("A", 10)], [], [], 2)
+        self.assertEqual(eta, 20)
+
+        eta, _scale = store.estimate_remaining_seconds([], [("A", 10, 8)], [], 1)
+        self.assertEqual(eta, 2)
+
+        completed = [("A", 2000, 4000), ("B", 2000, 1000)]
+        eta, scale = store.estimate_remaining_seconds([("A", 10)], [], completed, 1)
+        self.assertEqual(eta, 20)
+        self.assertEqual(scale, 2.0)
+        eta, scale = store.estimate_remaining_seconds([("B", 10)], [], completed, 1)
+        self.assertEqual(eta, 5)
+        self.assertEqual(scale, 0.5)
+
+    def test_default_worker_count_uses_three_quarters_of_logical_processors(self) -> None:
+        from unittest.mock import patch
+
+        with patch("run_corpus_benchmark.os.cpu_count", return_value=12):
+            self.assertEqual(store.default_worker_count(), 9)
+        with patch("run_corpus_benchmark.os.cpu_count", return_value=8):
+            self.assertEqual(store.default_worker_count(), 6)
+        with patch("run_corpus_benchmark.os.cpu_count", return_value=1):
+            self.assertEqual(store.default_worker_count(), 1)
+        with patch("run_corpus_benchmark.os.cpu_count", return_value=None):
+            self.assertEqual(store.default_worker_count(), 1)
     def test_corpus_file_is_written_at_most_once_per_interval_and_always_on_exit(self) -> None:
         self.assertTrue(store.corpus_save_is_due(None, 1_000.0))
         self.assertFalse(store.corpus_save_is_due(1_000.0, 1_179.0))
@@ -105,10 +139,10 @@ class BenchmarkStoreTest(unittest.TestCase):
         captured = io.StringIO()
         status_lock = threading.Lock()
         worker_status = {
-            1: {"board": "board-A", "start": 0.0, "last_line": "Routing...", "active": True},
+            1: {"board": "board-A", "tier": "A", "start": 0.0, "last_line": "Routing...", "active": True},
             2: {"board": "Idle", "start": 0.0, "last_line": "Idle", "active": False},
         }
-        messages = collections.deque(["[1/10] board-A: CLEAN (5.2s)"])
+        messages = collections.deque(["[   1/  10] TIMEOUT  (    5.2s, CLEAN) board-A"])
 
         with patch("sys.stdout", captured):
             store.render_dashboard(
@@ -133,14 +167,44 @@ class BenchmarkStoreTest(unittest.TestCase):
         self.assertEqual(lines[0], "=" * 155)
         # Separator after header
         self.assertEqual(lines[2], "-" * 155)
-        # Separator after active workers (header + 2 workers)
-        self.assertEqual(lines[6], "-" * 155)
+        # Separator after the worker rows (header + 2 workers, no Active Workers heading)
+        self.assertEqual(lines[5], "-" * 155)
         # Bottom separator
-        self.assertEqual(lines[9], "=" * 155)
+        self.assertEqual(lines[8], "=" * 155)
+        self.assertNotIn("Active Workers:", plain)
+        self.assertIn("[W-01 T-A]", plain)
+        self.assertIn("[W-02]", plain)
+        self.assertIn("Latest results:", plain)
+        self.assertNotIn("Recent Completed", plain)
+        self.assertIn("[   1/  10] TIMEOUT  (    5.2s, CLEAN) board-A", plain)
 
         # Header contains target workers and +/- hint
         self.assertIn("Workers: 2 (target 4)", lines[1])
         self.assertIn("[+ / - adjust workers | ESC / Q to stop]", lines[1])
+
+    def test_recent_result_aligns_outcome_and_seconds(self) -> None:
+        self.assertEqual(
+            store.format_recent_result(3, 527, "CLEAN", store.format_result_timing(734.4), "f4fc_f4fc"),
+            "[   3/ 527] CLEAN    (  734.4s) f4fc_f4fc",
+        )
+        self.assertEqual(
+            store.format_recent_result(
+                6, 527, "UNROUTED", store.format_result_timing(1995.7, "unr=1, viol=9"), "typec-charger_TypeC-DC-Charger"
+            ),
+            "[   6/ 527] UNROUTED ( 1995.7s, unr=1, viol=9) typec-charger_TypeC-DC-Charger",
+        )
+        clean = store.format_recent_result(7, 527, "CLEAN", store.format_result_timing(1095.7), "RoBoC_RoboticsMKII")
+        unrouted = store.format_recent_result(
+            6, 527, "UNROUTED", store.format_result_timing(1995.7, "unr=1, viol=9"), "board"
+        )
+        self.assertEqual(clean.index("( "), unrouted.index("( "))
+
+    def test_fixture_name_keeps_both_ends_when_longer_than_37_characters(self) -> None:
+        short = "bee-light-measurement-matrix"
+        self.assertEqual(store.format_fixture_name(short), short)
+        long_name = "bee-light-measur" + ("x" * 10) + "asurement-matrix"
+        self.assertGreater(len(long_name), 37)
+        self.assertEqual(store.format_fixture_name(long_name), "bee-light-measur...asurement-matrix")
 
     def test_dynamic_worker_scaling_increments_and_decrements_gracefully(self) -> None:
         import queue
