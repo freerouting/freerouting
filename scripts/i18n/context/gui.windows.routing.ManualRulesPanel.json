@@ -10,7 +10,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.ManualRulesPanel",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "on_layer_tooltip"
@@ -62,7 +62,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.ManualRulesPanel",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "trace_clearance_class_tooltip"
@@ -98,7 +98,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.ManualRulesPanel",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "trace_clearance_class",
@@ -136,7 +136,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.ManualRulesPanel",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "via_rule_tooltip"
