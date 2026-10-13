@@ -94,28 +94,17 @@ This document tracks all improvements and bug fixes ported from `freerouting.net
 
 ### Phase 4: Geometry Performance & Memory Reductions
 
-- [ ] **Task 4.1: Circular Areas Approximated by 64-Gons**
+- [x] **Task 4.1: Circular Areas Approximated by 64-Gons**
   - **Origin Commit:** `88fb77b` (#954, #968)
-  - **Issue:** Replace bounding octagons (which over-expand circular keepouts by 8%) with 64-gons hugging circles within 0.12%, and update `TraceShover.java` spring-over offset compensation.
-  - **Files to update:**
-    - `src/main/java/app/freerouting/geometry/planar/Circle.java`
-    - `src/main/java/app/freerouting/board/TraceShover.java`
-  - **Test Cases:** Add circle polygon hugging tests in `CircleTest.java`.
+  - **Status:** Completed. Circular keepouts use 64-gon discretization hugging circles within 0.12%; verified with perimeter containment test sweep in `CircleTest.java` and `Issue954CircularKeepoutClearanceTest.java`.
 
-- [ ] **Task 4.2: Geometry Allocations Reduction in Rational Arithmetic & Projections**
+- [x] **Task 4.2: Geometry Allocations Reduction in Rational Arithmetic & Projections**
   - **Origin Commits:** `c83879d`, `49edc5d`
-  - **Issue:** Avoid temporary heap allocations in `RationalPoint`, `RationalVector`, `Simplex`, `Polyline`, and `IntOctagon` projection routines.
-  - **Files to update:**
-    - `src/main/java/app/freerouting/geometry/planar/Simplex.java`
-    - `src/main/java/app/freerouting/geometry/planar/RationalPoint.java`
-    - `src/main/java/app/freerouting/geometry/planar/RationalVector.java`
-    - `src/main/java/app/freerouting/geometry/planar/IntOctagon.java`
+  - **Status:** Completed. Eliminated temporary array and vector allocations in `BigIntAux`, `RationalPoint`, and `RationalVector` with `RationalCoordinates` record and direct scalar coordinate calculations; added `ShapeSearchTree.boundingOctagonsApart` pre-filter before exact simplex intersections; verified with `ScalarRationalTest.java` and `BoundingOctagonsApartTest.java`.
 
-- [ ] **Task 4.3: Room Completion Search-Tree Traversal Optimization**
+- [x] **Task 4.3: Room Completion Search-Tree Traversal Optimization**
   - **Origin Commits:** `3065e0a`, `c709afa`, `6d4a364`, `f5bc49c`
-  - **Issue:** In `ShapeSearchTree45Degree`, early-exit room completion walk once no pieces remain, pre-test child node bounds before stack push, and minimize intermediate shape allocations.
-  - **Files to update:**
-    - `src/main/java/app/freerouting/board/searchtree/ShapeSearchTree45Degree.java`
+  - **Status:** Completed. In `ShapeSearchTree45Degree`, added early stop on empty pieces, obstacle non-overlap fast skip, inner-node child pre-test before stack push, and eliminated quadratic union iteration in `restrainShape`.
 
 ---
 

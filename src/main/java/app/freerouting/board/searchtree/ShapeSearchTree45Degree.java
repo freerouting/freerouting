@@ -200,6 +200,18 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
               traceCompleteShapeCandidate(
                   debugStep, netNumber, roomLayer, currentObject, currentObjectShape);
             }
+            if (!debugAnchor) {
+              boolean overlapsAny = false;
+              for (IncompleteFreeSpaceExpansionRoom roomPiece : result) {
+                if (((IntOctagon) roomPiece.getShape()).overlaps(currentObjectShape)) {
+                  overlapsAny = true;
+                  break;
+                }
+              }
+              if (!overlapsAny) {
+                continue;
+              }
+            }
             Collection<IncompleteFreeSpaceExpansionRoom> newResult = new ArrayList<>();
             IntOctagon newBoundingShape = IntOctagon.EMPTY;
             boolean hadRoomsBeforeObstacle = !result.isEmpty();
@@ -244,7 +256,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                     restrainShape(currentRoom, currentObjectShape);
                 newResult.addAll(newRestrainedShapes);
 
-                for (IncompleteFreeSpaceExpansionRoom tmpShape : newResult) {
+                for (IncompleteFreeSpaceExpansionRoom tmpShape : newRestrainedShapes) {
                   newBoundingShape = newBoundingShape.union((IntOctagon) tmpShape.getShape());
                 }
               } else {
@@ -292,8 +304,14 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
             debugStep++;
           }
         } else {
-          stack.push(((InnerNode) currentNode).firstChild);
-          stack.push(((InnerNode) currentNode).secondChild);
+          TreeNode first = ((InnerNode) currentNode).firstChild;
+          TreeNode second = ((InnerNode) currentNode).secondChild;
+          if (first != null && first.boundingShape.intersects(boundingShape)) {
+            stack.push(first);
+          }
+          if (second != null && second.boundingShape.intersects(boundingShape)) {
+            stack.push(second);
+          }
         }
       }
     }

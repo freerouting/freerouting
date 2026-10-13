@@ -607,10 +607,28 @@ public class ShapeSearchTree extends MinAreaTree {
       // enlarge both item shapes by the half clearance to create
       // symmetry.
       ConvexShape tmpOffsetShape = (ConvexShape) tmpShape.enlarge(currentHalfClearance);
-      if (currentOffsetShape.intersects(tmpOffsetShape)) {
+      if (!boundingOctagonsApart(currentOffsetShape, tmpOffsetShape)
+          && currentOffsetShape.intersects(tmpOffsetShape)) {
         obstacleEntries.add(new TreeEntry(tmpEntry.leaf.object, tmpEntry.leaf.shapeIndexInObject));
       }
     }
+  }
+
+  /**
+   * Returns true when the bounding octagons of two shapes, one of them a simplex, share no point,
+   * so the shapes share none and the exact test would answer false. The exact simplex test sorts
+   * and reduces the half-planes of both shapes; the octagon test is eight comparisons.
+   */
+  static boolean boundingOctagonsApart(ConvexShape a, ConvexShape b) {
+    if (!(a instanceof Simplex) && !(b instanceof Simplex)) {
+      return false;
+    }
+    if (!(a instanceof TileShape tileA) || !(b instanceof TileShape tileB)) {
+      return false;
+    }
+    IntOctagon octagonA = tileA.boundingOctagon();
+    IntOctagon octagonB = tileB.boundingOctagon();
+    return octagonA != null && octagonB != null && !octagonA.intersects(octagonB);
   }
 
   /**
