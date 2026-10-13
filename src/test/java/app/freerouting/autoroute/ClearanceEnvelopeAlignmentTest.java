@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
@@ -120,5 +121,54 @@ class ClearanceEnvelopeAlignmentTest {
             + traceHalfWidth
             + ", clearance="
             + clearance);
+  }
+
+  @Test
+  void testProbeGndTargetEmptySafeRegion() {
+    // Reconstruct the exact geometry captured from the release 2.5.0 GND probe
+    TileShape room =
+        new IntOctagon(2096240, -652900, 2188005, -637500, 2733740, 2825505, 1443340, 1550505);
+    TileShape target =
+        new IntOctagon(2107787, -639750, 2110037, -637500, 2745287, 2749787, 1470287, 1470287);
+    int traceClearanceOffset = 2268;
+
+    // 1. Raw intersection touches room within the forbidden clearance zone of an obstacle
+    TileShape rawIntersection = target.intersection(room);
+    assertFalse(rawIntersection.isEmpty(), "Raw target intersects the room");
+
+    // 2. Width-safe intersection (inset by traceClearanceOffset) is empty
+    TileShape safeRoom = (TileShape) room.offset(-traceClearanceOffset);
+    TileShape safeIntersection = target.intersection(safeRoom);
+    assertTrue(
+        safeIntersection.isEmpty(),
+        "Width-safe target region must be empty when target only touches clearance margin");
+
+    // 3. Target extending deeper into the room has a non-empty safe region inside safeRoom
+    TileShape deeperTarget = new IntBox(2107787, -645000, 2110037, -637500).boundingOctagon();
+    TileShape safeDeeperIntersection = deeperTarget.intersection(safeRoom);
+    assertFalse(safeDeeperIntersection.isEmpty(), "Deep target must have non-empty safe region");
+    Point safeCenter = safeDeeperIntersection.centreOfGravity().round();
+    assertTrue(safeRoom.contains(safeCenter), "Safe connection center must lie inside safe room");
+  }
+
+  @Test
+  void testNeckdownOffsetCalculation() {
+    int traceHalfWidth = 1250;
+    int clearance = 2000;
+    int clearanceCompensation = (clearance + 1) / 2; // 1000
+    int searchTolerance = 2;
+    int clearanceSafetyMargin = 16;
+    int traceClearanceOffset =
+        traceHalfWidth + clearanceCompensation + searchTolerance + clearanceSafetyMargin; // 2268
+
+    int neckdownHalfWidth = 750;
+    int widthDifference = traceHalfWidth - neckdownHalfWidth; // 500
+    int neckdownClearanceOffset = traceClearanceOffset - widthDifference; // 1768
+
+    // Expected neckdown clearance offset:
+    // neckdownCompensated (750 + 1000 = 1750) + tolerance (2) + safetyMargin (16) = 1768
+    int expectedNeckdownOffset =
+        neckdownHalfWidth + clearanceCompensation + searchTolerance + clearanceSafetyMargin;
+    assertEquals(expectedNeckdownOffset, neckdownClearanceOffset);
   }
 }

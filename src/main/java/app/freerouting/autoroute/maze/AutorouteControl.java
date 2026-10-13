@@ -266,6 +266,15 @@ public class AutorouteControl {
     return traceClearanceOffset[layer];
   }
 
+  /** Returns the clearance offset for traces with neckdown on the specified layer. */
+  public int getNeckdownClearanceOffset(int layer, double neckdownHalfWidth) {
+    if (layer < 0 || layer >= layerCount) {
+      return 0;
+    }
+    int widthDifference = (int) Math.round(traceHalfWidth[layer] - neckdownHalfWidth);
+    return Math.max(0, traceClearanceOffset[layer] - widthDifference);
+  }
+
   /** Recomputes the trace clearance offset for the specified layer against the given board. */
   public void updateTraceClearanceOffset(int layer, RoutingBoard board) {
     if (layer >= 0 && layer < layerCount && board != null && board.rules != null) {
