@@ -98,7 +98,7 @@ public final class DesignBlocks {
       return true;
     }
     Set<Item> seen = new HashSet<>(ownSet);
-    boolean anyOther = false;
+    boolean sawOtherSet = false;
     for (Item netItem : board.getConnectableItems(netNumber)) {
       if (seen.contains(netItem)) {
         continue;
@@ -108,9 +108,9 @@ public final class DesignBlocks {
       if (!isBlockedSet(otherSet)) {
         return false;
       }
-      anyOther = true;
+      sawOtherSet = true;
     }
-    return anyOther;
+    return sawOtherSet;
   }
 
   /** The airlines (open connections) with a blocked end. */
