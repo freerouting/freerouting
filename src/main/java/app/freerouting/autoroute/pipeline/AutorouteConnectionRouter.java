@@ -8,7 +8,6 @@ import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.ConductionArea;
 import app.freerouting.board.model.items.Item;
-import app.freerouting.board.model.structure.Unit;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
@@ -175,15 +174,7 @@ final class AutorouteConnectionRouter {
       Map<Item, Integer> ripupCosts,
       int ripupPassNo,
       TimeLimit timeLimit) {
-    int boardResolution = Math.max(1, router.board.communication.resolution);
-    int neckWidth =
-        (int)
-            Math.round(
-                Unit.scale(
-                    router.settings.getNeckWidthUm() * boardResolution,
-                    Unit.UM,
-                    router.board.communication.unit));
-    int neckHalfWidth = Math.max(1, neckWidth / 2);
+    int neckHalfWidth = AutorouteControl.neckHalfWidth(router.board, router.settings);
     boolean narrowerSomewhere = false;
     for (int i = 0; i < originalControl.layerCount; i++) {
       if (originalControl.layerActive[i] && originalControl.traceHalfWidth[i] > neckHalfWidth) {
