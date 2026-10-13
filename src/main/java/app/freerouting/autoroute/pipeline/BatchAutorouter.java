@@ -3,6 +3,7 @@ package app.freerouting.autoroute.pipeline;
 import app.freerouting.autoroute.AutorouteAttemptResult;
 import app.freerouting.autoroute.AutorouteAttemptState;
 import app.freerouting.autoroute.BoardHistory;
+import app.freerouting.autoroute.FailureReason;
 import app.freerouting.autoroute.maze.AutorouteControl;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.ConductionArea;
@@ -82,6 +83,7 @@ public final class BatchAutorouter extends NamedAlgorithm {
   private final AutorouteConnectionRouter connectionRouter;
   private final AutoroutePassRunner passRunner;
   private final AutorouteBatchLoop batchLoop;
+
   protected RoutingJob job;
   int totalItemsRouted;
   boolean fanoutTimedOut;
@@ -333,7 +335,12 @@ public final class BatchAutorouter extends NamedAlgorithm {
         AutorouteAttemptState.FAILED,
         "strict_drc: connection ripped because "
             + newItems.size()
-            + " new item(s) included clearance violations");
+            + " new item(s) included clearance violations",
+        new FailureReason(
+            FailureReason.FailureType.STRICT_DRC_REJECTED,
+            "The routed connection was ripped because "
+                + newItems.size()
+                + " new item(s) included clearance violations."));
   }
 
   public boolean isFanoutTimedOut() {

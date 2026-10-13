@@ -2,6 +2,7 @@ package app.freerouting.autoroute.pipeline;
 
 import app.freerouting.autoroute.AutorouteAttemptResult;
 import app.freerouting.autoroute.AutorouteAttemptState;
+import app.freerouting.autoroute.FailureReason;
 import app.freerouting.autoroute.maze.AutorouteControl;
 import app.freerouting.autoroute.maze.AutorouteEngine;
 import app.freerouting.board.facade.BasicBoard;
@@ -161,7 +162,12 @@ final class AutorouteConnectionRouter {
       return autorouteResult;
     } catch (Exception e) {
       FRLogger.error("Error during routing passes", e);
-      return new AutorouteAttemptResult(AutorouteAttemptState.FAILED);
+      return new AutorouteAttemptResult(
+          AutorouteAttemptState.FAILED,
+          "Unexpected exception during routing: " + e.getMessage(),
+          new FailureReason(
+              FailureReason.FailureType.UNEXPECTED_EXCEPTION,
+              "Unexpected exception aborted the routing attempt: " + e));
     }
   }
 
