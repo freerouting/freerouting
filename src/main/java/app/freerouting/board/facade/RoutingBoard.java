@@ -22,6 +22,7 @@ import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.board.model.structure.Layer;
 import app.freerouting.board.model.structure.LayerStructure;
 import app.freerouting.board.model.structure.ShapeEntrySide;
+import app.freerouting.board.optimize.ShoveCheckCache;
 import app.freerouting.board.optimize.TraceShover;
 import app.freerouting.board.optimize.TraceTightener;
 import app.freerouting.board.searchtree.SearchTreeObject;
@@ -76,6 +77,9 @@ public class RoutingBoard extends BasicBoard implements Serializable {
 
   private transient Item shoveFailingObstacle;
   private transient int shoveFailingLayer = -1;
+  private transient long shoveFailingObstacleWrites;
+  private transient long shoveFailingLayerWrites;
+  private transient List<Item> shoveCacheObstacles;
   private transient RoutingBoardOperations operations;
   private transient RoutingBoardSearchFacade searchFacade;
   private transient RoutingBoardUndoFacade undoFacade;
@@ -271,22 +275,23 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       }
     }
 
-    IntOctagon tidyRegion;
+    IntOctagon[] tidyRegion = new IntOctagon[1];
     boolean calculateTidyRegion;
     if (tidyWidth < Integer.MAX_VALUE) {
-      tidyRegion = IntOctagon.EMPTY;
+      tidyRegion[0] = IntOctagon.EMPTY;
       calculateTidyRegion = tidyWidth > 0;
     } else {
-      tidyRegion = null;
+      tidyRegion[0] = null;
       calculateTidyRegion = false;
     }
     startMarkingChangedArea();
-    if (!DrillItemMover.insert(
+    if (!DrillItemMover.insertJoiningTidyRegion(
         drillItem, vector, maxRecursionDepth, maxViaRecursionDepth, tidyRegion, this)) {
       return false;
     }
-    if (calculateTidyRegion) {
-      tidyRegion = tidyRegion.enlarge(tidyWidth);
+    IntOctagon finalTidyRegion = tidyRegion[0];
+    if (calculateTidyRegion && finalTidyRegion != null) {
+      finalTidyRegion = finalTidyRegion.enlarge(tidyWidth);
     }
     int[] optNetNoArr;
     if (maxRecursionDepth <= 0) {
@@ -295,7 +300,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     } else {
       optNetNoArr = new int[0];
     }
-    optChangedArea(optNetNoArr, tidyRegion, pullTightAccuracy, null, null, pullTightTimeLimit);
+    optChangedArea(optNetNoArr, finalTidyRegion, pullTightAccuracy, null, null, pullTightTimeLimit);
     return true;
   }
 
@@ -1046,21 +1051,20 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     if (routerSettings.fanout != null
         && Boolean.TRUE.equals(routerSettings.fanout.fallbackToBoardVias)
         && ctrlSettings.viaRule != null) {
-      app.freerouting.rules.ViaRule combinedViaRule =
-          new app.freerouting.rules.ViaRule(ctrlSettings.viaRule.name + "_fallback");
-      for (int i = 0; i < ctrlSettings.viaRule.viaCount(); i++) {
-        combinedViaRule.appendVia(ctrlSettings.viaRule.getVia(i));
-      }
-      if (!this.rules.viaRules.isEmpty()) {
-        app.freerouting.rules.ViaRule defaultViaRule = this.rules.viaRules.firstElement();
-        for (int i = 0; i < defaultViaRule.viaCount(); i++) {
-          app.freerouting.rules.ViaInfo defaultVia = defaultViaRule.getVia(i);
-          if (!combinedViaRule.contains(defaultVia)) {
-            combinedViaRule.appendVia(defaultVia);
-          }
-        }
-      }
-      ctrlSettings.viaRule = combinedViaRule;
+      app.freerouting.rules.NetClass pinNetClass =
+          this.rules.nets.get(pinNetNo) != null
+              ? this.rules.nets.get(pinNetNo).getNetClass()
+              : null;
+      Integer netViaClearance =
+          pinNetClass != null
+              ? pinNetClass.defaultItemClearanceClasses.get(
+                  app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.VIA)
+              : null;
+      app.freerouting.rules.ViaRule boardDefaultViaRule =
+          !this.rules.viaRules.isEmpty() ? this.rules.viaRules.firstElement() : null;
+      ctrlSettings.viaRule =
+          fanoutFallbackViaRule(
+              ctrlSettings.viaRule, boardDefaultViaRule, netViaClearance, this.rules);
       ctrlSettings.rebuildViaInfo(this, routerSettings.getViaCosts(), pinNetNo);
     }
     Component pinComponent = this.components.get(pin.getComponentId());
@@ -1113,10 +1117,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     }
     if (result != null
         && result.state == AutorouteAttemptState.FAILED
-        && Boolean.TRUE.equals(
-            routerSettings.fanout != null
-                ? routerSettings.fanout.retryWithoutEscapeWindow
-                : null)) {
+        && routerSettings.fanout != null
+        && Boolean.TRUE.equals(routerSettings.fanout.retryWithoutEscapeWindow)) {
       ctrlSettings.ignoreEscapeWindow = true;
       result =
           currentAutorouteEngine.autorouteConnection(
@@ -1139,6 +1141,47 @@ public class RoutingBoard extends BasicBoard implements Serializable {
           timeLimitToPreventEndlessLoop);
     }
     return result;
+  }
+
+  public static app.freerouting.rules.ViaRule fanoutFallbackViaRule(
+      app.freerouting.rules.ViaRule netRule,
+      app.freerouting.rules.ViaRule boardRule,
+      Integer netViaClearance,
+      app.freerouting.rules.BoardRules rules) {
+    app.freerouting.rules.ViaRule combined =
+        new app.freerouting.rules.ViaRule(netRule.name + "_fallback");
+    for (int i = 0; i < netRule.viaCount(); i++) {
+      combined.appendVia(netRule.getVia(i));
+    }
+    if (boardRule == null) {
+      return combined;
+    }
+    for (int i = 0; i < boardRule.viaCount(); i++) {
+      app.freerouting.rules.ViaInfo boardVia = boardRule.getVia(i);
+      if (netViaClearance != null && netViaClearance != boardVia.getClearanceClassIndex()) {
+        boolean present = false;
+        for (int j = 0; j < combined.viaCount(); j++) {
+          app.freerouting.rules.ViaInfo existing = combined.getVia(j);
+          if (existing.getPadstack() == boardVia.getPadstack()
+              && existing.getClearanceClassIndex() == netViaClearance) {
+            present = true;
+            break;
+          }
+        }
+        if (!present) {
+          combined.appendVia(
+              new app.freerouting.rules.ViaInfo(
+                  boardVia.getName(),
+                  boardVia.getPadstack(),
+                  netViaClearance,
+                  boardVia.attachSmdAllowed(),
+                  rules));
+        }
+      } else if (!combined.contains(boardVia)) {
+        combined.appendVia(boardVia);
+      }
+    }
+    return combined;
   }
 
   /**
@@ -1394,6 +1437,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
           }
         }
         if (somethingChanged) {
+          result = true;
           break;
         }
       }
@@ -1413,7 +1457,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   public int connectNetlessPadsToTheirFootprintsNet(int[] tiePadsOut) {
     int assigned = 0;
     int tiePads = 0;
-    for (Pin pin : getPins()) {
+    for (Pin pin : new ArrayList<>(getPins())) {
       if (pin.netCount() != 0) {
         continue;
       }
@@ -1555,6 +1599,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
 
   public void setShoveFailingObstacle(Item item) {
     shoveFailingObstacle = item;
+    shoveFailingObstacleWrites++;
   }
 
   public int getShoveFailingLayer() {
@@ -1563,11 +1608,33 @@ public class RoutingBoard extends BasicBoard implements Serializable {
 
   public void setShoveFailingLayer(int layer) {
     shoveFailingLayer = layer;
+    shoveFailingLayerWrites++;
   }
 
   private void clearShoveFailingObstacle() {
     shoveFailingObstacle = null;
     shoveFailingLayer = -1;
+    shoveFailingObstacleWrites++;
+    shoveFailingLayerWrites++;
+  }
+
+  public long getShoveFailingObstacleWrites() {
+    return shoveFailingObstacleWrites;
+  }
+
+  public long getShoveFailingLayerWrites() {
+    return shoveFailingLayerWrites;
+  }
+
+  public List<Item> getShoveCacheObstacles() {
+    if (shoveCacheObstacles == null) {
+      shoveCacheObstacles = new java.util.ArrayList<>();
+    }
+    return shoveCacheObstacles;
+  }
+
+  public ShoveCheckCache getShoveChecks() {
+    return ShoveCheckCache.forThread();
   }
 
   /**

@@ -809,7 +809,24 @@ public abstract class Item
       }
       // Search from currentItem along the contacts
       // until the next fork or nonroute item.
+      Item ringItem = currentItem;
+      Point ringPoint = prevContactPoint;
+      int ringLayer = prevContactLayer;
+      long ringSteps = 0;
+      long ringMark = 1;
       for (; ; ) {
+        if (++ringSteps > 1
+            && currentItem == ringItem
+            && prevContactLayer == ringLayer
+            && prevContactPoint.equals(ringPoint)) {
+          break; // around the ring once: every item on it is in result
+        }
+        if (ringSteps == ringMark) {
+          ringItem = currentItem;
+          ringPoint = prevContactPoint;
+          ringLayer = prevContactLayer;
+          ringMark *= 2;
+        }
         if (!currentItem.isRoutable()) {
           // connection ends
           break;
@@ -997,6 +1014,9 @@ public abstract class Item
           newNetNoArr.length - foundIndex);
     }
     this.netNumbers = newNetNoArr;
+    if (this.board != null) {
+      this.board.noteNetAssignmentChanged();
+    }
     return true;
   }
 
@@ -1018,6 +1038,9 @@ public abstract class Item
       return;
     }
     clearanceClassIndex = index;
+    if (this.board != null) {
+      this.board.itemList.noteContentChange();
+    }
   }
 
   /** Changes the clearance class of this item and updates the search tree. */
@@ -1064,15 +1087,15 @@ public abstract class Item
       }
       netNumbers[0] = netNumber;
     }
+    if (this.board != null) {
+      this.board.noteNetAssignmentChanged();
+    }
     if (this instanceof Pin) {
       board.invalidateEdgePinNetCache();
     }
   }
 
-  /**
-   * Erik Gavriluk (freerouting.net): makes this item connectable on every net of netNumbers at
-   * once, as the DSN reader builds a tie pin from a pin the netlist lists under several nets.
-   */
+  /** Assigns multiple net numbers to this item (e.g., for net ties). */
   public void assignNetNumbers(int[] netNumbers) {
     for (int netNumber : netNumbers) {
       if (!Nets.isNormalNetNumber(netNumber) || netNumber > board.rules.nets.maxNetNumber()) {
@@ -1082,6 +1105,9 @@ public abstract class Item
     }
     board.itemList.saveForUndo(this);
     this.netNumbers = netNumbers.clone();
+    if (this.board != null) {
+      this.board.noteNetAssignmentChanged();
+    }
     if (this instanceof Pin) {
       board.invalidateEdgePinNetCache();
     }

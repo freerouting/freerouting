@@ -779,7 +779,7 @@ public class Pin extends DrillItem implements Serializable {
 
   /**
    * Erik Gavriluk (freerouting.net): the pins matching accept whose copper overlaps this pin's
-   * copper on a common layer, netted or not. Exact shapes, as overlappingPins.
+   * copper on a common layer, netted or not. Exact shapes.
    */
   public List<Pin> copperOverlappingPins(Predicate<Pin> accept) {
     List<Pin> result = new LinkedList<>();
