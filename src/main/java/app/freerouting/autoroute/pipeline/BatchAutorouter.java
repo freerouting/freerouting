@@ -224,7 +224,7 @@ public final class BatchAutorouter extends NamedAlgorithm {
         settings.autorouter == null
             || settings.autorouter.startNecked == null
             || settings.autorouter.startNecked;
-    if (this.startNecked) {
+    if (this.startNecked && board != null) {
       for (Trace trace : board.getTraces()) {
         if (trace.netCount() == 1
             && board.rules.nets.get(trace.getNetNumber(0)) != null
