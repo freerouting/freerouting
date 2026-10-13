@@ -97,6 +97,9 @@ public final class BatchFanout {
       RouterSettings settings,
       StoppableThread thread,
       FanoutProgressListener progressListener) {
+    if (settings.usesDirectPinRouting()) {
+      return DirectPinRouting.run(board, settings, thread);
+    }
     BatchFanout fanoutInstance = new BatchFanout(board, settings, thread);
     long fanoutStart = System.currentTimeMillis();
     if (settings.fanout != null && settings.fanout.timeoutString != null) {

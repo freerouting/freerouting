@@ -13,8 +13,8 @@ This document tracks all improvements and bug fixes ported from `freerouting.net
 |---|---|---|:---:|:---:|
 | **Phase 1** | **Bug Fixes & I/O Integrity** | Upstream bug fixes (#952, #951, #947) & DSN/Fusion parsing fixes | 4 | **Completed** |
 | **Phase 2** | **DRC & Board Clearance Rules** | Zero-clearance overlap violations, outline edge pin guard, hole clearances, net ties | 4 | **Completed** |
-| **Phase 3** | **Routing Engine & Fallbacks** | Direct-first fallback, start-necked, unreachable & enclosed pins stop, via-in-pad | 5 | **In Progress** |
-| **Phase 4** | **Geometry & Memory Tuning** | 64-gon circular areas, room completion byte-identical speedup, rational allocation reduction | 4 | Pending |
+| **Phase 3** | **Routing Engine & Fallbacks** | Direct-first fallback, start-necked, unreachable & enclosed pins stop, via-in-pad | 5 | **Completed** |
+| **Phase 4** | **Geometry & Memory Tuning** | 64-gon circular areas, room completion byte-identical speedup, rational allocation reduction | 4 | **Completed** |
 | **Phase 5** | **Verification & Benchmarks** | Golden fixtures validation, quality gates, Spotless & Checkstyle | 3 | Pending |
 
 ---
@@ -63,12 +63,9 @@ This document tracks all improvements and bug fixes ported from `freerouting.net
 
 ### Phase 3: Routing Engine & Fallback Refinements
 
-- [ ] **Task 3.1: Fallback Strategy Ordering (`direct-first`)**
+- [x] **Task 3.1: Fallback Strategy Ordering (`direct-first`)**
   - **Origin Commit:** `dbed7e0`
-  - **Issue:** Escape vias can wall in adjacent fine-pitch pins before traces can connect on their home layer. Placing `direct_first` fanout ahead in fallback strategies allows local connections to complete before escape vias are placed.
-  - **Files to update:**
-    - `src/main/java/app/freerouting/autoroute/pipeline/RoutingFallback.java`
-    - `src/main/java/app/freerouting/settings/DefaultSettings.java`
+  - **Status:** Completed. Default `fallback_strategies` is `direct-first,fanout-retry,short-escape,open-escape,no-fanout`. `direct_first` runs `DirectPinRouting` (same-layer connections, no vias, existing copper fixed) before escape fanout. The neighbouring-pin exit veto inside the later maze search (`PinExitGuard`) is not ported. Verified with `RoutingFallbackTest`.
 
 - [x] **Task 3.2: Early Stop on Unreachable & Enclosed Pins**
   - **Origin Commits:** `55a9345`, `adb2eb3`, `7373fad`, `38e326e`
@@ -78,13 +75,13 @@ This document tracks all improvements and bug fixes ported from `freerouting.net
   - **Origin Commits:** `3b6c557`, `264456b`
   - **Status:** Completed. Nets that required necking on earlier connections route at the neck width directly, avoiding redundant failed class-width searches; added setting `start_necked`, `neckedRouteNets` recovery, clamped to `minAllowedTraceHalfWidth`; verified with `StartNeckedTest.java`.
 
-- [ ] **Task 3.4: Routing Fallback Optimization (Skip Duplicate Passes & Resume Residuals)**
+- [x] **Task 3.4: Routing Fallback Optimization (Skip Duplicate Passes & Resume Residuals)**
   - **Origin Commits:** `230da12`, `dbe10a3`, `1aeb50b`, `0871cd6`
-  - **Issue:** Skip duplicate pass loops that repeat previous attempts, and continue residual boards first.
+  - **Status:** Completed. After a retryable stop, a residual board (at most `residual_repair_max_open`, default 4) is continued before the alternatives. A fanout-only attempt whose fanout leaves an earlier pass-loop start board stops after fanout. Elapsed time does not choose or skip attempts. `TestingSettings` sets `fallback_strategies` to `none` so fixture tests stay single-pass.
 
-- [ ] **Task 3.5: Exploration Rounds Tuning & Later Tries Expansion**
+- [x] **Task 3.5: Exploration Rounds Tuning & Later Tries Expansion**
   - **Origin Commits:** `dc3ffcf`, `cca75af`, `0e24715`
-  - **Issue:** Lighter exploration rounds (short-escape, open-escape), with later tries expanding search neighbourhoods and adjusting via costs.
+  - **Status:** Completed when `router.autorouter.explore_patience` is above 0 (default 0). Exploration uses `explore_fallback_strategies` (`short-escape,open-escape`). Later via tries multiply the via cost by 2, 4, then 8. Later neighbourhood tries rip other nets' copper out to 12 mm. The time-sliced opening rounds (`round_seconds`) are not ported. Verified with `RoutingSupervisorTest`.
 
 ---
 

@@ -11,4 +11,7 @@ public class BoardStatisticsConnections implements Serializable {
 
   @SerializedName("incomplete_count")
   public Integer incompleteCount;
+
+  @SerializedName("design_blocked_count")
+  public Integer designBlockedCount;
 }

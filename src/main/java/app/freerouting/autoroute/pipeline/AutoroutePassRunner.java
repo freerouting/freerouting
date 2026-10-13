@@ -273,9 +273,14 @@ final class AutoroutePassRunner {
         Comparator.comparingInt((Item item) -> item.netCount() > 0 ? item.getNetNumber(0) : 0)
             .thenComparingInt(Item::getId);
 
-    if (this.stagnationCount >= 2) {
+    Integer orderSeed =
+        router.settings.autorouter != null ? router.settings.autorouter.itemOrderSeed : null;
+    if (this.stagnationCount >= 2 || orderSeed != null) {
       signalItems.sort(deterministicItemComparator);
       long seed = (long) passNo * 1000003L + router.board.rules.nets.maxNetNumber();
+      if (orderSeed != null) {
+        seed = seed * 31L + orderSeed;
+      }
       shuffle(signalItems, new Random(seed));
       router.job.logDebug(
           "Pass #"

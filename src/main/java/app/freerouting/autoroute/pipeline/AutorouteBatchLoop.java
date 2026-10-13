@@ -77,6 +77,7 @@ final class AutorouteBatchLoop {
     router.sessionStartTime = Instant.now();
     router.initialUnroutedCount = calculateIncompleteCount(router.board);
     router.resetAntiOscillationState();
+    router.lastStopReason = null;
 
     final BoardHistory bh = new BoardHistory(job.routerSettings);
 
@@ -294,6 +295,15 @@ final class AutorouteBatchLoop {
               currentUnrouted == 1 ? "" : "s"));
     }
     boolean continueAutorouting = isRouterEnabled;
+    if (isRouterEnabled) {
+      router.passLoopStartHash = router.board.getHash();
+      if (router.repeatsEarlierPassLoop(router.passLoopStartHash)) {
+        router.lastStopReason = BatchAutorouter.StopReason.REPEATED;
+        continueAutorouting = false;
+        job.logInfo(
+            "Pass loop skipped: fanout left the board an earlier pass loop with the same settings started on.");
+      }
+    }
 
     int currentPass = 1;
     int consecutiveNoImprovementPasses = 0;
@@ -312,7 +322,7 @@ final class AutorouteBatchLoop {
     Set<String> alreadyRoutedBoardHashes = new java.util.HashSet<>();
     while (continueAutorouting && !router.thread.isStopAutoRouterRequested()) {
       if (job.state == RoutingJobState.TIMED_OUT) {
-        router.thread.requestStopAutoRouter();
+        stopFor(BatchAutorouter.StopReason.TIMED_OUT);
       }
 
       String currentBoardHash = router.board.getHash();
@@ -331,7 +341,7 @@ final class AutorouteBatchLoop {
       if (router.settings.autorouter.maxPasses != null
           && router.settings.autorouter.maxPasses > 0
           && currentPass > router.settings.autorouter.maxPasses) {
-        thread.requestStopAutoRouter();
+        stopFor(BatchAutorouter.StopReason.MAX_PASSES);
         break;
       }
 
@@ -367,14 +377,14 @@ final class AutorouteBatchLoop {
             if (boardToRestore == null) {
               job.logInfo(
                   "The router was not able to improve the board, stopping the auto-router.");
-              thread.requestStopAutoRouter();
+              stopFor(BatchAutorouter.StopReason.NO_IMPROVEMENT);
               break;
             }
 
             int boardToRestoreRank = bh.getRank(boardToRestore);
 
             if (boardToRestoreRank > BOARD_RANK_LIMIT) {
-              thread.requestStopAutoRouter();
+              stopFor(BatchAutorouter.StopReason.STAGNATION);
               break;
             }
 
@@ -553,7 +563,7 @@ final class AutorouteBatchLoop {
                     + "(e.g. check pad clearances, trace width rules, and available routing "
                     + "space):\n"
                     + report);
-            thread.requestStopAutoRouter();
+            stopFor(BatchAutorouter.StopReason.STAGNATION);
             break;
           }
         }
@@ -584,7 +594,7 @@ final class AutorouteBatchLoop {
                   + "The following connections could not be routed -- please review your design "
                   + "(e.g. check pad clearances, trace width rules, and available routing space):\n"
                   + report);
-          thread.requestStopAutoRouter();
+          stopFor(BatchAutorouter.StopReason.STAGNATION);
           break;
         }
 
@@ -632,11 +642,25 @@ final class AutorouteBatchLoop {
 
     job.board = router.board;
 
+    if (router.lastStopReason == null) {
+      if (job.state == RoutingJobState.TIMED_OUT) {
+        router.lastStopReason = BatchAutorouter.StopReason.TIMED_OUT;
+      } else if (thread.isStopRequested()) {
+        router.lastStopReason = BatchAutorouter.StopReason.CANCELLED;
+      } else if (thread.isStopAutoRouterRequested()) {
+        router.lastStopReason = BatchAutorouter.StopReason.STAGNATION;
+      } else {
+        router.lastStopReason = BatchAutorouter.StopReason.COMPLETED;
+      }
+    }
+
     boolean wasRouterRun =
         router.settings.getRunRouter()
             && (router.settings.autorouter.maxPasses == null
                 || router.settings.autorouter.maxPasses >= 0);
-    if (wasRouterRun && !router.thread.isStopAutoRouterRequested()) {
+    if (wasRouterRun
+        && !router.thread.isStopAutoRouterRequested()
+        && router.lastStopReason != BatchAutorouter.StopReason.REPEATED) {
       // clean up dangling tails and unused orphan fanout vias when autorouting finishes normally.
       removeTails(Item.StopConnectionOption.NONE);
     }
@@ -718,5 +742,12 @@ final class AutorouteBatchLoop {
 
   private void fireBoardSnapshotEvent(RoutingBoard board) {
     router.fireBoardSnapshotEvent(board);
+  }
+
+  private void stopFor(BatchAutorouter.StopReason reason) {
+    if (router.lastStopReason == null) {
+      router.lastStopReason = reason;
+    }
+    router.thread.requestStopAutoRouter();
   }
 }

@@ -40,4 +40,14 @@ public abstract class StoppableThread extends Thread implements Stoppable {
   public synchronized boolean isStopAutoRouterRequested() {
     return this.stopRequestState != StopRequestState.NONE;
   }
+
+  /**
+   * Clears an autorouter-only stop so another fallback attempt can run. A stop of the whole job is
+   * left in place.
+   */
+  public synchronized void resetAutoRouterStopRequest() {
+    if (this.stopRequestState == StopRequestState.AUTO_ROUTER_ONLY) {
+      this.stopRequestState = StopRequestState.NONE;
+    }
+  }
 }

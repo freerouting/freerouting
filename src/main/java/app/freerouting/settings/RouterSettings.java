@@ -658,6 +658,23 @@ public class RouterSettings implements Serializable, Cloneable {
     return neckWidthUm != null && neckWidthUm > 0 ? neckWidthUm : 0;
   }
 
+  /** Sets the configured necking width in micrometres. */
+  public void setNeckWidthUm(double width) {
+    this.neckWidthUm = width;
+  }
+
+  /** Returns whether direct pin routing strategy is configured for fanout. */
+  public boolean usesDirectPinRouting() {
+    String strategy = this.fanout != null ? this.fanout.strategy : null;
+    if (strategy == null || strategy.isEmpty() || "eager".equalsIgnoreCase(strategy)) {
+      return false;
+    }
+    if (!"direct_first".equalsIgnoreCase(strategy)) {
+      throw new IllegalArgumentException("router.fanout.strategy must be eager or direct_first");
+    }
+    return true;
+  }
+
   /** Returns whether connections with newly introduced clearance violations are rejected. */
   public boolean isStrictDrc() {
     return Boolean.TRUE.equals(strictDrc);

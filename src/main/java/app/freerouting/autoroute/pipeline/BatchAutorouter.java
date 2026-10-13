@@ -127,6 +127,54 @@ public final class BatchAutorouter extends NamedAlgorithm {
   public int startNeckedRouted;
   public int startNeckedFailed;
 
+  /** Why the last pass loop stopped. Null until the loop records a reason. */
+  public StopReason lastStopReason;
+
+  /** Board hash after fanout, where the pass loop started. */
+  public String passLoopStartHash;
+
+  private java.util.function.Predicate<String> repeatsPassLoop;
+
+  /** Why {@link #runBatchLoop()} stopped. */
+  public enum StopReason {
+    COMPLETED,
+    MAX_PASSES,
+    STAGNATION,
+    NO_IMPROVEMENT,
+    TIMED_OUT,
+    CANCELLED,
+    REPEATED
+  }
+
+  /**
+   * Builds an attempt on a private board and settings. {@code removeUnconnectedVias} stays false
+   * for a continuation that must keep the incumbent's fanout vias.
+   */
+  public static BatchAutorouter createAttempt(
+      RoutingJob job, RoutingBoard board, RouterSettings settings, boolean removeUnconnectedVias) {
+    int accuracy = settings.tracePullTightAccuracy != null ? settings.tracePullTightAccuracy : 500;
+    BatchAutorouter router =
+        new BatchAutorouter(
+            job.thread,
+            board,
+            settings,
+            removeUnconnectedVias,
+            true,
+            settings.getStartRipupCosts(),
+            accuracy);
+    router.job = job;
+    return router;
+  }
+
+  /** Fanout-only attempts stop when this returns true for the post-fanout board hash. */
+  public void setRepeatsPassLoop(java.util.function.Predicate<String> repeatsPassLoop) {
+    this.repeatsPassLoop = repeatsPassLoop;
+  }
+
+  boolean repeatsEarlierPassLoop(String hash) {
+    return hash != null && this.repeatsPassLoop != null && this.repeatsPassLoop.test(hash);
+  }
+
   /** Creates a BatchAutorouter for the given routing job. */
   public BatchAutorouter(RoutingJob job) {
     this(

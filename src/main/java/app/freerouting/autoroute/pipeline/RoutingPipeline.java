@@ -25,7 +25,7 @@ public final class RoutingPipeline {
   }
 
   private final RoutingJob job;
-  private final BatchAutorouter autorouter;
+  private BatchAutorouter autorouter;
   private final BatchOptimizer optimizer;
   private final List<StageListener> stageListeners = new ArrayList<>();
 
@@ -103,7 +103,33 @@ public final class RoutingPipeline {
     }
 
     if (routerEnabled && !this.job.thread.isStopAutoRouterRequested()) {
+      List<RoutingFallback.Strategy> strategies =
+          RoutingFallback.parse(
+              this.job.routerSettings,
+              name ->
+                  this.job.logWarning(
+                      "Unknown routing fallback strategy '"
+                          + name
+                          + "' ignored; known strategies: "
+                          + knownStrategyNames()
+                          + "."));
+      byte[] input = null;
+      if (!strategies.isEmpty() && this.job.board != null) {
+        try {
+          input = this.job.board.serialize(false);
+        } catch (RuntimeException e) {
+          this.job.logWarning(
+              "Routing fallback disabled; the input board could not be saved: " + e.getMessage());
+        }
+      }
       this.autorouter.runBatchLoop();
+      RoutingFallbackRunner fallback = new RoutingFallbackRunner(this.autorouter);
+      if (input != null) {
+        this.autorouter = fallback.run(this.job, this.autorouter, strategies, input);
+      }
+      if (RoutingSupervisor.explores(this.job.routerSettings)) {
+        this.autorouter = fallback.explore(this.job, this.autorouter);
+      }
     } else if (this.job.routerSettings.isFanoutEnabled()
         && !this.job.thread.isStopAutoRouterRequested()) {
       Integer originalMaxPasses = this.job.routerSettings.autorouter.maxPasses;
@@ -134,6 +160,17 @@ public final class RoutingPipeline {
     for (StageListener listener : this.stageListeners) {
       listener.afterOptimization(this.optimizer);
     }
+  }
+
+  private static String knownStrategyNames() {
+    StringBuilder names = new StringBuilder();
+    for (RoutingFallback.Strategy strategy : RoutingFallback.KNOWN) {
+      if (!names.isEmpty()) {
+        names.append(", ");
+      }
+      names.append(strategy.name);
+    }
+    return names.toString();
   }
 
   private static void normalizeRouterAlgorithm(RoutingJob job) {

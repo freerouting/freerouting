@@ -1111,6 +1111,17 @@ public class RoutingBoard extends BasicBoard implements Serializable {
           currentAutorouteEngine.autorouteConnection(
               pinConnectedSet, unconnectedSet, ctrlSettings, rippedItemList, null);
     }
+    if (result != null
+        && result.state == AutorouteAttemptState.FAILED
+        && Boolean.TRUE.equals(
+            routerSettings.fanout != null
+                ? routerSettings.fanout.retryWithoutEscapeWindow
+                : null)) {
+      ctrlSettings.ignoreEscapeWindow = true;
+      result =
+          currentAutorouteEngine.autorouteConnection(
+              pinConnectedSet, unconnectedSet, ctrlSettings, rippedItemList, null);
+    }
     if (result == null) {
       result =
           new AutorouteAttemptResult(
