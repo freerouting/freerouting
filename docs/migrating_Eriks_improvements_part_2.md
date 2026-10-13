@@ -12,8 +12,8 @@ This document tracks all improvements and bug fixes ported from `freerouting.net
 | Phase | Category | Description | Items | Status |
 |---|---|---|:---:|:---:|
 | **Phase 1** | **Bug Fixes & I/O Integrity** | Upstream bug fixes (#952, #951, #947) & DSN/Fusion parsing fixes | 4 | **Completed** |
-| **Phase 2** | **DRC & Board Clearance Rules** | Zero-clearance overlap violations, outline edge pin guard, hole clearances | 4 | **In Progress** |
-| **Phase 3** | **Routing Engine & Fallbacks** | Direct-first fallback, start-necked, unreachable & enclosed pins stop, via-in-pad | 5 | Pending |
+| **Phase 2** | **DRC & Board Clearance Rules** | Zero-clearance overlap violations, outline edge pin guard, hole clearances, net ties | 4 | **Completed** |
+| **Phase 3** | **Routing Engine & Fallbacks** | Direct-first fallback, start-necked, unreachable & enclosed pins stop, via-in-pad | 5 | **In Progress** |
 | **Phase 4** | **Geometry & Memory Tuning** | 64-gon circular areas, room completion byte-identical speedup, rational allocation reduction | 4 | Pending |
 | **Phase 5** | **Verification & Benchmarks** | Golden fixtures validation, quality gates, Spotless & Checkstyle | 3 | Pending |
 
@@ -55,12 +55,9 @@ This document tracks all improvements and bug fixes ported from `freerouting.net
   - **Origin Commits:** `f905f35`, `a711fc0`, `3477aa1`
   - **Status:** Completed. Added `obstaclesOf` filtering in `ShapeSearchTree.java` to skip non-obstacles before candidate sorting.
 
-- [ ] **Task 2.4: Netless Pad Joining & Net Tie Rules**
-  - **Origin Commit:** `552a80b`
-  - **Issue:** Refine netless pad joining so netless copper isn't inappropriately assigned to a net unless designated as a net tie or grouped footprint copper.
-  - **Files to update:**
-    - `src/main/java/app/freerouting/board/RoutingBoard.java`
-    - `src/main/java/app/freerouting/board/Pin.java`
+- [x] **Task 2.4: Netless Pad Joining & Net Tie Rules**
+  - **Origin Commits:** `552a80b`, `7fc6b12`, `7b45d2a`, `7267620`
+  - **Status:** Completed. Implemented `connectNetlessPadsToTheirFootprintsNet` and `connectNetlessPads` in `RoutingBoard.java`, `assignNetNumbers` in `Item.java`, and `copperOverlappingPins` / `overlappingNettedPins` / `getNormalContacts` in `Pin.java`; supported `fix_kicad_footprints` setting; added tests in `NetTiePadTest.java` and `NetlessPadNetTest.java`.
 
 ---
 
@@ -81,12 +78,9 @@ This document tracks all improvements and bug fixes ported from `freerouting.net
     - `src/main/java/app/freerouting/autoroute/pipeline/AutoroutePassRunner.java`
     - `src/main/java/app/freerouting/autoroute/pipeline/RoutingPipeline.java`
 
-- [ ] **Task 3.3: Start Necked Optimization (`router.autorouter.start_necked`)**
+- [x] **Task 3.3: Start Necked Optimization (`router.autorouter.start_necked`)**
   - **Origin Commits:** `3b6c557`, `264456b`
-  - **Issue:** Nets that required necking on earlier connections route at the neck width when their joint-neck probe is refused, reducing wasted failed passes.
-  - **Files to update:**
-    - `src/main/java/app/freerouting/autoroute/pipeline/AutorouteConnectionRouter.java`
-    - `src/main/java/app/freerouting/settings/AutorouterSettings.java`
+  - **Status:** Completed. Nets that required necking on earlier connections route at the neck width directly, avoiding redundant failed class-width searches; added setting `start_necked`, `neckedRouteNets` recovery, clamped to `minAllowedTraceHalfWidth`; verified with `StartNeckedTest.java`.
 
 - [ ] **Task 3.4: Routing Fallback Optimization (Skip Duplicate Passes & Resume Residuals)**
   - **Origin Commits:** `230da12`, `dbe10a3`, `1aeb50b`, `0871cd6`

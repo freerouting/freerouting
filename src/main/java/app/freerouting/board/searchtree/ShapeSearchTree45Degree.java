@@ -280,6 +280,12 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
               }
             }
             result = newResult;
+            if (result.isEmpty()) {
+              // Erik Gavriluk (freerouting.net): with no piece left, the empty union reaches no
+              // node.
+              // Stop the walk early rather than continuing to pop and reject remaining nodes.
+              break;
+            }
             boundingShape = newBoundingShape;
           }
           if (debugAnchor) {

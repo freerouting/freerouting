@@ -74,6 +74,13 @@ public class RouterSettings implements Serializable, Cloneable {
   @SerializedName("strict_drc")
   public Boolean strictDrc;
 
+  /**
+   * Erik Gavriluk (freerouting.net): fixes KiCad footprints by giving overlapping netless pads
+   * their footprint's net.
+   */
+  @SerializedName("fix_kicad_footprints")
+  public Boolean fixKicadFootprints;
+
   @SerializedName("job_timeout")
   public String jobTimeoutString;
 

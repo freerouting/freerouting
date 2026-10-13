@@ -27,6 +27,7 @@ import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.gui.workspace.WorkspaceSettings;
 import app.freerouting.gui.workspace.session.InteractiveActionThread;
 import app.freerouting.io.BoardReadResult;
+import app.freerouting.io.FileFormat;
 import app.freerouting.io.kicad.KiCadJsonReader;
 import app.freerouting.io.specctra.DsnReader;
 import app.freerouting.io.specctra.DsnWriter;
@@ -864,6 +865,23 @@ public class HeadlessBoardManager implements BoardManager {
     }
     this.board.expandBoundingBoxToIncludeAllItems();
     this.board.reduceNetsOfRouteItems();
+    boolean isKicadBoard =
+        this.routingJob != null
+            && this.routingJob.input != null
+            && this.routingJob.input.format == FileFormat.KICAD_DESIGN_JSON;
+    boolean fixKicadFootprints =
+        this.routingJob != null
+            && this.routingJob.routerSettings != null
+            && Boolean.TRUE.equals(this.routingJob.routerSettings.fixKicadFootprints);
+    int[] tiePads = new int[1];
+    int assigned = this.board.connectNetlessPads(isKicadBoard, fixKicadFootprints, tiePads);
+    if (assigned > 0) {
+      FRLogger.info(
+          assigned
+              + " netless pad(s) overlapping a netted pad take that pad's net"
+              + (tiePads[0] > 0 ? " (" + tiePads[0] + " tie pad(s) carry several nets)" : "")
+              + ".");
+    }
     validatePowerPlanes();
     validateBoardDesignErrors();
     // NOTE: The full-board DRC (getAllClearanceViolations) is O(n²) and is deferred to the

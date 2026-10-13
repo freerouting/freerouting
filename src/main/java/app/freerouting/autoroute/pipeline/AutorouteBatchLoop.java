@@ -668,6 +668,15 @@ final class AutorouteBatchLoop {
 
     bh.clear();
 
+    if (router.startNeckedRouted + router.startNeckedFailed > 0) {
+      job.logInfo(
+          "Start necked: "
+              + router.startNeckedRouted
+              + " connection(s) of nets that needed the neck before routed at the neck width without a class-width search, "
+              + router.startNeckedFailed
+              + " did not route.");
+    }
+
     // Print all profiling results at the end of session
     PerformanceProfiler.printResults();
     PerformanceProfiler.reset();

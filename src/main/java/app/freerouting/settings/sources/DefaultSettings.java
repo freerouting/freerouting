@@ -164,6 +164,7 @@ public class DefaultSettings implements SettingsSource {
     settings.automaticNeckdown = true;
     settings.autorouter.saveIntermediateStages = false;
     settings.autorouter.ignoreNetClasses = new String[0];
+    settings.autorouter.startNecked = true;
     settings.maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
     settings.autorouter.maxThreads = settings.maxThreads;
     settings.copperToEdgeClearanceUm = DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM;
@@ -173,6 +174,7 @@ public class DefaultSettings implements SettingsSource {
     settings.planeAsObstacle = false;
     settings.neckWidthUm = DEFAULT_NECK_WIDTH_UM;
     settings.strictDrc = false;
+    settings.fixKicadFootprints = false;
 
     // layers is left null intentionally –
     // they will be populated by DsnFileSettings (from the DSN layer count) and then

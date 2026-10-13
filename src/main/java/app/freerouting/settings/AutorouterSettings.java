@@ -52,6 +52,15 @@ public class AutorouterSettings implements Serializable, Cloneable {
       example = "[\"kicad_default\"]")
   public String[] ignoreNetClasses;
 
+  /**
+   * Erik Gavriluk (freerouting.net): whether nets that required necking on earlier connections
+   * route at the neck width directly on later connections (skipping redundant class-width
+   * searches).
+   */
+  @SerializedName("start_necked")
+  @Schema(description = "Whether nets requiring necking route at neck width directly")
+  public Boolean startNecked;
+
   @Override
   public AutorouterSettings clone() {
     try {

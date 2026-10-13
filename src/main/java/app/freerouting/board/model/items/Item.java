@@ -1069,6 +1069,24 @@ public abstract class Item
     }
   }
 
+  /**
+   * Erik Gavriluk (freerouting.net): makes this item connectable on every net of netNumbers at
+   * once, as the DSN reader builds a tie pin from a pin the netlist lists under several nets.
+   */
+  public void assignNetNumbers(int[] netNumbers) {
+    for (int netNumber : netNumbers) {
+      if (!Nets.isNormalNetNumber(netNumber) || netNumber > board.rules.nets.maxNetNumber()) {
+        FRLogger.warn("Item.assign_net_numbers: netNumber " + netNumber + " is not a board net");
+        return;
+      }
+    }
+    board.itemList.saveForUndo(this);
+    this.netNumbers = netNumbers.clone();
+    if (this instanceof Pin) {
+      board.invalidateEdgePinNetCache();
+    }
+  }
+
   /** Returns true, if item is contained in the input filter. */
   public abstract boolean isSelectedByFilter(ItemSelectionFilter filter);
 
