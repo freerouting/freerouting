@@ -527,9 +527,12 @@ public abstract class FoundConnectionLocator {
     if (currentFromInfo.nextRoom == null) {
       return this.currentFromPoint;
     }
-    double traceHalfWidth = this.ctrl.compensatedTraceHalfWidth[this.currentTraceLayer];
+    double shrinkOffset =
+        (currentFromInfo.nextRoom instanceof ObstacleExpansionRoom)
+            ? this.ctrl.compensatedTraceHalfWidth[this.currentTraceLayer]
+            : this.ctrl.getTraceClearanceOffset(this.currentTraceLayer);
     TileShape shrinkedRoomShape =
-        (TileShape) currentFromInfo.nextRoom.getShape().offset(-traceHalfWidth);
+        (TileShape) currentFromInfo.nextRoom.getShape().offset(-shrinkOffset);
     if (shrinkedRoomShape.isEmpty() || shrinkedRoomShape.contains(this.currentFromPoint)) {
       return this.currentFromPoint;
     }

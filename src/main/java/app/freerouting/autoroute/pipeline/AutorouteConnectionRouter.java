@@ -205,6 +205,7 @@ final class AutorouteConnectionRouter {
       int compensation = neckControl.compensatedTraceHalfWidth[i] - neckControl.traceHalfWidth[i];
       neckControl.traceHalfWidth[i] = Math.min(neckControl.traceHalfWidth[i], neckHalfWidth);
       neckControl.compensatedTraceHalfWidth[i] = neckControl.traceHalfWidth[i] + compensation;
+      neckControl.updateTraceClearanceOffset(i, router.board);
     }
 
     AutorouteEngine neckEngine =
