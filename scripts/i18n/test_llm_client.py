@@ -49,6 +49,22 @@ class LlmClientGeminiTest(unittest.TestCase):
         self.assertEqual(generation_config["thinkingConfig"]["thinkingLevel"], "low")
         self.assertNotIn("thinkingBudget", generation_config.get("thinkingConfig", {}))
 
+    @patch("requests.post")
+    def test_call_gemini_preserves_surrounding_quotes(self, mock_post: MagicMock) -> None:
+        mock_post.return_value.json.return_value = {
+            "candidates": [{"content": {"parts": [{"text": '"en" for English, "de" for German'}]}}]
+        }
+        mock_post.return_value.ok = True
+
+        result = llm_client._call_gemini(
+            "translate language help",
+            "gemini-3.7-flash",
+            "test-key",
+            "https://generativelanguage.googleapis.com/v1beta",
+            500,
+        )
+        self.assertEqual(result, '"en" for English, "de" for German')
+
     def test_call_gemini_requires_api_key(self) -> None:
         with self.assertRaisesRegex(ValueError, "GEMINI_API_KEY is not set"):
             llm_client._call_gemini("prompt", "gemini-3.7-flash", "", "http://example", 100)
@@ -89,6 +105,35 @@ class LlmClientGeminiTest(unittest.TestCase):
         self.assertTrue(llm_client._is_quota_or_balance_error(ValueError("429 RESOURCE_EXHAUSTED")))
         self.assertTrue(llm_client._is_quota_or_balance_error(ValueError("Quota exceeded for quota metric")))
         self.assertFalse(llm_client._is_quota_or_balance_error(ValueError("503 Service Unavailable")))
+
+
+
+class ExtractJsonObjectTests(unittest.TestCase):
+    """Responses that used to fail to parse and were then written to locale files verbatim."""
+
+    def test_properties_escapes_inside_json_string(self) -> None:
+        # \# and \: are .properties escapes, not JSON escapes; json.loads rejects them.
+        response = '```json\n{ "36": " \\#_global_optimal_passes\\:\\#_prioritized_passes." }\n```'
+        self.assertEqual(
+            llm_client._extract_json_object(response),
+            {"36": " \\#_global_optimal_passes\\:\\#_prioritized_passes."},
+        )
+
+    def test_bare_integer_key(self) -> None:
+        response = '```json { 0: "The autorouter is about to start." } ```'
+        self.assertEqual(llm_client._extract_json_object(response), {"0": "The autorouter is about to start."})
+
+    def test_valid_json_escapes_are_left_alone(self) -> None:
+        self.assertEqual(llm_client._extract_json_object('{"1": "a\\tb \\"q\\""}'), {"1": 'a\tb "q"'})
+
+    def test_translate_batch_keeps_leading_quote(self) -> None:
+        response = '{"0": "\\"en\\" für Englisch, \\"de\\" für Deutsch."}'
+        with patch.object(llm_client, "call_llm", return_value=response):
+            result, ok = llm_client.translate_batch(
+                "prompt", ["0"], english_values=['"en" for English, "de" for German.']
+            )
+        self.assertTrue(ok)
+        self.assertEqual(result, {"0": '"en" für Englisch, "de" für Deutsch.'})
 
 
 if __name__ == "__main__":

@@ -99,6 +99,27 @@ class RulesRoundTripTest {
   }
 
   @Test
+  void rulesViaWithStrippedPadstackNameResolvesToDecimalPadstack() throws Exception {
+    RoutingBoard board = DsnTestFixtures.loadBoard("Issue143-rpi_splitter.dsn");
+    assertNotNull(board.library.padstacks.get("Round1$13.779528"));
+
+    String rulesContent =
+        """
+        (rules PCB Issue143
+          (rule
+            (via "Round1$13")
+          )
+        )
+        """;
+    InputStream in = new ByteArrayInputStream(rulesContent.getBytes(StandardCharsets.UTF_8));
+    boolean ok = RulesReader.read(in, "Issue143", board);
+    assertTrue(ok, "RulesReader should succeed and resolve via with stripped name fallback");
+    assertNotNull(
+        board.library.getViaPadstack("Round1$13.779528"),
+        "The via padstack should be registered in via padstacks");
+  }
+
+  @Test
   void readExistingRulesFixture() throws Exception {
     RoutingBoard board = DsnTestFixtures.loadBoard("Issue029-hw48na.dsn");
     InputStream in = DsnTestFixtures.openResource("Issue029-hw48na_valid.rules");

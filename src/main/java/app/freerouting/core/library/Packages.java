@@ -4,9 +4,12 @@ import app.freerouting.geometry.planar.Shape;
 import app.freerouting.logger.FRLogger;
 import java.io.Serializable;
 import java.util.Vector;
+import java.util.regex.Pattern;
 
 /** Describes a library of component packages. */
 public class Packages implements Serializable {
+
+  private static final Pattern SUFFIX_PATTERN = Pattern.compile("::\\d+$");
 
   final Padstacks padstackList;
 
@@ -37,18 +40,37 @@ public class Packages implements Serializable {
         otherSidePackage = currentPackage;
       }
     }
-    String baseName = name.replaceAll("::\\d+$", "");
+    if (otherSidePackage != null) {
+      return otherSidePackage;
+    }
+    // Safe fallback: only if no package with the exact name was found on either side
+    String baseName = SUFFIX_PATTERN.matcher(name).replaceFirst("");
     if (!baseName.equalsIgnoreCase(name)) {
       for (Package currentPackage : packages) {
         if (currentPackage != null && currentPackage.name.equalsIgnoreCase(baseName)) {
           if (currentPackage.isFront == isFront) {
+            FRLogger.warn(
+                "Package '"
+                    + name
+                    + "' not found; falling back to base package '"
+                    + baseName
+                    + "'");
             return currentPackage;
           }
           otherSidePackage = currentPackage;
         }
       }
+      if (otherSidePackage != null) {
+        FRLogger.warn(
+            "Package '"
+                + name
+                + "' not found; falling back to other-side base package '"
+                + baseName
+                + "'");
+        return otherSidePackage;
+      }
     }
-    return otherSidePackage;
+    return null;
   }
 
   /** Returns the package with the specified ID. Package IDs start at 1. */

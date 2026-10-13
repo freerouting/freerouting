@@ -1,0 +1,21 @@
+(pcb circular_clearance_repro
+  (parser (string_quote ") (space_in_quoted_tokens on))
+  (resolution um 10) (unit um)
+  (structure
+    (layer F.Cu (type signal) (property (index 0)))
+    (layer B.Cu (type signal) (property (index 1)))
+    (boundary (path pcb 0 0 0 20000 0 20000 -20000 0 -20000 0 0))
+    (via Via560)
+    (rule (width 150) (clearance 200)))
+  (placement (component physical_hole
+    (place P0 10000 -10000 front 0)))
+  (library
+    (image physical_hole
+      (pin Pad560 1 0 7075)
+      (keepout "" (circle F.Cu 5000))
+      (keepout "" (circle B.Cu 5000)))
+    (padstack Pad560 (shape (circle F.Cu 560)) (attach off))
+    (padstack Via560 (shape (circle F.Cu 560))
+      (shape (circle B.Cu 560)) (attach off)))
+  (network (net TEST (pins P0-1)))
+  (wiring (via Via560 11176.751555 -12840.929562 (net TEST) (type protect))))

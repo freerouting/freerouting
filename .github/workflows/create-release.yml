@@ -351,6 +351,15 @@ jobs:
             ./build/native/nativeCompile/freerouting-cli -de fixtures/Issue508-DAC2020_bm01.dsn -do build/test_smoke.ses -mp 1
           fi
           test -s build/test_smoke.ses
+      - name: 'Smoke Test - KiCad Board with Component Outlines and Planes (Issue #957)'
+        shell: bash
+        run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            ./build/native/nativeCompile/freerouting-cli.exe -de fixtures/Issue957-smoke-ldo-led.dsn -do build/test_issue957.ses -mp 1
+          else
+            ./build/native/nativeCompile/freerouting-cli -de fixtures/Issue957-smoke-ldo-led.dsn -do build/test_issue957.ses -mp 1
+          fi
+          test -s build/test_issue957.ses
       - name: Smoke Test - DRC Report Mode
         shell: bash
         run: |

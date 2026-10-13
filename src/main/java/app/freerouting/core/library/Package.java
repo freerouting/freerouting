@@ -3,6 +3,7 @@ package app.freerouting.core.library;
 import app.freerouting.board.actions.ItemInfoPrinter;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.geometry.planar.Area;
+import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Shape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
@@ -15,6 +16,8 @@ import java.util.Locale;
  * and optional other stuff like an outline package keepouts.
  */
 public class Package implements Comparable<Package>, ItemInfoPrinter.Printable, Serializable {
+
+  private static final long serialVersionUID = -8340961798629732334L;
 
   /** The name of the package. */
   public final String name;
@@ -119,15 +122,17 @@ public class Package implements Comparable<Package>, ItemInfoPrinter.Printable, 
       Padstack currentPadstack = this.packageList.padstackList.get(currentPin.padstackId);
       printer.append(currentPadstack.name, tm.getText("padstack_info"), currentPadstack);
       printer.append(" " + tm.getText("at") + " ");
-      printer.append(currentPin.relativeLocation.toFloat());
+      printer.append(currentPin.getExactRelativeLocation());
       printer.append(", " + tm.getText("rotation") + " ");
       printer.appendWithoutTransforming(currentPin.rotationInDegree);
     }
     printer.newline();
   }
 
-  /** Describes a pin padstack of a package. */
+  /** A padstack instance at a precise package-local position. */
   public static class Pin implements Serializable {
+
+    private static final long serialVersionUID = -7159316874351447008L;
 
     /** The name of the pin. */
     public final String name;
@@ -141,12 +146,30 @@ public class Package implements Comparable<Package>, ItemInfoPrinter.Printable, 
     /** The rotation of the pin padstack. */
     public final double rotationInDegree;
 
-    /** Creates a new package pin with the input coordinates relative to the package location. */
+    /** Precise package-local offset; the integer vector is derived from this value. */
+    private final FloatPoint exactRelativeLocation;
+
+    /** Creates a pin with an integer package-local offset. */
     public Pin(String name, int padstackId, Vector relativeLocation, double rotationInDegree) {
+      this(name, padstackId, relativeLocation.toFloat(), rotationInDegree);
+    }
+
+    /** Creates a pin retaining the fractional package-local offset. */
+    public Pin(String name, int padstackId, FloatPoint relativeLocation, double rotationInDegree) {
       this.name = name;
       this.padstackId = padstackId;
-      this.relativeLocation = relativeLocation;
       this.rotationInDegree = rotationInDegree;
+      this.exactRelativeLocation = relativeLocation;
+      this.relativeLocation =
+          relativeLocation.round().differenceBy(app.freerouting.geometry.planar.Point.ZERO);
+    }
+
+    /** Returns the high-precision relative location of this pin. */
+    public FloatPoint getExactRelativeLocation() {
+      if (this.exactRelativeLocation != null) {
+        return this.exactRelativeLocation;
+      }
+      return this.relativeLocation != null ? this.relativeLocation.toFloat() : FloatPoint.ZERO;
     }
   }
 
