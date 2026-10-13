@@ -164,36 +164,17 @@ public abstract class FoundConnectionLocator {
         this.currentTargetDoorIndex = this.backtrackArray.length - 1;
         TileShape targetShape =
             ((Connectable) startItem).getTraceConnectionShape(searchTree, startDoor.treeEntryNo);
-        if (startItem instanceof DrillItem) {
-          this.currentTargetShape = targetShape.intersection(startDoor.room.getShape());
-        } else {
-          int layer = startDoor.room.getLayer();
-          int shrinkOffset =
-              (startDoor.room instanceof ObstacleExpansionRoom)
-                  ? this.ctrl.compensatedTraceHalfWidth[layer]
-                  : this.ctrl.getTraceClearanceOffset(layer);
-          TileShape safeRoomShape = (TileShape) startDoor.room.getShape().offset(-shrinkOffset);
-          TileShape boundedShape = null;
-          if (!safeRoomShape.isEmpty()) {
-            TileShape safeTargetShape = targetShape.intersection(safeRoomShape);
-            if (!safeTargetShape.isEmpty()) {
-              boundedShape = safeTargetShape;
-            }
+        TileShape boundedShape = calculateWidthSafeTargetShape(startDoor, targetShape, this.ctrl);
+        if (boundedShape.dimension() >= 2 && !(startItem instanceof DrillItem)) {
+          // the target is a conduction area, make a safe connection
+          // by shrinking the shape by the trace halfwidth.
+          double traceHalfWidth = this.ctrl.compensatedTraceHalfWidth[startDoor.room.getLayer()];
+          TileShape shrinkedShape = (TileShape) boundedShape.offset(-traceHalfWidth);
+          if (!shrinkedShape.isEmpty()) {
+            boundedShape = shrinkedShape;
           }
-          if (boundedShape == null) {
-            boundedShape = targetShape.intersection(startDoor.room.getShape());
-          }
-          if (boundedShape.dimension() >= 2) {
-            // the target is a conduction area, make a save connection
-            // by shrinking the shape by the trace halfwidth.
-            double traceHalfWidth = this.ctrl.compensatedTraceHalfWidth[layer];
-            TileShape shrinkedShape = (TileShape) boundedShape.offset(-traceHalfWidth);
-            if (!shrinkedShape.isEmpty()) {
-              boundedShape = shrinkedShape;
-            }
-          }
-          this.currentTargetShape = boundedShape;
         }
+        this.currentTargetShape = boundedShape;
       }
       this.currentToDoorIndex = this.currentFromDoorIndex + 1;
       ResultItem nextTrace = this.calculateNextTrace(layerChanged, atFanoutEnd);
@@ -228,6 +209,31 @@ public abstract class FoundConnectionLocator {
   }
 
   /**
+   * Calculates the width-safe target shape for a target door within its room. For DrillItems
+   * (pins/vias), returns the connection shape directly. For distributed targets
+   * (Trace/ConductionArea), enforces the clearance offset shrink of the room.
+   */
+  private static TileShape calculateWidthSafeTargetShape(
+      TargetItemExpansionDoor door, TileShape targetShape, AutorouteControl ctrl) {
+    if (door.item instanceof DrillItem) {
+      return targetShape.intersection(door.room.getShape());
+    }
+    int layer = door.room.getLayer();
+    int shrinkOffset =
+        (door.room instanceof ObstacleExpansionRoom)
+            ? ctrl.compensatedTraceHalfWidth[layer]
+            : ctrl.getTraceClearanceOffset(layer);
+    TileShape safeRoomShape = (TileShape) door.room.getShape().offset(-shrinkOffset);
+    if (!safeRoomShape.isEmpty()) {
+      TileShape safeTargetShape = targetShape.intersection(safeRoomShape);
+      if (!safeTargetShape.isEmpty()) {
+        return safeTargetShape;
+      }
+    }
+    return targetShape.intersection(door.room.getShape());
+  }
+
+  /**
    * Calculates the starting point of the next trace on fromDoor.item, ensuring it is positioned
    * inside the width-safe clearance region of fromDoor.room.
    */
@@ -238,23 +244,7 @@ public abstract class FoundConnectionLocator {
     if (connectionShape == null || connectionShape.isEmpty()) {
       return fromDoor.room.getShape().centreOfGravity().round().toFloat();
     }
-    if (fromDoor.item instanceof DrillItem) {
-      connectionShape = connectionShape.intersection(fromDoor.room.getShape());
-      return connectionShape.centreOfGravity().round().toFloat();
-    }
-    int layer = fromDoor.room.getLayer();
-    int shrinkOffset =
-        (fromDoor.room instanceof ObstacleExpansionRoom)
-            ? ctrl.compensatedTraceHalfWidth[layer]
-            : ctrl.getTraceClearanceOffset(layer);
-    TileShape safeRoomShape = (TileShape) fromDoor.room.getShape().offset(-shrinkOffset);
-    if (!safeRoomShape.isEmpty()) {
-      TileShape safeConnectionShape = connectionShape.intersection(safeRoomShape);
-      if (!safeConnectionShape.isEmpty()) {
-        return safeConnectionShape.centreOfGravity().round().toFloat();
-      }
-    }
-    connectionShape = connectionShape.intersection(fromDoor.room.getShape());
+    connectionShape = calculateWidthSafeTargetShape(fromDoor, connectionShape, ctrl);
     return connectionShape.centreOfGravity().round().toFloat();
   }
 

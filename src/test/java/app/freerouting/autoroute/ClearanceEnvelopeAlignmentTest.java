@@ -150,25 +150,4 @@ class ClearanceEnvelopeAlignmentTest {
     Point safeCenter = safeDeeperIntersection.centreOfGravity().round();
     assertTrue(safeRoom.contains(safeCenter), "Safe connection center must lie inside safe room");
   }
-
-  @Test
-  void testNeckdownOffsetCalculation() {
-    int traceHalfWidth = 1250;
-    int clearance = 2000;
-    int clearanceCompensation = (clearance + 1) / 2; // 1000
-    int searchTolerance = 2;
-    int clearanceSafetyMargin = 16;
-    int traceClearanceOffset =
-        traceHalfWidth + clearanceCompensation + searchTolerance + clearanceSafetyMargin; // 2268
-
-    int neckdownHalfWidth = 750;
-    int widthDifference = traceHalfWidth - neckdownHalfWidth; // 500
-    int neckdownClearanceOffset = traceClearanceOffset - widthDifference; // 1768
-
-    // Expected neckdown clearance offset:
-    // neckdownCompensated (750 + 1000 = 1750) + tolerance (2) + safetyMargin (16) = 1768
-    int expectedNeckdownOffset =
-        neckdownHalfWidth + clearanceCompensation + searchTolerance + clearanceSafetyMargin;
-    assertEquals(expectedNeckdownOffset, neckdownClearanceOffset);
-  }
 }

@@ -655,13 +655,6 @@ public class MazeSearchEngine {
       if (toDoor == listElement.door) {
         continue;
       }
-      // Validate index before calling - prevents warning when indices become stale
-      // during routing
-      int treeShapeCount = toDoor.item.treeShapeCount(this.autorouteEngine.autorouteSearchTree);
-      if (toDoor.treeEntryNo < 0 || toDoor.treeEntryNo >= treeShapeCount) {
-        // Index out of range (trace was modified during routing)
-        continue;
-      }
       TileShape safeTargetShape = getWidthSafeTargetShape(toDoor);
       if (safeTargetShape == null || safeTargetShape.isEmpty()) {
         continue;
