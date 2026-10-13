@@ -97,6 +97,65 @@ Use the table below to jump to the package most likely to own the behavior you a
 | CLI entry point and native execution | `app.freerouting.cli` |
 | Startup bootstrap, settings initialization, and CPU calibration | `app.freerouting.startup` |
 
+## Clearance-query geometry contracts
+
+`ShapeSearchTree.overlappingTreeEntriesWithClearance` and its item/object wrappers
+share one dispatch under the tree read lock. Queries use raw geometry in an
+uncompensated tree and already compensated geometry in a tree for the query's
+clearance class. The latter performs direct overlap testing; adding explicit
+clearance again would reject usable space. For an unmatched query class, prepared
+shapes may not cover the pairwise requirement. Add only the missing remainder:
+`max(0, clearance(a,b,layer) - compensation(a,layer) - compensation(b,layer))`.
+Existing excess compensation is not removed, so some legal passages may still be
+rejected. Callers with raw geometry can use the general uncompensated tree to
+avoid that excess.
+
+A larger envelope is safe only if its consumers handle enclosed copper correctly.
+`ShapeTraceEntries` rejects a foreign trace when an endpoint strictly inside the
+shove envelope has either no contact or multiple contacts. Replacement pieces can
+project a single movable contact, but cannot preserve an enclosed free endpoint or
+branching junction. A fully enclosed trace can have no boundary crossings and still
+be an obstacle; a partial cutout must not silently erase its endpoint or junction.
+Rejecting during shared obstacle analysis protects both pad and trace
+checking/insertion, including obstacle lists with other valid replacement pieces.
+Same-net copper and supported single-contact replacements retain their existing
+handling. The safety policy deliberately favors refusal over collision or lost
+connectivity. Excess compensation can enclose a physically movable junction, so
+refusal may require another route or leave a connection unrouted. Recovering those
+moves requires topology-preserving reconstruction, not weakening the rejection.
+Insertion failure keeps the existing undo-required API contract; this is
+not a guarantee of rollback after earlier recursive via movements.
+
+`Item.getTileShape()` returns default-tree geometry, so moved items and net-change
+checks must not compensate it again. `BasicBoard.checkShape`, trace-end pin searches,
+and `ForcedViaInserter` construct physical geometry and prepare it before querying.
+This includes the wider trace launched from a via, as well as the via pad itself.
+Orthogonal via shapes remain `IntBox` instances after compensation: their four-sided
+entry indices and shove policy must not be changed by an octagonal enlargement.
+The optimizer's segment-length check similarly prepares its physical width and uses
+that width when calculating a stopping distance; for a mismatched class it uses an
+uncompensated tree to preserve the actual pairwise rules. `Item.clearanceViolations`
+also queries and measures uncompensated shapes in that tree, applying pairwise
+clearance once. Both use `SearchTreeManager.getUncompensatedTree()`, which avoids
+specialized autoroute-tree approximations for obstacle areas. This is not exact
+analytic copper geometry: the general tree still uses angle-dependent pad bounds
+and hole-clearance envelopes. Circle obstacle areas retain the existing 64-gon
+approximation; circular pads can still use bounding boxes or octagons. Independent
+physical-distance checks and external EDA DRC provide separate safety evidence.
+The managed tree is reused and participates in normal edits and reindexing; it is
+published only after initialization. The normal uncompensated default is reused
+without allocating another tree.
+Detached component transforms initialize this tree before temporarily indexing their
+items, so before/after DRC snapshots contain the same peers even though those items
+are not in the persistent board item list.
+Hole-check shapes already encode hole clearance and use class zero; they retain
+explicit checking. Uncompensated queries retain their symmetric half-clearance
+expansions and safety margin. All-layer queries evaluate each layer's clearance rule.
+
+This contract does not change the separate search/insertion envelope tolerance
+problem (#961), circle discretization (#954), or preserved-junction connectivity
+and normalization (#958/#960). The default tree remains uncompensated.
+
 ## Module Boundaries (ArchUnit)
 
 Architectural boundaries are codified in `src/test/java/app/freerouting/architecture/ModuleBoundariesArchTest.java`.

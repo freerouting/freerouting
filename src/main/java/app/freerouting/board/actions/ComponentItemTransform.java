@@ -70,6 +70,9 @@ public final class ComponentItemTransform {
     Set<String> violations;
     Map<String, Set<Integer>> endpointContacts;
     Map<Integer, Point> pinCenters = new HashMap<>();
+    // Temporary peers are indexed below but are absent from itemList. Create the DRC tree
+    // first, so both the original and candidate snapshots include the same transient inventory.
+    board.searchTreeManager.getUncompensatedTree();
     insert(board, old);
     try {
       contacts = contacts(old);

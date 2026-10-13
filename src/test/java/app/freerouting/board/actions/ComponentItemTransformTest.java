@@ -30,6 +30,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class ComponentItemTransformTest {
   private RoutingBoard board() {
@@ -129,9 +130,11 @@ class ComponentItemTransformTest {
     assertEquals(start.y, component.getExactLocation().y);
   }
 
-  @Test
-  void conflictingAnchorsRejectWithoutChangingPoseOrSearchTree() {
+  @ParameterizedTest
+  @ValueSource(booleans = {false, true})
+  void conflictingAnchorsRejectWithoutChangingPoseOrSearchTree(boolean compensated) {
     var board = board();
+    board.searchTreeManager.setClearanceCompensationUsed(compensated);
     var a = pin(board, 2000.5, 3000.5, 1);
     var b = pin(board, 4000, 3001, 1);
     var trace = trace(board, a.getCenter(), b.getCenter());
@@ -145,17 +148,28 @@ class ComponentItemTransformTest {
     assertEquals(2, detached.get(2).getNormalContacts().size());
   }
 
-  @Test
-  void newForeignNetClearanceRejectsAndLeavesStationaryPinUntouched() {
+  @ParameterizedTest
+  @ValueSource(booleans = {false, true})
+  void newForeignNetClearanceRejectsAndLeavesStationaryPinUntouched(boolean compensated) {
     var board = board();
+    board.searchTreeManager.setClearanceCompensationUsed(compensated);
     var a = pin(board, 2000.5, 3000.5, 1);
     var obstacle = pin(board, -3000, 2001, 2);
     var before = obstacle.getCenter();
+    var component = board.components.get(a.getComponentId());
+    var originalLocation = component.getExactLocation();
+    double originalRotation = component.getRotationInDegree();
+    boolean originalSide = component.placedOnFront();
     var detached = detach(board, a);
     assertNull(ComponentItemTransform.apply(board, detached, 90, false, Point.ZERO));
+    assertEquals(originalLocation, component.getExactLocation());
+    assertEquals(originalRotation, component.getRotationInDegree());
+    assertEquals(originalSide, component.placedOnFront());
     assertEquals(before, obstacle.getCenter());
     assertTrue(obstacle.getNormalContacts().isEmpty());
     detached.forEach(board::insertItem);
+    assertTrue(board.searchTreeManager.validateEntries(detached.getFirst()));
+    assertTrue(board.searchTreeManager.validateEntries(obstacle));
     assertEquals(
         0,
         new app.freerouting.drc.DesignRulesChecker(board, null).getAllClearanceViolations().size());

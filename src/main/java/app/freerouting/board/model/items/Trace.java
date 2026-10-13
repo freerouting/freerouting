@@ -395,7 +395,9 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     Point currentEndPoint = this.firstCorner();
     for (int i = 0; i < 2; i++) {
       IntOctagon currentOct = currentEndPoint.surroundingOctagon();
-      currentOct = currentOct.enlarge(this.halfWidth);
+      currentOct =
+          currentOct.enlarge(
+              getCompensatedHalfWidth(this.board.searchTreeManager.getDefaultTree()));
       Set<Item> currentOverlaps =
           this.board.overlappingItemsWithClearance(
               currentOct, this.layer, new int[0], this.clearanceClassIndex());
