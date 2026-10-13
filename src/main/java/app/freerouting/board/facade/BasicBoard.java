@@ -106,6 +106,7 @@ public class BasicBoard implements Serializable {
   private transient BoardSnapshotManager snapshotManager;
   public int preExistingClearanceViolationsCount = 0;
   public transient int unfixableClearanceViolationsCount = 0;
+  public transient Set<Integer> ruleBlockedPins;
   public transient CompletableFuture<Void> postLoadFuture;
 
   /** The rectangle, where the graphics may be not up-to-date. */

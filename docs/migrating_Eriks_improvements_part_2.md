@@ -70,13 +70,9 @@ This document tracks all improvements and bug fixes ported from `freerouting.net
     - `src/main/java/app/freerouting/autoroute/pipeline/RoutingFallback.java`
     - `src/main/java/app/freerouting/settings/DefaultSettings.java`
 
-- [ ] **Task 3.2: Early Stop on Unreachable & Enclosed Pins**
+- [x] **Task 3.2: Early Stop on Unreachable & Enclosed Pins**
   - **Origin Commits:** `55a9345`, `adb2eb3`, `7373fad`, `38e326e`
-  - **Issue:** Pins that cannot be reached or left without violating minimum track width or design rules caused infinite rounds or bogus sub-minimum neckdowns. Detecting them early stops impossible routing rounds and frees time budget.
-  - **Files to update:**
-    - `src/main/java/app/freerouting/drc/RulesCheck.java`
-    - `src/main/java/app/freerouting/autoroute/pipeline/AutoroutePassRunner.java`
-    - `src/main/java/app/freerouting/autoroute/pipeline/RoutingPipeline.java`
+  - **Status:** Completed. Implemented `DesignBlocks.java` detecting pins and connections blocked by the design (foreign fixed copper overlaps and rule-blocked pins); added `BasicBoard.ruleBlockedPins`; integrated `dropDesignBlockedItems`, `ruleBlockedNets`, `designBlocked`, and localized `failedNetRipItems` into `AutoroutePassRunner.java`; verified with `DesignBlocksTest.java`.
 
 - [x] **Task 3.3: Start Necked Optimization (`router.autorouter.start_necked`)**
   - **Origin Commits:** `3b6c557`, `264456b`

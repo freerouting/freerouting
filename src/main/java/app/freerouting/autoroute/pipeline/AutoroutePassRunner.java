@@ -4,20 +4,26 @@ import static java.util.Collections.shuffle;
 
 import app.freerouting.autoroute.AutorouteAttemptResult;
 import app.freerouting.autoroute.AutorouteAttemptState;
+import app.freerouting.autoroute.DesignBlocks;
 import app.freerouting.autoroute.PerformanceProfiler;
+import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.model.items.Via;
+import app.freerouting.board.model.structure.Unit;
 import app.freerouting.core.RouterCounters;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.drc.DesignRulesChecker;
+import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +52,7 @@ final class AutoroutePassRunner {
     try {
       long itemSelectionStart = BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
       List<Item> autorouteItemList = router.getAutorouteItems(router.board);
+      dropDesignBlockedItems(autorouteItemList);
       if (BatchAutorouter.isBenchmarkProfileEnabled()) {
         router.profileItemSelectionNanos += System.nanoTime() - itemSelectionStart;
       }
@@ -164,16 +171,9 @@ final class AutoroutePassRunner {
                 currentItem, passNo, autorouterResult.state, autorouterResult.details);
             router.job.logDebug("Autorouter " + autorouterResult.details);
             int failureCount = router.board.failureLog.getFailureCount(currentItem);
-            if (failureCount >= 2) {
-              int netNo = currentItem.getNetNumber(i);
-              List<Item> tracesToRip = new ArrayList<>();
-              for (Item netItem : router.board.getConnectableItems(netNo)) {
-                if ((netItem instanceof Trace || netItem instanceof Via)
-                    && !netItem.isUserFixed()
-                    && netItem.netCount() == 1) {
-                  tracesToRip.add(netItem);
-                }
-              }
+            int netNo = currentItem.getNetNumber(i);
+            if (failureCount >= 2 && !designBlocked(router.board, currentItem, netNo)) {
+              List<Item> tracesToRip = failedNetRipItems(router.board, currentItem, netNo);
               if (!tracesToRip.isEmpty()) {
                 router.board.removeItems(tracesToRip);
               }
@@ -500,6 +500,63 @@ final class AutoroutePassRunner {
       counters.incompleteCount = router.calculateIncompleteCount(router.board);
       router.fireBoardUpdatedEvent(router.progressStatistics, counters, router.board);
     }
+  }
+
+  private void dropDesignBlockedItems(List<Item> items) {
+    int before = items.size();
+    Set<Integer> ruleBlockedNets = ruleBlockedNets(router.board);
+    items.removeIf(
+        item ->
+            (router.board.failureLog.getFailureCount(item) > 0
+                    || (ruleBlockedNets != null
+                        && item.netCount() == 1
+                        && ruleBlockedNets.contains(item.getNetNumber(0))))
+                && designBlocked(router.board, item, item.getNetNumber(0)));
+    if (items.size() < before && router.job != null) {
+      router.job.logDebug(
+          "Not retrying "
+              + (before - items.size())
+              + " item(s) whose open connections the design blocks (pins on foreign copper).");
+    }
+  }
+
+  static Set<Integer> ruleBlockedNets(RoutingBoard board) {
+    if (board.ruleBlockedPins == null || board.ruleBlockedPins.isEmpty()) {
+      return null;
+    }
+    Set<Integer> nets = new HashSet<>();
+    for (Pin pin : board.getPins()) {
+      if (pin.netCount() == 1 && board.ruleBlockedPins.contains(pin.getId())) {
+        nets.add(pin.getNetNumber(0));
+      }
+    }
+    return nets.isEmpty() ? null : nets;
+  }
+
+  static boolean designBlocked(RoutingBoard board, Item item, int netNumber) {
+    return item.netCount() == 1 && DesignBlocks.connectionsBlocked(board, item, netNumber);
+  }
+
+  static List<Item> failedNetRipItems(RoutingBoard board, Item failedItem, int netNumber) {
+    Collection<Item> items = board.getConnectableItems(netNumber);
+    long pinCount = items.stream().filter(i -> i instanceof Pin).count();
+    boolean branched = pinCount > 2;
+    int offset =
+        (int)
+            Math.round(
+                board.communication.coordinateTransform.dsnToBoard(
+                    Unit.scale(1500, Unit.UM, board.communication.unit)));
+    IntBox region = failedItem.boundingBox().offset(offset);
+    List<Item> result = new ArrayList<>();
+    for (Item i : items) {
+      if ((i instanceof Trace || i instanceof Via)
+          && !i.isUserFixed()
+          && i.netCount() == 1
+          && (!branched || region.intersects(i.boundingBox()))) {
+        result.add(i);
+      }
+    }
+    return result;
   }
 
   private void logTailRemoval(int passNo, int incompleteCount, boolean before) {
