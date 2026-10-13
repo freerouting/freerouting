@@ -10,6 +10,7 @@ import app.freerouting.autoroute.maze.AutorouteControl;
 import app.freerouting.autoroute.maze.MazeSearchElement;
 import app.freerouting.autoroute.maze.MazeSearchEngine;
 import app.freerouting.board.model.items.Connectable;
+import app.freerouting.board.model.items.DrillItem;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.structure.AngleRestriction;
 import app.freerouting.board.searchtree.ShapeSearchTree;
@@ -120,7 +121,7 @@ public abstract class FoundConnectionLocator {
       this.targetItem = currentDestinationDoor.item;
       this.targetLayer = currentDestinationDoor.room.getLayer();
 
-      this.currentFromPoint = calculateStartingPoint(currentDestinationDoor, searchTree);
+      this.currentFromPoint = calculateStartingPoint(currentDestinationDoor, searchTree, this.ctrl);
     } else if (mazeSearchResult.destinationDoor instanceof ExpansionDrill currentDrill) {
       // may happen only in case of fanout
       this.targetItem = null;
@@ -163,15 +164,35 @@ public abstract class FoundConnectionLocator {
         this.currentTargetDoorIndex = this.backtrackArray.length - 1;
         TileShape targetShape =
             ((Connectable) startItem).getTraceConnectionShape(searchTree, startDoor.treeEntryNo);
-        this.currentTargetShape = targetShape.intersection(startDoor.room.getShape());
-        if (this.currentTargetShape.dimension() >= 2) {
-          // the target is a conduction area, make a save connection
-          // by shrinking the shape by the trace halfwidth.
-          double traceHalfWidth = this.ctrl.compensatedTraceHalfWidth[startDoor.room.getLayer()];
-          TileShape shrinkedShape = (TileShape) this.currentTargetShape.offset(-traceHalfWidth);
-          if (!shrinkedShape.isEmpty()) {
-            this.currentTargetShape = shrinkedShape;
+        if (startItem instanceof DrillItem) {
+          this.currentTargetShape = targetShape.intersection(startDoor.room.getShape());
+        } else {
+          int layer = startDoor.room.getLayer();
+          int shrinkOffset =
+              (startDoor.room instanceof ObstacleExpansionRoom)
+                  ? this.ctrl.compensatedTraceHalfWidth[layer]
+                  : this.ctrl.getTraceClearanceOffset(layer);
+          TileShape safeRoomShape = (TileShape) startDoor.room.getShape().offset(-shrinkOffset);
+          TileShape boundedShape = null;
+          if (!safeRoomShape.isEmpty()) {
+            TileShape safeTargetShape = targetShape.intersection(safeRoomShape);
+            if (!safeTargetShape.isEmpty()) {
+              boundedShape = safeTargetShape;
+            }
           }
+          if (boundedShape == null) {
+            boundedShape = targetShape.intersection(startDoor.room.getShape());
+          }
+          if (boundedShape.dimension() >= 2) {
+            // the target is a conduction area, make a save connection
+            // by shrinking the shape by the trace halfwidth.
+            double traceHalfWidth = this.ctrl.compensatedTraceHalfWidth[layer];
+            TileShape shrinkedShape = (TileShape) boundedShape.offset(-traceHalfWidth);
+            if (!shrinkedShape.isEmpty()) {
+              boundedShape = shrinkedShape;
+            }
+          }
+          this.currentTargetShape = boundedShape;
         }
       }
       this.currentToDoorIndex = this.currentFromDoorIndex + 1;
@@ -207,13 +228,32 @@ public abstract class FoundConnectionLocator {
   }
 
   /**
-   * Calculates the starting point of the next trace on fromDoor.item. The implementation is not yet
-   * optimal for starting points on traces or areas.
+   * Calculates the starting point of the next trace on fromDoor.item, ensuring it is positioned
+   * inside the width-safe clearance region of fromDoor.room.
    */
   private static FloatPoint calculateStartingPoint(
-      TargetItemExpansionDoor fromDoor, ShapeSearchTree searchTree) {
+      TargetItemExpansionDoor fromDoor, ShapeSearchTree searchTree, AutorouteControl ctrl) {
     TileShape connectionShape =
         ((Connectable) fromDoor.item).getTraceConnectionShape(searchTree, fromDoor.treeEntryNo);
+    if (connectionShape == null || connectionShape.isEmpty()) {
+      return fromDoor.room.getShape().centreOfGravity().round().toFloat();
+    }
+    if (fromDoor.item instanceof DrillItem) {
+      connectionShape = connectionShape.intersection(fromDoor.room.getShape());
+      return connectionShape.centreOfGravity().round().toFloat();
+    }
+    int layer = fromDoor.room.getLayer();
+    int shrinkOffset =
+        (fromDoor.room instanceof ObstacleExpansionRoom)
+            ? ctrl.compensatedTraceHalfWidth[layer]
+            : ctrl.getTraceClearanceOffset(layer);
+    TileShape safeRoomShape = (TileShape) fromDoor.room.getShape().offset(-shrinkOffset);
+    if (!safeRoomShape.isEmpty()) {
+      TileShape safeConnectionShape = connectionShape.intersection(safeRoomShape);
+      if (!safeConnectionShape.isEmpty()) {
+        return safeConnectionShape.centreOfGravity().round().toFloat();
+      }
+    }
     connectionShape = connectionShape.intersection(fromDoor.room.getShape());
     return connectionShape.centreOfGravity().round().toFloat();
   }
