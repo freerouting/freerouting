@@ -165,8 +165,9 @@ public class Library extends ScopeKeyword {
       FRLogger.error("Library.read_padstack_scope: IO error scanning file", e);
       return false;
     }
-    if (boardPadstacks.get(padstackName) != null) {
-      // Padstack exists already
+    app.freerouting.core.library.Padstack existingPadstack = boardPadstacks.get(padstackName);
+    if (existingPadstack != null && padstackName.equals(existingPadstack.name)) {
+      // Padstack exists already (differing only in case is treated as a separate padstack)
       return true;
     }
     if (shapeList.isEmpty()) {

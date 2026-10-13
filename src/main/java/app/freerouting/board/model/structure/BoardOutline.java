@@ -202,9 +202,17 @@ public class BoardOutline extends Item implements Serializable {
     this.edgePinNets = null;
   }
 
+  /**
+   * Erik Gavriluk (freerouting.net): whether a net with a pin on or beyond the outline (such as an
+   * edge connector's fingers) may route across the outline everywhere on the board. Default true
+   * for Specctra/DSN compatibility; can be set false when edge pins must not exempt other traces of
+   * that net from respecting edge clearance.
+   */
+  public boolean edgePinNetsCrossOutline = true;
+
   @Override
   public boolean isTraceObstacle(int netNumber) {
-    if (netNumber > 0 && getEdgePinNets().contains(netNumber)) {
+    if (edgePinNetsCrossOutline && netNumber > 0 && getEdgePinNets().contains(netNumber)) {
       return false;
     }
     return true;

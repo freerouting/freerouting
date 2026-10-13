@@ -376,9 +376,10 @@ public abstract class Item
     ShapeSearchTree defaultTree = board.searchTreeManager.getDefaultTree();
     for (int i = 0; i < tileShapeCount(); i++) {
       TileShape currentTileShape = getTileShape(i);
+      // Erik Gavriluk (freerouting.net): test only items that are obstacles to this item
       Collection<TreeEntry> currentOverlappingItems =
           defaultTree.overlappingTreeEntriesWithClearance(
-              currentTileShape, shapeLayer(i), new int[0], this.clearanceClassIndex);
+              currentTileShape, shapeLayer(i), new int[0], this.clearanceClassIndex, this);
       for (TreeEntry currentEntry : currentOverlappingItems) {
         if (!(currentEntry.object instanceof Item currentItem) || currentEntry.object == this) {
           continue;
@@ -502,7 +503,15 @@ public abstract class Item
             }
             double shortfallUm = shortfall * boardUnitToUmFactor;
 
-            if (shortfallUm > toleranceUm) {
+            // Erik Gavriluk (freerouting.net): copper overlapping an obstacle that keeps no
+            // clearance (a keepout
+            // of the null class, FR-100) measured 0 against 0 and was never reported: e.g. a track
+            // inside
+            // mounting hole H4's keepout. An overlap deeper than the tolerance is a violation
+            // whatever the clearance.
+            if (shortfallUm > toleranceUm
+                || (minimumClearance <= 0
+                    && overlapsBeyond(shape1, shape2, toleranceUm / boardUnitToUmFactor))) {
               if ((smallestClearance < 0) || (actualClearance < smallestClearance)) {
                 smallestClearance = actualClearance;
               }
@@ -522,6 +531,11 @@ public abstract class Item
       }
     }
     return result;
+  }
+
+  private static boolean overlapsBeyond(TileShape shape1, TileShape shape2, double depth) {
+    TileShape shrunk = depth > 0 ? (TileShape) shape1.offset(-depth) : shape1;
+    return !shrunk.isEmpty() && shrunk.intersection(shape2).dimension() == 2;
   }
 
   private double calculateClearanceBetweenTwoShapes(

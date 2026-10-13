@@ -512,11 +512,26 @@ public class ShapeSearchTree extends MinAreaTree {
       int[] ignoreNetNos,
       int clearanceClassIndex,
       Collection<TreeEntry> obstacleEntries) {
+    overlappingTreeEntriesWithClearance(
+        shape, layer, ignoreNetNos, clearanceClassIndex, obstacleEntries, null);
+  }
+
+  /**
+   * Overload of {@link #overlappingTreeEntriesWithClearance} that filters out items that are not
+   * obstacles to {@code obstaclesOf}.
+   */
+  public void overlappingTreeEntriesWithClearance(
+      ConvexShape shape,
+      int layer,
+      int[] ignoreNetNos,
+      int clearanceClassIndex,
+      Collection<TreeEntry> obstacleEntries,
+      Item obstaclesOf) {
     Lock lock = readLock();
     lock.lock();
     try {
       overlappingTreeEntriesWithClearanceUnlocked(
-          shape, layer, ignoreNetNos, clearanceClassIndex, obstacleEntries);
+          shape, layer, ignoreNetNos, clearanceClassIndex, obstacleEntries, obstaclesOf);
     } finally {
       lock.unlock();
     }
@@ -527,7 +542,8 @@ public class ShapeSearchTree extends MinAreaTree {
       int layer,
       int[] ignoreNetNos,
       int clearanceClassIndex,
-      Collection<TreeEntry> obstacleEntries) {
+      Collection<TreeEntry> obstacleEntries,
+      Item obstaclesOf) {
     if (shape == null) {
       return;
     }
@@ -563,6 +579,13 @@ public class ShapeSearchTree extends MinAreaTree {
           }
         }
       }
+      // Erik Gavriluk (freerouting.net): skip items that are not obstacles to obstaclesOf before
+      // sorting candidates and running exact geometric intersections
+      if (!ignoreItem
+          && obstaclesOf != null
+          && (currentItem == obstaclesOf || !currentItem.isObstacle(obstaclesOf))) {
+        ignoreItem = true;
+      }
       if (!ignoreItem) {
         int currentClearance =
             clMatrix.getValue(clearanceClassIndex, currentItem.clearanceClassIndex(), layer, true);
@@ -597,12 +620,22 @@ public class ShapeSearchTree extends MinAreaTree {
    */
   public Collection<TreeEntry> overlappingTreeEntriesWithClearance(
       ConvexShape shape, int layer, int[] ignoreNetNos, int clearanceClassIndex) {
+    return overlappingTreeEntriesWithClearance(
+        shape, layer, ignoreNetNos, clearanceClassIndex, (Item) null);
+  }
+
+  /**
+   * Returns all objects of class TreeEntry which overlap with shape inclusive clearance and are
+   * obstacles to {@code obstaclesOf}.
+   */
+  public Collection<TreeEntry> overlappingTreeEntriesWithClearance(
+      ConvexShape shape, int layer, int[] ignoreNetNos, int clearanceClassIndex, Item obstaclesOf) {
     Collection<TreeEntry> result = new LinkedList<>();
     if (this.isClearanceCompensationUsed()) {
       this.overlappingTreeEntries(shape, layer, ignoreNetNos, result);
     } else {
       this.overlappingTreeEntriesWithClearance(
-          shape, layer, ignoreNetNos, clearanceClassIndex, result);
+          shape, layer, ignoreNetNos, clearanceClassIndex, result, obstaclesOf);
     }
     return result;
   }
