@@ -50,7 +50,7 @@ public class BoardFileDetails implements Serializable {
   @SerializedName("path")
   protected String directoryPath = "";
 
-  protected transient byte[] dataBytes = new byte[0];
+  protected transient volatile byte[] dataBytes = new byte[0];
 
   /** Creates empty file details. */
   public BoardFileDetails() {}
@@ -103,24 +103,42 @@ public class BoardFileDetails implements Serializable {
 
   /** Replaces the file data and updates its metadata and statistics. */
   public void setData(byte[] data) {
-    this.dataBytes = data;
     this.size = data.length;
     CRC32 crc = new CRC32();
     crc.update(data);
     this.crc32 = crc.getValue();
 
     // read the file contents to determine the file format
-    FileFormat detectedFormat = RoutingJob.getFileFormat(this.dataBytes);
-    if (detectedFormat != FileFormat.UNKNOWN) {
+    FileFormat detectedFormat = RoutingJob.getFileFormat(data);
+    // JSON sniffing identifies the shared board representation, not whether it is a design or
+    // routing session. Keep an explicitly selected session format during output publication.
+    boolean isKnownJsonSession =
+        this.format == FileFormat.KICAD_SESSION_JSON
+            && detectedFormat == FileFormat.KICAD_DESIGN_JSON;
+    if (detectedFormat != FileFormat.UNKNOWN && !isKnownJsonSession) {
       this.format = detectedFormat;
     } else if (this.format == FileFormat.UNKNOWN && !this.filename.isEmpty()) {
       this.format = RoutingJob.getFileFormat(Path.of(this.filename));
     }
 
     // set the statistical data based on the file content
-    this.statistics = new BoardStatistics(this.dataBytes, this.format);
+    this.statistics = new BoardStatistics(data, this.format);
 
+    // Publish the complete snapshot after its metadata is ready for polling readers.
+    this.dataBytes = data;
     fireUpdatedEvent();
+  }
+
+  /**
+   * Discards unavailable output bytes while retaining the selected format, destination, and
+   * listeners. No update event is fired: an invalid snapshot must not be published or written as an
+   * empty file.
+   */
+  public void invalidateData() {
+    this.size = 0;
+    this.crc32 = 0;
+    this.statistics = new BoardStatistics();
+    this.dataBytes = new byte[0];
   }
 
   /** Returns a JSON representation of this object. */
