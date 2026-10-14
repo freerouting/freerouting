@@ -889,11 +889,19 @@
       "serializable": true
     },
     {
+      "type": "app.freerouting.rules.CornerStyle",
+      "serializable": true
+    },
+    {
       "type": "app.freerouting.rules.DefaultItemClearanceClasses",
       "serializable": true
     },
     {
       "type": "app.freerouting.rules.DefaultItemClearanceClasses$ItemClass",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.rules.MeanderPatternType",
       "serializable": true
     },
     {
@@ -910,6 +918,10 @@
     },
     {
       "type": "app.freerouting.rules.NetLengthConstraint",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.rules.NetMeanderConstraint",
       "serializable": true
     },
     {

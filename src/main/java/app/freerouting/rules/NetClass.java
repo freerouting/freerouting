@@ -37,6 +37,7 @@ public class NetClass implements Serializable, ItemInfoPrinter.Printable {
   private boolean ignoreCyclesWithAreas;
   private double minimumTraceLength = 0;
   private double maximumTraceLength = 0;
+  private NetMeanderConstraint meanderConstraint = NetMeanderConstraint.UNCONSTRAINED;
 
   /** Creates a new instance of {@code NetClass}. */
   public NetClass(
@@ -205,6 +206,35 @@ public class NetClass implements Serializable, ItemInfoPrinter.Printable {
       this.minimumTraceLength = constraint.minLength();
       this.maximumTraceLength = constraint.maxLength();
     }
+  }
+
+  /**
+   * Returns the meander (accordion) constraint of this net class.
+   *
+   * @return the net class meander constraint, never null
+   */
+  public NetMeanderConstraint getMeanderConstraint() {
+    return this.meanderConstraint != null
+        ? this.meanderConstraint
+        : NetMeanderConstraint.UNCONSTRAINED;
+  }
+
+  /**
+   * Sets the meander (accordion) constraint of this net class.
+   *
+   * @param constraint the new meander constraint, or null for unconstrained
+   */
+  public void setMeanderConstraint(NetMeanderConstraint constraint) {
+    this.meanderConstraint = (constraint != null) ? constraint : NetMeanderConstraint.UNCONSTRAINED;
+  }
+
+  /**
+   * Returns true if this net class has an active meander constraint.
+   *
+   * @return true if meander geometry parameters are constrained
+   */
+  public boolean hasMeanderConstraint() {
+    return this.meanderConstraint != null && this.meanderConstraint.isConstrained();
   }
 
   /** Returns whether the layer with the given index is active for routing. */
