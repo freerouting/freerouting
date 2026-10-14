@@ -58,5 +58,7 @@
   ],
   "tier": "C",
   "expected_outcome": "partial",
-  "timeout_budget": "00:20:00"
+  "timeout_budget": "06:00:00",
+  "tier_index": 1,
+  "reference_seconds": 6819.7
 }

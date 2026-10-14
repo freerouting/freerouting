@@ -38,6 +38,29 @@ class StoppableThreadTest {
     assertTrue(thread.isStopAutoRouterRequested());
   }
 
+  @Test
+  void resetStopAutoRouterRequest() {
+    TestStoppableThread thread = new TestStoppableThread();
+    thread.requestStopAutoRouter();
+    assertTrue(thread.isStopAutoRouterRequested());
+
+    thread.resetStopAutoRouterRequest();
+    assertFalse(thread.isStopAutoRouterRequested());
+    assertFalse(thread.isStopRequested());
+  }
+
+  @Test
+  void resetDoesNotOverrideFullStop() {
+    TestStoppableThread thread = new TestStoppableThread();
+    thread.requestStop();
+    assertTrue(thread.isStopRequested());
+    assertTrue(thread.isStopAutoRouterRequested());
+
+    thread.resetStopAutoRouterRequest();
+    assertTrue(thread.isStopRequested());
+    assertTrue(thread.isStopAutoRouterRequested());
+  }
+
   private static class TestStoppableThread extends StoppableThread {
 
     @Override

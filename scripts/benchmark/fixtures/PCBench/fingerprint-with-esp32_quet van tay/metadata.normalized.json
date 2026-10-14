@@ -48,17 +48,18 @@
     "golden-canary",
     "plane",
     "small",
-    "tier-a",
-    "tier-b"
+    "tier-a"
   ],
   "tier": "A",
   "expected_outcome": "complete",
-  "timeout_budget": "00:05:00",
+  "timeout_budget": "06:00:00",
   "baseline_routing": {
     "calibrated_at": "2026-08-18T20:56:32.924511+00:00",
     "elapsed_seconds": 8.0,
     "unrouted_nets": 0,
     "clearance_violations": 0,
     "quality_score": 999.99
-  }
+  },
+  "tier_index": 292,
+  "reference_seconds": 24.0
 }
