@@ -7,17 +7,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import app.freerouting.gui.a11y.GuiA11yHarness;
 import app.freerouting.gui.a11y.GuiLocators;
 import app.freerouting.gui.board.BoardToolbar;
+import app.freerouting.gui.board.BoardToolbarInspectedItem;
 import app.freerouting.gui.menus.BoardMenuBar;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import javax.accessibility.AccessibleRole;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -149,6 +152,74 @@ class BoardMenuToolbarA11yTest {
               GuiA11yHarness.findByLocator(toolbar, GuiLocators.TOOLBAR_CANCEL),
               GuiLocators.TOOLBAR_CANCEL);
           GuiA11yHarness.requireUniqueSiblingNames(toolbar);
+          GuiA11yHarness.requireNoLeakedGuiResources();
+        });
+  }
+
+  @Test
+  void inspectToolbarActionsAreGroupedSeparatorsAndAccessible() {
+    List<String> actions = new ArrayList<>();
+    JToolBar toolbar =
+        GuiA11yHarness.onEdt(
+            () -> BoardToolbarInspectedItem.createComponentOnly(Locale.ENGLISH, actions::add));
+
+    GuiA11yHarness.onEdt(
+        () -> {
+          GuiA11yHarness.requireAccessibleName(
+              GuiA11yHarness.findByLocator(toolbar, GuiLocators.TOOLBAR_ROOT),
+              GuiLocators.TOOLBAR_ROOT);
+          String[] locators = {
+            GuiLocators.INSPECT_CANCEL,
+            GuiLocators.INSPECT_INFO,
+            GuiLocators.INSPECT_EXTEND_NETS,
+            GuiLocators.INSPECT_EXTEND_CONNECTED_SETS,
+            GuiLocators.INSPECT_EXTEND_CONNECTIONS,
+            GuiLocators.INSPECT_EXTEND_COMPONENTS,
+            GuiLocators.INSPECT_VIOLATIONS,
+            GuiLocators.INSPECT_ZOOM_SELECTION,
+            GuiLocators.INSPECT_ZOOM_ALL,
+            GuiLocators.INSPECT_ZOOM_REGION
+          };
+          for (String locator : locators) {
+            Component button = GuiA11yHarness.findByLocator(toolbar, locator);
+            GuiA11yHarness.requireRole(button, locator, AccessibleRole.PUSH_BUTTON);
+            GuiA11yHarness.requireAccessibleName(button, locator);
+            GuiA11yHarness.invoke(button, locator);
+          }
+          assertEquals(Arrays.asList(locators), actions);
+
+          long separatorCount =
+              Arrays.stream(toolbar.getComponents())
+                  .filter(
+                      c -> c instanceof javax.swing.JSeparator || c instanceof JToolBar.Separator)
+                  .count();
+          assertEquals(
+              3, separatorCount, "Expect exactly 3 group separators between 4 action groups");
+
+          GuiA11yHarness.requireUniqueSiblingNames(toolbar);
+          GuiA11yHarness.requireNoLeakedGuiResources();
+        });
+  }
+
+  @Test
+  void inspectToolbarLocatorsRemainStableWhenAccessibleNamesAreHungarian() {
+    JToolBar english =
+        GuiA11yHarness.onEdt(
+            () -> BoardToolbarInspectedItem.createComponentOnly(Locale.ENGLISH, null));
+    JToolBar hungarian =
+        GuiA11yHarness.onEdt(
+            () -> BoardToolbarInspectedItem.createComponentOnly(Locale.forLanguageTag("hu"), null));
+
+    GuiA11yHarness.onEdt(
+        () -> {
+          String englishName =
+              GuiA11yHarness.accessibleName(
+                  GuiA11yHarness.findByLocator(english, GuiLocators.INSPECT_CANCEL));
+          String hungarianName =
+              GuiA11yHarness.accessibleName(
+                  GuiA11yHarness.findByLocator(hungarian, GuiLocators.INSPECT_CANCEL));
+          assertNotEquals(englishName, hungarianName);
+          assertEquals("A jelenlegi kijelölés megszüntetése (Esc).", hungarianName);
           GuiA11yHarness.requireNoLeakedGuiResources();
         });
   }

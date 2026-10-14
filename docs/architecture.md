@@ -199,11 +199,36 @@ the dedicated subpackages above; `app.freerouting.autoroute.events` remains the 
 
 ### `app.freerouting.rules`
 
-The rule model that defines nets, clearance classes, via rules, and layer constraints.
+The rule model that defines nets, clearance classes, via rules, layer constraints, and trace length bounds.
+
+- `NetLengthConstraint` — Immutable record representing minimum and maximum trace length bounds (`minLength`, `maxLength`), target length calculation (midpoint or single bound), and boundary checks (`isSatisfied(traceLength)`).
+- Trace length bounds are supported at both the `NetClass` level and as explicit overrides at the `Net` level (parsed from Specctra DSN `(circuit (length <max> [<min>]))` or `(rule (length <max> [<min>]))` scopes). When unconstrained at the net level, a net transparently falls back to its net class constraint.
+- **Future Extension Point:** Net length constraints are structured for forward compatibility with future post-routing Net Length Tuning and accordion meander insertion phases, providing the target length and tolerance envelope without coupling to active routing search heuristics.
 
 ### `app.freerouting.drc`
 
 Design-rule checking and violation reporting. Use this package when you need to understand why a routed board is still invalid.
+
+### Precise component placement
+
+`Component` retains one precise placement; its integer location is derived. Package pin
+positions retain their fractional offsets. `geometry.planar.PlacementTransform` composes
+pin rotation, package offsets, component rotation, side mirroring and world translation
+before quantizing pad geometry. Pins, component outlines and component keepouts use this
+shared transform. DSN/SES writers and component copies retain the precise pose. Copy
+previews apply a display translation without mutating the source component. Rebinding
+a copied item invalidates its derived geometry before clearance checks and insertion.
+
+`board.actions.ComponentItemTransform` validates rotations and reflections of detached
+editor selections. It captures their contact graph, transforms copies, and applies a
+uniform grid correction to each connected trace/via group when required by its pin
+anchors. Conflicting anchors, changed contacts, collapsed traces, new angle violations,
+and new clearance violations reject the operation and restore the component poses. It
+never widens contact tolerances. The GUI uses `BasicBoard.detachItemForMove` to remove
+component items from the board and its search trees without granting ordinary deletion
+permission. It retains ownership of the existing move snapshot, final insertion, observer
+notifications and ratsnest updates. Standalone low-level item
+mutators still require callers to manage board search trees and connectivity.
 
 ### `app.freerouting.geometry.planar`
 

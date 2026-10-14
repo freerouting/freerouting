@@ -78,13 +78,6 @@ public final class LoggingBootstrap {
           consoleLoggingLevel = arg.substring("--logging.console.level=".length());
         } else if (arg.startsWith("--logging.file.location=")) {
           fileLoggingLocation = arg.substring("--logging.file.location=".length());
-        } else if (arg.startsWith("-l=")) {
-          fileLoggingLocation = arg.substring("-l=".length());
-        } else if ("-l".equals(arg)) {
-          int index = Arrays.asList(args).indexOf("-l");
-          if (index >= 0 && index < args.length - 1) {
-            fileLoggingLocation = args[index + 1];
-          }
         } else if (arg.startsWith("--logging.file.pattern=")) {
           fileLoggingPattern = arg.substring("--logging.file.pattern=".length());
         } else if (arg.startsWith("--debug.enable_detailed_logging=")) {

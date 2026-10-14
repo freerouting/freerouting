@@ -4,7 +4,6 @@ import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.gui.board.BoardFrame;
 import app.freerouting.gui.board.BoardPanel;
 import app.freerouting.util.TextManager;
-import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
@@ -19,38 +18,33 @@ public class PopupMenuDisplay extends JPopupMenu {
 
     TextManager tm = new TextManager(this.getClass(), boardFrame.getLocale());
 
-    JMenuItem popupCenterDisplayMenuitem = new JMenuItem();
-    popupCenterDisplayMenuitem.setText(tm.getText("center_display"));
-    popupCenterDisplayMenuitem.addActionListener(
-        _ -> boardPanel.centerDisplay(boardPanel.rightButtonClickLocation));
-    popupCenterDisplayMenuitem.addActionListener(
-        _ ->
-            FRAnalytics.buttonClicked(
-                "popupCenterDisplayMenuitem", popupCenterDisplayMenuitem.getText()));
+    // Flat items rather than a "Zoom" submenu: a JMenu's arrow icon makes Swing's
+    // BasicMenuItemUI reserve a matching arrow-icon column across every sibling item in
+    // this JPopupMenu (see MenuItemLayoutHelper), which was padding out the whole menu -
+    // including unrelated items added by subclasses - just to make room for one arrow.
+    addPopupItem(
+        tm,
+        "center_display",
+        "popupCenterDisplayMenuitem",
+        () -> boardPanel.centerDisplay(boardPanel.rightButtonClickLocation));
+    addPopupItem(
+        tm,
+        "zoom_in",
+        "popupZoomInMenuitem",
+        () -> boardPanel.zoomIn(boardPanel.rightButtonClickLocation));
+    addPopupItem(
+        tm,
+        "zoom_out",
+        "popupZoomOutMenuitem",
+        () -> boardPanel.zoomOut(boardPanel.rightButtonClickLocation));
+  }
 
-    this.add(popupCenterDisplayMenuitem);
-
-    JMenu zoomMenu = new JMenu();
-    zoomMenu.setText(tm.getText("zoom"));
-
-    JMenuItem popupZoomInMenuitem = new JMenuItem();
-    popupZoomInMenuitem.setText(tm.getText("zoom_in"));
-    popupZoomInMenuitem.addActionListener(
-        _ -> boardPanel.zoomIn(boardPanel.rightButtonClickLocation));
-    popupZoomInMenuitem.addActionListener(
-        _ -> FRAnalytics.buttonClicked("popupZoomInMenuitem", popupZoomInMenuitem.getText()));
-
-    zoomMenu.add(popupZoomInMenuitem);
-
-    JMenuItem popupZoomOutMenuitem = new JMenuItem();
-    popupZoomOutMenuitem.setText(tm.getText("zoom_out"));
-    popupZoomOutMenuitem.addActionListener(
-        _ -> boardPanel.zoomOut(boardPanel.rightButtonClickLocation));
-    popupZoomOutMenuitem.addActionListener(
-        _ -> FRAnalytics.buttonClicked("popupZoomOutMenuitem", popupZoomOutMenuitem.getText()));
-
-    zoomMenu.add(popupZoomOutMenuitem);
-
-    this.add(zoomMenu);
+  /** Builds one menu item with translated text, action, and analytics tracking. */
+  private void addPopupItem(TextManager tm, String textKey, String analyticsId, Runnable action) {
+    JMenuItem menuItem = new JMenuItem();
+    menuItem.setText(tm.getText(textKey));
+    menuItem.addActionListener(_ -> action.run());
+    menuItem.addActionListener(_ -> FRAnalytics.buttonClicked(analyticsId, menuItem.getText()));
+    this.add(menuItem);
   }
 }

@@ -49,11 +49,11 @@ public final class BatchFanout {
             ? settings.fanout.pinSortingOrder
             : "outer_first";
     Collection<app.freerouting.board.model.items.Pin> boardSmdPinList = routingBoard.getSmdPins();
-    // Filter out SMD pins that belong to no net — they don't need fanout and would inflate
-    // total pin counts and escape statistics.
+    // Filter out SMD pins that belong to no net or an ignored net class — they don't need
+    // fanout and would inflate total pin counts and escape statistics.
     Collection<app.freerouting.board.model.items.Pin> boardSmdPinListWithNets = new LinkedList<>();
     for (app.freerouting.board.model.items.Pin pin : boardSmdPinList) {
-      if (pin.netCount() > 0) {
+      if (pin.netCount() > 0 && !pin.hasIgnoredNets()) {
         boardSmdPinListWithNets.add(pin);
       }
     }
@@ -238,6 +238,10 @@ public final class BatchFanout {
         }
         double maxMilliseconds = baseMillisPerPin * (passNo + 1);
         final TimeLimit timeLimit = new TimeLimit((int) maxMilliseconds);
+        if (currentPin.boardPin.hasIgnoredNets()) {
+          --pinsToGo;
+          continue;
+        }
         String fullPinName =
             currentComponent.boardComponent.name + "-" + currentPin.boardPin.name();
         int netNumber = currentPin.boardPin.getNetNumber(0);

@@ -510,8 +510,8 @@ public class Route {
     FloatPoint fromCorner = this.prevCorner.toFloat();
     if (nearestTargetPoint != null && prevCorner != null) {
       boolean currentLengthMatchingOk = true; // used for drawing the incomplete as violation
-      double maxTraceLength = currentNet.getNetClass().getMaximumTraceLength();
-      double minTraceLength = currentNet.getNetClass().getMinimumTraceLength();
+      double maxTraceLength = currentNet.getMaximumTraceLength();
+      double minTraceLength = currentNet.getMinimumTraceLength();
       double lengthMatchingColorIntensity = graphicsContext.getLengthMatchingAreaColorIntensity();
       if (maxTraceLength > 0 || minTraceLength > 0 && lengthMatchingColorIntensity > 0) {
 

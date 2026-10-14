@@ -51,6 +51,12 @@ public abstract class Rule {
         } else if (currentToken == Keyword.CLEARANCE) {
           // this is a "(clear" rule
           currentRule = readClearanceRule(scanner);
+        } else if (currentToken == Keyword.LENGTH) {
+          // this is a "(length" rule
+          Circuit.LengthMatchingRule lengthResult = Circuit.readLengthScope(scanner);
+          if (lengthResult != null) {
+            currentRule = new LengthRule(lengthResult.maxLength, lengthResult.minLength);
+          }
         } else {
           ScopeKeyword.skipScope(scanner);
         }
@@ -327,6 +333,17 @@ public abstract class Rule {
     public ClearanceRule(double value, Collection<String> classPairs) {
       this.value = value;
       clearanceClassPairs = classPairs;
+    }
+  }
+
+  public static class LengthRule extends Rule {
+
+    public final double maxLength;
+    public final double minLength;
+
+    public LengthRule(double maxLength, double minLength) {
+      this.maxLength = maxLength;
+      this.minLength = minLength;
     }
   }
 

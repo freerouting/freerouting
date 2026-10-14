@@ -289,6 +289,7 @@ class SesRoundTripTest {
     assertEquals("0", SesWriter.formatPlacementRotation(0.0));
     assertEquals("339", SesWriter.formatPlacementRotation(339.0));
     assertEquals("338.5", SesWriter.formatPlacementRotation(338.5));
+    assertEquals("12.2501234567", SesWriter.formatPlacementRotation(12.2501234567));
     assertEquals("-45.25", SesWriter.formatPlacementRotation(-45.25));
   }
 

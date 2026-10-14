@@ -26,7 +26,6 @@ import javax.swing.SwingUtilities;
 public final class GuiBoardPresentationController {
 
   private static final long BACKGROUND_REPAINT_INTERVAL = 1000;
-  private static final long INTERACTIVE_REPAINT_INTERVAL = 33;
   private static long lastRepaintedTime;
 
   private final GuiBoardManager manager;
@@ -56,37 +55,42 @@ public final class GuiBoardPresentationController {
 
   public void repaint() {
     BoardPanel panel = manager.getPanel();
+    if (panel == null) {
+      return;
+    }
     if (manager.isPaintImmediately()) {
       panel.paintImmediately(new Rectangle(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE));
       return;
     }
 
-    long interval =
-        manager.isInInteractiveDrag() ? INTERACTIVE_REPAINT_INTERVAL : BACKGROUND_REPAINT_INTERVAL;
-    long now = System.currentTimeMillis();
-    if (lastRepaintedTime >= now - interval) {
-      return;
+    if (manager.isBoardReadOnly()) {
+      long now = System.currentTimeMillis();
+      if (lastRepaintedTime >= now - BACKGROUND_REPAINT_INTERVAL) {
+        return;
+      }
+      lastRepaintedTime = now;
     }
-    lastRepaintedTime = now;
 
-    Rectangle updateRectangle = getGraphicsUpdateRectangle();
-    if (updateRectangle.width > 0 && updateRectangle.height > 0) {
-      panel.repaint(updateRectangle);
-    } else {
-      panel.repaint();
-    }
+    panel.repaint();
   }
 
   public void repaint(Rectangle rectangle) {
+    BoardPanel panel = manager.getPanel();
+    if (panel == null || rectangle == null || rectangle.width <= 0 || rectangle.height <= 0) {
+      return;
+    }
     if (manager.isPaintImmediately()) {
-      manager.getPanel().paintImmediately(rectangle);
+      panel.paintImmediately(rectangle);
     } else {
-      manager.getPanel().repaint(rectangle);
+      panel.repaint(rectangle);
     }
   }
 
   public Rectangle getGraphicsUpdateRectangle() {
     RoutingBoard board = manager.getPresentationBoard();
+    if (board == null) {
+      return new Rectangle(0, 0, 0, 0);
+    }
     IntBox updateBox = board.getGraphicsUpdateBox();
     if (updateBox == null || updateBox.isEmpty()) {
       return new Rectangle(0, 0, 0, 0);

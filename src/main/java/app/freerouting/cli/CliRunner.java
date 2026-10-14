@@ -100,6 +100,15 @@ public final class CliRunner {
         routingJob.state = RoutingJobState.CANCELLED;
         break;
       }
+      if (routingJob.thread != null
+          && routingJob.thread.getState() != Thread.State.NEW
+          && !routingJob.thread.isAlive()
+          && !isCliTerminalState(routingJob.state)) {
+        FRLogger.error(
+            "Routing thread terminated abnormally without assigning a terminal state.", null);
+        routingJob.state = RoutingJobState.TERMINATED;
+        break;
+      }
     }
 
     boolean outputWritten = writeCliOutputIfAvailable(globalSettings, routingJob);

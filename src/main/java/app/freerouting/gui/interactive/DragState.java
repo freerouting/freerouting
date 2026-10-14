@@ -118,6 +118,7 @@ public abstract class DragState extends InteractiveState {
       for (Integer changedNet : changedNets) {
         hdlg.updateRatsnest(changedNet);
       }
+      hdlg.repaint();
     }
     if (this.somethingDragged) {}
     return result;

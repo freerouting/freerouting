@@ -23,7 +23,6 @@ import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.geometry.planar.IntPoint;
-import app.freerouting.geometry.planar.IntVector;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.PolygonShape;
 import app.freerouting.geometry.planar.PolylineShape;
@@ -587,11 +586,9 @@ public final class KiCadJsonReader {
           if (padstack == null) {
             padstack = padstacks.add(padstackName, shapes, isDrillable, false);
           }
-          IntVector relativeLoc =
-              new IntVector(
-                  (int) Math.round(pad.offset.x * scaleFactor),
-                  (int) Math.round(-pad.offset.y * scaleFactor));
-          packagePins.add(new Package.Pin(pad.name, padstack.id, relativeLoc, 0.0));
+          FloatPoint exactRel =
+              new FloatPoint(pad.offset.x * scaleFactor, -pad.offset.y * scaleFactor);
+          packagePins.add(new Package.Pin(pad.name, padstack.id, exactRel, 0.0));
         }
 
         boolean isFront = !"B.Cu".equalsIgnoreCase(comp.layer);
@@ -642,15 +639,13 @@ public final class KiCadJsonReader {
           }
           suffix++;
         }
-        IntPoint position =
-            new IntPoint(
-                (int) Math.round(comp.position.x * scaleFactor),
-                (int) Math.round(-comp.position.y * scaleFactor));
+        FloatPoint exactPos =
+            new FloatPoint(comp.position.x * scaleFactor, -comp.position.y * scaleFactor);
 
         Component boardComp =
-            board.components.add(
+            board.components.addPrecise(
                 comp.reference,
-                position,
+                exactPos,
                 comp.rotation,
                 isFront,
                 componentPackage,
@@ -938,12 +933,12 @@ public final class KiCadJsonReader {
       if (pin1.padstackId != pin2.padstackId) {
         return false;
       }
-      app.freerouting.geometry.planar.FloatPoint loc1 = pin1.relativeLocation.toFloat();
-      app.freerouting.geometry.planar.FloatPoint loc2 = pin2.relativeLocation.toFloat();
-      if (Math.abs(loc1.x - loc2.x) > 0.001 || Math.abs(loc1.y - loc2.y) > 0.001) {
+      app.freerouting.geometry.planar.FloatPoint loc1 = pin1.getExactRelativeLocation();
+      app.freerouting.geometry.planar.FloatPoint loc2 = pin2.getExactRelativeLocation();
+      if (loc1.x != loc2.x || loc1.y != loc2.y) {
         return false;
       }
-      if (Math.abs(pin1.rotationInDegree - pin2.rotationInDegree) > 0.001) {
+      if (pin1.rotationInDegree != pin2.rotationInDegree) {
         return false;
       }
     }

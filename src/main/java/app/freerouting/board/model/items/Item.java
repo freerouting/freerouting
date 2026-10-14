@@ -1024,6 +1024,7 @@ public abstract class Item
   /** Assigns this item to the component with the input component ID. */
   public void assignComponentId(int id) {
     componentId = id;
+    clearDerivedData();
   }
 
   /**
@@ -1321,7 +1322,7 @@ public abstract class Item
   public boolean hasIgnoredNets() {
     for (int netNumber : this.netNumbers) {
       Net net = this.board.rules.nets.get(netNumber);
-      if (net.getNetClass().isIgnoredByAutorouter) {
+      if (net != null && net.getNetClass() != null && net.getNetClass().isIgnoredByAutorouter) {
         return true;
       }
     }

@@ -38,6 +38,7 @@ from prompt_builder import (  # noqa: E402
 )
 from properties_io import (  # noqa: E402
     ICON_KEY_RE,
+    LLM_WRAPPER_RE,
     PLACEHOLDER_RE,
     SUPPORTED_LOCALES,
     bundle_name_from_path,
@@ -49,6 +50,7 @@ from properties_io import (  # noqa: E402
     sanitize_segment_translation,
     should_translate_by_segments,
     split_property_newlines,
+    unwrap_translation_quotes,
     validate_property_escapes,
     validate_segment_join,
     write_properties,
@@ -117,8 +119,13 @@ def translate_by_segments(
         if parsed and str(index) in parsed:
             value = parsed[str(index)]
             if isinstance(value, str):
-                return sanitize_segment_translation(value.strip().strip("\"'"))
-        return sanitize_segment_translation(response.strip().strip("\"'"))
+                return sanitize_segment_translation(unwrap_translation_quotes(value, segment))
+        if LLM_WRAPPER_RE.search(response):
+            # An unparsed JSON or fenced response is not a translation. Writing it out is
+            # how ```json { "36": "..." } ``` ended up in 35 locales' command_line_help.
+            err(f"  Unparseable response for segment {index}; leaving the key untranslated")
+            return None
+        return sanitize_segment_translation(unwrap_translation_quotes(response, segment))
 
     size = min(batch_size(), 8)
     for offset in range(0, len(work), size):
@@ -126,10 +133,10 @@ def translate_by_segments(
         prompt = build_segments_prompt(bundle, full_entry, locale, chunk)
         indices = [str(index) for index, _segment in chunk]
         english_parts = [segment for _index, segment in chunk]
-        parsed = translate_batch(prompt, indices, english_values=english_parts)
+        parsed, _api_ok = translate_batch(prompt, indices, english_values=english_parts)
         if parsed is not None and len(parsed) == len(chunk):
             for index, _segment in chunk:
-                translated[index] = sanitize_segment_translation(parsed[str(index)].strip().strip("\"'"))
+                translated[index] = sanitize_segment_translation(parsed[str(index)])
             continue
 
         err("  Failed to parse segment batch JSON; retrying segments individually")

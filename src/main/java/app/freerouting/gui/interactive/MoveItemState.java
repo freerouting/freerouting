@@ -62,7 +62,7 @@ public final class MoveItemState extends InteractiveState {
     routingBoard.generateSnapshot();
 
     for (Item currentItem : itemList) {
-      routingBoard.removeItem(currentItem);
+      routingBoard.detachItemForMove(currentItem);
     }
     this.netItemsList = new LinkedList<>();
     this.itemList = new TreeSet<>();
@@ -128,7 +128,9 @@ public final class MoveItemState extends InteractiveState {
     Set<Item> obstacleItems = new TreeSet<>();
     Set<Item> addItems = new TreeSet<>();
     for (Item currentItem : allItems) {
-      if (currentItem.isUserFixed()) {
+      if (currentItem.isUserFixed()
+          || (currentItem.getComponentId() > 0
+              && routingBoard.components.get(currentItem.getComponentId()).positionFixed)) {
         boardHandling.screenMessages.setStatusMessage(
             tm.getText("some_items_cannot_be_moved_because_they_are_fixed"));
         moveOk = false;
@@ -308,38 +310,36 @@ public final class MoveItemState extends InteractiveState {
     if (factor == 0) {
       return;
     }
-    Components components = hdlg.getRoutingBoard().components;
-    for (Component currentComponent : this.componentList) {
-      components.turn90Degree(currentComponent.id, factor, currentPosition);
-    }
-    this.clearanceViolations = new LinkedList<>();
-    for (Item currentItem : this.itemList) {
-      currentItem.turn90Degree(factor, currentPosition);
-      this.clearanceViolations.addAll(currentItem.clearanceViolations());
-    }
-    for (NetItems currentNetItems : this.netItemsList) {
-      this.hdlg.updateRatsnest(currentNetItems.netNumber, currentNetItems.items);
-    }
-    hdlg.repaint();
+    transformItems(factor * 90.0, false);
   }
 
-  /** Rotates the items in the list by the given angle around the current position. */
+  /** Rotates the items in the list around the current position. */
   public void rotate(double angleInDegree) {
-    if (angleInDegree == 0) {
+    if (angleInDegree != 0) {
+      transformItems(angleInDegree, false);
+    }
+  }
+
+  private void transformItems(double angle, boolean mirror) {
+    var transformed =
+        app.freerouting.board.actions.ComponentItemTransform.apply(
+            hdlg.getRoutingBoard(), itemList, angle, mirror, currentPosition);
+    if (transformed == null) {
+      hdlg.screenMessages.setStatusMessage(tm.getText("insertion_failed_because_of_obstacles"));
       return;
     }
-    Components components = hdlg.getRoutingBoard().components;
-    for (Component currentComponent : this.componentList) {
-      components.rotate(currentComponent.id, angleInDegree, this.currentPosition);
+    itemList.clear();
+    itemList.addAll(transformed);
+    netItemsList.clear();
+    clearanceViolations = new LinkedList<>();
+    for (Item item : itemList) {
+      for (int i = 0; i < item.netCount(); i++) {
+        addToNetItemsList(item, item.getNetNumber(i));
+      }
+      clearanceViolations.addAll(item.clearanceViolations());
     }
-    this.clearanceViolations = new LinkedList<>();
-    FloatPoint floatPosition = this.currentPosition.toFloat();
-    for (Item currentItem : this.itemList) {
-      currentItem.rotateApprox(angleInDegree, floatPosition);
-      this.clearanceViolations.addAll(currentItem.clearanceViolations());
-    }
-    for (NetItems currentNetItems : this.netItemsList) {
-      this.hdlg.updateRatsnest(currentNetItems.netNumber, currentNetItems.items);
+    for (NetItems netItems : netItemsList) {
+      hdlg.updateRatsnest(netItems.netNumber, netItems.items);
     }
     hdlg.repaint();
   }
@@ -378,19 +378,7 @@ public final class MoveItemState extends InteractiveState {
       return;
     }
 
-    Components components = hdlg.getRoutingBoard().components;
-    for (Component currentComponent : this.componentList) {
-      components.changeSide(currentComponent.id, currentPosition);
-    }
-    this.clearanceViolations = new LinkedList<>();
-    for (Item currentItem : this.itemList) {
-      currentItem.changePlacementSide(currentPosition);
-      this.clearanceViolations.addAll(currentItem.clearanceViolations());
-    }
-    for (NetItems currentNetItems : this.netItemsList) {
-      this.hdlg.updateRatsnest(currentNetItems.netNumber, currentNetItems.items);
-    }
-    hdlg.repaint();
+    transformItems(0, true);
   }
 
   /** Resets the rotation of the moved components. */

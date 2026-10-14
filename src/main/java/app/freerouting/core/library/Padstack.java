@@ -15,6 +15,8 @@ import java.util.Locale;
 /** Describes padstack masks for pins or vias located at the origin. */
 public class Padstack implements Comparable<Padstack>, ItemInfoPrinter.Printable, Serializable {
 
+  private static final long serialVersionUID = 6835750667897173121L;
+
   public final String name;
   public final int id;
 
@@ -28,6 +30,16 @@ public class Padstack implements Comparable<Padstack>, ItemInfoPrinter.Printable
   public final boolean placedAbsolute;
 
   private final ConvexShape[] shapes;
+
+  /**
+   * Auxiliary convex shapes per layer for non-convex custom pads. The primary convex shape in
+   * {@link #shapes} serves as the core connection target, while auxiliary shapes represent the
+   * remaining copper geometry to be placed as obstacles of the same net.
+   */
+  private final ConvexShape[][] auxiliaryShapes;
+
+  /** True if this padstack contains non-convex custom pad geometry. */
+  public boolean hasNonConvexGeometry;
 
   /** Pointer to the padstack list containing this padstack. */
   private final Padstacks padstackList;
@@ -51,7 +63,20 @@ public class Padstack implements Comparable<Padstack>, ItemInfoPrinter.Printable
       boolean isDrillable,
       boolean placedAbsolute,
       Padstacks padstackList) {
+    this(name, id, shapes, null, isDrillable, placedAbsolute, padstackList);
+  }
+
+  /** Creates a new Padstack with one shape per board layer and auxiliary shapes for custom pads. */
+  Padstack(
+      String name,
+      int id,
+      ConvexShape[] shapes,
+      ConvexShape[][] auxiliaryShapes,
+      boolean isDrillable,
+      boolean placedAbsolute,
+      Padstacks padstackList) {
     this.shapes = shapes;
+    this.auxiliaryShapes = auxiliaryShapes;
     this.name = name;
     this.id = id;
     this.attachAllowed = isDrillable;
@@ -138,6 +163,32 @@ public class Padstack implements Comparable<Padstack>, ItemInfoPrinter.Printable
       return null;
     }
     return shapes[layer];
+  }
+
+  /** Gets any auxiliary shapes on the specified layer for non-convex custom pads. */
+  public ConvexShape[] getAuxiliaryShapes(int layer) {
+    if (auxiliaryShapes == null || layer < 0 || layer >= auxiliaryShapes.length) {
+      return null;
+    }
+    return auxiliaryShapes[layer];
+  }
+
+  /** Returns whether this padstack has auxiliary shapes on any layer. */
+  public boolean hasAuxiliaryShapes() {
+    if (auxiliaryShapes == null) {
+      return false;
+    }
+    for (ConvexShape[] aux : auxiliaryShapes) {
+      if (aux != null && aux.length > 0) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /** Returns whether this padstack represents non-convex custom pad geometry. */
+  public boolean hasNonConvexGeometry() {
+    return hasNonConvexGeometry || hasAuxiliaryShapes();
   }
 
   /** Returns the first layer of this padstack with a shape != null. */

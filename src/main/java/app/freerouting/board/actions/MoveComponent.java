@@ -5,6 +5,7 @@ import app.freerouting.board.model.items.ComponentOutline;
 import app.freerouting.board.model.items.DrillItem;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.ObstacleArea;
+import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.model.structure.BoardOutline;
 import app.freerouting.board.model.structure.Component;
 import app.freerouting.datastructures.Signum;
@@ -15,8 +16,10 @@ import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Vector;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Set;
 
 /** Class for moving a group of items on the board. */
 public class MoveComponent {
@@ -28,6 +31,8 @@ public class MoveComponent {
   private final int maxViaRecursionDepth;
   private final RoutingBoard board;
   private final SortedItem[] itemGroupArr;
+  private final Set<Item> itemGroupSet;
+  private final Set<Item> itemsToShove = new HashSet<>();
   private boolean allItemsMovable = true;
   private Component component;
 
@@ -64,10 +69,21 @@ public class MoveComponent {
         // MoveItemGroup currently only implemented for DrillItems
         allItemsMovable = false;
         itemGroupArr = new SortedItem[0];
+        itemGroupSet = Set.of();
         return;
       }
       if (currentItem instanceof DrillItem drillItem) {
         itemCenters.add(drillItem.getCenter().toFloat());
+      }
+    }
+    this.itemGroupSet = new HashSet<>(itemGroupList);
+    if (itemCenters.isEmpty()) {
+      if (this.component != null) {
+        itemCenters.add(this.component.getLocation().toFloat());
+      } else {
+        for (Item currentItem : itemGroupList) {
+          itemCenters.add(currentItem.boundingBox().centreOfGravity());
+        }
       }
     }
     // calculate the gravity point of all item centers
@@ -77,8 +93,10 @@ public class MoveComponent {
       gravityX += currentCenter.x;
       gravityY += currentCenter.y;
     }
-    gravityX /= itemCenters.size();
-    gravityY /= itemCenters.size();
+    if (!itemCenters.isEmpty()) {
+      gravityX /= itemCenters.size();
+      gravityY /= itemCenters.size();
+    }
     Point gravityPoint = new IntPoint((int) Math.round(gravityX), (int) Math.round(gravityY));
     itemGroupArr = new SortedItem[itemGroupList.size()];
     Iterator<Item> it = itemGroupList.iterator();
@@ -99,6 +117,35 @@ public class MoveComponent {
     Arrays.sort(itemGroupArr);
   }
 
+  private static boolean hasConnectingTraces(DrillItem drillItem) {
+    Collection<Item> contacts = drillItem.getNormalContacts();
+    for (Item currentContact : contacts) {
+      if (currentContact instanceof Trace) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private static boolean requiresDrillItemMover(DrillItem drillItem) {
+    return hasConnectingTraces(drillItem) || drillItem.netCount() > 1;
+  }
+
+  /**
+   * Returns the minimum width of drill items that have connecting traces or multiple nets, or -1.0
+   * if no such drill items exist.
+   */
+  public double getMinDrillItemWidthWithTraces() {
+    double min = Double.MAX_VALUE;
+    for (int i = 0; i < itemGroupArr.length; i++) {
+      if (itemGroupArr[i].item instanceof DrillItem drillItem
+          && requiresDrillItemMover(drillItem)) {
+        min = Math.min(min, drillItem.minWidth());
+      }
+    }
+    return min == Double.MAX_VALUE ? -1.0 : min;
+  }
+
   /**
    * Checks, if all items in the group can be moved by shoving obstacle trace aside without creating
    * clearance violations.
@@ -107,24 +154,50 @@ public class MoveComponent {
     if (!allItemsMovable) {
       return false;
     }
+    itemsToShove.clear();
     TimeLimit timeLimit = new TimeLimit(CHECK_TIME_LIMIT);
-    Collection<Item> ignoreItems = new LinkedList<>();
+    Set<Item> ignoreItems = new HashSet<>(this.itemGroupSet);
     for (int i = 0; i < itemGroupArr.length; i++) {
       boolean moveOk;
       if (itemGroupArr[i].item instanceof DrillItem currentDrillItem) {
-        if (this.translateVector.lengthApprox() >= currentDrillItem.minWidth()) {
-          // a clearance violation with a connecting trace may occur
-          moveOk = false;
+        boolean useDrillMover = requiresDrillItemMover(currentDrillItem);
+        if (useDrillMover) {
+          if (this.translateVector.lengthApprox() >= currentDrillItem.minWidth()) {
+            // a clearance violation with a connecting trace may occur
+            moveOk = false;
+          } else {
+            moveOk =
+                DrillItemMover.check(
+                    currentDrillItem,
+                    this.translateVector,
+                    this.maxRecursionDepth,
+                    this.maxViaRecursionDepth,
+                    ignoreItems,
+                    board,
+                    timeLimit);
+            if (moveOk) {
+              itemsToShove.add(currentDrillItem);
+            }
+          }
         } else {
-          moveOk =
-              DrillItemMover.check(
-                  currentDrillItem,
-                  this.translateVector,
-                  this.maxRecursionDepth,
-                  this.maxViaRecursionDepth,
-                  ignoreItems,
-                  board,
-                  timeLimit);
+          // DrillItem with at most 1 net and no connecting traces can move freely if the target
+          // space has no obstacles
+          moveOk = board.checkMoveItem(currentDrillItem, this.translateVector, ignoreItems);
+          if (!moveOk && this.translateVector.lengthApprox() < currentDrillItem.minWidth()) {
+            // Target space has obstacles, check if they can be shoved aside
+            moveOk =
+                DrillItemMover.check(
+                    currentDrillItem,
+                    this.translateVector,
+                    this.maxRecursionDepth,
+                    this.maxViaRecursionDepth,
+                    ignoreItems,
+                    board,
+                    timeLimit);
+            if (moveOk) {
+              itemsToShove.add(currentDrillItem);
+            }
+          }
         }
       } else {
         moveOk = board.checkMoveItem(itemGroupArr[i].item, this.translateVector, ignoreItems);
@@ -153,15 +226,21 @@ public class MoveComponent {
     }
     for (int i = 0; i < itemGroupArr.length; i++) {
       if (itemGroupArr[i].item instanceof DrillItem currentDrillItem) {
-        boolean moveOk =
-            board.moveDrillItem(
-                currentDrillItem,
-                this.translateVector,
-                this.maxRecursionDepth,
-                this.maxViaRecursionDepth,
-                tidyWidth,
-                pullTightAccuracy,
-                PULL_TIGHT_TIME_LIMIT);
+        boolean moveOk;
+        if (itemsToShove.contains(currentDrillItem) || requiresDrillItemMover(currentDrillItem)) {
+          moveOk =
+              board.moveDrillItem(
+                  currentDrillItem,
+                  this.translateVector,
+                  this.maxRecursionDepth,
+                  this.maxViaRecursionDepth,
+                  tidyWidth,
+                  pullTightAccuracy,
+                  PULL_TIGHT_TIME_LIMIT);
+        } else {
+          currentDrillItem.moveBy(this.translateVector);
+          moveOk = true;
+        }
         if (!moveOk) {
           if (this.component != null) {
             this.component.translateBy(translateVector.negate());

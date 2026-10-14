@@ -319,11 +319,14 @@ public class RouteState extends InteractiveState {
       for (int currentNetNumber : this.route.netNumbers) {
         hdlg.updateRatsnest(currentNetNumber);
       }
+      hdlg.recalculateLengthViolations();
+      hdlg.getRoutingBoard().resetGraphicsUpdateBox();
+      hdlg.repaint();
     } else {
       result = this;
+      hdlg.recalculateLengthViolations();
+      hdlg.repaint(hdlg.getGraphicsUpdateRectangle());
     }
-    hdlg.recalculateLengthViolations();
-    hdlg.repaint(hdlg.getGraphicsUpdateRectangle());
     return result;
   }
 
@@ -353,6 +356,8 @@ public class RouteState extends InteractiveState {
     for (int currentNetNumber : this.route.netNumbers) {
       hdlg.updateRatsnest(currentNetNumber);
     }
+    hdlg.getRoutingBoard().resetGraphicsUpdateBox();
+    hdlg.repaint();
     return this.returnState;
   }
 

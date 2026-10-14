@@ -123,6 +123,15 @@ public class ObstacleArea extends Item implements Serializable {
         FRLogger.warn("ObstacleArea.get_area: area is null");
         return null;
       }
+      if (getComponentId() > 0) {
+        this.precalculatedAbsoluteArea =
+            board
+                .components
+                .get(getComponentId())
+                .placementTransform(board.components.getFlipStyleRotateFirst())
+                .area(relativeArea);
+        return this.precalculatedAbsoluteArea;
+      }
       Area turnedArea = this.relativeArea;
       if (this.sideChanged && !this.board.components.getFlipStyleRotateFirst()) {
         turnedArea = turnedArea.mirrorVertical(Point.ZERO);
@@ -175,6 +184,12 @@ public class ObstacleArea extends Item implements Serializable {
   public boolean isObstacle(Item other) {
     if (other.sharesNet(this)) {
       return false;
+    }
+    if (other instanceof Pin) {
+      return this.netCount() > 0;
+    }
+    if (other instanceof ObstacleArea otherArea) {
+      return this.netCount() > 0 && otherArea.netCount() > 0;
     }
     return other instanceof Trace || other instanceof Via;
   }

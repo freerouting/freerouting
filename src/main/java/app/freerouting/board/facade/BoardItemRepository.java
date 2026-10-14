@@ -169,6 +169,20 @@ public final class BoardItemRepository {
 
   /** Removes an item and performs the existing tree, observer, and revision updates. */
   void removeItem(Item item) {
+    removeItem(item, false);
+  }
+
+  /** A move detaches component items without granting ordinary deletion permission. */
+  void detachItemForMove(Item item) {
+    if (item.isUserFixed()
+        || (item.getComponentId() > 0
+            && board.components.get(item.getComponentId()).positionFixed)) {
+      throw new IllegalArgumentException("Fixed items cannot be detached for a move");
+    }
+    removeItem(item, true);
+  }
+
+  private void removeItem(Item item, boolean forMove) {
     if (item == null) {
       return;
     }
@@ -187,7 +201,7 @@ public final class BoardItemRepository {
     if (item instanceof Trace trace && trace.netNumbers.length > 0 && trace.netNumbers[0] == 94) {
       logTraceRemoval(trace);
     }
-    if (item.isDeletionForbidden()) {
+    if (item.isDeletionForbidden() && !(forMove && item.getComponentId() > 0)) {
       return;
     }
     board.additionalUpdateAfterChange(item);

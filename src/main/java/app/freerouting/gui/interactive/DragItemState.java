@@ -3,11 +3,15 @@ package app.freerouting.gui.interactive;
 import app.freerouting.board.actions.MoveComponent;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.structure.AngleRestriction;
+import app.freerouting.board.model.structure.Component;
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.gui.workspace.GuiBoardManager;
+import java.awt.Rectangle;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -67,6 +71,10 @@ public class DragItemState extends DragState {
         // reduce evtl. the shove distance to make the check shove function
         // work properly, if more than 1 trace have to be shoved.
         double sampleWidth = 2 * hdlg.getRoutingBoard().getMinTraceHalfWidth();
+        double minDrillWidth = moveComponent.getMinDrillItemWidthWithTraces();
+        if (minDrillWidth > 0 && sampleWidth >= minDrillWidth) {
+          sampleWidth = Math.max(1.0, minDrillWidth - 1.0);
+        }
         if (length > sampleWidth) {
           relCoor = relCoor.changeLengthApprox(sampleWidth);
         }
@@ -84,15 +92,57 @@ public class DragItemState extends DragState {
         hdlg.getRoutingBoard().generateSnapshot();
         this.somethingDragged = true;
       }
+      Collection<Item> movedItems =
+          itemToMove.getComponentId() > 0
+              ? hdlg.getRoutingBoard().getComponentItems(itemToMove.getComponentId())
+              : List.of(itemToMove);
+      IntBox oldBox = hdlg.getRoutingBoard().getBoundingBox(movedItems);
+      if (itemToMove.getComponentId() > 0) {
+        Component comp = hdlg.getRoutingBoard().components.get(itemToMove.getComponentId());
+        if (comp != null) {
+          IntPoint p = comp.getLocation().toFloat().round();
+          oldBox = oldBox.union(new IntBox(p, p));
+        }
+      }
+
       if (!moveComponent.insert(
           hdlg.getWorkspaceSettings().getTracePullTightRegionWidth(),
           hdlg.getWorkspaceSettings().getTracePullTightAccuracy())) {
         // an insert error occurred, end the drag state
         return this.returnState;
       }
-      hdlg.repaint();
+
+      IntBox newBox = hdlg.getRoutingBoard().getBoundingBox(movedItems);
+      if (itemToMove.getComponentId() > 0) {
+        Component comp = hdlg.getRoutingBoard().components.get(itemToMove.getComponentId());
+        if (comp != null) {
+          IntPoint p = comp.getLocation().toFloat().round();
+          newBox = newBox.union(new IntBox(p, p));
+        }
+      }
+      IntBox changedBox = oldBox.union(newBox);
+      IntBox updateBox = hdlg.getRoutingBoard().getGraphicsUpdateBox();
+      if (updateBox != null && !updateBox.isEmpty()) {
+        changedBox = changedBox.union(updateBox);
+      }
+      hdlg.getRoutingBoard().resetGraphicsUpdateBox();
+
+      IntBox offsetBox = changedBox.offset(hdlg.getRoutingBoard().rules.getMaxTraceHalfWidth());
+      Rectangle screenRect = hdlg.graphicsContext.coordinateTransform.boardToScreen(offsetBox);
+      int padding = 20;
+      if (itemToMove.getComponentId() > 0) {
+        Component comp = hdlg.getRoutingBoard().components.get(itemToMove.getComponentId());
+        if (comp != null && comp.getPartNumber() != null && !comp.getPartNumber().isEmpty()) {
+          padding = Math.max(padding, comp.getPartNumber().length() * 8);
+        }
+      }
+      screenRect.x -= padding;
+      screenRect.y -= padding;
+      screenRect.width += 2 * padding;
+      screenRect.height += 2 * padding;
+      hdlg.repaint(screenRect);
+      this.previousLocation = this.previousLocation.add(relCoor.toFloat());
     }
-    this.previousLocation = toLocation; // (IntPoint)this.curr_location.translate_by(relCoor);
     return this;
   }
 
@@ -121,10 +171,12 @@ public class DragItemState extends DragState {
           hdlg.updateRatsnest(currentNetNumber);
         }
       }
+      hdlg.getRoutingBoard().resetGraphicsUpdateBox();
     } else {
       hdlg.showRatsnest();
     }
     hdlg.screenMessages.setStatusMessage("");
+    hdlg.repaint();
     return this.returnState;
   }
 }
