@@ -58,6 +58,13 @@ class BenchmarkStoreTest(unittest.TestCase):
         self.assertEqual(store.format_saved_age(10.0, 52.9), "0.7m ago")
         self.assertEqual(store.format_saved_age(0.0, 1626.0), "27.1m ago")
 
+    def test_graceful_stop_exits_after_workers_drain(self) -> None:
+        self.assertFalse(store.should_stop_main_loop(2, False, True, False))
+        self.assertTrue(store.should_stop_main_loop(0, False, True, False))
+        self.assertFalse(store.should_stop_main_loop(0, False, False, False))
+        self.assertTrue(store.should_stop_main_loop(0, True, False, False))
+        self.assertTrue(store.should_stop_main_loop(3, False, False, True))
+
     def test_journal_keeps_the_latest_score_for_a_cache_key(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             journal = Path(tmp) / "run-journal.jsonl"

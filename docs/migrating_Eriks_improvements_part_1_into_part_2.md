@@ -25,9 +25,9 @@ Both branches independently added `RoutingFallback.java`, `ClearanceBaseline.jav
 
 Source commits: `49bae0471`, `9ad0be83b`.
 
-- [x] `scripts/pcbench/run_corpus_benchmark.py`: `--timeout` overrides every board's catalog budget. Default stays the part 1 final value `08:00:00`. `+` and `-` change the worker count while a run is in progress. Lowering the count drains a worker before the next task starts. The journal, lock, and tier order from current master stayed.
+- [x] `scripts/pcbench/run_corpus_benchmark.py`: `--timeout` overrides every board's catalog budget. The merge brought the part 1 default `08:00:00`; this branch later sets it to `06:00:00`. `+` and `-` change the worker count while a run is in progress. Lowering the count drains a worker before the next task starts. A graceful stop exits once the in-flight workers finish, even when boards remain queued. The journal, lock, and tier order from current master stayed.
 - [x] `scripts/benchmark/lib/MarkdownExporter.ps1`: `### Timeout Summary` table (version, total timeouts, fanout, auto-router, optimizer, job timeout budget).
-- [x] `scripts/benchmark/run-benchmarks.ps1`: `$MaxTime` default `08:00:00`.
+- [x] `scripts/benchmark/run-benchmarks.ps1`: `$MaxTime` default `06:00:00`.
 - [x] `scripts/pcbench/test_benchmark_store.py`: tests that arrived with the worker-scaling commit.
 - [x] Generated `scripts/benchmark/results/*`, `website/benchmarks.html`, and `freerouting-2.6.0-RC2.jar` were not taken. `9d9e56581` is the nightly result snapshot and was left behind with them.
 

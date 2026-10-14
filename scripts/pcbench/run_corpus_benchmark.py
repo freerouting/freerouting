@@ -822,6 +822,17 @@ def format_saved_age(last_saved_at: float | None, now: float) -> str:
     return f"{max(0.0, (now - last_saved_at) / 60):.1f}m ago"
 
 
+def should_stop_main_loop(
+    active_workers: int, queue_empty: bool, cancel_requested: bool, force_kill: bool
+) -> bool:
+    """Stop when the run is finished, or when a graceful stop has drained the workers."""
+    if force_kill:
+        return True
+    if active_workers > 0:
+        return False
+    return queue_empty or cancel_requested
+
+
 def parse_tier_order(raw: str) -> list[str]:
     """Return the tier run order.
 
@@ -1445,8 +1456,16 @@ def main() -> int:
                 b_name, rec, err = result_queue.get(timeout=0.2)
             except queue.Empty:
                 with worker_lock:
-                    if active_worker_threads == 0 and task_queue.empty():
-                        break
+                    drained = active_worker_threads == 0
+                    queued = task_queue.empty()
+                if should_stop_main_loop(0 if drained else 1, queued, cancel_event.is_set(), False):
+                    if cancel_event.is_set() and not queued:
+                        with status_lock:
+                            recent_messages.append(
+                                f"{C_BYELLOW}[GRACEFUL STOP] Left {task_queue.qsize()} board(s) queued.{C_RESET}"
+                            )
+                        trigger_render()
+                    break
                 continue
 
             if rec is None and err is None:
