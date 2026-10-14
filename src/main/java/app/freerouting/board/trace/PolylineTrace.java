@@ -119,6 +119,25 @@ public class PolylineTrace extends Trace implements Serializable {
     return PolylineTraceGeometry.boundingBox(lines, getHalfWidth());
   }
 
+  @Override
+  public boolean contains(Point point) {
+    if (point == null) {
+      return false;
+    }
+    Point first = firstCorner();
+    Point last = lastCorner();
+    if ((first != null && point.equals(first)) || (last != null && point.equals(last))) {
+      return true;
+    }
+    if (!(point instanceof IntPoint)) {
+      return false;
+    }
+    if (!point.isContainedIn(boundingBox())) {
+      return false;
+    }
+    return lines != null && lines.contains(point);
+  }
+
   /** Returns the polyline of this trace. */
   public Polyline polyline() {
     return lines;
@@ -1268,6 +1287,9 @@ public class PolylineTrace extends Trace implements Serializable {
       return false;
     }
     Polyline contactPolyline = contactTrace.polyline();
+    if (!contactPolyline.lastCorner().equals(tracePolyline.firstCorner())) {
+      return false;
+    }
     Line contactLastLine = contactPolyline.lines[contactPolyline.lines.length - 2];
     // look, if this trace has a sharp angle with the contact trace.
     Line firstLine = tracePolyline.lines[1];
