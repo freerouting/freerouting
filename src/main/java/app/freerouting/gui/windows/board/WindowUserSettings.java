@@ -152,9 +152,23 @@ public final class WindowUserSettings {
             globalSettings.userProfileSettings.isTelemetryAllowed = telemetryCheckbox.isSelected());
     contentPanel.add(telemetryCheckbox, gbc);
 
-    // Contacting
+    // Surveys
     gbc.gridx = 0;
     gbc.gridy = 4;
+    gbc.gridwidth = 4;
+    JCheckBox surveysCheckbox = new JCheckBox(tm.getText("allow_surveys"));
+    surveysCheckbox.setSelected(
+        globalSettings.userProfileSettings.isSurveysAllowed(
+            globalSettings.usageAndDiagnosticData.disableAnalytics));
+    surveysCheckbox.addItemListener(
+        _ ->
+            globalSettings.userProfileSettings.allowSurveys =
+                surveysCheckbox.isSelected() ? Boolean.TRUE : Boolean.FALSE);
+    contentPanel.add(surveysCheckbox, gbc);
+
+    // Contacting
+    gbc.gridx = 0;
+    gbc.gridy = 5;
     gbc.gridwidth = 4;
     JCheckBox allowContactCheckbox = new JCheckBox(tm.getText("allow_contact"));
     allowContactCheckbox.setSelected(globalSettings.userProfileSettings.isContactAllowed);
@@ -166,7 +180,7 @@ public final class WindowUserSettings {
 
     // Update button
     gbc.gridx = 0;
-    gbc.gridy = 5;
+    gbc.gridy = 6;
     gbc.gridwidth = 4;
     gbc.anchor = GridBagConstraints.CENTER;
     JButton updateButton = new JButton(tm.getText("save_settings_button"));
