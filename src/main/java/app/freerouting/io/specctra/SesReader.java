@@ -2,6 +2,7 @@ package app.freerouting.io.specctra;
 
 import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.model.structure.FixedState;
+import app.freerouting.board.model.structure.Unit;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;
@@ -9,6 +10,7 @@ import app.freerouting.io.specctra.parser.IJFlexScanner;
 import app.freerouting.io.specctra.parser.Keyword;
 import app.freerouting.io.specctra.parser.LayerStructure;
 import app.freerouting.io.specctra.parser.PolygonPath;
+import app.freerouting.io.specctra.parser.ReadScopeParameter;
 import app.freerouting.io.specctra.parser.ScopeKeyword;
 import app.freerouting.io.specctra.parser.Shape;
 import app.freerouting.io.specctra.parser.SpecctraDsnStreamReader;
@@ -31,16 +33,16 @@ public final class SesReader {
   private final IJFlexScanner scanner;
   private final BasicBoard board;
   private final LayerStructure specctraLayerStructure;
-  private final double sessionFileScaleDenominator;
+  private double sessionToBoardScale;
   private int wiresImported;
   private int viasImported;
   private int errorsEncountered;
 
-  private SesReader(IJFlexScanner scanner, BasicBoard board, double scaleDenominator) {
+  private SesReader(IJFlexScanner scanner, BasicBoard board, double sessionToBoardScale) {
     this.scanner = scanner;
     this.board = board;
     this.specctraLayerStructure = new LayerStructure(board.layerStructure);
-    this.sessionFileScaleDenominator = scaleDenominator;
+    this.sessionToBoardScale = sessionToBoardScale;
   }
 
   /**
@@ -176,6 +178,15 @@ public final class SesReader {
       if (prevToken == Keyword.OPEN_BRACKET) {
         if (nextToken == Keyword.NETWORK_OUT) {
           processNetworkScope();
+        } else if (nextToken == Keyword.RESOLUTION_SCOPE) {
+          ReadScopeParameter resolution = new ReadScopeParameter(this.scanner, null, null);
+          if (!Keyword.RESOLUTION_SCOPE.readScope(resolution) || resolution.resolution <= 0) {
+            throw new IOException("Invalid SES routing resolution");
+          }
+          sessionToBoardScale =
+              board.communication.coordinateTransform.dsnToBoard(
+                      Unit.scale(1, resolution.unit, board.communication.unit))
+                  / resolution.resolution;
         } else {
           ScopeKeyword.skipScope(this.scanner);
         }
@@ -299,19 +310,11 @@ public final class SesReader {
 
     try {
       int layerIndex = wirePath.layer.no;
-      int[] boardCoordinates = new int[wirePath.coordinateArr.length];
-      for (int i = 0; i < wirePath.coordinateArr.length; i++) {
-        boardCoordinates[i] =
-            (int) Math.round(wirePath.coordinateArr[i] / sessionFileScaleDenominator);
+      if (layerIndex < 0 || layerIndex >= board.getLayerCount()) {
+        throw new IOException("Invalid SES wire layer");
       }
-
-      Point[] points = new Point[boardCoordinates.length / 2];
-      for (int i = 0; i < points.length; i++) {
-        points[i] = Point.getInstance(boardCoordinates[2 * i], boardCoordinates[2 * i + 1]);
-      }
-
-      Polyline polyline = new Polyline(points);
-      int halfWidth = (int) Math.round(wirePath.width / (2.0 * sessionFileScaleDenominator));
+      Polyline polyline = SesPathGeometry.read(wirePath.coordinateArr, sessionToBoardScale);
+      int halfWidth = SesPathGeometry.halfWidth(wirePath.width, sessionToBoardScale);
 
       int clearanceClass =
           board
@@ -320,9 +323,13 @@ public final class SesReader {
               .defaultItemClearanceClasses
               .get(app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.TRACE);
 
-      board.insertTrace(
-          polyline, layerIndex, halfWidth, netNumbers, clearanceClass, FixedState.USER_FIXED);
-
+      // Import fixed copper exactly; normalization must not erase point copper or short segments.
+      var trace =
+          board.insertTraceWithoutCleaning(
+              polyline, layerIndex, halfWidth, netNumbers, clearanceClass, FixedState.USER_FIXED);
+      if (trace == null) {
+        return false;
+      }
       wiresImported++;
       return true;
 
@@ -390,8 +397,8 @@ public final class SesReader {
         return false;
       }
 
-      int x = (int) Math.round(location[0] / sessionFileScaleDenominator);
-      int y = (int) Math.round(location[1] / sessionFileScaleDenominator);
+      int x = (int) Math.round(location[0] * sessionToBoardScale);
+      int y = (int) Math.round(location[1] * sessionToBoardScale);
       Point viaLocation = Point.getInstance(x, y);
 
       int clearanceClass =

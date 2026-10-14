@@ -13,7 +13,6 @@ import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.geometry.planar.Point;
 import app.freerouting.io.CoordinateTransform;
 import app.freerouting.io.specctra.parser.Layer;
 import app.freerouting.io.specctra.parser.Parser;
@@ -23,7 +22,6 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -367,80 +365,14 @@ public final class SesWriter {
       CoordinateTransform coordinateTransform,
       IndentFileWriter file)
       throws IOException {
-    int layerIndex = wire.getLayer();
-    final app.freerouting.board.model.structure.Layer boardLayer =
-        board.layerStructure.layers[layerIndex];
-    final int wireWidth = (int) Math.round(coordinateTransform.boardToDsn(2 * wire.getHalfWidth()));
+    String layer = board.layerStructure.layers[wire.getLayer()].name;
+    double width = coordinateTransform.boardToDsn(2 * wire.getHalfWidth());
+    SesTracePath path = SesTracePath.from(wire, coordinateTransform);
     file.startScope();
     file.write("wire");
-    Point[] corners = wire.polyline().corners();
-    int[] coors = new int[2 * corners.length];
-    int cornerIndex = 0;
-    int[] prevCoors = null;
-    for (int i = 0; i < corners.length; i++) {
-      FloatPoint cornerPoint = corners[i].toFloat();
-      if (i == 0 || i == corners.length - 1) {
-        FloatPoint snapped = snappedEndpoint(wire, i == 0);
-        if (snapped != null) {
-          cornerPoint = snapped;
-        }
-      }
-      double[] currentFloatCoors = coordinateTransform.boardToDsn(cornerPoint);
-      int[] currentCoors = new int[2];
-      currentCoors[0] = (int) Math.round(currentFloatCoors[0]);
-      currentCoors[1] = (int) Math.round(currentFloatCoors[1]);
-      if (i == 0 || (currentCoors[0] != prevCoors[0] || currentCoors[1] != prevCoors[1])) {
-        coors[cornerIndex] = currentCoors[0];
-        ++cornerIndex;
-        coors[cornerIndex] = currentCoors[1];
-        ++cornerIndex;
-        prevCoors = currentCoors;
-      }
-    }
-    if (cornerIndex < coors.length) {
-      coors = Arrays.copyOf(coors, cornerIndex);
-    }
-    writePath(boardLayer.name, wireWidth, coors, identifierType, file);
+    path.write(layer, width, identifierType, file);
     writeFixedState(file, wire.getFixedState());
     file.endScope();
-  }
-
-  /**
-   * Returns the exact pad/via center to use for a wire endpoint, or null to keep the corner as-is.
-   * Trace endpoints can sit on the border of freerouting's octagon approximation of a pad — a point
-   * that is inside the approximation but outside the importing tool's real pad polygon, which then
-   * reports the net as unconnected. Snapping the endpoint to the contacted drill item's center (the
-   * same coordinate {@code writeVia} emits) removes those sub-pad gaps. Only snaps when the
-   * endpoint already lies within the pad inradius of the center, so the last segment cannot leave
-   * the pad or fold across a neighbor.
-   */
-  static FloatPoint snappedEndpoint(PolylineTrace wire, boolean startSide) {
-    Point corner = startSide ? wire.firstCorner() : wire.lastCorner();
-    FloatPoint cornerFloat = corner.toFloat();
-    java.util.Set<Item> contacts = startSide ? wire.getStartContacts() : wire.getEndContacts();
-    int layer = wire.getLayer();
-    for (Item contact : contacts) {
-      if (!(contact instanceof app.freerouting.board.model.items.DrillItem drill)) {
-        continue;
-      }
-      if (layer < drill.firstLayer() || layer > drill.lastLayer()) {
-        continue;
-      }
-      app.freerouting.geometry.planar.Shape padShape = drill.getShape(layer - drill.firstLayer());
-      if (padShape == null) {
-        continue;
-      }
-      FloatPoint center = drill.getCenter().toFloat();
-      double centerDistance = cornerFloat.distance(center);
-      if (centerDistance <= 0.5) {
-        // Already at the center (within rounding) — nothing to fix.
-        return null;
-      }
-      if (centerDistance <= padShape.borderDistance(center)) {
-        return center;
-      }
-    }
-    return null;
   }
 
   private static void writeVia(
@@ -478,28 +410,6 @@ public final class SesWriter {
     } else {
       file.write("protect)");
     }
-  }
-
-  private static void writePath(
-      String layerName,
-      int width,
-      int[] coors,
-      IdentifierType identifierType,
-      IndentFileWriter file)
-      throws IOException {
-    file.startScope();
-    file.write("path ");
-    identifierType.write(layerName, file);
-    file.write(" ");
-    file.write(String.valueOf(width));
-    int cornerCount = coors.length / 2;
-    for (int i = 0; i < cornerCount; i++) {
-      file.newLine();
-      file.write(String.valueOf(coors[2 * i]));
-      file.write(" ");
-      file.write(String.valueOf(coors[2 * i + 1]));
-    }
-    file.endScope();
   }
 
   private static void writeConductionArea(
