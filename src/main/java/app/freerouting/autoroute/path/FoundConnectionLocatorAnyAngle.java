@@ -2,7 +2,6 @@ package app.freerouting.autoroute.path;
 
 import app.freerouting.autoroute.expansion.CompleteExpansionRoom;
 import app.freerouting.autoroute.maze.AutorouteControl;
-import app.freerouting.autoroute.maze.AutorouteEngine;
 import app.freerouting.autoroute.maze.MazeSearchEngine;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.structure.AngleRestriction;
@@ -78,7 +77,7 @@ class FoundConnectionLocatorAnyAngle extends FoundConnectionLocator {
     }
 
     double traceHalfwidthExact = this.ctrl.compensatedTraceHalfWidth[this.currentTraceLayer];
-    double traceHalfwidthMax = traceHalfwidthExact + AutorouteEngine.TRACE_WIDTH_TOLERANCE;
+    double traceHalfwidthMax = this.ctrl.getTraceClearanceOffset(this.currentTraceLayer);
     final double traceHalfwidthMiddle = traceHalfwidthExact + cTolerance;
 
     BacktrackElement currentToInfo = this.backtrackArray[this.currentToDoorIndex];
