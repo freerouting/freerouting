@@ -199,11 +199,18 @@ the dedicated subpackages above; `app.freerouting.autoroute.events` remains the 
 
 ### `app.freerouting.rules`
 
-The rule model that defines nets, clearance classes, via rules, layer constraints, and trace length bounds.
+The rule model that defines nets, clearance classes, via rules, layer constraints, trace length bounds, and meander pattern tuning constraints.
 
 - `NetLengthConstraint` — Immutable record representing minimum and maximum trace length bounds (`minLength`, `maxLength`), target length calculation (midpoint or single bound), and boundary checks (`isSatisfied(traceLength)`).
 - Trace length bounds are supported at both the `NetClass` level and as explicit overrides at the `Net` level (parsed from Specctra DSN `(circuit (length <max> [<min>]))` or `(rule (length <max> [<min>]))` scopes). When unconstrained at the net level, a net transparently falls back to its net class constraint.
-- **Future Extension Point:** Net length constraints are structured for forward compatibility with future post-routing Net Length Tuning and accordion meander insertion phases, providing the target length and tolerance envelope without coupling to active routing search heuristics.
+- `NetMeanderConstraint` — Immutable record representing trace length tuning meander (accordion) constraints: excursion bounds (`minAmplitude`, `maxAmplitude`), segment spacing (`spacing`), corner geometry (`CornerStyle`: `FILLET` or `CHAMFER`), corner radius percentage (`radiusPercentage`), and baseline side restriction (`singleSided`).
+- Meander pattern constraints are resolved across a 4-tier fallback hierarchy: explicit `Net` override → `NetClass` constraint → `BoardRules` default preset → `RouterSettings` / `DefaultSettings`.
+- Specctra DSN grammar support includes standard Specctra descriptors (`length_amplitude`, `length_gap`), extension descriptors (`corner_style`, `radius`, `single_sided`), and grouped scopes (`meander_pattern`), supporting both reading and lossless round-trip serialization.
+- `DifferentialPair` — Immutable record representing a differential signal pair linking two complementary nets (`positiveNet`, `negativeNet`) with a common logical base name (`baseName`), target coupled spacing (`coupledSpacing`), and maximum allowable intra-pair skew (`maxSkew`).
+- `DifferentialPairs` — Thread-safe collection and bidirectional index for differential signal pairs on a board, facilitating $O(1)$ lookups by base name (case-insensitive) or by net reference/number.
+- `DifferentialPairDetector` — Automated detector recognizing standard EDA differential pair suffix conventions (`_P`/`_N`, `_DP`/`_DM`, `_D+`/`_D-`, `_+`/`_-`, `_POS`/`_NEG`, `.P`/`.N`, and scoped `D+`/`D-` USB fallback), requiring `_` or `.` delimiters to eliminate false positives on terminal polarities (`LED+`, `MOT+`, `SPK+`), excluding power/battery/ground rails (`GND`, `VCC`, `+5V`, `BAT+`, `V+`, etc.), and registering complementary pairs during post-load board processing in `HeadlessBoardManager`.
+- Differential pair nets integrate into the meander constraint fallback hierarchy: when unconstrained at the net or net-class level, nets belonging to a registered differential pair automatically inherit the `DIFF_PAIR` meander preset rather than `SINGLE_TRACK`.
+- **Future Extension Point:** Net length, meander pattern constraints, and differential pair models are structured for forward compatibility with future post-routing Net Length Tuning and differential pair routing phases, providing the geometric and topological envelope without coupling to active routing search heuristics.
 
 ### `app.freerouting.drc`
 

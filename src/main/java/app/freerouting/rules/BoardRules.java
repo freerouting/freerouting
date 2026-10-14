@@ -25,6 +25,7 @@ public class BoardRules implements Serializable {
   public final ViaInfos viaInfos = new ViaInfos();
   public final Vector<ViaRule> viaRules = new Vector<>();
   public final NetClasses netClasses = new NetClasses();
+  public final DifferentialPairs differentialPairs = new DifferentialPairs();
   private final LayerStructure layerStructure;
 
   /** The angle restriction for traces: 90 degree, 45 degree or none. */
@@ -61,6 +62,104 @@ public class BoardRules implements Serializable {
     this.minTraceHalfWidth = 100000;
     this.maxTraceHalfWidth = 100;
     this.holeClearance = 0;
+    initDefaultMeanderConstraints(1000.0);
+  }
+
+  private final java.util.Map<MeanderPatternType, NetMeanderConstraint> defaultMeanderConstraints =
+      new java.util.EnumMap<>(MeanderPatternType.class);
+  private final java.util.Set<MeanderPatternType> explicitMeanderConstraints =
+      java.util.EnumSet.noneOf(MeanderPatternType.class);
+
+  /**
+   * Initializes default length-tuning meander constraints for all pattern types using the given
+   * millimeter-to-board scale factor, preserving any constraints explicitly configured from DSN.
+   *
+   * @param mmToBoardScale multiplier to convert millimeters to board coordinates
+   */
+  public void initDefaultMeanderConstraints(double mmToBoardScale) {
+    for (MeanderPatternType type : MeanderPatternType.values()) {
+      if (!this.explicitMeanderConstraints.contains(type)) {
+        this.defaultMeanderConstraints.put(
+            type, NetMeanderConstraint.createDefaultPreset(type, mmToBoardScale));
+      }
+    }
+  }
+
+  /**
+   * Returns whether an explicit meander constraint was configured for the given pattern type.
+   *
+   * @param type the pattern type
+   * @return true if an explicit constraint was set
+   */
+  public boolean hasExplicitMeanderConstraint(MeanderPatternType type) {
+    return this.explicitMeanderConstraints.contains(type);
+  }
+
+  /**
+   * Returns the default length-tuning meander constraint for the specified pattern type.
+   *
+   * @param type the pattern type (single track, diff pair, or diff pair skew)
+   * @return the default meander constraint
+   */
+  public NetMeanderConstraint getDefaultMeanderConstraint(MeanderPatternType type) {
+    MeanderPatternType key = (type != null) ? type : MeanderPatternType.SINGLE_TRACK;
+    NetMeanderConstraint constraint = this.defaultMeanderConstraints.get(key);
+    if (constraint != null) {
+      return constraint;
+    }
+    return NetMeanderConstraint.createDefaultPreset(key, 1000.0);
+  }
+
+  /**
+   * Sets the default length-tuning meander constraint for the specified pattern type.
+   *
+   * @param type the pattern type
+   * @param constraint the constraint to set
+   */
+  public void setDefaultMeanderConstraint(
+      MeanderPatternType type, NetMeanderConstraint constraint) {
+    if (type != null && constraint != null) {
+      this.defaultMeanderConstraints.put(type, constraint);
+      this.explicitMeanderConstraints.add(type);
+    }
+  }
+
+  /**
+   * Resolves the effective length-tuning meander constraint for the given net, falling back from
+   * net-specific to net-class to the board default.
+   *
+   * @param net the net to query
+   * @param fallbackType pattern type to use if unconstrained
+   * @return resolved NetMeanderConstraint
+   */
+  public NetMeanderConstraint getMeanderConstraint(Net net, MeanderPatternType fallbackType) {
+    if (net != null) {
+      if (net.hasExplicitMeanderConstraint()) {
+        return net.getExplicitMeanderConstraint();
+      }
+      if (net.getNetClass() != null && net.getNetClass().hasMeanderConstraint()) {
+        return net.getNetClass().getMeanderConstraint();
+      }
+    }
+    return getDefaultMeanderConstraint(fallbackType);
+  }
+
+  /**
+   * Resolves the effective length-tuning meander constraint for the given net, falling back from
+   * net-specific to net-class to the board default constraint (DIFF_PAIR if the net belongs to a
+   * registered differential pair, SINGLE_TRACK otherwise).
+   *
+   * @param net the net to query
+   * @return resolved NetMeanderConstraint
+   */
+  public NetMeanderConstraint getMeanderConstraint(Net net) {
+    MeanderPatternType defaultType =
+        (net != null
+                && this.differentialPairs != null
+                && this.differentialPairs.findForNet(net) != null)
+            ? MeanderPatternType.DIFF_PAIR
+            : MeanderPatternType.SINGLE_TRACK;
+    return getMeanderConstraint(net, defaultType);
   }
 
   /** Gets the default item clearance class. */

@@ -98,6 +98,24 @@ public class DefaultSettings implements SettingsSource {
    */
   public static final double DEFAULT_NECK_WIDTH_UM = 0.0;
 
+  /** Default minimum amplitude for trace length tuning meanders in millimeters. */
+  public static final double DEFAULT_MEANDER_MIN_AMPLITUDE_MM = 0.2;
+
+  /** Default maximum amplitude for trace length tuning meanders in millimeters. */
+  public static final double DEFAULT_MEANDER_MAX_AMPLITUDE_MM = 1.0;
+
+  /** Default spacing between parallel meander traces in millimeters. */
+  public static final double DEFAULT_MEANDER_SPACING_MM = 0.6;
+
+  /** Default corner style for meander turns (FILLET or CHAMFER). */
+  public static final String DEFAULT_MEANDER_CORNER_STYLE = "FILLET";
+
+  /** Default corner radius percentage for meander turns (0 to 100). */
+  public static final double DEFAULT_MEANDER_RADIUS_PERCENTAGE = 80.0;
+
+  /** Default single sided constraint for meanders. */
+  public static final boolean DEFAULT_MEANDER_SINGLE_SIDED = false;
+
   /** Current default router score formula. */
   public static final RouterScoringVersion DEFAULT_ROUTER_SCORING_VERSION =
       RouterScoringVersion.V2_CONTINUOUS;
@@ -180,6 +198,12 @@ public class DefaultSettings implements SettingsSource {
     settings.copperToEdgeClearanceUm = DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM;
     settings.holeClearanceUm = DEFAULT_HOLE_CLEARANCE_UM;
     settings.clearanceToleranceUm = DEFAULT_CLEARANCE_TOLERANCE_UM;
+    settings.meanderMinAmplitudeMm = DEFAULT_MEANDER_MIN_AMPLITUDE_MM;
+    settings.meanderMaxAmplitudeMm = DEFAULT_MEANDER_MAX_AMPLITUDE_MM;
+    settings.meanderSpacingMm = DEFAULT_MEANDER_SPACING_MM;
+    settings.meanderCornerStyle = DEFAULT_MEANDER_CORNER_STYLE;
+    settings.meanderRadiusPercentage = DEFAULT_MEANDER_RADIUS_PERCENTAGE;
+    settings.meanderSingleSided = DEFAULT_MEANDER_SINGLE_SIDED;
     settings.planeNets = new String[0];
     settings.planeAsObstacle = false;
     settings.neckWidthUm = DEFAULT_NECK_WIDTH_UM;
