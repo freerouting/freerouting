@@ -52,10 +52,11 @@ class BenchmarkStoreTest(unittest.TestCase):
         self.assertTrue(store.corpus_save_is_due(1_000.0, 1_180.0))
         self.assertTrue(store.corpus_save_is_due(1_000.0, 1_001.0, force=True))
 
-    def test_saved_age_is_seconds_since_the_last_corpus_swap(self) -> None:
+    def test_saved_age_is_minutes_since_the_last_corpus_swap(self) -> None:
         self.assertEqual(store.format_saved_age(None, 50.0), "never")
-        self.assertEqual(store.format_saved_age(40.0, 40.2), "0s ago")
-        self.assertEqual(store.format_saved_age(10.0, 52.9), "42s ago")
+        self.assertEqual(store.format_saved_age(40.0, 40.2), "0.0m ago")
+        self.assertEqual(store.format_saved_age(10.0, 52.9), "0.7m ago")
+        self.assertEqual(store.format_saved_age(0.0, 1626.0), "27.1m ago")
 
     def test_journal_keeps_the_latest_score_for_a_cache_key(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -142,7 +143,7 @@ class BenchmarkStoreTest(unittest.TestCase):
             1: {"board": "board-A", "tier": "A", "start": 0.0, "last_line": "Routing...", "active": True},
             2: {"board": "Idle", "start": 0.0, "last_line": "Idle", "active": False},
         }
-        messages = collections.deque(["[   1/  10] TIMEOUT  (    5.2s, CLEAN) board-A"])
+        messages = collections.deque(["[   1/  10] TIMEOUT  (    0.1m, CLEAN) board-A"])
 
         with patch("sys.stdout", captured):
             store.render_dashboard(
@@ -176,7 +177,7 @@ class BenchmarkStoreTest(unittest.TestCase):
         self.assertIn("[W-02]", plain)
         self.assertIn("Latest results:", plain)
         self.assertNotIn("Recent Completed", plain)
-        self.assertIn("[   1/  10] TIMEOUT  (    5.2s, CLEAN) board-A", plain)
+        self.assertIn("[   1/  10] TIMEOUT  (    0.1m, CLEAN) board-A", plain)
 
         # Header contains target workers and +/- hint
         self.assertIn("Workers: 2 (target 4)", lines[1])
@@ -185,13 +186,13 @@ class BenchmarkStoreTest(unittest.TestCase):
     def test_recent_result_aligns_outcome_and_seconds(self) -> None:
         self.assertEqual(
             store.format_recent_result(3, 527, "CLEAN", store.format_result_timing(734.4), "f4fc_f4fc"),
-            "[   3/ 527] CLEAN    (  734.4s) f4fc_f4fc",
+            "[   3/ 527] CLEAN    (   12.2m) f4fc_f4fc",
         )
         self.assertEqual(
             store.format_recent_result(
-                6, 527, "UNROUTED", store.format_result_timing(1995.7, "unr=1, viol=9"), "typec-charger_TypeC-DC-Charger"
+                22, 535, "UNROUTED", store.format_result_timing(13040.3, "unr=5, viol=0"), "dorkyboard_keyboard"
             ),
-            "[   6/ 527] UNROUTED ( 1995.7s, unr=1, viol=9) typec-charger_TypeC-DC-Charger",
+            "[  22/ 535] UNROUTED (  217.3m, unr=5, viol=0) dorkyboard_keyboard",
         )
         clean = store.format_recent_result(7, 527, "CLEAN", store.format_result_timing(1095.7), "RoBoC_RoboticsMKII")
         unrouted = store.format_recent_result(

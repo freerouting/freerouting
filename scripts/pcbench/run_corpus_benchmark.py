@@ -136,8 +136,8 @@ def format_fixture_name(name: str, limit: int = 37) -> str:
 
 
 def format_result_timing(seconds: float, suffix: str = "") -> str:
-    """Right-align the seconds so result rows share one time column."""
-    timing = f"({seconds:7.1f}s"
+    """Right-align the minutes so result rows share one time column."""
+    timing = f"({seconds / 60:7.1f}m"
     if suffix:
         timing += f", {suffix}"
     return timing + ")"
@@ -819,7 +819,7 @@ def format_saved_age(last_saved_at: float | None, now: float) -> str:
     """Toolbar age of the last successful benchmarks.json swap."""
     if last_saved_at is None:
         return "never"
-    return f"{max(0, int(now - last_saved_at))}s ago"
+    return f"{max(0.0, (now - last_saved_at) / 60):.1f}m ago"
 
 
 def parse_tier_order(raw: str) -> list[str]:
