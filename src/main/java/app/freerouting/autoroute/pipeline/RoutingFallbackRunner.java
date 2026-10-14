@@ -32,6 +32,7 @@ final class RoutingFallbackRunner {
       BatchAutorouter defaultRouter,
       List<RoutingFallback.Strategy> strategies,
       byte[] input) {
+    ClearanceBaseline inputBaseline = job.board.clearanceBaseline;
     RoutingFallback.Outcome best =
         RoutingFallback.Outcome.of("default", job.board, job.routerSettings);
     if (best.isCompleteAndClean()) {
@@ -89,7 +90,7 @@ final class RoutingFallbackRunner {
       if (stopped(job) || bestAttempt.outcome.isCompleteAndClean()) {
         break;
       }
-      Attempt attempt = runAttempt(job, input, strategy, false);
+      Attempt attempt = runAttempt(job, input, strategy, false, inputBaseline);
       if (attempt == null) {
         continue;
       }
@@ -182,6 +183,9 @@ final class RoutingFallbackRunner {
         break;
       }
       RoutingBoard copy = (RoutingBoard) BasicBoard.deserialize(input);
+      if (copy.clearanceBaseline == null) {
+        copy.clearanceBaseline = bestAttempt.board.clearanceBaseline;
+      }
       if ("neighbourhood".equals(planned.kind())) {
         int ripped = RetryNeighbourhood.ripNearOpenPins(copy, planned.tryNumber());
         job.logInfo(
@@ -252,8 +256,15 @@ final class RoutingFallbackRunner {
   }
 
   private Attempt runAttempt(
-      RoutingJob job, byte[] input, RoutingFallback.Strategy strategy, boolean keepFanoutVias) {
+      RoutingJob job,
+      byte[] input,
+      RoutingFallback.Strategy strategy,
+      boolean keepFanoutVias,
+      ClearanceBaseline inputBaseline) {
     RoutingBoard board = (RoutingBoard) BasicBoard.deserialize(input);
+    if (board.clearanceBaseline == null) {
+      board.clearanceBaseline = inputBaseline;
+    }
     RouterSettings settings = job.routerSettings.clone();
     strategy.apply(settings);
     Attempt attempt = runPrepared(job, board, settings, keepFanoutVias, strategy.name);

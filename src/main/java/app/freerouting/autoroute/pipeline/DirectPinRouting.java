@@ -34,6 +34,12 @@ final class DirectPinRouting {
 
   private DirectPinRouting() {}
 
+  /** A null or non-positive {@code fanout.max_items} is unlimited, as in {@code BatchFanout}. */
+  static int fanoutItemLimit(RouterSettings settings) {
+    Integer configured = settings.fanout != null ? settings.fanout.maxItems : null;
+    return configured != null && configured > 0 ? configured : Integer.MAX_VALUE;
+  }
+
   static BatchFanout.FanoutRunSummary run(
       RoutingBoard board, RouterSettings settings, StoppableThread thread) {
     if (!settings.getRunRouter()) {
@@ -57,10 +63,7 @@ final class DirectPinRouting {
     int attempts = 0;
     int routed = 0;
     int deferred = 0;
-    int maxItems =
-        settings.fanout != null && settings.fanout.maxItems != null
-            ? settings.fanout.maxItems
-            : Integer.MAX_VALUE;
+    int maxItems = DirectPinRouting.fanoutItemLimit(settings);
     boolean fanoutDisabled =
         settings.fanout != null
             && settings.fanout.maxPasses != null

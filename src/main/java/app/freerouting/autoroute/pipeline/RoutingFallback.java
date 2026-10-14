@@ -213,13 +213,32 @@ public final class RoutingFallback {
       return this.unrouted - this.designBlocked == 0 && this.newOrChanged == 0;
     }
 
+    /** The attempt baseline, or the input-board baseline when the attempt has none. */
+    static ClearanceBaseline exemptionBaseline(
+        ClearanceBaseline incumbent, ClearanceBaseline boardBaseline) {
+      return incumbent != null ? incumbent : boardBaseline;
+    }
+
+    /** Violations that are not exact unchanged exemptions. A null baseline counts them all. */
+    static int newOrChangedCount(
+        int violationCount, ClearanceBaseline baseline, Collection<ClearanceViolation> violations) {
+      if (violationCount == 0) {
+        return 0;
+      }
+      if (baseline == null) {
+        return violationCount;
+      }
+      return baseline.countNewOrChanged(violations);
+    }
+
     public static Outcome of(String strategy, RoutingBoard board, RouterSettings scoring) {
       return of(strategy, board, scoring, null);
     }
 
     /**
-     * Measures the board. A null baseline counts every violation as new. Design-blocked airlines
-     * are counted once here, not on every pass statistic.
+     * Measures the board. An explicit incumbent wins; otherwise the input-board clearance baseline
+     * is used. A null baseline counts every violation as new. Design-blocked airlines are counted
+     * once here, not on every pass statistic.
      */
     public static Outcome of(
         String strategy, RoutingBoard board, RouterSettings scoring, ClearanceBaseline incumbent) {
@@ -241,11 +260,10 @@ public final class RoutingFallback {
               ? statistics.clearanceViolations.totalCount
               : 0;
       int changed =
-          violationCount == 0
-              ? 0
-              : incumbent == null
-                  ? violationCount
-                  : incumbent.countNewOrChanged(violationsOf(board));
+          newOrChangedCount(
+              violationCount,
+              exemptionBaseline(incumbent, board.clearanceBaseline),
+              violationsOf(board));
       statistics.clearanceViolations.newOrChangedCount = changed;
       return new Outcome(
           strategy,

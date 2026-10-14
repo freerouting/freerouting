@@ -2,8 +2,11 @@ package app.freerouting.autoroute.pipeline;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import app.freerouting.drc.ClearanceBaseline;
+import app.freerouting.drc.ClearanceViolation;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.sources.DefaultSettings;
 import java.util.ArrayList;
@@ -93,5 +96,24 @@ class RoutingFallbackTest {
     assertFalse(RoutingFallback.isRetryable(BatchAutorouter.StopReason.TIMED_OUT));
     assertFalse(RoutingFallback.isRetryable(BatchAutorouter.StopReason.CANCELLED));
     assertFalse(RoutingFallback.isRetryable(BatchAutorouter.StopReason.REPEATED));
+  }
+
+  @Test
+  void preExistingViolationsAreNotCountedAsNew() {
+    ClearanceViolation violation = new ClearanceViolation(null, null, null, 0, 100, 50);
+    List<ClearanceViolation> violations = List.of(violation);
+    ClearanceBaseline input = new ClearanceBaseline(violations);
+    assertEquals(0, RoutingFallback.Outcome.newOrChangedCount(1, input, violations));
+    assertEquals(1, RoutingFallback.Outcome.newOrChangedCount(1, null, violations));
+    assertSame(input, RoutingFallback.Outcome.exemptionBaseline(null, input));
+  }
+
+  @Test
+  void directFirstTreatsNonPositiveFanoutItemLimitAsUnlimited() {
+    RouterSettings settings = new DefaultSettings().getSettings();
+    settings.fanout.maxItems = 0;
+    assertEquals(Integer.MAX_VALUE, DirectPinRouting.fanoutItemLimit(settings));
+    settings.fanout.maxItems = 3;
+    assertEquals(3, DirectPinRouting.fanoutItemLimit(settings));
   }
 }
