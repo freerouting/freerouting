@@ -58,12 +58,18 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
       Thread monitorThread =
           new Thread(
               () -> {
-                while ((job != null) && (job.thread != null)) {
+                while (job != null
+                    && job.thread != null
+                    && job.thread.isAlive()
+                    && (job.state == RoutingJobState.RUNNING
+                        || job.state == RoutingJobState.STOPPING
+                        || job.state == RoutingJobState.PAUSED)) {
 
                   try {
                     Thread.sleep(1000);
                   } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    Thread.currentThread().interrupt();
+                    return;
                   }
 
                   if (job.state == RoutingJobState.RUNNING
@@ -82,14 +88,16 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
                         try {
                           Thread.sleep(1000);
                         } catch (InterruptedException e) {
-                          e.printStackTrace();
+                          Thread.currentThread().interrupt();
+                          return;
                         }
                       }
                       markTimedOutIfStillActive();
                     }
                   }
                 }
-              });
+              },
+              "freerouting-job-monitor-" + job.id);
       monitorThread.setDaemon(true);
       monitorThread.start();
 
@@ -192,14 +200,14 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
             }
           });
       pipeline.run();
-      setJobOutput(job);
+      boolean outputReady = setJobOutput(job);
 
       boolean fanoutTimedOut = pipeline.getAutorouter().isFanoutTimedOut();
       final boolean optimizerTimedOut =
           pipeline.getOptimizer() != null && pipeline.getOptimizer().isTimedOut();
 
       job.finishedAt = Instant.now();
-      assignTerminalState();
+      assignTerminalState(outputReady);
 
       long durationMs = java.time.Duration.between(job.startedAt, job.finishedAt).toMillis();
       double durationSec = durationMs / 1000.0;
@@ -332,53 +340,57 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
     }
   }
 
-  private void setJobOutput(RoutingJob job) {
-    if (job.output == null) {
-      job.output = new BoardFileDetails(job.board);
-      job.output.addUpdatedEventListener(_ -> job.fireOutputUpdatedEvent());
-      String outputBaseName =
-          job.input != null ? job.input.getFilenameWithoutExtension() : job.name;
-      if (job.input != null && job.input.format == FileFormat.KICAD_DESIGN_JSON) {
-        job.output.format = FileFormat.KICAD_SESSION_JSON;
-        job.output.setFilename(outputBaseName + ".json");
+  private boolean setJobOutput(RoutingJob job) {
+    try {
+      if (job.board == null) {
+        throw new java.io.IOException("The final routing board is unavailable");
+      }
+      if (job.output == null) {
+        job.output = new BoardFileDetails(job.board);
+        job.output.addUpdatedEventListener(_ -> job.fireOutputUpdatedEvent());
+        String name = job.input != null ? job.input.getFilenameWithoutExtension() : job.name;
+        if (job.input != null && job.input.format == FileFormat.KICAD_DESIGN_JSON) {
+          job.output.format = FileFormat.KICAD_SESSION_JSON;
+          job.output.setFilename(name + ".json");
+        } else {
+          job.output.format = FileFormat.SES;
+          job.output.setFilename(name + ".ses");
+        }
+      }
+      byte[] bytes;
+      if (job.output.format == FileFormat.KICAD_SESSION_JSON) {
+        bytes =
+            app.freerouting.io.kicad.KiCadJsonWriter.write(job.board, job.name)
+                .getBytes(java.nio.charset.StandardCharsets.UTF_8);
       } else {
-        job.output.format = FileFormat.SES;
-        job.output.setFilename(outputBaseName + ".ses");
-      }
-    }
-
-    // save the result to the output field
-    if (job.output.format == FileFormat.KICAD_SESSION_JSON) {
-      try {
-        String jsonStr = app.freerouting.io.kicad.KiCadJsonWriter.write(job.board, job.name);
-        job.output.setData(jsonStr.getBytes(java.nio.charset.StandardCharsets.UTF_8));
-      } catch (Exception e) {
-        FRLogger.error("Couldn't save the JSON output into the job object.", e);
-      }
-    } else if (job.output.format == FileFormat.SES) {
-      HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
-      boardManager.replaceRoutingBoard(job.board);
-
-      // Save the SES file after the auto-router has finished
-      try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-        if (boardManager.saveAsSpecctraSessionSes(baos, job.name)) {
-          job.output.setData(baos.toByteArray());
+        HeadlessBoardManager manager = new HeadlessBoardManager(job);
+        manager.replaceRoutingBoard(job.board);
+        try (ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
+          boolean saved;
+          if (job.output.format == FileFormat.SES) {
+            saved = manager.saveAsSpecctraSessionSes(buffer, job.name);
+          } else if (job.output.format == FileFormat.SCR) {
+            saved = manager.saveAsFusionScriptScr(buffer, job.name);
+          } else {
+            throw new java.io.IOException("Unsupported routing output format");
+          }
+          if (!saved) {
+            throw new java.io.IOException("The current routing board could not be exported");
+          }
+          bytes = buffer.toByteArray();
         }
-      } catch (Exception e) {
-        FRLogger.error("Couldn't save the SES output into the job object.", e);
       }
-    } else if (job.output.format == FileFormat.SCR) {
-      HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
-      boardManager.replaceRoutingBoard(job.board);
-
-      // Save the SCR file after the auto-router has finished
-      try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-        if (boardManager.saveAsFusionScriptScr(baos, job.name)) {
-          job.output.setData(baos.toByteArray());
-        }
-      } catch (Exception e) {
-        FRLogger.error("Couldn't save the SCR output into the job object.", e);
+      if (bytes.length == 0) {
+        throw new java.io.IOException("The current routing board produced empty output");
       }
+      // Publish only the complete current snapshot. A failed export must not
+      // leave an earlier preview available as a completed routing result.
+      job.output.setData(bytes);
+      return true;
+    } catch (Exception error) {
+      job.output = null;
+      FRLogger.error("The current routing output was not published.", error);
+      return false;
     }
   }
 
@@ -400,7 +412,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
    * RoutingJobState#CANCELLED}. Anything already terminal, including a timeout assigned by the
    * monitor, is left as it is.
    */
-  void assignTerminalState() {
+  void assignTerminalState(boolean outputReady) {
     synchronized (terminalStateLock) {
       if (job.state != RoutingJobState.RUNNING && job.state != RoutingJobState.STOPPING) {
         return;
@@ -409,8 +421,12 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
         job.state = RoutingJobState.CANCELLED;
         return;
       }
-      if (jobClockExpired() && job.thread != null && job.thread.isStopRequested()) {
+      if (jobClockExpired()) {
         job.state = RoutingJobState.TIMED_OUT;
+        return;
+      }
+      if (!outputReady) {
+        job.state = RoutingJobState.INVALID;
         return;
       }
       job.state = RoutingJobState.COMPLETED;
