@@ -35,6 +35,21 @@ public final class BigIntAux {
     return tmp1.subtract(tmp2);
   }
 
+  /** Record representing homogeneous 3D rational coordinates (x, y, z). */
+  public record RationalCoordinates(BigInteger x, BigInteger y, BigInteger z) {}
+
+  /** Adds homogeneous coordinates without allocating temporary three-element arrays. */
+  public static RationalCoordinates addRationalCoordinates(
+      BigInteger ax, BigInteger ay, BigInteger az, BigInteger bx, BigInteger by, BigInteger bz) {
+    if (az.equals(bz)) {
+      return new RationalCoordinates(ax.add(bx), ay.add(by), az);
+    }
+    return new RationalCoordinates(
+        ax.multiply(bz).add(bx.multiply(az)),
+        ay.multiply(bz).add(by.multiply(az)),
+        az.multiply(bz));
+  }
+
   /**
    * Auxiliary function to implement addition and translation in the classes RationalVector and
    * RationalPoint.

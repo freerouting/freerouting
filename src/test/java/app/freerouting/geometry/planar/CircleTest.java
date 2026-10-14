@@ -151,11 +151,19 @@ class CircleTest {
   }
 
   @Test
-  void testBoundingTileRespectsMaxSegmentLength() {
-    Circle circle = new Circle(Point.ZERO, 10000);
-    // Request segment length of 100 -> 10000 / 100 + 1 = 101 divisions per quadrant -> 404 sides
-    TileShape shape = circle.boundingTile(100);
-    assertInstanceOf(Simplex.class, shape);
-    assertEquals(404, shape.borderLineCount(), "boundingTile must not cap divisions to 64");
+  void testCircularAreaHugsCircleContainedPoints() {
+    int[] radii = {16, 750, 7500, 25000};
+    for (int radius : radii) {
+      Circle circle = new Circle(new IntPoint(123456, -98765), radius);
+      TileShape tile = circle.splitToConvex()[0];
+      for (int i = 0; i < 360; i++) {
+        double a = i * Math.PI / 180.0;
+        FloatPoint onCircle =
+            new FloatPoint(
+                123456 + Math.cos(a) * (radius - 0.001), -98765 + Math.sin(a) * (radius - 0.001));
+        assertTrue(
+            tile.contains(onCircle), "point of circle at angle " + i + " must lie inside tile");
+      }
+    }
   }
 }

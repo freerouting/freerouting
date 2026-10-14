@@ -133,6 +133,13 @@ public class Library extends ScopeKeyword {
       while (nextToken != Keyword.CLOSED_BRACKET) {
         Object prevToken = nextToken;
         nextToken = scanner.nextToken();
+        if (nextToken == null) {
+          FRLogger.warn(
+              "Library.read_padstack_scope: unexpected end of file at '"
+                  + scanner.getScopeIdentifier()
+                  + "'");
+          return false;
+        }
         if (prevToken == Keyword.OPEN_BRACKET) {
           if (nextToken == Keyword.SHAPE) {
             Shape currentShape = Shape.readScope(scanner, layerStructure);
@@ -165,8 +172,9 @@ public class Library extends ScopeKeyword {
       FRLogger.error("Library.read_padstack_scope: IO error scanning file", e);
       return false;
     }
-    if (boardPadstacks.get(padstackName) != null) {
-      // Padstack exists already
+    app.freerouting.core.library.Padstack existingPadstack = boardPadstacks.get(padstackName);
+    if (existingPadstack != null && padstackName.equals(existingPadstack.name)) {
+      // Padstack exists already (differing only in case is treated as a separate padstack)
       return true;
     }
     if (shapeList.isEmpty()) {

@@ -118,6 +118,18 @@ public class PolygonShape extends PolylineShape {
 
   @Override
   public boolean intersects(Shape shape) {
+    if (shape instanceof PolygonShape other) {
+      TileShape[] convexPieces = splitToConvex();
+      TileShape[] otherPieces = other.splitToConvex();
+      for (TileShape piece : convexPieces) {
+        for (TileShape otherPiece : otherPieces) {
+          if (piece.intersects(otherPiece)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
     return shape.intersects(this);
   }
 
@@ -182,8 +194,17 @@ public class PolygonShape extends PolylineShape {
 
   @Override
   public double borderDistance(FloatPoint point) {
-    FRLogger.warn("PolygonShape.border_distance not yet implemented");
-    return 0;
+    if (corners.length == 0) {
+      return 0;
+    }
+    FloatPoint prevCorner = corners[corners.length - 1].toFloat();
+    double result = prevCorner.distance(point);
+    for (Point corner : corners) {
+      FloatPoint currentCorner = corner.toFloat();
+      result = Math.min(result, new FloatLine(prevCorner, currentCorner).segmentDistance(point));
+      prevCorner = currentCorner;
+    }
+    return result;
   }
 
   @Override
@@ -409,7 +430,7 @@ public class PolygonShape extends PolylineShape {
   @Override
   public double area() {
 
-    if (dimension() <= 2) {
+    if (dimension() < 2) {
       return 0;
     }
     // calculate half of the absolute value of

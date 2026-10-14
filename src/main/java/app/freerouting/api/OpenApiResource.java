@@ -62,6 +62,12 @@ public class OpenApiResource {
         @ApiResponse(responseCode = "500", description = "Failed to generate OpenAPI specification")
       })
   @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getOpenApiDefault(@Context UriInfo uriInfo) {
+    return getOpenApiJson(uriInfo);
+  }
+
+  @GET
   @Path("/openapi.json")
   @Produces(MediaType.APPLICATION_JSON)
   public Response getOpenApiJson(@Context UriInfo uriInfo) {
