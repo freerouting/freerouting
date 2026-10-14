@@ -2,6 +2,7 @@ package app.freerouting.board;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.Freerouting;
@@ -14,12 +15,15 @@ import app.freerouting.board.model.structure.LayerStructure;
 import app.freerouting.board.state.Communication;
 import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.core.library.Padstack;
+import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
+import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.PolylineShape;
+import app.freerouting.geometry.planar.RationalPoint;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.io.specctra.SesWriter;
 import app.freerouting.rules.BoardRules;
@@ -390,5 +394,127 @@ public class PreservedTraceJunctionTest {
     }
     assertEquals(
         2, wireCount, "Exactly 2 wires should be exported; preserved trunk must not be split");
+  }
+
+  /**
+   * Defect 2 regression test: Two traces meeting at a RationalPoint shared endpoint (resulting from
+   * non-integer line intersections like (5000.5, 5000.5)) must be recognized as contained
+   * endpoints, dispatch symmetric normalContactPoint, and be fully traversed by
+   * getConnectionItems().
+   */
+  @Test
+  void testRationalSharedEndpointConnectionTraversal() {
+    Line lineStart1 = new Line(new IntPoint(-1000, 0), new IntPoint(0, -1000));
+    Line lineA = new Line(new IntPoint(0, 0), new IntPoint(1, 1));
+    Line lineB = new Line(new IntPoint(0, 1), new IntPoint(1, 0));
+    Line lineEnd2 = new Line(new IntPoint(1001, 0), new IntPoint(2001, 1000));
+
+    Point rationalIntersection = lineA.intersection(lineB);
+    assertTrue(
+        rationalIntersection instanceof RationalPoint,
+        "Line intersection must produce a RationalPoint");
+
+    Polyline polyline1 = new Polyline(new Line[] {lineStart1, lineA, lineB});
+    Polyline polyline2 = new Polyline(new Line[] {lineA, lineB, lineEnd2});
+
+    assertEquals(rationalIntersection, polyline1.lastCorner());
+    assertEquals(rationalIntersection, polyline2.firstCorner());
+
+    PolylineTrace trace1 =
+        board.insertTraceWithoutCleaning(polyline1, 0, 100, new int[] {1}, 1, FixedState.UNFIXED);
+    PolylineTrace trace2 =
+        board.insertTraceWithoutCleaning(polyline2, 0, 100, new int[] {1}, 1, FixedState.UNFIXED);
+
+    assertTrue(trace1.contains(rationalIntersection), "trace1 must contain rational intersection");
+    assertTrue(trace2.contains(rationalIntersection), "trace2 must contain rational intersection");
+
+    Point contact12 = trace1.normalContactPoint(trace2);
+    Point contact21 = trace2.normalContactPoint(trace1);
+    assertNotNull(contact12, "normalContactPoint from trace1 to trace2 must not be null");
+    assertEquals(
+        rationalIntersection,
+        contact12,
+        "Contact point must match the shared rational intersection");
+    assertEquals(contact12, contact21, "Contact points must be symmetric");
+
+    assertTrue(
+        trace1.getNormalContacts().contains(trace2), "trace1 normal contacts must include trace2");
+    assertTrue(
+        trace2.getNormalContacts().contains(trace1), "trace2 normal contacts must include trace1");
+
+    Set<Item> connectionItems = trace1.getConnectionItems();
+    assertTrue(
+        connectionItems.contains(trace2),
+        "getConnectionItems must traverse through the shared rational endpoint");
+  }
+
+  /**
+   * Defect 1 regression test: An unlocked multi-segment trunk contacted along its interior by a
+   * branch trace must safely decline unsupported corner smoothing during smoothenEndCornersFork,
+   * preserving connectivity without disconnecting copper or introducing DRC clearance violations.
+   */
+  @Test
+  void testUnlockedTrunkInteriorContactSmoothingPreservesTopologyAndClearance() {
+    // Net 1 trunk: (10000,10000) → (40000,10000) → (50000,20000) → (50000,50000)
+    Point[] trunkCorners =
+        new Point[] {
+          new IntPoint(10000, 10000),
+          new IntPoint(40000, 10000),
+          new IntPoint(50000, 20000),
+          new IntPoint(50000, 50000)
+        };
+    PolylineTrace trunk =
+        board.insertTraceWithoutCleaning(
+            new Polyline(trunkCorners), 0, 100, new int[] {1}, 1, FixedState.USER_FIXED);
+
+    // Net 1 branch: (30000,10000) → (20000,0)
+    Point branchStart = new IntPoint(30000, 10000);
+    Point branchEnd = new IntPoint(20000, 0);
+    PolylineTrace branch =
+        board.insertTraceWithoutCleaning(
+            new Polyline(branchStart, branchEnd), 0, 100, new int[] {1}, 1, FixedState.UNFIXED);
+
+    // Fixed Net 2 obstacle: (45000,8000) → (45000,11000)
+    board.insertTraceWithoutCleaning(
+        new Polyline(new IntPoint(45000, 8000), new IntPoint(45000, 11000)),
+        0,
+        100,
+        new int[] {2},
+        1,
+        FixedState.USER_FIXED);
+
+    // Verify initial contact and clean DRC state
+    assertTrue(branch.getStartContacts().contains(trunk), "Branch start must contact trunk");
+    DesignRulesChecker drc = new DesignRulesChecker(board, null);
+    assertTrue(
+        drc.getAllClearanceViolations().isEmpty(),
+        "Initial board must have 0 clearance violations");
+
+    // Unlock trunk as described in the reproduction
+    trunk.setFixedState(FixedState.UNFIXED);
+
+    // Calling pullTight returns false
+    boolean pullTightChanged = branch.pullTight(true, 100, null);
+    assertFalse(pullTightChanged, "pullTight should return false on this geometry");
+
+    // Calling smoothenEndCornersFork must safely decline interior junction smoothing
+    boolean forkChanged = branch.smoothenEndCornersFork(true, 100, null);
+    assertFalse(forkChanged, "smoothenEndCornersFork must decline unsupported interior smoothing");
+
+    // Branch start corner must NOT move to (50000, 9960)
+    assertEquals(
+        branchStart,
+        branch.firstCorner(),
+        "Branch start corner must remain at (30000, 10000) and preserve topology");
+
+    // Net 1 must remain a single connected set containing both trunk and branch
+    Set<Item> connectedSet = branch.getConnectedSet(1);
+    assertTrue(connectedSet.contains(trunk), "Trunk must remain in the connected set of branch");
+    assertTrue(connectedSet.contains(branch), "Branch must remain in its own connected set");
+
+    // Comprehensive DRC must remain 0 violations (no collision with Net 2 obstacle)
+    assertTrue(
+        drc.getAllClearanceViolations().isEmpty(),
+        "No clearance violations should be introduced by smoothing check");
   }
 }
