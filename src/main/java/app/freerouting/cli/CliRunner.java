@@ -200,7 +200,7 @@ public final class CliRunner {
 
   /** Returns whether the CLI should stop waiting for routing updates. */
   public static boolean isCliTerminalState(RoutingJobState state) {
-    return state.isTerminal();
+    return state != null && state.isTerminal();
   }
 
   /** Writes nonempty output for completed or timed-out jobs without overwriting with empty data. */

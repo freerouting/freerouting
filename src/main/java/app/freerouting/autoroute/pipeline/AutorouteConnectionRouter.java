@@ -73,6 +73,46 @@ final class AutorouteConnectionRouter {
       maxMilliseconds = Math.min(maxMilliseconds, Integer.MAX_VALUE);
       TimeLimit timeLimit = new TimeLimit((int) maxMilliseconds);
 
+      boolean isStrictPass = router.settings.isStrictDrc();
+
+      // start_necked: a net that needed the neck before routes at the neck width, ripping like any
+      // search, and
+      // that result stands. The class-width search it skips would use up the space before the
+      // necked retry
+      // and, when it routes, displace the neighbours the neck fits beside.
+      if (router.startNecked
+          && router.settings.getNeckWidthUm() > 0
+          && router.neckedRouteNets.contains(routeNetNo)) {
+        int beforeStart = router.board.communication.idGenerator.maxGeneratedId();
+        byte[] startSnapshot = isStrictPass ? router.board.serialize(false) : null;
+        AutorouteAttemptResult started =
+            retryConnectionNecked(
+                routeNetNo,
+                autorouteControl,
+                currentViaCosts,
+                routeStartSet,
+                routeDestSet,
+                rippedItemList,
+                ripupCosts,
+                ripupPassNo,
+                timeLimit,
+                /* planned= */ true,
+                /* quiet= */ true);
+        if (started != null) {
+          if (started.state != AutorouteAttemptState.ROUTED) {
+            router.startNeckedFailed++;
+            return started;
+          }
+          AutorouteAttemptResult rejection =
+              applyStrictDrcAfterRoute(routeNetNo, beforeStart, startSnapshot, ripupPassNo);
+          if (rejection != null) {
+            return rejection;
+          }
+          router.startNeckedRouted++;
+          return started;
+        }
+      }
+
       AutorouteEngine autorouteEngine =
           router.board.initAutoroute(
               routeNetNo,
@@ -85,7 +125,6 @@ final class AutorouteConnectionRouter {
       // per-connection serialize that previously fired for every pass ≥ 3 caused significant
       // allocation/GC pressure on large boards. The removeItems-based rollback in
       // enforceStrictDrc() handles the common case without needing a full snapshot.
-      boolean isStrictPass = router.settings.isStrictDrc();
       byte[] strictDrcBoardSnapshot = isStrictPass ? router.board.serialize(false) : null;
 
       long mazeSearchStart = BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
@@ -137,7 +176,9 @@ final class AutorouteConnectionRouter {
                 rippedItemList,
                 ripupCosts,
                 ripupPassNo,
-                timeLimit);
+                timeLimit,
+                /* planned= */ false,
+                /* quiet= */ false);
         if (neckedResult != null) {
           AutorouteAttemptResult strictResult =
               applyStrictDrcAfterRoute(
@@ -174,7 +215,9 @@ final class AutorouteConnectionRouter {
       SortedSet<Item> rippedItemList,
       Map<Item, Integer> ripupCosts,
       int ripupPassNo,
-      TimeLimit timeLimit) {
+      TimeLimit timeLimit,
+      boolean planned,
+      boolean quiet) {
     int boardResolution = Math.max(1, router.board.communication.resolution);
     int neckWidth =
         (int)
@@ -183,7 +226,8 @@ final class AutorouteConnectionRouter {
                     router.settings.getNeckWidthUm() * boardResolution,
                     Unit.UM,
                     router.board.communication.unit));
-    int neckHalfWidth = Math.max(1, neckWidth / 2);
+    int neckHalfWidth =
+        Math.max(Math.max(1, neckWidth / 2), router.board.rules.getMinAllowedTraceHalfWidth());
     boolean narrowerSomewhere = false;
     for (int i = 0; i < originalControl.layerCount; i++) {
       if (originalControl.layerActive[i] && originalControl.traceHalfWidth[i] > neckHalfWidth) {
@@ -222,8 +266,10 @@ final class AutorouteConnectionRouter {
       router.addProfileMazeSearchNanos(System.nanoTime() - neckMazeSearchStart);
     }
     if (neckResult.state != AutorouteAttemptState.ROUTED) {
-      return null;
+      return planned ? neckResult : null;
     }
+
+    router.neckedRouteNets.add(routeNetNo);
 
     long neckPullTightStart = BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
     router.board.optChangedArea(
@@ -236,13 +282,15 @@ final class AutorouteConnectionRouter {
     if (BatchAutorouter.isBenchmarkProfileEnabled()) {
       router.addProfileOptChangedAreaNanos(System.nanoTime() - neckPullTightStart);
     }
-    Net routeNet = router.board.rules.nets.get(routeNetNo);
-    FRLogger.info(
-        "Necked retry routed net '"
-            + (routeNet != null ? routeNet.name : "#" + routeNetNo)
-            + "' at "
-            + router.settings.getNeckWidthUm()
-            + " um trace width.");
+    if (!quiet) {
+      Net routeNet = router.board.rules.nets.get(routeNetNo);
+      FRLogger.info(
+          (planned ? "Retry plan routed net '" : "Necked retry routed net '")
+              + (routeNet != null ? routeNet.name : "#" + routeNetNo)
+              + "' at "
+              + router.settings.getNeckWidthUm()
+              + " um trace width.");
+    }
     return neckResult;
   }
 

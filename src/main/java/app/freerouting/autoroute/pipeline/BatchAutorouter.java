@@ -113,6 +113,68 @@ public final class BatchAutorouter extends NamedAlgorithm {
   BoardStatistics progressStatistics;
   int progressItemsSinceStatistics;
 
+  /**
+   * Erik Gavriluk (freerouting.net): nets that routed at neck width earlier in the pass loop (or
+   * had necked traces when the loop started).
+   */
+  final Set<Integer> neckedRouteNets = new TreeSet<>();
+
+  /**
+   * Erik Gavriluk (freerouting.net): whether nets in neckedRouteNets route at neck width directly.
+   */
+  boolean startNecked;
+
+  public int startNeckedRouted;
+  public int startNeckedFailed;
+
+  /** Why the last pass loop stopped. Null until the loop records a reason. */
+  public StopReason lastStopReason;
+
+  /** Board hash after fanout, where the pass loop started. */
+  public String passLoopStartHash;
+
+  private java.util.function.Predicate<String> repeatsPassLoop;
+
+  /** Why {@link #runBatchLoop()} stopped. */
+  public enum StopReason {
+    COMPLETED,
+    MAX_PASSES,
+    STAGNATION,
+    NO_IMPROVEMENT,
+    TIMED_OUT,
+    CANCELLED,
+    REPEATED
+  }
+
+  /**
+   * Builds an attempt on a private board and settings. {@code removeUnconnectedVias} stays false
+   * for a continuation that must keep the incumbent's fanout vias.
+   */
+  public static BatchAutorouter createAttempt(
+      RoutingJob job, RoutingBoard board, RouterSettings settings, boolean removeUnconnectedVias) {
+    int accuracy = settings.tracePullTightAccuracy != null ? settings.tracePullTightAccuracy : 500;
+    BatchAutorouter router =
+        new BatchAutorouter(
+            job.thread,
+            board,
+            settings,
+            removeUnconnectedVias,
+            true,
+            settings.getStartRipupCosts(),
+            accuracy);
+    router.job = job;
+    return router;
+  }
+
+  /** Fanout-only attempts stop when this returns true for the post-fanout board hash. */
+  public void setRepeatsPassLoop(java.util.function.Predicate<String> repeatsPassLoop) {
+    this.repeatsPassLoop = repeatsPassLoop;
+  }
+
+  boolean repeatsEarlierPassLoop(String hash) {
+    return hash != null && this.repeatsPassLoop != null && this.repeatsPassLoop.test(hash);
+  }
+
   /** Creates a BatchAutorouter for the given routing job. */
   public BatchAutorouter(RoutingJob job) {
     this(
@@ -157,9 +219,21 @@ public final class BatchAutorouter extends NamedAlgorithm {
 
     this.startRipupCosts = startRipupCosts;
     this.tracePullTightAccuracy = pullTightAccuracy;
-    // Retained state is deliberately opt-in for bounded benchmark experiments only. The default
-    // remains the fresh-engine behavior used by production routing and parity comparisons.
     this.retainAutorouteDatabase = BENCHMARK_RETAIN_AUTOROUTE_DATABASE;
+    this.startNecked =
+        settings.autorouter == null
+            || settings.autorouter.startNecked == null
+            || settings.autorouter.startNecked;
+    if (this.startNecked && board != null) {
+      for (Trace trace : board.getTraces()) {
+        if (trace.netCount() == 1
+            && board.rules.nets.get(trace.getNetNumber(0)) != null
+            && trace.getHalfWidth()
+                < board.rules.getTraceHalfWidth(trace.getNetNumber(0), trace.getLayer())) {
+          neckedRouteNets.add(trace.getNetNumber(0));
+        }
+      }
+    }
     this.connectionRouter = new AutorouteConnectionRouter(this);
     this.passRunner = new AutoroutePassRunner(this);
     this.batchLoop = new AutorouteBatchLoop(this);
@@ -269,6 +343,7 @@ public final class BatchAutorouter extends NamedAlgorithm {
             tracePullTightAccuracy);
     routerInstance.job = job;
     routerInstance.isOptimizerAutorouter = true;
+    routerInstance.startNecked = false;
 
     boolean stillUnroutedItems = true;
     int currentPassNo = 1;
@@ -591,5 +666,25 @@ public final class BatchAutorouter extends NamedAlgorithm {
       incompleteNets.addAll(board.routingLedger().incompleteNetNumbers());
     }
     return incompleteCount;
+  }
+
+  public boolean isStartNecked() {
+    return startNecked;
+  }
+
+  public void setStartNecked(boolean startNecked) {
+    this.startNecked = startNecked;
+  }
+
+  public Set<Integer> getNeckedRouteNets() {
+    return neckedRouteNets;
+  }
+
+  public int getStartNeckedRouted() {
+    return startNeckedRouted;
+  }
+
+  public int getStartNeckedFailed() {
+    return startNeckedFailed;
   }
 }

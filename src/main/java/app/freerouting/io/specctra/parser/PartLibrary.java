@@ -55,7 +55,7 @@ public class PartLibrary extends ScopeKeyword {
       app.freerouting.core.library.LogicalPart currentPart = logicalParts.get(i);
 
       scopeParameter.file.startScope();
-      scopeParameter.file.write("logicalPart ");
+      scopeParameter.file.write("logical_part ");
       scopeParameter.identifierType.write(currentPart.name, scopeParameter.file);
       scopeParameter.file.newLine();
       for (int j = 0; j < currentPart.pinCount(); j++) {
@@ -109,7 +109,8 @@ public class PartLibrary extends ScopeKeyword {
             return false;
           }
           scopeParameter.logicalPartMappings.add(nextMapping);
-        } else if (nextToken == LOGICAL_PART) {
+        } else if (nextToken == LOGICAL_PART
+            || "logicalPart".equals(nextToken instanceof Keyword k ? k.getName() : nextToken)) {
           LogicalPart nextPart = readLogicalPart(scopeParameter.scanner);
           if (nextPart == null) {
             return false;
