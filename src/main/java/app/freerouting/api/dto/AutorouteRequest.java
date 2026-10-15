@@ -19,62 +19,90 @@ import java.util.List;
         "Single-turn autorouting request with multi-file input support and output format options")
 public class AutorouteRequest {
 
-  @SerializedName("file_content")
+  @SerializedName(
+      value = "file_content",
+      alternate = {"fileContent"})
   @Schema(
+      name = "file_content",
       description = "Raw content of the primary design file (Specctra DSN text or KiCad JSON)",
       example = "(pcb board ...)")
   public String fileContent;
 
-  @SerializedName("file_path")
+  @SerializedName(
+      value = "file_path",
+      alternate = {"filePath"})
   @Schema(
+      name = "file_path",
       description =
           "Local file path to the primary design file (used when running locally or with server filesystem access)",
       example = "C:/projects/board.dsn")
   public String filePath;
 
-  @SerializedName("rules_content")
+  @SerializedName(
+      value = "rules_content",
+      alternate = {"rulesContent"})
   @Schema(
+      name = "rules_content",
       description = "Raw content of the optional Specctra design rules (.rules) file",
       example = "(rules ...)")
   public String rulesContent;
 
-  @SerializedName("rules_path")
+  @SerializedName(
+      value = "rules_path",
+      alternate = {"rulesPath"})
   @Schema(
+      name = "rules_path",
       description = "Local file path to the optional design rules (.rules) file",
       example = "C:/projects/board.rules")
   public String rulesPath;
 
-  @SerializedName("session_content")
+  @SerializedName(
+      value = "session_content",
+      alternate = {"sessionContent"})
   @Schema(
+      name = "session_content",
       description =
           "Raw content of an initial routing session (.ses or KiCad .json) to import before routing",
       example = "(session ...)")
   public String sessionContent;
 
-  @SerializedName("session_path")
+  @SerializedName(
+      value = "session_path",
+      alternate = {"sessionPath"})
   @Schema(
+      name = "session_path",
       description =
           "Local file path to an initial routing session (.ses or KiCad .json) to import before routing",
       example = "C:/projects/board.ses")
   public String sessionPath;
 
-  @SerializedName("router_settings")
-  @Schema(description = "Router settings configuration overrides")
+  @SerializedName(
+      value = "router_settings",
+      alternate = {"routerSettings"})
+  @Schema(name = "router_settings", description = "Router settings configuration overrides")
   public RouterSettings routerSettings;
 
-  @SerializedName("drc_settings")
-  @Schema(description = "Design rule checker settings configuration")
+  @SerializedName(
+      value = "drc_settings",
+      alternate = {"drcSettings"})
+  @Schema(name = "drc_settings", description = "Design rule checker settings configuration")
   public DesignRulesCheckerSettings drcSettings;
 
-  @SerializedName("output_formats")
+  @SerializedName(
+      value = "output_formats",
+      alternate = {"outputFormats"})
   @Schema(
+      name = "output_formats",
       description =
           "List of desired output formats: 'SES', 'KICAD_JSON', 'SCR', 'DRC_JSON', 'DRC_SUMMARY'. Defaults to ['SES']",
       example = "[\"SES\", \"DRC_SUMMARY\"]")
   public List<String> outputFormats = new ArrayList<>();
 
-  @SerializedName("timeout_seconds")
+  @SerializedName(
+      value = "timeout_seconds",
+      alternate = {"timeoutSeconds"})
   @Schema(
+      name = "timeout_seconds",
       description = "Maximum execution timeout budget in seconds (default 300 = 5 minutes)",
       example = "120")
   public Integer timeoutSeconds;

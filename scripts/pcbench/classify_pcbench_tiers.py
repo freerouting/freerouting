@@ -14,11 +14,8 @@ from typing import Any
 def classify_board(meta: dict[str, Any]) -> tuple[str, str, str, list[str]]:
     """Classify a board into (tier, expected_outcome, timeout_budget, extra_tags).
 
-    Returns:
-        tier: 'A' | 'B' | 'C' | 'D' | 'E'
-        expected_outcome: 'complete' | 'partial' | 'timeout' | 'unsupported'
-        timeout_budget: '00:05:00' | '00:10:00' | '00:20:00' | '00:45:00'
-        tags: list of descriptive tags
+    The job timeout is six hours for every tier. A board that already has a fixed
+    ``tier_index`` keeps that assignment; this heuristic is only for new boards.
     """
     board = meta.get("board", {})
     layers = board.get("layers", 2)
@@ -34,21 +31,21 @@ def classify_board(meta: dict[str, Any]) -> tuple[str, str, str, list[str]]:
     # Tier D: Extreme stress / pathological size
     if nets > 450 or components > 350 or layers >= 10 or area_cm2 > 600:
         tags.extend(["tier-d", "extreme-stress"])
-        return "D", "partial", "00:45:00", tags
+        return "D", "partial", "06:00:00", tags
 
     # Tier A: Canary / Fast smoke-test suite
     if layers <= 2 and nets <= 35 and components <= 25 and area_cm2 <= 45:
         tags.extend(["tier-a", "canary", "small"])
-        return "A", "complete", "00:05:00", tags
+        return "A", "complete", "06:00:00", tags
 
     # Tier B: Routine benchmark suite (standard 2-4 layer, moderate net count)
     if layers <= 4 and nets <= 160 and components <= 140 and area_cm2 <= 180:
         tags.extend(["tier-b", "routine", "medium" if nets > 60 else "small"])
-        return "B", "complete", "00:10:00", tags
+        return "B", "complete", "06:00:00", tags
 
     # Tier C: Complex / Multi-layer / High density
     tags.extend(["tier-c", "complex", "large" if nets > 250 else "medium"])
-    return "C", "partial", "00:20:00", tags
+    return "C", "partial", "06:00:00", tags
 
 
 def main() -> int:
@@ -72,7 +69,13 @@ def main() -> int:
 
     for b in boards:
         board_id = b.get("board_id")
-        tier, expected, timeout, tags = classify_board(b)
+        if b.get("tier_index") is not None and b.get("tier"):
+            tier = b["tier"]
+            expected = b.get("expected_outcome") or "partial"
+            timeout = "06:00:00"
+            tags = list(b.get("tags") or [])
+        else:
+            tier, expected, timeout, tags = classify_board(b)
         tier_counts[tier] += 1
 
         b["tier"] = tier

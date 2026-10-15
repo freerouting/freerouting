@@ -2,7 +2,6 @@ package app.freerouting.io.specctra;
 
 import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.model.structure.FixedState;
-import app.freerouting.board.model.structure.Unit;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;
@@ -10,7 +9,6 @@ import app.freerouting.io.specctra.parser.IJFlexScanner;
 import app.freerouting.io.specctra.parser.Keyword;
 import app.freerouting.io.specctra.parser.LayerStructure;
 import app.freerouting.io.specctra.parser.PolygonPath;
-import app.freerouting.io.specctra.parser.ReadScopeParameter;
 import app.freerouting.io.specctra.parser.ScopeKeyword;
 import app.freerouting.io.specctra.parser.Shape;
 import app.freerouting.io.specctra.parser.SpecctraDsnStreamReader;
@@ -38,11 +36,11 @@ public final class SesReader {
   private int viasImported;
   private int errorsEncountered;
 
-  private SesReader(IJFlexScanner scanner, BasicBoard board, double sessionToBoardScale) {
+  private SesReader(IJFlexScanner scanner, BasicBoard board, double scaleFactor) {
     this.scanner = scanner;
     this.board = board;
     this.specctraLayerStructure = new LayerStructure(board.layerStructure);
-    this.sessionToBoardScale = sessionToBoardScale;
+    this.sessionToBoardScale = scaleFactor;
   }
 
   /**
@@ -179,19 +177,42 @@ public final class SesReader {
         if (nextToken == Keyword.NETWORK_OUT) {
           processNetworkScope();
         } else if (nextToken == Keyword.RESOLUTION_SCOPE) {
-          ReadScopeParameter resolution = new ReadScopeParameter(this.scanner, null, null);
-          if (!Keyword.RESOLUTION_SCOPE.readScope(resolution) || resolution.resolution <= 0) {
-            throw new IOException("Invalid SES routing resolution");
-          }
-          sessionToBoardScale =
-              board.communication.coordinateTransform.dsnToBoard(
-                      Unit.scale(1, resolution.unit, board.communication.unit))
-                  / resolution.resolution;
+          readSessionResolution();
         } else {
           ScopeKeyword.skipScope(this.scanner);
         }
       }
     }
+  }
+
+  /**
+   * Reads the resolution declaration in a session routes scope and calculates the session-to-board
+   * coordinate scale factor.
+   */
+  private void readSessionResolution() throws IOException {
+    Object unitToken = this.scanner.nextToken();
+    Object resolutionToken = this.scanner.nextToken();
+    Object close = this.scanner.nextToken();
+    if (!(unitToken instanceof String name)
+        || app.freerouting.board.model.structure.Unit.fromString(name) == null
+        || !(resolutionToken instanceof Integer resolution)
+        || resolution <= 0
+        || close != Keyword.CLOSED_BRACKET) {
+      throw new IOException(
+          "SesReader: invalid routes resolution; expected (resolution <unit> <positive integer>)");
+    }
+    app.freerouting.board.model.structure.Unit sessionUnit =
+        app.freerouting.board.model.structure.Unit.fromString(name);
+    this.sessionToBoardScale = this.board.communication.getResolution(sessionUnit) / resolution;
+  }
+
+  /** Resolves the item's net class, falling back to the board default net class. */
+  private app.freerouting.rules.NetClass netClassOf(int[] netNumbers) {
+    Net net =
+        netNumbers != null && netNumbers.length > 0
+            ? this.board.rules.nets.get(netNumbers[0])
+            : null;
+    return net != null ? net.getNetClass() : this.board.rules.getDefaultNetClass();
   }
 
   /** Processes the {@code (network_out ...)} scope containing individual nets. */
@@ -317,9 +338,7 @@ public final class SesReader {
       int halfWidth = SesPathGeometry.halfWidth(wirePath.width, sessionToBoardScale);
 
       int clearanceClass =
-          board
-              .rules
-              .getDefaultNetClass()
+          netClassOf(netNumbers)
               .defaultItemClearanceClasses
               .get(app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.TRACE);
 
@@ -402,9 +421,7 @@ public final class SesReader {
       Point viaLocation = Point.getInstance(x, y);
 
       int clearanceClass =
-          board
-              .rules
-              .getDefaultNetClass()
+          netClassOf(netNumbers)
               .defaultItemClearanceClasses
               .get(app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.VIA);
 

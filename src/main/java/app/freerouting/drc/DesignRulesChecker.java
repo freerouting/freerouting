@@ -974,7 +974,7 @@ public class DesignRulesChecker {
               .append(" (")
               .append(netName)
               .append("): ")
-              .append(netIncompletes)
+              .append(count)
               .append(" incomplete(s); ");
         }
       }

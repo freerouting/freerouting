@@ -199,10 +199,7 @@ public final class CliRunner {
   }
 
   public static boolean isCliTerminalState(RoutingJobState state) {
-    return state == RoutingJobState.COMPLETED
-        || state == RoutingJobState.TERMINATED
-        || state == RoutingJobState.TIMED_OUT
-        || state == RoutingJobState.CANCELLED;
+    return state != null && state.isTerminal();
   }
 
   public static boolean writeCliOutputIfAvailable(

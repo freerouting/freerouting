@@ -48,17 +48,19 @@
   "tags": [
     "2-layer",
     "small",
-    "tier-b",
-    "zone"
+    "zone",
+    "tier-b"
   ],
   "tier": "B",
   "expected_outcome": "baseline_violations",
-  "timeout_budget": "00:10:00",
+  "timeout_budget": "06:00:00",
   "baseline_routing": {
     "calibrated_at": "2026-08-18T20:56:32.927516+00:00",
     "elapsed_seconds": 5.88,
     "unrouted_nets": 1,
     "clearance_violations": 2,
     "quality_score": 766.66
-  }
+  },
+  "tier_index": 18,
+  "reference_seconds": 4.5
 }

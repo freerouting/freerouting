@@ -239,6 +239,133 @@ public class TraceShover {
       int maxViaRecursionDepth,
       int maxSpringOverRecursionDepth,
       TimeLimit timeLimit) {
+    ShoveCheckCache cache = board.getShoveChecks();
+    if (cache == null
+        || timeLimit != null
+        || !ShoveCheckCache.supported(traceShape, dir, netNumbers)
+        || traceShape.isEmpty()) {
+      return checkUncached(
+          traceShape,
+          fromSide,
+          dir,
+          layer,
+          netNumbers,
+          clearanceClassIndex,
+          maxRecursionDepth,
+          maxViaRecursionDepth,
+          maxSpringOverRecursionDepth,
+          timeLimit);
+    }
+    long stamp = board.itemList.getContentVersion();
+    ShoveCheckCache.Key key =
+        new ShoveCheckCache.Key(
+            traceShape,
+            fromSide,
+            dir,
+            layer,
+            netNumbers,
+            clearanceClassIndex,
+            maxRecursionDepth,
+            maxViaRecursionDepth,
+            maxSpringOverRecursionDepth,
+            false);
+    ShoveCheckCache.Entry hit = cache.tryGet(board, stamp, key);
+    if (hit != null) {
+      cache.countHit();
+      for (int i = 0; i < hit.ids; i++) {
+        board.communication.idGenerator.newId();
+      }
+      if (hit.wroteObstacle) {
+        board.setShoveFailingObstacle(
+            hit.obstacle < 0 ? null : board.getShoveCacheObstacles().get(hit.obstacle));
+      }
+      if (hit.wroteLayer) {
+        board.setShoveFailingLayer(hit.layer);
+      }
+      return hit.result;
+    }
+    cache.countMiss();
+    return measuredCheck(
+        cache,
+        key,
+        traceShape,
+        fromSide,
+        dir,
+        layer,
+        netNumbers,
+        clearanceClassIndex,
+        maxRecursionDepth,
+        maxViaRecursionDepth,
+        maxSpringOverRecursionDepth,
+        stamp);
+  }
+
+  private boolean measuredCheck(
+      ShoveCheckCache cache,
+      ShoveCheckCache.Key key,
+      TileShape traceShape,
+      ShapeEntrySide fromSide,
+      Direction dir,
+      int layer,
+      int[] netNumbers,
+      int clearanceClassIndex,
+      int maxRecursionDepth,
+      int maxViaRecursionDepth,
+      int maxSpringOverRecursionDepth,
+      long stamp) {
+    int ids = board.communication.idGenerator.maxGeneratedId();
+    long obstacleWrites = board.getShoveFailingObstacleWrites();
+    long layerWrites = board.getShoveFailingLayerWrites();
+
+    boolean result =
+        checkUncached(
+            traceShape,
+            fromSide,
+            dir,
+            layer,
+            netNumbers,
+            clearanceClassIndex,
+            maxRecursionDepth,
+            maxViaRecursionDepth,
+            maxSpringOverRecursionDepth,
+            null);
+
+    int idsUsed = board.communication.idGenerator.maxGeneratedId() - ids;
+    boolean wroteObstacle = board.getShoveFailingObstacleWrites() != obstacleWrites;
+    Item obstacle = wroteObstacle ? board.getShoveFailingObstacle() : null;
+
+    if (board.itemList.getContentVersion() != stamp
+        || idsUsed < 0
+        || (obstacle != null && !obstacle.isOnTheBoard())) {
+      return result;
+    }
+
+    boolean wroteLayer = board.getShoveFailingLayerWrites() != layerWrites;
+    int obstacleIndex =
+        (wroteObstacle && obstacle != null) ? ShoveCheckCache.obstacleIndex(board, obstacle) : -1;
+    ShoveCheckCache.Entry entry =
+        new ShoveCheckCache.Entry(
+            result,
+            idsUsed,
+            wroteObstacle,
+            obstacleIndex,
+            wroteLayer,
+            wroteLayer ? board.getShoveFailingLayer() : -1);
+    cache.put(board, stamp, key, entry);
+    return result;
+  }
+
+  private boolean checkUncached(
+      TileShape traceShape,
+      ShapeEntrySide fromSide,
+      Direction dir,
+      int layer,
+      int[] netNumbers,
+      int clearanceClassIndex,
+      int maxRecursionDepth,
+      int maxViaRecursionDepth,
+      int maxSpringOverRecursionDepth,
+      TimeLimit timeLimit) {
     if (timeLimit != null && timeLimit.limitExceeded()) {
       return false;
     }

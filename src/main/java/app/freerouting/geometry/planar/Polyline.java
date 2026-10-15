@@ -82,6 +82,9 @@ public class Polyline implements Serializable {
       this.lines = new Line[0];
       return;
     }
+    if (filteredLines == inputLines) {
+      filteredLines = inputLines.clone();
+    }
     precalculatedFloatCorners = new FloatPoint[filteredLines.length - 1];
 
     // turn evtl the direction of the lines that they point always
@@ -145,7 +148,7 @@ public class Polyline implements Serializable {
     tmpArr[newLength] = lines[1];
     ++newLength;
     for (int i = 2; i < lines.length - 2; i++) {
-      if (tmpArr[newLength - 1].isEqualOrOpposite(lines[i + 1])) {
+      if (newLength > 0 && tmpArr[newLength - 1].isEqualOrOpposite(lines[i + 1])) {
         // skip 2 lines
         --newLength;
       } else {
