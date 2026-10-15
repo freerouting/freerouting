@@ -425,8 +425,8 @@ public class JobOutputResource extends BaseController {
               }
             }
 
-            // Close the connection if the job is completed or cancelled
-            if (job.state == RoutingJobState.COMPLETED || job.state == RoutingJobState.CANCELLED) {
+            // Close the connection if the job reached a terminal state
+            if (job.state != null && job.state.isTerminal()) {
               try {
                 eventSink.close();
               } catch (Exception ex) {
@@ -533,8 +533,8 @@ public class JobOutputResource extends BaseController {
               }
             }
 
-            // Close the connection if the job is completed or cancelled
-            if (job.state == RoutingJobState.COMPLETED || job.state == RoutingJobState.CANCELLED) {
+            // Close the connection if the job reached a terminal state
+            if (job.state != null && job.state.isTerminal()) {
               try {
                 eventSink.close();
               } catch (Exception ex) {

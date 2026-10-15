@@ -23,6 +23,9 @@ public class TestingSettings implements SettingsSource {
     this.settings.scoring = null;
     // Keep legacy fixture expectations stable unless a test explicitly opts in.
     this.settings.copperToEdgeClearanceUm = 0.0;
+    // Fallback and exploration re-route an unfinished board. Tests opt in explicitly.
+    this.settings.autorouter.fallbackStrategies = "none";
+    this.settings.autorouter.explorePatience = 0;
   }
 
   /** Sets the bend cost for a layer, expanding the layer array if needed. */

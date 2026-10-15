@@ -322,13 +322,13 @@ public class LineSegment implements Serializable {
     int stairCount;
 
     if (functionOfX) {
-      stairWidth = (int) Math.round((width * (double) absDx) / (double) absDy);
+      stairWidth = Math.max(1, (int) Math.round((width * (double) absDx) / (double) absDy));
       stairCount = (absDx - 1) / stairWidth + 1;
       if (endPoint.x < startPoint.x) {
         stairWidth = -stairWidth;
       }
     } else {
-      stairWidth = (int) Math.round((width * (double) absDy) / (double) absDx);
+      stairWidth = Math.max(1, (int) Math.round((width * (double) absDy) / (double) absDx));
       stairCount = (absDy - 1) / stairWidth + 1;
       if (endPoint.y < startPoint.y) {
         stairWidth = -stairWidth;
@@ -401,14 +401,16 @@ public class LineSegment implements Serializable {
     int stairWidth;
     int stairCount;
     if (functionOfX) {
-      stairWidth = (int) Math.round((width * (double) absDelta.x) / (double) absDelta.y);
+      stairWidth =
+          Math.max(1, (int) Math.round((width * (double) absDelta.x) / (double) absDelta.y));
       stairCount = (absDelta.x - 1) / stairWidth + 1;
       if (endPoint.x < startPoint.x) {
         stairWidth = -stairWidth;
       }
     } else {
-      stairWidth = (int) Math.round((width * (double) absDelta.y) / (double) absDelta.x);
-      stairCount = (absDelta.y - 1) / stairWidth + 1;
+      stairWidth =
+          Math.max(1, (int) Math.round((width * (double) absDelta.y) / (double) absDelta.x));
+      stairCount = (absDelta.x - 1) / stairWidth + 1;
       if (endPoint.y < startPoint.y) {
         stairWidth = -stairWidth;
       }
@@ -429,7 +431,7 @@ public class LineSegment implements Serializable {
           currentY = (int) Math.round(this.getLine().functionValueApprox(currentX));
         } else {
           currentY = startPoint.y + i * stairWidth;
-          currentX = (int) Math.round(this.getLine().functionValueApprox(currentY));
+          currentX = (int) Math.round(this.getLine().functionInYValueApprox(currentY));
         }
         currentLinePoint = new IntPoint(currentX, currentY);
       }

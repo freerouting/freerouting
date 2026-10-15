@@ -86,23 +86,17 @@ public class RationalVector extends Vector implements Serializable {
 
   @Override
   final Vector add(IntVector other) {
-    RationalVector vector = new RationalVector(other);
-    return add(vector);
+    BigIntAux.RationalCoordinates result =
+        BigIntAux.addRationalCoordinates(
+            x, y, z, BigInteger.valueOf(other.x), BigInteger.valueOf(other.y), BigInteger.ONE);
+    return new RationalVector(result.x(), result.y(), result.z());
   }
 
   @Override
   final Vector add(RationalVector other) {
-    BigInteger[] v1 = new BigInteger[3];
-    v1[0] = x;
-    v1[1] = y;
-    v1[2] = z;
-
-    BigInteger[] v2 = new BigInteger[3];
-    v2[0] = other.x;
-    v2[1] = other.y;
-    v2[2] = other.z;
-    BigInteger[] result = BigIntAux.addRationalCoordinates(v1, v2);
-    return new RationalVector(result[0], result[1], result[2]);
+    BigIntAux.RationalCoordinates result =
+        BigIntAux.addRationalCoordinates(x, y, z, other.x, other.y, other.z);
+    return new RationalVector(result.x(), result.y(), result.z());
   }
 
   /**
@@ -118,8 +112,10 @@ public class RationalVector extends Vector implements Serializable {
 
   @Override
   Side sideOf(IntVector other) {
-    RationalVector vector = new RationalVector(other);
-    return sideOf(vector);
+    return Side.of(
+        y.multiply(BigInteger.valueOf(other.x))
+            .subtract(x.multiply(BigInteger.valueOf(other.y)))
+            .signum());
   }
 
   @Override
@@ -153,8 +149,10 @@ public class RationalVector extends Vector implements Serializable {
 
   @Override
   Signum projection(IntVector other) {
-    Vector vector = new RationalVector(other);
-    return vector.projection(this);
+    return Signum.of(
+        x.multiply(BigInteger.valueOf(other.x))
+            .add(y.multiply(BigInteger.valueOf(other.y)))
+            .signum());
   }
 
   @Override
@@ -253,17 +251,8 @@ public class RationalVector extends Vector implements Serializable {
 
   @Override
   Point addTo(RationalPoint point) {
-    BigInteger[] v1 = new BigInteger[3];
-    v1[0] = x;
-    v1[1] = y;
-    v1[2] = z;
-
-    BigInteger[] v2 = new BigInteger[3];
-    v2[0] = point.x;
-    v2[1] = point.y;
-    v2[2] = point.z;
-
-    BigInteger[] result = BigIntAux.addRationalCoordinates(v1, v2);
-    return new RationalPoint(result[0], result[1], result[2]);
+    BigIntAux.RationalCoordinates result =
+        BigIntAux.addRationalCoordinates(x, y, z, point.x, point.y, point.z);
+    return new RationalPoint(result.x(), result.y(), result.z());
   }
 }

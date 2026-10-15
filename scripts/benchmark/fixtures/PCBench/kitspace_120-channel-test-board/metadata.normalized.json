@@ -45,10 +45,12 @@
     "2-layer",
     "complex",
     "medium",
-    "tier-c",
-    "zone"
+    "zone",
+    "tier-c"
   ],
   "tier": "C",
   "expected_outcome": "partial",
-  "timeout_budget": "00:20:00"
+  "timeout_budget": "06:00:00",
+  "tier_index": 105,
+  "reference_seconds": 1323.2
 }
