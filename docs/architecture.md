@@ -65,6 +65,30 @@ flowchart TD
     CORE --> AR
 ```
 
+## Routing output and stream ownership
+
+`management.jobs.RoutingJobOutputWriter` serializes a complete board snapshot through the existing
+SES, Fusion script, or KiCad JSON writer. Export failure discards unavailable bytes while preserving
+the caller's output format, destination, and listeners. Successful final publication precedes the
+`COMPLETED` state; unsuccessful publication produces `INVALID`, unless cancellation or timeout
+already takes precedence.
+
+Job state, output descriptors, and board references are volatile for publication to polling threads.
+File bytes are published after their derived metadata is ready; this does not make mutation of the
+live routing board thread-safe or replace the routing pipeline's board synchronization.
+
+`core.RoutingJobState.isTerminal()` defines the finished states used by CLI waiting and API streaming.
+Output downloads and disk writers treat an empty snapshot as unavailable, so a failed export cannot
+overwrite a destination with an empty file.
+
+`api.v1.JobOutputStream` owns one subscriber's checksum, polling executor, and asynchronous send.
+SES and KiCad JSON subscriptions share cleanup and bounded delivery while retaining their existing
+payload formats and polling intervals. A subscriber has at most one send in flight; intermediate
+updates are coalesced into the next snapshot. Successful completion waits for the final send before
+closing. Terminal errors, a closed client, or failed delivery release the worker; a stalled send is
+bounded to ten seconds to prevent indefinite retention by a client that stops reading. Checksums
+are subscription-local so reconnecting or additional clients receive the current snapshot.
+
 ## Repository Layout
 
 | Path | Purpose |
