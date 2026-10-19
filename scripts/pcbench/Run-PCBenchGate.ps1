@@ -78,6 +78,9 @@ foreach ($board in $tierBoards) {
             }
         } catch {
             Write-Warning "Could not parse run results for ${boardId}: $_"
+            if ($Tier -eq "A") {
+                $failedCanaries += $boardId
+            }
         }
     }
 }
