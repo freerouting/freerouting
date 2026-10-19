@@ -4,7 +4,6 @@ import app.freerouting.autoroute.expansion.ExpandableObject;
 import app.freerouting.autoroute.expansion.ExpansionDoor;
 import app.freerouting.autoroute.expansion.ObstacleExpansionRoom;
 import app.freerouting.autoroute.maze.AutorouteControl;
-import app.freerouting.autoroute.maze.AutorouteEngine;
 import app.freerouting.autoroute.maze.MazeSearchEngine;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.structure.AngleRestriction;
@@ -135,17 +134,13 @@ public class FoundConnectionLocator45Degree extends FoundConnectionLocator {
     TileShape roomShape = currentFromInfo.nextRoom.getShape();
 
     int traceHalfwidth = this.ctrl.compensatedTraceHalfWidth[this.currentTraceLayer];
-    int traceHalfwidthAdd =
-        traceHalfwidth
-            + AutorouteEngine
-                .TRACE_WIDTH_TOLERANCE; // add some tolerance for free space expansion rooms.
     int shrinkOffset;
     if (currentFromInfo.nextRoom instanceof ObstacleExpansionRoom) {
-
       shrinkOffset = traceHalfwidth;
     } else {
-      shrinkOffset = traceHalfwidthAdd;
+      shrinkOffset = this.ctrl.getTraceClearanceOffset(this.currentTraceLayer);
     }
+    int traceHalfwidthAdd = shrinkOffset;
 
     TileShape shrinkedRoomShape = (TileShape) roomShape.offset(-shrinkOffset);
     if (this.ctrl.netNumber == 33 || this.ctrl.netNumber == 66 || this.ctrl.netNumber == 67) {
