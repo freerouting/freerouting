@@ -56,6 +56,42 @@ public class RouterSettings implements Serializable, Cloneable {
       alternate = {"conduction_is_obstacle", "planeAsObstacle", "conductionIsObstacle"})
   public Boolean planeAsObstacle;
 
+  /** Minimum amplitude for trace length tuning meanders in millimeters. */
+  @SerializedName(
+      value = "meander_min_amplitude_mm",
+      alternate = {"meanderMinAmplitudeMm"})
+  public Double meanderMinAmplitudeMm;
+
+  /** Maximum amplitude for trace length tuning meanders in millimeters. */
+  @SerializedName(
+      value = "meander_max_amplitude_mm",
+      alternate = {"meanderMaxAmplitudeMm"})
+  public Double meanderMaxAmplitudeMm;
+
+  /** Spacing between parallel meander traces in millimeters. */
+  @SerializedName(
+      value = "meander_spacing_mm",
+      alternate = {"meanderSpacingMm"})
+  public Double meanderSpacingMm;
+
+  /** Corner style for meander turns (FILLET or CHAMFER). */
+  @SerializedName(
+      value = "meander_corner_style",
+      alternate = {"meanderCornerStyle"})
+  public String meanderCornerStyle;
+
+  /** Corner radius percentage for meander turns (0 to 100). */
+  @SerializedName(
+      value = "meander_radius_percentage",
+      alternate = {"meanderRadiusPercentage"})
+  public Double meanderRadiusPercentage;
+
+  /** Whether meanders are restricted to one side of the baseline track. */
+  @SerializedName(
+      value = "meander_single_sided",
+      alternate = {"meanderSingleSided"})
+  public Boolean meanderSingleSided;
+
   /**
    * Opt-in width necking: when a connection fails at its net-class trace width, retry it once with
    * all trace half-widths clamped to this width (in micrometers). Intended for fine-pitch regions
@@ -73,6 +109,13 @@ public class RouterSettings implements Serializable, Cloneable {
    */
   @SerializedName("strict_drc")
   public Boolean strictDrc;
+
+  /**
+   * Erik Gavriluk (freerouting.net): fixes KiCad footprints by giving overlapping netless pads
+   * their footprint's net.
+   */
+  @SerializedName("fix_kicad_footprints")
+  public Boolean fixKicadFootprints;
 
   @SerializedName("job_timeout")
   public String jobTimeoutString;
@@ -620,6 +663,12 @@ public class RouterSettings implements Serializable, Cloneable {
     result.copperToEdgeClearanceUm = this.copperToEdgeClearanceUm;
     result.holeClearanceUm = this.holeClearanceUm;
     result.clearanceToleranceUm = this.clearanceToleranceUm;
+    result.meanderMinAmplitudeMm = this.meanderMinAmplitudeMm;
+    result.meanderMaxAmplitudeMm = this.meanderMaxAmplitudeMm;
+    result.meanderSpacingMm = this.meanderSpacingMm;
+    result.meanderCornerStyle = this.meanderCornerStyle;
+    result.meanderRadiusPercentage = this.meanderRadiusPercentage;
+    result.meanderSingleSided = this.meanderSingleSided;
     result.planeNets = this.planeNets != null ? this.planeNets.clone() : null;
     result.planeAsObstacle = this.planeAsObstacle;
     result.neckWidthUm = this.neckWidthUm;
@@ -649,6 +698,23 @@ public class RouterSettings implements Serializable, Cloneable {
   /** Returns the configured necking width in micrometres, or zero when disabled. */
   public double getNeckWidthUm() {
     return neckWidthUm != null && neckWidthUm > 0 ? neckWidthUm : 0;
+  }
+
+  /** Sets the configured necking width in micrometres. */
+  public void setNeckWidthUm(double width) {
+    this.neckWidthUm = width;
+  }
+
+  /** Returns whether direct pin routing strategy is configured for fanout. */
+  public boolean usesDirectPinRouting() {
+    String strategy = this.fanout != null ? this.fanout.strategy : null;
+    if (strategy == null || strategy.isEmpty() || "eager".equalsIgnoreCase(strategy)) {
+      return false;
+    }
+    if (!"direct_first".equalsIgnoreCase(strategy)) {
+      throw new IllegalArgumentException("router.fanout.strategy must be eager or direct_first");
+    }
+    return true;
   }
 
   /** Returns whether connections with newly introduced clearance violations are rejected. */

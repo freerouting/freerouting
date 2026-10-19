@@ -138,10 +138,10 @@ public class BoardStatistics implements Serializable {
     // Board
     this.board.boundingBox =
         new Rectangle2D.Float(
-            (float) bb.ur.x,
-            (float) board.getBoundingBox().ur.y,
-            (float) board.getBoundingBox().ll.x,
-            (float) board.getBoundingBox().ll.y);
+            (float) bb.ll.x,
+            (float) bb.ll.y,
+            (float) (bb.ur.x - bb.ll.x),
+            (float) (bb.ur.y - bb.ll.y));
     this.board.size =
         new Rectangle2D.Float(
             0,
@@ -190,7 +190,7 @@ public class BoardStatistics implements Serializable {
     this.components.totalCount = board.components.count();
 
     // Pads
-    this.pads.totalCount = board.getPins().size();
+    this.pads.totalCount = board.getPinCount();
 
     // Nets
     this.nets.totalCount = board.rules.nets.maxNetNumber();
@@ -349,7 +349,7 @@ public class BoardStatistics implements Serializable {
     }
 
     // Vias
-    this.vias.totalCount = board.getVias().size();
+    this.vias.totalCount = board.getViaCount();
     this.vias.throughHoleCount = 0;
     this.vias.blindCount = 0;
     this.vias.buriedCount = 0;
@@ -397,6 +397,10 @@ public class BoardStatistics implements Serializable {
         }
       }
       this.clearanceViolations.unfixableCount = unfixable;
+      this.clearanceViolations.newOrChangedCount =
+          board.clearanceBaseline != null
+              ? board.clearanceBaseline.countNewOrChanged(violationsList)
+              : null;
       this.clearanceViolations.routerIntroducedCount =
           Math.max(
               0, this.clearanceViolations.totalCount - board.preExistingClearanceViolationsCount);
@@ -404,6 +408,7 @@ public class BoardStatistics implements Serializable {
       this.clearanceViolations.totalCount = 0;
       this.clearanceViolations.preExistingCount = 0;
       this.clearanceViolations.unfixableCount = 0;
+      this.clearanceViolations.newOrChangedCount = 0;
       this.clearanceViolations.routerIntroducedCount = 0;
       this.clearanceViolations.totalViolationUm = 0.0;
       this.clearanceViolations.minViolationUm = 0.0;
@@ -862,5 +867,48 @@ public class BoardStatistics implements Serializable {
 
     @SerializedName("escaped_count")
     public int escapedCount;
+  }
+
+  /** Lightweight metrics for optimizer evaluation without building full {@link BoardStatistics}. */
+  public record OptimizerMetrics(int viaCount, float totalLength, float totalWeightedLength) {
+    public static OptimizerMetrics of(BasicBoard board) {
+      int viaCount = 0;
+      float totalLength = 0.0f;
+      float totalWeightedLength = 0.0f;
+      int defaultClearanceClass = BoardRules.defaultClearanceClass();
+
+      Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.startReadObject();
+      for (; ; ) {
+        UndoableObjects.Storable currentItem = board.itemList.readObject(it);
+        if (currentItem == null) {
+          break;
+        }
+        if (currentItem instanceof Via) {
+          viaCount++;
+        } else if (currentItem instanceof Trace currentTrace) {
+          totalLength += (float) currentTrace.getLength();
+          FixedState fixedState = currentTrace.getFixedState();
+          if (fixedState == FixedState.UNFIXED || fixedState == FixedState.SHOVE_FIXED) {
+            double weightedTraceLength =
+                currentTrace.getLength()
+                    * (currentTrace.getHalfWidth()
+                        + board.clearanceValue(
+                            currentTrace.clearanceClassIndex(),
+                            defaultClearanceClass,
+                            currentTrace.getLayer()));
+            if (fixedState == FixedState.SHOVE_FIXED) {
+              weightedTraceLength /= 2;
+            }
+            totalWeightedLength += (float) weightedTraceLength;
+          }
+        }
+      }
+      Unit unit = board.communication.unit;
+      if (unit != null && unit != Unit.MM) {
+        totalLength = (float) Unit.scale(totalLength, unit, Unit.MM);
+        totalWeightedLength = (float) Unit.scale(totalWeightedLength, unit, Unit.MM);
+      }
+      return new OptimizerMetrics(viaCount, totalLength, totalWeightedLength);
+    }
   }
 }

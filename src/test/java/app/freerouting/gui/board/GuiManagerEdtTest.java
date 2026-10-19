@@ -10,13 +10,20 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.SwingUtilities;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
 class GuiManagerEdtTest {
 
   @BeforeAll
-  static void setUpLogging() {
-    FRLogger.info("Initializing logging for GuiManagerEdtTest");
+  @Timeout(60)
+  static void initializeDesktopTestEnvironment() {
+    FRLogger.info("Initializing logging and EDT for GuiManagerEdtTest");
+    // Cold Windows AWT/class loading is setup, not part of the five-second interrupt handshake.
+    // Exercise the real entry point here; startup failure still fails the suite instead of skipping
+    // it.
+    assertTrue(GuiManager.invokeOnEdt(() -> true), "The desktop EDT must initialize successfully");
   }
 
   @Test
@@ -85,7 +92,7 @@ class GuiManagerEdtTest {
     assertFalse(GuiManager.invokeOnEdt(null));
   }
 
-  @Test
+  @RepeatedTest(5)
   @AllowErrorLogs(
       "Verifies graceful false return and interrupt restoration when thread is interrupted")
   void returnsFalseAndRestoresInterruptWhenInterrupted() throws Exception {
@@ -117,12 +124,19 @@ class GuiManagerEdtTest {
             });
 
     testThread.start();
-    assertTrue(initializerStarted.await(5, TimeUnit.SECONDS));
-    testThread.interrupt();
-    assertTrue(threadFinished.await(5, TimeUnit.SECONDS));
-    allowInitializerToFinish.countDown();
-
-    assertFalse(result.get());
-    assertTrue(interruptedState.get());
+    try {
+      assertTrue(initializerStarted.await(5, TimeUnit.SECONDS));
+      testThread.interrupt();
+      assertTrue(threadFinished.await(5, TimeUnit.SECONDS));
+      assertFalse(result.get());
+      assertTrue(interruptedState.get());
+    } finally {
+      // A failed assertion must not leave the EDT blocked or retain this test's worker.
+      allowInitializerToFinish.countDown();
+      testThread.interrupt();
+      testThread.join(5000);
+      SwingUtilities.invokeAndWait(() -> {});
+      assertFalse(testThread.isAlive(), "The interrupted test worker must exit");
+    }
   }
 }

@@ -40,7 +40,7 @@ public class Net {
       }
     }
     scopeParameter.file.endScope();
-    if (net.hasExplicitLengthConstraint()) {
+    if (net.hasExplicitLengthConstraint() || net.hasExplicitMeanderConstraint()) {
       writeCircuit(net, scopeParameter);
     }
     scopeParameter.file.endScope();
@@ -48,33 +48,80 @@ public class Net {
 
   private static void writeCircuit(
       app.freerouting.rules.Net net, WriteScopeParameter scopeParameter) throws IOException {
-    app.freerouting.rules.NetLengthConstraint constraint = net.getExplicitLengthConstraint();
-    if (constraint == null || !constraint.isConstrained()) {
+    app.freerouting.rules.NetLengthConstraint lengthConstraint = net.getExplicitLengthConstraint();
+    app.freerouting.rules.NetMeanderConstraint meanderConstraint =
+        net.getExplicitMeanderConstraint();
+    boolean hasLength = lengthConstraint != null && lengthConstraint.isConstrained();
+    boolean hasMeander = meanderConstraint != null && meanderConstraint.isConstrained();
+    if (!hasLength && !hasMeander) {
       return;
     }
-    final double minTraceLength = constraint.minLength();
-    final double maxTraceLength = constraint.maxLength();
     scopeParameter.file.startScope();
     scopeParameter.file.write("circuit");
-    scopeParameter.file.newLine();
-    scopeParameter.file.write("(length ");
-    double transformedMaxLength;
-    if (maxTraceLength <= 0) {
-      transformedMaxLength = -1;
-    } else {
-      transformedMaxLength = scopeParameter.coordinateTransform.boardToDsn(maxTraceLength);
+    if (hasLength) {
+      final double minTraceLength = lengthConstraint.minLength();
+      final double maxTraceLength = lengthConstraint.maxLength();
+      scopeParameter.file.newLine();
+      scopeParameter.file.write("(length ");
+      double transformedMaxLength;
+      if (maxTraceLength <= 0) {
+        transformedMaxLength = -1;
+      } else {
+        transformedMaxLength = scopeParameter.coordinateTransform.boardToDsn(maxTraceLength);
+      }
+      scopeParameter.file.write(String.valueOf(transformedMaxLength));
+      scopeParameter.file.write(" ");
+      double transformedMinLength;
+      if (minTraceLength <= 0) {
+        transformedMinLength = 0;
+      } else {
+        transformedMinLength = scopeParameter.coordinateTransform.boardToDsn(minTraceLength);
+      }
+      scopeParameter.file.write(String.valueOf(transformedMinLength));
+      scopeParameter.file.write(")");
     }
-    scopeParameter.file.write(String.valueOf(transformedMaxLength));
-    scopeParameter.file.write(" ");
-    double transformedMinLength;
-    if (minTraceLength <= 0) {
-      transformedMinLength = 0;
-    } else {
-      transformedMinLength = scopeParameter.coordinateTransform.boardToDsn(minTraceLength);
+    if (hasMeander) {
+      writeMeanderProperties(meanderConstraint, scopeParameter);
     }
-    scopeParameter.file.write(String.valueOf(transformedMinLength));
-    scopeParameter.file.write(")");
     scopeParameter.file.endScope();
+  }
+
+  static void writeMeanderProperties(
+      app.freerouting.rules.NetMeanderConstraint meander, WriteScopeParameter scopeParameter)
+      throws IOException {
+    if (meander.hasAmplitude()) {
+      scopeParameter.file.newLine();
+      scopeParameter.file.write("(length_amplitude ");
+      double maxAmp = scopeParameter.coordinateTransform.boardToDsn(meander.maxAmplitude());
+      double minAmp = scopeParameter.coordinateTransform.boardToDsn(meander.minAmplitude());
+      scopeParameter.file.write(String.valueOf(maxAmp));
+      scopeParameter.file.write(" ");
+      scopeParameter.file.write(String.valueOf(minAmp));
+      scopeParameter.file.write(")");
+    }
+    if (meander.hasSpacing()) {
+      scopeParameter.file.newLine();
+      scopeParameter.file.write("(length_gap ");
+      double gap = scopeParameter.coordinateTransform.boardToDsn(meander.spacing());
+      scopeParameter.file.write(String.valueOf(gap));
+      scopeParameter.file.write(")");
+    }
+    if (meander.cornerStyle() != null) {
+      scopeParameter.file.newLine();
+      scopeParameter.file.write("(corner_style ");
+      scopeParameter.file.write(meander.cornerStyle().name().toLowerCase());
+      scopeParameter.file.write(")");
+    }
+    if (meander.radiusPercentage() >= 0) {
+      scopeParameter.file.newLine();
+      scopeParameter.file.write("(radius ");
+      scopeParameter.file.write(String.valueOf(meander.radiusPercentage()));
+      scopeParameter.file.write(")");
+    }
+    scopeParameter.file.newLine();
+    scopeParameter.file.write("(single_sided ");
+    scopeParameter.file.write(meander.singleSided() ? "on" : "off");
+    scopeParameter.file.write(")");
   }
 
   public static void writeNetId(

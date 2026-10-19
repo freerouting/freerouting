@@ -18,6 +18,7 @@ public class Keyword {
   public static final Keyword AUTOROUTE_SETTINGS = new Keyword("autoroute_settings");
   public static final Keyword BACK = new Keyword("back");
   public static final Keyword BOUNDARY = new Keyword("boundary");
+  public static final Keyword CHAMFER = new Keyword("chamfer");
   public static final Keyword CIRCUIT = new Keyword("circuit");
   public static final Keyword CIRCLE = new Keyword("circle");
   public static final Keyword CLASS = new Keyword("class");
@@ -26,10 +27,14 @@ public class Keyword {
   public static final ScopeKeyword COMPONENT_SCOPE = new Component();
   public static final Keyword CONSTANT = new Keyword("constant");
   public static final Keyword CONTROL = new Keyword("control");
+  public static final Keyword CORNER_STYLE = new Keyword("corner_style");
   public static final Keyword CLEARANCE = new Keyword("clearance");
   public static final Keyword CLEARANCE_CLASS = new Keyword("clearance_class");
   public static final Keyword CLOSED_BRACKET = new Keyword(")");
+  public static final Keyword DIFF_PAIR = new Keyword("diff_pair");
+  public static final Keyword DIFF_PAIR_SKEW = new Keyword("diff_pair_skew");
   public static final Keyword FANOUT = new Keyword("fanout");
+  public static final Keyword FILLET = new Keyword("fillet");
   public static final Keyword FLIP_STYLE = new Keyword("flip_style");
   public static final Keyword FIX = new Keyword("fix");
   public static final Keyword FORTYFIVE_DEGREE = new Keyword("fortyfive_degree");
@@ -45,10 +50,13 @@ public class Keyword {
   public static final Keyword LAYER = new Keyword("layer");
   public static final Keyword LAYER_RULE = new Keyword("layer_rule");
   public static final Keyword LENGTH = new Keyword("length");
+  public static final Keyword LENGTH_AMPLITUDE = new Keyword("length_amplitude");
+  public static final Keyword LENGTH_GAP = new Keyword("length_gap");
   public static final ScopeKeyword LIBRARY_SCOPE = new Library();
   public static final Keyword LOCK_TYPE = new Keyword("lock_type");
   public static final Keyword LOGICAL_PART = new Keyword("logical_part");
   public static final Keyword LOGICAL_PART_MAPPING = new Keyword("logical_part_mapping");
+  public static final Keyword MEANDER_PATTERN = new Keyword("meander_pattern");
   public static final Keyword NET = new Keyword("net");
   public static final Keyword NETWORK_OUT = new Keyword("network_out");
   public static final ScopeKeyword NETWORK_SCOPE = new Network();
@@ -63,6 +71,7 @@ public class Keyword {
   public static final Keyword PADSTACK = new Keyword("padstack");
   public static final ScopeKeyword PART_LIBRARY_SCOPE = new PartLibrary();
   public static final ScopeKeyword PARSER_SCOPE = new Parser();
+  public static final Keyword PATTERN_TYPE = new Keyword("pattern_type");
   public static final ScopeKeyword PCB_SCOPE = new ScopeKeyword("pcb");
   public static final Keyword PIN = new Keyword("pin");
   public static final Keyword PINS = new Keyword("pins");
@@ -84,6 +93,7 @@ public class Keyword {
   public static final Keyword POSTROUTE = new Keyword("postroute");
   public static final Keyword POWER = new Keyword("power");
   public static final Keyword PULL_TIGHT = new Keyword("pull_tight");
+  public static final Keyword RADIUS = new Keyword("radius");
   public static final Keyword RECTANGLE = new Keyword("rectangle");
   public static final ScopeKeyword RESOLUTION_SCOPE = new Resolution();
   public static final Keyword ROTATE = new Keyword("rotate");
@@ -96,6 +106,7 @@ public class Keyword {
   public static final Keyword SHOVE_FIXED = new Keyword("shove_fixed");
   public static final Keyword SIDE = new Keyword("side");
   public static final Keyword SIGNAL = new Keyword("signal");
+  public static final Keyword SINGLE_SIDED = new Keyword("single_sided");
   public static final Keyword SPARE = new Keyword("spare");
   public static final Keyword START_PASS_NO = new Keyword("start_pass_no");
   public static final Keyword START_RIPUP_COSTS = new Keyword("start_ripup_costs");
@@ -127,5 +138,23 @@ public class Keyword {
   /** Returns the name string of this Keyword. The name is used for debugging purposes. */
   public String getName() {
     return name;
+  }
+
+  /**
+   * Checks whether the token matches the given keyword either by reference equality or by
+   * case-insensitive string name comparison.
+   *
+   * @param token the token returned from the scanner (Keyword or String)
+   * @param keyword the target keyword to compare against
+   * @return true if the token matches the keyword
+   */
+  public static boolean matches(Object token, Keyword keyword) {
+    if (token == keyword) {
+      return true;
+    }
+    if (token instanceof String str && keyword != null) {
+      return str.equalsIgnoreCase(keyword.getName());
+    }
+    return false;
   }
 }

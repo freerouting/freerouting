@@ -32,6 +32,19 @@ public class Packages implements Serializable {
       return null;
     }
     Package otherSidePackage = null;
+    // Erik Gavriluk (freerouting.net): match exact case first so packages differing only in case
+    // stay distinct
+    for (Package currentPackage : packages) {
+      if (currentPackage != null && currentPackage.name.equals(name)) {
+        if (currentPackage.isFront == isFront) {
+          return currentPackage;
+        }
+        otherSidePackage = currentPackage;
+      }
+    }
+    if (otherSidePackage != null) {
+      return otherSidePackage;
+    }
     for (Package currentPackage : packages) {
       if (currentPackage != null && currentPackage.name.equalsIgnoreCase(name)) {
         if (currentPackage.isFront == isFront) {
