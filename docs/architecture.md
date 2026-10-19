@@ -223,11 +223,14 @@ the dedicated subpackages above; `app.freerouting.autoroute.events` remains the 
 
 ### `app.freerouting.rules`
 
-The rule model that defines nets, clearance classes, via rules, layer constraints, and trace length bounds.
+The rule model that defines nets, clearance classes, via rules, layer constraints, trace length bounds, and meander pattern tuning constraints.
 
 - `NetLengthConstraint` — Immutable record representing minimum and maximum trace length bounds (`minLength`, `maxLength`), target length calculation (midpoint or single bound), and boundary checks (`isSatisfied(traceLength)`).
 - Trace length bounds are supported at both the `NetClass` level and as explicit overrides at the `Net` level (parsed from Specctra DSN `(circuit (length <max> [<min>]))` or `(rule (length <max> [<min>]))` scopes). When unconstrained at the net level, a net transparently falls back to its net class constraint.
-- **Future Extension Point:** Net length constraints are structured for forward compatibility with future post-routing Net Length Tuning and accordion meander insertion phases, providing the target length and tolerance envelope without coupling to active routing search heuristics.
+- `NetMeanderConstraint` — Immutable record representing trace length tuning meander (accordion) constraints: excursion bounds (`minAmplitude`, `maxAmplitude`), segment spacing (`spacing`), corner geometry (`CornerStyle`: `FILLET` or `CHAMFER`), corner radius percentage (`radiusPercentage`), and baseline side restriction (`singleSided`).
+- Meander pattern constraints are resolved across a 4-tier fallback hierarchy: explicit `Net` override → `NetClass` constraint → `BoardRules` default preset → `RouterSettings` / `DefaultSettings`.
+- Specctra DSN grammar support includes standard Specctra descriptors (`length_amplitude`, `length_gap`), extension descriptors (`corner_style`, `radius`, `single_sided`), and grouped scopes (`meander_pattern`), supporting both reading and lossless round-trip serialization.
+- **Future Extension Point:** Net length and meander pattern constraints are structured for forward compatibility with future post-routing Net Length Tuning and accordion meander pathfinding phases (PR3), providing the geometric envelope without coupling to active routing search heuristics.
 
 ### `app.freerouting.drc`
 
