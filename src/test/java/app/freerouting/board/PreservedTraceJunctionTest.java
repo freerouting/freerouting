@@ -75,9 +75,9 @@ public class PreservedTraceJunctionTest {
 
     RoutingBoard routingBoard =
         new RoutingBoard(
-            new IntBox(0, 0, 10000000, 10000000),
+            new IntBox(-100000, -100000, 10000000, 10000000),
             layerStructure,
-            new PolylineShape[] {TileShape.getInstance(0, 0, 10000000, 10000000)},
+            new PolylineShape[] {TileShape.getInstance(-100000, -100000, 10000000, 10000000)},
             0,
             boardRules,
             communication);

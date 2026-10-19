@@ -189,10 +189,20 @@ public abstract class Trace extends Item implements Connectable, Serializable {
       result.addAll(getNormalContacts(endCorner, false));
     }
 
-    // Query same-net items in the bounding box to capture branches meeting
+    // Query same-net items in the trace bounds to capture branches meeting
     // this trace at internal bends or along the centerline (e.g. preserved T-junctions)
     if (board != null) {
-      Set<SearchTreeObject> overlaps = board.overlappingObjects(this.boundingBox(), this.layer);
+      TileShape contactBounds;
+      if (this instanceof PolylineTrace polylineTrace) {
+        contactBounds =
+            polylineTrace
+                .polyline()
+                .boundingOctagon(0, polylineTrace.cornerCount() - 1)
+                .offset(this.getHalfWidth());
+      } else {
+        contactBounds = this.boundingBox();
+      }
+      Set<SearchTreeObject> overlaps = board.overlappingObjects(contactBounds, this.layer);
       for (SearchTreeObject obj : overlaps) {
         if (!(obj instanceof Item item)
             || item == this

@@ -20,7 +20,9 @@ import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.ClearanceMatrix;
 import app.freerouting.settings.GlobalSettings;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -68,6 +70,28 @@ class PolylineTraceContactTest {
     assertEquals(junction, second.normalContactPoint((Item) first));
     assertTrue(first.getConnectionItems().contains(second));
     assertTrue(second.getConnectionItems().contains(first));
+  }
+
+  @Test
+  void parallelDiagonalTracesReportExactContactsWithOctagonalBounds() {
+    PolylineTrace[] diagonals = new PolylineTrace[16];
+    for (int i = 0; i < diagonals.length; i++) {
+      int offset = i * 200;
+      diagonals[i] =
+          insertTrace(
+              new Polyline(new IntPoint(-4000, -4000 + offset), new IntPoint(4000, 4000 + offset)));
+    }
+    for (PolylineTrace diagonal : diagonals) {
+      assertTrue(diagonal.getNormalContacts().isEmpty());
+    }
+
+    // Connect a branch to the interior midpoint (0, 0) of the first diagonal
+    PolylineTrace branch = insertTrace(new Polyline(new IntPoint(0, 0), new IntPoint(2000, -2000)));
+    assertEquals(Set.of(branch), diagonals[0].getNormalContacts());
+    assertEquals(Set.of(diagonals[0]), branch.getNormalContacts());
+    for (int i = 1; i < diagonals.length; i++) {
+      assertTrue(diagonals[i].getNormalContacts().isEmpty());
+    }
   }
 
   private PolylineTrace insertTrace(Polyline polyline) {
