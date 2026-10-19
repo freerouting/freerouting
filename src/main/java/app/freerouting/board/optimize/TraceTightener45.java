@@ -533,7 +533,7 @@ class TraceTightener45 extends TraceTightener {
       double otherDist = Math.abs(translateLine.signedDistance(otherTraceCornerApprox));
       translateDist = Math.min(translateDist, prevCornerDist);
       translateDist = Math.min(translateDist, otherDist);
-      if (translateDist >= 0.99) {
+      if (translateDist >= getMinContactChamferRoom()) {
 
         translateDist = Math.max(translateDist - 1, 1);
         if (translateLine.sideOf(currentPrevEndCorner) == Side.ON_THE_LEFT) {
@@ -641,7 +641,7 @@ class TraceTightener45 extends TraceTightener {
       double otherDist = Math.abs(translateLine.signedDistance(otherTraceCornerApprox));
       translateDist = Math.min(translateDist, prevCornerDist);
       translateDist = Math.min(translateDist, otherDist);
-      if (translateDist >= 0.99) {
+      if (translateDist >= getMinContactChamferRoom()) {
 
         translateDist = Math.max(translateDist - 1, 1);
         if (translateLine.sideOf(currentPrevEndCorner) == Side.ON_THE_LEFT) {

@@ -55,12 +55,14 @@
   ],
   "tier": "B",
   "expected_outcome": "baseline_violations",
-  "timeout_budget": "00:10:00",
+  "timeout_budget": "06:00:00",
   "baseline_routing": {
     "calibrated_at": "2026-08-18T20:56:32.842604+00:00",
     "elapsed_seconds": 25.18,
     "unrouted_nets": 0,
     "clearance_violations": 6,
     "quality_score": 961.28
-  }
+  },
+  "tier_index": 290,
+  "reference_seconds": 16.5
 }

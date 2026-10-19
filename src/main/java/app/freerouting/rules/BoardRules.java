@@ -187,6 +187,20 @@ public class BoardRules implements Serializable {
     return minTraceHalfWidth;
   }
 
+  private int minAllowedTraceHalfWidth;
+
+  /**
+   * Erik Gavriluk (freerouting.net): returns the narrowest trace half-width allowed (0: no limit).
+   */
+  public int getMinAllowedTraceHalfWidth() {
+    return minAllowedTraceHalfWidth;
+  }
+
+  /** Erik Gavriluk (freerouting.net): sets the narrowest trace half-width allowed (0: no limit). */
+  public void setMinAllowedTraceHalfWidth(int value) {
+    this.minAllowedTraceHalfWidth = Math.max(0, value);
+  }
+
   /** Returns the biggest of all default trace half-widths. */
   public int getMaxTraceHalfWidth() {
     return maxTraceHalfWidth;

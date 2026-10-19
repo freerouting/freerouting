@@ -114,6 +114,18 @@ public final class DrillItemMover {
       int maxViaRecursionDepth,
       IntOctagon tidyRegion,
       RoutingBoard board) {
+    IntOctagon[] holder = tidyRegion != null ? new IntOctagon[] {tidyRegion} : null;
+    return insertJoiningTidyRegion(
+        drillItem, vector, maxRecursionDepth, maxViaRecursionDepth, holder, board);
+  }
+
+  public static boolean insertJoiningTidyRegion(
+      DrillItem drillItem,
+      Vector vector,
+      int maxRecursionDepth,
+      int maxViaRecursionDepth,
+      IntOctagon[] tidyRegionHolder,
+      RoutingBoard board) {
     if (drillItem.isShoveFixed()) {
       return false;
     }
@@ -141,8 +153,8 @@ public final class DrillItemMover {
       } else {
         currentTileShape = newShape.boundingOctagon();
       }
-      if (tidyRegion != null) {
-        tidyRegion = tidyRegion.union(currentTileShape.boundingOctagon());
+      if (tidyRegionHolder != null && tidyRegionHolder.length > 0 && tidyRegionHolder[0] != null) {
+        tidyRegionHolder[0] = tidyRegionHolder[0].union(currentTileShape.boundingOctagon());
       }
       ShapeEntrySide fromSide = new ShapeEntrySide(drillItem.getCenter(), currentTileShape);
       if (!forcedPadRouter.forcedPad(

@@ -8,6 +8,7 @@ import app.freerouting.board.model.items.ObstacleArea;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.searchtree.ShapeSearchTree;
+import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -25,6 +26,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Set;
 
@@ -34,7 +36,7 @@ public class BoardOutline extends Item implements Serializable {
   private static final int HALF_WIDTH = 100;
 
   /** The board shapes inside the outline curves. */
-  private final PolylineShape[] shapes;
+  private PolylineShape[] shapes;
 
   /**
    * The board shape outside the outline curves, where a keepout will be generated The outline
@@ -88,47 +90,64 @@ public class BoardOutline extends Item implements Serializable {
   }
 
   private transient Set<Integer> edgePinNets;
+  private transient int cachedItemCount = -1;
+  private transient int countedPins = -1;
+  private transient long countedVersion = -1;
+  private transient UndoableObjects countedList;
 
-  /**
-   * Nets whose pins touch the outline. Rebuilt only after {@link #invalidateEdgePinNets()}. The
-   * previous probe called {@code getPins().size()} on every check, which copied every board item
-   * into a linked list from inside maze room expansion.
-   */
+  /** Nets whose pins touch the outline. */
   private Set<Integer> getEdgePinNets() {
-    if (this.edgePinNets != null) {
-      return this.edgePinNets;
-    }
-    Set<Integer> set = new HashSet<>();
+    int currentItemCount = -1;
     if (this.board != null) {
-      for (Pin pin : this.board.getPins()) {
-        Point center = pin.getCenter();
-        boolean isEdgeOrOutside = false;
-        if (center != null && !this.contains(center)) {
-          isEdgeOrOutside = true;
-        } else {
-          for (int layer = pin.firstLayer(); layer <= pin.lastLayer(); layer++) {
-            Shape shape = pin.getShape(layer - pin.firstLayer());
-            if (shape instanceof TileShape tileShape) {
-              for (int c = 0; c < tileShape.borderLineCount(); c++) {
-                if (!this.contains(tileShape.corner(c))) {
-                  isEdgeOrOutside = true;
-                  break;
-                }
-              }
-            }
-            if (isEdgeOrOutside) {
-              break;
-            }
+      long version = this.board.itemList.getVersion();
+      if (version != this.countedVersion || this.countedList != this.board.itemList) {
+        this.countedPins = 0;
+        Iterator<UndoableObjects.UndoableObjectNode> iterator =
+            this.board.itemList.startReadObject();
+        while (this.board.itemList.readObject(iterator) instanceof Item item) {
+          if (item instanceof Pin) {
+            this.countedPins++;
           }
         }
-        if (isEdgeOrOutside) {
-          for (int net : pin.netNumbers) {
-            set.add(net);
+        this.countedVersion = version;
+        this.countedList = this.board.itemList;
+      }
+      currentItemCount = this.countedPins;
+    }
+    if (this.edgePinNets == null || this.cachedItemCount != currentItemCount) {
+      this.cachedItemCount = currentItemCount;
+      Set<Integer> set = new HashSet<>();
+      if (this.board != null) {
+        for (Pin pin : this.board.getPins()) {
+          Point center = pin.getCenter();
+          boolean isEdgeOrOutside = false;
+          if (center != null && !this.contains(center)) {
+            isEdgeOrOutside = true;
+          } else {
+            for (int layer = pin.firstLayer(); layer <= pin.lastLayer(); layer++) {
+              Shape shape = pin.getShape(layer - pin.firstLayer());
+              if (shape instanceof TileShape tileShape) {
+                for (int c = 0; c < tileShape.borderLineCount(); c++) {
+                  if (!this.contains(tileShape.corner(c))) {
+                    isEdgeOrOutside = true;
+                    break;
+                  }
+                }
+              }
+              if (isEdgeOrOutside) {
+                break;
+              }
+            }
+          }
+          if (isEdgeOrOutside) {
+            for (int net : pin.netNumbers) {
+              set.add(net);
+            }
           }
         }
       }
+      this.edgePinNets = set;
     }
-    this.edgePinNets = set;
     return this.edgePinNets;
   }
 
@@ -200,11 +219,22 @@ public class BoardOutline extends Item implements Serializable {
   /** Invalidates cached edge pin nets when board geometry or pins change. */
   public void invalidateEdgePinNets() {
     this.edgePinNets = null;
+    this.cachedItemCount = -1;
+    this.countedVersion = -1;
+    this.countedList = null;
   }
+
+  /**
+   * Erik Gavriluk (freerouting.net): whether a net with a pin on or beyond the outline (such as an
+   * edge connector's fingers) may route across the outline everywhere on the board. Default true
+   * for Specctra/DSN compatibility; can be set false when edge pins must not exempt other traces of
+   * that net from respecting edge clearance.
+   */
+  public boolean edgePinNetsCrossOutline = true;
 
   @Override
   public boolean isTraceObstacle(int netNumber) {
-    if (netNumber > 0 && getEdgePinNets().contains(netNumber)) {
+    if (edgePinNetsCrossOutline && netNumber > 0 && getEdgePinNets().contains(netNumber)) {
       return false;
     }
     return true;
@@ -263,9 +293,11 @@ public class BoardOutline extends Item implements Serializable {
 
   @Override
   public void translateBy(Vector vector) {
-    for (PolylineShape currentShape : this.shapes) {
-      currentShape = currentShape.translateBy(vector);
+    PolylineShape[] newShapes = new PolylineShape[this.shapes.length];
+    for (int i = 0; i < this.shapes.length; i++) {
+      newShapes[i] = this.shapes[i].translateBy(vector);
     }
+    this.shapes = newShapes;
     if (keepoutArea != null) {
       keepoutArea = keepoutArea.translateBy(vector);
     }
@@ -275,9 +307,11 @@ public class BoardOutline extends Item implements Serializable {
 
   @Override
   public void turn90Degree(int factor, IntPoint pole) {
-    for (PolylineShape currentShape : this.shapes) {
-      currentShape = currentShape.turn90Degree(factor, pole);
+    PolylineShape[] newShapes = new PolylineShape[this.shapes.length];
+    for (int i = 0; i < this.shapes.length; i++) {
+      newShapes[i] = this.shapes[i].turn90Degree(factor, pole);
     }
+    this.shapes = newShapes;
     if (keepoutArea != null) {
       keepoutArea = keepoutArea.turn90Degree(factor, pole);
     }
@@ -288,9 +322,11 @@ public class BoardOutline extends Item implements Serializable {
   @Override
   public void rotateApprox(double angleInDegree, FloatPoint pole) {
     double angle = Math.toRadians(angleInDegree);
-    for (PolylineShape currentShape : this.shapes) {
-      currentShape = currentShape.rotateApprox(angle, pole);
+    PolylineShape[] newShapes = new PolylineShape[this.shapes.length];
+    for (int i = 0; i < this.shapes.length; i++) {
+      newShapes[i] = this.shapes[i].rotateApprox(angle, pole);
     }
+    this.shapes = newShapes;
     if (keepoutArea != null) {
       keepoutArea = keepoutArea.rotateApprox(angle, pole);
     }
@@ -300,9 +336,11 @@ public class BoardOutline extends Item implements Serializable {
 
   @Override
   public void changePlacementSide(IntPoint pole) {
-    for (PolylineShape currentShape : this.shapes) {
-      currentShape = currentShape.mirrorVertical(pole);
+    PolylineShape[] newShapes = new PolylineShape[this.shapes.length];
+    for (int i = 0; i < this.shapes.length; i++) {
+      newShapes[i] = this.shapes[i].mirrorVertical(pole);
     }
+    this.shapes = newShapes;
     if (keepoutArea != null) {
       keepoutArea = keepoutArea.mirrorVertical(pole);
     }

@@ -11,4 +11,8 @@ public class BoardStatisticsConnections implements Serializable {
 
   @SerializedName("incomplete_count")
   public Integer incompleteCount;
+
+  /** Open connections with an end blocked by the design (e.g. pins on foreign fixed copper). */
+  @SerializedName("design_blocked_count")
+  public Integer designBlockedCount;
 }

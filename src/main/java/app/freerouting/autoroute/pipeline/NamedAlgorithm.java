@@ -92,6 +92,15 @@ public abstract sealed class NamedAlgorithm implements Serializable
     }
   }
 
+  /**
+   * Copies listeners onto another algorithm stage so a fallback attempt reports the same events.
+   */
+  public void copyListenersFrom(NamedAlgorithm source) {
+    this.boardSnapshotEventListeners.addAll(source.boardSnapshotEventListeners);
+    this.boardUpdatedEventListeners.addAll(source.boardUpdatedEventListeners);
+    this.taskStateChangedEventListeners.addAll(source.taskStateChangedEventListeners);
+  }
+
   /** Adds a listener for board updated events. */
   public void addBoardUpdatedEventListener(BoardUpdatedEventListener listener) {
     boardUpdatedEventListeners.add(listener);

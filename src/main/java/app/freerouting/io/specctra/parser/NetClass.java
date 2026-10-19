@@ -111,6 +111,21 @@ public class NetClass {
       Circuit.ReadScopeResult circuit = null;
 
       Object nextToken = scanner.nextToken();
+      if (nextToken == Keyword.CLOSED_BRACKET) {
+        return new NetClass(
+            className,
+            traceClearanceClass,
+            netList,
+            rules,
+            layerRules,
+            useVia,
+            useLayer,
+            viaRule,
+            shoveFixed,
+            pullTight,
+            minTraceLength,
+            maxTraceLength);
+      }
       if (!rulesMissing) {
         Object prevToken = nextToken;
         for (; ; ) {

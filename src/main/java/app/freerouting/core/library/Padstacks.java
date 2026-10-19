@@ -23,6 +23,16 @@ public class Padstacks implements Serializable {
 
   /** Returns the padstack with the input name or null, if no such padstack exists. */
   public Padstack get(String name) {
+    if (name == null) {
+      return null;
+    }
+    // Erik Gavriluk (freerouting.net): match exact case first so padstacks differing only in case
+    // stay distinct
+    for (Padstack currentPadstack : padstacks) {
+      if (currentPadstack != null && currentPadstack.name.equals(name)) {
+        return currentPadstack;
+      }
+    }
     for (Padstack currentPadstack : padstacks) {
       if (currentPadstack != null && currentPadstack.name.equalsIgnoreCase(name)) {
         return currentPadstack;

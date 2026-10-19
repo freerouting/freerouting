@@ -54,7 +54,7 @@ public class ForcedPadRouter {
   }
 
   /** Checks, if line is in front of padShape when shoving from fromSide. */
-  private static boolean inFrontOfPad(
+  public static boolean inFrontOfPad(
       Line line, TileShape padShape, int fromSide, int width, boolean withSides) {
     if (!padShape.isIntOctagon()) {
       // only implemented for octagons
@@ -75,7 +75,7 @@ public class ForcedPadRouter {
             Math.min(lineA.y, lineB.y) >= padOctagon.topY + width
                 || Math.max(lineA.x - lineA.y, lineB.x - lineB.y)
                     <= padOctagon.upperLeftDiagonalX - diagWidth
-                || Math.min(lineA.x + lineA.y, lineB.x + lineB.x)
+                || Math.min(lineA.x + lineA.y, lineB.x + lineB.y)
                     >= padOctagon.upperRightDiagonalX + diagWidth;
         if (withSides && !result) {
           result =

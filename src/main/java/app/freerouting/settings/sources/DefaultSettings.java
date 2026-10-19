@@ -126,6 +126,11 @@ public class DefaultSettings implements SettingsSource {
 
   public static final float DEFAULT_ROUTER_UNROUTED_CONNECTION_WEIGHT = 1000.0F;
 
+  public static final String DEFAULT_FALLBACK_STRATEGIES =
+      "direct-first,fanout-retry,short-escape,open-escape,no-fanout";
+  public static final String DEFAULT_EXPLORE_FALLBACK_STRATEGIES = "short-escape,open-escape";
+  public static final double DEFAULT_SMD_NET_VIA_COST_FACTOR = 0.1;
+
   /** Split between first-half and second-half unrouted weights. Default 0.5. */
   public static final float DEFAULT_ROUTER_UNROUTED_FREE_FRACTION = 0.5F;
 
@@ -182,6 +187,12 @@ public class DefaultSettings implements SettingsSource {
     settings.automaticNeckdown = true;
     settings.autorouter.saveIntermediateStages = false;
     settings.autorouter.ignoreNetClasses = new String[0];
+    settings.autorouter.startNecked = true;
+    settings.autorouter.fallbackStrategies = DEFAULT_FALLBACK_STRATEGIES;
+    settings.autorouter.exploreFallbackStrategies = DEFAULT_EXPLORE_FALLBACK_STRATEGIES;
+    settings.autorouter.smdNetViaCostFactor = DEFAULT_SMD_NET_VIA_COST_FACTOR;
+    settings.autorouter.residualRepairMaxOpen = 4;
+    settings.autorouter.explorePatience = 0;
     settings.maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
     settings.autorouter.maxThreads = settings.maxThreads;
     settings.copperToEdgeClearanceUm = DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM;
@@ -197,6 +208,7 @@ public class DefaultSettings implements SettingsSource {
     settings.planeAsObstacle = false;
     settings.neckWidthUm = DEFAULT_NECK_WIDTH_UM;
     settings.strictDrc = false;
+    settings.fixKicadFootprints = false;
 
     // layers is left null intentionally –
     // they will be populated by DsnFileSettings (from the DSN layer count) and then
@@ -214,6 +226,8 @@ public class DefaultSettings implements SettingsSource {
     settings.fanout.pinSortingOrder = "outer_first";
     settings.fanout.maxItems = Integer.MAX_VALUE;
     settings.fanout.fallbackToBoardVias = true;
+    settings.fanout.retryWithoutEscapeWindow = false;
+    settings.fanout.strategy = "eager";
 
     // Optimizer defaults
     settings.optimizer.enabled = true;

@@ -23,12 +23,10 @@ import java.util.TreeSet;
 public class PlanarDelaunayTriangulation {
 
   /**
-   * Randum generatur to shuffle the input corners. A fixed seed is used to make the results
+   * Random seed to shuffle the input corners. A fixed seed is used to make the results
    * reproducible.
    */
   private static final int seed = 99;
-
-  private static final Random randomGenerator = new Random(seed);
 
   /** The structure for searching the triangle containing a given input corner. */
   private final TriangleGraph searchGraph;
@@ -56,9 +54,8 @@ public class PlanarDelaunayTriangulation {
     }
 
     // create a random permutation of the corners.
-    // use a fixed seed to get reproducible result
-    randomGenerator.setSeed(seed);
-    Collections.shuffle(cornerList, randomGenerator);
+    // use a fixed seed to get reproducible result without cross-worker thread interference
+    Collections.shuffle(cornerList, new Random(seed));
 
     // create a big triangle containing all corners in the list to start with.
 
