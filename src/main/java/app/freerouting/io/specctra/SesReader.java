@@ -331,27 +331,24 @@ public final class SesReader {
 
     try {
       int layerIndex = wirePath.layer.no;
-      int[] boardCoordinates = new int[wirePath.coordinateArr.length];
-      for (int i = 0; i < wirePath.coordinateArr.length; i++) {
-        boardCoordinates[i] = (int) Math.round(wirePath.coordinateArr[i] * sessionToBoardScale);
+      if (layerIndex < 0 || layerIndex >= board.getLayerCount()) {
+        throw new IOException("Invalid SES wire layer");
       }
-
-      Point[] points = new Point[boardCoordinates.length / 2];
-      for (int i = 0; i < points.length; i++) {
-        points[i] = Point.getInstance(boardCoordinates[2 * i], boardCoordinates[2 * i + 1]);
-      }
-
-      Polyline polyline = new Polyline(points);
-      int halfWidth = (int) Math.round(wirePath.width * sessionToBoardScale / 2.0);
+      Polyline polyline = SesPathGeometry.read(wirePath.coordinateArr, sessionToBoardScale);
+      int halfWidth = SesPathGeometry.halfWidth(wirePath.width, sessionToBoardScale);
 
       int clearanceClass =
           netClassOf(netNumbers)
               .defaultItemClearanceClasses
               .get(app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.TRACE);
 
-      board.insertTrace(
-          polyline, layerIndex, halfWidth, netNumbers, clearanceClass, FixedState.USER_FIXED);
-
+      // Import fixed copper exactly; normalization must not erase point copper or short segments.
+      var trace =
+          board.insertTraceWithoutCleaning(
+              polyline, layerIndex, halfWidth, netNumbers, clearanceClass, FixedState.USER_FIXED);
+      if (trace == null) {
+        return false;
+      }
       wiresImported++;
       return true;
 
