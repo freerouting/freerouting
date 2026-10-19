@@ -3,6 +3,7 @@ package app.freerouting.autoroute.maze;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.structure.Unit;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.Point;
@@ -370,5 +371,24 @@ public class AutorouteControl {
       this.toLayer = toLayer;
       this.attachSmdAllowed = attachSmdAllowed;
     }
+  }
+
+  /**
+   * Returns the user's {@code neck_width_um} as a trace half width in board units (clamped to at
+   * least {@link app.freerouting.rules.BoardRules#getMinAllowedTraceHalfWidth()}), or the minimum
+   * allowed trace half width (0 when unset) when {@code neck_width_um} is not set. No automatic
+   * narrowing may go below this width.
+   */
+  public static int neckHalfWidth(RoutingBoard board, RouterSettings settings) {
+    double neckWidthUm = settings.getNeckWidthUm();
+    if (neckWidthUm <= 0) {
+      return board.rules.getMinAllowedTraceHalfWidth();
+    }
+    int boardResolution = Math.max(1, board.communication.resolution);
+    int neckWidth =
+        (int)
+            Math.round(
+                Unit.scale(neckWidthUm * boardResolution, Unit.UM, board.communication.unit));
+    return Math.max(Math.max(1, neckWidth / 2), board.rules.getMinAllowedTraceHalfWidth());
   }
 }

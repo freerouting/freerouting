@@ -499,9 +499,21 @@ public final class FoundConnectionInserter {
     if (endPin != null && endPin.isOnLayer(layer)) {
       candidateHalfWidths.add(endPin.getTraceNeckdownHalfwidth(layer));
     }
-    candidateHalfWidths.add(Math.max(1, (baseHalfWidth * 3) / 4));
-    candidateHalfWidths.add(Math.max(1, (baseHalfWidth * 3) / 5));
-    candidateHalfWidths.add(Math.max(1, baseHalfWidth / 2));
+    // neck_width_um is the narrowest trace the user allows; the necked retry already routes at
+    // that width, so percentage narrowing below it would produce traces the board house cannot
+    // make. Pin-neckdown candidates above stay consistent with insertNeckdown so a trace can still
+    // enter a pad whose neckdown width is below neck_width_um.
+    int minHalfWidth = AutorouteControl.neckHalfWidth(board, ctrl.settings);
+    for (int pctHalfWidth :
+        new int[] {
+          Math.max(1, (baseHalfWidth * 3) / 4),
+          Math.max(1, (baseHalfWidth * 3) / 5),
+          Math.max(1, baseHalfWidth / 2)
+        }) {
+      if (pctHalfWidth >= minHalfWidth) {
+        candidateHalfWidths.add(pctHalfWidth);
+      }
+    }
 
     for (int candidateHalfWidth : candidateHalfWidths) {
       if (candidateHalfWidth <= 0 || candidateHalfWidth >= baseHalfWidth) {
