@@ -79,6 +79,9 @@ public class AutorouteControl {
   /** Source pin layer for targeted fanout diagnostics and limits. */
   public int fanoutStartPinLayer = -1;
 
+  /** Erik Gavriluk (freerouting.net): retry a failed fanout escape without the distance window. */
+  public boolean ignoreEscapeWindow;
+
   /** Normally true, if the autorouter contains no fanout pass. */
   public boolean removeUnconnectedVias;
 
@@ -331,7 +334,13 @@ public class AutorouteControl {
     if (pureSmdNet) {
       // Pure SMD boards need a much cheaper via escape to avoid exhausting the local pad channel
       // before the search commits to a layer change.
-      viaCostFactor *= 0.1;
+      double factor =
+          this.settings != null
+                  && this.settings.autorouter != null
+                  && this.settings.autorouter.smdNetViaCostFactor != null
+              ? this.settings.autorouter.smdNetViaCostFactor
+              : 0.1;
+      viaCostFactor *= factor;
     }
     minNormalViaCost = viaCosts * viaCostFactor;
     minCheapViaCost = 0.8 * minNormalViaCost;

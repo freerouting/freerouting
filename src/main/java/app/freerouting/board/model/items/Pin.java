@@ -5,6 +5,7 @@ import app.freerouting.board.actions.ItemSelectionFilter;
 import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.model.structure.Component;
 import app.freerouting.board.model.structure.FixedState;
+import app.freerouting.board.searchtree.SearchTreeObject;
 import app.freerouting.core.library.LogicalPart;
 import app.freerouting.core.library.Package;
 import app.freerouting.core.library.Padstack;
@@ -26,10 +27,13 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.Predicate;
 
 /**
  * Class describing the functionality of an electrical Item on the board with a shape on 1 or
@@ -759,6 +763,67 @@ public class Pin extends DrillItem implements Serializable {
     }
 
     return simpleName.toString();
+  }
+
+  @Override
+  public Set<Item> getNormalContacts() {
+    Set<Item> result = super.getNormalContacts();
+    if (board == null || getComponentId() == 0) {
+      return result;
+    }
+    for (Pin other : copperOverlappingPins(o -> o.sharesNet(this))) {
+      result.add(other);
+    }
+    return result;
+  }
+
+  /**
+   * Erik Gavriluk (freerouting.net): the pins matching accept whose copper overlaps this pin's
+   * copper on a common layer, netted or not. Exact shapes.
+   */
+  public List<Pin> copperOverlappingPins(Predicate<Pin> accept) {
+    List<Pin> result = new LinkedList<>();
+    if (board == null) {
+      return result;
+    }
+    IntBox box = this.boundingBox();
+    for (SearchTreeObject obj : board.overlappingObjects(box, -1)) {
+      if (!(obj instanceof Pin other)) {
+        continue;
+      }
+      if (other == this
+          || !accept.test(other)
+          || !other.sharesLayer(this)
+          || !box.intersects(other.boundingBox())) {
+        continue;
+      }
+      boolean overlaps = false;
+      for (int i = 0; i < tileShapeCount() && !overlaps; i++) {
+        Shape mine = getShape(i);
+        for (int j = 0; j < other.tileShapeCount() && !overlaps; j++) {
+          Shape theirs = other.getShape(j);
+          overlaps =
+              mine != null
+                  && theirs != null
+                  && shapeLayer(i) == other.shapeLayer(j)
+                  && mine.intersects(theirs);
+        }
+      }
+      if (overlaps) {
+        result.add(other);
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Erik Gavriluk (freerouting.net): the netted pins whose copper overlaps this netless pin's
+   * copper on a common layer (FR-102).
+   */
+  public List<Pin> overlappingNettedPins() {
+    return (board == null || netCount() != 0)
+        ? Collections.emptyList()
+        : copperOverlappingPins(other -> other.netCount() != 0);
   }
 
   /** Describes an exit restriction from a trace from a pin pad. */

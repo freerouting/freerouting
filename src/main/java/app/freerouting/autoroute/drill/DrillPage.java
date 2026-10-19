@@ -110,15 +110,16 @@ public class DrillPage implements ExpandableObject {
       int drillLastLayer = this.board.getLayerCount() - 1;
       for (int i = 0; i < drillShapes.length; i++) {
         TileShape currentDrillShape = drillShapes[i];
-        Point currentDrillLocation = null;
+        Point pinCenter = null;
         if (attachSmd) {
-          currentDrillLocation =
+          pinCenter =
               calcPinCenterInDrill(currentDrillShape, drillFirstLayer, autorouteEngine.board);
-          if (currentDrillLocation == null) {
-            currentDrillLocation =
+          if (pinCenter == null) {
+            pinCenter =
                 calcPinCenterInDrill(currentDrillShape, drillLastLayer, autorouteEngine.board);
           }
         }
+        Point currentDrillLocation = pinCenter;
         if (currentDrillLocation == null) {
           currentDrillLocation = currentDrillShape.centreOfGravity().round();
         }
@@ -127,6 +128,17 @@ public class DrillPage implements ExpandableObject {
                 currentDrillShape, currentDrillLocation, drillFirstLayer, drillLastLayer);
         if (newDrill.calculateExpansionRooms(autorouteEngine)) {
           this.drills.add(newDrill);
+        }
+        if (pinCenter != null) {
+          Point centreOfGravity = currentDrillShape.centreOfGravity().round();
+          if (!centreOfGravity.equals(pinCenter)) {
+            ExpansionDrill cogDrill =
+                new ExpansionDrill(
+                    currentDrillShape, centreOfGravity, drillFirstLayer, drillLastLayer);
+            if (cogDrill.calculateExpansionRooms(autorouteEngine)) {
+              this.drills.add(cogDrill);
+            }
+          }
         }
       }
     }

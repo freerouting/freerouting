@@ -31,6 +31,34 @@ public class UndoableObjects implements Serializable {
 
   private boolean redoPossible;
 
+  /**
+   * Changes whenever the set of objects a reader sees can change (an insert, a delete, a replaced
+   * node, a snapshot level change), so callers can reuse a scan of the list until it moves.
+   */
+  private transient long version;
+
+  /**
+   * Changes whenever an object's content may change: an insert, a delete, an undo or redo, every
+   * saveForUndo (which precedes an in-place change) and every noteContentChange. Snapshot level
+   * changes leave it alone.
+   */
+  private transient long contentVersion;
+
+  /** Returns the current change stamp; equal stamps mean the readable objects are unchanged. */
+  public long getVersion() {
+    return version;
+  }
+
+  /** Returns the content change stamp. */
+  public long getContentVersion() {
+    return contentVersion;
+  }
+
+  /** Records an in-place change made without saveForUndo. */
+  public void noteContentChange() {
+    ++contentVersion;
+  }
+
   /** Creates a new instance of UndoableObjectsList. */
   public UndoableObjects() {
     stackLevel = 0;
@@ -65,6 +93,8 @@ public class UndoableObjects implements Serializable {
   /** Adds object to the UndoableObjectsList. */
   public void insert(UndoableObjects.Storable object) {
     disableRedo();
+    ++version;
+    ++contentVersion;
     UndoableObjectNode currentUndoableObject = new UndoableObjectNode(object, stackLevel);
     objects.put(object, currentUndoableObject);
   }
@@ -124,6 +154,8 @@ public class UndoableObjects implements Serializable {
       }
     }
     objects.remove(object);
+    ++version;
+    ++contentVersion;
     return true;
   }
 
@@ -133,6 +165,7 @@ public class UndoableObjects implements Serializable {
     Collection<UndoableObjectNode> currentDeletedObjectsList = new LinkedList<>();
     deletedObjectsStack.add(currentDeletedObjectsList);
     ++stackLevel;
+    ++version;
   }
 
   /**
@@ -171,6 +204,8 @@ public class UndoableObjects implements Serializable {
       }
     }
     --this.stackLevel;
+    ++version;
+    ++contentVersion;
     redoPossible = true;
     return true;
   }
@@ -187,6 +222,8 @@ public class UndoableObjects implements Serializable {
       return false; // already at the top level
     }
     ++this.stackLevel;
+    ++version;
+    ++contentVersion;
     for (UndoableObjectNode currentNode : objects.values()) {
       if (currentNode.redoObject != null && currentNode.redoObject.level == this.stackLevel) {
         // Object was created on a lower level and changed on the current level,
@@ -201,7 +238,9 @@ public class UndoableObjects implements Serializable {
         }
       } else if (currentNode.level == this.stackLevel) {
         // Object was created on the current level, allow it to be restored.
-        restoredObjects.add(currentNode.object);
+        if (restoredObjects != null) {
+          restoredObjects.add(currentNode.object);
+        }
       }
     }
     // Delete the objects, which were deleted on the current level, again.
@@ -221,6 +260,32 @@ public class UndoableObjects implements Serializable {
           cancelledObjects.add(currentDeletedNode.object);
         }
       }
+    }
+    return true;
+  }
+
+  /**
+   * Returns the changes since the last snapshot. {@code before} receives the pre-snapshot state of
+   * every object that existed before it and was changed or deleted since; {@code after} receives
+   * the current state of every object inserted or changed since. Returns false, and adds nothing,
+   * when there is no snapshot.
+   */
+  public boolean changesSinceSnapshot(
+      Collection<UndoableObjects.Storable> before, Collection<UndoableObjects.Storable> after) {
+    if (stackLevel == 0) {
+      return false;
+    }
+    for (UndoableObjectNode node : objects.values()) {
+      if (node == null || node.level != stackLevel) {
+        continue;
+      }
+      after.add(node.object);
+      if (node.undoObject != null && node.undoObject.level < stackLevel) {
+        before.add(node.undoObject.object);
+      }
+    }
+    for (UndoableObjectNode deleted : deletedObjectsStack.get(stackLevel - 1)) {
+      before.add(deleted.object);
     }
     return true;
   }
@@ -263,6 +328,7 @@ public class UndoableObjects implements Serializable {
     }
     deletedObjectsStack.remove(deletedObjectsStackSize - 1);
     --stackLevel;
+    ++version;
     return true;
   }
 
@@ -271,6 +337,7 @@ public class UndoableObjects implements Serializable {
    * have existed before that snapshot.
    */
   public void saveForUndo(UndoableObjects.Storable object) {
+    ++contentVersion;
     disableRedo();
     // search object in the map
     UndoableObjectNode currentNode = objects.get(object);

@@ -104,7 +104,7 @@ class RoutingJobSchedulerActionThreadTest {
   @Test
   void jobClockStopBecomesTimedOut() {
     RoutingJobSchedulerActionThread action = stoppedJob(RoutingJobState.RUNNING, true);
-    action.assignTerminalState();
+    action.assignTerminalState(true);
     assertEquals(RoutingJobState.TIMED_OUT, action.job.state);
   }
 
@@ -120,7 +120,7 @@ class RoutingJobSchedulerActionThreadTest {
   @Test
   void stopBeforeTheJobClockCompletes() {
     RoutingJobSchedulerActionThread action = stoppedJob(RoutingJobState.RUNNING, false);
-    action.assignTerminalState();
+    action.assignTerminalState(true);
     assertEquals(RoutingJobState.COMPLETED, action.job.state);
   }
 
@@ -128,7 +128,7 @@ class RoutingJobSchedulerActionThreadTest {
   void userCancelWinsOverTheExpiredJobClock() {
     RoutingJobSchedulerActionThread action = stoppedJob(RoutingJobState.STOPPING, true);
     action.job.setCancelledByUser(true);
-    action.assignTerminalState();
+    action.assignTerminalState(true);
     assertEquals(RoutingJobState.CANCELLED, action.job.state);
   }
 
@@ -138,7 +138,7 @@ class RoutingJobSchedulerActionThreadTest {
     job.state = RoutingJobState.RUNNING;
     RoutingJobSchedulerActionThread action = new RoutingJobSchedulerActionThread(job);
     action.markTimedOutIfStillActive();
-    action.assignTerminalState();
+    action.assignTerminalState(true);
     assertEquals(RoutingJobState.TIMED_OUT, job.state);
   }
 
@@ -157,6 +157,36 @@ class RoutingJobSchedulerActionThreadTest {
     assertEquals(
         RoutingJobState.TERMINATED, job.state, "Fatal error must set job state to TERMINATED");
     assertNotNull(job.finishedAt, "Job finishedAt must be recorded on fatal error");
+  }
+
+  @Test
+  void failedOutputDoesNotBecomeCompleted() {
+    RoutingJob job = new RoutingJob();
+    job.state = RoutingJobState.RUNNING;
+    RoutingJobSchedulerActionThread action = new RoutingJobSchedulerActionThread(job);
+    action.assignTerminalState(false);
+    assertEquals(RoutingJobState.INVALID, job.state);
+  }
+
+  @Test
+  void expiredDeadlineDoesNotNeedTheMonitorToRequestStop() {
+    RoutingJob job = new RoutingJob();
+    job.state = RoutingJobState.RUNNING;
+    job.timeoutAt = Instant.now().minusSeconds(1);
+    RoutingJobSchedulerActionThread action = new RoutingJobSchedulerActionThread(job);
+    job.thread = action;
+    action.assignTerminalState(true);
+    assertEquals(RoutingJobState.TIMED_OUT, job.state);
+  }
+
+  @Test
+  void cancellationTakesPriorityOverOutputFailure() {
+    RoutingJob job = new RoutingJob();
+    job.state = RoutingJobState.STOPPING;
+    job.setCancelledByUser(true);
+    RoutingJobSchedulerActionThread action = new RoutingJobSchedulerActionThread(job);
+    action.assignTerminalState(false);
+    assertEquals(RoutingJobState.CANCELLED, job.state);
   }
 
   private static RoutingJobSchedulerActionThread stoppedJob(

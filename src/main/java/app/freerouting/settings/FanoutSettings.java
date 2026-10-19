@@ -101,6 +101,20 @@ public class FanoutSettings implements Serializable, Cloneable {
   @SerializedName("fallback_to_board_vias")
   public Boolean fallbackToBoardVias;
 
+  /**
+   * Erik Gavriluk (freerouting.net): a pin whose escape fails inside the escape length window is
+   * retried once without the window.
+   */
+  @SerializedName("retry_without_escape_window")
+  public Boolean retryWithoutEscapeWindow;
+
+  /**
+   * Erik Gavriluk (freerouting.net): fanout strategy, "eager" or "direct_first". direct_first
+   * routes same-layer pin connections before any escape via.
+   */
+  @SerializedName("strategy")
+  public String strategy;
+
   /** Timeout for the fanout stage (e.g., "5m", "300s"). Default is null (no timeout). */
   @SerializedName("timeout")
   public String timeoutString;
