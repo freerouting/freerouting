@@ -97,6 +97,9 @@ public final class BatchFanout {
       RouterSettings settings,
       StoppableThread thread,
       FanoutProgressListener progressListener) {
+    if (settings.usesDirectPinRouting()) {
+      return DirectPinRouting.run(board, settings, thread);
+    }
     BatchFanout fanoutInstance = new BatchFanout(board, settings, thread);
     long fanoutStart = System.currentTimeMillis();
     if (settings.fanout != null && settings.fanout.timeoutString != null) {
@@ -138,7 +141,7 @@ public final class BatchFanout {
       // board states, so consecutive hashes always differ — but the per-pass outcome
       // (routed count + via count) repeats exactly while ripup costs escalate uselessly
       // (observed: 14 identical passes on a dense SMD carrier).
-      long boardState = ((long) routedCount << 32) ^ board.getVias().size();
+      long boardState = ((long) routedCount << 32) ^ board.getViaCount();
       if (boardState == previousBoardState) {
         identicalPasses++;
         if (identicalPasses >= stagnationPassLimit) {
@@ -177,7 +180,7 @@ public final class BatchFanout {
     int routedCount = 0;
     int notRoutedCount = 0;
     int insertErrorCount = 0;
-    final int viasBeforePass = this.routingBoard.getVias().size();
+    final int viasBeforePass = this.routingBoard.getViaCount();
     int ripupCosts = this.settings.getStartRipupCosts() * (passNo + 1);
 
     long baseMillisPerPin =
@@ -426,7 +429,7 @@ public final class BatchFanout {
           }
         }
         --pinsToGo;
-        int extraViasThisPass = Math.max(0, this.routingBoard.getVias().size() - viasBeforePass);
+        int extraViasThisPass = Math.max(0, this.routingBoard.getViaCount() - viasBeforePass);
         maybePublishProgress(
             progressListener,
             passNo,
@@ -482,7 +485,7 @@ public final class BatchFanout {
         break;
       }
     }
-    int extraViasThisPass = Math.max(0, this.routingBoard.getVias().size() - viasBeforePass);
+    int extraViasThisPass = Math.max(0, this.routingBoard.getViaCount() - viasBeforePass);
     this.extraViasTotal += extraViasThisPass;
     BoardStatistics passStats = new BoardStatistics(this.routingBoard, null, false);
     EscapeStatistics escapeStats = EscapeStatistics.fromBoardStatistics(passStats);
@@ -577,7 +580,7 @@ public final class BatchFanout {
       // to avoid the cost of a full escape scan on every tick.
       EscapeStatistics interimEscape = new EscapeStatistics(this.totalSmdPinCount, 0, 0.0);
       if (progressStats != null) {
-        progressStats.vias.totalCount = this.routingBoard.getVias().size();
+        progressStats.vias.totalCount = this.routingBoard.getViaCount();
         progressStats.traces.totalCount = this.routingBoard.getTraces().size();
       }
       publishProgress(

@@ -5,7 +5,10 @@ import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.ClearanceMatrix;
+import app.freerouting.rules.CornerStyle;
+import app.freerouting.rules.MeanderPatternType;
 import app.freerouting.rules.NetClass;
+import app.freerouting.rules.NetMeanderConstraint;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -24,6 +27,7 @@ public abstract class Rule {
   public static Collection<Rule> readScope(IJFlexScanner scanner) {
     Collection<Rule> result = new LinkedList<>();
     Object currentToken = null;
+    Circuit.MeanderDescriptorBuilder meanderBuilder = new Circuit.MeanderDescriptorBuilder();
     for (; ; ) {
       Object prevToken = currentToken;
       try {
@@ -45,7 +49,9 @@ public abstract class Rule {
       if (prevToken == Keyword.OPEN_BRACKET) {
         // every rule starts with a "("
         Rule currentRule = null;
-        if (currentToken == Keyword.WIDTH) {
+        if (meanderBuilder.readDescriptor(currentToken, scanner)) {
+          // Handled meander descriptor — accumulated into meanderBuilder
+        } else if (currentToken == Keyword.WIDTH) {
           // this is a "(width" rule
           currentRule = readWidthRule(scanner);
         } else if (currentToken == Keyword.CLEARANCE) {
@@ -65,6 +71,9 @@ public abstract class Rule {
           result.add(currentRule);
         }
       }
+    }
+    if (meanderBuilder.hasAttributes()) {
+      result.add(meanderBuilder.toMeanderRule());
     }
     return result;
   }
@@ -344,6 +353,73 @@ public abstract class Rule {
     public LengthRule(double maxLength, double minLength) {
       this.maxLength = maxLength;
       this.minLength = minLength;
+    }
+  }
+
+  public static class MeanderRule extends Rule {
+
+    public final Double minAmplitude;
+    public final Double maxAmplitude;
+    public final Double spacing;
+    public final CornerStyle cornerStyle;
+    public final Double radiusPercentage;
+    public final Boolean singleSided;
+    public final MeanderPatternType patternType;
+
+    public MeanderRule(
+        Double minAmplitude,
+        Double maxAmplitude,
+        Double spacing,
+        CornerStyle cornerStyle,
+        Double radiusPercentage,
+        Boolean singleSided,
+        MeanderPatternType patternType) {
+      this.minAmplitude = minAmplitude;
+      this.maxAmplitude = maxAmplitude;
+      this.spacing = spacing;
+      this.cornerStyle = cornerStyle;
+      this.radiusPercentage = radiusPercentage;
+      this.singleSided = singleSided;
+      this.patternType = patternType;
+    }
+
+    public NetMeanderConstraint applyTo(
+        NetMeanderConstraint existing, app.freerouting.io.CoordinateTransform transform) {
+      NetMeanderConstraint base =
+          (existing != null)
+              ? existing
+              : NetMeanderConstraint.createDefaultPreset(
+                  (this.patternType != null) ? this.patternType : MeanderPatternType.SINGLE_TRACK,
+                  1.0);
+      return NetMeanderConstraint.fromDsn(
+          this.minAmplitude,
+          this.maxAmplitude,
+          this.spacing,
+          this.cornerStyle,
+          this.radiusPercentage,
+          this.singleSided,
+          transform,
+          base);
+    }
+
+    public NetMeanderConstraint toMeanderConstraint(
+        MeanderPatternType defaultType, app.freerouting.io.CoordinateTransform transform) {
+      MeanderPatternType type = (this.patternType != null) ? this.patternType : defaultType;
+      NetMeanderConstraint preset = NetMeanderConstraint.createDefaultPreset(type, 1.0);
+      return NetMeanderConstraint.fromDsn(
+          this.minAmplitude,
+          this.maxAmplitude,
+          this.spacing,
+          this.cornerStyle,
+          this.radiusPercentage,
+          this.singleSided,
+          transform,
+          preset);
+    }
+
+    public NetMeanderConstraint toMeanderConstraint(
+        app.freerouting.io.CoordinateTransform transform) {
+      return toMeanderConstraint(MeanderPatternType.SINGLE_TRACK, transform);
     }
   }
 

@@ -72,7 +72,24 @@ public final class Connection {
       }
       // Search from currentItem along the contacts
       // until the next fork or nonroute item.
+      Item ringItem = currentItem;
+      Point ringPoint = prevContactPoint;
+      int ringLayer = prevContactLayer;
+      long ringSteps = 0;
+      long ringMark = 1;
       for (; ; ) {
+        if (++ringSteps > 1
+            && currentItem == ringItem
+            && prevContactLayer == ringLayer
+            && prevContactPoint.equals(ringPoint)) {
+          break;
+        }
+        if (ringSteps == ringMark) {
+          ringItem = currentItem;
+          ringPoint = prevContactPoint;
+          ringLayer = prevContactLayer;
+          ringMark *= 2;
+        }
         if (!currentItem.isRoutable() || forkFound) {
           // connection ends
           if (startPoint == null) {
