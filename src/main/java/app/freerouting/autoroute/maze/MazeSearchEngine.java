@@ -13,6 +13,7 @@ import app.freerouting.autoroute.expansion.ObstacleExpansionRoom;
 import app.freerouting.autoroute.expansion.TargetItemExpansionDoor;
 import app.freerouting.board.actions.ItemSelectionFilter;
 import app.freerouting.board.model.items.Connectable;
+import app.freerouting.board.model.items.DrillItem;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Trace;
@@ -657,23 +658,11 @@ public class MazeSearchEngine {
       if (toDoor == listElement.door) {
         continue;
       }
-      // Validate index before calling - prevents warning when indices become stale
-      // during routing
-      int treeShapeCount = toDoor.item.treeShapeCount(this.autorouteEngine.autorouteSearchTree);
-      if (toDoor.treeEntryNo < 0 || toDoor.treeEntryNo >= treeShapeCount) {
-        // Index out of range (trace was modified during routing)
+      TileShape safeTargetShape = getWidthSafeTargetShape(toDoor);
+      if (safeTargetShape == null || safeTargetShape.isEmpty()) {
         continue;
       }
-      TileShape targetShape =
-          ((Connectable) toDoor.item)
-              .getTraceConnectionShape(
-                  this.autorouteEngine.autorouteSearchTree, toDoor.treeEntryNo);
-      if (targetShape == null) {
-        // Item's tree shape index out of range (can happen when traces are modified
-        // during routing)
-        continue;
-      }
-      FloatPoint connectionPoint = targetShape.nearestPointApprox(shapeEntryMiddle);
+      FloatPoint connectionPoint = safeTargetShape.nearestPointApprox(shapeEntryMiddle);
       if (!nextRoomIsThick) {
         // check the line from shapeEntryMiddle to the nearest point.
         int[] currentNetNumbers = new int[1];
@@ -1077,11 +1066,11 @@ public class MazeSearchEngine {
           expansionDoorsDestination++;
           continue;
         }
-        TileShape connectionShape =
-            ((Connectable) currentDoor.item)
-                .getTraceConnectionShape(searchTree, currentDoor.treeEntryNo);
-        connectionShape = connectionShape.intersection(currentDoor.room.getShape());
-        FloatPoint currentCenter = connectionShape.centreOfGravity();
+        TileShape safeConnectionShape = getWidthSafeTargetShape(currentDoor);
+        if (safeConnectionShape == null || safeConnectionShape.isEmpty()) {
+          continue;
+        }
+        FloatPoint currentCenter = safeConnectionShape.centreOfGravity();
         FloatLine shapeEntry = new FloatLine(currentCenter, currentCenter);
         double sortingValue =
             this.destinationDistance.calculate(currentCenter, currentRoom.getLayer());
@@ -1220,6 +1209,53 @@ public class MazeSearchEngine {
       }
     }
     return result;
+  }
+
+  /**
+   * Computes the width-safe connection shape of a target door within its room. Returns null if the
+   * target cannot be legally connected in this room at the configured trace width (or legal pin
+   * neckdown width).
+   */
+  TileShape getWidthSafeTargetShape(TargetItemExpansionDoor targetDoor) {
+    if (targetDoor == null || targetDoor.room == null || targetDoor.item == null) {
+      return null;
+    }
+    int layer = targetDoor.room.getLayer();
+    if (layer < 0 || layer >= this.ctrl.layerCount) {
+      return null;
+    }
+    if (!(targetDoor.item instanceof Connectable connectable)) {
+      return null;
+    }
+    int treeShapeCount = targetDoor.item.treeShapeCount(this.autorouteEngine.autorouteSearchTree);
+    if (targetDoor.treeEntryNo < 0 || targetDoor.treeEntryNo >= treeShapeCount) {
+      return null;
+    }
+    TileShape targetShape =
+        connectable.getTraceConnectionShape(
+            this.autorouteEngine.autorouteSearchTree, targetDoor.treeEntryNo);
+    if (targetShape == null || targetShape.isEmpty()) {
+      return null;
+    }
+    if (targetDoor.item instanceof DrillItem) {
+      TileShape connectionShape = targetShape.intersection(targetDoor.room.getShape());
+      return connectionShape.isEmpty() ? null : connectionShape;
+    }
+
+    int shrinkOffset =
+        (targetDoor.room instanceof ObstacleExpansionRoom)
+            ? this.ctrl.compensatedTraceHalfWidth[layer]
+            : this.ctrl.getTraceClearanceOffset(layer);
+
+    TileShape safeRoomShape = (TileShape) targetDoor.room.getShape().offset(-shrinkOffset);
+    if (!safeRoomShape.isEmpty()) {
+      TileShape safeShape = targetShape.intersection(safeRoomShape);
+      if (!safeShape.isEmpty()) {
+        return safeShape;
+      }
+    }
+
+    return null;
   }
 
   /**
