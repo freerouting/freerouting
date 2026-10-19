@@ -37,6 +37,7 @@ import app.freerouting.management.jobs.ThreadActionListener;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.CornerStyle;
 import app.freerouting.rules.DefaultItemClearanceClasses;
+import app.freerouting.rules.DifferentialPairDetector;
 import app.freerouting.rules.MeanderPatternType;
 import app.freerouting.rules.NetMeanderConstraint;
 import app.freerouting.settings.sources.DefaultSettings;
@@ -961,7 +962,7 @@ public class HeadlessBoardManager implements BoardManager {
     }
   }
 
-  private void applyImmediatePostLoadProcessing() {
+  void applyImmediatePostLoadProcessing() {
     if (this.board == null) {
       return;
     }
@@ -986,6 +987,7 @@ public class HeadlessBoardManager implements BoardManager {
     }
     validatePowerPlanes();
     validateBoardDesignErrors();
+    DifferentialPairDetector.detectAndRegister(this.board.rules);
     // NOTE: The full-board DRC (getAllClearanceViolations) is O(n²) and is deferred to the
     // background thread in scheduleDeferredPostLoadProcessing() to avoid blocking every board
     // load (including GUI loads) on large designs.
