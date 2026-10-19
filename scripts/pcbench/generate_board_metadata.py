@@ -14,6 +14,21 @@ from pathlib import Path
 from typing import Any
 
 
+def apply_preserved_regroup_fields(normalized: dict[str, Any], existing: dict[str, Any] | None) -> dict[str, Any]:
+    """Keep the fixed tier assignment when conversion rewrites a board's metadata."""
+    if not existing:
+        return normalized
+    for key in ("tier", "tier_index", "reference_seconds", "expected_outcome", "timeout_budget"):
+        if key in existing:
+            normalized[key] = existing[key]
+    previous_tags = existing.get("tags")
+    if isinstance(previous_tags, list):
+        layer_tags = [tag for tag in normalized.get("tags", []) if str(tag).endswith("-layer")]
+        kept = [tag for tag in previous_tags if not str(tag).endswith("-layer")]
+        normalized["tags"] = layer_tags + [tag for tag in kept if tag not in layer_tags]
+    return normalized
+
+
 def sha256_file(path: Path) -> str:
     if not path.exists():
         return ""
@@ -271,6 +286,15 @@ def main() -> int:
 
     if drc_report:
         normalized_meta["reference"]["kicad_drc_breakdown"] = drc_report
+
+    existing_meta = None
+    normalized_path = output_dir / "metadata.normalized.json"
+    if normalized_path.exists():
+        try:
+            existing_meta = json.loads(normalized_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            existing_meta = None
+    apply_preserved_regroup_fields(normalized_meta, existing_meta)
 
     # 2. ground_truth.json
     ground_truth: dict[str, Any] = {

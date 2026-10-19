@@ -71,7 +71,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
 
   @SerializedName("state")
   @Schema(description = "The current state of the job")
-  public RoutingJobState state = RoutingJobState.INVALID;
+  public volatile RoutingJobState state = RoutingJobState.INVALID;
 
   @SerializedName("stage")
   @Schema(description = "The current stage of the job")
@@ -101,7 +101,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
 
   @SerializedName("output")
   @Schema(description = "Details of the routed output design file")
-  public BoardFileDetails output;
+  public volatile BoardFileDetails output;
 
   @SerializedName("rules")
   @Schema(description = "Details of the uploaded design rules (.rules) file")
@@ -138,7 +138,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   public RouterJobResourceUsage resourceUsage = new RouterJobResourceUsage();
 
   public transient StoppableThread thread;
-  public transient RoutingBoard board;
+  public transient volatile RoutingBoard board;
 
   /** Per-stage before/after metrics retained for the result manifest. */
   public transient RoutingResultManifest.PhaseMetrics resultPhaseMetrics =
@@ -228,13 +228,11 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
           return FileFormat.FRB;
         }
 
-        // If the first few bytes are 0x0A or 0x13, ignore them
-        while (buffer[0] == (byte) 0x0A || buffer[0] == (byte) 0x0D) {
-          buffer[0] = buffer[1];
-          buffer[1] = buffer[2];
-          buffer[2] = buffer[3];
-          buffer[3] = buffer[4];
-          buffer[4] = buffer[5];
+        // The signature follows all leading line breaks and blanks.
+        java.util.Arrays.fill(buffer, (byte) 0);
+        if (firstNonWs >= 0) {
+          System.arraycopy(
+              content, firstNonWs, buffer, 0, Math.min(6, content.length - firstNonWs));
         }
 
         // Check if the file is a DSN file (it starts with "(pcb" or "(PCB")
@@ -584,6 +582,11 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   /** Registers a listener for new log entries. */
   public void addLogEntryAddedEventListener(RoutingJobLogEntryAddedEventListener listener) {
     logEntryAddedEventListeners.add(listener);
+  }
+
+  /** Unregisters a listener for new log entries. */
+  public void removeLogEntryAddedEventListener(RoutingJobLogEntryAddedEventListener listener) {
+    logEntryAddedEventListeners.remove(listener);
   }
 
   /** Notifies listeners that a log entry was added. */

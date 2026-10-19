@@ -47,6 +47,11 @@ public class Net implements Comparable<Net>, ItemInfoPrinter.Printable, Serializ
    */
   private NetLengthConstraint lengthConstraint;
 
+  /**
+   * Optional explicit trace meander constraint for this net, or null if inheriting from netClass.
+   */
+  private NetMeanderConstraint meanderConstraint;
+
   /** Creates a new net. */
   public Net(String name, int subnetNumber, int number, Nets netList, boolean containsPlane) {
     this.name = name;
@@ -151,6 +156,61 @@ public class Net implements Comparable<Net>, ItemInfoPrinter.Printable, Serializ
    */
   public NetLengthConstraint getExplicitLengthConstraint() {
     return this.lengthConstraint;
+  }
+
+  /**
+   * Returns the effective meander constraint of this net.
+   *
+   * <p>If this net defines an explicit meander constraint, it is returned. Otherwise, falls back to
+   * the net class meander constraint if defined. If the net class has no constraint, falls back to
+   * the board rules default meander preset (DIFF_PAIR if part of a differential pair, SINGLE_TRACK
+   * otherwise).
+   *
+   * @return the effective meander constraint, never null
+   */
+  public NetMeanderConstraint getMeanderConstraint() {
+    if (this.meanderConstraint != null && this.meanderConstraint.isConstrained()) {
+      return this.meanderConstraint;
+    }
+    if (this.netClass != null && this.netClass.hasMeanderConstraint()) {
+      return this.netClass.getMeanderConstraint();
+    }
+    if (this.netList != null
+        && this.netList.getBoard() != null
+        && this.netList.getBoard().rules != null) {
+      return this.netList.getBoard().rules.getMeanderConstraint(this);
+    }
+    return NetMeanderConstraint.UNCONSTRAINED;
+  }
+
+  /**
+   * Sets the explicit meander constraint for this net. Pass null or {@link
+   * NetMeanderConstraint#UNCONSTRAINED} to remove the explicit net-level constraint and inherit
+   * from the net class or board defaults.
+   *
+   * @param constraint the explicit constraint, or null to inherit
+   */
+  public void setMeanderConstraint(NetMeanderConstraint constraint) {
+    this.meanderConstraint = constraint;
+  }
+
+  /**
+   * Returns true if this net has an explicit net-level meander constraint set, false if inheriting.
+   *
+   * @return true if an explicit constraint is configured on this net
+   */
+  public boolean hasExplicitMeanderConstraint() {
+    return this.meanderConstraint != null && this.meanderConstraint.isConstrained();
+  }
+
+  /**
+   * Returns the explicit net-level meander constraint of this net, or null if unconstrained
+   * directly at the net level.
+   *
+   * @return the explicit constraint, or null
+   */
+  public NetMeanderConstraint getExplicitMeanderConstraint() {
+    return this.meanderConstraint;
   }
 
   /** Returns the pins and conduction areas of this net. */

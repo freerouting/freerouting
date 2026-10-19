@@ -99,9 +99,20 @@ public class Communication implements Serializable {
     return specctraParserInfo != null && specctraParserInfo.hostCad != null;
   }
 
-  /** Returns the resolution scaled to the input unit. */
+  /** Returns the number of internal board coordinates per input unit. */
   public double getResolution(Unit unit) {
+    if (this.coordinateTransform != null) {
+      return Unit.scale(this.coordinateTransform.dsnToBoard(1), unit, this.unit);
+    }
     return Unit.scale(this.resolution, unit, this.unit);
+  }
+
+  /** Converts a physical distance to internal board coordinates. */
+  public double physicalToBoard(double value, Unit unit) {
+    if (this.coordinateTransform != null) {
+      return Unit.scale(value * this.coordinateTransform.dsnToBoard(1), unit, this.unit);
+    }
+    return Unit.scale(value * this.resolution, unit, this.unit);
   }
 
   private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {

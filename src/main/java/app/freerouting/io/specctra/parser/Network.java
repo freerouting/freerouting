@@ -27,9 +27,11 @@ import app.freerouting.rules.DefaultItemClearanceClasses.ItemClass;
 import app.freerouting.rules.ViaInfo;
 import app.freerouting.rules.ViaRule;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -190,6 +192,9 @@ public class Network extends ScopeKeyword {
       }
       scopeParameter.file.write(String.valueOf(transformedMinLength));
       scopeParameter.file.write(")");
+    }
+    if (netClass.hasMeanderConstraint()) {
+      Net.writeMeanderProperties(netClass.getMeanderConstraint(), scopeParameter);
     }
     scopeParameter.file.endScope();
   }
@@ -505,6 +510,9 @@ public class Network extends ScopeKeyword {
         if (rule.minLength > 0) {
           boardNetClass.setMinimumTraceLength(coordinateTransform.dsnToBoard(rule.minLength));
         }
+      } else if (currentRule instanceof Rule.MeanderRule rule) {
+        boardNetClass.setMeanderConstraint(
+            rule.applyTo(boardNetClass.getMeanderConstraint(), coordinateTransform));
       } else {
         FRLogger.warn(
             "Network.insert_net_class: rule type not yet implemented at '"
@@ -543,6 +551,11 @@ public class Network extends ScopeKeyword {
 
     boardNetClass.setPullTight(netClass.pullTight);
     boardNetClass.setShoveFixed(netClass.shoveFixed);
+    if (netClass.circuit != null && netClass.circuit.hasMeanderConstraint()) {
+      boardNetClass.setMeanderConstraint(
+          netClass.circuit.toMeanderConstraint(
+              app.freerouting.rules.MeanderPatternType.SINGLE_TRACK, coordinateTransform));
+    }
     boolean viaInfosCreated = false;
 
     if (clearanceRuleFound && boardNetClass != board.rules.getDefaultNetClass()) {
@@ -563,31 +576,25 @@ public class Network extends ScopeKeyword {
   private static void insertClassPairs(
       Collection<NetClass.ClassClass> classClasses, ReadScopeParameter scopeParameter) {
     for (NetClass.ClassClass currentClassClass : classClasses) {
-      Iterator<String> it1 = currentClassClass.classNames.iterator();
       BasicBoard routingBoard = scopeParameter.boardHandling.getRoutingBoard();
-      while (it1.hasNext()) {
-        String firstName = it1.next();
-        app.freerouting.rules.NetClass firstClass =
-            KiCadNetClassNames.resolveNetClass(routingBoard.rules, firstName);
-        if (firstClass == null) {
-          FRLogger.warn("Network.insert_class_pairs: first class not found");
+      List<app.freerouting.rules.NetClass> classes = new ArrayList<>();
+      for (String name : currentClassClass.classNames) {
+        app.freerouting.rules.NetClass netClass =
+            KiCadNetClassNames.resolveNetClass(routingBoard.rules, name);
+        if (netClass != null) {
+          classes.add(netClass);
         } else {
-          Iterator<String> it2 = it1;
-          while (it2.hasNext()) {
-            String secondName = it2.next();
-            app.freerouting.rules.NetClass secondClass =
-                KiCadNetClassNames.resolveNetClass(routingBoard.rules, secondName);
-            if (secondClass == null) {
-              FRLogger.warn("Network.insert_class_pairs: second class not found");
-            } else {
-              insertClassPairInfo(
-                  currentClassClass,
-                  firstClass,
-                  secondClass,
-                  routingBoard,
-                  scopeParameter.coordinateTransform);
-            }
-          }
+          FRLogger.warn("Network.insert_class_pairs: class '" + name + "' not found");
+        }
+      }
+      for (int i = 0; i < classes.size(); i++) {
+        for (int j = i + 1; j < classes.size(); j++) {
+          insertClassPairInfo(
+              currentClassClass,
+              classes.get(i),
+              classes.get(j),
+              routingBoard,
+              scopeParameter.coordinateTransform);
         }
       }
     }
@@ -713,10 +720,14 @@ public class Network extends ScopeKeyword {
     int defaultViaClClass =
         netClass.defaultItemClearanceClasses.get(DefaultItemClearanceClasses.ItemClass.VIA);
     for (String currentViaName : useVia) {
+      String cleanedViaName =
+          currentViaName != null ? currentViaName.replaceAll("\\.\\d+", "") : null;
       for (int i = 0; i < board.rules.viaInfos.count(); i++) {
         ViaInfo currentViaInfo = board.rules.viaInfos.get(i);
         if (currentViaInfo.getClearanceClassIndex() == defaultViaClClass) {
-          if (currentViaInfo.getPadstack().name.equals(currentViaName)) {
+          if (currentViaInfo.getPadstack().name.equals(currentViaName)
+              || (cleanedViaName != null
+                  && currentViaInfo.getPadstack().name.equals(cleanedViaName))) {
             newViaRule.appendVia(currentViaInfo);
           }
         }
@@ -1330,7 +1341,7 @@ public class Network extends ScopeKeyword {
       if (scopeParameter.viaPadstackNames != null) {
         scopeParameter.viaPadstackNames.addAll(n.useVia);
       } else {
-        scopeParameter.viaPadstackNames = n.useVia;
+        scopeParameter.viaPadstackNames = new ArrayList<>(n.useVia);
       }
     }
 
@@ -1496,6 +1507,11 @@ public class Network extends ScopeKeyword {
         if (max > 0 || min > 0) {
           boardNet.setLengthConstraint(new app.freerouting.rules.NetLengthConstraint(min, max));
         }
+        if (netCircuit.hasMeanderConstraint()) {
+          boardNet.setMeanderConstraint(
+              netCircuit.toMeanderConstraint(
+                  app.freerouting.rules.MeanderPatternType.SINGLE_TRACK, coordinateTransform));
+        }
       }
       if (!netRules.isEmpty()) {
         // Evaluate the net rules.
@@ -1530,6 +1546,9 @@ public class Network extends ScopeKeyword {
             if (max > 0 || min > 0) {
               boardNet.setLengthConstraint(new app.freerouting.rules.NetLengthConstraint(min, max));
             }
+          } else if (currentObject instanceof Rule.MeanderRule rule) {
+            boardNet.setMeanderConstraint(
+                rule.applyTo(boardNet.getMeanderConstraint(), coordinateTransform));
           } else {
             FRLogger.warn(
                 "Network.read_net_scope: Rule not yet implemented at '"

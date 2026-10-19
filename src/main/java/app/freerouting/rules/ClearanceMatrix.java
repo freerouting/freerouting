@@ -6,6 +6,7 @@ import app.freerouting.geometry.planar.Point;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.TextManager;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Locale;
 
 /**
@@ -322,7 +323,7 @@ public class ClearanceMatrix implements Serializable {
   }
 
   /** Removes the class with the given index from the clearance matrix. */
-  void removeClass(int index) {
+  public void removeClass(int index) {
     int oldClassCount = this.classCount;
     --this.classCount;
 
@@ -349,6 +350,25 @@ public class ClearanceMatrix implements Serializable {
       ++newRowIndex;
     }
     this.row = newRow;
+    recomputeMaxValues();
+  }
+
+  /**
+   * Recomputes row and layer maximum clearance values from remaining entries after a class is
+   * removed.
+   */
+  private void recomputeMaxValues() {
+    Arrays.fill(this.maxValueOnLayer, 0);
+    for (Row currentRow : this.row) {
+      for (int layer = 0; layer < this.maxValueOnLayer.length; layer++) {
+        int max = 0;
+        for (MatrixEntry entry : currentRow.column) {
+          max = Math.max(max, entry.layer[layer]);
+        }
+        currentRow.maxValue[layer] = max;
+        this.maxValueOnLayer[layer] = Math.max(this.maxValueOnLayer[layer], max);
+      }
+    }
   }
 
   /**

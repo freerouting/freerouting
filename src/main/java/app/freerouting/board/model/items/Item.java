@@ -378,9 +378,10 @@ public abstract class Item
     ShapeSearchTree drcTree = board.searchTreeManager.getUncompensatedTree();
     for (int i = 0; i < treeShapeCount(drcTree); i++) {
       TileShape currentTileShape = getTreeShape(drcTree, i);
+      // Erik Gavriluk (freerouting.net): test only items that are obstacles to this item
       Collection<TreeEntry> currentOverlappingItems =
           drcTree.overlappingTreeEntriesWithClearance(
-              currentTileShape, shapeLayer(i), new int[0], this.clearanceClassIndex);
+              currentTileShape, shapeLayer(i), new int[0], this.clearanceClassIndex, this);
       for (TreeEntry currentEntry : currentOverlappingItems) {
         if (!(currentEntry.object instanceof Item currentItem) || currentEntry.object == this) {
           continue;
@@ -494,7 +495,15 @@ public abstract class Item
             }
             double shortfallUm = shortfall * boardUnitToUmFactor;
 
-            if (shortfallUm > toleranceUm) {
+            // Erik Gavriluk (freerouting.net): copper overlapping an obstacle that keeps no
+            // clearance (a keepout
+            // of the null class, FR-100) measured 0 against 0 and was never reported: e.g. a track
+            // inside
+            // mounting hole H4's keepout. An overlap deeper than the tolerance is a violation
+            // whatever the clearance.
+            if (shortfallUm > toleranceUm
+                || (minimumClearance <= 0
+                    && overlapsBeyond(shape1, shape2, toleranceUm / boardUnitToUmFactor))) {
               if ((smallestClearance < 0) || (actualClearance < smallestClearance)) {
                 smallestClearance = actualClearance;
               }
@@ -514,6 +523,11 @@ public abstract class Item
       }
     }
     return result;
+  }
+
+  private static boolean overlapsBeyond(TileShape shape1, TileShape shape2, double depth) {
+    TileShape shrunk = depth > 0 ? (TileShape) shape1.offset(-depth) : shape1;
+    return !shrunk.isEmpty() && shrunk.intersection(shape2).dimension() == 2;
   }
 
   private double calculateClearanceBetweenTwoShapes(
@@ -787,7 +801,24 @@ public abstract class Item
       }
       // Search from currentItem along the contacts
       // until the next fork or nonroute item.
+      Item ringItem = currentItem;
+      Point ringPoint = prevContactPoint;
+      int ringLayer = prevContactLayer;
+      long ringSteps = 0;
+      long ringMark = 1;
       for (; ; ) {
+        if (++ringSteps > 1
+            && currentItem == ringItem
+            && prevContactLayer == ringLayer
+            && prevContactPoint.equals(ringPoint)) {
+          break; // around the ring once: every item on it is in result
+        }
+        if (ringSteps == ringMark) {
+          ringItem = currentItem;
+          ringPoint = prevContactPoint;
+          ringLayer = prevContactLayer;
+          ringMark *= 2;
+        }
         if (!currentItem.isRoutable()) {
           // connection ends
           break;
@@ -975,6 +1006,9 @@ public abstract class Item
           newNetNoArr.length - foundIndex);
     }
     this.netNumbers = newNetNoArr;
+    if (this.board != null) {
+      this.board.noteNetAssignmentChanged();
+    }
     return true;
   }
 
@@ -996,6 +1030,9 @@ public abstract class Item
       return;
     }
     clearanceClassIndex = index;
+    if (this.board != null) {
+      this.board.itemList.noteContentChange();
+    }
   }
 
   /** Changes the clearance class of this item and updates the search tree. */
@@ -1041,6 +1078,27 @@ public abstract class Item
         FRLogger.warn("Item.assign_net_no: unexpected netCount > 1");
       }
       netNumbers[0] = netNumber;
+    }
+    if (this.board != null) {
+      this.board.noteNetAssignmentChanged();
+    }
+    if (this instanceof Pin) {
+      board.invalidateEdgePinNetCache();
+    }
+  }
+
+  /** Assigns multiple net numbers to this item (e.g., for net ties). */
+  public void assignNetNumbers(int[] netNumbers) {
+    for (int netNumber : netNumbers) {
+      if (!Nets.isNormalNetNumber(netNumber) || netNumber > board.rules.nets.maxNetNumber()) {
+        FRLogger.warn("Item.assign_net_numbers: netNumber " + netNumber + " is not a board net");
+        return;
+      }
+    }
+    board.itemList.saveForUndo(this);
+    this.netNumbers = netNumbers.clone();
+    if (this.board != null) {
+      this.board.noteNetAssignmentChanged();
     }
     if (this instanceof Pin) {
       board.invalidateEdgePinNetCache();

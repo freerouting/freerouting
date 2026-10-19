@@ -116,6 +116,25 @@ class Issue969ClearanceQueryTest extends RoutingFixtureTest {
     assertWrappers(board, query, 0, new int[] {1}, trace, false);
     assertWrappers(board, query, 0, new int[] {2}, trace, true);
     assertWrappers(board, query, 0, new int[] {2, 1}, trace, false);
+    var foreignPeer =
+        board.insertTraceWithoutCleaning(
+            new Polyline(new Point[] {new IntPoint(90000, -130000), new IntPoint(110000, -130000)}),
+            0,
+            500,
+            new int[] {2},
+            1,
+            FixedState.USER_FIXED);
+    var tree = board.searchTreeManager.getDefaultTree();
+    for (int queryClass : new int[] {1, 2}) {
+      assertFalse(
+          tree.overlappingTreeEntriesWithClearance(query, 0, new int[0], queryClass, trace).stream()
+              .anyMatch(e -> e.object == trace));
+      assertTrue(
+          tree
+              .overlappingTreeEntriesWithClearance(query, 0, new int[0], queryClass, foreignPeer)
+              .stream()
+              .anyMatch(e -> e.object == trace));
+    }
   }
 
   @ParameterizedTest

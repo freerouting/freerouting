@@ -9,7 +9,7 @@
 #>
 param(
     [string]$Tier = "All",
-    [int]$Workers = 8,
+    [int]$Workers = [Math]::Max(1, [int][Math]::Round([Environment]::ProcessorCount * 0.75)),
     [int]$MaxBoards = 0,
     [switch]$Force
 )

@@ -60,7 +60,8 @@ public class ItemRouteResult implements Comparable<ItemRouteResult> {
         (float)
             (viaCountBefore != 0 && traceLengthBefore != 0
                 ? 1.0
-                    - (((viaCountAfter / viaCountBefore) + (traceLengthAfter / traceLengthBefore))
+                    - ((((double) viaCountAfter / viaCountBefore)
+                            + (traceLengthAfter / traceLengthBefore))
                         / 2)
                 : 0);
   }

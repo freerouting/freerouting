@@ -27,6 +27,7 @@ import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.gui.workspace.WorkspaceSettings;
 import app.freerouting.gui.workspace.session.InteractiveActionThread;
 import app.freerouting.io.BoardReadResult;
+import app.freerouting.io.FileFormat;
 import app.freerouting.io.kicad.KiCadJsonReader;
 import app.freerouting.io.specctra.DsnReader;
 import app.freerouting.io.specctra.DsnWriter;
@@ -34,7 +35,11 @@ import app.freerouting.io.specctra.SesWriter;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.jobs.ThreadActionListener;
 import app.freerouting.rules.BoardRules;
+import app.freerouting.rules.CornerStyle;
 import app.freerouting.rules.DefaultItemClearanceClasses;
+import app.freerouting.rules.DifferentialPairDetector;
+import app.freerouting.rules.MeanderPatternType;
+import app.freerouting.rules.NetMeanderConstraint;
 import app.freerouting.settings.sources.DefaultSettings;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -365,6 +370,7 @@ public class HeadlessBoardManager implements BoardManager {
     applyPlaneNetsOverride();
     applyPlaneAsObstacleOverride();
     applyClearanceToleranceOverride();
+    applyMeanderSettingsOverride();
   }
 
   private void applyHoleClearanceOverride() {
@@ -386,14 +392,8 @@ public class HeadlessBoardManager implements BoardManager {
       return;
     }
 
-    int boardResolution = Math.max(1, this.board.communication.resolution);
     int configuredClearanceBoardUnits =
-        (int)
-            Math.round(
-                Unit.scale(
-                    configuredClearanceUm * boardResolution,
-                    Unit.UM,
-                    this.board.communication.unit));
+        (int) Math.round(this.board.communication.physicalToBoard(configuredClearanceUm, Unit.UM));
     boolean changed = configuredClearanceBoardUnits != this.board.rules.getHoleClearance();
     this.board.rules.setHoleClearance(configuredClearanceBoardUnits);
     int holeKeepouts = 0;
@@ -532,14 +532,8 @@ public class HeadlessBoardManager implements BoardManager {
       return;
     }
 
-    int boardResolution = Math.max(1, this.board.communication.resolution);
     int configuredClearanceBoardUnits =
-        (int)
-            Math.round(
-                Unit.scale(
-                    configuredClearanceUm * boardResolution,
-                    Unit.UM,
-                    this.board.communication.unit));
+        (int) Math.round(this.board.communication.physicalToBoard(configuredClearanceUm, Unit.UM));
 
     if (usesDefaultEdgeClearanceValue) {
       // The default value is only a guess. Never demand more edge clearance than the input already
@@ -655,6 +649,115 @@ public class HeadlessBoardManager implements BoardManager {
       this.routingJob.drcSettings.clearanceToleranceUm = toleranceUm;
     }
     FRLogger.debug("Applied clearance tolerance: " + toleranceUm + " um.");
+  }
+
+  private void applyMeanderSettingsOverride() {
+    if (this.board == null
+        || this.board.rules == null
+        || this.board.communication == null
+        || this.routingJob == null
+        || this.routingJob.routerSettings == null) {
+      return;
+    }
+
+    int boardResolution = Math.max(1, this.board.communication.resolution);
+    double mmToBoardScale = Unit.scale(boardResolution, Unit.MM, this.board.communication.unit);
+
+    // Ensure default meander constraints are properly scaled to board units
+    this.board.rules.initDefaultMeanderConstraints(mmToBoardScale);
+
+    var settings = this.routingJob.routerSettings;
+    if (settings.meanderMinAmplitudeMm == null
+        && settings.meanderMaxAmplitudeMm == null
+        && settings.meanderSpacingMm == null
+        && settings.meanderCornerStyle == null
+        && settings.meanderRadiusPercentage == null
+        && settings.meanderSingleSided == null) {
+      return;
+    }
+
+    boolean usesDefaultValues =
+        (settings.meanderMinAmplitudeMm == null
+                || Math.abs(
+                        settings.meanderMinAmplitudeMm
+                            - DefaultSettings.DEFAULT_MEANDER_MIN_AMPLITUDE_MM)
+                    < 1e-9)
+            && (settings.meanderMaxAmplitudeMm == null
+                || Math.abs(
+                        settings.meanderMaxAmplitudeMm
+                            - DefaultSettings.DEFAULT_MEANDER_MAX_AMPLITUDE_MM)
+                    < 1e-9)
+            && (settings.meanderSpacingMm == null
+                || Math.abs(settings.meanderSpacingMm - DefaultSettings.DEFAULT_MEANDER_SPACING_MM)
+                    < 1e-9)
+            && (settings.meanderCornerStyle == null
+                || DefaultSettings.DEFAULT_MEANDER_CORNER_STYLE.equalsIgnoreCase(
+                    settings.meanderCornerStyle))
+            && (settings.meanderRadiusPercentage == null
+                || Math.abs(
+                        settings.meanderRadiusPercentage
+                            - DefaultSettings.DEFAULT_MEANDER_RADIUS_PERCENTAGE)
+                    < 1e-9)
+            && (settings.meanderSingleSided == null
+                || settings.meanderSingleSided == DefaultSettings.DEFAULT_MEANDER_SINGLE_SIDED);
+
+    // Keep explicit DSN meander rules untouched when only the global default settings are active.
+    if (usesDefaultValues) {
+      return;
+    }
+
+    double minAmpMm =
+        settings.meanderMinAmplitudeMm != null
+            ? settings.meanderMinAmplitudeMm
+            : DefaultSettings.DEFAULT_MEANDER_MIN_AMPLITUDE_MM;
+    double maxAmpMm =
+        settings.meanderMaxAmplitudeMm != null
+            ? settings.meanderMaxAmplitudeMm
+            : DefaultSettings.DEFAULT_MEANDER_MAX_AMPLITUDE_MM;
+    double spacingMm =
+        settings.meanderSpacingMm != null
+            ? settings.meanderSpacingMm
+            : DefaultSettings.DEFAULT_MEANDER_SPACING_MM;
+    CornerStyle cornerStyle =
+        settings.meanderCornerStyle != null
+            ? CornerStyle.parse(settings.meanderCornerStyle)
+            : CornerStyle.valueOf(DefaultSettings.DEFAULT_MEANDER_CORNER_STYLE);
+    double radiusPct =
+        settings.meanderRadiusPercentage != null
+            ? settings.meanderRadiusPercentage
+            : DefaultSettings.DEFAULT_MEANDER_RADIUS_PERCENTAGE;
+    boolean singleSided =
+        settings.meanderSingleSided != null
+            ? settings.meanderSingleSided
+            : DefaultSettings.DEFAULT_MEANDER_SINGLE_SIDED;
+
+    for (MeanderPatternType type : MeanderPatternType.values()) {
+      double defaultTypeSpacingMm =
+          switch (type) {
+            case DIFF_PAIR -> NetMeanderConstraint.DEFAULT_SPACING_DIFF_PAIR_MM;
+            case DIFF_PAIR_SKEW -> NetMeanderConstraint.DEFAULT_SPACING_DIFF_PAIR_SKEW_MM;
+            case SINGLE_TRACK -> NetMeanderConstraint.DEFAULT_SPACING_SINGLE_TRACK_MM;
+          };
+      double typeSpacingMm =
+          (settings.meanderSpacingMm != null) ? settings.meanderSpacingMm : defaultTypeSpacingMm;
+
+      NetMeanderConstraint constraint =
+          NetMeanderConstraint.ofMm(
+              minAmpMm,
+              maxAmpMm,
+              typeSpacingMm,
+              cornerStyle,
+              radiusPct,
+              singleSided,
+              mmToBoardScale);
+
+      this.board.rules.setDefaultMeanderConstraint(type, constraint);
+      FRLogger.debug(
+          "Applied meander pattern settings to board rules default constraint for "
+              + type
+              + ": "
+              + constraint);
+    }
   }
 
   /**
@@ -855,17 +958,36 @@ public class HeadlessBoardManager implements BoardManager {
       applyPlaneNetsOverride();
       applyPlaneAsObstacleOverride();
       applyClearanceToleranceOverride();
+      applyMeanderSettingsOverride();
     }
   }
 
-  private void applyImmediatePostLoadProcessing() {
+  void applyImmediatePostLoadProcessing() {
     if (this.board == null) {
       return;
     }
     this.board.expandBoundingBoxToIncludeAllItems();
     this.board.reduceNetsOfRouteItems();
+    boolean isKicadBoard =
+        this.routingJob != null
+            && this.routingJob.input != null
+            && this.routingJob.input.format == FileFormat.KICAD_DESIGN_JSON;
+    boolean fixKicadFootprints =
+        this.routingJob != null
+            && this.routingJob.routerSettings != null
+            && Boolean.TRUE.equals(this.routingJob.routerSettings.fixKicadFootprints);
+    int[] tiePads = new int[1];
+    int assigned = this.board.connectNetlessPads(isKicadBoard, fixKicadFootprints, tiePads);
+    if (assigned > 0) {
+      FRLogger.info(
+          assigned
+              + " netless pad(s) overlapping a netted pad take that pad's net"
+              + (tiePads[0] > 0 ? " (" + tiePads[0] + " tie pad(s) carry several nets)" : "")
+              + ".");
+    }
     validatePowerPlanes();
     validateBoardDesignErrors();
+    DifferentialPairDetector.detectAndRegister(this.board.rules);
     // NOTE: The full-board DRC (getAllClearanceViolations) is O(n²) and is deferred to the
     // background thread in scheduleDeferredPostLoadProcessing() to avoid blocking every board
     // load (including GUI loads) on large designs.
@@ -906,6 +1028,8 @@ public class HeadlessBoardManager implements BoardManager {
                   }
                 }
                 loadedBoard.unfixableClearanceViolationsCount = unfixable;
+                loadedBoard.clearanceBaseline =
+                    new app.freerouting.drc.ClearanceBaseline(violations);
                 if (!violations.isEmpty()) {
                   warnPreExistingClearanceViolations(loadedBoard, violations);
                 }
