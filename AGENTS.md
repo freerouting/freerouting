@@ -38,21 +38,7 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
   and `python scripts/i18n/extract-context.py --check` when applicable. On Windows use
   `gradlew.bat`. If formatting is intentionally changed, isolate it in a dedicated
   change and inspect `git diff --stat` plus `git diff --check`.
-  **PR Review & Processing Workflow:** When reviewing, refining, and preparing a Pull Request for merge, follow this strict step-by-step checklist:
-  1. **Maintainer Edit Access & Checkout:** Check whether `maintainerCanModify` is `true` (via `gh pr view <number> --json maintainerCanModify`). If `true` and the author's fork is not archived/read-only, check out the PR branch (via `gh pr checkout <number>`), use direct push access, and commit changes directly on the PR's branch rather than creating a separate branch or PR. If the fork repository has been archived or deleted, work on a dedicated branch in `origin` instead.
-  2. **Base Branch Up-to-Date & Conflict Resolution:** Always check if the branch needs to be updated with the base branch (e.g. `origin/master`). Fetch the latest base branch (`git fetch origin <base-branch>`), check if the branch is behind (`git log HEAD..origin/<base-branch> --oneline` or `gh pr view <number> --json mergeStateStatus` (checking if `mergeStateStatus` is `BEHIND`)), and if so, merge or rebase the base branch into the current branch (`git merge origin/<base-branch>`), cleanly resolve any conflicts, and verify that the build compiles.
-  3. **Review Comments & Feedback Check:** Check if there are already comments or reviews from reviewers and review bots (`gh pr view <number> --json comments,reviews`). Verify whether they have been addressed. Address any valid outstanding issues and ensure conversation threads are acknowledged and formally resolved.
-  4. **Issue Validity on Current Codebase:** Verify whether the issue or feature the PR addresses is still valid on the current codebase. It is possible that the bug was already fixed or the area refactored elsewhere in the codebase since the PR was created.
-  5. **Unit Test Demonstration & Full Coverage:** For functional or executable code changes, make sure that the PR has unit tests that demonstrate the issue correctly. Add more unit tests if needed to ensure:
-     - (a) we have the right unit test demonstrating the exact issue that the PR fixes (failing before the fix, passing after), and
-     - (b) we have full test coverage over the modified logic and edge cases.
-     (For documentation, asset, or non-executable changes, verify that the relevant linters and quality checks pass instead.)
-  6. **Critical Code Review & Refinement:** Always be critical of the PR's code. Review and refine it in every way possible: adhere strictly to Clean Code principles, naming conventions, and architectural boundaries (e.g. `ModuleBoundariesArchTest`), eliminate dead code or suboptimal patterns, optimize performance where appropriate, and ensure quality gates pass (`./gradlew spotlessCheck checkstyleMain checkstyleTest` and `pre-commit run --all-files`).
-  7. **Pre-Merge Summary for Maintainer:** After completing all review steps, conflict resolution, refinements, and testing, write a brief, structured summary of the findings, refinements, and test results for the maintainer so they can review and decide if we can proceed with the merge.
-  **PR Merge Rule:** **Never merge PRs automatically without explicit user confirmation.** Always present the PR link, summary of changes, and check status to the user and wait for their explicit confirmation to merge.
-  **PR and Issue Body Integrity Rule:** Always pass markdown descriptions via `--body-file <path>` when creating or editing pull requests or issues (`gh pr create/edit --body-file <file>`, `gh issue create/edit --body-file <file>`). **Never** pass inline markdown text through shell command-line flags (e.g. `--body "..."`) or string interpolation in PowerShell, Bash, or Python scripts. Shell argument parsers and language escape evaluators mangle characters like `\`t` (tab), `\`f` (form feed), `\`r` (carriage return), and `\`b` (backspace) inside code identifiers, backticks, and file paths (e.g. converting `\BatchOptimizer` to `\BatchOptimizer` or dropping `r` in `\routing-engine`), resulting in corrupted descriptions on GitHub.
-  **GitHub Actions Polling Rate Rule:** When polling GitHub Actions status checks (e.g. `gh pr checks`, `gh run view`), wait at least 15 seconds between queries to avoid spamming the GitHub API and exhausting rate limits.
-  **PR Reviewer Feedback Loop:** After creating a PR, wait until all automated reviewers (e.g. GitHub Code Quality bot, GitHub Copilot) have completed their reviews before addressing comments or pushing changes (`gh pr view <pr-number> --json comments,reviews`). Do not push fixes prematurely when only the first reviewer (such as the code quality bot) has responded; wait for GitHub Copilot and all other active reviewer bots to finish. Read all remarks, evaluate them objectively, address all valid issues together in local commits, verify quality gates, and push the fixes to the PR branch. For each conversation thread raised by reviewers, reply to the thread and formally resolve it according to the action taken (e.g., mark as addressed with a summary of the fix, won't fix with technical justification, or incorrect with clarifying context).
+  **PR Review & Merge Operations:** Follow the dedicated `github-automation` skill for the complete 7-step PR review workflow, feedback loop, body-integrity rules (`--body-file`), and merge policies. Never merge PRs automatically without explicit user confirmation.
 - **Legacy Reference Implementation:** The historical v1.9 reference implementation is preserved in Git tag `v1.9.0` for optional deep-dive archaeology. The in-tree v1.9 source directory and build tasks have been removed; use git worktrees or `scripts/benchmark/Build-Baseline.ps1` when historical comparisons are needed.
 - **Logging & Debugging:** Use the `FRLogger` class for logging. The method `trace(String method, String operation, String message, String impactedItems, Point[] impactedPoints)` should be used for detailed algorithmic steps, especially in routing logic, to facilitate debugging and performance analysis. Logs should be structured and informative, including impacted nets and impacted points in the routing process. When comparing against a baseline build, keep diagnostic payloads synchronized between the WIP tree and that baseline before drawing conclusions from log diffs.
   - For parity investigations, keep diagnostic payloads synchronized between WIP and the baseline under comparison. If WIP emits a debug marker (for example `[assign_raw]` with section/door identity), add the same marker fields to the baseline instrumentation before drawing conclusions from log diffs.
@@ -117,12 +103,13 @@ The full priority ladder is documented in `docs/settings.md`. Key sources: `Defa
 
 # Workflow Commands
 
-Execute the following commands from the root directory using the Gradle Wrapper:
+Execute the following commands from the root directory using the Gradle Wrapper (on Windows use `gradlew.bat`):
 
+- **Targeted Test (Fast & Token-Efficient):** `./gradlew test --tests "<ClassName>" -q` (e.g. `./gradlew test --tests "Dac2020Bm01RoutingTest" -q`)
 - **Run Tests (fast/default):** `./gradlew test`
 - **Run Slow Tests Only:** `./gradlew testSlow`
 - **Run Fast + Slow Tests:** `./gradlew testAll`
-- **Run Full Verification Suite:** `./gradlew check`
+- **Run Full Verification Suite:** `./gradlew check` (pipe verbose output to temporary logs like `> logs/check.log 2>&1` during agent sessions to avoid context bloat)
 - **Build the Executable JAR:** `./gradlew executableJar` (Find the result in `build/libs/freerouting-current-executable.jar`)
 - **Run Current Development Environment:** `./gradlew run`
 - **Gradle Build Scan:** Gradle Build Scan is activated and available after builds complete on GitHub Actions (inspect the Develocity link printed in CI summaries and build results).
@@ -136,6 +123,15 @@ Your communication should be direct, professional, and technically precise. Ackn
 - **No Emoticons / Emojis:** Do not use emoticons or emojis in release notes, documentation, commit messages, or user-facing text.
 - **Command Line Arguments / Parameter Names:** Always use lowercase `snake_case`, with nested fields separated by the dot (`.`) character (e.g. `--router.plane_as_obstacle=true`, `--router.plane_via_costs=50`, `--router.copper_to_edge_clearance_um=500`). Do not encourage users to use deprecated parameters (such as `conduction_is_obstacle` or `conductionIsObstacle`) or `camelCase` parameters (such as `planeAsObstacle`). Sample parameter references in documentation, CLI help, and discussions must strictly follow the lowercase `snake_case` with dot `.` format.
 - **Release Notes:** Release notes must follow the structure and sections of the most recent releases (e.g. v2.4.1, v2.3.0). The style should be professional, direct, friendly, and grateful. Keep release notes as brief as possible without leaving anything important out. Include relevant sponsor callouts, highlights, detailed categorized sections, known limitations/guidance, and heartfelt contributor acknowledgments.
+
+# Agent Efficiency & Context Optimization
+
+To minimize unnecessary token consumption and avoid context window pollution:
+- **Diff-First Inspection:** When reviewing PRs, investigating regressions, or checking bugfixes, always inspect the patch (`git diff`, `gh pr diff`) or narrow line ranges (`view_file` with explicit `StartLine`/`EndLine`) instead of loading entire multi-thousand-line source files.
+- **Silent & Targeted Verification:** Never run broad Gradle tasks (like full `./gradlew test` or `./gradlew check`) directly into conversation output. Run targeted test classes (`./gradlew test --tests "<ClassName>" -q`) and redirect heavy multi-task output to files (e.g. `> logs/check.log 2>&1`), inspecting only the trailing summary if an error occurs.
+- **Research Delegation:** For broad codebase explorations, log auditing, or multi-file surveys, delegate to the `research` subagent (`invoke_subagent`). Subagents execute in isolated contexts and return concise findings, protecting the main conversation history from token bloat.
+- **Daily Triage, Parallel PR Worktrees & Nightly PCBench:** Follow the [`daily-ops`](.agents/skills/daily-ops/SKILL.md) skill for daily issue/PR briefings grouped by topic, parallel `Workspace: "share"` subagent PR reviews (with GitHub Copilot review verification), and post-merge `-RCx.jar` PCBench Tiers A & B regression runs.
+- **Compaction Recommendations:** Proactively recommend the `/compact` command to the user between major phase shifts (e.g., when transitioning from root-cause diagnosis to implementation, or after completing a multi-turn bugfix before PR preparation).
 
 # DRC & Clearance Architecture
 
@@ -166,69 +162,11 @@ Key facts about how copper pours (power/ground planes) are modelled and routed �
 
 # API Analytics Architecture
 
-Key facts about how API usage analytics are tracked — established during the analytics tracking investigation.
-
-## Pipeline overview (three hops)
-
-1. **API controller** (`JobControllerV1`, `SessionControllerV1`, `SystemControllerV1`) calls `FRAnalytics.apiEndpointCalled(method, request, response, userId)` on every **successful (2xx) response**.
-2. `FRAnalytics.trackAnonymousAction` builds a `Properties` map and calls `FreeroutingAnalyticsClient.track(...)`, which **POSTs** a JSON `Payload` asynchronously (background thread) to `https://api.freerouting.app/v1/analytics/track`.
-3. `AnalyticsControllerV1.trackAction` on the server receives that POST and writes the row to **BigQuery** via the singleton `BigQueryClient`, into the table `freerouting-analytics.freerouting_application.api_endpoint_called`. The table name is derived from the event name by lowercasing and replacing spaces/hyphens with underscores.
-
-## Key invariants
-
-- **`FRAnalytics.permanent_user_id` is always `null` in headless/API mode.** `FRAnalytics.setUserId()` is only called from the GUI startup path. Always pass the per-request `userId` UUID from `AuthenticateUser()` to the 4-arg overload `FRAnalytics.apiEndpointCalled(method, request, response, userId)` so that callers can be identified in BigQuery. Never call `FRAnalytics.setUserId()` from a request-handling thread — it writes static state shared across all concurrent requests (race condition).
-- **`FRAnalytics.apiEndpointCalled` has two overloads.** The 3-arg overload (no userId) is kept for unauthenticated endpoints (e.g. `GET /v1/system/status`) where no caller UUID is available. All authenticated controller methods must use the 4-arg overload, passing the return value of `AuthenticateUser()`.
-- **Error responses (4xx/5xx) are tracked by `ApiAnalyticsFilter`**, not by the controller methods. This JAX-RS `ContainerResponseFilter` (registered in `FreeroutingApplication`) fires for every response with status ≥ 400 — including 401 Unauthorized responses aborted by `ApiKeyValidationFilter` before the controller runs. Successful (2xx) responses are intentionally skipped by the filter to avoid double-tracking with the richer controller-level calls.
-- **`BigQueryClient` is a singleton.** Use `BigQueryClient.getInstance(libraryVersion, serviceAccountKey)` — never `new BigQueryClient(...)` — in `AnalyticsControllerV1`. Constructing a new instance on every request re-authenticates against GCP's token endpoint (network I/O). The singleton is recreated automatically if the service-account key value changes (key rotation).
-- **`FreeroutingAnalyticsClient` delivery failures are aggregated, not logged per-failure.** Calling `FRLogger.debug/warn` inside the async send thread floods logs when the analytics endpoint is unreachable. Instead, failures are routed to `AnalyticsErrorAggregator.recordFailure(endpoint, e)`. The first failure in each window is logged immediately at WARN; subsequent failures are counted silently. A daemon thread (`"analytics-error-reporter"`) flushes a per-error-type summary every 60 minutes: at WARN if total ≤ 50, at ERROR if > 50 (sustained outage).
-
-## BigQuery table and column conventions
-
-- All analytics events land in `freerouting-analytics.freerouting_application.<event_name>` where the table name is the event string lowercased with spaces/hyphens replaced by underscores (e.g. `"API Endpoint Called"` → `api_endpoint_called`).
-- Standard columns present on all rows: `id`, `received_at`, `sent_at`, `timestamp`, `loaded_at`, `uuid_ts`, `user_id`, `anonymous_id`, `event`, `event_text`, `context_library_name`, `context_library_version`.
-- API-call-specific columns: `api_method` (e.g. `"GET v1/jobs/…"`), `api_request`, `api_response`.
-- `user_id` and `anonymous_id` are both set to the caller's `Freerouting-Profile-ID` UUID for authenticated API calls. Both will be `null` for unauthenticated endpoints (system status, environment) and for any legacy events fired before fix #1 was applied.
-
-## Verifying analytics in BigQuery
-
-```sql
--- Check recent API events are arriving
-SELECT received_at, anonymous_id, api_method, context_library_version
-FROM `freerouting-analytics.freerouting_application.api_endpoint_called`
-WHERE received_at >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 HOUR)
-ORDER BY received_at DESC LIMIT 50;
-
--- Call count per endpoint (last 24 h)
-SELECT api_method, COUNT(*) AS calls
-FROM `freerouting-analytics.freerouting_application.api_endpoint_called`
-WHERE received_at >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 24 HOUR)
-GROUP BY api_method ORDER BY calls DESC;
-
--- Confirm null-user-id volume (should be ~0 after fix #1)
-SELECT
-  COUNTIF(user_id IS NULL OR user_id = '') AS null_user_ids,
-  COUNT(*) AS total
-FROM `freerouting-analytics.freerouting_application.api_endpoint_called`
-WHERE received_at >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 7 DAY);
-
--- Error-response breakdown by endpoint (tracked by ApiAnalyticsFilter)
-SELECT api_method, COUNT(*) AS error_count
-FROM `freerouting-analytics.freerouting_application.api_endpoint_called`
-WHERE received_at >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 7 DAY)
-  AND (api_response LIKE '%error%' OR api_response LIKE '%not found%')
-GROUP BY api_method ORDER BY error_count DESC;
-```
-
-## Relevant source files
-
-| File | Role |
-|---|---|
-| `analytics/FRAnalytics.java` | Static facade; `apiEndpointCalled(…, UUID userId)` is the primary call site |
-| `analytics/FreeroutingAnalyticsClient.java` | HTTP client posting to `api.freerouting.app/v1/analytics/track` |
-| `analytics/AnalyticsErrorAggregator.java` | Aggregates delivery failures; emits first-failure WARN + hourly summary |
-| `analytics/BigQueryClient.java` | Singleton GCP BigQuery writer; `getInstance()` avoids per-request re-auth |
-| `api/ApiAnalyticsFilter.java` | JAX-RS dual filter; tracks all ≥ 400 responses centrally |
-| `api/FreeroutingApplication.java` | Registers `ApiAnalyticsFilter` alongside existing filters |
+Key facts about API usage tracking (three-hop pipeline: Controller -> `FRAnalytics` / `FreeroutingAnalyticsClient` -> BigQuery `api_endpoint_called`):
+- Authenticated requests must pass caller UUID via the 4-arg `FRAnalytics.apiEndpointCalled(..., userId)`.
+- Global error tracking (>=400) is handled by `ApiAnalyticsFilter`.
+- Failures in analytics reporting are aggregated by `AnalyticsErrorAggregator` rather than logged per failure.
+- Complete pipeline details, invariants, table schema, and BigQuery verification queries are documented in [`docs/internals/api-analytics.md`](docs/internals/api-analytics.md).
 
 # MCP Server Architecture
 
@@ -276,86 +214,11 @@ Key facts and invariants for the dedicated MCP server implementation.
 - Update `docs/settings.md` whenever `mcp_server` fields change.
 - Update `docs/architecture.md` if package boundaries or data flow changes.
 
-# Docker Multi-Platform Build
+# Packaging & JRE Module Requirements (jlink & Docker)
 
-The Docker images are built and published by two GitHub Actions workflows:
-
-- `.github/workflows/docker-release.yml` — triggered on every GitHub release; tags the image with the semver version and `latest`.
-- `.github/workflows/docker-nightly.yml` — triggered on every push to `master`; tags the image as `nightly`.
-
-Both workflows build a multi-platform manifest image using Docker Buildx + QEMU. The supported platforms are:
-
-| Platform | Hardware |
-|---|---|
-| `linux/amd64` | x86-64 servers, PCs, most cloud VMs |
-| `linux/arm64` | Apple Silicon, AWS Graviton, Raspberry Pi 4/5 (64-bit OS) |
-
-> **Note:** `linux/arm/v7` (32-bit ARM) support was dropped when the project moved to Java 25, because `eclipse-temurin:25` no longer publishes an `arm/v7` image. Raspberry Pi users running a 32-bit OS should switch to a 64-bit OS image to use the official Docker image.
-
-`provenance: false` is set on both workflows so that the manifest does not contain build-attestation entries (which show up as `"architecture": "unknown"` in `docker manifest inspect`).
-
-The Gradle tests are run on the native `ubuntu-latest` runner **before** the multi-platform build step to avoid QEMU network/loopback unreliability inside the cross-compiled build container.
-
-For end-user self-hosting instructions see `docs/self-hosting.md`.
-
-# Installer / jlink Module Requirements
-
-The Windows, Linux, and macOS installers use `jlink` to build a minimal bundled JRE. The `--add-modules` list must include every JDK module that the application (or its bundled libraries) accesses at runtime — `jlink` does **not** auto-detect usages from inside a fat jar.
-
-## Correct `--add-modules` list per platform
-
-| Platform | Required modules |
-|---|---|
-| **Windows** | `java.desktop,java.logging,java.management,java.net.http,java.sql,java.xml,jdk.crypto.ec,jdk.crypto.mscapi,jdk.management` |
-| **Linux** | `java.desktop,java.logging,java.management,java.net.http,java.sql,java.xml,jdk.crypto.ec,jdk.management` |
-| **macOS** | `java.desktop,java.logging,java.management,java.net.http,java.sql,java.xml,jdk.crypto.ec,jdk.management` |
-
-> `jdk.crypto.mscapi` is **Windows-only** (provides `SunMSCAPI` for the Windows OS certificate store). Do not add it to Linux/macOS scripts.
-
-## Why each module is needed
-
-- **`java.management`** — `ManagementFactory` (used in `SystemControllerV1`, `RoutingJobSchedulerActionThread`, Log4j2 startup, Jersey-server). Missing this module causes `NoClassDefFoundError: java/lang/management/ManagementFactory` on startup and crashes the `/v1/system/status` endpoint with HTTP 500.
-- **`jdk.management`** — `com.sun.management.ThreadMXBean.getThreadAllocatedBytes()` and `com.sun.management.OperatingSystemMXBean.getCpuLoad()`. Transitively brings in `java.management`.
-- **`jdk.crypto.ec`** — EC crypto provider (`SunEC`) required for TLS 1.3 / ECDHE key exchange. Without it, all HTTPS connections to Google APIs (OAuth2, BigQuery, Sheets) fail at the SSL handshake.
-- **`jdk.crypto.mscapi`** — Windows native certificate store access. Without it, Java uses only its own bundled `cacerts`, which is usually sufficient but may miss system-level certificates.
-
-## Modules explicitly NOT needed
-
-- `java.instrument` — javassist references it but HK2/Jersey proxy generation uses `ClassLoader.defineClass()`, not bytecode redefining. Do not add.
-- `jdk.attach` / `jdk.jdi` — javassist debugging tools. Not needed for runtime proxy generation. Do not add.
-- `jdk.httpserver` — referenced in jersey-server module-info but Freerouting uses Jetty, not the JDK HTTP server. Do not add.
-- `java.naming` — log4j-core requires it `static` (optional) for JNDI lookups; Freerouting does not use JNDI lookups. Do not add. Instead, `System.setProperty("log4j2.disableJndi", "true")` is set at the very start of the Log4j2 property-setup block in `Freerouting.main()` (before `LogManager.getContext()` is first called) so Log4j2 skips its JNDI plugin registration entirely and emits no WARN.
-- `java.rmi` — log4j-core requires it for remote JMX; not needed for local embedded logging. Do not add.
-
-## Defensive coding pattern for `ManagementFactory`
-
-All `ManagementFactory` call sites are wrapped in `try/catch (Throwable)` so the application degrades gracefully (returns -1 / skips stats) rather than crashing when running on a custom or stripped JRE:
-
-```java
-try {
-    ThreadMXBean threadMXBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
-    // ...use threadMXBean...
-} catch (Throwable t) {
-    // java.management or jdk.management module not available in this JRE build
-}
-```
-
-Affected files: `SystemControllerV1.getCpuLoad()`, `RoutingJobSchedulerActionThread.monitorCpuAndMemoryUsage()`.
-
-## Analysing module requirements
-
-To check what JDK modules a jar requires, use:
-```bash
-jdeps --ignore-missing-deps -q --print-module-deps <jar-file>
-```
-For the project's own thin jar (without bundled deps):
-```bash
-jdeps --ignore-missing-deps -q --print-module-deps build/libs/freerouting.jar
-```
-To inspect a named module's `requires` declarations:
-```bash
-jar --describe-module --file <jar-file> | grep requires
-```
+- **Docker Multi-Platform:** Automated via `docker-release.yml` and `docker-nightly.yml` for `linux/amd64` and `linux/arm64` (ARMv7 dropped on Java 25). `provenance: false` is required.
+- **jlink Bundled JRE:** Requires platform-specific `--add-modules` (including `jdk.crypto.ec`, `jdk.management`, and on Windows `jdk.crypto.mscapi`). `ManagementFactory` calls must be guarded with `try/catch (Throwable)`.
+- Full module breakdown, rationale, and container build invariants are documented in [`docs/internals/packaging-and-jlink.md`](docs/internals/packaging-and-jlink.md).
 
 # API Authentication Filter Architecture
 
@@ -439,51 +302,8 @@ Use `actions/stale@v9`. v5 (previously used) ran on Node.js 16 which is EOL. Do 
 
 # Trace Normalisation & Routing-Loop Architecture
 
-Key facts about how `PolylineTraceNormalization`, `BasicBoard.normalize_traces()`, and `AutorouteBatchLoop.run()` interact — established during the Issue 676 regression investigation.
-
-## `PolylineTraceNormalization.normalize()` depth limit
-
-`PolylineTraceNormalization.MAX_NORMALIZATION_DEPTH` (= 16) caps the recursion depth of trace normalization. **Exceeding the cap returns `false` (no further change at that depth level) instead of throwing** — an exception here used to be swallowed by a caller try-catch and surfaced only as:
-> `WARNING The normalization of net 'GND' failed.`
-
-`return false` is safe because the outer loop in `normalize_traces` treats it as "no change for this trace" and continues to the next trace, terminating normally. `normalize()` declares no checked exception.
-
-## `PolylineTrace.combine_at_end()` null search-tree entries
-
-`combine_at_end` contains two code paths:
-
-1. **Full remove + re-insert** — used when `joined_polyline.arr.length != new_line_count` (parallel lines were skipped at the join).
-2. **Optimised merge via `merge_entries_at_end`** — reuses existing search-tree leaf nodes for performance.
-
-Path 2 calls `p_to_trace.get_search_tree_entries(tree)` and `p_from_trace.get_search_tree_entries(tree)`. Either can return `null` if the trace has no entries in the given search tree (e.g. it was freshly inserted or its entries were cleared). This caused a `NullPointerException` inside `ShapeSearchTree.merge_entries_at_end`, visible in the stack as:
-```
-NullPointerException: Cannot load from object array because "to_trace_entries" is null
- at ShapeSearchTree.merge_entries_at_end(ShapeSearchTree.java:237)
- at PolylineTrace.combine_at_end(PolylineTrace.java:395)
- at PolylineTrace.normalize(PolylineTrace.java:776)
-```
-
-**Fix applied (via `PolylineTraceSearchTreeAdapter.hasDefaultEntries`):** Before choosing path 2, `combine_at_end` checks whether both `this` and `other_trace` have entries in the default search tree (`board.search_tree_manager.get_default_tree()`). If either is null, it falls back to path 1 (the safe full-remove + re-insert).
-
-> **Why the default tree is sufficient for the guard:** All traces are always inserted into the default tree. Compensated trees are built on top of it. If a trace is missing from the default tree it is definitionally not in any compensated tree either.
-
-## `AutorouteBatchLoop` same-board-hash tracking
-
-v1.9 maintained an `already_checked_board_hashes` set. Between passes it computed a board hash; if the same hash appeared twice, it stopped routing.
-
-**Current state:** `AutorouteBatchLoop.run()` declares an `alreadyRoutedBoardHashes` `HashSet<String>`, but the same-hash early stop is **disabled (commented out)** — per-pass ripup budgets and random seeds change each pass, so an identical hash can still make progress later. Stagnation is instead handled by the `BoardHistory` restore check, which uses a strict `>` comparison so equally-scored boards do not trigger unbounded restores. The hash set is still cleared whenever a previous board state is restored (ripup + retry cycle), so a restored state can be routed again with a higher ripup cost.
-
-## `BoardStatistics.getNormalizedScore()` division by zero / NaN
-
-`getMaximumScore()` returns `maximumCount * unroutedNetPenalty`. When a board is already fully routed (`maximumCount == 0`), this is 0, and dividing by it produces `NaN`. NaN failed all comparison-based stagnation checks, causing the score to always appear as 0.
-
-**Fix applied:** A `if (maximumScore <= 0f) return 0f;` guard was added in `getNormalizedScore()` before the division.
-
-## Symptom summary
-
-| Symptom | Root cause | Fix location |
-|---|---|---|
-| `WARNING The normalization of net 'GND' failed.` (every pass) | `PolylineTraceNormalization` hit the max depth and threw | `PolylineTraceNormalization` — throw → debug + `return false` |
-| `NullPointerException` in `merge_entries_at_end` | Trace missing search-tree entries, `combine_at_end` chose optimised path | `PolylineTrace.combine_at_end()` — `PolylineTraceSearchTreeAdapter.hasDefaultEntries` guard before path 2 |
-| Score always 0 | `getNormalizedScore()` divided by 0 when board fully routed | `BoardStatistics.getNormalizedScore()` — `<= 0` guard |
-| Router loops endlessly on same board | No board-hash stagnation detection | `AutorouteBatchLoop.run()` — same-hash early stop currently disabled (see above); stagnation handled by the `BoardHistory` strict-`>` restore check |
+Key invariants established during the Issue 676 investigation:
+- `PolylineTraceNormalization.normalize()` caps recursion at `MAX_NORMALIZATION_DEPTH` (= 16) and returns `false` (no throw) on depth limit.
+- `PolylineTrace.combine_at_end()` guards optimised merge via `PolylineTraceSearchTreeAdapter.hasDefaultEntries`, falling back to full remove/re-insert if null.
+- Score division-by-zero guard in `BoardStatistics.getLegacyNormalizedScore()` prevents `NaN` comparisons.
+- Full architectural details and symptom summary are documented in [`docs/internals/trace-normalization.md`](docs/internals/trace-normalization.md).

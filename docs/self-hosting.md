@@ -35,9 +35,8 @@ The official Docker image is a multi-platform image published to [ghcr.io/freero
 |---|---|
 | `linux/amd64` | Standard x86-64 servers, PCs, most cloud VMs |
 | `linux/arm64` | Apple Silicon Macs (via Rosetta/native), AWS Graviton, Raspberry Pi 4/5 running a **64-bit** OS |
-| `linux/arm/v7` | Raspberry Pi 2/3/4 running a **32-bit** OS (e.g. Raspberry Pi OS Legacy 32-bit), Umbrel, CasaOS, and other self-hosted home-server stacks on ARMv7 hardware |
 
-> **Umbrel users:** Umbrel often runs a 32-bit OS on 64-bit Raspberry Pi hardware. The `linux/arm/v7` image covers that case. No extra configuration is needed — Docker selects the right image automatically.
+> **Note on 32-bit ARM (`linux/arm/v7`):** 32-bit ARM support was dropped when the project moved to Java 25, because `eclipse-temurin:25` no longer publishes an `arm/v7` image. Raspberry Pi users (including Umbrel/CasaOS setups) should use a **64-bit** OS image to run the official Docker container.
 
 ---
 
