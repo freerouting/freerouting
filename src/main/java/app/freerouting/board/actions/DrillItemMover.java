@@ -279,22 +279,16 @@ public final class DrillItemMover {
     }
     boolean isIntOctagon = obstacleShape.isIntOctagon();
     double clearanceValue =
-        board.clearanceValue(clearanceClassIndex, via.clearanceClassIndex(), layer);
+        searchTree.additionalClearance(clearanceClassIndex, via.clearanceClassIndex(), layer);
     double shoveDistance;
     if (board.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE || isIntOctagon) {
       shoveDistance = 0.5 * currentViaShape.boundingBox().maxWidth();
-      if (!searchTree.isClearanceCompensationUsed()) {
-        shoveDistance += clearanceValue;
-      }
+      shoveDistance += clearanceValue;
     } else {
       // a different algorithm is used for calculating the new via centers
       shoveDistance = 0;
-      if (!searchTree.isClearanceCompensationUsed()) {
-        // enlarge obstacleShape and currentViaShape by half of the clearance value to
-        // synchronize
-        // with the check algorithm in ShapeSearchTree.overlapping_tree_entries_with_clearance
-        shoveDistance += 0.5 * clearanceValue;
-      }
+      // Split only the clearance not already represented by the two prepared shapes.
+      shoveDistance += 0.5 * clearanceValue;
     }
 
     // The additional constant 2 is an empirical value for the tolerance in case of diagonal
@@ -319,9 +313,7 @@ public final class DrillItemMover {
       tryViaCenters = currentOffsetOctagon.nearestBorderProjections(currentViaCenter, tryCount);
     } else {
       TileShape currentOffsetShape = (TileShape) obstacleShape.enlarge(shoveDistance);
-      if (!searchTree.isClearanceCompensationUsed()) {
-        currentViaShape = (TileShape) currentViaShape.enlarge(0.5 * clearanceValue);
-      }
+      currentViaShape = (TileShape) currentViaShape.enlarge(0.5 * clearanceValue);
       if (extendedCheck) {
         tryCount = 4;
       }

@@ -64,6 +64,7 @@ public final class ForcedViaInserter {
       is90Degree = false;
     }
 
+    tileShape = compensatePadShape(tileShape, clearanceClassIndex, layer, board);
     ShapeEntrySide fromSide =
         calculateFromSide(
             location.toFloat(), tileShape, roomShape.toSimplex(), checkRadius, is90Degree);
@@ -101,6 +102,7 @@ public final class ForcedViaInserter {
       startTraceShape = startTraceCircle.boundingOctagon();
     }
 
+    startTraceShape = compensatePadShape(startTraceShape, traceClearanceClass, layer, board);
     ForcedPadRouter.CheckDrillResult traceResult =
         forcedPadRouter.checkForcedPad(
             startTraceShape,
@@ -161,6 +163,7 @@ public final class ForcedViaInserter {
       } else {
         tileShape = currentPadShape.boundingOctagon();
       }
+      tileShape = compensatePadShape(tileShape, currentClearanceClassIndex, i, board);
       ShapeEntrySide fromSide =
           forcedPadRouter.calcFromSide(
               tileShape, location, i, calcFromSideOffset, currentClearanceClassIndex);
@@ -218,6 +221,7 @@ public final class ForcedViaInserter {
         } else {
           startTraceShape = startTraceCircle.boundingOctagon();
         }
+        startTraceShape = compensatePadShape(startTraceShape, traceClearanceClassIndex, i, board);
         if (forcedPadRouter.checkForcedPad(
                 startTraceShape,
                 fromSide,
@@ -291,6 +295,7 @@ public final class ForcedViaInserter {
           startTraceShape = startTraceCircle.boundingOctagon();
         }
       }
+      tileShape = compensatePadShape(tileShape, currentClearanceClassIndex, i, board);
       ShapeEntrySide fromSide =
           forcedPadRouter.calcFromSide(
               tileShape, location, i, calcFromSideOffset, currentClearanceClassIndex);
@@ -329,6 +334,7 @@ public final class ForcedViaInserter {
         }
       }
       if (startTraceShape != null) {
+        startTraceShape = compensatePadShape(startTraceShape, traceClearanceClassIndex, i, board);
         // necessary in case startTraceShape is bigger than tileShape
         if (!forcedPadRouter.forcedPad(
             startTraceShape,
@@ -353,6 +359,23 @@ public final class ForcedViaInserter {
         FixedState.UNFIXED,
         viaInfo.attachSmdAllowed());
     return true;
+  }
+
+  /** Prepares new pad geometry for the same tree used by ForcedPadRouter and DrillItemMover. */
+  private static TileShape compensatePadShape(
+      TileShape shape, int clearanceClassIndex, int layer, RoutingBoard board) {
+    int compensation =
+        board
+            .searchTreeManager
+            .getDefaultTree()
+            .clearanceCompensationValue(clearanceClassIndex, layer);
+    if (compensation == 0) {
+      return shape;
+    }
+    // Preserve four-sided geometry: side indices and orthogonal shoving depend on IntBox.
+    return shape instanceof IntBox box
+        ? box.offset(compensation)
+        : (TileShape) shape.enlarge(compensation);
   }
 
   /**

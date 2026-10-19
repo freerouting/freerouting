@@ -1044,10 +1044,12 @@ public class BasicBoard implements Serializable {
   }
 
   /**
-   * Returns items, which overlap with shape on layer layer inclusive clearance. clearanceClass is
-   * the index in the clearance matrix, which describes the required clearance restrictions to other
-   * items. The function may also return items, which are nearly overlapping, but do not overlap
-   * with exact calculation. If layer {@literal <} 0, the layer is ignored.
+   * Returns items overlapping a shape prepared for the default search tree, including clearance.
+   * When the default tree is compensated, shape must already include its compensation (as does
+   * Item.getTileShape()). clearanceClass is the index in the clearance matrix, which describes the
+   * required clearance restrictions to other items. The function may also return items, which are
+   * nearly overlapping, but do not overlap with exact calculation. If layer {@literal <} 0, the
+   * layer is ignored.
    */
   public Set<Item> overlappingItemsWithClearance(
       ConvexShape shape, int layer, int[] ignoreNetNos, int clearanceClass) {
@@ -1085,9 +1087,13 @@ public class BasicBoard implements Serializable {
       if (!currentShape.isContainedIn(boundingBox)) {
         return false;
       }
+      // Area input is physical geometry, unlike Item.getTileShape(), which is tree-prepared.
+      int compensation = defaultTree.clearanceCompensationValue(clearanceClassIndex, layer);
+      TileShape queryShape =
+          compensation == 0 ? currentShape : (TileShape) currentShape.enlarge(compensation);
       Set<SearchTreeObject> obstacles = new TreeSet<>();
       defaultTree.overlappingObjectsWithClearance(
-          currentShape, layer, netNumbers, clearanceClassIndex, obstacles);
+          queryShape, layer, netNumbers, clearanceClassIndex, obstacles);
       for (SearchTreeObject currentObject : obstacles) {
         boolean isObstacle = true;
         for (int j = 0; j < netNumbers.length; j++) {
@@ -1117,12 +1123,8 @@ public class BasicBoard implements Serializable {
     ShapeSearchTree defaultTree = this.searchTreeManager.getDefaultTree();
     Collection<TreeEntry> treeEntries = new LinkedList<>();
     int[] ignoreNetNos = new int[0];
-    if (defaultTree.isClearanceCompensationUsed()) {
-      defaultTree.overlappingTreeEntries(shape, layer, ignoreNetNos, treeEntries);
-    } else {
-      defaultTree.overlappingTreeEntriesWithClearance(
-          shape, layer, ignoreNetNos, clearanceClassIndex, treeEntries);
-    }
+    defaultTree.overlappingTreeEntriesWithClearance(
+        shape, layer, ignoreNetNos, clearanceClassIndex, treeEntries);
     for (TreeEntry currentTreeEntry : treeEntries) {
       if (!(currentTreeEntry.object instanceof Item currentItem)) {
         continue;

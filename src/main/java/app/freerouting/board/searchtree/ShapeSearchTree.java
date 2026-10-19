@@ -121,6 +121,25 @@ public class ShapeSearchTree extends MinAreaTree {
   }
 
   /**
+   * Clearance still needed between two shapes already prepared for this tree. For arbitrary class
+   * matrices, their compensation radii need not add up to the pairwise clearance. Never shrink
+   * prepared shapes when they already provide more clearance than required.
+   */
+  public int additionalClearance(int firstClass, int secondClass, int layer) {
+    if (!isClearanceCompensationUsed()) {
+      return board.clearanceValue(firstClass, secondClass, layer);
+    }
+    // Keep the compensated convention: the callers supply their geometric rounding guards.
+    // The explicit (uncompensated) path retains its existing matrix safety margin.
+    int clearance = board.rules.clearanceMatrix.getValue(firstClass, secondClass, layer, false);
+    return Math.max(
+        0,
+        clearance
+            - clearanceCompensationValue(firstClass, layer)
+            - clearanceCompensationValue(secondClass, layer));
+  }
+
+  /**
    * Changes the tree entries from keepAtStartCount + 1 to newShapeCount - 1 - keepAtEndCount to
    * changedEntries. Special implementation for change_trace for performance reasons
    */
@@ -459,6 +478,15 @@ public class ShapeSearchTree extends MinAreaTree {
 
   private void overlappingTreeEntriesUnlocked(
       ConvexShape shape, int layer, int[] ignoreNetNos, Collection<TreeEntry> treeEntries) {
+    overlappingTreeEntriesUnlocked(shape, layer, ignoreNetNos, treeEntries, null);
+  }
+
+  private void overlappingTreeEntriesUnlocked(
+      ConvexShape shape,
+      int layer,
+      int[] ignoreNetNos,
+      Collection<TreeEntry> treeEntries,
+      Item obstaclesOf) {
     if (shape == null) {
       return;
     }
@@ -487,6 +515,13 @@ public class ShapeSearchTree extends MinAreaTree {
             }
           }
         }
+        if (!ignoreObject
+            && obstaclesOf != null
+            && (!(currentObject instanceof Item currentItem)
+                || currentItem == obstaclesOf
+                || !currentItem.isObstacle(obstaclesOf))) {
+          ignoreObject = true;
+        }
         if (!ignoreObject) {
           TileShape currentShape = currentObject.getTreeShape(this, currentLeaf.shapeIndexInObject);
           boolean addItem;
@@ -509,11 +544,16 @@ public class ShapeSearchTree extends MinAreaTree {
   }
 
   /**
-   * Looks up all entries in the search tree, so that inserting an item with shape shape, net number
-   * netNumber, clearance type clearanceClassIndex and layer layer would produce a clearance
-   * violation, and puts them into the set obstacleEntries. The elements in obstacleEntries are of
-   * type TreeEntry. if layer < 0, the layer is ignored. Used only internally, because the clearance
-   * compensation is not taken into account.
+   * Appends entries overlapping the query, including clearance, without clearing the destination.
+   *
+   * <p>The shape must use this tree's geometry convention: raw geometry for an uncompensated tree,
+   * already compensated geometry for a compensated tree. In the latter case the query and indexed
+   * shapes already account for clearance; expanding them again would count it twice. Use a tree
+   * compensated for the query's clearance class when querying mixed clearance classes. Compensation
+   * for a different query class need not represent its pairwise clearance rules; those queries add
+   * only the pairwise clearance not already represented by the two prepared shapes. Excess
+   * compensation remains conservative; prepared shapes are never shrunk. The explicit path retains
+   * the half-clearance expansions and safety margin. If layer is negative, all layers are queried.
    */
   public void overlappingTreeEntriesWithClearance(
       ConvexShape shape,
@@ -539,8 +579,12 @@ public class ShapeSearchTree extends MinAreaTree {
     Lock lock = readLock();
     lock.lock();
     try {
-      overlappingTreeEntriesWithClearanceUnlocked(
-          shape, layer, ignoreNetNos, clearanceClassIndex, obstacleEntries, obstaclesOf);
+      if (isClearanceCompensationUsed() && clearanceClassIndex == compensatedClearanceClassNo) {
+        overlappingTreeEntriesUnlocked(shape, layer, ignoreNetNos, obstacleEntries, obstaclesOf);
+      } else {
+        overlappingTreeEntriesWithClearanceUnlocked(
+            shape, layer, ignoreNetNos, clearanceClassIndex, obstacleEntries, obstaclesOf);
+      }
     } finally {
       lock.unlock();
     }
@@ -558,6 +602,16 @@ public class ShapeSearchTree extends MinAreaTree {
     }
     if (obstacleEntries == null) {
       FRLogger.warn("ShapeSearchTree.overlaps_with_clearance: obstacleEntries is null");
+      return;
+    }
+    if (layer < 0) {
+      // Clearance is layer-specific. A negative layer is not a clearance-matrix index.
+      for (int currentLayer = 0;
+          currentLayer < board.layerStructure.layers.length;
+          currentLayer++) {
+        overlappingTreeEntriesWithClearanceUnlocked(
+            shape, currentLayer, ignoreNetNos, clearanceClassIndex, obstacleEntries, obstaclesOf);
+      }
       return;
     }
     ClearanceMatrix clMatrix = board.rules.clearanceMatrix;
@@ -580,30 +634,35 @@ public class ShapeSearchTree extends MinAreaTree {
     try {
       overlapsUnlocked(offsetBounds, tmpList);
       for (Leaf currentLeaf : tmpList) {
-        Item currentItem = (Item) currentLeaf.object;
+        SearchTreeObject currentObject = (SearchTreeObject) currentLeaf.object;
         int shapeIndex = currentLeaf.shapeIndexInObject;
-        boolean ignoreItem = layer >= 0 && currentItem.shapeLayer(shapeIndex) != layer;
+        boolean ignoreItem = layer >= 0 && currentObject.shapeLayer(shapeIndex) != layer;
         if (!ignoreItem) {
           for (int i = 0; i < ignoreNetNos.length; i++) {
-            if (!currentItem.isObstacle(ignoreNetNos[i])) {
+            if (!currentObject.isObstacle(ignoreNetNos[i])) {
               ignoreItem = true;
             }
           }
         }
-        // Erik Gavriluk (freerouting.net): skip items that are not obstacles to obstaclesOf before
-        // sorting candidates and running exact geometric intersections.
-        if (!ignoreItem
-            && obstaclesOf != null
-            && (currentItem == obstaclesOf || !currentItem.isObstacle(obstaclesOf))) {
-          ignoreItem = true;
-        }
         if (!ignoreItem) {
-          int currentClearance =
-              clMatrix.getValue(
-                  clearanceClassIndex, currentItem.clearanceClassIndex(), layer, true);
-          EntrySortedByClearance sortedOb =
-              new EntrySortedByClearance(currentLeaf, currentClearance, nextEntryId++);
-          sortedItems.add(sortedOb);
+          if (currentObject instanceof Item currentItem) {
+            // Erik Gavriluk (freerouting.net): skip items that are not obstacles to obstaclesOf
+            // before sorting candidates and running exact geometric intersections.
+            if (obstaclesOf != null
+                && (currentItem == obstaclesOf || !currentItem.isObstacle(obstaclesOf))) {
+              continue;
+            }
+            int currentClearance =
+                additionalClearance(clearanceClassIndex, currentItem.clearanceClassIndex(), layer);
+            EntrySortedByClearance sortedOb =
+                new EntrySortedByClearance(currentLeaf, currentClearance, nextEntryId++);
+            sortedItems.add(sortedOb);
+          } else if (obstaclesOf == null
+              && currentObject.getTreeShape(this, shapeIndex).intersects(shape)) {
+            // Expansion rooms have no physical clearance class. Preserve their direct overlap
+            // semantics even when a mismatched query class needs conservative item checking.
+            obstacleEntries.add(new TreeEntry(currentObject, shapeIndex));
+          }
         }
       }
     } finally {
@@ -612,7 +671,8 @@ public class ShapeSearchTree extends MinAreaTree {
     int currentHalfClearance = 0;
     ConvexShape currentOffsetShape = shape;
     for (EntrySortedByClearance tmpEntry : sortedItems) {
-      int tmpHalfClearance = tmpEntry.clearance / 2;
+      int tmpHalfClearance =
+          isClearanceCompensationUsed() ? (tmpEntry.clearance + 1) / 2 : tmpEntry.clearance / 2;
       if (tmpHalfClearance != currentHalfClearance) {
         currentHalfClearance = tmpHalfClearance;
         currentOffsetShape = (ConvexShape) shape.enlarge(currentHalfClearance);
@@ -648,8 +708,9 @@ public class ShapeSearchTree extends MinAreaTree {
 
   /**
    * Returns all objects of class TreeEntry, which overlap with shape on layer layer inclusive
-   * clearance. clearanceClassIndex is the index in the clearance matrix, which describes the
-   * required clearance restrictions to other items. If layer {@literal <} 0, the layer is ignored.
+   * clearance. The query must follow the geometry convention documented by the collecting overload.
+   * clearanceClassIndex is the index in the clearance matrix, which describes the required
+   * clearance restrictions to other items. If layer {@literal <} 0, the layer is ignored.
    */
   public Collection<TreeEntry> overlappingTreeEntriesWithClearance(
       ConvexShape shape, int layer, int[] ignoreNetNos, int clearanceClassIndex) {
@@ -664,18 +725,15 @@ public class ShapeSearchTree extends MinAreaTree {
   public Collection<TreeEntry> overlappingTreeEntriesWithClearance(
       ConvexShape shape, int layer, int[] ignoreNetNos, int clearanceClassIndex, Item obstaclesOf) {
     Collection<TreeEntry> result = new LinkedList<>();
-    if (this.isClearanceCompensationUsed()) {
-      this.overlappingTreeEntries(shape, layer, ignoreNetNos, result);
-    } else {
-      this.overlappingTreeEntriesWithClearance(
-          shape, layer, ignoreNetNos, clearanceClassIndex, result, obstaclesOf);
-    }
+    this.overlappingTreeEntriesWithClearance(
+        shape, layer, ignoreNetNos, clearanceClassIndex, result, obstaclesOf);
     return result;
   }
 
   /**
-   * Puts all items in the tree overlapping with shape on layer layer into obstacles, if obstacles
-   * != null. If layer {@literal <} 0, the layer is ignored.
+   * Appends overlapping objects, using the same tree-prepared query geometry as {@link
+   * #overlappingTreeEntriesWithClearance(ConvexShape, int, int[], int)}. If layer {@literal <} 0,
+   * the layer is ignored.
    */
   public void overlappingObjectsWithClearance(
       ConvexShape shape,
@@ -692,9 +750,9 @@ public class ShapeSearchTree extends MinAreaTree {
   }
 
   /**
-   * Looks up all items in the search tree, so that inserting an item with shape shape, net number
-   * netNumber, clearance type clearanceClassIndex and layer would produce a clearance violation,
-   * and puts them into the set obstacleEntries. If layer {@literal <} 0, the layer is ignored.
+   * Appends overlapping board items, using the same tree-prepared query geometry as {@link
+   * #overlappingTreeEntriesWithClearance(ConvexShape, int, int[], int)}. Non-item routing rooms are
+   * excluded. If layer {@literal <} 0, the layer is ignored.
    */
   public void overlappingObjectsWithClearance(
       ConvexShape shape,
@@ -706,12 +764,15 @@ public class ShapeSearchTree extends MinAreaTree {
     this.overlappingTreeEntriesWithClearance(
         shape, layer, ignoreNetNos, clearanceClassIndex, treeEntries);
     for (TreeEntry currentEntry : treeEntries) {
-      obstacles.add((Item) currentEntry.object);
+      if (currentEntry.object instanceof Item item) {
+        obstacles.add(item);
+      }
     }
   }
 
   /**
-   * Returns all items in the tree, which overlap with shape on layer layer inclusive clearance.
+   * Returns all items in the tree, which overlap with shape on layer layer inclusive clearance. The
+   * query must use the same tree-prepared geometry as the entry-returning overload.
    * clearanceClassIndex is the index in the clearance matrix, which describes the required
    * clearance restrictions to other items. If layer {@literal <} 0, the layer is ignored.
    */
