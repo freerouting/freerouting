@@ -117,6 +117,9 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     return getNormalContacts(lastCorner(), false);
   }
 
+  /** Returns true if the centerline of this trace contains the specified point. */
+  public abstract boolean contains(Point point);
+
   @Override
   public Point normalContactPoint(Item other) {
     return other.normalContactPoint(this);
@@ -132,23 +135,46 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     if (this.layer != other.layer) {
       return null;
     }
-    boolean contactAtFirstCorner =
-        this.firstCorner().equals(other.firstCorner())
-            || this.firstCorner().equals(other.lastCorner());
-    boolean contactAtLastCorner =
-        this.lastCorner().equals(other.firstCorner())
-            || this.lastCorner().equals(other.lastCorner());
-    Point result;
-    if (!(contactAtFirstCorner || contactAtLastCorner)
-        || contactAtFirstCorner && contactAtLastCorner) {
-      // no contact point or more than 1 contact point
-      result = null;
-    } else if (contactAtFirstCorner) {
-      result = this.firstCorner();
-    } else { // contact at last corner
-      result = this.lastCorner();
+    Point p1 = this.firstCorner();
+    Point p2 = this.lastCorner();
+    Point op1 = other.firstCorner();
+    Point op2 = other.lastCorner();
+
+    boolean thisFirstOnOther = p1 != null && other.contains(p1);
+    boolean thisLastOnOther = p2 != null && other.contains(p2);
+    boolean otherFirstOnThis = op1 != null && this.contains(op1);
+    boolean otherLastOnThis = op2 != null && this.contains(op2);
+
+    Point uniquePoint = null;
+    int count = 0;
+
+    if (thisFirstOnOther) {
+      uniquePoint = p1;
+      count++;
     }
-    return result;
+    if (thisLastOnOther) {
+      if (uniquePoint == null || !uniquePoint.equals(p2)) {
+        uniquePoint = p2;
+        count++;
+      }
+    }
+    if (otherFirstOnThis) {
+      if (uniquePoint == null || !uniquePoint.equals(op1)) {
+        uniquePoint = op1;
+        count++;
+      }
+    }
+    if (otherLastOnThis) {
+      if (uniquePoint == null || !uniquePoint.equals(op2)) {
+        uniquePoint = op2;
+        count++;
+      }
+    }
+
+    if (count == 1) {
+      return uniquePoint;
+    }
+    return null;
   }
 
   @Override
@@ -161,6 +187,42 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     Point endCorner = this.lastCorner();
     if (endCorner != null) {
       result.addAll(getNormalContacts(endCorner, false));
+    }
+
+    // Query same-net items in the trace bounds to capture branches meeting
+    // this trace at internal bends or along the centerline (e.g. preserved T-junctions)
+    if (board != null) {
+      TileShape contactBounds;
+      if (this instanceof PolylineTrace polylineTrace) {
+        contactBounds =
+            polylineTrace
+                .polyline()
+                .boundingOctagon(0, polylineTrace.cornerCount() - 1)
+                .offset(this.getHalfWidth());
+      } else {
+        contactBounds = this.boundingBox();
+      }
+      Set<SearchTreeObject> overlaps = board.overlappingObjects(contactBounds, this.layer);
+      for (SearchTreeObject obj : overlaps) {
+        if (!(obj instanceof Item item)
+            || item == this
+            || !item.sharesNet(this)
+            || !item.sharesLayer(this)) {
+          continue;
+        }
+        if (item instanceof Trace otherTrace) {
+          Point p1 = otherTrace.firstCorner();
+          Point p2 = otherTrace.lastCorner();
+          if ((p1 != null && this.contains(p1)) || (p2 != null && this.contains(p2))) {
+            result.add(item);
+          }
+        } else if (item instanceof DrillItem drillItem) {
+          Point center = drillItem.getCenter();
+          if (center != null && this.contains(center)) {
+            result.add(item);
+          }
+        }
+      }
     }
     return result;
   }
@@ -185,7 +247,9 @@ public abstract class Trace extends Item implements Connectable, Serializable {
           && currentItem.sharesLayer(this)
           && (ignoreNet || currentItem.sharesNet(this))) {
         if (currentItem instanceof Trace currentTrace) {
-          if (point.equals(currentTrace.firstCorner()) || point.equals(currentTrace.lastCorner())) {
+          if (point.equals(currentTrace.firstCorner())
+              || point.equals(currentTrace.lastCorner())
+              || currentTrace.contains(point)) {
             result.add(currentItem);
           }
         } else if (currentItem instanceof DrillItem currentDrillItem) {
@@ -210,12 +274,12 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   /** Returns true, if this trace is not contacted at its first or at its last point. */
   @Override
   public boolean isTail() {
-    Collection<Item> contactList = this.getStartContacts();
-    if (contactList.isEmpty()) {
+    Collection<Item> startContactList = this.getStartContacts();
+    if (startContactList.isEmpty()) {
       return true;
     }
-    contactList = this.getEndContacts();
-    return contactList.isEmpty();
+    Collection<Item> endContactList = this.getEndContacts();
+    return endContactList.isEmpty();
   }
 
   @Override

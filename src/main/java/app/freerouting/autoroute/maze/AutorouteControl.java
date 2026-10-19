@@ -3,6 +3,7 @@ package app.freerouting.autoroute.maze;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.structure.Unit;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.Point;
@@ -38,6 +39,13 @@ public class AutorouteControl {
    * Equal to traceHalfWidth if no clearance compensation is used.
    */
   public final int[] compensatedTraceHalfWidth;
+
+  /**
+   * The clearance offset for traces in free-space expansion rooms on each layer. This accounts for
+   * compensated trace half-width, search tolerance, and the insertion clearance safety margin so
+   * that planned corners stay outside insertion's forbidden envelope.
+   */
+  public final int[] traceClearanceOffset;
 
   public final double[] viaRadii;
 
@@ -140,6 +148,7 @@ public class AutorouteControl {
     layerCount = board.getLayerCount();
     traceHalfWidth = new int[layerCount];
     compensatedTraceHalfWidth = new int[layerCount];
+    traceClearanceOffset = new int[layerCount];
     layerActive = new boolean[layerCount];
     viasAllowed = settings.getViasAllowed();
     viaRadii = new double[layerCount];
@@ -236,11 +245,42 @@ public class AutorouteControl {
       compensatedTraceHalfWidth[i] =
           traceHalfWidth[i]
               + board.rules.clearanceMatrix.clearanceCompensationValue(traceClearanceClassIndex, i);
+      int safetyMargin =
+          board.rules.clearanceMatrix.getValue(
+                  traceClearanceClassIndex, traceClearanceClassIndex, i, true)
+              - board.rules.clearanceMatrix.getValue(
+                  traceClearanceClassIndex, traceClearanceClassIndex, i, false);
+      traceClearanceOffset[i] =
+          compensatedTraceHalfWidth[i] + AutorouteEngine.TRACE_WIDTH_TOLERANCE + safetyMargin;
       if (currentNetClass != null && !currentNetClass.isActiveRoutingLayer(i)) {
         layerActive[i] = false;
       }
     }
     rebuildViaInfo(board, viaCosts, netNumber);
+  }
+
+  /**
+   * Returns the width-safe clearance offset for traces on the specified layer in free-space
+   * expansion rooms.
+   */
+  public int getTraceClearanceOffset(int layer) {
+    if (layer < 0 || layer >= layerCount) {
+      return 0;
+    }
+    return traceClearanceOffset[layer];
+  }
+
+  /** Recomputes the trace clearance offset for the specified layer against the given board. */
+  public void updateTraceClearanceOffset(int layer, RoutingBoard board) {
+    if (layer >= 0 && layer < layerCount && board != null && board.rules != null) {
+      int safetyMargin =
+          board.rules.clearanceMatrix.getValue(
+                  traceClearanceClassIndex, traceClearanceClassIndex, layer, true)
+              - board.rules.clearanceMatrix.getValue(
+                  traceClearanceClassIndex, traceClearanceClassIndex, layer, false);
+      traceClearanceOffset[layer] =
+          compensatedTraceHalfWidth[layer] + AutorouteEngine.TRACE_WIDTH_TOLERANCE + safetyMargin;
+    }
   }
 
   /** Rebuilds via info masks and costs for the specified board, via costs, and net. */
@@ -331,5 +371,24 @@ public class AutorouteControl {
       this.toLayer = toLayer;
       this.attachSmdAllowed = attachSmdAllowed;
     }
+  }
+
+  /**
+   * Returns the user's {@code neck_width_um} as a trace half width in board units (clamped to at
+   * least {@link app.freerouting.rules.BoardRules#getMinAllowedTraceHalfWidth()}), or the minimum
+   * allowed trace half width (0 when unset) when {@code neck_width_um} is not set. No automatic
+   * narrowing may go below this width.
+   */
+  public static int neckHalfWidth(RoutingBoard board, RouterSettings settings) {
+    double neckWidthUm = settings.getNeckWidthUm();
+    if (neckWidthUm <= 0) {
+      return board.rules.getMinAllowedTraceHalfWidth();
+    }
+    int boardResolution = Math.max(1, board.communication.resolution);
+    int neckWidth =
+        (int)
+            Math.round(
+                Unit.scale(neckWidthUm * boardResolution, Unit.UM, board.communication.unit));
+    return Math.max(Math.max(1, neckWidth / 2), board.rules.getMinAllowedTraceHalfWidth());
   }
 }

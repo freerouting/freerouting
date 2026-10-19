@@ -61,16 +61,16 @@ class KiCadDrcViolationRoutingTest extends RoutingFixtureTest {
   @Test
   void issue5756TrackAnd1HoleClearanceViolations() throws Exception {
     assertDrcOnLoadedBoard(
-        "Issue575-drc_BBD_Mars-64_6_track_1_hole_clearance_violations.dsn", 3, 67);
+        "Issue575-drc_BBD_Mars-64_6_track_1_hole_clearance_violations.dsn", 0, 67);
   }
 
   @Test
   void issue5754HoleClearanceViolations() throws Exception {
-    assertDrcOnLoadedBoard("Issue575-drc_dev-board_4_hole_clearance_violations.dsn", 9, 0);
+    assertDrcOnLoadedBoard("Issue575-drc_dev-board_4_hole_clearance_violations.dsn", 3, 0);
   }
 
   @Test
   void issue5757UnconnectedItems() throws Exception {
-    assertDrcOnLoadedBoard("Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn", 145, 0);
+    assertDrcOnLoadedBoard("Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn", 122, 0);
   }
 }
