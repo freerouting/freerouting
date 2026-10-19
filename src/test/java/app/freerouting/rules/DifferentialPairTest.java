@@ -149,13 +149,13 @@ class DifferentialPairTest {
     DifferentialPair original = new DifferentialPair(posNet, negNet, "USB", 250.0, 50.0);
 
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    try (ObjectOutputStream oos = new ObjectOutputStream(baos)) {
-      oos.writeObject(original);
+    try (ObjectOutputStream output = new ObjectOutputStream(baos)) {
+      output.writeObject(original);
     }
 
-    try (ObjectInputStream ois =
+    try (ObjectInputStream input =
         new ObjectInputStream(new ByteArrayInputStream(baos.toByteArray()))) {
-      DifferentialPair deserialized = (DifferentialPair) ois.readObject();
+      DifferentialPair deserialized = (DifferentialPair) input.readObject();
       assertNotNull(deserialized);
       assertEquals(original.baseName(), deserialized.baseName());
       assertEquals(original.coupledSpacing(), deserialized.coupledSpacing());

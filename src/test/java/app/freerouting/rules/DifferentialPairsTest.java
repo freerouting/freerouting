@@ -104,8 +104,16 @@ class DifferentialPairsTest {
     DifferentialPair usb = new DifferentialPair(pos1, neg1, "USB");
     registry.add(usb);
 
-    // Re-adding identical pair is allowed
+    // Re-adding identical pair or updating constraints for the same pair is allowed
     registry.add(usb);
+    DifferentialPair updatedUsb = usb.withCoupledSpacing(300.0).withMaxSkew(25.0);
+    registry.add(updatedUsb);
+    assertEquals(300.0, registry.get("USB").coupledSpacing());
+    assertEquals(updatedUsb, registry.findForNet(pos1));
+
+    // Attempting to register different nets under an existing baseName must throw
+    DifferentialPair conflictBaseName = new DifferentialPair(pos2, neg2, "USB");
+    assertThrows(IllegalArgumentException.class, () -> registry.add(conflictBaseName));
 
     // Attempting to pair an already-paired net with another net must throw
     DifferentialPair conflictPos = new DifferentialPair(pos1, neg2, "CONFLICT");
@@ -161,13 +169,13 @@ class DifferentialPairsTest {
     registry.add(new DifferentialPair(pos1, neg1, "USB", 250.0, 50.0));
 
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    try (ObjectOutputStream oos = new ObjectOutputStream(baos)) {
-      oos.writeObject(registry);
+    try (ObjectOutputStream output = new ObjectOutputStream(baos)) {
+      output.writeObject(registry);
     }
 
-    try (ObjectInputStream ois =
+    try (ObjectInputStream input =
         new ObjectInputStream(new ByteArrayInputStream(baos.toByteArray()))) {
-      DifferentialPairs deserialized = (DifferentialPairs) ois.readObject();
+      DifferentialPairs deserialized = (DifferentialPairs) input.readObject();
       assertNotNull(deserialized);
       assertEquals(1, deserialized.count());
       assertNotNull(deserialized.get("USB"));

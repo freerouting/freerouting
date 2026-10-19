@@ -2,9 +2,9 @@ package app.freerouting.rules;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -28,22 +28,42 @@ public class DifferentialPairs implements Serializable {
   public DifferentialPairs() {}
 
   /**
-   * Adds a differential pair to this registry.
+   * Adds a differential pair to this registry, or updates constraints if a pair with the same base
+   * name and nets is already registered.
    *
    * @param pair the differential pair to add
    * @throws NullPointerException if {@code pair} is null
-   * @throws IllegalArgumentException if either net is already registered in another pair
+   * @throws IllegalArgumentException if either net or the base name is already registered with
+   *     different nets
    */
   public synchronized void add(DifferentialPair pair) {
     Objects.requireNonNull(pair, "pair cannot be null");
 
+    String key = pair.baseName().toLowerCase(Locale.ROOT);
+    DifferentialPair existingByName = this.pairsByName.get(key);
+    if (existingByName != null && !hasSameIdentity(existingByName, pair)) {
+      throw new IllegalArgumentException(
+          "Differential pair "
+              + pair.baseName()
+              + " is already registered with different nets ("
+              + existingByName.positiveNet().name
+              + ", "
+              + existingByName.negativeNet().name
+              + ")");
+    }
+
     checkNetAvailability(pair.positiveNet(), pair);
     checkNetAvailability(pair.negativeNet(), pair);
 
-    String key = pair.baseName().toLowerCase(Locale.ROOT);
     this.pairsByName.put(key, pair);
     indexSubnets(pair.positiveNet(), pair);
     indexSubnets(pair.negativeNet(), pair);
+  }
+
+  private static boolean hasSameIdentity(DifferentialPair a, DifferentialPair b) {
+    return a.baseName().equalsIgnoreCase(b.baseName())
+        && a.positiveNet().equals(b.positiveNet())
+        && a.negativeNet().equals(b.negativeNet());
   }
 
   private void checkNetAvailability(Net net, DifferentialPair pair) {
@@ -51,14 +71,14 @@ public class DifferentialPairs implements Serializable {
       return;
     }
     DifferentialPair existing = pairsByNetNumber.get(net.netNumber);
-    if (existing != null && !existing.equals(pair)) {
+    if (existing != null && !hasSameIdentity(existing, pair)) {
       throw new IllegalArgumentException(
           "Net " + net.name + " is already registered in pair " + existing.baseName());
     }
     if (net.netList != null) {
       for (Net subnet : net.netList.get(net.name)) {
         DifferentialPair existingSub = pairsByNetNumber.get(subnet.netNumber);
-        if (existingSub != null && !existingSub.equals(pair)) {
+        if (existingSub != null && !hasSameIdentity(existingSub, pair)) {
           throw new IllegalArgumentException(
               "Net " + subnet.name + " is already registered in pair " + existingSub.baseName());
         }
@@ -137,18 +157,19 @@ public class DifferentialPairs implements Serializable {
       return false;
     }
     String key = pair.baseName().toLowerCase(Locale.ROOT);
-    DifferentialPair removed = this.pairsByName.remove(key);
-    if (removed != null) {
-      removeSubnets(pair.positiveNet());
-      removeSubnets(pair.negativeNet());
+    DifferentialPair existing = this.pairsByName.get(key);
+    if (existing != null && hasSameIdentity(existing, pair)) {
+      this.pairsByName.remove(key);
+      removeSubnets(existing.positiveNet());
+      removeSubnets(existing.negativeNet());
       return true;
     }
     return false;
   }
 
-  /** Returns an unmodifiable collection of all registered differential pairs. */
+  /** Returns an unmodifiable snapshot collection of all registered differential pairs. */
   public synchronized Collection<DifferentialPair> all() {
-    return Collections.unmodifiableCollection(this.pairsByName.values());
+    return List.copyOf(this.pairsByName.values());
   }
 
   /** Returns the total count of registered differential pairs. */

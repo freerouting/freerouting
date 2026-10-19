@@ -233,8 +233,8 @@ class DifferentialPairDetectorTest {
     assertNull(DifferentialPairDetector.extract("USB-"));
     assertNull(DifferentialPairDetector.extract("LED+"));
     assertNull(DifferentialPairDetector.extract("LED-"));
-    assertNull(DifferentialPairDetector.extract("MOT+"));
-    assertNull(DifferentialPairDetector.extract("MOT-"));
+    assertNull(DifferentialPairDetector.extract("MOTOR+"));
+    assertNull(DifferentialPairDetector.extract("MOTOR-"));
     assertNull(DifferentialPairDetector.extract("SPK+"));
     assertNull(DifferentialPairDetector.extract("SPK-"));
     assertNull(DifferentialPairDetector.extract("IN+"));
