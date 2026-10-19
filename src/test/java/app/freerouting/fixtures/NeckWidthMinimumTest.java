@@ -35,8 +35,11 @@ class NeckWidthMinimumTest extends RoutingFixtureTest {
     assertEquals(RoutingJobState.COMPLETED, job.state);
     assertEquals(0, new BoardStatistics(job.board).connections.incompleteCount);
 
+    // Issue978-esp32c3.dsn uses (resolution um 10), so 150 um full width = 750 board units half
+    // width.
+    int expectedNeckHalfWidth = 750;
     int neckHalfWidth = AutorouteControl.neckHalfWidth(job.board, job.routerSettings);
-    assertTrue(neckHalfWidth > 0);
+    assertEquals(expectedNeckHalfWidth, neckHalfWidth);
     List<String> narrow = new ArrayList<>();
     for (Trace trace : job.board.getTraces()) {
       int classHalfWidth =
