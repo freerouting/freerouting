@@ -305,5 +305,5 @@ Use `actions/stale@v9`. v5 (previously used) ran on Node.js 16 which is EOL. Do 
 Key invariants established during the Issue 676 investigation:
 - `PolylineTraceNormalization.normalize()` caps recursion at `MAX_NORMALIZATION_DEPTH` (= 16) and returns `false` (no throw) on depth limit.
 - `PolylineTrace.combine_at_end()` guards optimised merge via `PolylineTraceSearchTreeAdapter.hasDefaultEntries`, falling back to full remove/re-insert if null.
-- Score division-by-zero guard in `BoardStatistics.getNormalizedScore()` prevents `NaN` comparisons.
+- Score division-by-zero guard in `BoardStatistics.getLegacyNormalizedScore()` prevents `NaN` comparisons.
 - Full architectural details and symptom summary are documented in [`docs/internals/trace-normalization.md`](docs/internals/trace-normalization.md).

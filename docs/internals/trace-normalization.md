@@ -32,13 +32,13 @@ NullPointerException: Cannot load from object array because "to_trace_entries" i
 
 v1.9 maintained an `already_checked_board_hashes` set. Between passes it computed a board hash; if the same hash appeared twice, it stopped routing.
 
-**Current state:** `AutorouteBatchLoop.run()` declares an `alreadyRoutedBoardHashes` `HashSet<String>`, but the same-hash early stop is **disabled (commented out)** — per-pass ripup budgets and random seeds change each pass, so an identical hash can still make progress later. Stagnation is instead handled by the `BoardHistory` restore check, which uses a strict `>` comparison so equally-scored boards do not trigger unbounded restores. The hash set is still cleared whenever a previous board state is restored (ripup + retry cycle), so a restored state can be routed again with a higher ripup cost.
+**Current state:** `AutorouteBatchLoop.run()` declares an `alreadyRoutedBoardHashes` `HashSet<String>`, but the same-hash early stop and hash insertions are **disabled (commented out)** — per-pass ripup budgets and random seeds change each pass, so an identical hash can still make progress later. Stagnation is instead handled actively by the `BoardHistory` restore check, which uses a strict `>` comparison so equally-scored boards do not trigger unbounded restores.
 
-## `BoardStatistics.getNormalizedScore()` Division by Zero / NaN
+## `BoardStatistics` Legacy Normalized Score Division by Zero / NaN
 
 `getMaximumScore()` returns `maximumCount * unroutedNetPenalty`. When a board is already fully routed (`maximumCount == 0`), this is 0, and dividing by it produces `NaN`. NaN failed all comparison-based stagnation checks, causing the score to always appear as 0.
 
-**Fix applied:** A `if (maximumScore <= 0f) return 0f;` guard was added in `getNormalizedScore()` before the division.
+**Fix applied:** A `if (maximumScore <= 0f) return 0f;` guard was added in `BoardStatistics.getLegacyNormalizedScore()` (while `getNormalizedScore()` now delegates to `getRouterScore()`).
 
 ## Symptom Summary
 
@@ -46,5 +46,5 @@ v1.9 maintained an `already_checked_board_hashes` set. Between passes it compute
 |---|---|---|
 | `WARNING The normalization of net 'GND' failed.` (every pass) | `PolylineTraceNormalization` hit the max depth and threw | `PolylineTraceNormalization` — throw -> debug + `return false` |
 | `NullPointerException` in `merge_entries_at_end` | Trace missing search-tree entries, `combine_at_end` chose optimised path | `PolylineTrace.combine_at_end()` — `PolylineTraceSearchTreeAdapter.hasDefaultEntries` guard before path 2 |
-| Score always 0 | `getNormalizedScore()` divided by 0 when board fully routed | `BoardStatistics.getNormalizedScore()` — `<= 0` guard |
+| Score always 0 | `getLegacyNormalizedScore()` divided by 0 when board fully routed | `BoardStatistics.getLegacyNormalizedScore()` — `<= 0` guard (`getNormalizedScore()` delegates to `getRouterScore()`) |
 | Router loops endlessly on same board | No board-hash stagnation detection | `AutorouteBatchLoop.run()` — same-hash early stop currently disabled; stagnation handled by the `BoardHistory` strict-`>` restore check |
