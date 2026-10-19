@@ -71,7 +71,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
 
   @SerializedName("state")
   @Schema(description = "The current state of the job")
-  public RoutingJobState state = RoutingJobState.INVALID;
+  public volatile RoutingJobState state = RoutingJobState.INVALID;
 
   @SerializedName("stage")
   @Schema(description = "The current stage of the job")
@@ -101,7 +101,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
 
   @SerializedName("output")
   @Schema(description = "Details of the routed output design file")
-  public BoardFileDetails output;
+  public volatile BoardFileDetails output;
 
   @SerializedName("rules")
   @Schema(description = "Details of the uploaded design rules (.rules) file")
@@ -138,7 +138,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   public RouterJobResourceUsage resourceUsage = new RouterJobResourceUsage();
 
   public transient StoppableThread thread;
-  public transient RoutingBoard board;
+  public transient volatile RoutingBoard board;
 
   /** Per-stage before/after metrics retained for the result manifest. */
   public transient RoutingResultManifest.PhaseMetrics resultPhaseMetrics =
