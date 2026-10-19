@@ -256,4 +256,48 @@ class NetMeanderConstraintTest {
         rules.getDefaultMeanderConstraint(MeanderPatternType.SINGLE_TRACK),
         rules.getMeanderConstraint(net));
   }
+
+  @Test
+  void testDifferentialPairFallbackHierarchy() {
+    app.freerouting.board.facade.RoutingBoard board = createTestBoard();
+    BoardRules rules = board.rules;
+
+    Net usbP = rules.nets.add("USB_P", 1, false);
+    Net usbN = rules.nets.add("USB_N", 1, false);
+    Net singleEnded = rules.nets.add("RESET", 1, false);
+
+    DifferentialPair pair = new DifferentialPair(usbP, usbN, "USB");
+    rules.differentialPairs.add(pair);
+
+    // Differential pair net falls back to DIFF_PAIR preset
+    assertEquals(
+        rules.getDefaultMeanderConstraint(MeanderPatternType.DIFF_PAIR),
+        rules.getMeanderConstraint(usbP));
+    assertEquals(
+        rules.getDefaultMeanderConstraint(MeanderPatternType.DIFF_PAIR),
+        usbP.getMeanderConstraint());
+    assertEquals(
+        rules.getDefaultMeanderConstraint(MeanderPatternType.DIFF_PAIR),
+        usbN.getMeanderConstraint());
+
+    // Single-ended net falls back to SINGLE_TRACK preset
+    assertEquals(
+        rules.getDefaultMeanderConstraint(MeanderPatternType.SINGLE_TRACK),
+        rules.getMeanderConstraint(singleEnded));
+    assertEquals(
+        rules.getDefaultMeanderConstraint(MeanderPatternType.SINGLE_TRACK),
+        singleEnded.getMeanderConstraint());
+
+    // Explicit constraint on diff pair net still takes precedence
+    NetMeanderConstraint explicit =
+        new NetMeanderConstraint(350.0, 1600.0, 800.0, CornerStyle.FILLET, 90.0, false);
+    usbP.setMeanderConstraint(explicit);
+    assertEquals(explicit, usbP.getMeanderConstraint());
+    assertEquals(explicit, rules.getMeanderConstraint(usbP));
+
+    // Partner net still falls back to DIFF_PAIR
+    assertEquals(
+        rules.getDefaultMeanderConstraint(MeanderPatternType.DIFF_PAIR),
+        usbN.getMeanderConstraint());
+  }
 }
