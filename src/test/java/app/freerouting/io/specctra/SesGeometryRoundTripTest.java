@@ -263,6 +263,25 @@ class SesGeometryRoundTripTest {
     assertEquals(0, traces(target).getFirst().firstCorner().toFloat().y);
   }
 
+  @Test
+  void rationalCornersBetweenLatticePointsRoundTrip() throws Exception {
+    BasicBoard source = board(Unit.UM, 1000, 1000);
+    Line first = new Line(0, 2, 1, 0);
+    Line middle = new Line(0, 0, 1, 2);
+    Line last = new Line(3, 0, 2, 2);
+    final PolylineTrace original = insert(source, new Polyline(new Line[] {first, middle, last}));
+    BasicBoard target = board(Unit.UM, 1000, 1000);
+    SesImportSummary summary = SesReader.read(new ByteArrayInputStream(write(source)), target);
+    assertEquals(0, summary.errorsEncountered());
+    assertEquals(1, summary.wiresImported());
+    List<PolylineTrace> imported = traces(target);
+    assertEquals(1, imported.size());
+    assertEquals(0.5, imported.getFirst().firstCorner().toFloat().x, 1e-9);
+    assertEquals(1.0, imported.getFirst().firstCorner().toFloat().y, 1e-9);
+    assertEquals(1.5, imported.getFirst().lastCorner().toFloat().x, 1e-9);
+    assertEquals(3.0, imported.getFirst().lastCorner().toFloat().y, 1e-9);
+  }
+
   private static byte[] write(BasicBoard board) throws Exception {
     try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
       SesWriter.write(board, output, "geometry.dsn");

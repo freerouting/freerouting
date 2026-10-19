@@ -87,7 +87,7 @@ final class SesPathGeometry {
         BigFraction.from(value)
             .multiply(denominator)
             .bigDecimalValue(0, RoundingMode.HALF_EVEN)
-            .toBigIntegerExact();
+            .toBigInteger();
     return BigFraction.of(numerator, denominator);
   }
 
@@ -157,9 +157,9 @@ final class SesPathGeometry {
     BigInteger y;
     if (dx.signum() == 0) {
       x = constant.divide(dy);
-      y = from.y.bigDecimalValue(0, RoundingMode.HALF_UP).toBigIntegerExact();
+      y = from.y.bigDecimalValue(0, RoundingMode.HALF_UP).toBigInteger();
     } else if (dy.signum() == 0) {
-      x = from.x.bigDecimalValue(0, RoundingMode.HALF_UP).toBigIntegerExact();
+      x = from.x.bigDecimalValue(0, RoundingMode.HALF_UP).toBigInteger();
       y = constant.negate().divide(dx);
     } else {
       // Coprime direction components define the existing line's integer lattice; BigInteger's
@@ -167,11 +167,7 @@ final class SesPathGeometry {
       x = constant.multiply(dy.mod(dx.abs()).modInverse(dx.abs())).mod(dx.abs());
       y = dy.multiply(x).subtract(constant).divide(dx);
       BigInteger steps =
-          from.x
-              .subtract(x)
-              .divide(dx)
-              .bigDecimalValue(0, RoundingMode.HALF_UP)
-              .toBigIntegerExact();
+          from.x.subtract(x).divide(dx).bigDecimalValue(0, RoundingMode.HALF_UP).toBigInteger();
       x = x.add(steps.multiply(dx));
       y = y.add(steps.multiply(dy));
     }
@@ -228,7 +224,7 @@ final class SesPathGeometry {
       BigInteger multiple =
           BigFraction.of(first.dot(second), first.dot(first))
               .bigDecimalValue(0, RoundingMode.HALF_EVEN)
-              .toBigIntegerExact();
+              .toBigInteger();
       if (multiple.signum() == 0) {
         reduced = true;
         break;
