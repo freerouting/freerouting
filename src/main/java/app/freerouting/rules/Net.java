@@ -163,7 +163,8 @@ public class Net implements Comparable<Net>, ItemInfoPrinter.Printable, Serializ
    *
    * <p>If this net defines an explicit meander constraint, it is returned. Otherwise, falls back to
    * the net class meander constraint if defined. If the net class has no constraint, falls back to
-   * the board rules default meander preset for single track tuning.
+   * the board rules default meander preset (DIFF_PAIR if part of a differential pair, SINGLE_TRACK
+   * otherwise).
    *
    * @return the effective meander constraint, never null
    */
@@ -177,10 +178,7 @@ public class Net implements Comparable<Net>, ItemInfoPrinter.Printable, Serializ
     if (this.netList != null
         && this.netList.getBoard() != null
         && this.netList.getBoard().rules != null) {
-      return this.netList
-          .getBoard()
-          .rules
-          .getDefaultMeanderConstraint(MeanderPatternType.SINGLE_TRACK);
+      return this.netList.getBoard().rules.getMeanderConstraint(this);
     }
     return NetMeanderConstraint.UNCONSTRAINED;
   }
