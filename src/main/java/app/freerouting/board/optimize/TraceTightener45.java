@@ -488,11 +488,13 @@ class TraceTightener45 extends TraceTightener {
           currentOtherTraceCornerApprox = contactTracePolyline.cornerApprox(1);
           currentOtherTraceLine = contactTracePolyline.lines[1];
           currentOtherPrevTraceLine = contactTracePolyline.lines[2];
-        } else {
+        } else if (contactTracePolyline.lastCorner().equals(currentEndCorner)) {
           int currentCornerNo = contactTracePolyline.cornerCount() - 2;
           currentOtherTraceCornerApprox = contactTracePolyline.cornerApprox(currentCornerNo);
           currentOtherTraceLine = contactTracePolyline.lines[currentCornerNo + 1].opposite();
           currentOtherPrevTraceLine = contactTracePolyline.lines[currentCornerNo];
+        } else {
+          return null;
         }
         Side currentPrevCornerSide = currentPrevEndCorner.sideOf(currentOtherTraceLine);
         Signum currentProjection = lineDirection.projection(currentOtherTraceLine.direction());
@@ -596,11 +598,13 @@ class TraceTightener45 extends TraceTightener {
           currentOtherTraceCornerApprox = contactTracePolyline.cornerApprox(1);
           currentOtherTraceLine = contactTracePolyline.lines[1];
           currentOtherPrevTraceLine = contactTracePolyline.lines[2];
-        } else {
+        } else if (contactTracePolyline.lastCorner().equals(currentEndCorner)) {
           int currentCornerNo = contactTracePolyline.cornerCount() - 2;
           currentOtherTraceCornerApprox = contactTracePolyline.cornerApprox(currentCornerNo);
           currentOtherTraceLine = contactTracePolyline.lines[currentCornerNo + 1].opposite();
           currentOtherPrevTraceLine = contactTracePolyline.lines[currentCornerNo];
+        } else {
+          return null;
         }
         Side currentPrevCornerSide = currentPrevEndCorner.sideOf(currentOtherTraceLine);
         Signum currentProjection = lineDirection.projection(currentOtherTraceLine.direction());

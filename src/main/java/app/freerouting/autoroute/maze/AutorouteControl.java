@@ -40,6 +40,13 @@ public class AutorouteControl {
    */
   public final int[] compensatedTraceHalfWidth;
 
+  /**
+   * The clearance offset for traces in free-space expansion rooms on each layer. This accounts for
+   * compensated trace half-width, search tolerance, and the insertion clearance safety margin so
+   * that planned corners stay outside insertion's forbidden envelope.
+   */
+  public final int[] traceClearanceOffset;
+
   public final double[] viaRadii;
 
   /** The additional costs to min_normal via_cost for inserting a via between 2 layers. */
@@ -141,6 +148,7 @@ public class AutorouteControl {
     layerCount = board.getLayerCount();
     traceHalfWidth = new int[layerCount];
     compensatedTraceHalfWidth = new int[layerCount];
+    traceClearanceOffset = new int[layerCount];
     layerActive = new boolean[layerCount];
     viasAllowed = settings.getViasAllowed();
     viaRadii = new double[layerCount];
@@ -237,11 +245,42 @@ public class AutorouteControl {
       compensatedTraceHalfWidth[i] =
           traceHalfWidth[i]
               + board.rules.clearanceMatrix.clearanceCompensationValue(traceClearanceClassIndex, i);
+      int safetyMargin =
+          board.rules.clearanceMatrix.getValue(
+                  traceClearanceClassIndex, traceClearanceClassIndex, i, true)
+              - board.rules.clearanceMatrix.getValue(
+                  traceClearanceClassIndex, traceClearanceClassIndex, i, false);
+      traceClearanceOffset[i] =
+          compensatedTraceHalfWidth[i] + AutorouteEngine.TRACE_WIDTH_TOLERANCE + safetyMargin;
       if (currentNetClass != null && !currentNetClass.isActiveRoutingLayer(i)) {
         layerActive[i] = false;
       }
     }
     rebuildViaInfo(board, viaCosts, netNumber);
+  }
+
+  /**
+   * Returns the width-safe clearance offset for traces on the specified layer in free-space
+   * expansion rooms.
+   */
+  public int getTraceClearanceOffset(int layer) {
+    if (layer < 0 || layer >= layerCount) {
+      return 0;
+    }
+    return traceClearanceOffset[layer];
+  }
+
+  /** Recomputes the trace clearance offset for the specified layer against the given board. */
+  public void updateTraceClearanceOffset(int layer, RoutingBoard board) {
+    if (layer >= 0 && layer < layerCount && board != null && board.rules != null) {
+      int safetyMargin =
+          board.rules.clearanceMatrix.getValue(
+                  traceClearanceClassIndex, traceClearanceClassIndex, layer, true)
+              - board.rules.clearanceMatrix.getValue(
+                  traceClearanceClassIndex, traceClearanceClassIndex, layer, false);
+      traceClearanceOffset[layer] =
+          compensatedTraceHalfWidth[layer] + AutorouteEngine.TRACE_WIDTH_TOLERANCE + safetyMargin;
+    }
   }
 
   /** Rebuilds via info masks and costs for the specified board, via costs, and net. */

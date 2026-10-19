@@ -93,6 +93,11 @@ public class TestingSettings implements SettingsSource {
     this.settings.neckWidthUm = neckWidthUm;
   }
 
+  /** Enables or disables automatic neckdown at pins for the test run. */
+  public void setAutomaticNeckdown(boolean enabled) {
+    this.settings.automaticNeckdown = enabled;
+  }
+
   /** Enables strict DRC behavior for the test run. */
   public void setStrictDrc(boolean strictDrc) {
     this.settings.strictDrc = strictDrc;

@@ -282,12 +282,14 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
       }
       if (currentItem != this && currentItem.sharesNet(this) && currentItem.sharesLayer(this)) {
         if (currentItem instanceof Trace currentTrace) {
-          // Use exact matching to match trace endpoints to pin/via center.
+          // Use exact matching to match trace endpoints or centerline to pin/via center.
           // Tolerance-based matching causes false cycle detection during trace normalization
           // when nearby trace endpoints (but not at pin center) are incorrectly treated as
           // contacts.
-          if (drillCenter.equals(currentTrace.firstCorner())
-              || drillCenter.equals(currentTrace.lastCorner())) {
+          if (drillCenter != null
+              && (drillCenter.equals(currentTrace.firstCorner())
+                  || drillCenter.equals(currentTrace.lastCorner())
+                  || currentTrace.contains(drillCenter))) {
             result.add(currentItem);
           }
         } else if (currentItem instanceof DrillItem currentDrillItem) {
@@ -342,7 +344,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
       return null;
     }
     Point drillCenter = this.getCenter();
-    if (drillCenter.equals(trace.firstCorner()) || drillCenter.equals(trace.lastCorner())) {
+    if (drillCenter != null && trace.contains(drillCenter)) {
       return drillCenter;
     }
     return null;

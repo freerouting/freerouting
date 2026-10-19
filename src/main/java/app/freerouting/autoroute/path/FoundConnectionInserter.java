@@ -238,9 +238,11 @@ public final class FoundConnectionInserter {
         neckdownInserted =
             insertNeckdown(okPoint, currentCornerArr[1], trace.layer, startPin, endPin);
       }
+      // The micro-neckdown narrows the trace below its net-class width, so it is part of automatic
+      // neckdown and must stay off when the user disabled it, fanout or not (issue #973).
       if (!neckdownInserted
           && okPoint != insertPolyline.lastCorner()
-          && (ctrl.isFanout || ctrl.withNeckdown)
+          && ctrl.withNeckdown
           && currentCornerArr.length == 2) {
         microNeckdownInserted =
             insertFanoutMicroNeckdown(

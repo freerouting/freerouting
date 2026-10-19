@@ -156,7 +156,7 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
             .map(ui -> ui.firstItem.getId())
             .collect(Collectors.toSet());
 
-    int[] spotCheckIds = {2340, 1869, 2372, 1802};
+    int[] spotCheckIds = {2372, 2433, 2436};
     for (int trackId : spotCheckIds) {
       Item trackItem = board.getItem(trackId);
       assertNotNull(trackItem, "Track with ID " + trackId + " should exist in the board");
