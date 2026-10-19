@@ -28,7 +28,9 @@ import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.ClearanceMatrix;
 import app.freerouting.rules.DefaultItemClearanceClasses;
 import app.freerouting.rules.DefaultItemClearanceClasses.ItemClass;
+import app.freerouting.rules.MeanderPatternType;
 import app.freerouting.rules.NetClass;
+import app.freerouting.rules.NetMeanderConstraint;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -648,6 +650,12 @@ public class Structure extends ScopeKeyword {
                 + (traceHalfwidth * 2 / 40000.0)
                 + " mm)");
         boardRules.setDefaultTraceHalfWidths(traceHalfwidth);
+      } else if (currentObject instanceof Rule.MeanderRule rule) {
+        NetMeanderConstraint currentDefault =
+            boardRules.getDefaultMeanderConstraint(MeanderPatternType.SINGLE_TRACK);
+        NetMeanderConstraint updated =
+            rule.applyTo(currentDefault, scopeParameter.coordinateTransform);
+        boardRules.setDefaultMeanderConstraint(MeanderPatternType.SINGLE_TRACK, updated);
       }
     }
     for (LayerRule layerRule : boardConstructionInfo.layerDependentRules) {
@@ -1013,9 +1021,9 @@ public class Structure extends ScopeKeyword {
         } else if (nextToken == Keyword.AUTOROUTE_SETTINGS) {
           if (scopeParameter.layerStructure == null) {
             scopeParameter.layerStructure = new LayerStructure(boardConstructionInfo.layerInfo);
-            scopeParameter.autorouteSettings =
-                AutorouteSettings.readScope(scopeParameter.scanner, scopeParameter.layerStructure);
           }
+          scopeParameter.autorouteSettings =
+              AutorouteSettings.readScope(scopeParameter.scanner, scopeParameter.layerStructure);
         } else if (nextToken == Keyword.CONTROL) {
           readOk = readControlScope(scopeParameter);
         } else if (nextToken == Keyword.FLIP_STYLE) {
@@ -1236,11 +1244,12 @@ public class Structure extends ScopeKeyword {
 
     // Calculate an approximate scaling between dsn coordinates and board
     // coordinates.
-    int scaleFactor = Math.max(scopeParameter.resolution, 1);
+    // Keep fractional scales: integer division can otherwise collapse the board to zero.
+    double scaleFactor = Math.max(scopeParameter.resolution, 1);
 
     double maxCoor = 0;
     for (int i = 0; i < 4; i++) {
-      maxCoor = Math.max(maxCoor, Math.abs(boundingBox.coor[i] * scopeParameter.resolution));
+      maxCoor = Math.max(maxCoor, Math.abs(boundingBox.coor[i] * scaleFactor));
     }
     if (maxCoor == 0) {
       scopeParameter.boardOutlineOk = false;
@@ -1248,8 +1257,8 @@ public class Structure extends ScopeKeyword {
     }
     // make scalefactor smaller, if there is a danger of integer overflow.
     while (5 * maxCoor >= Limits.CRIT_INT) {
-      scaleFactor /= 10;
-      maxCoor /= 10;
+      scaleFactor /= 10.0;
+      maxCoor /= 10.0;
     }
 
     scopeParameter.coordinateTransform = new CoordinateTransform(scaleFactor, 0, 0);

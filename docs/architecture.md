@@ -65,6 +65,30 @@ flowchart TD
     CORE --> AR
 ```
 
+## Routing output and stream ownership
+
+`management.jobs.RoutingJobOutputWriter` serializes a complete board snapshot through the existing
+SES, Fusion script, or KiCad JSON writer. Export failure discards unavailable bytes while preserving
+the caller's output format, destination, and listeners. Successful final publication precedes the
+`COMPLETED` state; unsuccessful publication produces `INVALID`, unless cancellation or timeout
+already takes precedence.
+
+Job state, output descriptors, and board references are volatile for publication to polling threads.
+File bytes are published after their derived metadata is ready; this does not make mutation of the
+live routing board thread-safe or replace the routing pipeline's board synchronization.
+
+`core.RoutingJobState.isTerminal()` defines the finished states used by CLI waiting and API streaming.
+Output downloads and disk writers treat an empty snapshot as unavailable, so a failed export cannot
+overwrite a destination with an empty file.
+
+`api.v1.JobOutputStream` owns one subscriber's checksum, polling executor, and asynchronous send.
+SES and KiCad JSON subscriptions share cleanup and bounded delivery while retaining their existing
+payload formats and polling intervals. A subscriber has at most one send in flight; intermediate
+updates are coalesced into the next snapshot. Successful completion waits for the final send before
+closing. Terminal errors, a closed client, or failed delivery release the worker; a stalled send is
+bounded to ten seconds to prevent indefinite retention by a client that stops reading. Checksums
+are subscription-local so reconnecting or additional clients receive the current snapshot.
+
 ## Repository Layout
 
 | Path | Purpose |
@@ -199,11 +223,18 @@ the dedicated subpackages above; `app.freerouting.autoroute.events` remains the 
 
 ### `app.freerouting.rules`
 
-The rule model that defines nets, clearance classes, via rules, layer constraints, and trace length bounds.
+The rule model that defines nets, clearance classes, via rules, layer constraints, trace length bounds, and meander pattern tuning constraints.
 
 - `NetLengthConstraint` — Immutable record representing minimum and maximum trace length bounds (`minLength`, `maxLength`), target length calculation (midpoint or single bound), and boundary checks (`isSatisfied(traceLength)`).
 - Trace length bounds are supported at both the `NetClass` level and as explicit overrides at the `Net` level (parsed from Specctra DSN `(circuit (length <max> [<min>]))` or `(rule (length <max> [<min>]))` scopes). When unconstrained at the net level, a net transparently falls back to its net class constraint.
-- **Future Extension Point:** Net length constraints are structured for forward compatibility with future post-routing Net Length Tuning and accordion meander insertion phases, providing the target length and tolerance envelope without coupling to active routing search heuristics.
+- `NetMeanderConstraint` — Immutable record representing trace length tuning meander (accordion) constraints: excursion bounds (`minAmplitude`, `maxAmplitude`), segment spacing (`spacing`), corner geometry (`CornerStyle`: `FILLET` or `CHAMFER`), corner radius percentage (`radiusPercentage`), and baseline side restriction (`singleSided`).
+- Meander pattern constraints are resolved across a 4-tier fallback hierarchy: explicit `Net` override → `NetClass` constraint → `BoardRules` default preset → `RouterSettings` / `DefaultSettings`.
+- Specctra DSN grammar support includes standard Specctra descriptors (`length_amplitude`, `length_gap`), extension descriptors (`corner_style`, `radius`, `single_sided`), and grouped scopes (`meander_pattern`), supporting both reading and lossless round-trip serialization.
+- `DifferentialPair` — Immutable record representing a differential signal pair linking two complementary nets (`positiveNet`, `negativeNet`) with a common logical base name (`baseName`), target coupled spacing (`coupledSpacing`), and maximum allowable intra-pair skew (`maxSkew`).
+- `DifferentialPairs` — Thread-safe collection and bidirectional index for differential signal pairs on a board, facilitating $O(1)$ lookups by base name (case-insensitive) or by net reference/number.
+- `DifferentialPairDetector` — Automated detector recognizing standard EDA differential pair suffix conventions (`_P`/`_N`, `_DP`/`_DM`, `_D+`/`_D-`, `_+`/`_-`, `_POS`/`_NEG`, `.P`/`.N`, and scoped `D+`/`D-` USB fallback), requiring `_` or `.` delimiters to eliminate false positives on terminal polarities (`LED+`, `MOTOR+`, `SPK+`), excluding power/battery/ground rails (`GND`, `VCC`, `+5V`, `BAT+`, `V+`, etc.), and registering complementary pairs during post-load board processing in `HeadlessBoardManager`.
+- Differential pair nets integrate into the meander constraint fallback hierarchy: when unconstrained at the net or net-class level, nets belonging to a registered differential pair automatically inherit the `DIFF_PAIR` meander preset rather than `SINGLE_TRACK`.
+- **Future Extension Point:** Net length, meander pattern constraints, and differential pair models are structured for forward compatibility with future post-routing Net Length Tuning and differential pair routing phases, providing the geometric and topological envelope without coupling to active routing search heuristics.
 
 ### `app.freerouting.drc`
 
@@ -464,6 +495,34 @@ File parsing and export live in `io.specctra`.
 - `io.specctra.parser` contains the lower-level grammar and parsing logic.
 
 When diagnosing a load or export issue, begin here.
+
+SES geometry conversion stays in `io.specctra`, independently of the routing algorithms.
+`SesTracePath` writes finite decimal coordinates and widths using the board's existing
+coordinate transform. Endpoint snapping must not collapse any nonzero segment, including
+an interior segment of a longer path. Real point copper keeps its width and two coincident
+endpoints in the standard `path` syntax accepted by KiCad.
+
+`SesReader` applies the session's unit and resolution before constructing board objects.
+`SesPathGeometry` reconstructs the existing integer supporting-line representation;
+Apache Commons Numbers Fraction recovers rational intersections within four ULPs of
+serialization noise, with bounded convergence. Approximation is restricted to the
+fractional part so large legal board coordinates do not exceed the library's convergent
+numerator limit. The main and standalone CLI runtime classpaths both include this
+dependency. The executable JAR preserves the core and fraction modules' licence and
+notice files under distinct `META-INF/licenses/commons-numbers-*` paths. Corners may
+share a projective denominator only when both original coordinates
+remain within that tolerance. Integer congruence bases are reduced with at most 128
+steps to reconstruct short supporting lines, so a large intersection denominator is not
+mistaken for an out-of-range board coordinate. This is SES representation recovery;
+no routing decision or board grid is changed.
+
+The reader checks actual insertion before counting an imported wire. It rejects widths,
+coordinates and supporting lines outside the board representation, distinct endpoints
+that collapse at serialization precision, and collinear reversals that `Polyline` would
+otherwise shorten. Monotone collinear simplification is allowed because it preserves the
+same copper. Rejected wires are reported as errors rather than moved, removed or counted
+as successful imports. KiCad performs its own final nanometre-grid conversion.
+
 
 ### Native CLI and Startup Path
 

@@ -99,7 +99,7 @@ public class IntDirection extends Direction implements Serializable {
 
   @Override
   public Direction turn45Degree(int factor) {
-    int n = factor % 8;
+    int n = Math.floorMod(factor, 8);
     return switch (n) {
       case 0 -> new IntDirection(x, y); // 0 degrees
       case 1 -> new IntDirection(x - y, x + y); // 45 degrees

@@ -38,33 +38,50 @@ public class MinAreaTree extends ShapeTree {
     }
   }
 
+  /** Calculates overlaps into {@code result} in {@link Leaf} order. */
+  public void overlaps(RegularTileShape shape, List<Leaf> result) {
+    Lock lock = readLock();
+    lock.lock();
+    try {
+      overlapsUnlocked(shape, result);
+    } finally {
+      lock.unlock();
+    }
+  }
+
   /** Calculates overlaps while the read lock is already held by the caller. */
   protected final List<Leaf> overlapsUnlocked(RegularTileShape shape) {
     List<Leaf> foundOverlaps = new ArrayList<>();
+    overlapsUnlocked(shape, foundOverlaps);
+    return foundOverlaps;
+  }
+
+  /** Appends overlapping leaves into {@code result} while read lock is held. */
+  protected final void overlapsUnlocked(RegularTileShape shape, List<Leaf> result) {
     if (this.root == null) {
-      return foundOverlaps;
+      return;
     }
+    int first = result.size();
     ArrayStack<TreeNode> stack = nodeStack.get();
     stack.reset();
     stack.push(this.root);
     TreeNode currentNode;
-    for (; ; ) {
-      currentNode = stack.pop();
-      if (currentNode == null) {
-        break;
-      }
+    while ((currentNode = stack.pop()) != null) {
       onNodeVisited();
       if (currentNode.boundingShape.intersects(shape)) {
         if (currentNode instanceof Leaf leaf) {
-          foundOverlaps.add(leaf);
+          result.add(leaf);
         } else {
           stack.push(((InnerNode) currentNode).firstChild);
           stack.push(((InnerNode) currentNode).secondChild);
         }
       }
     }
-    Collections.sort(foundOverlaps);
-    return foundOverlaps;
+    if (first == 0) {
+      Collections.sort(result);
+    } else {
+      result.subList(first, result.size()).sort(null);
+    }
   }
 
   /** Extension hook for testing and instrumentation during tree traversal. */

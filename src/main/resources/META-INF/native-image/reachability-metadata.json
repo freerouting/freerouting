@@ -889,11 +889,39 @@
       "serializable": true
     },
     {
+      "type": "app.freerouting.rules.CornerStyle",
+      "serializable": true
+    },
+    {
       "type": "app.freerouting.rules.DefaultItemClearanceClasses",
       "serializable": true
     },
     {
       "type": "app.freerouting.rules.DefaultItemClearanceClasses$ItemClass",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.rules.DifferentialPair",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.rules.DifferentialPairs",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.rules.DifferentialPairDetector$ExtractedNetInfo",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.rules.DifferentialPairDetector$Polarity",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.rules.DifferentialPairDetector$SuffixStyle",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.rules.MeanderPatternType",
       "serializable": true
     },
     {
@@ -910,6 +938,10 @@
     },
     {
       "type": "app.freerouting.rules.NetLengthConstraint",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.rules.NetMeanderConstraint",
       "serializable": true
     },
     {

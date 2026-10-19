@@ -82,14 +82,15 @@ function Resolve-BenchmarkStoredPath {
         return $Path
     }
 
+    $benchmarkDir = Split-Path $PSScriptRoot -Parent
     $normalizedPath = $Path.Replace('/', '\') -replace '^\.?[\\/]+', ''
     if ($normalizedPath.StartsWith('scripts\benchmark\', [System.StringComparison]::OrdinalIgnoreCase)) {
-        return Join-Path $PSScriptRoot ($normalizedPath.Substring('scripts\benchmark\'.Length))
+        return Join-Path $benchmarkDir ($normalizedPath.Substring('scripts\benchmark\'.Length))
     }
     if ($normalizedPath.StartsWith('benchmark\', [System.StringComparison]::OrdinalIgnoreCase)) {
-        return Join-Path $PSScriptRoot ($normalizedPath.Substring('benchmark\'.Length))
+        return Join-Path $benchmarkDir ($normalizedPath.Substring('benchmark\'.Length))
     }
-    return Join-Path $PSScriptRoot $normalizedPath
+    return Join-Path $benchmarkDir $normalizedPath
 }
 
 function Convert-BenchmarkObjectPaths {

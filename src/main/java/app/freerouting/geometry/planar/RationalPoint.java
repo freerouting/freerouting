@@ -170,51 +170,41 @@ public final class RationalPoint extends Point implements Serializable {
 
   @Override
   Point translateBy(IntVector vector) {
-    RationalVector rationalVector = new RationalVector(vector);
-    return translateBy(rationalVector);
+    BigIntAux.RationalCoordinates result =
+        BigIntAux.addRationalCoordinates(
+            x, y, z, BigInteger.valueOf(vector.x), BigInteger.valueOf(vector.y), BigInteger.ONE);
+    return new RationalPoint(result.x(), result.y(), result.z());
   }
 
   @Override
   Point translateBy(RationalVector vector) {
-    BigInteger[] v1 = new BigInteger[3];
-    v1[0] = x;
-    v1[1] = y;
-    v1[2] = z;
-
-    BigInteger[] v2 = new BigInteger[3];
-    v2[0] = vector.x;
-    v2[1] = vector.y;
-    v2[2] = vector.z;
-    BigInteger[] result = BigIntAux.addRationalCoordinates(v1, v2);
-    return new RationalPoint(result[0], result[1], result[2]);
+    BigIntAux.RationalCoordinates result =
+        BigIntAux.addRationalCoordinates(x, y, z, vector.x, vector.y, vector.z);
+    return new RationalPoint(result.x(), result.y(), result.z());
   }
 
   /** Returns the difference vector of this point and other. */
   @Override
   public Vector differenceBy(Point other) {
-    Vector tmp = other.differenceBy(this);
-    return tmp.negate();
+    if (other instanceof IntPoint integer) {
+      return differenceBy(integer);
+    }
+    return differenceBy((RationalPoint) other);
   }
 
   @Override
   Vector differenceBy(IntPoint other) {
-    RationalPoint rationalOther = new RationalPoint(other);
-    return differenceBy(rationalOther);
+    BigIntAux.RationalCoordinates result =
+        BigIntAux.addRationalCoordinates(
+            x, y, z, BigInteger.valueOf(-other.x), BigInteger.valueOf(-other.y), BigInteger.ONE);
+    return new RationalVector(result.x(), result.y(), result.z());
   }
 
   @Override
   Vector differenceBy(RationalPoint other) {
-    BigInteger[] v1 = new BigInteger[3];
-    v1[0] = x;
-    v1[1] = y;
-    v1[2] = z;
-
-    BigInteger[] v2 = new BigInteger[3];
-    v2[0] = other.x.negate();
-    v2[1] = other.y.negate();
-    v2[2] = other.z;
-    BigInteger[] result = BigIntAux.addRationalCoordinates(v1, v2);
-    return new RationalVector(result[0], result[1], result[2]);
+    BigIntAux.RationalCoordinates result =
+        BigIntAux.addRationalCoordinates(x, y, z, other.x.negate(), other.y.negate(), other.z);
+    return new RationalVector(result.x(), result.y(), result.z());
   }
 
   /**
@@ -224,9 +214,33 @@ public final class RationalPoint extends Point implements Serializable {
    */
   @Override
   public Side sideOf(Point p1, Point p2) {
-    Vector v1 = differenceBy(p1);
-    Vector v2 = p2.differenceBy(p1);
-    return v1.sideOf(v2);
+    BigIntAux.RationalCoordinates a = coordinates(p1);
+    BigIntAux.RationalCoordinates b = coordinates(p2);
+    BigIntAux.RationalCoordinates v1 =
+        BigIntAux.addRationalCoordinates(x, y, z, a.x().negate(), a.y().negate(), a.z());
+    if (p1 instanceof IntPoint i1 && p2 instanceof IntPoint i2) {
+      BigInteger crossProduct =
+          v1.y()
+              .multiply(BigInteger.valueOf((long) i2.x - i1.x))
+              .subtract(v1.x().multiply(BigInteger.valueOf((long) i2.y - i1.y)));
+      return Side.of(crossProduct.signum());
+    }
+    BigIntAux.RationalCoordinates v2 =
+        BigIntAux.addRationalCoordinates(
+            b.x(), b.y(), b.z(), a.x().negate(), a.y().negate(), a.z());
+    BigInteger crossProduct = v1.y().multiply(v2.x()).subtract(v1.x().multiply(v2.y()));
+    return Side.of(crossProduct.signum());
+  }
+
+  private static BigIntAux.RationalCoordinates coordinates(Point point) {
+    if (point instanceof IntPoint p) {
+      return new BigIntAux.RationalCoordinates(
+          BigInteger.valueOf(p.x), BigInteger.valueOf(p.y), BigInteger.ONE);
+    }
+    if (point instanceof RationalPoint p) {
+      return new BigIntAux.RationalCoordinates(p.x, p.y, p.z);
+    }
+    throw new IllegalArgumentException("Unsupported point type: " + point.getClass().getName());
   }
 
   @Override

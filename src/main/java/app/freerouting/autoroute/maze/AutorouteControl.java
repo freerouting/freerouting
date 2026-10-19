@@ -73,6 +73,9 @@ public class AutorouteControl {
   /** Source pin layer for targeted fanout diagnostics and limits. */
   public int fanoutStartPinLayer = -1;
 
+  /** Erik Gavriluk (freerouting.net): retry a failed fanout escape without the distance window. */
+  public boolean ignoreEscapeWindow;
+
   /** Normally true, if the autorouter contains no fanout pass. */
   public boolean removeUnconnectedVias;
 
@@ -293,7 +296,13 @@ public class AutorouteControl {
     if (pureSmdNet) {
       // Pure SMD boards need a much cheaper via escape to avoid exhausting the local pad channel
       // before the search commits to a layer change.
-      viaCostFactor *= 0.1;
+      double factor =
+          this.settings != null
+                  && this.settings.autorouter != null
+                  && this.settings.autorouter.smdNetViaCostFactor != null
+              ? this.settings.autorouter.smdNetViaCostFactor
+              : 0.1;
+      viaCostFactor *= factor;
     }
     minNormalViaCost = viaCosts * viaCostFactor;
     minCheapViaCost = 0.8 * minNormalViaCost;
@@ -326,19 +335,21 @@ public class AutorouteControl {
   }
 
   /**
-   * Returns the user's {@code neck_width_um} as a trace half width in board units, or 0 when it is
-   * not set. No automatic narrowing may go below this width.
+   * Returns the user's {@code neck_width_um} as a trace half width in board units (clamped to at
+   * least {@link app.freerouting.rules.BoardRules#getMinAllowedTraceHalfWidth()}), or the minimum
+   * allowed trace half width (0 when unset) when {@code neck_width_um} is not set. No automatic
+   * narrowing may go below this width.
    */
   public static int neckHalfWidth(RoutingBoard board, RouterSettings settings) {
     double neckWidthUm = settings.getNeckWidthUm();
     if (neckWidthUm <= 0) {
-      return 0;
+      return board.rules.getMinAllowedTraceHalfWidth();
     }
     int boardResolution = Math.max(1, board.communication.resolution);
     int neckWidth =
         (int)
             Math.round(
                 Unit.scale(neckWidthUm * boardResolution, Unit.UM, board.communication.unit));
-    return Math.max(1, neckWidth / 2);
+    return Math.max(Math.max(1, neckWidth / 2), board.rules.getMinAllowedTraceHalfWidth());
   }
 }

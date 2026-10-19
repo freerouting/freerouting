@@ -12,7 +12,7 @@
     A comma-separated list keeps that order, for example "C,A".
 
 .PARAMETER Workers
-    Number of parallel routing workers (default: 4).
+    Number of parallel routing workers. Defaults to round(logical processors * 0.75).
 
 .PARAMETER MaxBoards
     Limit execution to first N boards (default: 0 for all).
@@ -22,7 +22,7 @@
 #>
 param(
     [string]$Tier = "All",
-    [int]$Workers = 8,
+    [int]$Workers = [Math]::Max(1, [int][Math]::Round([Environment]::ProcessorCount * 0.75)),
     [int]$MaxBoards = 0,
     [string]$VersionLabel = "",
     [string]$JarPath = "",

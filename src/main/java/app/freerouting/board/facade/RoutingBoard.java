@@ -22,6 +22,7 @@ import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.board.model.structure.Layer;
 import app.freerouting.board.model.structure.LayerStructure;
 import app.freerouting.board.model.structure.ShapeEntrySide;
+import app.freerouting.board.optimize.ShoveCheckCache;
 import app.freerouting.board.optimize.TraceShover;
 import app.freerouting.board.optimize.TraceTightener;
 import app.freerouting.board.searchtree.SearchTreeObject;
@@ -49,8 +50,13 @@ import app.freerouting.rules.Net;
 import app.freerouting.rules.ViaInfo;
 import app.freerouting.settings.RouterSettings;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -71,6 +77,9 @@ public class RoutingBoard extends BasicBoard implements Serializable {
 
   private transient Item shoveFailingObstacle;
   private transient int shoveFailingLayer = -1;
+  private transient long shoveFailingObstacleWrites;
+  private transient long shoveFailingLayerWrites;
+  private transient List<Item> shoveCacheObstacles;
   private transient RoutingBoardOperations operations;
   private transient RoutingBoardSearchFacade searchFacade;
   private transient RoutingBoardUndoFacade undoFacade;
@@ -266,22 +275,23 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       }
     }
 
-    IntOctagon tidyRegion;
+    IntOctagon[] tidyRegion = new IntOctagon[1];
     boolean calculateTidyRegion;
     if (tidyWidth < Integer.MAX_VALUE) {
-      tidyRegion = IntOctagon.EMPTY;
+      tidyRegion[0] = IntOctagon.EMPTY;
       calculateTidyRegion = tidyWidth > 0;
     } else {
-      tidyRegion = null;
+      tidyRegion[0] = null;
       calculateTidyRegion = false;
     }
     startMarkingChangedArea();
-    if (!DrillItemMover.insert(
+    if (!DrillItemMover.insertJoiningTidyRegion(
         drillItem, vector, maxRecursionDepth, maxViaRecursionDepth, tidyRegion, this)) {
       return false;
     }
-    if (calculateTidyRegion) {
-      tidyRegion = tidyRegion.enlarge(tidyWidth);
+    IntOctagon finalTidyRegion = tidyRegion[0];
+    if (calculateTidyRegion && finalTidyRegion != null) {
+      finalTidyRegion = finalTidyRegion.enlarge(tidyWidth);
     }
     int[] optNetNoArr;
     if (maxRecursionDepth <= 0) {
@@ -290,7 +300,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     } else {
       optNetNoArr = new int[0];
     }
-    optChangedArea(optNetNoArr, tidyRegion, pullTightAccuracy, null, null, pullTightTimeLimit);
+    optChangedArea(optNetNoArr, finalTidyRegion, pullTightAccuracy, null, null, pullTightTimeLimit);
     return true;
   }
 
@@ -1041,21 +1051,20 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     if (routerSettings.fanout != null
         && Boolean.TRUE.equals(routerSettings.fanout.fallbackToBoardVias)
         && ctrlSettings.viaRule != null) {
-      app.freerouting.rules.ViaRule combinedViaRule =
-          new app.freerouting.rules.ViaRule(ctrlSettings.viaRule.name + "_fallback");
-      for (int i = 0; i < ctrlSettings.viaRule.viaCount(); i++) {
-        combinedViaRule.appendVia(ctrlSettings.viaRule.getVia(i));
-      }
-      if (!this.rules.viaRules.isEmpty()) {
-        app.freerouting.rules.ViaRule defaultViaRule = this.rules.viaRules.firstElement();
-        for (int i = 0; i < defaultViaRule.viaCount(); i++) {
-          app.freerouting.rules.ViaInfo defaultVia = defaultViaRule.getVia(i);
-          if (!combinedViaRule.contains(defaultVia)) {
-            combinedViaRule.appendVia(defaultVia);
-          }
-        }
-      }
-      ctrlSettings.viaRule = combinedViaRule;
+      app.freerouting.rules.NetClass pinNetClass =
+          this.rules.nets.get(pinNetNo) != null
+              ? this.rules.nets.get(pinNetNo).getNetClass()
+              : null;
+      Integer netViaClearance =
+          pinNetClass != null
+              ? pinNetClass.defaultItemClearanceClasses.get(
+                  app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.VIA)
+              : null;
+      app.freerouting.rules.ViaRule boardDefaultViaRule =
+          !this.rules.viaRules.isEmpty() ? this.rules.viaRules.firstElement() : null;
+      ctrlSettings.viaRule =
+          fanoutFallbackViaRule(
+              ctrlSettings.viaRule, boardDefaultViaRule, netViaClearance, this.rules);
       ctrlSettings.rebuildViaInfo(this, routerSettings.getViaCosts(), pinNetNo);
     }
     Component pinComponent = this.components.get(pin.getComponentId());
@@ -1106,6 +1115,15 @@ public class RoutingBoard extends BasicBoard implements Serializable {
           currentAutorouteEngine.autorouteConnection(
               pinConnectedSet, unconnectedSet, ctrlSettings, rippedItemList, null);
     }
+    if (result != null
+        && result.state == AutorouteAttemptState.FAILED
+        && routerSettings.fanout != null
+        && Boolean.TRUE.equals(routerSettings.fanout.retryWithoutEscapeWindow)) {
+      ctrlSettings.ignoreEscapeWindow = true;
+      result =
+          currentAutorouteEngine.autorouteConnection(
+              pinConnectedSet, unconnectedSet, ctrlSettings, rippedItemList, null);
+    }
     if (result == null) {
       result =
           new AutorouteAttemptResult(
@@ -1123,6 +1141,47 @@ public class RoutingBoard extends BasicBoard implements Serializable {
           timeLimitToPreventEndlessLoop);
     }
     return result;
+  }
+
+  public static app.freerouting.rules.ViaRule fanoutFallbackViaRule(
+      app.freerouting.rules.ViaRule netRule,
+      app.freerouting.rules.ViaRule boardRule,
+      Integer netViaClearance,
+      app.freerouting.rules.BoardRules rules) {
+    app.freerouting.rules.ViaRule combined =
+        new app.freerouting.rules.ViaRule(netRule.name + "_fallback");
+    for (int i = 0; i < netRule.viaCount(); i++) {
+      combined.appendVia(netRule.getVia(i));
+    }
+    if (boardRule == null) {
+      return combined;
+    }
+    for (int i = 0; i < boardRule.viaCount(); i++) {
+      app.freerouting.rules.ViaInfo boardVia = boardRule.getVia(i);
+      if (netViaClearance != null && netViaClearance != boardVia.getClearanceClassIndex()) {
+        boolean present = false;
+        for (int j = 0; j < combined.viaCount(); j++) {
+          app.freerouting.rules.ViaInfo existing = combined.getVia(j);
+          if (existing.getPadstack() == boardVia.getPadstack()
+              && existing.getClearanceClassIndex() == netViaClearance) {
+            present = true;
+            break;
+          }
+        }
+        if (!present) {
+          combined.appendVia(
+              new app.freerouting.rules.ViaInfo(
+                  boardVia.getName(),
+                  boardVia.getPadstack(),
+                  netViaClearance,
+                  boardVia.attachSmdAllowed(),
+                  rules));
+        }
+      } else if (!combined.contains(boardVia)) {
+        combined.appendVia(boardVia);
+      }
+    }
+    return combined;
   }
 
   /**
@@ -1378,11 +1437,159 @@ public class RoutingBoard extends BasicBoard implements Serializable {
           }
         }
         if (somethingChanged) {
+          result = true;
           break;
         }
       }
     }
     return result;
+  }
+
+  /**
+   * Erik Gavriluk (freerouting.net): connects netless pads to their footprints' net (FR-102). A
+   * netless pad whose copper overlaps a netted pad takes that pad's net. One overlapping pads of
+   * several nets is a net tie: it carries every one of those nets, the tie pin the DSN reader
+   * builds from a pin the netlist lists under several nets.
+   *
+   * @param tiePadsOut optional output array where tiePadsOut[0] receives count of tie pads.
+   * @return how many pads were assigned.
+   */
+  public int connectNetlessPadsToTheirFootprintsNet(int[] tiePadsOut) {
+    int assigned = 0;
+    int tiePads = 0;
+    for (Pin pin : new ArrayList<>(getPins())) {
+      if (pin.netCount() != 0) {
+        continue;
+      }
+      Set<Integer> nets = new TreeSet<>();
+      boolean ownFootprint = true;
+      for (Pin other : pin.overlappingNettedPins()) {
+        ownFootprint &= (other.getComponentId() == pin.getComponentId());
+        for (int i = 0; i < other.netCount(); i++) {
+          nets.add(other.getNetNumber(i));
+        }
+      }
+      if (nets.isEmpty()) {
+        continue;
+      }
+      if (nets.size() == 1) {
+        pin.assignNetNo(nets.iterator().next());
+      } else if (ownFootprint) {
+        int[] netArr = nets.stream().mapToInt(Integer::intValue).toArray();
+        pin.assignNetNumbers(netArr);
+        tiePads++;
+      } else {
+        continue;
+      }
+      assigned++;
+    }
+    if (tiePadsOut != null && tiePadsOut.length > 0) {
+      tiePadsOut[0] = tiePads;
+    }
+    return assigned;
+  }
+
+  /** Erik Gavriluk (freerouting.net): connects netless pads to their footprints' net (FR-102). */
+  public int connectNetlessPadsToTheirFootprintsNet() {
+    return connectNetlessPadsToTheirFootprintsNet(new int[1]);
+  }
+
+  /**
+   * Erik Gavriluk (freerouting.net): connects netless pads as the input specifies. A board read
+   * from KiCad keeps its netless pads netless unless fix_kicad_footprints is set. With
+   * fix_kicad_footprints, a group of overlapping netless pads touching pads of one net, all of one
+   * footprint, takes that net.
+   *
+   * @param kicadBoard whether the board is a KiCad board
+   * @param fixKicadFootprints whether to fix KiCad footprints by giving netless pads their net
+   * @param tiePadsOut optional output array where tiePadsOut[0] receives count of tie pads
+   * @return how many pads were assigned
+   */
+  public int connectNetlessPads(boolean kicadBoard, boolean fixKicadFootprints, int[] tiePadsOut) {
+    if (!kicadBoard) {
+      return connectNetlessPadsToTheirFootprintsNet(tiePadsOut);
+    }
+    if (tiePadsOut != null && tiePadsOut.length > 0) {
+      tiePadsOut[0] = 0;
+    }
+    if (!fixKicadFootprints) {
+      return 0;
+    }
+    List<Pin> netless = new ArrayList<>();
+    for (Pin p : getPins()) {
+      if (p.netCount() == 0) {
+        netless.add(p);
+      }
+    }
+    Map<Pin, Integer> index = new IdentityHashMap<>();
+    for (int i = 0; i < netless.size(); i++) {
+      index.put(netless.get(i), i);
+    }
+    int[] parent = new int[netless.size()];
+    for (int i = 0; i < parent.length; i++) {
+      parent[i] = i;
+    }
+    for (int i = 0; i < netless.size(); i++) {
+      for (Pin other : netless.get(i).copperOverlappingPins(o -> o.netCount() == 0)) {
+        Integer otherIdx = index.get(other);
+        if (otherIdx != null) {
+          int rootI = findRoot(parent, i);
+          int rootOther = findRoot(parent, otherIdx);
+          parent[rootI] = rootOther;
+        }
+      }
+    }
+    Map<Integer, List<Pin>> groups = new HashMap<>();
+    for (int i = 0; i < netless.size(); i++) {
+      int root = findRoot(parent, i);
+      groups.computeIfAbsent(root, k -> new ArrayList<>()).add(netless.get(i));
+    }
+    record PinNetAssignment(Pin pin, int net) {}
+    List<PinNetAssignment> assignments = new ArrayList<>();
+    for (List<Pin> members : groups.values()) {
+      int component = members.getFirst().getComponentId();
+      boolean mismatchComponent = false;
+      for (Pin m : members) {
+        if (m.getComponentId() != component) {
+          mismatchComponent = true;
+          break;
+        }
+      }
+      if (mismatchComponent) {
+        continue;
+      }
+      List<Pin> netted = new ArrayList<>();
+      for (Pin m : members) {
+        netted.addAll(m.copperOverlappingPins(o -> o.netCount() != 0));
+      }
+      if (netted.isEmpty()) {
+        continue;
+      }
+      boolean valid = true;
+      int firstNet = netted.getFirst().getNetNumber(0);
+      for (Pin o : netted) {
+        if (o.getComponentId() != component || o.netCount() != 1 || o.getNetNumber(0) != firstNet) {
+          valid = false;
+          break;
+        }
+      }
+      if (valid) {
+        for (Pin m : members) {
+          assignments.add(new PinNetAssignment(m, firstNet));
+        }
+      }
+    }
+    for (PinNetAssignment a : assignments) {
+      a.pin().assignNetNo(a.net());
+    }
+    return assignments.size();
+  }
+
+  private static int findRoot(int[] parent, int i) {
+    if (parent[i] == i) {
+      return i;
+    }
+    return parent[i] = findRoot(parent, parent[i]);
   }
 
   /** Returns the obstacle responsible for the last shove to fail. */
@@ -1392,6 +1599,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
 
   public void setShoveFailingObstacle(Item item) {
     shoveFailingObstacle = item;
+    shoveFailingObstacleWrites++;
   }
 
   public int getShoveFailingLayer() {
@@ -1400,11 +1608,33 @@ public class RoutingBoard extends BasicBoard implements Serializable {
 
   public void setShoveFailingLayer(int layer) {
     shoveFailingLayer = layer;
+    shoveFailingLayerWrites++;
   }
 
   private void clearShoveFailingObstacle() {
     shoveFailingObstacle = null;
     shoveFailingLayer = -1;
+    shoveFailingObstacleWrites++;
+    shoveFailingLayerWrites++;
+  }
+
+  public long getShoveFailingObstacleWrites() {
+    return shoveFailingObstacleWrites;
+  }
+
+  public long getShoveFailingLayerWrites() {
+    return shoveFailingLayerWrites;
+  }
+
+  public List<Item> getShoveCacheObstacles() {
+    if (shoveCacheObstacles == null) {
+      shoveCacheObstacles = new java.util.ArrayList<>();
+    }
+    return shoveCacheObstacles;
+  }
+
+  public ShoveCheckCache getShoveChecks() {
+    return ShoveCheckCache.forThread();
   }
 
   /**
