@@ -67,8 +67,8 @@ foreach ($board in $tierBoards) {
                 Sort-Object -Property { $_.run_at } -Descending | Select-Object -First 1
 
             if ($latestRun) {
-                $unrouted = if ($latestRun.quality.unrouted_nets -ne $null) { [int]$latestRun.quality.unrouted_nets } else { 0 }
-                $violations = if ($latestRun.quality.clearance_violations -ne $null) { [int]$latestRun.quality.clearance_violations } else { 0 }
+                $unrouted = if ($latestRun.quality.unrouted_connections -ne $null) { [int]$latestRun.quality.unrouted_connections } else { throw "Missing quality.unrouted_connections" }
+                $violations = if ($latestRun.quality.clearance_violations -ne $null) { [int]$latestRun.quality.clearance_violations } else { throw "Missing quality.clearance_violations" }
                 $timedOut = $latestRun.exit.timed_out -eq $true
 
                 if ($Tier -eq "A" -and ($unrouted -gt 0 -or $violations -gt 0 -or $timedOut)) {
@@ -78,6 +78,9 @@ foreach ($board in $tierBoards) {
             }
         } catch {
             Write-Warning "Could not parse run results for ${boardId}: $_"
+            if ($Tier -eq "A") {
+                $failedCanaries += $boardId
+            }
         }
     }
 }
