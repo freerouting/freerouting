@@ -135,8 +135,8 @@ class GuiManagerEdtTest {
       allowInitializerToFinish.countDown();
       testThread.interrupt();
       testThread.join(5000);
-      assertFalse(testThread.isAlive(), "The interrupted test worker must exit");
       SwingUtilities.invokeAndWait(() -> {});
+      assertFalse(testThread.isAlive(), "The interrupted test worker must exit");
     }
   }
 }
