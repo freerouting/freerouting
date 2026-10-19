@@ -414,6 +414,16 @@ The autorouter is the "make it work" stage. It solves missing connections one at
 
 The autorouter may also temporarily rip up nearby conflicting traces or vias if needed to find a legal route. Its job is to turn an incomplete design into one that is electrically connected.
 
+#### Preserved Traces and Centerline Junction Connectivity
+
+Preserved traces (`USER_FIXED` and `SYSTEM_FIXED`, such as KiCad footprint tracks or SPECCTRA DSN `route`/`fix` wires) must retain their exact geometry without mutation or splitting throughout routing, normalization, and export:
+
+- **Centerline Contact Model:** Rather than splitting preserved geometry into separate sub-traces (which would mutate user geometry and emit fragmented wires upon export), Freerouting recognizes electrical junctions where branch trace endpoints or drill items lie along the centerline or internal bends of an existing trace via `Trace.contains(Point)`.
+- **Bidirectional Contact Symmetry:** `Trace.getNormalContacts()`, `Trace.getNormalContacts(Point, boolean)`, `Trace.normalContactPoint()`, and `DrillItem.getNormalContacts()` inspect overlapping items to ensure symmetric reachability for connected set traversal (`getConnectedSetRecu`).
+- **Tail Cleanup Safety:** Branches meeting preserved trace centerlines report valid contact points and are not misclassified as dangling tails (`isTail() == false`), ensuring `RoutingBoard.removeTraceTails()` preserves valid junctions.
+- **Normalization Stability:** Traces meeting preserved copper do not oscillate between split and combine passes in `BasicBoard.normalizeTraces()`, preventing infinite ping-pong loops.
+- **Export Fidelity:** Preserved traces are written to Specctra SES files (`SesWriter`) with their original unbroken coordinate spans, preserving 1:1 parity with KiCad and other EDA tools.
+
 #### Optimizer
 
 The optimizer is the "make it better" stage. It runs after routing is already complete and tries to improve the quality of existing routes without changing what connects to what.
