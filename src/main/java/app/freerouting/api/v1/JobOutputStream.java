@@ -156,7 +156,8 @@ final class JobOutputStream {
   }
 
   private boolean failed() {
-    return job.state.isTerminal() && job.state != RoutingJobState.COMPLETED;
+    RoutingJobState state = job.state;
+    return state != null && state.isTerminal() && state != RoutingJobState.COMPLETED;
   }
 
   private void close() {

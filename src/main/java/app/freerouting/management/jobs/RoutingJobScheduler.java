@@ -507,15 +507,17 @@ public final class RoutingJobScheduler {
     }
 
     // Save the output file if the filename is defined and there is data stored in
-    // it
-    var outputData = job.output != null ? job.output.getData() : null;
+    // it, or remove any stale persisted preview when output is unavailable
     if (job.output != null
         && job.output.getFilename() != null
-        && !job.output.getFilename().isEmpty()
-        && outputData != null
-        && outputData.available() > 0) {
+        && !job.output.getFilename().isEmpty()) {
       Path outputFilePath = sessionFolderPath.resolve(job.output.getFilename());
-      Files.write(outputFilePath, outputData.readAllBytes());
+      var outputData = job.output.getData();
+      if (outputData != null && outputData.available() > 0) {
+        Files.write(outputFilePath, outputData.readAllBytes());
+      } else {
+        Files.deleteIfExists(outputFilePath);
+      }
     }
   }
 

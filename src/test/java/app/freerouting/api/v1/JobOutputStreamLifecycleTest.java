@@ -330,6 +330,26 @@ class JobOutputStreamLifecycleTest {
     }
   }
 
+  @Test
+  void nullJobStateRemainsNonTerminalDuringPolling() throws Exception {
+    final Set<Thread> existing = workers();
+    try {
+      withJob(() -> startStream(false));
+      assertTrue(awaitNewWorker(existing));
+      job.state = null;
+      Thread.sleep(300);
+      verify(sink, never()).close();
+      assertFalse(closed.get());
+      job.state = RoutingJobState.CANCELLED;
+      verify(sink, timeout(2000)).close();
+      assertTrue(awaitWorkerExit(existing));
+    } finally {
+      job.state = RoutingJobState.CANCELLED;
+      closed.set(true);
+      awaitWorkerExit(existing);
+    }
+  }
+
   private void startStream(boolean json) {
     if (json) {
       resource.streamOutputJson(job.id.toString(), sink, sse);
