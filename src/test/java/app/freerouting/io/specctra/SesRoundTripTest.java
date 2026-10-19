@@ -217,7 +217,7 @@ class SesRoundTripTest {
         }
         tracesWithDrillContacts++;
         var corner = (startSide ? trace.firstCorner() : trace.lastCorner()).toFloat();
-        var snapped = SesWriter.snappedEndpoint(trace, startSide);
+        var snapped = SesTracePath.snappedEndpoint(trace, startSide);
         if (snapped != null) {
           // A snap may only move the endpoint to the center of a contacted drill item,
           // and never further than that item's pad inradius.
