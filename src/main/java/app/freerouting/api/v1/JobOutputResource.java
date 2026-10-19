@@ -31,15 +31,11 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.sse.OutboundSseEvent;
 import jakarta.ws.rs.sse.Sse;
 import jakarta.ws.rs.sse.SseEventSink;
+import java.io.ByteArrayInputStream;
 import java.util.Base64;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * JAX-RS resource for the routing job API.
@@ -54,9 +50,6 @@ import java.util.concurrent.TimeUnit;
         "Routing job management endpoints for creating, monitoring, and controlling PCB routing"
             + " jobs")
 public class JobOutputResource extends BaseController {
-
-  private static final ConcurrentHashMap<String, Long> previousOutputChecksums =
-      new ConcurrentHashMap<>();
 
   /** Default constructor for JobOutputResource. */
   public JobOutputResource() {}
@@ -160,7 +153,8 @@ public class JobOutputResource extends BaseController {
             || job.state == RoutingJobState.STOPPING;
 
     // Check if output data is available
-    if (job.output == null || job.output.getData() == null) {
+    ByteArrayInputStream outputData = job.output != null ? job.output.getData() : null;
+    if (outputData == null || outputData.available() == 0) {
       if (isInProgress) {
         // Job is running but hasn't written any output yet — return 204 No Content (no body per RFC
         // 7231)
@@ -175,7 +169,7 @@ public class JobOutputResource extends BaseController {
     var result = new BoardFilePayload();
     result.jobId = job.id;
     result.setFilename(job.output.getFilename());
-    result.setData(job.output.getData().readAllBytes());
+    result.setData(outputData.readAllBytes());
     result.dataBase64 = Base64.getEncoder().encodeToString(result.getData().readAllBytes());
 
     var response = GSON.toJson(result);
@@ -276,7 +270,8 @@ public class JobOutputResource extends BaseController {
             || job.state == RoutingJobState.PAUSED
             || job.state == RoutingJobState.STOPPING;
 
-    if (job.output == null || job.output.getData() == null) {
+    ByteArrayInputStream outputData = job.output != null ? job.output.getData() : null;
+    if (outputData == null || outputData.available() == 0) {
       if (isInProgress) {
         return Response.status(Response.Status.NO_CONTENT).build();
       }
@@ -320,7 +315,7 @@ public class JobOutputResource extends BaseController {
 
     // Output is JSON — return it as raw JSON (not Base64-encoded)
     try {
-      byte[] outputBytes = job.output.getData().readAllBytes();
+      byte[] outputBytes = outputData.readAllBytes();
       String jsonOutput = new String(outputBytes, java.nio.charset.StandardCharsets.UTF_8);
       FRAnalytics.apiEndpointCalled(
           "GET v1/jobs/" + jobId + "/output/json",
@@ -347,7 +342,7 @@ public class JobOutputResource extends BaseController {
    * <p>A new SSE event is pushed every ~200 ms when the output CRC32 checksum changes. Each event
    * payload is a JSON-serialized {@link app.freerouting.api.dto.BoardFilePayload} with the current
    * Base64-encoded SES data. The stream is closed automatically when the job transitions to {@code
-   * COMPLETED} or {@code CANCELLED}.
+   * COMPLETED} or any terminal error state.
    */
   @Operation(
       summary = "Stream job output in real-time",
@@ -389,64 +384,7 @@ public class JobOutputResource extends BaseController {
       return;
     }
 
-    // Create a scheduled executor for periodic updates
-    ScheduledExecutorService executor =
-        Executors.newSingleThreadScheduledExecutor(
-            r -> {
-              Thread t = new Thread(r, "job-output-stream-worker");
-              t.setDaemon(true);
-              return t;
-            });
-
-    // Schedule periodic updates every 250ms
-    executor.scheduleAtFixedRate(
-        () -> {
-          try {
-            if (job.output != null && job.output.getData() != null) {
-              var result = new BoardFilePayload();
-              result.jobId = job.id;
-              result.setFilename(job.output.getFilename());
-              result.setData(job.output.getData().readAllBytes());
-              result.dataBase64 =
-                  Base64.getEncoder().encodeToString(result.getData().readAllBytes());
-
-              Long previousOutputChecksum = previousOutputChecksums.get(jobId);
-
-              if ((previousOutputChecksum == null) || (result.crc32 != previousOutputChecksum)) {
-                previousOutputChecksums.put(jobId, result.crc32);
-
-                OutboundSseEvent event =
-                    sse.newEventBuilder()
-                        .id(String.valueOf(System.currentTimeMillis()))
-                        .data(GSON.toJson(result))
-                        .build();
-
-                eventSink.send(event);
-              }
-            }
-
-            // Close the connection if the job reached a terminal state
-            if (job.state != null && job.state.isTerminal()) {
-              try {
-                eventSink.close();
-              } catch (Exception ex) {
-                FRLogger.error("Error closing SSE event sink", ex);
-              }
-              executor.shutdown();
-            }
-          } catch (Exception e) {
-            FRLogger.error("Error while streaming output", e);
-            try {
-              eventSink.close();
-            } catch (Exception ex) {
-              FRLogger.error("Error closing SSE event sink", ex);
-            }
-            executor.shutdown();
-          }
-        },
-        0,
-        200,
-        TimeUnit.MILLISECONDS);
+    JobOutputStream.startSes(job, eventSink, sse);
 
     // Log the API call
     FRAnalytics.apiEndpointCalled(
@@ -459,7 +397,7 @@ public class JobOutputResource extends BaseController {
    * <p>A new SSE event is pushed every ~500 ms when the board state changes (detected via CRC32).
    * Each event payload is raw KiCad JSON (not Base64-encoded), making it directly consumable by the
    * KiCad IPC bridge. The stream is closed automatically when the job transitions to {@code
-   * COMPLETED} or {@code CANCELLED}.
+   * COMPLETED} or any terminal error state.
    */
   @Operation(
       summary = "Stream job JSON output in real-time",
@@ -500,61 +438,7 @@ public class JobOutputResource extends BaseController {
       return;
     }
 
-    ScheduledExecutorService executor =
-        Executors.newSingleThreadScheduledExecutor(
-            r -> {
-              Thread t = new Thread(r, "job-output-board-stream-worker");
-              t.setDaemon(true);
-              return t;
-            });
-    java.util.concurrent.atomic.AtomicLong previousChecksum =
-        new java.util.concurrent.atomic.AtomicLong(-1);
-
-    executor.scheduleAtFixedRate(
-        () -> {
-          try {
-            if (job.board != null) {
-              // Generate JSON from the current board state
-              String jsonStr = app.freerouting.io.kicad.KiCadJsonWriter.write(job.board, job.name);
-              java.util.zip.CRC32 crc = new java.util.zip.CRC32();
-              crc.update(jsonStr.getBytes(java.nio.charset.StandardCharsets.UTF_8));
-              long crcValue = crc.getValue();
-
-              if (crcValue != previousChecksum.get()) {
-                previousChecksum.set(crcValue);
-                OutboundSseEvent event =
-                    sse.newEventBuilder()
-                        .id(String.valueOf(System.currentTimeMillis()))
-                        .name("json-output")
-                        .data(jsonStr)
-                        .mediaType(MediaType.APPLICATION_JSON_TYPE)
-                        .build();
-                eventSink.send(event);
-              }
-            }
-
-            // Close the connection if the job reached a terminal state
-            if (job.state != null && job.state.isTerminal()) {
-              try {
-                eventSink.close();
-              } catch (Exception ex) {
-                FRLogger.error("Error closing SSE event sink", ex);
-              }
-              executor.shutdown();
-            }
-          } catch (Exception e) {
-            FRLogger.error("Error while streaming JSON output", e);
-            try {
-              eventSink.close();
-            } catch (Exception ex) {
-              FRLogger.error("Error closing SSE event sink", ex);
-            }
-            executor.shutdown();
-          }
-        },
-        0,
-        500,
-        TimeUnit.MILLISECONDS);
+    JobOutputStream.startJson(job, eventSink, sse);
 
     FRAnalytics.apiEndpointCalled(
         "GET v1/jobs/" + jobId + "/output/json/stream", "", "json-stream-started", userId);
@@ -675,8 +559,8 @@ public class JobOutputResource extends BaseController {
   @Operation(
       summary = "Get DRC diagnostic summary",
       description =
-          "Retrieves a structured diagnostic summary of design rule violations including"
-              + " component context, spatial congestion zones, and actionable layout auto-correction hints.")
+          "Retrieves a structured diagnostic summary of design rule violations including component"
+              + " context, spatial congestion zones, and actionable layout auto-correction hints.")
   @ApiResponses(
       value = {
         @ApiResponse(

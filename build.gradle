@@ -151,6 +151,9 @@ dependencies {
     implementation 'org.apache.logging.log4j:log4j-core:2.26.1'
     implementation 'org.apache.logging.log4j:log4j-api:2.26.1'
 
+    // Bounded rational recovery for SES serialization; reuse Apache's continued fractions.
+    implementation 'org.apache.commons:commons-numbers-fraction:1.3'
+
     // https://github.com/google/gson
     implementation 'com.google.code.gson:gson:2.14.0'
 
@@ -218,6 +221,7 @@ dependencies {
     cliRuntimeClasspath 'org.slf4j:slf4j-api:2.0.20'
     cliRuntimeClasspath 'org.slf4j:slf4j-nop:2.0.20'
     cliRuntimeClasspath 'com.google.code.gson:gson:2.14.0'
+    cliRuntimeClasspath 'org.apache.commons:commons-numbers-fraction:1.3'
 
     // ArchUnit: package-architecture enforcement
     testImplementation 'com.tngtech.archunit:archunit-junit5:1.5.1'
@@ -291,6 +295,23 @@ tasks.register('executableJar', Jar) {
         exclude 'org/apache/logging/log4j/core/lookup/JndiLookup.class'
         exclude 'org/apache/logging/log4j/core/net/JndiManager.class'
         exclude 'org/apache/logging/log4j/core/net/JndiManager$*.class'
+    }
+
+    // Preserve this dependency's notices under distinct paths: the fat JAR otherwise
+    // drops duplicate META-INF/LICENSE and NOTICE entries from runtime dependencies.
+    ['core', 'fraction'].each { numbersModule ->
+        from({
+            def numbersJar = configurations.runtimeClasspath.find {
+                it.name.startsWith("commons-numbers-${numbersModule}-")
+            }
+            zipTree(numbersJar)
+        }) {
+            include 'META-INF/LICENSE', 'META-INF/NOTICE'
+            includeEmptyDirs = false
+            eachFile { entry ->
+                entry.path = "META-INF/licenses/commons-numbers-${numbersModule}/${entry.name}"
+            }
+        }
     }
 
     from files(sourceSets.main.output)

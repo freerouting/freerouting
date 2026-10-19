@@ -23,8 +23,9 @@ public class NetClass {
   public final boolean pullTight;
   public double minTraceLength;
   public double maxTraceLength;
+  public final Circuit.ReadScopeResult circuit;
 
-  /** Creates a new instance of NetClass. */
+  /** Creates a new instance of NetClass without circuit scope. */
   public NetClass(
       String name,
       String traceClearanceClass,
@@ -38,6 +39,37 @@ public class NetClass {
       boolean pullTight,
       double minTraceLength,
       double maxTraceLength) {
+    this(
+        name,
+        traceClearanceClass,
+        netList,
+        rules,
+        layerRules,
+        useVia,
+        useLayer,
+        viaRule,
+        shoveFixed,
+        pullTight,
+        minTraceLength,
+        maxTraceLength,
+        null);
+  }
+
+  /** Creates a new instance of NetClass with circuit scope. */
+  public NetClass(
+      String name,
+      String traceClearanceClass,
+      Collection<String> netList,
+      Collection<Rule> rules,
+      Collection<Rule.LayerRule> layerRules,
+      Collection<String> useVia,
+      Collection<String> useLayer,
+      String viaRule,
+      boolean shoveFixed,
+      boolean pullTight,
+      double minTraceLength,
+      double maxTraceLength,
+      Circuit.ReadScopeResult circuit) {
     this.name = name;
     this.traceClearanceClass = traceClearanceClass;
     this.netList = netList;
@@ -50,6 +82,7 @@ public class NetClass {
     this.pullTight = pullTight;
     this.minTraceLength = minTraceLength;
     this.maxTraceLength = maxTraceLength;
+    this.circuit = circuit;
   }
 
   public static NetClass readScope(IJFlexScanner scanner) {
@@ -75,6 +108,7 @@ public class NetClass {
       boolean shoveFixed = false;
       double minTraceLength = 0;
       double maxTraceLength = 0;
+      Circuit.ReadScopeResult circuit = null;
 
       Object nextToken = scanner.nextToken();
       if (nextToken == Keyword.CLOSED_BRACKET) {
@@ -117,6 +151,7 @@ public class NetClass {
             } else if (nextToken == Keyword.CIRCUIT) {
               Circuit.ReadScopeResult currentRule = Circuit.readScope(scanner);
               if (currentRule != null) {
+                circuit = currentRule;
                 maxTraceLength = currentRule.maxLength;
                 minTraceLength = currentRule.minLength;
                 useVia.addAll(currentRule.useVia);
@@ -150,7 +185,8 @@ public class NetClass {
           shoveFixed,
           pullTight,
           minTraceLength,
-          maxTraceLength);
+          maxTraceLength,
+          circuit);
     } catch (IOException e) {
       FRLogger.error("NetClass.read_scope: IO error while scanning file", e);
       return null;
