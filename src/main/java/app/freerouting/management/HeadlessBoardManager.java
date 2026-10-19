@@ -27,6 +27,7 @@ import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.gui.workspace.WorkspaceSettings;
 import app.freerouting.gui.workspace.session.InteractiveActionThread;
 import app.freerouting.io.BoardReadResult;
+import app.freerouting.io.FileFormat;
 import app.freerouting.io.kicad.KiCadJsonReader;
 import app.freerouting.io.specctra.DsnReader;
 import app.freerouting.io.specctra.DsnWriter;
@@ -391,14 +392,8 @@ public class HeadlessBoardManager implements BoardManager {
       return;
     }
 
-    int boardResolution = Math.max(1, this.board.communication.resolution);
     int configuredClearanceBoardUnits =
-        (int)
-            Math.round(
-                Unit.scale(
-                    configuredClearanceUm * boardResolution,
-                    Unit.UM,
-                    this.board.communication.unit));
+        (int) Math.round(this.board.communication.physicalToBoard(configuredClearanceUm, Unit.UM));
     boolean changed = configuredClearanceBoardUnits != this.board.rules.getHoleClearance();
     this.board.rules.setHoleClearance(configuredClearanceBoardUnits);
     int holeKeepouts = 0;
@@ -537,14 +532,8 @@ public class HeadlessBoardManager implements BoardManager {
       return;
     }
 
-    int boardResolution = Math.max(1, this.board.communication.resolution);
     int configuredClearanceBoardUnits =
-        (int)
-            Math.round(
-                Unit.scale(
-                    configuredClearanceUm * boardResolution,
-                    Unit.UM,
-                    this.board.communication.unit));
+        (int) Math.round(this.board.communication.physicalToBoard(configuredClearanceUm, Unit.UM));
 
     if (usesDefaultEdgeClearanceValue) {
       // The default value is only a guess. Never demand more edge clearance than the input already
@@ -979,6 +968,23 @@ public class HeadlessBoardManager implements BoardManager {
     }
     this.board.expandBoundingBoxToIncludeAllItems();
     this.board.reduceNetsOfRouteItems();
+    boolean isKicadBoard =
+        this.routingJob != null
+            && this.routingJob.input != null
+            && this.routingJob.input.format == FileFormat.KICAD_DESIGN_JSON;
+    boolean fixKicadFootprints =
+        this.routingJob != null
+            && this.routingJob.routerSettings != null
+            && Boolean.TRUE.equals(this.routingJob.routerSettings.fixKicadFootprints);
+    int[] tiePads = new int[1];
+    int assigned = this.board.connectNetlessPads(isKicadBoard, fixKicadFootprints, tiePads);
+    if (assigned > 0) {
+      FRLogger.info(
+          assigned
+              + " netless pad(s) overlapping a netted pad take that pad's net"
+              + (tiePads[0] > 0 ? " (" + tiePads[0] + " tie pad(s) carry several nets)" : "")
+              + ".");
+    }
     validatePowerPlanes();
     validateBoardDesignErrors();
     DifferentialPairDetector.detectAndRegister(this.board.rules);
@@ -1022,6 +1028,8 @@ public class HeadlessBoardManager implements BoardManager {
                   }
                 }
                 loadedBoard.unfixableClearanceViolationsCount = unfixable;
+                loadedBoard.clearanceBaseline =
+                    new app.freerouting.drc.ClearanceBaseline(violations);
                 if (!violations.isEmpty()) {
                   warnPreExistingClearanceViolations(loadedBoard, violations);
                 }

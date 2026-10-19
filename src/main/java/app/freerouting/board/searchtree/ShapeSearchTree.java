@@ -57,6 +57,10 @@ public class ShapeSearchTree extends MinAreaTree {
   protected final ThreadLocal<ArrayStack<TreeNode>> completeShapeStack =
       ThreadLocal.withInitial(() -> new ArrayStack<>(10000));
 
+  /** Reusable result list for spatial overlap queries, isolated per caller thread. */
+  private final ThreadLocal<List<Leaf>> queryLeafBuffer =
+      ThreadLocal.withInitial(() -> new ArrayList<>(128));
+
   /**
    * The clearance class number for which the shapes of this tree is compensated. If
    * compensatedClearanceClassNo = 0, the shapes are not compensated.
@@ -467,35 +471,40 @@ public class ShapeSearchTree extends MinAreaTree {
       FRLogger.warn("ShapeSearchTree.overlaps: shape not bounded");
       return;
     }
-    Collection<Leaf> tmpList = this.overlapsUnlocked(bounds);
+    List<Leaf> tmpList = queryLeafBuffer.get();
+    tmpList.clear();
     boolean is45Degree = shape instanceof IntOctagon;
-
-    for (Leaf currentLeaf : tmpList) {
-      SearchTreeObject currentObject = (SearchTreeObject) currentLeaf.object;
-      int shapeIndex = currentLeaf.shapeIndexInObject;
-      boolean ignoreObject = layer >= 0 && currentObject.shapeLayer(shapeIndex) != layer;
-      if (!ignoreObject) {
-        for (int i = 0; i < ignoreNetNos.length; i++) {
-          if (!currentObject.isObstacle(ignoreNetNos[i])) {
-            ignoreObject = true;
+    try {
+      this.overlapsUnlocked(bounds, tmpList);
+      for (Leaf currentLeaf : tmpList) {
+        SearchTreeObject currentObject = (SearchTreeObject) currentLeaf.object;
+        int shapeIndex = currentLeaf.shapeIndexInObject;
+        boolean ignoreObject = layer >= 0 && currentObject.shapeLayer(shapeIndex) != layer;
+        if (!ignoreObject) {
+          for (int i = 0; i < ignoreNetNos.length; i++) {
+            if (!currentObject.isObstacle(ignoreNetNos[i])) {
+              ignoreObject = true;
+            }
+          }
+        }
+        if (!ignoreObject) {
+          TileShape currentShape = currentObject.getTreeShape(this, currentLeaf.shapeIndexInObject);
+          boolean addItem;
+          if (is45Degree && currentShape instanceof IntOctagon) {
+            // in this case the check for intersection is redundant and
+            // therefore skipped for performance reasons
+            addItem = true;
+          } else {
+            addItem = currentShape.intersects(shape);
+          }
+          if (addItem) {
+            TreeEntry newEntry = new TreeEntry(currentObject, shapeIndex);
+            treeEntries.add(newEntry);
           }
         }
       }
-      if (!ignoreObject) {
-        TileShape currentShape = currentObject.getTreeShape(this, currentLeaf.shapeIndexInObject);
-        boolean addItem;
-        if (is45Degree && currentShape instanceof IntOctagon) {
-          // in this case the check for intersection is redundant and
-          // therefore skipped for performance reasons
-          addItem = true;
-        } else {
-          addItem = currentShape.intersects(shape);
-        }
-        if (addItem) {
-          TreeEntry newEntry = new TreeEntry(currentObject, shapeIndex);
-          treeEntries.add(newEntry);
-        }
-      }
+    } finally {
+      tmpList.clear();
     }
   }
 
@@ -512,11 +521,26 @@ public class ShapeSearchTree extends MinAreaTree {
       int[] ignoreNetNos,
       int clearanceClassIndex,
       Collection<TreeEntry> obstacleEntries) {
+    overlappingTreeEntriesWithClearance(
+        shape, layer, ignoreNetNos, clearanceClassIndex, obstacleEntries, null);
+  }
+
+  /**
+   * Overload of {@link #overlappingTreeEntriesWithClearance} that filters out items that are not
+   * obstacles to {@code obstaclesOf}.
+   */
+  public void overlappingTreeEntriesWithClearance(
+      ConvexShape shape,
+      int layer,
+      int[] ignoreNetNos,
+      int clearanceClassIndex,
+      Collection<TreeEntry> obstacleEntries,
+      Item obstaclesOf) {
     Lock lock = readLock();
     lock.lock();
     try {
       overlappingTreeEntriesWithClearanceUnlocked(
-          shape, layer, ignoreNetNos, clearanceClassIndex, obstacleEntries);
+          shape, layer, ignoreNetNos, clearanceClassIndex, obstacleEntries, obstaclesOf);
     } finally {
       lock.unlock();
     }
@@ -527,7 +551,8 @@ public class ShapeSearchTree extends MinAreaTree {
       int layer,
       int[] ignoreNetNos,
       int clearanceClassIndex,
-      Collection<TreeEntry> obstacleEntries) {
+      Collection<TreeEntry> obstacleEntries,
+      Item obstaclesOf) {
     if (shape == null) {
       return;
     }
@@ -547,29 +572,42 @@ public class ShapeSearchTree extends MinAreaTree {
     // a factor less than sqr2 has evtl. be added because
     // enlarging is not symmetric.
     RegularTileShape offsetBounds = (RegularTileShape) bounds.offset(maxClearance);
-    Collection<Leaf> tmpList = overlapsUnlocked(offsetBounds);
+    List<Leaf> tmpList = queryLeafBuffer.get();
+    tmpList.clear();
     // sort the found items by its clearances to clearanceClassIndex on layer layer
     Set<EntrySortedByClearance> sortedItems = new TreeSet<>();
     int nextEntryId = 0;
-
-    for (Leaf currentLeaf : tmpList) {
-      Item currentItem = (Item) currentLeaf.object;
-      int shapeIndex = currentLeaf.shapeIndexInObject;
-      boolean ignoreItem = layer >= 0 && currentItem.shapeLayer(shapeIndex) != layer;
-      if (!ignoreItem) {
-        for (int i = 0; i < ignoreNetNos.length; i++) {
-          if (!currentItem.isObstacle(ignoreNetNos[i])) {
-            ignoreItem = true;
+    try {
+      overlapsUnlocked(offsetBounds, tmpList);
+      for (Leaf currentLeaf : tmpList) {
+        Item currentItem = (Item) currentLeaf.object;
+        int shapeIndex = currentLeaf.shapeIndexInObject;
+        boolean ignoreItem = layer >= 0 && currentItem.shapeLayer(shapeIndex) != layer;
+        if (!ignoreItem) {
+          for (int i = 0; i < ignoreNetNos.length; i++) {
+            if (!currentItem.isObstacle(ignoreNetNos[i])) {
+              ignoreItem = true;
+            }
           }
         }
+        // Erik Gavriluk (freerouting.net): skip items that are not obstacles to obstaclesOf before
+        // sorting candidates and running exact geometric intersections.
+        if (!ignoreItem
+            && obstaclesOf != null
+            && (currentItem == obstaclesOf || !currentItem.isObstacle(obstaclesOf))) {
+          ignoreItem = true;
+        }
+        if (!ignoreItem) {
+          int currentClearance =
+              clMatrix.getValue(
+                  clearanceClassIndex, currentItem.clearanceClassIndex(), layer, true);
+          EntrySortedByClearance sortedOb =
+              new EntrySortedByClearance(currentLeaf, currentClearance, nextEntryId++);
+          sortedItems.add(sortedOb);
+        }
       }
-      if (!ignoreItem) {
-        int currentClearance =
-            clMatrix.getValue(clearanceClassIndex, currentItem.clearanceClassIndex(), layer, true);
-        EntrySortedByClearance sortedOb =
-            new EntrySortedByClearance(currentLeaf, currentClearance, nextEntryId++);
-        sortedItems.add(sortedOb);
-      }
+    } finally {
+      tmpList.clear();
     }
     int currentHalfClearance = 0;
     ConvexShape currentOffsetShape = shape;
@@ -584,10 +622,28 @@ public class ShapeSearchTree extends MinAreaTree {
       // enlarge both item shapes by the half clearance to create
       // symmetry.
       ConvexShape tmpOffsetShape = (ConvexShape) tmpShape.enlarge(currentHalfClearance);
-      if (currentOffsetShape.intersects(tmpOffsetShape)) {
+      if (!boundingOctagonsApart(currentOffsetShape, tmpOffsetShape)
+          && currentOffsetShape.intersects(tmpOffsetShape)) {
         obstacleEntries.add(new TreeEntry(tmpEntry.leaf.object, tmpEntry.leaf.shapeIndexInObject));
       }
     }
+  }
+
+  /**
+   * Returns true when the bounding octagons of two shapes, one of them a simplex, share no point,
+   * so the shapes share none and the exact test would answer false. The exact simplex test sorts
+   * and reduces the half-planes of both shapes; the octagon test is eight comparisons.
+   */
+  static boolean boundingOctagonsApart(ConvexShape a, ConvexShape b) {
+    if (!(a instanceof Simplex) && !(b instanceof Simplex)) {
+      return false;
+    }
+    if (!(a instanceof TileShape tileA) || !(b instanceof TileShape tileB)) {
+      return false;
+    }
+    IntOctagon octagonA = tileA.boundingOctagon();
+    IntOctagon octagonB = tileB.boundingOctagon();
+    return octagonA != null && octagonB != null && !octagonA.intersects(octagonB);
   }
 
   /**
@@ -597,12 +653,22 @@ public class ShapeSearchTree extends MinAreaTree {
    */
   public Collection<TreeEntry> overlappingTreeEntriesWithClearance(
       ConvexShape shape, int layer, int[] ignoreNetNos, int clearanceClassIndex) {
+    return overlappingTreeEntriesWithClearance(
+        shape, layer, ignoreNetNos, clearanceClassIndex, (Item) null);
+  }
+
+  /**
+   * Returns all objects of class TreeEntry which overlap with shape inclusive clearance and are
+   * obstacles to {@code obstaclesOf}.
+   */
+  public Collection<TreeEntry> overlappingTreeEntriesWithClearance(
+      ConvexShape shape, int layer, int[] ignoreNetNos, int clearanceClassIndex, Item obstaclesOf) {
     Collection<TreeEntry> result = new LinkedList<>();
     if (this.isClearanceCompensationUsed()) {
       this.overlappingTreeEntries(shape, layer, ignoreNetNos, result);
     } else {
       this.overlappingTreeEntriesWithClearance(
-          shape, layer, ignoreNetNos, clearanceClassIndex, result);
+          shape, layer, ignoreNetNos, clearanceClassIndex, result, obstaclesOf);
     }
     return result;
   }

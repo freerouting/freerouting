@@ -45,17 +45,19 @@
     "canary",
     "golden-canary",
     "small",
-    "tier-a",
-    "zone"
+    "zone",
+    "tier-a"
   ],
   "tier": "A",
   "expected_outcome": "complete",
-  "timeout_budget": "00:05:00",
+  "timeout_budget": "06:00:00",
   "baseline_routing": {
     "calibrated_at": "2026-08-18T20:56:33.165139+00:00",
     "elapsed_seconds": 14.53,
     "unrouted_nets": 0,
     "clearance_violations": 60,
     "quality_score": 657.14
-  }
+  },
+  "tier_index": 32,
+  "reference_seconds": 9.7
 }
