@@ -54,10 +54,14 @@ Below is a comprehensive list of command-line options available in Freerouting, 
   Sets the upper limit for the number of autorouter passes to perform. More passes may result in better optimization but will take longer.
 
 - **`-mt [number of threads]`**
-  Sets the thread pool size for route optimization:
+  Sets the thread pool size for route optimization. Same as `--router.max_threads`:
   - Default: One less than the number of logical processors on the system.
-  - Set to `0` to disable route optimization.
+  - Set to `0` to disable route optimization (same as `--router.optimizer.enabled=false`).
   - Increasing the number may improve performance on multi-core systems.
+  - To set only the optimizer pool, use `--router.optimizer.max_threads`.
+
+- **`--router.optimizer.enabled=[true|false]`**
+  Runs the route optimizer after autorouting. Default is `true`.
 
 - **`--router.optimizer.improvement_threshold=[percentage]`**
   Specifies the relative optimizer pass-improvement stopping threshold directly as a percentage (e.g. `2.5` = 2.5%, `5.5` = 5.5%):
