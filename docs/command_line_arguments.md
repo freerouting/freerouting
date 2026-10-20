@@ -72,37 +72,29 @@ Below is a comprehensive list of command-line options available in Freerouting, 
     - `3.5 – 5.0` (3.5% – 5.0%): Fast mode. Cuts optimizer runtime by ~45%, retaining ~65% of via reductions.
     - `> 5.5` (> 5.5%): Rapid prototyping. Stops after 1–2 passes; not recommended for production boards where via minimization matters.
   - Setting `0.0` continues optimization until `max_passes` is reached or no further improvements are possible.
-  - *Note:* The legacy `-oit` flag is deprecated and no longer supported. A warning will be logged if used.
+  - *Note:* The legacy `-oit [percentage]` flag is deprecated but still applied. A warning is logged when it is used.
 
 - **`-inc [net class names]`**
   Lists net classes to ignore during autorouting:
   - Provide a comma-separated list (e.g., `-inc GND,VCC`).
   - The autorouter will not route nets belonging to these classes.
 
-- **`-im`**
-  Enables saving of intermediate steps in a version-specific binary format:
-  - Allows resuming interrupted optimizations from the last checkpoint.
-  - Disabled by default.
+- **`-im`** (Removed)
+  No longer has any effect. Intermediate steps are not saved, and routing cannot be resumed
+  from a checkpoint. A warning is logged when it is used.
 
 
 ### Optimization Strategies
 
-- **`-us [greedy | global | hybrid]`**
-  Sets the board updating strategy for route optimization:
-  - `greedy` (default): Accepts any immediate improvement.
-  - `global`: Only accepts changes that result in a global optimum.
-  - `hybrid`: Combines both strategies; requires `-hr` to specify the ratio.
+- **`-is [sequential | prioritized]`**
+  Sets the item selection strategy for route optimization. Same as
+  `--router.optimizer.item_selection_strategy=[SEQUENTIAL|PRIORITIZED]`:
+  - `sequential` (default): Processes items in order.
+  - `prioritized`: Selects items based on calculated scores from previous rounds.
 
-- **`-hr [m:n]`**
-  Specifies the hybrid ratio when using the `hybrid` update strategy:
-  - Format: `#_global_optimal_passes:#_prioritized_passes` (e.g., `1:1`).
-  - Only effective with `-us hybrid`.
-
-- **`-is [sequential | random | prioritized]`**
-  Sets the item selection strategy for route optimization:
-  - `sequential`: Processes items in order.
-  - `random`: Processes items in a random order.
-  - `prioritized` (default): Selects items based on calculated scores from previous rounds.
+- **`-us [greedy | global | hybrid]`** and **`-hr [m:n]`** (Removed)
+  No longer have any effect. The optimizer only uses the global optimal board update strategy.
+  A warning is logged when they are used.
 
 ### Language and Localization
 
