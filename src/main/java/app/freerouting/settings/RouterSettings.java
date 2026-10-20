@@ -1153,6 +1153,20 @@ public class RouterSettings implements Serializable, Cloneable {
 
     int changedCount = ReflectionUtil.copyFields(settings, this);
 
+    // The flat max_threads (also -mt) caps both pools, as setMaxThreads() does. A source that sets
+    // it without a pool's nested max_threads sets that pool too.
+    if (settings.maxThreads != null) {
+      int threads = normalizeMaxThreads(settings.maxThreads);
+      if (this.autorouter != null
+          && (settings.autorouter == null || settings.autorouter.maxThreads == null)) {
+        this.autorouter.maxThreads = threads;
+      }
+      if (this.optimizer != null
+          && (settings.optimizer == null || settings.optimizer.maxThreads == null)) {
+        this.optimizer.maxThreads = threads;
+      }
+    }
+
     // Fire property change events for key properties to update GUI
     // Note: We fire events even if values didn't change to ensure GUI is in sync
     if (pcs != null) {
