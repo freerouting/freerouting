@@ -90,6 +90,13 @@ public class CliSettings implements SettingsSource {
                   + " '--router.autorouter.ignore_net_classes' instead.");
         }
 
+        // "-mt 0" disables the optimizer, as it did in v1.9 and as the CLI docs say. Other values
+        // set the thread count through router.max_threads.
+        if ("mt".equals(flag) && isZeroOrNegativeInteger(value)) {
+          applyRouterSetting(settings, "router.optimizer.enabled", "false");
+          continue;
+        }
+
         // Map short flags to router settings
         String propertyName = mapFlagToProperty(flag);
         if (propertyName != null
@@ -164,6 +171,14 @@ public class CliSettings implements SettingsSource {
       FRLogger.debug("Applied CLI router setting: " + propertyName + " = " + value);
     } catch (Exception e) {
       FRLogger.warn("Failed to apply CLI router setting: " + propertyName + ": " + e.getMessage());
+    }
+  }
+
+  private static boolean isZeroOrNegativeInteger(String value) {
+    try {
+      return Integer.decode(value.trim()) <= 0;
+    } catch (NumberFormatException e) {
+      return false;
     }
   }
 
