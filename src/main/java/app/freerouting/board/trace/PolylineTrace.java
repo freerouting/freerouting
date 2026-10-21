@@ -121,16 +121,13 @@ public class PolylineTrace extends Trace implements Serializable {
 
   @Override
   public boolean contains(Point point) {
-    if (point == null) {
+    if (point == null || point.isInfinite()) {
       return false;
     }
     Point first = firstCorner();
     Point last = lastCorner();
     if ((first != null && point.equals(first)) || (last != null && point.equals(last))) {
       return true;
-    }
-    if (!(point instanceof IntPoint)) {
-      return false;
     }
     if (!point.isContainedIn(boundingBox())) {
       return false;
@@ -718,9 +715,8 @@ public class PolylineTrace extends Trace implements Serializable {
   public Trace[] split(Point point) {
     for (int i = 0; i < this.lines.lines.length - 2; i++) {
       LineSegment currentLineSegment = new LineSegment(this.lines, i + 1);
-      if (currentLineSegment.contains(point)) {
-        Direction splitLineDirection = currentLineSegment.getLine().direction().turn45Degree(2);
-        Line splitLine = new Line(point, splitLineDirection);
+      Line splitLine = currentLineSegment.splitLine(point);
+      if (splitLine != null) {
         Trace[] result = split(i + 1, splitLine);
         if (result != null) {
           return result;
