@@ -1,5 +1,6 @@
 package app.freerouting.io.specctra;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -68,12 +69,23 @@ class SesNumericFidelityTest {
     BigDecimal[] exact =
         java.util.Arrays.stream(tokens).map(BigDecimal::new).toArray(BigDecimal[]::new);
     double[] legacy = java.util.Arrays.stream(tokens).mapToDouble(Double::parseDouble).toArray();
-    var expected = SesPathGeometry.read(legacy, 1.0);
+    // The final corner projects (1842257, -1216995) onto the captured C4 trunk from
+    // (1827966, -1225246) to (1853380, -1210574). Independent exact dot-product arithmetic
+    // gives (23111116921, -15267207222) / 12545; the decoder is not the expected-value oracle.
+    Point[] expected = {
+      new IntPoint(1760000, -991250),
+      new IntPoint(1764864, -991250),
+      new IntPoint(1842257, -1068643),
+      new IntPoint(1842257, -1216995),
+      Point.getInstance(
+          BigInteger.valueOf(23111116921L),
+          BigInteger.valueOf(-15267207222L),
+          BigInteger.valueOf(12545))
+    };
+    var legacyRestored = SesPathGeometry.read(legacy, 1.0);
     var restored = SesPathGeometry.read(exact, BigFraction.ONE);
-    assertEquals(expected.cornerCount(), restored.cornerCount());
-    for (int index = 0; index < expected.cornerCount(); index++) {
-      assertEquals(expected.corner(index), restored.corner(index));
-    }
+    assertArrayEquals(expected, legacyRestored.corners());
+    assertArrayEquals(expected, restored.corners());
   }
 
   @Test

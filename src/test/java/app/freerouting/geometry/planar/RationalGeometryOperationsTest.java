@@ -101,9 +101,23 @@ class RationalGeometryOperationsTest {
   @Test
   void bigIntegerDirectionsRotateExactlyAndCompose() {
     BigInteger huge = BigInteger.ONE.shiftLeft(100);
-    Direction direction = new BigIntDirection(huge.add(BigInteger.ONE), huge);
+    BigInteger x = huge.add(BigInteger.ONE);
+    BigInteger twiceHugePlusOne = huge.shiftLeft(1).add(BigInteger.ONE);
+    Direction direction = new BigIntDirection(x, huge);
+    // Independent signed component expectations for each counterclockwise 45-degree step.
+    Direction[] expected = {
+      new BigIntDirection(x, huge),
+      new BigIntDirection(BigInteger.ONE, twiceHugePlusOne),
+      new BigIntDirection(huge.negate(), x),
+      new BigIntDirection(twiceHugePlusOne.negate(), BigInteger.ONE),
+      new BigIntDirection(x.negate(), huge.negate()),
+      new BigIntDirection(BigInteger.ONE.negate(), twiceHugePlusOne.negate()),
+      new BigIntDirection(huge, x.negate()),
+      new BigIntDirection(twiceHugePlusOne, BigInteger.ONE.negate())
+    };
     for (int factor = -9; factor <= 9; factor++) {
       Direction rotated = direction.turn45Degree(factor);
+      assertEquals(expected[Math.floorMod(factor, 8)], rotated, "Rotation factor " + factor);
       assertEquals(direction, rotated.turn45Degree(-factor));
       assertEquals(rotated, direction.turn45Degree(1).turn45Degree(factor - 1));
     }

@@ -1,6 +1,7 @@
 package app.freerouting.board.model.items;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -79,9 +80,16 @@ class DrillItemIntegerPositionTest {
     assertEquals(center, via.getCenter());
     assertEquals(before, new ArrayList<>(board.getItems()));
     assertTrue(board.overlappingObjects(TileShape.getInstance(center), 0).contains(via));
-    via.moveBy(integral);
-    assertEquals(new IntPoint(2, 0), via.getCenter());
-    assertTrue(board.overlappingObjects(TileShape.getInstance(via.getCenter()), 0).contains(via));
+    // Move beyond the old pad envelope so a stale tree entry cannot satisfy the lookup.
+    Vector largeIntegral =
+        new RationalVector(BigInteger.valueOf(2000), BigInteger.ZERO, BigInteger.TWO);
+    via.moveBy(largeIntegral);
+    assertEquals(new IntPoint(1001, 0), via.getCenter());
+    for (int layer = 0; layer < 2; layer++) {
+      assertTrue(
+          board.overlappingObjects(TileShape.getInstance(via.getCenter()), layer).contains(via));
+      assertFalse(board.overlappingObjects(TileShape.getInstance(center), layer).contains(via));
+    }
     assertEquals(
         new IntPoint(1, 0), shape.translateBy(integral).boundingBox().centreOfGravity().round());
     assertThrows(IllegalArgumentException.class, () -> shape.translateBy(fractional));

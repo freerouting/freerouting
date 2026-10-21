@@ -29,6 +29,8 @@ import app.freerouting.rules.ClearanceMatrix;
 import app.freerouting.settings.GlobalSettings;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -65,7 +67,7 @@ class RationalInteriorTraceContactTest {
             0,
             1,
             FixedState.UNFIXED);
-    Point junction = branch(1).lastCorner();
+    Point junction = Point.getInstance(BigInteger.ONE, BigInteger.ONE, BigInteger.TWO);
     if (keepPoint) {
       assertTrue(
           TraceTightener.getInstance(board, new int[] {1}, null, 500, null, -1, junction, 0)
@@ -79,6 +81,15 @@ class RationalInteriorTraceContactTest {
     }
     assertFalse(trunk.isOnTheBoard());
     assertEquals(2, board.getTraces().size());
+    var livePieces = board.getTraces().stream().map(trace -> (PolylineTrace) trace).toList();
+    assertTrue(livePieces.stream().allMatch(piece -> piece.cornerCount() == 2));
+    assertEquals(
+        Set.of(
+            Set.of(new IntPoint(-1000, -1000), junction),
+            Set.of(junction, new IntPoint(1000, 1000))),
+        livePieces.stream()
+            .map(piece -> Set.of(piece.firstCorner(), piece.lastCorner()))
+            .collect(Collectors.toSet()));
     assertEquals(1, board.getConnectedSets(1).size());
     assertTrue(new DesignRulesChecker(board, null).getAllClearanceViolations().isEmpty());
   }
