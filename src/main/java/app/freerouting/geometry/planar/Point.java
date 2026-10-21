@@ -6,6 +6,28 @@ import java.math.BigInteger;
 /** Abstract class describing functionality for Points in the plane. */
 public abstract sealed class Point implements Serializable permits IntPoint, RationalPoint {
 
+  /**
+   * Returns the identical integer coordinate, or rejects a fractional/infinite/out-of-range point.
+   */
+  public final IntPoint toIntegerExact() {
+    if (this instanceof IntPoint integer) {
+      return integer;
+    }
+    RationalPoint rational = (RationalPoint) this;
+    if (rational.isInfinite()) {
+      throw new IllegalArgumentException("An infinite point is not an integer board position");
+    }
+    BigInteger[] x = rational.x.divideAndRemainder(rational.z);
+    BigInteger[] y = rational.y.divideAndRemainder(rational.z);
+    if (x[1].signum() != 0
+        || y[1].signum() != 0
+        || x[0].abs().compareTo(Limits.CRIT_INT_BIG) > 0
+        || y[0].abs().compareTo(Limits.CRIT_INT_BIG) > 0) {
+      throw new IllegalArgumentException("The point is not a bounded integer board position");
+    }
+    return new IntPoint(x[0].intValueExact(), y[0].intValueExact());
+  }
+
   /** Standard implementation of the zero point. */
   public static final IntPoint ZERO = new IntPoint(0, 0);
 

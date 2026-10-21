@@ -18,12 +18,16 @@ public class Line implements Comparable<Line>, Serializable {
 
   /** Creates a directed Line from two points. */
   public Line(Point a, Point b) {
-    this.a = a;
-    this.b = b;
-    this.dir = null;
-    if (!(a instanceof IntPoint && b instanceof IntPoint)) {
-      FRLogger.warn("Line(a, b) only implemented for IntPoints till now");
+    if (a instanceof IntPoint && b instanceof IntPoint) {
+      this.a = a;
+      this.b = b;
+      this.dir = null;
+      return;
     }
+    IntPoint[] support = integerSupport(a, b);
+    this.a = support[0];
+    this.b = support[1];
+    this.dir = null;
   }
 
   /** Creates a directed Line from four integer coordinates. */
@@ -35,12 +39,137 @@ public class Line implements Comparable<Line>, Serializable {
 
   /** Creates a directed Line from a point and a direction. */
   public Line(Point a, Direction dir) {
-    this.a = a;
-    this.b = a.translateBy(dir.getVector());
-    this.dir = dir;
-    if (!(a instanceof IntPoint && b instanceof IntPoint)) {
-      FRLogger.warn("Line(a, dir) only implemented for IntPoints till now");
+    Point b = a.translateBy(dir.getVector());
+    if (a instanceof IntPoint && b instanceof IntPoint) {
+      this.a = a;
+      this.b = b;
+      this.dir = dir;
+      return;
     }
+    IntPoint[] support = integerSupport(a, b);
+    this.a = support[0];
+    this.b = support[1];
+    this.dir = null;
+  }
+
+  /** Finds a bounded, nonparallel cap at an exact point without rounding it. */
+  public Line capAt(Point point) {
+    try {
+      return new Line(point, direction().turn45Degree(2));
+    } catch (IllegalArgumentException unsupportedPerpendicular) {
+      if (point == null || point.isInfinite()) {
+        return null;
+      }
+      BigInteger[] coordinates = rationalCoordinates(point);
+      BigInteger x = floorDivide(coordinates[0], coordinates[2]);
+      BigInteger y = floorDivide(coordinates[1], coordinates[2]);
+      for (int[] offset : new int[][] {{0, 0}, {1, 0}, {0, 1}, {-1, 0}, {0, -1}}) {
+        BigInteger ax = x.add(BigInteger.valueOf(offset[0]));
+        BigInteger ay = y.add(BigInteger.valueOf(offset[1]));
+        if (ax.abs().compareTo(Limits.CRIT_INT_BIG) > 0
+            || ay.abs().compareTo(Limits.CRIT_INT_BIG) > 0) {
+          continue;
+        }
+        try {
+          Line cap = new Line(point, new IntPoint(ax.intValueExact(), ay.intValueExact()));
+          if (!isParallel(cap)) {
+            return cap;
+          }
+        } catch (IllegalArgumentException unsupportedCap) {
+          // Try the next exact lattice direction; never move the junction.
+        }
+      }
+      return null;
+    }
+  }
+
+  /** Resolves exact points to the bounded integer supports required by line operations. */
+  private static IntPoint[] integerSupport(Point first, Point second) {
+    if (first instanceof IntPoint a && second instanceof IntPoint b) {
+      return new IntPoint[] {a, b};
+    }
+    if (first == null || second == null || first.isInfinite() || second.isInfinite()) {
+      throw new IllegalArgumentException("A line requires finite points");
+    }
+    BigInteger[] a = rationalCoordinates(first);
+    BigInteger[] b = rationalCoordinates(second);
+    BigInteger dx = b[0].multiply(a[2]).subtract(a[0].multiply(b[2]));
+    BigInteger dy = b[1].multiply(a[2]).subtract(a[1].multiply(b[2]));
+    BigInteger gcd = dx.gcd(dy);
+    if (gcd.signum() == 0) {
+      throw new IllegalArgumentException("A line requires distinct points");
+    }
+    dx = dx.divide(gcd);
+    dy = dy.divide(gcd);
+    BigInteger[] constant = a[0].multiply(dy).subtract(a[1].multiply(dx)).divideAndRemainder(a[2]);
+    if (constant[1].signum() != 0) {
+      throw new IllegalArgumentException("The line has no integer defining points");
+    }
+    BigInteger x;
+    BigInteger y;
+    if (dx.signum() == 0) {
+      x = constant[0].divide(dy);
+      y = BigInteger.ZERO;
+    } else {
+      BigInteger modulus = dx.abs();
+      x = constant[0].multiply(dy.mod(modulus).modInverse(modulus)).mod(modulus);
+      y = dy.multiply(x).subtract(constant[0]).divide(dx);
+    }
+    BigInteger[] interval = {null, null};
+    restrictSupportParameter(interval, x, dx);
+    restrictSupportParameter(interval, y, dy);
+    if (interval[0].compareTo(interval[1]) > 0) {
+      throw new IllegalArgumentException("The line has no bounded integer defining points");
+    }
+    BigInteger step =
+        dx.signum() == 0
+            ? floorDivide(a[1].subtract(y.multiply(a[2])), dy.multiply(a[2]))
+            : floorDivide(a[0].subtract(x.multiply(a[2])), dx.multiply(a[2]));
+    step = step.max(interval[0]).min(interval[1]);
+    x = x.add(step.multiply(dx));
+    y = y.add(step.multiply(dy));
+    return new IntPoint[] {
+      new IntPoint(x.intValueExact(), y.intValueExact()),
+      new IntPoint(x.add(dx).intValueExact(), y.add(dy).intValueExact())
+    };
+  }
+
+  private static BigInteger[] rationalCoordinates(Point point) {
+    if (point instanceof IntPoint integer) {
+      return new BigInteger[] {
+        BigInteger.valueOf(integer.x), BigInteger.valueOf(integer.y), BigInteger.ONE
+      };
+    }
+    RationalPoint rational = (RationalPoint) point;
+    return new BigInteger[] {rational.x, rational.y, rational.z};
+  }
+
+  private static void restrictSupportParameter(
+      BigInteger[] interval, BigInteger origin, BigInteger direction) {
+    BigInteger limit = Limits.CRIT_INT_BIG;
+    BigInteger low = limit.negate().max(limit.negate().subtract(direction));
+    BigInteger high = limit.min(limit.subtract(direction));
+    if (direction.signum() == 0) {
+      if (origin.compareTo(low) < 0 || origin.compareTo(high) > 0) {
+        throw new IllegalArgumentException("The line is outside the integer coordinate range");
+      }
+      return;
+    }
+    BigInteger start = direction.signum() > 0 ? low : high;
+    BigInteger end = direction.signum() > 0 ? high : low;
+    BigInteger lower = floorDivide(start.subtract(origin).negate(), direction).negate();
+    BigInteger upper = floorDivide(end.subtract(origin), direction);
+    interval[0] = interval[0] == null ? lower : interval[0].max(lower);
+    interval[1] = interval[1] == null ? upper : interval[1].min(upper);
+  }
+
+  private static BigInteger floorDivide(BigInteger numerator, BigInteger denominator) {
+    if (denominator.signum() < 0) {
+      numerator = numerator.negate();
+      denominator = denominator.negate();
+    }
+    BigInteger[] quotient = numerator.divideAndRemainder(denominator);
+    return quotient[1].signum() < 0 ? quotient[0].subtract(BigInteger.ONE) : quotient[0];
   }
 
   /** Creates a directed line from an IntPoint and an IntDirection. */

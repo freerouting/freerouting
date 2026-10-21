@@ -268,7 +268,7 @@ public final class IntOctagon extends RegularTileShape implements Serializable {
     if (relCoor.equals(Vector.ZERO)) {
       return this;
     }
-    IntVector relativeCoordinate = (IntVector) relCoor;
+    IntVector relativeCoordinate = relCoor.toIntegerExact();
     return new IntOctagon(
         leftX + relativeCoordinate.x,
         bottomY + relativeCoordinate.y,
