@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Collection;
@@ -587,6 +588,8 @@ public class SpecctraDsnStreamReader implements IJFlexScanner {
   /** zzAtEOF == true <=> the scanner is at the EOF */
   private boolean zzAtEOF;
 
+  private boolean exactNumbers;
+
   private Character[] stringSkipTrailing = {8, 9, 32};
   private Character[] stringSkipTrailingNewLines = {8, 9, 10, 13, 32};
   private Character[] stringStopAt = {8, 9, 10, 13, 32, 40, 41};
@@ -608,6 +611,12 @@ public class SpecctraDsnStreamReader implements IJFlexScanner {
    */
   public SpecctraDsnStreamReader(InputStream in) {
     this(new InputStreamReader(in));
+  }
+
+  /** Enables decimal numeric tokens for SES without changing legacy DSN token types. */
+  public SpecctraDsnStreamReader(InputStream in, boolean exactNumbers) {
+    this(in);
+    this.exactNumbers = exactNumbers;
   }
 
   private static int[] zzUnpackAction() {
@@ -1684,7 +1693,7 @@ public class SpecctraDsnStreamReader implements IJFlexScanner {
           break;
         case 5:
           {
-            return Integer.valueOf(yytext());
+            return exactNumbers ? new BigDecimal(yytext()) : Integer.valueOf(yytext());
           }
         case 236:
           break;
@@ -1733,7 +1742,7 @@ public class SpecctraDsnStreamReader implements IJFlexScanner {
     return nextString(ignoreNewline, ' ');
   }
 
-  private double readFloatingToken() throws IOException {
+  private Number readFloatingToken() throws IOException {
     boolean hasExp = false;
     for (int i = zzStartRead; i < zzMarkedPos; i++) {
       char c = zzBuffer[i];
@@ -1757,7 +1766,8 @@ public class SpecctraDsnStreamReader implements IJFlexScanner {
         zzMarkedPos++;
       }
     }
-    return Double.parseDouble(new String(zzBuffer, zzStartRead, zzMarkedPos - zzStartRead));
+    String literal = new String(zzBuffer, zzStartRead, zzMarkedPos - zzStartRead);
+    return exactNumbers ? new BigDecimal(literal) : Double.valueOf(literal);
   }
 
   private boolean hasStringChar(int offset) {

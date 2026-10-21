@@ -583,39 +583,47 @@ File parsing and export live in `io.specctra`.
 
 When diagnosing a load or export issue, begin here.
 
-SES geometry conversion stays in `io.specctra`, independently of the routing algorithms.
-`SesTracePath` writes finite decimal coordinates and widths using the board's existing
-coordinate transform. Endpoint snapping must not collapse any nonzero segment, including
-an interior segment of a longer path. Real point copper keeps its width and two coincident
-endpoints in the standard `path` syntax accepted by KiCad.
+SES geometry conversion stays in `io.specctra`, independently of routing algorithms.
+`SesTracePath` uses `Point.exactCoordinates()` and exact unit/resolution scaling rather
+than converting rational corners through floating point. `SesNumbers` emits ordinary
+decimal tokens accepted by KiCad. Noninteger coordinates retain a fixed fractional
+scale of at least 24 places and more than twice the reduced denominator's decimal
+length. Trailing zeros certify a rounding interval narrow enough to recover the
+original as its unique lowest-denominator fraction. Endpoint snapping cannot collapse
+a nonzero segment; real point copper retains its width and two coincident endpoints.
 
-`SesReader` applies the session's unit and resolution before constructing board objects.
-`SesPathGeometry` reconstructs the existing integer supporting-line representation;
-Apache Commons Numbers Fraction recovers rational intersections within four ULPs of
-serialization noise, with bounded convergence. Approximation is restricted to the
-fractional part so large legal board coordinates do not exceed the library's convergent
-numerator limit. The main and standalone CLI runtime classpaths both include this
-dependency. The executable JAR preserves the core and fraction modules' licence and
-notice files under distinct `META-INF/licenses/commons-numbers-*` paths. Corners may
-share a projective denominator only when both original coordinates
-remain within that tolerance. Integer congruence bases are reduced with at most 128
-steps to reconstruct short supporting lines, so a large intersection denominator is not
-mistaken for an out-of-range board coordinate. This is SES representation recovery;
-no routing decision or board grid is changed.
+`SesReader` enables exact decimal tokens on `SpecctraDsnStreamReader`; the default DSN
+scanner keeps its existing integer/double token types. Decimal text and session scaling
+remain exact through `SesNumbers` and `SesPathGeometry`. Rational recovery identifies
+the lowest-denominator fraction in the external token's half-last-place interval before
+applying session scaling, then checks the result against the existing four-ULP binary
+serialization envelope. Legacy widths and via centres may recover an integer only
+inside that same envelope. This is representation recovery, not a contact-matching
+or manufacturing tolerance. Exact integer coordinates beyond the scanner's old 32-bit
+raw-token limit are permitted when the scaled board geometry is representable.
 
-Finite-decimal SES paths and per-coordinate rational recovery do not guarantee exact
-incidence with every separately represented preserved supporting line. A reimported
-endpoint can lie microscopically off the centerline even when the copper overlaps and
-the host EDA tool reports no open. Validate the live contact graph and the exported
-board in the host EDA tool; a graph difference after SES reimport needs its own
-representation-recovery diagnosis.
+Older double-derived sessions do not carry enough digits to guarantee original exact
+incidence. For an otherwise unrepresentable two-corner connector with an integer
+endpoint, legacy recovery constrains a primitive direction and a single rational
+parameter using both original coordinate envelopes together. Every restored endpoint
+must remain inside the unchanged four-ULP envelopes and have bounded integer supports;
+ambiguous, collapsed or unsupported geometry is refused. No broader electrical
+connectivity policy or board-grid change is implied. Files reformatted by another
+program need not retain the new writer's precision guarantee.
 
-The reader checks actual insertion before counting an imported wire. It rejects widths,
-coordinates and supporting lines outside the board representation, distinct endpoints
-that collapse at serialization precision, and collinear reversals that `Polyline` would
-otherwise shorten. Monotone collinear simplification is allowed because it preserves the
-same copper. Rejected wires are reported as errors rather than moved, removed or counted
-as successful imports. KiCad performs its own final nanometre-grid conversion.
+Apache Commons Numbers Fraction supplies exact fraction arithmetic. The main and
+standalone CLI classpaths include it; executable JARs preserve its core/fraction licence
+and notice files under distinct `META-INF/licenses/commons-numbers-*` paths. Integer
+congruence bases use at most 128 reduction steps to restore supported endpoint caps.
+
+The reader checks actual insertion before counting an imported wire. Legacy
+single-vertex paths create real point copper. Invalid paths, out-of-range coordinates,
+unrepresentable widths/supports, distinct endpoints that collapse during conversion and
+collinear reversals are reported as errors rather than moved or counted as imports.
+Monotone collinear simplification is allowed because it preserves the same copper.
+Via centres must remain integer board positions. Validate live connectivity, SES
+reimport, preserved geometry and comprehensive DRC independently, then check the host
+EDA import: KiCad performs its own final nanometre-grid conversion.
 
 
 ### Native CLI and Startup Path

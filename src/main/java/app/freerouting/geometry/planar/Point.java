@@ -1,10 +1,21 @@
 package app.freerouting.geometry.planar;
 
+import app.freerouting.datastructures.BigIntAux;
 import java.io.Serializable;
 import java.math.BigInteger;
 
 /** Abstract class describing functionality for Points in the plane. */
 public abstract sealed class Point implements Serializable permits IntPoint, RationalPoint {
+
+  /** Immutable exact coordinates for interchange; affine coordinates are x/z and y/z. */
+  public final BigIntAux.RationalCoordinates exactCoordinates() {
+    if (this instanceof IntPoint integer) {
+      return new BigIntAux.RationalCoordinates(
+          BigInteger.valueOf(integer.x), BigInteger.valueOf(integer.y), BigInteger.ONE);
+    }
+    RationalPoint rational = (RationalPoint) this;
+    return new BigIntAux.RationalCoordinates(rational.x, rational.y, rational.z);
+  }
 
   /**
    * Returns the identical integer coordinate, or rejects a fractional/infinite/out-of-range point.
