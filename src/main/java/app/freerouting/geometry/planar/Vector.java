@@ -10,6 +10,15 @@ import java.math.BigInteger;
  */
 public abstract class Vector implements Serializable {
 
+  /** Returns the identical bounded integer displacement without rounding fractional vectors. */
+  public final IntVector toIntegerExact() {
+    if (this instanceof IntVector integer) {
+      return integer;
+    }
+    IntPoint integer = Point.ZERO.translateBy(this).toIntegerExact();
+    return new IntVector(integer.x, integer.y);
+  }
+
   /** Standard implementation of the zero vector. */
   public static final IntVector ZERO = new IntVector(0, 0);
 

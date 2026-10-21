@@ -271,15 +271,31 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     return !isUserFixed() && (this.netCount() > 0);
   }
 
-  /** Returns true, if this trace is not contacted at its first or at its last point. */
+  /** Returns true if an endpoint dangles, including traces with unsplit interior junctions. */
   @Override
   public boolean isTail() {
-    Collection<Item> startContactList = this.getStartContacts();
-    if (startContactList.isEmpty()) {
-      return true;
+    return getStartContacts().isEmpty() || getEndContacts().isEmpty();
+  }
+
+  /** Returns whether another trace endpoint or drill center contacts this trace's interior. */
+  public boolean hasInteriorContacts() {
+    for (Item contact : getNormalContacts()) {
+      if (contact instanceof Trace trace) {
+        if (isInteriorPoint(trace.firstCorner()) || isInteriorPoint(trace.lastCorner())) {
+          return true;
+        }
+      } else if (contact instanceof DrillItem drill && isInteriorPoint(drill.getCenter())) {
+        return true;
+      }
     }
-    Collection<Item> endContactList = this.getEndContacts();
-    return endContactList.isEmpty();
+    return false;
+  }
+
+  private boolean isInteriorPoint(Point point) {
+    return point != null
+        && !point.equals(firstCorner())
+        && !point.equals(lastCorner())
+        && contains(point);
   }
 
   @Override

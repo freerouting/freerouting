@@ -253,7 +253,13 @@ class Issue955PlacementLifecycleTest {
             .filter(l -> l.contains("place S21 "))
             .findFirst()
             .orElseThrow();
-    assertTrue(placement.contains("2097468.06 -1213891.58"));
+    String[] tokens = placement.strip().split("\\s+");
+    assertEquals(
+        new java.math.BigDecimal("2097468.06"),
+        new java.math.BigDecimal(tokens[2]).stripTrailingZeros());
+    assertEquals(
+        new java.math.BigDecimal("-1213891.58"),
+        new java.math.BigDecimal(tokens[3]).stripTrailingZeros());
   }
 
   @Test

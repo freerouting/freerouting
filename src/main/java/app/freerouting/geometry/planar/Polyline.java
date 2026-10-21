@@ -44,11 +44,9 @@ public class Polyline implements Serializable {
     // construct perpendicular lines at the start and at the end to represent
     // the first and the last point of points as intersection of lines.
 
-    Direction dir = Direction.getInstance(points[0], points[1]);
-    lines[0] = Line.getInstance(points[0], dir.turn45Degree(2));
-
-    dir = Direction.getInstance(points[points.length - 1], points[points.length - 2]);
-    lines[points.length] = Line.getInstance(points[points.length - 1], dir.turn45Degree(2));
+    lines[0] = endpointCap(lines[1], points[0]);
+    lines[points.length] =
+        endpointCap(lines[points.length - 1].opposite(), points[points.length - 1]);
   }
 
   /** Creates a polyline from an array of points. */
@@ -63,11 +61,9 @@ public class Polyline implements Serializable {
       return;
     }
     lines = new Line[3];
-    Direction dir = Direction.getInstance(fromCorner, toCorner);
-    lines[0] = Line.getInstance(fromCorner, dir.turn45Degree(2));
     lines[1] = new Line(fromCorner, toCorner);
-    dir = Direction.getInstance(fromCorner, toCorner);
-    lines[2] = Line.getInstance(toCorner, dir.turn45Degree(2));
+    lines[0] = endpointCap(lines[1], fromCorner);
+    lines[2] = endpointCap(lines[1], toCorner);
   }
 
   /**
@@ -102,6 +98,14 @@ public class Polyline implements Serializable {
       }
     }
     this.lines = filteredLines;
+  }
+
+  private static Line endpointCap(Line support, Point point) {
+    Line cap = support.capAt(point);
+    if (cap == null) {
+      throw new IllegalArgumentException("The polyline endpoint has no bounded integer cap");
+    }
+    return cap;
   }
 
   private static Line[] removeConsecutiveParallelLines(Line[] lines) {
@@ -891,7 +895,12 @@ public class Polyline implements Serializable {
         if (directionTowardsLine == null) {
           continue;
         }
-        Line currentResultLine = new Line(point, directionTowardsLine);
+        Line currentResultLine;
+        try {
+          currentResultLine = new Line(point, directionTowardsLine);
+        } catch (IllegalArgumentException unsupportedProjection) {
+          continue;
+        }
         Point prevCorner = this.corner(i - 1);
         Point nextCorner = this.corner(i);
         Side prevCornerSide = currentResultLine.sideOf(prevCorner);
@@ -908,7 +917,13 @@ public class Polyline implements Serializable {
     if (nearestLine == null) {
       return null;
     }
-    Line startLine = new Line(point, nearestLine.direction());
+    Line startLine =
+        point instanceof IntPoint
+            ? new Line(point, nearestLine.direction())
+            : resultLine.capAt(point);
+    if (startLine == null) {
+      return null;
+    }
     return new LineSegment(startLine, resultLine, nearestLine);
   }
 

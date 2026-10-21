@@ -11,7 +11,10 @@ import app.freerouting.board.model.structure.LayerStructure;
 import app.freerouting.board.model.structure.Unit;
 import app.freerouting.board.state.Communication;
 import app.freerouting.board.trace.PolylineTrace;
+import app.freerouting.geometry.planar.Direction;
 import app.freerouting.geometry.planar.IntBox;
+import app.freerouting.geometry.planar.IntPoint;
+import app.freerouting.geometry.planar.IntVector;
 import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;
@@ -21,6 +24,7 @@ import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.ClearanceMatrix;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -56,6 +60,8 @@ class SesGeometryRoundTripTest {
   @ParameterizedTest
   @CsvSource({
     "UM,10,10",
+    "UM,3,10",
+    "UM,7,10",
     "UM,1000,1000",
     "UM,100,10",
     "MM,1000,1000",
@@ -189,6 +195,7 @@ class SesGeometryRoundTripTest {
     for (int index = 0; index < original.polyline().cornerCount(); index++) {
       var before = original.polyline().corner(index).toFloat();
       var after = imported.polyline().corner(index).toFloat();
+      assertEquals(original.polyline().corner(index), imported.polyline().corner(index));
       assertEquals(before.x, after.x, 4 * Math.ulp(before.x));
       assertEquals(before.y, after.y, 4 * Math.ulp(before.y));
     }
@@ -241,6 +248,7 @@ class SesGeometryRoundTripTest {
     for (int index = 0; index < original.polyline().cornerCount(); index++) {
       var before = original.polyline().corner(index).toFloat();
       var after = imported.polyline().corner(index).toFloat();
+      assertEquals(original.polyline().corner(index), imported.polyline().corner(index));
       assertEquals(before.x, after.x, 4 * Math.ulp(before.x));
       assertEquals(before.y, after.y, 4 * Math.ulp(before.y));
     }
@@ -280,6 +288,71 @@ class SesGeometryRoundTripTest {
     assertEquals(1.0, imported.getFirst().firstCorner().toFloat().y, 1e-9);
     assertEquals(1.5, imported.getFirst().lastCorner().toFloat().x, 1e-9);
     assertEquals(3.0, imported.getFirst().lastCorner().toFloat().y, 1e-9);
+  }
+
+  @Test
+  void exactRationalInteriorJunctionSurvivesSesExportAndReimport() throws Exception {
+    BasicBoard source = board(Unit.UM, 1000, 1000);
+    Point junction =
+        Point.getInstance(
+            BigInteger.valueOf(357180298144L),
+            BigInteger.valueOf(-124230707150L),
+            BigInteger.valueOf(178933));
+    Line trunk = new Line(junction, Direction.getInstance(new IntVector(421, -425)));
+    IntVector along = new IntVector(4210, -4250);
+    final PolylineTrace preserved =
+        insert(
+            source, new Polyline(trunk.a.translateBy(along.negate()), trunk.b.translateBy(along)));
+    Line support = new Line(new IntPoint(1996168, -694286), new IntPoint(1995743, -694707));
+    Line otherCap =
+        new Line(
+            trunk.a.translateBy(new IntVector(1, 0)), trunk.b.translateBy(new IntVector(1, 0)));
+    final PolylineTrace branch =
+        insert(source, new Polyline(new Line[] {otherCap, support, trunk}));
+    assertEquals(junction, branch.lastCorner());
+    assertEquals(1, source.getConnectedSets(1).size());
+    byte[] session = write(source);
+    BasicBoard target = board(Unit.UM, 1000, 1000);
+    SesImportSummary imported = SesReader.read(new ByteArrayInputStream(session), target);
+    assertEquals(2, imported.wiresImported());
+    assertEquals(0, imported.errorsEncountered());
+    assertEquals(1, target.getConnectedSets(1).size());
+    List<PolylineTrace> restored = traces(target);
+    for (PolylineTrace original : List.of(preserved, branch)) {
+      assertTrue(
+          restored.stream()
+              .anyMatch(
+                  trace ->
+                      java.util.Arrays.equals(
+                          original.polyline().corners(), trace.polyline().corners())));
+    }
+  }
+
+  @Test
+  void exactIntegerCoordinatesLargerThanScannerIntRangeRoundTrip() throws Exception {
+    BasicBoard source = board(Unit.UM, 1000000, 1000);
+    final PolylineTrace original =
+        insert(source, new Polyline(new IntPoint(3000000, 0), new IntPoint(3000010, 0)));
+    BasicBoard target = board(Unit.UM, 1000000, 1000);
+    SesImportSummary imported = SesReader.read(new ByteArrayInputStream(write(source)), target);
+    assertEquals(0, imported.errorsEncountered());
+    assertEquals(1, imported.wiresImported());
+    assertEquals(original.firstCorner(), traces(target).getFirst().firstCorner());
+    assertEquals(original.lastCorner(), traces(target).getFirst().lastCorner());
+  }
+
+  @Test
+  void singleVertexSessionPathCreatesActualPointCopper() throws Exception {
+    BasicBoard target = board(Unit.UM, 10, 10);
+    String session =
+        "(session point (routes (resolution um 10) (network_out (net TEST (wire (path F.Cu 20 100"
+            + " 100))))))";
+    SesImportSummary imported =
+        SesReader.read(new ByteArrayInputStream(session.getBytes(StandardCharsets.UTF_8)), target);
+    assertEquals(1, imported.wiresImported());
+    assertEquals(0, imported.errorsEncountered());
+    assertEquals(new IntPoint(100, 100), traces(target).getFirst().firstCorner());
+    assertEquals(new IntPoint(100, 100), traces(target).getFirst().lastCorner());
   }
 
   private static byte[] write(BasicBoard board) throws Exception {
