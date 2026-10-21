@@ -478,10 +478,26 @@ The autorouter may also temporarily rip up nearby conflicting traces or vias if 
 Preserved traces (`USER_FIXED` and `SYSTEM_FIXED`, such as KiCad footprint tracks or SPECCTRA DSN `route`/`fix` wires) must retain their exact geometry without mutation or splitting throughout routing, normalization, and export:
 
 - **Centerline Contact Model:** Rather than splitting preserved geometry into separate sub-traces (which would mutate user geometry and emit fragmented wires upon export), Freerouting recognizes electrical junctions where branch trace endpoints or drill items lie along the centerline or internal bends of an existing trace via `Trace.contains(Point)`.
+- **Exact Finite Membership:** Integer points and finite rational line intersections are supported at trace endpoints, internal bends, and segment interiors. Membership requires exact collinearity and closed finite bounds, without coordinate rounding or a distance tolerance. Contact queries retain net/layer filtering, and multiple distinct shared points remain ambiguous to `normalContactPoint()`.
 - **Bidirectional Contact Symmetry:** `Trace.getNormalContacts()`, `Trace.getNormalContacts(Point, boolean)`, `Trace.normalContactPoint()`, and `DrillItem.getNormalContacts()` inspect overlapping items to ensure symmetric reachability for connected set traversal (`getConnectedSetRecu`).
-- **Tail Cleanup Safety:** Branches meeting preserved trace centerlines report valid contact points and are not misclassified as dangling tails (`isTail() == false`), ensuring `RoutingBoard.removeTraceTails()` preserves valid junctions.
+- **Tail Cleanup Safety:** `isTail()` retains its diagnostic meaning: an outer endpoint dangles, including on traces with unsplit interior junctions. Cleanup separately protects whole traces containing interior trace/drill contacts. Endpoint-tail lookup and whole-connection collection preserve those junctions; normalization can split them before trimming the dangling portions. Ordinary endpoint-only stubs remain removable, and DRC still reports dangling endpoints.
+- **Exact Rational Splitting:** Rational split points use integer-defined nonparallel caps with exact intersection checks. Existing endpoint caps are reused; interior points try bounded nearby lattice anchors without moving the point. If no supported cap is found, splitting safely returns no change before mutation. The bounded search is not a complete solver for all representable rational points.
 - **Normalization Stability:** Traces meeting preserved copper do not oscillate between split and combine passes in `BasicBoard.normalizeTraces()`, preventing infinite ping-pong loops.
 - **Export Fidelity:** Preserved traces are written to Specctra SES files (`SesWriter`) with their original unbroken coordinate spans, preserving 1:1 parity with KiCad and other EDA tools.
+
+`FoundConnectionInserter` completes both endpoint attachments before stub cleanup and
+normalization, checks each attachment result using that endpoint's layer width, and
+requires same-net normal-contact reachability between the terminal components before
+reporting success. Mutable terminal traces can be replaced by splitting or combining;
+captured component witnesses and exact-point lookup resolve the surviving board items.
+Both fixed and mutable terminals capture their original components, including mutable
+branches. A single live graph traversal must reach every surviving witness from both
+components, rather than accepting one member from each or seeding disconnected members.
+This verifies surviving-item reachability; replacement of an entirely removed component
+uses its exact anchor, rather than asserting preservation of every old geometric span.
+A fanout without a destination item must reach its newly inserted via. Failed insertion
+returns failure while leaving successfully inserted copper to the existing retry and
+cleanup flow.
 
 #### Optimizer
 
@@ -584,6 +600,13 @@ remain within that tolerance. Integer congruence bases are reduced with at most 
 steps to reconstruct short supporting lines, so a large intersection denominator is not
 mistaken for an out-of-range board coordinate. This is SES representation recovery;
 no routing decision or board grid is changed.
+
+Finite-decimal SES paths and per-coordinate rational recovery do not guarantee exact
+incidence with every separately represented preserved supporting line. A reimported
+endpoint can lie microscopically off the centerline even when the copper overlaps and
+the host EDA tool reports no open. Validate the live contact graph and the exported
+board in the host EDA tool; a graph difference after SES reimport needs its own
+representation-recovery diagnosis.
 
 The reader checks actual insertion before counting an imported wire. It rejects widths,
 coordinates and supporting lines outside the board representation, distinct endpoints
