@@ -59,6 +59,7 @@ public abstract class FoundConnectionLocator {
    */
   protected final BacktrackElement[] backtrackArray;
 
+  protected boolean constructionFailed;
   protected final AutorouteControl ctrl;
   protected final ShapeSearchTree searchTree;
   protected final AngleRestriction angleRestriction;
@@ -211,6 +212,10 @@ public abstract class FoundConnectionLocator {
       this.currentToDoorIndex = this.currentFromDoorIndex + 1;
       ResultItem nextTrace = this.calculateNextTrace(layerChanged, atFanoutEnd);
       atFanoutEnd = false;
+      if (nextTrace == null) {
+        this.connectionItems.clear();
+        return;
+      }
       this.connectionItems.add(nextTrace);
     }
   }
@@ -237,7 +242,7 @@ public abstract class FoundConnectionLocator {
           new FoundConnectionLocatorAnyAngle(
               mazeSearchResult, ctrl, searchTree, angleRestriction, rippedItemList, ripupCosts);
     }
-    return result;
+    return result.constructionFailed ? null : result;
   }
 
   /**
@@ -489,6 +494,9 @@ public abstract class FoundConnectionLocator {
     FloatPoint prevCorner = this.currentFromPoint;
     for (; ; ) {
       Collection<FloatPoint> nextCorners = calculateNextTraceCorners();
+      if (constructionFailed) {
+        return null;
+      }
       if (nextCorners.isEmpty()) {
         break;
       }
@@ -589,6 +597,14 @@ public abstract class FoundConnectionLocator {
     }
     BacktrackElement currentFromInfo = this.backtrackArray[this.currentFromDoorIndex];
     if (currentFromInfo.nextRoom == null) {
+      return this.currentFromPoint;
+    }
+    TileShape room = currentFromInfo.nextRoom.getShape();
+    if (angleRestriction != AngleRestriction.NONE
+        && !(angleRestriction == AngleRestriction.NINETY_DEGREE
+            ? room.isIntBox()
+            : room.isIntOctagon())) {
+      // The general-room locator constructs a contained entry path, including any extra bends.
       return this.currentFromPoint;
     }
     double shrinkOffset =

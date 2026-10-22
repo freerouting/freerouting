@@ -895,10 +895,12 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       Stoppable stoppableThread,
       TimeLimit timeLimit,
       boolean retainAutorouteDatabase) {
+    var searchTree = this.searchTreeManager.getAutorouteTree(traceClearanceClassIndex);
     if (this.autorouteEngine == null
         || !retainAutorouteDatabase
-        || this.autorouteEngine.autorouteSearchTree.compensatedClearanceClassNo
-            != traceClearanceClassIndex) {
+        || this.autorouteEngine.autorouteSearchTree != searchTree) {
+      // Rooms and drill state belong to one tree geometry, not merely one clearance class.
+      finishAutoroute();
       this.autorouteEngine =
           new AutorouteEngine(this, traceClearanceClassIndex, retainAutorouteDatabase);
     }
