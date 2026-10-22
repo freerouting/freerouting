@@ -167,7 +167,11 @@ public class FoundConnectionLocator45Degree extends FoundConnectionLocator {
               + ", current_from="
               + this.currentFromPoint);
     }
-    if (!shrinkedRoomShape.isEmpty()) {
+    boolean generalRoom =
+        !(this.angleRestriction == AngleRestriction.NINETY_DEGREE
+            ? roomShape.isIntBox()
+            : roomShape.isIntOctagon());
+    if (!generalRoom && !shrinkedRoomShape.isEmpty()) {
       // enter the shrunk room shape by a 45-degree angle first
       FloatPoint nearestRoomPoint = shrinkedRoomShape.nearestPointApprox(this.currentFromPoint);
       boolean horizontalFirst =
@@ -194,8 +198,14 @@ public class FoundConnectionLocator45Degree extends FoundConnectionLocator {
             calculateAdditionalCorner(
                 this.currentFromPoint, nearestPoint, false, this.angleRestriction);
       }
-      result.add(addCorner);
-      result.add(nearestPoint);
+      if (generalRoom) {
+        if (!appendRoomPath(result, roomShape, shrinkOffset, nearestPoint)) {
+          return new LinkedList<>();
+        }
+      } else {
+        result.add(addCorner);
+        result.add(nearestPoint);
+      }
       ++this.currentToDoorIndex;
       if (this.ctrl.netNumber == 33 || this.ctrl.netNumber == 66 || this.ctrl.netNumber == 67) {
         FRLogger.trace(
@@ -279,10 +289,16 @@ public class FoundConnectionLocator45Degree extends FoundConnectionLocator {
     nearestToDoorPoint = roundToInteger(nearestToDoorPoint);
     boolean horizontalFirst =
         calcHorizontalFirstToDoor(currentToInfo.door, this.currentFromPoint, nearestToDoorPoint);
-    result.add(
-        calculateAdditionalCorner(
-            this.currentFromPoint, nearestToDoorPoint, horizontalFirst, this.angleRestriction));
-    result.add(nearestToDoorPoint);
+    if (generalRoom) {
+      if (!appendRoomPath(result, roomShape, shrinkOffset, nearestToDoorPoint)) {
+        return new LinkedList<>();
+      }
+    } else {
+      result.add(
+          calculateAdditionalCorner(
+              this.currentFromPoint, nearestToDoorPoint, horizontalFirst, this.angleRestriction));
+      result.add(nearestToDoorPoint);
+    }
     ++this.currentToDoorIndex;
     if (this.ctrl.netNumber == 33 || this.ctrl.netNumber == 66 || this.ctrl.netNumber == 67) {
       FRLogger.trace(
@@ -305,6 +321,25 @@ public class FoundConnectionLocator45Degree extends FoundConnectionLocator {
               + horizontalFirst);
     }
     return result;
+  }
+
+  private boolean appendRoomPath(
+      Collection<FloatPoint> result, TileShape room, int inset, FloatPoint target) {
+    var corners =
+        RestrictedAngleRoomPath.connect(
+            room, inset, currentFromPoint.round(), target.round(), angleRestriction);
+    if (corners == null) {
+      constructionFailed = true;
+      return false;
+    }
+    for (var corner : corners) {
+      result.add(corner.toFloat());
+    }
+    // A coincident door still needs to advance the caller's backtrack traversal.
+    if (corners.isEmpty()) {
+      result.add(target);
+    }
+    return true;
   }
 
   /**

@@ -26,7 +26,7 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
   public ObstacleExpansionRoom(Item item, int indexInItem, ShapeSearchTree shapeTree) {
     this.item = item;
     this.indexInItem = indexInItem;
-    this.shape = item.getTreeShape(shapeTree, indexInItem);
+    this.shape = shapeTree.getRoomShape(item, indexInItem);
     this.doors = new ArrayList<>();
   }
 

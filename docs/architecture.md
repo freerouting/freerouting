@@ -123,6 +123,53 @@ Use the table below to jump to the package most likely to own the behavior you a
 
 ## Clearance-query geometry contracts
 
+Autoroute room geometry is selected independently of permitted trace directions.
+`SearchTreeManager.getAutorouteTree()` inspects the general tree's outline pieces on all
+layers, including filled outside-area decomposition. If the pieces cannot be represented
+by the specialized solver's boxes or octagons without losing a boundary, it uses the
+general half-plane room solver. The configured 45-degree or 90-degree trace restriction
+still selects the path locator. This preserves long slanted outline boundaries instead
+of turning their enclosing octagons into false keepouts (#1014). Broad-phase index
+bounds remain octagonal for 45-degree routing and rectangular for orthogonal routing.
+General outline-room trees retain the specialized solver's non-outline obstacle
+envelopes through an immutable angle policy: rectangular-pad inflation, hole clearances,
+area bounds and trace offset updates keep their existing box/octagon conventions. A
+common room-obstacle hook applies these envelopes during clipping, neighbour
+construction and obstacle-room creation. The room-specific overlap query also filters by
+these envelopes; ordinary overlap/contact queries continue to filter by indexed shapes.
+Indexed trace shapes, contact queries and explicit net-tie cutouts remain unchanged;
+room envelopes retain their existing conservative approximation. The shape-only delegate
+is never indexed. The default interactive/general tree and uncompensated DRC tree keep
+their existing policies; this is not an exact-geometry guarantee for every item class.
+Simple rectangular outer outlines retain the fast orthogonal solver in strip mode:
+square end-cap excess is outside the board or behind the adjoining edge. Concave
+orthogonal outlines and multiple polygons do not use that exception.
+
+The tree cache distinguishes solver type, immutable obstacle-angle policy and clearance
+class. An existing general default tree remains reusable for its clearance class.
+Retained autoroute engines and rooms belong to a particular tree instance; selecting a
+different tree clears the previous engine's transient state. Outline shape indices and
+layer mapping are unchanged. Switching between outline strips and filled outside areas
+invalidates cached shapes and affected rooms around reinsertion. General rooms can
+change door topology, route ordering, allocation and runtime, so routing comparisons
+must measure completion, full DRC, determinism and search cost. Geometry selection
+preserves the existing neckdown policy: supply the native tool's minimum track width
+through `router.neck_width_um` when neckdown is enabled and the input does not encode
+that fabrication limit.
+
+Constrained-angle path construction inside non-box/non-octagonal rooms can require more
+than one elbow. `RestrictedAngleRoomPath` first tries the ordinary elbows, then
+subdivides the straight segment using nearby integer midpoint candidates in stable
+order. Every emitted corner stays in the convex allowed region, with endpoint-aware
+insets for entry/exit doors. Orthogonal trace bends use square-cap support distances at
+slanted walls rather than a circular-radius inset. Existing oblique-door rounding can
+need a one-grid-unit construction collar; this never changes the indexed outline,
+electrical clearance rules or insertion checks. Unsupported lattice geometry or a fixed
+4096-node construction limit returns failure explicitly instead of emitting an outside
+corner. This is a bounded geometric heuristic, not a complete restricted-angle path
+solver; its decisions never depend on elapsed or remaining time. Specialized room paths
+continue to use the existing locator construction.
+
 `ShapeSearchTree.overlappingTreeEntriesWithClearance` and its item/object wrappers
 share one dispatch under the tree read lock. Queries use raw geometry in an
 uncompensated tree and already compensated geometry in a tree for the query's
