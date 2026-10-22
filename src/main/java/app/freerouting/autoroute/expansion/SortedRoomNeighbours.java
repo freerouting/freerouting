@@ -198,7 +198,7 @@ public final class SortedRoomNeighbours {
     }
     SortedRoomNeighbours result = new SortedRoomNeighbours(room, completedRoom);
     ArrayList<ShapeTree.TreeEntry> overlappingObjects = new ArrayList<>();
-    autorouteSearchTree.overlappingTreeEntries(roomShape, room.getLayer(), overlappingObjects);
+    autorouteSearchTree.overlappingRoomEntries(roomShape, room.getLayer(), overlappingObjects);
 
     // Sort the overlapping objects deterministically to ensure parity with v1.9.
     overlappingObjects.sort(
@@ -225,7 +225,7 @@ public final class SortedRoomNeighbours {
         continue;
       }
       TileShape currentShape =
-          currentObject.getTreeShape(autorouteSearchTree, currentEntry.shapeIndexInObject);
+          autorouteSearchTree.getRoomShape(currentObject, currentEntry.shapeIndexInObject);
       TileShape intersection = roomShape.intersection(currentShape);
       int dimension = intersection.dimension();
       if (dimension > 1) {

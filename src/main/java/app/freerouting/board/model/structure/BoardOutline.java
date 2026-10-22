@@ -428,12 +428,17 @@ public class BoardOutline extends Item implements Serializable {
     if (value == keepoutOutsideOutline) {
       return;
     }
-    keepoutOutsideOutline = value;
     if (this.board == null || this.board.searchTreeManager == null) {
+      keepoutOutsideOutline = value;
       return;
     }
+    this.board.additionalUpdateAfterChange(this);
     this.board.searchTreeManager.remove(this);
+    keepoutOutsideOutline = value;
+    // Line strips and outside-area pieces have different counts and layer mappings.
+    clearDerivedData();
     this.board.searchTreeManager.insert(this);
+    this.board.additionalUpdateAfterChange(this);
   }
 
   /** Returns the sum of the lines of all outline polygons. */
