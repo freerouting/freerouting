@@ -60,7 +60,11 @@ public record ViaDelayOverride(
     if (from == null || to == null) {
       return false;
     }
-    return (this.signalLayerFrom.equalsIgnoreCase(from) && this.signalLayerTo.equalsIgnoreCase(to))
-        || (this.signalLayerFrom.equalsIgnoreCase(to) && this.signalLayerTo.equalsIgnoreCase(from));
+    String trimmedFrom = from.trim();
+    String trimmedTo = to.trim();
+    return (this.signalLayerFrom.equalsIgnoreCase(trimmedFrom)
+            && this.signalLayerTo.equalsIgnoreCase(trimmedTo))
+        || (this.signalLayerFrom.equalsIgnoreCase(trimmedTo)
+            && this.signalLayerTo.equalsIgnoreCase(trimmedFrom));
   }
 }

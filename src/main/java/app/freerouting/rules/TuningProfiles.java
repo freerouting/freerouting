@@ -31,7 +31,7 @@ public class TuningProfiles implements Serializable {
    */
   public synchronized void add(TuningProfile profile) {
     Objects.requireNonNull(profile, "profile cannot be null");
-    String key = profile.name().toLowerCase(Locale.ROOT);
+    String key = toKey(profile.name());
     this.profilesByName.put(key, profile);
   }
 
@@ -42,10 +42,8 @@ public class TuningProfiles implements Serializable {
    * @return matching profile or {@code null} if not found
    */
   public synchronized TuningProfile get(String name) {
-    if (name == null || name.isBlank()) {
-      return null;
-    }
-    return this.profilesByName.get(name.trim().toLowerCase(Locale.ROOT));
+    String key = toKey(name);
+    return (key != null) ? this.profilesByName.get(key) : null;
   }
 
   /**
@@ -55,10 +53,8 @@ public class TuningProfiles implements Serializable {
    * @return true if registered
    */
   public synchronized boolean contains(String name) {
-    if (name == null || name.isBlank()) {
-      return false;
-    }
-    return this.profilesByName.containsKey(name.trim().toLowerCase(Locale.ROOT));
+    String key = toKey(name);
+    return (key != null) && this.profilesByName.containsKey(key);
   }
 
   /**
@@ -87,14 +83,20 @@ public class TuningProfiles implements Serializable {
    * @return removed profile, or {@code null} if none was registered
    */
   public synchronized TuningProfile remove(String name) {
-    if (name == null || name.isBlank()) {
-      return null;
-    }
-    return this.profilesByName.remove(name.trim().toLowerCase(Locale.ROOT));
+    String key = toKey(name);
+    return (key != null) ? this.profilesByName.remove(key) : null;
   }
 
   /** Clears all registered tuning profiles. */
   public synchronized void clear() {
     this.profilesByName.clear();
+  }
+
+  private static String toKey(String name) {
+    if (name == null) {
+      return null;
+    }
+    String trimmed = name.trim();
+    return trimmed.isEmpty() ? null : trimmed.toLowerCase(Locale.ROOT);
   }
 }

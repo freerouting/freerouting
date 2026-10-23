@@ -116,7 +116,7 @@ public final class TuningProfileParser {
     List<TuningProfile> result = new ArrayList<>();
     Object nextToken = null;
     for (; ; ) {
-      Object prevToken = nextToken;
+      final Object prevToken = nextToken;
       try {
         nextToken = scanner.nextToken();
       } catch (IOException e) {
@@ -147,7 +147,7 @@ public final class TuningProfileParser {
       throws IOException {
     Object nextToken = null;
     for (; ; ) {
-      Object prevToken = nextToken;
+      final Object prevToken = nextToken;
       nextToken = scanner.nextToken();
       if (nextToken == null || nextToken == Keyword.CLOSED_BRACKET) {
         break;
@@ -155,7 +155,7 @@ public final class TuningProfileParser {
       if (prevToken == Keyword.OPEN_BRACKET) {
         if (Keyword.matches(nextToken, Keyword.LAYER_RULE)) {
           readLayerRuleTrackPropagation(scanner, transform, trackPropagations);
-        } else if (Keyword.matches(nextToken, new Keyword("entry"))) {
+        } else if (Keyword.matches(nextToken, Keyword.ENTRY)) {
           readEntryTrackPropagation(scanner, transform, trackPropagations);
         } else {
           ScopeKeyword.skipScope(scanner);
@@ -183,7 +183,7 @@ public final class TuningProfileParser {
 
     Object nextToken = null;
     for (; ; ) {
-      Object prevToken = nextToken;
+      final Object prevToken = nextToken;
       nextToken = scanner.nextToken();
       if (nextToken == null || nextToken == Keyword.CLOSED_BRACKET) {
         break;
@@ -235,7 +235,7 @@ public final class TuningProfileParser {
 
     Object nextToken = null;
     for (; ; ) {
-      Object prevToken = nextToken;
+      final Object prevToken = nextToken;
       nextToken = scanner.nextToken();
       if (nextToken == null || nextToken == Keyword.CLOSED_BRACKET) {
         break;
@@ -277,7 +277,7 @@ public final class TuningProfileParser {
     double globalDelay = currentGlobalDelay;
     Object nextToken = null;
     for (; ; ) {
-      Object prevToken = nextToken;
+      final Object prevToken = nextToken;
       nextToken = scanner.nextToken();
       if (nextToken == null || nextToken == Keyword.CLOSED_BRACKET) {
         break;
@@ -311,7 +311,7 @@ public final class TuningProfileParser {
 
     Object nextToken = null;
     for (; ; ) {
-      Object prevToken = nextToken;
+      final Object prevToken = nextToken;
       nextToken = scanner.nextToken();
       if (nextToken == null || nextToken == Keyword.CLOSED_BRACKET) {
         break;
@@ -385,6 +385,12 @@ public final class TuningProfileParser {
         val = d;
       } else if (token instanceof Integer i) {
         val = i.doubleValue();
+      } else if (token instanceof String s) {
+        try {
+          val = Double.parseDouble(s);
+        } catch (NumberFormatException _) {
+          val = null;
+        }
       }
       skipToClosedBracket(scanner);
       return val;
@@ -428,7 +434,7 @@ public final class TuningProfileParser {
     double timeFactor = 0.0;
     Object nextToken = null;
     for (; ; ) {
-      Object prevToken = nextToken;
+      final Object prevToken = nextToken;
       nextToken = scanner.nextToken();
       if (nextToken == null || nextToken == Keyword.CLOSED_BRACKET) {
         break;

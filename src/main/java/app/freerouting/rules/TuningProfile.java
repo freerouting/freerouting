@@ -76,8 +76,9 @@ public record TuningProfile(
     if (signalLayer == null) {
       return null;
     }
+    String trimmed = signalLayer.trim();
     for (TrackPropagation entry : this.trackPropagations) {
-      if (entry.signalLayer().equalsIgnoreCase(signalLayer)) {
+      if (entry.signalLayer().equalsIgnoreCase(trimmed)) {
         return entry;
       }
     }

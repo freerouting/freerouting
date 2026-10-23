@@ -35,6 +35,7 @@ public class Keyword {
   public static final Keyword DELAY = new Keyword("delay");
   public static final Keyword DIFF_PAIR = new Keyword("diff_pair");
   public static final Keyword DIFF_PAIR_SKEW = new Keyword("diff_pair_skew");
+  public static final Keyword ENTRY = new Keyword("entry");
   public static final Keyword FANOUT = new Keyword("fanout");
   public static final Keyword FILLET = new Keyword("fillet");
   public static final Keyword FLIP_STYLE = new Keyword("flip_style");
@@ -68,7 +69,6 @@ public class Keyword {
   public static final Keyword NINETY_DEGREE = new Keyword("ninety_degree");
   public static final Keyword NONE = new Keyword("none");
   public static final Keyword NORMAL = new Keyword("normal");
-  public static final Keyword NSEC = new Keyword("nsec");
   public static final Keyword OFF = new Keyword("off");
   public static final Keyword ON = new Keyword("on");
   public static final Keyword OPEN_BRACKET = new Keyword("(");
