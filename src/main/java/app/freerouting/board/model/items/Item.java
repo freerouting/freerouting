@@ -131,6 +131,9 @@ public abstract class Item
     if (this instanceof ViaObstacleArea) {
       return BoardItemType.VIA_OBSTACLE_AREA;
     }
+    if (this instanceof WireObstacleArea) {
+      return BoardItemType.WIRE_OBSTACLE_AREA;
+    }
     if (this instanceof ComponentObstacleArea) {
       return BoardItemType.COMPONENT_OBSTACLE_AREA;
     }
