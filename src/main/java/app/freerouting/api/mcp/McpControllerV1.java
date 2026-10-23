@@ -367,6 +367,9 @@ public class McpControllerV1 extends BaseController {
     boolean isError = response.statusCode() >= 400;
     JsonObject result = new JsonObject();
     result.add("content", content);
+    // tools/list advertises the {status, contentType, body} envelope as outputSchema, and the MCP
+    // specification requires structuredContent matching it whenever an outputSchema is declared.
+    result.add("structuredContent", payload);
     result.addProperty("isError", isError);
 
     if (isError) {
@@ -694,6 +697,12 @@ public class McpControllerV1 extends BaseController {
     content.add(textObj);
     JsonObject result = new JsonObject();
     result.add("content", content);
+    // Custom tools declare the inner body ({base64}, {text} or {message}) as their outputSchema.
+    // Error results carry the API's error body instead, which does not match that schema, so they
+    // are reported through content and isError only.
+    if (!isError) {
+      result.add("structuredContent", body);
+    }
     result.addProperty("isError", isError);
 
     JsonObject eventPayload = new JsonObject();
