@@ -29,6 +29,7 @@ import app.freerouting.rules.ViaRule;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -859,10 +860,21 @@ public class Network extends ScopeKeyword {
   }
 
   private static void insertComponents(ReadScopeParameter scopeParameter) {
+    record PlacedComponent(String libraryName, ComponentPlacement.ComponentLocation location) {}
+
+    List<PlacedComponent> components = new ArrayList<>();
     for (ComponentPlacement nextLibComponent : scopeParameter.placementList) {
       for (ComponentPlacement.ComponentLocation nextComponent : nextLibComponent.locations) {
-        insertComponent(nextComponent, nextLibComponent.libName, scopeParameter);
+        components.add(new PlacedComponent(nextLibComponent.libName, nextComponent));
       }
+    }
+    // Allocation order determines item IDs and connected-set representatives before routing.
+    // Stable sorting preserves the existing first-match behavior of duplicate reference names.
+    if (scopeParameter.canonicalPlacementOrder) {
+      components.sort(Comparator.comparing(component -> component.location().name));
+    }
+    for (PlacedComponent component : components) {
+      insertComponent(component.location(), component.libraryName(), scopeParameter);
     }
   }
 
