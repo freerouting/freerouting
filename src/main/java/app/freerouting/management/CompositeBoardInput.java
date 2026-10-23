@@ -6,6 +6,7 @@ import app.freerouting.core.BoardFileDetails;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.io.FileFormat;
 import app.freerouting.io.kicad.KiCadJsonReader;
+import app.freerouting.io.specctra.DsnReadOptions;
 import app.freerouting.io.specctra.RulesReader;
 import app.freerouting.io.specctra.SesReader;
 import app.freerouting.logger.FRLogger;
@@ -136,10 +137,8 @@ public class CompositeBoardInput {
   }
 
   /**
-   * Assembles the composite inputs into the provided routing job: 1. Loads design data into
-   * job.board. 2. Merges settings layers (Default -> DSN -> Rules -> API overrides). 3. Applies
-   * design rules onto board and router settings. 4. Imports initial session (SES or KiCad JSON) if
-   * present.
+   * Resolves file and per-job settings before allocating the design's board items, then applies
+   * design rules and imports the initial session (SES or KiCad JSON), if present.
    *
    * @param job Target routing job
    * @throws Exception If design loading or parsing fails
@@ -164,23 +163,11 @@ public class CompositeBoardInput {
 
     boolean isDsn = job.input.format == FileFormat.DSN;
     boolean isJson = job.input.format == FileFormat.KICAD_DESIGN_JSON;
-
-    HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
-    if (isDsn) {
-      boardManager.loadFromSpecctraDsn(
-          new ByteArrayInputStream(designData), null, new ItemIdGenerator());
-    } else if (isJson) {
-      boardManager.loadFromKiCadJson(
-          new ByteArrayInputStream(designData), null, new ItemIdGenerator());
-    } else {
+    if (!isDsn && !isJson) {
       throw new IllegalArgumentException(
           "Unsupported primary design format: "
               + job.input.format
               + ". Expected DSN or KICAD_DESIGN_JSON.");
-    }
-    job.board = boardManager.getRoutingBoard();
-    if (job.board == null) {
-      throw new IllegalStateException("Failed to create routing board from design data.");
     }
 
     // Settings merging pipeline
@@ -236,6 +223,26 @@ public class CompositeBoardInput {
       settingsMerger.addOrReplaceSources(new ApiSettings(job.routerSettings));
     }
 
+    var importSettings = settingsMerger.merge();
+    var importOptions =
+        importSettings.autorouter != null && importSettings.autorouter.itemOrderSeed != null
+            ? DsnReadOptions.REFERENCE_NAME
+            : DsnReadOptions.INPUT_ORDER;
+    HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
+    if (isDsn) {
+      boardManager.loadFromSpecctraDsn(
+          new ByteArrayInputStream(designData), null, new ItemIdGenerator(), importOptions);
+    } else if (isJson) {
+      boardManager.loadFromKiCadJson(
+          new ByteArrayInputStream(designData), null, new ItemIdGenerator());
+    }
+    job.board = boardManager.getRoutingBoard();
+    if (job.board == null) {
+      throw new IllegalStateException("Failed to create routing board from design data.");
+    }
+
+    // Board attachment enriches the per-job source with layer-derived values.
+    // Preserve those values in the same post-load merge used before import options existed.
     job.routerSettings = settingsMerger.merge();
 
     // Apply rules onto the board and routerSettings
