@@ -5,6 +5,7 @@ import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.ConductionArea;
 import app.freerouting.board.model.items.ObstacleArea;
 import app.freerouting.board.model.items.ViaObstacleArea;
+import app.freerouting.board.model.items.WireObstacleArea;
 import app.freerouting.board.model.structure.AngleRestriction;
 import app.freerouting.board.model.structure.BoardOutline;
 import app.freerouting.board.model.structure.FixedState;
@@ -254,6 +255,8 @@ public class Structure extends ScopeKeyword {
     scopeParameter.file.startScope();
     if (keepout instanceof ViaObstacleArea) {
       scopeParameter.file.write("via_keepout");
+    } else if (keepout instanceof WireObstacleArea) {
+      scopeParameter.file.write("wire_keepout");
     } else {
       scopeParameter.file.write("keepout");
     }
@@ -874,9 +877,13 @@ public class Structure extends ScopeKeyword {
       ReadScopeParameter scopeParameter,
       KeepoutType keepoutType,
       FixedState fixedState) {
+    if (area == null || area.shapeList == null || area.shapeList.isEmpty()) {
+      FRLogger.warn("Structure.insert_keepout: area shapeList is empty or null");
+      return true;
+    }
     Area keepoutArea =
         Shape.transformAreaToBoard(area.shapeList, scopeParameter.coordinateTransform);
-    if (keepoutArea.dimension() < 2) {
+    if (keepoutArea == null || keepoutArea.dimension() < 2) {
       // A degenerate keepout (e.g. all polygon vertices identical, exported incorrectly by the EDA
       // tool) cannot be enforced as a routing constraint. The board remains valid — the keepout
       // restriction is simply not applied, making routing more permissive in that area.
@@ -940,6 +947,8 @@ public class Structure extends ScopeKeyword {
     }
     if (keepoutType == KeepoutType.via_keepout) {
       board.insertViaObstacle(area, layer, clearanceClassIndex, fixedState);
+    } else if (keepoutType == KeepoutType.wire_keepout) {
+      board.insertWireObstacle(area, layer, clearanceClassIndex, fixedState);
     } else if (keepoutType == KeepoutType.place_keepout) {
       board.insertComponentObstacle(area, layer, clearanceClassIndex, fixedState);
     } else {
@@ -957,6 +966,7 @@ public class Structure extends ScopeKeyword {
 
     Collection<Shape.ReadAreaScopeResult> keepoutList = new LinkedList<>();
     Collection<Shape.ReadAreaScopeResult> viaKeepoutList = new LinkedList<>();
+    Collection<Shape.ReadAreaScopeResult> wireKeepoutList = new LinkedList<>();
     Collection<Shape.ReadAreaScopeResult> placeKeepoutList = new LinkedList<>();
 
     Object nextToken = null;
@@ -1006,6 +1016,12 @@ public class Structure extends ScopeKeyword {
             scopeParameter.layerStructure = new LayerStructure(boardConstructionInfo.layerInfo);
           }
           viaKeepoutList.add(
+              Shape.readAreaScope(scopeParameter.scanner, scopeParameter.layerStructure, false));
+        } else if (nextToken == Keyword.WIRE_KEEPOUT) {
+          if (scopeParameter.layerStructure == null) {
+            scopeParameter.layerStructure = new LayerStructure(boardConstructionInfo.layerInfo);
+          }
+          wireKeepoutList.add(
               Shape.readAreaScope(scopeParameter.scanner, scopeParameter.layerStructure, false));
         } else if (nextToken == Keyword.PLACE_KEEPOUT) {
           if (scopeParameter.layerStructure == null) {
@@ -1068,6 +1084,13 @@ public class Structure extends ScopeKeyword {
     for (Shape.ReadAreaScopeResult currentArea : viaKeepoutList) {
       if (!insertKeepout(
           currentArea, scopeParameter, KeepoutType.via_keepout, FixedState.SYSTEM_FIXED)) {
+        return false;
+      }
+    }
+
+    for (Shape.ReadAreaScopeResult currentArea : wireKeepoutList) {
+      if (!insertKeepout(
+          currentArea, scopeParameter, KeepoutType.wire_keepout, FixedState.SYSTEM_FIXED)) {
         return false;
       }
     }
@@ -1347,6 +1370,7 @@ public class Structure extends ScopeKeyword {
   enum KeepoutType {
     keepout,
     via_keepout,
+    wire_keepout,
     place_keepout
   }
 

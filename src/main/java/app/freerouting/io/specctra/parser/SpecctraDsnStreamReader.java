@@ -1666,7 +1666,8 @@ public class SpecctraDsnStreamReader implements IJFlexScanner {
           break;
         case 104:
           {
-            return Keyword.KEEPOUT;
+            yybegin(NAME);
+            return Keyword.WIRE_KEEPOUT;
           }
         case 233:
           break;
