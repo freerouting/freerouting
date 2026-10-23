@@ -151,7 +151,9 @@ public class Via extends DrillItem implements Serializable {
 
   @Override
   public boolean isObstacle(Item other) {
-    if (other == this || other instanceof ComponentObstacleArea) {
+    if (other == this
+        || other instanceof ComponentObstacleArea
+        || other instanceof WireObstacleArea) {
       return false;
     }
     if ((other instanceof ConductionArea area) && !area.getIsObstacle()) {
