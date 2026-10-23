@@ -118,6 +118,16 @@ public class DestinationDistance {
     return calculate(point.boundingBox(), layer);
   }
 
+  /**
+   * Estimates the remaining cost at a drill or drill page whose base via charge is already paid.
+   * The ordinary layer-distance estimate includes that charge again when the destination is on
+   * another layer. Crediting it here keeps the frontier bound optimistic without changing the
+   * accumulated route cost or any additional layer-transition costs.
+   */
+  double calculateWithPrepaidVia(FloatPoint point, int layer) {
+    return Math.max(0.0, calculate(point, layer) - minNormalViaCost);
+  }
+
   /** Calculates the lower bound distance from box on layer. */
   public double calculate(IntBox box, int layer) {
     if (boxIsEmpty) {
