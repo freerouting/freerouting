@@ -973,6 +973,26 @@
       "serializable": true
     },
     {
+      "type": "app.freerouting.rules.TrackPropagation",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.rules.TuningProfile",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.rules.TuningProfileType",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.rules.TuningProfiles",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.rules.ViaDelayOverride",
+      "serializable": true
+    },
+    {
       "type": "app.freerouting.settings.ApiAuthenticationSettings",
       "fields": [
         {

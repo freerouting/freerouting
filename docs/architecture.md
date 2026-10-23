@@ -229,6 +229,9 @@ Application bootstrap and top-level wiring. Start here when you need the entry p
 
 Import and export for board files. The public DSN and SES entry points are in this package, and parser internals live in `io.specctra.parser`.
 
+- `DsnReader` / `DsnWriter` — High-level DSN stream reading and lossless serialization.
+- `TuningProfileParser` — Specctra DSN parser and serializer for KiCad 10-aligned `(tuning_profile ...)` scopes, layer-specific track propagation descriptors, and via delay override penalties. Suppressed when `compatMode=true` for strict third-party Specctra tool compatibility.
+
 ### `app.freerouting.board`
 
 The live board model is split into cohesive subpackages. There are no remaining Java sources in the
@@ -293,7 +296,13 @@ The rule model that defines nets, clearance classes, via rules, layer constraint
 - `DifferentialPairs` — Thread-safe collection and bidirectional index for differential signal pairs on a board, facilitating $O(1)$ lookups by base name (case-insensitive) or by net reference/number.
 - `DifferentialPairDetector` — Automated detector recognizing standard EDA differential pair suffix conventions (`_P`/`_N`, `_DP`/`_DM`, `_D+`/`_D-`, `_+`/`_-`, `_POS`/`_NEG`, `.P`/`.N`, and scoped `D+`/`D-` USB fallback), requiring `_` or `.` delimiters to eliminate false positives on terminal polarities (`LED+`, `MOTOR+`, `SPK+`), excluding power/battery/ground rails (`GND`, `VCC`, `+5V`, `BAT+`, `V+`, etc.), and registering complementary pairs during post-load board processing in `HeadlessBoardManager`.
 - Differential pair nets integrate into the meander constraint fallback hierarchy: when unconstrained at the net or net-class level, nets belonging to a registered differential pair automatically inherit the `DIFF_PAIR` meander preset rather than `SINGLE_TRACK`.
-- **Future Extension Point:** Net length, meander pattern constraints, and differential pair models are structured for forward compatibility with future post-routing Net Length Tuning and differential pair routing phases, providing the geometric and topological envelope without coupling to active routing search heuristics.
+- `TuningProfile` — Immutable record defining KiCad 10-aligned time-domain trace tuning profiles: target impedance (`targetImpedanceOhms`), time-domain tuning toggle (`enableTimeDomainTuning`), topology type (`TuningProfileType`: `SINGLE` or `DIFFERENTIAL`), layer-specific propagation speed and reference plane descriptors (`TrackPropagation`), and default via unit delay with layer-transition overrides (`ViaDelayOverride`).
+- `TrackPropagation` — Immutable record mapping trace width and propagation speed (`timeLengthFactor`, ps/cm) to a signal layer, along with optional top and bottom reference planes (`topReference`, `bottomReference`) for controlled-impedance modeling. Unreferenced planes (`<None>`, `none`) are normalized to `null`, and signal layers are barred from self-referencing.
+- `ViaDelayOverride` — Immutable record capturing explicit via propagation delay penalties (`delayPs`) between specific signal layers (`signalLayerFrom`, `signalLayerTo`) and via barrels (`viaLayerFrom`, `viaLayerTo`), supporting arbitrary layer counts (2 to 32+ copper layers) and same-layer transitions.
+- `TuningProfiles` — Thread-safe registry on `BoardRules.tuningProfiles` enabling $O(1)$ case-insensitive profile lookups by name while preserving declaration order.
+- `NetClass` integration — Net classes associate with tuning profiles by name (`tuningProfileName`), resolved via `netClass.getTuningProfile(board.rules)` with graceful null handling if unassigned or missing.
+- Specctra DSN grammar alignment — Uses standard Specctra v10 `time_length_factor` for unit delay, `layer_rule` for layer-specific propagation, structured sub-tokens for via delay overrides (`(override (signal_layers <from> <to>) (via_layers <from> <to>) (delay <ps>))`), and `(tuning_profile <name>)` binding inside `(class ...)`, supporting both reading and lossless round-trip serialization.
+- **Future Extension Point:** Net length, meander pattern constraints, differential pair models, and tuning profiles are structured for forward compatibility with future post-routing Net Length Tuning and differential pair routing phases, providing the geometric and topological envelope without coupling to active routing search heuristics.
 
 ### `app.freerouting.drc`
 

@@ -63,6 +63,11 @@ public abstract class Rule {
           if (lengthResult != null) {
             currentRule = new LengthRule(lengthResult.maxLength, lengthResult.minLength);
           }
+        } else if (Keyword.matches(currentToken, Keyword.TIME_LENGTH_FACTOR)) {
+          Double timeFactor = Circuit.readNumberScope(scanner);
+          if (timeFactor != null) {
+            currentRule = new TimeLengthFactorRule(timeFactor);
+          }
         } else {
           ScopeKeyword.skipScope(scanner);
         }
@@ -353,6 +358,15 @@ public abstract class Rule {
     public LengthRule(double maxLength, double minLength) {
       this.maxLength = maxLength;
       this.minLength = minLength;
+    }
+  }
+
+  public static class TimeLengthFactorRule extends Rule {
+
+    public final double value;
+
+    public TimeLengthFactorRule(double value) {
+      this.value = value;
     }
   }
 

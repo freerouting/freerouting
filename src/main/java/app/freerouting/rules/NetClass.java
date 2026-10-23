@@ -38,6 +38,7 @@ public class NetClass implements Serializable, ItemInfoPrinter.Printable {
   private double minimumTraceLength = 0;
   private double maximumTraceLength = 0;
   private NetMeanderConstraint meanderConstraint = NetMeanderConstraint.UNCONSTRAINED;
+  private String tuningProfileName;
 
   /** Creates a new instance of {@code NetClass}. */
   public NetClass(
@@ -235,6 +236,41 @@ public class NetClass implements Serializable, ItemInfoPrinter.Printable {
    */
   public boolean hasMeanderConstraint() {
     return this.meanderConstraint != null && this.meanderConstraint.isConstrained();
+  }
+
+  /**
+   * Returns the name of the tuning profile assigned to this net class, or {@code null} if none.
+   *
+   * @return tuning profile name or null
+   */
+  public String getTuningProfileName() {
+    return this.tuningProfileName;
+  }
+
+  /**
+   * Sets the name of the tuning profile assigned to this net class.
+   *
+   * @param tuningProfileName profile name or null
+   */
+  public void setTuningProfileName(String tuningProfileName) {
+    this.tuningProfileName =
+        (tuningProfileName != null && !tuningProfileName.isBlank())
+            ? tuningProfileName.trim()
+            : null;
+  }
+
+  /**
+   * Resolves and returns the {@link TuningProfile} instance from the board rules, or {@code null}
+   * if no profile is assigned or the named profile is not registered.
+   *
+   * @param rules the board rules containing the tuning profile registry
+   * @return resolved TuningProfile or null
+   */
+  public TuningProfile getTuningProfile(BoardRules rules) {
+    if (rules == null || this.tuningProfileName == null) {
+      return null;
+    }
+    return rules.tuningProfiles.get(this.tuningProfileName);
   }
 
   /** Returns whether the layer with the given index is active for routing. */

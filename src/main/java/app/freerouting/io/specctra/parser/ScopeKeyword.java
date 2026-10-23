@@ -71,6 +71,22 @@ public class ScopeKeyword extends Keyword {
           if (!nextScope.readScope(scopeParameter)) {
             return false;
           }
+        } else if (Keyword.matches(nextToken, Keyword.TUNING_PROFILE)
+            && scopeParameter.boardHandling.getRoutingBoard() != null) {
+          app.freerouting.rules.TuningProfile profile =
+              TuningProfileParser.readScope(
+                  scopeParameter.scanner, scopeParameter.coordinateTransform);
+          if (profile != null) {
+            scopeParameter.boardHandling.getRoutingBoard().rules.tuningProfiles.add(profile);
+          }
+        } else if (Keyword.matches(nextToken, Keyword.TUNING_PROFILES)
+            && scopeParameter.boardHandling.getRoutingBoard() != null) {
+          java.util.List<app.freerouting.rules.TuningProfile> profileList =
+              TuningProfileParser.readMultipleProfilesScope(
+                  scopeParameter.scanner, scopeParameter.coordinateTransform);
+          for (app.freerouting.rules.TuningProfile profile : profileList) {
+            scopeParameter.boardHandling.getRoutingBoard().rules.tuningProfiles.add(profile);
+          }
         } else {
           // skip unknown scope
           skipScope(scopeParameter.scanner);
