@@ -52,11 +52,26 @@ class ApiAnalyticsFilterTest {
 
     when(res.getStatus()).thenReturn(400);
     when(req.getProperty("app.freerouting.analytics.method")).thenReturn("POST");
-    when(req.getProperty("app.freerouting.analytics.path")).thenReturn("v1/analytics/identity");
+    when(req.getProperty("app.freerouting.analytics.path")).thenReturn("/v1/analytics/identity");
 
     filter.filter(req, res);
 
     verify(res, never()).getEntity();
+  }
+
+  @Test
+  void testNonAnalyticsEndpointWithAnalyticsInNameIsNotSkipped() throws IOException {
+    ContainerRequestContext req = mock(ContainerRequestContext.class);
+    ContainerResponseContext res = mock(ContainerResponseContext.class);
+
+    when(res.getStatus()).thenReturn(404);
+    when(req.getProperty("app.freerouting.analytics.method")).thenReturn("GET");
+    when(req.getProperty("app.freerouting.analytics.path")).thenReturn("v1/analyticsx");
+    when(res.getEntity()).thenReturn("Not found");
+
+    filter.filter(req, res);
+
+    verify(res).getEntity();
   }
 
   @Test

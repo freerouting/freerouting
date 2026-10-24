@@ -63,6 +63,9 @@ public class BigQueryClient implements AnalyticsClient {
   /** Maximum number of unwritten rows buffered across all tables before dropping. */
   static final int MAX_PENDING_ROWS = 5_000;
 
+  /** Maximum number of distinct table queues allowed in memory. */
+  static final int MAX_DISTINCT_TABLES = 100;
+
   /** Maximum number of rows sent in a single insertAll HTTP request. */
   static final int MAX_BATCH_SIZE = 100;
 
@@ -318,6 +321,9 @@ public class BigQueryClient implements AnalyticsClient {
   @Override
   public void setEnabled(boolean enabled) {
     this.enabled = enabled;
+    if (!enabled) {
+      clearPendingBuffers();
+    }
   }
 
   boolean isCircuitBreakerOpen() {
@@ -351,8 +357,17 @@ public class BigQueryClient implements AnalyticsClient {
   }
 
   private void clearPendingBuffers() {
-    pendingByTable.clear();
-    totalPendingCount.set(0);
+    for (var entry : pendingByTable.entrySet()) {
+      ConcurrentLinkedQueue<Map<String, String>> queue = entry.getValue();
+      int drained = 0;
+      while (queue.poll() != null) {
+        drained++;
+      }
+      if (drained > 0) {
+        totalPendingCount.addAndGet(-drained);
+      }
+      pendingByTable.remove(entry.getKey(), queue);
+    }
     synchronized (flushLock) {
       flushLock.notifyAll();
     }
@@ -400,10 +415,20 @@ public class BigQueryClient implements AnalyticsClient {
       return;
     }
 
+    String tableName = payload.event.toLowerCase().replace(" ", "_").replace("-", "_");
+    if (!pendingByTable.containsKey(tableName) && pendingByTable.size() >= MAX_DISTINCT_TABLES) {
+      AnalyticsErrorAggregator.recordFailure(
+          "BigQuery/table_overflow",
+          new RuntimeException(
+              "BigQuery distinct table limit reached ("
+                  + MAX_DISTINCT_TABLES
+                  + "). Dropping telemetry event."));
+      return;
+    }
+
     // Snapshot the fields on the calling thread so background threads don't race
     // on mutable payload state.
     Map<String, String> fields = generateFieldsFromPayload(payload);
-    String tableName = payload.event.toLowerCase().replace(" ", "_").replace("-", "_");
 
     // Trait-only tables (identifies, user_snapshots) follow the Segment identifies schema:
     // flattened traits + standard metadata, but no event / event_text columns.
@@ -426,7 +451,7 @@ public class BigQueryClient implements AnalyticsClient {
   }
 
   void flushAllPendingAsync() {
-    if (isCircuitBreakerOpen() || executor.isShutdown()) {
+    if (!enabled || isCircuitBreakerOpen() || executor.isShutdown()) {
       return;
     }
     for (String tableName : pendingByTable.keySet()) {
@@ -435,7 +460,7 @@ public class BigQueryClient implements AnalyticsClient {
   }
 
   private void triggerBatchSend(String tableName) {
-    if (executor.isShutdown() || isCircuitBreakerOpen()) {
+    if (!enabled || executor.isShutdown() || isCircuitBreakerOpen()) {
       return;
     }
     try {
@@ -446,16 +471,29 @@ public class BigQueryClient implements AnalyticsClient {
   }
 
   private void drainAndSend(String tableName) {
+    if (!enabled || isCircuitBreakerOpen() || executor.isShutdown()) {
+      return;
+    }
+
     ConcurrentLinkedQueue<Map<String, String>> queue = pendingByTable.get(tableName);
-    if (queue == null || queue.isEmpty() || isCircuitBreakerOpen()) {
+    if (queue == null || queue.isEmpty()) {
       return;
     }
 
     List<Map<String, String>> batch = new ArrayList<>(MAX_BATCH_SIZE);
     Map<String, String> row;
+    int drained = 0;
     while (batch.size() < MAX_BATCH_SIZE && (row = queue.poll()) != null) {
       batch.add(row);
-      totalPendingCount.decrementAndGet();
+      drained++;
+    }
+
+    if (drained > 0) {
+      totalPendingCount.addAndGet(-drained);
+    }
+
+    if (queue.isEmpty()) {
+      pendingByTable.remove(tableName, queue);
     }
 
     if (batch.isEmpty()) {
@@ -473,7 +511,7 @@ public class BigQueryClient implements AnalyticsClient {
     }
 
     // If more items remain in this table's queue, trigger another batch drain
-    if (!queue.isEmpty() && !isCircuitBreakerOpen() && !executor.isShutdown()) {
+    if (!queue.isEmpty() && enabled && !isCircuitBreakerOpen() && !executor.isShutdown()) {
       triggerBatchSend(tableName);
     }
   }
@@ -523,13 +561,14 @@ public class BigQueryClient implements AnalyticsClient {
 
   @Override
   public void flush(long timeoutMs) {
-    if (isCircuitBreakerOpen()) {
+    if (!enabled || isCircuitBreakerOpen()) {
       return;
     }
     flushAllPendingAsync();
     long deadline = System.currentTimeMillis() + timeoutMs;
     synchronized (flushLock) {
-      while ((totalPendingCount.get() > 0 || inFlightBatches.get() > 0)
+      while (enabled
+          && (totalPendingCount.get() > 0 || inFlightBatches.get() > 0)
           && !isCircuitBreakerOpen()) {
         long remaining = deadline - System.currentTimeMillis();
         if (remaining <= 0) {

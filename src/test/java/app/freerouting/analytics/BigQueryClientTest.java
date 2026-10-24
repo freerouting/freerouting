@@ -176,4 +176,35 @@ class BigQueryClientTest {
     assertTrue(client.getTotalPendingCount() <= BigQueryClient.MAX_PENDING_ROWS);
     client.shutdown();
   }
+
+  @Test
+  void testDisablingClearsPendingBuffers() throws IOException {
+    BigQuery mockBigQuery = mock(BigQuery.class);
+    BigQueryClient client = new BigQueryClient("2.3.0", mockBigQuery);
+
+    Properties props = new Properties();
+    props.put("foo", "bar");
+    client.track("user-1", "anon-1", "table_1", props);
+    assertTrue(client.getTotalPendingCount() > 0);
+
+    client.setEnabled(false);
+    assertEquals(0, client.getTotalPendingCount());
+
+    client.shutdown();
+  }
+
+  @Test
+  void testDistinctTableLimitPreventsUnboundedGrowth() throws IOException {
+    BigQuery mockBigQuery = mock(BigQuery.class);
+    BigQueryClient client = new BigQueryClient("2.3.0", mockBigQuery);
+
+    for (int i = 0; i < BigQueryClient.MAX_DISTINCT_TABLES + 20; i++) {
+      Properties props = new Properties();
+      props.put("i", String.valueOf(i));
+      client.track("user-1", "anon-1", "unique_table_" + i, props);
+    }
+
+    assertTrue(client.getTotalPendingCount() <= BigQueryClient.MAX_DISTINCT_TABLES);
+    client.shutdown();
+  }
 }
