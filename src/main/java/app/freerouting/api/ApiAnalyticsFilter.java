@@ -129,6 +129,11 @@ public class ApiAnalyticsFilter implements ContainerRequestFilter, ContainerResp
         return;
       }
 
+      // Do not track errors from analytics endpoints to prevent recursive error loops.
+      if (path.contains("analytics")) {
+        return;
+      }
+
       // Canonical format: "GET v1/jobs/550e8400-..." (matches existing controller calls)
       String apiMethod = method + " " + path;
 

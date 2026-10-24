@@ -11,6 +11,7 @@ import com.google.api.gax.retrying.RetrySettings;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.bigquery.BigQuery;
+import com.google.cloud.bigquery.BigQueryException;
 import com.google.cloud.bigquery.BigQueryOptions;
 import com.google.cloud.bigquery.InsertAllRequest;
 import com.google.cloud.bigquery.InsertAllResponse;
@@ -26,10 +27,18 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -50,6 +59,18 @@ public class BigQueryClient implements AnalyticsClient {
 
   private static final String BIGQUERY_PROJECT_ID = "freerouting-analytics";
   private static final String BIGQUERY_DATASET_ID = "freerouting_application";
+
+  /** Maximum number of unwritten rows buffered across all tables before dropping. */
+  static final int MAX_PENDING_ROWS = 5_000;
+
+  /** Maximum number of rows sent in a single insertAll HTTP request. */
+  static final int MAX_BATCH_SIZE = 100;
+
+  /** Interval in milliseconds between scheduled batch flushes. */
+  static final long FLUSH_INTERVAL_MS = 1_000L;
+
+  /** Duration in milliseconds that the circuit breaker stays open after a 429 quota error. */
+  static final long CIRCUIT_BREAKER_DURATION_MS = Duration.ofMinutes(15).toMillis();
 
   // -------------------------------------------------------------------------
   // Singleton state — guarded by the class monitor
@@ -74,16 +95,36 @@ public class BigQueryClient implements AnalyticsClient {
   /** The authenticated BigQuery service. Owned exclusively by this instance. */
   private final BigQuery bigQuery;
 
-  private final ExecutorService executor =
-      Executors.newFixedThreadPool(
+  private final ConcurrentHashMap<String, ConcurrentLinkedQueue<Map<String, String>>>
+      pendingByTable = new ConcurrentHashMap<>();
+  private final AtomicInteger totalPendingCount = new AtomicInteger(0);
+  private final AtomicInteger inFlightBatches = new AtomicInteger(0);
+  private final Object flushLock = new Object();
+
+  private volatile long circuitBreakerExpiryEpochMs = 0L;
+  private final AtomicBoolean circuitBreakerLogged = new AtomicBoolean(false);
+
+  private final ThreadPoolExecutor executor =
+      new ThreadPoolExecutor(
           2,
+          2,
+          0L,
+          TimeUnit.MILLISECONDS,
+          new ArrayBlockingQueue<>(1_000),
           r -> {
             Thread t = new Thread(r, "analytics-bigquery-sender");
             t.setDaemon(true);
             return t;
+          },
+          new ThreadPoolExecutor.DiscardPolicy());
+
+  private final ScheduledExecutorService scheduler =
+      Executors.newSingleThreadScheduledExecutor(
+          r -> {
+            Thread t = new Thread(r, "analytics-bigquery-scheduler");
+            t.setDaemon(true);
+            return t;
           });
-  private final AtomicInteger inFlightCount = new AtomicInteger(0);
-  private final Object flushLock = new Object();
 
   private boolean enabled = true;
 
@@ -102,12 +143,19 @@ public class BigQueryClient implements AnalyticsClient {
     // Enable TLS protocols
     System.setProperty("https.protocols", "TLSv1.2,TLSv1.3");
     bigQuery = createBigQueryService(serviceAccountKey.getBytes());
+    startScheduler();
   }
 
   /** Package-private constructor for unit tests with a custom BigQuery instance. */
   BigQueryClient(String libraryVersion, BigQuery bigQuery) {
     this.libraryVersion = libraryVersion;
     this.bigQuery = bigQuery;
+    startScheduler();
+  }
+
+  private void startScheduler() {
+    scheduler.scheduleWithFixedDelay(
+        this::flushAllPendingAsync, FLUSH_INTERVAL_MS, FLUSH_INTERVAL_MS, TimeUnit.MILLISECONDS);
   }
 
   // -------------------------------------------------------------------------
@@ -137,6 +185,9 @@ public class BigQueryClient implements AnalyticsClient {
     synchronized (BigQueryClient.class) {
       // Re-check inside the lock in case another thread just initialised the singleton.
       if (singletonInstance == null || !serviceAccountKey.equals(singletonKey)) {
+        if (singletonInstance != null) {
+          singletonInstance.shutdown();
+        }
         singletonInstance = new BigQueryClient(libraryVersion, serviceAccountKey);
         singletonKey = serviceAccountKey;
         FRLogger.debug(
@@ -261,7 +312,7 @@ public class BigQueryClient implements AnalyticsClient {
   }
 
   // -------------------------------------------------------------------------
-  // Async send
+  // Async send & micro-batching
   // -------------------------------------------------------------------------
 
   @Override
@@ -269,67 +320,190 @@ public class BigQueryClient implements AnalyticsClient {
     this.enabled = enabled;
   }
 
+  boolean isCircuitBreakerOpen() {
+    long expiry = circuitBreakerExpiryEpochMs;
+    if (expiry == 0L) {
+      return false;
+    }
+    if (System.currentTimeMillis() < expiry) {
+      return true;
+    }
+    circuitBreakerExpiryEpochMs = 0L;
+    circuitBreakerLogged.set(false);
+    return false;
+  }
+
+  void tripCircuitBreaker() {
+    circuitBreakerExpiryEpochMs = System.currentTimeMillis() + CIRCUIT_BREAKER_DURATION_MS;
+    clearPendingBuffers();
+    if (circuitBreakerLogged.compareAndSet(false, true)) {
+      FRLogger.warn(
+          "BigQuery rate limit / quota exceeded (429 RESOURCE_EXHAUSTED). Circuit breaker tripped; "
+              + "pausing BigQuery streaming for "
+              + Duration.ofMillis(CIRCUIT_BREAKER_DURATION_MS).toMinutes()
+              + " minutes.");
+    }
+  }
+
+  void resetCircuitBreaker() {
+    circuitBreakerExpiryEpochMs = 0L;
+    circuitBreakerLogged.set(false);
+  }
+
+  private void clearPendingBuffers() {
+    pendingByTable.clear();
+    totalPendingCount.set(0);
+    synchronized (flushLock) {
+      flushLock.notifyAll();
+    }
+  }
+
+  static boolean isQuotaExceededError(Throwable throwable) {
+    Throwable current = throwable;
+    while (current != null) {
+      if (current instanceof BigQueryException bqe) {
+        if (bqe.getCode() == 429
+            || "rateLimitExceeded".equalsIgnoreCase(bqe.getReason())
+            || "RESOURCE_EXHAUSTED".equalsIgnoreCase(bqe.getReason())) {
+          return true;
+        }
+      }
+      String className = current.getClass().getName();
+      if ("com.google.api.client.googleapis.json.GoogleJsonResponseException".equals(className)) {
+        if (current.getMessage() != null && current.getMessage().contains("429")) {
+          return true;
+        }
+      }
+      String msg = current.getMessage();
+      if (msg != null
+          && (msg.contains("rateLimitExceeded")
+              || msg.contains("RESOURCE_EXHAUSTED")
+              || msg.contains("RATE_LIMIT_EXCEEDED")
+              || msg.contains("Quota exceeded"))) {
+        return true;
+      }
+      current = current.getCause();
+    }
+    return false;
+  }
+
   private void sendPayloadAsync(Payload payload) {
-    if (!enabled || executor.isShutdown()) {
+    if (!enabled || executor.isShutdown() || isCircuitBreakerOpen()) {
       return;
     }
 
-    // Snapshot the fields on the calling thread so the background thread doesn't race
+    if (totalPendingCount.get() >= MAX_PENDING_ROWS) {
+      AnalyticsErrorAggregator.recordFailure(
+          "BigQuery/buffer_overflow",
+          new RuntimeException(
+              "BigQuery buffer full (" + MAX_PENDING_ROWS + " rows). Dropping telemetry event."));
+      return;
+    }
+
+    // Snapshot the fields on the calling thread so background threads don't race
     // on mutable payload state.
     Map<String, String> fields = generateFieldsFromPayload(payload);
+    String tableName = payload.event.toLowerCase().replace(" ", "_").replace("-", "_");
 
-    inFlightCount.incrementAndGet();
-    executor.submit(
-        () -> {
-          try {
-            // Table name is the event name with some formatting.
-            String tableName = payload.event.toLowerCase().replace(" ", "_").replace("-", "_");
+    // Trait-only tables (identifies, user_snapshots) follow the Segment identifies schema:
+    // flattened traits + standard metadata, but no event / event_text columns.
+    if (!isTraitOnlyTable(tableName)) {
+      fields.put("event_text", fields.get("event"));
+      fields.remove("event");
+      fields.put("event", tableName);
+    } else {
+      fields.remove("event");
+    }
 
-            // Trait-only tables (identifies, user_snapshots) follow the Segment identifies
-            // schema:
-            // flattened traits + standard metadata, but no event / event_text columns.
-            if (!isTraitOnlyTable(tableName)) {
-              fields.put("event_text", fields.get("event"));
-              fields.remove("event");
-              fields.put("event", tableName);
-            } else {
-              fields.remove("event");
-            }
+    ConcurrentLinkedQueue<Map<String, String>> queue =
+        pendingByTable.computeIfAbsent(tableName, _ -> new ConcurrentLinkedQueue<>());
+    queue.add(fields);
+    totalPendingCount.incrementAndGet();
 
-            TableId tableId = TableId.of(BIGQUERY_PROJECT_ID, BIGQUERY_DATASET_ID, tableName);
-            InsertAllRequest request =
-                InsertAllRequest.newBuilder(tableId)
-                    .setIgnoreUnknownValues(true)
-                    .addRow(InsertAllRequest.RowToInsert.of(fields))
-                    .build();
+    if (queue.size() >= MAX_BATCH_SIZE) {
+      triggerBatchSend(tableName);
+    }
+  }
 
-            InsertAllResponse response = bigQuery.insertAll(request);
-            if (response.hasErrors()) {
-              response
-                  .getInsertErrors()
-                  .forEach(
-                      (_, errors) ->
-                          FRLogger.error(
-                              "Error in BigQueryClient.sendPayloadAsync: ("
-                                  + tableName
-                                  + ") "
-                                  + errors,
-                              null));
-            }
-          } catch (Exception e) {
-            if (isTransientNetworkError(e)) {
-              FRLogger.warn(
-                  "Transient network issue in BigQueryClient.sendPayloadAsync: " + e.getMessage());
-            } else {
-              FRLogger.error("Exception in BigQueryClient.sendPayloadAsync: " + e.getMessage(), e);
-            }
-          } finally {
-            inFlightCount.decrementAndGet();
-            synchronized (flushLock) {
-              flushLock.notifyAll();
-            }
-          }
-        });
+  void flushAllPendingAsync() {
+    if (isCircuitBreakerOpen() || executor.isShutdown()) {
+      return;
+    }
+    for (String tableName : pendingByTable.keySet()) {
+      triggerBatchSend(tableName);
+    }
+  }
+
+  private void triggerBatchSend(String tableName) {
+    if (executor.isShutdown() || isCircuitBreakerOpen()) {
+      return;
+    }
+    try {
+      executor.submit(() -> drainAndSend(tableName));
+    } catch (Exception ignored) {
+      // Handled by ThreadPoolExecutor discard policy or shutdown
+    }
+  }
+
+  private void drainAndSend(String tableName) {
+    ConcurrentLinkedQueue<Map<String, String>> queue = pendingByTable.get(tableName);
+    if (queue == null || queue.isEmpty() || isCircuitBreakerOpen()) {
+      return;
+    }
+
+    List<Map<String, String>> batch = new ArrayList<>(MAX_BATCH_SIZE);
+    Map<String, String> row;
+    while (batch.size() < MAX_BATCH_SIZE && (row = queue.poll()) != null) {
+      batch.add(row);
+      totalPendingCount.decrementAndGet();
+    }
+
+    if (batch.isEmpty()) {
+      return;
+    }
+
+    inFlightBatches.incrementAndGet();
+    try {
+      sendBatch(tableName, batch);
+    } finally {
+      inFlightBatches.decrementAndGet();
+      synchronized (flushLock) {
+        flushLock.notifyAll();
+      }
+    }
+
+    // If more items remain in this table's queue, trigger another batch drain
+    if (!queue.isEmpty() && !isCircuitBreakerOpen() && !executor.isShutdown()) {
+      triggerBatchSend(tableName);
+    }
+  }
+
+  private void sendBatch(String tableName, List<Map<String, String>> batch) {
+    try {
+      TableId tableId = TableId.of(BIGQUERY_PROJECT_ID, BIGQUERY_DATASET_ID, tableName);
+      InsertAllRequest.Builder builder =
+          InsertAllRequest.newBuilder(tableId).setIgnoreUnknownValues(true);
+      for (Map<String, String> rowFields : batch) {
+        builder.addRow(InsertAllRequest.RowToInsert.of(rowFields));
+      }
+
+      InsertAllResponse response = bigQuery.insertAll(builder.build());
+      if (response.hasErrors()) {
+        response
+            .getInsertErrors()
+            .forEach(
+                (_, errors) ->
+                    AnalyticsErrorAggregator.recordFailure(
+                        "BigQuery/" + tableName,
+                        new RuntimeException("Insert errors for " + tableName + ": " + errors),
+                        errors.toString()));
+      }
+    } catch (Exception e) {
+      if (isQuotaExceededError(e)) {
+        tripCircuitBreaker();
+      }
+      AnalyticsErrorAggregator.recordFailure("BigQuery/" + tableName, e, e.getMessage());
+    }
   }
 
   static boolean isTransientNetworkError(Throwable throwable) {
@@ -349,9 +523,14 @@ public class BigQueryClient implements AnalyticsClient {
 
   @Override
   public void flush(long timeoutMs) {
+    if (isCircuitBreakerOpen()) {
+      return;
+    }
+    flushAllPendingAsync();
     long deadline = System.currentTimeMillis() + timeoutMs;
     synchronized (flushLock) {
-      while (inFlightCount.get() > 0) {
+      while ((totalPendingCount.get() > 0 || inFlightBatches.get() > 0)
+          && !isCircuitBreakerOpen()) {
         long remaining = deadline - System.currentTimeMillis();
         if (remaining <= 0) {
           break;
@@ -368,7 +547,25 @@ public class BigQueryClient implements AnalyticsClient {
 
   @Override
   public void shutdown() {
+    scheduler.shutdown();
+    try {
+      flush(2_000);
+    } catch (Exception ignored) {
+      // Best-effort flush before shutdown; ignore any errors.
+    }
     executor.shutdown();
+  }
+
+  int getTotalPendingCount() {
+    return totalPendingCount.get();
+  }
+
+  void tripCircuitBreakerForTesting() {
+    tripCircuitBreaker();
+  }
+
+  void resetCircuitBreakerForTesting() {
+    resetCircuitBreaker();
   }
 
   private Map<String, String> generateFieldsFromPayload(Payload payload) {

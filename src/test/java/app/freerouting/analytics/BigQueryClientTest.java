@@ -1,6 +1,7 @@
 package app.freerouting.analytics;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -21,6 +22,7 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 class BigQueryClientTest {
 
@@ -91,6 +93,87 @@ class BigQueryClientTest {
     client.track("user-1", "anon-1", "Some Event", props);
 
     client.flush(500);
+    client.shutdown();
+  }
+
+  @Test
+  void testMicroBatchingMultipleRows() throws IOException {
+    BigQuery mockBigQuery = mock(BigQuery.class);
+    InsertAllResponse mockResponse = mock(InsertAllResponse.class);
+    when(mockResponse.hasErrors()).thenReturn(false);
+    when(mockBigQuery.insertAll(any(InsertAllRequest.class))).thenReturn(mockResponse);
+
+    BigQueryClient client = new BigQueryClient("2.3.0", mockBigQuery);
+
+    for (int i = 0; i < 5; i++) {
+      Properties props = new Properties();
+      props.put("index", String.valueOf(i));
+      client.track("user-1", "anon-1", "batch_event", props);
+    }
+
+    client.flush(2000);
+
+    ArgumentCaptor<InsertAllRequest> captor = ArgumentCaptor.forClass(InsertAllRequest.class);
+    verify(mockBigQuery).insertAll(captor.capture());
+
+    InsertAllRequest sentRequest = captor.getValue();
+    assertEquals("batch_event", sentRequest.getTable().getTable());
+    assertEquals(5, sentRequest.getRows().size());
+
+    client.shutdown();
+  }
+
+  @Test
+  void testCircuitBreakerTripsOn429AndDropsSubsequent() throws IOException {
+    BigQuery mockBigQuery = mock(BigQuery.class);
+    when(mockBigQuery.insertAll(any(InsertAllRequest.class)))
+        .thenThrow(new BigQueryException(429, "Quota exceeded for quota metric 'Requests'"));
+
+    BigQueryClient client = new BigQueryClient("2.3.0", mockBigQuery);
+    assertFalse(client.isCircuitBreakerOpen());
+
+    Properties props = new Properties();
+    props.put("k", "v");
+    client.track("user-1", "anon-1", "failing_event", props);
+    client.flush(2000);
+
+    assertTrue(client.isCircuitBreakerOpen());
+    assertEquals(0, client.getTotalPendingCount());
+
+    // Subsequent track should be dropped immediately
+    client.track("user-1", "anon-1", "failing_event", props);
+    assertEquals(0, client.getTotalPendingCount());
+
+    client.resetCircuitBreakerForTesting();
+    assertFalse(client.isCircuitBreakerOpen());
+
+    client.shutdown();
+  }
+
+  @Test
+  void testQuotaExceededErrorDetection() {
+    assertTrue(
+        BigQueryClient.isQuotaExceededError(new BigQueryException(429, "rateLimitExceeded")));
+    assertTrue(BigQueryClient.isQuotaExceededError(new RuntimeException("RESOURCE_EXHAUSTED")));
+    assertTrue(
+        BigQueryClient.isQuotaExceededError(
+            new RuntimeException("Quota exceeded for quota metric 'Requests'")));
+    assertFalse(BigQueryClient.isQuotaExceededError(new SocketTimeoutException("timeout")));
+    assertFalse(BigQueryClient.isQuotaExceededError(new NullPointerException("NPE")));
+  }
+
+  @Test
+  void testBufferOverflowDropsEvents() throws IOException {
+    BigQuery mockBigQuery = mock(BigQuery.class);
+    BigQueryClient client = new BigQueryClient("2.3.0", mockBigQuery);
+
+    for (int i = 0; i < BigQueryClient.MAX_PENDING_ROWS + 10; i++) {
+      Properties props = new Properties();
+      props.put("i", String.valueOf(i));
+      client.track("user-1", "anon-1", "overflow_test", props);
+    }
+
+    assertTrue(client.getTotalPendingCount() <= BigQueryClient.MAX_PENDING_ROWS);
     client.shutdown();
   }
 }
