@@ -1,0 +1,18 @@
+{
+  "updated": "2026-10-26",
+  "tiers": [
+    {
+      "name": "Gold & Silver Sponsors",
+      "donors": [
+        {
+          "name": "Foxy Laboratories",
+          "url": "https://foxylabs.ee"
+        }
+      ]
+    },
+    {
+      "name": "Community Backers & Patrons",
+      "donors": []
+    }
+  ]
+}
