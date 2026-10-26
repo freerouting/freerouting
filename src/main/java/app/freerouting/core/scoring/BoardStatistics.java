@@ -819,8 +819,27 @@ public class BoardStatistics implements Serializable {
     return getLegacyNormalizedScore(legacyScoringOrDefault(routerSettings));
   }
 
+  /**
+   * Returns the configured optimizer score without its floor at zero, used to rank optimizer passes.
+   * On dense boards where initial penalty exceeds 1,000, score is negative rather than clamped at 0.
+   */
+  public float getOptimizerRank(RouterSettings routerSettings) {
+    if (routerSettings != null
+        && routerSettings.optimizerScoring != null
+        && routerSettings.optimizerScoring.version
+            == app.freerouting.settings.OptimizerScoringVersion.V2_LOWER_BOUND) {
+      return (float) v2OptimizerScoreUnbounded(routerSettings.optimizerScoring);
+    }
+    return getOptimizerScore(routerSettings);
+  }
+
   /** Calculates the V2 optimizer score from board-only lower bounds and actual route metrics. */
   private float getV2OptimizerScore(OptimizerScoreSettings settings) {
+    return (float) Math.max(0.0, v2OptimizerScoreUnbounded(settings));
+  }
+
+  /** 1,000 less the V2 optimizer score's penalties; below zero when they outweigh it. */
+  private double v2OptimizerScoreUnbounded(OptimizerScoreSettings settings) {
     double difficulty =
         this.difficulty.difficultyD != null ? Math.max(1.0, this.difficulty.difficultyD) : 1.0;
     double minTraceLength =
@@ -846,7 +865,7 @@ public class BoardStatistics implements Serializable {
         valueOrDefault(settings.excessBendWeight, 500.0f)
             * Math.max(0.0, actualBendCount - minBendCount)
             / Math.max(difficulty, difficultyFloor);
-    return (float) Math.max(0.0, 1000.0 - lengthPenalty - viaPenalty - bendPenalty);
+    return 1000.0 - lengthPenalty - viaPenalty - bendPenalty;
   }
 
   /**

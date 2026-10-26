@@ -295,7 +295,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
     // Capture initial board state for baseline and session summary
     BoardStatistics initialStats = board.getStatistics();
     float initialRouterScore = initialStats.getRouterScore(job.routerSettings);
-    float initialOptimizerScore = initialStats.getOptimizerScore(job.routerSettings);
+    float initialOptimizerScore = initialStats.getOptimizerRank(job.routerSettings);
     RoutingResultManifest.PhaseDetail phase = job.resultPhaseMetrics.optimizer;
     phase.before =
         RoutingResultManifest.PhaseSnapshot.fromBoardStatistics(
@@ -397,7 +397,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
       }
       ++currentPass;
 
-      float scoreBeforePass = board.getStatistics().getOptimizerScore(job.routerSettings);
+      float scoreBeforePass = board.getStatistics().getOptimizerRank(job.routerSettings);
 
       String currentBoardHash = this.board.getHash();
       this.fireTaskStateChangedEvent(
@@ -412,7 +412,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
       }
 
       BoardStatistics passStats = board.getStatistics();
-      float scoreAfterPass = passStats.getOptimizerScore(job.routerSettings);
+      float scoreAfterPass = passStats.getOptimizerRank(job.routerSettings);
       String rejectionReason =
           optimizerCandidateRejectionReason(
               this.bestIncompleteCount,
@@ -439,17 +439,19 @@ public final class BatchOptimizer extends NamedAlgorithm {
         restoreIncumbentBoard();
       }
 
-      double passImprovementFraction =
-          scoreBeforePass > 0 ? (double) (scoreAfterPass - scoreBeforePass) / scoreBeforePass : 0;
-      double passImprovementPercent = passImprovementFraction * 100.0;
+      StopRuleView stopRuleView =
+          stopRuleScores(
+              scoreBeforePass,
+              scoreAfterPass,
+              passStats.connections.incompleteCount > 0);
+      double passImprovementPercent = scoreImprovementPercent(scoreBeforePass, scoreAfterPass);
       String passOutcome =
           scoreAfterPass > scoreBeforePass
               ? "IMPROVED"
               : (scoreAfterPass < scoreBeforePass ? "REGRESSED" : "UNCHANGED");
       String passImprovementPercentStr =
-          scoreBeforePass > 0
-              ? String.format(Locale.US, "%.4f%%", passImprovementPercent)
-              : "n/a (baseline was 0.00)";
+          String.format(Locale.US, "%.4f%%", passImprovementPercent)
+              + (scoreBeforePass > 0 ? "" : " of the excess");
       job.logInfo(
           String.format(
               Locale.US,
@@ -469,7 +471,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
         // Keep the optimizer going to try with normal ripup costs
         scoreImprovement = -1;
       } else {
-        scoreImprovement = passImprovementPercent;
+        scoreImprovement = stopRuleView.percent();
       }
 
       if (scoreImprovement != -1
@@ -490,7 +492,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
     // Restore best board achieved if final state regressed below best score or added
     // violations/opens
     BoardStatistics endStats = this.board.getStatistics();
-    float finalBoardScore = endStats.getOptimizerScore(job.routerSettings);
+    float finalBoardScore = endStats.getOptimizerRank(job.routerSettings);
     int finalIncomplete = endStats.connections.incompleteCount;
     int finalViolations = endStats.clearanceViolations.totalCount;
 
@@ -599,10 +601,40 @@ public final class BatchOptimizer extends NamedAlgorithm {
     if (candidate.clearanceViolations.totalCount > incumbentClearanceViolationCount) {
       return "DRC_COUNT_REGRESSION";
     }
+    if (candidate.connections.incompleteCount < incumbentIncompleteCount) {
+      return null;
+    }
     if (!(candidateOptimizerScore > incumbentOptimizerScore)) {
       return "OPTIMIZER_SCORE_NOT_IMPROVED";
     }
     return null;
+  }
+
+  /**
+   * Calculates what a pass gained, in percent, for the stop rule's improvement threshold:
+   * of the score while it is above zero, and at or below zero ({@link BoardStatistics#getOptimizerRank}),
+   * where the score is no base, of the excess the score charges (1,000 less the score).
+   */
+  public static double scoreImprovementPercent(float before, float after) {
+    double fraction =
+        before > 0
+            ? (double) (after - before) / before
+            : (double) (after - before) / (1000.0 - before);
+    return fraction * 100.0;
+  }
+
+  /** The scores and the gain in percent read by the pass loop's stop rule. */
+  public record StopRuleView(float before, float after, double percent) {}
+
+  /**
+   * Calculates what the stop rule reads of a pass's scores. Passes are accepted by rank;
+   * the stop rule reads the rank too, except on a board with open connections from a score at or
+   * below zero, where it reads the score with its floor so an incomplete board does not loop fruitlessly.
+   */
+  public static StopRuleView stopRuleScores(float before, float after, boolean connectionsOpen) {
+    return connectionsOpen && before <= 0
+        ? new StopRuleView(0f, Math.max(0f, after), 0.0)
+        : new StopRuleView(before, after, scoreImprovementPercent(before, after));
   }
 
   /**
@@ -851,7 +883,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
             this.board.getHash(),
             routeoptimizerPassDuration,
             FRLogger.formatScore(
-                boardStatisticsAfter.getOptimizerScore(job.routerSettings),
+                boardStatisticsAfter.getOptimizerRank(job.routerSettings),
                 boardStatisticsAfter.connections.incompleteCount,
                 boardStatisticsAfter.clearanceViolations.totalCount)));
     return routeImproved;
