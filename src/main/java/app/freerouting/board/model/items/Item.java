@@ -8,6 +8,7 @@ import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.model.structure.BoardOutline;
 import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.board.model.structure.Unit;
+import app.freerouting.board.searchtree.ExactCopper;
 import app.freerouting.board.searchtree.SearchTreeObject;
 import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.board.trace.PolylineTrace;
@@ -379,10 +380,19 @@ public abstract class Item
     ShapeSearchTree drcTree = board.searchTreeManager.getUncompensatedTree();
     for (int i = 0; i < treeShapeCount(drcTree); i++) {
       TileShape currentTileShape = getTreeShape(drcTree, i);
+      // Erik Gavriluk (freerouting.net): a pin's or via's copper (a circle, a turned pad),
+      // measured where the tiles overlap (router.exact_copper).
+      boolean exactCopper = board.rules.isExactCopper() && !drcTree.isClearanceCompensationUsed();
+      ExactCopper exactThis = exactCopper ? drcTree.exactCopperOf(this, i) : null;
       // Erik Gavriluk (freerouting.net): test only items that are obstacles to this item
       Collection<TreeEntry> currentOverlappingItems =
           drcTree.overlappingTreeEntriesWithClearance(
-              currentTileShape, shapeLayer(i), new int[0], this.clearanceClassIndex, this);
+              currentTileShape,
+              shapeLayer(i),
+              new int[0],
+              this.clearanceClassIndex,
+              this,
+              exactThis);
       for (TreeEntry currentEntry : currentOverlappingItems) {
         if (!(currentEntry.object instanceof Item currentItem) || currentEntry.object == this) {
           continue;
@@ -503,11 +513,30 @@ public abstract class Item
                 exactCircles
                     ? exact1.center.distance(exact2.center) - exact1.radius - exact2.radius
                     : 0;
+            // freerouting.net (router.exact_copper): a pin's or via's copper (with the hole
+            // envelope its tile carries, so the drill's hole clearance does not disappear)
+            // against the other copper; a turned pad's octagon reaches past its slanted edges.
+            ExactCopper exactOther =
+                exactCopper
+                    ? drcTree.exactCopperOf(currentItem, currentEntry.shapeIndexInObject)
+                    : null;
+            boolean measuredCopper = false;
+            double copperGap = 0;
+            if (exactThis != null || exactOther != null) {
+              ExactCopper copper1 = exactThis != null ? exactThis : ExactCopper.of(shape1);
+              ExactCopper copper2 = exactOther != null ? exactOther : ExactCopper.of(shape2);
+              if (copper1 != null && copper2 != null) {
+                measuredCopper = true;
+                copperGap = ExactCopper.distance(copper1, copper2);
+              }
+            }
             double actualClearance =
-                exactCircles
-                    ? Math.max(0, circleGap)
-                    : calculateClearanceBetweenTwoShapes(
-                        shape1, shape2, minimumClearance, clComp1, clComp2);
+                measuredCopper
+                    ? copperGap
+                    : exactCircles
+                        ? Math.max(0, circleGap)
+                        : calculateClearanceBetweenTwoShapes(
+                            shape1, shape2, minimumClearance, clComp1, clComp2);
 
             double shortfall = minimumClearance - actualClearance;
             double boardUnitToUmFactor =

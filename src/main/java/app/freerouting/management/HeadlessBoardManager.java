@@ -368,6 +368,7 @@ public class HeadlessBoardManager implements BoardManager {
     applyCopperToEdgeClearanceOverride();
     applyHoleClearanceOverride();
     applyHoleToHole();
+    applyExactCopperOverride();
     applyPlaneNetsOverride();
     applyPlaneAsObstacleOverride();
     applyClearanceToleranceOverride();
@@ -389,6 +390,17 @@ public class HeadlessBoardManager implements BoardManager {
     }
     this.board.rules.setMinHoleToHole(
         (int) Math.floor(this.board.communication.physicalToBoard(um, Unit.UM) + 0.5));
+  }
+
+  private void applyExactCopperOverride() {
+    if (this.board == null
+        || this.board.rules == null
+        || this.routingJob == null
+        || this.routingJob.routerSettings == null
+        || this.routingJob.routerSettings.exactCopper == null) {
+      return;
+    }
+    this.board.rules.setExactCopper(this.routingJob.routerSettings.exactCopper);
   }
 
   private void applyHoleClearanceOverride() {
@@ -974,6 +986,7 @@ public class HeadlessBoardManager implements BoardManager {
       applyCopperToEdgeClearanceOverride();
       applyHoleClearanceOverride();
       applyHoleToHole();
+      applyExactCopperOverride();
       applyPlaneNetsOverride();
       applyPlaneAsObstacleOverride();
       applyClearanceToleranceOverride();

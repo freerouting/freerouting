@@ -111,6 +111,14 @@ public class RouterSettings implements Serializable, Cloneable {
   public Double neckWidthUm;
 
   /**
+   * Measure a pin's or via's copper (a circle, a pad polygon) where the search tree's octagons
+   * overlap, in the clearance query, the via checks, via shoves and moves, and the clearance
+   * checker, instead of refusing the pair on the octagons.
+   */
+  @SerializedName("exact_copper")
+  public Boolean exactCopper;
+
+  /**
    * When true, a routed connection whose newly inserted traces/vias carry clearance violations is
    * ripped up again and counted as not routed for that pass, instead of being kept with the
    * violations (v1 limitation: violations between two pre-existing foreign items pushed by a shove
@@ -682,6 +690,7 @@ public class RouterSettings implements Serializable, Cloneable {
     result.planeNets = this.planeNets != null ? this.planeNets.clone() : null;
     result.planeAsObstacle = this.planeAsObstacle;
     result.neckWidthUm = this.neckWidthUm;
+    result.exactCopper = this.exactCopper;
     result.strictDrc = this.strictDrc;
     result.tracePullTightAccuracy = this.tracePullTightAccuracy;
     result.viasAllowed = this.viasAllowed;

@@ -42,6 +42,41 @@ public final class ForcedViaInserter {
       RoutingBoard board,
       int traceHalfWidth,
       int traceClearanceClass) {
+    return checkLayer(
+        viaRadius,
+        clearanceClassIndex,
+        attachSmdAllowed,
+        roomShape,
+        location,
+        layer,
+        netNumbers,
+        maxRecursionDepth,
+        maxViaRecursionDepth,
+        board,
+        traceHalfWidth,
+        traceClearanceClass,
+        false);
+  }
+
+  /**
+   * Checks, if a Via is possible at the input layer after evtl. shoving aside obstacle traces.
+   * roomShape is used for calculating the fromSide. With {@code circularCopper}, a round via is
+   * checked as the circle the insertion checks.
+   */
+  public static ForcedPadRouter.CheckDrillResult checkLayer(
+      double viaRadius,
+      int clearanceClassIndex,
+      boolean attachSmdAllowed,
+      TileShape roomShape,
+      Point location,
+      int layer,
+      int[] netNumbers,
+      int maxRecursionDepth,
+      int maxViaRecursionDepth,
+      RoutingBoard board,
+      int traceHalfWidth,
+      int traceClearanceClass,
+      boolean circularCopper) {
     if (viaRadius <= 0) {
       return ForcedPadRouter.CheckDrillResult.DRILLABLE;
     }
@@ -87,7 +122,9 @@ public final class ForcedViaInserter {
             maxRecursionDepth,
             maxViaRecursionDepth,
             false,
-            null);
+            null,
+            false,
+            circularCopper ? viaShape : null);
     if (viaResult == ForcedPadRouter.CheckDrillResult.NOT_DRILLABLE) {
       return viaResult;
     }
@@ -117,7 +154,9 @@ public final class ForcedViaInserter {
             maxRecursionDepth,
             maxViaRecursionDepth,
             false,
-            null);
+            null,
+            false,
+            startTraceCircle);
     if (traceResult == ForcedPadRouter.CheckDrillResult.NOT_DRILLABLE) {
       return traceResult;
     }
@@ -186,7 +225,8 @@ public final class ForcedViaInserter {
               maxViaRecursionDepth,
               false,
               null,
-              holeLayer)
+              holeLayer,
+              currentPadShape)
           == ForcedPadRouter.CheckDrillResult.NOT_DRILLABLE) {
         board.setShoveFailingLayer(i);
         return false;
@@ -212,7 +252,8 @@ public final class ForcedViaInserter {
                 maxViaRecursionDepth,
                 false,
                 null,
-                true)
+                true,
+                holeShape)
             == ForcedPadRouter.CheckDrillResult.NOT_DRILLABLE) {
           board.setShoveFailingLayer(i);
           return false;
@@ -242,7 +283,9 @@ public final class ForcedViaInserter {
                 maxRecursionDepth,
                 maxViaRecursionDepth,
                 false,
-                null)
+                null,
+                false,
+                startTraceCircle)
             == ForcedPadRouter.CheckDrillResult.NOT_DRILLABLE) {
           board.setShoveFailingLayer(i);
           return false;
@@ -323,7 +366,8 @@ public final class ForcedViaInserter {
           null,
           maxRecursionDepth,
           maxViaRecursionDepth,
-          holeLayer)) {
+          holeLayer,
+          currentPadShape)) {
         board.setShoveFailingLayer(i);
         return false;
       }
@@ -344,7 +388,8 @@ public final class ForcedViaInserter {
             null,
             maxRecursionDepth,
             maxViaRecursionDepth,
-            true)) {
+            true,
+            holeShape)) {
           board.setShoveFailingLayer(i);
           return false;
         }
@@ -361,7 +406,9 @@ public final class ForcedViaInserter {
             true,
             null,
             maxRecursionDepth,
-            maxViaRecursionDepth)) {
+            maxViaRecursionDepth,
+            false,
+            startTraceCircle)) {
           board.setShoveFailingLayer(i);
           return false;
         }

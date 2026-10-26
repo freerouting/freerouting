@@ -213,6 +213,7 @@ public class DefaultSettings implements SettingsSource {
     settings.planeNets = new String[0];
     settings.planeAsObstacle = false;
     settings.neckWidthUm = DEFAULT_NECK_WIDTH_UM;
+    settings.exactCopper = true;
     settings.strictDrc = false;
     settings.fixKicadFootprints = false;
 

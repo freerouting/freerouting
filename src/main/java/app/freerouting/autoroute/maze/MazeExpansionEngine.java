@@ -11,6 +11,7 @@ import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Via;
 import app.freerouting.core.library.Padstack;
+import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -404,7 +405,8 @@ final class MazeExpansionEngine {
               0,
               search.autorouteEngine.board,
               ctrl.traceHalfWidth[layer],
-              ctrl.traceClearanceClassIndex);
+              ctrl.traceClearanceClassIndex,
+              viaShape instanceof Circle);
       if (result == ForcedPadRouter.CheckDrillResult.DRILLABLE) {
         return result;
       }

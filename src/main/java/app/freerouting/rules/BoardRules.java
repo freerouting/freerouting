@@ -51,6 +51,7 @@ public class BoardRules implements Serializable {
   private boolean useSlowAutorouteAlgorithm;
   private int holeClearance;
   private int minHoleToHole;
+  private boolean exactCopper = true;
   public transient double clearanceToleranceUm = 1.0;
 
   /** Creates a new instance of this class. */
@@ -240,6 +241,19 @@ public class BoardRules implements Serializable {
   /** Sets the hole-to-hole minimum ({@link #getMinHoleToHole()}). */
   public void setMinHoleToHole(int value) {
     this.minHoleToHole = Math.max(0, value);
+  }
+
+  /**
+   * Whether to measure a pin's or via's copper (a circle, a pad polygon) where the search tree's
+   * octagons overlap, instead of refusing the pair on the octagons.
+   */
+  public boolean isExactCopper() {
+    return exactCopper;
+  }
+
+  /** Sets whether to use exact copper clearance. */
+  public void setExactCopper(boolean value) {
+    this.exactCopper = value;
   }
 
   /** Changes the default trace half-width used for routing on the input layer. */

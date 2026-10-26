@@ -11,12 +11,14 @@ import app.freerouting.board.model.structure.ShapeEntrySide;
 import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.board.searchtree.ShapeTraceEntries;
 import app.freerouting.datastructures.TimeLimit;
+import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
+import app.freerouting.geometry.planar.Shape;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import java.util.Collection;
@@ -103,7 +105,11 @@ public final class DrillItemMover {
               maxRecursionDepth,
               maxViaRecursionDepth,
               true,
-              timeLimit)
+              timeLimit,
+              false,
+              board.rules.isExactCopper()
+                  ? movedCopper(drillItem, currentInd, vector, searchTree)
+                  : null)
           == ForcedPadRouter.CheckDrillResult.NOT_DRILLABLE) {
         return false;
       }
@@ -180,7 +186,11 @@ public final class DrillItemMover {
           attachAllowed,
           ignoreItems,
           maxRecursionDepth,
-          maxViaRecursionDepth)) {
+          maxViaRecursionDepth,
+          false,
+          board.rules.isExactCopper()
+              ? movedCopper(drillItem, currentInd, vector, searchTree)
+              : null)) {
         return false;
       }
       IntBox currentBoundingBox = currentShape.boundingBox();
@@ -190,6 +200,22 @@ public final class DrillItemMover {
     }
     drillItem.moveBy(vector);
     return true;
+  }
+
+  private static Shape movedCopper(
+      DrillItem drillItem, int index, Vector vector, ShapeSearchTree tree) {
+    Shape copper = drillItem.getShape(index);
+    if (!(copper instanceof Circle) && !(copper instanceof TileShape)) {
+      return null;
+    }
+    int layer = drillItem.shapeLayer(index);
+    int grow =
+        tree.clearanceCompensationValue(drillItem.clearanceClassIndex(), layer)
+            + tree.drillHoleClearanceDelta(drillItem, copper, layer);
+    if (copper instanceof Circle circle) {
+      return circle.translateBy(vector).enlarge(grow);
+    }
+    return grow == 0 ? ((TileShape) copper).translateBy(vector) : null;
   }
 
   /**
@@ -207,13 +233,40 @@ public final class DrillItemMover {
       int maxViaRecursionDepth,
       boolean copperSharingAllowed,
       RoutingBoard board) {
+    return shoveVias(
+        obstacleShape,
+        fromSide,
+        layer,
+        netNumbers,
+        clearanceClassIndex,
+        ignoreItems,
+        maxRecursionDepth,
+        maxViaRecursionDepth,
+        copperSharingAllowed,
+        board,
+        null);
+  }
+
+  /** Shoves vias out of obstacleShape with exactShape copper. */
+  public static boolean shoveVias(
+      TileShape obstacleShape,
+      ShapeEntrySide fromSide,
+      int layer,
+      int[] netNumbers,
+      int clearanceClassIndex,
+      Collection<Item> ignoreItems,
+      int maxRecursionDepth,
+      int maxViaRecursionDepth,
+      boolean copperSharingAllowed,
+      RoutingBoard board,
+      Shape exactShape) {
     ShapeSearchTree searchTree = board.searchTreeManager.getDefaultTree();
     ShapeTraceEntries shapeEntries =
         new ShapeTraceEntries(
             obstacleShape, layer, netNumbers, clearanceClassIndex, fromSide, board);
     Collection<Item> obstacles =
         searchTree.overlappingItemsWithClearance(
-            obstacleShape, layer, new int[0], clearanceClassIndex);
+            obstacleShape, layer, new int[0], clearanceClassIndex, exactShape);
 
     if (!shapeEntries.storeItems(obstacles, false, copperSharingAllowed)) {
       return true;
