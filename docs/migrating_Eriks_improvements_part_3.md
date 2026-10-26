@@ -32,15 +32,15 @@ This document tracks all improvements and bug fixes ported from `freerouting.net
   - [x] Port `OptimizerRankTests.cs` to `src/test/java/app/freerouting/autoroute/pipeline/OptimizerRankTest.java`.
   - [x] Run fast verification tests.
 
-- [ ] **Task 1.2: Input-Fixed Locked Tracks & Arc Stand-ins (`FixedState.INPUT_FIXED`)**
+- [x] **Task 1.2: Input-Fixed Locked Tracks & Arc Stand-ins (`FixedState.INPUT_FIXED`)**
   - **Origin Commits:** `574ff793`, `ad33ee4c`
   - **Problem:** KiCad locked tracks and arc stand-ins arrive in DSN as `(type fix)`. Java currently reads them as `SYSTEM_FIXED`. However, pipeline stages (Direct Pin Routing, Additive Routing) also use `SYSTEM_FIXED` for temporary locking. Because `SYSTEM_FIXED` items were not treated as preserved routes, branches ending on locked tracks were rejected as non-contacts or produced dangling DRC warnings.
   - **Solution:** Introduce `FixedState.INPUT_FIXED` (stronger than `SYSTEM_FIXED`). Treat both `INPUT_FIXED` and `USER_FIXED` as preserved routes (`isPreservedRoute()`), permitting center-line contacts. Ensure pipeline stages only set `SYSTEM_FIXED` and do not alter `INPUT_FIXED` items.
-  - [ ] Add `INPUT_FIXED` to `FixedState.java`.
-  - [ ] Update `Trace.isPreservedRoute()` / `Item.isPreservedRoute()` and contact logic in `Trace.java` and `PolylineTrace.java`.
-  - [ ] Update `Wiring.java` and `SesWriter.java` / `SesReader.java` to map `fix` wire/via to `FixedState.INPUT_FIXED`.
-  - [ ] Port `LockedTraceJunctionTests.cs` to `src/test/java/app/freerouting/board/LockedTraceJunctionTest.java`.
-  - [ ] Verify test suite passes.
+  - [x] Add `INPUT_FIXED` to `FixedState.java`.
+  - [x] Update `Trace.isPreservedRoute()` / `Item.isPreservedRoute()` and contact logic in `Trace.java` and `PolylineTrace.java`.
+  - [x] Update `Wiring.java` and `SesWriter.java` / `SesReader.java` to map `fix` wire/via to `FixedState.INPUT_FIXED`.
+  - [x] Port `LockedTraceJunctionTests.cs` to `src/test/java/app/freerouting/board/LockedTraceJunctionTest.java`.
+  - [x] Verify test suite passes.
 
 - [ ] **Task 1.3: SES Rational Corner Junction Synchronization (`SessionJunction`)**
   - **Origin Commits:** `41d888c4`, `5214f386`

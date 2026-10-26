@@ -121,6 +121,11 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   public abstract boolean contains(Point point);
 
   @Override
+  public boolean isPreservedRoute() {
+    return getFixedState() != null && getFixedState().isPreservedRoute();
+  }
+
+  @Override
   public Point normalContactPoint(Item other) {
     return other.normalContactPoint(this);
   }

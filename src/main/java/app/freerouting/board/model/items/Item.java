@@ -940,7 +940,9 @@ public abstract class Item
 
   /** Fixes the item. */
   public void setFixedState(FixedState fixedState) {
+    FixedState oldState = this.fixedState;
     this.fixedState = fixedState;
+    noteIfPreservedChanged(oldState);
   }
 
   /** Returns false, if this item is an obstacle for vias with the input net number. */
@@ -948,11 +950,31 @@ public abstract class Item
     return false;
   }
 
-  /** Unfixes the item, if it is not fixed by the system. */
+  /** Unfixes the item, if it is not fixed by the system or the input (isFix()). */
   public void unfix() {
-    if (fixedState != FixedState.SYSTEM_FIXED) {
+    if (fixedState != null && !fixedState.isFix()) {
+      FixedState oldState = fixedState;
       fixedState = FixedState.UNFIXED;
+      noteIfPreservedChanged(oldState);
     }
+  }
+
+  private void noteIfPreservedChanged(FixedState oldState) {
+    if (this instanceof Trace
+        && (oldState != null && oldState.isPreservedRoute())
+            != (this.fixedState != null && this.fixedState.isPreservedRoute())) {
+      if (this.board != null) {
+        this.board.noteNetAssignmentChanged();
+      }
+    }
+  }
+
+  /**
+   * Returns whether this item is a preserved route: user-fixed (DSN route/protect) or input-fixed
+   * (DSN fix wire / locked KiCad track).
+   */
+  public boolean isPreservedRoute() {
+    return this.fixedState != null && this.fixedState.isPreservedRoute();
   }
 
   /** Returns true, if this item is an unfixed trace or via, so it can be routed by auto-router. */

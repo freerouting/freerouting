@@ -213,7 +213,7 @@ public class Wiring extends ScopeKeyword {
     file.write("(type ");
     if (fixedState == FixedState.SHOVE_FIXED) {
       file.write("shoveFixed)");
-    } else if (fixedState == FixedState.SYSTEM_FIXED) {
+    } else if (fixedState.isFix()) {
       file.write("fix)");
     } else {
       file.write("protect)");
@@ -261,7 +261,8 @@ public class Wiring extends ScopeKeyword {
       if (nextToken == SHOVE_FIXED) {
         result = FixedState.SHOVE_FIXED;
       } else if (nextToken == FIX) {
-        result = FixedState.SYSTEM_FIXED;
+        // The input's lock, told apart from the temporary lock of a pipeline stage (FixedState.INPUT_FIXED).
+        result = FixedState.INPUT_FIXED;
       } else if (nextToken != NORMAL) {
         result = FixedState.USER_FIXED;
       }
