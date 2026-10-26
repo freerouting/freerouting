@@ -8,6 +8,7 @@ import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
+import javax.swing.JTabbedPane;
 
 /**
  * Shared accessibility helper and locator registry for the Freerouting GUI (decision D22).
@@ -70,6 +71,15 @@ public final class A11y {
    */
   public static List<Component> accessibleChildren(Component component) {
     List<Component> out = new ArrayList<>();
+    if (component instanceof JTabbedPane tabbedPane) {
+      for (int i = 0; i < tabbedPane.getTabCount(); i++) {
+        Component tabComp = tabbedPane.getComponentAt(i);
+        if (tabComp != null) {
+          out.add(tabComp);
+        }
+      }
+      return out;
+    }
     AccessibleContext ac = component.getAccessibleContext();
     if (ac != null) {
       int count = ac.getAccessibleChildrenCount();

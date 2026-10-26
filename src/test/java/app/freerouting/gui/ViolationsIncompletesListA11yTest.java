@@ -44,7 +44,9 @@ class ViolationsIncompletesListA11yTest {
       "Issue575-drc_BBD_Mars-64_6_track_1_hole_clearance_violations.dsn";
 
   private static final int EXPECTED_UNIQUE_VIOLATIONS = 67;
-  private static final int EXPECTED_INCOMPLETES = 9;
+  // 3 unconnected components remain on dev-board; 6 previously missed T-junctions
+  // are now correctly recognized as connected by the centerline contact model.
+  private static final int EXPECTED_INCOMPLETES = 3;
 
   @BeforeEach
   void setUp() {

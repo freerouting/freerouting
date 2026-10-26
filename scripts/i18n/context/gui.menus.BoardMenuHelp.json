@@ -59,6 +59,22 @@
     "related_keys": [],
     "ui_role": "label"
   },
+  "patrons": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.menus.BoardMenuHelp"
+    ],
+    "english_hash": "e1d7b0df768e19684be2d8551177f17b46a39861c44328b78e20b1679a1be3da",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.menus.BoardMenuHelp",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
   "sponsor": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [

@@ -127,6 +127,7 @@ public final class GuiLocators {
   public static final String MENU_OTHER = "menu.other";
   public static final String MENU_HELP = "menu.help";
   public static final String MENU_HELP_ABOUT = "menu.help.about";
+  public static final String MENU_HELP_PATRONS = "menu.help.patrons";
   public static final String MENU_HELP_SPONSOR = "menu.help.sponsor";
   public static final String MENU_PROFILE = "menu.profile";
 
@@ -177,6 +178,10 @@ public final class GuiLocators {
   public static final String ROUTING_SUMMARY_DONATE_BUTTON = "dialog.routing_summary.donate";
   public static final String ROUTING_SUMMARY_CLOSE_BUTTON = "dialog.routing_summary.close";
   public static final String ROUTING_SUMMARY_SHOW_CHECKBOX = "dialog.routing_summary.show_checkbox";
+
+  // ---- About dialog ----
+  public static final String WINDOW_ABOUT_TABBED_PANE = "window.about.tabbed_pane";
+  public static final String WINDOW_ABOUT_PATRON_BUTTON = "window.about.patron_button";
 
   /** Returns the stable locator for a message label at {@code index}. */
   public static String windowMessageLabel(int index) {
