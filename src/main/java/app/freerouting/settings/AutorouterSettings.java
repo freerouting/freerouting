@@ -132,6 +132,17 @@ public class AutorouterSettings implements Serializable, Cloneable {
   @Schema(description = "Extra cost for fanout vias placed inside same-net pad clearance")
   public Double fanoutViaPadGap;
 
+  /**
+   * Erik Gavriluk (freerouting.net): the order the first pass routes the balls of a ball grid part
+   * in: "auto", "off", "outer_first", or "inner_first".
+   */
+  @SerializedName("ball_escape_order")
+  @Schema(
+      description =
+          "Order for routing balls of BGA parts in pass 1"
+              + " ('auto', 'off', 'inner_first', 'outer_first')")
+  public String ballEscapeOrder;
+
   @Override
   public AutorouterSettings clone() {
     try {

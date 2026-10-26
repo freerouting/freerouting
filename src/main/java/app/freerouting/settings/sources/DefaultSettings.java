@@ -201,6 +201,7 @@ public class DefaultSettings implements SettingsSource {
     settings.autorouter.viaInPad = false;
     settings.autorouter.viaTouchingPad = false;
     settings.autorouter.fanoutViaPadGap = 0.0;
+    settings.autorouter.ballEscapeOrder = "auto";
     settings.maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
     settings.autorouter.maxThreads = settings.maxThreads;
     settings.copperToEdgeClearanceUm = DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM;
@@ -238,6 +239,7 @@ public class DefaultSettings implements SettingsSource {
     settings.fanout.fallbackToBoardVias = true;
     settings.fanout.retryWithoutEscapeWindow = false;
     settings.fanout.strategy = "eager";
+    settings.fanout.twoLayerBga = "no_fanout";
 
     // Optimizer defaults
     settings.optimizer.enabled = true;

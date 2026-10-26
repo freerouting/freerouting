@@ -32,6 +32,12 @@ public final class RoutingPipeline {
   private RoutingPipeline(RoutingJob job, Function<RoutingJob, BatchOptimizer> optimizerFactory) {
     this.job = job;
     normalizeRouterAlgorithm(job);
+    if (job.board != null) {
+      String chosen = TwoLayerBga.apply(job.routerSettings, job.board);
+      if (chosen != null) {
+        job.logInfo(chosen);
+      }
+    }
     this.autorouter = new BatchAutorouter(job);
     this.optimizer = job.routerSettings.getRunOptimizer() ? optimizerFactory.apply(job) : null;
   }
