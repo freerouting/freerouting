@@ -49,9 +49,12 @@ public class OptimizerRankTest {
     assertEquals(0f, after.getOptimizerScore(settings), 0.001f);
 
     // 1000 - 1000 * 48.62 / 489.61 - 2000 * 39 / 156 - 500 * 184 / 156
-    assertTrue(before.getOptimizerRank(settings) >= -189.5f && before.getOptimizerRank(settings) <= -188.5f);
+    assertTrue(
+        before.getOptimizerRank(settings) >= -189.5f
+            && before.getOptimizerRank(settings) <= -188.5f);
     // 1000 - 1000 * 19.37 / 489.61 - 2000 * 31 / 156 - 500 * 209 / 156
-    assertTrue(after.getOptimizerRank(settings) >= -107.5f && after.getOptimizerRank(settings) <= -106.5f);
+    assertTrue(
+        after.getOptimizerRank(settings) >= -107.5f && after.getOptimizerRank(settings) <= -106.5f);
     assertTrue(after.getOptimizerRank(settings) > before.getOptimizerRank(settings));
   }
 
@@ -68,7 +71,9 @@ public class OptimizerRankTest {
     stats.difficulty.difficultyD = 10.0f;
 
     assertEquals(stats.getOptimizerScore(settings), stats.getOptimizerRank(settings), 0.001f);
-    assertTrue(stats.getOptimizerRank(settings) >= 199.999f && stats.getOptimizerRank(settings) <= 200.001f);
+    assertTrue(
+        stats.getOptimizerRank(settings) >= 199.999f
+            && stats.getOptimizerRank(settings) <= 200.001f);
   }
 
   @Test
@@ -85,7 +90,11 @@ public class OptimizerRankTest {
     assertEquals(
         "OPTIMIZER_SCORE_NOT_IMPROVED",
         BatchOptimizer.optimizerCandidateRejectionReason(
-            1, 0, before.getOptimizerScore(settings), shorter, shorter.getOptimizerScore(settings)));
+            1,
+            0,
+            before.getOptimizerScore(settings),
+            shorter,
+            shorter.getOptimizerScore(settings)));
     assertNull(
         BatchOptimizer.optimizerCandidateRejectionReason(
             1, 0, before.getOptimizerRank(settings), shorter, shorter.getOptimizerRank(settings)));
@@ -117,7 +126,8 @@ public class OptimizerRankTest {
 
   @Test
   public void stopRuleReadsTheFlooredScoreWithConnectionsOpenAtOrBelowZero() {
-    // DerKnopf_led-ring, 1 open: a polish gain below zero does not keep the optimizer from the rounds.
+    // DerKnopf_led-ring, 1 open: a polish gain below zero does not keep the optimizer from the
+    // rounds.
     BatchOptimizer.StopRuleView stop = BatchOptimizer.stopRuleScores(-189.06f, -181.62f, true);
     assertEquals(0f, stop.before(), 0.001f);
     assertEquals(0f, stop.after(), 0.001f);
@@ -141,8 +151,12 @@ public class OptimizerRankTest {
   @Test
   public void improvementFromZeroOrBelowIsAShareOfTheExcess() {
     // -189 -> -107 removes 82 of the 1,189 points the score charges: 6.9%.
-    assertTrue(BatchOptimizer.scoreImprovementPercent(-189f, -107f) >= 6.89 && BatchOptimizer.scoreImprovementPercent(-189f, -107f) <= 6.91);
-    assertTrue(BatchOptimizer.scoreImprovementPercent(0f, 10f) >= 0.999 && BatchOptimizer.scoreImprovementPercent(0f, 10f) <= 1.001);
+    assertTrue(
+        BatchOptimizer.scoreImprovementPercent(-189f, -107f) >= 6.89
+            && BatchOptimizer.scoreImprovementPercent(-189f, -107f) <= 6.91);
+    assertTrue(
+        BatchOptimizer.scoreImprovementPercent(0f, 10f) >= 0.999
+            && BatchOptimizer.scoreImprovementPercent(0f, 10f) <= 1.001);
     assertTrue(BatchOptimizer.scoreImprovementPercent(-189f, -190f) < 0);
     assertEquals(0.0, BatchOptimizer.scoreImprovementPercent(-189f, -189f), 0.0001);
   }

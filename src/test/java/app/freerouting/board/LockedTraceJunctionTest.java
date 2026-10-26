@@ -3,7 +3,6 @@ package app.freerouting.board;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.board.facade.RoutingBoard;
@@ -25,8 +24,9 @@ import org.junit.jupiter.api.Test;
 
 /**
  * A DSN {@code fix} wire (so every locked KiCad track) is input-fixed: as fixed as the system-fixed
- * lock that some pipeline stages put on every trace for their run, but a preserved route, so a branch
- * that ends on its centre line is connected there, as on a {@code route} wire. A stage's lock is not.
+ * lock that some pipeline stages put on every trace for their run, but a preserved route, so a
+ * branch that ends on its centre line is connected there, as on a {@code route} wire. A stage's
+ * lock is not.
  */
 public class LockedTraceJunctionTest {
 
@@ -52,11 +52,13 @@ public class LockedTraceJunctionTest {
 
   private static RoutingBoard load(byte[] dsnBytes) {
     ByteArrayInputStream stream = new ByteArrayInputStream(dsnBytes);
-    return (RoutingBoard) ((BoardReadResult.Success) DsnReader.readBoard(stream, null, null)).board();
+    return (RoutingBoard)
+        ((BoardReadResult.Success) DsnReader.readBoard(stream, null, null)).board();
   }
 
   private IntPoint p(double x, double y) {
-    FloatPoint boardCoords = board.communication.coordinateTransform.dsnToBoard(new double[] {x, y});
+    FloatPoint boardCoords =
+        board.communication.coordinateTransform.dsnToBoard(new double[] {x, y});
     return boardCoords.round();
   }
 
@@ -143,8 +145,7 @@ public class LockedTraceJunctionTest {
     Padstack padstack = board.library.padstacks.get("V");
     assertNotNull(padstack);
     Via via =
-        board.insertVia(
-            padstack, p(6000, 5000), new int[] {net("N")}, 1, FixedState.UNFIXED, true);
+        board.insertVia(padstack, p(6000, 5000), new int[] {net("N")}, 1, FixedState.UNFIXED, true);
 
     assertTrue(via.getNormalContacts().contains(trunk));
     assertTrue(trunk.getNormalContacts().contains(via));

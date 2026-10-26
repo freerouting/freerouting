@@ -441,9 +441,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
 
       StopRuleView stopRuleView =
           stopRuleScores(
-              scoreBeforePass,
-              scoreAfterPass,
-              passStats.connections.incompleteCount > 0);
+              scoreBeforePass, scoreAfterPass, passStats.connections.incompleteCount > 0);
       double passImprovementPercent = scoreImprovementPercent(scoreBeforePass, scoreAfterPass);
       String passOutcome =
           scoreAfterPass > scoreBeforePass
@@ -611,8 +609,8 @@ public final class BatchOptimizer extends NamedAlgorithm {
   }
 
   /**
-   * Calculates what a pass gained, in percent, for the stop rule's improvement threshold:
-   * of the score while it is above zero, and at or below zero ({@link BoardStatistics#getOptimizerRank}),
+   * Calculates what a pass gained, in percent, for the stop rule's improvement threshold: of the
+   * score while it is above zero, and at or below zero ({@link BoardStatistics#getOptimizerRank}),
    * where the score is no base, of the excess the score charges (1,000 less the score).
    */
   public static double scoreImprovementPercent(float before, float after) {
@@ -627,9 +625,9 @@ public final class BatchOptimizer extends NamedAlgorithm {
   public record StopRuleView(float before, float after, double percent) {}
 
   /**
-   * Calculates what the stop rule reads of a pass's scores. Passes are accepted by rank;
-   * the stop rule reads the rank too, except on a board with open connections from a score at or
-   * below zero, where it reads the score with its floor so an incomplete board does not loop fruitlessly.
+   * Calculates what the stop rule reads of a pass's scores. Passes are accepted by rank; the stop
+   * rule reads the rank too, except on a board with open connections from a score at or below zero,
+   * where it reads the score with its floor so an incomplete board does not loop fruitlessly.
    */
   public static StopRuleView stopRuleScores(float before, float after, boolean connectionsOpen) {
     return connectionsOpen && before <= 0

@@ -820,8 +820,9 @@ public class BoardStatistics implements Serializable {
   }
 
   /**
-   * Returns the configured optimizer score without its floor at zero, used to rank optimizer passes.
-   * On dense boards where initial penalty exceeds 1,000, score is negative rather than clamped at 0.
+   * Returns the configured optimizer score without its floor at zero, used to rank optimizer
+   * passes. On dense boards where initial penalty exceeds 1,000, score is negative rather than
+   * clamped at 0.
    */
   public float getOptimizerRank(RouterSettings routerSettings) {
     if (routerSettings != null
