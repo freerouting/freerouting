@@ -202,6 +202,7 @@ public class DefaultSettings implements SettingsSource {
     settings.autorouter.viaTouchingPad = false;
     settings.autorouter.fanoutViaPadGap = 0.0;
     settings.autorouter.ballEscapeOrder = "auto";
+    settings.autorouter.exitStubs = true;
     settings.maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
     settings.autorouter.maxThreads = settings.maxThreads;
     settings.copperToEdgeClearanceUm = DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM;

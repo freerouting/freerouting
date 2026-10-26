@@ -143,6 +143,14 @@ public class AutorouterSettings implements Serializable, Cloneable {
               + " ('auto', 'off', 'inner_first', 'outer_first')")
   public String ballEscapeOrder;
 
+  /**
+   * Erik Gavriluk (freerouting.net): straight exit stubs for fine-pitch IC pins whose clearance
+   * exactly meets design rules.
+   */
+  @SerializedName("exit_stubs")
+  @Schema(description = "Pre-place straight exit stubs for fine-pitch pins with exact clearance")
+  public Boolean exitStubs;
+
   @Override
   public AutorouterSettings clone() {
     try {

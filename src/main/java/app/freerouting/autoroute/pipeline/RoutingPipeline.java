@@ -28,6 +28,7 @@ public final class RoutingPipeline {
   private BatchAutorouter autorouter;
   private final BatchOptimizer optimizer;
   private final List<StageListener> stageListeners = new ArrayList<>();
+  private final List<Integer> exitStubItems = new ArrayList<>();
 
   private RoutingPipeline(RoutingJob job, Function<RoutingJob, BatchOptimizer> optimizerFactory) {
     this.job = job;
@@ -36,6 +37,10 @@ public final class RoutingPipeline {
       String chosen = TwoLayerBga.apply(job.routerSettings, job.board);
       if (chosen != null) {
         job.logInfo(chosen);
+      }
+      String stubs = ExitStubs.apply(job.routerSettings, job.board, this.exitStubItems);
+      if (stubs != null) {
+        job.logInfo(stubs);
       }
     }
     this.autorouter = new BatchAutorouter(job);
@@ -95,7 +100,18 @@ public final class RoutingPipeline {
     }
     runRoutingStage();
     runOptimizationStage();
+    releaseExitStubs();
     this.job.stage = RoutingStage.IDLE;
+  }
+
+  private void releaseExitStubs() {
+    if (!this.exitStubItems.isEmpty() && this.job.board != null) {
+      String stubLine = ExitStubs.release(this.job.board, this.exitStubItems);
+      if (stubLine != null) {
+        this.job.logInfo(stubLine);
+      }
+      this.exitStubItems.clear();
+    }
   }
 
   private void runRoutingStage() {

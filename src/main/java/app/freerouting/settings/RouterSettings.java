@@ -49,6 +49,10 @@ public class RouterSettings implements Serializable, Cloneable {
   @SerializedName("clearance_tolerance_um")
   public Double clearanceToleranceUm;
 
+  /** Erik Gavriluk (freerouting.net): the board checker's tolerance in micrometers. */
+  @SerializedName("drc_epsilon_um")
+  public Double drcEpsilonUm;
+
   /**
    * Explicit list of net names to treat as power-plane nets, enabling plane-routing mode and
    * discounted plane via costs for these nets.
@@ -681,6 +685,7 @@ public class RouterSettings implements Serializable, Cloneable {
     result.holeClearanceUm = this.holeClearanceUm;
     result.holeToHoleUm = this.holeToHoleUm;
     result.clearanceToleranceUm = this.clearanceToleranceUm;
+    result.drcEpsilonUm = this.drcEpsilonUm;
     result.meanderMinAmplitudeMm = this.meanderMinAmplitudeMm;
     result.meanderMaxAmplitudeMm = this.meanderMaxAmplitudeMm;
     result.meanderSpacingMm = this.meanderSpacingMm;

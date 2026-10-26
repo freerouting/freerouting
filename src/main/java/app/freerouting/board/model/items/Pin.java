@@ -155,6 +155,13 @@ public class Pin extends DrillItem implements Serializable {
     return component.getPackage().getPin(pinIndex).name;
   }
 
+  /** Return the name of the component of this pin. */
+  public String componentName() {
+    Component comp =
+        board != null && board.components != null ? board.components.get(getComponentId()) : null;
+    return comp != null ? comp.name : null;
+  }
+
   /** Gets index of this pin in the library package of the pins component. */
   public int getPinIndex() {
     return pinIndex;
@@ -374,6 +381,10 @@ public class Pin extends DrillItem implements Serializable {
     }
     // Same-net vias must be allowed to contact SMD pins during fanout.
     return !this.drillAllowed() || !(other instanceof Via);
+  }
+
+  public static boolean arePiecesOfOnePad(Pin pin1, Pin pin2) {
+    return isSameLogicalPad(pin1, pin2);
   }
 
   private static boolean isSameLogicalPad(Pin pin1, Pin pin2) {

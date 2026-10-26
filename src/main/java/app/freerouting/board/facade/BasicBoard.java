@@ -108,6 +108,7 @@ public class BasicBoard implements Serializable {
   public int preExistingClearanceViolationsCount = 0;
   public transient int unfixableClearanceViolationsCount = 0;
   public transient Set<Integer> ruleBlockedPins;
+  public transient Set<Integer> tolerancePins;
   public transient app.freerouting.drc.ClearanceBaseline clearanceBaseline;
   public transient CompletableFuture<Void> postLoadFuture;
 

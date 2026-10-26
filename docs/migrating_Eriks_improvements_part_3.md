@@ -101,25 +101,25 @@ This document tracks all improvements and bug fixes ported from `freerouting.net
 
 ### Phase 3: Advanced Autorouting Pipelines, BGA & Escapes
 
-- [ ] **Task 3.1: BGA Escape Routing & Ordering (`TwoLayerBga` & `BallEscapeOrder`)**
+- [x] **Task 3.1: BGA Escape Routing & Ordering (`TwoLayerBga` & `BallEscapeOrder`)**
   - **Origin Commits:** `TwoLayerBga.cs`, `BallEscapeOrder.cs`, `BallFields.cs`
   - **Feature:**
     - `TwoLayerBga`: On boards with 2 signal layers and BGA components, enthusiastic eager fanout drops vias that block all layers. Auto-adjust fanout mode to `no_fanout` or `direct_first`.
     - `BallEscapeOrder`: When routing BGA balls in the initial pass, route ring-by-ring from the innermost ring outward (`inner_first`), ensuring interior pins secure exit channels while routing space is available.
-  - [ ] Create `BallFields.java`, `TwoLayerBga.java`, and `BallEscapeOrder.java` in `app.freerouting.autoroute.pipeline`.
-  - [ ] Add settings `ballEscapeOrder` and `twoLayerBga` to `AutorouterSettings.java` and `FanoutSettings.java`.
-  - [ ] Integrate into `RoutingPipeline.java` and `AutorouteBatchLoop.java`.
-  - [ ] Port `TwoLayerBgaTests.cs` and `BallEscapeOrderTests.cs`.
-  - [ ] Verify tests pass.
+  - [x] Create `BallFields.java`, `TwoLayerBga.java`, and `BallEscapeOrder.java` in `app.freerouting.autoroute.pipeline`.
+  - [x] Add settings `ballEscapeOrder` and `twoLayerBga` to `AutorouterSettings.java` and `FanoutSettings.java`.
+  - [x] Integrate into `RoutingPipeline.java` and `AutoroutePassRunner.java`.
+  - [x] Port `TwoLayerBgaTests.cs`, `BallFieldsTests.cs`, and `BallEscapeOrderTests.cs`.
+  - [x] Verify tests pass.
 
-- [ ] **Task 3.2: Fine-Pitch Pre-Routing Exit Stubs (`ExitStubs`)**
+- [x] **Task 3.2: Fine-Pitch Pre-Routing Exit Stubs (`ExitStubs`)**
   - **Origin Commits:** `ExitStubs.cs`, `9dafd145`
   - **Feature:** Pins of fine-pitch ICs (0.4 mm VQFN) whose geometry exactly matches design rules leave no room for the router's standard clearance safety margin (1.6 µm) plus maze search clearance rooms. Pre-places straight exit stubs along pad centerlines (user-fixed during routing), allowing the maze search to connect cleanly at the stub end in open territory. Unused stubs are pruned after routing.
-  - [ ] Create `ExitStubs.java` in `app.freerouting.autoroute.pipeline`.
-  - [ ] Add `exitStubs` setting to `AutorouterSettings.java` and `DefaultSettings.java`.
-  - [ ] Integrate stub placement and release into `RoutingPipeline.java`.
-  - [ ] Port `ExitStubsTests.cs` to `src/test/java/app/freerouting/autoroute/ExitStubsTest.java`.
-  - [ ] Verify tests pass.
+  - [x] Create `ExitStubs.java` in `app.freerouting.autoroute.pipeline`.
+  - [x] Add `exitStubs` setting to `AutorouterSettings.java` and `DefaultSettings.java`.
+  - [x] Integrate stub placement and release into `RoutingPipeline.java`.
+  - [x] Port `ExitStubsTests.cs` to `src/test/java/app/freerouting/autoroute/ExitStubsTest.java`.
+  - [x] Verify tests pass.
 
 - [ ] **Task 3.3: Keepout-Covered Pin Pad End Relocation (`PadEndWithClearStub`)**
   - **Origin Commits:** `2e82c181`, `779370eb`, `c8638505`

@@ -53,6 +53,7 @@ public class BoardRules implements Serializable {
   private int minHoleToHole;
   private boolean exactCopper = true;
   public transient double clearanceToleranceUm = 1.0;
+  public transient java.util.Map<Integer, PinClearanceSource> pinClearanceSources;
 
   /** Creates a new instance of this class. */
   public BoardRules(LayerStructure layerStructure, ClearanceMatrix clearanceMatrix) {
