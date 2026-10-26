@@ -80,15 +80,15 @@ This document tracks all improvements and bug fixes ported from `freerouting.net
   - [x] Port `SameNetSpacingTests.cs` to `src/test/java/app/freerouting/rules/SameNetSpacingTest.java`.
   - [x] Verify test suite.
 
-- [ ] **Task 2.2: Physical Exact Copper Clearance (`ExactCopper` & `router.exact_copper`)**
+- [x] **Task 2.2: Physical Exact Copper Clearance (`ExactCopper` & `router.exact_copper`)**
   - **Origin Commits:** `f4b15296`, `77f9e7a4`, `4ac76700`
   - **Feature:** In dense boards with fine pitches (0.4 mm VQFN, 0.75 mm BGA), conservative bounding octagons (which extend 8% past circles at 22.5°) cause false clearance collision rejections between circular vias, pads, and trace corners that are physically legal under Euclidean distance.
   - **Solution:** Implement `ExactCopper.java` (convex core + radius Euclidean distance calculation). In `ShapeSearchTree.java`, `Item.java`, `Pin.java`, and `Via.java`, use bounding octagons for rapid filtering, but perform exact Euclidean distance checks for overlapping octagons when `exact_copper` is enabled.
-  - [ ] Create `ExactCopper.java` in `app.freerouting.board.searchtree`.
-  - [ ] Add `exactCopper` setting to `RouterSettings.java` and `DefaultSettings.java`.
-  - [ ] Integrate exact copper checks in `ShapeSearchTree.java`, `Item.java`, `Pin.java`, and `Via.java`.
-  - [ ] Port `ExactCopperClearanceTests.cs` to `src/test/java/app/freerouting/board/ExactCopperClearanceTest.java`.
-  - [ ] Verify tests pass.
+  - [x] Create `ExactCopper.java` in `app.freerouting.board.searchtree`.
+  - [x] Add `exactCopper` setting to `RouterSettings.java` and `DefaultSettings.java`.
+  - [x] Integrate exact copper checks in `ShapeSearchTree.java`, `Item.java`, `Pin.java`, and `Via.java`.
+  - [x] Port `ExactCopperClearanceTests.cs` to `src/test/java/app/freerouting/board/ExactCopperClearanceTest.java`.
+  - [x] Verify tests pass.
 
 - [ ] **Task 2.3: Via in SMD Pad Auto-Detection (`router.autorouter.via_in_pad`)**
   - **Origin Commits:** `KiCadViaInPad.cs`, `AutorouterSettings.cs`
