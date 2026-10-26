@@ -599,9 +599,6 @@ public final class BatchOptimizer extends NamedAlgorithm {
     if (candidate.clearanceViolations.totalCount > incumbentClearanceViolationCount) {
       return "DRC_COUNT_REGRESSION";
     }
-    if (candidate.connections.incompleteCount < incumbentIncompleteCount) {
-      return null;
-    }
     if (!(candidateOptimizerScore > incumbentOptimizerScore)) {
       return "OPTIMIZER_SCORE_NOT_IMPROVED";
     }
