@@ -52,6 +52,9 @@ public class Padstack implements Comparable<Padstack>, ItemInfoPrinter.Printable
    */
   public boolean holeOnly;
 
+  /** Native drill radius in board units; zero means no drill. Null retains DSN inference. */
+  public Double explicitDrillRadius;
+
   /** Cached drill radius to avoid repeated regex parsing on every render call. */
   private Double cachedDrillRadius;
 
@@ -90,11 +93,23 @@ public class Padstack implements Comparable<Padstack>, ItemInfoPrinter.Printable
     return this.name.compareToIgnoreCase(other.name);
   }
 
+  public Double getExplicitDrillRadius() {
+    return this.explicitDrillRadius;
+  }
+
+  public void setExplicitDrillRadius(Double explicitDrillRadius) {
+    this.explicitDrillRadius = explicitDrillRadius;
+    this.cachedDrillRadius = null;
+  }
+
   /**
    * Returns the drill radius of this padstack in board units. The result is cached after the first
    * computation to avoid repeated regex parsing.
    */
   public double getDrillRadius() {
+    if (this.explicitDrillRadius != null) {
+      return this.explicitDrillRadius;
+    }
     if (cachedDrillRadius != null) {
       return cachedDrillRadius;
     }

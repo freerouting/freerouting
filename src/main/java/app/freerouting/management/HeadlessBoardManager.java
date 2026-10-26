@@ -367,10 +367,28 @@ public class HeadlessBoardManager implements BoardManager {
     this.edgeClearanceAppliedByOverride = false;
     applyCopperToEdgeClearanceOverride();
     applyHoleClearanceOverride();
+    applyHoleToHole();
     applyPlaneNetsOverride();
     applyPlaneAsObstacleOverride();
     applyClearanceToleranceOverride();
     applyMeanderSettingsOverride();
+  }
+
+  private void applyHoleToHole() {
+    if (this.board == null
+        || this.board.rules == null
+        || this.routingJob == null
+        || this.routingJob.routerSettings == null
+        || this.routingJob.routerSettings.holeToHoleUm == null) {
+      return;
+    }
+    double um = this.routingJob.routerSettings.holeToHoleUm;
+    if (um < 0 || !Double.isFinite(um)) {
+      FRLogger.warn("Ignoring router.hole_to_hole_um because it is negative: " + um);
+      return;
+    }
+    this.board.rules.setMinHoleToHole(
+        (int) Math.floor(this.board.communication.physicalToBoard(um, Unit.UM) + 0.5));
   }
 
   private void applyHoleClearanceOverride() {
@@ -955,6 +973,7 @@ public class HeadlessBoardManager implements BoardManager {
       this.routingJob.routerSettings.applyNetClassExclusions(this.board);
       applyCopperToEdgeClearanceOverride();
       applyHoleClearanceOverride();
+      applyHoleToHole();
       applyPlaneNetsOverride();
       applyPlaneAsObstacleOverride();
       applyClearanceToleranceOverride();

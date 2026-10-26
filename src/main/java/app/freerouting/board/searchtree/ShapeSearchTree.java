@@ -1284,7 +1284,7 @@ public class ShapeSearchTree extends MinAreaTree {
    * drill hole (not just its copper pad). Applies to every drilled item — vias, PTH pins and
    * hole-only (NPTH) padstacks alike; returns 0 when the hole-clearance rule is disabled.
    */
-  protected int drillHoleClearanceDelta(DrillItem drillItem, Shape shape, int layer) {
+  public int drillHoleClearanceDelta(DrillItem drillItem, Shape shape, int layer) {
     if (this.board == null || this.board.rules == null) {
       return 0;
     }

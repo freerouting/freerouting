@@ -384,6 +384,10 @@ final class MazeExpansionEngine {
       if (layer < viaPadstack.fromLayer() || layer > viaPadstack.toLayer()) {
         continue;
       }
+      if (!app.freerouting.rules.HoleSpacing.clear(
+          search.autorouteEngine.board, viaPadstack, drill.location)) {
+        continue;
+      }
       ConvexShape viaShape = viaPadstack.getShape(layer);
       double viaRadius = viaShape == null ? 0 : 0.5 * viaShape.maxWidth();
       double requiredRadius = Math.max(viaRadius, ctrl.traceHalfWidth[layer]);

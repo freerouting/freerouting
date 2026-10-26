@@ -329,6 +329,14 @@ public class Pin extends DrillItem implements Serializable {
     return this.firstLayer() == this.lastLayer();
   }
 
+  /**
+   * Whether a via may sit on this pad, even when the via-in-pad setting is off. True for exposed
+   * pads (thermal pads).
+   */
+  public boolean viaMayAttach() {
+    return false;
+  }
+
   @Override
   public boolean isObstacle(Item other) {
     if (other == this) {

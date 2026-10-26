@@ -50,6 +50,7 @@ public class BoardRules implements Serializable {
 
   private boolean useSlowAutorouteAlgorithm;
   private int holeClearance;
+  private int minHoleToHole;
   public transient double clearanceToleranceUm = 1.0;
 
   /** Creates a new instance of this class. */
@@ -224,6 +225,21 @@ public class BoardRules implements Serializable {
   /** Sets the clearance around drilled holes. */
   public void setHoleClearance(int value) {
     this.holeClearance = Math.max(0, value);
+  }
+
+  /**
+   * KiCad's hole-to-hole minimum (Board Setup min_hole_to_hole, router.hole_to_hole_um): the
+   * edge-to-edge distance a via's drill keeps from every other drilled hole, of any net. It is the
+   * only spacing between two vias of one net, whose copper keeps no clearance ({@link
+   * HoleSpacing}). 0 means no minimum.
+   */
+  public int getMinHoleToHole() {
+    return minHoleToHole;
+  }
+
+  /** Sets the hole-to-hole minimum ({@link #getMinHoleToHole()}). */
+  public void setMinHoleToHole(int value) {
+    this.minHoleToHole = Math.max(0, value);
   }
 
   /** Changes the default trace half-width used for routing on the input layer. */

@@ -86,6 +86,11 @@ public class DefaultSettings implements SettingsSource {
   public static final double DEFAULT_HOLE_CLEARANCE_UM = 0.0;
 
   /**
+   * Default hole-to-hole minimum in micrometres: KiCad's (BOARD_DESIGN_SETTINGS m_HoleToHoleMin).
+   */
+  public static final double DEFAULT_HOLE_TO_HOLE_UM = 250.0;
+
+  /**
    * Default clearance violation shortfall tolerance in micrometres (1.0 um / 0.001 mm). Absorbs
    * imperial-to-metric conversion drift and corner polygonal discretization noise.
    */
@@ -197,6 +202,7 @@ public class DefaultSettings implements SettingsSource {
     settings.autorouter.maxThreads = settings.maxThreads;
     settings.copperToEdgeClearanceUm = DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM;
     settings.holeClearanceUm = DEFAULT_HOLE_CLEARANCE_UM;
+    settings.holeToHoleUm = DEFAULT_HOLE_TO_HOLE_UM;
     settings.clearanceToleranceUm = DEFAULT_CLEARANCE_TOLERANCE_UM;
     settings.meanderMinAmplitudeMm = DEFAULT_MEANDER_MIN_AMPLITUDE_MM;
     settings.meanderMaxAmplitudeMm = DEFAULT_MEANDER_MAX_AMPLITUDE_MM;

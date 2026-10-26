@@ -65,6 +65,15 @@ public final class DrillItemMover {
     boolean attachAllowed = false;
     if (drillItem instanceof Via via) {
       attachAllowed = via.attachAllowed;
+      if (via.getPadstack() != null
+          && !app.freerouting.rules.HoleSpacing.clear(
+              board,
+              via.getPadstack(),
+              via.getCenter().translateBy(vector),
+              via,
+              effectiveIgnoreItems)) {
+        return false;
+      }
     }
     ShapeSearchTree searchTree = board.searchTreeManager.getDefaultTree();
     for (int currentLayer = drillItem.firstLayer();
@@ -133,6 +142,11 @@ public final class DrillItemMover {
     boolean attachAllowed = false;
     if (drillItem instanceof Via via) {
       attachAllowed = via.attachAllowed;
+      if (via.getPadstack() != null
+          && !app.freerouting.rules.HoleSpacing.clear(
+              board, via.getPadstack(), via.getCenter().translateBy(vector), via)) {
+        return false;
+      }
     }
     ForcedPadRouter forcedPadRouter = new ForcedPadRouter(board);
     Collection<Item> ignoreItems = new LinkedList<>();

@@ -230,6 +230,41 @@ public class ForcedPadRouter {
       int maxViaRecursionDepth,
       boolean checkOnlyFront,
       TimeLimit timeLimit) {
+    return checkForcedPad(
+        padShape,
+        fromSide,
+        layer,
+        netNumbers,
+        clearanceClassIndex,
+        copperSharingAllowed,
+        ignoreItems,
+        maxRecursionDepth,
+        maxViaRecursionDepth,
+        checkOnlyFront,
+        timeLimit,
+        false);
+  }
+
+  /**
+   * Checks, if a pad with the input parameters can be inserted without clearance violations.
+   * Returns false, if the check failed. If ignoreItems != null, items in this list are not checked.
+   * If checkOnlyFront, only trace obstacles in the direction from fromSide are checked for
+   * performance reasons. This is the case when moving drill_items. {@code holeOnly} marks padShape
+   * as a via's drill grown by the hole clearance, which only other nets' copper keeps.
+   */
+  public CheckDrillResult checkForcedPad(
+      TileShape padShape,
+      ShapeEntrySide fromSide,
+      int layer,
+      int[] netNumbers,
+      int clearanceClassIndex,
+      boolean copperSharingAllowed,
+      Collection<Item> ignoreItems,
+      int maxRecursionDepth,
+      int maxViaRecursionDepth,
+      boolean checkOnlyFront,
+      TimeLimit timeLimit,
+      boolean holeOnly) {
     if (!padShape.isContainedIn(board.getBoundingBox())) {
       this.board.setShoveFailingObstacle(board.getOutline());
       return CheckDrillResult.NOT_DRILLABLE;
@@ -243,7 +278,8 @@ public class ForcedPadRouter {
     if (ignoreItems != null) {
       obstacles.removeAll(ignoreItems);
     }
-    boolean obstaclesShovable = shapeEntries.storeItems(obstacles, true, copperSharingAllowed);
+    boolean obstaclesShovable =
+        shapeEntries.storeItems(obstacles, true, copperSharingAllowed, holeOnly);
     if (!obstaclesShovable) {
       this.board.setShoveFailingObstacle(shapeEntries.getFoundObstacle());
       return CheckDrillResult.NOT_DRILLABLE;
@@ -353,6 +389,30 @@ public class ForcedPadRouter {
       Collection<Item> ignoreItems,
       int maxRecursionDepth,
       int maxViaRecursionDepth) {
+    return forcedPad(
+        padShape,
+        fromSide,
+        layer,
+        netNumbers,
+        clearanceClassIndex,
+        copperSharingAllowed,
+        ignoreItems,
+        maxRecursionDepth,
+        maxViaRecursionDepth,
+        false);
+  }
+
+  boolean forcedPad(
+      TileShape padShape,
+      ShapeEntrySide fromSide,
+      int layer,
+      int[] netNumbers,
+      int clearanceClassIndex,
+      boolean copperSharingAllowed,
+      Collection<Item> ignoreItems,
+      int maxRecursionDepth,
+      int maxViaRecursionDepth,
+      boolean holeOnly) {
     if (padShape.isEmpty()) {
       FRLogger.warn("ShoveTraceAux.forced_pad: padShape is empty");
       return true;
@@ -383,7 +443,7 @@ public class ForcedPadRouter {
       obstacles.removeAll(ignoreItems);
     }
     boolean obstaclesShovable =
-        shapeEntries.storeItems(obstacles, true, copperSharingAllowed)
+        shapeEntries.storeItems(obstacles, true, copperSharingAllowed, holeOnly)
             && shapeEntries.shoveViaList.isEmpty();
     if (!obstaclesShovable) {
       this.board.setShoveFailingObstacle(shapeEntries.getFoundObstacle());

@@ -90,6 +90,7 @@ public class Via extends DrillItem implements Serializable {
     java.util.Collection<app.freerouting.drc.ClearanceViolation> rawViolations =
         super.clearanceViolations();
     if (!this.isEscapeVia || this.escapeViaSmdLayer < 0) {
+      addHoleToHoleViolations(rawViolations);
       return rawViolations;
     }
     java.util.Collection<app.freerouting.drc.ClearanceViolation> filteredViolations =
@@ -108,7 +109,57 @@ public class Via extends DrillItem implements Serializable {
       }
       filteredViolations.add(violation);
     }
+    addHoleToHoleViolations(filteredViolations);
     return filteredViolations;
+  }
+
+  /**
+   * The drilled items, of any net, whose holes are closer to this via's drill than the board's
+   * hole-to-hole minimum (KiCad's hole_to_hole check; {@link app.freerouting.rules.HoleSpacing}),
+   * within the rules' clearance tolerance. Reported on a layer both span, the same from either via,
+   * so the checker counts a pair once.
+   */
+  private void addHoleToHoleViolations(
+      java.util.Collection<app.freerouting.drc.ClearanceViolation> violations) {
+    int minimum =
+        this.board != null && this.board.rules != null ? this.board.rules.getMinHoleToHole() : 0;
+    if (minimum <= 0
+        || this.padstack == null
+        || !app.freerouting.rules.HoleSpacing.hasHole(this.padstack)) {
+      return;
+    }
+    double toleranceUm =
+        (this.board != null && this.board.rules != null)
+            ? this.board.rules.clearanceToleranceUm
+            : 1.0;
+    double tolerance =
+        Double.isFinite(toleranceUm) && toleranceUm > 0
+            ? toleranceUm
+                * Math.max(1, this.board.communication.resolution)
+                / app.freerouting.board.model.structure.Unit.scale(
+                    1.0,
+                    this.board.communication.unit,
+                    app.freerouting.board.model.structure.Unit.UM)
+            : 0;
+    double radius = this.padstack.getDrillRadius();
+    app.freerouting.geometry.planar.FloatPoint center = getCenter().toFloat();
+    for (app.freerouting.rules.HoleSpacing.TooCloseItem tooClose :
+        app.freerouting.rules.HoleSpacing.tooClose(
+            this.board, center, radius, firstLayer(), lastLayer(), minimum - tolerance, this)) {
+      DrillItem other = tooClose.item;
+      double gap = tooClose.gap;
+      app.freerouting.geometry.planar.IntPoint c = center.round();
+      int r = (int) Math.ceil(radius);
+      violations.add(
+          new app.freerouting.drc.ClearanceViolation(
+              this,
+              other,
+              new app.freerouting.geometry.planar.IntBox(c.x - r, c.y - r, c.x + r, c.y + r),
+              Math.max(firstLayer(), other.firstLayer()),
+              minimum,
+              Math.max(0, gap),
+              true));
+    }
   }
 
   @Override
@@ -164,7 +215,7 @@ public class Via extends DrillItem implements Serializable {
       return false;
     }
     if (other instanceof Pin pin) {
-      return !this.attachAllowed || !pin.drillAllowed();
+      return !pin.drillAllowed() || (!this.attachAllowed && !pin.viaMayAttach());
     }
     return false;
   }

@@ -33,6 +33,15 @@ public class RouterSettings implements Serializable, Cloneable {
   public Double holeClearanceUm;
 
   /**
+   * KiCad's hole-to-hole minimum (Board Setup min_hole_to_hole), in micrometres: the edge-to-edge
+   * distance a via's drill keeps from every other drilled hole, of any net. Vias of one net keep
+   * only this from each other: KiCad keeps no copper clearance within a net. A KiCad board sets its
+   * own; a DSN, which has none, gets KiCad's default, 250. 0 turns it off.
+   */
+  @SerializedName("hole_to_hole_um")
+  public Double holeToHoleUm;
+
+  /**
    * Clearance violation shortfall tolerance in micrometers. Clearance shortfalls (expected -
    * actual) less than or equal to this threshold are treated as floating-point
    * rounding/discretization noise rather than electrical clearance violations.
@@ -662,6 +671,7 @@ public class RouterSettings implements Serializable, Cloneable {
     }
     result.copperToEdgeClearanceUm = this.copperToEdgeClearanceUm;
     result.holeClearanceUm = this.holeClearanceUm;
+    result.holeToHoleUm = this.holeToHoleUm;
     result.clearanceToleranceUm = this.clearanceToleranceUm;
     result.meanderMinAmplitudeMm = this.meanderMinAmplitudeMm;
     result.meanderMaxAmplitudeMm = this.meanderMaxAmplitudeMm;

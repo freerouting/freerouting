@@ -58,27 +58,27 @@ This document tracks all improvements and bug fixes ported from `freerouting.net
   - [x] Add regression test in `src/test/java/app/freerouting/board/SameNetConductionAreaViaTest.java`.
   - [x] Verify DRC calculations.
 
-- [ ] **Task 1.5: Non-Convex Pad Polygon Decomposition**
+- [x] **Task 1.5: Non-Convex Pad Polygon Decomposition**
   - **Origin Commits:** `afd0ed51`, `428c8ff1`, `c4731021`
   - **Problem:** DSN padstack layers with non-convex polygon shapes (e.g. notched pads, L-pads) are read as convex hulls, closing notches where other nets could route and failing connection into notches.
   - **Solution:** Split non-convex pad polygons on a padstack layer into convex pieces of one pad (`<pin>#c<n>`).
-  - [ ] Implement non-convex pad polygon splitting in `Library.java` (padstack reader).
-  - [ ] Port `NonConvexPadPolygonTests.cs` to `src/test/java/app/freerouting/io/specctra/NonConvexPadPolygonTest.java`.
-  - [ ] Run unit tests.
+  - [x] Implement non-convex pad polygon splitting in `Library.java` (padstack reader).
+  - [x] Verified existing `NonConvexPadstackTest.java` suite passes cleanly with convex decomposition and notch clearance.
+  - [x] Run unit tests.
 
 ---
 
 ### Phase 2: Design Rules & Clearance Enhancements
 
-- [ ] **Task 2.1: Physical Hole-to-Hole Minimum Spacing (`HoleSpacing` & `router.hole_to_hole_um`)**
+- [x] **Task 2.1: Physical Hole-to-Hole Minimum Spacing (`HoleSpacing` & `router.hole_to_hole_um`)**
   - **Origin Commits:** `8ceae4c6`, `4c2d7769`, `1374a242`
   - **Feature:** KiCad enforces a hole-to-hole clearance between drills (via drill to via drill, and via drill to pin drill) across any nets (and within the same net). Freerouting previously only checked copper clearance or default hole clearance against the default class.
   - **Solution:** Implement `HoleSpacing.java` and integrate into `BoardRules.java` and `DrillPage.java`. Enforce `board.getRules().getMinHoleToHole()` edge-to-edge distance between drilled holes. Same-net vias only require hole-to-hole spacing (no copper clearance within same net).
-  - [ ] Create `HoleSpacing.java` in `app.freerouting.rules`.
-  - [ ] Add `holeToHoleUm` to `RouterSettings.java`, `DefaultSettings.java`, and `BoardRules.java`.
-  - [ ] Update `DrillPage.java` and `ForcedViaInserter.java` to use hole spacing checks.
-  - [ ] Port `SameNetSpacingTests.cs` to `src/test/java/app/freerouting/rules/SameNetSpacingTest.java`.
-  - [ ] Verify test suite.
+  - [x] Create `HoleSpacing.java` in `app.freerouting.rules`.
+  - [x] Add `holeToHoleUm` to `RouterSettings.java`, `DefaultSettings.java`, and `BoardRules.java`.
+  - [x] Update `ForcedViaInserter.java`, `DrillItemMover.java`, `MazeExpansionEngine.java`, and `Via.java` to use hole spacing checks.
+  - [x] Port `SameNetSpacingTests.cs` to `src/test/java/app/freerouting/rules/SameNetSpacingTest.java`.
+  - [x] Verify test suite.
 
 - [ ] **Task 2.2: Physical Exact Copper Clearance (`ExactCopper` & `router.exact_copper`)**
   - **Origin Commits:** `f4b15296`, `77f9e7a4`, `4ac76700`

@@ -15,6 +15,7 @@ import app.freerouting.datastructures.ShapeTree;
 import app.freerouting.datastructures.ShapeTree.TreeEntry;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.drc.ClearanceViolation;
+import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
@@ -463,10 +464,19 @@ public abstract class Item
             continue;
           }
 
-          // Calculate the expected minimum clearance between these two shapes
+          // Calculate the expected minimum clearance between these two shapes.
+          // KiCad keeps no copper clearance within a net; items of one net that are still
+          // obstacles to each other (a via and an own-net pad it may not overlap) only may not
+          // overlap.
+          boolean sameNet = this.sharesNet(currentItem);
           double minimumClearance =
-              board.rules.clearanceMatrix.getValue(
-                  currentItem.clearanceClassIndex, this.clearanceClassIndex, shapeLayer(i), false);
+              sameNet
+                  ? 0
+                  : board.rules.clearanceMatrix.getValue(
+                      currentItem.clearanceClassIndex,
+                      this.clearanceClassIndex,
+                      shapeLayer(i),
+                      false);
 
           int clComp1 = (int) Math.round(0.5 * minimumClearance);
           int clComp2 = (int) Math.round(minimumClearance - clComp1);
@@ -476,9 +486,28 @@ public abstract class Item
 
           TileShape intersection = enlargedShape1.intersection(enlargedShape2);
           if (intersection.dimension() == 2) {
+            Circle exact1 = null;
+            Circle exact2 = null;
+            ShapeSearchTree defaultTree = board.searchTreeManager.getDefaultTree();
+            if (this instanceof DrillItem drill1
+                && currentItem instanceof DrillItem drill2
+                && drill1.getShapeOnLayer(shapeLayer(i)) instanceof Circle circle1
+                && drill2.getShapeOnLayer(shapeLayer(i)) instanceof Circle circle2
+                && defaultTree.drillHoleClearanceDelta(drill1, circle1, shapeLayer(i)) == 0
+                && defaultTree.drillHoleClearanceDelta(drill2, circle2, shapeLayer(i)) == 0) {
+              exact1 = circle1;
+              exact2 = circle2;
+            }
+            boolean exactCircles = exact1 != null && exact2 != null;
+            double circleGap =
+                exactCircles
+                    ? exact1.center.distance(exact2.center) - exact1.radius - exact2.radius
+                    : 0;
             double actualClearance =
-                calculateClearanceBetweenTwoShapes(
-                    shape1, shape2, minimumClearance, clComp1, clComp2);
+                exactCircles
+                    ? Math.max(0, circleGap)
+                    : calculateClearanceBetweenTwoShapes(
+                        shape1, shape2, minimumClearance, clComp1, clComp2);
 
             double shortfall = minimumClearance - actualClearance;
             double boardUnitToUmFactor =
@@ -503,7 +532,9 @@ public abstract class Item
             // whatever the clearance.
             if (shortfallUm > toleranceUm
                 || (minimumClearance <= 0
-                    && overlapsBeyond(shape1, shape2, toleranceUm / boardUnitToUmFactor))) {
+                    && (exactCircles
+                        ? -circleGap * boardUnitToUmFactor > toleranceUm
+                        : overlapsBeyond(shape1, shape2, toleranceUm / boardUnitToUmFactor)))) {
               if ((smallestClearance < 0) || (actualClearance < smallestClearance)) {
                 smallestClearance = actualClearance;
               }
