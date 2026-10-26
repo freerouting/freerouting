@@ -90,12 +90,12 @@ This document tracks all improvements and bug fixes ported from `freerouting.net
   - [x] Port `ExactCopperClearanceTests.cs` to `src/test/java/app/freerouting/board/ExactCopperClearanceTest.java`.
   - [x] Verify tests pass.
 
-- [ ] **Task 2.3: Via in SMD Pad Auto-Detection (`router.autorouter.via_in_pad`)**
+- [x] **Task 2.3: Via in SMD Pad Auto-Detection (`router.autorouter.via_in_pad`)**
   - **Origin Commits:** `KiCadViaInPad.cs`, `AutorouterSettings.cs`
   - **Feature:** KiCad boards often place vias in SMD pads when designer choices or board setup rules (`capping yes`, `filling yes`) allow it. If not explicitly set, auto-detect if the board already has vias in SMD pads of its net or via filling/capping is enabled, and enable `via_in_pad` / `via_touching_pad`.
-  - [ ] Implement via-in-pad auto-detection in `RoutingJobPreparation.java` and `HeadlessBoardManager.java`.
-  - [ ] Port `KiCadViaInPadTests.cs` to `src/test/java/app/freerouting/autoroute/KiCadViaInPadTest.java`.
-  - [ ] Verify tests pass.
+  - [x] Implement via-in-pad auto-detection in `RoutingJobPreparation.java` and `HeadlessBoardManager.java`.
+  - [x] Port `ViaInPadTests.cs` to `src/test/java/app/freerouting/autoroute/ViaInPadTest.java`.
+  - [x] Verify tests pass.
 
 ---
 
