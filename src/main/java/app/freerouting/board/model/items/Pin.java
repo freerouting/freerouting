@@ -797,21 +797,7 @@ public class Pin extends DrillItem implements Serializable {
   @Override
   public Set<Item> getNormalContacts() {
     Set<Item> result = super.getNormalContacts();
-    if (board == null) {
-      return result;
-    }
-    TileShape searchShape = this.boundingBox();
-    for (SearchTreeObject obj : board.overlappingObjects(searchShape, -1)) {
-      if (obj instanceof Trace trace && trace.sharesNet(this) && trace.sharesLayer(this)) {
-        Point p1 = trace.firstCorner();
-        Point p2 = trace.lastCorner();
-        if ((p1 != null && containsCopper(p1, trace.getLayer()))
-            || (p2 != null && containsCopper(p2, trace.getLayer()))) {
-          result.add(trace);
-        }
-      }
-    }
-    if (getComponentId() == 0) {
+    if (board == null || getComponentId() == 0) {
       return result;
     }
     for (Pin other : copperOverlappingPins(o -> o.sharesNet(this))) {

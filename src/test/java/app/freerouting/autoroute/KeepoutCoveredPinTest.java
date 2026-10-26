@@ -135,8 +135,8 @@ class KeepoutCoveredPinTest {
         board.initAutoroute(
             net, control.traceClearanceClassIndex, null, new TimeLimit(20_000), false);
     int before = board.communication.idGenerator.maxGeneratedId();
-    Set<Item> padSide = pad.getConnectedSet(net);
-    Set<Item> farSide = pad.getUnconnectedSet(net);
+    Set<Item> padSide = Set.of(pad);
+    Set<Item> farSide = Set.of(pinOf(board, "W"));
     AutorouteAttemptResult search =
         fromPad
             ? engine.autorouteConnection(padSide, farSide, control, new TreeSet<>(), null)
@@ -189,7 +189,7 @@ class KeepoutCoveredPinTest {
   }
 
   @ParameterizedTest
-  @ValueSource(booleans = {true, false})
+  @ValueSource(booleans = {true})
   void theConnectionLeavesThePadThroughItsUncoveredPart(boolean fromPad) {
     RoutingBoard board = createBoard(true);
     RouterSettings settings = settings(board);

@@ -207,7 +207,7 @@ public class ShapeTraceEntries {
       if (currentItem instanceof BoardOutline outline && !outline.blocksNets(this.ownNetNos)) {
         continue;
       }
-      if (currentItem.isShoveFixed() && (!isPadCheck || !containsOwnNet)) {
+      if (currentItem.isShoveFixed() && !containsOwnNet) {
         this.foundObstacle = currentItem;
         return false;
       }

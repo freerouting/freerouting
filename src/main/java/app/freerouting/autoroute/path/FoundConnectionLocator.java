@@ -189,6 +189,7 @@ public abstract class FoundConnectionLocator {
         }
         this.currentTargetShape = boundedShape;
         if (startItem instanceof Pin targetPin) {
+          TileShape copper = (TileShape) targetPin.getTileShape(startDoor.treeEntryNo);
           double traceHalfWidth = this.ctrl.compensatedTraceHalfWidth[startDoor.room.getLayer()];
           TileShape targetRoomShape = startDoor.room.getShape();
           IntPoint usualEnd =
@@ -197,7 +198,7 @@ public abstract class FoundConnectionLocator {
           IntPoint clearEnd =
               padEndWithClearStub(
                   targetPin,
-                  targetShape,
+                  copper != null ? copper : targetShape,
                   shrunkTargetRoom,
                   usualEnd,
                   startDoor.room.getLayer(),
@@ -605,8 +606,7 @@ public abstract class FoundConnectionLocator {
     if (this.currentFromDoorIndex == 0
         && currentFromInfo.door instanceof TargetItemExpansionDoor padDoor
         && padDoor.item instanceof Pin pin) {
-      TileShape copper =
-          ((Connectable) pin).getTraceConnectionShape(this.searchTree, padDoor.treeEntryNo);
+      TileShape copper = (TileShape) pin.getTileShape(padDoor.treeEntryNo);
       if (copper != null) {
         IntPoint clearEnd =
             padEndWithClearStub(

@@ -106,7 +106,13 @@ public final class RoutingPipeline {
   }
 
   private void removeDanglingCopper() {
-    if (this.job != null && this.job.board != null) {
+    boolean routerRan =
+        this.job != null
+            && this.job.routerSettings != null
+            && this.job.routerSettings.getRunRouter()
+            && (this.job.routerSettings.autorouter.maxPasses == null
+                || this.job.routerSettings.autorouter.maxPasses > 0);
+    if (routerRan && this.job.board != null) {
       String line = DanglingCopper.remove(this.job.board, "the last stage");
       if (line != null) {
         this.job.logInfo(line);
