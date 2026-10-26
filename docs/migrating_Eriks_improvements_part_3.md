@@ -121,12 +121,12 @@ This document tracks all improvements and bug fixes ported from `freerouting.net
   - [x] Port `ExitStubsTests.cs` to `src/test/java/app/freerouting/autoroute/ExitStubsTest.java`.
   - [x] Verify tests pass.
 
-- [ ] **Task 3.3: Keepout-Covered Pin Pad End Relocation (`PadEndWithClearStub`)**
+- [x] **Task 3.3: Keepout-Covered Pin Pad End Relocation (`PadEndWithClearStub`)**
   - **Origin Commits:** `2e82c181`, `779370eb`, `c8638505`
   - **Feature:** When a board keepout or cut-out partially overlaps a pad (e.g. `nan-15_top-plate`), the maze search connection stub can graze the keepout and get ripped up by strict DRC checks. Detect blocked stubs and reposition the pad connection point to an unobstructed region of the pad copper.
-  - [ ] Implement `padEndWithClearStub` in `FoundConnectionLocator.java`.
-  - [ ] Port `KeepoutCoveredPinTests.cs` to `src/test/java/app/freerouting/autoroute/KeepoutCoveredPinTest.java`.
-  - [ ] Verify tests pass.
+  - [x] Implement `padEndWithClearStub` in `FoundConnectionLocator.java`.
+  - [x] Port `KeepoutCoveredPinTests.cs` to `src/test/java/app/freerouting/autoroute/KeepoutCoveredPinTest.java`.
+  - [x] Verify tests pass.
 
 - [ ] **Task 3.4: Dangling Copper Cleanup (`DanglingCopper`)**
   - **Origin Commits:** `306fd1b9`, `0a7d90fe`

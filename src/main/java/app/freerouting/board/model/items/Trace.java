@@ -276,7 +276,9 @@ public abstract class Trace extends Item implements Connectable, Serializable {
             result.add(currentItem);
           }
         } else if (currentItem instanceof DrillItem currentDrillItem) {
-          if (point.equals(currentDrillItem.getCenter())) {
+          if (currentDrillItem instanceof Pin pin
+              ? pin.containsCopper(point, this.layer)
+              : point.equals(currentDrillItem.getCenter())) {
             result.add(currentItem);
           }
         } else if (currentItem instanceof ConductionArea currentArea) {

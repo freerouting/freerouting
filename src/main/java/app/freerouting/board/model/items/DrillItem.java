@@ -359,6 +359,12 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
 
   @Override
   public TileShape getTraceConnectionShape(ShapeSearchTree searchTree, int index) {
+    if (this instanceof Pin pin) {
+      TileShape shape = pin.getTileShape(index);
+      if (shape != null) {
+        return shape;
+      }
+    }
     return TileShape.getInstance(this.getCenter());
   }
 
