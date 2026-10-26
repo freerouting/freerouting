@@ -160,10 +160,13 @@ public class Via extends DrillItem implements Serializable {
     if (!other.sharesNet(this)) {
       return true;
     }
-    if (other instanceof Trace) {
+    if (other instanceof Trace || other instanceof Via) {
       return false;
     }
-    return !this.attachAllowed || !(other instanceof Pin) || !((Pin) other).drillAllowed();
+    if (other instanceof Pin pin) {
+      return !this.attachAllowed || !pin.drillAllowed();
+    }
+    return false;
   }
 
   /** Checks, if the Via has contacts on at most 1 layer. */

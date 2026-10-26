@@ -42,21 +42,21 @@ This document tracks all improvements and bug fixes ported from `freerouting.net
   - [x] Port `LockedTraceJunctionTests.cs` to `src/test/java/app/freerouting/board/LockedTraceJunctionTest.java`.
   - [x] Verify test suite passes.
 
-- [ ] **Task 1.3: SES Rational Corner Junction Synchronization (`SessionJunction`)**
+- [x] **Task 1.3: SES Rational Corner Junction Synchronization (`SessionJunction`)**
   - **Origin Commits:** `41d888c4`, `5214f386`
   - **Problem:** In SES files, rational coordinates (from angled segments or neckdowns) can round differently on adjacent wire endpoints sharing a junction point. One wire rounds to grid while another restores exact rational, causing a sub-micron open junction (broken net connectivity upon reload, reproduced on `tinybot` and `TCKB`).
   - **Solution:** In `SesReader.java`, coordinate shared endpoints across wires on the same layer so that wires sharing a junction either all stay rational or all round to integer together.
-  - [ ] Coordinate wire endpoints in `SesReader.java` before board insertion.
-  - [ ] Port `SessionJunctionTests.cs` to `src/test/java/app/freerouting/io/specctra/SessionJunctionTest.java`.
-  - [ ] Verify junction tests pass.
+  - [x] Coordinate wire endpoints in `SesReader.java` before board insertion.
+  - [x] Port `SessionJunctionTests.cs` to `src/test/java/app/freerouting/io/specctra/SessionJunctionTest.java`.
+  - [x] Verify junction tests pass.
 
-- [ ] **Task 1.4: Same-Net Conduction Area Obstacle Guard in DRC (`Via.isObstacle`)**
+- [x] **Task 1.4: Same-Net Conduction Area Obstacle Guard in DRC (`Via.isObstacle`)**
   - **Origin Commits:** `dfc91039`, `c57a8d5a`
   - **Problem:** In `Via.java` and `Item.java`, same-net conduction areas (copper graphics, unnetted/netted zone fills) were treated as zero-clearance obstacles, falsely rejecting legal same-net vias and reporting bogus DRC violations (e.g. `NRF52832_Touch_Switch`).
   - **Solution:** In `Via.isObstacle()`, treat same-net conduction areas as connected copper rather than zero-clearance obstacles.
-  - [ ] Update `Via.isObstacle` to exempt same-net conduction areas.
-  - [ ] Add regression test in `src/test/java/app/freerouting/board/SameNetConductionAreaViaTest.java`.
-  - [ ] Verify DRC calculations.
+  - [x] Update `Via.isObstacle` to exempt same-net conduction areas.
+  - [x] Add regression test in `src/test/java/app/freerouting/board/SameNetConductionAreaViaTest.java`.
+  - [x] Verify DRC calculations.
 
 - [ ] **Task 1.5: Non-Convex Pad Polygon Decomposition**
   - **Origin Commits:** `afd0ed51`, `428c8ff1`, `c4731021`

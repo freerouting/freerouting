@@ -359,13 +359,9 @@ public class Pin extends DrillItem implements Serializable {
       }
       return true;
     }
-    if (other instanceof Trace) {
-      return false;
-    }
-    if (other instanceof Pin) {
-      // Pins sharing the same electrical net (e.g. composite pads, thermal vias in pad,
-      // stitching vias, or internally connected pins across components) are electrically
-      // connected and do not violate clearance against each other.
+    if (other instanceof Trace || other instanceof Pin || other instanceof ConductionArea) {
+      // Items sharing the same electrical net (e.g. traces, composite pads, same-net conduction
+      // areas / copper graphics) are electrically connected and do not violate clearance.
       return false;
     }
     // Same-net vias must be allowed to contact SMD pins during fanout.
