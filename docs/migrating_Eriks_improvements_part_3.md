@@ -128,13 +128,13 @@ This document tracks all improvements and bug fixes ported from `freerouting.net
   - [x] Port `KeepoutCoveredPinTests.cs` to `src/test/java/app/freerouting/autoroute/KeepoutCoveredPinTest.java`.
   - [x] Verify tests pass.
 
-- [ ] **Task 3.4: Dangling Copper Cleanup (`DanglingCopper`)**
+- [x] **Task 3.4: Dangling Copper Cleanup (`DanglingCopper`)**
   - **Origin Commits:** `306fd1b9`, `0a7d90fe`
   - **Feature:** When autorouting stops, times out, or finishes passes, leftover trace tails and one-layer dangling vias remain on the board. Run a multi-pass cleanup (`RoutingBoard.removeTraceTails()`) guarded by net connectivity checks before writing final session output.
-  - [ ] Create `DanglingCopper.java` in `app.freerouting.autoroute.pipeline`.
-  - [ ] Integrate into `RoutingPipeline.java` and `HeadlessBoardManager.java`.
-  - [ ] Port `DanglingCopperTests.cs` to `src/test/java/app/freerouting/autoroute/DanglingCopperTest.java`.
-  - [ ] Verify tests pass.
+  - [x] Create `DanglingCopper.java` in `app.freerouting.autoroute.pipeline`.
+  - [x] Integrate into `RoutingPipeline.java`.
+  - [x] Port `DanglingCopperTests.cs` to `src/test/java/app/freerouting/autoroute/pipeline/DanglingCopperTest.java`.
+  - [x] Verify tests pass.
 
 ---
 

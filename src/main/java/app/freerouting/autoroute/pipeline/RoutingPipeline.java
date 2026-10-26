@@ -101,7 +101,17 @@ public final class RoutingPipeline {
     runRoutingStage();
     runOptimizationStage();
     releaseExitStubs();
+    removeDanglingCopper();
     this.job.stage = RoutingStage.IDLE;
+  }
+
+  private void removeDanglingCopper() {
+    if (this.job != null && this.job.board != null) {
+      String line = DanglingCopper.remove(this.job.board, "the last stage");
+      if (line != null) {
+        this.job.logInfo(line);
+      }
+    }
   }
 
   private void releaseExitStubs() {
