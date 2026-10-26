@@ -1010,12 +1010,26 @@ public abstract class Item
     return false;
   }
 
-  /** Unfixes the item, if it is not fixed by the system or the input (isFix()). */
+  /**
+   * Unfixes the item, if it is not fixed by the system or the input ({@link FixedState#isFix}). A
+   * preserved route on the board is also split where other copper of its net ends inside it: those
+   * junctions were contacts only while it was preserved ({@link Trace#isConnectionPoint}), and a
+   * mutable trace is joined at its end corners, so without the split tail removal deleted the span
+   * between two branches and pull-tight moved it off a branch (upstream #993). {@link
+   * #setFixedState} does not split: its callers that unfix copper remove it.
+   */
   public void unfix() {
     if (fixedState != null && !fixedState.isFix()) {
       FixedState oldState = fixedState;
+      List<Point> junctions =
+          oldState.isPreservedRoute() && this instanceof Trace trace && isOnTheBoard()
+              ? trace.interiorJunctions()
+              : null;
       fixedState = FixedState.UNFIXED;
       noteIfPreservedChanged(oldState);
+      if (junctions != null && !junctions.isEmpty()) {
+        ((Trace) this).splitAt(junctions);
+      }
     }
   }
 

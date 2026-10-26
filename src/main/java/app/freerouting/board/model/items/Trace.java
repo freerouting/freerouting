@@ -18,8 +18,11 @@ import app.freerouting.rules.Net;
 import app.freerouting.rules.Nets;
 import app.freerouting.util.TextManager;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
@@ -139,9 +142,53 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     if (point == null) {
       return false;
     }
-    return point.equals(firstCorner())
-        || point.equals(lastCorner())
-        || (isPreservedRoute() && centreLineContains(point));
+    return point.equals(firstCorner()) || point.equals(lastCorner()) || centreLineContains(point);
+  }
+
+  /** The points away from its end corners where this trace meets its contacts. */
+  public List<Point> interiorJunctions() {
+    List<Point> result = new ArrayList<>();
+    for (Item contact : getNormalContacts()) {
+      Point point = normalContactPoint(contact);
+      if (point != null
+          && !point.equals(firstCorner())
+          && !point.equals(lastCorner())
+          && !result.contains(point)) {
+        result.add(point);
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Splits this trace at each of points inside it; a point the trace cannot be split at is skipped.
+   */
+  public void splitAt(List<Point> points) {
+    List<Trace> pieces = new ArrayList<>();
+    pieces.add(this);
+    for (Point point : points) {
+      int index = -1;
+      for (int i = 0; i < pieces.size(); i++) {
+        Trace piece = pieces.get(i);
+        if (piece.isOnTheBoard()
+            && !point.equals(piece.firstCorner())
+            && !point.equals(piece.lastCorner())
+            && piece.centreLineContains(point)) {
+          index = i;
+          break;
+        }
+      }
+      if (index < 0) {
+        continue;
+      }
+      Trace target = pieces.get(index);
+      Trace[] split = target.split(point);
+      if (split == null || split.length == 0) {
+        continue;
+      }
+      pieces.remove(index);
+      pieces.addAll(Arrays.asList(split));
+    }
   }
 
   @Override
