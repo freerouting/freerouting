@@ -28,7 +28,7 @@ class DonorServiceTest {
     assertNotNull(topTier.name());
     assertFalse(topTier.donors().isEmpty(), "Top tier should contain initial donors");
     assertEquals("Foxy Laboratories", topTier.donors().getFirst().name());
-    assertEquals("https://foxylabs.ee", topTier.donors().getFirst().url());
+    assertEquals("https://www.foxylabs.eu/", topTier.donors().getFirst().url());
   }
 
   @Test

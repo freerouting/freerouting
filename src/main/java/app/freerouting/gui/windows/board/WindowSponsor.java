@@ -7,6 +7,7 @@ import app.freerouting.gui.board.BoardFrame;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.TextManager;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Dimension;
@@ -58,9 +59,8 @@ public final class WindowSponsor {
 
     this.sponsorDialog.add(content);
     this.sponsorDialog.setResizable(true);
-    this.sponsorDialog.setMinimumSize(new Dimension(500, 420));
+    this.sponsorDialog.setMinimumSize(new Dimension(480, 320));
     this.sponsorDialog.pack();
-    this.sponsorDialog.setSize(540, 520);
     this.sponsorDialog.setLocationRelativeTo(boardFrame);
     WindowBase.clampWindowHeight(this.sponsorDialog, boardFrame);
     this.sponsorDialog.setVisible(true);
@@ -149,13 +149,23 @@ public final class WindowSponsor {
     // Dynamic Donors Container
     JPanel donorsContainer = new JPanel();
     donorsContainer.setLayout(new BoxLayout(donorsContainer, BoxLayout.Y_AXIS));
+    donorsContainer.setAlignmentX(Component.LEFT_ALIGNMENT);
     A11y.tag(donorsContainer, GuiLocators.WINDOW_SPONSOR_DONORS_LIST);
     A11y.describe(donorsContainer, tm.getText("header_donors"), null);
 
     JLabel loadingLabel = new JLabel(tm.getText("loading_donors"));
     loadingLabel.setFont(loadingLabel.getFont().deriveFont(Font.ITALIC));
+    loadingLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
     donorsContainer.add(loadingLabel);
     panel.add(donorsContainer, gbc);
+
+    // Vertical glue spacer to push all content firmly to the top
+    GridBagConstraints glueGbc = new GridBagConstraints();
+    glueGbc.gridwidth = GridBagConstraints.REMAINDER;
+    glueGbc.weightx = 1.0;
+    glueGbc.weighty = 1.0;
+    glueGbc.fill = GridBagConstraints.BOTH;
+    panel.add(Box.createGlue(), glueGbc);
 
     // Fetch and populate donors asynchronously
     if (donorService != null) {
@@ -176,6 +186,7 @@ public final class WindowSponsor {
     if (payload == null || payload.tiers() == null || payload.tiers().isEmpty()) {
       JLabel emptyLabel = new JLabel(tm.getText("empty_tier"));
       emptyLabel.setFont(emptyLabel.getFont().deriveFont(Font.ITALIC));
+      emptyLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
       container.add(emptyLabel);
       container.revalidate();
       container.repaint();
@@ -191,10 +202,12 @@ public final class WindowSponsor {
       tierTitle.setFont(tierTitle.getFont().deriveFont(Font.BOLD, 12f));
       tierTitle.setForeground(new Color(180, 100, 0));
       tierTitle.setBorder(BorderFactory.createEmptyBorder(6, 0, 4, 0));
+      tierTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
       container.add(tierTitle);
 
-      JPanel tierListPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 4));
+      JPanel tierListPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 4));
       tierListPanel.setOpaque(false);
+      tierListPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
       for (DonorService.Donor donor : tier.donors()) {
         if (donor.name() == null || donor.name().isBlank()) {
@@ -235,6 +248,7 @@ public final class WindowSponsor {
     if (container.getComponentCount() == 0) {
       JLabel emptyLabel = new JLabel(tm.getText("empty_tier"));
       emptyLabel.setFont(emptyLabel.getFont().deriveFont(Font.ITALIC));
+      emptyLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
       container.add(emptyLabel);
     }
 
