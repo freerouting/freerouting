@@ -148,7 +148,8 @@ final class MazeExpansionEngine {
     int fromRoomLayer = fromElement.sectionNoOfDoor;
     DrillPage drillPage = (DrillPage) fromElement.door;
     Collection<ExpansionDrill> drillList =
-        drillPage.getDrills(search.autorouteEngine, ctrl.attachSmdAllowed);
+        drillPage.getDrills(
+            search.autorouteEngine, ctrl.attachSmdAllowed, ctrl.centreOfGravityViaCandidate);
     if (search.fanoutDiagnostics.enabled()) {
       search.fanoutDiagnostics.trace(
           "drill_page_scan",
@@ -396,7 +397,7 @@ final class MazeExpansionEngine {
           ForcedViaInserter.checkLayer(
               requiredRadius,
               viaInfo.getClearanceClassIndex(),
-              viaInfo.attachSmdAllowed(),
+              ctrl.viaAttachAllowed(viaInfo),
               roomShape,
               drill.location,
               layer,

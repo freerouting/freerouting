@@ -106,6 +106,32 @@ public class AutorouterSettings implements Serializable, Cloneable {
   @Schema(description = "Extra seed for the autorouter item order")
   public Integer itemOrderSeed;
 
+  /** Erik Gavriluk (freerouting.net): allows vias directly in SMD component pads of their net. */
+  @SerializedName("via_in_pad")
+  @Schema(description = "Allows vias directly in SMD component pads of their own net")
+  public Boolean viaInPad;
+
+  /**
+   * Erik Gavriluk (freerouting.net): allows vias touching SMD pads of their net with the drill hole
+   * outside.
+   */
+  @SerializedName("via_touching_pad")
+  @Schema(description = "Allows vias touching SMD pads of their own net with drill hole outside")
+  public Boolean viaTouchingPad;
+
+  /**
+   * Erik Gavriluk (freerouting.net): enables centre-of-gravity candidate for pieces with SMD pads.
+   */
+  @SerializedName("via_centre_of_gravity")
+  @Schema(
+      description = "Enables centre-of-gravity via candidate for free pieces containing SMD pads")
+  public Boolean viaCentreOfGravity;
+
+  /** Erik Gavriluk (freerouting.net): extra cost for fanout vias inside own-net pad clearance. */
+  @SerializedName("fanout_via_pad_gap")
+  @Schema(description = "Extra cost for fanout vias placed inside same-net pad clearance")
+  public Double fanoutViaPadGap;
+
   @Override
   public AutorouterSettings clone() {
     try {

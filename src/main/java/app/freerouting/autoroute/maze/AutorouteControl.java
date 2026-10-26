@@ -61,6 +61,20 @@ public class AutorouteControl {
   /** True, if vias may drill to the pad of SMD pins. */
   public boolean attachSmdAllowed;
 
+  /** True, if vias may sit directly in SMD pads of their own net. */
+  public final boolean viaInPad;
+
+  /** True, if vias may touch SMD pads of their own net with drill hole outside. */
+  public final boolean viaTouchingPad;
+
+  /**
+   * True, if free pieces containing SMD pads also offer their centre of gravity as via candidate.
+   */
+  public final boolean centreOfGravityViaCandidate;
+
+  /** Extra cost for fanout vias inside own-net pad clearance. */
+  public final double fanoutViaPadGap;
+
   /** The minimum cost value of all normal vias. */
   public double minNormalViaCost;
 
@@ -145,6 +159,26 @@ public class AutorouteControl {
   private AutorouteControl(
       RoutingBoard board, RouterSettings settings, ExpansionCostFactor[] traceCosts) {
     this.settings = settings;
+    this.viaInPad =
+        settings != null
+            && settings.autorouter != null
+            && Boolean.TRUE.equals(settings.autorouter.viaInPad);
+    this.viaTouchingPad =
+        settings != null
+            && settings.autorouter != null
+            && Boolean.TRUE.equals(settings.autorouter.viaTouchingPad);
+    this.fanoutViaPadGap =
+        (settings != null
+                && settings.autorouter != null
+                && settings.autorouter.fanoutViaPadGap != null)
+            ? Math.max(0, settings.autorouter.fanoutViaPadGap)
+            : 0;
+    this.centreOfGravityViaCandidate =
+        (settings != null
+                && settings.autorouter != null
+                && settings.autorouter.viaCentreOfGravity != null)
+            ? settings.autorouter.viaCentreOfGravity
+            : !viaInPad;
     layerCount = board.getLayerCount();
     traceHalfWidth = new int[layerCount];
     compensatedTraceHalfWidth = new int[layerCount];
@@ -196,6 +230,15 @@ public class AutorouteControl {
     ripupAllowed = false;
     ripupCosts = 1000;
     ripupPassNo = 1;
+  }
+
+  /**
+   * Whether a via of {@code viaInfo} may share copper with SMD pads of its own net: the via rule's
+   * flag, or with {@code viaInPad} / {@code viaTouchingPad} the forced {@code attachSmdAllowed} as
+   * well.
+   */
+  public boolean viaAttachAllowed(ViaInfo viaInfo) {
+    return viaInfo.attachSmdAllowed() || ((viaInPad || viaTouchingPad) && this.attachSmdAllowed);
   }
 
   private static boolean isPureSmdNet(RoutingBoard board, int netNumber) {

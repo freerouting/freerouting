@@ -180,6 +180,33 @@ public final class ForcedViaInserter {
       RoutingBoard board,
       int[] tracePenHalfwidthArr,
       int traceClearanceClassIndex) {
+    return check(
+        viaInfo,
+        location,
+        netNumbers,
+        maxRecursionDepth,
+        maxViaRecursionDepth,
+        board,
+        tracePenHalfwidthArr,
+        traceClearanceClassIndex,
+        null);
+  }
+
+  /**
+   * Checks, if a Via is possible with the input parameter after evtl. shoving aside obstacle
+   * traces. {@code attachSmdAllowed} overrides the via rule's flag when non-null.
+   */
+  public static boolean check(
+      ViaInfo viaInfo,
+      Point location,
+      int[] netNumbers,
+      int maxRecursionDepth,
+      int maxViaRecursionDepth,
+      RoutingBoard board,
+      int[] tracePenHalfwidthArr,
+      int traceClearanceClassIndex,
+      Boolean attachSmdAllowed) {
+    boolean attach = attachSmdAllowed != null ? attachSmdAllowed : viaInfo.attachSmdAllowed();
     Vector translateVector = location.differenceBy(Point.ZERO);
     int calcFromSideOffset = board.getMinTraceHalfWidth();
     ForcedPadRouter forcedPadRouter = new ForcedPadRouter(board);
@@ -219,7 +246,7 @@ public final class ForcedViaInserter {
               i,
               netNumbers,
               currentClearanceClassIndex,
-              viaInfo.attachSmdAllowed(),
+              attach,
               null,
               maxRecursionDepth,
               maxViaRecursionDepth,
@@ -246,7 +273,7 @@ public final class ForcedViaInserter {
                 i,
                 netNumbers,
                 0,
-                viaInfo.attachSmdAllowed(),
+                attach,
                 null,
                 maxRecursionDepth,
                 maxViaRecursionDepth,
@@ -311,6 +338,33 @@ public final class ForcedViaInserter {
       int maxRecursionDepth,
       int maxViaRecursionDepth,
       RoutingBoard board) {
+    return insert(
+        viaInfo,
+        location,
+        netNumbers,
+        traceClearanceClassIndex,
+        tracePenHalfwidthArr,
+        maxRecursionDepth,
+        maxViaRecursionDepth,
+        board,
+        null);
+  }
+
+  /**
+   * Shoves aside traces, so that a via with the input parameters can be inserted without clearance
+   * violations. {@code attachSmdAllowed} overrides the via rule's flag when non-null.
+   */
+  public static boolean insert(
+      ViaInfo viaInfo,
+      Point location,
+      int[] netNumbers,
+      int traceClearanceClassIndex,
+      int[] tracePenHalfwidthArr,
+      int maxRecursionDepth,
+      int maxViaRecursionDepth,
+      RoutingBoard board,
+      Boolean attachSmdAllowed) {
+    boolean attach = attachSmdAllowed != null ? attachSmdAllowed : viaInfo.attachSmdAllowed();
     Vector translateVector = location.differenceBy(Point.ZERO);
     int calcFromSideOffset = board.getMinTraceHalfWidth();
     ForcedPadRouter forcedPadRouter = new ForcedPadRouter(board);
@@ -362,7 +416,7 @@ public final class ForcedViaInserter {
           i,
           netNumbers,
           currentClearanceClassIndex,
-          viaInfo.attachSmdAllowed(),
+          attach,
           null,
           maxRecursionDepth,
           maxViaRecursionDepth,
@@ -384,7 +438,7 @@ public final class ForcedViaInserter {
             i,
             netNumbers,
             0,
-            viaInfo.attachSmdAllowed(),
+            attach,
             null,
             maxRecursionDepth,
             maxViaRecursionDepth,
@@ -420,8 +474,35 @@ public final class ForcedViaInserter {
         netNumbers,
         viaInfo.getClearanceClassIndex(),
         FixedState.UNFIXED,
-        viaInfo.attachSmdAllowed());
+        attach);
     return true;
+  }
+
+  /**
+   * Whether a via of {@code viaPadstack} at {@code location} has its drill hole overlapping an
+   * own-net SMD pad.
+   */
+  public static boolean holeInSmdPad(
+      RoutingBoard board, Padstack viaPadstack, Point location, int[] netNumbers) {
+    double drillRadius = viaPadstack.getDrillRadius();
+    if (drillRadius <= 0 || !(location instanceof IntPoint center)) {
+      return false;
+    }
+    Circle hole = new Circle(center, (int) Math.ceil(drillRadius));
+    for (int layer = viaPadstack.fromLayer(); layer <= viaPadstack.toLayer(); layer++) {
+      for (SearchTreeObject found : board.overlappingObjects(hole, layer)) {
+        if (found instanceof Pin pin
+            && pin.drillAllowed()
+            && !pin.viaMayAttach()
+            && pin.sharesNetNo(netNumbers)) {
+          Shape pad = pin.getShapeOnLayer(layer);
+          if (pad != null && pad.intersects(hole)) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
   }
 
   /** Prepares new pad geometry for the same tree used by ForcedPadRouter and DrillItemMover. */

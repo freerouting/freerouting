@@ -198,6 +198,9 @@ public class DefaultSettings implements SettingsSource {
     settings.autorouter.smdNetViaCostFactor = DEFAULT_SMD_NET_VIA_COST_FACTOR;
     settings.autorouter.residualRepairMaxOpen = 4;
     settings.autorouter.explorePatience = 0;
+    settings.autorouter.viaInPad = false;
+    settings.autorouter.viaTouchingPad = false;
+    settings.autorouter.fanoutViaPadGap = 0.0;
     settings.maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
     settings.autorouter.maxThreads = settings.maxThreads;
     settings.copperToEdgeClearanceUm = DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM;

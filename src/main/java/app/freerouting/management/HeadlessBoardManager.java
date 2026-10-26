@@ -369,6 +369,7 @@ public class HeadlessBoardManager implements BoardManager {
     applyHoleClearanceOverride();
     applyHoleToHole();
     applyExactCopperOverride();
+    applyViaInPadAutoDetection();
     applyPlaneNetsOverride();
     applyPlaneAsObstacleOverride();
     applyClearanceToleranceOverride();
@@ -401,6 +402,29 @@ public class HeadlessBoardManager implements BoardManager {
       return;
     }
     this.board.rules.setExactCopper(this.routingJob.routerSettings.exactCopper);
+  }
+
+  private void applyViaInPadAutoDetection() {
+    if (this.board == null || this.routingJob == null || this.routingJob.routerSettings == null) {
+      return;
+    }
+    if (this.routingJob.routerSettings.autorouter == null) {
+      this.routingJob.routerSettings.autorouter = new app.freerouting.settings.AutorouterSettings();
+    }
+    if (this.routingJob.routerSettings.autorouter.viaInPad == null) {
+      boolean detected = false;
+      for (app.freerouting.board.model.items.Via via : this.board.getVias()) {
+        if (app.freerouting.board.actions.ForcedViaInserter.holeInSmdPad(
+            this.board, via.getPadstack(), via.getCenter(), via.netNumbers)) {
+          detected = true;
+          break;
+        }
+      }
+      if (detected) {
+        this.routingJob.routerSettings.autorouter.viaInPad = true;
+        FRLogger.info("The board's own vias decide: router.autorouter.via_in_pad = true.");
+      }
+    }
   }
 
   private void applyHoleClearanceOverride() {
@@ -987,6 +1011,7 @@ public class HeadlessBoardManager implements BoardManager {
       applyHoleClearanceOverride();
       applyHoleToHole();
       applyExactCopperOverride();
+      applyViaInPadAutoDetection();
       applyPlaneNetsOverride();
       applyPlaneAsObstacleOverride();
       applyClearanceToleranceOverride();

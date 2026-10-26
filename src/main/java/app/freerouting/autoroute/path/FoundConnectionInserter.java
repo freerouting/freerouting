@@ -804,7 +804,8 @@ public final class FoundConnectionInserter {
         this.ctrl.traceHalfWidth,
         this.ctrl.maxShoveTraceRecursionDepth,
         this.ctrl.maxShoveViaRecursionDepth,
-        this.board)) {
+        this.board,
+        this.ctrl.viaAttachAllowed(viaInfo))) {
       FRLogger.debug("FoundConnectionInserter: forced via failed for net #" + ctrl.netNumber);
       traceFanoutDiagnostic(
           "forced_via_insert_failed",
