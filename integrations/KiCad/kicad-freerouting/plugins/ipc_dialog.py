@@ -22,6 +22,7 @@ import queue
 import subprocess
 import sys
 import threading
+import webbrowser
 from pathlib import Path
 from typing import Callable, Optional
 
@@ -178,6 +179,9 @@ class IpcRoutingDialog:
         self._progressbar = None
         self._cancel_btn = None
         self._log_btn = None
+        self._support_btn = None
+        self._support_lbl = None
+        self._support_note_var = None
         self._icon_img = None
 
     def create_ui(self) -> bool:
@@ -313,6 +317,15 @@ class IpcRoutingDialog:
             )
             console_lbl.pack(anchor=tk.W, fill=tk.X, pady=(0, 10))
 
+            # Support note label (hidden during routing; shown on successful completion)
+            self._support_note_var = tk.StringVar(value="")
+            self._support_lbl = ttk.Label(
+                main_frame,
+                textvariable=self._support_note_var,
+                font=subtitle_font,
+                foreground="#555555",
+            )
+
             # Button Bar
             btn_frame = ttk.Frame(main_frame)
             btn_frame.pack(fill=tk.X, side=tk.BOTTOM)
@@ -323,6 +336,12 @@ class IpcRoutingDialog:
                 command=self._open_log_file,
             )
             self._log_btn.pack(side=tk.LEFT)
+
+            self._support_btn = ttk.Button(
+                btn_frame,
+                text="Support Freerouting",
+                command=self._open_support_url,
+            )
 
             self._cancel_btn = ttk.Button(
                 btn_frame,
@@ -390,6 +409,24 @@ class IpcRoutingDialog:
                             self._status_var.set("✓ Routing Completed Successfully")
                         if self._detail_var:
                             self._detail_var.set(summary)
+                        if self._support_note_var:
+                            self._support_note_var.set(
+                                "Freerouting is an open-source project supported by community donations."
+                            )
+                        if self._support_lbl:
+                            try:
+                                self._support_lbl.pack(
+                                    anchor="w",
+                                    pady=(0, 6),
+                                    before=self._cancel_btn.master if self._cancel_btn else None,
+                                )
+                            except Exception as lbl_err:
+                                logger.debug("Support label pack error: %s", lbl_err)
+                        if self._support_btn:
+                            try:
+                                self._support_btn.pack(side="right", padx=(0, 8))
+                            except Exception as btn_err:
+                                logger.debug("Support button pack error: %s", btn_err)
                         if self._cancel_btn:
                             self._cancel_btn.config(text="Close", command=self._close, state="normal")
                     elif msg_type == "error":
@@ -494,6 +531,13 @@ class IpcRoutingDialog:
                 subprocess.Popen(["xdg-open", str(log_file)])
         except Exception as e:
             logger.warning(f"Could not open log file: {e}")
+
+    def _open_support_url(self) -> None:
+        """Opens the Freerouting donation and support page in default browser."""
+        try:
+            webbrowser.open("https://www.freerouting.app/donate.html")
+        except Exception as e:
+            logger.warning(f"Could not open support URL: {e}")
 
     # ------------------------------------------------------------------
     # Execution Runner
