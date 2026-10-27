@@ -3,9 +3,11 @@ package app.freerouting.io.specctra;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import app.freerouting.geometry.planar.IntPoint;
+import app.freerouting.geometry.planar.Limits;
 import app.freerouting.geometry.planar.Point;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -86,6 +88,21 @@ class SesNumericFidelityTest {
     var restored = SesPathGeometry.read(exact, BigFraction.ONE);
     assertArrayEquals(expected, legacyRestored.corners());
     assertArrayEquals(expected, restored.corners());
+    assertNotNull(SesPathGeometry.exact(exact, BigFraction.ONE));
+  }
+
+  @Test
+  void outOfRangeCoordinatesAreNotRoundedOntoTheGrid() throws Exception {
+    BigDecimal beyond = BigDecimal.valueOf(Limits.CRIT_INT + 1L);
+    assertThrows(
+        IOException.class,
+        () ->
+            SesPathGeometry.exact(
+                new BigDecimal[] {BigDecimal.ZERO, BigDecimal.ZERO, beyond, BigDecimal.ONE},
+                BigFraction.ONE));
+    assertThrows(
+        IOException.class,
+        () -> SesPathGeometry.read(new double[] {0, 0, Limits.CRIT_INT + 1.0, 1}, 1));
   }
 
   @Test

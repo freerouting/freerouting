@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.Freerouting;
+import app.freerouting.autoroute.pipeline.ExitStubs;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Trace;
@@ -29,6 +30,7 @@ import app.freerouting.rules.ClearanceMatrix;
 import app.freerouting.settings.GlobalSettings;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
@@ -169,6 +171,32 @@ class RationalInteriorTraceContactTest {
     assertTrue(trunk.getConnectionItems().isEmpty());
     assertFalse(board.removeTraceTails(1, Item.StopConnectionOption.NONE));
     assertTrue(trunk.isOnTheBoard());
+  }
+
+  @Test
+  void exitStubReleaseKeepsAnUnsplitInteriorJunction() {
+    PolylineTrace contact =
+        insert(
+            new Polyline(
+                new Point[] {
+                  new IntPoint(0, 0), new IntPoint(15000, 10000), new IntPoint(15000, 0)
+                }),
+            0,
+            1,
+            FixedState.USER_FIXED);
+    PolylineTrace trunk =
+        insert(new Polyline(new IntPoint(0, 0), new IntPoint(30000, 0)), 0, 1, FixedState.UNFIXED);
+    // A component trace cannot be split, so release must not delete it as a dangling tail.
+    trunk.assignComponentId(1);
+    trunk.setFixedState(ExitStubs.PLACED_STATE);
+    assertTrue(trunk.isTail());
+    assertTrue(trunk.hasInteriorContacts());
+    String released = ExitStubs.release(board, List.of(trunk.getId()));
+    assertNotNull(released);
+    assertFalse(released.contains("would open"));
+    assertTrue(trunk.isOnTheBoard());
+    assertTrue(contact.isOnTheBoard());
+    assertEquals(FixedState.UNFIXED, trunk.getFixedState());
   }
 
   @Test

@@ -75,7 +75,7 @@ final class SesPathGeometry {
     try {
       return readExact(coordinates, scale);
     } catch (IOException failure) {
-      if (precise) {
+      if (precise || fatalGeometry(failure)) {
         throw failure;
       }
       double[] legacy = new double[coordinates.length];
@@ -129,7 +129,7 @@ final class SesPathGeometry {
     try {
       return read(coordinates, scale);
     } catch (IOException failure) {
-      if (precise || isCollinearRejection(failure)) {
+      if (precise || isCollinearRejection(failure) || fatalGeometry(failure)) {
         throw failure;
       }
       return null;
@@ -151,7 +151,10 @@ final class SesPathGeometry {
       if (corner == null) {
         try {
           corner = corner(board[i], board[i + 1]);
-        } catch (IOException _) {
+        } catch (IOException failure) {
+          if (fatalGeometry(failure)) {
+            throw failure;
+          }
           return null;
         }
       }
@@ -181,7 +184,7 @@ final class SesPathGeometry {
       }
       return polyline;
     } catch (IOException failure) {
-      if (isCollinearRejection(failure)) {
+      if (isCollinearRejection(failure) || fatalGeometry(failure)) {
         throw failure;
       }
       return null;
@@ -211,6 +214,21 @@ final class SesPathGeometry {
 
   private static boolean isCollinearRejection(IOException failure) {
     return failure.getMessage() != null && failure.getMessage().contains("collinear");
+  }
+
+  /** Range and collapse errors must not be rounded onto the grid as different copper. */
+  private static boolean fatalGeometry(IOException failure) {
+    for (Throwable current = failure; current != null; current = current.getCause()) {
+      String message = current.getMessage();
+      if (message != null
+          && (message.contains("board range")
+              || message.contains("out-of-range")
+              || message.contains("exact integer range")
+              || message.contains("Non-finite"))) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private static boolean near(Point point, Corner corner) {

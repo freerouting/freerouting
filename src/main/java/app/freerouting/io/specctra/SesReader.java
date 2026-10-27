@@ -460,16 +460,16 @@ public final class SesReader {
   private void insertWires() {
     int count = wires.size();
     Polyline[] exact = new Polyline[count];
-    boolean[] failed = new boolean[count];
+    IOException[] failed = new IOException[count];
     boolean[] onGrid = new boolean[count];
     Set<LayerPoint> gridCorners = new HashSet<>();
     for (int i = 0; i < count; i++) {
       try {
         exact[i] = SesPathGeometry.exact(wires.get(i).coordinates(), wires.get(i).scale());
-      } catch (IOException _) {
-        failed[i] = true;
+      } catch (IOException failure) {
+        failed[i] = failure;
       }
-      if (exact[i] == null && !failed[i]) {
+      if (exact[i] == null && failed[i] == null) {
         onGrid[i] = true;
         addGridCorners(wires.get(i), gridCorners);
       }
@@ -489,9 +489,8 @@ public final class SesReader {
     for (int i = 0; i < count; i++) {
       SessionWire wire = wires.get(i);
       try {
-        if (failed[i]) {
-          throw new IOException(
-              "A collinear reversal in a session wire cannot be read without losing copper");
+        if (failed[i] != null) {
+          throw failed[i];
         }
         Polyline polyline = onGrid[i] ? SesPathGeometry.grid(wire.board, null) : exact[i];
         if (board.insertTraceWithoutCleaning(
