@@ -1495,7 +1495,7 @@ public class BasicBoard implements Serializable {
     Collection<SearchTreeObject> foundItems = overlappingObjects(pointShape, layer);
     for (SearchTreeObject currentObject : foundItems) {
       if (currentObject instanceof Trace currentTrace) {
-        if (!currentTrace.netsEqual(netNumbers)) {
+        if (!currentTrace.netsEqual(netNumbers) || currentTrace.hasInteriorContacts()) {
           continue;
         }
         if (currentTrace.firstCorner().equals(location)) {
@@ -1520,10 +1520,14 @@ public class BasicBoard implements Serializable {
    * case.
    */
   public boolean removeIfCycle(Trace trace) {
-    if (!trace.isOnTheBoard()) {
+    if (!trace.isOnTheBoard() || trace.isDeletionForbidden()) {
       return false;
     }
     if (!trace.isCycle()) {
+      return false;
+    }
+    Set<Item> connectionItems = trace.getConnectionItems();
+    if (!connectionItems.contains(trace)) {
       return false;
     }
     // Remove tails at the endpoints after removing the cycle,
@@ -1538,7 +1542,6 @@ public class BasicBoard implements Serializable {
       Trace tail = getTraceTail(endCorners[i], currentLayer, currentNetNumbers);
       tailAtEndpointBefore[i] = tail != null;
     }
-    Set<Item> connectionItems = trace.getConnectionItems();
     this.removeItems(connectionItems);
     for (int i = 0; i < 2; i++) {
       if (!tailAtEndpointBefore[i]) {

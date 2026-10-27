@@ -55,14 +55,14 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
       FixedState fixedState,
       BasicBoard board) {
     super(netNumbers, clearanceClassIndex, id, groupId, fixedState, board);
-    this.center = center;
+    this.center = center == null ? null : center.toIntegerExact();
   }
 
   /** Works only for symmetric DrillItems. */
   @Override
   public void translateBy(Vector vector) {
     if (center != null) {
-      center = center.translateBy(vector);
+      center = center.translateBy(vector).toIntegerExact();
     }
     this.clearDerivedData();
   }
@@ -95,6 +95,8 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
   @Override
   public void moveBy(Vector vector) {
     Point oldCenter = this.getCenter();
+    // Item.moveBy removes the tree entry before translating; reject unsupported moves first.
+    oldCenter.translateBy(vector).toIntegerExact();
     // remember the contact situation of this drillitem to traces on each layer
     Set<TraceInfo> contactTraceInfo = new TreeSet<>();
     Collection<Item> contacts = this.getNormalContacts();
@@ -231,7 +233,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
   }
 
   protected void setCenter(Point center) {
-    this.center = center;
+    this.center = center == null ? null : center.toIntegerExact();
   }
 
   /** Returns the padstack of this drillitem. */

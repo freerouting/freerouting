@@ -486,10 +486,28 @@ The autorouter may also temporarily rip up nearby conflicting traces or vias if 
 Preserved traces (`USER_FIXED` and `SYSTEM_FIXED`, such as KiCad footprint tracks or SPECCTRA DSN `route`/`fix` wires) must retain their exact geometry without mutation or splitting throughout routing, normalization, and export:
 
 - **Centerline Contact Model:** Rather than splitting preserved geometry into separate sub-traces (which would mutate user geometry and emit fragmented wires upon export), Freerouting recognizes electrical junctions where branch trace endpoints or drill items lie along the centerline or internal bends of an existing trace via `Trace.contains(Point)`.
+- **Exact Finite Membership:** Integer points and finite rational line intersections are supported at trace endpoints, internal bends, and segment interiors. Membership requires exact collinearity and closed finite bounds, without coordinate rounding or a distance tolerance. Contact queries retain net/layer filtering, and multiple distinct shared points remain ambiguous to `normalContactPoint()`.
 - **Bidirectional Contact Symmetry:** `Trace.getNormalContacts()`, `Trace.getNormalContacts(Point, boolean)`, `Trace.normalContactPoint()`, and `DrillItem.getNormalContacts()` inspect overlapping items to ensure symmetric reachability for connected set traversal (`getConnectedSetRecu`).
-- **Tail Cleanup Safety:** Branches meeting preserved trace centerlines report valid contact points and are not misclassified as dangling tails (`isTail() == false`), ensuring `RoutingBoard.removeTraceTails()` preserves valid junctions.
+- **Tail Cleanup Safety:** `isTail()` retains its diagnostic meaning: an outer endpoint dangles, including on traces with unsplit interior junctions. Cleanup separately protects whole traces containing interior trace/drill contacts. Endpoint-tail lookup and whole-connection collection preserve those junctions; normalization can split them before trimming the dangling portions. Ordinary endpoint-only stubs remain removable, and DRC still reports dangling endpoints.
+- **Exact Rational Splitting:** Rational split points use integer-defined nonparallel caps with exact intersection checks. Existing endpoint caps are reused; interior points try bounded nearby lattice anchors without moving the point. If no supported cap is found, splitting safely returns no change before mutation. The bounded search is not a complete solver for all representable rational points.
+- **Supporting-Line Invariant:** `Line` operations retain bounded integer defining points. Point-based constructors convert representable rational input to an exact integer lattice line, preserving direction, and reject unsupported lines before creating invalid geometry. Polyline endpoint caps may be nonperpendicular when required to retain an exact rational endpoint. Projection connectors decline geometry that cannot satisfy this representation.
+- **Rational Queries and Integer Placement:** Rational projections retain their denominator and exact orientation; surrounding bounds round outward using integer arithmetic. Drill centres and primitive circle/box/octagon translations require integer board positions. Integral rational representations are canonicalized exactly; fractional drill moves are rejected before undo/search-tree mutation. This is a placement boundary, not a rounding policy for routing intersections.
 - **Normalization Stability:** Traces meeting preserved copper do not oscillate between split and combine passes in `BasicBoard.normalizeTraces()`, preventing infinite ping-pong loops.
 - **Export Fidelity:** Preserved traces are written to Specctra SES files (`SesWriter`) with their original unbroken coordinate spans, preserving 1:1 parity with KiCad and other EDA tools.
+
+`FoundConnectionInserter` completes both endpoint attachments before stub cleanup and
+normalization, checks each attachment result using that endpoint's layer width, and
+requires same-net normal-contact reachability between the terminal components before
+reporting success. Mutable terminal traces can be replaced by splitting or combining;
+captured component witnesses and exact-point lookup resolve the surviving board items.
+Both fixed and mutable terminals capture their original components, including mutable
+branches. A single live graph traversal must reach every surviving witness from both
+components, rather than accepting one member from each or seeding disconnected members.
+This verifies surviving-item reachability; replacement of an entirely removed component
+uses its exact anchor, rather than asserting preservation of every old geometric span.
+A fanout without a destination item must reach its newly inserted via. Failed insertion
+returns failure while leaving successfully inserted copper to the existing retry and
+cleanup flow.
 
 #### Optimizer
 
@@ -573,32 +591,47 @@ File parsing and export live in `io.specctra`.
 
 When diagnosing a load or export issue, begin here.
 
-SES geometry conversion stays in `io.specctra`, independently of the routing algorithms.
-`SesTracePath` writes finite decimal coordinates and widths using the board's existing
-coordinate transform. Endpoint snapping must not collapse any nonzero segment, including
-an interior segment of a longer path. Real point copper keeps its width and two coincident
-endpoints in the standard `path` syntax accepted by KiCad.
+SES geometry conversion stays in `io.specctra`, independently of routing algorithms.
+`SesTracePath` uses `Point.exactCoordinates()` and exact unit/resolution scaling rather
+than converting rational corners through floating point. `SesNumbers` emits ordinary
+decimal tokens accepted by KiCad. Noninteger coordinates retain a fixed fractional
+scale of at least 24 places and more than twice the reduced denominator's decimal
+length. Trailing zeros certify a rounding interval narrow enough to recover the
+original as its unique lowest-denominator fraction. Endpoint snapping cannot collapse
+a nonzero segment; real point copper retains its width and two coincident endpoints.
 
-`SesReader` applies the session's unit and resolution before constructing board objects.
-`SesPathGeometry` reconstructs the existing integer supporting-line representation;
-Apache Commons Numbers Fraction recovers rational intersections within four ULPs of
-serialization noise, with bounded convergence. Approximation is restricted to the
-fractional part so large legal board coordinates do not exceed the library's convergent
-numerator limit. The main and standalone CLI runtime classpaths both include this
-dependency. The executable JAR preserves the core and fraction modules' licence and
-notice files under distinct `META-INF/licenses/commons-numbers-*` paths. Corners may
-share a projective denominator only when both original coordinates
-remain within that tolerance. Integer congruence bases are reduced with at most 128
-steps to reconstruct short supporting lines, so a large intersection denominator is not
-mistaken for an out-of-range board coordinate. This is SES representation recovery;
-no routing decision or board grid is changed.
+`SesReader` enables exact decimal tokens on `SpecctraDsnStreamReader`; the default DSN
+scanner keeps its existing integer/double token types. Decimal text and session scaling
+remain exact through `SesNumbers` and `SesPathGeometry`. Rational recovery identifies
+the lowest-denominator fraction in the external token's half-last-place interval before
+applying session scaling, then checks the result against the existing four-ULP binary
+serialization envelope. Legacy widths and via centres may recover an integer only
+inside that same envelope. This is representation recovery, not a contact-matching
+or manufacturing tolerance. Exact integer coordinates beyond the scanner's old 32-bit
+raw-token limit are permitted when the scaled board geometry is representable.
 
-The reader checks actual insertion before counting an imported wire. It rejects widths,
-coordinates and supporting lines outside the board representation, distinct endpoints
-that collapse at serialization precision, and collinear reversals that `Polyline` would
-otherwise shorten. Monotone collinear simplification is allowed because it preserves the
-same copper. Rejected wires are reported as errors rather than moved, removed or counted
-as successful imports. KiCad performs its own final nanometre-grid conversion.
+Older double-derived sessions do not carry enough digits to guarantee original exact
+incidence. For an otherwise unrepresentable two-corner connector with an integer
+endpoint, legacy recovery constrains a primitive direction and a single rational
+parameter using both original coordinate envelopes together. Every restored endpoint
+must remain inside the unchanged four-ULP envelopes and have bounded integer supports;
+ambiguous, collapsed or unsupported geometry is refused. No broader electrical
+connectivity policy or board-grid change is implied. Files reformatted by another
+program need not retain the new writer's precision guarantee.
+
+Apache Commons Numbers Fraction supplies exact fraction arithmetic. The main and
+standalone CLI classpaths include it; executable JARs preserve its core/fraction licence
+and notice files under distinct `META-INF/licenses/commons-numbers-*` paths. Integer
+congruence bases use at most 128 reduction steps to restore supported endpoint caps.
+
+The reader checks actual insertion before counting an imported wire. Legacy
+single-vertex paths create real point copper. Invalid paths, out-of-range coordinates,
+unrepresentable widths/supports, distinct endpoints that collapse during conversion and
+collinear reversals are reported as errors rather than moved or counted as imports.
+Monotone collinear simplification is allowed because it preserves the same copper.
+Via centres must remain integer board positions. Validate live connectivity, SES
+reimport, preserved geometry and comprehensive DRC independently, then check the host
+EDA import: KiCad performs its own final nanometre-grid conversion.
 
 
 ### Native CLI and Startup Path
