@@ -3943,6 +3943,10 @@
     {
       "type": "java.util.LinkedHashMap",
       "serializable": true
+    },
+    {
+      "type": "java.lang.Number",
+      "serializable": true
     }
   ],
   "resources": [
