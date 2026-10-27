@@ -141,6 +141,10 @@
       "serializable": true
     },
     {
+      "type": "app.freerouting.board.model.items.WireObstacleArea",
+      "serializable": true
+    },
+    {
       "type": "app.freerouting.board.model.structure.AngleRestriction",
       "serializable": true
     },

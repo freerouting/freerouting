@@ -1684,6 +1684,20 @@
     "related_keys": [],
     "ui_role": "label"
   },
+  "wire_keepout": {
+    "bundle_desc": "shared/common strings",
+    "code_references": [],
+    "english_hash": "9a3989653e01ac6af475b0e03f3ce7a7cdbce2bdd49d1f20d22e3ea0bec5413b",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": null,
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
   "with": {
     "bundle_desc": "shared/common strings",
     "code_references": [],

@@ -6,6 +6,7 @@ import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.Session;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.io.FileFormat;
+import app.freerouting.io.specctra.DsnReadOptions;
 import app.freerouting.io.specctra.RulesReader;
 import app.freerouting.io.specctra.SesImportSummary;
 import app.freerouting.io.specctra.SesReader;
@@ -90,16 +91,6 @@ public final class RoutingJobScheduler {
                           // load the board from the input into a RoutingBoard object
                           if (isDsn || isJson) {
                             try {
-                              HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
-                              if (isDsn) {
-                                boardManager.loadFromSpecctraDsn(
-                                    job.input.getData(), null, new ItemIdGenerator());
-                              } else {
-                                boardManager.loadFromKiCadJson(
-                                    job.input.getData(), null, new ItemIdGenerator());
-                              }
-                              job.board = boardManager.getRoutingBoard();
-
                               GlobalSettings gs = globalSettings();
                               var settingsMerger =
                                   gs != null && gs.settingsMergerProtype != null
@@ -169,8 +160,27 @@ public final class RoutingJobScheduler {
                                     new ApiSettings(job.routerSettings));
                               }
 
-                              // Apply the final merged settings to the job and optimize them for
-                              // the board
+                              // Resolve DSN item allocation from the merged settings before the
+                              // board is loaded. The job receives those settings after attachment.
+                              var importSettings = settingsMerger.merge();
+                              var importOptions = DsnReadOptions.forSettings(importSettings);
+                              HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
+                              if (isDsn) {
+                                boardManager.loadFromSpecctraDsn(
+                                    job.input.getData(),
+                                    null,
+                                    new ItemIdGenerator(),
+                                    importOptions);
+                              } else {
+                                boardManager.loadFromKiCadJson(
+                                    job.input.getData(), null, new ItemIdGenerator());
+                              }
+                              job.board = boardManager.getRoutingBoard();
+
+                              // Board attachment enriches the per-job source with layer-derived
+                              // values.
+                              // Merge again here, preserving the existing post-load application
+                              // order.
                               job.routerSettings = settingsMerger.merge();
 
                               // Apply rules from rules file onto the board and routerSettings

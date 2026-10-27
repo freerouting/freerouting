@@ -46,6 +46,7 @@ flowchart TD
     end
 
     DSN --> IO --> BOARD
+    MGMT -->|resolved import options| IO
     RULES --> AR
     BOARD --> AR
     AR --> DRC --> IO --> SES
@@ -228,6 +229,13 @@ Application bootstrap and top-level wiring. Start here when you need the entry p
 ### `app.freerouting.io.specctra`
 
 Import and export for board files. The public DSN and SES entry points are in this package, and parser internals live in `io.specctra.parser`.
+
+`DsnReadOptions` carries immutable allocation decisions into `DsnReader`; the parser does not
+inspect application settings or GUI state. Existing reader overloads retain input order. Headless
+job scheduling and composite/API assembly resolve their existing settings sources before parsing,
+then request reference-name allocation when the effective item-order seed is non-null. They still
+apply the resolved settings and board rules after attachment. GUI and standalone imports retain
+legacy allocation; a seed selected after import cannot retroactively canonicalize item identities.
 
 ### `app.freerouting.board`
 
