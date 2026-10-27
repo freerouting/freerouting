@@ -60,14 +60,7 @@ class Issue1016PlacementOrderRoutingTest extends RoutingFixtureTest {
   }
 
   private static Outcome route(String fixture, int pass, int seed) throws IOException {
-    RoutingBoard board;
-    try (var in = DsnTestFixtures.openResource(fixture)) {
-      board =
-          (RoutingBoard)
-              ((BoardReadResult.Success)
-                      DsnReader.readBoard(in, null, null, fixture, DsnReadOptions.REFERENCE_NAME))
-                  .board();
-    }
+    RoutingBoard board = loadReferenceOrder(fixture);
     board.awaitPostLoad();
     var before = drc(board);
     assertEquals(2, before.getIncompleteCount());
@@ -114,7 +107,7 @@ class Issue1016PlacementOrderRoutingTest extends RoutingFixtureTest {
 
     var out = new ByteArrayOutputStream();
     SesWriter.write(board, out, "placement-order");
-    RoutingBoard reimported = DsnTestFixtures.loadBoard(fixture);
+    RoutingBoard reimported = loadReferenceOrder(fixture);
     reimported.awaitPostLoad();
     var imported = SesReader.read(new ByteArrayInputStream(out.toByteArray()), reimported);
     assertEquals(0, imported.errorsEncountered());
@@ -123,6 +116,15 @@ class Issue1016PlacementOrderRoutingTest extends RoutingFixtureTest {
     assertEquals(copper, copper(reimported));
     assertEquals(poses(board), poses(reimported));
     return new Outcome(representatives, copper);
+  }
+
+  private static RoutingBoard loadReferenceOrder(String fixture) throws IOException {
+    try (var in = DsnTestFixtures.openResource(fixture)) {
+      return (RoutingBoard)
+          ((BoardReadResult.Success)
+                  DsnReader.readBoard(in, null, null, fixture, DsnReadOptions.REFERENCE_NAME))
+              .board();
+    }
   }
 
   private static Map<String, Pose> poses(RoutingBoard board) {

@@ -10,6 +10,7 @@ import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.io.BoardReadResult;
+import app.freerouting.settings.RouterSettings;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -31,6 +32,17 @@ class PlacementOrderImportTest {
     assertEquals(componentIds(expected), componentIds(actual));
     assertEquals(itemIds(expected), itemIds(actual));
     assertFixtureSemantics(actual);
+  }
+
+  @Test
+  void explicitSeedIncludingZeroSelectsReferenceNameOrder() {
+    assertEquals(DsnReadOptions.INPUT_ORDER, DsnReadOptions.forSettings(null));
+    var settings = new RouterSettings();
+    assertEquals(DsnReadOptions.INPUT_ORDER, DsnReadOptions.forSettings(settings));
+    settings.autorouter.itemOrderSeed = 0;
+    assertEquals(DsnReadOptions.REFERENCE_NAME, DsnReadOptions.forSettings(settings));
+    settings.autorouter.itemOrderSeed = -1;
+    assertEquals(DsnReadOptions.REFERENCE_NAME, DsnReadOptions.forSettings(settings));
   }
 
   @Test
@@ -61,17 +73,17 @@ class PlacementOrderImportTest {
   @Test
   void duplicateReferencesKeepTheirOriginalPackageAssociation() throws IOException {
     String original = text().replace("A1", "DUP").replace("B2", "DUP");
-    RoutingBoard firstPad = fromText(original);
+    RoutingBoard originalOrder = fromText(original);
     String reversed =
         text("Issue1016-placement-order-reversed.dsn").replace("A1", "DUP").replace("B2", "DUP");
-    RoutingBoard firstGuard = fromText(reversed);
-    assertEquals(5, firstPad.components.count());
-    assertEquals(5, firstGuard.components.count());
-    assertEquals("PAD", firstPad.components.get("DUP").getPackage().name);
-    assertEquals(50000, firstPad.components.get("DUP").getExactLocation().x);
-    assertEquals("GUARD", firstGuard.components.get("DUP").getPackage().name);
-    assertEquals(100000, firstGuard.components.get("DUP").getExactLocation().x);
-    assertEquals("guard-123", firstGuard.components.get("DUP").getPartNumber());
+    RoutingBoard reversedOrder = fromText(reversed);
+    assertEquals(5, originalOrder.components.count());
+    assertEquals(5, reversedOrder.components.count());
+    assertEquals("PAD", originalOrder.components.get("DUP").getPackage().name);
+    assertEquals(50000, originalOrder.components.get("DUP").getExactLocation().x);
+    assertEquals("GUARD", reversedOrder.components.get("DUP").getPackage().name);
+    assertEquals(100000, reversedOrder.components.get("DUP").getExactLocation().x);
+    assertEquals("guard-123", reversedOrder.components.get("DUP").getPartNumber());
   }
 
   @Test

@@ -224,10 +224,7 @@ public class CompositeBoardInput {
     }
 
     var importSettings = settingsMerger.merge();
-    var importOptions =
-        importSettings.autorouter != null && importSettings.autorouter.itemOrderSeed != null
-            ? DsnReadOptions.REFERENCE_NAME
-            : DsnReadOptions.INPUT_ORDER;
+    var importOptions = DsnReadOptions.forSettings(importSettings);
     HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
     if (isDsn) {
       boardManager.loadFromSpecctraDsn(

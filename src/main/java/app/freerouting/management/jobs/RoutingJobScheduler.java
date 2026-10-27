@@ -160,14 +160,10 @@ public final class RoutingJobScheduler {
                                     new ApiSettings(job.routerSettings));
                               }
 
-                              // Apply the final merged settings to the job and optimize them for
-                              // the board
+                              // Resolve DSN item allocation from the merged settings before the
+                              // board is loaded. The job receives those settings after attachment.
                               var importSettings = settingsMerger.merge();
-                              var importOptions =
-                                  importSettings.autorouter != null
-                                          && importSettings.autorouter.itemOrderSeed != null
-                                      ? DsnReadOptions.REFERENCE_NAME
-                                      : DsnReadOptions.INPUT_ORDER;
+                              var importOptions = DsnReadOptions.forSettings(importSettings);
                               HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
                               if (isDsn) {
                                 boardManager.loadFromSpecctraDsn(
