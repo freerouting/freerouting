@@ -120,18 +120,25 @@ public class DestinationDistance {
 
   /**
    * Estimates the remaining cost at a drill or drill page whose base via charge is already paid.
-   * The ordinary layer-distance estimate includes that charge again when the destination is on
-   * another layer. Crediting it here keeps the frontier bound optimistic without changing the
-   * accumulated route cost or any additional layer-transition costs.
+   * Cross-layer candidates include that charge again. Credit one via only when the winning
+   * candidate itself contains a via, so a cheaper same-layer remainder keeps its distance.
    */
   double calculateWithPrepaidVia(FloatPoint point, int layer) {
-    return Math.max(0.0, calculate(point, layer) - minNormalViaCost);
+    LowerBound bound = lowerBound(point.boundingBox(), layer);
+    if (bound.viaCount <= 0) {
+      return bound.cost;
+    }
+    return Math.max(0.0, bound.cost - minNormalViaCost);
   }
 
   /** Calculates the lower bound distance from box on layer. */
   public double calculate(IntBox box, int layer) {
+    return lowerBound(box, layer).cost;
+  }
+
+  private LowerBound lowerBound(IntBox box, int layer) {
     if (boxIsEmpty) {
-      return Integer.MAX_VALUE;
+      return new LowerBound();
     }
 
     double componentSideDeltaX;
@@ -224,15 +231,16 @@ public class DestinationDistance {
       innerSideMinDelta = innerSideDeltaX;
     }
 
-    double result = Integer.MAX_VALUE;
+    LowerBound result = new LowerBound();
 
     if (layer == 0) { // calculate shortest distance to component side box
       // calculate one layer distance
 
       if (!componentSideBoxIsEmpty) {
-        result =
+        result.assign(
             box.weightedDistance(
-                componentSideBox, traceCosts[0].horizontal(), traceCosts[0].vertical());
+                componentSideBox, traceCosts[0].horizontal(), traceCosts[0].vertical()),
+            0);
       }
 
       if (activeLayerCount <= 1) {
@@ -254,7 +262,7 @@ public class DestinationDistance {
                 + minNormalViaCost;
       }
 
-      result = Math.min(result, tmpDistance);
+      result.consider(tmpDistance, 1);
 
       // calculate two layer distance on component and solde side
       // with two vias
@@ -264,7 +272,7 @@ public class DestinationDistance {
               + componentSideMinDelta * minComponentInnerTraceCost
               + 2 * minNormalViaCost;
 
-      result = Math.min(result, tmpDistance);
+      result.consider(tmpDistance, 2);
 
       if (activeLayerCount == 2) {
         return result;
@@ -275,7 +283,7 @@ public class DestinationDistance {
       tmpDistance =
           innerSideMaxDelta + innerSideMinDelta * minComponentInnerTraceCost + minNormalViaCost;
 
-      result = Math.min(result, tmpDistance);
+      result.consider(tmpDistance, 1);
 
       // calculate three layer distance
 
@@ -283,10 +291,10 @@ public class DestinationDistance {
           solderSideMaxDelta
               + +minComponentSolderInnerTraceCost * solderSideMinDelta
               + 2 * minNormalViaCost;
-      result = Math.min(result, tmpDistance);
+      result.consider(tmpDistance, 2);
 
       tmpDistance = componentSideMaxDelta + componentSideMinDelta + 2 * minNormalViaCost;
-      result = Math.min(result, tmpDistance);
+      result.consider(tmpDistance, 2);
 
       if (activeLayerCount == 3) {
         return result;
@@ -294,21 +302,23 @@ public class DestinationDistance {
 
       tmpDistance = innerSideMaxDelta + innerSideMinDelta + 2 * minNormalViaCost;
 
-      result = Math.min(result, tmpDistance);
+      result.consider(tmpDistance, 2);
 
       // calculate four layer distance
 
       tmpDistance = solderSideMaxDelta + solderSideMinDelta + 3 * minNormalViaCost;
 
-      return Math.min(result, tmpDistance);
+      result.consider(tmpDistance, 3);
+      return result;
     }
     if (layer == layerCount - 1) { // calculate the shortest distance to solder side box
       // calculate one layer distance
 
       if (!solderSideBoxIsEmpty) {
-        result =
+        result.assign(
             box.weightedDistance(
-                solderSideBox, traceCosts[layer].horizontal(), traceCosts[layer].vertical());
+                solderSideBox, traceCosts[layer].horizontal(), traceCosts[layer].vertical()),
+            0);
       }
 
       // calculate two layer distance
@@ -324,16 +334,16 @@ public class DestinationDistance {
                 + minComponentSideTraceCost * componentSideMinDelta
                 + minNormalViaCost;
       }
-      result = Math.min(result, tmpDistance);
+      result.consider(tmpDistance, 1);
       tmpDistance =
           solderSideMaxDelta + solderSideMinDelta * minSolderInnerTraceCost + 2 * minNormalViaCost;
-      result = Math.min(result, tmpDistance);
+      result.consider(tmpDistance, 2);
       if (activeLayerCount <= 2) {
         return result;
       }
       tmpDistance =
           innerSideMinDelta * minSolderInnerTraceCost + innerSideMaxDelta + minNormalViaCost;
-      result = Math.min(result, tmpDistance);
+      result.consider(tmpDistance, 1);
 
       // calculate three layer distance
 
@@ -341,19 +351,20 @@ public class DestinationDistance {
           componentSideMaxDelta
               + minComponentSolderInnerTraceCost * componentSideMinDelta
               + 2 * minNormalViaCost;
-      result = Math.min(result, tmpDistance);
+      result.consider(tmpDistance, 2);
       tmpDistance = solderSideMaxDelta + solderSideMinDelta + 2 * minNormalViaCost;
-      result = Math.min(result, tmpDistance);
+      result.consider(tmpDistance, 2);
       if (activeLayerCount == 3) {
         return result;
       }
       tmpDistance = innerSideMaxDelta + innerSideMinDelta + 2 * minNormalViaCost;
-      result = Math.min(result, tmpDistance);
+      result.consider(tmpDistance, 2);
 
       // calculate four layer distance
 
       tmpDistance = componentSideMaxDelta + componentSideMinDelta + 3 * minNormalViaCost;
-      return Math.min(result, tmpDistance);
+      result.consider(tmpDistance, 3);
+      return result;
     }
 
     // calculate distance to inner layer box
@@ -361,31 +372,50 @@ public class DestinationDistance {
     // calculate one layer distance
 
     if (!innerSideBoxIsEmpty) {
-      result =
+      result.assign(
           box.weightedDistance(
-              innerSideBox, traceCosts[layer].horizontal(), traceCosts[layer].vertical());
+              innerSideBox, traceCosts[layer].horizontal(), traceCosts[layer].vertical()),
+          0);
     }
 
     // calculate two layer distance
 
     double tmpDistance = innerSideMaxDelta + innerSideMinDelta + minNormalViaCost;
 
-    result = Math.min(result, tmpDistance);
+    result.consider(tmpDistance, 1);
     tmpDistance =
         componentSideMaxDelta
             + componentSideMinDelta * minComponentInnerTraceCost
             + minNormalViaCost;
-    result = Math.min(result, tmpDistance);
+    result.consider(tmpDistance, 1);
     tmpDistance =
         solderSideMaxDelta + solderSideMinDelta * minSolderInnerTraceCost + minNormalViaCost;
-    result = Math.min(result, tmpDistance);
+    result.consider(tmpDistance, 1);
 
     // calculate three layer distance
 
     tmpDistance = componentSideMaxDelta + componentSideMinDelta + 2 * minNormalViaCost;
-    result = Math.min(result, tmpDistance);
+    result.consider(tmpDistance, 2);
     tmpDistance = solderSideMaxDelta + solderSideMinDelta + 2 * minNormalViaCost;
-    return Math.min(result, tmpDistance);
+    result.consider(tmpDistance, 2);
+    return result;
+  }
+
+  /** Winning lower bound together with the via count of the candidate that produced it. */
+  private static final class LowerBound {
+    private double cost = Integer.MAX_VALUE;
+    private int viaCount;
+
+    private void assign(double candidate, int vias) {
+      this.cost = candidate;
+      this.viaCount = vias;
+    }
+
+    private void consider(double candidate, int vias) {
+      if (candidate < this.cost) {
+        assign(candidate, vias);
+      }
+    }
   }
 
   /** Calculates cheap distance for box on layer using cheap via cost. */

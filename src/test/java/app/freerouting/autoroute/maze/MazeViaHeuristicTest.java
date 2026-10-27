@@ -9,6 +9,7 @@ import app.freerouting.autoroute.drill.ExpansionDrill;
 import app.freerouting.autoroute.expansion.CompleteFreeSpaceExpansionRoom;
 import app.freerouting.autoroute.expansion.ExpansionDoor;
 import app.freerouting.geometry.planar.FloatLine;
+import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.io.specctra.DsnTestFixtures;
@@ -209,6 +210,26 @@ class MazeViaHeuristicTest {
   }
 
   @Test
+  void sameLayerRemainderIsNotDiscountedByAPrepaidVia() {
+    DestinationDistance distance = twoLayerDistance(500);
+    distance.join(new IntBox(7000, 0, 7000, 0), 0);
+    distance.join(new IntBox(0, 0, 0, 0), 1);
+    FloatPoint point = new FloatPoint(8000, 0);
+
+    assertEquals(1000, distance.calculate(point, 0), EPSILON);
+    assertEquals(1000, distance.calculateWithPrepaidVia(point, 0), EPSILON);
+  }
+
+  @Test
+  void crossLayerEstimateDropsExactlyOnePrepaidVia() {
+    DestinationDistance distance = twoLayerDistance(500);
+    distance.join(new IntBox(8000, 0, 8000, 0), 1);
+
+    assertEquals(8500, distance.calculate(new FloatPoint(0, 0), 0), EPSILON);
+    assertEquals(8000, distance.calculateWithPrepaidVia(new FloatPoint(0, 0), 0), EPSILON);
+  }
+
+  @Test
   void cheapViaEstimateDoesNotChangeLaterPrepaidPriorities() throws IOException {
     Context context = context(0, 50);
     double paidBase = context.control.minNormalViaCost;
@@ -217,6 +238,15 @@ class MazeViaHeuristicTest {
     MazeListElement queued = onlyQueued(context);
     assertEquals(paidBase, queued.expansionValue, EPSILON);
     assertEquals(paidBase, queued.sortingValue, EPSILON);
+  }
+
+  private static DestinationDistance twoLayerDistance(double viaCost) {
+    var costs =
+        new AutorouteControl.ExpansionCostFactor[] {
+          new AutorouteControl.ExpansionCostFactor(1, 1),
+          new AutorouteControl.ExpansionCostFactor(1, 1)
+        };
+    return new DestinationDistance(costs, new boolean[] {true, true}, viaCost, 0.8 * viaCost);
   }
 
   private static Context context(int sourceLayer, int viaCost) throws IOException {
