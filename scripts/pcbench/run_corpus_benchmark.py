@@ -143,9 +143,48 @@ def format_result_timing(seconds: float, suffix: str = "") -> str:
     return timing + ")"
 
 
-def format_recent_result(completed: int, total: int, label: str, timing: str, name: str) -> str:
-    """Progress, padded outcome, timing, then the full fixture name."""
-    return f"[{completed:4d}/{total:4d}] {label:<8} {timing} {name}"
+def format_recent_result(
+    completed: int,
+    total: int,
+    label: str,
+    timing: str,
+    name: str,
+    tier_place: tuple[int, int, str] | None = None,
+) -> str:
+    """Progress, padded outcome, timing, then the full fixture name.
+
+    ``tier_place`` is ``(index, tier size, tier)`` in run order, so the 12th
+    board of 48 tier C boards reads ``  12/ 48 of T-C``.
+    """
+    head = f"{completed:4d}/{total:4d}"
+    if tier_place is not None:
+        index, tier_total, tier = tier_place
+        head = f"{head} {index:3d}/{tier_total:3d} of T-{tier}"
+    return f"[{head}] {label:<8} {timing} {name}"
+
+
+def assign_tier_places(boards: list[dict[str, Any]]) -> dict[str, tuple[int, int, str]]:
+    """Map each board id to its 1-based index inside its tier.
+
+    ``boards`` must already be in benchmark order. The denominator counts the
+    selected boards of that tier, including ones skipped because they are
+    already cached.
+    """
+    totals: dict[str, int] = {}
+    order: list[tuple[str, str]] = []
+    for board in boards:
+        board_id = board.get("board_id")
+        if not isinstance(board_id, str) or not board_id:
+            continue
+        tier = str(board.get("tier") or "?")
+        totals[tier] = totals.get(tier, 0) + 1
+        order.append((board_id, tier))
+    seen: dict[str, int] = {}
+    places: dict[str, tuple[int, int, str]] = {}
+    for board_id, tier in order:
+        seen[tier] = seen.get(tier, 0) + 1
+        places[board_id] = (seen[tier], totals[tier], tier)
+    return places
 
 
 def format_worker_tag(wid: int, tier: str | None = None) -> str:
@@ -613,6 +652,40 @@ def format_duration(seconds: float) -> str:
     return f"{hours:02d}:{minutes:02d}:{secs:02d}"
 
 
+def format_elapsed_clock(seconds: float) -> str:
+    """Minutes and seconds for the worker clock. Minutes grow past 59."""
+    whole = max(0, int(seconds))
+    return f"{whole // 60:02d}:{whole % 60:02d}"
+
+
+def format_worker_progress(elapsed_seconds: float, expected_seconds: float | None) -> str:
+    """``[22:51]`` or ``[22:51 ~42m]`` when the estimate rounds to at least one minute."""
+    clock = format_elapsed_clock(elapsed_seconds)
+    if expected_seconds is None or expected_seconds <= 0:
+        return f"[{clock}]"
+    minutes = int(expected_seconds / 60 + 0.5)
+    if minutes <= 0:
+        return f"[{clock}]"
+    return f"[{clock} ~{minutes}m]"
+
+
+def expected_fixture_seconds(
+    reference_seconds: float,
+    tier: str,
+    scales: dict[str, float],
+) -> float | None:
+    """Seconds this fixture should take on the current build.
+
+    The catalog reference is that board's previous measured runtime. The tier
+    scale is the current build's speed on boards of the same difficulty, and
+    it stays at 1 until this run has enough evidence. The product is the same
+    estimate the suite ETA uses for that board.
+    """
+    if reference_seconds <= 0:
+        return None
+    return reference_seconds * scale_for(scales, tier)
+
+
 def duration_scales(completed: list[tuple[str, float, float]]) -> dict[str, float]:
     """Return per-tier speed ratios and a global ratio under the empty-string key.
 
@@ -722,6 +795,7 @@ def render_dashboard(
     slots = target_workers if target_workers is not None else max(1, len(running))
     remaining_secs, _shown_scale = estimate_remaining_seconds(queued, running, samples, slots)
     eta_str = format_duration(remaining_secs)
+    scales = duration_scales(samples)
     pct = (completed / total) * 100.0 if total > 0 else 0.0
 
     ver_part = f" | {C_BWHITE}Version:{C_RESET} {C_BCYAN}{version_label}{C_RESET}" if version_label else ""
@@ -757,9 +831,14 @@ def render_dashboard(
             info = worker_status[wid]
             if info.get("active"):
                 run_sec = int(now - info.get("start", now))
-                dur_str = f"{run_sec // 60:02d}:{run_sec % 60:02d}"
                 board = format_fixture_name(str(info.get("board", "unknown")))
                 tier = str(info.get("tier") or "?")
+                expected = expected_fixture_seconds(
+                    float(info.get("reference_seconds") or 0.0),
+                    tier,
+                    scales,
+                )
+                progress = format_worker_progress(run_sec, expected)
                 last = info.get("last_line", "")
                 last_time = info.get("last_line_time")
                 idle_sec = int(now - last_time) if last_time else run_sec
@@ -767,7 +846,7 @@ def render_dashboard(
                 lines.append(
                     f"  {C_BMAGENTA}{format_worker_tag(wid, tier)}{C_RESET} "
                     f"{C_BWHITE}{board:<37}{C_RESET} "
-                    f"{C_BYELLOW}[{dur_str}]{C_RESET} -> {C_GRAY}{last}{idle_str}{C_RESET}"
+                    f"{C_BYELLOW}{progress}{C_RESET} -> {C_GRAY}{last}{idle_str}{C_RESET}"
                 )
             else:
                 lines.append(f"  {C_BMAGENTA}{format_worker_tag(wid)}{C_RESET} {C_DIM}Idle{C_RESET}")
@@ -1014,6 +1093,8 @@ def main() -> int:
 
     if args.max_boards > 0:
         boards = boards[: args.max_boards]
+
+    tier_places = assign_tier_places(boards)
 
     jar_sha256 = compute_sha256(jar_path)
     jar_size = jar_path.stat().st_size
@@ -1473,7 +1554,9 @@ def main() -> int:
 
             if err is not None:
                 error_count += 1
-                msg = format_recent_result(completed, len(tasks), "ERROR", f"({err})", b_name)
+                msg = format_recent_result(
+                    completed, len(tasks), "ERROR", f"({err})", b_name, tier_places.get(b_name)
+                )
                 recent_messages.append(msg)
                 try:
                     save_corpus()
@@ -1527,7 +1610,12 @@ def main() -> int:
                     unrouted_count += 1
 
             msg = format_recent_result(
-                completed, len(tasks), label, format_result_timing(float(sec or 0.0), suffix), b_name
+                completed,
+                len(tasks),
+                label,
+                format_result_timing(float(sec or 0.0), suffix),
+                b_name,
+                tier_places.get(b_name),
             )
             recent_messages.append(msg)
 
