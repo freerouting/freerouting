@@ -163,7 +163,11 @@ public final class HoleSpacing {
       Item self,
       Collection<Item> ignore,
       BiPredicate<DrillItem, Double> report) {
-    int reach = (int) Math.ceil(radius + minimum) + 1;
+    double maxOtherDrill =
+        (board != null && board.library != null && board.library.padstacks != null)
+            ? board.library.padstacks.getMaxDrillRadius()
+            : 0.0;
+    int reach = (int) Math.ceil(radius + minimum + maxOtherDrill) + 1;
     IntPoint c = center.round();
     IntBox box = new IntBox(c.x - reach, c.y - reach, c.x + reach, c.y + reach);
     List<ShapeTree.TreeEntry> entries = new ArrayList<>();

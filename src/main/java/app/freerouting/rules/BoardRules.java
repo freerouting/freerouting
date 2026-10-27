@@ -51,7 +51,7 @@ public class BoardRules implements Serializable {
   private boolean useSlowAutorouteAlgorithm;
   private int holeClearance;
   private int minHoleToHole;
-  private boolean exactCopper = true;
+  private Boolean exactCopper = true;
   public transient double clearanceToleranceUm = 1.0;
   public transient java.util.Map<Integer, PinClearanceSource> pinClearanceSources;
 
@@ -249,7 +249,7 @@ public class BoardRules implements Serializable {
    * octagons overlap, instead of refusing the pair on the octagons.
    */
   public boolean isExactCopper() {
-    return exactCopper;
+    return this.exactCopper == null || this.exactCopper;
   }
 
   /** Sets whether to use exact copper clearance. */
@@ -579,5 +579,8 @@ public class BoardRules implements Serializable {
     int snapAngleNo = stream.readInt();
     this.traceAngleRestriction = AngleRestriction.valueOf(snapAngleNo);
     this.clearanceToleranceUm = 1.0;
+    if (this.exactCopper == null) {
+      this.exactCopper = Boolean.TRUE;
+    }
   }
 }

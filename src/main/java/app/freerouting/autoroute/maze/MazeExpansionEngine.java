@@ -390,6 +390,9 @@ final class MazeExpansionEngine {
           search.autorouteEngine.board, viaPadstack, drill.location)) {
         continue;
       }
+      if (!ctrl.viaHoleAllowed(search.autorouteEngine.board, viaInfo, drill.location, netNumbers)) {
+        continue;
+      }
       ConvexShape viaShape = viaPadstack.getShape(layer);
       double viaRadius = viaShape == null ? 0 : 0.5 * viaShape.maxWidth();
       double requiredRadius = Math.max(viaRadius, ctrl.traceHalfWidth[layer]);

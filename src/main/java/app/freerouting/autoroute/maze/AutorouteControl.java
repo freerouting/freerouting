@@ -241,6 +241,20 @@ public class AutorouteControl {
     return viaInfo.attachSmdAllowed() || ((viaInPad || viaTouchingPad) && this.attachSmdAllowed);
   }
 
+  /**
+   * Whether a via of {@code viaInfo} may have its drill hole at {@code location}: always, except
+   * under {@code viaTouchingPad} alone, where the hole must stay outside the own-net SMD pads it
+   * overlaps.
+   */
+  public boolean viaHoleAllowed(
+      RoutingBoard board, ViaInfo viaInfo, Point location, int[] netNumbers) {
+    return !viaTouchingPad
+        || viaInPad
+        || viaInfo.attachSmdAllowed()
+        || !app.freerouting.board.actions.ForcedViaInserter.holeInSmdPad(
+            board, viaInfo.getPadstack(), location, netNumbers);
+  }
+
   private static boolean isPureSmdNet(RoutingBoard board, int netNumber) {
     Collection<Item> netItems = board.getConnectableItems(netNumber);
     if (netItems.isEmpty()) {

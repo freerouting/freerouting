@@ -58,7 +58,7 @@ class ViaInPadTest {
   void settingIsOffByDefaultAndControlsViaAttachAllowed() {
     RoutingBoard board = readBoard(DSN);
     RouterSettings settings = new DefaultSettings().getSettings();
-    assertFalse(settings.autorouter.viaInPad);
+    assertFalse(Boolean.TRUE.equals(settings.autorouter.viaInPad));
 
     AutorouteControl controlOff = new AutorouteControl(board, 1, settings);
     assertTrue(controlOff.attachSmdAllowed); // forced for net with SMD pin
@@ -162,5 +162,33 @@ class ViaInPadTest {
     Via via = board.getVias().iterator().next();
     assertTrue(via.attachAllowed);
     assertTrue(new DesignRulesChecker(board, null).getAllClearanceViolations().isEmpty());
+  }
+
+  @Test
+  void autoDetectionFromDsnEnablesViaInPad() {
+    String dsnWithVia =
+        """
+        (pcb viainpad (resolution um 1) (unit um)
+          (structure (layer top (type signal)) (layer bottom (type signal))
+            (boundary (rect pcb 0 0 7000 6000)) (via V) (rule (width 150) (clearance 150)))
+          (placement
+            (component CA (place A 5000 5000 front 0)) (component CB (place B 5095 4751 front 0)))
+          (library
+            (image CA (pin PA 1 0 0)) (image CB (pin PB 1 0 0))
+            (padstack PA (shape (rect top -200 -300 200 300)) (attach off))
+            (padstack PB (shape (rect bottom -300 -200 300 200)) (attach off))
+            (padstack V (shape (circle top 700)) (shape (circle bottom 700)) (attach off)))
+          (network (net N (pins A-1 B-1)))
+          (wiring (via V 5000 5000 (net N))))
+        """;
+    app.freerouting.core.RoutingJob job = new app.freerouting.core.RoutingJob();
+    job.routerSettings = new DefaultSettings().getSettings();
+    app.freerouting.management.HeadlessBoardManager manager =
+        new app.freerouting.management.HeadlessBoardManager(job);
+    ByteArrayInputStream stream =
+        new ByteArrayInputStream(dsnWithVia.getBytes(StandardCharsets.UTF_8));
+    manager.loadFromSpecctraDsn(stream, null, null);
+    assertTrue(job.routerSettings.autorouter.viaInPad);
+    assertTrue(job.routerSettings.autorouter.viaTouchingPad);
   }
 }

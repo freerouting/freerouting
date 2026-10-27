@@ -121,19 +121,18 @@ public class Via extends DrillItem implements Serializable {
    */
   private void addHoleToHoleViolations(
       java.util.Collection<app.freerouting.drc.ClearanceViolation> violations) {
-    int minimum =
-        this.board != null && this.board.rules != null ? this.board.rules.getMinHoleToHole() : 0;
+    if (this.board == null || this.board.rules == null) {
+      return;
+    }
+    int minimum = this.board.rules.getMinHoleToHole();
     if (minimum <= 0
         || this.padstack == null
         || !app.freerouting.rules.HoleSpacing.hasHole(this.padstack)) {
       return;
     }
-    double toleranceUm =
-        (this.board != null && this.board.rules != null)
-            ? this.board.rules.clearanceToleranceUm
-            : 1.0;
+    double toleranceUm = this.board.rules.clearanceToleranceUm;
     double tolerance =
-        Double.isFinite(toleranceUm) && toleranceUm > 0
+        Double.isFinite(toleranceUm) && toleranceUm > 0 && this.board.communication != null
             ? toleranceUm
                 * Math.max(1, this.board.communication.resolution)
                 / app.freerouting.board.model.structure.Unit.scale(

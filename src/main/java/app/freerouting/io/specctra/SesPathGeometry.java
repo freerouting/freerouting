@@ -40,7 +40,7 @@ final class SesPathGeometry {
       double[] board, java.util.function.BiFunction<Double, Double, IntPoint> designPoint)
       throws IOException {
     List<Corner> corners = new ArrayList<>(board.length / 2);
-    for (int i = 0; i < board.length; i += 2) {
+    for (int i = 0; i + 1 < board.length; i += 2) {
       Corner c = null;
       if (designPoint != null) {
         IntPoint routed = designPoint.apply(board[i], board[i + 1]);
@@ -122,7 +122,7 @@ final class SesPathGeometry {
       double[] board, java.util.function.BiFunction<Double, Double, IntPoint> designPoint)
       throws IOException {
     List<Point> points = new ArrayList<>(board.length / 2);
-    for (int i = 0; i < board.length; i += 2) {
+    for (int i = 0; i + 1 < board.length; i += 2) {
       Point p = gridPoint(board[i], board[i + 1], designPoint);
       if (points.isEmpty() || !points.getLast().equals(p)) {
         points.add(p);

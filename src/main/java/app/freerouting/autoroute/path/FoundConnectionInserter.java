@@ -751,14 +751,15 @@ public final class FoundConnectionInserter {
       }
       foundSuitableSpan = true;
       if (ForcedViaInserter.check(
-          currentViaInfo,
-          location,
-          netNumbers,
-          this.ctrl.maxShoveTraceRecursionDepth,
-          this.ctrl.maxShoveViaRecursionDepth,
-          this.board,
-          this.ctrl.traceHalfWidth,
-          this.ctrl.traceClearanceClassIndex)) {
+              currentViaInfo,
+              location,
+              netNumbers,
+              this.ctrl.maxShoveTraceRecursionDepth,
+              this.ctrl.maxShoveViaRecursionDepth,
+              this.board,
+              this.ctrl.traceHalfWidth,
+              this.ctrl.traceClearanceClassIndex)
+          && this.ctrl.viaHoleAllowed(this.board, currentViaInfo, location, netNumbers)) {
         viaInfo = currentViaInfo;
         break;
       }

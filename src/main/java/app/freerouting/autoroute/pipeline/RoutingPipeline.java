@@ -33,16 +33,6 @@ public final class RoutingPipeline {
   private RoutingPipeline(RoutingJob job, Function<RoutingJob, BatchOptimizer> optimizerFactory) {
     this.job = job;
     normalizeRouterAlgorithm(job);
-    if (job.board != null) {
-      String chosen = TwoLayerBga.apply(job.routerSettings, job.board);
-      if (chosen != null) {
-        job.logInfo(chosen);
-      }
-      String stubs = ExitStubs.apply(job.routerSettings, job.board, this.exitStubItems);
-      if (stubs != null) {
-        job.logInfo(stubs);
-      }
-    }
     this.autorouter = new BatchAutorouter(job);
     this.optimizer = job.routerSettings.getRunOptimizer() ? optimizerFactory.apply(job) : null;
   }
@@ -97,6 +87,14 @@ public final class RoutingPipeline {
   public void run() {
     if (this.job != null && this.job.board != null) {
       this.job.board.awaitPostLoad();
+      String chosen = TwoLayerBga.apply(this.job.routerSettings, this.job.board);
+      if (chosen != null) {
+        this.job.logInfo(chosen);
+      }
+      String stubs = ExitStubs.apply(this.job.routerSettings, this.job.board, this.exitStubItems);
+      if (stubs != null) {
+        this.job.logInfo(stubs);
+      }
     }
     runRoutingStage();
     runOptimizationStage();
