@@ -971,6 +971,11 @@ public class MazeSearchEngine {
   private boolean init(Set<Item> startItems, Set<Item> destinationItems) {
     reduceTraceShapesAtTiePins(startItems, this.ctrl.netNumber, this.searchTree);
     reduceTraceShapesAtTiePins(destinationItems, this.ctrl.netNumber, this.searchTree);
+    for (Item currentItem : this.autorouteEngine.board.getConnectableItems(this.ctrl.netNumber)) {
+      ItemAutorouteInfo currentInfo = currentItem.getAutorouteInfo();
+      currentInfo.setStartInfo(false);
+      currentInfo.setDestinationInfo(false);
+    }
     // process the destination items
     boolean destinationOk = false;
     for (Item currentItem : destinationItems) {
@@ -979,6 +984,7 @@ public class MazeSearchEngine {
       }
       ItemAutorouteInfo currentInfo = currentItem.getAutorouteInfo();
       currentInfo.setStartInfo(false);
+      currentInfo.setDestinationInfo(true);
       boolean anyInactive = false;
       boolean anyActive = false;
       for (int i = 0; i < currentItem.treeShapeCount(this.searchTree); i++) {
@@ -1022,6 +1028,7 @@ public class MazeSearchEngine {
       }
       ItemAutorouteInfo currentInfo = currentItem.getAutorouteInfo();
       currentInfo.setStartInfo(true);
+      currentInfo.setDestinationInfo(false);
       if (currentItem instanceof Connectable connectable) {
         for (int i = 0; i < currentItem.treeShapeCount(searchTree); i++) {
           TileShape containedShape = connectable.getTraceConnectionShape(searchTree, i);
@@ -1064,6 +1071,9 @@ public class MazeSearchEngine {
         }
         if (currentDoor.isDestinationDoor()) {
           expansionDoorsDestination++;
+          continue;
+        }
+        if (!currentDoor.isStartDoor()) {
           continue;
         }
         TileShape safeConnectionShape = getWidthSafeTargetShape(currentDoor);

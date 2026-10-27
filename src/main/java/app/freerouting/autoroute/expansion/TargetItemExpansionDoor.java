@@ -44,7 +44,13 @@ public class TargetItemExpansionDoor implements ExpandableObject {
   /** Returns true if this door leads to a destination item rather than a start item. */
   public boolean isDestinationDoor() {
     ItemAutorouteInfo itemInfo = this.item.getAutorouteInfo();
-    return !itemInfo.isStartInfo();
+    return itemInfo.isDestinationInfo();
+  }
+
+  /** Returns true if this door leads to a start item. */
+  public boolean isStartDoor() {
+    ItemAutorouteInfo itemInfo = this.item.getAutorouteInfo();
+    return itemInfo.isStartInfo();
   }
 
   @Override

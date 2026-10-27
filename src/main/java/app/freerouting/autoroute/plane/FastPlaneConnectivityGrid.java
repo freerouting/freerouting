@@ -286,10 +286,10 @@ public class FastPlaneConnectivityGrid {
         long distY = Math.abs(cellY - y1);
         if (distY <= radius) {
           int deltaX = (int) Math.sqrt(radiusSq - distY * distY);
-          int sCol = Math.max(startCol, (segMinX - deltaX - originX) / cellSize);
-          int eCol = Math.min(endCol, (segMaxX + deltaX - originX) / cellSize);
-          if (sCol <= eCol) {
-            setRowSpan(obstacleMask, r, sCol, eCol);
+          int spanStartCol = Math.max(startCol, (segMinX - deltaX - originX) / cellSize);
+          int spanEndCol = Math.min(endCol, (segMaxX + deltaX - originX) / cellSize);
+          if (spanStartCol <= spanEndCol) {
+            setRowSpan(obstacleMask, r, spanStartCol, spanEndCol);
           }
         }
       }
