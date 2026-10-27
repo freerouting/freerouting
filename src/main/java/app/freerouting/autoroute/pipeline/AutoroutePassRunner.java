@@ -66,6 +66,15 @@ final class AutoroutePassRunner {
         reorderSingleThreadItems(autorouteItemList, passNo);
       }
 
+      // freerouting.net: the balls of ball grid parts first in the first pass, ring by ring
+      // (router.autorouter.ball_escape_order); a retry plan still goes ahead of them.
+      if (passNo == 1 && router.getBallEscapeOrder() != null) {
+        int moved = router.getBallEscapeOrder().moveToFront(autorouteItemList);
+        if (router.job != null) {
+          router.job.logDebug("Pass #1: the ball escape order puts " + moved + " ball(s) first.");
+        }
+      }
+
       long initialProgressStatisticsStart =
           BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
       router.progressStatistics = new BoardStatistics(router.board, null, false);

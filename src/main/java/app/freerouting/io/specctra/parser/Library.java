@@ -105,6 +105,15 @@ public class Library extends ScopeKeyword {
       scopeParameter.file.newLine();
       scopeParameter.file.write("(absolute on)");
     }
+    if (!scopeParameter.compatMode && padstack.explicitDrillRadius != null) {
+      scopeParameter.file.newLine();
+      double dsnDia =
+          scopeParameter.coordinateTransform.boardToDsn(2 * padstack.explicitDrillRadius);
+      scopeParameter.file.write(
+          "(freerouting_drill_diameter "
+              + (dsnDia == (long) dsnDia ? String.valueOf((long) dsnDia) : String.valueOf(dsnDia))
+              + ")");
+    }
     scopeParameter.file.endScope();
   }
 
@@ -116,6 +125,7 @@ public class Library extends ScopeKeyword {
     String padstackName;
     boolean isDrilllable = true;
     boolean placedAbsolute = false;
+    Double drillDiameter = null;
     Collection<Shape> shapeList = new LinkedList<>();
     try {
       Object nextToken = scanner.nextToken();
@@ -163,6 +173,23 @@ public class Library extends ScopeKeyword {
             isDrilllable = DsnFile.readOnOffScope(scanner);
           } else if (nextToken == Keyword.ABSOLUTE) {
             placedAbsolute = DsnFile.readOnOffScope(scanner);
+          } else if ("freerouting_drill_diameter".equals(nextToken)) {
+            Object diaToken = scanner.nextToken();
+            double diameter = Double.NaN;
+            if (diaToken instanceof Integer intVal) {
+              diameter = intVal.doubleValue();
+            } else if (diaToken instanceof Double doubleVal) {
+              diameter = doubleVal;
+            } else if (diaToken instanceof Float floatVal) {
+              diameter = floatVal.doubleValue();
+            }
+            if (!Double.isFinite(diameter)
+                || diameter < 0
+                || scanner.nextToken() != Keyword.CLOSED_BRACKET) {
+              FRLogger.warn("Invalid native drill diameter in padstack '" + padstackName + "'");
+              return false;
+            }
+            drillDiameter = diameter;
           } else {
             ScopeKeyword.skipScope(scanner);
           }
@@ -340,6 +367,9 @@ public class Library extends ScopeKeyword {
     Padstack padstack =
         boardPadstacks.add(
             padstackName, padstackShapes, auxiliaryShapes, isDrilllable, placedAbsolute);
+    if (drillDiameter != null) {
+      padstack.explicitDrillRadius = coordinateTransform.dsnToBoard(drillDiameter) / 2.0;
+    }
     if (hasNonConvex) {
       padstack.hasNonConvexGeometry = true;
     }

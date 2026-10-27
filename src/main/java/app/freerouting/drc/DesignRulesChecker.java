@@ -74,9 +74,10 @@ public class DesignRulesChecker {
 
           // Create a unique key using sorted IDs to avoid duplicates
           String key =
-              id1 < id2
-                  ? id1 + "-" + id2 + "-" + violation.layer
-                  : id2 + "-" + id1 + "-" + violation.layer;
+              (id1 < id2
+                      ? id1 + "-" + id2 + "-" + violation.layer
+                      : id2 + "-" + id1 + "-" + violation.layer)
+                  + (violation.holeToHole ? "-h" : "");
 
           if (!seenViolations.contains(key)) {
             seenViolations.add(key);
@@ -560,13 +561,25 @@ public class DesignRulesChecker {
 
     // Determine violation type
     String type = "clearance";
-    if (isHole(violation.firstItem) || isHole(violation.secondItem)) {
+    if (violation.holeToHole) {
+      type = "hole_to_hole";
+    } else if (isHole(violation.firstItem) || isHole(violation.secondItem)) {
       type = "holeClearance";
     }
 
     // Create violation description
     String description;
-    if ("holeClearance".equals(type)) {
+    if ("hole_to_hole".equals(type)) {
+      description =
+          "Drilled holes too close together: %s and %s (expected: %.4f %s, actual: %.4f %s)"
+              .formatted(
+                  firstItemDesc,
+                  secondItemDesc,
+                  convertCoordinate(violation.expectedClearance, coordinateUnit),
+                  coordinateUnit,
+                  convertCoordinate(violation.actualClearance, coordinateUnit),
+                  coordinateUnit);
+    } else if ("holeClearance".equals(type)) {
       description =
           "Hole clearance violation between %s and %s (expected: %.4f %s, actual: %.4f %s)"
               .formatted(
