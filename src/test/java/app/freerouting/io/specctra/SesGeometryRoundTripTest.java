@@ -12,6 +12,7 @@ import app.freerouting.board.model.structure.Unit;
 import app.freerouting.board.state.Communication;
 import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.geometry.planar.IntBox;
+import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;
@@ -135,29 +136,33 @@ class SesGeometryRoundTripTest {
   }
 
   @Test
-  void nonzeroSubgridSegmentIsRejectedInsteadOfBecomingPointCopper() throws Exception {
+  void aSegmentBelowTheBoardsPrecisionReadsAsPointCopper() throws Exception {
     BasicBoard target = board(Unit.UM, 10, 10);
     String session =
-        "(session unsupported (routes (resolution um 10) (network_out (net TEST (wire (path F.Cu 20"
+        "(session sub (routes (resolution um 10) (network_out (net TEST (wire (path F.Cu 20"
             + " 100 100 100.00000000000001 100))))))";
     SesImportSummary summary =
         SesReader.read(new ByteArrayInputStream(session.getBytes(StandardCharsets.UTF_8)), target);
-    assertEquals(0, summary.wiresImported());
-    assertEquals(1, summary.errorsEncountered());
-    assertTrue(traces(target).isEmpty());
+    assertEquals(0, summary.errorsEncountered());
+    assertEquals(1, summary.wiresImported());
+    PolylineTrace trace = traces(target).getFirst();
+    assertEquals(new IntPoint(100, 100), trace.firstCorner());
+    assertEquals(trace.firstCorner(), trace.lastCorner());
   }
 
   @Test
-  void nonIntegerSupportingLineIsRejectedWithoutMovingCopper() throws Exception {
+  void cornersWithoutAnIntegerLineReadRoundedToTheGrid() throws Exception {
     BasicBoard target = board(Unit.UM, 10, 10);
     String session =
         "(session unsupported (routes (resolution um 10) (network_out (net TEST (wire (path F.Cu 20"
             + " 100.1 100.2 110.1 110.2))))))";
     SesImportSummary summary =
         SesReader.read(new ByteArrayInputStream(session.getBytes(StandardCharsets.UTF_8)), target);
-    assertEquals(0, summary.wiresImported());
-    assertEquals(1, summary.errorsEncountered());
-    assertTrue(traces(target).isEmpty());
+    assertEquals(0, summary.errorsEncountered());
+    assertEquals(1, summary.wiresImported());
+    PolylineTrace trace = traces(target).getFirst();
+    assertEquals(new IntPoint(100, 100), trace.firstCorner());
+    assertEquals(new IntPoint(110, 110), trace.lastCorner());
   }
 
   @ParameterizedTest

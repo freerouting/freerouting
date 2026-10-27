@@ -11,6 +11,7 @@ import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Via;
 import app.freerouting.core.library.Padstack;
+import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -147,7 +148,8 @@ final class MazeExpansionEngine {
     int fromRoomLayer = fromElement.sectionNoOfDoor;
     DrillPage drillPage = (DrillPage) fromElement.door;
     Collection<ExpansionDrill> drillList =
-        drillPage.getDrills(search.autorouteEngine, ctrl.attachSmdAllowed);
+        drillPage.getDrills(
+            search.autorouteEngine, ctrl.attachSmdAllowed, ctrl.centreOfGravityViaCandidate);
     if (search.fanoutDiagnostics.enabled()) {
       search.fanoutDiagnostics.trace(
           "drill_page_scan",
@@ -384,6 +386,13 @@ final class MazeExpansionEngine {
       if (layer < viaPadstack.fromLayer() || layer > viaPadstack.toLayer()) {
         continue;
       }
+      if (!app.freerouting.rules.HoleSpacing.clear(
+          search.autorouteEngine.board, viaPadstack, drill.location)) {
+        continue;
+      }
+      if (!ctrl.viaHoleAllowed(search.autorouteEngine.board, viaInfo, drill.location, netNumbers)) {
+        continue;
+      }
       ConvexShape viaShape = viaPadstack.getShape(layer);
       double viaRadius = viaShape == null ? 0 : 0.5 * viaShape.maxWidth();
       double requiredRadius = Math.max(viaRadius, ctrl.traceHalfWidth[layer]);
@@ -391,7 +400,7 @@ final class MazeExpansionEngine {
           ForcedViaInserter.checkLayer(
               requiredRadius,
               viaInfo.getClearanceClassIndex(),
-              viaInfo.attachSmdAllowed(),
+              ctrl.viaAttachAllowed(viaInfo),
               roomShape,
               drill.location,
               layer,
@@ -400,7 +409,8 @@ final class MazeExpansionEngine {
               0,
               search.autorouteEngine.board,
               ctrl.traceHalfWidth[layer],
-              ctrl.traceClearanceClassIndex);
+              ctrl.traceClearanceClassIndex,
+              viaShape instanceof Circle);
       if (result == ForcedPadRouter.CheckDrillResult.DRILLABLE) {
         return result;
       }
