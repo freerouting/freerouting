@@ -8,6 +8,7 @@ import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.model.structure.BoardOutline;
 import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.board.model.structure.Unit;
+import app.freerouting.board.searchtree.ExactCopper;
 import app.freerouting.board.searchtree.SearchTreeObject;
 import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.board.trace.PolylineTrace;
@@ -15,6 +16,7 @@ import app.freerouting.datastructures.ShapeTree;
 import app.freerouting.datastructures.ShapeTree.TreeEntry;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.drc.ClearanceViolation;
+import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
@@ -378,10 +380,19 @@ public abstract class Item
     ShapeSearchTree drcTree = board.searchTreeManager.getUncompensatedTree();
     for (int i = 0; i < treeShapeCount(drcTree); i++) {
       TileShape currentTileShape = getTreeShape(drcTree, i);
+      // Erik Gavriluk (freerouting.net): a pin's or via's copper (a circle, a turned pad),
+      // measured where the tiles overlap (router.exact_copper).
+      boolean exactCopper = board.rules.isExactCopper() && !drcTree.isClearanceCompensationUsed();
+      ExactCopper exactThis = exactCopper ? drcTree.exactCopperOf(this, i) : null;
       // Erik Gavriluk (freerouting.net): test only items that are obstacles to this item
       Collection<TreeEntry> currentOverlappingItems =
           drcTree.overlappingTreeEntriesWithClearance(
-              currentTileShape, shapeLayer(i), new int[0], this.clearanceClassIndex, this);
+              currentTileShape,
+              shapeLayer(i),
+              new int[0],
+              this.clearanceClassIndex,
+              this,
+              exactThis);
       for (TreeEntry currentEntry : currentOverlappingItems) {
         if (!(currentEntry.object instanceof Item currentItem) || currentEntry.object == this) {
           continue;
@@ -464,10 +475,19 @@ public abstract class Item
             continue;
           }
 
-          // Calculate the expected minimum clearance between these two shapes
+          // Calculate the expected minimum clearance between these two shapes.
+          // KiCad keeps no copper clearance within a net; items of one net that are still
+          // obstacles to each other (a via and an own-net pad it may not overlap) only may not
+          // overlap.
+          boolean sameNet = this.sharesNet(currentItem);
           double minimumClearance =
-              board.rules.clearanceMatrix.getValue(
-                  currentItem.clearanceClassIndex, this.clearanceClassIndex, shapeLayer(i), false);
+              sameNet
+                  ? 0
+                  : board.rules.clearanceMatrix.getValue(
+                      currentItem.clearanceClassIndex,
+                      this.clearanceClassIndex,
+                      shapeLayer(i),
+                      false);
 
           int clComp1 = (int) Math.round(0.5 * minimumClearance);
           int clComp2 = (int) Math.round(minimumClearance - clComp1);
@@ -477,9 +497,47 @@ public abstract class Item
 
           TileShape intersection = enlargedShape1.intersection(enlargedShape2);
           if (intersection.dimension() == 2) {
+            Circle exact1 = null;
+            Circle exact2 = null;
+            ShapeSearchTree defaultTree = board.searchTreeManager.getDefaultTree();
+            if (this instanceof DrillItem drill1
+                && currentItem instanceof DrillItem drill2
+                && drill1.getShapeOnLayer(shapeLayer(i)) instanceof Circle circle1
+                && drill2.getShapeOnLayer(shapeLayer(i)) instanceof Circle circle2
+                && defaultTree.drillHoleClearanceDelta(drill1, circle1, shapeLayer(i)) == 0
+                && defaultTree.drillHoleClearanceDelta(drill2, circle2, shapeLayer(i)) == 0) {
+              exact1 = circle1;
+              exact2 = circle2;
+            }
+            boolean exactCircles = exact1 != null && exact2 != null;
+            double circleGap =
+                exactCircles
+                    ? exact1.center.distance(exact2.center) - exact1.radius - exact2.radius
+                    : 0;
+            // freerouting.net (router.exact_copper): a pin's or via's copper (with the hole
+            // envelope its tile carries, so the drill's hole clearance does not disappear)
+            // against the other copper; a turned pad's octagon reaches past its slanted edges.
+            ExactCopper exactOther =
+                exactCopper
+                    ? drcTree.exactCopperOf(currentItem, currentEntry.shapeIndexInObject)
+                    : null;
+            boolean measuredCopper = false;
+            double copperGap = 0;
+            if (exactThis != null || exactOther != null) {
+              ExactCopper copper1 = exactThis != null ? exactThis : ExactCopper.of(shape1);
+              ExactCopper copper2 = exactOther != null ? exactOther : ExactCopper.of(shape2);
+              if (copper1 != null && copper2 != null) {
+                measuredCopper = true;
+                copperGap = ExactCopper.distance(copper1, copper2);
+              }
+            }
             double actualClearance =
-                calculateClearanceBetweenTwoShapes(
-                    shape1, shape2, minimumClearance, clComp1, clComp2);
+                measuredCopper
+                    ? copperGap
+                    : exactCircles
+                        ? Math.max(0, circleGap)
+                        : calculateClearanceBetweenTwoShapes(
+                            shape1, shape2, minimumClearance, clComp1, clComp2);
 
             double shortfall = minimumClearance - actualClearance;
             double boardUnitToUmFactor =
@@ -504,7 +562,9 @@ public abstract class Item
             // whatever the clearance.
             if (shortfallUm > toleranceUm
                 || (minimumClearance <= 0
-                    && overlapsBeyond(shape1, shape2, toleranceUm / boardUnitToUmFactor))) {
+                    && (exactCircles
+                        ? -circleGap * boardUnitToUmFactor > toleranceUm
+                        : overlapsBeyond(shape1, shape2, toleranceUm / boardUnitToUmFactor)))) {
               if ((smallestClearance < 0) || (actualClearance < smallestClearance)) {
                 smallestClearance = actualClearance;
               }
@@ -945,7 +1005,9 @@ public abstract class Item
 
   /** Fixes the item. */
   public void setFixedState(FixedState fixedState) {
+    FixedState oldState = this.fixedState;
     this.fixedState = fixedState;
+    noteIfPreservedChanged(oldState);
   }
 
   /** Returns false, if this item is an obstacle for vias with the input net number. */
@@ -953,11 +1015,45 @@ public abstract class Item
     return false;
   }
 
-  /** Unfixes the item, if it is not fixed by the system. */
+  /**
+   * Unfixes the item, if it is not fixed by the system or the input ({@link FixedState#isFix}). A
+   * preserved route on the board is also split where other copper of its net ends inside it: those
+   * junctions were contacts only while it was preserved ({@link Trace#isConnectionPoint}), and a
+   * mutable trace is joined at its end corners, so without the split tail removal deleted the span
+   * between two branches and pull-tight moved it off a branch (upstream #993). {@link
+   * #setFixedState} does not split: its callers that unfix copper remove it.
+   */
   public void unfix() {
-    if (fixedState != FixedState.SYSTEM_FIXED) {
+    if (fixedState != null && !fixedState.isFix()) {
+      FixedState oldState = fixedState;
+      List<Point> junctions =
+          oldState.isPreservedRoute() && this instanceof Trace trace && isOnTheBoard()
+              ? trace.interiorJunctions()
+              : null;
       fixedState = FixedState.UNFIXED;
+      noteIfPreservedChanged(oldState);
+      if (junctions != null && !junctions.isEmpty()) {
+        ((Trace) this).splitAt(junctions);
+      }
     }
+  }
+
+  private void noteIfPreservedChanged(FixedState oldState) {
+    if (this instanceof Trace
+        && (oldState != null && oldState.isPreservedRoute())
+            != (this.fixedState != null && this.fixedState.isPreservedRoute())) {
+      if (this.board != null) {
+        this.board.noteNetAssignmentChanged();
+      }
+    }
+  }
+
+  /**
+   * Returns whether this item is a preserved route: user-fixed (DSN route/protect) or input-fixed
+   * (DSN fix wire / locked KiCad track).
+   */
+  public boolean isPreservedRoute() {
+    return this.fixedState != null && this.fixedState.isPreservedRoute();
   }
 
   /** Returns true, if this item is an unfixed trace or via, so it can be routed by auto-router. */

@@ -3,8 +3,10 @@ package app.freerouting.io.specctra;
 import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.core.library.Padstack;
+import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;
+import app.freerouting.geometry.planar.RationalPoint;
 import app.freerouting.io.specctra.parser.IJFlexScanner;
 import app.freerouting.io.specctra.parser.Keyword;
 import app.freerouting.io.specctra.parser.LayerStructure;
@@ -17,7 +19,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.apache.commons.numbers.fraction.BigFraction;
 
 /**
@@ -37,6 +41,19 @@ public final class SesReader {
   private int wiresImported;
   private int viasImported;
   private int errorsEncountered;
+  private final List<SessionWire> wires = new ArrayList<>();
+
+  private record SessionWire(
+      BigDecimal[] coordinates,
+      BigFraction scale,
+      double[] board,
+      int layer,
+      int halfWidth,
+      int[] nets,
+      int clearanceClass,
+      FixedState fixed) {}
+
+  private record LayerPoint(int layer, IntPoint at) {}
 
   private SesReader(IJFlexScanner scanner, BasicBoard board, BigFraction scaleFactor) {
     this.scanner = scanner;
@@ -160,6 +177,14 @@ public final class SesReader {
 
   /** Processes the {@code (routes ...)} scope containing network data. */
   private void processRoutesScope() throws IOException {
+    try {
+      readRoutesScope();
+    } finally {
+      insertWires();
+    }
+  }
+
+  private void readRoutesScope() throws IOException {
     Object nextToken = null;
     for (; ; ) {
       final Object prevToken = nextToken;
@@ -343,22 +368,30 @@ public final class SesReader {
       if (layerIndex < 0 || layerIndex >= board.getLayerCount()) {
         throw new IOException("Invalid SES wire layer");
       }
-      Polyline polyline = SesPathGeometry.read(wirePath.coordinates(), sessionToBoardScale);
-      int halfWidth = SesPathGeometry.halfWidth(wirePath.width(), sessionToBoardScale);
+      BigDecimal[] coordinates = wirePath.coordinates();
+      BigFraction scale = sessionToBoardScale;
+      double[] boardCoordinates = new double[coordinates.length];
+      for (int i = 0; i < coordinates.length; i++) {
+        boardCoordinates[i] = coordinates[i].doubleValue() * scale.doubleValue();
+      }
+      SesPathGeometry.check(boardCoordinates);
+      int halfWidth = SesPathGeometry.halfWidth(wirePath.width(), scale);
 
       int clearanceClass =
           netClassOf(netNumbers)
               .defaultItemClearanceClasses
               .get(app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.TRACE);
 
-      // Import fixed copper exactly; normalization must not erase point copper or short segments.
-      var trace =
-          board.insertTraceWithoutCleaning(
-              polyline, layerIndex, halfWidth, netNumbers, clearanceClass, FixedState.USER_FIXED);
-      if (trace == null) {
-        return false;
-      }
-      wiresImported++;
+      wires.add(
+          new SessionWire(
+              coordinates,
+              scale,
+              boardCoordinates,
+              layerIndex,
+              halfWidth,
+              netNumbers,
+              clearanceClass,
+              FixedState.USER_FIXED));
       return true;
 
     } catch (Exception e) {
@@ -417,6 +450,83 @@ public final class SesReader {
           new BigDecimal[] {coordinates[0], coordinates[1], coordinates[0], coordinates[1]};
     }
     return new SessionPath(specctraLayerStructure.getNo(layer), numbers.getFirst(), coordinates);
+  }
+
+  /**
+   * Puts the session's wires on the board together, after its vias, so that a corner several wires
+   * share reloads the same way in each. A wire that restores exactly is read on the grid too when
+   * one of its rational corners rounds to a grid corner of a wire on its layer read on the grid.
+   */
+  private void insertWires() {
+    int count = wires.size();
+    Polyline[] exact = new Polyline[count];
+    boolean[] failed = new boolean[count];
+    boolean[] onGrid = new boolean[count];
+    Set<LayerPoint> gridCorners = new HashSet<>();
+    for (int i = 0; i < count; i++) {
+      try {
+        exact[i] = SesPathGeometry.exact(wires.get(i).coordinates(), wires.get(i).scale());
+      } catch (IOException _) {
+        failed[i] = true;
+      }
+      if (exact[i] == null && !failed[i]) {
+        onGrid[i] = true;
+        addGridCorners(wires.get(i), gridCorners);
+      }
+    }
+    for (boolean again = !gridCorners.isEmpty(); again; ) {
+      again = false;
+      for (int i = 0; i < count; i++) {
+        if (!onGrid[i]
+            && exact[i] != null
+            && rationalCornerOnGrid(exact[i], wires.get(i).layer, gridCorners)) {
+          onGrid[i] = true;
+          addGridCorners(wires.get(i), gridCorners);
+          again = true;
+        }
+      }
+    }
+    for (int i = 0; i < count; i++) {
+      SessionWire wire = wires.get(i);
+      try {
+        if (failed[i]) {
+          throw new IOException(
+              "A collinear reversal in a session wire cannot be read without losing copper");
+        }
+        Polyline polyline = onGrid[i] ? SesPathGeometry.grid(wire.board, null) : exact[i];
+        if (board.insertTraceWithoutCleaning(
+                polyline, wire.layer, wire.halfWidth, wire.nets, wire.clearanceClass, wire.fixed)
+            == null) {
+          FRLogger.warn("SesReader.processWireScope: the wire makes no trace on the board");
+          errorsEncountered++;
+          continue;
+        }
+        wiresImported++;
+      } catch (Exception e) {
+        FRLogger.warn("SesReader.processWireScope: failed to import wire — " + e.getMessage());
+        errorsEncountered++;
+      }
+    }
+    wires.clear();
+  }
+
+  private void addGridCorners(SessionWire wire, Set<LayerPoint> gridCorners) {
+    for (int i = 0; i + 1 < wire.board.length; i += 2) {
+      gridCorners.add(
+          new LayerPoint(
+              wire.layer, SesPathGeometry.gridPoint(wire.board[i], wire.board[i + 1], null)));
+    }
+  }
+
+  private static boolean rationalCornerOnGrid(
+      Polyline polyline, int layer, Set<LayerPoint> gridCorners) {
+    for (int i = 0; i < polyline.cornerCount(); i++) {
+      if (polyline.corner(i) instanceof RationalPoint corner
+          && gridCorners.contains(new LayerPoint(layer, corner.toFloat().round()))) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**

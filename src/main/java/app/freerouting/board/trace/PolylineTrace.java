@@ -24,6 +24,7 @@ import app.freerouting.geometry.planar.LineSegment;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.Shape;
+import app.freerouting.geometry.planar.Side;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
@@ -133,6 +134,27 @@ public class PolylineTrace extends Trace implements Serializable {
       return false;
     }
     return lines != null && lines.contains(point);
+  }
+
+  @Override
+  public boolean centreLineContains(Point point) {
+    if (point == null || lines == null || lines.lines == null) {
+      return false;
+    }
+    Line[] segmentLines = lines.lines;
+    for (int i = 1; i < segmentLines.length - 1; i++) {
+      if (segmentLines[i].sideOf(point) != Side.COLLINEAR) {
+        continue;
+      }
+      Side fromStart = segmentLines[i - 1].sideOf(point);
+      Side fromEnd = segmentLines[i + 1].sideOf(point);
+      if ((fromStart == Side.COLLINEAR || fromStart == segmentLines[i - 1].sideOf(lines.corner(i)))
+          && (fromEnd == Side.COLLINEAR
+              || fromEnd == segmentLines[i + 1].sideOf(lines.corner(i - 1)))) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /** Returns the polyline of this trace. */

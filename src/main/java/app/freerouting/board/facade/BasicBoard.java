@@ -108,6 +108,7 @@ public class BasicBoard implements Serializable {
   public int preExistingClearanceViolationsCount = 0;
   public transient int unfixableClearanceViolationsCount = 0;
   public transient Set<Integer> ruleBlockedPins;
+  public transient Set<Integer> tolerancePins;
   public transient app.freerouting.drc.ClearanceBaseline clearanceBaseline;
   public transient CompletableFuture<Void> postLoadFuture;
 
@@ -1523,6 +1524,17 @@ public class BasicBoard implements Serializable {
 
   private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
+    if (this.rules != null && this.rules.getMinHoleToHole() <= 0 && this.communication != null) {
+      this.rules.setMinHoleToHole(
+          (int)
+              Math.round(
+                  250.0
+                      * Math.max(1, this.communication.resolution)
+                      / app.freerouting.board.model.structure.Unit.scale(
+                          1.0,
+                          this.communication.unit,
+                          app.freerouting.board.model.structure.Unit.UM)));
+    }
     // insert the items on the board into the search trees
     searchTreeManager = new SearchTreeManager(this);
     normalizeSuppressedNetNos = new HashSet<>();

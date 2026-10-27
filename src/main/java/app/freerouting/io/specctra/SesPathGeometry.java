@@ -4,6 +4,7 @@ import app.freerouting.geometry.planar.Direction;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Limits;
 import app.freerouting.geometry.planar.Line;
+import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -18,6 +19,23 @@ final class SesPathGeometry {
   private record Corner(BigFraction x, BigFraction y) {}
 
   private SesPathGeometry() {}
+
+  static void check(double[] board) throws IOException {
+    if (board.length < 4 || board.length % 2 != 0) {
+      throw new IOException("A SES wire needs at least two complete corners");
+    }
+  }
+
+  static IntPoint gridPoint(
+      double x, double y, java.util.function.BiFunction<Double, Double, IntPoint> designPoint) {
+    if (designPoint != null) {
+      IntPoint routed = designPoint.apply(x, y);
+      if (routed != null) {
+        return routed;
+      }
+    }
+    return new IntPoint((int) Math.floor(x + 0.5), (int) Math.floor(y + 0.5));
+  }
 
   static Polyline read(double[] coordinates, double scale) throws IOException {
     if (coordinates.length < 4 || coordinates.length % 2 != 0) {
@@ -68,6 +86,14 @@ final class SesPathGeometry {
     }
   }
 
+  static Polyline read(
+      double[] board, java.util.function.BiFunction<Double, Double, IntPoint> designPoint)
+      throws IOException {
+    check(board);
+    Polyline restored = exact(board, designPoint);
+    return restored != null ? restored : grid(board, designPoint);
+  }
+
   private static Polyline readExact(BigDecimal[] coordinates, BigFraction scale)
       throws IOException {
     List<Corner> corners = new ArrayList<>();
@@ -89,6 +115,113 @@ final class SesPathGeometry {
       }
     }
     return build(corners);
+  }
+
+  /**
+   * Restores a path exactly, or returns null when only a grid reading can represent it. A collinear
+   * reversal still fails: snapping it would drop copper.
+   */
+  static Polyline exact(BigDecimal[] coordinates, BigFraction scale) throws IOException {
+    boolean precise = false;
+    for (BigDecimal coordinate : coordinates) {
+      precise |= coordinate.scale() >= 24;
+    }
+    try {
+      return read(coordinates, scale);
+    } catch (IOException failure) {
+      if (precise || isCollinearRejection(failure)) {
+        throw failure;
+      }
+      return null;
+    }
+  }
+
+  static Polyline exact(
+      double[] board, java.util.function.BiFunction<Double, Double, IntPoint> designPoint)
+      throws IOException {
+    List<Corner> corners = new ArrayList<>(board.length / 2);
+    for (int i = 0; i + 1 < board.length; i += 2) {
+      Corner corner = null;
+      if (designPoint != null) {
+        IntPoint routed = designPoint.apply(board[i], board[i + 1]);
+        if (routed != null) {
+          corner = new Corner(BigFraction.of(routed.x), BigFraction.of(routed.y));
+        }
+      }
+      if (corner == null) {
+        try {
+          corner = corner(board[i], board[i + 1]);
+        } catch (IOException _) {
+          return null;
+        }
+      }
+      if (!corners.isEmpty() && corners.getLast().equals(corner)) {
+        if (board[i - 2] != board[i] || board[i - 1] != board[i + 1]) {
+          return null;
+        }
+        continue;
+      }
+      corners.add(corner);
+    }
+    try {
+      Polyline polyline = build(corners);
+      if (corners.size() == 1) {
+        return polyline;
+      }
+      int count = polyline.cornerCount();
+      if (count < 2
+          || !near(polyline.firstCorner(), corners.getFirst())
+          || !near(polyline.lastCorner(), corners.getLast())) {
+        return null;
+      }
+      for (int i = 1; count == corners.size() && i < count - 1; i++) {
+        if (!near(polyline.corner(i), corners.get(i))) {
+          return null;
+        }
+      }
+      return polyline;
+    } catch (IOException failure) {
+      if (isCollinearRejection(failure)) {
+        throw failure;
+      }
+      return null;
+    }
+  }
+
+  static Polyline grid(
+      double[] board, java.util.function.BiFunction<Double, Double, IntPoint> designPoint)
+      throws IOException {
+    List<Point> points = new ArrayList<>(board.length / 2);
+    for (int i = 0; i + 1 < board.length; i += 2) {
+      Point point = gridPoint(board[i], board[i + 1], designPoint);
+      if (points.isEmpty() || !points.getLast().equals(point)) {
+        points.add(point);
+      }
+    }
+    List<Corner> corners = new ArrayList<>(points.size());
+    for (Point point : points) {
+      corners.add(
+          new Corner(BigFraction.of(((IntPoint) point).x), BigFraction.of(((IntPoint) point).y)));
+    }
+    rejectCollinearReversals(corners);
+    return points.size() == 1
+        ? pointCopper(corners.getFirst())
+        : new Polyline(points.toArray(Point[]::new));
+  }
+
+  private static boolean isCollinearRejection(IOException failure) {
+    return failure.getMessage() != null && failure.getMessage().contains("collinear");
+  }
+
+  private static boolean near(Point point, Corner corner) {
+    app.freerouting.geometry.planar.FloatPoint value = point.toFloat();
+    return Math.abs(value.x - corner.x.doubleValue()) <= 1e-6 * Math.max(1, Math.abs(value.x))
+        && Math.abs(value.y - corner.y.doubleValue()) <= 1e-6 * Math.max(1, Math.abs(value.y));
+  }
+
+  private static Polyline pointCopper(Corner corner) throws IOException {
+    Line[] crossing = crossingLines(corner);
+    return new Polyline(new Line[] {crossing[0], crossing[1], crossing[0]});
   }
 
   static int halfWidth(double width, double scale) throws IOException {

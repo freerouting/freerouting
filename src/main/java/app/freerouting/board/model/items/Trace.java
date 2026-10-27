@@ -18,8 +18,11 @@ import app.freerouting.rules.Net;
 import app.freerouting.rules.Nets;
 import app.freerouting.util.TextManager;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
@@ -120,6 +123,74 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   /** Returns true if the centerline of this trace contains the specified point. */
   public abstract boolean contains(Point point);
 
+  /** Returns true if point lies on the centre line of this trace, its corners included. */
+  public boolean centreLineContains(Point point) {
+    return contains(point);
+  }
+
+  @Override
+  public boolean isPreservedRoute() {
+    return getFixedState() != null && getFixedState().isPreservedRoute();
+  }
+
+  /**
+   * A preserved route cannot be split, so a branch that ends on it is joined where it ends: on such
+   * a trace every point of the centre line is a connection point. Any other trace is joined by
+   * splitting it there, so only its end corners are.
+   */
+  public boolean isConnectionPoint(Point point) {
+    if (point == null) {
+      return false;
+    }
+    return point.equals(firstCorner()) || point.equals(lastCorner()) || centreLineContains(point);
+  }
+
+  /** The points away from its end corners where this trace meets its contacts. */
+  public List<Point> interiorJunctions() {
+    List<Point> result = new ArrayList<>();
+    for (Item contact : getNormalContacts()) {
+      Point point = normalContactPoint(contact);
+      if (point != null
+          && !point.equals(firstCorner())
+          && !point.equals(lastCorner())
+          && !result.contains(point)) {
+        result.add(point);
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Splits this trace at each of points inside it; a point the trace cannot be split at is skipped.
+   */
+  public void splitAt(List<Point> points) {
+    List<Trace> pieces = new ArrayList<>();
+    pieces.add(this);
+    for (Point point : points) {
+      int index = -1;
+      for (int i = 0; i < pieces.size(); i++) {
+        Trace piece = pieces.get(i);
+        if (piece.isOnTheBoard()
+            && !point.equals(piece.firstCorner())
+            && !point.equals(piece.lastCorner())
+            && piece.centreLineContains(point)) {
+          index = i;
+          break;
+        }
+      }
+      if (index < 0) {
+        continue;
+      }
+      Trace target = pieces.get(index);
+      Trace[] split = target.split(point);
+      if (split == null || split.length == 0) {
+        continue;
+      }
+      pieces.remove(index);
+      pieces.addAll(Arrays.asList(split));
+    }
+  }
+
   @Override
   public Point normalContactPoint(Item other) {
     return other.normalContactPoint(this);
@@ -140,10 +211,10 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     Point op1 = other.firstCorner();
     Point op2 = other.lastCorner();
 
-    boolean thisFirstOnOther = p1 != null && other.contains(p1);
-    boolean thisLastOnOther = p2 != null && other.contains(p2);
-    boolean otherFirstOnThis = op1 != null && this.contains(op1);
-    boolean otherLastOnThis = op2 != null && this.contains(op2);
+    boolean thisFirstOnOther = p1 != null && other.isConnectionPoint(p1);
+    boolean thisLastOnOther = p2 != null && other.isConnectionPoint(p2);
+    boolean otherFirstOnThis = op1 != null && this.isConnectionPoint(op1);
+    boolean otherLastOnThis = op2 != null && this.isConnectionPoint(op2);
 
     Point uniquePoint = null;
     int count = 0;
@@ -213,12 +284,13 @@ public abstract class Trace extends Item implements Connectable, Serializable {
         if (item instanceof Trace otherTrace) {
           Point p1 = otherTrace.firstCorner();
           Point p2 = otherTrace.lastCorner();
-          if ((p1 != null && this.contains(p1)) || (p2 != null && this.contains(p2))) {
+          if ((p1 != null && this.centreLineContains(p1))
+              || (p2 != null && this.centreLineContains(p2))) {
             result.add(item);
           }
         } else if (item instanceof DrillItem drillItem) {
           Point center = drillItem.getCenter();
-          if (center != null && this.contains(center)) {
+          if (center != null && this.centreLineContains(center)) {
             result.add(item);
           }
         }
@@ -247,9 +319,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
           && currentItem.sharesLayer(this)
           && (ignoreNet || currentItem.sharesNet(this))) {
         if (currentItem instanceof Trace currentTrace) {
-          if (point.equals(currentTrace.firstCorner())
-              || point.equals(currentTrace.lastCorner())
-              || currentTrace.contains(point)) {
+          if (currentTrace.isConnectionPoint(point)) {
             result.add(currentItem);
           }
         } else if (currentItem instanceof DrillItem currentDrillItem) {

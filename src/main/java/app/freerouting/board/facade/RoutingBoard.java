@@ -1386,8 +1386,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
           break;
         }
         Item currentItem = (Item) currentObject;
-        if (currentItem.netNumbers.length <= 1
-            || currentItem.getFixedState() == FixedState.SYSTEM_FIXED) {
+        if (currentItem.netNumbers.length <= 1 || currentItem.getFixedState().isFix()) {
           continue;
         }
         if (currentObject instanceof Via) {

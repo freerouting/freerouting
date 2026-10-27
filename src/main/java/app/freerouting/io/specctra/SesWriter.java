@@ -322,7 +322,7 @@ public final class SesWriter {
     Collection<Item> netItems = board.getConnectableItems(netNumber);
     boolean headerWritten = false;
     for (Item currentItem : netItems) {
-      if (currentItem.getFixedState() == FixedState.SYSTEM_FIXED) {
+      if (currentItem.getFixedState().isFix()) {
         continue;
       }
       boolean isWire = currentItem instanceof PolylineTrace;
@@ -410,7 +410,7 @@ public final class SesWriter {
     }
     file.newLine();
     file.write("(type ");
-    if (fixedState == FixedState.SYSTEM_FIXED) {
+    if (fixedState.isFix()) {
       file.write("fix)");
     } else {
       file.write("protect)");

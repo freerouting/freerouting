@@ -396,7 +396,25 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     super.clearDerivedData();
     this.precalculatedFirstLayer = -1;
     this.precalculatedLastLayer = -1;
+    this.exactCopperCache = null;
   }
+
+  /**
+   * Cached copper per shape index, with the tree shape it was measured behind; invalidated with the
+   * tree shape (clearDerivedData).
+   */
+  public static class ExactCopperEntry {
+    public final TileShape treeShape;
+    public final app.freerouting.board.searchtree.ExactCopper copper;
+
+    public ExactCopperEntry(
+        TileShape treeShape, app.freerouting.board.searchtree.ExactCopper copper) {
+      this.treeShape = treeShape;
+      this.copper = copper;
+    }
+  }
+
+  public transient ExactCopperEntry[] exactCopperCache;
 
   /** Auxiliary class used in the method move_by. */
   private static class TraceInfo implements Comparable<TraceInfo> {

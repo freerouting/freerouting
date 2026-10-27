@@ -181,6 +181,20 @@ public class ShapeTraceEntries {
    */
   public boolean storeItems(
       Collection<Item> itemList, boolean isPadCheck, boolean copperSharingAllowed) {
+    return storeItems(itemList, isPadCheck, copperSharingAllowed, false);
+  }
+
+  /**
+   * Puts all obstacles in itemList into the internal sorted data structure. Returns false, if the
+   * list contains obstacles, which cannot be shoved aside. If isPadCheck, the check is for vias,
+   * otherwise it is for traces. If copperSharingAllowed, overlaps with traces or pads of the own
+   * net are allowed.
+   */
+  public boolean storeItems(
+      Collection<Item> itemList,
+      boolean isPadCheck,
+      boolean copperSharingAllowed,
+      boolean holeOnly) {
     for (Item currentItem : itemList) {
       if (!isPadCheck && currentItem instanceof ViaObstacleArea
           || currentItem instanceof ComponentObstacleArea) {
@@ -198,8 +212,15 @@ public class ShapeTraceEntries {
         return false;
       }
       if (currentItem instanceof Via via) {
-        if (isPadCheck || !containsOwnNet) {
+        if (!containsOwnNet) {
           shoveViaList.add(via);
+        }
+      } else if (isPadCheck && containsOwnNet && currentItem instanceof Pin ownPin) {
+        boolean mayOverlap =
+            holeOnly || (ownPin.drillAllowed() && (copperSharingAllowed || ownPin.viaMayAttach()));
+        if (!mayOverlap && overlapsCopper(ownPin)) {
+          this.foundObstacle = currentItem;
+          return false;
         }
       } else if (currentItem instanceof PolylineTrace currentTrace) {
 
@@ -225,6 +246,19 @@ public class ShapeTraceEntries {
     searchFromSide();
     resort();
     return calculateStackLevels();
+  }
+
+  /** Whether the checked shape overlaps {@code pin}'s copper on its layer (more than touching). */
+  private boolean overlapsCopper(Pin pin) {
+    for (int i = 0; i < pin.tileShapeCount(); i++) {
+      TileShape copper = pin.getTileShape(i);
+      if (pin.shapeLayer(i) == this.layer
+          && copper != null
+          && this.shape.intersection(copper).dimension() == 2) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
