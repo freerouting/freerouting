@@ -794,6 +794,11 @@ public class GlobalSettings implements Serializable {
             // Note: 0 is allowed and means no limit
             i++;
           }
+        } else if (args[i].startsWith("-spl")) {
+          if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
+            routerSettings.autorouter.stagnationPassLimit = Integer.decode(args[i + 1]);
+            i++;
+          }
         } else if (args[i].startsWith("-mt")) {
           if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
             routerSettings.optimizer.maxThreads = Integer.decode(args[i + 1]);

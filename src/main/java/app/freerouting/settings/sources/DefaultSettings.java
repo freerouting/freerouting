@@ -169,6 +169,12 @@ public class DefaultSettings implements SettingsSource {
    */
   public static final float DEFAULT_OPTIMIZER_IMPROVEMENT_THRESHOLD = 2.5F;
 
+  /**
+   * Default consecutive passes without score improvement before the autorouter stops. {@code 0} or
+   * negative disables stagnation detection and allows routing to proceed up to {@code max_passes}.
+   */
+  public static final int DEFAULT_STAGNATION_PASS_LIMIT = 10;
+
   private static final int PRIORITY = 0;
 
   @Override
@@ -186,6 +192,7 @@ public class DefaultSettings implements SettingsSource {
     settings.autorouter.algorithm = RouterSettings.ALGORITHM_CURRENT;
     settings.jobTimeoutString = "12:00:00";
     settings.autorouter.maxPasses = 0;
+    settings.autorouter.stagnationPassLimit = DEFAULT_STAGNATION_PASS_LIMIT;
     settings.autorouter.maxItems = Integer.MAX_VALUE;
     settings.tracePullTightAccuracy = 500;
     settings.viasAllowed = true;
