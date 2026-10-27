@@ -29,7 +29,7 @@ from .config import (
     API_SERVER_STARTUP_TIMEOUT,
     LOG_DIR,
 )
-from .gui_helpers import wx_show_error
+from .gui_helpers import wx_show_error, refill_board_zones
 
 logger = logging.getLogger("freerouting.ipc_router")
 
@@ -321,6 +321,7 @@ class IpcRouter:
 
             if ok:
                 logger.info("Successfully imported SES file into KiCad.")
+                refill_board_zones(board)
                 try:
                     if hasattr(pcbnew, "UpdateUserInterface"):
                         pcbnew.UpdateUserInterface()

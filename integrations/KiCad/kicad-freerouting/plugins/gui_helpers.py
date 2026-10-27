@@ -114,3 +114,34 @@ def has_pcbnew_api():
         return hasattr(pcbnew, "ExportSpecctraDSN") and hasattr(pcbnew, "ImportSpecctraSES")
     except ImportError:
         return False
+
+
+def refill_board_zones(board=None):
+    """Refill copper zones on the board after routing tracks/vias so clearances are carved out."""
+    import logging
+    logger = logging.getLogger("freerouting")
+    try:
+        import pcbnew
+    except ImportError:
+        return False
+
+    if board is None and hasattr(pcbnew, "GetBoard"):
+        try:
+            board = pcbnew.GetBoard()
+        except Exception:
+            return False
+
+    if board is None:
+        return False
+
+    try:
+        if hasattr(pcbnew, "ZONE_FILLER") and hasattr(board, "Zones"):
+            filler = pcbnew.ZONE_FILLER(board)
+            zones = board.Zones()
+            if zones is not None:
+                filler.Fill(zones)
+                logger.info("Re-filled copper zones after routing.")
+                return True
+    except Exception as e:
+        logger.warning(f"Could not refill copper zones: {e}")
+    return False
