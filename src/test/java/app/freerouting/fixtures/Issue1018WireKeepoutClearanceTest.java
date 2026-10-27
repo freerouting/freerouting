@@ -177,6 +177,10 @@ class Issue1018WireKeepoutClearanceTest extends RoutingFixtureTest {
 
     // 5. Trace obstacle check
     assertTrue(wireObstacle.isTraceObstacle(999), "Unrelated net must be a trace obstacle");
+
+    // 6. DrillPage skips drillable items, so a wire keepout must not carve a via hole.
+    assertTrue(wireObstacle.isDrillable(999), "Vias must be placeable inside a wire keepout");
+    assertTrue(wireObstacle.isDrillable(sampleVia.getNetNumber(0)));
   }
 
   @Test

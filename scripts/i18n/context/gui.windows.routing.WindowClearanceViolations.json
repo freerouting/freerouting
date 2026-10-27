@@ -198,5 +198,21 @@
       "via_keepout"
     ],
     "ui_role": "label"
+  },
+  "wire_keepout": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.windows.routing.WindowClearanceViolations"
+    ],
+    "english_hash": "6e2a2ae3bef05bb3ae90fbb5d17e203f1ea64f58ce7856faef97c498441c4b5f",
+    "grammatical_role": "fragment",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.windows.routing.WindowClearanceViolations",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
   }
 }

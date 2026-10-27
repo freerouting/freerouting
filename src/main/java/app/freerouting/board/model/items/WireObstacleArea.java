@@ -101,6 +101,12 @@ public class WireObstacleArea extends ObstacleArea {
     return !containsNet(netNumber);
   }
 
+  /** Vias are allowed. DrillPage carves holes only for items that are not drillable. */
+  @Override
+  public boolean isDrillable(int netNumber) {
+    return true;
+  }
+
   @Override
   public boolean isSelectedByFilter(ItemSelectionFilter filter) {
     if (!this.isSelectedByFixedFilter(filter)) {
