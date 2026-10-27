@@ -21,6 +21,7 @@ import java.util.TreeSet;
 public final class NetRoutingLedger {
 
   private final BasicBoard board;
+  private final List<ConductionArea> conductionAreas = new ArrayList<>();
   private boolean built;
   private List<Item>[] itemsByNet;
   private int[] incompleteByNet = new int[0];
@@ -36,6 +37,7 @@ public final class NetRoutingLedger {
   /** Drops the cache. The next read rebuilds it from the current item list. */
   public synchronized void invalidate() {
     built = false;
+    conductionAreas.clear();
     dirtyNets.clear();
     itemNets.clear();
     itemsByNet = emptyLists();
@@ -101,10 +103,14 @@ public final class NetRoutingLedger {
     for (int netNumber = 1; netNumber <= maxNet; netNumber++) {
       itemsByNet[netNumber] = new ArrayList<>();
     }
+    conductionAreas.clear();
     for (Item item : board.getItems()) {
       if (item instanceof Connectable) {
         addItemToLists(item);
         itemNets.put(item, item.netNumbers.clone());
+      }
+      if (item instanceof ConductionArea ca) {
+        conductionAreas.add(ca);
       }
     }
     maximumConnections = countMaximumConnections();
@@ -154,6 +160,9 @@ public final class NetRoutingLedger {
 
   private void addItem(Item item) {
     addItemToLists(item);
+    if (item instanceof ConductionArea ca && !conductionAreas.contains(ca)) {
+      conductionAreas.add(ca);
+    }
     markNets(item);
   }
 
@@ -171,9 +180,12 @@ public final class NetRoutingLedger {
       int netNumber = item.getNetNumber(index);
       if (netNumber >= 1 && netNumber < itemsByNet.length) {
         itemsByNet[netNumber].remove(item);
-        dirtyNets.add(netNumber);
       }
     }
+    if (item instanceof ConductionArea ca) {
+      conductionAreas.remove(ca);
+    }
+    markNets(item);
   }
 
   private void addItemToLists(Item item) {
@@ -192,6 +204,16 @@ public final class NetRoutingLedger {
       int netNumber = item.getNetNumber(index);
       if (netNumber >= 1 && netNumber < itemsByNet.length) {
         dirtyNets.add(netNumber);
+      }
+    }
+    for (ConductionArea ca : conductionAreas) {
+      if (ca.getLayer() >= item.firstLayer() && ca.getLayer() <= item.lastLayer()) {
+        for (int index = 0; index < ca.netCount(); index++) {
+          int netNumber = ca.getNetNumber(index);
+          if (netNumber >= 1 && netNumber < itemsByNet.length) {
+            dirtyNets.add(netNumber);
+          }
+        }
       }
     }
   }
