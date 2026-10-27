@@ -40,7 +40,7 @@ flowchart TD
         IO["**io.specctra**\nDSN / SES reader-writer"]
         BOARD["**board.model/facade/state/actions/trace + searchtree + optimize**\nLive board model · search trees · optimization"]
         RULES["**rules**\nNets · clearances"]
-        AR["**autoroute.pipeline + maze + expansion + drill + path + decoupling**\nRouting stages · maze · expansion · path · decoupling"]
+        AR["**autoroute.pipeline + maze + expansion + drill + path + decoupling + plane**\nRouting stages · maze · expansion · path · decoupling · plane"]
         DRC["**drc**\nDesign-rule checking"]
         GEO["**geometry.planar**\nShapes · points · math"]
     end
@@ -304,6 +304,12 @@ Read-only, deterministic identification of IC supply decoupling capacitors on a 
 Computes confidence scores, explainable bitmask reason codes, and candidate IC supply owners
 without modifying board items, routing traces, or locking copper.
 
+### `app.freerouting.autoroute.plane`
+
+High-performance topological plane connectivity analysis and fracture detection.
+
+- `FastPlaneConnectivityGrid` — Flat `long[]` bitset ($<32\text{ KB}$ RAM) with adaptive cell resolution. Replaces slow $O(N \cdot V^2)$ 2D polygon clipping (`Area.subtract`) with sub-millisecond dilated span rasterization and queue-based flood fill. Evaluates plane reachability on signal layers (`--router.plane_as_obstacle=false`), detects severed topological islands caused by foreign trace cuts, and enables `BatchAutorouter` to route DRC-clean physical bridge traces connecting disconnected plane pins across all CAD formats (Altium, EAGLE, KiCad).
+
 ### `app.freerouting.autoroute`
 
 Remaining autoroute support types and routing diagnostics. The implementation families are kept in
@@ -327,6 +333,8 @@ The rule model that defines nets, clearance classes, via rules, layer constraint
 ### `app.freerouting.drc`
 
 Design-rule checking and violation reporting. Use this package when you need to understand why a routed board is still invalid.
+
+- `NetRoutingLedger` — Incremental incomplete-connection ledger and net tracker. Dynamically tracks conduction areas and invalidates plane net caches whenever items on their layers are inserted or removed, ensuring real-time DRC accuracy for severed and bridged plane islands.
 
 ### Precise component placement
 
