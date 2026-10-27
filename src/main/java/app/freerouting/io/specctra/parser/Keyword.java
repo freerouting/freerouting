@@ -18,6 +18,7 @@ public class Keyword {
   public static final Keyword AUTOROUTE_SETTINGS = new Keyword("autoroute_settings");
   public static final Keyword BACK = new Keyword("back");
   public static final Keyword BOUNDARY = new Keyword("boundary");
+  public static final Keyword BOTTOM_REFERENCE = new Keyword("bottom_reference");
   public static final Keyword CHAMFER = new Keyword("chamfer");
   public static final Keyword CIRCUIT = new Keyword("circuit");
   public static final Keyword CIRCLE = new Keyword("circle");
@@ -31,8 +32,10 @@ public class Keyword {
   public static final Keyword CLEARANCE = new Keyword("clearance");
   public static final Keyword CLEARANCE_CLASS = new Keyword("clearance_class");
   public static final Keyword CLOSED_BRACKET = new Keyword(")");
+  public static final Keyword DELAY = new Keyword("delay");
   public static final Keyword DIFF_PAIR = new Keyword("diff_pair");
   public static final Keyword DIFF_PAIR_SKEW = new Keyword("diff_pair_skew");
+  public static final Keyword ENTRY = new Keyword("entry");
   public static final Keyword FANOUT = new Keyword("fanout");
   public static final Keyword FILLET = new Keyword("fillet");
   public static final Keyword FLIP_STYLE = new Keyword("flip_style");
@@ -41,6 +44,7 @@ public class Keyword {
   public static final Keyword FROMTO = new Keyword("fromto");
   public static final Keyword FRONT = new Keyword("front");
   public static final Keyword GENERATED_BY_FREEROUTING = new Keyword("generated_by_freerouting");
+  public static final Keyword GLOBAL_UNIT_DELAY = new Keyword("global_unit_delay");
   public static final Keyword HORIZONTAL = new Keyword("horizontal");
   public static final Keyword HOST_CAD = new Keyword("host_cad");
   public static final Keyword HOST_VERSION = new Keyword("host_version");
@@ -56,6 +60,8 @@ public class Keyword {
   public static final Keyword LOCK_TYPE = new Keyword("lock_type");
   public static final Keyword LOGICAL_PART = new Keyword("logical_part");
   public static final Keyword LOGICAL_PART_MAPPING = new Keyword("logical_part_mapping");
+  public static final Keyword MATCH_FROMTO_DELAY = new Keyword("match_fromto_delay");
+  public static final Keyword MATCH_NET_DELAY = new Keyword("match_net_delay");
   public static final Keyword MEANDER_PATTERN = new Keyword("meander_pattern");
   public static final Keyword NET = new Keyword("net");
   public static final Keyword NETWORK_OUT = new Keyword("network_out");
@@ -68,6 +74,7 @@ public class Keyword {
   public static final Keyword OPEN_BRACKET = new Keyword("(");
   public static final Keyword ORDER = new Keyword("order");
   public static final Keyword OUTLINE = new Keyword("outline");
+  public static final Keyword OVERRIDE = new Keyword("override");
   public static final Keyword PADSTACK = new Keyword("padstack");
   public static final ScopeKeyword PART_LIBRARY_SCOPE = new PartLibrary();
   public static final ScopeKeyword PARSER_SCOPE = new Parser();
@@ -84,6 +91,7 @@ public class Keyword {
   public static final Keyword PREFERRED_DIRECTION = new Keyword("preferred_direction");
   public static final Keyword PREFERRED_DIRECTION_TRACE_COSTS =
       new Keyword("preferred_direction_trace_costs");
+  public static final Keyword PSEC = new Keyword("psec");
   public static final Keyword SNAP_ANGLE = new Keyword("snap_angle");
   public static final Keyword POLYGON = new Keyword("polygon");
   public static final Keyword PN = new Keyword("PN");
@@ -106,13 +114,28 @@ public class Keyword {
   public static final Keyword SHOVE_FIXED = new Keyword("shove_fixed");
   public static final Keyword SIDE = new Keyword("side");
   public static final Keyword SIGNAL = new Keyword("signal");
+  public static final Keyword SIGNAL_FROM = new Keyword("signal_from");
+  public static final Keyword SIGNAL_LAYER = new Keyword("signal_layer");
+  public static final Keyword SIGNAL_LAYERS = new Keyword("signal_layers");
+  public static final Keyword SIGNAL_LAYER_FROM = new Keyword("signal_layer_from");
+  public static final Keyword SIGNAL_LAYER_TO = new Keyword("signal_layer_to");
+  public static final Keyword SIGNAL_TO = new Keyword("signal_to");
   public static final Keyword SINGLE_SIDED = new Keyword("single_sided");
   public static final Keyword SPARE = new Keyword("spare");
   public static final Keyword START_PASS_NO = new Keyword("start_pass_no");
   public static final Keyword START_RIPUP_COSTS = new Keyword("start_ripup_costs");
   public static final Keyword STRING_QUOTE = new Keyword("string_quote");
   public static final ScopeKeyword STRUCTURE_SCOPE = new Structure();
+  public static final Keyword TARGET_IMPEDANCE = new Keyword("target_impedance");
+  public static final Keyword TIME_DOMAIN = new Keyword("time_domain");
+  public static final Keyword TIME_LENGTH_FACTOR = new Keyword("time_length_factor");
+  public static final Keyword TIME_RESOLUTION = new Keyword("time_resolution");
+  public static final Keyword TOP_REFERENCE = new Keyword("top_reference");
+  public static final Keyword TRACK_PROPAGATION = new Keyword("track_propagation");
+  public static final Keyword TUNING_PROFILE = new Keyword("tuning_profile");
+  public static final Keyword TUNING_PROFILES = new Keyword("tuning_profiles");
   public static final Keyword TYPE = new Keyword("type");
+  public static final Keyword UNIT_DELAY = new Keyword("unit_delay");
   public static final Keyword USE_LAYER = new Keyword("use_layer");
   public static final Keyword USE_NET = new Keyword("use_net");
   public static final Keyword USE_VIA = new Keyword("use_via");
@@ -121,8 +144,15 @@ public class Keyword {
   public static final Keyword VIAS = new Keyword("vias");
   public static final Keyword VIA_AT_SMD = new Keyword("via_at_smd");
   public static final Keyword VIA_COSTS = new Keyword("via_costs");
+  public static final Keyword VIA_DELAY_OVERRIDE = new Keyword("via_delay_override");
+  public static final Keyword VIA_FROM = new Keyword("via_from");
   public static final Keyword VIA_KEEPOUT = new Keyword("via_keepout");
+  public static final Keyword VIA_LAYERS = new Keyword("via_layers");
+  public static final Keyword VIA_LAYER_FROM = new Keyword("via_layer_from");
+  public static final Keyword VIA_LAYER_TO = new Keyword("via_layer_to");
+  public static final Keyword VIA_PROPAGATION = new Keyword("via_propagation");
   public static final Keyword VIA_RULE = new Keyword("via_rule");
+  public static final Keyword VIA_TO = new Keyword("via_to");
   public static final Keyword WIDTH = new Keyword("width");
   public static final Keyword WINDOW = new Keyword("window");
   public static final Keyword WIRE = new Keyword("wire");

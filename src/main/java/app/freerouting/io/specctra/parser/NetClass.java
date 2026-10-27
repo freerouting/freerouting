@@ -24,6 +24,7 @@ public class NetClass {
   public double minTraceLength;
   public double maxTraceLength;
   public final Circuit.ReadScopeResult circuit;
+  public final String tuningProfile;
 
   /** Creates a new instance of NetClass without circuit scope. */
   public NetClass(
@@ -70,6 +71,39 @@ public class NetClass {
       double minTraceLength,
       double maxTraceLength,
       Circuit.ReadScopeResult circuit) {
+    this(
+        name,
+        traceClearanceClass,
+        netList,
+        rules,
+        layerRules,
+        useVia,
+        useLayer,
+        viaRule,
+        shoveFixed,
+        pullTight,
+        minTraceLength,
+        maxTraceLength,
+        circuit,
+        null);
+  }
+
+  /** Creates a new instance of NetClass with circuit and tuning profile scopes. */
+  public NetClass(
+      String name,
+      String traceClearanceClass,
+      Collection<String> netList,
+      Collection<Rule> rules,
+      Collection<Rule.LayerRule> layerRules,
+      Collection<String> useVia,
+      Collection<String> useLayer,
+      String viaRule,
+      boolean shoveFixed,
+      boolean pullTight,
+      double minTraceLength,
+      double maxTraceLength,
+      Circuit.ReadScopeResult circuit,
+      String tuningProfile) {
     this.name = name;
     this.traceClearanceClass = traceClearanceClass;
     this.netList = netList;
@@ -83,6 +117,7 @@ public class NetClass {
     this.minTraceLength = minTraceLength;
     this.maxTraceLength = maxTraceLength;
     this.circuit = circuit;
+    this.tuningProfile = tuningProfile;
   }
 
   public static NetClass readScope(IJFlexScanner scanner) {
@@ -109,6 +144,7 @@ public class NetClass {
       double minTraceLength = 0;
       double maxTraceLength = 0;
       Circuit.ReadScopeResult circuit = null;
+      String tuningProfile = null;
 
       Object nextToken = scanner.nextToken();
       if (nextToken == Keyword.CLOSED_BRACKET) {
@@ -166,6 +202,8 @@ public class NetClass {
               shoveFixed = DsnFile.readOnOffScope(scanner);
             } else if (nextToken == Keyword.PULL_TIGHT) {
               pullTight = DsnFile.readOnOffScope(scanner);
+            } else if (Keyword.matches(nextToken, Keyword.TUNING_PROFILE)) {
+              tuningProfile = DsnFile.readStringScope(scanner);
             } else {
               ScopeKeyword.skipScope(scanner);
             }
@@ -186,7 +224,8 @@ public class NetClass {
           pullTight,
           minTraceLength,
           maxTraceLength,
-          circuit);
+          circuit,
+          tuningProfile);
     } catch (IOException e) {
       FRLogger.error("NetClass.read_scope: IO error while scanning file", e);
       return null;

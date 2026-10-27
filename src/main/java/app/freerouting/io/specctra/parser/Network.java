@@ -58,6 +58,7 @@ public class Network extends ScopeKeyword {
     }
     writeViaInfos(scopeParameter.board.rules, scopeParameter.file, scopeParameter.identifierType);
     writeViaRules(scopeParameter.board.rules, scopeParameter.file, scopeParameter.identifierType);
+    writeTuningProfiles(scopeParameter);
     writeNetClasses(scopeParameter);
     scopeParameter.file.endScope();
   }
@@ -94,6 +95,20 @@ public class Network extends ScopeKeyword {
         identifierType.write(currentRule.getVia(i).getName(), file);
       }
       file.endScope();
+    }
+  }
+
+  public static void writeTuningProfiles(WriteScopeParameter scopeParameter) throws IOException {
+    if (scopeParameter.compatMode || scopeParameter.board.rules.tuningProfiles == null) {
+      return;
+    }
+    for (app.freerouting.rules.TuningProfile profile :
+        scopeParameter.board.rules.tuningProfiles.getAll()) {
+      TuningProfileParser.writeScope(
+          profile,
+          scopeParameter.file,
+          scopeParameter.identifierType,
+          scopeParameter.coordinateTransform);
     }
   }
 
@@ -135,6 +150,13 @@ public class Network extends ScopeKeyword {
       scopeParameter.file.newLine();
       scopeParameter.file.write("(via_rule ");
       scopeParameter.identifierType.write(netClass.getViaRule().name, scopeParameter.file);
+      scopeParameter.file.write(")");
+    }
+
+    if (!scopeParameter.compatMode && netClass.getTuningProfileName() != null) {
+      scopeParameter.file.newLine();
+      scopeParameter.file.write("(tuning_profile ");
+      scopeParameter.identifierType.write(netClass.getTuningProfileName(), scopeParameter.file);
       scopeParameter.file.write(")");
     }
 
@@ -478,6 +500,9 @@ public class Network extends ScopeKeyword {
         FRLogger.warn(
             "Network.insert_net_class: via rule not found at '" + boardNetClass.getName() + "'");
       }
+    }
+    if (netClass.tuningProfile != null) {
+      boardNetClass.setTuningProfileName(netClass.tuningProfile);
     }
     if (netClass.maxTraceLength > 0) {
       boardNetClass.setMaximumTraceLength(coordinateTransform.dsnToBoard(netClass.maxTraceLength));
@@ -1330,6 +1355,20 @@ public class Network extends ScopeKeyword {
             return false;
           }
           classClassList.add(currentClassClass);
+        } else if (Keyword.matches(nextToken, Keyword.TUNING_PROFILE)) {
+          app.freerouting.rules.TuningProfile profile =
+              TuningProfileParser.readScope(
+                  scopeParameter.scanner, scopeParameter.coordinateTransform);
+          if (profile != null) {
+            scopeParameter.boardHandling.getRoutingBoard().rules.tuningProfiles.add(profile);
+          }
+        } else if (Keyword.matches(nextToken, Keyword.TUNING_PROFILES)) {
+          List<app.freerouting.rules.TuningProfile> profileList =
+              TuningProfileParser.readMultipleProfilesScope(
+                  scopeParameter.scanner, scopeParameter.coordinateTransform);
+          for (app.freerouting.rules.TuningProfile profile : profileList) {
+            scopeParameter.boardHandling.getRoutingBoard().rules.tuningProfiles.add(profile);
+          }
         } else {
           skipScope(scopeParameter.scanner);
         }
