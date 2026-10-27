@@ -33,12 +33,25 @@ public class RouterSettings implements Serializable, Cloneable {
   public Double holeClearanceUm;
 
   /**
+   * KiCad's hole-to-hole minimum (Board Setup min_hole_to_hole), in micrometres: the edge-to-edge
+   * distance a via's drill keeps from every other drilled hole, of any net. Vias of one net keep
+   * only this from each other: KiCad keeps no copper clearance within a net. A KiCad board sets its
+   * own; a DSN, which has none, gets KiCad's default, 250. 0 turns it off.
+   */
+  @SerializedName("hole_to_hole_um")
+  public Double holeToHoleUm;
+
+  /**
    * Clearance violation shortfall tolerance in micrometers. Clearance shortfalls (expected -
    * actual) less than or equal to this threshold are treated as floating-point
    * rounding/discretization noise rather than electrical clearance violations.
    */
   @SerializedName("clearance_tolerance_um")
   public Double clearanceToleranceUm;
+
+  /** Erik Gavriluk (freerouting.net): the board checker's tolerance in micrometers. */
+  @SerializedName("drc_epsilon_um")
+  public Double drcEpsilonUm;
 
   /**
    * Explicit list of net names to treat as power-plane nets, enabling plane-routing mode and
@@ -100,6 +113,14 @@ public class RouterSettings implements Serializable, Cloneable {
    */
   @SerializedName("neck_width_um")
   public Double neckWidthUm;
+
+  /**
+   * Measure a pin's or via's copper (a circle, a pad polygon) where the search tree's octagons
+   * overlap, in the clearance query, the via checks, via shoves and moves, and the clearance
+   * checker, instead of refusing the pair on the octagons.
+   */
+  @SerializedName("exact_copper")
+  public Boolean exactCopper;
 
   /**
    * When true, a routed connection whose newly inserted traces/vias carry clearance violations is
@@ -662,7 +683,9 @@ public class RouterSettings implements Serializable, Cloneable {
     }
     result.copperToEdgeClearanceUm = this.copperToEdgeClearanceUm;
     result.holeClearanceUm = this.holeClearanceUm;
+    result.holeToHoleUm = this.holeToHoleUm;
     result.clearanceToleranceUm = this.clearanceToleranceUm;
+    result.drcEpsilonUm = this.drcEpsilonUm;
     result.meanderMinAmplitudeMm = this.meanderMinAmplitudeMm;
     result.meanderMaxAmplitudeMm = this.meanderMaxAmplitudeMm;
     result.meanderSpacingMm = this.meanderSpacingMm;
@@ -672,6 +695,7 @@ public class RouterSettings implements Serializable, Cloneable {
     result.planeNets = this.planeNets != null ? this.planeNets.clone() : null;
     result.planeAsObstacle = this.planeAsObstacle;
     result.neckWidthUm = this.neckWidthUm;
+    result.exactCopper = this.exactCopper;
     result.strictDrc = this.strictDrc;
     result.tracePullTightAccuracy = this.tracePullTightAccuracy;
     result.viasAllowed = this.viasAllowed;
