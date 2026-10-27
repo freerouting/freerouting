@@ -8,9 +8,9 @@ plugins {
     id 'maven-publish'
     id 'checkstyle'
     id "com.vanniktech.maven.publish" version "0.37.0"
-    id 'io.github.ben-manes.versions' version '0.65.0'
+    id 'io.github.ben-manes.versions' version '0.66.0'
     id "com.diffplug.spotless" version "8.10.4"
-    id 'org.graalvm.buildtools.native' version '1.1.14'
+    id 'org.graalvm.buildtools.native' version '1.1.17'
 }
 
 checkstyle {
@@ -155,7 +155,7 @@ dependencies {
     implementation 'org.apache.commons:commons-numbers-fraction:1.3'
 
     // https://github.com/google/gson
-    implementation 'com.google.code.gson:gson:2.14.0'
+    implementation 'com.google.code.gson:gson:2.15.0'
 
     // https://segment.com/docs - this one doesn't work because it's missing the Java 9+ module-info.class
     //implementation 'com.segment.analytics.java:analytics:+'
@@ -193,13 +193,13 @@ dependencies {
     // Add Google Cloud BigQuery dependencies for telemetry
     implementation 'com.google.auth:google-auth-library-oauth2-http:1.54.0'
     implementation 'com.google.api:gax:2.87.0'
-    implementation 'com.google.api-client:google-api-client-appengine:2.9.1'
+    implementation 'com.google.api-client:google-api-client-appengine:2.9.2'
     implementation 'com.google.cloud:google-cloud-core:2.77.0'
     implementation 'com.google.cloud:google-cloud-core-http:2.77.0'
     implementation 'com.google.cloud:google-cloud-bigquery:2.73.0'
 
     // Add Google Sheets API dependencies for API key validation
-    implementation 'com.google.api-client:google-api-client:2.9.1'
+    implementation 'com.google.api-client:google-api-client:2.9.2'
     implementation 'com.google.apis:google-api-services-sheets:v4-rev20260213-2.0.0'
 
     // Security constraints for transitive dependencies
@@ -220,7 +220,7 @@ dependencies {
     cliRuntimeClasspath 'org.apache.logging.log4j:log4j-api:2.26.1'
     cliRuntimeClasspath 'org.slf4j:slf4j-api:2.0.20'
     cliRuntimeClasspath 'org.slf4j:slf4j-nop:2.0.20'
-    cliRuntimeClasspath 'com.google.code.gson:gson:2.14.0'
+    cliRuntimeClasspath 'com.google.code.gson:gson:2.15.0'
     cliRuntimeClasspath 'org.apache.commons:commons-numbers-fraction:1.3'
 
     // ArchUnit: package-architecture enforcement
