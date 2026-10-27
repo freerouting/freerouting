@@ -367,10 +367,90 @@ public class HeadlessBoardManager implements BoardManager {
     this.edgeClearanceAppliedByOverride = false;
     applyCopperToEdgeClearanceOverride();
     applyHoleClearanceOverride();
+    applyHoleToHole();
+    applyExactCopperOverride();
+    applyViaInPadAutoDetection();
     applyPlaneNetsOverride();
     applyPlaneAsObstacleOverride();
     applyClearanceToleranceOverride();
     applyMeanderSettingsOverride();
+  }
+
+  private void applyHoleToHole() {
+    if (this.board == null
+        || this.board.rules == null
+        || this.routingJob == null
+        || this.routingJob.routerSettings == null
+        || this.routingJob.routerSettings.holeToHoleUm == null) {
+      return;
+    }
+    double um = this.routingJob.routerSettings.holeToHoleUm;
+    if (um < 0 || !Double.isFinite(um)) {
+      FRLogger.warn("Ignoring router.hole_to_hole_um because it is negative: " + um);
+      return;
+    }
+    this.board.rules.setMinHoleToHole(
+        (int) Math.floor(this.board.communication.physicalToBoard(um, Unit.UM) + 0.5));
+  }
+
+  private void applyExactCopperOverride() {
+    if (this.board == null
+        || this.board.rules == null
+        || this.routingJob == null
+        || this.routingJob.routerSettings == null
+        || this.routingJob.routerSettings.exactCopper == null) {
+      return;
+    }
+    this.board.rules.setExactCopper(this.routingJob.routerSettings.exactCopper);
+  }
+
+  private void applyViaInPadAutoDetection() {
+    if (this.board == null || this.routingJob == null || this.routingJob.routerSettings == null) {
+      return;
+    }
+    if (this.routingJob.routerSettings.autorouter == null) {
+      this.routingJob.routerSettings.autorouter = new app.freerouting.settings.AutorouterSettings();
+    }
+    Boolean viaInPad = this.routingJob.routerSettings.autorouter.viaInPad;
+    Boolean viaTouchingPad = this.routingJob.routerSettings.autorouter.viaTouchingPad;
+    if (viaInPad == null || viaTouchingPad == null) {
+      boolean inPadDetected = false;
+      boolean touchingDetected = false;
+      for (app.freerouting.board.model.items.Via via : this.board.getVias()) {
+        if (!inPadDetected
+            && app.freerouting.board.actions.ForcedViaInserter.holeInSmdPad(
+                this.board, via.getPadstack(), via.getCenter(), via.netNumbers)) {
+          inPadDetected = true;
+          touchingDetected = true;
+          break;
+        }
+        if (!touchingDetected
+            && app.freerouting.board.actions.ForcedViaInserter.crowdsOwnPad(
+                this.board,
+                via.getPadstack(),
+                via.clearanceClassIndex(),
+                via.getCenter(),
+                via.netNumbers != null && via.netNumbers.length > 0 ? via.netNumbers[0] : 0)) {
+          touchingDetected = true;
+        }
+      }
+      if (viaInPad == null) {
+        if (inPadDetected) {
+          this.routingJob.routerSettings.autorouter.viaInPad = true;
+          this.routingJob.routerSettings.autorouter.viaTouchingPad = true;
+          FRLogger.info("The board's own vias decide: router.autorouter.via_in_pad = true.");
+        } else if (touchingDetected && viaTouchingPad == null) {
+          this.routingJob.routerSettings.autorouter.viaInPad = false;
+          this.routingJob.routerSettings.autorouter.viaTouchingPad = true;
+          FRLogger.info("The board's own vias decide: router.autorouter.via_touching_pad = true.");
+        } else {
+          this.routingJob.routerSettings.autorouter.viaInPad = false;
+        }
+      }
+      if (this.routingJob.routerSettings.autorouter.viaTouchingPad == null) {
+        this.routingJob.routerSettings.autorouter.viaTouchingPad = touchingDetected;
+      }
+    }
   }
 
   private void applyHoleClearanceOverride() {
@@ -955,6 +1035,9 @@ public class HeadlessBoardManager implements BoardManager {
       this.routingJob.routerSettings.applyNetClassExclusions(this.board);
       applyCopperToEdgeClearanceOverride();
       applyHoleClearanceOverride();
+      applyHoleToHole();
+      applyExactCopperOverride();
+      applyViaInPadAutoDetection();
       applyPlaneNetsOverride();
       applyPlaneAsObstacleOverride();
       applyClearanceToleranceOverride();

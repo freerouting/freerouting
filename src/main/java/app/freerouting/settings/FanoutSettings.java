@@ -115,6 +115,13 @@ public class FanoutSettings implements Serializable, Cloneable {
   @SerializedName("strategy")
   public String strategy;
 
+  /**
+   * Erik Gavriluk (freerouting.net): how fanout starts on a 2-signal-layer board with a BGA: "off",
+   * "no_fanout", or "direct_first".
+   */
+  @SerializedName("two_layer_bga")
+  public String twoLayerBga;
+
   /** Timeout for the fanout stage (e.g., "5m", "300s"). Default is null (no timeout). */
   @SerializedName("timeout")
   public String timeoutString;
