@@ -1,5 +1,6 @@
 package app.freerouting.board.model.items;
 
+import app.freerouting.autoroute.plane.FastPlaneConnectivityGrid;
 import app.freerouting.board.actions.ItemInfoPrinter;
 import app.freerouting.board.actions.ItemSelectionFilter;
 import app.freerouting.board.facade.BasicBoard;
@@ -17,7 +18,11 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.TextManager;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -41,6 +46,9 @@ public class ConductionArea extends ObstacleArea implements Connectable {
 
   private transient int cachedBoardRevision = -1;
   private transient java.awt.geom.Area cachedBoardFillArea;
+  private transient int cachedFractureRevision = -1;
+  private transient FastPlaneConnectivityGrid.PlaneFractureResult cachedFractureResult;
+  private transient FastPlaneConnectivityGrid connectivityGrid;
 
   /** Creates a new instance of ConductionArea. */
   public ConductionArea(
@@ -78,6 +86,8 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     super.clearDerivedData();
     this.cachedBoardRevision = -1;
     this.cachedBoardFillArea = null;
+    this.cachedFractureRevision = -1;
+    this.cachedFractureResult = null;
   }
 
   /** Pre-computes detailed plane-fill geometry off the EDT so zoom-in paints stay responsive. */
@@ -358,6 +368,133 @@ public class ConductionArea extends ObstacleArea implements Connectable {
       }
     }
     return result;
+  }
+
+  /**
+   * Returns true if this conduction area is split into multiple isolated copper islands by
+   * obstacles.
+   */
+  public boolean isFractured() {
+    FastPlaneConnectivityGrid.PlaneFractureResult res = getFractureResult();
+    return res != null && res.isFractured;
+  }
+
+  /** Returns the cached or freshly computed fracture analysis result for this conduction area. */
+  public FastPlaneConnectivityGrid.PlaneFractureResult getFractureResult() {
+    if (this.board == null) {
+      return null;
+    }
+    int currentRevision = this.board.getRevision();
+    if (this.cachedFractureResult != null && this.cachedFractureRevision == currentRevision) {
+      return this.cachedFractureResult;
+    }
+    if (this.connectivityGrid == null) {
+      this.connectivityGrid = new FastPlaneConnectivityGrid();
+    }
+    Collection<Item> contacts = getNormalContacts();
+    this.cachedFractureResult = this.connectivityGrid.evaluateFracture(this, this.board, contacts);
+    this.cachedFractureRevision = currentRevision;
+    return this.cachedFractureResult;
+  }
+
+  @Override
+  void getConnectedSetRecu(Set<Item> result, int netNumber, boolean stopAtPlane) {
+    if (this.board == null) {
+      super.getConnectedSetRecu(result, netNumber, stopAtPlane);
+      return;
+    }
+
+    FastPlaneConnectivityGrid.PlaneFractureResult fractureResult = getFractureResult();
+    if (fractureResult == null || !fractureResult.isFractured) {
+      super.getConnectedSetRecu(result, netNumber, stopAtPlane);
+      return;
+    }
+
+    // Determine which islands have already been contacted by items in result
+    Set<Integer> reachedIslands = new HashSet<>();
+    for (Item resItem : result) {
+      if (resItem != this && resItem.sharesNet(this) && resItem.sharesLayer(this)) {
+        for (Map.Entry<Integer, List<Item>> entry : fractureResult.islandItems.entrySet()) {
+          if (entry.getValue().contains(resItem)) {
+            reachedIslands.add(entry.getKey());
+            break;
+          }
+        }
+      }
+    }
+
+    if (reachedIslands.isEmpty()) {
+      // If this conduction area itself is the start item, only visit island 0 so severed islands
+      // are not falsely bridged
+      reachedIslands.add(0);
+    }
+
+    for (int islandId : reachedIslands) {
+      List<Item> reachableItems = fractureResult.islandItems.get(islandId);
+      if (reachableItems != null) {
+        for (Item item : reachableItems) {
+          if (item != this && (netNumber <= 0 || item.containsNet(netNumber))) {
+            if (result.add(item)) {
+              item.getConnectedSetRecu(result, netNumber, stopAtPlane);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @Override
+  boolean isCycleRecu(
+      Set<Item> visitedItems, Item searchItem, Item comeFromItem, boolean ignoreAreas) {
+    if (ignoreAreas) {
+      return false;
+    }
+    if (this.board == null) {
+      return super.isCycleRecu(visitedItems, searchItem, comeFromItem, ignoreAreas);
+    }
+    FastPlaneConnectivityGrid.PlaneFractureResult fractureResult = getFractureResult();
+    if (fractureResult == null || !fractureResult.isFractured) {
+      return super.isCycleRecu(visitedItems, searchItem, comeFromItem, ignoreAreas);
+    }
+
+    Integer fromIsland = null;
+    if (comeFromItem != null) {
+      for (Map.Entry<Integer, List<Item>> entry : fractureResult.islandItems.entrySet()) {
+        if (entry.getValue().contains(comeFromItem)) {
+          fromIsland = entry.getKey();
+          break;
+        }
+      }
+    }
+
+    Collection<Item> contactList = getNormalContacts();
+    if (contactList == null) {
+      return false;
+    }
+    for (Item currentContact : contactList) {
+      if (currentContact == comeFromItem) {
+        continue;
+      }
+      if (currentContact == searchItem) {
+        return true;
+      }
+      if (fromIsland != null) {
+        boolean onSameIsland = false;
+        List<Item> islandMembers = fractureResult.islandItems.get(fromIsland);
+        if (islandMembers != null && islandMembers.contains(currentContact)) {
+          onSameIsland = true;
+        }
+        if (!onSameIsland) {
+          continue;
+        }
+      }
+      if (visitedItems.add(currentContact)) {
+        if (currentContact.isCycleRecu(visitedItems, searchItem, this, ignoreAreas)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   @Override
