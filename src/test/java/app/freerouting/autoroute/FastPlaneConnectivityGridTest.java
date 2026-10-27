@@ -22,6 +22,7 @@ import app.freerouting.core.StoppableThread;
 import app.freerouting.core.library.Package;
 import app.freerouting.core.library.Packages;
 import app.freerouting.core.library.Padstack;
+import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.ConvexShape;
@@ -265,6 +266,14 @@ class FastPlaneConnectivityGridTest {
     drc.calculateAllIncompletes();
     assertEquals(
         1, drc.getIncompleteCount(), "Before routing, severed GND pins must have 1 incomplete");
+    assertEquals(
+        1,
+        board.routingLedger().incompleteCount(),
+        "NetRoutingLedger must report 1 incomplete for severed GND plane");
+    assertEquals(
+        1,
+        new BoardStatistics(board).connections.incompleteCount,
+        "BoardStatistics must report 1 incomplete for severed GND plane");
 
     RoutingJob job = new RoutingJob();
     job.board = board;
@@ -281,6 +290,14 @@ class FastPlaneConnectivityGridTest {
     finalDrc.calculateAllIncompletes();
     assertEquals(
         0, finalDrc.getIncompleteCount(), "Autorouter must successfully bridge severed islands");
+    assertEquals(
+        0,
+        job.board.routingLedger().incompleteCount(),
+        "NetRoutingLedger must clear to 0 incompletes once bridged");
+    assertEquals(
+        0,
+        new BoardStatistics(job.board).connections.incompleteCount,
+        "BoardStatistics must clear to 0 incompletes once bridged");
     assertEquals(
         0,
         finalDrc.getAllClearanceViolations().size(),

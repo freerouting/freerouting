@@ -618,8 +618,10 @@ public class BoardStatistics implements Serializable {
             }
           }
         }
-      } else if (contact instanceof ConductionArea) {
-        return true;
+      } else if (contact instanceof ConductionArea ca) {
+        if (!ca.isFractured()) {
+          return true;
+        }
       }
     }
     return false;

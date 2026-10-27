@@ -2,6 +2,7 @@ package app.freerouting.autoroute.expansion;
 
 import app.freerouting.autoroute.ItemAutorouteInfo;
 import app.freerouting.autoroute.maze.MazeSearchElement;
+import app.freerouting.board.model.items.ConductionArea;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.geometry.planar.Simplex;
@@ -44,7 +45,10 @@ public class TargetItemExpansionDoor implements ExpandableObject {
   /** Returns true if this door leads to a destination item rather than a start item. */
   public boolean isDestinationDoor() {
     ItemAutorouteInfo itemInfo = this.item.getAutorouteInfo();
-    return itemInfo.isDestinationInfo();
+    if (this.item instanceof ConductionArea) {
+      return itemInfo.isDestinationInfo();
+    }
+    return !itemInfo.isStartInfo();
   }
 
   /** Returns true if this door leads to a start item. */
