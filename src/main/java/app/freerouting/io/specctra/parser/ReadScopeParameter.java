@@ -28,6 +28,7 @@ public class ReadScopeParameter {
   final NetList netlist = new NetList();
   final BoardObservers observers;
   final IdGenerator idGenerator;
+  final boolean canonicalPlacementOrder;
 
   /**
    * Warnings collected during DSN parsing (e.g. skipped wires, missing padstacks, degenerate
@@ -99,6 +100,16 @@ public class ReadScopeParameter {
    */
   public ReadScopeParameter(
       IJFlexScanner scanner, BoardObservers observers, IdGenerator idGenerator) {
+    this(scanner, observers, idGenerator, false);
+  }
+
+  /** Creates a parser scope with an explicit placement-allocation policy. */
+  public ReadScopeParameter(
+      IJFlexScanner scanner,
+      BoardObservers observers,
+      IdGenerator idGenerator,
+      boolean canonicalPlacementOrder) {
+    this.canonicalPlacementOrder = canonicalPlacementOrder;
     this.scanner = scanner;
     boardHandling = new MinimalBoardManager();
     this.observers = observers;

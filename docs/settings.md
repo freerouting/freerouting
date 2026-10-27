@@ -138,6 +138,9 @@ The primary way to configure Freerouting is through a JSON settings file. This f
     - **`algorithm`**: Algorithm identifier (`freerouting-router` by default; legacy identifiers such as `freerouting-router-v19` safely normalize to `freerouting-router`).
     - **`max_passes`**: Maximum autorouter passes. `0` means no limit.
     - **`max_items`**: Maximum items attempted in the autorouter stage.
+    - **`item_order_seed`**: Optional extra seed for signal-item permutations after the first
+      autorouter pass, for example `--router.autorouter.item_order_seed=42`. The first pass
+      retains its existing ordering policy.
     - **`save_intermediate_stages`**: Save board snapshots between passes.
     - **`ignore_net_classes`**: Net class names the autorouter should skip.
     - **`max_threads`**: Canonical CLI is `--router.autorouter.max_threads`. The autorouter pass
@@ -191,6 +194,26 @@ The primary way to configure Freerouting is through a JSON settings file. This f
 The router and optimizer versions are independent. CLI aliases are
 `--router-scoring-version=v1|v2`, `--optimizer-scoring-version=v1|v2`, and
 `--scoring-version=v1|v2` to select both.
+
+##### Reproducible placement import
+
+Headless DSN jobs and composite/API inputs with an explicit `item_order_seed` allocate component
+placements in exact reference-name order before routing. Settings are resolved before import,
+including file settings and per-job overrides; zero and negative seeds also enable this policy.
+For unique references, changing the order or grouping of placement records alone therefore
+preserves component, pad, and package-keepout identities. Package association, geometry, side,
+fixed state, and pin-net membership remain unchanged. Duplicate references retain their relative
+source order and are excluded from the placement-order guarantee.
+
+Unseeded jobs, GUI imports, and existing standalone reader overloads retain legacy input order.
+Embedding callers can explicitly use `DsnReadOptions.REFERENCE_NAME` on a fresh import. Setting a
+seed after loading, including internally generated exploration seeds, does not reallocate items;
+reload with the desired import policy to establish placement-order invariance.
+
+Use the same seed, settings, worker count, and deterministic work limits when comparing routing
+runs. This guarantee does not canonicalize other DSN scopes or electrically equivalent copper
+representations. In particular, KiCad can join fixed track segments differently on separate
+exports; matching the seed alone does not make those different router inputs identical.
 
 ##### **`optimizer` Sub-section**
 
