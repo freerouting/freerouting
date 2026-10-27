@@ -81,21 +81,31 @@ function sendError(rpcId, code, message) {
   console.log(responseStr);
 }
 
+function buildToolResult(status, body, isError) {
+  const result = {
+    content: [{
+      type: 'text',
+      text: JSON.stringify({
+        status: status,
+        contentType: 'application/json',
+        body: body
+      })
+    }],
+    isError: isError
+  };
+  // Local file tools advertise {message} as outputSchema. Upstream error bodies do not match
+  // that schema, so they stay in content and isError only (#981).
+  if (!isError) {
+    result.structuredContent = body;
+  }
+  return result;
+}
+
 function sendToolResponse(rpcId, status, body, isError) {
   const rpcResponse = {
     jsonrpc: '2.0',
     id: rpcId,
-    result: {
-      content: [{
-        type: 'text',
-        text: JSON.stringify({
-          status: status,
-          contentType: 'application/json',
-          body: body
-        })
-      }],
-      isError: isError
-    }
+    result: buildToolResult(status, body, isError)
   };
   const responseStr = JSON.stringify(rpcResponse);
   logDebug(`<-- TOOL RESPONSE: ${responseStr}`);
@@ -242,118 +252,126 @@ function handleLocalDownload(rpcId, jobId, filePath) {
   req.end();
 }
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-  terminal: false
-});
+function startStdioBridge() {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+    terminal: false
+  });
 
-rl.on('line', (line) => {
-  if (!line.trim()) return;
-  logDebug(`--> INPUT STDIN: ${line}`);
+  rl.on('line', (line) => {
+    if (!line.trim()) return;
+    logDebug(`--> INPUT STDIN: ${line}`);
 
-  let requestObj = null;
-  try {
-    requestObj = JSON.parse(line);
-  } catch (e) {
-    // let it fail or let server handle
-  }
-
-  if (requestObj && requestObj.method === 'initialize' && requestObj.params) {
-    const clientInfo = requestObj.params.clientInfo;
-    if (clientInfo && clientInfo.name && clientInfo.version) {
-      const rawEnvHost = `${clientInfo.name}/${clientInfo.version}`;
-      detectedEnvHost = rawEnvHost.replace(/[^\x20-\x7E]/g, '');
-      logDebug(`Detected Environment Host: ${detectedEnvHost}`);
+    let requestObj = null;
+    try {
+      requestObj = JSON.parse(line);
+    } catch (e) {
+      // let it fail or let server handle
     }
-  }
 
-  if (requestObj && requestObj.method === 'tools/call' && requestObj.params) {
-    const toolName = requestObj.params.name;
-    const args = requestObj.params.arguments || {};
-
-    if (toolName === 'upload_job_input_from_local_file') {
-      handleLocalUpload(requestObj.id, args.jobId, args.filePath);
-      return;
-    } else if (toolName === 'download_job_output_to_local_file') {
-      handleLocalDownload(requestObj.id, args.jobId, args.filePath);
-      return;
-    }
-  }
-
-  const headers = {
-    'Content-Type': 'application/json',
-    'Freerouting-Profile-ID': getOrCreateProfileId()
-  };
-
-  const email = process.env.FREEROUTING_PROFILE_EMAIL || process.env.FREEROUTING__PROFILE__EMAIL;
-  if (email) {
-    headers['Freerouting-Profile-Email'] = email;
-  }
-
-  const envHost = process.env.FREEROUTING_ENVIRONMENT_HOST || process.env.FREEROUTING__ENVIRONMENT__HOST || detectedEnvHost || 'MCP-Client/1.0';
-  headers['Freerouting-Environment-Host'] = envHost;
-
-  if (process.env.FREEROUTING_API_KEY) {
-    headers['Authorization'] = 'Bearer ' + process.env.FREEROUTING_API_KEY;
-  }
-
-  logDebug(`HTTP Request URL: ${API_URL}`);
-  logDebug(`HTTP Request Headers: ${JSON.stringify(redactHeaders(headers))}`);
-
-  const req = httpModule.request(API_URL, {
-    method: 'POST',
-    headers: headers
-  }, (res) => {
-    let data = '';
-    res.on('data', (chunk) => {
-      data += chunk;
-    });
-    res.on('end', () => {
-      const trimmed = data.trim();
-      let parsed = null;
-      let isValidRpc = false;
-      try {
-        parsed = JSON.parse(trimmed);
-        if (parsed && typeof parsed === 'object' && parsed.jsonrpc === '2.0') {
-          if (parsed.result !== undefined || (parsed.error && typeof parsed.error === 'object' && typeof parsed.error.code === 'number')) {
-            isValidRpc = true;
-          }
-        }
-      } catch (e) {
-        // Not valid JSON
+    if (requestObj && requestObj.method === 'initialize' && requestObj.params) {
+      const clientInfo = requestObj.params.clientInfo;
+      if (clientInfo && clientInfo.name && clientInfo.version) {
+        const rawEnvHost = `${clientInfo.name}/${clientInfo.version}`;
+        detectedEnvHost = rawEnvHost.replace(/[^\x20-\x7E]/g, '');
+        logDebug(`Detected Environment Host: ${detectedEnvHost}`);
       }
+    }
 
-      logDebug(`HTTP Response Raw Data: ${trimmed}`);
+    if (requestObj && requestObj.method === 'tools/call' && requestObj.params) {
+      const toolName = requestObj.params.name;
+      const args = requestObj.params.arguments || {};
 
-      if (isValidRpc) {
-        const singleLine = trimmed.replace(/\r/g, '').replace(/\n/g, '');
-        logDebug(`<-- FORWARDED RESPONSE: ${singleLine}`);
-        console.log(singleLine);
-      } else {
-        // Only send an error response if this was a request (not a notification)
-        if (requestObj && requestObj.id !== undefined && requestObj.id !== null) {
-          let errMsg = `HTTP ${res.statusCode} ${res.statusMessage || ''}`.trim();
-          if (parsed && typeof parsed === 'object' && typeof parsed.error === 'string') {
-            errMsg = parsed.error;
-          } else if (trimmed) {
-            if (trimmed.length < 200 && !trimmed.startsWith('<')) {
-              errMsg = trimmed;
+      if (toolName === 'upload_job_input_from_local_file') {
+        handleLocalUpload(requestObj.id, args.jobId, args.filePath);
+        return;
+      } else if (toolName === 'download_job_output_to_local_file') {
+        handleLocalDownload(requestObj.id, args.jobId, args.filePath);
+        return;
+      }
+    }
+
+    const headers = {
+      'Content-Type': 'application/json',
+      'Freerouting-Profile-ID': getOrCreateProfileId()
+    };
+
+    const email = process.env.FREEROUTING_PROFILE_EMAIL || process.env.FREEROUTING__PROFILE__EMAIL;
+    if (email) {
+      headers['Freerouting-Profile-Email'] = email;
+    }
+
+    const envHost = process.env.FREEROUTING_ENVIRONMENT_HOST || process.env.FREEROUTING__ENVIRONMENT__HOST || detectedEnvHost || 'MCP-Client/1.0';
+    headers['Freerouting-Environment-Host'] = envHost;
+
+    if (process.env.FREEROUTING_API_KEY) {
+      headers['Authorization'] = 'Bearer ' + process.env.FREEROUTING_API_KEY;
+    }
+
+    logDebug(`HTTP Request URL: ${API_URL}`);
+    logDebug(`HTTP Request Headers: ${JSON.stringify(redactHeaders(headers))}`);
+
+    const req = httpModule.request(API_URL, {
+      method: 'POST',
+      headers: headers
+    }, (res) => {
+      let data = '';
+      res.on('data', (chunk) => {
+        data += chunk;
+      });
+      res.on('end', () => {
+        const trimmed = data.trim();
+        let parsed = null;
+        let isValidRpc = false;
+        try {
+          parsed = JSON.parse(trimmed);
+          if (parsed && typeof parsed === 'object' && parsed.jsonrpc === '2.0') {
+            if (parsed.result !== undefined || (parsed.error && typeof parsed.error === 'object' && typeof parsed.error.code === 'number')) {
+              isValidRpc = true;
             }
           }
-          sendError(requestObj.id, -32603, errMsg);
-        } else {
-          logDebug(`Ignored non-RPC/204 response for notification: HTTP ${res.statusCode}`);
+        } catch (e) {
+          // Not valid JSON
         }
-      }
+
+        logDebug(`HTTP Response Raw Data: ${trimmed}`);
+
+        if (isValidRpc) {
+          const singleLine = trimmed.replace(/\r/g, '').replace(/\n/g, '');
+          logDebug(`<-- FORWARDED RESPONSE: ${singleLine}`);
+          console.log(singleLine);
+        } else {
+          // Only send an error response if this was a request (not a notification)
+          if (requestObj && requestObj.id !== undefined && requestObj.id !== null) {
+            let errMsg = `HTTP ${res.statusCode} ${res.statusMessage || ''}`.trim();
+            if (parsed && typeof parsed === 'object' && typeof parsed.error === 'string') {
+              errMsg = parsed.error;
+            } else if (trimmed) {
+              if (trimmed.length < 200 && !trimmed.startsWith('<')) {
+                errMsg = trimmed;
+              }
+            }
+            sendError(requestObj.id, -32603, errMsg);
+          } else {
+            logDebug(`Ignored non-RPC/204 response for notification: HTTP ${res.statusCode}`);
+          }
+        }
+      });
     });
-  });
 
-  req.on('error', (err) => {
-    sendError(requestObj ? requestObj.id : null, -32603, 'Public API request failed: ' + err.message);
-  });
+    req.on('error', (err) => {
+      sendError(requestObj ? requestObj.id : null, -32603, 'Public API request failed: ' + err.message);
+    });
 
-  req.write(line);
-  req.end();
-});
+    req.write(line);
+    req.end();
+  });
+}
+
+if (require.main === module) {
+  startStdioBridge();
+}
+
+module.exports = { buildToolResult };
 
