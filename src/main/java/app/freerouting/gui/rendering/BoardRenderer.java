@@ -179,7 +179,7 @@ public final class BoardRenderer {
       }
       case VIA_OBSTACLE_AREA -> graphicsContext.getViaObstacleColors();
       case CONDUCTION_AREA -> graphicsContext.getTraceColors(true);
-      case OBSTACLE_AREA -> graphicsContext.getObstacleColors();
+      case OBSTACLE_AREA, WIRE_OBSTACLE_AREA -> graphicsContext.getObstacleColors();
       default -> new Color[item.board.getLayerCount()];
     };
   }
@@ -239,7 +239,7 @@ public final class BoardRenderer {
       }
       case CONDUCTION_AREA -> graphicsContext.getConductionColorIntensity();
       case VIA_OBSTACLE_AREA -> graphicsContext.getViaObstacleColorIntensity();
-      case OBSTACLE_AREA -> graphicsContext.getObstacleColorIntensity();
+      case OBSTACLE_AREA, WIRE_OBSTACLE_AREA -> graphicsContext.getObstacleColorIntensity();
       default -> 0;
     };
   }
@@ -321,7 +321,7 @@ public final class BoardRenderer {
               (ComponentObstacleArea) item, step, graphics, graphicsContext, style);
       case TRACE -> renderTrace((PolylineTrace) item, step, graphics, graphicsContext, style);
       case PIN, VIA -> renderDrillItem((DrillItem) item, step, graphics, graphicsContext, style);
-      case OBSTACLE_AREA, VIA_OBSTACLE_AREA ->
+      case OBSTACLE_AREA, VIA_OBSTACLE_AREA, WIRE_OBSTACLE_AREA ->
           renderObstacleArea((ObstacleArea) item, step, graphics, graphicsContext, style);
       case BOARD_OUTLINE ->
           renderBoardOutline((BoardOutline) item, step, graphics, graphicsContext, style);
