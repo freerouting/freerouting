@@ -28,6 +28,7 @@ public final class RoutingPipeline {
   private BatchAutorouter autorouter;
   private final BatchOptimizer optimizer;
   private final List<StageListener> stageListeners = new ArrayList<>();
+  private final List<Integer> exitStubItems = new ArrayList<>();
 
   private RoutingPipeline(RoutingJob job, Function<RoutingJob, BatchOptimizer> optimizerFactory) {
     this.job = job;
@@ -86,10 +87,45 @@ public final class RoutingPipeline {
   public void run() {
     if (this.job != null && this.job.board != null) {
       this.job.board.awaitPostLoad();
+      String chosen = TwoLayerBga.apply(this.job.routerSettings, this.job.board);
+      if (chosen != null) {
+        this.job.logInfo(chosen);
+      }
+      String stubs = ExitStubs.apply(this.job.routerSettings, this.job.board, this.exitStubItems);
+      if (stubs != null) {
+        this.job.logInfo(stubs);
+      }
     }
     runRoutingStage();
     runOptimizationStage();
+    releaseExitStubs();
+    removeDanglingCopper();
     this.job.stage = RoutingStage.IDLE;
+  }
+
+  private void removeDanglingCopper() {
+    boolean routerRan =
+        this.job != null
+            && this.job.routerSettings != null
+            && this.job.routerSettings.getRunRouter()
+            && (this.job.routerSettings.autorouter.maxPasses == null
+                || this.job.routerSettings.autorouter.maxPasses > 0);
+    if (routerRan && this.job.board != null) {
+      String line = DanglingCopper.remove(this.job.board, "the last stage");
+      if (line != null) {
+        this.job.logInfo(line);
+      }
+    }
+  }
+
+  private void releaseExitStubs() {
+    if (!this.exitStubItems.isEmpty() && this.job.board != null) {
+      String stubLine = ExitStubs.release(this.job.board, this.exitStubItems);
+      if (stubLine != null) {
+        this.job.logInfo(stubLine);
+      }
+      this.exitStubItems.clear();
+    }
   }
 
   private void runRoutingStage() {

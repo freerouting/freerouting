@@ -127,6 +127,20 @@ public final class BatchAutorouter extends NamedAlgorithm {
   public int startNeckedRouted;
   public int startNeckedFailed;
 
+  private BallEscapeOrder ballEscapeOrder;
+  private boolean ballEscapeOrderFound;
+
+  public BallEscapeOrder getBallEscapeOrder() {
+    if (!this.ballEscapeOrderFound) {
+      this.ballEscapeOrder =
+          BallEscapeOrder.of(
+              this.board,
+              this.settings.autorouter != null ? this.settings.autorouter.ballEscapeOrder : null);
+      this.ballEscapeOrderFound = true;
+    }
+    return this.ballEscapeOrder;
+  }
+
   /** Why the last pass loop stopped. Null until the loop records a reason. */
   public StopReason lastStopReason;
 
@@ -237,6 +251,8 @@ public final class BatchAutorouter extends NamedAlgorithm {
     this.connectionRouter = new AutorouteConnectionRouter(this);
     this.passRunner = new AutoroutePassRunner(this);
     this.batchLoop = new AutorouteBatchLoop(this);
+    BallEscapeOrder.checkMode(
+        this.settings.autorouter != null ? this.settings.autorouter.ballEscapeOrder : null);
   }
 
   static boolean isBenchmarkProfileEnabled() {

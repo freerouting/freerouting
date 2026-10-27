@@ -26,6 +26,7 @@ public class TestingSettings implements SettingsSource {
     // Fallback and exploration re-route an unfinished board. Tests opt in explicitly.
     this.settings.autorouter.fallbackStrategies = "none";
     this.settings.autorouter.explorePatience = 0;
+    this.settings.autorouter.exitStubs = false;
   }
 
   /** Sets the bend cost for a layer, expanding the layer array if needed. */
@@ -76,6 +77,11 @@ public class TestingSettings implements SettingsSource {
   /** Enables or disables the autorouter. */
   public void setRouterEnabled(boolean enabled) {
     this.settings.autorouter.enabled = enabled;
+  }
+
+  /** Enables or disables fine-pitch exit stubs in the testing settings. */
+  public void setExitStubs(Boolean exitStubs) {
+    this.settings.autorouter.exitStubs = exitStubs;
   }
 
   /** Sets the copper-to-edge clearance override used by tests. */
