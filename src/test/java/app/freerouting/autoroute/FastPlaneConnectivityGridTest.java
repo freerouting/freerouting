@@ -32,12 +32,16 @@ import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
+import app.freerouting.io.specctra.SesWriter;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.ClearanceMatrix;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.ViaInfo;
 import app.freerouting.rules.ViaRule;
 import app.freerouting.settings.sources.DefaultSettings;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
@@ -241,7 +245,7 @@ class FastPlaneConnectivityGridTest {
   }
 
   @Test
-  void testAutorouterBridgesSeveredPlaneIslands() {
+  void testAutorouterBridgesSeveredPlaneIslands() throws IOException {
     Area area = TileShape.getInstance(1_000_000, 1_000_000, 9_000_000, 9_000_000);
     board.insertConductionArea(area, 0, new int[] {gndNet.netNumber}, 0, false, FixedState.UNFIXED);
 
@@ -302,6 +306,16 @@ class FastPlaneConnectivityGridTest {
         0,
         finalDrc.getAllClearanceViolations().size(),
         "Bridge route must not introduce clearance violations");
+
+    // Verify that the resulting Specctra SES export (used by Altium, EAGLE, KiCad, etc.)
+    // contains the physical bridge wire, guaranteeing cross-EDA connectivity upon re-pour
+    ByteArrayOutputStream sesStream = new ByteArrayOutputStream();
+    SesWriter.write(job.board, sesStream, "test_design");
+    String sesContent = sesStream.toString(StandardCharsets.UTF_8);
+    assertTrue(sesContent.contains("(net GND"), "SES output must contain net GND wiring");
+    assertTrue(
+        sesContent.contains("(wire"),
+        "SES output must contain physical bridge wires connecting severed islands");
   }
 
   private static final class TestStoppableThread extends StoppableThread {
