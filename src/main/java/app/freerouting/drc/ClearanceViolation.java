@@ -42,6 +42,12 @@ public class ClearanceViolation implements ItemInfoPrinter.Printable {
   public final double expectedClearance;
   public final double actualClearance;
 
+  /**
+   * The two items' drill holes are closer than the board's hole-to-hole minimum (KiCad's
+   * hole_to_hole), measured edge to edge, not a copper clearance.
+   */
+  public final boolean holeToHole;
+
   /** Creates a new instance of ClearanceViolation. */
   public ClearanceViolation(
       Item firstItem,
@@ -50,12 +56,25 @@ public class ClearanceViolation implements ItemInfoPrinter.Printable {
       int layer,
       double expectedClearance,
       double actualClearance) {
+    this(firstItem, secondItem, shape, layer, expectedClearance, actualClearance, false);
+  }
+
+  /** Creates a new instance of ClearanceViolation including the hole-to-hole flag. */
+  public ClearanceViolation(
+      Item firstItem,
+      Item secondItem,
+      ConvexShape shape,
+      int layer,
+      double expectedClearance,
+      double actualClearance,
+      boolean holeToHole) {
     this.firstItem = firstItem;
     this.secondItem = secondItem;
     this.shape = shape;
     this.layer = layer;
     this.expectedClearance = expectedClearance;
     this.actualClearance = actualClearance;
+    this.holeToHole = holeToHole;
   }
 
   /**

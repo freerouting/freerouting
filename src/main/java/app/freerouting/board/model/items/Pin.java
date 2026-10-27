@@ -155,6 +155,13 @@ public class Pin extends DrillItem implements Serializable {
     return component.getPackage().getPin(pinIndex).name;
   }
 
+  /** Return the name of the component of this pin. */
+  public String componentName() {
+    Component comp =
+        board != null && board.components != null ? board.components.get(getComponentId()) : null;
+    return comp != null ? comp.name : null;
+  }
+
   /** Gets index of this pin in the library package of the pins component. */
   public int getPinIndex() {
     return pinIndex;
@@ -329,6 +336,14 @@ public class Pin extends DrillItem implements Serializable {
     return this.firstLayer() == this.lastLayer();
   }
 
+  /**
+   * Whether a via may sit on this pad, even when the via-in-pad setting is off. True for exposed
+   * pads (thermal pads).
+   */
+  public boolean viaMayAttach() {
+    return false;
+  }
+
   @Override
   public boolean isObstacle(Item other) {
     if (other == this) {
@@ -359,17 +374,17 @@ public class Pin extends DrillItem implements Serializable {
       }
       return true;
     }
-    if (other instanceof Trace) {
-      return false;
-    }
-    if (other instanceof Pin) {
-      // Pins sharing the same electrical net (e.g. composite pads, thermal vias in pad,
-      // stitching vias, or internally connected pins across components) are electrically
-      // connected and do not violate clearance against each other.
+    if (other instanceof Trace || other instanceof Pin) {
+      // Items sharing the same electrical net (e.g. traces, composite pads) are electrically
+      // connected and do not violate clearance.
       return false;
     }
     // Same-net vias must be allowed to contact SMD pins during fanout.
     return !this.drillAllowed() || !(other instanceof Via);
+  }
+
+  public static boolean arePiecesOfOnePad(Pin pin1, Pin pin2) {
+    return isSameLogicalPad(pin1, pin2);
   }
 
   private static boolean isSameLogicalPad(Pin pin1, Pin pin2) {
@@ -768,6 +783,15 @@ public class Pin extends DrillItem implements Serializable {
     }
 
     return simpleName.toString();
+  }
+
+  /** Exact copper containment, independent of clearance-compensated search shapes. */
+  public boolean containsCopper(Point point, int layer) {
+    if (point == null || !isOnLayer(layer)) {
+      return false;
+    }
+    Shape shape = this.getShape(layer - this.firstLayer());
+    return shape != null && shape.contains(point);
   }
 
   @Override

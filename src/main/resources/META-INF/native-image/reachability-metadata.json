@@ -3935,6 +3935,22 @@
     },
     {
       "type": "sun.util.resources.cldr.CalendarData"
+    },
+    {
+      "type": "java.util.EnumMap",
+      "serializable": true
+    },
+    {
+      "type": "java.util.EnumSet$SerializationProxy",
+      "serializable": true
+    },
+    {
+      "type": "java.util.LinkedHashMap",
+      "serializable": true
+    },
+    {
+      "type": "java.lang.Number",
+      "serializable": true
     }
   ],
   "resources": [
