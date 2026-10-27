@@ -33,7 +33,8 @@ import org.junit.jupiter.api.Test;
  */
 class SerializedJdkTypesRegisteredTest extends RoutingFixtureTest {
 
-  private static final String FIXTURE = "Issue957-smoke-ldo-led.dsn";
+  private static final String SMOKE_FIXTURE = "Issue957-smoke-ldo-led.dsn";
+  private static final String GOLDEN_WORKLOAD_FIXTURE = "Issue508-DAC2020_bm01.dsn";
   private static final String METADATA = "META-INF/native-image/reachability-metadata.json";
 
   /** ObjectOutputStream that records every class descriptor it writes. */
@@ -58,11 +59,27 @@ class SerializedJdkTypesRegisteredTest extends RoutingFixtureTest {
   }
 
   @Test
-  @DisplayName("All classes written by a board snapshot are registered for native serialization")
-  void snapshotClassesAreRegistered() throws Exception {
+  @DisplayName("Issue 957 snapshot classes are registered for native serialization")
+  void smokeBoardSnapshotClassesAreRegistered() throws Exception {
+    assertSnapshotClassesAreRegistered(SMOKE_FIXTURE, null);
+  }
+
+  @Test
+  @DisplayName("Golden-workload snapshot classes are registered for native serialization")
+  void goldenWorkloadSnapshotClassesAreRegistered() throws Exception {
+    // Same board as the native PGO profile step. Two items are enough: the snapshot still writes
+    // the whole loaded item list, which is where a board-specific JDK type would show up.
+    assertSnapshotClassesAreRegistered(GOLDEN_WORKLOAD_FIXTURE, 2);
+  }
+
+  private void assertSnapshotClassesAreRegistered(String fixture, Integer maxItems)
+      throws Exception {
     TestingSettings settings = new TestingSettings();
     settings.setJobTimeoutString("00:02:00");
-    RoutingJob job = getRoutingJob(FIXTURE, settings);
+    if (maxItems != null) {
+      settings.setMaxItems(maxItems);
+    }
+    RoutingJob job = getRoutingJob(fixture, settings);
     assertNotNull(job);
     assertNotNull(job.routerSettings);
     assertNotNull(job.routerSettings.autorouter);
@@ -70,6 +87,9 @@ class SerializedJdkTypesRegisteredTest extends RoutingFixtureTest {
     // value. The scheduler reads the merged RouterSettings, so the bound has to be assigned here.
     job.routerSettings.setMaxPasses(1);
     job.routerSettings.jobTimeoutString = "00:02:00";
+    if (maxItems != null) {
+      job.routerSettings.autorouter.maxItems = maxItems;
+    }
 
     runRoutingJob(job);
 
