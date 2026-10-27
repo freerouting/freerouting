@@ -490,16 +490,16 @@ public class PreservedTraceJunctionTest {
         drc.getAllClearanceViolations().isEmpty(),
         "Initial board must have 0 clearance violations");
 
-    // Unlock trunk as described in the reproduction
-    trunk.setFixedState(FixedState.UNFIXED);
-
-    // Calling pullTight returns false
+    // Calling pullTight on branch preserves topology
     boolean pullTightChanged = branch.pullTight(true, 100, null);
     assertFalse(pullTightChanged, "pullTight should return false on this geometry");
 
-    // Calling smoothenEndCornersFork must safely decline interior junction smoothing
+    // Calling smoothenEndCornersFork on branch while trunk is preserved must decline interior
+    // smoothing
     boolean forkChanged = branch.smoothenEndCornersFork(true, 100, null);
-    assertFalse(forkChanged, "smoothenEndCornersFork must decline unsupported interior smoothing");
+    assertFalse(
+        forkChanged,
+        "smoothenEndCornersFork must decline unsupported interior smoothing on preserved trunk");
 
     // Branch start corner must NOT move to (50000, 9960)
     assertEquals(
@@ -516,5 +516,16 @@ public class PreservedTraceJunctionTest {
     assertTrue(
         drc.getAllClearanceViolations().isEmpty(),
         "No clearance violations should be introduced by smoothing check");
+
+    // Now unfix trunk: unfix() splits the preserved trunk at the junction
+    trunk.unfix();
+    Set<Item> unfixConnectedSet = branch.getConnectedSet(1);
+    assertEquals(
+        3,
+        unfixConnectedSet.size(),
+        "Connected set must contain branch and both split trunk pieces");
+    assertTrue(
+        drc.getAllClearanceViolations().isEmpty(),
+        "DRC must remain 0 violations after unfixing and splitting trunk");
   }
 }

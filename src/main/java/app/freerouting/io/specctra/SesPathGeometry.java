@@ -4,6 +4,7 @@ import app.freerouting.geometry.planar.Direction;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Limits;
 import app.freerouting.geometry.planar.Line;
+import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -18,38 +19,150 @@ final class SesPathGeometry {
 
   private SesPathGeometry() {}
 
-  static Polyline read(double[] coordinates, double scale) throws IOException {
-    if (coordinates.length < 4 || coordinates.length % 2 != 0) {
+  static void check(double[] board) throws IOException {
+    if (board.length < 4 || board.length % 2 != 0) {
       throw new IOException("A SES wire needs at least two complete corners");
     }
-    List<Corner> corners = new ArrayList<>();
-    for (int index = 0; index < coordinates.length; index += 2) {
-      Corner corner = corner(coordinates[index] * scale, coordinates[index + 1] * scale);
-      if (!corners.isEmpty() && corners.getLast().equals(corner)) {
-        if (coordinates[index - 2] != coordinates[index]
-            || coordinates[index - 1] != coordinates[index + 1]) {
-          throw new IOException("A nonzero SES segment collapses at board coordinate precision");
-        }
-      } else {
-        corners.add(corner);
+  }
+
+  static IntPoint gridPoint(
+      double x, double y, java.util.function.BiFunction<Double, Double, IntPoint> designPoint) {
+    if (designPoint != null) {
+      IntPoint routed = designPoint.apply(x, y);
+      if (routed != null) {
+        return routed;
       }
     }
-    if (corners.size() == 1) {
-      Line[] crossing = crossingLines(corners.getFirst());
-      return new Polyline(new Line[] {crossing[0], crossing[1], crossing[0]});
+    return new IntPoint((int) Math.floor(x + 0.5), (int) Math.floor(y + 0.5));
+  }
+
+  static Polyline exact(
+      double[] board, java.util.function.BiFunction<Double, Double, IntPoint> designPoint)
+      throws IOException {
+    List<Corner> corners = new ArrayList<>(board.length / 2);
+    for (int i = 0; i + 1 < board.length; i += 2) {
+      Corner c = null;
+      if (designPoint != null) {
+        IntPoint routed = designPoint.apply(board[i], board[i + 1]);
+        if (routed != null) {
+          c = new Corner(BigFraction.of(routed.x), BigFraction.of(routed.y));
+        }
+      }
+      if (c == null) {
+        try {
+          c = corner(board[i], board[i + 1]);
+        } catch (Exception _) {
+          return null;
+        }
+      }
+      if (!corners.isEmpty() && corners.getLast().equals(c)) {
+        if (board[i - 2] != board[i] || board[i - 1] != board[i + 1]) {
+          return null;
+        }
+        continue;
+      }
+      corners.add(c);
     }
     rejectCollinearReversals(corners);
-    Line[] lines = new Line[corners.size() + 1];
-    for (int index = 1; index < corners.size(); index++) {
-      lines[index] = supportingLine(corners.get(index - 1), corners.get(index));
+    boolean allInteger = true;
+    for (Corner c : corners) {
+      if (!c.x.getDenominator().equals(BigInteger.ONE)
+          || !c.y.getDenominator().equals(BigInteger.ONE)) {
+        allInteger = false;
+        break;
+      }
     }
-    lines[0] = endpointLine(corners.getFirst(), lines[1]);
-    lines[lines.length - 1] = endpointLine(corners.getLast(), lines[lines.length - 2]);
+    if (allInteger) {
+      if (corners.size() == 1) {
+        return pointCopper(corners.getFirst());
+      }
+      Point[] pts = new Point[corners.size()];
+      for (int i = 0; i < corners.size(); i++) {
+        pts[i] = integerPoint(corners.get(i).x.getNumerator(), corners.get(i).y.getNumerator());
+      }
+      return new Polyline(pts);
+    }
+    if (corners.size() == 1) {
+      try {
+        return pointCopper(corners.getFirst());
+      } catch (Exception _) {
+        return null;
+      }
+    }
+    Line[] lines = new Line[corners.size() + 1];
+    for (int i = 1; i < corners.size(); i++) {
+      try {
+        lines[i] = supportingLine(corners.get(i - 1), corners.get(i));
+      } catch (Exception _) {
+        return null;
+      }
+    }
+    try {
+      lines[0] = endpointLine(corners.getFirst(), lines[1]);
+      lines[lines.length - 1] = endpointLine(corners.getLast(), lines[lines.length - 2]);
+    } catch (Exception _) {
+      return null;
+    }
     Polyline polyline = new Polyline(lines);
-    if (polyline.cornerCount() < 2) {
-      throw new IOException("The SES path cannot be represented on this board");
+    int count = polyline.cornerCount();
+    if (count < 2
+        || !near(polyline.firstCorner(), corners.getFirst())
+        || !near(polyline.lastCorner(), corners.getLast())) {
+      return null;
+    }
+    for (int i = 1; count == corners.size() && i < count - 1; i++) {
+      if (!near(polyline.corner(i), corners.get(i))) {
+        return null;
+      }
     }
     return polyline;
+  }
+
+  static Polyline grid(
+      double[] board, java.util.function.BiFunction<Double, Double, IntPoint> designPoint)
+      throws IOException {
+    List<Point> points = new ArrayList<>(board.length / 2);
+    for (int i = 0; i + 1 < board.length; i += 2) {
+      Point p = gridPoint(board[i], board[i + 1], designPoint);
+      if (points.isEmpty() || !points.getLast().equals(p)) {
+        points.add(p);
+      }
+    }
+    List<Corner> corners = new ArrayList<>(points.size());
+    for (Point p : points) {
+      corners.add(new Corner(BigFraction.of(((IntPoint) p).x), BigFraction.of(((IntPoint) p).y)));
+    }
+    rejectCollinearReversals(corners);
+    return points.size() == 1
+        ? pointCopper(corners.getFirst())
+        : new Polyline(points.toArray(Point[]::new));
+  }
+
+  private static boolean near(Point point, Corner corner) {
+    app.freerouting.geometry.planar.FloatPoint p = point.toFloat();
+    return Math.abs(p.x - corner.x.doubleValue()) <= 1e-6 * Math.max(1, Math.abs(p.x))
+        && Math.abs(p.y - corner.y.doubleValue()) <= 1e-6 * Math.max(1, Math.abs(p.y));
+  }
+
+  private static Polyline pointCopper(Corner corner) throws IOException {
+    Line[] crossing = crossingLines(corner);
+    return new Polyline(new Line[] {crossing[0], crossing[1], crossing[0]});
+  }
+
+  static Polyline read(
+      double[] board, java.util.function.BiFunction<Double, Double, IntPoint> designPoint)
+      throws IOException {
+    check(board);
+    Polyline exact = exact(board, designPoint);
+    return exact != null ? exact : grid(board, designPoint);
+  }
+
+  static Polyline read(double[] coordinates, double scale) throws IOException {
+    double[] board = new double[coordinates.length];
+    for (int i = 0; i < coordinates.length; i++) {
+      board[i] = coordinates[i] * scale;
+    }
+    return read(board, null);
   }
 
   static int halfWidth(double width, double scale) throws IOException {
