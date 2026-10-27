@@ -56,6 +56,8 @@ class Log4j2ConfigurationFactoryTest {
     // Check Root Logger
     LoggerConfig rootLogger = config.getRootLogger();
     assertNotNull(rootLogger);
+    // Root level follows the most verbose appender, so TRACE guards are off by default
+    assertEquals(Level.INFO, rootLogger.getLevel());
 
     // Console should be attached
     assertTrue(
@@ -87,6 +89,7 @@ class Log4j2ConfigurationFactoryTest {
 
       // Root Logger check
       LoggerConfig rootLogger = config.getRootLogger();
+      assertEquals(Level.TRACE, rootLogger.getLevel());
 
       // Console should NOT be attached
       assertTrue(
@@ -118,6 +121,7 @@ class Log4j2ConfigurationFactoryTest {
     assertNull(config.getAppender("File"));
 
     LoggerConfig rootLogger = config.getRootLogger();
+    assertEquals(Level.WARN, rootLogger.getLevel());
     // Console should be attached with WARN level
     assertTrue(
         rootLogger.getAppenderRefs().stream()
