@@ -1,9 +1,11 @@
 package app.freerouting.board.actions;
 
 import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.structure.AngleRestriction;
 import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.board.model.structure.ShapeEntrySide;
+import app.freerouting.board.searchtree.SearchTreeObject;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.ConvexShape;
@@ -40,6 +42,41 @@ public final class ForcedViaInserter {
       RoutingBoard board,
       int traceHalfWidth,
       int traceClearanceClass) {
+    return checkLayer(
+        viaRadius,
+        clearanceClassIndex,
+        attachSmdAllowed,
+        roomShape,
+        location,
+        layer,
+        netNumbers,
+        maxRecursionDepth,
+        maxViaRecursionDepth,
+        board,
+        traceHalfWidth,
+        traceClearanceClass,
+        false);
+  }
+
+  /**
+   * Checks, if a Via is possible at the input layer after evtl. shoving aside obstacle traces.
+   * roomShape is used for calculating the fromSide. With {@code circularCopper}, a round via is
+   * checked as the circle the insertion checks.
+   */
+  public static ForcedPadRouter.CheckDrillResult checkLayer(
+      double viaRadius,
+      int clearanceClassIndex,
+      boolean attachSmdAllowed,
+      TileShape roomShape,
+      Point location,
+      int layer,
+      int[] netNumbers,
+      int maxRecursionDepth,
+      int maxViaRecursionDepth,
+      RoutingBoard board,
+      int traceHalfWidth,
+      int traceClearanceClass,
+      boolean circularCopper) {
     if (viaRadius <= 0) {
       return ForcedPadRouter.CheckDrillResult.DRILLABLE;
     }
@@ -85,7 +122,9 @@ public final class ForcedViaInserter {
             maxRecursionDepth,
             maxViaRecursionDepth,
             false,
-            null);
+            null,
+            false,
+            circularCopper ? viaShape : null);
     if (viaResult == ForcedPadRouter.CheckDrillResult.NOT_DRILLABLE) {
       return viaResult;
     }
@@ -115,7 +154,9 @@ public final class ForcedViaInserter {
             maxRecursionDepth,
             maxViaRecursionDepth,
             false,
-            null);
+            null,
+            false,
+            startTraceCircle);
     if (traceResult == ForcedPadRouter.CheckDrillResult.NOT_DRILLABLE) {
       return traceResult;
     }
@@ -139,14 +180,45 @@ public final class ForcedViaInserter {
       RoutingBoard board,
       int[] tracePenHalfwidthArr,
       int traceClearanceClassIndex) {
+    return check(
+        viaInfo,
+        location,
+        netNumbers,
+        maxRecursionDepth,
+        maxViaRecursionDepth,
+        board,
+        tracePenHalfwidthArr,
+        traceClearanceClassIndex,
+        null);
+  }
+
+  /**
+   * Checks, if a Via is possible with the input parameter after evtl. shoving aside obstacle
+   * traces. {@code attachSmdAllowed} overrides the via rule's flag when non-null.
+   */
+  public static boolean check(
+      ViaInfo viaInfo,
+      Point location,
+      int[] netNumbers,
+      int maxRecursionDepth,
+      int maxViaRecursionDepth,
+      RoutingBoard board,
+      int[] tracePenHalfwidthArr,
+      int traceClearanceClassIndex,
+      Boolean attachSmdAllowed) {
+    boolean attach = attachSmdAllowed != null ? attachSmdAllowed : viaInfo.attachSmdAllowed();
     Vector translateVector = location.differenceBy(Point.ZERO);
     int calcFromSideOffset = board.getMinTraceHalfWidth();
     ForcedPadRouter forcedPadRouter = new ForcedPadRouter(board);
     Padstack viaPadstack = viaInfo.getPadstack();
+    if (!app.freerouting.rules.HoleSpacing.clear(board, viaPadstack, location)) {
+      return false;
+    }
     Shape holeShape = holeCheckShape(viaPadstack, location, board);
     for (int i = viaPadstack.fromLayer(); i <= viaPadstack.toLayer(); i++) {
       Shape currentPadShape = viaPadstack.getShape(i);
       int currentClearanceClassIndex = viaInfo.getClearanceClassIndex();
+      boolean holeLayer = false;
       if (currentPadShape == null) {
         if (holeShape == null) {
           continue;
@@ -154,6 +226,7 @@ public final class ForcedViaInserter {
         // The drill hole itself must keep hole clearance from copper on this layer.
         currentPadShape = holeShape;
         currentClearanceClassIndex = 0;
+        holeLayer = true;
       } else {
         currentPadShape = (Shape) currentPadShape.translateBy(translateVector);
       }
@@ -173,12 +246,14 @@ public final class ForcedViaInserter {
               i,
               netNumbers,
               currentClearanceClassIndex,
-              viaInfo.attachSmdAllowed(),
+              attach,
               null,
               maxRecursionDepth,
               maxViaRecursionDepth,
               false,
-              null)
+              null,
+              holeLayer,
+              currentPadShape)
           == ForcedPadRouter.CheckDrillResult.NOT_DRILLABLE) {
         board.setShoveFailingLayer(i);
         return false;
@@ -198,12 +273,14 @@ public final class ForcedViaInserter {
                 i,
                 netNumbers,
                 0,
-                viaInfo.attachSmdAllowed(),
+                attach,
                 null,
                 maxRecursionDepth,
                 maxViaRecursionDepth,
                 false,
-                null)
+                null,
+                true,
+                holeShape)
             == ForcedPadRouter.CheckDrillResult.NOT_DRILLABLE) {
           board.setShoveFailingLayer(i);
           return false;
@@ -233,7 +310,9 @@ public final class ForcedViaInserter {
                 maxRecursionDepth,
                 maxViaRecursionDepth,
                 false,
-                null)
+                null,
+                false,
+                startTraceCircle)
             == ForcedPadRouter.CheckDrillResult.NOT_DRILLABLE) {
           board.setShoveFailingLayer(i);
           return false;
@@ -259,20 +338,52 @@ public final class ForcedViaInserter {
       int maxRecursionDepth,
       int maxViaRecursionDepth,
       RoutingBoard board) {
+    return insert(
+        viaInfo,
+        location,
+        netNumbers,
+        traceClearanceClassIndex,
+        tracePenHalfwidthArr,
+        maxRecursionDepth,
+        maxViaRecursionDepth,
+        board,
+        null);
+  }
+
+  /**
+   * Shoves aside traces, so that a via with the input parameters can be inserted without clearance
+   * violations. {@code attachSmdAllowed} overrides the via rule's flag when non-null.
+   */
+  public static boolean insert(
+      ViaInfo viaInfo,
+      Point location,
+      int[] netNumbers,
+      int traceClearanceClassIndex,
+      int[] tracePenHalfwidthArr,
+      int maxRecursionDepth,
+      int maxViaRecursionDepth,
+      RoutingBoard board,
+      Boolean attachSmdAllowed) {
+    boolean attach = attachSmdAllowed != null ? attachSmdAllowed : viaInfo.attachSmdAllowed();
     Vector translateVector = location.differenceBy(Point.ZERO);
     int calcFromSideOffset = board.getMinTraceHalfWidth();
     ForcedPadRouter forcedPadRouter = new ForcedPadRouter(board);
     Padstack viaPadstack = viaInfo.getPadstack();
+    if (!app.freerouting.rules.HoleSpacing.clear(board, viaPadstack, location)) {
+      return false;
+    }
     Shape holeShape = holeCheckShape(viaPadstack, location, board);
     for (int i = viaPadstack.fromLayer(); i <= viaPadstack.toLayer(); i++) {
       Shape currentPadShape = viaPadstack.getShape(i);
       int currentClearanceClassIndex = viaInfo.getClearanceClassIndex();
+      boolean holeLayer = false;
       if (currentPadShape == null) {
         if (holeShape == null) {
           continue;
         }
         currentPadShape = holeShape;
         currentClearanceClassIndex = 0;
+        holeLayer = true;
       } else {
         currentPadShape = (Shape) currentPadShape.translateBy(translateVector);
       }
@@ -305,10 +416,12 @@ public final class ForcedViaInserter {
           i,
           netNumbers,
           currentClearanceClassIndex,
-          viaInfo.attachSmdAllowed(),
+          attach,
           null,
           maxRecursionDepth,
-          maxViaRecursionDepth)) {
+          maxViaRecursionDepth,
+          holeLayer,
+          currentPadShape)) {
         board.setShoveFailingLayer(i);
         return false;
       }
@@ -325,10 +438,12 @@ public final class ForcedViaInserter {
             i,
             netNumbers,
             0,
-            viaInfo.attachSmdAllowed(),
+            attach,
             null,
             maxRecursionDepth,
-            maxViaRecursionDepth)) {
+            maxViaRecursionDepth,
+            true,
+            holeShape)) {
           board.setShoveFailingLayer(i);
           return false;
         }
@@ -345,7 +460,9 @@ public final class ForcedViaInserter {
             true,
             null,
             maxRecursionDepth,
-            maxViaRecursionDepth)) {
+            maxViaRecursionDepth,
+            false,
+            startTraceCircle)) {
           board.setShoveFailingLayer(i);
           return false;
         }
@@ -357,8 +474,35 @@ public final class ForcedViaInserter {
         netNumbers,
         viaInfo.getClearanceClassIndex(),
         FixedState.UNFIXED,
-        viaInfo.attachSmdAllowed());
+        attach);
     return true;
+  }
+
+  /**
+   * Whether a via of {@code viaPadstack} at {@code location} has its drill hole overlapping an
+   * own-net SMD pad.
+   */
+  public static boolean holeInSmdPad(
+      RoutingBoard board, Padstack viaPadstack, Point location, int[] netNumbers) {
+    double drillRadius = viaPadstack.getDrillRadius();
+    if (drillRadius <= 0 || !(location instanceof IntPoint center)) {
+      return false;
+    }
+    Circle hole = new Circle(center, (int) Math.ceil(drillRadius));
+    for (int layer = viaPadstack.fromLayer(); layer <= viaPadstack.toLayer(); layer++) {
+      for (SearchTreeObject found : board.overlappingObjects(hole, layer)) {
+        if (found instanceof Pin pin
+            && pin.drillAllowed()
+            && !pin.viaMayAttach()
+            && pin.sharesNetNo(netNumbers)) {
+          Shape pad = pin.getShapeOnLayer(layer);
+          if (pad != null && pad.intersects(hole)) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
   }
 
   /** Prepares new pad geometry for the same tree used by ForcedPadRouter and DrillItemMover. */
@@ -481,5 +625,49 @@ public final class ForcedViaInserter {
       }
     }
     return null;
+  }
+
+  /**
+   * The fanout's check whether a via of {@code viaPadstack} and class {@code viaClearanceClass} at
+   * {@code location} comes inside the clearance (the rule, between the pad's class and {@code
+   * viaClearanceClass}) of a pad of net {@code netNumber} on one of its layers. Legal since
+   * same-net spacing; the fanout prefers to keep the gap. Exposed pads, where vias may sit ({@link
+   * Pin#viaMayAttach()}), do not count.
+   */
+  public static boolean crowdsOwnPad(
+      RoutingBoard board,
+      Padstack viaPadstack,
+      int viaClearanceClass,
+      Point location,
+      int netNumber) {
+    if (!(location instanceof IntPoint center)) {
+      return false;
+    }
+    for (int layer = viaPadstack.fromLayer(); layer <= viaPadstack.toLayer(); layer++) {
+      ConvexShape viaShape = viaPadstack.getShape(layer);
+      if (viaShape == null) {
+        continue;
+      }
+      int radius = (int) Math.ceil(0.5 * viaShape.maxWidth());
+      int reach = board.rules.clearanceMatrix.maxValue(viaClearanceClass, layer);
+      if (reach <= 0) {
+        continue;
+      }
+      for (SearchTreeObject found :
+          board.overlappingObjects(new Circle(center, radius + reach), layer)) {
+        if (found instanceof Pin pin
+            && pin.containsNet(netNumber)
+            && !pin.viaMayAttach()
+            && pin.getShapeOnLayer(layer) instanceof Shape pad) {
+          int clearance =
+              board.rules.clearanceMatrix.getValue(
+                  pin.clearanceClassIndex(), viaClearanceClass, layer, false);
+          if (clearance > 0 && pad.intersects(new Circle(center, radius + clearance))) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
   }
 }

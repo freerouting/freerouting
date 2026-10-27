@@ -207,6 +207,88 @@ class BenchmarkStoreTest(unittest.TestCase):
         )
         self.assertEqual(clean.index("( "), unrouted.index("( "))
 
+    def test_recent_result_names_the_boards_place_in_its_tier(self) -> None:
+        self.assertEqual(
+            store.format_recent_result(
+                1021,
+                1142,
+                "UNROUTED",
+                store.format_result_timing(113.9 * 60, "unr=19, viol=8"),
+                "ErgodoneWithHole_ErgoDone",
+                (12, 48, "C"),
+            ),
+            "[1021/1142  12/ 48 of T-C] UNROUTED (  113.9m, unr=19, viol=8) ErgodoneWithHole_ErgoDone",
+        )
+        self.assertEqual(
+            store.format_recent_result(1021, 1142, "CLEAN", store.format_result_timing(60), "board", (8, 348, "C")),
+            "[1021/1142   8/348 of T-C] CLEAN    (    1.0m) board",
+        )
+        self.assertEqual(
+            store.format_recent_result(1021, 1142, "CLEAN", store.format_result_timing(60), "board", (112, 113, "C")),
+            "[1021/1142 112/113 of T-C] CLEAN    (    1.0m) board",
+        )
+        self.assertEqual(
+            store.format_recent_result(1021, 1142, "CLEAN", store.format_result_timing(60), "board", (4, 9, "C")),
+            "[1021/1142   4/  9 of T-C] CLEAN    (    1.0m) board",
+        )
+
+    def test_tier_place_follows_run_order_inside_each_tier(self) -> None:
+        places = store.assign_tier_places(
+            [
+                {"board_id": "slow-c", "tier": "C"},
+                {"board_id": "only-a", "tier": "A"},
+                {"board_id": "quick-c", "tier": "C"},
+                {"board_id": "", "tier": "C"},
+            ]
+        )
+        self.assertEqual(places["slow-c"], (1, 2, "C"))
+        self.assertEqual(places["quick-c"], (2, 2, "C"))
+        self.assertEqual(places["only-a"], (1, 1, "A"))
+        self.assertNotIn("", places)
+
+    def test_worker_clock_shows_expected_completion_from_previous_runtime(self) -> None:
+        self.assertEqual(store.format_worker_progress(22 * 60 + 51, 42 * 60 + 12), "[22:51 ~42m]")
+        self.assertEqual(store.format_worker_progress(5, None), "[00:05]")
+        self.assertEqual(store.format_worker_progress(5, 20), "[00:05]")
+        self.assertEqual(store.format_worker_progress(5, 30), "[00:05 ~1m]")
+        self.assertEqual(store.expected_fixture_seconds(100, "C", {"": 1.0}), 100.0)
+        self.assertEqual(store.expected_fixture_seconds(100, "C", {"": 1.0, "C": 2.0}), 200.0)
+        self.assertIsNone(store.expected_fixture_seconds(0, "C", {"": 1.0}))
+
+        import collections
+        import io
+        import re
+        import threading
+        from unittest.mock import patch
+
+        captured = io.StringIO()
+        worker_status = {
+            6: {
+                "board": "Microdox-PCB_Microdox-LEDs",
+                "tier": "C",
+                "start": 1_000.0,
+                "last_line": "Auto-routing pass #9",
+                "active": True,
+                "reference_seconds": 42 * 60 + 12,
+            }
+        }
+        with (
+            patch("sys.stdout", captured),
+            patch("run_corpus_benchmark.time.perf_counter", return_value=1_000.0 + 22 * 60 + 51),
+        ):
+            store.render_dashboard(
+                completed=1,
+                total=10,
+                t_start=1_000.0,
+                worker_status=worker_status,
+                recent_messages=collections.deque(),
+                status_lock=threading.Lock(),
+                in_place=False,
+                completed_samples=[("C", 2_000.0, 2_000.0)],
+            )
+        plain = re.sub(r"\033\[[0-9;]*m", "", captured.getvalue())
+        self.assertIn("[22:51 ~42m]", plain)
+
     def test_fixture_name_keeps_both_ends_when_longer_than_37_characters(self) -> None:
         short = "bee-light-measurement-matrix"
         self.assertEqual(store.format_fixture_name(short), short)

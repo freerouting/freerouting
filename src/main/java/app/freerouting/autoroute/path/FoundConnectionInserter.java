@@ -751,14 +751,15 @@ public final class FoundConnectionInserter {
       }
       foundSuitableSpan = true;
       if (ForcedViaInserter.check(
-          currentViaInfo,
-          location,
-          netNumbers,
-          this.ctrl.maxShoveTraceRecursionDepth,
-          this.ctrl.maxShoveViaRecursionDepth,
-          this.board,
-          this.ctrl.traceHalfWidth,
-          this.ctrl.traceClearanceClassIndex)) {
+              currentViaInfo,
+              location,
+              netNumbers,
+              this.ctrl.maxShoveTraceRecursionDepth,
+              this.ctrl.maxShoveViaRecursionDepth,
+              this.board,
+              this.ctrl.traceHalfWidth,
+              this.ctrl.traceClearanceClassIndex)
+          && this.ctrl.viaHoleAllowed(this.board, currentViaInfo, location, netNumbers)) {
         viaInfo = currentViaInfo;
         break;
       }
@@ -804,7 +805,8 @@ public final class FoundConnectionInserter {
         this.ctrl.traceHalfWidth,
         this.ctrl.maxShoveTraceRecursionDepth,
         this.ctrl.maxShoveViaRecursionDepth,
-        this.board)) {
+        this.board,
+        this.ctrl.viaAttachAllowed(viaInfo))) {
       FRLogger.debug("FoundConnectionInserter: forced via failed for net #" + ctrl.netNumber);
       traceFanoutDiagnostic(
           "forced_via_insert_failed",
