@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import app.freerouting.autoroute.expansion.CompleteFreeSpaceExpansionRoom;
 import app.freerouting.autoroute.expansion.IncompleteFreeSpaceExpansionRoom;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.structure.AngleRestriction;
@@ -236,6 +237,55 @@ class OutlineRoomGeometryTest {
     assertTrue(entries.stream().noneMatch(e -> e.object == trace));
     tree.overlappingRoomEntries(query, 0, entries);
     assertTrue(entries.stream().anyMatch(e -> e.object == trace));
+  }
+
+  @Test
+  void removingTraceDropsRoomsThatMeetOnlyItsEnvelope() throws Exception {
+    var board = DsnTestFixtures.loadBoard("Issue1014-slanted-edge.dsn");
+    var engine = board.initAutoroute(1, 1, null, null, true);
+    var tree = engine.autorouteSearchTree;
+    var trace =
+        board.insertTraceWithoutCleaning(
+            new app.freerouting.geometry.planar.Polyline(
+                new IntPoint(30000, 30000), new IntPoint(40000, 33000)),
+            0,
+            100,
+            new int[] {1},
+            1,
+            FixedState.UNFIXED);
+    var gap = new IntBox(34000, 30050, 34001, 30051);
+    assertFalse(trace.getTreeShape(tree, 0).intersects(gap));
+    assertTrue(tree.getRoomShape(trace, 0).intersects(gap));
+    var room = new CompleteFreeSpaceExpansionRoom(gap, 0, 99);
+    tree.insert(room);
+    board.removeItem(trace);
+    assertTrue(
+        tree.overlaps(gap).stream().noneMatch(leaf -> leaf.object == room),
+        "envelope overlap must invalidate the retained room");
+  }
+
+  @Test
+  void snapAngleChangeRebuildsDefaultTreeShapesAndDropsRetainedEngine() throws Exception {
+    var board = DsnTestFixtures.loadBoard("Issue969-clearance-query.dsn");
+    board.rules.setTraceAngleRestriction(AngleRestriction.FORTYFIVE_DEGREE);
+    var via =
+        board.insertVia(
+            board.library.padstacks.get("Via100"),
+            new IntPoint(10000, -10000),
+            new int[] {1},
+            0,
+            FixedState.UNFIXED,
+            false);
+    var engine = board.initAutoroute(1, 0, null, null, true);
+    assertSame(board.searchTreeManager.getDefaultTree(), engine.autorouteSearchTree);
+    assertFalse(via.getTreeShape(engine.autorouteSearchTree, 0).isIntBox());
+    var same = board.initAutoroute(1, 0, null, null, true);
+    assertSame(engine, same);
+    board.rules.setTraceAngleRestriction(AngleRestriction.NINETY_DEGREE);
+    var rebuilt = board.initAutoroute(1, 0, null, null, true);
+    assertNotSame(engine, rebuilt);
+    assertSame(board.searchTreeManager.getDefaultTree(), rebuilt.autorouteSearchTree);
+    assertTrue(via.getTreeShape(rebuilt.autorouteSearchTree, 0).isIntBox());
   }
 
   @Test

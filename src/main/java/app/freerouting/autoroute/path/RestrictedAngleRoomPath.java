@@ -60,7 +60,9 @@ final class RestrictedAngleRoomPath {
                       -border.signedDistance(from.toFloat()),
                       -border.signedDistance(to.toFloat()))));
       Line shifted = border.translate(distance);
-      // Line translations use integer supports. Never round an entry/exit outside its half-plane.
+      // Interior is the right half-plane (TileShape.isOutside), so signedDistance is negative
+      // there and a positive translate moves the border inward. Integer supports can still step
+      // past an endpoint; ON_THE_LEFT means that endpoint would leave the room, so keep the border.
       borders[i] =
           shifted.sideOf(from) == Side.ON_THE_LEFT || shifted.sideOf(to) == Side.ON_THE_LEFT
               ? border

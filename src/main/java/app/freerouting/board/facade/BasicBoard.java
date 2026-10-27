@@ -1359,6 +1359,9 @@ public class BasicBoard implements Serializable {
    */
   public void additionalUpdateAfterChange(Item item) {}
 
+  /** Drops retained autoroute rooms before indexed search shapes are rebuilt. */
+  public void clearRetainedAutorouteState() {}
+
   /**
    * Restores the situation at the previous snapshot. Returns false, if no more undo is possible.
    * Puts the numbers of the changed nets into the set changedNets, if changedNets != null

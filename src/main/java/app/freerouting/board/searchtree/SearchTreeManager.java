@@ -29,6 +29,9 @@ public class SearchTreeManager {
   private ShapeSearchTree defaultTree;
   private boolean clearanceCompensationUsed;
 
+  /** Angle whose derived shapes are currently stored in the default tree. */
+  private AngleRestriction indexedShapeAngle;
+
   /** Creates a new instance of SearchTreeManager. */
   public SearchTreeManager(BasicBoard board) {
     this.board = board;
@@ -36,6 +39,7 @@ public class SearchTreeManager {
     defaultTree = new ShapeSearchTree(FortyfiveDegreeBoundingDirections.INSTANCE, board, 0);
     compensatedSearchTrees.add(defaultTree);
     this.clearanceCompensationUsed = false;
+    this.indexedShapeAngle = board.rules.getTraceAngleRestriction();
   }
 
   /** Inserts the tree shapes of item into all active search trees. */
@@ -66,6 +70,7 @@ public class SearchTreeManager {
 
   /** Returns the default tree used in interactive routing. */
   public ShapeSearchTree getDefaultTree() {
+    refreshIndexedShapesAfterAngleChange();
     return defaultTree;
   }
 
@@ -132,6 +137,7 @@ public class SearchTreeManager {
             FortyfiveDegreeBoundingDirections.INSTANCE, this.board, compensatedClearanceClassNo);
     this.compensatedSearchTrees.add(defaultTree);
     insertAllBoardItems();
+    this.indexedShapeAngle = board.rules.getTraceAngleRestriction();
   }
 
   /** Actions to be done, when a value in the clearance matrix is changed interactively. */
@@ -166,6 +172,7 @@ public class SearchTreeManager {
    * conservative for the selected room-envelope policy.
    */
   public ShapeSearchTree getAutorouteTree(int clearanceClassIndex) {
+    refreshIndexedShapesAfterAngleChange();
     // The general default tree can serve any room geometry, as before.
     if (defaultTree.compensatedClearanceClassNo == clearanceClassIndex) {
       return defaultTree;
@@ -211,6 +218,20 @@ public class SearchTreeManager {
       currentAutorouteTree.insert(currentItem);
     }
     return currentAutorouteTree;
+  }
+
+  /**
+   * The default tree's drill and trace shapes read the live angle and are not keyed by it. After a
+   * snap-angle change, rebuild those shapes and drop retained rooms before the same tree is reused.
+   */
+  private void refreshIndexedShapesAfterAngleChange() {
+    AngleRestriction angle = board.rules.getTraceAngleRestriction();
+    if (indexedShapeAngle == angle) {
+      return;
+    }
+    indexedShapeAngle = angle;
+    board.clearRetainedAutorouteState();
+    reinsertTreeItems();
   }
 
   private Class<? extends ShapeSearchTree> autorouteTreeType() {

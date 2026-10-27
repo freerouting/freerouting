@@ -137,6 +137,8 @@ area bounds and trace offset updates keep their existing box/octagon conventions
 common room-obstacle hook applies these envelopes during clipping, neighbour
 construction and obstacle-room creation. The room-specific overlap query also filters by
 these envelopes; ordinary overlap/contact queries continue to filter by indexed shapes.
+Retained-room invalidation uses the same envelope, so a room clipped by the box or octagon
+is dropped even when it misses the indexed copper.
 Indexed trace shapes, contact queries and explicit net-tie cutouts remain unchanged;
 room envelopes retain their existing conservative approximation. The shape-only delegate
 is never indexed. The default interactive/general tree and uncompensated DRC tree keep
@@ -147,9 +149,10 @@ orthogonal outlines and multiple polygons do not use that exception.
 
 The tree cache distinguishes solver type, immutable obstacle-angle policy and clearance
 class. An existing general default tree remains reusable for its clearance class.
-Retained autoroute engines and rooms belong to a particular tree instance; selecting a
-different tree clears the previous engine's transient state. Outline shape indices and
-layer mapping are unchanged. Switching between outline strips and filled outside areas
+Its derived shapes follow the live trace angle, so a snap-angle change rebuilds them and
+drops any retained engine before that same tree is reused. Retained autoroute engines and
+rooms belong to a particular tree instance; selecting a different tree clears the previous
+engine's transient state. Outline shape indices and layer mapping are unchanged. Switching between outline strips and filled outside areas
 invalidates cached shapes and affected rooms around reinsertion. General rooms can
 change door topology, route ordering, allocation and runtime, so routing comparisons
 must measure completion, full DRC, determinism and search cost. Geometry selection
