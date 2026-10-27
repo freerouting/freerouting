@@ -25,6 +25,8 @@ Freerouting integrates seamlessly with many popular EDA tools and PCB design sof
 
 ![image](https://user-images.githubusercontent.com/910321/210981925-d32fb974-e3e6-4e65-832e-ed033ef3b3db.png)
 
+9. The plugin automatically triggers KiCad's zone filler (`ZONE_FILLER`) after importing the routed tracks and vias, ensuring all existing copper zones and ground pours immediately carve out clearance cutouts around newly routed copper.
+
 ## [Autodesk Fusion](https://www.autodesk.com/products/fusion-360/overview)
 
 Autodesk Fusion Electronics integrates with Freerouting via the dedicated Freerouting Fusion Plugin ULP ([`freerouting_fusion_plugin.ulp`](https://github.com/freerouting/freerouting/blob/master/integrations/AutodeskFusion/freerouting_fusion_plugin.ulp)).
