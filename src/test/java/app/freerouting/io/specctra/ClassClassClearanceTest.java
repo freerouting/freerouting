@@ -4,7 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 import app.freerouting.board.facade.BasicBoard;
+import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.drc.DesignRulesChecker;
+import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.rules.DefaultItemClearanceClasses.ItemClass;
 import app.freerouting.settings.DesignRulesCheckerSettings;
@@ -130,17 +132,22 @@ class ClassClassClearanceTest {
                 "(clearance 100 (type smd_smd))",
                 "(via_rule selected)",
                 "(rule (clearance 2220))",
-                "(via first V default attach) (via second V default)"
+                "(via first V default attach) (via second V2 default)"
                     + "(via_rule selected second first)"
                     + "(net N3) (class unrelated N3 (via_rule selected))")
-            .replace("(circuit (use_via V))", "");
+            .replace("(circuit (use_via V))", "")
+            .replace(
+                "(library",
+                "(library (padstack V2 (shape (circle top 900))" + " (shape (circle bottom 900)))");
     BasicBoard board = read(dsn);
     var selected = board.rules.nets.get("N1", 1).getNetClass().getViaRule();
     var unrelated = board.rules.nets.get("N3", 1).getNetClass().getViaRule();
     assertEquals(2, selected.viaCount());
     assertEquals(2, unrelated.viaCount());
     for (int i = 0; i < selected.viaCount(); i++) {
-      assertEquals(unrelated.getVia(i).getPadstack(), selected.getVia(i).getPadstack());
+      String expectedPadstack = i == 0 ? "V2" : "V";
+      assertEquals(expectedPadstack, selected.getVia(i).getPadstack().name);
+      assertEquals(expectedPadstack, unrelated.getVia(i).getPadstack().name);
       assertEquals(unrelated.getVia(i).attachSmdAllowed(), selected.getVia(i).attachSmdAllowed());
       assertEquals(i == 1, selected.getVia(i).attachSmdAllowed());
       assertEquals(item(board, "N1", ItemClass.VIA), selected.getVia(i).getClearanceClassIndex());
@@ -179,6 +186,129 @@ class ClassClassClearanceTest {
     int actualPlaneClass = board.getConductionAreas().iterator().next().clearanceClassIndex();
     assertClearance(
         board, actualPlaneClass, item(board, "N2", ItemClass.TRACE), 0, explicit ? 200 : 2220);
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"HV-wire", "HV-smd", "HV-via", "HV-pin", "HV-area"})
+  void generatedNamesDoNotAliasUnrelatedClasses(String unrelatedName) {
+    BasicBoard board =
+        read(
+            fixture(
+                    "kicad_default",
+                    "(clearance 100 (type smd_smd))",
+                    "(rule (clearance 200))",
+                    "(rule (clearance 2220) (clearance 400 (type wire_smd)))",
+                    "(net N3) (class " + unrelatedName + " N3 (rule (clearance 5000)))")
+                .replace("(net N2) (type protect)", "(net N3) (type protect)"));
+    var pad = board.getPins().iterator().next();
+    var trace = board.getTraces().iterator().next();
+    assertClearance(board, pad.clearanceClassIndex(), trace.clearanceClassIndex(), 0, 5000);
+    assertClearance(
+        board, item(board, "N1", ItemClass.TRACE), trace.clearanceClassIndex(), 0, 5000);
+    assertClearance(board, pad.clearanceClassIndex(), item(board, "N2", ItemClass.TRACE), 0, 400);
+    assertClearance(
+        board, item(board, "N1", ItemClass.TRACE), item(board, "N2", ItemClass.TRACE), 0, 2220);
+  }
+
+  @ParameterizedTest
+  @ValueSource(booleans = {false, true})
+  void specificitySurvivesRepeatedClassPairDeclarations(boolean specificFirst) {
+    String specific =
+        "(class_class (classes kicad_default HV)"
+            + " (rule (clearance 3000 (type smd_smd)))"
+            + " (layer_rule bottom (rule (clearance 3500))))";
+    String general = "(class_class (classes kicad_default HV) (rule (clearance 2220)))";
+    String dsn =
+        fixture(
+                "kicad_default",
+                "(clearance 100 (type smd_smd))",
+                "(rule (clearance 200))",
+                "(rule (clearance 2220))",
+                "")
+            .replace(general, specificFirst ? specific + general : general + specific);
+    BasicBoard board = read(dsn);
+    int firstPad = item(board, "N1", ItemClass.SMD);
+    int secondPad = item(board, "N2", ItemClass.SMD);
+    assertClearance(board, firstPad, secondPad, 0, 3000);
+    assertClearance(board, firstPad, secondPad, 1, 3500);
+    assertClearance(
+        board, item(board, "N1", ItemClass.TRACE), item(board, "N2", ItemClass.TRACE), 0, 2220);
+    assertClearance(
+        board, item(board, "N1", ItemClass.TRACE), item(board, "N2", ItemClass.TRACE), 1, 3500);
+  }
+
+  @Test
+  void routerSelectedViaUsesClassPairClearanceAfterLocalWireRule() {
+    BasicBoard board =
+        read(
+            fixture(
+                    "kicad_default",
+                    "(clearance 100 (type smd_smd))",
+                    "(rule (clearance 200) (clearance 100 (type wire_smd)))",
+                    "(rule (clearance 2220))",
+                    "")
+                .replace("(class kicad_default N1 (circuit (use_via V))", "(class kicad_default N1")
+                .replace("(placement (component P (place J1 10000 10000 front 0)))", "")
+                .replace("(pins J1-1)", ""));
+    var net = board.rules.nets.get("N1", 1);
+    var selected = net.getNetClass().getViaRule().getVia(0);
+    var via =
+        board.insertVia(
+            selected.getPadstack(),
+            new IntPoint(100000, 100000),
+            new int[] {net.netNumber},
+            selected.getClearanceClassIndex(),
+            FixedState.UNFIXED,
+            selected.attachSmdAllowed());
+    assertClearance(
+        board,
+        via.clearanceClassIndex(),
+        board.getTraces().iterator().next().clearanceClassIndex(),
+        0,
+        2220);
+    assertEquals(
+        1,
+        new DesignRulesChecker(board, new DesignRulesCheckerSettings())
+            .getAllClearanceViolations()
+            .size(),
+        "The actual 575 um via-to-trace gap violates 2220 um");
+  }
+
+  @ParameterizedTest
+  @ValueSource(booleans = {false, true})
+  void allSelectedViaClearancesReceivePairRulesWithoutLosingSelfRules(boolean typed) {
+    String pairRules =
+        "(rule (clearance 2220)"
+            + (typed ? "(clearance 450 (type via_wire)) (clearance 350 (type via_smd))" : "")
+            + ")"
+            + "(layer_rule bottom (rule (clearance 800 (type via_wire))))";
+    BasicBoard board =
+        read(
+            fixture(
+                    "kicad_default",
+                    "(clearance 100 (type smd_smd)) (clearance 700 (type custom_custom))",
+                    "(via_rule selected) (rule (clearance 200) (clearance 100 (type wire_smd)))",
+                    pairRules,
+                    "(via first V custom attach) (via second V default) (via_rule selected first second)"
+                        + "(net N3) (class unrelated N3 (via_rule selected))")
+                .replace("(circuit (use_via V))", ""));
+    var selected = board.rules.nets.get("N1", 1).getNetClass().getViaRule();
+    var unrelated = board.rules.nets.get("N3", 1).getNetClass().getViaRule();
+    assertEquals(2, selected.viaCount());
+    for (int i = 0; i < 2; i++) {
+      int via = selected.getVia(i).getClearanceClassIndex();
+      assertClearance(board, via, via, 0, i == 0 ? 700 : 200);
+      assertClearance(board, via, item(board, "N2", ItemClass.TRACE), 0, typed ? 450 : 2220);
+      assertClearance(board, via, item(board, "N2", ItemClass.TRACE), 1, 800);
+      assertClearance(board, via, item(board, "N2", ItemClass.SMD), 0, typed ? 350 : 2220);
+      assertClearance(
+          board,
+          unrelated.getVia(i).getClearanceClassIndex(),
+          item(board, "N2", ItemClass.TRACE),
+          0,
+          200);
+      assertEquals(i == 0, selected.getVia(i).attachSmdAllowed());
+    }
   }
 
   private static int item(BasicBoard board, String net, ItemClass type) {
