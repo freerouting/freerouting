@@ -4,12 +4,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.board.actions.ItemIdGenerator;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.state.BoardObserverAdaptor;
 import app.freerouting.core.RoutingJob;
+import app.freerouting.drc.ClearanceBaseline;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.management.HeadlessBoardManager;
 import app.freerouting.settings.RouterSettings;
@@ -63,6 +65,22 @@ class BoardHistoryTest {
         board1.getHash(),
         restoredBoard.getHash(),
         "Restored board should be functionally identical to the original");
+  }
+
+  @Test
+  void restoredBoardKeepsTheClearanceBaseline() {
+    // The fallback and the statistics compare violations against this baseline; a restored copy
+    // without it reports every pre-existing violation of the input design as new.
+    board2.awaitPostLoad();
+    ClearanceBaseline baseline = board2.clearanceBaseline;
+    assertNotNull(baseline, "Loading the board builds its clearance baseline");
+    BoardHistory history = new BoardHistory(routerSettings);
+    history.add(board2);
+
+    RoutingBoard restoredBoard = history.restoreBestBoard();
+
+    assertNotNull(restoredBoard);
+    assertSame(baseline, restoredBoard.clearanceBaseline);
   }
 
   @Test

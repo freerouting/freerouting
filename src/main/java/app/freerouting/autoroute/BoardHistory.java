@@ -3,6 +3,7 @@ package app.freerouting.autoroute;
 import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.core.scoring.BoardStatistics;
+import app.freerouting.drc.ClearanceBaseline;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.RoutingCostSettings;
 import java.io.Serializable;
@@ -164,7 +165,10 @@ public class BoardHistory {
       for (BoardHistoryEntry entry : boards) {
         if (entry.restoreCount <= maxAllowedRestoreCount) {
           entry.restoreCount++;
-          return (RoutingBoard) BasicBoard.deserialize(entry.board);
+          RoutingBoard restored = (RoutingBoard) BasicBoard.deserialize(entry.board);
+          // The baseline is transient: without it, every pre-existing violation counts as new.
+          restored.clearanceBaseline = entry.clearanceBaseline;
+          return restored;
         }
       }
       return null;
@@ -209,12 +213,15 @@ public class BoardHistory {
     public final byte[] board;
     public final String hash;
     public final float score;
+    public final transient ClearanceBaseline clearanceBaseline;
     public int restoreCount;
 
     public BoardHistoryEntry(RoutingBoard board, RouterSettings routerSettings) {
       this.board = board.serialize(false);
       this.hash = board.getHash();
       this.score = new BoardStatistics(board).getRouterScore(routerSettings);
+      // Read after the statistics, which wait for the post-load DRC that builds the baseline.
+      this.clearanceBaseline = board.clearanceBaseline;
       this.restoreCount = 0;
     }
   }
