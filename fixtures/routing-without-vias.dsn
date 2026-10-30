@@ -1,0 +1,19 @@
+(pcb routing_without_vias
+  (resolution um 10) (unit um)
+  (structure
+    (layer F.Cu (type signal) (property (index 0)))
+    (boundary (path pcb 0 0 0 20000 0 20000 -10000 0 -10000 0 0))
+    (rule (width 250) (clearance 200)))
+  (placement
+    (component Pad800
+      (place A 2000 -3000 front 0)
+      (place B 18000 -3000 front 0)
+      (place C 2000 -7000 front 0)
+      (place D 18000 -7000 front 0)))
+  (library
+    (image Pad800 (pin Smd800 1 0 0))
+    (padstack Smd800 (shape (rect F.Cu -400 -400 400 400)) (attach off)))
+  (network
+    (net SIG1 (pins A-1 B-1))
+    (net SIG2 (pins C-1 D-1))
+    (class default SIG1 SIG2 (rule (width 250) (clearance 200)))))
