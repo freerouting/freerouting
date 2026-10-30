@@ -452,6 +452,9 @@ public class HeadlessBoardManager implements BoardManager {
         this.routingJob.routerSettings.autorouter.viaTouchingPad = touchingDetected;
       }
     }
+    this.board.rules.setViaInPad(
+        Boolean.TRUE.equals(this.routingJob.routerSettings.autorouter.viaInPad),
+        Boolean.TRUE.equals(this.routingJob.routerSettings.autorouter.viaTouchingPad));
   }
 
   private void applyHoleClearanceOverride() {
