@@ -52,6 +52,15 @@ class RouterMaxThreadsMergeTest {
 
     assertTrue(merged.getRunOptimizer());
     assertEquals(Runtime.getRuntime().availableProcessors(), merged.optimizer.maxThreads);
+    assertEquals(Runtime.getRuntime().availableProcessors(), merged.maxThreads);
+  }
+
+  @Test
+  void legacyMtNegativeDisablesTheOptimizerAndKeepsLaterFlags() {
+    RouterSettings merged = mergeCli("-mt", "-1", "-mp", "5");
+
+    assertFalse(merged.getRunOptimizer());
+    assertEquals(5, merged.autorouter.maxPasses);
   }
 
   @Test

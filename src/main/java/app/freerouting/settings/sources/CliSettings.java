@@ -72,7 +72,10 @@ public class CliSettings implements SettingsSource {
       } else if (arg.startsWith("-")) {
         // Handle -flag value format
         String flag = arg.substring(1);
-        String value = i + 1 < args.length && !args[i + 1].startsWith("-") ? args[++i] : "";
+        String next = i + 1 < args.length ? args[i + 1] : null;
+        // -mt takes a signed number ("-mt -1"), so a leading '-' is not the next flag there.
+        boolean signedNumber = "mt".equals(flag) && next != null && next.matches("-?\\d+");
+        String value = next != null && (!next.startsWith("-") || signedNumber) ? args[++i] : "";
 
         if ("de".equals(flag)) {
           hasDesignInputArgument = true;

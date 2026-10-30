@@ -1181,6 +1181,9 @@ public class RouterSettings implements Serializable, Cloneable {
     // it without a pool's nested max_threads sets that pool too.
     if (settings.maxThreads != null) {
       int threads = normalizeMaxThreads(settings.maxThreads);
+      // Keep the flat value normalized too (0 means all processors), so GUI readers of
+      // maxThreads never see 0.
+      this.maxThreads = threads;
       if (this.autorouter != null
           && (settings.autorouter == null || settings.autorouter.maxThreads == null)) {
         this.autorouter.maxThreads = threads;
