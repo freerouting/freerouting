@@ -1,12 +1,14 @@
 package app.freerouting.board;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.Pin;
+import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.specctra.DsnReader;
 import java.io.ByteArrayInputStream;
@@ -133,5 +135,32 @@ class NetTieClusteringTest {
 
     // 7. Component separation: R3 pin 1 overlaps R1 pin 1 in location, but belongs to COMP3
     assertEquals(0, r3p1.getNetTieClusterId(), "Pads on different components must not cluster");
+
+    // 8. Clearance & Obstacle Verification:
+    // Partner pins in Cluster 1 (R1-1 and R1-2) must NOT be obstacles to each other despite having
+    // different nets!
+    assertFalse(
+        r1p1.isObstacle(r1p2),
+        "Pins in the same net-tie cluster must not be obstacles to each other");
+    assertFalse(
+        r1p2.isObstacle(r1p1), "Obstacle relationship must be symmetric for net-tie partners");
+
+    // Foreign pins (R1-1 vs R1-3, R1-1 vs R3-1) MUST remain obstacles to each other
+    assertTrue(
+        r1p1.isObstacle(r1p3), "Pins in different clusters must remain obstacles to each other");
+    assertTrue(
+        r1p1.isObstacle(r3p1), "Pins on different components must remain obstacles to each other");
+
+    // Run DRC: R1-1 and R1-2 must have 0 violations against each other.
+    // The only remaining violations on the board are R3-1 overlapping R1-1 (different components).
+    DesignRulesChecker drc = new DesignRulesChecker(board, null);
+    var violations = drc.getAllClearanceViolations();
+    for (var v : violations) {
+      boolean betweenR1p1AndR1p2 =
+          (v.firstItem == r1p1 && v.secondItem == r1p2)
+              || (v.firstItem == r1p2 && v.secondItem == r1p1);
+      assertFalse(
+          betweenR1p1AndR1p2, "Net-tie partners must produce zero DRC clearance violations");
+    }
   }
 }

@@ -389,6 +389,11 @@ public class Pin extends DrillItem implements Serializable {
     }
     if (!other.sharesNet(this)) {
       if (other instanceof Pin otherPin) {
+        if (this.netTieClusterId > 0 && this.netTieClusterId == otherPin.netTieClusterId) {
+          // Pins belonging to the same net-tie cluster on the same component are intentionally
+          // stacked or bridged across nets and do not violate clearance against each other.
+          return false;
+        }
         if (this.getComponentId() > 0
             && this.getComponentId() == otherPin.getComponentId()
             && this.netCount() == 0
