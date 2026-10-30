@@ -1079,6 +1079,10 @@ public class HeadlessBoardManager implements BoardManager {
               + (tiePads[0] > 0 ? " (" + tiePads[0] + " tie pad(s) carry several nets)" : "")
               + ".");
     }
+    int netTieClusters = this.board.clusterNetTies();
+    if (netTieClusters > 0) {
+      FRLogger.info(netTieClusters + " multi-pin net-tie cluster(s) identified and indexed.");
+    }
     validatePowerPlanes();
     validateBoardDesignErrors();
     DifferentialPairDetector.detectAndRegister(this.board.rules);

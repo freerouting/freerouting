@@ -46,6 +46,13 @@ public class Pin extends DrillItem implements Serializable {
   /** The index of this pin in its component (starting with 0). */
   public final int pinIndex;
 
+  /**
+   * The identifier of the net-tie cluster this pin belongs to (0 if not part of any net-tie
+   * cluster). Pins sharing the same positive cluster ID within a footprint are intentionally
+   * stacked or connected across nets.
+   */
+  private int netTieClusterId = 0;
+
   /** The pin, this pin was changed to by swapping or this pin, if no pin swap occurred. */
   private Pin changedTo = this;
 
@@ -128,14 +135,17 @@ public class Pin extends DrillItem implements Serializable {
     for (int i = 0; i < currentNetNumbers.length; i++) {
       currentNetNumbers[i] = getNetNumber(i);
     }
-    return new Pin(
-        getComponentId(),
-        this.pinIndex,
-        currentNetNumbers,
-        clearanceClassIndex(),
-        id,
-        getFixedState(),
-        board);
+    Pin copiedPin =
+        new Pin(
+            getComponentId(),
+            this.pinIndex,
+            currentNetNumbers,
+            clearanceClassIndex(),
+            id,
+            getFixedState(),
+            board);
+    copiedPin.netTieClusterId = this.netTieClusterId;
+    return copiedPin;
   }
 
   /** Rebinding a copied pin invalidates both its connection point and its geometry. */
@@ -165,6 +175,23 @@ public class Pin extends DrillItem implements Serializable {
   /** Gets index of this pin in the library package of the pins component. */
   public int getPinIndex() {
     return pinIndex;
+  }
+
+  /**
+   * Returns the net-tie cluster ID of this pin, or {@code 0} if it is not part of any net-tie
+   * cluster.
+   */
+  public int getNetTieClusterId() {
+    return netTieClusterId;
+  }
+
+  /**
+   * Sets the net-tie cluster ID for this pin.
+   *
+   * @param netTieClusterId the cluster ID (must be non-negative)
+   */
+  public void setNetTieClusterId(int netTieClusterId) {
+    this.netTieClusterId = Math.max(0, netTieClusterId);
   }
 
   @Override
