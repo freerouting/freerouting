@@ -137,27 +137,29 @@ public class ClearanceMatrix implements Serializable {
         || classJ >= classCount
         || layer < 0
         || layer >= layerStructure.layers.length) {
-      FRLogger.trace(
-          "ClearanceMatrix.get_value",
-          "out_of_bounds",
-          "Clearance request out of bounds: class_i="
-              + classI
-              + " (max="
-              + (classCount - 1)
-              + ")"
-              + ", class_j="
-              + classJ
-              + " (max="
-              + (classCount - 1)
-              + ")"
-              + ", layer="
-              + layer
-              + " (max="
-              + (layerStructure.layers.length - 1)
-              + ")"
-              + ", returning 0",
-          "Clearance Check",
-          new Point[0]);
+      if (FRLogger.isGranularTraceActive()) {
+        FRLogger.trace(
+            "ClearanceMatrix.get_value",
+            "out_of_bounds",
+            "Clearance request out of bounds: class_i="
+                + classI
+                + " (max="
+                + (classCount - 1)
+                + ")"
+                + ", class_j="
+                + classJ
+                + " (max="
+                + (classCount - 1)
+                + ")"
+                + ", layer="
+                + layer
+                + " (max="
+                + (layerStructure.layers.length - 1)
+                + ")"
+                + ", returning 0",
+            "Clearance Check",
+            new Point[0]);
+      }
       return 0;
     }
 
@@ -165,38 +167,40 @@ public class ClearanceMatrix implements Serializable {
     int finalValue =
         addSafetyMargin ? valueFromTheMatrix + clearance_safety_margin : valueFromTheMatrix;
 
-    FRLogger.trace(
-        "ClearanceMatrix.get_value",
-        "clearance_retrieved",
-        "Clearance value: class_i="
-            + classI
-            + " ("
-            + (classI < row.length ? row[classI].name : "?")
-            + ")"
-            + ", class_j="
-            + classJ
-            + " ("
-            + (classJ < row.length ? row[classJ].name : "?")
-            + ")"
-            + ", layer="
-            + layer
-            + " ("
-            + (layer < layerStructure.layers.length ? layerStructure.layers[layer].name : "?")
-            + ")"
-            + ", base_value="
-            + valueFromTheMatrix
-            + " ("
-            + (valueFromTheMatrix / 10000.0)
-            + "mm)"
-            + ", safety_margin="
-            + (addSafetyMargin ? clearance_safety_margin : 0)
-            + ", finalValue="
-            + finalValue
-            + " ("
-            + (finalValue / 10000.0)
-            + "mm)",
-        "Clearance Check",
-        new Point[0]);
+    if (FRLogger.isGranularTraceActive()) {
+      FRLogger.trace(
+          "ClearanceMatrix.get_value",
+          "clearance_retrieved",
+          "Clearance value: class_i="
+              + classI
+              + " ("
+              + (classI < row.length ? row[classI].name : "?")
+              + ")"
+              + ", class_j="
+              + classJ
+              + " ("
+              + (classJ < row.length ? row[classJ].name : "?")
+              + ")"
+              + ", layer="
+              + layer
+              + " ("
+              + (layer < layerStructure.layers.length ? layerStructure.layers[layer].name : "?")
+              + ")"
+              + ", base_value="
+              + valueFromTheMatrix
+              + " ("
+              + (valueFromTheMatrix / 10000.0)
+              + "mm)"
+              + ", safety_margin="
+              + (addSafetyMargin ? clearance_safety_margin : 0)
+              + ", finalValue="
+              + finalValue
+              + " ("
+              + (finalValue / 10000.0)
+              + "mm)",
+          "Clearance Check",
+          new Point[0]);
+    }
 
     return finalValue;
   }

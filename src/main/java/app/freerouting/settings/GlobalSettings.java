@@ -45,12 +45,28 @@ public class GlobalSettings implements Serializable {
     return currentInstance;
   }
 
+  // Resolved once: every granular trace call reads the settings, and Class.forName plus getField
+  // on each read cost more than the trace itself.
+  private static volatile java.lang.reflect.Field freeroutingGlobalSettingsField;
+  private static volatile boolean freeroutingGlobalSettingsFieldResolved;
+
   private static GlobalSettings getFreeroutingGlobalSettingsIfAvailable() {
+    if (!freeroutingGlobalSettingsFieldResolved) {
+      try {
+        Class<?> freeroutingClass =
+            Class.forName(
+                "app.freerouting.Freerouting", false, GlobalSettings.class.getClassLoader());
+        freeroutingGlobalSettingsField = freeroutingClass.getField("globalSettings");
+      } catch (Throwable _) {
+        // Ignored in environments where Freerouting is not loaded or unavailable
+      }
+      freeroutingGlobalSettingsFieldResolved = true;
+    }
+    java.lang.reflect.Field field = freeroutingGlobalSettingsField;
+    if (field == null) {
+      return null;
+    }
     try {
-      Class<?> freeroutingClass =
-          Class.forName(
-              "app.freerouting.Freerouting", false, GlobalSettings.class.getClassLoader());
-      java.lang.reflect.Field field = freeroutingClass.getField("globalSettings");
       Object val = field.get(null);
       if (val instanceof GlobalSettings gs) {
         return gs;

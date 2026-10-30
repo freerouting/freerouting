@@ -574,21 +574,23 @@ public class MazeSearchEngine {
               + ctrl.netNumber);
       for (int doorIndex = 0; doorIndex < roomDoorsSnapshot.size(); doorIndex++) {
         ExpansionDoor candidateDoor = roomDoorsSnapshot.get(doorIndex);
-        FRLogger.trace(
-            "ROOM_DOOR candidate index="
-                + doorIndex
-                + ", from_section="
-                + listElement.sectionNoOfDoor
-                + ", backtrack_section="
-                + listElement.sectionNoOfBacktrackDoor
-                + ", from_door="
-                + describeExpandable(listElement.door)
-                + ", nextRoom="
-                + describeRoom(listElement.nextRoom)
-                + ", candidate="
-                + describeExpandable(candidateDoor)
-                + ", net="
-                + ctrl.netNumber);
+        if (FRLogger.isTraceEnabled()) {
+          FRLogger.trace(
+              "ROOM_DOOR candidate index="
+                  + doorIndex
+                  + ", from_section="
+                  + listElement.sectionNoOfDoor
+                  + ", backtrack_section="
+                  + listElement.sectionNoOfBacktrackDoor
+                  + ", from_door="
+                  + describeExpandable(listElement.door)
+                  + ", nextRoom="
+                  + describeRoom(listElement.nextRoom)
+                  + ", candidate="
+                  + describeExpandable(candidateDoor)
+                  + ", net="
+                  + ctrl.netNumber);
+        }
       }
     }
 
@@ -819,32 +821,34 @@ public class MazeSearchEngine {
                 + describeExpandableBounds(fromElement.door)
                 + ", net="
                 + ctrl.netNumber);
-        FRLogger.trace(
-            "MazeSearchEngine.expand_to_door_section",
-            "skip_assign_raw",
-            "selected_section="
-                + sectionIndex
-                + ", from_section="
-                + fromElement.sectionNoOfDoor
-                + ", backtrack_section="
-                + fromElement.sectionNoOfBacktrackDoor
-                + ", occupied="
-                + doorSectionOccupied
-                + ", shape_entry_null="
-                + (shapeEntry == null)
-                + ", adjustment="
-                + adjustment,
-            "Net #"
-                + ctrl.netNumber
-                + ", door="
-                + describeExpandable(door)
-                + ", door_bounds="
-                + describeExpandableBounds(door)
-                + ", from_door="
-                + describeExpandable(fromElement.door)
-                + ", from_door_bounds="
-                + describeExpandableBounds(fromElement.door),
-            toImpactedPoints(shapeEntry));
+        if (FRLogger.isGranularTraceActive()) {
+          FRLogger.trace(
+              "MazeSearchEngine.expand_to_door_section",
+              "skip_assign_raw",
+              "selected_section="
+                  + sectionIndex
+                  + ", from_section="
+                  + fromElement.sectionNoOfDoor
+                  + ", backtrack_section="
+                  + fromElement.sectionNoOfBacktrackDoor
+                  + ", occupied="
+                  + doorSectionOccupied
+                  + ", shape_entry_null="
+                  + (shapeEntry == null)
+                  + ", adjustment="
+                  + adjustment,
+              "Net #"
+                  + ctrl.netNumber
+                  + ", door="
+                  + describeExpandable(door)
+                  + ", door_bounds="
+                  + describeExpandableBounds(door)
+                  + ", from_door="
+                  + describeExpandable(fromElement.door)
+                  + ", from_door_bounds="
+                  + describeExpandableBounds(fromElement.door),
+              toImpactedPoints(shapeEntry));
+        }
       }
       return false;
     }
@@ -932,36 +936,38 @@ public class MazeSearchEngine {
               + describeExpandableBounds(fromElement.door)
               + ", net="
               + ctrl.netNumber);
-      FRLogger.trace(
-          "MazeSearchEngine.expand_to_door_section",
-          "assign_raw",
-          "selected_section="
-              + sectionIndex
-              + ", from_section="
-              + fromElement.sectionNoOfDoor
-              + ", backtrack_section="
-              + fromElement.sectionNoOfBacktrackDoor
-              + ", add_costs="
-              + addCosts
-              + ", adjustment="
-              + adjustment
-              + ", roomRipped="
-              + roomRipped
-              + ", expansionValue="
-              + expansionValue
-              + ", sortingValue="
-              + sortingValue,
-          "Net #"
-              + ctrl.netNumber
-              + ", door="
-              + describeExpandable(door)
-              + ", door_bounds="
-              + describeExpandableBounds(door)
-              + ", from_door="
-              + describeExpandable(fromElement.door)
-              + ", from_door_bounds="
-              + describeExpandableBounds(fromElement.door),
-          toImpactedPoints(shapeEntry));
+      if (FRLogger.isGranularTraceActive()) {
+        FRLogger.trace(
+            "MazeSearchEngine.expand_to_door_section",
+            "assign_raw",
+            "selected_section="
+                + sectionIndex
+                + ", from_section="
+                + fromElement.sectionNoOfDoor
+                + ", backtrack_section="
+                + fromElement.sectionNoOfBacktrackDoor
+                + ", add_costs="
+                + addCosts
+                + ", adjustment="
+                + adjustment
+                + ", roomRipped="
+                + roomRipped
+                + ", expansionValue="
+                + expansionValue
+                + ", sortingValue="
+                + sortingValue,
+            "Net #"
+                + ctrl.netNumber
+                + ", door="
+                + describeExpandable(door)
+                + ", door_bounds="
+                + describeExpandableBounds(door)
+                + ", from_door="
+                + describeExpandable(fromElement.door)
+                + ", from_door_bounds="
+                + describeExpandableBounds(fromElement.door),
+            toImpactedPoints(shapeEntry));
+      }
     }
     this.mazeExpansionList.add(newElement);
     return true;

@@ -365,6 +365,15 @@ public final class FRLogger {
   }
 
   /**
+   * Returns true when a granular {@code trace(method, operation, message, impactedItems)} call has
+   * an effect: granular TRACE output, or a debug session that may pause on it. Hot call sites check
+   * it first, so that they do not build a message nobody reads.
+   */
+  public static boolean isGranularTraceActive() {
+    return (enabled && granularTraceEnabled) || DebugControl.getInstance().isActive();
+  }
+
+  /**
    * Logs a TRACE message.
    *
    * @param msg The message to log.

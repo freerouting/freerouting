@@ -166,13 +166,15 @@ public class AutorouteEngine {
             searchResult.destinationDoor != null
                 ? searchResult.destinationDoor.getClass().getSimpleName()
                 : "null";
-        FRLogger.trace(
-            "compare_trace_maze_result_raw net="
-                + ctrl.netNumber
-                + ", section="
-                + searchResult.sectionNoOfDoor
-                + ", destination_type="
-                + destinationType);
+        if (FRLogger.isTraceEnabled()) {
+          FRLogger.trace(
+              "compare_trace_maze_result_raw net="
+                  + ctrl.netNumber
+                  + ", section="
+                  + searchResult.sectionNoOfDoor
+                  + ", destination_type="
+                  + destinationType);
+        }
       }
     }
 
@@ -437,38 +439,42 @@ public class AutorouteEngine {
           break;
         }
       }
-      FRLogger.trace(
-          "COMPLETE_ROOM input"
-              + ", net="
-              + this.netNumber
-              + ", layer="
-              + room.getLayer()
-              + ", room_bounds="
-              + describeShapeBounds(room.getShape())
-              + ", contained_bounds="
-              + describeShapeBounds(room.getContainedShape())
-              + ", from_door_bounds="
-              + describeShapeBounds(fromDoorShape)
-              + ", ignoreObject="
-              + (ignoreObject == null ? "null" : ignoreObject.getClass().getSimpleName()));
+      if (FRLogger.isTraceEnabled()) {
+        FRLogger.trace(
+            "COMPLETE_ROOM input"
+                + ", net="
+                + this.netNumber
+                + ", layer="
+                + room.getLayer()
+                + ", room_bounds="
+                + describeShapeBounds(room.getShape())
+                + ", contained_bounds="
+                + describeShapeBounds(room.getContainedShape())
+                + ", from_door_bounds="
+                + describeShapeBounds(fromDoorShape)
+                + ", ignoreObject="
+                + (ignoreObject == null ? "null" : ignoreObject.getClass().getSimpleName()));
+      }
       Collection<IncompleteFreeSpaceExpansionRoom> completedShapes =
           this.autorouteSearchTree.completeShape(room, this.netNumber, ignoreObject, fromDoorShape);
       int initialCandidateIndex = 0;
       for (IncompleteFreeSpaceExpansionRoom initialCandidate : completedShapes) {
-        FRLogger.trace(
-            "COMPLETE_ROOM initial_candidate"
-                + ", net="
-                + this.netNumber
-                + ", layer="
-                + initialCandidate.getLayer()
-                + ", index="
-                + initialCandidateIndex
-                + ", dimension="
-                + initialCandidate.getShape().dimension()
-                + ", incomplete_bounds="
-                + describeShapeBounds(initialCandidate.getShape())
-                + ", from_door_bounds="
-                + describeShapeBounds(fromDoorShape));
+        if (FRLogger.isTraceEnabled()) {
+          FRLogger.trace(
+              "COMPLETE_ROOM initial_candidate"
+                  + ", net="
+                  + this.netNumber
+                  + ", layer="
+                  + initialCandidate.getLayer()
+                  + ", index="
+                  + initialCandidateIndex
+                  + ", dimension="
+                  + initialCandidate.getShape().dimension()
+                  + ", incomplete_bounds="
+                  + describeShapeBounds(initialCandidate.getShape())
+                  + ", from_door_bounds="
+                  + describeShapeBounds(fromDoorShape));
+        }
         ++initialCandidateIndex;
       }
       this.removeIncompleteExpansionRoom(room);
@@ -479,16 +485,18 @@ public class AutorouteEngine {
         }
         if (isFirstCompletedRoom) {
           isFirstCompletedRoom = false;
-          FRLogger.trace(
-              "COMPLETE_ROOM first_candidate"
-                  + ", net="
-                  + this.netNumber
-                  + ", layer="
-                  + currentIncompleteRoom.getLayer()
-                  + ", incomplete_bounds="
-                  + describeShapeBounds(currentIncompleteRoom.getShape())
-                  + ", from_door_bounds="
-                  + describeShapeBounds(fromDoorShape));
+          if (FRLogger.isTraceEnabled()) {
+            FRLogger.trace(
+                "COMPLETE_ROOM first_candidate"
+                    + ", net="
+                    + this.netNumber
+                    + ", layer="
+                    + currentIncompleteRoom.getLayer()
+                    + ", incomplete_bounds="
+                    + describeShapeBounds(currentIncompleteRoom.getShape())
+                    + ", from_door_bounds="
+                    + describeShapeBounds(fromDoorShape));
+          }
           CompleteFreeSpaceExpansionRoom completedRoom =
               this.addCompleteRoom(currentIncompleteRoom);
           if (completedRoom != null) {
@@ -502,16 +510,18 @@ public class AutorouteEngine {
               this.autorouteSearchTree.completeShape(
                   currentIncompleteRoom, this.netNumber, ignoreObject, fromDoorShape);
           for (IncompleteFreeSpaceExpansionRoom tmpRoom : currentCompletedShapes) {
-            FRLogger.trace(
-                "COMPLETE_ROOM recalc_candidate"
-                    + ", net="
-                    + this.netNumber
-                    + ", layer="
-                    + tmpRoom.getLayer()
-                    + ", incomplete_bounds="
-                    + describeShapeBounds(tmpRoom.getShape())
-                    + ", from_door_bounds="
-                    + describeShapeBounds(fromDoorShape));
+            if (FRLogger.isTraceEnabled()) {
+              FRLogger.trace(
+                  "COMPLETE_ROOM recalc_candidate"
+                      + ", net="
+                      + this.netNumber
+                      + ", layer="
+                      + tmpRoom.getLayer()
+                      + ", incomplete_bounds="
+                      + describeShapeBounds(tmpRoom.getShape())
+                      + ", from_door_bounds="
+                      + describeShapeBounds(fromDoorShape));
+            }
             CompleteFreeSpaceExpansionRoom completedRoom = this.addCompleteRoom(tmpRoom);
             if (completedRoom != null) {
               result.add(completedRoom);
@@ -538,14 +548,16 @@ public class AutorouteEngine {
     }
     completeExpansionRooms.add(completedRoom);
     this.autorouteSearchTree.insert(completedRoom);
-    FRLogger.trace(
-        "COMPLETE_ROOM added"
-            + ", net="
-            + this.netNumber
-            + ", layer="
-            + completedRoom.getLayer()
-            + ", bounds="
-            + describeShapeBounds(completedRoom.getShape()));
+    if (FRLogger.isTraceEnabled()) {
+      FRLogger.trace(
+          "COMPLETE_ROOM added"
+              + ", net="
+              + this.netNumber
+              + ", layer="
+              + completedRoom.getLayer()
+              + ", bounds="
+              + describeShapeBounds(completedRoom.getShape()));
+    }
     return completedRoom;
   }
 

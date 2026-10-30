@@ -300,7 +300,9 @@ public class Polyline implements Serializable {
   /** Returns the intersection of the no-th with the (no - 1)-th edge line. */
   public Point corner(int cornerIndex) {
     if (lines.length < 2) {
-      FRLogger.trace("Polyline.corner: lines.length is < 2");
+      if (FRLogger.isTraceEnabled()) {
+        FRLogger.trace("Polyline.corner: lines.length is < 2");
+      }
       return null;
     }
     int no;
@@ -771,39 +773,43 @@ public class Polyline implements Serializable {
       return null;
     }
     Point newEndCorner = this.lines[lineIndex].intersection(endLine);
-    FRLogger.trace(
-        "Polyline.split",
-        "compare_trace_split_called",
-        "lineIndex="
-            + lineIndex
-            + ", lines.length="
-            + lines.length
-            + ", lines.length-2="
-            + (lines.length - 2)
-            + ", newEndCorner="
-            + debugPoint(newEndCorner)
-            + " (type="
-            + newEndCorner.getClass().getSimpleName()
-            + ")"
-            + ", lastCorner="
-            + debugPoint(this.lastCorner())
-            + " (type="
-            + this.lastCorner().getClass().getSimpleName()
-            + ")"
-            + ", equals="
-            + newEndCorner.equals(this.lastCorner()),
-        "Polyline split lineIndex=" + lineIndex,
-        new Point[] {this.firstCorner(), newEndCorner, this.lastCorner()});
-    StringBuilder sb = new StringBuilder("    CORNERS:");
-    for (int i = 0; i < this.cornerCount(); i++) {
-      sb.append(" ").append(this.cornerApprox(i));
+    if (FRLogger.isGranularTraceActive()) {
+      FRLogger.trace(
+          "Polyline.split",
+          "compare_trace_split_called",
+          "lineIndex="
+              + lineIndex
+              + ", lines.length="
+              + lines.length
+              + ", lines.length-2="
+              + (lines.length - 2)
+              + ", newEndCorner="
+              + debugPoint(newEndCorner)
+              + " (type="
+              + newEndCorner.getClass().getSimpleName()
+              + ")"
+              + ", lastCorner="
+              + debugPoint(this.lastCorner())
+              + " (type="
+              + this.lastCorner().getClass().getSimpleName()
+              + ")"
+              + ", equals="
+              + newEndCorner.equals(this.lastCorner()),
+          "Polyline split lineIndex=" + lineIndex,
+          new Point[] {this.firstCorner(), newEndCorner, this.lastCorner()});
     }
-    FRLogger.trace(
-        "Polyline.split",
-        "compare_trace_split_corners",
-        sb.toString(),
-        "Polyline split lineIndex=" + lineIndex,
-        new Point[] {this.firstCorner(), newEndCorner, this.lastCorner()});
+    if (FRLogger.isGranularTraceActive()) {
+      StringBuilder sb = new StringBuilder("    CORNERS:");
+      for (int i = 0; i < this.cornerCount(); i++) {
+        sb.append(" ").append(this.cornerApprox(i));
+      }
+      FRLogger.trace(
+          "Polyline.split",
+          "compare_trace_split_corners",
+          sb.toString(),
+          "Polyline split lineIndex=" + lineIndex,
+          new Point[] {this.firstCorner(), newEndCorner, this.lastCorner()});
+    }
     if (lineIndex == 1 && newEndCorner.equals(this.firstCorner())
         || lineIndex >= lines.length - 2 && newEndCorner.equals(this.lastCorner())) {
       // No split, if endLine does not intersect, but touches
