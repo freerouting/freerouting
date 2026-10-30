@@ -2,6 +2,7 @@ package app.freerouting.io.specctra.parser;
 
 import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.ConductionArea;
 import app.freerouting.board.model.structure.AngleRestriction;
 import app.freerouting.board.state.BoardObservers;
 import app.freerouting.board.state.Communication;
@@ -41,6 +42,9 @@ public class ReadScopeParameter {
    * boards, because the layers may not be read completely.
    */
   final Collection<PlaneInfo> planeList = new LinkedList<>();
+
+  /** Planes whose inherited clearance must follow their net class after network rules are read. */
+  final Collection<ConductionArea> planesWithInheritedClearance = new ArrayList<>();
 
   /**
    * Component placement information. It is filled while reading the placement scope and can be
