@@ -84,6 +84,19 @@ class BoardHistoryTest {
   }
 
   @Test
+  void deepCopyKeepsTheClearanceBaseline() {
+    // The fallback continuations and the optimizer work on deep copies of the routed board.
+    board2.awaitPostLoad();
+    ClearanceBaseline baseline = board2.clearanceBaseline;
+    assertNotNull(baseline, "Loading the board builds its clearance baseline");
+
+    RoutingBoard copy = board2.deepCopy();
+
+    assertNotSame(board2, copy);
+    assertSame(baseline, copy.clearanceBaseline);
+  }
+
+  @Test
   void restoreBestBoardFromMultiple() {
     BoardHistory history = new BoardHistory(routerSettings);
 
