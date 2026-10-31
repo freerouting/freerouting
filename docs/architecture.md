@@ -337,7 +337,7 @@ Planar geometry primitives and helper classes used throughout routing and board 
 The Swing user interface is split into cohesive subpackages. There are no remaining Java sources in
 the `gui` root package.
 
-- `gui.windows.board` — board/information windows (`WindowAbout`, `WindowNets`, `WindowVisibility`).
+- `gui.windows.board` — board/information windows (`WindowAbout`, `WindowNets`, `WindowVisibility`, `WindowSponsor`) and dynamic donor synchronization (`DonorService`). See [`docs/donors.md`](donors.md) for maintainer update workflows.
 - `gui.windows.routing` — routing, rules, clearance, via, and autoroute windows.
 - `gui.menus` — board menus and popup menus (`BoardMenuBar`, `BoardMenuFile`, `PopupMenuMain`).
 - `gui.board` — board shell and frame classes (`BoardFrame`, `BoardPanel`, `GuiManager`, toolbars).

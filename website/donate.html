@@ -271,6 +271,27 @@
         </div>
     </div>
 
+    <!-- COMMUNITY PATRONS & DONORS HONOR ROLL -->
+    <section class="donors-section" id="donors-honor-roll">
+        <h2 style="color: #ffffff; margin-top: 0; margin-bottom: 0.4em; font-size: 1.45em;">
+            <i class="fas fa-heart" style="color: var(--accent-pink);"></i> Our Donors &amp; Sponsors
+        </h2>
+        <p style="color: #d1d5db; margin-bottom: 1.5em; font-size: 0.95em;">
+            Heartfelt thanks to the incredible companies, makers, and engineers who generously support the open-source maintenance of Freerouting.
+        </p>
+        <div id="donors-container">
+            <!-- Populated dynamically from donors.json -->
+            <div class="donor-tier-group">
+                <div class="donor-tier-title">Gold &amp; Silver Sponsors</div>
+                <div class="donor-badge-list">
+                    <a class="donor-badge" href="https://www.foxylabs.eu/" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-certificate" style="color: var(--gold-light);"></i> Foxy Laboratories
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- CHANNELS & PAYMENT METHODS -->
     <section class="channels-section">
         <h2 style="color: #ffffff; margin-top: 0; margin-bottom: 0.8em; font-size: 1.45em;">Supported Payment Methods &amp; Global Channels</h2>
@@ -422,6 +443,51 @@
                 }
             });
         });
+
+        // Load dynamic donors honor roll from donors.json
+        fetch('donors.json')
+            .then(function(response) {
+                if (!response.ok) throw new Error('Network error');
+                return response.json();
+            })
+            .then(function(data) {
+                if (!data || !Array.isArray(data.tiers)) return;
+                const container = document.getElementById('donors-container');
+                if (!container) return;
+                let html = '';
+                data.tiers.forEach(function(tier) {
+                    if (!tier.donors || tier.donors.length === 0) return;
+                    html += '<div class="donor-tier-group">';
+                    html += '<div class="donor-tier-title">' + escapeHtml(tier.name) + '</div>';
+                    html += '<div class="donor-badge-list">';
+                    tier.donors.forEach(function(donor) {
+                        const name = typeof donor === 'string' ? donor : donor.name;
+                        const url = typeof donor === 'object' && donor.url ? donor.url : null;
+                        if (!name) return;
+                        if (url) {
+                            html += '<a class="donor-badge" href="' + escapeHtml(url) + '" target="_blank" rel="noopener noreferrer">';
+                            html += '<i class="fas fa-certificate" style="color: var(--gold-light);"></i> ' + escapeHtml(name) + '</a>';
+                        } else {
+                            html += '<span class="donor-badge no-link">';
+                            html += '<i class="fas fa-heart" style="color: var(--accent-pink);"></i> ' + escapeHtml(name) + '</span>';
+                        }
+                    });
+                    html += '</div></div>';
+                });
+                if (html.length > 0) {
+                    container.innerHTML = html;
+                }
+            })
+            .catch(function(err) {
+                // Keep initial static fallback content
+            });
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>"']/g, function(m) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+            });
+        }
     });
 </script>
 
