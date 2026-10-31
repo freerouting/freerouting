@@ -34,6 +34,15 @@ public abstract class TraceTightener {
   // with angles to close to 180 degree the algorithm becomes numerically
   // unstable
   protected static final double c_min_corner_dist_square = 0.9;
+
+  /**
+   * The most rounds a fixpoint loop of this algorithm may run. Its steps can undo each other (see
+   * TraceTightenerAnyAngle.pullTight), so the loops need a bound to terminate. Counting rounds
+   * instead of milliseconds gives the same result on every machine and under any load. The routing
+   * test fixtures need at most a few dozen rounds.
+   */
+  static final int MAX_ROUNDS = 1000;
+
   protected final RoutingBoard board;
 
   /** If only_net_no {@literal >} 0, only nets with this net numbers are optimized. */
@@ -137,7 +146,7 @@ public abstract class TraceTightener {
     // starting with curr_min_translate_dist big is a try to
     // avoid fine approximation at the beginning to avoid
     // problems with dog ears
-    while (somethingChanged) {
+    for (int rounds = 0; somethingChanged && !mustStopAfter(rounds); ++rounds) {
       somethingChanged = false;
       for (int i = 0; i < board.getLayerCount(); i++) {
         IntOctagon changedRegion = board.changedArea.getArea(i);
@@ -201,6 +210,11 @@ public abstract class TraceTightener {
   }
 
   public abstract Polyline pullTight(Polyline polyline);
+
+  /** Returns whether a fixpoint loop that has run the given number of rounds must stop. */
+  protected boolean mustStopAfter(int rounds) {
+    return rounds >= MAX_ROUNDS || isStopRequested();
+  }
 
   /** Terminates the pull tight algorithm, if the user has made a stop request. */
   protected boolean isStopRequested() {
