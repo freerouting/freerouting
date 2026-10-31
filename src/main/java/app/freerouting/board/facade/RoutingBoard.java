@@ -151,6 +151,21 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
+   * Optimizes the route in the internally marked area without a time limit, so that the result does
+   * not depend on the speed or load of the machine. The autorouter uses this; the parameters are
+   * those of {@link #optChangedArea(int[], IntOctagon, int, ExpansionCostFactor[], Stoppable,
+   * int)}.
+   */
+  public void optChangedArea(
+      int[] onlyNetNoArr,
+      IntOctagon clipShape,
+      int accuracy,
+      ExpansionCostFactor[] traceCosts,
+      Stoppable stoppableThread) {
+    optChangedArea(onlyNetNoArr, clipShape, accuracy, traceCosts, stoppableThread, 0);
+  }
+
+  /**
    * Optimizes the route in the internally marked area. If netNumber {@literal >} 0, only traces
    * with net number netNumber are optimized. If clipShape != null the optimizing is restricted to
    * clipShape. traceCosts is used for optimizing vias and may be null. If stoppableThread != null,

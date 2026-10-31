@@ -18,8 +18,6 @@ import java.util.SortedSet;
 /** Executes one autoroute connection, including necked retry and strict-DRC recovery. */
 final class AutorouteConnectionRouter {
 
-  private static final int TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP = 1000;
-
   private final BatchAutorouter router;
 
   AutorouteConnectionRouter(BatchAutorouter router) {
@@ -147,8 +145,7 @@ final class AutorouteConnectionRouter {
             null,
             router.getTracePullTightAccuracy(),
             autorouteControl.traceCosts,
-            router.thread,
-            TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
+            router.thread);
         if (BatchAutorouter.isBenchmarkProfileEnabled()) {
           router.addProfileOptChangedAreaNanos(System.nanoTime() - pullTightStart);
         }
@@ -268,8 +265,7 @@ final class AutorouteConnectionRouter {
         null,
         router.getTracePullTightAccuracy(),
         neckControl.traceCosts,
-        router.thread,
-        TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
+        router.thread);
     if (BatchAutorouter.isBenchmarkProfileEnabled()) {
       router.addProfileOptChangedAreaNanos(System.nanoTime() - neckPullTightStart);
     }
