@@ -45,6 +45,10 @@ import java.util.TreeSet;
 })
 public class Network extends ScopeKeyword {
 
+  /** The Specctra item classes that can get a clearance class separate from the wires. */
+  private static final List<String> NON_WIRE_ITEM_CLASS_NAMES =
+      List.of("via", "smd", "pin", "area");
+
   /** Creates a new instance of Network. */
   public Network() {
     super("network");
@@ -666,50 +670,111 @@ public class Network extends ScopeKeyword {
       secondClassNo = clearanceMatrix.getNo(secondClassName);
     }
     if (clearanceRule.clearanceClassPairs.isEmpty()) {
-      if (layerIndex < 0) {
-        clearanceMatrix.setValue(firstClassNo, secondClassNo, currentClearance);
-        clearanceMatrix.setValue(secondClassNo, firstClassNo, currentClearance);
-      } else {
-        clearanceMatrix.setValue(firstClassNo, secondClassNo, layerIndex, currentClearance);
-        clearanceMatrix.setValue(secondClassNo, firstClassNo, layerIndex, currentClearance);
-      }
-    } else {
-      for (String currentString : clearanceRule.clearanceClassPairs) {
-        String[] currentPair = currentString.split("_");
-        if (currentPair.length != 2) {
-          continue;
+      // An untyped rule applies to all items of both classes, including the ones that an earlier
+      // typed rule moved into item-specific clearance classes.
+      for (int firstItemClassNo : itemClearanceClasses(clearanceMatrix, firstClass)) {
+        for (int secondItemClassNo : itemClearanceClasses(clearanceMatrix, secondClass)) {
+          setSymmetricValue(
+              clearanceMatrix, firstItemClassNo, secondItemClassNo, layerIndex, currentClearance);
         }
+      }
+      return;
+    }
+    if (Structure.containsWireClearancePair(clearanceRule.clearanceClassPairs)) {
+      separatePinAndAreaClassesFromWires(clearanceMatrix, firstClass, firstClassNo);
+      separatePinAndAreaClassesFromWires(clearanceMatrix, secondClass, secondClassNo);
+    }
+    for (String currentString : clearanceRule.clearanceClassPairs) {
+      String[] currentPair = currentString.split("_");
+      if (currentPair.length != 2) {
+        continue;
+      }
+      // a pair such as wire_via applies both ways: wires of the first class to vias of the
+      // second, and wires of the second class to vias of the first
+      setItemPairClearance(
+          clearanceMatrix, firstClass, secondClass, currentPair, layerIndex, currentClearance);
+      setItemPairClearance(
+          clearanceMatrix, secondClass, firstClass, currentPair, layerIndex, currentClearance);
+    }
+  }
 
-        int currentFirstClassNo;
-        int currentSecondClassNo;
-        for (int i = 0; i < 2; i++) {
-          if (i == 0) {
-            currentFirstClassNo = getClearanceClass(clearanceMatrix, firstClass, currentPair[0]);
-            currentSecondClassNo = getClearanceClass(clearanceMatrix, secondClass, currentPair[1]);
-          } else {
-            currentFirstClassNo = getClearanceClass(clearanceMatrix, secondClass, currentPair[0]);
-            currentSecondClassNo = getClearanceClass(clearanceMatrix, firstClass, currentPair[1]);
-          }
-          if (layerIndex < 0) {
-            clearanceMatrix.setValue(currentFirstClassNo, currentSecondClassNo, currentClearance);
-            clearanceMatrix.setValue(currentSecondClassNo, currentFirstClassNo, currentClearance);
-          } else {
-            clearanceMatrix.setValue(
-                currentFirstClassNo, currentSecondClassNo, layerIndex, currentClearance);
-            clearanceMatrix.setValue(
-                currentSecondClassNo, currentFirstClassNo, layerIndex, currentClearance);
-          }
-        }
+  /** Sets the clearance between item class pair[0] of {@code from} and pair[1] of {@code to}. */
+  private static void setItemPairClearance(
+      ClearanceMatrix clearanceMatrix,
+      app.freerouting.rules.NetClass from,
+      app.freerouting.rules.NetClass to,
+      String[] pair,
+      int layerIndex,
+      int clearance) {
+    int fromClassNo = getClearanceClass(clearanceMatrix, from, pair[0]);
+    int toClassNo = getClearanceClass(clearanceMatrix, to, pair[1]);
+    setSymmetricValue(clearanceMatrix, fromClassNo, toClassNo, layerIndex, clearance);
+  }
+
+  /**
+   * A net class with its own clearance rule starts with one clearance class shared by all its
+   * items. Before a rule typed for wires is applied, the SMD pads, pins and areas still sharing the
+   * wire class get item-specific classes with the same values, so the rule does not reach them.
+   * Vias keep their class because the via infos of the net class already reference it.
+   */
+  private static void separatePinAndAreaClassesFromWires(
+      ClearanceMatrix clearanceMatrix, app.freerouting.rules.NetClass netClass, int wireClassNo) {
+    separateFromWireClass(clearanceMatrix, netClass, wireClassNo, ItemClass.SMD, "smd");
+    separateFromWireClass(clearanceMatrix, netClass, wireClassNo, ItemClass.PIN, "pin");
+    separateFromWireClass(clearanceMatrix, netClass, wireClassNo, ItemClass.AREA, "area");
+  }
+
+  private static void separateFromWireClass(
+      ClearanceMatrix clearanceMatrix,
+      app.freerouting.rules.NetClass netClass,
+      int wireClassNo,
+      ItemClass itemClass,
+      String itemClassName) {
+    if (netClass.defaultItemClearanceClasses.get(itemClass) == wireClassNo) {
+      getClearanceClass(clearanceMatrix, netClass, itemClassName);
+    }
+  }
+
+  /**
+   * Returns the clearance class of the wires of {@code netClass} followed by the item-specific
+   * classes that {@link #getClearanceClass} has created for it so far.
+   */
+  private static List<Integer> itemClearanceClasses(
+      ClearanceMatrix clearanceMatrix, app.freerouting.rules.NetClass netClass) {
+    String netClassName = netClass.getName();
+    List<Integer> result = new ArrayList<>();
+    result.add(clearanceMatrix.getNo(netClassName));
+    for (String itemClassName : NON_WIRE_ITEM_CLASS_NAMES) {
+      int itemClassNo =
+          clearanceMatrix.getNo(netClassName + DsnFile.CLASS_CLEARANCE_SEPARATOR + itemClassName);
+      if (itemClassNo >= 0) {
+        result.add(itemClassNo);
       }
+    }
+    return result;
+  }
+
+  /** Sets the clearance between both classes, on all layers if {@code layerIndex} is negative. */
+  private static void setSymmetricValue(
+      ClearanceMatrix clearanceMatrix,
+      int firstClassNo,
+      int secondClassNo,
+      int layerIndex,
+      int clearance) {
+    if (layerIndex < 0) {
+      clearanceMatrix.setValue(firstClassNo, secondClassNo, clearance);
+      clearanceMatrix.setValue(secondClassNo, firstClassNo, clearance);
+    } else {
+      clearanceMatrix.setValue(firstClassNo, secondClassNo, layerIndex, clearance);
+      clearanceMatrix.setValue(secondClassNo, firstClassNo, layerIndex, clearance);
     }
   }
 
   private static void createDefaultClearanceClasses(
       app.freerouting.rules.NetClass netClass, ClearanceMatrix clearanceMatrix) {
-    getClearanceClass(clearanceMatrix, netClass, "via");
-    getClearanceClass(clearanceMatrix, netClass, "smd");
-    getClearanceClass(clearanceMatrix, netClass, "pin");
-    getClearanceClass(clearanceMatrix, netClass, "area");
+    for (String itemClassName : NON_WIRE_ITEM_CLASS_NAMES) {
+      getClearanceClass(clearanceMatrix, netClass, itemClassName);
+    }
   }
 
   private static void createViaRule(
