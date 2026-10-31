@@ -181,6 +181,21 @@ This contract does not change the separate search/insertion envelope tolerance
 problem (#961), circle discretization (#954), or preserved-junction connectivity
 and normalization (#958/#960). The default tree remains uncompensated.
 
+### Net-tie clustering and pad-stacking DRC contracts
+
+Footprints often place multiple pads or through-holes at overlapping coordinates across
+distinct electrical nets (e.g. net-ties, star grounds, power distribution connectors).
+At board post-load time, `RoutingBoard.clusterNetTies()` identifies physically overlapping
+pads sharing copper layers within each footprint via Disjoint-Set Union (union-find) and
+assigns a shared positive `netTieClusterId` to each participating `Pin`.
+
+`Pin.isObstacle(Item other)` consults `netTieClusterId` in $O(1)$ time without allocations:
+pins sharing the same positive cluster ID within a footprint are treated as non-obstacles.
+`Item.clearanceViolations()` correspondingly exempts traces contacting their designated pin
+from clearance violations against foreign partner pins in the same net-tie cluster. Distinct
+clusters on the same footprint or overlapping pins on different footprints remain isolated
+and enforce standard clearance rules (#718).
+
 ## Module Boundaries (ArchUnit)
 
 Architectural boundaries are codified in `src/test/java/app/freerouting/architecture/ModuleBoundariesArchTest.java`.

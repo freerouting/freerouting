@@ -42,6 +42,7 @@ import app.freerouting.geometry.planar.LineSegment;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.PolylineShape;
+import app.freerouting.geometry.planar.Shape;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
@@ -1593,6 +1594,98 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       return i;
     }
     return parent[i] = findRoot(parent, parent[i]);
+  }
+
+  /**
+   * Identifies physically overlapping pins within each footprint and clusters them into net-ties.
+   *
+   * <p>Pins sharing physical copper on a common layer within the same component (footprint) are
+   * assigned a shared positive {@code netTieClusterId}. This enables O(1) clearance exemption and
+   * maze routing escape corridors across distinct nets without repeated spatial intersection
+   * checks.
+   *
+   * @return the total number of multi-pin net-tie clusters identified on the board.
+   */
+  public int clusterNetTies() {
+    // 1. Group pins by component ID (excluding board pins with componentId <= 0)
+    Map<Integer, List<Pin>> pinsByComponent = new HashMap<>();
+    for (Pin pin : getPins()) {
+      if (pin.getComponentId() > 0) {
+        pinsByComponent.computeIfAbsent(pin.getComponentId(), _ -> new ArrayList<>()).add(pin);
+      }
+    }
+
+    int nextClusterId = 1;
+    int multiPinClusters = 0;
+
+    for (List<Pin> compPins : pinsByComponent.values()) {
+      int count = compPins.size();
+      if (count <= 1) {
+        continue;
+      }
+
+      int[] parent = new int[count];
+      for (int i = 0; i < count; i++) {
+        parent[i] = i;
+      }
+
+      // Check pairwise physical copper overlap between pins of the same component
+      for (int i = 0; i < count; i++) {
+        Pin p1 = compPins.get(i);
+        IntBox b1 = p1.boundingBox();
+        for (int j = i + 1; j < count; j++) {
+          Pin p2 = compPins.get(j);
+          if (!p1.sharesLayer(p2) || !b1.intersects(p2.boundingBox())) {
+            continue;
+          }
+          if (pinsOverlapCopper(p1, p2)) {
+            int rootI = findRoot(parent, i);
+            int rootJ = findRoot(parent, j);
+            if (rootI != rootJ) {
+              parent[rootI] = rootJ;
+            }
+          }
+        }
+      }
+
+      // Group pin indices by their root representative
+      Map<Integer, List<Pin>> groups = new HashMap<>();
+      for (int i = 0; i < count; i++) {
+        int root = findRoot(parent, i);
+        groups.computeIfAbsent(root, _ -> new ArrayList<>()).add(compPins.get(i));
+      }
+
+      for (List<Pin> cluster : groups.values()) {
+        if (cluster.size() > 1) {
+          int clusterId = nextClusterId++;
+          for (Pin pin : cluster) {
+            pin.setNetTieClusterId(clusterId);
+          }
+          multiPinClusters++;
+        }
+      }
+    }
+
+    return multiPinClusters;
+  }
+
+  private static boolean pinsOverlapCopper(Pin p1, Pin p2) {
+    for (int i = 0; i < p1.tileShapeCount(); i++) {
+      Shape s1 = p1.getShape(i);
+      if (s1 == null) {
+        continue;
+      }
+      int layer1 = p1.shapeLayer(i);
+      for (int j = 0; j < p2.tileShapeCount(); j++) {
+        if (layer1 == p2.shapeLayer(j)) {
+          Shape s2 = p2.getShape(j);
+          if (s2 != null && s1.intersects(s2)) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
   }
 
   /** Returns the obstacle responsible for the last shove to fail. */

@@ -402,8 +402,8 @@ public abstract class Item
         }
         boolean isObstacle = currentItem.isObstacle(this);
         if (isObstacle && this instanceof Trace thisTrace && currentItem instanceof Trace) {
-          // Look, if both traces are connected to the same tie pin.
-          // In this case they are allowed to overlap without sharing a net.
+          // Look, if both traces are connected to the same tie pin or partner pins of the same
+          // net-tie cluster. In this case they are allowed to overlap without sharing a net.
           Point contactPoint = thisTrace.firstCorner();
           boolean contactFound = false;
           Collection<Item> currentContacts = thisTrace.getNormalContacts(contactPoint, true);
@@ -423,8 +423,42 @@ public abstract class Item
           }
           if (contactFound) {
             for (Item currentContact : currentContacts) {
-              if (currentContact instanceof Pin) {
+              if (currentContact instanceof Pin contactPin) {
                 if (currentContact.sharesNet(this) && currentContact.sharesNet(currentItem)) {
+                  isObstacle = false;
+                  break;
+                }
+                if (contactPin.getNetTieClusterId() > 0) {
+                  isObstacle = false;
+                  break;
+                }
+              }
+            }
+          }
+        }
+
+        // Trace-to-Pin clearance exemption at a net-tie junction:
+        // A trace terminating on its net-tie target pin is allowed to overlap foreign partner
+        // pins belonging to the same net-tie cluster.
+        if (isObstacle
+            && ((this instanceof Trace && currentItem instanceof Pin)
+                || (this instanceof Pin && currentItem instanceof Trace))) {
+          Trace trace = (this instanceof Trace) ? (Trace) this : (Trace) currentItem;
+          Pin pin = (this instanceof Pin) ? (Pin) this : (Pin) currentItem;
+          if (pin.getNetTieClusterId() > 0) {
+            Point p1 = trace.firstCorner();
+            Point p2 = trace.lastCorner();
+            for (Item contact : trace.getNormalContacts(p1, true)) {
+              if (contact instanceof Pin cp
+                  && cp.getNetTieClusterId() == pin.getNetTieClusterId()) {
+                isObstacle = false;
+                break;
+              }
+            }
+            if (isObstacle) {
+              for (Item contact : trace.getNormalContacts(p2, true)) {
+                if (contact instanceof Pin cp
+                    && cp.getNetTieClusterId() == pin.getNetTieClusterId()) {
                   isObstacle = false;
                   break;
                 }
