@@ -49,7 +49,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * counts that arrive between the snapshot and the map cleanup are not lost — they stay in the map
  * and are captured by the next flush.
  */
-final class AnalyticsErrorAggregator {
+public final class AnalyticsErrorAggregator {
 
   /** How often (in minutes) the aggregated error summary is flushed to the log. */
   static final int FLUSH_INTERVAL_MINUTES = 60;
@@ -128,7 +128,7 @@ final class AnalyticsErrorAggregator {
    * @param endpoint the URL that was being called when the failure occurred
    * @param e the exception that caused the failure
    */
-  static void recordFailure(String endpoint, Exception e) {
+  public static void recordFailure(String endpoint, Exception e) {
     recordFailure(endpoint, e, null);
   }
 
@@ -143,7 +143,7 @@ final class AnalyticsErrorAggregator {
    * @param e the exception that caused the failure
    * @param serverResponseBody the raw HTTP error body returned by the server, or {@code null}
    */
-  static void recordFailure(String endpoint, Exception e, String serverResponseBody) {
+  public static void recordFailure(String endpoint, Exception e, String serverResponseBody) {
     String key = normaliseKey(endpoint, e);
 
     // Keep the latest server response body for this key (bounded to MAX_BODY_LENGTH).

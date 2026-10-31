@@ -39,6 +39,9 @@ public final class GuiLocators {
   /** Current measurement unit indicator. */
   public static final String STATUS_UNIT = "status.unit";
 
+  /** Micro-survey trigger button in status bar. */
+  public static final String STATUS_SURVEY_TRIGGER = "status.survey.trigger";
+
   // ---- Toolbar ----
   /** Root panel for the component-only toolbar seam. */
   public static final String TOOLBAR_ROOT = "toolbar.root";
