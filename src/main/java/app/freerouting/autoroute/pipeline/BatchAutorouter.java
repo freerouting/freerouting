@@ -100,6 +100,10 @@ public final class BatchAutorouter extends NamedAlgorithm {
 
   long lastBoardUpdateTimestamp;
   boolean isOptimizerAutorouter;
+
+  /** Nets whose open connections this router does not try to route. */
+  Set<Integer> netsLeftUnrouted = Set.of();
+
   long profileItemSelectionNanos;
   long profileIntermediateStatisticsNanos;
   long profileBoardStatisticsNanos;
@@ -337,8 +341,9 @@ public final class BatchAutorouter extends NamedAlgorithm {
 
   /**
    * Auto-routes ripup passes until the board is completed or the auto-router is stopped by the
-   * user, or if maxPassCount is exceeded. Is currently used in the optimize via batch pass. Returns
-   * the number of passes to complete the board or maxPassCount + 1, if the board is not completed.
+   * user, or if maxPassCount is exceeded. Is currently used in the optimize via batch pass. The
+   * open connections of netsLeftUnrouted are not routed. Returns the number of passes to complete
+   * the board or maxPassCount + 1, if the board is not completed.
    */
   public static int autoroutePassesForOptimizingItem(
       RoutingJob job,
@@ -347,7 +352,8 @@ public final class BatchAutorouter extends NamedAlgorithm {
       int tracePullTightAccuracy,
       boolean withPreferredDirections,
       RoutingBoard updatedRoutingBoard,
-      RouterSettings routerSettings) {
+      RouterSettings routerSettings,
+      Set<Integer> netsLeftUnrouted) {
     BatchAutorouter routerInstance =
         new BatchAutorouter(
             job.thread,
@@ -360,6 +366,7 @@ public final class BatchAutorouter extends NamedAlgorithm {
     routerInstance.job = job;
     routerInstance.isOptimizerAutorouter = true;
     routerInstance.startNecked = false;
+    routerInstance.netsLeftUnrouted = netsLeftUnrouted;
 
     boolean stillUnroutedItems = true;
     int currentPassNo = 1;
@@ -469,6 +476,9 @@ public final class BatchAutorouter extends NamedAlgorithm {
             // Let's go through all nets of this item
             for (int i = 0; i < currentItem.netCount(); i++) {
               int currentNetNumber = currentItem.getNetNumber(i);
+              if (netsLeftUnrouted.contains(currentNetNumber)) {
+                continue;
+              }
               Set<Item> connectedSet = currentItem.getConnectedSet(currentNetNumber);
               for (Item currentConnectedItem : connectedSet) {
                 if (currentConnectedItem.netCount() <= 1) {
