@@ -197,18 +197,18 @@ The router and optimizer versions are independent. CLI aliases are
 
 ##### Reproducible placement import
 
-Headless DSN jobs and composite/API inputs with an explicit `item_order_seed` allocate component
-placements in exact reference-name order before routing. Settings are resolved before import,
-including file settings and per-job overrides; zero and negative seeds also enable this policy.
-For unique references, changing the order or grouping of placement records alone therefore
-preserves component, pad, and package-keepout identities. Package association, geometry, side,
-fixed state, and pin-net membership remain unchanged. Duplicate references retain their relative
-source order and are excluded from the placement-order guarantee.
+All DSN imports (headless jobs, composite/API inputs, GUI sessions, and default reader overloads)
+allocate component placements in exact reference-name order by default before routing.
+For unique references, changing the order or grouping of placement records alone (e.g. from
+KiCad re-saving and regenerating footprint UUIDs) preserves component, pad, and package-keepout
+identities. Package association, geometry, side, fixed state, and pin-net membership remain
+unchanged. Duplicate references retain their relative source order and are excluded from the
+placement-order guarantee.
 
-Unseeded jobs, GUI imports, and existing standalone reader overloads retain legacy input order.
-Embedding callers can explicitly use `DsnReadOptions.REFERENCE_NAME` on a fresh import. Setting a
-seed after loading, including internally generated exploration seeds, does not reallocate items;
-reload with the desired import policy to establish placement-order invariance.
+Any configured `router.autorouter.item_order_seed` is applied only after these identities exist,
+providing an explicit, reproducible shuffle without relying on file order as an implicit seed.
+Embedding callers can explicitly supply `DsnReadOptions.INPUT_ORDER` if legacy source order is
+specifically required.
 
 Use the same seed, settings, worker count, and deterministic work limits when comparing routing
 runs. This guarantee does not canonicalize other DSN scopes or electrically equivalent copper

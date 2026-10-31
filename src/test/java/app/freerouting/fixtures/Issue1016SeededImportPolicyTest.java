@@ -147,7 +147,7 @@ class Issue1016SeededImportPolicyTest extends RoutingFixtureTest {
   private static void assertPolicy(RoutingJob job, Integer expected) {
     assertNotNull(job.board);
     assertEquals(expected, job.routerSettings.autorouter.itemOrderSeed);
-    assertEquals(expected == null ? "B2" : "A1", job.board.components.get(1).name);
+    assertEquals("A1", job.board.components.get(1).name);
     assertEquals(5, job.board.components.count());
     assertEquals(5, job.board.getPins().size());
     // The fixture has a 20 x 12 mm outline and two signal layers. The reader's

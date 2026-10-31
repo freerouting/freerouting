@@ -962,8 +962,7 @@ public class HeadlessBoardManager implements BoardManager {
    */
   public BoardReadResult loadFromSpecctraDsn(
       InputStream inputStream, BoardObservers boardObservers, IdGenerator idGenerator) {
-    return loadFromSpecctraDsn(
-        inputStream, boardObservers, idGenerator, DsnReadOptions.INPUT_ORDER);
+    return loadFromSpecctraDsn(inputStream, boardObservers, idGenerator, DsnReadOptions.DEFAULT);
   }
 
   /** Loads a DSN with allocation options resolved before parsing by job orchestration. */

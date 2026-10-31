@@ -2,7 +2,6 @@ package app.freerouting.io.specctra;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -35,32 +34,48 @@ class PlacementOrderImportTest {
   }
 
   @Test
-  void explicitSeedIncludingZeroSelectsReferenceNameOrder() {
-    assertEquals(DsnReadOptions.INPUT_ORDER, DsnReadOptions.forSettings(null));
+  void forSettingsSelectsReferenceNameOrderByDefaultAndWithSeeds() {
+    assertEquals(DsnReadOptions.REFERENCE_NAME, DsnReadOptions.forSettings(null));
     var settings = new RouterSettings();
-    assertEquals(DsnReadOptions.INPUT_ORDER, DsnReadOptions.forSettings(settings));
+    assertEquals(DsnReadOptions.REFERENCE_NAME, DsnReadOptions.forSettings(settings));
     settings.autorouter.itemOrderSeed = 0;
     assertEquals(DsnReadOptions.REFERENCE_NAME, DsnReadOptions.forSettings(settings));
     settings.autorouter.itemOrderSeed = -1;
     assertEquals(DsnReadOptions.REFERENCE_NAME, DsnReadOptions.forSettings(settings));
+    settings.autorouter.itemOrderSeed = 42;
+    assertEquals(DsnReadOptions.REFERENCE_NAME, DsnReadOptions.forSettings(settings));
   }
 
   @Test
-  void existingReaderOverloadsRetainInputOrder() throws IOException {
+  void defaultReaderOverloadsUseReferenceNameOrder() throws IOException {
     RoutingBoard original = DsnTestFixtures.loadBoard(FIXTURE);
     RoutingBoard reversed = DsnTestFixtures.loadBoard("Issue1016-placement-order-reversed.dsn");
     original.awaitPostLoad();
     reversed.awaitPostLoad();
     assertEquals("A1", original.components.get(1).name);
-    assertEquals("B2", reversed.components.get(1).name);
-    assertNotEquals(componentIds(original), componentIds(reversed));
+    assertEquals("A1", reversed.components.get(1).name);
+    assertEquals(componentIds(original), componentIds(reversed));
   }
 
   @Test
-  void nullReadOptionsRetainInputOrder() throws IOException {
+  void explicitInputOrderOptionRetainsSourceOrder() throws IOException {
+    RoutingBoard reversed;
+    try (var in = DsnTestFixtures.openResource("Issue1016-placement-order-reversed.dsn")) {
+      reversed =
+          (RoutingBoard)
+              ((BoardReadResult.Success)
+                      DsnReader.readBoard(in, null, null, "reversed", DsnReadOptions.INPUT_ORDER))
+                  .board();
+    }
+    reversed.awaitPostLoad();
+    assertEquals("B2", reversed.components.get(1).name);
+  }
+
+  @Test
+  void nullReadOptionsUseReferenceNameOrder() throws IOException {
     try (var in = DsnTestFixtures.openResource("Issue1016-placement-order-reversed.dsn")) {
       var result = (BoardReadResult.Success) DsnReader.readBoard(in, null, null, null, null);
-      assertEquals("B2", result.board().components.get(1).name);
+      assertEquals("A1", result.board().components.get(1).name);
     }
   }
 
