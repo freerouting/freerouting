@@ -161,9 +161,15 @@ public final class RoutingJobScheduler {
                               }
 
                               // Resolve DSN item allocation from the merged settings before the
-                              // board is loaded. The job receives those settings after attachment.
+                              // board is loaded.
                               var importSettings = settingsMerger.merge();
                               var importOptions = DsnReadOptions.forSettings(importSettings);
+                              // The board overrides applied during the load (copper-to-edge
+                              // clearance, hole-to-hole, ...) read job.routerSettings. An API job
+                              // only carries the fields the client sent, so hand it the merged
+                              // settings first, as the CLI does, or the defaults are skipped.
+                              job.routerSettings = importSettings;
+                              settingsMerger.addOrReplaceSources(new ApiSettings(importSettings));
                               HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
                               if (isDsn) {
                                 boardManager.loadFromSpecctraDsn(
