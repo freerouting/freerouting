@@ -34,8 +34,11 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
   private static final String TEST_BOARD =
       "Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn";
 
-  /** Expected counts from the reference freerouting DRC JSON for this board. */
-  private static final int EXPECTED_UNCONNECTED_NET_GROUPS = 9;
+  /**
+   * Lower bounds for this board: the unconnected items reported by KiCad's own DRC, and the
+   * dangling tracks and vias documented in the reference freerouting DRC JSON.
+   */
+  private static final int EXPECTED_UNCONNECTED_NET_GROUPS = 7;
 
   private static final int EXPECTED_DANGLING_TRACKS = 24;
   private static final int EXPECTED_DANGLING_VIAS = 4;
@@ -71,22 +74,14 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
         trace2.getNetNumber(0),
         "Traces 2402 and 2411 must belong to the same net");
 
-    // Trace 2402 is genuinely dangling: the board-model connectivity check
-    // confirms neither endpoint has a contact. The DRC must report this.
-    assertTrue(
-        trace1.isTail(),
-        "Trace 2402 (GND) is expected to be a dangling trace (is_tail == true). "
-            + "It has no connected endpoints in this partially-routed board.");
-
+    // Trace 2402 ends inside the pad of GND pin 321, 0.2 um off its centre. KiCad treats it as
+    // connected (its DRC report does not list it as dangling), so the reader joins it to the pin.
     Item item321 = board.getItem(321); // GND pin (component #26)
-    // Confirm that pin 321 is indeed NOT in the normal contacts of trace 2402.
-    // (This is the correct board state — not a false negative from the DRC.)
-    if (item321 != null) {
-      Collection<Item> contacts1 = item1.getNormalContacts();
-      assertFalse(
-          contacts1.contains(item321),
-          "Trace 2402 correctly has NO connection to pin 321 in this board state.");
-    }
+    assertNotNull(item321, "Pin 321 not found");
+    assertFalse(trace1.isTail(), "Trace 2402 (GND) must not dangle: it ends inside pin 321");
+    assertTrue(
+        trace1.getConnectedSet(trace1.getNetNumber(0)).contains(item321),
+        "Trace 2402 must be connected to pin 321");
 
     Item via2522item =
         board.getItems().stream().filter(item -> item.getId() == 2522).findFirst().orElse(null);
@@ -137,15 +132,15 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
 
     System.out.println("Unconnected net groups detected: " + unconnectedNetGroups);
 
-    // Normalization failures inflate the count well above the reference value
-    // of 9 (each failed net produces additional disconnected components).
+    // Normalization failures inflate the count above KiCad's value of 7
+    // (each failed net produces additional disconnected components).
     // Use a lower-bound guard so the test catches under-detection regressions
     // while remaining tolerant of the over-detection caused by normalization artefacts.
     assertTrue(
         unconnectedNetGroups >= EXPECTED_UNCONNECTED_NET_GROUPS,
         "DRC should detect at least "
             + EXPECTED_UNCONNECTED_NET_GROUPS
-            + " unconnected net groups (per reference JSON); actual="
+            + " unconnected net groups (per KiCad DRC); actual="
             + unconnectedNetGroups
             + ".");
 
@@ -156,7 +151,8 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
             .map(ui -> ui.firstItem.getId())
             .collect(Collectors.toSet());
 
-    int[] spotCheckIds = {2372, 2433, 2436};
+    // Track 2433 ends inside a +5V pad, 0.5 um off its centre, and is connected like in KiCad.
+    int[] spotCheckIds = {2372, 2436};
     for (int trackId : spotCheckIds) {
       Item trackItem = board.getItem(trackId);
       assertNotNull(trackItem, "Track with ID " + trackId + " should exist in the board");
@@ -198,8 +194,8 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
             + EXPECTED_DANGLING_VIAS
             + " via_dangling violations; actual="
             + viaDanglingViolations);
-    // Unconnected net groups: normalization failures inflate the count above the
-    // reference value of 9, so we use a lower-bound guard here as well.
+    // Unconnected net groups: normalization failures inflate the count above
+    // KiCad's value of 7, so we use a lower-bound guard here as well.
     assertTrue(
         report.unconnectedItems.size() >= EXPECTED_UNCONNECTED_NET_GROUPS,
         "Report should contain at least "

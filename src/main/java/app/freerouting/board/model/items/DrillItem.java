@@ -272,6 +272,15 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     return getShape(layer - fromLayer);
   }
 
+  /** Exact copper containment, independent of clearance-compensated search shapes. */
+  public boolean containsCopper(Point point, int layer) {
+    if (point == null || !isOnLayer(layer)) {
+      return false;
+    }
+    Shape shape = this.getShape(layer - this.firstLayer());
+    return shape != null && shape.contains(point);
+  }
+
   @Override
   public Set<Item> getNormalContacts() {
     Point drillCenter = this.getCenter();
