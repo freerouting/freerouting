@@ -6,7 +6,6 @@ import static app.freerouting.autoroute.pipeline.BatchAutorouter.LAST_MILE_INCOM
 import static app.freerouting.autoroute.pipeline.BatchAutorouter.LAST_MILE_MAX_ATTEMPTS;
 import static app.freerouting.autoroute.pipeline.BatchAutorouter.LAST_MILE_STAGNATION_PASSES;
 import static app.freerouting.autoroute.pipeline.BatchAutorouter.MAXIMUM_TRIES_ON_THE_SAME_BOARD;
-import static app.freerouting.autoroute.pipeline.BatchAutorouter.STAGNATION_PASS_LIMIT;
 import static app.freerouting.autoroute.pipeline.BatchAutorouter.STAGNATION_SCORE_THRESHOLD;
 import static app.freerouting.autoroute.pipeline.BatchAutorouter.STOP_AT_PASS_MINIMUM;
 import static app.freerouting.autoroute.pipeline.BatchAutorouter.STOP_AT_PASS_MODULO;
@@ -313,6 +312,11 @@ final class AutorouteBatchLoop {
     float globalBestScore = Float.NEGATIVE_INFINITY; // best score seen across all passes
     int passOfBestScore = 0; // pass where globalBestScore was achieved
     int incompleteCountAtBestScore = 0; // incomplete count when globalBestScore was recorded
+    final int stagnationPassLimit =
+        (router.settings.autorouter != null
+                && router.settings.autorouter.stagnationPassLimit != null)
+            ? router.settings.autorouter.stagnationPassLimit
+            : BatchAutorouter.STAGNATION_PASS_LIMIT;
     // Track board hashes that have already been routed. If the board does not change between
     // two consecutive passes (same hash at pass start), the router is making no progress and
     // would produce identical decisions with identical ripup budgets — stop immediately rather
@@ -383,7 +387,7 @@ final class AutorouteBatchLoop {
 
             int boardToRestoreRank = bh.getRank(boardToRestore);
 
-            if (boardToRestoreRank > BOARD_RANK_LIMIT) {
+            if (stagnationPassLimit > 0 && boardToRestoreRank > BOARD_RANK_LIMIT) {
               stopFor(BatchAutorouter.StopReason.STAGNATION);
               break;
             }
@@ -495,6 +499,7 @@ final class AutorouteBatchLoop {
         if (boardScoreAfter > lastBestScore + STAGNATION_SCORE_THRESHOLD) {
           consecutiveNoImprovementPasses = 0;
           lastBestScore = boardScoreAfter;
+          lastMileAttempts = 0;
         } else {
           consecutiveNoImprovementPasses++;
 
@@ -512,6 +517,7 @@ final class AutorouteBatchLoop {
             boardScoreAfter = boardStatisticsAfter.getRouterScore(job.routerSettings);
             lastBestScore = boardScoreAfter;
             consecutiveNoImprovementPasses = 0;
+            passOfBestScore = currentPass;
             fanoutRecoveryApplied = true;
             alreadyRoutedBoardHashes.clear();
             job.logDebug(
@@ -535,6 +541,7 @@ final class AutorouteBatchLoop {
               boardScoreAfter = boardStatisticsAfter.getRouterScore(job.routerSettings);
               lastBestScore = boardScoreAfter;
               consecutiveNoImprovementPasses = 0;
+              passOfBestScore = currentPass;
               alreadyRoutedBoardHashes.clear();
               job.logInfo(
                   "Last-mile rip-up removed "
@@ -545,7 +552,7 @@ final class AutorouteBatchLoop {
             }
           }
 
-          if (consecutiveNoImprovementPasses >= STAGNATION_PASS_LIMIT) {
+          if (stagnationPassLimit > 0 && consecutiveNoImprovementPasses >= stagnationPassLimit) {
             String report = buildUnroutedConnectionsReport();
             job.logInfo(
                 "The router's score ("
@@ -553,7 +560,7 @@ final class AutorouteBatchLoop {
                     + ") has not improved by more than "
                     + STAGNATION_SCORE_THRESHOLD
                     + " points in the last "
-                    + STAGNATION_PASS_LIMIT
+                    + stagnationPassLimit
                     + " passes ("
                     + boardStatisticsAfter.connections.incompleteCount
                     + " item"
@@ -570,12 +577,13 @@ final class AutorouteBatchLoop {
 
         // --- Global best tracker (not reset by board restores) ---
         // Stops the router if no pass anywhere has meaningfully improved the score
-        // in the last STAGNATION_PASS_LIMIT passes, even across board-restore cycles.
+        // in the last stagnationPassLimit passes, even across board-restore cycles.
         if (boardScoreAfter > globalBestScore + STAGNATION_SCORE_THRESHOLD) {
           globalBestScore = boardScoreAfter;
           passOfBestScore = currentPass;
           incompleteCountAtBestScore = boardStatisticsAfter.connections.incompleteCount;
-        } else if ((currentPass - passOfBestScore) >= STAGNATION_PASS_LIMIT) {
+        } else if (stagnationPassLimit > 0
+            && (currentPass - passOfBestScore) >= stagnationPassLimit) {
           String report = buildUnroutedConnectionsReport();
           job.logInfo(
               "The router's best score ("
