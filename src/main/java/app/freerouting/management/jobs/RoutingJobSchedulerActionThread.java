@@ -272,6 +272,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
           job.apiKeyHash,
           inputFormat);
     } catch (VirtualMachineError fatal) {
+      markTerminatedByFailure(fatal);
       throw fatal;
     } catch (Throwable t) {
       FRLogger.error("Uncaught exception in routing job '" + job.shortName + "'", t);
@@ -340,6 +341,31 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
    * Marks a job that is still running or stopping as timed out. A job that already reached {@link
    * RoutingJobState#COMPLETED} or another terminal state keeps that state.
    */
+  /**
+   * Marks a job that is still active as terminated after a fatal error such as {@link
+   * OutOfMemoryError}. The CLI waiter treats that state as finished and exits. Swallowing the error
+   * leaves the state at {@link RoutingJobState#RUNNING} while the process makes no further progress.
+   */
+  void markTerminatedByFailure(Throwable fatal) {
+    try {
+      job.finishedAt = Instant.now();
+    } catch (Throwable ignored) {
+      // Allocation can fail again while the heap is exhausted.
+    }
+    synchronized (terminalStateLock) {
+      if (job.state == RoutingJobState.RUNNING
+          || job.state == RoutingJobState.STOPPING
+          || job.state == RoutingJobState.PAUSED) {
+        job.state = RoutingJobState.TERMINATED;
+      }
+    }
+    try {
+      job.logError("Job '" + job.shortName + "' terminated due to a fatal error", fatal);
+    } catch (Throwable ignored) {
+      // Logging allocates. The terminal state above is what lets the process exit.
+    }
+  }
+
   void markTimedOutIfStillActive() {
     synchronized (terminalStateLock) {
       if (job.state == RoutingJobState.RUNNING || job.state == RoutingJobState.STOPPING) {

@@ -294,6 +294,18 @@ class SettingsMergerTest {
   }
 
   @Test
+  void flatMaxThreadsDoesNotCapTheOptimizerPool() {
+    DefaultSettings defaults = new DefaultSettings();
+    int defaultOptimizerThreads = new DefaultSettings().getSettings().optimizer.maxThreads;
+    CliSettings cli = new CliSettings(new String[] {"--router.max_threads=1"});
+
+    RouterSettings merged = new SettingsMerger(defaults, cli).merge();
+
+    assertEquals(1, merged.maxThreads);
+    assertEquals(defaultOptimizerThreads, merged.optimizer.maxThreads);
+  }
+
+  @Test
   void cliNestedAutorouterMaxThreadsIsIndependentOfOptimizer() {
     DefaultSettings defaults = new DefaultSettings();
     CliSettings cli =
