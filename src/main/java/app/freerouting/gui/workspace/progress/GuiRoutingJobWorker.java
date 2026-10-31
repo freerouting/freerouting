@@ -323,6 +323,20 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
         counters.fanoutExtraViasCount);
   }
 
+  /**
+   * Hands the final board of the job to the workspace.
+   *
+   * <p>The routing fallback, the end-of-loop restore of the best board and the optimizer may each
+   * replace {@code routingJob.board} with another board instance. Only the optimizer reports its
+   * replacements to the workspace, so without this the workspace would keep, display and save the
+   * board the default configuration routed in place, while the job reports the one it chose.
+   */
+  void showFinalBoard() {
+    if (routingJob.board != null && routingJob.board != sessionPort.routingBoard()) {
+      sessionPort.replaceBoard(new BoardReplacement(generation, routingJob.board));
+    }
+  }
+
   private void handleRoutingStageFinished(BatchAutorouter autorouter) {
     var boardStatistics = new BoardStatistics(routingJob.board);
     this.scoreBeforeOptimization = boardStatistics.getRouterScore(routingJob.routerSettings);
@@ -624,6 +638,7 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
             }
           });
       this.pipeline.run();
+      showFinalBoard();
 
       // Save the result to the output field as a Specctra SES file
       if (routingJob.output.format == FileFormat.SES) {
