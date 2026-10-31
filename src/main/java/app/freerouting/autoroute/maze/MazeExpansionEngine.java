@@ -85,7 +85,7 @@ final class MazeExpansionEngine {
       expansionValue += ctrl.minNormalViaCost;
     }
     double sortingValue =
-        expansionValue + search.destinationDistance.calculate(nearestPoint, layer);
+        expansionValue + search.destinationDistance.calculateWithPrepaidVia(nearestPoint, layer);
     MazeListElement newElement =
         new MazeListElement(
             drill,
@@ -126,7 +126,7 @@ final class MazeExpansionEngine {
                 fromElementShapeEntryMiddle,
                 ctrl.traceCosts[layer].horizontal(),
                 ctrl.traceCosts[layer].vertical())
-            + search.destinationDistance.calculate(nearestPoint, layer);
+            + search.destinationDistance.calculateWithPrepaidVia(nearestPoint, layer);
     MazeListElement newElement =
         new MazeListElement(
             drillPage,
