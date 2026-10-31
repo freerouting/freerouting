@@ -72,7 +72,10 @@ public class CliSettings implements SettingsSource {
       } else if (arg.startsWith("-")) {
         // Handle -flag value format
         String flag = arg.substring(1);
-        String value = i + 1 < args.length && !args[i + 1].startsWith("-") ? args[++i] : "";
+        String next = i + 1 < args.length ? args[i + 1] : null;
+        // -mt takes a signed number ("-mt -1"), so a leading '-' is not the next flag there.
+        boolean signedNumber = "mt".equals(flag) && next != null && next.matches("-?\\d+");
+        String value = next != null && (!next.startsWith("-") || signedNumber) ? args[++i] : "";
 
         if ("de".equals(flag)) {
           hasDesignInputArgument = true;
@@ -88,6 +91,28 @@ public class CliSettings implements SettingsSource {
           FRLogger.warn(
               "The '-inc' command-line flag is deprecated; use"
                   + " '--router.autorouter.ignore_net_classes' instead.");
+        } else if ("is".equals(flag)) {
+          applyItemSelectionStrategy(settings, value);
+          continue;
+        } else if ("us".equals(flag) || "hr".equals(flag)) {
+          FRLogger.warn(
+              "The '-"
+                  + flag
+                  + "' command-line flag no longer has any effect: the optimizer only has the"
+                  + " global optimal board update strategy.");
+          continue;
+        } else if ("im".equals(flag)) {
+          FRLogger.warn(
+              "The '-im' command-line flag no longer has any effect: intermediate stages are not"
+                  + " saved and routing cannot be resumed from them.");
+          continue;
+        }
+
+        // "-mt 0" disables the optimizer, as it did in v1.9 and as the CLI docs say. Other values
+        // set the thread count through router.max_threads.
+        if ("mt".equals(flag) && isZeroOrNegativeInteger(value)) {
+          applyRouterSetting(settings, "router.optimizer.enabled", "false");
+          continue;
         }
 
         // Map short flags to router settings
@@ -164,6 +189,29 @@ public class CliSettings implements SettingsSource {
       FRLogger.debug("Applied CLI router setting: " + propertyName + " = " + value);
     } catch (Exception e) {
       FRLogger.warn("Failed to apply CLI router setting: " + propertyName + ": " + e.getMessage());
+    }
+  }
+
+  private static boolean isZeroOrNegativeInteger(String value) {
+    try {
+      return Integer.decode(value.trim()) <= 0;
+    } catch (NumberFormatException e) {
+      return false;
+    }
+  }
+
+  /** Applies "-is sequential|prioritized". Other values (e.g. the removed "random") warn. */
+  private void applyItemSelectionStrategy(RouterSettings settings, String value) {
+    String v = value.trim().toLowerCase();
+    if (v.startsWith("prio")) {
+      applyRouterSetting(settings, "router.optimizer.item_selection_strategy", "PRIORITIZED");
+    } else if (v.startsWith("seq")) {
+      applyRouterSetting(settings, "router.optimizer.item_selection_strategy", "SEQUENTIAL");
+    } else {
+      FRLogger.warn(
+          "The '-is' value '"
+              + value
+              + "' is not supported; use 'sequential' or 'prioritized'. Keeping the default.");
     }
   }
 
