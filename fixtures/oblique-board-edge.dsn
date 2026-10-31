@@ -1,0 +1,73 @@
+(pcb oblique-board-edge.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  120000 -110000  130000 -60000  170000 -60000  170000 -110000  120000 -110000)
+    )
+    (via "Via[0-1]_600:400_um")
+    (rule
+      (width 1000)
+      (clearance 200)
+    )
+  )
+  (placement
+    (component LED_2835
+      (place D1 131000 -67000 front 180)
+      (place D2 130500 -72000 front 0)
+    )
+  )
+  (library
+    (image LED_2835
+      (pin Rect[T]Pad_2200x2100_um 1 930 0)
+      (pin Rect[T]Pad_1300x2100_um 2 -1330 0)
+    )
+    (padstack Rect[T]Pad_2200x2100_um
+      (shape (rect F.Cu -1100 -1050 1100 1050))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1300x2100_um
+      (shape (rect F.Cu -650 -1050 650 1050))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net LINK
+      (pins D1-1 D2-2)
+    )
+    (class kicad_default LINK
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 1000)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

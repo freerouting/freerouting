@@ -894,6 +894,97 @@ public abstract sealed class TileShape extends PolylineShape implements ConvexSh
   }
 
   /**
+   * Cuts this shape into count slices of equal extent across the longer side of its bounding box.
+   * Returns exactly count shapes: a slice that would be degenerate is replaced by the whole shape,
+   * so that the slices always cover this shape.
+   */
+  public TileShape[] splitIntoSlices(int count) {
+    TileShape[] result = new TileShape[Math.max(1, count)];
+    if (result.length == 1) {
+      result[0] = this;
+      return result;
+    }
+    IntBox box = this.boundingBox();
+    boolean alongX = box.width() >= box.height();
+    long low = alongX ? box.ll.x : box.ll.y;
+    long extent = alongX ? box.width() : box.height();
+    for (int i = 0; i < result.length; i++) {
+      int from = (int) (low + extent * i / result.length);
+      int to = (int) (low + extent * (i + 1) / result.length);
+      IntBox slab =
+          alongX
+              ? new IntBox(from, box.ll.y, to, box.ur.y)
+              : new IntBox(box.ll.x, from, box.ur.x, to);
+      TileShape slice = to > from ? this.intersectionWithSimplify(slab) : null;
+      result[i] = slice == null || slice.isEmpty() || slice.dimension() < 2 ? this : slice;
+    }
+    return result;
+  }
+
+  /** Halvings allowed per convex shape in {@link #splitToTightOctagons}: at most 4096 pieces. */
+  static final int MAX_TIGHT_OCTAGON_SPLIT_DEPTH = 12;
+
+  /**
+   * Cuts each convex shape until the bounding octagon of every piece exceeds the piece by at most
+   * tolerance. A piece bounded only by orthogonal and diagonal lines is its own bounding octagon
+   * and stays whole; a piece with an oblique border line is halved across the longer side of its
+   * bounding box. The pieces cover the same area as the input shapes.
+   */
+  public static TileShape[] splitToTightOctagons(TileShape[] convexShapes, double tolerance) {
+    Collection<TileShape> pieces = new LinkedList<>();
+    for (TileShape shape : convexShapes) {
+      addTightOctagonPieces(shape, tolerance, 0, pieces);
+    }
+    return pieces.toArray(new TileShape[0]);
+  }
+
+  private static void addTightOctagonPieces(
+      TileShape shape, double tolerance, int depth, Collection<TileShape> pieces) {
+    if (shape.dimension() < 2
+        || depth >= MAX_TIGHT_OCTAGON_SPLIT_DEPTH
+        || shape.boundingOctagonExcess() <= tolerance) {
+      pieces.add(shape);
+      return;
+    }
+    IntBox box = shape.boundingBox();
+    if (Math.max(box.width(), box.height()) < 2) {
+      pieces.add(shape);
+      return;
+    }
+    IntBox firstHalf;
+    IntBox secondHalf;
+    if (box.width() >= box.height()) {
+      int middle = box.ll.x + box.width() / 2;
+      firstHalf = new IntBox(box.ll.x, box.ll.y, middle, box.ur.y);
+      secondHalf = new IntBox(middle, box.ll.y, box.ur.x, box.ur.y);
+    } else {
+      int middle = box.ll.y + box.height() / 2;
+      firstHalf = new IntBox(box.ll.x, box.ll.y, box.ur.x, middle);
+      secondHalf = new IntBox(box.ll.x, middle, box.ur.x, box.ur.y);
+    }
+    for (IntBox half : new IntBox[] {firstHalf, secondHalf}) {
+      TileShape piece = shape.intersectionWithSimplify(half);
+      if (!piece.isEmpty() && piece.dimension() == 2) {
+        addTightOctagonPieces(piece, tolerance, depth + 1, pieces);
+      }
+    }
+  }
+
+  /**
+   * Returns how far the bounding octagon of this shape reaches beyond it: the largest distance from
+   * a corner of the octagon to this shape. 0 for shapes bounded only by orthogonal and diagonal
+   * lines.
+   */
+  public double boundingOctagonExcess() {
+    IntOctagon octagon = this.boundingOctagon();
+    double result = 0;
+    for (int i = 0; i < octagon.borderLineCount(); i++) {
+      result = Math.max(result, this.distance(octagon.cornerApprox(i)));
+    }
+    return result;
+  }
+
+  /**
    * Divides this shape into sections with width and height at most maxSectionWidth of about equal
    * size.
    */
