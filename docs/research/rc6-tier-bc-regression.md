@@ -55,7 +55,7 @@ An earlier three-board result that restored all of RUMBAFLOCK, bullion, and Spik
 
 `hasInteriorContacts()` makes `BasicBoard.getTraceTail`, `RoutingBoard.removeTraceTails`, `Item.getConnectionItems`, and `ExitStubs.release` refuse to delete any trace with an interior contact. That preserves a real unsplit T-junction, and it also preserves a short nub whose interior contact is within one clearance of a dangling end.
 
-On Spikeling the nub is a 1500-unit stub on the same x as a longer trace. Clearance on that board is 2000 units (0.05 mm). Keeping the nub changes the route. Pass 2 then finishes with one clearance violation of about 21.74 µm (expected 2000 board units, actual about 1782) between two ordinary traces that themselves have `interior=false` and `tail=false`:
+On Spikeling the nub is a 1500-unit stub on the same x as a longer trace. Clearance on that board is 2000 units (0.2 mm). Keeping the nub changes the route. Pass 2 then finishes with one clearance violation of about 21.74 µm (expected 2000 board units, actual about 1782) between two ordinary traces that themselves have `interior=false` and `tail=false`:
 
 - `(1710987,-719889)` to `(1724500,-753600)`, layer 1
 - `(1753933,-756000)` to `(1772000,-633000)`, layer 1

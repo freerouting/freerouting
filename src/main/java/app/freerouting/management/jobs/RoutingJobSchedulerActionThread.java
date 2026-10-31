@@ -338,13 +338,10 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
   }
 
   /**
-   * Marks a job that is still running or stopping as timed out. A job that already reached {@link
-   * RoutingJobState#COMPLETED} or another terminal state keeps that state.
-   */
-  /**
    * Marks a job that is still active as terminated after a fatal error such as {@link
    * OutOfMemoryError}. The CLI waiter treats that state as finished and exits. Swallowing the error
-   * leaves the state at {@link RoutingJobState#RUNNING} while the process makes no further progress.
+   * leaves the state at {@link RoutingJobState#RUNNING} while the process makes no further
+   * progress.
    */
   void markTerminatedByFailure(Throwable fatal) {
     try {
@@ -366,6 +363,10 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
     }
   }
 
+  /**
+   * Marks a job that is still running or stopping as timed out. A job that already reached {@link
+   * RoutingJobState#COMPLETED} or another terminal state keeps that state.
+   */
   void markTimedOutIfStillActive() {
     synchronized (terminalStateLock) {
       if (job.state == RoutingJobState.RUNNING || job.state == RoutingJobState.STOPPING) {

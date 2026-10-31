@@ -55,7 +55,6 @@ public class DefaultExceptionHandler implements Thread.UncaughtExceptionHandler 
       return false;
     }
     return Freerouting.globalSettings != null
-        && Freerouting.globalSettings.guiSettings != null
         && Boolean.FALSE.equals(Freerouting.globalSettings.guiSettings.isEnabled);
   }
 

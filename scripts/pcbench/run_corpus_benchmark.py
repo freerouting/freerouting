@@ -404,6 +404,7 @@ def route_single_board(
                 try:
                     proc.kill()
                 except Exception:
+                    # The process may already have exited.
                     pass
                 exit_code = -1
                 stdout_lines.append("\nTIMEOUT: Process exceeded hard timeout budget\n")
@@ -420,6 +421,7 @@ def route_single_board(
                 try:
                     proc.kill()
                 except Exception:
+                    # The process may already have exited.
                     pass
                 try:
                     exit_code = proc.wait(timeout=10)
