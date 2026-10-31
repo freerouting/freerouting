@@ -43,12 +43,17 @@ class Issue1016PlacementOrderRoutingTest extends RoutingFixtureTest {
 
   static Stream<Arguments> passesAndSeeds() {
     return Stream.of(
-        Arguments.of(1, 42), Arguments.of(2, 42), Arguments.of(2, 0), Arguments.of(2, -1));
+        Arguments.of(1, null),
+        Arguments.of(2, null),
+        Arguments.of(1, 42),
+        Arguments.of(2, 42),
+        Arguments.of(2, 0),
+        Arguments.of(2, -1));
   }
 
   @ParameterizedTest
   @MethodSource("passesAndSeeds")
-  void placementPermutationsPreserveSeededRoutesAndConnectedGroupSelection(int pass, int seed)
+  void placementPermutationsPreserveSeededRoutesAndConnectedGroupSelection(int pass, Integer seed)
       throws IOException {
     Outcome expected = route(ORIGINAL, pass, seed);
     for (String fixture :
@@ -59,7 +64,7 @@ class Issue1016PlacementOrderRoutingTest extends RoutingFixtureTest {
     }
   }
 
-  private static Outcome route(String fixture, int pass, int seed) throws IOException {
+  private static Outcome route(String fixture, int pass, Integer seed) throws IOException {
     RoutingBoard board = loadReferenceOrder(fixture);
     board.awaitPostLoad();
     var before = drc(board);

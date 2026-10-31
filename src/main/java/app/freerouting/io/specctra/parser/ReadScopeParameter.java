@@ -100,7 +100,7 @@ public class ReadScopeParameter {
    */
   public ReadScopeParameter(
       IJFlexScanner scanner, BoardObservers observers, IdGenerator idGenerator) {
-    this(scanner, observers, idGenerator, false);
+    this(scanner, observers, idGenerator, true);
   }
 
   /** Creates a parser scope with an explicit placement-allocation policy. */
