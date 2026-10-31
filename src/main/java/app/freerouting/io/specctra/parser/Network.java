@@ -31,8 +31,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -576,8 +579,20 @@ public class Network extends ScopeKeyword {
 
   private static void insertClassPairs(
       Collection<NetClass.ClassClass> classClasses, ReadScopeParameter scopeParameter) {
+    BasicBoard routingBoard = scopeParameter.boardHandling.getRoutingBoard();
+    // Localize all participants before writing any pair. Otherwise an inherited item entry can
+    // change unrelated net classes, or a later split can lose an earlier pair's clearance.
+    Set<app.freerouting.rules.NetClass> preparedClasses = new LinkedHashSet<>();
+    for (NetClass.ClassClass classClass : classClasses) {
+      for (String name : classClass.classNames) {
+        var netClass = KiCadNetClassNames.resolveNetClass(routingBoard.rules, name);
+        if (netClass != null && preparedClasses.add(netClass)) {
+          prepareClassPairClearances(routingBoard, netClass);
+        }
+      }
+    }
+    List<ClassPairRule> pairRules = new ArrayList<>();
     for (NetClass.ClassClass currentClassClass : classClasses) {
-      BasicBoard routingBoard = scopeParameter.boardHandling.getRoutingBoard();
       List<app.freerouting.rules.NetClass> classes = new ArrayList<>();
       for (String name : currentClassClass.classNames) {
         app.freerouting.rules.NetClass netClass =
@@ -590,56 +605,204 @@ public class Network extends ScopeKeyword {
       }
       for (int i = 0; i < classes.size(); i++) {
         for (int j = i + 1; j < classes.size(); j++) {
-          insertClassPairInfo(
-              currentClassClass,
-              classes.get(i),
-              classes.get(j),
-              routingBoard,
-              scopeParameter.coordinateTransform);
+          collectClassPairRules(
+              currentClassClass, classes.get(i), classes.get(j), routingBoard, pairRules);
+        }
+      }
+    }
+    // Repeated declarations for the same pair share a scope. Apply more specific rules last,
+    // retaining source order among rules of equal specificity, including overlapping class lists.
+    pairRules.sort(Comparator.comparingInt(ClassPairRule::specificity));
+    for (ClassPairRule rule : pairRules) {
+      addMixedClearanceRule(
+          routingBoard.rules.clearanceMatrix,
+          rule.firstClass(),
+          rule.secondClass(),
+          rule.clearance(),
+          rule.layerIndex(),
+          scopeParameter.coordinateTransform);
+    }
+    // Structure creates planes before the network assigns net classes. Keep inherited plane
+    // clearances aligned with the same effective entries used by pads and newly imported wiring.
+    for (var plane : scopeParameter.planesWithInheritedClearance) {
+      var netClass = routingBoard.rules.nets.get(plane.getNetNumber(0)).getNetClass();
+      if (preparedClasses.contains(netClass)) {
+        plane.changeClearanceClassIndex(netClass.defaultItemClearanceClasses.get(ItemClass.AREA));
+      }
+    }
+  }
+
+  private static void prepareClassPairClearances(
+      BasicBoard board, app.freerouting.rules.NetClass netClass) {
+    ClearanceMatrix matrix = board.rules.clearanceMatrix;
+    int oldViaClass = netClass.defaultItemClearanceClasses.get(ItemClass.VIA);
+    for (ItemClass type : ItemClass.values()) {
+      if (type == ItemClass.NONE) {
+        continue;
+      }
+      int source =
+          type == ItemClass.TRACE
+              ? netClass.getTraceClearanceClass()
+              : netClass.defaultItemClearanceClasses.get(type);
+      String suffix = type == ItemClass.TRACE ? "wire" : type.name().toLowerCase(Locale.ROOT);
+      int localized =
+          copyPrivateClearanceClass(
+              matrix, netClass.getName() + DsnFile.CLASS_CLEARANCE_SEPARATOR + suffix, source);
+      netClass.defaultItemClearanceClasses.set(type, localized);
+      if (type == ItemClass.TRACE) {
+        netClass.setTraceClearanceClass(localized);
+      }
+    }
+
+    // Selected vias can use a different clearance from the net class's default VIA entry.
+    // Copy every selected source row rather than silently collapsing explicit via rules.
+    ViaRule oldRule = netClass.getViaRule();
+    if (oldRule == null) {
+      return;
+    }
+    Map<Integer, Integer> viaClasses = new LinkedHashMap<>();
+    viaClasses.put(oldViaClass, netClass.defaultItemClearanceClasses.get(ItemClass.VIA));
+    String ruleName = netClass.getName() + "_class_class";
+    while (board.rules.getViaRule(ruleName) != null) {
+      ruleName += "_";
+    }
+    ViaRule newRule = new ViaRule(ruleName);
+    for (int i = 0; i < oldRule.viaCount(); i++) {
+      ViaInfo via = oldRule.getVia(i);
+      int localized =
+          viaClasses.computeIfAbsent(
+              via.getClearanceClassIndex(),
+              source ->
+                  copyPrivateClearanceClass(
+                      matrix,
+                      netClass.getName() + DsnFile.CLASS_CLEARANCE_SEPARATOR + "via",
+                      source));
+      String viaName = via.getName() + "_" + ruleName;
+      while (board.rules.viaInfos.nameExists(viaName)) {
+        viaName += "_";
+      }
+      via = new ViaInfo(viaName, via.getPadstack(), localized, via.attachSmdAllowed(), board.rules);
+      board.rules.viaInfos.add(via);
+      newRule.appendVia(via);
+    }
+    board.rules.viaRules.add(newRule);
+    netClass.setViaRule(newRule);
+  }
+
+  private static int copyPrivateClearanceClass(ClearanceMatrix matrix, String name, int source) {
+    while (matrix.getNo(name) >= 0) {
+      name += "_";
+    }
+    return copyClearanceClass(matrix, name, source);
+  }
+
+  private static int copyClearanceClass(ClearanceMatrix matrix, String name, int source) {
+    if (!matrix.appendClass(name)) {
+      return matrix.getNo(name);
+    }
+    int result = matrix.getNo(name);
+    for (int layer = 0; layer < matrix.getLayerCount(); layer++) {
+      for (int other = 1; other < result; other++) {
+        int value = matrix.getValue(source, other, layer, false);
+        matrix.setValue(result, other, layer, value);
+        matrix.setValue(other, result, layer, value);
+      }
+      matrix.setValue(result, result, layer, matrix.getValue(source, source, layer, false));
+    }
+    return result;
+  }
+
+  private record ClassPairRule(
+      app.freerouting.rules.NetClass firstClass,
+      app.freerouting.rules.NetClass secondClass,
+      Rule.ClearanceRule clearance,
+      int layerIndex) {
+    int specificity() {
+      return (layerIndex < 0 ? 0 : 2) + (clearance.clearanceClassPairs.isEmpty() ? 0 : 1);
+    }
+  }
+
+  private static void collectClassPairRules(
+      NetClass.ClassClass classClass,
+      app.freerouting.rules.NetClass firstClass,
+      app.freerouting.rules.NetClass secondClass,
+      BasicBoard board,
+      List<ClassPairRule> rules) {
+    for (Rule currentRule : classClass.rules) {
+      if (currentRule instanceof Rule.ClearanceRule clearance) {
+        rules.add(new ClassPairRule(firstClass, secondClass, clearance, -1));
+      } else {
+        FRLogger.warn("Network.insert_class_pair_info: unexpected rule");
+      }
+    }
+    for (Rule.LayerRule layerRule : classClass.layerRules) {
+      for (String layerName : layerRule.layerNames) {
+        int layerIndex = board.layerStructure.getNo(layerName);
+        if (layerIndex < 0) {
+          FRLogger.warn("Network.insert_class_pair_info: layer not found at '" + layerName + "'");
+          continue;
+        }
+        for (Rule currentRule : layerRule.rules) {
+          if (currentRule instanceof Rule.ClearanceRule clearance) {
+            rules.add(new ClassPairRule(firstClass, secondClass, clearance, layerIndex));
+          } else {
+            FRLogger.warn("Network.insert_class_pair_info: unexpected layer rule type");
+          }
         }
       }
     }
   }
 
-  private static void insertClassPairInfo(
-      NetClass.ClassClass classClass,
-      app.freerouting.rules.NetClass firstClass,
-      app.freerouting.rules.NetClass secondClass,
-      BasicBoard board,
-      CoordinateTransform coordinateTransform) {
-    for (Rule currentRule : classClass.rules) {
-      if (currentRule instanceof Rule.ClearanceRule currentClearanceRule) {
-        addMixedClearanceRule(
-            board.rules.clearanceMatrix,
-            firstClass,
-            secondClass,
-            currentClearanceRule,
-            -1,
-            coordinateTransform);
-      } else {
-        FRLogger.warn("Network.insert_class_pair_info: unexpected rule");
+  private static Set<Integer> effectiveClearanceClasses(
+      app.freerouting.rules.NetClass netClass, ItemClass type) {
+    Set<Integer> result = new LinkedHashSet<>();
+    if (type == null) {
+      for (ItemClass item : ItemClass.values()) {
+        if (item != ItemClass.NONE) {
+          result.add(netClass.defaultItemClearanceClasses.get(item));
+        }
+      }
+    } else {
+      result.add(netClass.defaultItemClearanceClasses.get(type));
+    }
+    if ((type == null || type == ItemClass.VIA) && netClass.getViaRule() != null) {
+      for (int i = 0; i < netClass.getViaRule().viaCount(); i++) {
+        result.add(netClass.getViaRule().getVia(i).getClearanceClassIndex());
       }
     }
-    for (Rule.LayerRule currentLayerRule : classClass.layerRules) {
-      for (String currentLayerName : currentLayerRule.layerNames) {
-        int layerIndex = board.layerStructure.getNo(currentLayerName);
-        if (layerIndex < 0) {
-          FRLogger.warn(
-              "Network.insert_class_pair_info: layer not found at '" + currentLayerName + "'");
-          continue;
-        }
-        for (Rule currentRule : currentLayerRule.rules) {
-          if (currentRule instanceof Rule.ClearanceRule rule) {
-            addMixedClearanceRule(
-                board.rules.clearanceMatrix,
-                firstClass,
-                secondClass,
-                rule,
-                layerIndex,
-                coordinateTransform);
-          } else {
-            FRLogger.warn("Network.insert_class_pair_info: unexpected layer rule type");
-          }
+    return result;
+  }
+
+  private static Set<Integer> mixedClearanceClasses(
+      ClearanceMatrix matrix, app.freerouting.rules.NetClass netClass, String itemName) {
+    ItemClass type =
+        switch (itemName) {
+          case "wire" -> ItemClass.TRACE;
+          case "smd" -> ItemClass.SMD;
+          case "pin" -> ItemClass.PIN;
+          case "via" -> ItemClass.VIA;
+          case "area" -> ItemClass.AREA;
+          default -> null;
+        };
+    return type == null
+        ? Set.of(getClearanceClass(matrix, netClass, itemName))
+        : effectiveClearanceClasses(netClass, type);
+  }
+
+  private static void setMixedClearance(
+      ClearanceMatrix matrix,
+      Set<Integer> firstClasses,
+      Set<Integer> secondClasses,
+      int layer,
+      int value) {
+    for (int first : firstClasses) {
+      for (int second : secondClasses) {
+        if (layer < 0) {
+          matrix.setValue(first, second, value);
+          matrix.setValue(second, first, value);
+        } else {
+          matrix.setValue(first, second, layer, value);
+          matrix.setValue(second, first, layer, value);
         }
       }
     }
@@ -653,54 +816,32 @@ public class Network extends ScopeKeyword {
       int layerIndex,
       CoordinateTransform coordinateTransform) {
     int currentClearance = (int) Math.round(coordinateTransform.dsnToBoard(clearanceRule.value));
-    final String firstClassName = firstClass.getName();
-    int firstClassNo = clearanceMatrix.getNo(firstClassName);
-    if (firstClassNo < 0) {
-      clearanceMatrix.appendClass(firstClassName);
-      firstClassNo = clearanceMatrix.getNo(firstClassName);
-    }
-    final String secondClassName = secondClass.getName();
-    int secondClassNo = clearanceMatrix.getNo(secondClassName);
-    if (secondClassNo < 0) {
-      clearanceMatrix.appendClass(secondClassName);
-      secondClassNo = clearanceMatrix.getNo(secondClassName);
-    }
     if (clearanceRule.clearanceClassPairs.isEmpty()) {
-      if (layerIndex < 0) {
-        clearanceMatrix.setValue(firstClassNo, secondClassNo, currentClearance);
-        clearanceMatrix.setValue(secondClassNo, firstClassNo, currentClearance);
-      } else {
-        clearanceMatrix.setValue(firstClassNo, secondClassNo, layerIndex, currentClearance);
-        clearanceMatrix.setValue(secondClassNo, firstClassNo, layerIndex, currentClearance);
+      setMixedClearance(
+          clearanceMatrix,
+          effectiveClearanceClasses(firstClass, null),
+          effectiveClearanceClasses(secondClass, null),
+          layerIndex,
+          currentClearance);
+      return;
+    }
+    for (String pairName : clearanceRule.clearanceClassPairs) {
+      String[] pair = pairName.split("_");
+      if (pair.length != 2) {
+        continue;
       }
-    } else {
-      for (String currentString : clearanceRule.clearanceClassPairs) {
-        String[] currentPair = currentString.split("_");
-        if (currentPair.length != 2) {
-          continue;
-        }
-
-        int currentFirstClassNo;
-        int currentSecondClassNo;
-        for (int i = 0; i < 2; i++) {
-          if (i == 0) {
-            currentFirstClassNo = getClearanceClass(clearanceMatrix, firstClass, currentPair[0]);
-            currentSecondClassNo = getClearanceClass(clearanceMatrix, secondClass, currentPair[1]);
-          } else {
-            currentFirstClassNo = getClearanceClass(clearanceMatrix, secondClass, currentPair[0]);
-            currentSecondClassNo = getClearanceClass(clearanceMatrix, firstClass, currentPair[1]);
-          }
-          if (layerIndex < 0) {
-            clearanceMatrix.setValue(currentFirstClassNo, currentSecondClassNo, currentClearance);
-            clearanceMatrix.setValue(currentSecondClassNo, currentFirstClassNo, currentClearance);
-          } else {
-            clearanceMatrix.setValue(
-                currentFirstClassNo, currentSecondClassNo, layerIndex, currentClearance);
-            clearanceMatrix.setValue(
-                currentSecondClassNo, currentFirstClassNo, layerIndex, currentClearance);
-          }
-        }
-      }
+      setMixedClearance(
+          clearanceMatrix,
+          mixedClearanceClasses(clearanceMatrix, firstClass, pair[0]),
+          mixedClearanceClasses(clearanceMatrix, secondClass, pair[1]),
+          layerIndex,
+          currentClearance);
+      setMixedClearance(
+          clearanceMatrix,
+          mixedClearanceClasses(clearanceMatrix, secondClass, pair[0]),
+          mixedClearanceClasses(clearanceMatrix, firstClass, pair[1]),
+          layerIndex,
+          currentClearance);
     }
   }
 
@@ -821,40 +962,25 @@ public class Network extends ScopeKeyword {
       ClearanceMatrix clearanceMatrix,
       app.freerouting.rules.NetClass netClass,
       String itemClassName) {
-    String netClassName = netClass.getName();
-    String newClassName = netClassName;
-    if (!"wire".equals(itemClassName)) {
-      newClassName = newClassName + DsnFile.CLASS_CLEARANCE_SEPARATOR + itemClassName;
+    if ("wire".equals(itemClassName)) {
+      return netClass.getTraceClearanceClass();
     }
-    int foundClassNo = clearanceMatrix.getNo(newClassName);
-    if (foundClassNo >= 0) {
-      return foundClassNo;
-    }
-    clearanceMatrix.appendClass(newClassName);
-    int result = clearanceMatrix.getNo(newClassName);
-    int netClassNo = clearanceMatrix.getNo(netClassName);
-    if (netClassNo < 0 || result < 0) {
-      FRLogger.warn(
-          "Network.get_clearance_class: clearance class not found at '" + netClassName + "'");
-      return result;
-    }
-    // initialize the clearance values of newClassName from netClassName
-    for (int i = 1; i < clearanceMatrix.getClassCount(); i++) {
-
-      for (int j = 0; j < clearanceMatrix.getLayerCount(); j++) {
-        int currentValue = clearanceMatrix.getValue(netClassNo, i, j, false);
-        clearanceMatrix.setValue(result, i, j, currentValue);
-        clearanceMatrix.setValue(i, result, j, currentValue);
-      }
-    }
-    switch (itemClassName) {
-      case "via" -> netClass.defaultItemClearanceClasses.set(ItemClass.VIA, result);
-      case "pin" -> netClass.defaultItemClearanceClasses.set(ItemClass.PIN, result);
-      case "smd" -> netClass.defaultItemClearanceClasses.set(ItemClass.SMD, result);
-      case "area" -> netClass.defaultItemClearanceClasses.set(ItemClass.AREA, result);
-      default -> {
-        // Ignore unsupported item classes.
-      }
+    ItemClass itemClass =
+        switch (itemClassName) {
+          case "via" -> ItemClass.VIA;
+          case "pin" -> ItemClass.PIN;
+          case "smd" -> ItemClass.SMD;
+          case "area" -> ItemClass.AREA;
+          default -> null;
+        };
+    String name = netClass.getName() + DsnFile.CLASS_CLEARANCE_SEPARATOR + itemClassName;
+    int source =
+        itemClass == null
+            ? netClass.getTraceClearanceClass()
+            : netClass.defaultItemClearanceClasses.get(itemClass);
+    int result = copyClearanceClass(clearanceMatrix, name, source);
+    if (itemClass != null) {
+      netClass.defaultItemClearanceClasses.set(itemClass, result);
     }
     return result;
   }

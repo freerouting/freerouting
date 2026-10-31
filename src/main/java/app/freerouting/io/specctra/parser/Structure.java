@@ -1164,13 +1164,17 @@ public class Structure extends ScopeKeyword {
         }
         int[] netNumbers = new int[1];
         netNumbers[0] = currentNet.netNumber;
-        board.insertConductionArea(
-            planeArea,
-            currentLayer.no,
-            netNumbers,
-            clearanceClassIndex,
-            false,
-            FixedState.SYSTEM_FIXED);
+        ConductionArea insertedPlane =
+            board.insertConductionArea(
+                planeArea,
+                currentLayer.no,
+                netNumbers,
+                clearanceClassIndex,
+                false,
+                FixedState.SYSTEM_FIXED);
+        if (insertedPlane != null && planeInfo.area.clearanceClassName == null) {
+          scopeParameter.planesWithInheritedClearance.add(insertedPlane);
+        }
       } else {
         FRLogger.warn(
             "Plane.read_scope: unexpected layer name at '"
