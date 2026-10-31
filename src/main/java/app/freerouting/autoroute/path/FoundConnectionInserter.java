@@ -630,6 +630,13 @@ public final class FoundConnectionInserter {
     if (fromPoint == null || targetPoint == null || fromPoint.equals(targetPoint)) {
       return false;
     }
+    // Automatic neckdown narrows a trace at a pin. Away from the pins of the connection, a
+    // narrowed segment is only a way through a gap between foreign copper, below the net-class
+    // width the board asked for.
+    if (!reachesNeckdownZone(fromPoint, targetPoint, layer, startPin)
+        && !reachesNeckdownZone(fromPoint, targetPoint, layer, endPin)) {
+      return false;
+    }
     int baseHalfWidth = ctrl.traceHalfWidth[layer];
     LinkedHashSet<Integer> candidateHalfWidths = new LinkedHashSet<>();
     if (startPin != null && startPin.isOnLayer(layer)) {
@@ -706,6 +713,27 @@ public final class FoundConnectionInserter {
     return false;
   }
 
+  /**
+   * Whether the segment from {@code a} to {@code b} has an end within the distance of {@code pin}
+   * at which {@link #tryNeckDown} narrows a trace to enter the pin.
+   */
+  private boolean reachesNeckdownZone(Point a, Point b, int layer, Pin pin) {
+    if (pin == null || !pin.isOnLayer(layer)) {
+      return false;
+    }
+    FloatPoint pinCenter = pin.getCenter().toFloat();
+    double zone = pinNeckDownDistance(pin, layer);
+    return pinCenter.distance(a.toFloat()) < zone || pinCenter.distance(b.toFloat()) < zone;
+  }
+
+  /** The distance from the centre of {@code pin} within which a trace is necked down to it. */
+  private double pinNeckDownDistance(Pin pin, int layer) {
+    double clearance =
+        this.board.rules.clearanceMatrix.getValue(
+            ctrl.traceClearanceClassIndex, pin.clearanceClassIndex(), layer, true);
+    return 2 * (0.5 * pin.getMaxWidth(layer) + clearance);
+  }
+
   boolean insertNeckdown(Point fromCorner, Point toCorner, int layer, Pin startPin, Pin endPin) {
     if (startPin != null) {
       Point okPoint = tryNeckDown(toCorner, fromCorner, layer, startPin, true);
@@ -725,11 +753,7 @@ public final class FoundConnectionInserter {
       return null;
     }
     FloatPoint pinCenter = pin.getCenter().toFloat();
-    double currentClearance =
-        this.board.rules.clearanceMatrix.getValue(
-            ctrl.traceClearanceClassIndex, pin.clearanceClassIndex(), layer, true);
-    double pinNeckDownDistance = 2 * (0.5 * pin.getMaxWidth(layer) + currentClearance);
-    if (pinCenter.distance(toCorner.toFloat()) >= pinNeckDownDistance) {
+    if (pinCenter.distance(toCorner.toFloat()) >= pinNeckDownDistance(pin, layer)) {
       return null;
     }
 
