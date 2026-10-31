@@ -67,6 +67,10 @@ public class ShapeSearchTree extends MinAreaTree {
    */
   public final int compensatedClearanceClassNo;
 
+  // Only general outline-room trees use this immutable legacy obstacle-envelope policy.
+  private final ShapeSearchTree obstacleShapeTree;
+  private final AngleRestriction obstacleShapeAngle;
+
   public final String key;
   protected final BasicBoard board;
 
@@ -77,10 +81,31 @@ public class ShapeSearchTree extends MinAreaTree {
    */
   ShapeSearchTree(
       ShapeBoundingDirections directions, BasicBoard board, int compensatedClearanceClassNo) {
+    this(directions, board, compensatedClearanceClassNo, null);
+  }
+
+  ShapeSearchTree(
+      ShapeBoundingDirections directions,
+      BasicBoard board,
+      int compensatedClearanceClassNo,
+      AngleRestriction obstacleShapeAngle) {
     super(directions);
+    this.obstacleShapeAngle = obstacleShapeAngle;
+    this.obstacleShapeTree =
+        obstacleShapeAngle == AngleRestriction.FORTYFIVE_DEGREE
+            ? new ShapeSearchTree45Degree(board, compensatedClearanceClassNo)
+            : obstacleShapeAngle == AngleRestriction.NINETY_DEGREE
+                ? new ShapeSearchTree90Degree(board, compensatedClearanceClassNo)
+                : null;
     this.compensatedClearanceClassNo = compensatedClearanceClassNo;
     this.board = board;
-    key = getKey(this, directions, compensatedClearanceClassNo);
+    key =
+        getKey(this, directions, compensatedClearanceClassNo)
+            + (obstacleShapeAngle == null ? "" : "_" + obstacleShapeAngle.name());
+  }
+
+  AngleRestriction obstacleShapeAngle() {
+    return obstacleShapeAngle;
   }
 
   /** GetKey. */
@@ -476,6 +501,18 @@ public class ShapeSearchTree extends MinAreaTree {
     }
   }
 
+  /** Queries room envelopes without changing the indexed geometry used by contact queries. */
+  public void overlappingRoomEntries(
+      ConvexShape shape, int layer, Collection<TreeEntry> treeEntries) {
+    Lock lock = readLock();
+    lock.lock();
+    try {
+      overlappingTreeEntriesUnlocked(shape, layer, new int[0], treeEntries, null, true);
+    } finally {
+      lock.unlock();
+    }
+  }
+
   private void overlappingTreeEntriesUnlocked(
       ConvexShape shape, int layer, int[] ignoreNetNos, Collection<TreeEntry> treeEntries) {
     overlappingTreeEntriesUnlocked(shape, layer, ignoreNetNos, treeEntries, null);
@@ -487,6 +524,16 @@ public class ShapeSearchTree extends MinAreaTree {
       int[] ignoreNetNos,
       Collection<TreeEntry> treeEntries,
       Item obstaclesOf) {
+    overlappingTreeEntriesUnlocked(shape, layer, ignoreNetNos, treeEntries, obstaclesOf, false);
+  }
+
+  private void overlappingTreeEntriesUnlocked(
+      ConvexShape shape,
+      int layer,
+      int[] ignoreNetNos,
+      Collection<TreeEntry> treeEntries,
+      Item obstaclesOf,
+      boolean roomEnvelopes) {
     if (shape == null) {
       return;
     }
@@ -523,7 +570,10 @@ public class ShapeSearchTree extends MinAreaTree {
           ignoreObject = true;
         }
         if (!ignoreObject) {
-          TileShape currentShape = currentObject.getTreeShape(this, currentLeaf.shapeIndexInObject);
+          TileShape currentShape =
+              roomEnvelopes
+                  ? getRoomShape(currentObject, shapeIndex)
+                  : currentObject.getTreeShape(this, shapeIndex);
           boolean addItem;
           if (is45Degree && currentShape instanceof IntOctagon) {
             // in this case the check for intersection is redundant and
@@ -1046,7 +1096,7 @@ public class ShapeSearchTree extends MinAreaTree {
           && currentObject.shapeLayer(shapeIndex) == roomLayer
           && currentObject != ignoreObject) {
 
-        TileShape currentObjectShape = currentObject.getTreeShape(this, shapeIndex);
+        TileShape currentObjectShape = getRoomShape(currentObject, shapeIndex);
         Collection<IncompleteFreeSpaceExpansionRoom> newResult = new ArrayList<>();
         RegularTileShape newBoundingShape = IntOctagon.EMPTY;
 
@@ -1302,6 +1352,9 @@ public class ShapeSearchTree extends MinAreaTree {
   }
 
   public TileShape[] calculateTreeShapes(DrillItem drillItem) {
+    if (obstacleShapeTree != null) {
+      return obstacleShapeTree.calculateTreeShapes(drillItem);
+    }
     if (this.board == null) {
       return new TileShape[0];
     }
@@ -1339,6 +1392,9 @@ public class ShapeSearchTree extends MinAreaTree {
   }
 
   public TileShape[] calculateTreeShapes(ObstacleArea obstacleArea) {
+    if (obstacleShapeTree != null) {
+      return obstacleShapeTree.calculateTreeShapes(obstacleArea);
+    }
     if (this.board == null) {
       return new TileShape[0];
     }
@@ -1510,13 +1566,37 @@ public class ShapeSearchTree extends MinAreaTree {
    * Used for creating the shapes of a polyline_trace for this tree. Overwritten in derived classes.
    */
   TileShape offsetShape(Polyline polyline, int halfWidth, int no) {
+    if (obstacleShapeTree != null) {
+      return obstacleShapeTree.offsetShape(polyline, halfWidth, no);
+    }
     return polyline.offsetShape(halfWidth, no);
+  }
+
+  /**
+   * Returns the legacy obstacle envelope for room construction. Contact and clearance queries keep
+   * using the indexed shapes, including exact trace endpoints and explicit net-tie cutouts. Outline
+   * boundaries and previously completed rooms are never re-enveloped.
+   */
+  public TileShape getRoomShape(SearchTreeObject object, int shapeIndex) {
+    TileShape shape = object.getTreeShape(this, shapeIndex);
+    if (shape == null
+        || obstacleShapeTree == null
+        || !(object instanceof Item)
+        || object instanceof BoardOutline) {
+      return shape;
+    }
+    return obstacleShapeAngle == AngleRestriction.NINETY_DEGREE
+        ? shape.boundingBox()
+        : shape.boundingOctagon();
   }
 
   /**
    * Used for creating the shapes of a polyline_trace for this tree. Overwritten in derived classes.
    */
   public TileShape[] offsetShapes(Polyline polyline, int halfWidth, int fromNo, int toNo) {
+    if (obstacleShapeTree != null) {
+      return obstacleShapeTree.offsetShapes(polyline, halfWidth, fromNo, toNo);
+    }
     return polyline.offsetShapes(halfWidth, fromNo, toNo);
   }
 

@@ -109,10 +109,18 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     if (this.autorouteEngine == null || !this.autorouteEngine.maintainDatabase) {
       return;
     }
-    // Invalidate the free space expansion rooms touching a shape of item.
-    int shapeCount = item.treeShapeCount(this.autorouteEngine.autorouteSearchTree);
+    // Invalidate free-space rooms that touch the room envelope. Contact queries stay on the
+    // indexed shape; the envelope can block a room that misses that shape.
+    ShapeSearchTree autorouteTree = this.autorouteEngine.autorouteSearchTree;
+    int shapeCount = item.treeShapeCount(autorouteTree);
     for (int i = 0; i < shapeCount; i++) {
-      TileShape currentShape = item.getTreeShape(this.autorouteEngine.autorouteSearchTree, i);
+      TileShape currentShape = autorouteTree.getRoomShape(item, i);
+      if (currentShape == null) {
+        currentShape = item.getTreeShape(autorouteTree, i);
+      }
+      if (currentShape == null) {
+        continue;
+      }
       this.autorouteEngine.invalidateDrillPages(currentShape);
       int currentLayer = item.shapeLayer(i);
       Collection<SearchTreeObject> overlaps =
@@ -895,15 +903,23 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       Stoppable stoppableThread,
       TimeLimit timeLimit,
       boolean retainAutorouteDatabase) {
+    var searchTree = this.searchTreeManager.getAutorouteTree(traceClearanceClassIndex);
     if (this.autorouteEngine == null
         || !retainAutorouteDatabase
-        || this.autorouteEngine.autorouteSearchTree.compensatedClearanceClassNo
-            != traceClearanceClassIndex) {
+        || this.autorouteEngine.autorouteSearchTree != searchTree) {
+      // Rooms and drill state belong to one tree geometry, not merely one clearance class.
+      finishAutoroute();
       this.autorouteEngine =
           new AutorouteEngine(this, traceClearanceClassIndex, retainAutorouteDatabase);
     }
     this.autorouteEngine.initConnection(netNumber, stoppableThread, timeLimit);
     return this.autorouteEngine;
+  }
+
+  /** Drops retained rooms before the default tree rebuilds shapes for a new trace angle. */
+  @Override
+  public void clearRetainedAutorouteState() {
+    finishAutoroute();
   }
 
   /** Clears the auto-route database in case it was retained. */
