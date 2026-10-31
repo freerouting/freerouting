@@ -192,7 +192,9 @@ public class GuiManager {
         routingJob.tryToSetOutputFile(new File(globalSettings.initialOutputFile));
 
         // we need to set up a listener to save the design file when the autorouter is
-        // running
+        // running. The export is queued on the event dispatch thread, behind the
+        // replacement of the board by the final board of the job, so that the file
+        // holds the board the job chose and not the one the workspace started with.
         newFrame.boardPanel.boardHandling.autorouterListener =
             new ThreadActionListener() {
               @Override
@@ -200,18 +202,12 @@ public class GuiManager {
 
               @Override
               public void autorouterAborted() {
-                exportBoardToFile(
-                    newFrame,
-                    globalSettings.initialOutputFile,
-                    globalSettings.guiSettings.exitWhenFinished);
+                exportBoardToFileOnEdt(newFrame, globalSettings);
               }
 
               @Override
               public void autorouterFinished() {
-                exportBoardToFile(
-                    newFrame,
-                    globalSettings.initialOutputFile,
-                    globalSettings.guiSettings.exitWhenFinished);
+                exportBoardToFileOnEdt(newFrame, globalSettings);
               }
             };
 
@@ -518,6 +514,16 @@ public class GuiManager {
       FRLogger.error("Error reading rules file '" + rulesFileName + "'.", e);
     }
     return false;
+  }
+
+  /**
+   * Queues the export of the board in {@code newFrame} to the output file given on the command line
+   * on the event dispatch thread, after the workspace updates queued before it.
+   */
+  private static void exportBoardToFileOnEdt(BoardFrame newFrame, GlobalSettings globalSettings) {
+    String filename = globalSettings.initialOutputFile;
+    boolean exitWhenFinished = globalSettings.guiSettings.exitWhenFinished;
+    SwingUtilities.invokeLater(() -> exportBoardToFile(newFrame, filename, exitWhenFinished));
   }
 
   /**

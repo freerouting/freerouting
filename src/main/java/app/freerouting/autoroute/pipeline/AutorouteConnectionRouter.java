@@ -9,6 +9,7 @@ import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.ConductionArea;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.datastructures.TimeLimit;
+import app.freerouting.drc.ClearanceBaseline;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import java.util.Map;
@@ -301,7 +302,9 @@ final class AutorouteConnectionRouter {
           "",
           null);
       if (boardSnapshotBeforeRoute != null) {
+        ClearanceBaseline baseline = router.board.clearanceBaseline;
         router.board = (RoutingBoard) BasicBoard.deserialize(boardSnapshotBeforeRoute);
+        router.board.clearanceBaseline = baseline;
       }
     }
     return rejection;
