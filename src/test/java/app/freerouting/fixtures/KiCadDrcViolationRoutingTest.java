@@ -46,7 +46,10 @@ class KiCadDrcViolationRoutingTest extends RoutingFixtureTest {
   // copper pours (planes), Freerouting's strict geometric connectivity model may not see the
   // pins as connected to the plane. Thus, Freerouting often reports a much higher number of
   // unconnected components (Airlines) than KiCad does. The values below reflect Freerouting's
-  // actual geometric reality for these specific .dsn files.
+  // actual geometric reality for these specific .dsn files. Wires that end inside a pad of their
+  // net but off its centre are joined to the pad on import, as KiCad treats them as connected:
+  // dev-board matches KiCad's 0 unconnected items, Natural Tone Preamp has 8 airlines for KiCad's
+  // 7 unconnected items.
 
   // Note on clearance violations:
   // - For Mars-64, KiCad reported 6 track clearance violations and 1 hole clearance violation.
@@ -66,11 +69,11 @@ class KiCadDrcViolationRoutingTest extends RoutingFixtureTest {
 
   @Test
   void issue5754HoleClearanceViolations() throws Exception {
-    assertDrcOnLoadedBoard("Issue575-drc_dev-board_4_hole_clearance_violations.dsn", 3, 0);
+    assertDrcOnLoadedBoard("Issue575-drc_dev-board_4_hole_clearance_violations.dsn", 0, 0);
   }
 
   @Test
   void issue5757UnconnectedItems() throws Exception {
-    assertDrcOnLoadedBoard("Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn", 122, 0);
+    assertDrcOnLoadedBoard("Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn", 8, 0);
   }
 }

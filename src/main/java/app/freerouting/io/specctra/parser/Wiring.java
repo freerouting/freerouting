@@ -4,6 +4,7 @@ import app.freerouting.board.actions.ItemSelectionFilter;
 import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.ConductionArea;
+import app.freerouting.board.model.items.DrillItem;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.model.items.Via;
@@ -345,6 +346,7 @@ public class Wiring extends ScopeKeyword {
       }
     }
     RoutingBoard board = scopeParameter.boardHandling.getRoutingBoard();
+    connectWireEndsInsidePads(board);
     try {
       board.normalizeAllTraces();
     } catch (Exception e) {
@@ -353,6 +355,53 @@ public class Wiring extends ScopeKeyword {
       scopeParameter.warnings.add(msg);
     }
     return true;
+  }
+
+  /**
+   * Host CAD tools treat a wire as connected to a pad as soon as the wire end lies inside the pad
+   * copper, while the board model connects traces to pins and vias only at their centre. Extends
+   * every wire end that lies off-centre inside a pad of its net, and is not yet connected to it, by
+   * a stub to the pad centre, so the imported wire keeps its own geometry and gains the connection.
+   * A stub that would violate a clearance is left out: the import must not add violations the host
+   * CAD design does not have.
+   */
+  private static void connectWireEndsInsidePads(BasicBoard board) {
+    for (Trace wire : new LinkedList<>(board.getTraces())) {
+      connectEndToEnclosingPad(board, wire, wire.firstCorner());
+      connectEndToEnclosingPad(board, wire, wire.lastCorner());
+    }
+  }
+
+  private static void connectEndToEnclosingPad(BasicBoard board, Trace wire, Point end) {
+    DrillItem pad = enclosingPad(board, wire, end);
+    if (pad == null || pad.getCenter().equals(end) || isConnected(wire, pad)) {
+      return;
+    }
+    Polyline stub = new Polyline(end, pad.getCenter());
+    int layer = wire.getLayer();
+    int halfWidth = wire.getHalfWidth();
+    int clearanceClass = wire.clearanceClassIndex();
+    if (!board.checkPolylineTrace(stub, layer, halfWidth, wire.netNumbers, clearanceClass)) {
+      return;
+    }
+    board.insertTraceWithoutCleaning(
+        stub, layer, halfWidth, wire.netNumbers, clearanceClass, wire.getFixedState());
+  }
+
+  private static boolean isConnected(Trace wire, DrillItem pad) {
+    return wire.getConnectedSet(wire.getNetNumber(0)).contains(pad);
+  }
+
+  /** Returns a pin or via sharing a net with the wire whose copper contains the wire end. */
+  private static DrillItem enclosingPad(BasicBoard board, Trace wire, Point end) {
+    for (Item item : board.pickItems(end, wire.getLayer(), null)) {
+      if (item instanceof DrillItem pad
+          && pad.sharesNet(wire)
+          && pad.containsCopper(end, wire.getLayer())) {
+        return pad;
+      }
+    }
+    return null;
   }
 
   private Item readWireScope(ReadScopeParameter scopeParameter) {
