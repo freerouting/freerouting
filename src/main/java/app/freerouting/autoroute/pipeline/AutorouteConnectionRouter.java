@@ -14,6 +14,7 @@ import app.freerouting.rules.Net;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 /** Executes one autoroute connection, including necked retry and strict-DRC recovery. */
 final class AutorouteConnectionRouter {
@@ -51,19 +52,34 @@ final class AutorouteConnectionRouter {
       }
 
       Set<Item> connectedSet = item.getConnectedSet(routeNetNo);
-      Set<Item> routeStartSet;
-      Set<Item> routeDestSet;
       if (containsPlane) {
         for (Item currentItem : connectedSet) {
-          if (currentItem instanceof ConductionArea) {
+          if (currentItem instanceof ConductionArea ca && !ca.isFractured()) {
             return new AutorouteAttemptResult(AutorouteAttemptState.CONNECTED_TO_PLANE);
           }
         }
-        routeStartSet = connectedSet;
-        routeDestSet = unconnectedSet;
-      } else {
-        routeStartSet = unconnectedSet;
-        routeDestSet = connectedSet;
+      }
+
+      Set<Item> rawStartSet = containsPlane ? connectedSet : unconnectedSet;
+      Set<Item> rawDestSet = containsPlane ? unconnectedSet : connectedSet;
+
+      Set<Item> routeStartSet = new TreeSet<>();
+      for (Item it : rawStartSet) {
+        if (!(it instanceof ConductionArea)) {
+          routeStartSet.add(it);
+        }
+      }
+      Set<Item> routeDestSet = new TreeSet<>();
+      for (Item it : rawDestSet) {
+        if (!(it instanceof ConductionArea)) {
+          routeDestSet.add(it);
+        }
+      }
+      if (routeStartSet.isEmpty()) {
+        routeStartSet = rawStartSet;
+      }
+      if (routeDestSet.isEmpty()) {
+        routeDestSet = rawDestSet;
       }
 
       router.setAirLine(AutorouteAirlineCalculator.calculateAirline(routeStartSet, routeDestSet));

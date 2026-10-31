@@ -27,7 +27,7 @@ from .config import (
     SAVE_DEBUG_JSON, DEBUG_JSON_DIR, DEBUG_INPUT_JSON_FILENAME, DEBUG_OUTPUT_JSON_FILENAME,
     LOG_DIR,
 )
-from .gui_helpers import wx_show_error
+from .gui_helpers import wx_show_error, refill_board_zones
 from .board_json_helpers import serialize_board_to_json
 from .process_utils import ProcessDialog
 
@@ -420,6 +420,8 @@ class JsonApiRouter:
                     commit.Push(board)
                 except Exception as e2:
                     logger.error(f"commit.Push(board) failed too: {e2}", exc_info=True)
+
+        refill_board_zones(board)
 
         try:
             pcbnew.Refresh()

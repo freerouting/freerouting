@@ -756,7 +756,7 @@ public abstract class Item
   }
 
   /** Recursive part of get_connected_set. */
-  private void getConnectedSetRecu(Set<Item> result, int netNumber, boolean stopAtPlane) {
+  void getConnectedSetRecu(Set<Item> result, int netNumber, boolean stopAtPlane) {
     Collection<Item> contactList = getNormalContacts();
     if (contactList == null) {
       return;

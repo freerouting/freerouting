@@ -484,7 +484,8 @@ public final class BatchAutorouter extends NamedAlgorithm {
                 boolean isPlane = net != null && net.containsPlane();
                 if (isPlane) {
                   boolean alreadyConnectedToPlane =
-                      connectedSet.stream().anyMatch(ConductionArea.class::isInstance);
+                      connectedSet.stream()
+                          .anyMatch(item -> item instanceof ConductionArea ca && !ca.isFractured());
                   if (alreadyConnectedToPlane) {
                     continue;
                   }
