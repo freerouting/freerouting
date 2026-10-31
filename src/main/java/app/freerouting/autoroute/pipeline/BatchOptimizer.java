@@ -843,7 +843,12 @@ public final class BatchOptimizer extends NamedAlgorithm {
             Thread.currentThread().interrupt();
             break;
           } catch (ExecutionException e) {
-            job.logError("Error in candidate optimization task", e.getCause());
+            Throwable cause = e.getCause();
+            job.logError("Error in candidate optimization task", cause);
+            if (cause instanceof VirtualMachineError fatal) {
+              // The heap is already exhausted. Continuing the pass only wedges the process.
+              throw fatal;
+            }
           }
         }
 
