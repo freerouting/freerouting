@@ -492,7 +492,11 @@ public class RouterSettings implements Serializable, Cloneable {
         scoring.undesiredDirectionTraceCost[i] = layers[i].undesiredDirectionTraceCost;
       } else if (initializeTraceCosts) {
         scoring.undesiredDirectionTraceCost[i] = scoring.defaultUndesiredDirectionTraceCost;
-        if (currentPreferredDirectionIsHorizontal) {
+        boolean isPrefHoriz =
+            layers[i].preferredDirectionHorizontal != null
+                ? layers[i].preferredDirectionHorizontal
+                : currentPreferredDirectionIsHorizontal;
+        if (isPrefHoriz) {
           scoring.undesiredDirectionTraceCost[i] += horizontalAddCostsAgainstPreferredDir;
         } else {
           scoring.undesiredDirectionTraceCost[i] += verticalAddCostsAgainstPreferredDir;
@@ -636,23 +640,23 @@ public class RouterSettings implements Serializable, Cloneable {
       for (int i = 0; i < layerCount; i++) {
         layers[i] = new LayerSettings();
       }
-    }
-    if (scoring == null) {
-      scoring = new RoutingCostSettings();
-    }
-    // Initialize per-layer cost arrays with a neutral default so callers can
-    // write individual entries without waiting for applyBoardSpecificOptimizations.
-    scoring.preferredDirectionTraceCost = new double[layerCount];
-    scoring.undesiredDirectionTraceCost = new double[layerCount];
+      if (scoring == null) {
+        scoring = new RoutingCostSettings();
+      }
+      // Initialize per-layer cost arrays with a neutral default so callers can
+      // write individual entries without waiting for applyBoardSpecificOptimizations.
+      scoring.preferredDirectionTraceCost = new double[layerCount];
+      scoring.undesiredDirectionTraceCost = new double[layerCount];
 
-    for (int i = 0; i < layerCount; i++) {
-      layers[i].routable = true;
-      layers[i].preferredDirectionHorizontal = null;
-      layers[i].bendCost = null;
-      layers[i].preferredDirectionTraceCost = null;
-      layers[i].undesiredDirectionTraceCost = null;
-      scoring.preferredDirectionTraceCost[i] = 1.0;
-      scoring.undesiredDirectionTraceCost[i] = 1.0;
+      for (int i = 0; i < layerCount; i++) {
+        layers[i].routable = true;
+        layers[i].preferredDirectionHorizontal = null;
+        layers[i].bendCost = null;
+        layers[i].preferredDirectionTraceCost = null;
+        layers[i].undesiredDirectionTraceCost = null;
+        scoring.preferredDirectionTraceCost[i] = 1.0;
+        scoring.undesiredDirectionTraceCost[i] = 1.0;
+      }
     }
   }
 
