@@ -62,15 +62,15 @@ class DataModelContractsTest {
   @Test
   void testDefaultConfig() {
     IdentifierConfig config = IdentifierConfig.defaultConfig();
-    assertEquals(7.5, config.maxOwnerRadiusMm());
+    assertEquals(15.0, config.maxOwnerRadiusMm());
     assertEquals(0.20, config.minPitchMm());
-    assertEquals(3.50, config.maxPitchMm());
+    assertEquals(12.0, config.maxPitchMm());
     assertEquals(0.85, config.minPadAreaRatio());
     assertEquals(60, config.decouplingThreshold());
     assertEquals(40, config.reviewThreshold());
     assertEquals(4, config.ownerTopK());
     assertTrue(config.runRefDesAudit());
-    assertFalse(config.auditDemotesToReview());
+    assertTrue(config.auditDemotesToReview());
     assertFalse(config.groundNameHints().isEmpty());
   }
 }

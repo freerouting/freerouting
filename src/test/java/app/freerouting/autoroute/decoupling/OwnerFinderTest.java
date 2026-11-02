@@ -40,12 +40,12 @@ class OwnerFinderTest {
     capState.score = 45;
     capState.verdict = Verdict.REVIEW;
 
-    // IC 1 pin at (1000, 1000) -> distance sqrt(2) mm ~ 1.41 mm <= 7.5 mm
+    // IC 1 pin at (1000, 1000) -> distance sqrt(2) mm ~ 1.41 mm <= 15.0 mm
     Pin icPin1 = createMockPin(101, 50, 2, 1000, 1000);
-    // IC 2 pin at (4000, 3000) -> distance 5.0 mm <= 7.5 mm
+    // IC 2 pin at (4000, 3000) -> distance 5.0 mm <= 15.0 mm
     Pin icPin2 = createMockPin(102, 51, 2, 4000, 3000);
-    // IC 3 pin far away at (10000, 10000) -> distance ~ 14 mm > 7.5 mm
-    Pin icPin3 = createMockPin(103, 52, 2, 10000, 10000);
+    // IC 3 pin far away at (20000, 20000) -> distance ~ 28.3 mm > 15.0 mm
+    Pin icPin3 = createMockPin(103, 52, 2, 20000, 20000);
 
     when(index.getPinsOfNet(2)).thenReturn(List.of(capPinA, icPin1, icPin2, icPin3));
     when(index.getComponentType(50)).thenReturn(ComponentType.IC);

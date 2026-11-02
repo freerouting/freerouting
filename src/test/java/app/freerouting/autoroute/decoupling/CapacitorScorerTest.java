@@ -61,9 +61,9 @@ class CapacitorScorerTest {
     assertFalse(states.get(0).gatePassed);
     assertTrue(ReasonCode.SAME_OR_NO_NET.isSet(states.get(0).reasonMask));
 
-    // Case 3: Pitch out of range (pitch 5.0 mm > maxPitch 3.5 mm)
+    // Case 3: Pitch out of range (pitch 15.0 mm > maxPitch 12.0 mm)
     Pin p5 = createMockPin(5, 12, 0, true, 1, 0, 0, 100, 100);
-    Pin p6 = createMockPin(6, 12, 0, true, 2, 5000, 0, 100, 100); // 5000 units = 5 mm
+    Pin p6 = createMockPin(6, 12, 0, true, 2, 15000, 0, 100, 100); // 15000 units = 15 mm
     when(index.getTwoPinComponentIds()).thenReturn(List.of(12));
     when(index.getPinsOfComponent(12)).thenReturn(List.of(p5, p6));
 
@@ -114,7 +114,7 @@ class CapacitorScorerTest {
     when(index.getGroundScore(2)).thenReturn(10.0);
 
     BoardIndex.NetEvidence vccEvidence =
-        new BoardIndex.NetEvidence(2, 20, 5, 3, 4, true, false, 0, 0, 10.0);
+        new BoardIndex.NetEvidence(2, "VCC", 20, 5, 3, 4, true, false, 0, 0, 10.0);
     when(index.getNetEvidence(2)).thenReturn(vccEvidence);
 
     List<CapacitorScorer.EvaluationState> states =
@@ -178,7 +178,7 @@ class CapacitorScorerTest {
     when(index.getGroundScore(1)).thenReturn(90.0);
     when(index.getGroundScore(2)).thenReturn(10.0);
     BoardIndex.NetEvidence vccEvidence =
-        new BoardIndex.NetEvidence(2, 50, 10, 4, 5, true, false, 0, 0, 10.0);
+        new BoardIndex.NetEvidence(2, "VCC", 50, 10, 4, 5, true, false, 0, 0, 10.0);
     when(index.getNetEvidence(2)).thenReturn(vccEvidence);
 
     // Island cap on AVDD (net 3):
@@ -188,7 +188,7 @@ class CapacitorScorerTest {
     when(index.getGroundScore(3)).thenReturn(5.0);
     // AVDD net has single load, no plane, so receives few-pins penalty in Pass A
     BoardIndex.NetEvidence avddEvidence =
-        new BoardIndex.NetEvidence(3, 2, 1, 1, 1, false, false, 0, 0, 5.0);
+        new BoardIndex.NetEvidence(3, "AVDD", 2, 1, 1, 1, false, false, 0, 0, 5.0);
     when(index.getNetEvidence(3)).thenReturn(avddEvidence);
 
     when(index.getTwoPinComponentIds()).thenReturn(List.of(40, 43, 41));
@@ -210,6 +210,7 @@ class CapacitorScorerTest {
     Pin pL1_b = createMockPin(6, 42, 0, true, 2, 2500, 1500, 100, 100); // on VCC
     when(index.getPinsOfNet(3)).thenReturn(List.of(p4, pL1_a));
     when(index.getComponentType(42)).thenReturn(ComponentType.TWO_PIN_SMD);
+    when(index.getComponentName(42)).thenReturn("L1");
     when(index.getPinsOfComponent(42)).thenReturn(List.of(pL1_a, pL1_b));
 
     CapacitorScorer.applyPassB(states, index, config);

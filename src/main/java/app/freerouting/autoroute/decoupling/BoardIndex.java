@@ -2,6 +2,7 @@ package app.freerouting.autoroute.decoupling;
 
 import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.structure.Component;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.Nets;
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public final class BoardIndex {
   /** Topological and electrical evidence gathered for a specific net. */
   public record NetEvidence(
       int netNumber,
+      String netName,
       int pinCount,
       int icPinCount,
       int icCount,
@@ -32,7 +34,12 @@ public final class BoardIndex {
       int connectorLikePins,
       double groundScore) {}
 
+  private static final Pattern NON_CAP_NAME_PATTERN =
+      Pattern.compile(
+          "(?i)^(R|RN|L|FB|FL|D|LED|Q|J|JP|HDR|P|TP|F|RV|MOV|Y|X|SW|K|T|VR|RESET|BTN)[0-9_].*");
+
   private final int[] componentIds;
+  private final String[] componentNames;
   private final int[] componentPinOffsets;
   private final Pin[] componentPins;
   private final ComponentType[] componentTypes;
@@ -49,6 +56,7 @@ public final class BoardIndex {
 
   private BoardIndex(
       int[] componentIds,
+      String[] componentNames,
       int[] componentPinOffsets,
       Pin[] componentPins,
       ComponentType[] componentTypes,
@@ -61,6 +69,7 @@ public final class BoardIndex {
       int totalBoardComponents,
       int totalBoardPins) {
     this.componentIds = componentIds;
+    this.componentNames = componentNames;
     this.componentPinOffsets = componentPinOffsets;
     this.componentPins = componentPins;
     this.componentTypes = componentTypes;
@@ -183,7 +192,14 @@ public final class BoardIndex {
       Arrays.sort(compPins, start, end, (p1, p2) -> Integer.compare(p1.getId(), p2.getId()));
     }
 
-    // 5. Classify components
+    // 5. Classify components and cache names
+    String[] compNames = new String[compIds.length];
+    for (int i = 0; i < compIds.length; i++) {
+      Component comp =
+          (board != null && board.components != null) ? board.components.get(compIds[i]) : null;
+      compNames[i] = (comp != null && comp.name != null) ? comp.name.trim() : "";
+    }
+
     ComponentType[] compTypes = new ComponentType[compIds.length];
     boolean[] compXtal = new boolean[compIds.length];
     List<Integer> twoPinList = new ArrayList<>();
@@ -230,7 +246,10 @@ public final class BoardIndex {
               icPinCount++;
               distinctIcs.add(compId);
             } else if (ct == ComponentType.TWO_PIN_SMD) {
-              distinctTwoPinSmds.add(compId);
+              String cName = compNames[ci];
+              if (!NON_CAP_NAME_PATTERN.matcher(cName).matches()) {
+                distinctTwoPinSmds.add(compId);
+              }
             } else if (ct == ComponentType.CONNECTOR_LIKE) {
               connectorLikePins++;
             }
@@ -255,6 +274,7 @@ public final class BoardIndex {
       evidences[ni] =
           new NetEvidence(
               netNum,
+              netName,
               pinCount,
               icPinCount,
               distinctIcs.size(),
@@ -293,6 +313,7 @@ public final class BoardIndex {
       evidences[ni] =
           new NetEvidence(
               e.netNumber(),
+              e.netName(),
               e.pinCount(),
               e.icPinCount(),
               e.icCount(),
@@ -306,6 +327,7 @@ public final class BoardIndex {
 
     return new BoardIndex(
         compIds,
+        compNames,
         compOffsets,
         compPins,
         compTypes,
@@ -334,6 +356,7 @@ public final class BoardIndex {
   private static BoardIndex empty() {
     return new BoardIndex(
         new int[0],
+        new String[0],
         new int[1],
         new Pin[0],
         new ComponentType[0],
@@ -350,6 +373,12 @@ public final class BoardIndex {
   /** Returns all component IDs typed as TWO_PIN_SMD. */
   public List<Integer> getTwoPinComponentIds() {
     return twoPinComponentIds;
+  }
+
+  /** Returns the reference designator/name for a component, or an empty string if not found. */
+  public String getComponentName(int componentId) {
+    int ci = Arrays.binarySearch(componentIds, componentId);
+    return (ci >= 0 && ci < componentNames.length) ? componentNames[ci] : "";
   }
 
   /** Returns all pins belonging to a component, or an empty list if not found. */

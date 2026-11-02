@@ -50,6 +50,6 @@ public record IdentifierConfig(
   /** Creates a default configuration instance. */
   public static IdentifierConfig defaultConfig() {
     return new IdentifierConfig(
-        7.5, 0.20, 3.50, 0.85, 60, 40, 4, true, false, DEFAULT_GROUND_PATTERNS, Set.of(), Set.of());
+        15.0, 0.20, 12.0, 0.85, 60, 40, 4, true, true, DEFAULT_GROUND_PATTERNS, Set.of(), Set.of());
   }
 }

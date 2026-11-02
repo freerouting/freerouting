@@ -52,11 +52,11 @@ class RefDesAuditTest {
     assertEquals(AuditResult.CONFLICT, s3.audit);
     assertEquals(AuditResult.UNKNOWN, s4.audit);
     assertEquals(AuditResult.NOT_RUN, s5.audit);
-    // Demote to review is false by default
-    assertEquals(Verdict.DECOUPLING, s2.verdict);
+    // Demote to review is true by default
+    assertEquals(Verdict.REVIEW, s2.verdict);
 
-    // Test with auditDemotesToReview = true
-    IdentifierConfig demoteConfig =
+    // Test with auditDemotesToReview = false
+    IdentifierConfig noDemoteConfig =
         new IdentifierConfig(
             config.maxOwnerRadiusMm(),
             config.minPitchMm(),
@@ -66,12 +66,13 @@ class RefDesAuditTest {
             config.reviewThreshold(),
             config.ownerTopK(),
             config.runRefDesAudit(),
-            true,
+            false,
             config.groundNameHints(),
             config.forcedGroundNets(),
             config.forcedRejectComponents());
 
-    RefDesAudit.audit(List.of(s2), components, demoteConfig);
-    assertEquals(Verdict.REVIEW, s2.verdict);
+    s2.verdict = Verdict.DECOUPLING;
+    RefDesAudit.audit(List.of(s2), components, noDemoteConfig);
+    assertEquals(Verdict.DECOUPLING, s2.verdict);
   }
 }

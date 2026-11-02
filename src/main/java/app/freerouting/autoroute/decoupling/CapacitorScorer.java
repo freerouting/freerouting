@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * Executes hard gating checks, two-pass relative scoring, and Pass B filtered-island detection to
@@ -32,6 +33,14 @@ public final class CapacitorScorer {
   public static final int PENALTY_AMBIGUOUS_GROUND = -20;
 
   public static final double GROUND_MARGIN_THRESHOLD = 15.0;
+
+  private static final Pattern INDUCTOR_BEAD_PATTERN =
+      Pattern.compile("(?i)^(L|FB|FL|BLM|IND)[0-9_].*");
+
+  private static final Pattern RESISTOR_PATTERN = Pattern.compile("(?i)^(R|RN)[0-9_].*");
+
+  private static final Pattern POWER_NET_PATTERN =
+      Pattern.compile("(?i).*(VDD|VCC|PWR|AVDD|VDDA|PLL|VAA|VCOM|VREF|CORE|POWER|BAT).*");
 
   private CapacitorScorer() {}
 
@@ -178,12 +187,22 @@ public final class CapacitorScorer {
       states.add(state);
     }
 
-    // 2. Count parallel sibling pairs for gate survivors
+    // 2. Count parallel sibling pairs for gate survivors and tally rail capacitor counts
     Map<Long, Integer> pairCounts = new HashMap<>();
+    Map<Integer, Integer> railCapCounts = new HashMap<>();
+
     for (EvaluationState state : states) {
       if (state.gatePassed) {
         long key = packNetPair(state.netA, state.netB);
         pairCounts.put(key, pairCounts.getOrDefault(key, 0) + 1);
+
+        double groundScoreA = boardIndex.getGroundScore(state.netA);
+        double groundScoreB = boardIndex.getGroundScore(state.netB);
+        double groundDiff = groundScoreA - groundScoreB;
+        if (Math.abs(groundDiff) >= GROUND_MARGIN_THRESHOLD) {
+          int railNet = groundDiff > 0 ? state.netB : state.netA;
+          railCapCounts.put(railNet, railCapCounts.getOrDefault(railNet, 0) + 1);
+        }
       }
     }
 
@@ -307,10 +326,14 @@ public final class CapacitorScorer {
       return;
     }
 
-    // Map each component to its evaluation state
+    // Map each component to its evaluation state and tally rail capacitor counts
     Map<Integer, EvaluationState> stateByCompId = new HashMap<>();
+    Map<Integer, Integer> railCapCounts = new HashMap<>();
     for (EvaluationState state : states) {
       stateByCompId.put(state.componentId, state);
+      if (state.gatePassed && state.railNet > 0 && state.groundNet > 0) {
+        railCapCounts.put(state.railNet, railCapCounts.getOrDefault(state.railNet, 0) + 1);
+      }
     }
 
     // 2. Evaluate candidates in REVIEW or REJECTED that have a resolved ground
@@ -322,6 +345,7 @@ public final class CapacitorScorer {
         // Check 2-pin passives on this rail net (excluding the candidate itself)
         List<Pin> railPins = boardIndex.getPinsOfNet(state.railNet);
         int seriesPassiveCount = 0;
+        int seriesPassiveCompId = -1;
         boolean connectedToStrongRail = false;
 
         for (Pin pin : railPins) {
@@ -329,6 +353,7 @@ public final class CapacitorScorer {
           if (compId > 0 && compId != state.componentId) {
             if (boardIndex.getComponentType(compId) == ComponentType.TWO_PIN_SMD) {
               seriesPassiveCount++;
+              seriesPassiveCompId = compId;
               List<Pin> otherPins = boardIndex.getPinsOfComponent(compId);
               for (Pin otherPin : otherPins) {
                 for (int i = 0; i < otherPin.netCount(); i++) {
@@ -343,14 +368,36 @@ public final class CapacitorScorer {
         }
 
         // Exactly one series passive connecting this rail net to a strong rail
-        if (seriesPassiveCount == 1 && connectedToStrongRail) {
-          state.score = Math.clamp(state.score + SCORE_FILTERED_ISLAND, 0, 100);
-          state.reasonMask |= ReasonCode.FILTERED_ISLAND.mask();
+        if (seriesPassiveCount == 1 && connectedToStrongRail && seriesPassiveCompId > 0) {
+          String seriesCompName = boardIndex.getComponentName(seriesPassiveCompId);
+          boolean isInductorOrBead = INDUCTOR_BEAD_PATTERN.matcher(seriesCompName).matches();
+          boolean isResistor = RESISTOR_PATTERN.matcher(seriesCompName).matches();
 
-          if (state.score >= config.decouplingThreshold()) {
-            state.verdict = Verdict.DECOUPLING;
-          } else if (state.score >= config.reviewThreshold()) {
-            state.verdict = Verdict.REVIEW;
+          BoardIndex.NetEvidence railEv = boardIndex.getNetEvidence(state.railNet);
+          String railNetName = (railEv != null && railEv.netName() != null) ? railEv.netName() : "";
+          int railCapCount = railCapCounts.getOrDefault(state.railNet, 0);
+          boolean hasPowerCharacteristics =
+              railEv != null
+                  && (railEv.capDegree() >= 2
+                      || railEv.icCount() >= 2
+                      || railEv.plane()
+                      || POWER_NET_PATTERN.matcher(railNetName).matches());
+
+          boolean qualifies =
+              isInductorOrBead
+                  || (!isResistor
+                      && (hasPowerCharacteristics || (railEv != null && railEv.icPinCount() >= 1)))
+                  || (isResistor && hasPowerCharacteristics);
+
+          if (qualifies) {
+            state.score = Math.clamp(state.score + SCORE_FILTERED_ISLAND, 0, 100);
+            state.reasonMask |= ReasonCode.FILTERED_ISLAND.mask();
+
+            if (state.score >= config.decouplingThreshold()) {
+              state.verdict = Verdict.DECOUPLING;
+            } else if (state.score >= config.reviewThreshold()) {
+              state.verdict = Verdict.REVIEW;
+            }
           }
         }
       }
