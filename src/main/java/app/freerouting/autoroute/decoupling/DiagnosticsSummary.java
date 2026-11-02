@@ -17,4 +17,3 @@ public record DiagnosticsSummary(
     int review,
     int rejected,
     int auditConflicts) {}
-

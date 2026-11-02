@@ -6,4 +6,3 @@ public enum Verdict {
   REVIEW,
   REJECTED
 }
-

@@ -120,4 +120,3 @@ public final class DecouplingIdentifier {
     return new IdentificationResult(candidates, summary);
   }
 }
-

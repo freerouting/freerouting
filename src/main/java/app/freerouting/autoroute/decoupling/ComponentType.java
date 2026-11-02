@@ -7,4 +7,3 @@ public enum ComponentType {
   CONNECTOR_LIKE,
   OTHER
 }
-

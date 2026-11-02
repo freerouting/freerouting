@@ -41,4 +41,3 @@ public enum ReasonCode {
     return (bitmask & mask) != 0;
   }
 }
-

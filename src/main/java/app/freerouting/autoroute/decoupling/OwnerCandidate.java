@@ -10,4 +10,3 @@ package app.freerouting.autoroute.decoupling;
  */
 public record OwnerCandidate(
     int pinId, int componentId, int componentPinCount, long distanceSquared) {}
-

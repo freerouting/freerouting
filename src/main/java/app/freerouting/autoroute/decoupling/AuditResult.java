@@ -7,4 +7,3 @@ public enum AuditResult {
   CONFLICT,
   UNKNOWN
 }
-

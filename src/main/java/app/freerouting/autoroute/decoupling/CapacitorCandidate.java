@@ -42,4 +42,3 @@ public record CapacitorCandidate(
     owners = owners == null ? List.of() : List.copyOf(owners);
   }
 }
-
