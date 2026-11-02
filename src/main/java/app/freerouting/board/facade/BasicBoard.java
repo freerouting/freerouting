@@ -1446,6 +1446,7 @@ public class BasicBoard implements Serializable {
     while (it.hasNext()) {
       Item currentItem = (Item) it.next();
       searchTreeManager.remove(currentItem);
+      routingLedger().noteRemoved(currentItem);
       if ((communication != null) && (communication.observers != null)) {
         communication.observers.notifyDeleted(currentItem);
       }
@@ -1460,6 +1461,7 @@ public class BasicBoard implements Serializable {
       Item currentItem = (Item) it.next();
       currentItem.board = this;
       searchTreeManager.insert(currentItem);
+      routingLedger().noteInserted(currentItem);
       currentItem.clearAutorouteInfo();
       if ((communication != null) && (communication.observers != null)) {
         communication.observers.notifyNew(currentItem);
