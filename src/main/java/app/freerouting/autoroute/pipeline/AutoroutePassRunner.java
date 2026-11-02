@@ -12,8 +12,10 @@ import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.model.items.Via;
 import app.freerouting.board.model.structure.Unit;
+import app.freerouting.board.searchtree.SearchTreeObject;
 import app.freerouting.core.RouterCounters;
 import app.freerouting.core.scoring.BoardStatistics;
+import app.freerouting.drc.AirLine;
 import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.Point;
@@ -159,6 +161,7 @@ final class AutoroutePassRunner {
           }
 
           logRippedItems(currentItem, i, rippedItemList, rippedItemCosts);
+          rememberRipups(currentItem.getNetNumber(i), autorouterResult, rippedItemList, passNo);
           if (FRLogger.isTraceEnabled()) {
             logTraceRouteComparison(
                 currentItem, i, autorouterResult, rippedItemList, netItemsBefore);
@@ -325,9 +328,131 @@ final class AutoroutePassRunner {
       signalItems.sort(deterministicItemComparator);
     }
 
+    keptAwayNetsLast(signalItems);
     autorouteItemList.clear();
     autorouteItemList.addAll(planeItems);
     autorouteItemList.addAll(signalItems);
+  }
+
+  /**
+   * Moves the items of nets that the rip-up memory keeps away from other nets to the end of the
+   * pass, keeping the order otherwise: the nets they were moved for route first.
+   */
+  private void keptAwayNetsLast(List<Item> signalItems) {
+    if (router.ripupMemory.activeCount() == 0) {
+      return;
+    }
+    List<Item> keptAway = new ArrayList<>();
+    signalItems.removeIf(
+        item -> {
+          for (int i = 0; i < item.netCount(); i++) {
+            if (router.ripupMemory.isKeptAway(item.getNetNumber(i))) {
+              keptAway.add(item);
+              return true;
+            }
+          }
+          return false;
+        });
+    signalItems.addAll(keptAway);
+  }
+
+  /**
+   * Feeds the rip-up memory: which nets this attempt moved aside, and whether a net that was kept
+   * away from other nets still found its way. When a kept-away net keeps failing, the relation
+   * flips and the other net's copper in the way of the failed connections is removed, so that the
+   * failed net routes first and the other one looks for another way.
+   */
+  private void rememberRipups(
+      int netNo, AutorouteAttemptResult result, SortedSet<Item> rippedItemList, int passNo) {
+    RipupMemory memory = router.ripupMemory;
+    Set<Integer> keptAwayFrom = memory.netsNotToRip(netNo);
+    if (!keptAwayFrom.isEmpty()
+        && result.state != AutorouteAttemptState.ALREADY_CONNECTED
+        && result.state != AutorouteAttemptState.NO_UNCONNECTED_NETS
+        && result.state != AutorouteAttemptState.CONNECTED_TO_PLANE) {
+      boolean routed = result.state == AutorouteAttemptState.ROUTED;
+      for (int keptFromNet : keptAwayFrom) {
+        RipupMemory.Outcome outcome = memory.recordOutcome(netNo, keptFromNet, routed, passNo);
+        String message =
+            switch (outcome) {
+              case RESOLVED -> "routed without ripping '" + netName(keptFromNet) + "'.";
+              case FLIPPED ->
+                  "failed again without ripping '"
+                      + netName(keptFromNet)
+                      + "'; "
+                      + ripInCorridors(keptFromNet, netNo)
+                      + " item(s) of it removed from its way, '"
+                      + netName(keptFromNet)
+                      + "' is now kept away from it.";
+              case RETIRED ->
+                  "failed again while '"
+                      + netName(keptFromNet)
+                      + "' was kept away; the pair is released.";
+              case NONE -> "failed without ripping '" + netName(keptFromNet) + "'.";
+            };
+        logDebug(passNo, "net '" + netName(netNo) + "' " + message);
+      }
+    }
+    if (!rippedItemList.isEmpty()) {
+      Set<Integer> started = memory.recordRipup(netNo, rippedItemList, passNo);
+      if (!started.isEmpty()) {
+        logDebug(
+            passNo,
+            "net '"
+                + netName(netNo)
+                + "' moved "
+                + netNames(started)
+                + " aside a second time; they will not rip it back.");
+      }
+    }
+  }
+
+  /**
+   * Removes the unfixed traces and vias of {@code netNo} that lie across the open connections of
+   * {@code failedNetNo}. Returns the number of items removed.
+   */
+  private int ripInCorridors(int netNo, int failedNetNo) {
+    AirLine[] airlines = new DesignRulesChecker(router.board, null).getAllAirlines();
+    Set<Item> inTheWay = new TreeSet<>();
+    for (AirLine airline : airlines) {
+      if (airline == null || airline.net == null || airline.net.netNumber != failedNetNo) {
+        continue;
+      }
+      IntBox corridor = LastMileBlockerRipup.corridor(airline.fromCorner, airline.toCorner);
+      for (SearchTreeObject object : router.board.overlappingObjects(corridor, -1)) {
+        if (object instanceof Item item
+            && item.containsNet(netNo)
+            && LastMileBlockerRipup.isRemovableBlocker(item, failedNetNo)) {
+          inTheWay.add(item);
+        }
+      }
+    }
+    if (!inTheWay.isEmpty()) {
+      router.board.removeItems(new ArrayList<>(inTheWay));
+    }
+    return inTheWay.size();
+  }
+
+  private void logDebug(int passNo, String message) {
+    if (router.job != null) {
+      router.job.logDebug("Pass #" + passNo + ": " + message);
+    }
+  }
+
+  private String netName(int netNo) {
+    Net net = router.board.rules.nets.get(netNo);
+    return net != null ? net.name : "net#" + netNo;
+  }
+
+  private String netNames(Set<Integer> netNumbers) {
+    StringBuilder names = new StringBuilder();
+    for (int netNo : netNumbers) {
+      if (names.length() > 0) {
+        names.append(", ");
+      }
+      names.append('\'').append(netName(netNo)).append('\'');
+    }
+    return names.toString();
   }
 
   void resetAntiOscillationState() {

@@ -74,6 +74,13 @@ final class MazeRipupResolver {
     if (!obstacleItem.isRoutable()) {
       return -1;
     }
+    if (!ctrl.netsNotToRip.isEmpty()) {
+      for (int i = 0; i < obstacleItem.netCount(); i++) {
+        if (ctrl.netsNotToRip.contains(obstacleItem.getNetNumber(i))) {
+          return -1;
+        }
+      }
+    }
     if (doorIsSmall && !enterThroughSmallDoor(listElement, obstacleItem)) {
       return -1;
     }
