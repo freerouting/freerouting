@@ -208,7 +208,7 @@ public final class BoardIndex {
       int start = compOffsets[ci];
       int end = compOffsets[ci + 1];
       List<Pin> cPins = Arrays.asList(Arrays.copyOfRange(compPins, start, end));
-      ComponentTyper.TypingResult tr = ComponentTyper.classify(cPins);
+      ComponentTyper.TypingResult tr = ComponentTyper.classify(cPins, compNames[ci]);
       compTypes[ci] = tr.type();
       compXtal[ci] = tr.isXtalLike();
 

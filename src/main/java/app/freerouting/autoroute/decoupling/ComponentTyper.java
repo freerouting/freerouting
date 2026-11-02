@@ -19,6 +19,16 @@ public final class ComponentTyper {
   /** Result of typing a component, including any soft topological flags. */
   public record TypingResult(ComponentType type, boolean isXtalLike) {}
 
+  private static final java.util.regex.Pattern XTAL_NAME_PATTERN =
+      java.util.regex.Pattern.compile("(?i)^(Y|X|XTAL|OSC)[0-9_].*");
+
+  private static final java.util.regex.Pattern CONNECTOR_NAME_PATTERN =
+      java.util.regex.Pattern.compile("(?i)^(J|P|JP|HDR|CN|CONN|PIN)[0-9_].*");
+
+  private static final java.util.regex.Pattern NON_IC_NAME_PATTERN =
+      java.util.regex.Pattern.compile(
+          "(?i)^(R|RN|L|FB|FL|D|LED|Q|FET|T|TR|J|JP|HDR|P|TP|F|RV|MOV|Y|X|XTAL|OSC|SW|BTN|KEY|PUSH|RESET|S|K)[0-9_].*");
+
   /**
    * Types a component given its ordered list of pins.
    *
@@ -26,9 +36,25 @@ public final class ComponentTyper {
    * @return the classified {@link ComponentType} and secondary topological flags
    */
   public static TypingResult classify(List<Pin> pins) {
+    return classify(pins, null);
+  }
+
+  /**
+   * Types a component given its ordered list of pins and reference designator name.
+   *
+   * @param pins all pins belonging to the component
+   * @param compName reference designator name, or null/empty if unknown
+   * @return the classified {@link ComponentType} and secondary topological flags
+   */
+  public static TypingResult classify(List<Pin> pins, String compName) {
     if (pins == null || pins.isEmpty()) {
       return new TypingResult(ComponentType.OTHER, false);
     }
+
+    String name = compName != null ? compName.trim() : "";
+    boolean nameIsXtal = !name.isEmpty() && XTAL_NAME_PATTERN.matcher(name).matches();
+    boolean nameIsConnector = !name.isEmpty() && CONNECTOR_NAME_PATTERN.matcher(name).matches();
+    boolean nameIsNonIc = !name.isEmpty() && NON_IC_NAME_PATTERN.matcher(name).matches();
 
     int pinCount = pins.size();
 
@@ -42,20 +68,22 @@ public final class ComponentTyper {
       boolean validNets = p0.netCount() == 1 && p1.netCount() == 1;
 
       if (isP0Smd && isP1Smd && sameLayer && validNets) {
-        return new TypingResult(ComponentType.TWO_PIN_SMD, false);
+        return new TypingResult(ComponentType.TWO_PIN_SMD, nameIsXtal);
       }
-      return new TypingResult(ComponentType.OTHER, false);
+      return new TypingResult(ComponentType.OTHER, nameIsXtal);
     }
 
     if (pinCount < 2) {
-      return new TypingResult(ComponentType.OTHER, false);
+      return new TypingResult(ComponentType.OTHER, nameIsXtal);
+    }
+
+    if (nameIsXtal) {
+      return new TypingResult(ComponentType.OTHER, true);
     }
 
     // 2. Count SMD vs THT and collect distinct nets
     int smdCount = 0;
     Set<Integer> distinctNets = new HashSet<>();
-    int[] netOccurrences = new int[pinCount];
-    int maxNetRepeat = 0;
 
     for (Pin pin : pins) {
       if (pin.firstLayer() == pin.lastLayer()) {
@@ -91,19 +119,20 @@ public final class ComponentTyper {
     }
 
     // 3. Check for CONNECTOR_LIKE
-    // Condition A: Pin count >= 3 and mostly through-hole (< 50% SMD)
+    // Condition A: RefDes indicates connector
+    // Condition B: Pin count >= 3 and mostly through-hole (< 50% SMD)
+    // Condition C: Pin count >= 3, all pad bboxes identical, and all pin centers collinear
     boolean mostlyThroughHole = (smdCount * 2) < pinCount;
-
-    // Condition B: Pin count >= 3, all pad bboxes identical, and all pin centers collinear
     boolean isCollinearHeader = arePadBoxesIdentical(pins) && arePinCentersCollinear(pins);
 
-    if (mostlyThroughHole || isCollinearHeader) {
+    if (nameIsConnector || mostlyThroughHole || isCollinearHeader) {
       return new TypingResult(ComponentType.CONNECTOR_LIKE, isXtalLike);
     }
 
     // 4. Check for IC: pinCount >= 3, at least 2 distinct nets, SMD fraction >= 50%
-    if (distinctNets.size() >= 2 && (smdCount * 2) >= pinCount) {
-      return new TypingResult(ComponentType.IC, isXtalLike);
+    // Non-ICs (diodes, transistors, switches, passives, crystals) must never be classified as ICs
+    if (!nameIsNonIc && !isXtalLike && distinctNets.size() >= 2 && (smdCount * 2) >= pinCount) {
+      return new TypingResult(ComponentType.IC, false);
     }
 
     return new TypingResult(ComponentType.OTHER, isXtalLike);

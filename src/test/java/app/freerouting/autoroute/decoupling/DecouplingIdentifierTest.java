@@ -92,4 +92,161 @@ class DecouplingIdentifierTest {
 
     assertTrue(durationMs < 50, "Execution time should be under 50 ms, was " + durationMs + " ms");
   }
+
+  @Test
+  void testRoyalBlueFeatherCrystalAndConnectorRejection() throws IOException {
+    RoutingBoard board = DsnTestFixtures.loadBoard("Issue732-RoyalBlue54L-Feather.dsn");
+    IdentificationResult res = DecouplingIdentifier.identify(board);
+    for (CapacitorCandidate c : res.candidates()) {
+      String name = board.components.get(c.componentId()).name;
+      if (name.equals("C18") || name.equals("C20") || name.equals("C13") || name.equals("C14")) {
+        assertEquals(
+            Verdict.REJECTED,
+            c.verdict(),
+            "Expected " + name + " to be REJECTED, was " + c.verdict());
+      }
+    }
+  }
+
+  @Test
+  void testMultiBoardComprehensiveBenchmark() throws IOException {
+    record BoardEntry(String name, String path, boolean isUpload) {}
+    java.util.List<BoardEntry> boards =
+        java.util.List.of(
+            new BoardEntry(
+                "Door_Opener (ESP32-H2)",
+                "C:/Users/oppyu/.gemini/antigravity/brain/21fc1298-be63-4631-9c4f-d4667d57509b/.user_uploaded/media_1793641525430_224260a2.dsn",
+                true),
+            new BoardEntry(
+                "A64-OlinuXino Rev H (Allwinner A64)",
+                "C:/Users/oppyu/.gemini/antigravity/brain/21fc1298-be63-4631-9c4f-d4667d57509b/.user_uploaded/media_1793642930162_ac15d14f.dsn",
+                true),
+            new BoardEntry("Tomu/Fomu (Lattice iCE40UP5K)", "Issue756-tomu-fpga.dsn", false),
+            new BoardEntry(
+                "Smoothieboard v1 (LPC1769 5-Axis CNC)", "Issue145-smoothieboard.dsn", false),
+            new BoardEntry(
+                "RoyalBlue-Feather (Nordic nRF52840)", "Issue732-RoyalBlue54L-Feather.dsn", false),
+            new BoardEntry(
+                "CANIOT-Tiny-ARM (STM32 CAN Bus)", "Issue269-caniot-tiny-arm.dsn", false),
+            new BoardEntry(
+                "ColdFire-Xilinx (MCF5213 + CPLD)",
+                "Issue690-kit-dev-coldfire-xilinx_5213.dsn",
+                false),
+            new BoardEntry("LogicBoard SMT (Digital Logic)", "Issue219-LogicBoard_smt.dsn", false));
+
+    java.io.File logFile = new java.io.File("build/decoupling_verification.txt");
+    logFile.getParentFile().mkdirs();
+    try (java.io.PrintWriter pw = new java.io.PrintWriter(new java.io.FileWriter(logFile))) {
+      pw.println(
+          "==========================================================================================================");
+      pw.printf(
+          "%-38s | %-6s | %-6s | %-10s | %-6s | %-8s | %-9s | %-7s%n",
+          "Board Design",
+          "Comps",
+          "2-Pins",
+          "Decoupling",
+          "Review",
+          "Rejected",
+          "Conflicts",
+          "Time");
+      pw.println(
+          "==========================================================================================================");
+
+      for (BoardEntry be : boards) {
+        RoutingBoard board;
+        if (be.isUpload) {
+          java.io.File file = new java.io.File(be.path);
+          if (!file.exists()) continue;
+          try (java.io.InputStream is = new java.io.FileInputStream(file)) {
+            app.freerouting.io.BoardReadResult readResult =
+                app.freerouting.io.specctra.DsnReader.readBoard(is, null, null, file.getName());
+            board =
+                switch (readResult) {
+                  case app.freerouting.io.BoardReadResult.Success s -> (RoutingBoard) s.board();
+                  case app.freerouting.io.BoardReadResult.OutlineMissing o ->
+                      (RoutingBoard) o.board();
+                  default -> throw new IOException("Failed to parse board: " + readResult);
+                };
+          }
+        } else {
+          board = DsnTestFixtures.loadBoard(be.path);
+        }
+
+        long t0 = System.nanoTime();
+        IdentificationResult res = DecouplingIdentifier.identify(board);
+        long ms = (System.nanoTime() - t0) / 1_000_000L;
+
+        pw.printf(
+            "%-38s | %6d | %6d | %10d | %6d | %8d | %9d | %4d ms%n",
+            be.name,
+            res.summary().components(),
+            res.summary().twoPinCandidates(),
+            res.summary().decoupling(),
+            res.summary().review(),
+            res.summary().rejected(),
+            res.summary().auditConflicts(),
+            ms);
+
+        // Detailed breakdown of every candidate
+        pw.println("--- DECOUPLING CAPS (" + res.summary().decoupling() + ") ---");
+        for (CapacitorCandidate c : res.candidates()) {
+          if (c.verdict() == Verdict.DECOUPLING) {
+            String name = board.components.get(c.componentId()).name;
+            String pwr =
+                c.railNetNumber() > 0 ? board.rules.nets.get(c.railNetNumber()).name : "none";
+            String gnd =
+                c.groundNetNumber() > 0 ? board.rules.nets.get(c.groundNetNumber()).name : "none";
+            String owner =
+                !c.owners().isEmpty()
+                    ? board.components.get(c.owners().get(0).componentId()).name
+                    : "none";
+            pw.printf(
+                "  [DECOUPLING] %-8s | score=%2d | pwr=%-20s | gnd=%-15s | owner=%-8s%n",
+                name, c.score(), pwr, gnd, owner);
+          }
+        }
+
+        pw.println("--- REVIEW CAPS (" + res.summary().review() + ") ---");
+        for (CapacitorCandidate c : res.candidates()) {
+          if (c.verdict() == Verdict.REVIEW) {
+            String name = board.components.get(c.componentId()).name;
+            String pwr =
+                c.railNetNumber() > 0 ? board.rules.nets.get(c.railNetNumber()).name : "none";
+            String gnd =
+                c.groundNetNumber() > 0 ? board.rules.nets.get(c.groundNetNumber()).name : "none";
+            String owner =
+                !c.owners().isEmpty()
+                    ? board.components.get(c.owners().get(0).componentId()).name
+                    : "none";
+            pw.printf(
+                "  [REVIEW]     %-8s | score=%2d | pwr=%-20s | gnd=%-15s | owner=%-8s | audit=%s%n",
+                name, c.score(), pwr, gnd, owner, c.audit());
+          }
+        }
+
+        pw.println("--- REJECTED SAMPLES (C... or low score) ---");
+        int rejectedPrinted = 0;
+        for (CapacitorCandidate c : res.candidates()) {
+          String name = board.components.get(c.componentId()).name;
+          if (c.verdict() == Verdict.REJECTED && (name.startsWith("C") || rejectedPrinted < 10)) {
+            String pwr =
+                c.railNetNumber() > 0 ? board.rules.nets.get(c.railNetNumber()).name : "none";
+            String gnd =
+                c.groundNetNumber() > 0 ? board.rules.nets.get(c.groundNetNumber()).name : "none";
+            String owner =
+                !c.owners().isEmpty()
+                    ? board.components.get(c.owners().get(0).componentId()).name
+                    : "none";
+            pw.printf(
+                "  [REJECTED]   %-8s | score=%2d | pwr=%-20s | gnd=%-15s | owner=%-8s | audit=%s%n",
+                name, c.score(), pwr, gnd, owner, c.audit());
+            rejectedPrinted++;
+          }
+        }
+        pw.println();
+      }
+      pw.println(
+          "==========================================================================================================");
+    }
+  }
 }
