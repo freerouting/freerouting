@@ -247,7 +247,9 @@ public final class CapacitorScorer {
           score += SCORE_SHUNT_CAP_DEGREE;
           reasons |= ReasonCode.SHUNT_CAP_DEGREE.mask();
         }
-        if (railEvidence.xtalLikePins() > 0) {
+        if (railEvidence.xtalLikePins() > 0
+            && railEvidence.icCount() <= 1
+            && !railEvidence.plane()) {
           score += PENALTY_XTAL;
           reasons |= ReasonCode.XTAL_PENALTY.mask();
         }
