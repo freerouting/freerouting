@@ -9,8 +9,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import app.freerouting.Freerouting;
 import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.model.items.Via;
+import app.freerouting.board.model.structure.Component;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.fixtures.RoutingFixtureTest;
 import app.freerouting.io.kicad.KiCadDrcReport;
@@ -74,14 +76,23 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
         trace2.getNetNumber(0),
         "Traces 2402 and 2411 must belong to the same net");
 
-    // Trace 2402 ends inside the pad of GND pin 321, 0.2 um off its centre. KiCad treats it as
-    // connected (its DRC report does not list it as dangling), so the reader joins it to the pin.
-    Item item321 = board.getItem(321); // GND pin (component #26)
-    assertNotNull(item321, "Pin 321 not found");
-    assertFalse(trace1.isTail(), "Trace 2402 (GND) must not dangle: it ends inside pin 321");
+    // Trace 2402 ends inside the pad of GND pin 4 of U3, 0.2 um off its centre. KiCad treats it
+    // as connected (its DRC report does not list it as dangling), so the reader joins it to the
+    // pin.
+    Component u3 = board.components.get("U3");
+    assertNotNull(u3, "Component U3 must exist");
+    Pin u3Pin4 =
+        board.getComponentItems(u3.id).stream()
+            .filter(Pin.class::isInstance)
+            .map(Pin.class::cast)
+            .filter(p -> "4".equals(p.name()))
+            .findFirst()
+            .orElse(null);
+    assertNotNull(u3Pin4, "U3 pin 4 not found");
+    assertFalse(trace1.isTail(), "Trace 2402 (GND) must not dangle: it ends inside U3 pin 4");
     assertTrue(
-        trace1.getConnectedSet(trace1.getNetNumber(0)).contains(item321),
-        "Trace 2402 must be connected to pin 321");
+        trace1.getConnectedSet(trace1.getNetNumber(0)).contains(u3Pin4),
+        "Trace 2402 must be connected to U3 pin 4");
 
     Item via2522item =
         board.getItems().stream().filter(item -> item.getId() == 2522).findFirst().orElse(null);
