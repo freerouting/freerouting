@@ -722,11 +722,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
       return 0.0f;
     }
 
-    int configuredThreads =
-        (this.settings.optimizer != null && this.settings.optimizer.maxThreads != null)
-            ? this.settings.optimizer.maxThreads
-            : 1;
-    int threadPoolSize = Math.max(1, configuredThreads);
+    int threadPoolSize = Math.max(1, this.settings.getOptimizerMaxThreads());
 
     String optimizationPassId =
         "BatchOptRoute.opt_route_pass #"
