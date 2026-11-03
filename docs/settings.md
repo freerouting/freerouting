@@ -137,6 +137,7 @@ The primary way to configure Freerouting is through a JSON settings file. This f
     - **`enabled`**: Whether the autorouter stage runs after fanout.
     - **`algorithm`**: Algorithm identifier (`freerouting-router` by default; legacy identifiers such as `freerouting-router-v19` safely normalize to `freerouting-router`).
     - **`max_passes`**: Maximum autorouter passes. `0` means no limit.
+    - **`stagnation_pass_limit`**: Consecutive passes without score improvement before the autorouter stops. Default is `10`. `0` (or negative) disables stagnation detection and allows routing to proceed up to `max_passes`. Equivalent CLI flag: `--router.autorouter.stagnation_pass_limit=<int>` (or `-spl <int>`).
     - **`max_items`**: Maximum items attempted in the autorouter stage.
     - **`item_order_seed`**: Optional extra seed for signal-item permutations after the first
       autorouter pass, for example `--router.autorouter.item_order_seed=42`. The first pass
