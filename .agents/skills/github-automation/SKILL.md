@@ -53,8 +53,19 @@ gh pr edit <pr-number> --body-file "path/to/pr_body.md"
      - (b) we have full test coverage over the modified logic and edge cases.
      (For documentation, asset, or non-executable changes, verify that the relevant linters and quality checks pass instead.)
   6. **Critical Code Review & Refinement:** Always be critical of the PR's code. Review and refine it in every way possible: adhere strictly to Clean Code principles, naming conventions, and architectural boundaries (e.g. `ModuleBoundariesArchTest`), eliminate dead code or suboptimal patterns, optimize performance where appropriate, and ensure quality gates pass (`./gradlew spotlessCheck checkstyleMain checkstyleTest -q` and `pre-commit run --all-files`).
-  7. **Pre-Merge Summary for Maintainer:** After completing all review steps, conflict resolution, refinements, and testing, write a brief, structured summary of the findings, refinements, and test results for the maintainer so they can review and decide if we can proceed with the merge.
-- **PR Merge Rule:** **Never merge PRs automatically without explicit user confirmation.** Always present the PR link, summary of changes, and check status to the user and wait for their explicit confirmation to merge.
+  7. **Security & Privacy Audit:** Conduct a strict security and privacy review of all changes:
+     - **Secrets & Credentials:** Ensure no API keys, tokens, credentials, or private internal hostnames/URLs are introduced in code, tests, or documentation.
+     - **Privacy & Telemetry:** Ensure no unsanctioned tracking, telemetry, phone-home beacons, or unauthorized external network requests are added. Maintain strict user privacy.
+     - **Input Validation & Boundaries:** Guard against path traversal (e.g., unchecked relative file paths or `../`), command injection, unsafe reflection, or insecure deserialization in file parsers (DSN/SES/rules), CLI flags, and API endpoints.
+     - **Dependency Safety:** Verify that any new or bumped dependencies are trusted, actively maintained, and free of known vulnerabilities.
+  8. **Pre-Merge Summary & Milestone Verification:**
+     - Check the PR milestone (`gh pr view <number> --json milestone`).
+     - If the milestone is unset or set to `"Future"`, update it to the upcoming target release version (typically the highest version-numbered open milestone, e.g. `2.6`, `2.7`):
+       ```powershell
+       gh pr edit <number> --milestone "<next-release-milestone>"
+       ```
+     - Write a brief, structured summary of findings, refinements, security audit results, and test verification for the maintainer so they can review and decide on merging.
+- **PR Merge Rule:** **Never merge PRs automatically without explicit user confirmation.** Always verify that the Milestone is set to the correct upcoming release version (change `"Future"` or unset to the next release version), present the PR link and check status to the user, and wait for their explicit confirmation before merging.
 - **Quality Gates:** Before creating a PR or requesting review, ensure the local verification passes:
   ```powershell
   ./gradlew spotlessCheck checkstyleMain checkstyleTest -q
