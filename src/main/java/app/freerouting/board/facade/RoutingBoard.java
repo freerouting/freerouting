@@ -995,14 +995,12 @@ public class RoutingBoard extends BasicBoard implements Serializable {
             rippedItemList,
             null); // null: costs not needed here
     if (result.state == AutorouteAttemptState.ROUTED) {
-      final int timeLimitToPreventEndlessLoop = 1000;
       optChangedArea(
           new int[] {routeNetNo},
           null,
           routerSettings.tracePullTightAccuracy,
           ctrlSettings.traceCosts,
-          stoppableThread,
-          timeLimitToPreventEndlessLoop);
+          stoppableThread);
     }
     return result;
   }
@@ -1146,14 +1144,12 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     }
 
     if (result.state == AutorouteAttemptState.ROUTED) {
-      final int timeLimitToPreventEndlessLoop = 1000;
       optChangedArea(
           new int[] {pinNetNo},
           null,
           routerSettings.tracePullTightAccuracy,
           ctrlSettings.traceCosts,
-          stoppableThread,
-          timeLimitToPreventEndlessLoop);
+          stoppableThread);
     }
     return result;
   }

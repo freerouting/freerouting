@@ -448,7 +448,7 @@ public abstract class TraceTightener {
     boolean result = false;
     boolean connectionToTraceImproved = true;
     PolylineTrace currentTrace = trace;
-    while (connectionToTraceImproved) {
+    for (int rounds = 0; connectionToTraceImproved && !mustStopAfter(rounds); ++rounds) {
       connectionToTraceImproved = false;
       Polyline adjustedPolyline = smoothenEndCornersAtTrace2(currentTrace);
       if (adjustedPolyline != null) {
