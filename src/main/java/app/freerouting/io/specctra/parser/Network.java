@@ -871,7 +871,10 @@ public class Network extends ScopeKeyword {
     // Allocation order determines item IDs and connected-set representatives before routing.
     // Stable sorting preserves the existing first-match behavior of duplicate reference names.
     if (scopeParameter.canonicalPlacementOrder) {
-      components.sort(Comparator.comparing(component -> component.location().name));
+      components.sort(
+          Comparator.comparing(
+              component -> component.location().name,
+              Comparator.nullsLast(Comparator.naturalOrder())));
     }
     for (PlacedComponent component : components) {
       insertComponent(component.location(), component.libraryName(), scopeParameter);

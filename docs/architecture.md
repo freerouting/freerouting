@@ -231,11 +231,11 @@ Application bootstrap and top-level wiring. Start here when you need the entry p
 Import and export for board files. The public DSN and SES entry points are in this package, and parser internals live in `io.specctra.parser`.
 
 `DsnReadOptions` carries immutable allocation decisions into `DsnReader`; the parser does not
-inspect application settings or GUI state. Existing reader overloads retain input order. Headless
-job scheduling and composite/API assembly resolve their existing settings sources before parsing,
-then request reference-name allocation when the effective item-order seed is non-null. They still
-apply the resolved settings and board rules after attachment. GUI and standalone imports retain
-legacy allocation; a seed selected after import cannot retroactively canonicalize item identities.
+inspect application settings or GUI state. Placements are allocated canonically in exact
+reference-name order by default across all imports (headless jobs, composite/API inputs, GUI
+sessions, and standalone reader overloads). Legacy file-order allocation remains accessible via
+explicit `DsnReadOptions.INPUT_ORDER`. Any configured `router.autorouter.item_order_seed` is
+applied after item identities exist as an explicit shuffle.
 
 ### `app.freerouting.board`
 
