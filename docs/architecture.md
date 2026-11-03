@@ -40,7 +40,7 @@ flowchart TD
         IO["**io.specctra**\nDSN / SES reader-writer"]
         BOARD["**board.model/facade/state/actions/trace + searchtree + optimize**\nLive board model · search trees · optimization"]
         RULES["**rules**\nNets · clearances"]
-        AR["**autoroute.pipeline + maze + expansion + drill + path**\nRouting stages · maze · expansion · path"]
+        AR["**autoroute.pipeline + maze + expansion + drill + path + decoupling**\nRouting stages · maze · expansion · path · decoupling"]
         DRC["**drc**\nDesign-rule checking"]
         GEO["**geometry.planar**\nShapes · points · math"]
     end
@@ -297,6 +297,12 @@ Drill-page indexing and expansion-drill support used during maze expansion.
 ### `app.freerouting.autoroute.path`
 
 Found-connection reconstruction and insertion, including path connection value objects.
+
+### `app.freerouting.autoroute.decoupling`
+
+Read-only, deterministic identification of IC supply decoupling capacitors on a `RoutingBoard`.
+Computes confidence scores, explainable bitmask reason codes, and candidate IC supply owners
+without modifying board items, routing traces, or locking copper.
 
 ### `app.freerouting.autoroute`
 
