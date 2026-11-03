@@ -23,6 +23,7 @@ class PlatedSlotKeepoutTest extends RoutingFixtureTest {
     TestingSettings ts = new TestingSettings();
     ts.setMaxPasses(5);
     RoutingJob job = getRoutingJob("plated-slot-keepout.dsn", ts);
+    job.routerSettings.autorouter.maxPasses = 5;
     runRoutingJob(job);
 
     assertEquals(RoutingJobState.COMPLETED, job.state);
