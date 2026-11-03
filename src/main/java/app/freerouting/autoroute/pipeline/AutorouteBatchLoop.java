@@ -64,10 +64,7 @@ final class AutorouteBatchLoop {
     router.fireTaskStateChangedEvent(
         new TaskStateChangedEvent(router, TaskState.STARTED, 0, router.board.getHash()));
 
-    int optimizerThreads =
-        (settings.optimizer != null && settings.optimizer.maxThreads != null)
-            ? Math.max(1, settings.optimizer.maxThreads)
-            : 1;
+    int optimizerThreads = settings.getOptimizerMaxThreads();
     job.logInfo(
         "Pipeline thread limits: autorouter pass is single-threaded, optimizer.max_threads="
             + optimizerThreads
@@ -528,7 +525,7 @@ final class AutorouteBatchLoop {
               && incompleteNow <= LAST_MILE_INCOMPLETE_LIMIT
               && lastMileAttempts < LAST_MILE_MAX_ATTEMPTS
               && consecutiveNoImprovementPasses >= LAST_MILE_STAGNATION_PASSES) {
-            int removed = LastMileBlockerRipup.ripBlockers(router.board);
+            int removed = LastMileBlockerRipup.ripBlockers(router.board, router.ripupMemory);
             lastMileAttempts++;
             if (removed > 0) {
               boardStatisticsAfter = new BoardStatistics(router.board);

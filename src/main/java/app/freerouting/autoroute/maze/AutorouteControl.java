@@ -14,6 +14,8 @@ import app.freerouting.rules.ViaInfo;
 import app.freerouting.rules.ViaRule;
 import app.freerouting.settings.RouterSettings;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 
 /** Structure for controlling the autoroute algorithm. */
 public class AutorouteControl {
@@ -81,6 +83,12 @@ public class AutorouteControl {
   public boolean ripupAllowed;
   public int ripupCosts;
   public int ripupPassNo;
+
+  /**
+   * Nets whose traces and vias this search may not rip: the routed net was moved aside for them in
+   * an earlier pass (see the batch autorouter's rip-up memory). Empty by default.
+   */
+  public Set<Integer> netsNotToRip = Collections.emptySet();
 
   /** If true, the autoroute algorithm completes after the first drill. */
   public boolean isFanout;

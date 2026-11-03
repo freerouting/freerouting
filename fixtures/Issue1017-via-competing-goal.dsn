@@ -1,0 +1,22 @@
+(pcb via-competing-goal
+ (parser (string_quote ") (space_in_quoted_tokens on))
+ (resolution um 10) (unit um)
+ (structure
+  (layer F.Cu (type signal) (property (index 0)))
+  (layer B.Cu (type signal) (property (index 1)))
+  (boundary (path pcb 0 0 0 20000 0 20000 10000 0 10000 0 0))
+  (via VIA)
+  (rule (width 150) (clearance 200)))
+ (placement
+  (component PAD (place SOURCE 5000 5000 front 0) (place DEST 15000 5000 back 0)
+    (place V1 10000 500 back 0) (place V2 10000 9500 back 0)))
+ (library
+  (image PAD (pin SMD 1 0 0))
+  (padstack SMD (shape (circle F.Cu 800)) (attach off))
+  (padstack VIA (shape (circle F.Cu 560)) (shape (circle B.Cu 560)) (attach off)))
+ (network
+  (net ROUTE (pins SOURCE-1 DEST-1))
+  (net VICTIM (pins V1-1 V2-1))
+  (class default "" ROUTE VICTIM (circuit (use_via VIA))))
+ (wiring (wire (path B.Cu 150 10000 500 10000 9500) (net VICTIM)))
+)

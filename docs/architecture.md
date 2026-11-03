@@ -231,11 +231,11 @@ Application bootstrap and top-level wiring. Start here when you need the entry p
 Import and export for board files. The public DSN and SES entry points are in this package, and parser internals live in `io.specctra.parser`.
 
 `DsnReadOptions` carries immutable allocation decisions into `DsnReader`; the parser does not
-inspect application settings or GUI state. Existing reader overloads retain input order. Headless
-job scheduling and composite/API assembly resolve their existing settings sources before parsing,
-then request reference-name allocation when the effective item-order seed is non-null. They still
-apply the resolved settings and board rules after attachment. GUI and standalone imports retain
-legacy allocation; a seed selected after import cannot retroactively canonicalize item identities.
+inspect application settings or GUI state. Placements are allocated canonically in exact
+reference-name order by default across all imports (headless jobs, composite/API inputs, GUI
+sessions, and standalone reader overloads). Legacy file-order allocation remains accessible via
+explicit `DsnReadOptions.INPUT_ORDER`. Any configured `router.autorouter.item_order_seed` is
+applied after item identities exist as an explicit shuffle.
 
 ### `app.freerouting.board`
 
@@ -486,6 +486,12 @@ The autorouter is the "make it work" stage. It solves missing connections one at
     The new geometry is inserted into the board, temporary artifacts are removed, and the route is tightened so it fits better into nearby routing.
 
 The autorouter may also temporarily rip up nearby conflicting traces or vias if needed to find a legal route. Its job is to turn an incomplete design into one that is electrically connected.
+
+- Remember who moved whom.
+
+    Two nets that want the same space can otherwise take it from each other pass after pass: net A rips net B to route, B rips A back on its next attempt, A rips B again, or a board restore replays the same rip-up, and the board never gets both. `RipupMemory` (in `autoroute.pipeline`) records every rip-up of the stage: which net was being routed and which nets it removed. Recording changes nothing; the memory only steps in when the same rip-up (A removes B) happens again in a later pass. B is then kept away from A: its maze search may not rip A (`AutorouteControl.netsNotToRip`, checked in `MazeRipupResolver.checkRipup`), and B is routed after A in the pass. B has to find another way, for example a via to the other layer.
+
+    The restriction is bounded. When B fails twice while kept away, the relation flips: A's traces and vias across B's open connections are removed and A is kept away from B, so B routes first and A looks for the other way. When the flipped relation fails twice as well, the pair is released and never restricted again. The memory is kept across board restores within a stage and is keyed by net number, so routing stays deterministic. A board that routes without such a repeat is routed exactly as before. The events are logged at debug level (`Pass #n: net 'B' ...`).
 
 #### Preserved Traces and Centerline Junction Connectivity
 
