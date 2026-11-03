@@ -64,10 +64,7 @@ final class AutorouteBatchLoop {
     router.fireTaskStateChangedEvent(
         new TaskStateChangedEvent(router, TaskState.STARTED, 0, router.board.getHash()));
 
-    int optimizerThreads =
-        (settings.optimizer != null && settings.optimizer.maxThreads != null)
-            ? Math.max(1, settings.optimizer.maxThreads)
-            : 1;
+    int optimizerThreads = settings.getOptimizerMaxThreads();
     job.logInfo(
         "Pipeline thread limits: autorouter pass is single-threaded, optimizer.max_threads="
             + optimizerThreads

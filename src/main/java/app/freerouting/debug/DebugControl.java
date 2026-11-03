@@ -153,6 +153,15 @@ public final class DebugControl {
   }
 
   /**
+   * Returns true when single stepping or a trace insertion delay is set, the only cases in which
+   * {@link #check(String, String)} can pause or report an event.
+   */
+  public boolean isActive() {
+    DebugSettings ds = getDebugSettings();
+    return ds != null && (ds.singleStepExecution || ds.traceInsertionDelay != 0);
+  }
+
+  /**
    * Called by the logging framework at potential breakpoints. Parses the impactedItems string to
    * extract net numbers for filtering.
    *
