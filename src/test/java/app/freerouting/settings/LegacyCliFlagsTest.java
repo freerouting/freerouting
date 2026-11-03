@@ -87,12 +87,15 @@ class LegacyCliFlagsTest {
   }
 
   @Test
-  void deprecatedMaxThreadsZeroWarns() {
+  void deprecatedMaxThreadsZeroOrNegativeWarns() {
     int mark = logMark();
 
     merge("-mt", "0");
+    assertTrue(warnedAbout(mark, "-mt"));
 
-    assertTrue(warnedAbout(mark, "-mt 0"));
+    int markNeg = logMark();
+    merge("-mt", "-1");
+    assertTrue(warnedAbout(markNeg, "-mt"));
   }
 
   @Test

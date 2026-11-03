@@ -64,6 +64,7 @@ Below is a comprehensive list of command-line options available in Freerouting, 
 
 - **`--router.autorouter.max_threads=[number of threads]`**
   Sets the thread limit specifically for the autorouter stage (bounded by `--router.max_threads`).
+  *Note:* The autorouter currently runs single-threaded; this setting is reserved for future multi-threaded passes.
 
 - **`--router.optimizer.max_threads=[number of threads]`**
   Sets the thread limit specifically for the optimizer stage (bounded by `--router.max_threads`).

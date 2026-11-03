@@ -90,8 +90,8 @@ public class CliSettings implements SettingsSource {
         } else if ("mt".equals(flag)) {
           if (isZeroOrNegativeInteger(value)) {
             FRLogger.warn(
-                "The '-mt 0' idiom to disable the optimizer is deprecated; use"
-                    + " '--router.optimizer.enabled=false' instead.");
+                "Passing 0 or a negative value to '-mt' to disable the optimizer is deprecated;"
+                    + " use '--router.optimizer.enabled=false' instead.");
             applyRouterSetting(settings, "router.optimizer.enabled", "false");
             continue;
           }

@@ -145,6 +145,7 @@ The primary way to configure Freerouting is through a JSON settings file. This f
     - **`ignore_net_classes`**: Net class names the autorouter should skip.
     - **`max_threads`**: Stage-specific autorouter worker-thread limit. Canonical CLI is
       `--router.autorouter.max_threads`. Bounded by the global `--router.max_threads` ceiling.
+      The autorouter stage currently runs single-threaded; this setting is reserved for future multi-threaded passes.
 - **`result_json`**: Optional path for a machine-readable routing result manifest written at the
   end of a headless `-de`/`-do` run. Used by the benchmark and autopilot harnesses. Equivalent CLI
   flag: `--router.result_json=<path>`.
