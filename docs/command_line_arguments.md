@@ -50,15 +50,28 @@ Below is a comprehensive list of command-line options available in Freerouting, 
 
 ### Routing Parameters
 
-- **`-mp [number of passes]`**
+- **`--router.autorouter.max_passes=[number of passes]`**
   Sets the upper limit for the number of autorouter passes to perform. More passes may result in better optimization but will take longer.
 
-- **`-mt [number of threads]`**
-  Sets the thread pool size for route optimization. Same as `--router.max_threads`:
-  - Default: One less than the number of logical processors on the system.
-  - Set to `0` to disable route optimization (same as `--router.optimizer.enabled=false`).
+- **`-mp [number of passes]`** (Deprecated)
+  Legacy shorthand for `--router.autorouter.max_passes`. A warning is logged when it is used.
+
+- **`--router.max_threads=[number of threads]`**
+  Sets the global maximum thread ceiling across all routing stages (fanout, autorouter, and optimizer):
+  - Default: One less than the number of logical processors on the system (`cores - 1`).
+  - Set to `0` to use all available logical processors.
+  - Acts as an upper bound: no individual stage will exceed this limit.
+
+- **`--router.autorouter.max_threads=[number of threads]`**
+  Sets the thread limit specifically for the autorouter stage (bounded by `--router.max_threads`).
+
+- **`--router.optimizer.max_threads=[number of threads]`**
+  Sets the thread limit specifically for the optimizer stage (bounded by `--router.max_threads`).
+
+- **`-mt [number of threads]`** (Deprecated)
+  Legacy shorthand for `--router.max_threads`. A warning is logged when it is used:
+  - Setting `0` or less as a legacy shorthand to disable route optimization is deprecated; use `--router.optimizer.enabled=false` instead.
   - Increasing the number may improve performance on multi-core systems.
-  - To set only the optimizer pool, use `--router.optimizer.max_threads`.
 
 - **`--router.optimizer.enabled=[true|false]`**
   Runs the route optimizer after autorouting. Default is `true`.
@@ -86,11 +99,13 @@ Below is a comprehensive list of command-line options available in Freerouting, 
 
 ### Optimization Strategies
 
-- **`-is [sequential | prioritized]`**
-  Sets the item selection strategy for route optimization. Same as
-  `--router.optimizer.item_selection_strategy=[SEQUENTIAL|PRIORITIZED]`:
+- **`--router.optimizer.item_selection_strategy=[sequential|prioritized]`**
+  Sets the item selection strategy for route optimization:
   - `sequential` (default): Processes items in order.
   - `prioritized`: Selects items based on calculated scores from previous rounds.
+
+- **`-is [sequential | prioritized]`** (Deprecated)
+  Legacy shorthand for `--router.optimizer.item_selection_strategy`. A warning is logged when it is used.
 
 - **`-us [greedy | global | hybrid]`** and **`-hr [m:n]`** (Removed)
   No longer have any effect. The optimizer only uses the global optimal board update strategy.

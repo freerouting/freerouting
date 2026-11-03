@@ -291,14 +291,31 @@ public class RouterSettings implements Serializable, Cloneable {
   }
 
   /**
-   * Resolves {@code --router.autorouter.max_threads}. The autorouter pass does not read this value.
-   * Prefers {@code autorouter.maxThreads} and falls back to the legacy flat {@code
-   * router.maxThreads}.
+   * Resolves the effective autorouter thread limit. Prefers {@code autorouter.maxThreads} when set,
+   * bounded by {@code maxThreads} (the global thread ceiling). Falls back to {@code maxThreads} (or
+   * system default) if {@code autorouter.maxThreads} is not set.
    */
   public int getAutorouterMaxThreads() {
-    Integer configured =
-        (autorouter != null && autorouter.maxThreads != null) ? autorouter.maxThreads : maxThreads;
-    return normalizeMaxThreads(configured);
+    int globalCap = (maxThreads != null) ? normalizeMaxThreads(maxThreads) : defaultMaxThreads();
+    if (autorouter != null && autorouter.maxThreads != null) {
+      int stageThreads = normalizeMaxThreads(autorouter.maxThreads);
+      return (maxThreads != null) ? Math.min(stageThreads, globalCap) : stageThreads;
+    }
+    return globalCap;
+  }
+
+  /**
+   * Resolves the effective optimizer thread limit. Prefers {@code optimizer.maxThreads} when set,
+   * bounded by {@code maxThreads} (the global thread ceiling). Falls back to {@code maxThreads} (or
+   * system default) if {@code optimizer.maxThreads} is not set.
+   */
+  public int getOptimizerMaxThreads() {
+    int globalCap = (maxThreads != null) ? normalizeMaxThreads(maxThreads) : defaultMaxThreads();
+    if (optimizer != null && optimizer.maxThreads != null) {
+      int stageThreads = normalizeMaxThreads(optimizer.maxThreads);
+      return (maxThreads != null) ? Math.min(stageThreads, globalCap) : stageThreads;
+    }
+    return globalCap;
   }
 
   /** Sets the maximum duration allowed for a routing job. */
@@ -1176,23 +1193,6 @@ public class RouterSettings implements Serializable, Cloneable {
     }
 
     int changedCount = ReflectionUtil.copyFields(settings, this);
-
-    // The flat max_threads (also -mt) caps both pools, as setMaxThreads() does. A source that sets
-    // it without a pool's nested max_threads sets that pool too.
-    if (settings.maxThreads != null) {
-      int threads = normalizeMaxThreads(settings.maxThreads);
-      // Keep the flat value normalized too (0 means all processors), so GUI readers of
-      // maxThreads never see 0.
-      this.maxThreads = threads;
-      if (this.autorouter != null
-          && (settings.autorouter == null || settings.autorouter.maxThreads == null)) {
-        this.autorouter.maxThreads = threads;
-      }
-      if (this.optimizer != null
-          && (settings.optimizer == null || settings.optimizer.maxThreads == null)) {
-        this.optimizer.maxThreads = threads;
-      }
-    }
 
     // Fire property change events for key properties to update GUI
     // Note: We fire events even if values didn't change to ensure GUI is in sync

@@ -13,8 +13,8 @@ import org.junit.jupiter.api.Test;
 
 /**
  * The flat {@code router.max_threads} (and its {@code -mt} alias) is documented as the thread cap
- * for both pools. These tests check that it reaches {@code optimizer.max_threads} through the
- * settings merger, not only through {@link RouterSettings#setMaxThreads}.
+ * for all stages. These tests check that it limits both {@code getOptimizerMaxThreads()} and {@code
+ * getAutorouterMaxThreads()} through the settings merger.
  */
 class RouterMaxThreadsMergeTest {
 
@@ -23,18 +23,20 @@ class RouterMaxThreadsMergeTest {
   }
 
   @Test
-  void flatCliFlagSetsOptimizerThreads() {
+  void flatCliFlagSetsOptimizerAndAutorouterThreads() {
     RouterSettings merged = mergeCli("--router.max_threads=1");
 
-    assertEquals(1, merged.optimizer.maxThreads);
-    assertEquals(1, merged.autorouter.maxThreads);
+    assertEquals(1, merged.getOptimizerMaxThreads());
+    assertEquals(1, merged.getAutorouterMaxThreads());
+    assertEquals(1, merged.maxThreads);
   }
 
   @Test
-  void legacyMtFlagSetsOptimizerThreads() {
+  void legacyMtFlagSetsOptimizerAndAutorouterThreads() {
     RouterSettings merged = mergeCli("-mt", "1");
 
-    assertEquals(1, merged.optimizer.maxThreads);
+    assertEquals(1, merged.getOptimizerMaxThreads());
+    assertEquals(1, merged.getAutorouterMaxThreads());
   }
 
   @Test
@@ -43,7 +45,7 @@ class RouterMaxThreadsMergeTest {
 
     assertFalse(merged.getRunOptimizer());
     int expected = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
-    assertEquals(expected, merged.optimizer.maxThreads);
+    assertEquals(expected, merged.getOptimizerMaxThreads());
   }
 
   @Test
@@ -51,8 +53,8 @@ class RouterMaxThreadsMergeTest {
     RouterSettings merged = mergeCli("--router.max_threads=0");
 
     assertTrue(merged.getRunOptimizer());
-    assertEquals(Runtime.getRuntime().availableProcessors(), merged.optimizer.maxThreads);
-    assertEquals(Runtime.getRuntime().availableProcessors(), merged.maxThreads);
+    assertEquals(Runtime.getRuntime().availableProcessors(), merged.getOptimizerMaxThreads());
+    assertEquals(Runtime.getRuntime().availableProcessors(), merged.getAutorouterMaxThreads());
   }
 
   @Test
@@ -64,23 +66,24 @@ class RouterMaxThreadsMergeTest {
   }
 
   @Test
-  void flatEnvironmentVariableSetsOptimizerThreads() {
+  void flatEnvironmentVariableSetsOptimizerAndAutorouterThreads() {
     EnvironmentVariablesSource env =
         new EnvironmentVariablesSource(Map.of("FREEROUTING__ROUTER__MAX_THREADS", "1"));
 
     RouterSettings merged = new SettingsMerger(new DefaultSettings(), env).merge();
 
-    assertEquals(1, merged.optimizer.maxThreads);
+    assertEquals(1, merged.getOptimizerMaxThreads());
+    assertEquals(1, merged.getAutorouterMaxThreads());
   }
 
   @Test
-  void nestedFlagWinsOverFlatFlagFromTheSameSource() {
+  void nestedFlagWinsOverFlatFlagWhenWithinGlobalCeiling() {
     assumeTrue(Runtime.getRuntime().availableProcessors() >= 2);
 
     RouterSettings merged = mergeCli("--router.max_threads=2", "--router.optimizer.max_threads=1");
 
-    assertEquals(1, merged.optimizer.maxThreads);
-    assertEquals(2, merged.autorouter.maxThreads);
+    assertEquals(1, merged.getOptimizerMaxThreads());
+    assertEquals(2, merged.getAutorouterMaxThreads());
   }
 
   @Test
@@ -95,7 +98,18 @@ class RouterMaxThreadsMergeTest {
                 new CliSettings(new String[] {"--router.max_threads=1"}))
             .merge();
 
-    assertEquals(1, merged.optimizer.maxThreads);
+    assertEquals(1, merged.getOptimizerMaxThreads());
+  }
+
+  @Test
+  void stageSpecificAutorouterMaxThreadsDoesNotAffectOptimizer() {
+    assumeTrue(Runtime.getRuntime().availableProcessors() >= 2);
+
+    RouterSettings merged = mergeCli("--router.autorouter.max_threads=1");
+    int expected = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
+
+    assertEquals(1, merged.getAutorouterMaxThreads());
+    assertEquals(expected, merged.getOptimizerMaxThreads());
   }
 
   @Test
@@ -103,7 +117,7 @@ class RouterMaxThreadsMergeTest {
     RouterSettings merged = mergeCli("--router.max_passes=5");
     int expected = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
 
-    assertEquals(expected, merged.optimizer.maxThreads);
-    assertEquals(expected, merged.autorouter.maxThreads);
+    assertEquals(expected, merged.getOptimizerMaxThreads());
+    assertEquals(expected, merged.getAutorouterMaxThreads());
   }
 }
