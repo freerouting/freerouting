@@ -63,20 +63,24 @@ class BatchOptimizerPreflightGuardsTest extends RoutingFixtureTest {
   }
 
   @Test
-  void guard1BypassesOptimizerWhenBoardHasIncompletes() {
+  void incompleteConnectionsDoNotBypassOptimizer() {
     TestingSettings settings = new TestingSettings();
     RoutingJob job = getRoutingJob(DSN_BM08, settings);
     job.board = fullyRoutedBm08.deepCopy();
     job.thread = new NoOpStoppableThread();
 
     BatchOptimizer optimizer = BatchOptimizer.create(job);
-    BoardStatistics stats = new BoardStatistics();
+    BoardStatistics stats =
+        new BoardStatistics() {
+          @Override
+          public float getOptimizerScore(app.freerouting.settings.RouterSettings routerSettings) {
+            return 500.0f;
+          }
+        };
     stats.connections.incompleteCount = 5;
     stats.vias.totalCount = 10;
 
-    String bypassReason = optimizer.evaluatePreFlightGuards(stats);
-    assertNotNull(bypassReason);
-    assertTrue(bypassReason.contains("unrouted connection(s)"));
+    assertNull(optimizer.evaluatePreFlightGuards(stats));
   }
 
   @Test
