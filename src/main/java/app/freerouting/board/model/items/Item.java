@@ -133,6 +133,9 @@ public abstract class Item
     if (this instanceof ViaObstacleArea) {
       return BoardItemType.VIA_OBSTACLE_AREA;
     }
+    if (this instanceof WireObstacleArea) {
+      return BoardItemType.WIRE_OBSTACLE_AREA;
+    }
     if (this instanceof ComponentObstacleArea) {
       return BoardItemType.COMPONENT_OBSTACLE_AREA;
     }
@@ -463,7 +466,8 @@ public abstract class Item
           if (shape1 == null || shape2 == null) {
             FRLogger.warn(
                 String.format(
-                    "Item.clearanceViolations: unexpected null shape (%s is null) between item1=%s[id=%d, layer=%d] and item2=%s[id=%d, shapeIdx=%d]",
+                    "Item.clearanceViolations: unexpected null shape (%s is null) between"
+                        + " item1=%s[id=%d, layer=%d] and item2=%s[id=%d, shapeIdx=%d]",
                     shape1 == null ? "shape1" : "shape2",
                     this.getClass().getSimpleName(),
                     this.getId(),
@@ -840,6 +844,9 @@ public abstract class Item
   public Set<Item> getConnectionItems(StopConnectionOption stopOption) {
     Set<Item> contacts = this.getNormalContacts();
     Set<Item> result = new TreeSet<>();
+    if (this instanceof Trace trace && trace.hasInteriorContacts()) {
+      return result;
+    }
     if (this.isRoutable()) {
       result.add(this);
     }
@@ -879,8 +886,9 @@ public abstract class Item
           ringLayer = prevContactLayer;
           ringMark *= 2;
         }
-        if (!currentItem.isRoutable()) {
-          // connection ends
+        if (!currentItem.isRoutable()
+            || (currentItem instanceof Trace trace && trace.hasInteriorContacts())) {
+          // An unsplit interior junction is a fork, not a removable whole connection item.
           break;
         }
         if (currentItem instanceof Via) {

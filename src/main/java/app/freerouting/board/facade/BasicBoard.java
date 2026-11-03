@@ -12,6 +12,7 @@ import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.model.items.Via;
 import app.freerouting.board.model.items.ViaObstacleArea;
+import app.freerouting.board.model.items.WireObstacleArea;
 import app.freerouting.board.model.structure.BoardOutline;
 import app.freerouting.board.model.structure.Components;
 import app.freerouting.board.model.structure.FixedState;
@@ -184,6 +185,9 @@ public class BasicBoard implements Serializable {
   public void noteNetAssignmentChanged() {
     netAssignmentChangeCount++;
     itemList.noteContentChange();
+    if (routingLedger != null) {
+      routingLedger.invalidate();
+    }
   }
 
   /** Serialize. */
@@ -504,6 +508,58 @@ public class BasicBoard implements Serializable {
     }
     ViaObstacleArea obs =
         new ViaObstacleArea(
+            area,
+            layer,
+            translation,
+            rotationInDegree,
+            sideChanged,
+            clearanceClassIndex,
+            0,
+            componentId,
+            name,
+            fixedState,
+            this);
+    insertItem(obs);
+    return obs;
+  }
+
+  /**
+   * Inserts a wire obstacle area into the board, whose geometry is described by a polygonal shape,
+   * which may have holes. Vias are allowed in wire obstacle areas, but traces are prohibited.
+   */
+  public WireObstacleArea insertWireObstacle(
+      Area area, int layer, int clearanceClassIndex, FixedState fixedState) {
+    if (area == null) {
+      FRLogger.warn("BasicBoard.insert_wire_obstacle: area is null");
+      return null;
+    }
+    WireObstacleArea obs =
+        new WireObstacleArea(
+            area, layer, Vector.ZERO, 0, false, clearanceClassIndex, 0, 0, null, fixedState, this);
+    insertItem(obs);
+    return obs;
+  }
+
+  /**
+   * Inserts a wire obstacle belonging to a component into the board. Name is to identify the
+   * corresponding ObstacleArea in the component package.
+   */
+  public WireObstacleArea insertWireObstacle(
+      Area area,
+      int layer,
+      Vector translation,
+      double rotationInDegree,
+      boolean sideChanged,
+      int clearanceClassIndex,
+      int componentId,
+      String name,
+      FixedState fixedState) {
+    if (area == null) {
+      FRLogger.warn("BasicBoard.insert_wire_obstacle: area is null");
+      return null;
+    }
+    WireObstacleArea obs =
+        new WireObstacleArea(
             area,
             layer,
             translation,
@@ -1393,6 +1449,7 @@ public class BasicBoard implements Serializable {
     while (it.hasNext()) {
       Item currentItem = (Item) it.next();
       searchTreeManager.remove(currentItem);
+      routingLedger().noteRemoved(currentItem);
       if ((communication != null) && (communication.observers != null)) {
         communication.observers.notifyDeleted(currentItem);
       }
@@ -1407,6 +1464,7 @@ public class BasicBoard implements Serializable {
       Item currentItem = (Item) it.next();
       currentItem.board = this;
       searchTreeManager.insert(currentItem);
+      routingLedger().noteInserted(currentItem);
       currentItem.clearAutorouteInfo();
       if ((communication != null) && (communication.observers != null)) {
         communication.observers.notifyNew(currentItem);
@@ -1442,7 +1500,7 @@ public class BasicBoard implements Serializable {
     Collection<SearchTreeObject> foundItems = overlappingObjects(pointShape, layer);
     for (SearchTreeObject currentObject : foundItems) {
       if (currentObject instanceof Trace currentTrace) {
-        if (!currentTrace.netsEqual(netNumbers)) {
+        if (!currentTrace.netsEqual(netNumbers) || currentTrace.hasInteriorContacts()) {
           continue;
         }
         if (currentTrace.firstCorner().equals(location)) {
@@ -1467,10 +1525,14 @@ public class BasicBoard implements Serializable {
    * case.
    */
   public boolean removeIfCycle(Trace trace) {
-    if (!trace.isOnTheBoard()) {
+    if (!trace.isOnTheBoard() || trace.isDeletionForbidden()) {
       return false;
     }
     if (!trace.isCycle()) {
+      return false;
+    }
+    Set<Item> connectionItems = trace.getConnectionItems();
+    if (!connectionItems.contains(trace)) {
       return false;
     }
     // Remove tails at the endpoints after removing the cycle,
@@ -1485,7 +1547,6 @@ public class BasicBoard implements Serializable {
       Trace tail = getTraceTail(endCorners[i], currentLayer, currentNetNumbers);
       tailAtEndpointBefore[i] = tail != null;
     }
-    Set<Item> connectionItems = trace.getConnectionItems();
     this.removeItems(connectionItems);
     for (int i = 0; i < 2; i++) {
       if (!tailAtEndpointBefore[i]) {

@@ -1,0 +1,48 @@
+(pcb synthetic.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.99 (synthetic)")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu (type signal) (property (index 0)))
+    (layer B.Cu (type signal) (property (index 1)))
+    (boundary (path pcb 0  0 0  20000 0  20000 20000  0 20000  0 0))
+    (wire_keepout "" (polygon B.Cu 0  9000 2000  11000 2000  11000 18000  9000 18000  9000 2000))
+    (via "Via[0-1]_450:200_um")
+    (rule (width 150) (clearance 150))
+  )
+  (placement
+    (component "Pad_1x1"
+      (place P1 3000 10000 front 0 (PN "pad"))
+      (place P2 17000 10000 front 0 (PN "pad"))
+    )
+  )
+  (library
+    (image "Pad_1x1"
+      (pin Rect[T]Pad_1000x1000_um 1 0 0)
+    )
+    (padstack Rect[T]Pad_1000x1000_um
+      (shape (rect F.Cu -500 -500 500 500))
+      (attach off)
+    )
+    (padstack "Via[0-1]_450:200_um"
+      (shape (circle F.Cu 450))
+      (shape (circle B.Cu 450))
+      (attach off)
+    )
+  )
+  (network
+    (net GND)
+    (net A (pins P1-1 P2-1))
+    (class kicad_default "" GND A (circuit (use_via "Via[0-1]_450:200_um")) (rule (width 150) (clearance 150)))
+  )
+  (wiring
+    (wire (polygon F.Cu 0  500 500  19500 500  19500 19500  500 19500  500 500)(net GND)(type protect))
+    (via "Via[0-1]_450:200_um"  10000 15000 (net A)(type fix))
+  )
+)
+

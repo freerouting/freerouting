@@ -64,7 +64,8 @@ public class Log4j2ConfigurationFactory extends ConfigurationFactory {
     String filePattern = getProperty("freerouting.logging.file.pattern", PATTERN);
     boolean fileEnabled = getBooleanProperty("freerouting.logging.file.enabled", true);
     String fileLocation = getProperty("freerouting.logging.file.location", null);
-    if (fileEnabled && fileLocation != null && !fileLocation.isBlank()) {
+    boolean fileAppenderEnabled = fileEnabled && fileLocation != null && !fileLocation.isBlank();
+    if (fileAppenderEnabled) {
       // Ensure parent directory exists
       File logFile = new File(fileLocation);
       File parentDir = logFile.getParentFile();
@@ -95,18 +96,25 @@ public class Log4j2ConfigurationFactory extends ConfigurationFactory {
                     .addAttribute("pattern", filePattern)); // Use the same pattern for stderr
     builder.add(stderrAppender);
 
-    // Configure root logger
-    RootLoggerComponentBuilder rootLogger = builder.newRootLogger(Level.ALL);
+    // Configure root logger. Its level is the most verbose appender level, so that
+    // FRLogger.isTraceEnabled() is false unless an appender actually writes TRACE.
+    Level consoleLevel = parseLevel(getProperty("freerouting.logging.console.level", "INFO"));
+    Level fileLevel = parseLevel(getProperty("freerouting.logging.file.level", "DEBUG"));
+    Level rootLevel = Level.ERROR;
+    if (consoleEnabled && consoleLevel.isLessSpecificThan(rootLevel)) {
+      rootLevel = consoleLevel;
+    }
+    if (fileAppenderEnabled && fileLevel.isLessSpecificThan(rootLevel)) {
+      rootLevel = fileLevel;
+    }
+    RootLoggerComponentBuilder rootLogger = builder.newRootLogger(rootLevel);
 
     if (consoleEnabled) {
-      String consoleLevel = getProperty("freerouting.logging.console.level", "INFO");
-      rootLogger.add(
-          builder.newAppenderRef("Console").addAttribute("level", parseLevel(consoleLevel)));
+      rootLogger.add(builder.newAppenderRef("Console").addAttribute("level", consoleLevel));
     }
 
-    if (fileEnabled && fileLocation != null && !fileLocation.isBlank()) {
-      String fileLevel = getProperty("freerouting.logging.file.level", "DEBUG");
-      rootLogger.add(builder.newAppenderRef("File").addAttribute("level", parseLevel(fileLevel)));
+    if (fileAppenderEnabled) {
+      rootLogger.add(builder.newAppenderRef("File").addAttribute("level", fileLevel));
     }
 
     // Always add stderr for ERROR level

@@ -44,11 +44,9 @@ public class Polyline implements Serializable {
     // construct perpendicular lines at the start and at the end to represent
     // the first and the last point of points as intersection of lines.
 
-    Direction dir = Direction.getInstance(points[0], points[1]);
-    lines[0] = Line.getInstance(points[0], dir.turn45Degree(2));
-
-    dir = Direction.getInstance(points[points.length - 1], points[points.length - 2]);
-    lines[points.length] = Line.getInstance(points[points.length - 1], dir.turn45Degree(2));
+    lines[0] = endpointCap(lines[1], points[0]);
+    lines[points.length] =
+        endpointCap(lines[points.length - 1].opposite(), points[points.length - 1]);
   }
 
   /** Creates a polyline from an array of points. */
@@ -63,11 +61,9 @@ public class Polyline implements Serializable {
       return;
     }
     lines = new Line[3];
-    Direction dir = Direction.getInstance(fromCorner, toCorner);
-    lines[0] = Line.getInstance(fromCorner, dir.turn45Degree(2));
     lines[1] = new Line(fromCorner, toCorner);
-    dir = Direction.getInstance(fromCorner, toCorner);
-    lines[2] = Line.getInstance(toCorner, dir.turn45Degree(2));
+    lines[0] = endpointCap(lines[1], fromCorner);
+    lines[2] = endpointCap(lines[1], toCorner);
   }
 
   /**
@@ -102,6 +98,14 @@ public class Polyline implements Serializable {
       }
     }
     this.lines = filteredLines;
+  }
+
+  private static Line endpointCap(Line support, Point point) {
+    Line cap = support.capAt(point);
+    if (cap == null) {
+      throw new IllegalArgumentException("The polyline endpoint has no bounded integer cap");
+    }
+    return cap;
   }
 
   private static Line[] removeConsecutiveParallelLines(Line[] lines) {
@@ -296,7 +300,9 @@ public class Polyline implements Serializable {
   /** Returns the intersection of the no-th with the (no - 1)-th edge line. */
   public Point corner(int cornerIndex) {
     if (lines.length < 2) {
-      FRLogger.trace("Polyline.corner: lines.length is < 2");
+      if (FRLogger.isTraceEnabled()) {
+        FRLogger.trace("Polyline.corner: lines.length is < 2");
+      }
       return null;
     }
     int no;
@@ -767,39 +773,43 @@ public class Polyline implements Serializable {
       return null;
     }
     Point newEndCorner = this.lines[lineIndex].intersection(endLine);
-    FRLogger.trace(
-        "Polyline.split",
-        "compare_trace_split_called",
-        "lineIndex="
-            + lineIndex
-            + ", lines.length="
-            + lines.length
-            + ", lines.length-2="
-            + (lines.length - 2)
-            + ", newEndCorner="
-            + debugPoint(newEndCorner)
-            + " (type="
-            + newEndCorner.getClass().getSimpleName()
-            + ")"
-            + ", lastCorner="
-            + debugPoint(this.lastCorner())
-            + " (type="
-            + this.lastCorner().getClass().getSimpleName()
-            + ")"
-            + ", equals="
-            + newEndCorner.equals(this.lastCorner()),
-        "Polyline split lineIndex=" + lineIndex,
-        new Point[] {this.firstCorner(), newEndCorner, this.lastCorner()});
-    StringBuilder sb = new StringBuilder("    CORNERS:");
-    for (int i = 0; i < this.cornerCount(); i++) {
-      sb.append(" ").append(this.cornerApprox(i));
+    if (FRLogger.isGranularTraceActive()) {
+      FRLogger.trace(
+          "Polyline.split",
+          "compare_trace_split_called",
+          "lineIndex="
+              + lineIndex
+              + ", lines.length="
+              + lines.length
+              + ", lines.length-2="
+              + (lines.length - 2)
+              + ", newEndCorner="
+              + debugPoint(newEndCorner)
+              + " (type="
+              + newEndCorner.getClass().getSimpleName()
+              + ")"
+              + ", lastCorner="
+              + debugPoint(this.lastCorner())
+              + " (type="
+              + this.lastCorner().getClass().getSimpleName()
+              + ")"
+              + ", equals="
+              + newEndCorner.equals(this.lastCorner()),
+          "Polyline split lineIndex=" + lineIndex,
+          new Point[] {this.firstCorner(), newEndCorner, this.lastCorner()});
     }
-    FRLogger.trace(
-        "Polyline.split",
-        "compare_trace_split_corners",
-        sb.toString(),
-        "Polyline split lineIndex=" + lineIndex,
-        new Point[] {this.firstCorner(), newEndCorner, this.lastCorner()});
+    if (FRLogger.isGranularTraceActive()) {
+      StringBuilder sb = new StringBuilder("    CORNERS:");
+      for (int i = 0; i < this.cornerCount(); i++) {
+        sb.append(" ").append(this.cornerApprox(i));
+      }
+      FRLogger.trace(
+          "Polyline.split",
+          "compare_trace_split_corners",
+          sb.toString(),
+          "Polyline split lineIndex=" + lineIndex,
+          new Point[] {this.firstCorner(), newEndCorner, this.lastCorner()});
+    }
     if (lineIndex == 1 && newEndCorner.equals(this.firstCorner())
         || lineIndex >= lines.length - 2 && newEndCorner.equals(this.lastCorner())) {
       // No split, if endLine does not intersect, but touches
@@ -891,7 +901,12 @@ public class Polyline implements Serializable {
         if (directionTowardsLine == null) {
           continue;
         }
-        Line currentResultLine = new Line(point, directionTowardsLine);
+        Line currentResultLine;
+        try {
+          currentResultLine = new Line(point, directionTowardsLine);
+        } catch (IllegalArgumentException unsupportedProjection) {
+          continue;
+        }
         Point prevCorner = this.corner(i - 1);
         Point nextCorner = this.corner(i);
         Side prevCornerSide = currentResultLine.sideOf(prevCorner);
@@ -908,7 +923,13 @@ public class Polyline implements Serializable {
     if (nearestLine == null) {
       return null;
     }
-    Line startLine = new Line(point, nearestLine.direction());
+    Line startLine =
+        point instanceof IntPoint
+            ? new Line(point, nearestLine.direction())
+            : resultLine.capAt(point);
+    if (startLine == null) {
+      return null;
+    }
     return new LineSegment(startLine, resultLine, nearestLine);
   }
 

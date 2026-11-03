@@ -38,8 +38,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * Optimizes routes using a deterministic thread pool pipeline on a board that has completed
- * auto-routing.
+ * Optimizes the routed connections of a board after auto-routing, using a deterministic thread pool
+ * pipeline.
  */
 public final class BatchOptimizer extends NamedAlgorithm {
 
@@ -157,14 +157,6 @@ public final class BatchOptimizer extends NamedAlgorithm {
     if (this.settings.optimizer != null
         && Boolean.FALSE.equals(this.settings.optimizer.enablePreflightGuards)) {
       return null;
-    }
-
-    // Guard 1: Incomplete connections
-    if (stats.connections.incompleteCount > 0) {
-      return String.format(
-          Locale.US,
-          "the board has %d unrouted connection(s) (optimizer only runs on completely routed boards)",
-          stats.connections.incompleteCount);
     }
 
     float initialScore = stats.getOptimizerScore(this.job.routerSettings);
@@ -688,9 +680,9 @@ public final class BatchOptimizer extends NamedAlgorithm {
   }
 
   /**
-   * Tries to reduce the number of vias and the trace length of a completely routed board. Returns
-   * the amount of improvements made in percentage (expressed between 0.0 and 1.0), or -1 if the
-   * routing must go on no matter how much it improved.
+   * Tries to reduce the number of vias and the trace length of the routed connections. Returns the
+   * amount of improvements made in percentage (expressed between 0.0 and 1.0), or -1 if the routing
+   * must go on no matter how much it improved.
    */
   protected float optRoutePass(int passNo, boolean withPreferredDirections) {
     BoardStatistics boardStatisticsBefore = board.getStatistics();
@@ -722,11 +714,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
       return 0.0f;
     }
 
-    int configuredThreads =
-        (this.settings.optimizer != null && this.settings.optimizer.maxThreads != null)
-            ? this.settings.optimizer.maxThreads
-            : 1;
-    int threadPoolSize = Math.max(1, configuredThreads);
+    int threadPoolSize = Math.max(1, this.settings.getOptimizerMaxThreads());
 
     String optimizationPassId =
         "BatchOptRoute.opt_route_pass #"
@@ -843,7 +831,12 @@ public final class BatchOptimizer extends NamedAlgorithm {
             Thread.currentThread().interrupt();
             break;
           } catch (ExecutionException e) {
-            job.logError("Error in candidate optimization task", e.getCause());
+            Throwable cause = e.getCause();
+            job.logError("Error in candidate optimization task", cause);
+            if (cause instanceof VirtualMachineError fatal) {
+              // The heap is already exhausted. Continuing the pass only wedges the process.
+              throw fatal;
+            }
           }
         }
 
@@ -954,6 +947,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
       return new ItemRouteResult(item.getId());
     }
     routerCountersBefore.incompleteCount = calculateIncompleteCount(routingBoard);
+    final Set<Integer> netsLeftUnrouted = netsLeftUnrouted(routingBoard, item);
 
     Set<Item> rippedItems = new TreeSet<>();
     rippedItems.add(item);
@@ -1004,7 +998,8 @@ public final class BatchOptimizer extends NamedAlgorithm {
         job.routerSettings.tracePullTightAccuracy,
         withPreferredDirections,
         routingBoard,
-        job.routerSettings);
+        job.routerSettings,
+        netsLeftUnrouted);
 
     BoardStatistics.OptimizerMetrics metricsAfter =
         BoardStatistics.OptimizerMetrics.of(routingBoard);
@@ -1025,6 +1020,20 @@ public final class BatchOptimizer extends NamedAlgorithm {
             && (deadlineMs == null || System.currentTimeMillis() < deadlineMs)
             && result.improved();
     result.updateImproved(routeImproved);
+    return result;
+  }
+
+  /**
+   * Returns the nets that are unrouted before item is ripped, except the nets of item. A candidate
+   * re-routes only what it ripped: the router rips the copper of a net that keeps failing, so
+   * retrying the connections the routing stage could not complete would cost every candidate the
+   * routed part of such a net.
+   */
+  private static Set<Integer> netsLeftUnrouted(RoutingBoard routingBoard, Item item) {
+    Set<Integer> result = routingBoard.routingLedger().incompleteNetNumbers();
+    for (int i = 0; i < item.netCount(); i++) {
+      result.remove(item.getNetNumber(i));
+    }
     return result;
   }
 

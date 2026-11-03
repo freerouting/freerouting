@@ -29,6 +29,7 @@ import app.freerouting.gui.workspace.session.InteractiveActionThread;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.FileFormat;
 import app.freerouting.io.kicad.KiCadJsonReader;
+import app.freerouting.io.specctra.DsnReadOptions;
 import app.freerouting.io.specctra.DsnReader;
 import app.freerouting.io.specctra.DsnWriter;
 import app.freerouting.io.specctra.SesWriter;
@@ -435,9 +436,11 @@ public class HeadlessBoardManager implements BoardManager {
         }
       }
       if (viaInPad == null) {
-        if (inPadDetected) {
+        if (inPadDetected && !Boolean.FALSE.equals(viaTouchingPad)) {
           this.routingJob.routerSettings.autorouter.viaInPad = true;
-          this.routingJob.routerSettings.autorouter.viaTouchingPad = true;
+          if (viaTouchingPad == null) {
+            this.routingJob.routerSettings.autorouter.viaTouchingPad = true;
+          }
           FRLogger.info("The board's own vias decide: router.autorouter.via_in_pad = true.");
         } else if (touchingDetected && viaTouchingPad == null) {
           this.routingJob.routerSettings.autorouter.viaInPad = false;
@@ -451,6 +454,9 @@ public class HeadlessBoardManager implements BoardManager {
         this.routingJob.routerSettings.autorouter.viaTouchingPad = touchingDetected;
       }
     }
+    this.board.rules.setViaInPad(
+        Boolean.TRUE.equals(this.routingJob.routerSettings.autorouter.viaInPad),
+        Boolean.TRUE.equals(this.routingJob.routerSettings.autorouter.viaTouchingPad));
   }
 
   private void applyHoleClearanceOverride() {
@@ -961,6 +967,15 @@ public class HeadlessBoardManager implements BoardManager {
    */
   public BoardReadResult loadFromSpecctraDsn(
       InputStream inputStream, BoardObservers boardObservers, IdGenerator idGenerator) {
+    return loadFromSpecctraDsn(inputStream, boardObservers, idGenerator, DsnReadOptions.DEFAULT);
+  }
+
+  /** Loads a DSN with allocation options resolved before parsing by job orchestration. */
+  public BoardReadResult loadFromSpecctraDsn(
+      InputStream inputStream,
+      BoardObservers boardObservers,
+      IdGenerator idGenerator,
+      DsnReadOptions options) {
     if (inputStream == null) {
       return new BoardReadResult.IoError(new java.io.IOException("inputStream is null"));
     }
@@ -982,7 +997,7 @@ public class HeadlessBoardManager implements BoardManager {
                 + "...");
       }
       BoardReadResult dsnResult =
-          DsnReader.readBoard(inputStream, boardObservers, idGenerator, inputFilename);
+          DsnReader.readBoard(inputStream, boardObservers, idGenerator, inputFilename, options);
 
       applyParsedBoardResult(dsnResult, inputFilename, "DSN");
       return dsnResult;

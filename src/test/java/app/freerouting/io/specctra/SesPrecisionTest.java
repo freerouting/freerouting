@@ -24,7 +24,9 @@ import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.ClearanceMatrix;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.util.regex.Pattern;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -73,7 +75,10 @@ class SesPrecisionTest {
               new IdentifierType(new String[] {"(", ")", " "}, "\""),
               file);
     }
-    return bytes.toString(StandardCharsets.UTF_8);
+    // Compare coordinate values independently of the writer's certified decimal padding.
+    return Pattern.compile("-?\\d+\\.\\d+")
+        .matcher(bytes.toString(StandardCharsets.UTF_8))
+        .replaceAll(match -> new BigDecimal(match.group()).stripTrailingZeros().toPlainString());
   }
 
   @ParameterizedTest

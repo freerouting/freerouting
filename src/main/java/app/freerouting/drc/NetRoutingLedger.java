@@ -6,7 +6,9 @@ import app.freerouting.board.model.items.Connectable;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Pin;
 import java.util.ArrayList;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -25,6 +27,7 @@ public final class NetRoutingLedger {
   private int incompleteTotal;
   private int maximumConnections;
   private final Set<Integer> dirtyNets = new TreeSet<>();
+  private final Map<Item, int[]> itemNets = new IdentityHashMap<>();
 
   public NetRoutingLedger(BasicBoard board) {
     this.board = board;
@@ -34,6 +37,7 @@ public final class NetRoutingLedger {
   public synchronized void invalidate() {
     built = false;
     dirtyNets.clear();
+    itemNets.clear();
     itemsByNet = emptyLists();
     incompleteByNet = new int[0];
     incompleteTotal = 0;
@@ -45,6 +49,7 @@ public final class NetRoutingLedger {
     if (!built || !(item instanceof Connectable)) {
       return;
     }
+    itemNets.put(item, item.netNumbers.clone());
     addItem(item);
   }
 
@@ -91,12 +96,15 @@ public final class NetRoutingLedger {
     List<Item>[] lists = new List[maxNet + 1];
     itemsByNet = lists;
     incompleteByNet = new int[maxNet + 1];
+    dirtyNets.clear();
+    itemNets.clear();
     for (int netNumber = 1; netNumber <= maxNet; netNumber++) {
       itemsByNet[netNumber] = new ArrayList<>();
     }
     for (Item item : board.getItems()) {
       if (item instanceof Connectable) {
         addItemToLists(item);
+        itemNets.put(item, item.netNumbers.clone());
       }
     }
     maximumConnections = countMaximumConnections();
@@ -150,6 +158,15 @@ public final class NetRoutingLedger {
   }
 
   private void removeItem(Item item) {
+    int[] registeredNets = itemNets.remove(item);
+    if (registeredNets != null) {
+      for (int netNumber : registeredNets) {
+        if (netNumber >= 1 && netNumber < itemsByNet.length) {
+          itemsByNet[netNumber].remove(item);
+          dirtyNets.add(netNumber);
+        }
+      }
+    }
     for (int index = 0; index < item.netCount(); index++) {
       int netNumber = item.getNetNumber(index);
       if (netNumber >= 1 && netNumber < itemsByNet.length) {

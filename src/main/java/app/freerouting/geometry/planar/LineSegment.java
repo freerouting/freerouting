@@ -3,6 +3,7 @@ package app.freerouting.geometry.planar;
 import app.freerouting.datastructures.Signum;
 import app.freerouting.logger.FRLogger;
 import java.io.Serializable;
+import java.math.BigInteger;
 
 /**
  * Implements functionality for line segments. The difference between a LineSegment and a Line is,
@@ -152,22 +153,78 @@ public class LineSegment implements Serializable {
     return Simplex.getInstance(lines);
   }
 
-  /** Checks if point is contained in this line segment. */
+  /**
+   * Returns an integer-defined cap through point, nonparallel to this segment, or null when no
+   * supported cap is found. The split point is never rounded. Rational endpoints reuse their
+   * existing cap; interior points try a bounded set of nearby lattice anchors with exact checks.
+   */
+  public Line splitLine(Point point) {
+    if (!contains(point)) {
+      return null;
+    }
+    if (point instanceof IntPoint) {
+      return new Line(point, middle.direction().turn45Degree(2));
+    }
+    if (start.sideOf(point) == Side.COLLINEAR) {
+      return start;
+    }
+    if (end.sideOf(point) == Side.COLLINEAR) {
+      return end;
+    }
+    RationalPoint rational = (RationalPoint) point;
+    BigInteger baseX = rational.x.divide(rational.z);
+    BigInteger baseY = rational.y.divide(rational.z);
+    if (!withinIntegerBounds(baseX) || !withinIntegerBounds(baseY)) {
+      return null;
+    }
+    int[][] offsets = {{0, 0}, {1, 0}, {0, 1}, {-1, 0}, {0, -1}};
+    for (int[] offset : offsets) {
+      BigInteger ax = baseX.add(BigInteger.valueOf(offset[0]));
+      BigInteger ay = baseY.add(BigInteger.valueOf(offset[1]));
+      if (!withinIntegerBounds(ax) || !withinIntegerBounds(ay)) {
+        continue;
+      }
+      BigInteger dx = rational.x.subtract(ax.multiply(rational.z));
+      BigInteger dy = rational.y.subtract(ay.multiply(rational.z));
+      BigInteger divisor = dx.gcd(dy);
+      if (divisor.signum() == 0) {
+        continue;
+      }
+      dx = dx.divide(divisor);
+      dy = dy.divide(divisor);
+      for (int sign : new int[] {1, -1}) {
+        BigInteger bx = ax.add(dx.multiply(BigInteger.valueOf(sign)));
+        BigInteger by = ay.add(dy.multiply(BigInteger.valueOf(sign)));
+        if (!withinIntegerBounds(bx) || !withinIntegerBounds(by)) {
+          continue;
+        }
+        Line cap =
+            new Line(
+                ax.intValueExact(), ay.intValueExact(), bx.intValueExact(), by.intValueExact());
+        if (!middle.isParallel(cap) && middle.intersection(cap).equals(point)) {
+          return cap;
+        }
+      }
+    }
+    return null;
+  }
+
+  private static boolean withinIntegerBounds(BigInteger coordinate) {
+    return coordinate.abs().compareTo(Limits.CRIT_INT_BIG) <= 0;
+  }
+
+  /** Checks exact membership in the closed finite segment, including rational coordinates. */
   public boolean contains(Point point) {
-    if (!(point instanceof IntPoint)) {
-      FRLogger.warn("LineSegments.contains currently only implemented for IntPoints");
+    if (point == null || point.isInfinite()) {
       return false;
     }
     if (middle.sideOf(point) != Side.COLLINEAR) {
       return false;
     }
-    // create a perpendicular line at point and check, that the two
-    // endpoints of this segment are on different sides of that line.
-    Direction perpendicularDirection = middle.direction().turn45Degree(2);
-    Line perpendicularLine = new Line(point, perpendicularDirection);
-    Side startPointSide = perpendicularLine.sideOf(this.startPoint());
-    Side endPointSide = perpendicularLine.sideOf(this.endPoint());
-    return startPointSide != endPointSide || startPointSide == Side.COLLINEAR;
+    Point first = startPoint();
+    Point last = endPoint();
+    return point.compareX(first) * point.compareX(last) <= 0
+        && point.compareY(first) * point.compareY(last) <= 0;
   }
 
   /** Calculates the smallest surrounding box of this line segment. */

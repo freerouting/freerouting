@@ -151,6 +151,21 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
+   * Optimizes the route in the internally marked area without a time limit, so that the result does
+   * not depend on the speed or load of the machine. The autorouter uses this; the parameters are
+   * those of {@link #optChangedArea(int[], IntOctagon, int, ExpansionCostFactor[], Stoppable,
+   * int)}.
+   */
+  public void optChangedArea(
+      int[] onlyNetNoArr,
+      IntOctagon clipShape,
+      int accuracy,
+      ExpansionCostFactor[] traceCosts,
+      Stoppable stoppableThread) {
+    optChangedArea(onlyNetNoArr, clipShape, accuracy, traceCosts, stoppableThread, 0);
+  }
+
+  /**
    * Optimizes the route in the internally marked area. If netNumber {@literal >} 0, only traces
    * with net number netNumber are optimized. If clipShape != null the optimizing is restricted to
    * clipShape. traceCosts is used for optimizing vias and may be null. If stoppableThread != null,
@@ -980,14 +995,12 @@ public class RoutingBoard extends BasicBoard implements Serializable {
             rippedItemList,
             null); // null: costs not needed here
     if (result.state == AutorouteAttemptState.ROUTED) {
-      final int timeLimitToPreventEndlessLoop = 1000;
       optChangedArea(
           new int[] {routeNetNo},
           null,
           routerSettings.tracePullTightAccuracy,
           ctrlSettings.traceCosts,
-          stoppableThread,
-          timeLimitToPreventEndlessLoop);
+          stoppableThread);
     }
     return result;
   }
@@ -1131,14 +1144,12 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     }
 
     if (result.state == AutorouteAttemptState.ROUTED) {
-      final int timeLimitToPreventEndlessLoop = 1000;
       optChangedArea(
           new int[] {pinNetNo},
           null,
           routerSettings.tracePullTightAccuracy,
           ctrlSettings.traceCosts,
-          stoppableThread,
-          timeLimitToPreventEndlessLoop);
+          stoppableThread);
     }
     return result;
   }
@@ -1279,6 +1290,10 @@ public class RoutingBoard extends BasicBoard implements Serializable {
         continue;
       }
       if (currentItem.isTail()) {
+        // A dangling endpoint is a DRC finding, not permission to delete an entire junction.
+        if (currentItem instanceof Trace trace && trace.hasInteriorContacts()) {
+          continue;
+        }
         if (currentItem instanceof Via) {
           if (stopConnectionOption == Item.StopConnectionOption.VIA) {
             continue;

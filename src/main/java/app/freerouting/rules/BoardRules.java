@@ -52,6 +52,8 @@ public class BoardRules implements Serializable {
   private int holeClearance;
   private int minHoleToHole;
   private Boolean exactCopper = true;
+  private boolean viaInPad;
+  private boolean viaTouchingPad;
   public transient double clearanceToleranceUm = 1.0;
   public transient java.util.Map<Integer, PinClearanceSource> pinClearanceSources;
 
@@ -257,6 +259,28 @@ public class BoardRules implements Serializable {
     this.exactCopper = value;
   }
 
+  /**
+   * Whether a via may sit in an SMD pad of its own net, drill hole included ({@code
+   * router.autorouter.via_in_pad}).
+   */
+  public boolean isViaInPad() {
+    return this.viaInPad;
+  }
+
+  /**
+   * Whether a via may overlap an SMD pad of its own net with its drill hole outside the pad ({@code
+   * router.autorouter.via_touching_pad}).
+   */
+  public boolean isViaTouchingPad() {
+    return this.viaTouchingPad;
+  }
+
+  /** Sets the via-in-pad permissions resolved from the router settings. */
+  public void setViaInPad(boolean viaInPad, boolean viaTouchingPad) {
+    this.viaInPad = viaInPad;
+    this.viaTouchingPad = viaTouchingPad;
+  }
+
   /** Changes the default trace half-width used for routing on the input layer. */
   public void setDefaultTraceHalfWidth(int layer, int value) {
     this.getDefaultNetClass().setTraceHalfWidth(layer, value);
@@ -311,12 +335,9 @@ public class BoardRules implements Serializable {
   /**
    * Creates a default via rule for {@code netClass} with name {@code name}. If more than one via
    * info with the same layer range is found, only the via info with the smallest pad size is
-   * inserted.
+   * inserted. Without any via info the rule is empty: the class routes without vias.
    */
   public void createDefaultViaRule(NetClass netClass, String name) {
-    if (this.viaInfos.count() == 0) {
-      return;
-    }
     // Add the rule  containing all vias.
     ViaRule defaultRule = new ViaRule(name);
     int defaultViaClClass =
