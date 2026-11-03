@@ -196,6 +196,29 @@ from clearance violations against foreign partner pins in the same net-tie clust
 clusters on the same footprint or overlapping pins on different footprints remain isolated
 and enforce standard clearance rules (#718).
 
+### Net topology: `fromto` and `order`
+
+A net is normally routed as a tree that joins its pins in any order. The Specctra DSN can
+constrain that topology inside the `net` scope, and `Network.readNetScope` turns it into subnets:
+
+- each `(fromto P1 P2)` becomes a subnet of its own that connects these two pins;
+- `(order P1 P2 P3 ...)` becomes a chain of two-pin subnets, P1-P2, P2-P3 and so on.
+
+The subnets get distinct net numbers and keep the name of the net, so the SES output lists one
+`net` block per subnet under the same name. A pin named in several subnets carries all their net
+numbers, like a net-tie pad. Copper of different subnets keeps its clearance from each other: two
+subnets only meet at the pins they share.
+
+A star ground is therefore written as one `fromto` per branch, all starting at the star point:
+
+```
+(net GND (fromto R-1 A-1) (fromto R-1 B-1) (fromto R-1 C-1))
+```
+
+Each of A, B and C then gets its own trace to R (`StarGroundFromtoTest`). The star point is the
+pin named in the `fromto` scopes; the router does not choose it. KiCad does not write `fromto`
+scopes when it exports a DSN, so they have to be added to the file before routing.
+
 ## Module Boundaries (ArchUnit)
 
 Architectural boundaries are codified in `src/test/java/app/freerouting/architecture/ModuleBoundariesArchTest.java`.
