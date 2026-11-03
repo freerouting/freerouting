@@ -23,6 +23,8 @@ class ObliqueBoardEdgeTest extends RoutingFixtureTest {
     TestingSettings ts = new TestingSettings();
     ts.setMaxPasses(5);
     RoutingJob job = getRoutingJob("oblique-board-edge.dsn", ts);
+    // getRoutingJob sets 100 passes over the testing settings.
+    job.routerSettings.autorouter.maxPasses = 5;
     runRoutingJob(job);
 
     assertEquals(RoutingJobState.COMPLETED, job.state);
