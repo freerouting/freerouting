@@ -115,6 +115,7 @@ final class AutoroutePassRunner {
       int notRouted = 0;
       int routed = 0;
       int skipped = 0;
+      Set<Integer> keptAwayNetsAttemptedInPass = new TreeSet<>();
       for (Item currentItem : autorouteItemList) {
         if (router.thread.isStopAutoRouterRequested()) {
           break;
@@ -164,8 +165,11 @@ final class AutoroutePassRunner {
             router.profileAutorouteItemNanos += System.nanoTime() - routeItemStart;
           }
 
+          if (router.ripupMemory.isKeptAway(currentItem.getNetNumber(i))) {
+            keptAwayNetsAttemptedInPass.add(currentItem.getNetNumber(i));
+          }
           logRippedItems(currentItem, i, rippedItemList, rippedItemCosts);
-          rememberRipups(currentItem.getNetNumber(i), autorouterResult, rippedItemList, passNo);
+          rememberRipups(currentItem.getNetNumber(i), rippedItemList, passNo);
           if (FRLogger.isTraceEnabled()) {
             logTraceRouteComparison(
                 currentItem, i, autorouterResult, rippedItemList, netItemsBefore);
@@ -245,6 +249,10 @@ final class AutoroutePassRunner {
       Set<Integer> currentIncompleteNets = new TreeSet<>();
       routerCounters.incompleteCount =
           router.calculateIncompleteCount(router.board, currentIncompleteNets);
+      if (!router.thread.isStopAutoRouterRequested()) {
+        resolveKeptAwayOutcomes(
+            keptAwayNetsAttemptedInPass, currentIncompleteNets, routerCounters, passNo);
+      }
       router.fireBoardUpdatedEvent(boardStatistics, routerCounters, router.board);
 
       if (this.previousIncompleteCount >= 0
@@ -361,45 +369,10 @@ final class AutoroutePassRunner {
     signalItems.addAll(keptAway);
   }
 
-  /**
-   * Feeds the rip-up memory: which nets this attempt moved aside, and whether a net that was kept
-   * away from other nets still found its way. When a kept-away net keeps failing, the relation
-   * flips and the other net's copper in the way of the failed connections is removed, so that the
-   * failed net routes first and the other one looks for another way.
-   */
-  private void rememberRipups(
-      int netNo, AutorouteAttemptResult result, SortedSet<Item> rippedItemList, int passNo) {
-    RipupMemory memory = router.ripupMemory;
-    Set<Integer> keptAwayFrom = memory.netsNotToRip(netNo);
-    if (!keptAwayFrom.isEmpty()
-        && result.state != AutorouteAttemptState.ALREADY_CONNECTED
-        && result.state != AutorouteAttemptState.NO_UNCONNECTED_NETS
-        && result.state != AutorouteAttemptState.CONNECTED_TO_PLANE) {
-      boolean routed = result.state == AutorouteAttemptState.ROUTED;
-      for (int keptFromNet : keptAwayFrom) {
-        RipupMemory.Outcome outcome = memory.recordOutcome(netNo, keptFromNet, routed, passNo);
-        String message =
-            switch (outcome) {
-              case RESOLVED -> "routed without ripping '" + netName(keptFromNet) + "'.";
-              case FLIPPED ->
-                  "failed again without ripping '"
-                      + netName(keptFromNet)
-                      + "'; "
-                      + ripInCorridors(keptFromNet, netNo)
-                      + " item(s) of it removed from its way, '"
-                      + netName(keptFromNet)
-                      + "' is now kept away from it.";
-              case RETIRED ->
-                  "failed again while '"
-                      + netName(keptFromNet)
-                      + "' was kept away; the pair is released.";
-              case NONE -> "failed without ripping '" + netName(keptFromNet) + "'.";
-            };
-        logDebug(passNo, "net '" + netName(netNo) + "' " + message);
-      }
-    }
+  /** Feeds the rip-up memory: which nets this attempt moved aside. */
+  private void rememberRipups(int netNo, SortedSet<Item> rippedItemList, int passNo) {
     if (!rippedItemList.isEmpty()) {
-      Set<Integer> started = memory.recordRipup(netNo, rippedItemList, passNo);
+      Set<Integer> started = router.ripupMemory.recordRipup(netNo, rippedItemList, passNo);
       if (!started.isEmpty()) {
         logDebug(
             passNo,
@@ -409,6 +382,59 @@ final class AutoroutePassRunner {
                 + netNames(started)
                 + " aside a second time; they will not rip it back.");
       }
+    }
+  }
+
+  /**
+   * Evaluates the outcome for nets that were kept away from other nets during this pass. Only after
+   * all connections for the net have succeeded in the pass is the relation resolved. When a
+   * kept-away net keeps failing, the relation flips and the other net's copper in the way of the
+   * failed connections is removed, so that the failed net routes first and the other one looks for
+   * another way.
+   */
+  void resolveKeptAwayOutcomes(
+      Set<Integer> keptAwayNetsAttempted,
+      Set<Integer> incompleteNets,
+      RouterCounters routerCounters,
+      int passNo) {
+    if (keptAwayNetsAttempted.isEmpty()) {
+      return;
+    }
+    int itemsRemovedByFlip = 0;
+    for (int netNo : keptAwayNetsAttempted) {
+      Set<Integer> keptAwayFrom = router.ripupMemory.netsNotToRip(netNo);
+      if (keptAwayFrom.isEmpty()) {
+        continue;
+      }
+      boolean routed = !incompleteNets.contains(netNo);
+      for (int keptFromNet : new ArrayList<>(keptAwayFrom)) {
+        RipupMemory.Outcome outcome =
+            router.ripupMemory.recordOutcome(netNo, keptFromNet, routed, passNo);
+        String message =
+            switch (outcome) {
+              case RESOLVED -> "routed without ripping '" + netName(keptFromNet) + "'.";
+              case FLIPPED -> {
+                int ripped = ripInCorridors(keptFromNet, netNo);
+                itemsRemovedByFlip += ripped;
+                yield "failed again without ripping '"
+                    + netName(keptFromNet)
+                    + "'; "
+                    + ripped
+                    + " item(s) of it removed from its way, '"
+                    + netName(keptFromNet)
+                    + "' is now kept away from it.";
+              }
+              case RETIRED ->
+                  "failed again while '"
+                      + netName(keptFromNet)
+                      + "' was kept away; the pair is released.";
+              case NONE -> "failed without ripping '" + netName(keptFromNet) + "'.";
+            };
+        logDebug(passNo, "net '" + netName(netNo) + "' " + message);
+      }
+    }
+    if (itemsRemovedByFlip > 0) {
+      routerCounters.incompleteCount = router.calculateIncompleteCount(router.board);
     }
   }
 

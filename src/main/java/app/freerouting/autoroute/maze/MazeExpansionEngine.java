@@ -267,6 +267,13 @@ final class MazeExpansionEngine {
       if (!(currentObstacleItem instanceof Via)) {
         return;
       }
+      if (!ctrl.netsNotToRip.isEmpty()) {
+        for (int i = 0; i < currentObstacleItem.netCount(); i++) {
+          if (ctrl.netsNotToRip.contains(currentObstacleItem.getNetNumber(i))) {
+            return;
+          }
+        }
+      }
       Padstack currentObstaclePadstack = ((Via) currentObstacleItem).getPadstack();
       if (!ctrl.viaRule.containsPadstack(currentObstaclePadstack)
           || currentObstacleItem.clearanceClassIndex() != ctrl.viaClearanceClass) {
