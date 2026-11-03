@@ -60,6 +60,20 @@ public final class DsnReader {
       BoardObservers observers,
       IdGenerator idGenerator,
       String designName) {
+    return readBoard(inputStream, observers, idGenerator, designName, DsnReadOptions.DEFAULT);
+  }
+
+  /**
+   * Reads a DSN using explicit item-allocation options resolved by the caller before import.
+   * Existing overloads allocate placements canonically by reference name. A null option also uses
+   * that default.
+   */
+  public static BoardReadResult readBoard(
+      InputStream inputStream,
+      BoardObservers observers,
+      IdGenerator idGenerator,
+      String designName,
+      DsnReadOptions options) {
 
     if (inputStream == null) {
       return new BoardReadResult.ParseError("(pcb", "inputStream must not be null");
@@ -122,7 +136,10 @@ public final class DsnReader {
     // -----------------------------------------------------------------------
     // Parse the body — board is constructed inside ReadScopeParameter's shim
     // -----------------------------------------------------------------------
-    ReadScopeParameter scopeParameter = new ReadScopeParameter(scanner, observers, idGenerator);
+    DsnReadOptions effectiveOptions = options != null ? options : DsnReadOptions.DEFAULT;
+    ReadScopeParameter scopeParameter =
+        new ReadScopeParameter(
+            scanner, observers, idGenerator, effectiveOptions.canonicalPlacementOrder());
     boolean readOk = Keyword.PCB_SCOPE.readScope(scopeParameter);
 
     BasicBoard board = scopeParameter.getBoard();
@@ -130,6 +147,7 @@ public final class DsnReader {
     closeQuietly(inputStream);
 
     if (readOk) {
+      DsnFile.convertPlatedSlotKeepouts(board);
       // Apply power-plane autoroute settings if the DSN had no (autoroute ...) scope
       if (scopeParameter.autorouteSettings == null) {
         DsnFile.adjustPlaneAutorouteSettings(board);

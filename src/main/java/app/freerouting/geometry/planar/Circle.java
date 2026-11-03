@@ -267,11 +267,7 @@ public class Circle implements ConvexShape, Serializable {
     if (vector.equals(Vector.ZERO)) {
       return this;
     }
-    if (!(vector instanceof IntVector)) {
-      FRLogger.warn("Circle.translate_by only implemented for IntVectors till now");
-      return this;
-    }
-    IntPoint newCenter = (IntPoint) center.translateBy(vector);
+    IntPoint newCenter = center.translateBy(vector.toIntegerExact()).toIntegerExact();
     return new Circle(newCenter, radius);
   }
 

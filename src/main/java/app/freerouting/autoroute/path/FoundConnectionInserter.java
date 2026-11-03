@@ -4,20 +4,27 @@ import app.freerouting.autoroute.maze.AutorouteControl;
 import app.freerouting.board.actions.ForcedViaInserter;
 import app.freerouting.board.actions.ItemSelectionFilter;
 import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.ConductionArea;
+import app.freerouting.board.model.items.DrillItem;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Trace;
+import app.freerouting.board.model.items.Via;
 import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;
+import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.ViaInfo;
+import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 /** Inserts the traces and vias of the connection found by the autoroute algorithm. */
 public final class FoundConnectionInserter {
@@ -60,7 +67,8 @@ public final class FoundConnectionInserter {
 
   /**
    * Inserts an already found connection. {@code startItem} and {@code targetItem} belong to {@code
-   * board}. Returns null when a via or trace cannot be inserted.
+   * board}. Returns null when insertion or endpoint attachment fails, or when the final copper does
+   * not connect both terminal components.
    */
   public static FoundConnectionInserter insertSegments(
       RoutingBoard board,
@@ -70,11 +78,24 @@ public final class FoundConnectionInserter {
       int startLayer,
       int targetLayer,
       PlannedConnection.Segment[] segments) {
-    if (segments == null) {
+    if (!isContinuousPlan(segments, board.getLayerCount())
+        || startLayer < 0
+        || startLayer >= board.getLayerCount()
+        || targetLayer < 0
+        || targetLayer >= board.getLayerCount()) {
+      return null;
+    }
+    FoundConnectionInserter newInstance = new FoundConnectionInserter(board, ctrl);
+    PlannedConnection.Segment lastSegment = segments[segments.length - 1];
+    TerminalAnchor startAnchor =
+        newInstance.captureTerminal(
+            startItem, lastSegment.corners[lastSegment.corners.length - 1], startLayer, false);
+    TerminalAnchor targetAnchor =
+        newInstance.captureTerminal(targetItem, segments[0].corners[0], targetLayer, ctrl.isFanout);
+    if (startAnchor == null || targetAnchor == null) {
       return null;
     }
     int currentLayer = targetLayer;
-    FoundConnectionInserter newInstance = new FoundConnectionInserter(board, ctrl);
     for (PlannedConnection.Segment currentNewItem : segments) {
       if (true) {
         Point startCorner = currentNewItem.corners.length > 0 ? currentNewItem.corners[0] : null;
@@ -105,39 +126,38 @@ public final class FoundConnectionInserter {
     if (!newInstance.insertVia(newInstance.lastCorner, currentLayer, startLayer)) {
       return null;
     }
-    if (targetItem instanceof PolylineTrace toTrace) {
-      if (newInstance.firstCorner != null) {
-        board.connectToTrace(
+    if (targetItem instanceof PolylineTrace toTrace
+        && !board.connectToTrace(
             newInstance.firstCorner,
             toTrace,
-            ctrl.traceHalfWidth[startLayer],
-            ctrl.traceClearanceClassIndex);
-      } else {
-        FRLogger.warn(
-            "FoundConnectionInserter: firstCorner is null for net #"
-                + ctrl.netNumber
-                + ", skipping connect_to_trace for target item. "
-                + "This may indicate a degenerate route segment.");
-      }
+            ctrl.traceHalfWidth[targetLayer],
+            ctrl.traceClearanceClassIndex)) {
+      return null;
     }
-    if (startItem instanceof PolylineTrace toTrace) {
-      if (newInstance.lastCorner != null) {
-        board.connectToTrace(
+    if (startItem instanceof PolylineTrace toTrace
+        && !board.connectToTrace(
             newInstance.lastCorner,
             toTrace,
-            ctrl.traceHalfWidth[targetLayer],
-            ctrl.traceClearanceClassIndex);
-      } else {
-        FRLogger.warn(
-            "FoundConnectionInserter: lastCorner is null for net #"
-                + ctrl.netNumber
-                + ", skipping connect_to_trace for start item. "
-                + "This may indicate a degenerate route segment.");
-      }
+            ctrl.traceHalfWidth[startLayer],
+            ctrl.traceClearanceClassIndex)) {
+      return null;
+    }
+
+    // A new bridge can look like a tail until its exact endpoint attachments are complete.
+    for (PlannedConnection.Segment segment : segments) {
+      newInstance.removeTraceStubs(segment);
     }
 
     board.normalizeTraces(ctrl.netNumber);
-
+    if (!newInstance.connectsTerminals(startAnchor, targetAnchor)) {
+      FRLogger.trace(
+          "FoundConnectionInserter.insertSegments",
+          "connection_postcondition",
+          "Inserted copper does not connect both terminal components",
+          "Net #" + ctrl.netNumber,
+          new Point[] {startAnchor.point(), targetAnchor.point()});
+      return null;
+    }
     return newInstance;
   }
 
@@ -437,6 +457,16 @@ public final class FoundConnectionInserter {
       }
     }
 
+    board.rules.setPinEdgeToTurnDist(savedEdgeToTurnDist);
+    if (this.firstCorner == null) {
+      this.firstCorner = trace.corners[0];
+    }
+    this.lastCorner = trace.corners[trace.corners.length - 1];
+    return result;
+  }
+
+  private void removeTraceStubs(PlannedConnection.Segment trace) {
+    int[] netNumbers = {ctrl.netNumber};
     int removedTraceStubs = 0;
     for (int i = 0; i < trace.corners.length - 1; i++) {
       Trace traceStub = board.getTraceTail(trace.corners[i], trace.layer, netNumbers);
@@ -476,14 +506,123 @@ public final class FoundConnectionInserter {
             + FRLogger.isTraceEnabled(),
         "Net #" + ctrl.netNumber,
         new Point[0]);
-
-    board.rules.setPinEdgeToTurnDist(savedEdgeToTurnDist);
-    if (this.firstCorner == null) {
-      this.firstCorner = trace.corners[0];
-    }
-    this.lastCorner = trace.corners[trace.corners.length - 1];
-    return result;
   }
+
+  private static boolean isContinuousPlan(PlannedConnection.Segment[] segments, int layerCount) {
+    if (segments == null || segments.length == 0) {
+      return false;
+    }
+    IntPoint previousEnd = null;
+    for (PlannedConnection.Segment segment : segments) {
+      if (segment == null
+          || segment.corners == null
+          || segment.corners.length == 0
+          || segment.layer < 0
+          || segment.layer >= layerCount) {
+        return false;
+      }
+      for (IntPoint corner : segment.corners) {
+        if (corner == null) {
+          return false;
+        }
+      }
+      if (previousEnd != null && !previousEnd.equals(segment.corners[0])) {
+        return false;
+      }
+      previousEnd = segment.corners[segment.corners.length - 1];
+    }
+    return true;
+  }
+
+  private TerminalAnchor captureTerminal(
+      Item item, IntPoint endpoint, int layer, boolean fanoutEnd) {
+    if (item == null) {
+      return fanoutEnd ? new TerminalAnchor(Set.of(), endpoint, layer, true) : null;
+    }
+    if (!item.isOnTheBoard() || !item.containsNet(ctrl.netNumber) || !item.isOnLayer(layer)) {
+      return null;
+    }
+    Point anchor = endpoint;
+    if (item instanceof PolylineTrace trace && !trace.contains(endpoint)) {
+      var projection = trace.polyline().projectionLine(endpoint);
+      if (projection == null) {
+        return null;
+      }
+      anchor = projection.endPoint();
+    } else if (item instanceof DrillItem drill) {
+      anchor = drill.getCenter();
+    }
+    // Even a fixed terminal can have mutable branches. Preserve reachability of every surviving
+    // member, while allowing trace splitting, combining and legitimate via movement.
+    Set<Item> component = terminalComponent(item);
+    return new TerminalAnchor(component, anchor, layer, false);
+  }
+
+  private Set<Item> resolveTerminal(TerminalAnchor anchor) {
+    Set<Item> live = new TreeSet<>();
+    for (Item item : anchor.component()) {
+      if (item.isOnTheBoard() && item.containsNet(ctrl.netNumber)) {
+        live.add(item);
+      }
+    }
+    if (!live.isEmpty()) {
+      return live;
+    }
+    for (var object :
+        board.overlappingObjects(TileShape.getInstance(anchor.point()), anchor.layer())) {
+      if (!(object instanceof Item item) || !item.containsNet(ctrl.netNumber)) {
+        continue;
+      }
+      // Search-tree overlap includes trace widths and clearance compensation, not just contacts.
+      if (anchor.fanoutEnd()) {
+        if (item instanceof Via via && via.getCenter().equals(anchor.point())) {
+          live.add(item);
+        }
+      } else if (item instanceof Trace trace && trace.contains(anchor.point())) {
+        live.add(item);
+      } else if (item instanceof DrillItem drill && drill.getCenter().equals(anchor.point())) {
+        live.add(item);
+      } else if (item instanceof ConductionArea area && area.getArea().contains(anchor.point())) {
+        live.add(item);
+      }
+    }
+    return live;
+  }
+
+  private boolean connectsTerminals(TerminalAnchor start, TerminalAnchor target) {
+    Set<Item> starts = resolveTerminal(start);
+    Set<Item> targets = resolveTerminal(target);
+    if (starts.isEmpty() || targets.isEmpty()) {
+      return false;
+    }
+    // Seeding from every former member would conceal a component fractured during insertion.
+    Set<Item> reached = terminalComponent(starts.iterator().next());
+    return reached.containsAll(starts) && reached.containsAll(targets);
+  }
+
+  /** Collects one live same-net component without recursion. */
+  private Set<Item> terminalComponent(Item start) {
+    Set<Item> visited = new HashSet<>();
+    ArrayDeque<Item> pending = new ArrayDeque<>();
+    pending.add(start);
+    visited.add(start);
+    while (!pending.isEmpty()) {
+      Item item = pending.removeFirst();
+      var contacts = item.getNormalContacts();
+      if (contacts != null) {
+        for (Item contact : contacts) {
+          if (contact.isOnTheBoard()
+              && contact.containsNet(ctrl.netNumber)
+              && visited.add(contact)) {
+            pending.addLast(contact);
+          }
+        }
+      }
+    }
+    return visited;
+  }
+
+  private record TerminalAnchor(Set<Item> component, Point point, int layer, boolean fanoutEnd) {}
 
   private boolean insertFanoutMicroNeckdown(
       Point okPoint, Point targetPoint, int layer, int[] netNumbers, Pin startPin, Pin endPin) {

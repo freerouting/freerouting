@@ -138,19 +138,23 @@ The primary way to configure Freerouting is through a JSON settings file. This f
     - **`algorithm`**: Algorithm identifier (`freerouting-router` by default; legacy identifiers such as `freerouting-router-v19` safely normalize to `freerouting-router`).
     - **`max_passes`**: Maximum autorouter passes. `0` means no limit.
     - **`max_items`**: Maximum items attempted in the autorouter stage.
+    - **`item_order_seed`**: Optional extra seed for signal-item permutations after the first
+      autorouter pass, for example `--router.autorouter.item_order_seed=42`. The first pass
+      retains its existing ordering policy.
     - **`save_intermediate_stages`**: Save board snapshots between passes.
     - **`ignore_net_classes`**: Net class names the autorouter should skip.
-    - **`max_threads`**: Canonical CLI is `--router.autorouter.max_threads`. The autorouter pass
-      does not read it. Fanout is also single-threaded. The optimizer pool uses
-      `--router.optimizer.max_threads`. The legacy flat `--router.max_threads` remains as a
-      fallback / GUI knob and is still copied onto both pools.
+    - **`max_threads`**: Stage-specific autorouter worker-thread limit. Canonical CLI is
+      `--router.autorouter.max_threads`. Bounded by the global `--router.max_threads` ceiling.
+      The autorouter stage currently runs single-threaded; this setting is reserved for future multi-threaded passes.
 - **`result_json`**: Optional path for a machine-readable routing result manifest written at the
   end of a headless `-de`/`-do` run. Used by the benchmark and autopilot harnesses. Equivalent CLI
   flag: `--router.result_json=<path>`.
-- **`max_threads`**: Legacy flat / GUI worker-thread cap. `setMaxThreads()` still copies this
-  value into both `autorouter.max_threads` and `optimizer.max_threads`. Prefer the nested CLI
-  flags (`--router.autorouter.max_threads`, `--router.optimizer.max_threads`) when the two pools
-  must differ. `-mt` sets **optimizer** threads only.
+- **`max_threads`**: Global worker-thread ceiling across all stages (fanout, autorouter, and
+  optimizer). From any source (GUI, JSON, environment, `--router.max_threads`), setting this caps
+  the maximum number of threads any stage may use. Defaults to `cores - 1`. `0` means all
+  processors. Nested stage settings (`--router.autorouter.max_threads`,
+  `--router.optimizer.max_threads`) allow stage-specific fine-tuning within this ceiling.
+  Legacy `-mt` maps here; `-mt 0` disables the optimizer like `--router.optimizer.enabled=false`.
 - **`improvement_threshold`**: Minimum improvement required to continue routing.
 - **`trace_pull_tight_accuracy`**: Accuracy for pulling traces tight.
 - **`allowed_via_types`**: Enables or disables the use of different via types.
@@ -191,6 +195,26 @@ The primary way to configure Freerouting is through a JSON settings file. This f
 The router and optimizer versions are independent. CLI aliases are
 `--router-scoring-version=v1|v2`, `--optimizer-scoring-version=v1|v2`, and
 `--scoring-version=v1|v2` to select both.
+
+##### Reproducible placement import
+
+All DSN imports (headless jobs, composite/API inputs, GUI sessions, and default reader overloads)
+allocate component placements in exact reference-name order by default before routing.
+For unique references, changing the order or grouping of placement records alone (e.g. from
+KiCad re-saving and regenerating footprint UUIDs) preserves component, pad, and package-keepout
+identities. Package association, geometry, side, fixed state, and pin-net membership remain
+unchanged. Duplicate references retain their relative source order and are excluded from the
+placement-order guarantee.
+
+Any configured `router.autorouter.item_order_seed` is applied only after these identities exist,
+providing an explicit, reproducible shuffle without relying on file order as an implicit seed.
+Embedding callers can explicitly supply `DsnReadOptions.INPUT_ORDER` if legacy source order is
+specifically required.
+
+Use the same seed, settings, worker count, and deterministic work limits when comparing routing
+runs. This guarantee does not canonicalize other DSN scopes or electrically equivalent copper
+representations. In particular, KiCad can join fixed track segments differently on separate
+exports; matching the seed alone does not make those different router inputs identical.
 
 ##### **`optimizer` Sub-section**
 

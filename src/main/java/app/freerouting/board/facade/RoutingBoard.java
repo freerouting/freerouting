@@ -1279,6 +1279,10 @@ public class RoutingBoard extends BasicBoard implements Serializable {
         continue;
       }
       if (currentItem.isTail()) {
+        // A dangling endpoint is a DRC finding, not permission to delete an entire junction.
+        if (currentItem instanceof Trace trace && trace.hasInteriorContacts()) {
+          continue;
+        }
         if (currentItem instanceof Via) {
           if (stopConnectionOption == Item.StopConnectionOption.VIA) {
             continue;

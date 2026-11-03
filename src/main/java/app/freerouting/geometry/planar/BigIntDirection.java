@@ -1,6 +1,5 @@
 package app.freerouting.geometry.planar;
 
-import app.freerouting.logger.FRLogger;
 import java.io.Serializable;
 import java.math.BigInteger;
 
@@ -41,8 +40,18 @@ public class BigIntDirection extends Direction implements Serializable {
 
   @Override
   public Direction turn45Degree(int factor) {
-    FRLogger.warn("BigIntDirection: turn_45_degree not yet implemented");
-    return this;
+    BigInteger[] rotated =
+        switch (Math.floorMod(factor, 8)) {
+          case 0 -> new BigInteger[] {x, y};
+          case 1 -> new BigInteger[] {x.subtract(y), x.add(y)};
+          case 2 -> new BigInteger[] {y.negate(), x};
+          case 3 -> new BigInteger[] {x.negate().subtract(y), x.subtract(y)};
+          case 4 -> new BigInteger[] {x.negate(), y.negate()};
+          case 5 -> new BigInteger[] {y.subtract(x), x.negate().subtract(y)};
+          case 6 -> new BigInteger[] {y, x.negate()};
+          default -> new BigInteger[] {x.add(y), y.subtract(x)};
+        };
+    return Direction.getInstance(new RationalVector(rotated[0], rotated[1], BigInteger.ONE));
   }
 
   @Override

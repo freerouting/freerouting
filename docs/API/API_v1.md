@@ -574,6 +574,7 @@ Operational controls:
 - API throttling is controlled by `api_server.rate_limit`.
 - MCP throttling is controlled by `mcp_server.rate_limit`.
 - Responses include `X-Correlation-ID`; MCP forwards this ID to bridged REST calls for cross-layer tracing.
+- Successful `tools/call` results include `structuredContent` matching the tool `outputSchema` from `tools/list`. Generated REST tools use `{status, contentType, body}`. Custom tools use `{base64}`, `{text}`, or `{message}`, and omit `structuredContent` when an error payload does not match that schema. API authentication and MCP authentication are configured separately.
 
 For complete setup instructions (configuration, startup commands, verification, and troubleshooting), see:
 

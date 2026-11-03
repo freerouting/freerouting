@@ -55,6 +55,9 @@ class NativeImageSerializationMetadataArchTest {
     assertTrue(
         serializableTypes.contains("app.freerouting.board.model.items.ViaObstacleArea"),
         "ViaObstacleArea must be registered as serializable");
+    assertTrue(
+        serializableTypes.contains("app.freerouting.board.model.items.WireObstacleArea"),
+        "WireObstacleArea must be registered as serializable");
   }
 
   @Test

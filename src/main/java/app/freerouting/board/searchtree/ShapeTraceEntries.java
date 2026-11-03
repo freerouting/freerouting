@@ -9,6 +9,7 @@ import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.model.items.Via;
 import app.freerouting.board.model.items.ViaObstacleArea;
+import app.freerouting.board.model.items.WireObstacleArea;
 import app.freerouting.board.model.structure.BoardOutline;
 import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.board.model.structure.ShapeEntrySide;
@@ -196,8 +197,9 @@ public class ShapeTraceEntries {
       boolean copperSharingAllowed,
       boolean holeOnly) {
     for (Item currentItem : itemList) {
-      if (!isPadCheck && currentItem instanceof ViaObstacleArea
-          || currentItem instanceof ComponentObstacleArea) {
+      if ((!isPadCheck && currentItem instanceof ViaObstacleArea)
+          || currentItem instanceof ComponentObstacleArea
+          || (isPadCheck && currentItem instanceof WireObstacleArea)) {
         continue;
       }
       boolean containsOwnNet = currentItem.sharesNetNo(this.ownNetNos);

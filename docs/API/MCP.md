@@ -99,6 +99,14 @@ Click **+ New MCP Server** and enter:
 
 When executing routing tasks, LLMs must invoke the Freerouting MCP tools in a structured state-machine sequence to complete the routing job correctly.
 
+### Tool result shape
+
+`tools/list` advertises an `outputSchema` for every tool. A successful `tools/call` returns that object as `structuredContent`, in addition to the existing text `content`.
+
+- Generated REST tools (`get_system_status`, `enqueue_job`, and the other OpenAPI tools) use `{status, contentType, body}`. `status` is the HTTP status and `body` is the parsed response. The same envelope is returned when the bridged call completes with an HTTP error.
+- Custom tools use the inner body: `encode_base64` returns `{base64}`, `decode_base64` returns `{text}`, and `upload_job_input_from_local_file` / `download_job_output_to_local_file` return `{message}`. When the call fails and the payload does not match that schema, the result sets `isError` and omits `structuredContent`.
+- The NPX stdio bridge handles the two local-file tools itself and follows the same `{message}` rule. Every other `tools/call` is forwarded to the MCP server unchanged. API authentication and MCP authentication stay independent: the bridge sends `Authorization` only when `FREEROUTING_API_KEY` is set.
+
 ### Preferred 1-Turn Workflow: `autoroute_board`
 
 For modern AI coding assistants (e.g. Cursor, Claude Desktop), Freerouting provides a composite single-turn tool:

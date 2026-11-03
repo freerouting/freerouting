@@ -8,39 +8,42 @@ import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.io.CoordinateTransform;
 import java.io.IOException;
-import java.math.BigDecimal;
+import org.apache.commons.numbers.fraction.BigFraction;
 
 /** Encodes SES trace paths without collapsing nonzero segments or moving real point copper. */
 final class SesTracePath {
-  private final double[] coordinates;
+  private final BigFraction[] coordinates;
 
-  private SesTracePath(double[] coordinates) {
+  private SesTracePath(BigFraction[] coordinates) {
     this.coordinates = coordinates;
   }
 
   static SesTracePath from(PolylineTrace wire, CoordinateTransform transform) throws IOException {
+    return from(wire, transform, SesNumbers.fromDouble(transform.dsnToBoard(1)));
+  }
+
+  static SesTracePath from(PolylineTrace wire, CoordinateTransform transform, BigFraction scale)
+      throws IOException {
     Point[] corners = wire.polyline().corners();
     if (corners.length < 2) {
       throw new IOException("SES trace has fewer than two source corners");
     }
     boolean exactPoint = isExactPoint(corners);
-    FloatPoint[] original = new FloatPoint[corners.length];
-    FloatPoint[] snapped = new FloatPoint[corners.length];
+    Point[] original = corners.clone();
+    Point[] snapped = corners.clone();
     for (int index = 0; index < corners.length; index++) {
-      original[index] = corners[index].toFloat();
-      snapped[index] = original[index];
       // Keep upstream pad/via endpoint snapping, but do not move point copper.
       if (!exactPoint && (index == 0 || index == corners.length - 1)) {
         FloatPoint endpoint = snappedEndpoint(wire, index == 0);
         if (endpoint != null) {
-          snapped[index] = endpoint;
+          snapped[index] = endpoint.round();
         }
       }
     }
-    double[] encoded = encode(snapped, transform);
+    BigFraction[] encoded = encode(snapped, transform, scale);
     if (collapsesSegment(encoded, corners)) {
       // Contact snapping must never erase even one nonzero segment inside a longer trace.
-      encoded = encode(original, transform);
+      encoded = encode(original, transform, scale);
       if (collapsesSegment(encoded, corners)) {
         throw new IOException(
             "A nonzero SES segment cannot be represented at floating output precision");
@@ -50,11 +53,11 @@ final class SesTracePath {
     return new SesTracePath(encoded);
   }
 
-  private static boolean collapsesSegment(double[] coordinates, Point[] original) {
+  private static boolean collapsesSegment(BigFraction[] coordinates, Point[] original) {
     for (int index = 1; index < original.length; index++) {
       if (!original[index - 1].equals(original[index])
-          && coordinates[2 * index - 2] == coordinates[2 * index]
-          && coordinates[2 * index - 1] == coordinates[2 * index + 1]) {
+          && coordinates[2 * index - 2].doubleValue() == coordinates[2 * index].doubleValue()
+          && coordinates[2 * index - 1].doubleValue() == coordinates[2 * index + 1].doubleValue()) {
         return true;
       }
     }
@@ -70,14 +73,24 @@ final class SesTracePath {
     return true;
   }
 
-  private static double[] encode(FloatPoint[] corners, CoordinateTransform transform)
-      throws IOException {
-    double[] encoded = transform.boardToDsn(corners);
-    for (double coordinate : encoded) {
-      if (!Double.isFinite(coordinate)
-          || coordinate <= Long.MIN_VALUE
-          || coordinate >= Long.MAX_VALUE) {
-        throw new IOException("Non-finite or out-of-range SES trace coordinate");
+  private static BigFraction[] encode(
+      Point[] corners, CoordinateTransform transform, BigFraction scale) throws IOException {
+    double[] origin = transform.boardToDsn(Point.ZERO.toFloat());
+    BigFraction baseX = SesNumbers.fromDouble(origin[0]);
+    BigFraction baseY = SesNumbers.fromDouble(origin[1]);
+    BigFraction[] encoded = new BigFraction[corners.length * 2];
+    for (int index = 0; index < corners.length; index++) {
+      var point = corners[index].exactCoordinates();
+      if (point.z().signum() == 0) {
+        throw new IOException("Non-finite SES trace coordinate");
+      }
+      encoded[2 * index] = BigFraction.of(point.x(), point.z()).divide(scale).add(baseX);
+      encoded[2 * index + 1] = BigFraction.of(point.y(), point.z()).divide(scale).add(baseY);
+      for (int axis = 0; axis < 2; axis++) {
+        double value = encoded[2 * index + axis].doubleValue();
+        if (!Double.isFinite(value) || value <= Long.MIN_VALUE || value >= Long.MAX_VALUE) {
+          throw new IOException("Non-finite or out-of-range SES trace coordinate");
+        }
       }
     }
     return encoded;
@@ -88,19 +101,24 @@ final class SesTracePath {
     if (!Double.isFinite(width) || width <= 0) {
       throw new IOException("SES trace width must be finite and positive");
     }
+    write(layer, SesNumbers.fromDouble(width), identifier, file);
+  }
+
+  void write(String layer, BigFraction width, IdentifierType identifier, IndentFileWriter file)
+      throws IOException {
+    if (width.signum() <= 0) {
+      throw new IOException("SES trace width must be finite and positive");
+    }
     file.startScope();
     file.write("path ");
     identifier.write(layer, file);
-    file.write(" " + format(width));
+    file.write(" " + SesNumbers.format(width));
     for (int index = 0; index < coordinates.length; index += 2) {
       file.newLine();
-      file.write(format(coordinates[index]) + " " + format(coordinates[index + 1]));
+      file.write(
+          SesNumbers.format(coordinates[index]) + " " + SesNumbers.format(coordinates[index + 1]));
     }
     file.endScope();
-  }
-
-  private static String format(double coordinate) {
-    return BigDecimal.valueOf(coordinate).stripTrailingZeros().toPlainString();
   }
 
   /**

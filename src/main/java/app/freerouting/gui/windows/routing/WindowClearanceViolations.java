@@ -9,6 +9,7 @@ import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.model.items.Via;
 import app.freerouting.board.model.items.ViaObstacleArea;
+import app.freerouting.board.model.items.WireObstacleArea;
 import app.freerouting.board.model.structure.BoardOutline;
 import app.freerouting.board.model.structure.LayerStructure;
 import app.freerouting.drc.ClearanceViolation;
@@ -92,6 +93,8 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
       result = tm.getText("conductionArea");
     } else if (item instanceof ViaObstacleArea) {
       result = tm.getText("via_keepout");
+    } else if (item instanceof WireObstacleArea) {
+      result = tm.getText("wire_keepout");
     } else if (item instanceof ComponentObstacleArea) {
       result = tm.getText("component_keepout");
     } else if (item instanceof ObstacleArea) {

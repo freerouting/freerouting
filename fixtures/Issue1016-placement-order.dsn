@@ -1,0 +1,19 @@
+(pcb placement-order
+ (parser (string_quote ") (space_in_quoted_tokens on))
+ (resolution um 10) (unit um)
+ (structure
+  (layer F.Cu (type signal) (property (index 0)))
+  (layer B.Cu (type signal) (property (index 1)))
+  (boundary (path pcb 0 0 0 20000 0 20000 12000 0 12000 0 0))
+  (via VIA) (rule (width 150) (clearance 200)))
+ (placement (component PAD (place A1 5000 5000 front 0) (place A2 5400 5000 front 0) (place C1 15000 5000 front 0) (place B1 10000 2000 front 0)) (component GUARD (place B2 10000 8000 back 12.5 (lock_type position) (PN guard-123))))
+ (library
+  (image PAD (pin SMD 1 0 0))
+  (image GUARD (pin SMD 1 0 0) (keepout guard (circle F.Cu 600 0 2000)))
+  (padstack SMD (shape (circle F.Cu 800)) (attach off))
+  (padstack VIA (shape (circle F.Cu 560)) (shape (circle B.Cu 560)) (attach off)))
+ (network
+  (net A (pins A1-1 A2-1 C1-1))
+  (net B (pins B1-1 B2-1))
+  (class default "" A B (circuit (use_via VIA))))
+)

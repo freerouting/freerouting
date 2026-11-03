@@ -126,6 +126,7 @@ public class Keyword {
   public static final Keyword WIDTH = new Keyword("width");
   public static final Keyword WINDOW = new Keyword("window");
   public static final Keyword WIRE = new Keyword("wire");
+  public static final Keyword WIRE_KEEPOUT = new Keyword("wire_keepout");
   public static final ScopeKeyword WIRING_SCOPE = new Wiring();
   public static final Keyword WRITE_RESOLUTION = new Keyword("write_resolution");
   private final String name;

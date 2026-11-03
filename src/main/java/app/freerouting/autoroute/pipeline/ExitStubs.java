@@ -1497,7 +1497,7 @@ public final class ExitStubs {
     for (boolean changed = true; changed; ) {
       changed = false;
       for (PolylineTrace piece : new ArrayList<>(released)) {
-        if (piece.isOnTheBoard() && piece.isTail()) {
+        if (piece.isOnTheBoard() && piece.isTail() && !piece.hasInteriorContacts()) {
           board.removeItem(piece);
           removed++;
           changed = true;

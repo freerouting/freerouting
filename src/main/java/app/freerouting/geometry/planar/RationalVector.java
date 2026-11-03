@@ -2,7 +2,6 @@ package app.freerouting.geometry.planar;
 
 import app.freerouting.datastructures.BigIntAux;
 import app.freerouting.datastructures.Signum;
-import app.freerouting.logger.FRLogger;
 import java.io.Serializable;
 import java.math.BigInteger;
 
@@ -194,8 +193,14 @@ public class RationalVector extends Vector implements Serializable {
 
   @Override
   public Vector changeLengthApprox(double length) {
-    FRLogger.warn("RationalVector: change_length_approx not yet implemented");
-    return this;
+    FloatPoint scaled = toFloat().changeSize(length);
+    if (!Double.isFinite(scaled.x)
+        || !Double.isFinite(scaled.y)
+        || Math.abs(scaled.x) > Limits.CRIT_INT
+        || Math.abs(scaled.y) > Limits.CRIT_INT) {
+      throw new IllegalArgumentException("The scaled vector exceeds the integer coordinate range");
+    }
+    return scaled.round().differenceBy(Point.ZERO);
   }
 
   @Override
@@ -231,6 +236,9 @@ public class RationalVector extends Vector implements Serializable {
     BigInteger dx = x;
     BigInteger dy = y;
     BigInteger gcd = dx.gcd(y);
+    if (gcd.signum() == 0) {
+      return Direction.NULL;
+    }
     dx = dx.divide(gcd);
     dy = dy.divide(gcd);
     if (dx.abs().compareTo(Limits.CRIT_INT_BIG) <= 0

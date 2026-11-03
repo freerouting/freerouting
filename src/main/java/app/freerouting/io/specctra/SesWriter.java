@@ -12,7 +12,6 @@ import app.freerouting.core.library.Padstack;
 import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.geometry.planar.Area;
-import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.io.CoordinateTransform;
 import app.freerouting.io.specctra.parser.Layer;
 import app.freerouting.io.specctra.parser.Parser;
@@ -157,13 +156,11 @@ public final class SesWriter {
     file.newLine();
     file.write("(place ");
     identifierType.write(component.name, file);
-    double[] location = coordinateTransform.boardToDsn(component.getExactLocation());
-    final double xcoordinate = location[0];
-    final double ycoordinate = location[1];
-    file.write(" ");
-    file.write(String.valueOf(xcoordinate));
-    file.write(" ");
-    file.write(String.valueOf(ycoordinate));
+    var origin = component.getExactLocation();
+    final var scale =
+        SesNumbers.sessionScale(board, board.communication.unit, board.communication.resolution);
+    file.write(" " + SesNumbers.format(SesNumbers.fromDouble(origin.x).divide(scale)));
+    file.write(" " + SesNumbers.format(SesNumbers.fromDouble(origin.y).divide(scale)));
     if (component.placedOnFront()) {
       file.write(" front ");
     } else {
@@ -366,8 +363,11 @@ public final class SesWriter {
       IndentFileWriter file)
       throws IOException {
     String layer = board.layerStructure.layers[wire.getLayer()].name;
-    double width = coordinateTransform.boardToDsn(2 * wire.getHalfWidth());
-    SesTracePath path = SesTracePath.from(wire, coordinateTransform);
+    final var scale =
+        SesNumbers.sessionScale(board, board.communication.unit, board.communication.resolution);
+    var width =
+        org.apache.commons.numbers.fraction.BigFraction.of(2L * wire.getHalfWidth()).divide(scale);
+    SesTracePath path = SesTracePath.from(wire, coordinateTransform, scale);
     file.startScope();
     file.write("wire");
     path.write(layer, width, identifierType, file);
@@ -383,17 +383,22 @@ public final class SesWriter {
       IndentFileWriter file)
       throws IOException {
     Padstack viaPadstack = via.getPadstack();
-    final FloatPoint viaLocation = via.getCenter().toFloat();
+    final var center = via.getCenter().exactCoordinates();
+    final var scale =
+        SesNumbers.sessionScale(board, board.communication.unit, board.communication.resolution);
     file.startScope();
     file.write("via ");
     identifierType.write(viaPadstack.name, file);
     file.write(" ");
-    double[] location = coordinateTransform.boardToDsn(viaLocation);
-    final double xcoordinate = location[0];
-    file.write(String.valueOf(xcoordinate));
+    file.write(
+        SesNumbers.format(
+            org.apache.commons.numbers.fraction.BigFraction.of(center.x(), center.z())
+                .divide(scale)));
     file.write(" ");
-    final double ycoordinate = location[1];
-    file.write(String.valueOf(ycoordinate));
+    file.write(
+        SesNumbers.format(
+            org.apache.commons.numbers.fraction.BigFraction.of(center.y(), center.z())
+                .divide(scale)));
     writeFixedState(file, via.getFixedState());
     file.endScope();
   }
