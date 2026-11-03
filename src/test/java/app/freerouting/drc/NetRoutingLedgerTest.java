@@ -4,20 +4,41 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 import app.freerouting.Freerouting;
+import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.model.structure.FixedState;
+import app.freerouting.board.model.structure.Layer;
+import app.freerouting.board.model.structure.LayerStructure;
+import app.freerouting.board.state.Communication;
+import app.freerouting.core.library.Package;
+import app.freerouting.core.library.Packages;
+import app.freerouting.core.library.Padstack;
+import app.freerouting.core.library.Padstacks;
+import app.freerouting.geometry.planar.Circle;
+import app.freerouting.geometry.planar.ConvexShape;
+import app.freerouting.geometry.planar.IntBox;
+import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;
+import app.freerouting.geometry.planar.PolylineShape;
+import app.freerouting.geometry.planar.Vector;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.specctra.DsnReader;
 import app.freerouting.io.specctra.DsnTestFixtures;
+import app.freerouting.rules.BoardRules;
+import app.freerouting.rules.ClearanceMatrix;
+import app.freerouting.rules.Net;
 import app.freerouting.rules.NetClass;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 class NetRoutingLedgerTest {
 
@@ -59,9 +80,10 @@ class NetRoutingLedgerTest {
     assertEquals(1, board.routingLedger().incompleteCount());
   }
 
-  @Test
-  void undoOfARemovalRestoresTheIncompleteCount() {
-    RoutingBoard board = twoPinBoard();
+  @ParameterizedTest
+  @MethodSource("boardProviders")
+  void undoOfARemovalRestoresTheIncompleteCount(Supplier<BasicBoard> boardSupplier) {
+    BasicBoard board = boardSupplier.get();
     insertTrace(board);
     assertEquals(0, board.routingLedger().incompleteCount());
 
@@ -74,9 +96,10 @@ class NetRoutingLedgerTest {
     assertEquals(0, board.routingLedger().incompleteCount());
   }
 
-  @Test
-  void undoAndRedoOfAnInsertionKeepTheIncompleteCount() {
-    RoutingBoard board = twoPinBoard();
+  @ParameterizedTest
+  @MethodSource("boardProviders")
+  void undoAndRedoOfAnInsertionKeepTheIncompleteCount(Supplier<BasicBoard> boardSupplier) {
+    BasicBoard board = boardSupplier.get();
     assertEquals(1, board.routingLedger().incompleteCount());
 
     board.generateSnapshot();
@@ -93,6 +116,53 @@ class NetRoutingLedgerTest {
     assertEquals(0, board.routingLedger().incompleteCount());
   }
 
+  @ParameterizedTest
+  @MethodSource("boardProviders")
+  void undoAndRedoOfInPlaceNetAssignmentRestoresMembership(Supplier<BasicBoard> boardSupplier) {
+    BasicBoard board = boardSupplier.get();
+    assertEquals(1, board.routingLedger().incompleteCount());
+    Pin pin = board.getPins().iterator().next();
+    Net extraNet = board.rules.nets.add("EXTRA_NET", 1, false);
+    extraNet.setClass(board.rules.netClasses.get(0));
+    int newNet = extraNet.netNumber;
+
+    board.generateSnapshot();
+    pin.assignNetNo(newNet);
+    assertEquals(0, board.routingLedger().incompleteCount());
+
+    board.undo(null);
+
+    assertMatchesFullScan(board);
+    assertEquals(1, board.routingLedger().incompleteCount());
+
+    board.redo(null);
+
+    assertMatchesFullScan(board);
+    assertEquals(0, board.routingLedger().incompleteCount());
+  }
+
+  @ParameterizedTest
+  @MethodSource("boardProviders")
+  void undoOfInPlaceNetAssignmentWithoutIntermediateRead(Supplier<BasicBoard> boardSupplier) {
+    BasicBoard board = boardSupplier.get();
+    assertEquals(1, board.routingLedger().incompleteCount());
+    Pin pin = board.getPins().iterator().next();
+    Net extraNet = board.rules.nets.add("EXTRA_NET", 1, false);
+    extraNet.setClass(board.rules.netClasses.get(0));
+    int newNet = extraNet.netNumber;
+
+    board.generateSnapshot();
+    pin.assignNetNo(newNet);
+    board.undo(null);
+
+    assertMatchesFullScan(board);
+    assertEquals(1, board.routingLedger().incompleteCount());
+  }
+
+  private static Stream<Supplier<BasicBoard>> boardProviders() {
+    return Stream.of(NetRoutingLedgerTest::twoPinBoard, NetRoutingLedgerTest::twoPinBasicBoard);
+  }
+
   private static RoutingBoard twoPinBoard() {
     BoardReadResult result =
         DsnReader.readBoard(
@@ -101,7 +171,37 @@ class NetRoutingLedgerTest {
     return (RoutingBoard) ((BoardReadResult.Success) result).board();
   }
 
-  private static void insertTrace(RoutingBoard board) {
+  private static BasicBoard twoPinBasicBoard() {
+    LayerStructure layerStructure = new LayerStructure(new Layer[] {new Layer("top", true)});
+    IntBox bounds = new IntBox(0, 0, 10000, 10000);
+    ClearanceMatrix clearanceMatrix = ClearanceMatrix.getDefaultInstance(layerStructure, 10);
+    BoardRules rules = new BoardRules(layerStructure, clearanceMatrix);
+    rules.createDefaultNetClass();
+    Communication communication = new Communication();
+    BasicBoard board =
+        new BasicBoard(
+            bounds,
+            layerStructure,
+            new PolylineShape[] {bounds.toSimplex()},
+            0,
+            rules,
+            communication);
+    Net net = rules.nets.add("PERFECT", 1, false);
+    net.setClass(rules.netClasses.get(0));
+    board.library.padstacks = new Padstacks(layerStructure);
+    board.library.packages = new Packages(board.library.padstacks);
+    Padstack pad = board.library.padstacks.add(new ConvexShape[] {new Circle(Point.ZERO, 400)});
+    Package pkg =
+        board.library.packages.add(
+            new Package.Pin[] {new Package.Pin("1", pad.id, Vector.ZERO, 0)});
+    var c1 = board.components.add(new IntPoint(2000, 5000), 0, true, pkg);
+    var c2 = board.components.add(new IntPoint(8000, 5000), 0, true, pkg);
+    board.insertPin(c1.id, 0, new int[] {1}, 1, FixedState.SYSTEM_FIXED);
+    board.insertPin(c2.id, 0, new int[] {1}, 1, FixedState.SYSTEM_FIXED);
+    return board;
+  }
+
+  private static void insertTrace(BasicBoard board) {
     List<Pin> pins = new ArrayList<>(board.getPins());
     int netNumber = pins.get(0).getNetNumber(0);
     NetClass netClass = board.rules.nets.get(netNumber).getNetClass();
@@ -114,7 +214,7 @@ class NetRoutingLedgerTest {
         FixedState.UNFIXED);
   }
 
-  private static void assertMatchesFullScan(RoutingBoard board) {
+  private static void assertMatchesFullScan(BasicBoard board) {
     DesignRulesChecker checker = new DesignRulesChecker(board, null);
     checker.calculateAllIncompletes();
     assertEquals(checker.getIncompleteCount(), board.routingLedger().incompleteCount());

@@ -185,6 +185,9 @@ public class BasicBoard implements Serializable {
   public void noteNetAssignmentChanged() {
     netAssignmentChangeCount++;
     itemList.noteContentChange();
+    if (routingLedger != null) {
+      routingLedger.invalidate();
+    }
   }
 
   /** Serialize. */
