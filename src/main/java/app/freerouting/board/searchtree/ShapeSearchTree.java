@@ -42,6 +42,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.locks.Lock;
 
@@ -433,7 +434,16 @@ public class ShapeSearchTree extends MinAreaTree {
   public void overlappingObjects(
       ConvexShape shape, int layer, int[] ignoreNetNos, Set<SearchTreeObject> obstacles) {
     Collection<TreeEntry> treeEntries = new LinkedList<>();
-    overlappingTreeEntries(shape, layer, ignoreNetNos, treeEntries);
+    // A naturally ordered set sorts the objects itself: the entries need not come in leaf order.
+    boolean inLeafOrder =
+        !(obstacles instanceof SortedSet<?> sortedSet && sortedSet.comparator() == null);
+    Lock lock = readLock();
+    lock.lock();
+    try {
+      overlappingTreeEntriesUnlocked(shape, layer, ignoreNetNos, treeEntries, null, inLeafOrder);
+    } finally {
+      lock.unlock();
+    }
     if (obstacles != null) {
       for (TreeEntry currentEntry : treeEntries) {
         obstacles.add((SearchTreeObject) currentEntry.object);
@@ -487,6 +497,20 @@ public class ShapeSearchTree extends MinAreaTree {
       int[] ignoreNetNos,
       Collection<TreeEntry> treeEntries,
       Item obstaclesOf) {
+    overlappingTreeEntriesUnlocked(shape, layer, ignoreNetNos, treeEntries, obstaclesOf, true);
+  }
+
+  /**
+   * Puts the tree entries overlapping with shape into treeEntries, in leaf order when inLeafOrder
+   * is set, in tree traversal order otherwise.
+   */
+  private void overlappingTreeEntriesUnlocked(
+      ConvexShape shape,
+      int layer,
+      int[] ignoreNetNos,
+      Collection<TreeEntry> treeEntries,
+      Item obstaclesOf,
+      boolean inLeafOrder) {
     if (shape == null) {
       return;
     }
@@ -503,8 +527,12 @@ public class ShapeSearchTree extends MinAreaTree {
     tmpList.clear();
     boolean is45Degree = shape instanceof IntOctagon;
     try {
-      this.overlapsUnlocked(bounds, tmpList);
-      for (Leaf currentLeaf : tmpList) {
+      // Filter in traversal order, then sort only the kept leaves: the same order as sorting all
+      // candidates first, for a fraction of the comparisons.
+      this.collectOverlapsUnlocked(bounds, tmpList);
+      int keptCount = 0;
+      for (int leafIndex = 0; leafIndex < tmpList.size(); leafIndex++) {
+        Leaf currentLeaf = tmpList.get(leafIndex);
         SearchTreeObject currentObject = (SearchTreeObject) currentLeaf.object;
         int shapeIndex = currentLeaf.shapeIndexInObject;
         boolean ignoreObject = layer >= 0 && currentObject.shapeLayer(shapeIndex) != layer;
@@ -533,10 +561,17 @@ public class ShapeSearchTree extends MinAreaTree {
             addItem = currentShape.intersects(shape);
           }
           if (addItem) {
-            TreeEntry newEntry = new TreeEntry(currentObject, shapeIndex);
-            treeEntries.add(newEntry);
+            tmpList.set(keptCount++, currentLeaf);
           }
         }
+      }
+      List<Leaf> keptLeaves = tmpList.subList(0, keptCount);
+      if (inLeafOrder) {
+        keptLeaves.sort(null);
+      }
+      for (Leaf currentLeaf : keptLeaves) {
+        treeEntries.add(
+            new TreeEntry((SearchTreeObject) currentLeaf.object, currentLeaf.shapeIndexInObject));
       }
     } finally {
       tmpList.clear();
@@ -688,10 +723,13 @@ public class ShapeSearchTree extends MinAreaTree {
     tmpList.clear();
     // sort the found items by its clearances to clearanceClassIndex on layer layer
     Set<EntrySortedByClearance> sortedItems = new TreeSet<>();
-    int nextEntryId = 0;
     try {
-      overlapsUnlocked(offsetBounds, tmpList);
-      for (Leaf currentLeaf : tmpList) {
+      // Filter in traversal order, then sort only the kept leaves: the same order as sorting all
+      // candidates first, for a fraction of the comparisons.
+      collectOverlapsUnlocked(offsetBounds, tmpList);
+      int keptCount = 0;
+      for (int leafIndex = 0; leafIndex < tmpList.size(); leafIndex++) {
+        Leaf currentLeaf = tmpList.get(leafIndex);
         SearchTreeObject currentObject = (SearchTreeObject) currentLeaf.object;
         int shapeIndex = currentLeaf.shapeIndexInObject;
         boolean ignoreItem = layer >= 0 && currentObject.shapeLayer(shapeIndex) != layer;
@@ -712,16 +750,20 @@ public class ShapeSearchTree extends MinAreaTree {
             }
             int currentClearance =
                 additionalClearance(clearanceClassIndex, currentItem.clearanceClassIndex(), layer);
-            EntrySortedByClearance sortedOb =
-                new EntrySortedByClearance(currentLeaf, currentClearance, nextEntryId++);
-            sortedItems.add(sortedOb);
+            sortedItems.add(new EntrySortedByClearance(currentLeaf, currentClearance));
           } else if (obstaclesOf == null
               && currentObject.getTreeShape(this, shapeIndex).intersects(shape)) {
-            // Expansion rooms have no physical clearance class. Preserve their direct overlap
-            // semantics even when a mismatched query class needs conservative item checking.
-            obstacleEntries.add(new TreeEntry(currentObject, shapeIndex));
+            tmpList.set(keptCount++, currentLeaf);
           }
         }
+      }
+      // Expansion rooms have no physical clearance class. Preserve their direct overlap
+      // semantics even when a mismatched query class needs conservative item checking.
+      List<Leaf> keptRooms = tmpList.subList(0, keptCount);
+      keptRooms.sort(null);
+      for (Leaf currentLeaf : keptRooms) {
+        obstacleEntries.add(
+            new TreeEntry((SearchTreeObject) currentLeaf.object, currentLeaf.shapeIndexInObject));
       }
     } finally {
       tmpList.clear();
@@ -1576,22 +1618,24 @@ public class ShapeSearchTree extends MinAreaTree {
    */
   private static class EntrySortedByClearance implements Comparable<EntrySortedByClearance> {
 
-    private final int entryId;
     Leaf leaf;
     int clearance;
 
-    EntrySortedByClearance(Leaf leaf, int clearance, int entryId) {
+    EntrySortedByClearance(Leaf leaf, int clearance) {
       this.leaf = leaf;
       this.clearance = clearance;
-      this.entryId = entryId;
     }
 
+    /**
+     * Orders by clearance, then in leaf order. Leaves of items never compare equal, so no entry is
+     * dropped, and the order does not depend on the order of insertion.
+     */
     @Override
     public int compareTo(EntrySortedByClearance other) {
       if (clearance != other.clearance) {
         return Signum.asInt(clearance - other.clearance);
       }
-      return Integer.compare(entryId, other.entryId);
+      return leaf.compareTo(other.leaf);
     }
   }
 }
