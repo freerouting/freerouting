@@ -317,6 +317,7 @@ class SettingsMergerTest {
     assertEquals(1, merged.autorouter.maxThreads);
     assertEquals(4, merged.optimizer.maxThreads);
     assertEquals(1, merged.getAutorouterMaxThreads());
-    assertEquals(4, merged.getOptimizerMaxThreads());
+    assertEquals(
+        Math.min(4, Runtime.getRuntime().availableProcessors()), merged.getOptimizerMaxThreads());
   }
 }
