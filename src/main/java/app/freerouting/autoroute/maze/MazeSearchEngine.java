@@ -574,21 +574,23 @@ public class MazeSearchEngine {
               + ctrl.netNumber);
       for (int doorIndex = 0; doorIndex < roomDoorsSnapshot.size(); doorIndex++) {
         ExpansionDoor candidateDoor = roomDoorsSnapshot.get(doorIndex);
-        FRLogger.trace(
-            "ROOM_DOOR candidate index="
-                + doorIndex
-                + ", from_section="
-                + listElement.sectionNoOfDoor
-                + ", backtrack_section="
-                + listElement.sectionNoOfBacktrackDoor
-                + ", from_door="
-                + describeExpandable(listElement.door)
-                + ", nextRoom="
-                + describeRoom(listElement.nextRoom)
-                + ", candidate="
-                + describeExpandable(candidateDoor)
-                + ", net="
-                + ctrl.netNumber);
+        if (FRLogger.isTraceEnabled()) {
+          FRLogger.trace(
+              "ROOM_DOOR candidate index="
+                  + doorIndex
+                  + ", from_section="
+                  + listElement.sectionNoOfDoor
+                  + ", backtrack_section="
+                  + listElement.sectionNoOfBacktrackDoor
+                  + ", from_door="
+                  + describeExpandable(listElement.door)
+                  + ", nextRoom="
+                  + describeRoom(listElement.nextRoom)
+                  + ", candidate="
+                  + describeExpandable(candidateDoor)
+                  + ", net="
+                  + ctrl.netNumber);
+        }
       }
     }
 
@@ -819,6 +821,8 @@ public class MazeSearchEngine {
                 + describeExpandableBounds(fromElement.door)
                 + ", net="
                 + ctrl.netNumber);
+      }
+      if (FRLogger.isGranularTraceActive()) {
         FRLogger.trace(
             "MazeSearchEngine.expand_to_door_section",
             "skip_assign_raw",
@@ -932,6 +936,8 @@ public class MazeSearchEngine {
               + describeExpandableBounds(fromElement.door)
               + ", net="
               + ctrl.netNumber);
+    }
+    if (FRLogger.isGranularTraceActive()) {
       FRLogger.trace(
           "MazeSearchEngine.expand_to_door_section",
           "assign_raw",
