@@ -389,7 +389,14 @@ public class Wiring extends ScopeKeyword {
   }
 
   private static boolean isConnected(Trace wire, DrillItem pad) {
-    return wire.getConnectedSet(wire.getNetNumber(0)).contains(pad);
+    if (wire.netNumbers != null) {
+      for (int netNo : wire.netNumbers) {
+        if (pad.containsNet(netNo) && wire.getConnectedSet(netNo).contains(pad)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   /** Returns a pin or via sharing a net with the wire whose copper contains the wire end. */
