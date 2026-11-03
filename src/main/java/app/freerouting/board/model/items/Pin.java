@@ -46,6 +46,13 @@ public class Pin extends DrillItem implements Serializable {
   /** The index of this pin in its component (starting with 0). */
   public final int pinIndex;
 
+  /**
+   * The identifier of the net-tie cluster this pin belongs to (0 if not part of any net-tie
+   * cluster). Pins sharing the same positive cluster ID within a footprint are intentionally
+   * stacked or connected across nets.
+   */
+  private int netTieClusterId = 0;
+
   /** The pin, this pin was changed to by swapping or this pin, if no pin swap occurred. */
   private Pin changedTo = this;
 
@@ -128,14 +135,17 @@ public class Pin extends DrillItem implements Serializable {
     for (int i = 0; i < currentNetNumbers.length; i++) {
       currentNetNumbers[i] = getNetNumber(i);
     }
-    return new Pin(
-        getComponentId(),
-        this.pinIndex,
-        currentNetNumbers,
-        clearanceClassIndex(),
-        id,
-        getFixedState(),
-        board);
+    Pin copiedPin =
+        new Pin(
+            getComponentId(),
+            this.pinIndex,
+            currentNetNumbers,
+            clearanceClassIndex(),
+            id,
+            getFixedState(),
+            board);
+    copiedPin.netTieClusterId = this.netTieClusterId;
+    return copiedPin;
   }
 
   /** Rebinding a copied pin invalidates both its connection point and its geometry. */
@@ -155,9 +165,33 @@ public class Pin extends DrillItem implements Serializable {
     return component.getPackage().getPin(pinIndex).name;
   }
 
+  /** Return the name of the component of this pin. */
+  public String componentName() {
+    Component comp =
+        board != null && board.components != null ? board.components.get(getComponentId()) : null;
+    return comp != null ? comp.name : null;
+  }
+
   /** Gets index of this pin in the library package of the pins component. */
   public int getPinIndex() {
     return pinIndex;
+  }
+
+  /**
+   * Returns the net-tie cluster ID of this pin, or {@code 0} if it is not part of any net-tie
+   * cluster.
+   */
+  public int getNetTieClusterId() {
+    return netTieClusterId;
+  }
+
+  /**
+   * Sets the net-tie cluster ID for this pin.
+   *
+   * @param netTieClusterId the cluster ID (must be non-negative)
+   */
+  public void setNetTieClusterId(int netTieClusterId) {
+    this.netTieClusterId = Math.max(0, netTieClusterId);
   }
 
   @Override
@@ -329,6 +363,14 @@ public class Pin extends DrillItem implements Serializable {
     return this.firstLayer() == this.lastLayer();
   }
 
+  /**
+   * Whether a via may sit on this pad, even when the via-in-pad setting is off. True for exposed
+   * pads (thermal pads).
+   */
+  public boolean viaMayAttach() {
+    return false;
+  }
+
   @Override
   public boolean isObstacle(Item other) {
     if (other == this) {
@@ -347,6 +389,11 @@ public class Pin extends DrillItem implements Serializable {
     }
     if (!other.sharesNet(this)) {
       if (other instanceof Pin otherPin) {
+        if (this.netTieClusterId > 0 && this.netTieClusterId == otherPin.netTieClusterId) {
+          // Pins belonging to the same net-tie cluster on the same component are intentionally
+          // stacked or bridged across nets and do not violate clearance against each other.
+          return false;
+        }
         if (this.getComponentId() > 0
             && this.getComponentId() == otherPin.getComponentId()
             && this.netCount() == 0
@@ -359,17 +406,17 @@ public class Pin extends DrillItem implements Serializable {
       }
       return true;
     }
-    if (other instanceof Trace) {
-      return false;
-    }
-    if (other instanceof Pin) {
-      // Pins sharing the same electrical net (e.g. composite pads, thermal vias in pad,
-      // stitching vias, or internally connected pins across components) are electrically
-      // connected and do not violate clearance against each other.
+    if (other instanceof Trace || other instanceof Pin) {
+      // Items sharing the same electrical net (e.g. traces, composite pads) are electrically
+      // connected and do not violate clearance.
       return false;
     }
     // Same-net vias must be allowed to contact SMD pins during fanout.
     return !this.drillAllowed() || !(other instanceof Via);
+  }
+
+  public static boolean arePiecesOfOnePad(Pin pin1, Pin pin2) {
+    return isSameLogicalPad(pin1, pin2);
   }
 
   private static boolean isSameLogicalPad(Pin pin1, Pin pin2) {

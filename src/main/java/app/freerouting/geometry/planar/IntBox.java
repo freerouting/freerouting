@@ -406,8 +406,9 @@ public final class IntBox extends RegularTileShape implements Serializable {
     if (relCoor.equals(Vector.ZERO)) {
       return this;
     }
-    IntPoint newLl = (IntPoint) ll.translateBy(relCoor);
-    IntPoint newUr = (IntPoint) ur.translateBy(relCoor);
+    IntVector translation = relCoor.toIntegerExact();
+    IntPoint newLl = (IntPoint) ll.translateBy(translation);
+    IntPoint newUr = (IntPoint) ur.translateBy(translation);
     return new IntBox(newLl, newUr);
   }
 

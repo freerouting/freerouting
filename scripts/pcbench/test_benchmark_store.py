@@ -35,6 +35,97 @@ class BenchmarkStoreTest(unittest.TestCase):
         self.assertEqual(eta, 5)
         self.assertEqual(scale, 0.5)
 
+    def test_board_min_track_width_comes_from_the_kicad_setup(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            board_dir = Path(tmp)
+            self.assertIsNone(store.board_min_track_width_um(board_dir))
+
+            pcb = board_dir / "processed.kicad_pcb"
+            pcb.write_text(
+                '(kicad_pcb (version 20171130)\n  (setup\n    (trace_min 0.254)\n  )\n'
+                '  (net_class Default "" (clearance 0.2) (trace_width 0.508))\n)\n',
+                encoding="utf-8",
+            )
+            self.assertEqual(store.board_min_track_width_um(board_dir), 254.0)
+
+            pcb.write_text("(kicad_pcb (version 20171130) (setup))\n", encoding="utf-8")
+            self.assertIsNone(store.board_min_track_width_um(board_dir))
+
+    def test_route_single_board_passes_neck_width_um_to_freerouting(self) -> None:
+        from unittest.mock import MagicMock, patch
+
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            board_dir = tmp_path / "board"
+            board_dir.mkdir()
+            dsn = board_dir / "processed.dsn"
+            dsn.write_text("(pcb test)", encoding="utf-8")
+            jar = tmp_path / "freerouting.jar"
+            jar.write_text("dummy", encoding="utf-8")
+
+            cancel = threading.Event()
+            force_kill = threading.Event()
+
+            with patch("run_corpus_benchmark.subprocess.Popen") as mock_popen:
+                mock_proc = MagicMock()
+                mock_proc.poll.side_effect = [None, 0]
+                mock_proc.returncode = 0
+                mock_proc.stdout.readline.side_effect = [b"", b""]
+                mock_proc.stderr.readline.side_effect = [b"", b""]
+                mock_popen.return_value = mock_proc
+
+                # Test with neck_width_um = 254.0
+                record = store.route_single_board(
+                    jar,
+                    board_dir,
+                    tmp_path / "out",
+                    tmp_path / "logs",
+                    tmp_path / "user",
+                    "00:01:00",
+                    "test-ver",
+                    "dummy-sha",
+                    "dummy-jar-sha",
+                    1000,
+                    "A",
+                    1,
+                    {},
+                    {},
+                    threading.Lock(),
+                    cancel,
+                    force_kill,
+                    neck_width_um=254.0,
+                )
+                self.assertIsNotNone(record)
+                self.assertEqual(record["neck_width_um"], 254.0)
+                cmd = mock_popen.call_args[0][0]
+                self.assertIn("--router.neck_width_um=254", cmd)
+
+                # Test without neck_width_um
+                record2 = store.route_single_board(
+                    jar,
+                    board_dir,
+                    tmp_path / "out",
+                    tmp_path / "logs",
+                    tmp_path / "user",
+                    "00:01:00",
+                    "test-ver",
+                    "dummy-sha",
+                    "dummy-jar-sha",
+                    1000,
+                    "A",
+                    1,
+                    {},
+                    {},
+                    threading.Lock(),
+                    cancel,
+                    force_kill,
+                    neck_width_um=None,
+                )
+                self.assertIsNotNone(record2)
+                self.assertIsNone(record2["neck_width_um"])
+                cmd2 = mock_popen.call_args[0][0]
+                self.assertFalse(any(arg.startswith("--router.neck_width_um=") for arg in cmd2))
+
     def test_default_worker_count_uses_three_quarters_of_logical_processors(self) -> None:
         from unittest.mock import patch
 
@@ -207,6 +298,88 @@ class BenchmarkStoreTest(unittest.TestCase):
         )
         self.assertEqual(clean.index("( "), unrouted.index("( "))
 
+    def test_recent_result_names_the_boards_place_in_its_tier(self) -> None:
+        self.assertEqual(
+            store.format_recent_result(
+                1021,
+                1142,
+                "UNROUTED",
+                store.format_result_timing(113.9 * 60, "unr=19, viol=8"),
+                "ErgodoneWithHole_ErgoDone",
+                (12, 48, "C"),
+            ),
+            "[1021/1142  12/ 48 of T-C] UNROUTED (  113.9m, unr=19, viol=8) ErgodoneWithHole_ErgoDone",
+        )
+        self.assertEqual(
+            store.format_recent_result(1021, 1142, "CLEAN", store.format_result_timing(60), "board", (8, 348, "C")),
+            "[1021/1142   8/348 of T-C] CLEAN    (    1.0m) board",
+        )
+        self.assertEqual(
+            store.format_recent_result(1021, 1142, "CLEAN", store.format_result_timing(60), "board", (112, 113, "C")),
+            "[1021/1142 112/113 of T-C] CLEAN    (    1.0m) board",
+        )
+        self.assertEqual(
+            store.format_recent_result(1021, 1142, "CLEAN", store.format_result_timing(60), "board", (4, 9, "C")),
+            "[1021/1142   4/  9 of T-C] CLEAN    (    1.0m) board",
+        )
+
+    def test_tier_place_follows_run_order_inside_each_tier(self) -> None:
+        places = store.assign_tier_places(
+            [
+                {"board_id": "slow-c", "tier": "C"},
+                {"board_id": "only-a", "tier": "A"},
+                {"board_id": "quick-c", "tier": "C"},
+                {"board_id": "", "tier": "C"},
+            ]
+        )
+        self.assertEqual(places["slow-c"], (1, 2, "C"))
+        self.assertEqual(places["quick-c"], (2, 2, "C"))
+        self.assertEqual(places["only-a"], (1, 1, "A"))
+        self.assertNotIn("", places)
+
+    def test_worker_clock_shows_expected_completion_from_previous_runtime(self) -> None:
+        self.assertEqual(store.format_worker_progress(22 * 60 + 51, 42 * 60 + 12), "[22:51 ~42m]")
+        self.assertEqual(store.format_worker_progress(5, None), "[00:05]")
+        self.assertEqual(store.format_worker_progress(5, 20), "[00:05]")
+        self.assertEqual(store.format_worker_progress(5, 30), "[00:05 ~1m]")
+        self.assertEqual(store.expected_fixture_seconds(100, "C", {"": 1.0}), 100.0)
+        self.assertEqual(store.expected_fixture_seconds(100, "C", {"": 1.0, "C": 2.0}), 200.0)
+        self.assertIsNone(store.expected_fixture_seconds(0, "C", {"": 1.0}))
+
+        import collections
+        import io
+        import re
+        import threading
+        from unittest.mock import patch
+
+        captured = io.StringIO()
+        worker_status = {
+            6: {
+                "board": "Microdox-PCB_Microdox-LEDs",
+                "tier": "C",
+                "start": 1_000.0,
+                "last_line": "Auto-routing pass #9",
+                "active": True,
+                "reference_seconds": 42 * 60 + 12,
+            }
+        }
+        with (
+            patch("sys.stdout", captured),
+            patch("run_corpus_benchmark.time.perf_counter", return_value=1_000.0 + 22 * 60 + 51),
+        ):
+            store.render_dashboard(
+                completed=1,
+                total=10,
+                t_start=1_000.0,
+                worker_status=worker_status,
+                recent_messages=collections.deque(),
+                status_lock=threading.Lock(),
+                in_place=False,
+                completed_samples=[("C", 2_000.0, 2_000.0)],
+            )
+        plain = re.sub(r"\033\[[0-9;]*m", "", captured.getvalue())
+        self.assertIn("[22:51 ~42m]", plain)
+
     def test_fixture_name_keeps_both_ends_when_longer_than_37_characters(self) -> None:
         short = "bee-light-measurement-matrix"
         self.assertEqual(store.format_fixture_name(short), short)
@@ -311,6 +484,60 @@ class BenchmarkStoreTest(unittest.TestCase):
         self.assertEqual(len(results), 6)
         self.assertEqual(active_worker_threads, 0)
         self.assertEqual(len(worker_status), 0)
+
+    def test_reference_uses_latest_successful_version_and_ignores_failures(self) -> None:
+        runs = [
+            self._run("board", "2.6.0-RC2", "2026-10-08T10:00:00+00:00", 126.5),
+            self._run("board", "2.6.0-RC3", "2026-10-15T20:00:00+00:00", 3700.0),
+            self._run("board", "2.6.0-RC6", "2026-10-28T08:00:00+00:00", 400.0, oom=True),
+            self._run("board", "2.6.0-RC3", "2026-10-14T20:00:00+00:00", 100.0),
+            self._run("other", "2.4.1", "2026-09-01T00:00:00+00:00", 50.0),
+        ]
+        self.assertGreater(store.version_sort_key("2.6.0"), store.version_sort_key("2.6.0-RC6"))
+        self.assertGreater(store.version_sort_key("2.6.0-RC6"), store.version_sort_key("2.6.0-RC3"))
+        references = store.latest_successful_reference_seconds(runs)
+        self.assertEqual(references["board"], 3700.0)
+        self.assertEqual(references["other"], 50.0)
+        self.assertTrue(store.run_is_failure(runs[2]))
+        self.assertFalse(store.run_is_failure(runs[1]))
+        killed = self._run("board", "2.6.0-RC6", "2026-10-28T09:00:00+00:00", 12174.0)
+        killed["quality"]["unrouted_connections"] = 0
+        killed["quality"]["clearance_violations"] = 0
+        killed["exit"] = {
+            "code": 1,
+            "state": "FAILED",
+            "crashed": True,
+            "oom_detected": True,
+            "timed_out": False,
+        }
+        self.assertTrue(store.run_is_failure(killed))
+        self.assertTrue(store.fatal_process_output("java.lang.OutOfMemoryError: Java heap space"))
+        self.assertTrue(store.fatal_process_output("Exception in thread \"main\" java.lang.IllegalStateException"))
+        self.assertFalse(store.fatal_process_output("Optimizer pass #1: score 680.31 -> 680.18"))
+
+    @staticmethod
+    def _run(
+        board: str,
+        version: str,
+        run_at: str,
+        seconds: float,
+        *,
+        oom: bool = False,
+    ) -> dict:
+        return {
+            "cache_key": f"{board}--unrouted--{version}--abc",
+            "run_at": run_at,
+            "binary": {"version_label": version},
+            "fixture": {"relative_path": f"PCBench/{board}/unrouted.dsn"},
+            "quality": {"wall_clock_seconds": seconds},
+            "exit": {
+                "code": 3 if oom else 0,
+                "state": "TERMINATED" if oom else "COMPLETED",
+                "crashed": oom,
+                "oom_detected": oom,
+                "timed_out": False,
+            },
+        }
 
 
 if __name__ == "__main__":

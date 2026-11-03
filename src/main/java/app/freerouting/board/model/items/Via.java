@@ -8,6 +8,7 @@ import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.core.library.Padstack;
+import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Shape;
@@ -90,6 +91,7 @@ public class Via extends DrillItem implements Serializable {
     java.util.Collection<app.freerouting.drc.ClearanceViolation> rawViolations =
         super.clearanceViolations();
     if (!this.isEscapeVia || this.escapeViaSmdLayer < 0) {
+      addHoleToHoleViolations(rawViolations);
       return rawViolations;
     }
     java.util.Collection<app.freerouting.drc.ClearanceViolation> filteredViolations =
@@ -108,7 +110,56 @@ public class Via extends DrillItem implements Serializable {
       }
       filteredViolations.add(violation);
     }
+    addHoleToHoleViolations(filteredViolations);
     return filteredViolations;
+  }
+
+  /**
+   * The drilled items, of any net, whose holes are closer to this via's drill than the board's
+   * hole-to-hole minimum (KiCad's hole_to_hole check; {@link app.freerouting.rules.HoleSpacing}),
+   * within the rules' clearance tolerance. Reported on a layer both span, the same from either via,
+   * so the checker counts a pair once.
+   */
+  private void addHoleToHoleViolations(
+      java.util.Collection<app.freerouting.drc.ClearanceViolation> violations) {
+    if (this.board == null || this.board.rules == null) {
+      return;
+    }
+    int minimum = this.board.rules.getMinHoleToHole();
+    if (minimum <= 0
+        || this.padstack == null
+        || !app.freerouting.rules.HoleSpacing.hasHole(this.padstack)) {
+      return;
+    }
+    double toleranceUm = this.board.rules.clearanceToleranceUm;
+    double tolerance =
+        Double.isFinite(toleranceUm) && toleranceUm > 0 && this.board.communication != null
+            ? toleranceUm
+                * Math.max(1, this.board.communication.resolution)
+                / app.freerouting.board.model.structure.Unit.scale(
+                    1.0,
+                    this.board.communication.unit,
+                    app.freerouting.board.model.structure.Unit.UM)
+            : 0;
+    double radius = this.padstack.getDrillRadius();
+    app.freerouting.geometry.planar.FloatPoint center = getCenter().toFloat();
+    for (app.freerouting.rules.HoleSpacing.TooCloseItem tooClose :
+        app.freerouting.rules.HoleSpacing.tooClose(
+            this.board, center, radius, firstLayer(), lastLayer(), minimum - tolerance, this)) {
+      DrillItem other = tooClose.item;
+      double gap = tooClose.gap;
+      app.freerouting.geometry.planar.IntPoint c = center.round();
+      int r = (int) Math.ceil(radius);
+      violations.add(
+          new app.freerouting.drc.ClearanceViolation(
+              this,
+              other,
+              new app.freerouting.geometry.planar.IntBox(c.x - r, c.y - r, c.x + r, c.y + r),
+              Math.max(firstLayer(), other.firstLayer()),
+              minimum,
+              Math.max(0, gap),
+              true));
+    }
   }
 
   @Override
@@ -151,7 +202,9 @@ public class Via extends DrillItem implements Serializable {
 
   @Override
   public boolean isObstacle(Item other) {
-    if (other == this || other instanceof ComponentObstacleArea) {
+    if (other == this
+        || other instanceof ComponentObstacleArea
+        || other instanceof WireObstacleArea) {
       return false;
     }
     if ((other instanceof ConductionArea area) && !area.getIsObstacle()) {
@@ -160,10 +213,49 @@ public class Via extends DrillItem implements Serializable {
     if (!other.sharesNet(this)) {
       return true;
     }
-    if (other instanceof Trace) {
+    if (other instanceof Trace || other instanceof Via) {
       return false;
     }
-    return !this.attachAllowed || !(other instanceof Pin) || !((Pin) other).drillAllowed();
+    if (other instanceof Pin pin) {
+      return !pin.drillAllowed()
+          || (!this.attachAllowed && !pin.viaMayAttach() && !ownPadAllowedByRules(pin));
+    }
+    return false;
+  }
+
+  /**
+   * Whether the board rules let this via share copper with {@code pin}, an SMD pad of its own net:
+   * always under {@code via_in_pad}, and under {@code via_touching_pad} while its drill hole stays
+   * outside the pad. The router already inserts its own vias with that permission; this extends it
+   * to the vias the board came with, so the design rule check does not report the vias that made
+   * the router allow it. Called from search tree queries, so it must not query the tree itself.
+   */
+  private boolean ownPadAllowedByRules(Pin pin) {
+    if (this.board == null || this.board.rules == null) {
+      return false;
+    }
+    if (this.board.rules.isViaInPad()) {
+      return true;
+    }
+    return this.board.rules.isViaTouchingPad() && !holeInPad(pin);
+  }
+
+  /** Whether the drill hole of this via overlaps the copper of {@code pin} on a common layer. */
+  private boolean holeInPad(Pin pin) {
+    double drillRadius = this.getPadstack().getDrillRadius();
+    if (drillRadius <= 0 || !(this.getCenter() instanceof IntPoint center)) {
+      return false;
+    }
+    Circle hole = new Circle(center, (int) Math.ceil(drillRadius));
+    int fromLayer = Math.max(this.firstLayer(), pin.firstLayer());
+    int toLayer = Math.min(this.lastLayer(), pin.lastLayer());
+    for (int layer = fromLayer; layer <= toLayer; layer++) {
+      Shape pad = pin.getShapeOnLayer(layer);
+      if (pad != null && pad.intersects(hole)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /** Checks, if the Via has contacts on at most 1 layer. */

@@ -3,20 +3,26 @@ package app.freerouting.io.specctra;
 import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.core.library.Padstack;
+import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;
+import app.freerouting.geometry.planar.RationalPoint;
 import app.freerouting.io.specctra.parser.IJFlexScanner;
 import app.freerouting.io.specctra.parser.Keyword;
 import app.freerouting.io.specctra.parser.LayerStructure;
-import app.freerouting.io.specctra.parser.PolygonPath;
 import app.freerouting.io.specctra.parser.ScopeKeyword;
-import app.freerouting.io.specctra.parser.Shape;
 import app.freerouting.io.specctra.parser.SpecctraDsnStreamReader;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import org.apache.commons.numbers.fraction.BigFraction;
 
 /**
  * Reads a Specctra session (.ses) file and imports the routing data (wires and vias) into a {@link
@@ -31,12 +37,25 @@ public final class SesReader {
   private final IJFlexScanner scanner;
   private final BasicBoard board;
   private final LayerStructure specctraLayerStructure;
-  private double sessionToBoardScale;
+  private BigFraction sessionToBoardScale;
   private int wiresImported;
   private int viasImported;
   private int errorsEncountered;
+  private final List<SessionWire> wires = new ArrayList<>();
 
-  private SesReader(IJFlexScanner scanner, BasicBoard board, double scaleFactor) {
+  private record SessionWire(
+      BigDecimal[] coordinates,
+      BigFraction scale,
+      double[] board,
+      int layer,
+      int halfWidth,
+      int[] nets,
+      int clearanceClass,
+      FixedState fixed) {}
+
+  private record LayerPoint(int layer, IntPoint at) {}
+
+  private SesReader(IJFlexScanner scanner, BasicBoard board, BigFraction scaleFactor) {
     this.scanner = scanner;
     this.board = board;
     this.specctraLayerStructure = new LayerStructure(board.layerStructure);
@@ -65,11 +84,11 @@ public final class SesReader {
       throw new IOException("SesReader.read: board must not be null");
     }
 
-    IJFlexScanner scanner = new SpecctraDsnStreamReader(in);
+    SpecctraDsnStreamReader scanner = new SpecctraDsnStreamReader(in, true);
 
     // SES files use the DSN-to-board scale factor: dsn_to_board(1) / resolution
-    double scaleFactor =
-        board.communication.coordinateTransform.dsnToBoard(1) / board.communication.resolution;
+    BigFraction scaleFactor =
+        SesNumbers.sessionScale(board, board.communication.unit, board.communication.resolution);
 
     SesReader reader = new SesReader(scanner, board, scaleFactor);
 
@@ -158,6 +177,14 @@ public final class SesReader {
 
   /** Processes the {@code (routes ...)} scope containing network data. */
   private void processRoutesScope() throws IOException {
+    try {
+      readRoutesScope();
+    } finally {
+      insertWires();
+    }
+  }
+
+  private void readRoutesScope() throws IOException {
     Object nextToken = null;
     for (; ; ) {
       final Object prevToken = nextToken;
@@ -193,9 +220,14 @@ public final class SesReader {
     Object unitToken = this.scanner.nextToken();
     Object resolutionToken = this.scanner.nextToken();
     Object close = this.scanner.nextToken();
+    int resolution;
+    try {
+      resolution = exactNumber(resolutionToken).intValueExact();
+    } catch (ArithmeticException invalid) {
+      throw new IOException("SesReader: session resolution must be a positive integer", invalid);
+    }
     if (!(unitToken instanceof String name)
         || app.freerouting.board.model.structure.Unit.fromString(name) == null
-        || !(resolutionToken instanceof Integer resolution)
         || resolution <= 0
         || close != Keyword.CLOSED_BRACKET) {
       throw new IOException(
@@ -203,7 +235,7 @@ public final class SesReader {
     }
     app.freerouting.board.model.structure.Unit sessionUnit =
         app.freerouting.board.model.structure.Unit.fromString(name);
-    this.sessionToBoardScale = this.board.communication.getResolution(sessionUnit) / resolution;
+    this.sessionToBoardScale = SesNumbers.sessionScale(board, sessionUnit, resolution);
   }
 
   /** Resolves the item's net class, falling back to the board default net class. */
@@ -300,7 +332,8 @@ public final class SesReader {
    *     geometry error (the caller increments {@link #errorsEncountered})
    */
   private boolean processWireScope(int[] netNumbers) throws IOException {
-    PolygonPath wirePath = null;
+    SessionPath wirePath = null;
+    boolean sawPath = false;
     Object nextToken = null;
     for (; ; ) {
       final Object prevToken = nextToken;
@@ -317,7 +350,8 @@ public final class SesReader {
       }
       if (prevToken == Keyword.OPEN_BRACKET) {
         if (nextToken == Keyword.POLYGON_PATH) {
-          wirePath = Shape.readPolygonPathScope(this.scanner, this.specctraLayerStructure);
+          sawPath = true;
+          wirePath = readExactPath();
         } else {
           ScopeKeyword.skipScope(this.scanner);
         }
@@ -326,36 +360,172 @@ public final class SesReader {
 
     if (wirePath == null) {
       // conduction areas have no polygon_path — silently skip
-      return true;
+      return !sawPath;
     }
 
     try {
-      int layerIndex = wirePath.layer.no;
+      int layerIndex = wirePath.layer();
       if (layerIndex < 0 || layerIndex >= board.getLayerCount()) {
         throw new IOException("Invalid SES wire layer");
       }
-      Polyline polyline = SesPathGeometry.read(wirePath.coordinateArr, sessionToBoardScale);
-      int halfWidth = SesPathGeometry.halfWidth(wirePath.width, sessionToBoardScale);
+      BigDecimal[] coordinates = wirePath.coordinates();
+      BigFraction scale = sessionToBoardScale;
+      double[] boardCoordinates = new double[coordinates.length];
+      for (int i = 0; i < coordinates.length; i++) {
+        boardCoordinates[i] = coordinates[i].doubleValue() * scale.doubleValue();
+      }
+      SesPathGeometry.check(boardCoordinates);
+      int halfWidth = SesPathGeometry.halfWidth(wirePath.width(), scale);
 
       int clearanceClass =
           netClassOf(netNumbers)
               .defaultItemClearanceClasses
               .get(app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.TRACE);
 
-      // Import fixed copper exactly; normalization must not erase point copper or short segments.
-      var trace =
-          board.insertTraceWithoutCleaning(
-              polyline, layerIndex, halfWidth, netNumbers, clearanceClass, FixedState.USER_FIXED);
-      if (trace == null) {
-        return false;
-      }
-      wiresImported++;
+      wires.add(
+          new SessionWire(
+              coordinates,
+              scale,
+              boardCoordinates,
+              layerIndex,
+              halfWidth,
+              netNumbers,
+              clearanceClass,
+              FixedState.USER_FIXED));
       return true;
 
     } catch (Exception e) {
-      FRLogger.warn("SesReader.processWireScope: failed to import wire — " + e.getMessage());
+      FRLogger.warn(
+          "SesReader.processWireScope: failed to import wire on net #"
+              + netNumbers[0]
+              + " at "
+              + wirePath.coordinates()[0]
+              + ","
+              + wirePath.coordinates()[1]
+              + " — "
+              + e.getMessage());
       return false;
     }
+  }
+
+  private record SessionPath(int layer, BigDecimal width, BigDecimal[] coordinates) {}
+
+  private static BigDecimal exactNumber(Object token) throws IOException {
+    if (token instanceof BigDecimal decimal) {
+      return decimal;
+    }
+    throw new IOException("A decimal SES number was expected");
+  }
+
+  private SessionPath readExactPath() throws IOException {
+    String layer = scanner.nextString();
+    List<BigDecimal> numbers = new ArrayList<>();
+    boolean invalid = false;
+    for (; ; ) {
+      Object token = scanner.nextToken();
+      if (token == null) {
+        throw new IOException("Unexpected end of SES path");
+      }
+      if (token == Keyword.CLOSED_BRACKET) {
+        break;
+      }
+      if (token == Keyword.OPEN_BRACKET) {
+        ScopeKeyword.skipScope(scanner);
+        continue;
+      }
+      try {
+        numbers.add(exactNumber(token));
+      } catch (IOException invalidNumber) {
+        invalid = true;
+      }
+    }
+    if (invalid || numbers.size() < 3 || (numbers.size() - 1) % 2 != 0) {
+      FRLogger.warn("SesReader: invalid wire path on layer " + layer);
+      return null;
+    }
+    BigDecimal[] coordinates = numbers.subList(1, numbers.size()).toArray(BigDecimal[]::new);
+    if (coordinates.length == 2) {
+      // A single vertex represents point copper; keep two equal endpoints in the trace model.
+      coordinates =
+          new BigDecimal[] {coordinates[0], coordinates[1], coordinates[0], coordinates[1]};
+    }
+    return new SessionPath(specctraLayerStructure.getNo(layer), numbers.getFirst(), coordinates);
+  }
+
+  /**
+   * Puts the session's wires on the board together, after its vias, so that a corner several wires
+   * share reloads the same way in each. A wire that restores exactly is read on the grid too when
+   * one of its rational corners rounds to a grid corner of a wire on its layer read on the grid.
+   */
+  private void insertWires() {
+    int count = wires.size();
+    Polyline[] exact = new Polyline[count];
+    IOException[] failed = new IOException[count];
+    boolean[] onGrid = new boolean[count];
+    Set<LayerPoint> gridCorners = new HashSet<>();
+    for (int i = 0; i < count; i++) {
+      try {
+        exact[i] = SesPathGeometry.exact(wires.get(i).coordinates(), wires.get(i).scale());
+      } catch (IOException failure) {
+        failed[i] = failure;
+      }
+      if (exact[i] == null && failed[i] == null) {
+        onGrid[i] = true;
+        addGridCorners(wires.get(i), gridCorners);
+      }
+    }
+    for (boolean again = !gridCorners.isEmpty(); again; ) {
+      again = false;
+      for (int i = 0; i < count; i++) {
+        if (!onGrid[i]
+            && exact[i] != null
+            && rationalCornerOnGrid(exact[i], wires.get(i).layer, gridCorners)) {
+          onGrid[i] = true;
+          addGridCorners(wires.get(i), gridCorners);
+          again = true;
+        }
+      }
+    }
+    for (int i = 0; i < count; i++) {
+      SessionWire wire = wires.get(i);
+      try {
+        if (failed[i] != null) {
+          throw failed[i];
+        }
+        Polyline polyline = onGrid[i] ? SesPathGeometry.grid(wire.board, null) : exact[i];
+        if (board.insertTraceWithoutCleaning(
+                polyline, wire.layer, wire.halfWidth, wire.nets, wire.clearanceClass, wire.fixed)
+            == null) {
+          FRLogger.warn("SesReader.processWireScope: the wire makes no trace on the board");
+          errorsEncountered++;
+          continue;
+        }
+        wiresImported++;
+      } catch (Exception e) {
+        FRLogger.warn("SesReader.processWireScope: failed to import wire — " + e.getMessage());
+        errorsEncountered++;
+      }
+    }
+    wires.clear();
+  }
+
+  private void addGridCorners(SessionWire wire, Set<LayerPoint> gridCorners) {
+    for (int i = 0; i + 1 < wire.board.length; i += 2) {
+      gridCorners.add(
+          new LayerPoint(
+              wire.layer, SesPathGeometry.gridPoint(wire.board[i], wire.board[i + 1], null)));
+    }
+  }
+
+  private static boolean rationalCornerOnGrid(
+      Polyline polyline, int layer, Set<LayerPoint> gridCorners) {
+    for (int i = 0; i < polyline.cornerCount(); i++) {
+      if (polyline.corner(i) instanceof RationalPoint corner
+          && gridCorners.contains(new LayerPoint(layer, corner.toFloat().round()))) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -375,18 +545,13 @@ public final class SesReader {
     }
     this.scanner.setScopeIdentifier(padstackName);
 
-    double[] location = new double[2];
+    BigDecimal[] location = new BigDecimal[2];
     for (int i = 0; i < 2; i++) {
       nextToken = this.scanner.nextToken();
-      if (nextToken instanceof Double d) {
-        location[i] = d;
-      } else if (nextToken instanceof Integer integer) {
-        location[i] = integer;
-      } else {
-        FRLogger.warn(
-            "SesReader.processViaScope: number expected at '"
-                + this.scanner.getScopeIdentifier()
-                + "'");
+      try {
+        location[i] = exactNumber(nextToken);
+      } catch (IOException invalidNumber) {
+        FRLogger.warn("SesReader.processViaScope: " + invalidNumber.getMessage());
         return false;
       }
     }
@@ -416,9 +581,15 @@ public final class SesReader {
         return false;
       }
 
-      int x = (int) Math.round(location[0] * sessionToBoardScale);
-      int y = (int) Math.round(location[1] * sessionToBoardScale);
-      Point viaLocation = Point.getInstance(x, y);
+      BigFraction x = SesNumbers.recoverInteger(location[0], sessionToBoardScale);
+      BigFraction y = SesNumbers.recoverInteger(location[1], sessionToBoardScale);
+      if (!x.getDenominator().equals(java.math.BigInteger.ONE)
+          || !y.getDenominator().equals(java.math.BigInteger.ONE)) {
+        throw new IOException("The SES via center is not an integer board position");
+      }
+      Point viaLocation =
+          Point.getInstance(x.getNumerator().intValueExact(), y.getNumerator().intValueExact())
+              .toIntegerExact();
 
       int clearanceClass =
           netClassOf(netNumbers)

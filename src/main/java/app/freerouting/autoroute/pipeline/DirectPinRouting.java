@@ -55,7 +55,7 @@ final class DirectPinRouting {
     pins.sort(Comparator.comparingInt(Pin::getComponentId).thenComparingInt(pin -> pin.pinIndex));
     List<FixedCopper> fixed = new ArrayList<>();
     for (Item item : board.getItems()) {
-      if (item instanceof Trace || item instanceof Via) {
+      if ((item instanceof Trace || item instanceof Via) && !item.getFixedState().isFix()) {
         fixed.add(new FixedCopper(item.getId(), item.getFixedState()));
         item.setFixedState(FixedState.SYSTEM_FIXED);
       }

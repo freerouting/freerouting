@@ -55,14 +55,14 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
       FixedState fixedState,
       BasicBoard board) {
     super(netNumbers, clearanceClassIndex, id, groupId, fixedState, board);
-    this.center = center;
+    this.center = center == null ? null : center.toIntegerExact();
   }
 
   /** Works only for symmetric DrillItems. */
   @Override
   public void translateBy(Vector vector) {
     if (center != null) {
-      center = center.translateBy(vector);
+      center = center.translateBy(vector).toIntegerExact();
     }
     this.clearDerivedData();
   }
@@ -95,6 +95,8 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
   @Override
   public void moveBy(Vector vector) {
     Point oldCenter = this.getCenter();
+    // Item.moveBy removes the tree entry before translating; reject unsupported moves first.
+    oldCenter.translateBy(vector).toIntegerExact();
     // remember the contact situation of this drillitem to traces on each layer
     Set<TraceInfo> contactTraceInfo = new TreeSet<>();
     Collection<Item> contacts = this.getNormalContacts();
@@ -231,7 +233,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
   }
 
   protected void setCenter(Point center) {
-    this.center = center;
+    this.center = center == null ? null : center.toIntegerExact();
   }
 
   /** Returns the padstack of this drillitem. */
@@ -268,6 +270,15 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
       return null;
     }
     return getShape(layer - fromLayer);
+  }
+
+  /** Exact copper containment, independent of clearance-compensated search shapes. */
+  public boolean containsCopper(Point point, int layer) {
+    if (point == null || !isOnLayer(layer)) {
+      return false;
+    }
+    Shape shape = this.getShape(layer - this.firstLayer());
+    return shape != null && shape.contains(point);
   }
 
   @Override
@@ -394,7 +405,25 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     super.clearDerivedData();
     this.precalculatedFirstLayer = -1;
     this.precalculatedLastLayer = -1;
+    this.exactCopperCache = null;
   }
+
+  /**
+   * Cached copper per shape index, with the tree shape it was measured behind; invalidated with the
+   * tree shape (clearDerivedData).
+   */
+  public static class ExactCopperEntry {
+    public final TileShape treeShape;
+    public final app.freerouting.board.searchtree.ExactCopper copper;
+
+    public ExactCopperEntry(
+        TileShape treeShape, app.freerouting.board.searchtree.ExactCopper copper) {
+      this.treeShape = treeShape;
+      this.copper = copper;
+    }
+  }
+
+  public transient ExactCopperEntry[] exactCopperCache;
 
   /** Auxiliary class used in the method move_by. */
   private static class TraceInfo implements Comparable<TraceInfo> {

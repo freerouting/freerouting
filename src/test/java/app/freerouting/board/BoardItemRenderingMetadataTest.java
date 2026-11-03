@@ -15,6 +15,7 @@ import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.model.items.Via;
 import app.freerouting.board.model.items.ViaObstacleArea;
+import app.freerouting.board.model.items.WireObstacleArea;
 import app.freerouting.board.model.structure.BoardOutline;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.specctra.DsnReader;
@@ -67,6 +68,8 @@ class BoardItemRenderingMetadataTest {
         assertEquals(BoardItemType.CONDUCTION_AREA, type);
       } else if (item instanceof ViaObstacleArea) {
         assertEquals(BoardItemType.VIA_OBSTACLE_AREA, type);
+      } else if (item instanceof WireObstacleArea) {
+        assertEquals(BoardItemType.WIRE_OBSTACLE_AREA, type);
       } else if (item instanceof ComponentObstacleArea) {
         assertEquals(BoardItemType.COMPONENT_OBSTACLE_AREA, type);
       } else if (item instanceof ObstacleArea) {

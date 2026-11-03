@@ -4,8 +4,10 @@ import app.freerouting.geometry.planar.Direction;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Limits;
 import app.freerouting.geometry.planar.Line;
+import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -17,6 +19,23 @@ final class SesPathGeometry {
   private record Corner(BigFraction x, BigFraction y) {}
 
   private SesPathGeometry() {}
+
+  static void check(double[] board) throws IOException {
+    if (board.length < 4 || board.length % 2 != 0) {
+      throw new IOException("A SES wire needs at least two complete corners");
+    }
+  }
+
+  static IntPoint gridPoint(
+      double x, double y, java.util.function.BiFunction<Double, Double, IntPoint> designPoint) {
+    if (designPoint != null) {
+      IntPoint routed = designPoint.apply(x, y);
+      if (routed != null) {
+        return routed;
+      }
+    }
+    return new IntPoint((int) Math.floor(x + 0.5), (int) Math.floor(y + 0.5));
+  }
 
   static Polyline read(double[] coordinates, double scale) throws IOException {
     if (coordinates.length < 4 || coordinates.length % 2 != 0) {
@@ -38,6 +57,219 @@ final class SesPathGeometry {
       Line[] crossing = crossingLines(corners.getFirst());
       return new Polyline(new Line[] {crossing[0], crossing[1], crossing[0]});
     }
+    try {
+      return build(corners);
+    } catch (IOException failure) {
+      return recoverLegacyConnector(coordinates, scale, failure);
+    }
+  }
+
+  static Polyline read(BigDecimal[] coordinates, BigFraction scale) throws IOException {
+    if (coordinates.length < 4 || coordinates.length % 2 != 0) {
+      throw new IOException("A SES wire needs at least two complete corners");
+    }
+    boolean precise = false;
+    for (BigDecimal coordinate : coordinates) {
+      precise |= coordinate.scale() >= 24;
+    }
+    try {
+      return readExact(coordinates, scale);
+    } catch (IOException failure) {
+      if (precise || fatalGeometry(failure)) {
+        throw failure;
+      }
+      double[] legacy = new double[coordinates.length];
+      for (int index = 0; index < coordinates.length; index++) {
+        legacy[index] = coordinates[index].doubleValue();
+      }
+      return read(legacy, scale.doubleValue());
+    }
+  }
+
+  static Polyline read(
+      double[] board, java.util.function.BiFunction<Double, Double, IntPoint> designPoint)
+      throws IOException {
+    check(board);
+    Polyline restored = exact(board, designPoint);
+    return restored != null ? restored : grid(board, designPoint);
+  }
+
+  private static Polyline readExact(BigDecimal[] coordinates, BigFraction scale)
+      throws IOException {
+    List<Corner> corners = new ArrayList<>();
+    for (int index = 0; index < coordinates.length; index += 2) {
+      BigFraction x = SesNumbers.recover(coordinates[index], scale);
+      BigFraction y = SesNumbers.recover(coordinates[index + 1], scale);
+      if (x.abs().compareTo(BigFraction.of(Limits.CRIT_INT)) > 0
+          || y.abs().compareTo(BigFraction.of(Limits.CRIT_INT)) > 0) {
+        throw new IOException("SES wire coordinate exceeds the board range");
+      }
+      Corner corner = new Corner(x, y);
+      if (!corners.isEmpty() && corners.getLast().equals(corner)) {
+        if (coordinates[index - 2].compareTo(coordinates[index]) != 0
+            || coordinates[index - 1].compareTo(coordinates[index + 1]) != 0) {
+          throw new IOException("A nonzero SES segment collapses at board coordinate precision");
+        }
+      } else {
+        corners.add(corner);
+      }
+    }
+    return build(corners);
+  }
+
+  /**
+   * Restores a path exactly, or returns null when only a grid reading can represent it. A collinear
+   * reversal still fails: snapping it would drop copper.
+   */
+  static Polyline exact(BigDecimal[] coordinates, BigFraction scale) throws IOException {
+    boolean precise = false;
+    for (BigDecimal coordinate : coordinates) {
+      precise |= coordinate.scale() >= 24;
+    }
+    try {
+      return read(coordinates, scale);
+    } catch (IOException failure) {
+      if (precise || isCollinearRejection(failure) || fatalGeometry(failure)) {
+        throw failure;
+      }
+      return null;
+    }
+  }
+
+  static Polyline exact(
+      double[] board, java.util.function.BiFunction<Double, Double, IntPoint> designPoint)
+      throws IOException {
+    List<Corner> corners = new ArrayList<>(board.length / 2);
+    for (int i = 0; i + 1 < board.length; i += 2) {
+      Corner corner = null;
+      if (designPoint != null) {
+        IntPoint routed = designPoint.apply(board[i], board[i + 1]);
+        if (routed != null) {
+          corner = new Corner(BigFraction.of(routed.x), BigFraction.of(routed.y));
+        }
+      }
+      if (corner == null) {
+        try {
+          corner = corner(board[i], board[i + 1]);
+        } catch (IOException failure) {
+          if (fatalGeometry(failure)) {
+            throw failure;
+          }
+          return null;
+        }
+      }
+      if (!corners.isEmpty() && corners.getLast().equals(corner)) {
+        if (board[i - 2] != board[i] || board[i - 1] != board[i + 1]) {
+          return null;
+        }
+        continue;
+      }
+      corners.add(corner);
+    }
+    try {
+      Polyline polyline = build(corners);
+      if (corners.size() == 1) {
+        return polyline;
+      }
+      int count = polyline.cornerCount();
+      if (count < 2
+          || !near(polyline.firstCorner(), corners.getFirst())
+          || !near(polyline.lastCorner(), corners.getLast())) {
+        return null;
+      }
+      for (int i = 1; count == corners.size() && i < count - 1; i++) {
+        if (!near(polyline.corner(i), corners.get(i))) {
+          return null;
+        }
+      }
+      return polyline;
+    } catch (IOException failure) {
+      if (isCollinearRejection(failure) || fatalGeometry(failure)) {
+        throw failure;
+      }
+      return null;
+    }
+  }
+
+  static Polyline grid(
+      double[] board, java.util.function.BiFunction<Double, Double, IntPoint> designPoint)
+      throws IOException {
+    List<Point> points = new ArrayList<>(board.length / 2);
+    for (int i = 0; i + 1 < board.length; i += 2) {
+      Point point = gridPoint(board[i], board[i + 1], designPoint);
+      if (points.isEmpty() || !points.getLast().equals(point)) {
+        points.add(point);
+      }
+    }
+    List<Corner> corners = new ArrayList<>(points.size());
+    for (Point point : points) {
+      corners.add(
+          new Corner(BigFraction.of(((IntPoint) point).x), BigFraction.of(((IntPoint) point).y)));
+    }
+    rejectCollinearReversals(corners);
+    return points.size() == 1
+        ? pointCopper(corners.getFirst())
+        : new Polyline(points.toArray(Point[]::new));
+  }
+
+  private static boolean isCollinearRejection(IOException failure) {
+    return failure.getMessage() != null && failure.getMessage().contains("collinear");
+  }
+
+  /** Range and collapse errors must not be rounded onto the grid as different copper. */
+  private static boolean fatalGeometry(IOException failure) {
+    for (Throwable current = failure; current != null; current = current.getCause()) {
+      String message = current.getMessage();
+      if (message != null
+          && (message.contains("board range")
+              || message.contains("out-of-range")
+              || message.contains("exact integer range")
+              || message.contains("Non-finite"))) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private static boolean near(Point point, Corner corner) {
+    app.freerouting.geometry.planar.FloatPoint value = point.toFloat();
+    return Math.abs(value.x - corner.x.doubleValue()) <= 1e-6 * Math.max(1, Math.abs(value.x))
+        && Math.abs(value.y - corner.y.doubleValue()) <= 1e-6 * Math.max(1, Math.abs(value.y));
+  }
+
+  private static Polyline pointCopper(Corner corner) throws IOException {
+    Line[] crossing = crossingLines(corner);
+    return new Polyline(new Line[] {crossing[0], crossing[1], crossing[0]});
+  }
+
+  static int halfWidth(double width, double scale) throws IOException {
+    double value = width * scale / 2;
+    double rounded = Math.rint(value);
+    if (!Double.isFinite(value)
+        || value <= 0
+        || rounded < 1
+        || rounded > Limits.CRIT_INT
+        || Math.abs(value - rounded) > 4 * Math.ulp(value)) {
+      throw new IOException("The SES wire width cannot be represented on this board");
+    }
+    return (int) rounded;
+  }
+
+  static int halfWidth(BigDecimal width, BigFraction scale) throws IOException {
+    BigFraction half = SesNumbers.recoverInteger(width, scale).divide(2);
+    if (half.signum() <= 0
+        || !half.getDenominator().equals(BigInteger.ONE)
+        || half.getNumerator().compareTo(Limits.CRIT_INT_BIG) > 0) {
+      throw new IOException("The SES wire width cannot be represented on this board");
+    }
+    return half.getNumerator().intValueExact();
+  }
+
+  private static Polyline build(List<Corner> corners) throws IOException {
+    if (corners.size() == 1) {
+      Line[] crossing = crossingLines(corners.getFirst());
+      return new Polyline(new Line[] {crossing[0], crossing[1], crossing[0]});
+    }
     rejectCollinearReversals(corners);
     Line[] lines = new Line[corners.size() + 1];
     for (int index = 1; index < corners.size(); index++) {
@@ -52,17 +284,95 @@ final class SesPathGeometry {
     return polyline;
   }
 
-  static int halfWidth(double width, double scale) throws IOException {
-    double value = width * scale / 2;
-    double rounded = Math.rint(value);
-    if (!Double.isFinite(value)
-        || value <= 0
-        || rounded < 1
-        || rounded > Limits.CRIT_INT
-        || Math.abs(value - rounded) > 4 * Math.ulp(value)) {
-      throw new IOException("The SES wire width cannot be represented on this board");
+  private static Polyline recoverLegacyConnector(
+      double[] coordinates, double scale, IOException failure) throws IOException {
+    if (coordinates.length != 4) {
+      throw failure;
     }
-    return (int) rounded;
+    for (boolean reverse : new boolean[] {false, true}) {
+      int first = reverse ? 2 : 0;
+      int last = reverse ? 0 : 2;
+      SesNumbers.Interval ax = SesNumbers.legacyInterval(coordinates[first] * scale);
+      SesNumbers.Interval ay = SesNumbers.legacyInterval(coordinates[first + 1] * scale);
+      BigFraction anchorX = BigFraction.of(Math.round(coordinates[first] * scale));
+      BigFraction anchorY = BigFraction.of(Math.round(coordinates[first + 1] * scale));
+      if (!ax.contains(anchorX) || !ay.contains(anchorY)) {
+        continue;
+      }
+      SesNumbers.Interval bx = SesNumbers.legacyInterval(coordinates[last] * scale);
+      SesNumbers.Interval by = SesNumbers.legacyInterval(coordinates[last + 1] * scale);
+      SesNumbers.Interval dx =
+          new SesNumbers.Interval(bx.low().subtract(anchorX), bx.high().subtract(anchorX));
+      SesNumbers.Interval dy =
+          new SesNumbers.Interval(by.low().subtract(anchorY), by.high().subtract(anchorY));
+      BigInteger vx;
+      BigInteger vy;
+      if (dx.contains(BigFraction.ZERO)) {
+        if (dy.contains(BigFraction.ZERO)) {
+          continue;
+        }
+        vx = BigInteger.ZERO;
+        vy = BigInteger.valueOf(dy.low().signum());
+      } else if (dy.contains(BigFraction.ZERO)) {
+        vx = BigInteger.valueOf(dx.low().signum());
+        vy = BigInteger.ZERO;
+      } else {
+        BigFraction[] ratios = {
+          dy.low().divide(dx.low()),
+          dy.low().divide(dx.high()),
+          dy.high().divide(dx.low()),
+          dy.high().divide(dx.high())
+        };
+        java.util.Arrays.sort(ratios);
+        BigFraction slope = SesNumbers.simplest(new SesNumbers.Interval(ratios[0], ratios[3]));
+        vx = slope.getDenominator().multiply(BigInteger.valueOf(dx.low().signum()));
+        vy = slope.getNumerator().multiply(BigInteger.valueOf(dx.low().signum()));
+      }
+      try {
+        IntPoint anchor = integerPoint(anchorX.getNumerator(), anchorY.getNumerator());
+        final Line support =
+            new Line(
+                anchor,
+                integerPoint(anchorX.getNumerator().add(vx), anchorY.getNumerator().add(vy)));
+        SesNumbers.Interval parameter = null;
+        for (int axis = 0; axis < 2; axis++) {
+          BigInteger direction = axis == 0 ? vx : vy;
+          SesNumbers.Interval delta = axis == 0 ? dx : dy;
+          if (direction.signum() == 0) {
+            if (!delta.contains(BigFraction.ZERO)) {
+              throw failure;
+            }
+            continue;
+          }
+          BigFraction low = delta.low().divide(direction);
+          BigFraction high = delta.high().divide(direction);
+          SesNumbers.Interval constraint =
+              direction.signum() > 0
+                  ? new SesNumbers.Interval(low, high)
+                  : new SesNumbers.Interval(high, low);
+          parameter = parameter == null ? constraint : parameter.intersect(constraint);
+        }
+        BigFraction t = SesNumbers.simplest(parameter);
+        if (t.signum() <= 0) {
+          throw failure;
+        }
+        BigFraction endX = anchorX.add(t.multiply(vx));
+        BigFraction endY = anchorY.add(t.multiply(vy));
+        if (!bx.contains(endX) || !by.contains(endY)) {
+          throw failure;
+        }
+        Corner end = new Corner(endX, endY);
+        Line cap = endpointLine(end, support);
+        Polyline recovered = new Polyline(new Line[] {support.capAt(anchor), support, cap});
+        if (recovered.cornerCount() != 2) {
+          throw failure;
+        }
+        return reverse ? recovered.reverse() : recovered;
+      } catch (IOException | IllegalArgumentException unsupported) {
+        // A legacy decimal carries no exact provenance. Refuse rather than expand its envelope.
+      }
+    }
+    throw failure;
   }
 
   private static Corner corner(double x, double y) throws IOException {
@@ -144,34 +454,20 @@ final class SesPathGeometry {
   }
 
   private static Line integerLine(Corner from, BigInteger dx, BigInteger dy) throws IOException {
-    BigInteger divisor = dx.gcd(dy);
-    dx = dx.divide(divisor);
-    dy = dy.divide(divisor);
-    BigFraction intercept = from.x.multiply(dy).subtract(from.y.multiply(dx));
-    if (!intercept.getDenominator().equals(BigInteger.ONE)) {
-      throw new IOException(
-          "The SES segment has no integer supporting line; refusing to move copper");
+    try {
+      Corner next = new Corner(from.x.add(dx), from.y.add(dy));
+      return new Line(point(from), point(next));
+    } catch (IllegalArgumentException unsupported) {
+      throw new IOException("The SES segment has no bounded integer supporting line", unsupported);
     }
-    BigInteger constant = intercept.getNumerator();
-    BigInteger x;
-    BigInteger y;
-    if (dx.signum() == 0) {
-      x = constant.divide(dy);
-      y = from.y.bigDecimalValue(0, RoundingMode.HALF_UP).toBigInteger();
-    } else if (dy.signum() == 0) {
-      x = from.x.bigDecimalValue(0, RoundingMode.HALF_UP).toBigInteger();
-      y = constant.negate().divide(dx);
-    } else {
-      // Coprime direction components define the existing line's integer lattice; BigInteger's
-      // modular inverse finds one point without implementing new routing or geometry algorithms.
-      x = constant.multiply(dy.mod(dx.abs()).modInverse(dx.abs())).mod(dx.abs());
-      y = dy.multiply(x).subtract(constant).divide(dx);
-      BigInteger steps =
-          from.x.subtract(x).divide(dx).bigDecimalValue(0, RoundingMode.HALF_UP).toBigInteger();
-      x = x.add(steps.multiply(dx));
-      y = y.add(steps.multiply(dy));
-    }
-    return new Line(integerPoint(x, y), integerPoint(x.add(dx), y.add(dy)));
+  }
+
+  private static app.freerouting.geometry.planar.Point point(Corner corner) {
+    BigInteger denominator = commonDenominator(corner.x, corner.y);
+    return app.freerouting.geometry.planar.Point.getInstance(
+        corner.x.multiply(denominator).getNumerator(),
+        corner.y.multiply(denominator).getNumerator(),
+        denominator);
   }
 
   private static Line endpointLine(Corner corner, Line segment) throws IOException {

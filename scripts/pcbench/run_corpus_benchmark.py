@@ -127,6 +127,28 @@ def compute_sha256(path: Path) -> str:
     return h.hexdigest()
 
 
+_TRACE_MIN = re.compile(r"\(trace_min\s+([0-9]*\.?[0-9]+)\)")
+
+
+def board_min_track_width_um(board_dir: Path) -> float | None:
+    """Return the minimum track width of the board's KiCad design rules, in micrometers.
+
+    The hand routing of a board may use any width down to this value, but the Specctra export only
+    carries the net class widths. Reads ``(setup (trace_min ...))`` from ``processed.kicad_pcb``,
+    which all PCBench fixtures have in the KiCad 5 format. Returns None when it is missing.
+    """
+    pcb_path = board_dir / "processed.kicad_pcb"
+    try:
+        text = pcb_path.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return None
+    match = _TRACE_MIN.search(text)
+    if not match:
+        return None
+    width_um = round(float(match.group(1)) * 1000.0, 3)
+    return width_um if width_um > 0 else None
+
+
 def format_fixture_name(name: str, limit: int = 37) -> str:
     """Keep short fixture names. Longer names keep the first and last 16 characters."""
     text = name or ""
@@ -143,9 +165,48 @@ def format_result_timing(seconds: float, suffix: str = "") -> str:
     return timing + ")"
 
 
-def format_recent_result(completed: int, total: int, label: str, timing: str, name: str) -> str:
-    """Progress, padded outcome, timing, then the full fixture name."""
-    return f"[{completed:4d}/{total:4d}] {label:<8} {timing} {name}"
+def format_recent_result(
+    completed: int,
+    total: int,
+    label: str,
+    timing: str,
+    name: str,
+    tier_place: tuple[int, int, str] | None = None,
+) -> str:
+    """Progress, padded outcome, timing, then the full fixture name.
+
+    ``tier_place`` is ``(index, tier size, tier)`` in run order, so the 12th
+    board of 48 tier C boards reads ``  12/ 48 of T-C``.
+    """
+    head = f"{completed:4d}/{total:4d}"
+    if tier_place is not None:
+        index, tier_total, tier = tier_place
+        head = f"{head} {index:3d}/{tier_total:3d} of T-{tier}"
+    return f"[{head}] {label:<8} {timing} {name}"
+
+
+def assign_tier_places(boards: list[dict[str, Any]]) -> dict[str, tuple[int, int, str]]:
+    """Map each board id to its 1-based index inside its tier.
+
+    ``boards`` must already be in benchmark order. The denominator counts the
+    selected boards of that tier, including ones skipped because they are
+    already cached.
+    """
+    totals: dict[str, int] = {}
+    order: list[tuple[str, str]] = []
+    for board in boards:
+        board_id = board.get("board_id")
+        if not isinstance(board_id, str) or not board_id:
+            continue
+        tier = str(board.get("tier") or "?")
+        totals[tier] = totals.get(tier, 0) + 1
+        order.append((board_id, tier))
+    seen: dict[str, int] = {}
+    places: dict[str, tuple[int, int, str]] = {}
+    for board_id, tier in order:
+        seen[tier] = seen.get(tier, 0) + 1
+        places[board_id] = (seen[tier], totals[tier], tier)
+    return places
 
 
 def format_worker_tag(wid: int, tier: str | None = None) -> str:
@@ -236,6 +297,7 @@ def route_single_board(
     *,
     reference_seconds: float = 0.0,
     queued_ids: list[str] | None = None,
+    neck_width_um: float | None = None,
 ) -> dict[str, Any] | None:
     """Execute Freerouting on a single PCBench board and return a benchmark run record."""
     if cancel_event.is_set() or force_kill_event.is_set():
@@ -279,6 +341,9 @@ def route_single_board(
         "java",
         "-Dsun.stdout.buffered=false",
         "-Xmx4g",
+        # First heap failure ends the JVM. A swallowed OutOfMemoryError otherwise leaves the
+        # process alive and the worker slot busy until the job timeout.
+        "-XX:+ExitOnOutOfMemoryError",
         "-Dfreerouting.log.file.level=INFO",
         "-Dfreerouting.log.console.level=INFO",
         "-jar",
@@ -288,6 +353,8 @@ def route_single_board(
         "--api_server.enabled=false",
         "--mcp_server.enabled=false",
         "--router.max_threads=1",
+        # Separate from router.max_threads. One optimizer thread avoids a board copy per core.
+        "--router.optimizer.max_threads=1",
         "-de",
         str(dsn_path),
         "-do",
@@ -299,10 +366,13 @@ def route_single_board(
         f"--router.job_timeout={timeout_budget}",
         f"--logging.file.location={log_path}",
     ]
+    if neck_width_um:
+        cmd.append(f"--router.neck_width_um={neck_width_um:g}")
 
     exit_code = 0
     crashed = False
     timed_out = False
+    fatal_seen = threading.Event()
     stdout_lines: list[str] = []
 
     try:
@@ -340,6 +410,8 @@ def route_single_board(
                             if pfx in clean:
                                 short = clean.split(pfx, 1)[1]
                                 break
+                        if fatal_process_output(short) or fatal_process_output(clean):
+                            fatal_seen.set()
                         with status_lock:
                             worker_status[wid]["last_line"] = short[:90]
                             worker_status[wid]["last_line_time"] = time.perf_counter()
@@ -349,16 +421,41 @@ def route_single_board(
 
         # Allow a grace period for post-timeout routing wrap-up, DRC calculation, SES export, and JVM shutdown
         hard_timeout = timeout_sec + max(120, int(timeout_sec * 0.10))
-        try:
-            exit_code = proc.wait(timeout=hard_timeout)
-        except subprocess.TimeoutExpired:
-            timed_out = True
+        deadline = time.monotonic() + hard_timeout
+        while True:
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                timed_out = True
+                try:
+                    proc.kill()
+                except Exception:
+                    # The process may already have exited.
+                    pass
+                exit_code = -1
+                stdout_lines.append("\nTIMEOUT: Process exceeded hard timeout budget\n")
+                break
+            # After a fatal line, give the JVM a moment to exit on its own, then kill it.
+            wait_for = 3.0 if fatal_seen.is_set() else min(1.0, remaining)
             try:
-                proc.kill()
-            except Exception:
-                pass
-            exit_code = -1
-            stdout_lines.append("\nTIMEOUT: Process exceeded hard timeout budget\n")
+                exit_code = proc.wait(timeout=min(wait_for, remaining))
+                break
+            except subprocess.TimeoutExpired:
+                if not fatal_seen.is_set():
+                    continue
+                crashed = True
+                try:
+                    proc.kill()
+                except Exception:
+                    # The process may already have exited.
+                    pass
+                try:
+                    exit_code = proc.wait(timeout=10)
+                except subprocess.TimeoutExpired:
+                    exit_code = -1
+                stdout_lines.append(
+                    "\nFATAL: Process stayed alive after an uncaught error and was terminated\n"
+                )
+                break
 
         reader_thread.join(timeout=2.0)
     except Exception as e:
@@ -376,6 +473,16 @@ def route_single_board(
         return None
 
     stdout_text = "".join(stdout_lines)
+    oom_in_log = log_tail_contains(log_path, "OutOfMemoryError")
+    # A Task Manager kill, a non-zero JVM exit, or an OOM in stdout/log is a failed run
+    # even when an earlier manifest still describes a fully routed board.
+    if not timed_out and (
+        fatal_seen.is_set()
+        or fatal_process_output(stdout_text)
+        or oom_in_log
+        or exit_code not in (0, None)
+    ):
+        crashed = True
     wall_time = round(time.perf_counter() - t0, 2)
 
     # Clean up any stray SES files created in working directory if an older binary split on '+'
@@ -431,6 +538,10 @@ def route_single_board(
     avg_viol_um = violations_info.get("avg_violation_um", violations_info.get("avg_violation_mm", None))
     score_val = manifest_data.get("normalized_score", None)
     final_state = manifest_data.get("final_state", "FAILED" if (crashed or timed_out) else "COMPLETED")
+    if crashed and not timed_out:
+        final_state = "FAILED"
+    elif timed_out and final_state == "COMPLETED":
+        final_state = "TIMED_OUT"
     phases = manifest_data.get("phases", {})
     if not phases.get("autorouter", {}).get("duration_seconds") and stdout_text:
         phases = parse_phases_from_text(stdout_text)
@@ -583,7 +694,7 @@ def route_single_board(
             "code": exit_code,
             "state": final_state,
             "crashed": crashed,
-            "oom_detected": "OutOfMemoryError" in stdout_text,
+            "oom_detected": ("OutOfMemoryError" in stdout_text) or oom_in_log,
             "timed_out": timed_out,
         },
         "log_analysis": {
@@ -595,14 +706,123 @@ def route_single_board(
         "result_json": str(manifest_path.relative_to(output_dir.parent.parent)) if manifest_path.exists() else None,
         "output_file": str(ses_path.relative_to(output_dir.parent.parent)) if ses_path.exists() else None,
         "job_timeout": timeout_budget,
+        "neck_width_um": neck_width_um,
     }
 
     return run_record
 
 
 _render_lock = threading.Lock()
-# A tier scale needs this much 2.6.0-RC2 time before it replaces the prior of 1.
+# A tier scale needs this much reference time before it replaces the prior of 1.
 MINIMUM_SCALE_REFERENCE_SECONDS = 30 * 60
+_VERSION_LABEL = re.compile(
+    r"^[vV]?(\d+)(?:\.(\d+))?(?:\.(\d+))?(?:\.(\d+))?(?:[-.]?([A-Za-z]+)(\d+)?)?"
+)
+_FATAL_OUTPUT_MARKERS = (
+    "OutOfMemoryError",
+    "StackOverflowError",
+    "Exception in thread",
+    "terminated abnormally",
+    "terminated due to a fatal error",
+    "terminated due to an error",
+)
+
+
+def fatal_process_output(text: str) -> bool:
+    """True when child-process output means the run cannot continue."""
+    return any(marker in text for marker in _FATAL_OUTPUT_MARKERS)
+
+
+def log_tail_contains(path: Path, marker: str, tail_bytes: int = 262144) -> bool:
+    """True when the end of a log file contains marker. A missing file is false."""
+    try:
+        size = path.stat().st_size
+        with path.open("rb") as handle:
+            if size > tail_bytes:
+                handle.seek(size - tail_bytes)
+            text = handle.read().decode("utf-8", errors="replace")
+    except OSError:
+        return False
+    return marker in text
+
+
+def version_sort_key(label: str) -> tuple:
+    """Order version labels so 2.6.0 ranks above 2.6.0-RC6, which ranks above 2.6.0-RC3."""
+    match = _VERSION_LABEL.match((label or "").strip())
+    if not match:
+        return (0, 0, 0, 0, 0, "", 0)
+    major, minor, patch, build, tag, tag_number = match.groups()
+    return (
+        int(major or 0),
+        int(minor or 0),
+        int(patch or 0),
+        int(build or 0),
+        1 if not tag else 0,
+        (tag or "").casefold(),
+        int(tag_number or 0),
+    )
+
+
+def _parse_run_at(value: str) -> datetime:
+    if not value:
+        return datetime.min.replace(tzinfo=timezone.utc)
+    try:
+        parsed = datetime.fromisoformat(value)
+    except ValueError:
+        return datetime.min.replace(tzinfo=timezone.utc)
+    if parsed.tzinfo is None:
+        return parsed.replace(tzinfo=timezone.utc)
+    return parsed
+
+
+def fixture_id_from_run(run: dict[str, Any]) -> str | None:
+    """Board id from a corpus run record."""
+    relative = str((run.get("fixture") or {}).get("relative_path") or "").replace("\\", "/")
+    parts = [part for part in relative.split("/") if part]
+    if len(parts) >= 2 and parts[0] == "PCBench":
+        return parts[1]
+    cache_key = str(run.get("cache_key") or "")
+    marker = "--unrouted--"
+    if marker in cache_key:
+        return cache_key.split(marker, 1)[0] or None
+    return None
+
+
+def run_is_failure(run: dict[str, Any]) -> bool:
+    """A crashed, timed-out, or non-zero run is not a duration reference."""
+    exit_info = run.get("exit") or {}
+    if exit_info.get("crashed") or exit_info.get("oom_detected") or exit_info.get("timed_out"):
+        return True
+    code = exit_info.get("code")
+    if code not in (0, None):
+        return True
+    if exit_info.get("state") in {"FAILED", "TERMINATED", "INVALID"}:
+        return True
+    wall = (run.get("quality") or {}).get("wall_clock_seconds")
+    return not isinstance(wall, (int, float)) or wall <= 0
+
+
+def latest_successful_reference_seconds(runs: Any) -> dict[str, float]:
+    """Wall-clock seconds of the newest successful version, per fixture.
+
+    Failed runs are ignored. When the newest recorded version has only failures,
+    the next older version that completed is used.
+    """
+    best: dict[str, tuple[tuple, datetime, float]] = {}
+    for run in runs:
+        if not isinstance(run, dict) or run_is_failure(run):
+            continue
+        board_id = fixture_id_from_run(run)
+        if not board_id:
+            continue
+        version = str((run.get("binary") or {}).get("version_label") or "")
+        run_at = _parse_run_at(str(run.get("run_at") or ""))
+        seconds = float((run.get("quality") or {}).get("wall_clock_seconds") or 0.0)
+        rank = (version_sort_key(version), run_at)
+        current = best.get(board_id)
+        if current is None or rank > (current[0], current[1]):
+            best[board_id] = (version_sort_key(version), run_at, seconds)
+    return {board_id: item[2] for board_id, item in best.items()}
 
 
 def format_duration(seconds: float) -> str:
@@ -613,10 +833,45 @@ def format_duration(seconds: float) -> str:
     return f"{hours:02d}:{minutes:02d}:{secs:02d}"
 
 
+def format_elapsed_clock(seconds: float) -> str:
+    """Minutes and seconds for the worker clock. Minutes grow past 59."""
+    whole = max(0, int(seconds))
+    return f"{whole // 60:02d}:{whole % 60:02d}"
+
+
+def format_worker_progress(elapsed_seconds: float, expected_seconds: float | None) -> str:
+    """``[22:51]`` or ``[22:51 ~42m]`` when the estimate rounds to at least one minute."""
+    clock = format_elapsed_clock(elapsed_seconds)
+    if expected_seconds is None or expected_seconds <= 0:
+        return f"[{clock}]"
+    minutes = int(expected_seconds / 60 + 0.5)
+    if minutes <= 0:
+        return f"[{clock}]"
+    return f"[{clock} ~{minutes}m]"
+
+
+def expected_fixture_seconds(
+    reference_seconds: float,
+    tier: str,
+    scales: dict[str, float],
+) -> float | None:
+    """Seconds this fixture should take on the current build.
+
+    The reference is the latest successful run of this fixture on the newest
+    recorded version, or the catalog time when no such run exists. The tier
+    scale is the current build's speed on boards of the same difficulty, and
+    it stays at 1 until this run has enough evidence. The product is the same
+    estimate the suite ETA uses for that board.
+    """
+    if reference_seconds <= 0:
+        return None
+    return reference_seconds * scale_for(scales, tier)
+
+
 def duration_scales(completed: list[tuple[str, float, float]]) -> dict[str, float]:
     """Return per-tier speed ratios and a global ratio under the empty-string key.
 
-    A ratio is actual seconds divided by 2.6.0-RC2 seconds. It stays at 1 until
+    A ratio is actual seconds divided by reference seconds. It stays at 1 until
     the compared reference time reaches MINIMUM_SCALE_REFERENCE_SECONDS.
     """
     totals: dict[str, list[float]] = {}
@@ -649,8 +904,8 @@ def estimate_remaining_seconds(
     """Estimate suite seconds left, and the reference-weighted speed ratio.
 
     Running boards keep only their remaining expected time. Waiting boards go
-    to the worker that becomes free first. Expected time is the 2.6.0-RC2
-    duration times the tier ratio.
+    to the worker that becomes free first. Expected time is the fixture's
+    latest successful duration times the tier ratio.
     """
     scales = duration_scales(completed)
     slots = max(1, workers)
@@ -722,6 +977,7 @@ def render_dashboard(
     slots = target_workers if target_workers is not None else max(1, len(running))
     remaining_secs, _shown_scale = estimate_remaining_seconds(queued, running, samples, slots)
     eta_str = format_duration(remaining_secs)
+    scales = duration_scales(samples)
     pct = (completed / total) * 100.0 if total > 0 else 0.0
 
     ver_part = f" | {C_BWHITE}Version:{C_RESET} {C_BCYAN}{version_label}{C_RESET}" if version_label else ""
@@ -757,9 +1013,14 @@ def render_dashboard(
             info = worker_status[wid]
             if info.get("active"):
                 run_sec = int(now - info.get("start", now))
-                dur_str = f"{run_sec // 60:02d}:{run_sec % 60:02d}"
                 board = format_fixture_name(str(info.get("board", "unknown")))
                 tier = str(info.get("tier") or "?")
+                expected = expected_fixture_seconds(
+                    float(info.get("reference_seconds") or 0.0),
+                    tier,
+                    scales,
+                )
+                progress = format_worker_progress(run_sec, expected)
                 last = info.get("last_line", "")
                 last_time = info.get("last_line_time")
                 idle_sec = int(now - last_time) if last_time else run_sec
@@ -767,7 +1028,7 @@ def render_dashboard(
                 lines.append(
                     f"  {C_BMAGENTA}{format_worker_tag(wid, tier)}{C_RESET} "
                     f"{C_BWHITE}{board:<37}{C_RESET} "
-                    f"{C_BYELLOW}[{dur_str}]{C_RESET} -> {C_GRAY}{last}{idle_str}{C_RESET}"
+                    f"{C_BYELLOW}{progress}{C_RESET} -> {C_GRAY}{last}{idle_str}{C_RESET}"
                 )
             else:
                 lines.append(f"  {C_BMAGENTA}{format_worker_tag(wid)}{C_RESET} {C_DIM}Idle{C_RESET}")
@@ -945,6 +1206,12 @@ def main() -> int:
     parser.add_argument("--filter", default="", help="Filter fixtures by substring/pattern")
     parser.add_argument("--force", action="store_true", help="Force rerun even if already in benchmarks.json")
     parser.add_argument("--timeout", default="06:00:00", help="Job timeout budget for all tiers (default: 06:00:00)")
+    parser.add_argument(
+        "--neck-width-from-board",
+        action="store_true",
+        help="Pass each board's KiCad minimum track width as --router.neck_width_um. "
+        "Changes the routing: use a separate --version-label.",
+    )
     args = parser.parse_args()
     try:
         tier_order = parse_tier_order(args.tier)
@@ -1015,6 +1282,8 @@ def main() -> int:
     if args.max_boards > 0:
         boards = boards[: args.max_boards]
 
+    tier_places = assign_tier_places(boards)
+
     jar_sha256 = compute_sha256(jar_path)
     jar_size = jar_path.stat().st_size
 
@@ -1040,20 +1309,23 @@ def main() -> int:
 
     tasks = []
     board_reference: dict[str, tuple[str, float]] = {}
+    board_neck_width: dict[str, float | None] = {}
     queued_ids: list[str] = []
     already_completed = 0
+    historical_reference = latest_successful_reference_seconds(existing_runs.values())
     for b in boards:
         b_id = b.get("board_id")
         b_dir = fixtures_dir / b_id
         budget = args.timeout
         board_tier = b.get("tier") or "?"
-        reference_seconds = float(b.get("reference_seconds") or 0.0)
+        reference_seconds = float(historical_reference.get(b_id) or b.get("reference_seconds") or 0.0)
 
         if not args.force:
             is_already_run = any(
                 r.get("fixture", {}).get("relative_path") == f"PCBench/{b_id}/unrouted.dsn"
                 and r.get("binary", {}).get("version_label") == args.version_label
                 and (r.get("quality", {}).get("unrouted_connections") is not None or r.get("quality", {}).get("final_unrouted") is not None)
+                and (not run_is_failure(r) or (r.get("exit") or {}).get("timed_out"))
                 for r in existing_runs.values()
             )
             if is_already_run:
@@ -1077,6 +1349,8 @@ def main() -> int:
                 )
             )
             board_reference[b_id] = (board_tier, reference_seconds)
+            if args.neck_width_from_board:
+                board_neck_width[b_id] = board_min_track_width_um(b_dir)
             queued_ids.append(b_id)
 
     print(
@@ -1271,6 +1545,7 @@ def main() -> int:
                     force_kill_event,
                     reference_seconds=board_reference.get(board_name, ("?", 0.0))[1],
                     queued_ids=queued_ids,
+                    neck_width_um=board_neck_width.get(board_name),
                 )
             except Exception as exc:
                 err = exc
@@ -1473,7 +1748,9 @@ def main() -> int:
 
             if err is not None:
                 error_count += 1
-                msg = format_recent_result(completed, len(tasks), "ERROR", f"({err})", b_name)
+                msg = format_recent_result(
+                    completed, len(tasks), "ERROR", f"({err})", b_name, tier_places.get(b_name)
+                )
                 recent_messages.append(msg)
                 try:
                     save_corpus()
@@ -1492,9 +1769,11 @@ def main() -> int:
             router_viol = q.get("router_introduced_violations")
             sec = q.get("wall_clock_seconds", 0.0)
             sample_tier, sample_reference = board_reference.get(b_name, ("?", 0.0))
-            with status_lock:
-                completed_samples.append((sample_tier, sample_reference, float(sec or 0.0)))
             is_timeout = exit_info.get("timed_out", False)
+            failed_run = run_is_failure(rec)
+            if not failed_run:
+                with status_lock:
+                    completed_samples.append((sample_tier, sample_reference, float(sec or 0.0)))
 
             unfixable_viol = q.get("unfixable_clearance_violations")
             if unfixable_viol is None:
@@ -1514,7 +1793,14 @@ def main() -> int:
                 label = "UNROUTED"
                 suffix = f"unr={unr}, viol={viol}"
 
-            if is_timeout:
+            fatal_exit = exit_info.get("oom_detected") or exit_info.get("crashed") or (
+                exit_info.get("code") not in (0, None) and not is_timeout
+            )
+            if fatal_exit:
+                error_count += 1
+                label = "ERROR"
+                suffix = "oom" if exit_info.get("oom_detected") else f"exit={exit_info.get('code')}"
+            elif is_timeout:
                 timeout_count += 1
                 suffix = f"{label}, {suffix}" if suffix else label
                 label = "TIMEOUT"
@@ -1527,7 +1813,12 @@ def main() -> int:
                     unrouted_count += 1
 
             msg = format_recent_result(
-                completed, len(tasks), label, format_result_timing(float(sec or 0.0), suffix), b_name
+                completed,
+                len(tasks),
+                label,
+                format_result_timing(float(sec or 0.0), suffix),
+                b_name,
+                tier_places.get(b_name),
             )
             recent_messages.append(msg)
 

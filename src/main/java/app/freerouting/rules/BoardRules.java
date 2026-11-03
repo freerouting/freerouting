@@ -50,7 +50,12 @@ public class BoardRules implements Serializable {
 
   private boolean useSlowAutorouteAlgorithm;
   private int holeClearance;
+  private int minHoleToHole;
+  private Boolean exactCopper = true;
+  private boolean viaInPad;
+  private boolean viaTouchingPad;
   public transient double clearanceToleranceUm = 1.0;
+  public transient java.util.Map<Integer, PinClearanceSource> pinClearanceSources;
 
   /** Creates a new instance of this class. */
   public BoardRules(LayerStructure layerStructure, ClearanceMatrix clearanceMatrix) {
@@ -226,6 +231,56 @@ public class BoardRules implements Serializable {
     this.holeClearance = Math.max(0, value);
   }
 
+  /**
+   * KiCad's hole-to-hole minimum (Board Setup min_hole_to_hole, router.hole_to_hole_um): the
+   * edge-to-edge distance a via's drill keeps from every other drilled hole, of any net. It is the
+   * only spacing between two vias of one net, whose copper keeps no clearance ({@link
+   * HoleSpacing}). 0 means no minimum.
+   */
+  public int getMinHoleToHole() {
+    return minHoleToHole;
+  }
+
+  /** Sets the hole-to-hole minimum ({@link #getMinHoleToHole()}). */
+  public void setMinHoleToHole(int value) {
+    this.minHoleToHole = Math.max(0, value);
+  }
+
+  /**
+   * Whether to measure a pin's or via's copper (a circle, a pad polygon) where the search tree's
+   * octagons overlap, instead of refusing the pair on the octagons.
+   */
+  public boolean isExactCopper() {
+    return this.exactCopper == null || this.exactCopper;
+  }
+
+  /** Sets whether to use exact copper clearance. */
+  public void setExactCopper(boolean value) {
+    this.exactCopper = value;
+  }
+
+  /**
+   * Whether a via may sit in an SMD pad of its own net, drill hole included ({@code
+   * router.autorouter.via_in_pad}).
+   */
+  public boolean isViaInPad() {
+    return this.viaInPad;
+  }
+
+  /**
+   * Whether a via may overlap an SMD pad of its own net with its drill hole outside the pad ({@code
+   * router.autorouter.via_touching_pad}).
+   */
+  public boolean isViaTouchingPad() {
+    return this.viaTouchingPad;
+  }
+
+  /** Sets the via-in-pad permissions resolved from the router settings. */
+  public void setViaInPad(boolean viaInPad, boolean viaTouchingPad) {
+    this.viaInPad = viaInPad;
+    this.viaTouchingPad = viaTouchingPad;
+  }
+
   /** Changes the default trace half-width used for routing on the input layer. */
   public void setDefaultTraceHalfWidth(int layer, int value) {
     this.getDefaultNetClass().setTraceHalfWidth(layer, value);
@@ -280,12 +335,9 @@ public class BoardRules implements Serializable {
   /**
    * Creates a default via rule for {@code netClass} with name {@code name}. If more than one via
    * info with the same layer range is found, only the via info with the smallest pad size is
-   * inserted.
+   * inserted. Without any via info the rule is empty: the class routes without vias.
    */
   public void createDefaultViaRule(NetClass netClass, String name) {
-    if (this.viaInfos.count() == 0) {
-      return;
-    }
     // Add the rule  containing all vias.
     ViaRule defaultRule = new ViaRule(name);
     int defaultViaClClass =
@@ -548,5 +600,8 @@ public class BoardRules implements Serializable {
     int snapAngleNo = stream.readInt();
     this.traceAngleRestriction = AngleRestriction.valueOf(snapAngleNo);
     this.clearanceToleranceUm = 1.0;
+    if (this.exactCopper == null) {
+      this.exactCopper = Boolean.TRUE;
+    }
   }
 }

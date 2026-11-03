@@ -24,7 +24,6 @@ import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.LineSegment;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;
-import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.geometry.planar.RegularTileShape;
 import app.freerouting.geometry.planar.Shape;
 import app.freerouting.geometry.planar.ShapeBoundingDirections;
@@ -42,6 +41,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.locks.Lock;
 
@@ -433,7 +433,16 @@ public class ShapeSearchTree extends MinAreaTree {
   public void overlappingObjects(
       ConvexShape shape, int layer, int[] ignoreNetNos, Set<SearchTreeObject> obstacles) {
     Collection<TreeEntry> treeEntries = new LinkedList<>();
-    overlappingTreeEntries(shape, layer, ignoreNetNos, treeEntries);
+    // A naturally ordered set sorts the objects itself: the entries need not come in leaf order.
+    boolean inLeafOrder =
+        !(obstacles instanceof SortedSet<?> sortedSet && sortedSet.comparator() == null);
+    Lock lock = readLock();
+    lock.lock();
+    try {
+      overlappingTreeEntriesUnlocked(shape, layer, ignoreNetNos, treeEntries, null, inLeafOrder);
+    } finally {
+      lock.unlock();
+    }
     if (obstacles != null) {
       for (TreeEntry currentEntry : treeEntries) {
         obstacles.add((SearchTreeObject) currentEntry.object);
@@ -487,6 +496,20 @@ public class ShapeSearchTree extends MinAreaTree {
       int[] ignoreNetNos,
       Collection<TreeEntry> treeEntries,
       Item obstaclesOf) {
+    overlappingTreeEntriesUnlocked(shape, layer, ignoreNetNos, treeEntries, obstaclesOf, true);
+  }
+
+  /**
+   * Puts the tree entries overlapping with shape into treeEntries, in leaf order when inLeafOrder
+   * is set, in tree traversal order otherwise.
+   */
+  private void overlappingTreeEntriesUnlocked(
+      ConvexShape shape,
+      int layer,
+      int[] ignoreNetNos,
+      Collection<TreeEntry> treeEntries,
+      Item obstaclesOf,
+      boolean inLeafOrder) {
     if (shape == null) {
       return;
     }
@@ -503,8 +526,12 @@ public class ShapeSearchTree extends MinAreaTree {
     tmpList.clear();
     boolean is45Degree = shape instanceof IntOctagon;
     try {
-      this.overlapsUnlocked(bounds, tmpList);
-      for (Leaf currentLeaf : tmpList) {
+      // Filter in traversal order, then sort only the kept leaves: the same order as sorting all
+      // candidates first, for a fraction of the comparisons.
+      this.collectOverlapsUnlocked(bounds, tmpList);
+      int keptCount = 0;
+      for (int leafIndex = 0; leafIndex < tmpList.size(); leafIndex++) {
+        Leaf currentLeaf = tmpList.get(leafIndex);
         SearchTreeObject currentObject = (SearchTreeObject) currentLeaf.object;
         int shapeIndex = currentLeaf.shapeIndexInObject;
         boolean ignoreObject = layer >= 0 && currentObject.shapeLayer(shapeIndex) != layer;
@@ -533,10 +560,17 @@ public class ShapeSearchTree extends MinAreaTree {
             addItem = currentShape.intersects(shape);
           }
           if (addItem) {
-            TreeEntry newEntry = new TreeEntry(currentObject, shapeIndex);
-            treeEntries.add(newEntry);
+            tmpList.set(keptCount++, currentLeaf);
           }
         }
+      }
+      List<Leaf> keptLeaves = tmpList.subList(0, keptCount);
+      if (inLeafOrder) {
+        keptLeaves.sort(null);
+      }
+      for (Leaf currentLeaf : keptLeaves) {
+        treeEntries.add(
+            new TreeEntry((SearchTreeObject) currentLeaf.object, currentLeaf.shapeIndexInObject));
       }
     } finally {
       tmpList.clear();
@@ -562,7 +596,25 @@ public class ShapeSearchTree extends MinAreaTree {
       int clearanceClassIndex,
       Collection<TreeEntry> obstacleEntries) {
     overlappingTreeEntriesWithClearance(
-        shape, layer, ignoreNetNos, clearanceClassIndex, obstacleEntries, null);
+        shape, layer, ignoreNetNos, clearanceClassIndex, obstacleEntries, (Item) null);
+  }
+
+  /** Overload of {@link #overlappingTreeEntriesWithClearance} with exactShape copper. */
+  public void overlappingTreeEntriesWithClearance(
+      ConvexShape shape,
+      int layer,
+      int[] ignoreNetNos,
+      int clearanceClassIndex,
+      Collection<TreeEntry> obstacleEntries,
+      Shape exactShape) {
+    overlappingTreeEntriesWithClearance(
+        shape,
+        layer,
+        ignoreNetNos,
+        clearanceClassIndex,
+        obstacleEntries,
+        null,
+        ExactCopper.of(exactShape));
   }
 
   /**
@@ -576,6 +628,22 @@ public class ShapeSearchTree extends MinAreaTree {
       int clearanceClassIndex,
       Collection<TreeEntry> obstacleEntries,
       Item obstaclesOf) {
+    overlappingTreeEntriesWithClearance(
+        shape, layer, ignoreNetNos, clearanceClassIndex, obstacleEntries, obstaclesOf, null);
+  }
+
+  /**
+   * Overload of {@link #overlappingTreeEntriesWithClearance} with {@code obstaclesOf} and {@code
+   * exactQuery}.
+   */
+  public void overlappingTreeEntriesWithClearance(
+      ConvexShape shape,
+      int layer,
+      int[] ignoreNetNos,
+      int clearanceClassIndex,
+      Collection<TreeEntry> obstacleEntries,
+      Item obstaclesOf,
+      ExactCopper exactQuery) {
     Lock lock = readLock();
     lock.lock();
     try {
@@ -583,7 +651,13 @@ public class ShapeSearchTree extends MinAreaTree {
         overlappingTreeEntriesUnlocked(shape, layer, ignoreNetNos, obstacleEntries, obstaclesOf);
       } else {
         overlappingTreeEntriesWithClearanceUnlocked(
-            shape, layer, ignoreNetNos, clearanceClassIndex, obstacleEntries, obstaclesOf);
+            shape,
+            layer,
+            ignoreNetNos,
+            clearanceClassIndex,
+            obstacleEntries,
+            obstaclesOf,
+            exactQuery);
       }
     } finally {
       lock.unlock();
@@ -597,6 +671,18 @@ public class ShapeSearchTree extends MinAreaTree {
       int clearanceClassIndex,
       Collection<TreeEntry> obstacleEntries,
       Item obstaclesOf) {
+    overlappingTreeEntriesWithClearanceUnlocked(
+        shape, layer, ignoreNetNos, clearanceClassIndex, obstacleEntries, obstaclesOf, null);
+  }
+
+  private void overlappingTreeEntriesWithClearanceUnlocked(
+      ConvexShape shape,
+      int layer,
+      int[] ignoreNetNos,
+      int clearanceClassIndex,
+      Collection<TreeEntry> obstacleEntries,
+      Item obstaclesOf,
+      ExactCopper exactQuery) {
     if (shape == null) {
       return;
     }
@@ -610,7 +696,13 @@ public class ShapeSearchTree extends MinAreaTree {
           currentLayer < board.layerStructure.layers.length;
           currentLayer++) {
         overlappingTreeEntriesWithClearanceUnlocked(
-            shape, currentLayer, ignoreNetNos, clearanceClassIndex, obstacleEntries, obstaclesOf);
+            shape,
+            currentLayer,
+            ignoreNetNos,
+            clearanceClassIndex,
+            obstacleEntries,
+            obstaclesOf,
+            exactQuery);
       }
       return;
     }
@@ -630,10 +722,13 @@ public class ShapeSearchTree extends MinAreaTree {
     tmpList.clear();
     // sort the found items by its clearances to clearanceClassIndex on layer layer
     Set<EntrySortedByClearance> sortedItems = new TreeSet<>();
-    int nextEntryId = 0;
     try {
-      overlapsUnlocked(offsetBounds, tmpList);
-      for (Leaf currentLeaf : tmpList) {
+      // Filter in traversal order, then sort only the kept leaves: the same order as sorting all
+      // candidates first, for a fraction of the comparisons.
+      collectOverlapsUnlocked(offsetBounds, tmpList);
+      int keptCount = 0;
+      for (int leafIndex = 0; leafIndex < tmpList.size(); leafIndex++) {
+        Leaf currentLeaf = tmpList.get(leafIndex);
         SearchTreeObject currentObject = (SearchTreeObject) currentLeaf.object;
         int shapeIndex = currentLeaf.shapeIndexInObject;
         boolean ignoreItem = layer >= 0 && currentObject.shapeLayer(shapeIndex) != layer;
@@ -654,20 +749,27 @@ public class ShapeSearchTree extends MinAreaTree {
             }
             int currentClearance =
                 additionalClearance(clearanceClassIndex, currentItem.clearanceClassIndex(), layer);
-            EntrySortedByClearance sortedOb =
-                new EntrySortedByClearance(currentLeaf, currentClearance, nextEntryId++);
-            sortedItems.add(sortedOb);
+            sortedItems.add(new EntrySortedByClearance(currentLeaf, currentClearance));
           } else if (obstaclesOf == null
               && currentObject.getTreeShape(this, shapeIndex).intersects(shape)) {
-            // Expansion rooms have no physical clearance class. Preserve their direct overlap
-            // semantics even when a mismatched query class needs conservative item checking.
-            obstacleEntries.add(new TreeEntry(currentObject, shapeIndex));
+            tmpList.set(keptCount++, currentLeaf);
           }
         }
+      }
+      // Expansion rooms have no physical clearance class. Preserve their direct overlap
+      // semantics even when a mismatched query class needs conservative item checking.
+      List<Leaf> keptRooms = tmpList.subList(0, keptCount);
+      keptRooms.sort(null);
+      for (Leaf currentLeaf : keptRooms) {
+        obstacleEntries.add(
+            new TreeEntry((SearchTreeObject) currentLeaf.object, currentLeaf.shapeIndexInObject));
       }
     } finally {
       tmpList.clear();
     }
+    boolean exactCopper = board != null && board.rules != null && board.rules.isExactCopper();
+    ExactCopper[] queryCopperHolder = new ExactCopper[] {exactQuery};
+    boolean[] queryCopperKnownHolder = new boolean[] {exactQuery != null};
     int currentHalfClearance = 0;
     ConvexShape currentOffsetShape = shape;
     for (EntrySortedByClearance tmpEntry : sortedItems) {
@@ -683,10 +785,96 @@ public class ShapeSearchTree extends MinAreaTree {
       // symmetry.
       ConvexShape tmpOffsetShape = (ConvexShape) tmpShape.enlarge(currentHalfClearance);
       if (!boundingOctagonsApart(currentOffsetShape, tmpOffsetShape)
-          && currentOffsetShape.intersects(tmpOffsetShape)) {
+          && currentOffsetShape.intersects(tmpOffsetShape)
+          && !(exactCopper
+              && copperApart(
+                  shape,
+                  exactQuery != null,
+                  queryCopperHolder,
+                  queryCopperKnownHolder,
+                  tmpEntry.leaf.object,
+                  tmpEntry.leaf.shapeIndexInObject,
+                  tmpShape,
+                  tmpEntry.clearance))) {
         obstacleEntries.add(new TreeEntry(tmpEntry.leaf.object, tmpEntry.leaf.shapeIndexInObject));
       }
     }
+  }
+
+  /**
+   * Whether the copper of a clearance query and of a tree entry whose tiles overlap (enlarged by
+   * half the clearance each) keep clearance apart all the same.
+   */
+  public boolean copperApart(
+      ConvexShape queryShape,
+      boolean queryIsCopper,
+      ExactCopper[] queryCopperHolder,
+      boolean[] queryCopperKnownHolder,
+      Object entryObject,
+      int entryIndex,
+      TileShape entryTile,
+      int clearance) {
+    ExactCopper entry =
+        entryObject instanceof SearchTreeObject treeObject
+            ? exactCopperOf(treeObject, entryIndex)
+            : null;
+    if (entry == null) {
+      if (!queryIsCopper) {
+        return false;
+      }
+      entry = ExactCopper.of(entryTile);
+    }
+    if (!queryCopperKnownHolder[0]) {
+      queryCopperHolder[0] = ExactCopper.of(queryShape);
+      queryCopperKnownHolder[0] = true;
+    }
+    if (entry == null || queryCopperHolder[0] == null) {
+      return false;
+    }
+    return ExactCopper.distance(queryCopperHolder[0], entry) >= Math.max(clearance, 1);
+  }
+
+  /**
+   * The copper behind the tree shape of a pin or via, grown as its tree shape is (the tree's
+   * clearance compensation and the drill's hole envelope); null for other objects, whose tree shape
+   * is their copper's own tile.
+   */
+  public ExactCopper exactCopperOf(SearchTreeObject treeObject, int index) {
+    if (!(treeObject instanceof DrillItem drillItem)
+        || this.board == null
+        || index < 0
+        || index >= drillItem.tileShapeCount()) {
+      return null;
+    }
+    TileShape treeShape = drillItem.getTreeShape(this, index);
+    DrillItem.ExactCopperEntry[] cache = drillItem.exactCopperCache;
+    if (treeShape != null
+        && cache != null
+        && index < cache.length
+        && cache[index] != null
+        && cache[index].treeShape == treeShape) {
+      return cache[index].copper;
+    }
+    Shape shape = drillItem.getShape(index);
+    if (shape == null) {
+      shape = drillHoleObstacle(drillItem);
+    }
+    ExactCopper result = null;
+    if (shape != null) {
+      int layer = drillItem.shapeLayer(index);
+      int grow =
+          this.clearanceCompensationValue(drillItem.clearanceClassIndex(), layer)
+              + drillHoleClearanceDelta(drillItem, shape, layer);
+      result = ExactCopper.of(shape, grow);
+    }
+    if (treeShape != null) {
+      if (cache == null || cache.length != drillItem.tileShapeCount()) {
+        cache = new DrillItem.ExactCopperEntry[drillItem.tileShapeCount()];
+        drillItem.exactCopperCache = cache;
+      }
+      cache[index] = new DrillItem.ExactCopperEntry(treeShape, result);
+    }
+    return result;
   }
 
   /**
@@ -724,9 +912,24 @@ public class ShapeSearchTree extends MinAreaTree {
    */
   public Collection<TreeEntry> overlappingTreeEntriesWithClearance(
       ConvexShape shape, int layer, int[] ignoreNetNos, int clearanceClassIndex, Item obstaclesOf) {
+    return overlappingTreeEntriesWithClearance(
+        shape, layer, ignoreNetNos, clearanceClassIndex, obstaclesOf, null);
+  }
+
+  /**
+   * Returns all objects of class TreeEntry which overlap with shape inclusive clearance and are
+   * obstacles to {@code obstaclesOf}, measured with {@code exactQuery} copper.
+   */
+  public Collection<TreeEntry> overlappingTreeEntriesWithClearance(
+      ConvexShape shape,
+      int layer,
+      int[] ignoreNetNos,
+      int clearanceClassIndex,
+      Item obstaclesOf,
+      ExactCopper exactQuery) {
     Collection<TreeEntry> result = new LinkedList<>();
     this.overlappingTreeEntriesWithClearance(
-        shape, layer, ignoreNetNos, clearanceClassIndex, result, obstaclesOf);
+        shape, layer, ignoreNetNos, clearanceClassIndex, result, obstaclesOf, exactQuery);
     return result;
   }
 
@@ -760,9 +963,21 @@ public class ShapeSearchTree extends MinAreaTree {
       int[] ignoreNetNos,
       int clearanceClassIndex,
       Collection<Item> obstacles) {
+    overlappingObjectsWithClearance(
+        shape, layer, ignoreNetNos, clearanceClassIndex, obstacles, null);
+  }
+
+  /** Appends overlapping board items with {@code exactShape} copper. */
+  public void overlappingObjectsWithClearance(
+      ConvexShape shape,
+      int layer,
+      int[] ignoreNetNos,
+      int clearanceClassIndex,
+      Collection<Item> obstacles,
+      Shape exactShape) {
     Collection<TreeEntry> treeEntries = new LinkedList<>();
     this.overlappingTreeEntriesWithClearance(
-        shape, layer, ignoreNetNos, clearanceClassIndex, treeEntries);
+        shape, layer, ignoreNetNos, clearanceClassIndex, treeEntries, exactShape);
     for (TreeEntry currentEntry : treeEntries) {
       if (currentEntry.object instanceof Item item) {
         obstacles.add(item);
@@ -778,8 +993,15 @@ public class ShapeSearchTree extends MinAreaTree {
    */
   public Set<Item> overlappingItemsWithClearance(
       ConvexShape shape, int layer, int[] ignoreNetNos, int clearanceClassIndex) {
+    return overlappingItemsWithClearance(shape, layer, ignoreNetNos, clearanceClassIndex, null);
+  }
+
+  /** Returns all items in the tree with {@code exactShape} copper. */
+  public Set<Item> overlappingItemsWithClearance(
+      ConvexShape shape, int layer, int[] ignoreNetNos, int clearanceClassIndex, Shape exactShape) {
     Set<Item> result = new TreeSet<>();
-    this.overlappingObjectsWithClearance(shape, layer, ignoreNetNos, clearanceClassIndex, result);
+    this.overlappingObjectsWithClearance(
+        shape, layer, ignoreNetNos, clearanceClassIndex, result, exactShape);
     return result;
   }
 
@@ -1195,7 +1417,7 @@ public class ShapeSearchTree extends MinAreaTree {
     }
     TileShape[] result;
     if (boardOutline.keepoutOutsideOutlineGenerated()) {
-      TileShape[] convexShapes = boardOutline.getKeepoutArea().splitToConvex();
+      TileShape[] convexShapes = boardOutline.getKeepoutTiles();
       if (convexShapes == null) {
         return new TileShape[0];
       }
@@ -1215,25 +1437,20 @@ public class ShapeSearchTree extends MinAreaTree {
         result[i] = it.next();
       }
     } else {
-      // Only the line shapes of the outline are inserted as obstacles into the tree.
-      result = new TileShape[boardOutline.lineCount() * this.board.layerStructure.layers.length];
+      // Only the line shapes of the outline are inserted as obstacles into the tree, oblique
+      // lines in several slices (see BoardOutline.lineSlices).
+      int lineCount = boardOutline.lineCount();
+      result = new TileShape[boardOutline.tileShapeCount()];
       int halfWidth = boardOutline.getHalfWidth();
-      Line[] currentLineArr = new Line[3];
       int currentNo = 0;
       for (int layerIndex = 0; layerIndex < this.board.layerStructure.layers.length; layerIndex++) {
-        for (int shapeIndex = 0; shapeIndex < boardOutline.shapeCount(); shapeIndex++) {
-          PolylineShape currentOutlineShape = boardOutline.getShape(shapeIndex);
-          int borderLineCount = currentOutlineShape.borderLineCount();
-          currentLineArr[0] = currentOutlineShape.borderLine(borderLineCount - 1);
-          for (int i = 0; i < borderLineCount; i++) {
-            currentLineArr[1] = currentOutlineShape.borderLine(i);
-            currentLineArr[2] = currentOutlineShape.borderLine((i + 1) % borderLineCount);
-            Polyline tmpPolyline = new Polyline(currentLineArr);
-            int cmpValue =
-                this.clearanceCompensationValue(boardOutline.clearanceClassIndex(), layerIndex);
-            result[currentNo] = tmpPolyline.offsetShape(halfWidth + cmpValue, 0);
+        int cmpValue =
+            this.clearanceCompensationValue(boardOutline.clearanceClassIndex(), layerIndex);
+        for (int lineIndex = 0; lineIndex < lineCount; lineIndex++) {
+          TileShape lineShape = boardOutline.lineShape(lineIndex, halfWidth + cmpValue);
+          for (TileShape slice : lineShape.splitIntoSlices(boardOutline.lineSlices(lineIndex))) {
+            result[currentNo] = slice;
             ++currentNo;
-            currentLineArr[0] = currentLineArr[1];
           }
         }
       }
@@ -1284,7 +1501,7 @@ public class ShapeSearchTree extends MinAreaTree {
    * drill hole (not just its copper pad). Applies to every drilled item — vias, PTH pins and
    * hole-only (NPTH) padstacks alike; returns 0 when the hole-clearance rule is disabled.
    */
-  protected int drillHoleClearanceDelta(DrillItem drillItem, Shape shape, int layer) {
+  public int drillHoleClearanceDelta(DrillItem drillItem, Shape shape, int layer) {
     if (this.board == null || this.board.rules == null) {
       return 0;
     }
@@ -1395,22 +1612,24 @@ public class ShapeSearchTree extends MinAreaTree {
    */
   private static class EntrySortedByClearance implements Comparable<EntrySortedByClearance> {
 
-    private final int entryId;
     Leaf leaf;
     int clearance;
 
-    EntrySortedByClearance(Leaf leaf, int clearance, int entryId) {
+    EntrySortedByClearance(Leaf leaf, int clearance) {
       this.leaf = leaf;
       this.clearance = clearance;
-      this.entryId = entryId;
     }
 
+    /**
+     * Orders by clearance, then in leaf order. Leaves of items never compare equal, so no entry is
+     * dropped, and the order does not depend on the order of insertion.
+     */
     @Override
     public int compareTo(EntrySortedByClearance other) {
       if (clearance != other.clearance) {
         return Signum.asInt(clearance - other.clearance);
       }
-      return Integer.compare(entryId, other.entryId);
+      return leaf.compareTo(other.leaf);
     }
   }
 }

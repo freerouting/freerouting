@@ -20,6 +20,7 @@ import app.freerouting.settings.ApiServerSettings;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.McpServerSettings;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.net.URI;
@@ -55,6 +56,68 @@ class McpEndpointsTest {
       }
     }
     return false;
+  }
+
+  private static JsonObject outputSchemaOf(JsonArray tools, String toolName) {
+    for (int i = 0; i < tools.size(); i++) {
+      JsonObject item = tools.get(i).getAsJsonObject();
+      if (toolName.equals(item.get("name").getAsString())) {
+        assertTrue(item.has("outputSchema"), () -> toolName + " declares no outputSchema");
+        return item.getAsJsonObject("outputSchema");
+      }
+    }
+    return fail("tools/list does not expose " + toolName);
+  }
+
+  /**
+   * Checks the parts of JSON Schema the MCP tool schemas use (object type, required,
+   * additionalProperties=false, primitive property types). The MCP specification requires a
+   * result's structuredContent to conform to the tool's outputSchema; strict clients reject the
+   * call otherwise (#981).
+   */
+  private static void assertStructuredContentConforms(
+      JsonObject result, JsonObject schema, String toolName) {
+    assertTrue(
+        result.has("structuredContent") && result.get("structuredContent").isJsonObject(),
+        () -> toolName + " declares an outputSchema but returned no structuredContent: " + result);
+    JsonObject structured = result.getAsJsonObject("structuredContent");
+    if (schema.has("required")) {
+      for (JsonElement element : schema.getAsJsonArray("required")) {
+        String name = element.getAsString();
+        assertTrue(
+            structured.has(name),
+            () -> toolName + " structuredContent lacks required '" + name + "': " + structured);
+      }
+    }
+    JsonObject properties =
+        schema.has("properties") ? schema.getAsJsonObject("properties") : new JsonObject();
+    boolean closed =
+        schema.has("additionalProperties") && !schema.get("additionalProperties").getAsBoolean();
+    for (String key : structured.keySet()) {
+      if (!properties.has(key)) {
+        assertFalse(closed, () -> toolName + " structuredContent has undeclared '" + key + "'");
+        continue;
+      }
+      JsonObject propertySchema = properties.getAsJsonObject(key);
+      if (!propertySchema.has("type")) {
+        continue;
+      }
+      JsonElement value = structured.get(key);
+      String type = propertySchema.get("type").getAsString();
+      boolean matches =
+          switch (type) {
+            case "string" -> value.isJsonPrimitive() && value.getAsJsonPrimitive().isString();
+            case "integer" ->
+                value.isJsonPrimitive()
+                    && value.getAsJsonPrimitive().isNumber()
+                    && value.getAsDouble() == Math.rint(value.getAsDouble());
+            case "object" -> value.isJsonObject();
+            default -> true;
+          };
+      assertTrue(
+          matches,
+          () -> toolName + " structuredContent '" + key + "' is not " + type + ": " + value);
+    }
   }
 
   @BeforeEach
@@ -179,6 +242,11 @@ class McpEndpointsTest {
     JsonObject forwarded = JsonParser.parseString(textPayload).getAsJsonObject();
     assertEquals(200, forwarded.get("status").getAsInt());
     assertNotNull(forwarded.get("body"));
+
+    JsonObject callResult = callPayload.getAsJsonObject("result");
+    assertStructuredContentConforms(
+        callResult, outputSchemaOf(tools, "get_system_status"), "get_system_status");
+    assertEquals(forwarded, callResult.getAsJsonObject("structuredContent"));
   }
 
   @Test
@@ -232,6 +300,12 @@ class McpEndpointsTest {
     assertEquals(200, encodeResultBody.get("status").getAsInt());
     String base64Value = encodeResultBody.getAsJsonObject("body").get("base64").getAsString();
     assertEquals("aGVsbG8gd29ybGQ=", base64Value);
+    JsonObject encodeResult = encodePayload.getAsJsonObject("result");
+    assertStructuredContentConforms(
+        encodeResult, outputSchemaOf(tools, "encode_base64"), "encode_base64");
+    assertEquals(
+        "aGVsbG8gd29ybGQ=",
+        encodeResult.getAsJsonObject("structuredContent").get("base64").getAsString());
 
     // 3. Call decode_base64
     JsonObject decodeRequest = new JsonObject();
@@ -267,6 +341,11 @@ class McpEndpointsTest {
     assertEquals(200, decodeResultBody.get("status").getAsInt());
     String textValue = decodeResultBody.getAsJsonObject("body").get("text").getAsString();
     assertEquals("hello world", textValue);
+    JsonObject decodeResult = decodePayload.getAsJsonObject("result");
+    assertStructuredContentConforms(
+        decodeResult, outputSchemaOf(tools, "decode_base64"), "decode_base64");
+    assertEquals(
+        "hello world", decodeResult.getAsJsonObject("structuredContent").get("text").getAsString());
   }
 
   @Test
@@ -380,6 +459,11 @@ class McpEndpointsTest {
       assertFalse(
           uploadResult.get("isError").getAsBoolean(),
           () -> "upload_job_input_from_local_file flagged isError: " + uploadBody);
+      JsonArray tools = listTools();
+      assertStructuredContentConforms(
+          uploadResult,
+          outputSchemaOf(tools, "upload_job_input_from_local_file"),
+          "upload_job_input_from_local_file");
 
       // 2. Download the output before the job started: no output bytes exist yet. A QUEUED job
       // reports 400 ("hasn't started yet"); if the scheduler ever picks the job up concurrently
@@ -409,10 +493,19 @@ class McpEndpointsTest {
         assertTrue(
             downloadBody.getAsJsonObject("body").toString().contains("hasn't started"),
             () -> "expected 'hasn't started yet' error body, got: " + downloadBody);
+        // The error body does not match the {message} outputSchema, so it must not be offered
+        // as structuredContent.
+        assertFalse(
+            downloadResult.has("structuredContent"),
+            () -> "error result must not carry structuredContent: " + downloadResult);
       } else {
         assertFalse(
             downloadResult.get("isError").getAsBoolean(),
             () -> "expected isError=false for HTTP 204 download status: " + downloadBody);
+        assertStructuredContentConforms(
+            downloadResult,
+            outputSchemaOf(tools, "download_job_output_to_local_file"),
+            "download_job_output_to_local_file");
       }
       assertFalse(
           Files.exists(tempOutput),
@@ -463,6 +556,20 @@ class McpEndpointsTest {
     assertTrue(Files.exists(tempInput), () -> "fixture copy is missing after copy: " + tempInput);
     assertTrue(Files.size(tempInput) > 0, () -> "fixture copy is empty: " + tempInput);
     return tempInput;
+  }
+
+  private JsonArray listTools() throws Exception {
+    JsonObject request = new JsonObject();
+    request.addProperty("jsonrpc", "2.0");
+    request.addProperty("id", 99);
+    request.addProperty("method", "tools/list");
+    HttpResponse<String> response =
+        httpClient.send(authenticatedMcpRequest(request), HttpResponse.BodyHandlers.ofString());
+    assertEquals(200, response.statusCode());
+    return JsonParser.parseString(response.body())
+        .getAsJsonObject()
+        .getAsJsonObject("result")
+        .getAsJsonArray("tools");
   }
 
   /**

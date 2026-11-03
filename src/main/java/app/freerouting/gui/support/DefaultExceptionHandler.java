@@ -46,8 +46,26 @@ public class DefaultExceptionHandler implements Thread.UncaughtExceptionHandler 
     return null;
   }
 
+  /**
+   * Headless runs must leave the process after an uncaught fatal error. A dialog is impossible, and
+   * a surviving non-daemon thread would keep the JVM up with the job still marked running.
+   */
+  static boolean shouldExitAfter(Throwable error) {
+    if (!(error instanceof VirtualMachineError)) {
+      return false;
+    }
+    return Freerouting.globalSettings != null
+        && Boolean.FALSE.equals(Freerouting.globalSettings.guiSettings.isEnabled);
+  }
+
   @Override
   public void uncaughtException(Thread t, Throwable e) {
-    handleException(e);
+    try {
+      handleException(e);
+    } finally {
+      if (shouldExitAfter(e)) {
+        System.exit(1);
+      }
+    }
   }
 }

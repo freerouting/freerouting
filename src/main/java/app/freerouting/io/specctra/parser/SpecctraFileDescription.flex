@@ -198,7 +198,7 @@ ComponentIdentifier = ({Letter}|{Digit}|{SpecChar4})({Letter}|{Digit}|{SpecChar5
    "width"         { return Keyword.WIDTH; }
    "window"        { return Keyword.WINDOW; }
    "wire"          { yybegin(NAME); return Keyword.WIRE; }
-   "wire_keepout"  { return Keyword.KEEPOUT; }
+   "wire_keepout"  { yybegin(NAME); return Keyword.WIRE_KEEPOUT; }
    "wiring"        { return Keyword.WIRING_SCOPE; }
    "write_resolution" { return Keyword.WRITE_RESOLUTION; }
    "("             { return Keyword.OPEN_BRACKET; }

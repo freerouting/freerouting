@@ -9,20 +9,31 @@ import app.freerouting.autoroute.expansion.TargetItemExpansionDoor;
 import app.freerouting.autoroute.maze.AutorouteControl;
 import app.freerouting.autoroute.maze.MazeSearchElement;
 import app.freerouting.autoroute.maze.MazeSearchEngine;
+import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.model.items.Connectable;
 import app.freerouting.board.model.items.DrillItem;
 import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.items.Trace;
+import app.freerouting.board.model.items.Via;
 import app.freerouting.board.model.structure.AngleRestriction;
 import app.freerouting.board.searchtree.ShapeSearchTree;
+import app.freerouting.datastructures.ShapeTree;
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
+import app.freerouting.geometry.planar.Point;
+import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
+import java.util.function.Predicate;
 
 /** Locates and constructs trace connection geometries from maze search backtrack paths. */
 public abstract class FoundConnectionLocator {
@@ -49,6 +60,7 @@ public abstract class FoundConnectionLocator {
   protected final BacktrackElement[] backtrackArray;
 
   protected final AutorouteControl ctrl;
+  protected final ShapeSearchTree searchTree;
   protected final AngleRestriction angleRestriction;
   protected final TargetItemExpansionDoor startDoor;
   protected FloatPoint currentFromPoint;
@@ -68,6 +80,7 @@ public abstract class FoundConnectionLocator {
       SortedSet<Item> rippedItemList,
       Map<Item, Integer> ripupCosts) {
     this.ctrl = ctrl;
+    this.searchTree = searchTree;
     this.angleRestriction = angleRestriction;
     Collection<BacktrackElement> backtrackList =
         backtrack(mazeSearchResult, rippedItemList, ripupCosts, ctrl.netNumber);
@@ -175,6 +188,25 @@ public abstract class FoundConnectionLocator {
           }
         }
         this.currentTargetShape = boundedShape;
+        if (startItem instanceof Pin targetPin) {
+          TileShape copper = (TileShape) targetPin.getTileShape(startDoor.treeEntryNo);
+          double traceHalfWidth = this.ctrl.compensatedTraceHalfWidth[startDoor.room.getLayer()];
+          TileShape targetRoomShape = startDoor.room.getShape();
+          IntPoint usualEnd =
+              this.currentTargetShape.nearestPointApprox(this.currentFromPoint).round();
+          TileShape shrunkTargetRoom = (TileShape) targetRoomShape.offset(-traceHalfWidth);
+          IntPoint clearEnd =
+              padEndWithClearStub(
+                  targetPin,
+                  copper != null ? copper : targetShape,
+                  shrunkTargetRoom,
+                  usualEnd,
+                  startDoor.room.getLayer(),
+                  false);
+          if (clearEnd != null) {
+            this.currentTargetShape = TileShape.getInstance(clearEnd);
+          }
+        }
       }
       this.currentToDoorIndex = this.currentFromDoorIndex + 1;
       ResultItem nextTrace = this.calculateNextTrace(layerChanged, atFanoutEnd);
@@ -438,10 +470,12 @@ public abstract class FoundConnectionLocator {
    * returned.
    */
   private ResultItem calculateNextTrace(boolean layerChanged, boolean atFanoutEnd) {
-    Collection<FloatPoint> cornerList = new LinkedList<>();
+    List<FloatPoint> cornerList = new ArrayList<>();
     cornerList.add(this.currentFromPoint);
     if (!atFanoutEnd) {
       FloatPoint adjustedStartCorner = this.adjustStartCorner();
+      // The adjustment may have moved the pad end itself (PadEndWithClearStub).
+      cornerList.set(0, this.currentFromPoint);
       if (adjustedStartCorner != this.currentFromPoint) {
         FloatPoint addCorner =
             calculateAdditionalCorner(
@@ -566,7 +600,198 @@ public abstract class FoundConnectionLocator {
     if (shrinkedRoomShape.isEmpty() || shrinkedRoomShape.contains(this.currentFromPoint)) {
       return this.currentFromPoint;
     }
+    // The first trace's stub out of a pad: from the pad end to the room's corner margin, clear of
+    // copper
+    // overlapping the pad (PadEndWithClearStub), or from a pad end that is.
+    if (this.currentFromDoorIndex == 0
+        && currentFromInfo.door instanceof TargetItemExpansionDoor padDoor
+        && padDoor.item instanceof Pin pin) {
+      TileShape copper = (TileShape) pin.getTileShape(padDoor.treeEntryNo);
+      if (copper != null) {
+        IntPoint clearEnd =
+            padEndWithClearStub(
+                pin,
+                copper,
+                shrinkedRoomShape,
+                this.currentFromPoint.round(),
+                this.currentTraceLayer,
+                true);
+        if (clearEnd != null) {
+          this.currentFromPoint = clearEnd.toFloat();
+          this.previousFromPoint = this.currentFromPoint;
+        }
+      }
+    }
     return shrinkedRoomShape.nearestPointApprox(this.currentFromPoint).round().toFloat();
+  }
+
+  /**
+   * freerouting.net (2026-10-20): a pad end whose stub is clear of copper overlapping the pad. A
+   * trace's first and last corners lie inside the pad's room shrunk by the compensated half-width
+   * (adjustStartCorner, the corner calculation); the stub between that corner and the pad end
+   * crosses the pad's own copper, which the rooms do not cover, so nothing checks it against an
+   * obstacle that overlaps the pad. nan-15_top-plate's D1-1 (KiCad benchmark): a keyswitch cut-out
+   * grown by the edge clearance, a zero-clearance keepout, crosses the pad's right side 0.1 mm from
+   * its centre; the stub from the centre ran north along the cut-out's edge, 2 um into it, and the
+   * strict check ripped the connection every pass and round until one cost setting found another
+   * way. Where the stub from usualEnd to the shrunk room's nearest point meets copper the insertion
+   * cannot shove (a foreign pin, fixed copper, a keepout, the outline), the end moves to the point
+   * of the pad's copper nearest the usual one from which the stub is clear (a grid of 32 steps a
+   * side over the copper). Null keeps the usual end.
+   */
+  private IntPoint padEndWithClearStub(
+      Pin pin,
+      TileShape copper,
+      TileShape shrunkRoom,
+      IntPoint usualEnd,
+      int layer,
+      boolean fromPad) {
+    if (copper.dimension() < 2
+        || pin.board == null
+        || shrunkRoom.isEmpty()
+        || !unshovableCopperOverlapsPad(pin.board, pin, copper, layer, this.ctrl.netNumber)) {
+      return null;
+    }
+    int halfWidth = this.ctrl.traceHalfWidth[layer];
+    Predicate<IntPoint> clear =
+        end -> {
+          FloatPoint endPoint = end.toFloat();
+          FloatPoint corner = shrunkRoom.nearestPointApprox(endPoint).round().toFloat();
+          FloatPoint[] path;
+          if (fromPad) {
+            path =
+                new FloatPoint[] {
+                  endPoint,
+                  calculateAdditionalCorner(endPoint, corner, true, this.angleRestriction),
+                  corner
+                };
+          } else {
+            FloatPoint add =
+                calculateAdditionalCorner(corner, endPoint, true, this.angleRestriction);
+            if (!shrunkRoom.contains(add)) {
+              add = calculateAdditionalCorner(corner, endPoint, false, this.angleRestriction);
+            }
+            path = new FloatPoint[] {corner, add, endPoint};
+          }
+          List<Point> corners = new ArrayList<>();
+          for (FloatPoint p : path) {
+            IntPoint rounded = p.round();
+            if (corners.isEmpty() || !rounded.equals(corners.get(corners.size() - 1))) {
+              corners.add(rounded);
+            }
+          }
+          if (corners.size() < 2) {
+            IntBox box =
+                new IntBox(
+                    end.x - halfWidth, end.y - halfWidth, end.x + halfWidth, end.y + halfWidth);
+            return !endBlockedByUnshovableCopper(
+                pin.board, box, layer, this.ctrl.netNumber, this.ctrl.traceClearanceClassIndex);
+          }
+          Polyline stub = new Polyline(corners.toArray(new Point[0]));
+          for (int i = 0; i < stub.cornerCount() - 1; i++) {
+            if (endBlockedByUnshovableCopper(
+                pin.board,
+                stub.offsetShape(halfWidth, i),
+                layer,
+                this.ctrl.netNumber,
+                this.ctrl.traceClearanceClassIndex)) {
+              return false;
+            }
+          }
+          return true;
+        };
+
+    if (clear.test(usualEnd)) {
+      return null;
+    }
+    IntBox box = copper.boundingBox();
+    final int steps = 32;
+    double stepX = (box.ur.x - box.ll.x) / (double) steps;
+    double stepY = (box.ur.y - box.ll.y) / (double) steps;
+    IntPoint best = null;
+    double bestDistance = Double.MAX_VALUE;
+    for (int i = 1; i < steps; i++) {
+      for (int j = 1; j < steps; j++) {
+        IntPoint at =
+            new IntPoint(
+                (int) Math.round(box.ll.x + i * stepX), (int) Math.round(box.ll.y + j * stepY));
+        double distance = at.toFloat().distance(usualEnd.toFloat());
+        if (distance >= bestDistance || !copper.contains(at) || !clear.test(at)) {
+          continue;
+        }
+        best = at;
+        bestDistance = distance;
+      }
+    }
+    if (FRLogger.isTraceEnabled()) {
+      FRLogger.trace(
+          "pad_end_with_clear_stub pin="
+              + pin.getId()
+              + ", layer="
+              + layer
+              + ", usual="
+              + usualEnd
+              + ", result="
+              + (best != null ? best.toString() : "none"));
+    }
+    return best;
+  }
+
+  /**
+   * freerouting.net (2026-10-21): whether copper the insertion cannot shove (a foreign pin, fixed
+   * copper, a keepout) overlaps the pad's own copper on layer, the case padEndWithClearStub is for.
+   */
+  public static boolean unshovableCopperOverlapsPad(
+      BasicBoard board, Pin pin, TileShape copper, int layer, int netNumber) {
+    ShapeSearchTree defaultTree = board.searchTreeManager.getDefaultTree();
+    Collection<ShapeTree.TreeEntry> treeEntries = new ArrayList<>();
+    defaultTree.overlappingTreeEntries(copper, layer, new int[0], treeEntries);
+    for (ShapeTree.TreeEntry entry : treeEntries) {
+      if (!(entry.object instanceof Item item) || item == pin || !item.isTraceObstacle(netNumber)) {
+        continue;
+      }
+      if (!(item instanceof Pin
+          || item.isUserFixed()
+          || !(item instanceof Trace || item instanceof Via))) {
+        continue;
+      }
+      TileShape shape = item.getTileShape(entry.shapeIndexInObject);
+      if (shape != null && shape.intersection(copper).dimension() >= 2) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Whether a trace end with shape on layer meets copper of another net that the forced insertion
+   * cannot shove: a pin, fixed copper, a keepout or conduction area, the outline.
+   */
+  private static boolean endBlockedByUnshovableCopper(
+      BasicBoard board, TileShape shape, int layer, int netNumber, int clearanceClassIndex) {
+    if (!shape.isContainedIn(board.getBoundingBox())) {
+      return true;
+    }
+    ShapeSearchTree defaultTree = board.searchTreeManager.getDefaultTree();
+    Collection<ShapeTree.TreeEntry> treeEntries = new ArrayList<>();
+    int[] ignoreNetNos = new int[0];
+    if (defaultTree.isClearanceCompensationUsed()) {
+      defaultTree.overlappingTreeEntries(shape, layer, ignoreNetNos, treeEntries);
+    } else {
+      defaultTree.overlappingTreeEntriesWithClearance(
+          shape, layer, ignoreNetNos, clearanceClassIndex, treeEntries);
+    }
+    for (ShapeTree.TreeEntry entry : treeEntries) {
+      if (!(entry.object instanceof Item item) || !item.isTraceObstacle(netNumber)) {
+        continue;
+      }
+      if (item instanceof Pin
+          || item.isUserFixed()
+          || !(item instanceof Trace || item instanceof Via)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**

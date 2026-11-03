@@ -60,6 +60,17 @@ public class Padstacks implements Serializable {
     return padstacks.size();
   }
 
+  /** Returns the maximum drill radius among all padstacks in this library. */
+  public double getMaxDrillRadius() {
+    double max = 0.0;
+    for (Padstack p : padstacks) {
+      if (p != null) {
+        max = Math.max(max, p.getDrillRadius());
+      }
+    }
+    return max;
+  }
+
   /** Appends a new padstack with the input shapes to this padstacks. */
   public Padstack add(
       String name,

@@ -24,6 +24,7 @@ import app.freerouting.geometry.planar.LineSegment;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.Shape;
+import app.freerouting.geometry.planar.Side;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
@@ -121,7 +122,7 @@ public class PolylineTrace extends Trace implements Serializable {
 
   @Override
   public boolean contains(Point point) {
-    if (point == null) {
+    if (point == null || point.isInfinite()) {
       return false;
     }
     Point first = firstCorner();
@@ -129,13 +130,31 @@ public class PolylineTrace extends Trace implements Serializable {
     if ((first != null && point.equals(first)) || (last != null && point.equals(last))) {
       return true;
     }
-    if (!(point instanceof IntPoint)) {
-      return false;
-    }
     if (!point.isContainedIn(boundingBox())) {
       return false;
     }
     return lines != null && lines.contains(point);
+  }
+
+  @Override
+  public boolean centreLineContains(Point point) {
+    if (point == null || lines == null || lines.lines == null) {
+      return false;
+    }
+    Line[] segmentLines = lines.lines;
+    for (int i = 1; i < segmentLines.length - 1; i++) {
+      if (segmentLines[i].sideOf(point) != Side.COLLINEAR) {
+        continue;
+      }
+      Side fromStart = segmentLines[i - 1].sideOf(point);
+      Side fromEnd = segmentLines[i + 1].sideOf(point);
+      if ((fromStart == Side.COLLINEAR || fromStart == segmentLines[i - 1].sideOf(lines.corner(i)))
+          && (fromEnd == Side.COLLINEAR
+              || fromEnd == segmentLines[i + 1].sideOf(lines.corner(i - 1)))) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /** Returns the polyline of this trace. */
@@ -718,9 +737,8 @@ public class PolylineTrace extends Trace implements Serializable {
   public Trace[] split(Point point) {
     for (int i = 0; i < this.lines.lines.length - 2; i++) {
       LineSegment currentLineSegment = new LineSegment(this.lines, i + 1);
-      if (currentLineSegment.contains(point)) {
-        Direction splitLineDirection = currentLineSegment.getLine().direction().turn45Degree(2);
-        Line splitLine = new Line(point, splitLineDirection);
+      Line splitLine = currentLineSegment.splitLine(point);
+      if (splitLine != null) {
         Trace[] result = split(i + 1, splitLine);
         if (result != null) {
           return result;

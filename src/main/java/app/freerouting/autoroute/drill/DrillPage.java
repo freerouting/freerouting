@@ -32,6 +32,9 @@ public class DrillPage implements ExpandableObject {
   /** The number of the net, for which the drills are calculated. */
   private int netNumber = -1;
 
+  private boolean attachSmdCached;
+  private boolean centreOfGravityCandidateCached;
+
   /** Creates a new instance of DrillPage. */
   public DrillPage(IntBox shape, RoutingBoard board) {
     this.shape = shape;
@@ -61,8 +64,23 @@ public class DrillPage implements ExpandableObject {
 
   /** Returns the drills on this page. If attachSmd, drilling to smd pins is allowed. */
   public Collection<ExpansionDrill> getDrills(AutorouteEngine autorouteEngine, boolean attachSmd) {
-    if (this.drills == null || autorouteEngine.getNetNumber() != this.netNumber) {
+    return getDrills(autorouteEngine, attachSmd, true);
+  }
+
+  /**
+   * Returns the drills on this page. If attachSmd, drilling to smd pins is allowed. With {@code
+   * centreOfGravityCandidate}, free pieces containing an SMD pad also offer their centre of gravity
+   * as a via candidate.
+   */
+  public Collection<ExpansionDrill> getDrills(
+      AutorouteEngine autorouteEngine, boolean attachSmd, boolean centreOfGravityCandidate) {
+    if (this.drills == null
+        || autorouteEngine.getNetNumber() != this.netNumber
+        || this.attachSmdCached != attachSmd
+        || this.centreOfGravityCandidateCached != centreOfGravityCandidate) {
       this.netNumber = autorouteEngine.getNetNumber();
+      this.attachSmdCached = attachSmd;
+      this.centreOfGravityCandidateCached = centreOfGravityCandidate;
       this.drills = new LinkedList<>();
       ShapeSearchTree searchTree = autorouteEngine.autorouteSearchTree;
       Collection<TreeEntry> overlaps = new LinkedList<>();
@@ -129,7 +147,7 @@ public class DrillPage implements ExpandableObject {
         if (newDrill.calculateExpansionRooms(autorouteEngine)) {
           this.drills.add(newDrill);
         }
-        if (pinCenter != null) {
+        if (centreOfGravityCandidate && pinCenter != null) {
           Point centreOfGravity = currentDrillShape.centreOfGravity().round();
           if (!centreOfGravity.equals(pinCenter)) {
             ExpansionDrill cogDrill =

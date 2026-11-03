@@ -14,6 +14,8 @@ import app.freerouting.rules.ViaInfo;
 import app.freerouting.rules.ViaRule;
 import app.freerouting.settings.RouterSettings;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 
 /** Structure for controlling the autoroute algorithm. */
 public class AutorouteControl {
@@ -61,12 +63,32 @@ public class AutorouteControl {
   /** True, if vias may drill to the pad of SMD pins. */
   public boolean attachSmdAllowed;
 
+  /** True, if vias may sit directly in SMD pads of their own net. */
+  public final boolean viaInPad;
+
+  /** True, if vias may touch SMD pads of their own net with drill hole outside. */
+  public final boolean viaTouchingPad;
+
+  /**
+   * True, if free pieces containing SMD pads also offer their centre of gravity as via candidate.
+   */
+  public final boolean centreOfGravityViaCandidate;
+
+  /** Extra cost for fanout vias inside own-net pad clearance. */
+  public final double fanoutViaPadGap;
+
   /** The minimum cost value of all normal vias. */
   public double minNormalViaCost;
 
   public boolean ripupAllowed;
   public int ripupCosts;
   public int ripupPassNo;
+
+  /**
+   * Nets whose traces and vias this search may not rip: the routed net was moved aside for them in
+   * an earlier pass (see the batch autorouter's rip-up memory). Empty by default.
+   */
+  public Set<Integer> netsNotToRip = Collections.emptySet();
 
   /** If true, the autoroute algorithm completes after the first drill. */
   public boolean isFanout;
@@ -145,6 +167,26 @@ public class AutorouteControl {
   private AutorouteControl(
       RoutingBoard board, RouterSettings settings, ExpansionCostFactor[] traceCosts) {
     this.settings = settings;
+    this.viaInPad =
+        settings != null
+            && settings.autorouter != null
+            && Boolean.TRUE.equals(settings.autorouter.viaInPad);
+    this.viaTouchingPad =
+        settings != null
+            && settings.autorouter != null
+            && Boolean.TRUE.equals(settings.autorouter.viaTouchingPad);
+    this.fanoutViaPadGap =
+        (settings != null
+                && settings.autorouter != null
+                && settings.autorouter.fanoutViaPadGap != null)
+            ? Math.max(0, settings.autorouter.fanoutViaPadGap)
+            : 0;
+    this.centreOfGravityViaCandidate =
+        (settings != null
+                && settings.autorouter != null
+                && settings.autorouter.viaCentreOfGravity != null)
+            ? settings.autorouter.viaCentreOfGravity
+            : !viaInPad;
     layerCount = board.getLayerCount();
     traceHalfWidth = new int[layerCount];
     compensatedTraceHalfWidth = new int[layerCount];
@@ -196,6 +238,29 @@ public class AutorouteControl {
     ripupAllowed = false;
     ripupCosts = 1000;
     ripupPassNo = 1;
+  }
+
+  /**
+   * Whether a via of {@code viaInfo} may share copper with SMD pads of its own net: the via rule's
+   * flag, or with {@code viaInPad} / {@code viaTouchingPad} the forced {@code attachSmdAllowed} as
+   * well.
+   */
+  public boolean viaAttachAllowed(ViaInfo viaInfo) {
+    return viaInfo.attachSmdAllowed() || ((viaInPad || viaTouchingPad) && this.attachSmdAllowed);
+  }
+
+  /**
+   * Whether a via of {@code viaInfo} may have its drill hole at {@code location}: always, except
+   * under {@code viaTouchingPad} alone, where the hole must stay outside the own-net SMD pads it
+   * overlaps.
+   */
+  public boolean viaHoleAllowed(
+      RoutingBoard board, ViaInfo viaInfo, Point location, int[] netNumbers) {
+    return !viaTouchingPad
+        || viaInPad
+        || viaInfo.attachSmdAllowed()
+        || !app.freerouting.board.actions.ForcedViaInserter.holeInSmdPad(
+            board, viaInfo.getPadstack(), location, netNumbers);
   }
 
   private static boolean isPureSmdNet(RoutingBoard board, int netNumber) {

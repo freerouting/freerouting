@@ -373,8 +373,7 @@ public class BoardStatistics implements Serializable {
         double maxViolation = 0.0;
         double sumViolation = 0.0;
         for (app.freerouting.drc.ClearanceViolation cv : violationsList) {
-          double shortfall = Math.max(0.0, cv.expectedClearance - cv.actualClearance);
-          double shortfallUm = shortfall * boardUnitToUmFactor;
+          double shortfallUm = shortfallUm(cv, boardUnitToUmFactor);
           minViolation = Math.min(minViolation, shortfallUm);
           maxViolation = Math.max(maxViolation, shortfallUm);
           sumViolation += shortfallUm;
@@ -391,12 +390,16 @@ public class BoardStatistics implements Serializable {
       }
       this.clearanceViolations.preExistingCount = board.preExistingClearanceViolationsCount;
       int unfixable = 0;
+      double fixableViolationUm = 0.0;
       for (app.freerouting.drc.ClearanceViolation cv : violationsList) {
         if (cv.isUnfixable()) {
           unfixable++;
+        } else {
+          fixableViolationUm += shortfallUm(cv, boardUnitToUmFactor);
         }
       }
       this.clearanceViolations.unfixableCount = unfixable;
+      this.clearanceViolations.fixableViolationUm = fixableViolationUm;
       this.clearanceViolations.newOrChangedCount =
           board.clearanceBaseline != null
               ? board.clearanceBaseline.countNewOrChanged(violationsList)
@@ -411,6 +414,7 @@ public class BoardStatistics implements Serializable {
       this.clearanceViolations.newOrChangedCount = 0;
       this.clearanceViolations.routerIntroducedCount = 0;
       this.clearanceViolations.totalViolationUm = 0.0;
+      this.clearanceViolations.fixableViolationUm = 0.0;
       this.clearanceViolations.minViolationUm = 0.0;
       this.clearanceViolations.maxViolationUm = 0.0;
       this.clearanceViolations.avgViolationUm = 0.0;
@@ -625,6 +629,12 @@ public class BoardStatistics implements Serializable {
     return false;
   }
 
+  private static double shortfallUm(
+      app.freerouting.drc.ClearanceViolation violation, double boardUnitToUmFactor) {
+    return Math.max(0.0, violation.expectedClearance - violation.actualClearance)
+        * boardUnitToUmFactor;
+  }
+
   private static int countOccurrences(String text, String target) {
     int count = 0;
     int index = 0;
@@ -648,7 +658,7 @@ public class BoardStatistics implements Serializable {
     float maximumScore = getMaximumScore(scoringSettings);
     float penalties =
         this.connections.incompleteCount * scoringSettings.unroutedNetPenalty
-            + this.clearanceViolations.totalCount * scoringSettings.clearanceViolationPenalty
+            + this.clearanceViolations.fixableCount() * scoringSettings.clearanceViolationPenalty
             + this.bends.totalCount * scoringSettings.bendPenalty;
     // Use the mm-normalised trace length so that the trace-cost term is comparable
     // to the unroutedNetPenalty regardless of the DSN internal coordinate resolution.
@@ -710,14 +720,8 @@ public class BoardStatistics implements Serializable {
         this.connections.incompleteCount != null
             ? Math.max(0, this.connections.incompleteCount)
             : 0;
-    double violationCount =
-        this.clearanceViolations.totalCount != null
-            ? Math.max(0, this.clearanceViolations.totalCount)
-            : 0;
-    double violationDepth =
-        this.clearanceViolations.totalViolationUm != null
-            ? Math.max(0.0, this.clearanceViolations.totalViolationUm)
-            : 0.0;
+    double violationCount = this.clearanceViolations.fixableCount();
+    double violationDepth = this.clearanceViolations.fixableShortfallUm();
     double split =
         Math.min(1.0, Math.max(0.0, valueOrDefault(settings.unroutedFreeFraction, 0.5f)));
     double firstHalfWeight = valueOrDefault(settings.unroutedFirstHalfWeight, 1000.0f / 3.0f);
@@ -819,8 +823,28 @@ public class BoardStatistics implements Serializable {
     return getLegacyNormalizedScore(legacyScoringOrDefault(routerSettings));
   }
 
+  /**
+   * Returns the configured optimizer score without its floor at zero, used to rank optimizer
+   * passes. On dense boards where initial penalty exceeds 1,000, score is negative rather than
+   * clamped at 0.
+   */
+  public float getOptimizerRank(RouterSettings routerSettings) {
+    if (routerSettings != null
+        && routerSettings.optimizerScoring != null
+        && routerSettings.optimizerScoring.version
+            == app.freerouting.settings.OptimizerScoringVersion.V2_LOWER_BOUND) {
+      return (float) v2OptimizerScoreUnbounded(routerSettings.optimizerScoring);
+    }
+    return getOptimizerScore(routerSettings);
+  }
+
   /** Calculates the V2 optimizer score from board-only lower bounds and actual route metrics. */
   private float getV2OptimizerScore(OptimizerScoreSettings settings) {
+    return (float) Math.max(0.0, v2OptimizerScoreUnbounded(settings));
+  }
+
+  /** 1,000 less the V2 optimizer score's penalties; below zero when they outweigh it. */
+  private double v2OptimizerScoreUnbounded(OptimizerScoreSettings settings) {
     double difficulty =
         this.difficulty.difficultyD != null ? Math.max(1.0, this.difficulty.difficultyD) : 1.0;
     double minTraceLength =
@@ -846,7 +870,7 @@ public class BoardStatistics implements Serializable {
         valueOrDefault(settings.excessBendWeight, 500.0f)
             * Math.max(0.0, actualBendCount - minBendCount)
             / Math.max(difficulty, difficultyFloor);
-    return (float) Math.max(0.0, 1000.0 - lengthPenalty - viaPenalty - bendPenalty);
+    return 1000.0 - lengthPenalty - viaPenalty - bendPenalty;
   }
 
   /**
