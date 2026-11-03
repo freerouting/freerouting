@@ -630,9 +630,7 @@ public class Network extends ScopeKeyword {
     // clearances aligned with the same effective entries used by pads and newly imported wiring.
     for (var plane : scopeParameter.planesWithInheritedClearance) {
       var netClass = routingBoard.rules.nets.get(plane.getNetNumber(0)).getNetClass();
-      if (preparedClasses.contains(netClass)) {
-        plane.changeClearanceClassIndex(netClass.defaultItemClearanceClasses.get(ItemClass.AREA));
-      }
+      plane.changeClearanceClassIndex(netClass.defaultItemClearanceClasses.get(ItemClass.AREA));
     }
   }
 
