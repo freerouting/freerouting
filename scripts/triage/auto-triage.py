@@ -137,8 +137,9 @@ def triage_issue(issue):
     if clean_title != title:
         edit_cmd.extend(["--title", clean_title])
 
-    print(f"Executing: {' '.join(edit_cmd)}")
-    run_cmd(edit_cmd)
+    if len(edit_cmd) > 4:
+        print(f"Executing: {' '.join(edit_cmd)}")
+        run_cmd(edit_cmd)
 
     # 7. Set Native Issue Type
     t_id = TYPE_MAP[issue_type]
@@ -212,7 +213,7 @@ def triage_pull_request(pr):
             labels_to_add.add("API")
         if "integrations/KiCad" in f_norm:
             labels_to_add.add("KiCad")
-        if ".github/workflows" in f_norm:
+        if any(ci_path in f_norm for ci_path in [".github", ".agents"]):
             labels_to_add.add("CI")
         if f_norm.endswith(".java"):
             labels_to_add.add("Java")
@@ -227,7 +228,7 @@ def triage_pull_request(pr):
     for l in new_labels:
         edit_cmd.extend(["--add-label", l])
 
-    if len(edit_cmd) > 3:
+    if len(edit_cmd) > 4:
         print(f"Executing: {' '.join(edit_cmd)}")
         run_cmd(edit_cmd)
 
