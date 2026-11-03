@@ -115,4 +115,28 @@ class UnfixableClearanceViolationScoreTest {
         wireTooClose.getRouterScore(SETTINGS.scoring)
             < padsTooClose.getRouterScore(SETTINGS.scoring));
   }
+
+  @Test
+  void fixableShortfallIsZeroWhenAllViolationsAreUnfixableEvenIfMissingFixableUm() {
+    BoardStatisticsClearanceViolations violations = new BoardStatisticsClearanceViolations();
+    violations.totalCount = 3;
+    violations.unfixableCount = 3;
+    violations.totalViolationUm = 150.0;
+    violations.fixableViolationUm = null;
+
+    assertEquals(0, violations.fixableCount());
+    assertEquals(0.0, violations.fixableShortfallUm());
+  }
+
+  @Test
+  void fixableShortfallFallsBackToTotalWhenNoUnfixableViolationsAndMissingFixableUm() {
+    BoardStatisticsClearanceViolations violations = new BoardStatisticsClearanceViolations();
+    violations.totalCount = 3;
+    violations.unfixableCount = 0;
+    violations.totalViolationUm = 150.0;
+    violations.fixableViolationUm = null;
+
+    assertEquals(3, violations.fixableCount());
+    assertEquals(150.0, violations.fixableShortfallUm());
+  }
 }

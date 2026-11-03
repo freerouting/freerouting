@@ -135,7 +135,7 @@ public final class BoardScoreBreakdown {
         weights,
         stats.connections.maximumCount != null ? stats.connections.maximumCount : 0,
         stats.connections.incompleteCount != null ? stats.connections.incompleteCount : 0,
-        stats.clearanceViolations.fixableCount(),
+        stats.clearanceViolations != null ? stats.clearanceViolations.fixableCount() : 0,
         stats.bends.totalCount != null ? stats.bends.totalCount : 0,
         stats.traces.totalLength != null ? stats.traces.totalLength : 0f,
         stats.vias.totalCount != null ? stats.vias.totalCount : 0);

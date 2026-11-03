@@ -53,6 +53,9 @@ public class BoardStatisticsClearanceViolations implements Serializable {
    * statistics recorded without that split.
    */
   public double fixableShortfallUm() {
+    if (fixableCount() == 0) {
+      return 0.0;
+    }
     Double shortfall = fixableViolationUm != null ? fixableViolationUm : totalViolationUm;
     return shortfall != null ? Math.max(0.0, shortfall) : 0.0;
   }
