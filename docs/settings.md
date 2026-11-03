@@ -143,17 +143,18 @@ The primary way to configure Freerouting is through a JSON settings file. This f
       retains its existing ordering policy.
     - **`save_intermediate_stages`**: Save board snapshots between passes.
     - **`ignore_net_classes`**: Net class names the autorouter should skip.
-    - **`max_threads`**: Canonical CLI is `--router.autorouter.max_threads`. The autorouter pass
-      does not read it. Fanout is also single-threaded. The optimizer pool uses
-      `--router.optimizer.max_threads`. The legacy flat `--router.max_threads` remains as a
-      fallback / GUI knob and is still copied onto both pools.
+    - **`max_threads`**: Stage-specific autorouter worker-thread limit. Canonical CLI is
+      `--router.autorouter.max_threads`. Bounded by the global `--router.max_threads` ceiling.
+      The autorouter stage currently runs single-threaded; this setting is reserved for future multi-threaded passes.
 - **`result_json`**: Optional path for a machine-readable routing result manifest written at the
   end of a headless `-de`/`-do` run. Used by the benchmark and autopilot harnesses. Equivalent CLI
   flag: `--router.result_json=<path>`.
-- **`max_threads`**: Legacy flat / GUI worker-thread cap. `setMaxThreads()` still copies this
-  value into both `autorouter.max_threads` and `optimizer.max_threads`. Prefer the nested CLI
-  flags (`--router.autorouter.max_threads`, `--router.optimizer.max_threads`) when the two pools
-  must differ. `-mt` sets **optimizer** threads only.
+- **`max_threads`**: Global worker-thread ceiling across all stages (fanout, autorouter, and
+  optimizer). From any source (GUI, JSON, environment, `--router.max_threads`), setting this caps
+  the maximum number of threads any stage may use. Defaults to `cores - 1`. `0` means all
+  processors. Nested stage settings (`--router.autorouter.max_threads`,
+  `--router.optimizer.max_threads`) allow stage-specific fine-tuning within this ceiling.
+  Legacy `-mt` maps here; `-mt 0` disables the optimizer like `--router.optimizer.enabled=false`.
 - **`improvement_threshold`**: Minimum improvement required to continue routing.
 - **`trace_pull_tight_accuracy`**: Accuracy for pulling traces tight.
 - **`allowed_via_types`**: Enables or disables the use of different via types.
