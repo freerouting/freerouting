@@ -370,7 +370,8 @@ public final class FRLogger {
    * it first, so that they do not build a message nobody reads.
    */
   public static boolean isGranularTraceActive() {
-    return (enabled && granularTraceEnabled) || DebugControl.getInstance().isActive();
+    return (enabled && granularTraceEnabled && isTraceEnabled())
+        || DebugControl.getInstance().isActive();
   }
 
   /**
