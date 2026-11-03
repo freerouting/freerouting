@@ -8,6 +8,7 @@ import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.core.library.Padstack;
+import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Shape;
@@ -216,7 +217,43 @@ public class Via extends DrillItem implements Serializable {
       return false;
     }
     if (other instanceof Pin pin) {
-      return !pin.drillAllowed() || (!this.attachAllowed && !pin.viaMayAttach());
+      return !pin.drillAllowed()
+          || (!this.attachAllowed && !pin.viaMayAttach() && !ownPadAllowedByRules(pin));
+    }
+    return false;
+  }
+
+  /**
+   * Whether the board rules let this via share copper with {@code pin}, an SMD pad of its own net:
+   * always under {@code via_in_pad}, and under {@code via_touching_pad} while its drill hole stays
+   * outside the pad. The router already inserts its own vias with that permission; this extends it
+   * to the vias the board came with, so the design rule check does not report the vias that made
+   * the router allow it. Called from search tree queries, so it must not query the tree itself.
+   */
+  private boolean ownPadAllowedByRules(Pin pin) {
+    if (this.board == null || this.board.rules == null) {
+      return false;
+    }
+    if (this.board.rules.isViaInPad()) {
+      return true;
+    }
+    return this.board.rules.isViaTouchingPad() && !holeInPad(pin);
+  }
+
+  /** Whether the drill hole of this via overlaps the copper of {@code pin} on a common layer. */
+  private boolean holeInPad(Pin pin) {
+    double drillRadius = this.getPadstack().getDrillRadius();
+    if (drillRadius <= 0 || !(this.getCenter() instanceof IntPoint center)) {
+      return false;
+    }
+    Circle hole = new Circle(center, (int) Math.ceil(drillRadius));
+    int fromLayer = Math.max(this.firstLayer(), pin.firstLayer());
+    int toLayer = Math.min(this.lastLayer(), pin.lastLayer());
+    for (int layer = fromLayer; layer <= toLayer; layer++) {
+      Shape pad = pin.getShapeOnLayer(layer);
+      if (pad != null && pad.intersects(hole)) {
+        return true;
+      }
     }
     return false;
   }
