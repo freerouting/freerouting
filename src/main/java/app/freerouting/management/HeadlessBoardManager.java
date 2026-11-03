@@ -436,9 +436,11 @@ public class HeadlessBoardManager implements BoardManager {
         }
       }
       if (viaInPad == null) {
-        if (inPadDetected) {
+        if (inPadDetected && !Boolean.FALSE.equals(viaTouchingPad)) {
           this.routingJob.routerSettings.autorouter.viaInPad = true;
-          this.routingJob.routerSettings.autorouter.viaTouchingPad = true;
+          if (viaTouchingPad == null) {
+            this.routingJob.routerSettings.autorouter.viaTouchingPad = true;
+          }
           FRLogger.info("The board's own vias decide: router.autorouter.via_in_pad = true.");
         } else if (touchingDetected && viaTouchingPad == null) {
           this.routingJob.routerSettings.autorouter.viaInPad = false;
