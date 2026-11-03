@@ -51,6 +51,8 @@ public final class RoutingBoardUndoFacade {
           new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
       inputStream = new app.freerouting.util.SafeObjectInputStream(byteArrayInputStream);
       RoutingBoard boardCopy = (RoutingBoard) inputStream.readObject();
+      // Transient, so not serialized: without it every pre-existing violation counts as new.
+      boardCopy.clearanceBaseline = board.clearanceBaseline;
       boardCopy.clearAllItemTemporaryAutorouteData();
       boardCopy.finishAutoroute();
       return boardCopy;
