@@ -534,7 +534,19 @@ public class ShapeSearchTree extends MinAreaTree {
       int[] ignoreNetNos,
       Collection<TreeEntry> treeEntries,
       Item obstaclesOf) {
-    overlappingTreeEntriesUnlocked(shape, layer, ignoreNetNos, treeEntries, obstaclesOf, true, false);
+    overlappingTreeEntriesUnlocked(
+        shape, layer, ignoreNetNos, treeEntries, obstaclesOf, true, false);
+  }
+
+  private void overlappingTreeEntriesUnlocked(
+      ConvexShape shape,
+      int layer,
+      int[] ignoreNetNos,
+      Collection<TreeEntry> treeEntries,
+      Item obstaclesOf,
+      boolean inLeafOrder) {
+    overlappingTreeEntriesUnlocked(
+        shape, layer, ignoreNetNos, treeEntries, obstaclesOf, inLeafOrder, false);
   }
 
   /**
