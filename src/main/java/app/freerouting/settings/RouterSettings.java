@@ -1236,22 +1236,22 @@ public class RouterSettings implements Serializable, Cloneable {
       }
     }
 
-    // Validate maxThreads (0 means no limit - handled as max available during normalization)
+    // Validate maxThreads if explicitly specified (0 means no limit - handled during normalization)
     int availableProcessors = Runtime.getRuntime().availableProcessors();
-    if (this.maxThreads == null) {
-      this.maxThreads = defaultMaxThreads();
-    } else if (this.maxThreads < 0) {
-      String warning =
-          "Invalid maxThreads value: " + this.maxThreads + ", using " + defaultMaxThreads();
-      FRLogger.warn(warning);
-      this.validationWarnings.add(warning);
-      this.maxThreads = defaultMaxThreads();
-    } else if (this.maxThreads > availableProcessors) {
-      String warning =
-          "Invalid maxThreads value: " + this.maxThreads + ", capping at " + availableProcessors;
-      FRLogger.warn(warning);
-      this.validationWarnings.add(warning);
-      this.maxThreads = availableProcessors;
+    if (this.maxThreads != null) {
+      if (this.maxThreads < 0) {
+        String warning =
+            "Invalid maxThreads value: " + this.maxThreads + ", using " + defaultMaxThreads();
+        FRLogger.warn(warning);
+        this.validationWarnings.add(warning);
+        this.maxThreads = defaultMaxThreads();
+      } else if (this.maxThreads > availableProcessors) {
+        String warning =
+            "Invalid maxThreads value: " + this.maxThreads + ", capping at " + availableProcessors;
+        FRLogger.warn(warning);
+        this.validationWarnings.add(warning);
+        this.maxThreads = availableProcessors;
+      }
     }
 
     // Validate tracePullTightAccuracy
