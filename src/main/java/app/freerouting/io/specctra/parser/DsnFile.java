@@ -2,13 +2,21 @@ package app.freerouting.io.specctra.parser;
 
 import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.model.items.ConductionArea;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.ObstacleArea;
+import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.structure.BoardOutline;
 import app.freerouting.board.model.structure.FixedState;
+import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.geometry.planar.IntBox;
+import app.freerouting.geometry.planar.Shape;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /** Class for reading and writing dsn-files. */
 @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
@@ -17,6 +25,81 @@ public final class DsnFile {
   static final char CLASS_CLEARANCE_SEPARATOR = '-';
 
   private DsnFile() {}
+
+  /**
+   * Turns board keepouts that lie entirely inside the copper of a through-hole pad into via
+   * keepouts. KiCad exports the hole of a plated slot (USB shield tabs, barrel jacks) as a keepout
+   * on every signal layer. That keepout covers the pad centre, where traces connect to a pin, so
+   * the pad could never be reached. A round plated hole is not exported as a keepout at all, and
+   * the pad copper already keeps other nets away from the slot; only vias still have to stay out of
+   * it. Returns the number of converted keepouts.
+   *
+   * <p>Called from {@link app.freerouting.io.specctra.DsnReader#readBoard} once the components are
+   * placed.
+   */
+  public static int convertPlatedSlotKeepouts(BasicBoard routingBoard) {
+    if (routingBoard == null) {
+      return 0;
+    }
+    List<ObstacleArea> slotKeepouts = new ArrayList<>();
+    for (Item item : routingBoard.getItems()) {
+      if (item.getClass() == ObstacleArea.class
+          && item.getComponentId() <= 0
+          && isInsideThroughHolePad((ObstacleArea) item, routingBoard)) {
+        slotKeepouts.add((ObstacleArea) item);
+      }
+    }
+    for (ObstacleArea keepout : slotKeepouts) {
+      FixedState fixedState = keepout.getFixedState();
+      // Keepouts read from the DSN are user fixed, and removeItem skips fixed items.
+      keepout.setFixedState(FixedState.UNFIXED);
+      routingBoard.removeItem(keepout);
+      routingBoard.insertViaObstacle(
+          keepout.getArea(), keepout.getLayer(), keepout.clearanceClassIndex(), fixedState);
+    }
+    if (!slotKeepouts.isEmpty()) {
+      FRLogger.info(
+          "Converted "
+              + slotKeepouts.size()
+              + " keepout(s) inside through-hole pads (plated slots) into via keepouts.");
+    }
+    return slotKeepouts.size();
+  }
+
+  private static boolean contains(IntBox outer, IntBox inner) {
+    return outer.ll.x <= inner.ll.x
+        && outer.ll.y <= inner.ll.y
+        && outer.ur.x >= inner.ur.x
+        && outer.ur.y >= inner.ur.y;
+  }
+
+  private static boolean isInsideThroughHolePad(ObstacleArea keepout, BasicBoard routingBoard) {
+    int layer = keepout.getLayer();
+    FloatPoint[] corners = keepout.getArea().cornerApproxArr();
+    if (corners == null || corners.length == 0) {
+      return false;
+    }
+    for (Pin pin : routingBoard.getPins()) {
+      if (pin.firstLayer() == pin.lastLayer() || !pin.isOnLayer(layer)) {
+        continue;
+      }
+      Shape padShape = pin.getShape(layer - pin.firstLayer());
+      if (padShape == null || !contains(padShape.boundingBox(), keepout.boundingBox())) {
+        continue;
+      }
+      boolean inside = true;
+      for (FloatPoint corner : corners) {
+        if (!padShape.contains(corner)) {
+          inside = false;
+          break;
+        }
+      }
+      if (inside) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   /**
    * Sets containsPlane to true for nets with a conductionArea covering a large part of a signal
