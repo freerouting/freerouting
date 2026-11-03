@@ -50,14 +50,32 @@ Below is a comprehensive list of command-line options available in Freerouting, 
 
 ### Routing Parameters
 
-- **`-mp [number of passes]`**
+- **`--router.autorouter.max_passes=[number of passes]`**
   Sets the upper limit for the number of autorouter passes to perform. More passes may result in better optimization but will take longer.
 
-- **`-mt [number of threads]`**
-  Sets the thread pool size for route optimization:
-  - Default: One less than the number of logical processors on the system.
-  - Set to `0` to disable route optimization.
+- **`-mp [number of passes]`** (Deprecated)
+  Legacy shorthand for `--router.autorouter.max_passes`. A warning is logged when it is used.
+
+- **`--router.max_threads=[number of threads]`**
+  Sets the global maximum thread ceiling across all routing stages (fanout, autorouter, and optimizer):
+  - Default: One less than the number of logical processors on the system (`cores - 1`).
+  - Set to `0` to use all available logical processors.
+  - Acts as an upper bound: no individual stage will exceed this limit.
+
+- **`--router.autorouter.max_threads=[number of threads]`**
+  Sets the thread limit specifically for the autorouter stage (bounded by `--router.max_threads`).
+  *Note:* The autorouter currently runs single-threaded; this setting is reserved for future multi-threaded passes.
+
+- **`--router.optimizer.max_threads=[number of threads]`**
+  Sets the thread limit specifically for the optimizer stage (bounded by `--router.max_threads`).
+
+- **`-mt [number of threads]`** (Deprecated)
+  Legacy shorthand for `--router.max_threads`. A warning is logged when it is used:
+  - Setting `0` or less as a legacy shorthand to disable route optimization is deprecated; use `--router.optimizer.enabled=false` instead.
   - Increasing the number may improve performance on multi-core systems.
+
+- **`--router.optimizer.enabled=[true|false]`**
+  Runs the route optimizer after autorouting. Default is `true`.
 
 - **`--router.optimizer.improvement_threshold=[percentage]`**
   Specifies the relative optimizer pass-improvement stopping threshold directly as a percentage (e.g. `2.5` = 2.5%, `5.5` = 5.5%):
@@ -68,37 +86,31 @@ Below is a comprehensive list of command-line options available in Freerouting, 
     - `3.5 – 5.0` (3.5% – 5.0%): Fast mode. Cuts optimizer runtime by ~45%, retaining ~65% of via reductions.
     - `> 5.5` (> 5.5%): Rapid prototyping. Stops after 1–2 passes; not recommended for production boards where via minimization matters.
   - Setting `0.0` continues optimization until `max_passes` is reached or no further improvements are possible.
-  - *Note:* The legacy `-oit` flag is deprecated and no longer supported. A warning will be logged if used.
+  - *Note:* The legacy `-oit [percentage]` flag is deprecated but still applied. A warning is logged when it is used.
 
 - **`-inc [net class names]`**
   Lists net classes to ignore during autorouting:
   - Provide a comma-separated list (e.g., `-inc GND,VCC`).
   - The autorouter will not route nets belonging to these classes.
 
-- **`-im`**
-  Enables saving of intermediate steps in a version-specific binary format:
-  - Allows resuming interrupted optimizations from the last checkpoint.
-  - Disabled by default.
+- **`-im`** (Removed)
+  No longer has any effect. Intermediate steps are not saved, and routing cannot be resumed
+  from a checkpoint. A warning is logged when it is used.
 
 
 ### Optimization Strategies
 
-- **`-us [greedy | global | hybrid]`**
-  Sets the board updating strategy for route optimization:
-  - `greedy` (default): Accepts any immediate improvement.
-  - `global`: Only accepts changes that result in a global optimum.
-  - `hybrid`: Combines both strategies; requires `-hr` to specify the ratio.
-
-- **`-hr [m:n]`**
-  Specifies the hybrid ratio when using the `hybrid` update strategy:
-  - Format: `#_global_optimal_passes:#_prioritized_passes` (e.g., `1:1`).
-  - Only effective with `-us hybrid`.
-
-- **`-is [sequential | random | prioritized]`**
+- **`--router.optimizer.item_selection_strategy=[sequential|prioritized]`**
   Sets the item selection strategy for route optimization:
-  - `sequential`: Processes items in order.
-  - `random`: Processes items in a random order.
-  - `prioritized` (default): Selects items based on calculated scores from previous rounds.
+  - `sequential` (default): Processes items in order.
+  - `prioritized`: Selects items based on calculated scores from previous rounds.
+
+- **`-is [sequential | prioritized]`** (Deprecated)
+  Legacy shorthand for `--router.optimizer.item_selection_strategy`. A warning is logged when it is used.
+
+- **`-us [greedy | global | hybrid]`** and **`-hr [m:n]`** (Removed)
+  No longer have any effect. The optimizer only uses the global optimal board update strategy.
+  A warning is logged when they are used.
 
 ### Language and Localization
 
