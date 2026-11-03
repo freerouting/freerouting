@@ -35,7 +35,7 @@ class TraceTightenerAnyAngle extends TraceTightener {
   public Polyline pullTight(Polyline polyline) {
     Polyline newResult = avoidAcidTraps(polyline);
     Polyline prevResult = null;
-    while (newResult != prevResult && !isStopRequested()) {
+    for (int rounds = 0; newResult != prevResult && !mustStopAfter(rounds); ++rounds) {
       prevResult = newResult;
       Polyline tmp = skipSegmentsOfLength0(prevResult);
       Polyline tmp0 = reduceLines(tmp);
