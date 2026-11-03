@@ -201,8 +201,8 @@ public class DefaultSettings implements SettingsSource {
     settings.autorouter.fanoutViaPadGap = 0.0;
     settings.autorouter.ballEscapeOrder = "auto";
     settings.autorouter.exitStubs = true;
-    settings.maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
-    settings.autorouter.maxThreads = settings.maxThreads;
+    settings.maxThreads = null;
+    settings.autorouter.maxThreads = null;
     settings.copperToEdgeClearanceUm = DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM;
     settings.holeClearanceUm = DEFAULT_HOLE_CLEARANCE_UM;
     settings.holeToHoleUm = DEFAULT_HOLE_TO_HOLE_UM;
@@ -245,7 +245,7 @@ public class DefaultSettings implements SettingsSource {
     settings.optimizer.algorithm = "freerouting-optimizer";
     settings.optimizer.maxPasses = 100;
     settings.optimizer.maxItems = Integer.MAX_VALUE;
-    settings.optimizer.maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
+    settings.optimizer.maxThreads = null;
     settings.optimizer.optimizationImprovementThreshold = DEFAULT_OPTIMIZER_IMPROVEMENT_THRESHOLD;
     settings.optimizer.boardUpdateStrategy = BoardUpdateStrategy.GLOBAL_OPTIMAL;
     settings.optimizer.itemSelectionStrategy = ItemSelectionStrategy.SEQUENTIAL;

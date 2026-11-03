@@ -1,0 +1,82 @@
+(pcb plated-slot-keepout.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  100000 -100000  130000 -100000  130000 -80000  100000 -80000  100000 -100000)
+    )
+    (keepout "" (polygon signal 0  109500 -88750  110000 -88500  110500 -88750  110500 -91250
+            110000 -91500  109500 -91250  109500 -88750))
+    (via "Via[0-1]_600:300_um")
+    (rule
+      (width 250)
+      (clearance 200)
+    )
+  )
+  (placement
+    (component JACK
+      (place J1 110000 -90000 front 0)
+    )
+    (component R_THT
+      (place R1 122000 -90000 front 0)
+    )
+  )
+  (library
+    (image JACK
+      (pin Rect[A]Pad_4000x4000_um 1 0 0)
+    )
+    (image R_THT
+      (pin Round[A]Pad_1600_um 1 0 0)
+      (pin Round[A]Pad_1600_um 2 4000 0)
+    )
+    (padstack Rect[A]Pad_4000x4000_um
+      (shape (rect F.Cu -2000 -2000 2000 2000))
+      (shape (rect B.Cu -2000 -2000 2000 2000))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1600_um
+      (shape (circle F.Cu 1600))
+      (shape (circle B.Cu 1600))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:300_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net VIN
+      (pins J1-1 R1-1)
+    )
+    (class kicad_default VIN
+      (circuit
+        (use_via "Via[0-1]_600:300_um")
+      )
+      (rule
+        (width 250)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

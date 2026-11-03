@@ -44,7 +44,12 @@ class ViolationsIncompletesListA11yTest {
       "Issue575-drc_BBD_Mars-64_6_track_1_hole_clearance_violations.dsn";
 
   private static final int EXPECTED_UNIQUE_VIOLATIONS = 67;
-  private static final int EXPECTED_INCOMPLETES = 9;
+
+  /**
+   * Current airline count for the incomplete fixture. Rational junction connectivity reduced it
+   * from 9.
+   */
+  private static final int EXPECTED_INCOMPLETES = 3;
 
   @BeforeEach
   void setUp() {
