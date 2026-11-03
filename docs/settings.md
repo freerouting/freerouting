@@ -137,6 +137,7 @@ The primary way to configure Freerouting is through a JSON settings file. This f
     - **`enabled`**: Whether the autorouter stage runs after fanout.
     - **`algorithm`**: Algorithm identifier (`freerouting-router` by default; legacy identifiers such as `freerouting-router-v19` safely normalize to `freerouting-router`).
     - **`max_passes`**: Maximum autorouter passes. `0` means no limit.
+    - **`stagnation_pass_limit`**: Consecutive passes without score improvement before the autorouter stops. Default is `10`. `0` (or negative) disables stagnation detection and allows routing to proceed up to `max_passes`. Equivalent CLI flag: `--router.autorouter.stagnation_pass_limit=<int>` (or `-spl <int>`).
     - **`max_items`**: Maximum items attempted in the autorouter stage.
     - **`item_order_seed`**: Optional extra seed for signal-item permutations after the first
       autorouter pass, for example `--router.autorouter.item_order_seed=42`. The first pass
@@ -198,18 +199,18 @@ The router and optimizer versions are independent. CLI aliases are
 
 ##### Reproducible placement import
 
-Headless DSN jobs and composite/API inputs with an explicit `item_order_seed` allocate component
-placements in exact reference-name order before routing. Settings are resolved before import,
-including file settings and per-job overrides; zero and negative seeds also enable this policy.
-For unique references, changing the order or grouping of placement records alone therefore
-preserves component, pad, and package-keepout identities. Package association, geometry, side,
-fixed state, and pin-net membership remain unchanged. Duplicate references retain their relative
-source order and are excluded from the placement-order guarantee.
+All DSN imports (headless jobs, composite/API inputs, GUI sessions, and default reader overloads)
+allocate component placements in exact reference-name order by default before routing.
+For unique references, changing the order or grouping of placement records alone (e.g. from
+KiCad re-saving and regenerating footprint UUIDs) preserves component, pad, and package-keepout
+identities. Package association, geometry, side, fixed state, and pin-net membership remain
+unchanged. Duplicate references retain their relative source order and are excluded from the
+placement-order guarantee.
 
-Unseeded jobs, GUI imports, and existing standalone reader overloads retain legacy input order.
-Embedding callers can explicitly use `DsnReadOptions.REFERENCE_NAME` on a fresh import. Setting a
-seed after loading, including internally generated exploration seeds, does not reallocate items;
-reload with the desired import policy to establish placement-order invariance.
+Any configured `router.autorouter.item_order_seed` is applied only after these identities exist,
+providing an explicit, reproducible shuffle without relying on file order as an implicit seed.
+Embedding callers can explicitly supply `DsnReadOptions.INPUT_ORDER` if legacy source order is
+specifically required.
 
 Use the same seed, settings, worker count, and deterministic work limits when comparing routing
 runs. This guarantee does not canonicalize other DSN scopes or electrically equivalent copper
@@ -240,9 +241,10 @@ Configures the optional route-optimization stage that runs after autorouting.
     - `3.5 – 5.0` (3.5% – 5.0%): Fast mode. Cuts optimizer time by ~45%, retaining ~65% via cuts.
     - `> 5.5` (> 5.5%): Rapid prototyping. Stops after 1–2 passes; not recommended for production boards.
 - **`enable_preflight_guards`**: Whether pre-flight optimization guards are evaluated before starting the
-  optimizer loop. If enabled, bypasses the optimizer stage when the board has unrouted connections, has no vias
-  to eliminate (with trace length already near optimal), has an initial score at or near theoretical maximum,
-  or all vias are mandatory layer transitions between SMD pins that cannot be eliminated. Default is `true`.
+  optimizer loop. If enabled, bypasses the optimizer stage when the board has no vias to eliminate (with trace
+  length already near optimal), has an initial score at or near theoretical maximum, or all vias are mandatory
+  layer transitions between SMD pins that cannot be eliminated. Default is `true`. A board with unrouted
+  connections is optimized as well; the optimizer leaves those connections unrouted.
 - **`max_consecutive_failures`**: Maximum consecutive candidate failures allowed before concluding the
   current pass. Default is `50`.
 - **`max_consecutive_failures_pass1`**: Maximum consecutive candidate failures allowed in pass 1 before
