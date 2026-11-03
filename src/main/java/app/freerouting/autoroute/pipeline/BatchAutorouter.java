@@ -39,7 +39,6 @@ public final class BatchAutorouter extends NamedAlgorithm {
   static final int BOARD_RANK_LIMIT = BoardHistory.MAX_HISTORY_SIZE;
   // Maximum number of tries on the same board
   static final int MAXIMUM_TRIES_ON_THE_SAME_BOARD = 3;
-  static final int TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP = 1000;
   // The minimum number of passes to complete the board, unless all items are
   // routed
   static final int STOP_AT_PASS_MINIMUM = 8;
@@ -628,12 +627,7 @@ public final class BatchAutorouter extends NamedAlgorithm {
     board.removeTraceTails(-1, stopConnectionOption);
     long pullTightStart = BENCHMARK_PROFILE_ENABLED ? System.nanoTime() : 0;
     board.optChangedArea(
-        new int[0],
-        null,
-        this.tracePullTightAccuracy,
-        this.traceCosts,
-        this.thread,
-        TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
+        new int[0], null, this.tracePullTightAccuracy, this.traceCosts, this.thread);
     if (BENCHMARK_PROFILE_ENABLED) {
       this.profileTailRemovalNanos += System.nanoTime() - tailRemovalStart;
       this.profileOptChangedAreaNanos += System.nanoTime() - pullTightStart;
