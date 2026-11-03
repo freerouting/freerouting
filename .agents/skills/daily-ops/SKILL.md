@@ -28,14 +28,14 @@ This skill automates the maintainer's three core daily workflows while keeping t
 When the user asks for a daily summary, open PR/issue overview, or "what should we work on today?":
 
 ### Step 1: Lightweight Metadata Fetch (Do NOT read diffs yet)
-Run a single fast query to retrieve open PRs and recent open issues:
+Run a single fast query to retrieve open PRs (filtering out drafts) and recent open issues:
 ```powershell
-gh pr list --limit 50 --json number,title,author,labels,isDraft,mergeStateStatus,reviewDecision,statusCheckRollup,updatedAt
+gh pr list --limit 50 --search "draft:false" --json number,title,author,labels,mergeStateStatus,reviewDecision,statusCheckRollup,updatedAt
 gh issue list --limit 30 --json number,title,labels,updatedAt
 ```
 
 ### Step 2: Group by Topic Domain
-Categorize all open PRs and high-priority issues into topic buckets:
+Categorize all open, non-draft PRs and high-priority issues into topic buckets (draft PRs are ignored to keep the maintainer briefing focused on review-ready work):
 1. **Routing Engine & DRC** (`routing-engine`, `autoroute`, `board`, `drc`, `geometry`, `rules`)
 2. **GUI & Interactive Editor** (`GUI`, `a11y`, `rendering`, `workspace`)
 3. **File I/O & EDA Integrations** (`KiCad`, `specctra`, `dsn`, `ses`)
@@ -81,14 +81,25 @@ Each subagent executes the following inside its isolated `share` workspace witho
      ```powershell
      ./gradlew.bat test --tests "<AffectedTestClass>" -q
      ```
-5. **Quality Gates:**
+5. **Security & Privacy Audit:**
+   - Secrets & Credentials: Ensure no API keys, tokens, or private credentials are included in code, fixtures, or tests.
+   - Privacy & Telemetry: Ensure no user tracking, telemetry, or unsanctioned external network requests are introduced.
+   - Boundaries & Input Validation: Guard against path traversal (`../`), command injection, unsafe reflection, and deserialization vulnerabilities in file formats (DSN/SES/rules), CLI arguments, and API endpoints.
+   - Dependency Safety: Verify dependencies come from trusted sources with zero known CVEs.
+6. **Quality Gates:**
    - Run `./gradlew.bat spotlessCheck checkstyleMain checkstyleTest -q` and `pre-commit run --all-files`.
    - If any fixes, conflict resolutions, or Copilot refinements were made, commit and push directly to the PR branch.
-6. **Return Compact Report:**
-   - Return a concise 10-line summary to the parent orchestrator: PR `#`, Title, Files Changed, Copilot Findings Fixed, Test & Gate Status, and Merge Readiness (`READY` / `NEEDS_ATTENTION`).
+7. **Milestone Verification:**
+   - Check the PR milestone (`gh pr view <number> --json milestone`). If unset or set to `"Future"`, update it to the target release version (highest version-numbered open milestone, e.g. `2.6`, `2.7`):
+     ```powershell
+     gh pr edit <number> --milestone "<next-release-milestone>"
+     ```
+8. **Return Compact Report:**
+   - Return a concise summary to the parent orchestrator: PR `#`, Title, Files Changed, Copilot Findings Fixed, Security Audit Result, Test & Gate Status, Milestone, and Merge Readiness (`READY` / `NEEDS_ATTENTION`).
 
 ### Step 3: Present Unified Merge Dashboard & Wait for Confirmation
 - The main agent aggregates all subagent reports into a single **Merge Readiness Table**.
+- Verify that every ready PR has its Milestone assigned to the upcoming release version (not `"Future"` or unset).
 - **Never merge automatically.** Ask the user: *"Which of these ready PRs should I merge now?"*
 - Once confirmed by the user, merge the selected PRs sequentially (`gh pr merge <number> --merge` or `--squash` per repo convention) and track whether any merged PR touched the **Routing Engine**.
 

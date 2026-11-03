@@ -77,7 +77,11 @@ final class AutoroutePassRunner {
 
       long initialProgressStatisticsStart =
           BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
-      router.progressStatistics = new BoardStatistics(router.board, null, false);
+      // The optimizer routes each candidate with a listener-less router: no one reads these.
+      router.progressStatistics =
+          router.hasBoardUpdatedEventListeners()
+              ? new BoardStatistics(router.board, null, false)
+              : null;
       router.progressItemsSinceStatistics = 0;
       final BoardStatistics stats = router.progressStatistics;
       if (BatchAutorouter.isBenchmarkProfileEnabled()) {
@@ -223,7 +227,8 @@ final class AutoroutePassRunner {
           BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
       long finalBoardStatisticsStart =
           BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
-      final BoardStatistics boardStatistics = router.board.getStatistics();
+      final BoardStatistics boardStatistics =
+          router.hasBoardUpdatedEventListeners() ? router.board.getStatistics() : null;
       if (BatchAutorouter.isBenchmarkProfileEnabled()) {
         router.profileBoardStatisticsNanos += System.nanoTime() - finalBoardStatisticsStart;
         router.profileIntermediateStatisticsNanos += System.nanoTime() - finalStatisticsStart;
@@ -495,7 +500,8 @@ final class AutoroutePassRunner {
       int routed,
       int skipped) {
     router.progressItemsSinceStatistics++;
-    if (router.progressItemsSinceStatistics >= BatchAutorouter.PROGRESS_STATISTICS_ITEM_INTERVAL) {
+    if (router.progressItemsSinceStatistics >= BatchAutorouter.PROGRESS_STATISTICS_ITEM_INTERVAL
+        && router.hasBoardUpdatedEventListeners()) {
       long progressStatisticsStart =
           BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
       router.progressStatistics = new BoardStatistics(router.board, null, false);

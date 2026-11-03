@@ -339,35 +339,41 @@ public final class Sorted45DegreeRoomNeighbours {
     if (tryRemoveEdgeLines) {
       // Touching neighbour missing at the edge side with index removeEdgeNo
       // Remove the edge line and restart the algorithm.
-      FRLogger.trace(
-          "ROOM_EDGE_REMOVE start"
-              + ", net="
-              + netNumber
-              + ", layer="
-              + currentIncompleteRoom.getLayer()
-              + ", room_bounds="
-              + describeBounds(roomOct.boundingBox()));
+      if (FRLogger.isTraceEnabled()) {
+        FRLogger.trace(
+            "ROOM_EDGE_REMOVE start"
+                + ", net="
+                + netNumber
+                + ", layer="
+                + currentIncompleteRoom.getLayer()
+                + ", room_bounds="
+                + describeBounds(roomOct.boundingBox()));
+      }
 
       IntOctagon enlargedOct =
           removeNotTouchingBorderLines(roomOct, this.edgeInteriorTouchesObstacle);
-      FRLogger.trace(
-          "ROOM_EDGE_REMOVE enlarged"
-              + ", net="
-              + netNumber
-              + ", layer="
-              + currentIncompleteRoom.getLayer()
-              + ", enlarged_bounds="
-              + describeBounds(enlargedOct.boundingBox()));
-      FRLogger.trace(
-          "ROOM_EDGE_REMOVE contained"
-              + ", net="
-              + netNumber
-              + ", layer="
-              + currentIncompleteRoom.getLayer()
-              + ", type="
-              + currentIncompleteRoom.getContainedShape().getClass().getSimpleName()
-              + ", bounds="
-              + describeBounds(currentIncompleteRoom.getContainedShape().boundingBox()));
+      if (FRLogger.isTraceEnabled()) {
+        FRLogger.trace(
+            "ROOM_EDGE_REMOVE enlarged"
+                + ", net="
+                + netNumber
+                + ", layer="
+                + currentIncompleteRoom.getLayer()
+                + ", enlarged_bounds="
+                + describeBounds(enlargedOct.boundingBox()));
+      }
+      if (FRLogger.isTraceEnabled()) {
+        FRLogger.trace(
+            "ROOM_EDGE_REMOVE contained"
+                + ", net="
+                + netNumber
+                + ", layer="
+                + currentIncompleteRoom.getLayer()
+                + ", type="
+                + currentIncompleteRoom.getContainedShape().getClass().getSimpleName()
+                + ", bounds="
+                + describeBounds(currentIncompleteRoom.getContainedShape().boundingBox()));
+      }
 
       Collection<ExpansionDoor> doorList = this.completedRoom.getDoors();
       TileShape ignoreShape = null;
@@ -398,28 +404,32 @@ public final class Sorted45DegreeRoomNeighbours {
               currentIncompleteRoom.getContainedShape());
       Collection<IncompleteFreeSpaceExpansionRoom> newRooms =
           autorouteSearchTree.completeShape(enlargedRoom, netNumber, ignoreObject, ignoreShape);
-      FRLogger.trace(
-          "ROOM_EDGE_REMOVE complete_shape"
-              + ", net="
-              + netNumber
-              + ", layer="
-              + currentIncompleteRoom.getLayer()
-              + ", candidate_count="
-              + newRooms.size());
+      if (FRLogger.isTraceEnabled()) {
+        FRLogger.trace(
+            "ROOM_EDGE_REMOVE complete_shape"
+                + ", net="
+                + netNumber
+                + ", layer="
+                + currentIncompleteRoom.getLayer()
+                + ", candidate_count="
+                + newRooms.size());
+      }
       if (newRooms.size() == 1) {
         // Check, that the area increases to prevent endless loop.
         IncompleteFreeSpaceExpansionRoom newRoom = newRooms.iterator().next();
         if (newRoom.getShape().area() > roomArea) {
-          FRLogger.trace(
-              "ROOM_EDGE_REMOVE applied"
-                  + ", net="
-                  + netNumber
-                  + ", layer="
-                  + currentIncompleteRoom.getLayer()
-                  + ", old_bounds="
-                  + describeBounds(roomOct.boundingBox())
-                  + ", newBounds="
-                  + describeBounds(newRoom.getShape().boundingBox()));
+          if (FRLogger.isTraceEnabled()) {
+            FRLogger.trace(
+                "ROOM_EDGE_REMOVE applied"
+                    + ", net="
+                    + netNumber
+                    + ", layer="
+                    + currentIncompleteRoom.getLayer()
+                    + ", old_bounds="
+                    + describeBounds(roomOct.boundingBox())
+                    + ", newBounds="
+                    + describeBounds(newRoom.getShape().boundingBox()));
+          }
           currentIncompleteRoom.setShape(newRoom.getShape());
           currentIncompleteRoom.setContainedShape(newRoom.getContainedShape());
           return true;
