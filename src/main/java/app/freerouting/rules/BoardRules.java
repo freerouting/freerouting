@@ -311,12 +311,9 @@ public class BoardRules implements Serializable {
   /**
    * Creates a default via rule for {@code netClass} with name {@code name}. If more than one via
    * info with the same layer range is found, only the via info with the smallest pad size is
-   * inserted.
+   * inserted. Without any via info the rule is empty: the class routes without vias.
    */
   public void createDefaultViaRule(NetClass netClass, String name) {
-    if (this.viaInfos.count() == 0) {
-      return;
-    }
     // Add the rule  containing all vias.
     ViaRule defaultRule = new ViaRule(name);
     int defaultViaClClass =
