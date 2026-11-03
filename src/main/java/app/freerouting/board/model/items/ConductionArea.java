@@ -88,6 +88,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     this.cachedBoardFillArea = null;
     this.cachedFractureRevision = -1;
     this.cachedFractureResult = null;
+    this.connectivityGrid = null;
   }
 
   /** Pre-computes detailed plane-fill geometry off the EDT so zoom-in paints stay responsive. */

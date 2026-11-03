@@ -259,10 +259,12 @@ public class FastPlaneConnectivityGrid {
    * @param radius total obstacle clearance radius in board units
    */
   public void rasterizeThickSegment(int x1, int y1, int x2, int y2, int radius) {
-    int minX = Math.min(x1, x2) - radius;
-    int maxX = Math.max(x1, x2) + radius;
-    int minY = Math.min(y1, y2) - radius;
-    int maxY = Math.max(y1, y2) + radius;
+    // Conservative dilation: include cell half-diagonal so any cell touching the obstacle is marked
+    int dilatedRadius = radius + (cellSize + 1) / 2;
+    int minX = Math.min(x1, x2) - dilatedRadius;
+    int maxX = Math.max(x1, x2) + dilatedRadius;
+    int minY = Math.min(y1, y2) - dilatedRadius;
+    int maxY = Math.max(y1, y2) + dilatedRadius;
 
     int startCol = Math.max(0, (minX - originX) / cellSize);
     int endCol = Math.min(cols - 1, (maxX - originX) / cellSize);
@@ -273,7 +275,7 @@ public class FastPlaneConnectivityGrid {
       return;
     }
 
-    long radiusSq = (long) radius * radius;
+    long radiusSq = (long) dilatedRadius * dilatedRadius;
     long dx = x2 - x1;
     long dy = y2 - y1;
 
