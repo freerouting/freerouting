@@ -394,6 +394,60 @@ class BenchmarkStoreTest(unittest.TestCase):
         self.assertEqual(active_worker_threads, 0)
         self.assertEqual(len(worker_status), 0)
 
+    def test_reference_uses_latest_successful_version_and_ignores_failures(self) -> None:
+        runs = [
+            self._run("board", "2.6.0-RC2", "2026-10-08T10:00:00+00:00", 126.5),
+            self._run("board", "2.6.0-RC3", "2026-10-15T20:00:00+00:00", 3700.0),
+            self._run("board", "2.6.0-RC6", "2026-10-28T08:00:00+00:00", 400.0, oom=True),
+            self._run("board", "2.6.0-RC3", "2026-10-14T20:00:00+00:00", 100.0),
+            self._run("other", "2.4.1", "2026-09-01T00:00:00+00:00", 50.0),
+        ]
+        self.assertGreater(store.version_sort_key("2.6.0"), store.version_sort_key("2.6.0-RC6"))
+        self.assertGreater(store.version_sort_key("2.6.0-RC6"), store.version_sort_key("2.6.0-RC3"))
+        references = store.latest_successful_reference_seconds(runs)
+        self.assertEqual(references["board"], 3700.0)
+        self.assertEqual(references["other"], 50.0)
+        self.assertTrue(store.run_is_failure(runs[2]))
+        self.assertFalse(store.run_is_failure(runs[1]))
+        killed = self._run("board", "2.6.0-RC6", "2026-10-28T09:00:00+00:00", 12174.0)
+        killed["quality"]["unrouted_connections"] = 0
+        killed["quality"]["clearance_violations"] = 0
+        killed["exit"] = {
+            "code": 1,
+            "state": "FAILED",
+            "crashed": True,
+            "oom_detected": True,
+            "timed_out": False,
+        }
+        self.assertTrue(store.run_is_failure(killed))
+        self.assertTrue(store.fatal_process_output("java.lang.OutOfMemoryError: Java heap space"))
+        self.assertTrue(store.fatal_process_output("Exception in thread \"main\" java.lang.IllegalStateException"))
+        self.assertFalse(store.fatal_process_output("Optimizer pass #1: score 680.31 -> 680.18"))
+
+    @staticmethod
+    def _run(
+        board: str,
+        version: str,
+        run_at: str,
+        seconds: float,
+        *,
+        oom: bool = False,
+    ) -> dict:
+        return {
+            "cache_key": f"{board}--unrouted--{version}--abc",
+            "run_at": run_at,
+            "binary": {"version_label": version},
+            "fixture": {"relative_path": f"PCBench/{board}/unrouted.dsn"},
+            "quality": {"wall_clock_seconds": seconds},
+            "exit": {
+                "code": 3 if oom else 0,
+                "state": "TERMINATED" if oom else "COMPLETED",
+                "crashed": oom,
+                "oom_detected": oom,
+                "timed_out": False,
+            },
+        }
+
 
 if __name__ == "__main__":
     unittest.main()
