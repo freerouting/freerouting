@@ -60,12 +60,13 @@ public final class DsnReader {
       BoardObservers observers,
       IdGenerator idGenerator,
       String designName) {
-    return readBoard(inputStream, observers, idGenerator, designName, DsnReadOptions.INPUT_ORDER);
+    return readBoard(inputStream, observers, idGenerator, designName, DsnReadOptions.DEFAULT);
   }
 
   /**
    * Reads a DSN using explicit item-allocation options resolved by the caller before import.
-   * Existing overloads retain source placement order. A null option also retains that default.
+   * Existing overloads allocate placements canonically by reference name. A null option also uses
+   * that default.
    */
   public static BoardReadResult readBoard(
       InputStream inputStream,
@@ -135,9 +136,10 @@ public final class DsnReader {
     // -----------------------------------------------------------------------
     // Parse the body — board is constructed inside ReadScopeParameter's shim
     // -----------------------------------------------------------------------
+    DsnReadOptions effectiveOptions = options != null ? options : DsnReadOptions.DEFAULT;
     ReadScopeParameter scopeParameter =
         new ReadScopeParameter(
-            scanner, observers, idGenerator, options != null && options.canonicalPlacementOrder());
+            scanner, observers, idGenerator, effectiveOptions.canonicalPlacementOrder());
     boolean readOk = Keyword.PCB_SCOPE.readScope(scopeParameter);
 
     BasicBoard board = scopeParameter.getBoard();
