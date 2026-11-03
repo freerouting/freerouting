@@ -127,6 +127,28 @@ def compute_sha256(path: Path) -> str:
     return h.hexdigest()
 
 
+_TRACE_MIN = re.compile(r"\(trace_min\s+([0-9]*\.?[0-9]+)\)")
+
+
+def board_min_track_width_um(board_dir: Path) -> float | None:
+    """Return the minimum track width of the board's KiCad design rules, in micrometers.
+
+    The hand routing of a board may use any width down to this value, but the Specctra export only
+    carries the net class widths. Reads ``(setup (trace_min ...))`` from ``processed.kicad_pcb``,
+    which all PCBench fixtures have in the KiCad 5 format. Returns None when it is missing.
+    """
+    pcb_path = board_dir / "processed.kicad_pcb"
+    try:
+        text = pcb_path.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return None
+    match = _TRACE_MIN.search(text)
+    if not match:
+        return None
+    width_um = round(float(match.group(1)) * 1000.0, 3)
+    return width_um if width_um > 0 else None
+
+
 def format_fixture_name(name: str, limit: int = 37) -> str:
     """Keep short fixture names. Longer names keep the first and last 16 characters."""
     text = name or ""
@@ -275,6 +297,7 @@ def route_single_board(
     *,
     reference_seconds: float = 0.0,
     queued_ids: list[str] | None = None,
+    neck_width_um: float | None = None,
 ) -> dict[str, Any] | None:
     """Execute Freerouting on a single PCBench board and return a benchmark run record."""
     if cancel_event.is_set() or force_kill_event.is_set():
@@ -343,6 +366,8 @@ def route_single_board(
         f"--router.job_timeout={timeout_budget}",
         f"--logging.file.location={log_path}",
     ]
+    if neck_width_um:
+        cmd.append(f"--router.neck_width_um={neck_width_um:g}")
 
     exit_code = 0
     crashed = False
@@ -681,6 +706,7 @@ def route_single_board(
         "result_json": str(manifest_path.relative_to(output_dir.parent.parent)) if manifest_path.exists() else None,
         "output_file": str(ses_path.relative_to(output_dir.parent.parent)) if ses_path.exists() else None,
         "job_timeout": timeout_budget,
+        "neck_width_um": neck_width_um,
     }
 
     return run_record
@@ -1180,6 +1206,12 @@ def main() -> int:
     parser.add_argument("--filter", default="", help="Filter fixtures by substring/pattern")
     parser.add_argument("--force", action="store_true", help="Force rerun even if already in benchmarks.json")
     parser.add_argument("--timeout", default="06:00:00", help="Job timeout budget for all tiers (default: 06:00:00)")
+    parser.add_argument(
+        "--neck-width-from-board",
+        action="store_true",
+        help="Pass each board's KiCad minimum track width as --router.neck_width_um. "
+        "Changes the routing: use a separate --version-label.",
+    )
     args = parser.parse_args()
     try:
         tier_order = parse_tier_order(args.tier)
@@ -1277,6 +1309,7 @@ def main() -> int:
 
     tasks = []
     board_reference: dict[str, tuple[str, float]] = {}
+    board_neck_width: dict[str, float | None] = {}
     queued_ids: list[str] = []
     already_completed = 0
     historical_reference = latest_successful_reference_seconds(existing_runs.values())
@@ -1316,6 +1349,8 @@ def main() -> int:
                 )
             )
             board_reference[b_id] = (board_tier, reference_seconds)
+            if args.neck_width_from_board:
+                board_neck_width[b_id] = board_min_track_width_um(b_dir)
             queued_ids.append(b_id)
 
     print(
@@ -1510,6 +1545,7 @@ def main() -> int:
                     force_kill_event,
                     reference_seconds=board_reference.get(board_name, ("?", 0.0))[1],
                     queued_ids=queued_ids,
+                    neck_width_um=board_neck_width.get(board_name),
                 )
             except Exception as exc:
                 err = exc

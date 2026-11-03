@@ -48,6 +48,10 @@ import java.util.TreeSet;
 })
 public class Network extends ScopeKeyword {
 
+  /** The Specctra item classes that can get a clearance class separate from the wires. */
+  private static final List<String> NON_WIRE_ITEM_CLASS_NAMES =
+      List.of("via", "smd", "pin", "area");
+
   /** Creates a new instance of Network. */
   public Network() {
     super("network");
@@ -847,10 +851,9 @@ public class Network extends ScopeKeyword {
 
   private static void createDefaultClearanceClasses(
       app.freerouting.rules.NetClass netClass, ClearanceMatrix clearanceMatrix) {
-    getClearanceClass(clearanceMatrix, netClass, "via");
-    getClearanceClass(clearanceMatrix, netClass, "smd");
-    getClearanceClass(clearanceMatrix, netClass, "pin");
-    getClearanceClass(clearanceMatrix, netClass, "area");
+    for (String itemClassName : NON_WIRE_ITEM_CLASS_NAMES) {
+      getClearanceClass(clearanceMatrix, netClass, itemClassName);
+    }
   }
 
   private static void createViaRule(
@@ -997,7 +1000,10 @@ public class Network extends ScopeKeyword {
     // Allocation order determines item IDs and connected-set representatives before routing.
     // Stable sorting preserves the existing first-match behavior of duplicate reference names.
     if (scopeParameter.canonicalPlacementOrder) {
-      components.sort(Comparator.comparing(component -> component.location().name));
+      components.sort(
+          Comparator.comparing(
+              component -> component.location().name,
+              Comparator.nullsLast(Comparator.naturalOrder())));
     }
     for (PlacedComponent component : components) {
       insertComponent(component.location(), component.libraryName(), scopeParameter);
