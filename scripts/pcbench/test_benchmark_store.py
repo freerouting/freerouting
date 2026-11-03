@@ -35,6 +35,97 @@ class BenchmarkStoreTest(unittest.TestCase):
         self.assertEqual(eta, 5)
         self.assertEqual(scale, 0.5)
 
+    def test_board_min_track_width_comes_from_the_kicad_setup(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            board_dir = Path(tmp)
+            self.assertIsNone(store.board_min_track_width_um(board_dir))
+
+            pcb = board_dir / "processed.kicad_pcb"
+            pcb.write_text(
+                '(kicad_pcb (version 20171130)\n  (setup\n    (trace_min 0.254)\n  )\n'
+                '  (net_class Default "" (clearance 0.2) (trace_width 0.508))\n)\n',
+                encoding="utf-8",
+            )
+            self.assertEqual(store.board_min_track_width_um(board_dir), 254.0)
+
+            pcb.write_text("(kicad_pcb (version 20171130) (setup))\n", encoding="utf-8")
+            self.assertIsNone(store.board_min_track_width_um(board_dir))
+
+    def test_route_single_board_passes_neck_width_um_to_freerouting(self) -> None:
+        from unittest.mock import MagicMock, patch
+
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            board_dir = tmp_path / "board"
+            board_dir.mkdir()
+            dsn = board_dir / "processed.dsn"
+            dsn.write_text("(pcb test)", encoding="utf-8")
+            jar = tmp_path / "freerouting.jar"
+            jar.write_text("dummy", encoding="utf-8")
+
+            cancel = threading.Event()
+            force_kill = threading.Event()
+
+            with patch("run_corpus_benchmark.subprocess.Popen") as mock_popen:
+                mock_proc = MagicMock()
+                mock_proc.poll.side_effect = [None, 0]
+                mock_proc.returncode = 0
+                mock_proc.stdout.readline.side_effect = [b"", b""]
+                mock_proc.stderr.readline.side_effect = [b"", b""]
+                mock_popen.return_value = mock_proc
+
+                # Test with neck_width_um = 254.0
+                record = store.route_single_board(
+                    jar,
+                    board_dir,
+                    tmp_path / "out",
+                    tmp_path / "logs",
+                    tmp_path / "user",
+                    "00:01:00",
+                    "test-ver",
+                    "dummy-sha",
+                    "dummy-jar-sha",
+                    1000,
+                    "A",
+                    1,
+                    {},
+                    {},
+                    threading.Lock(),
+                    cancel,
+                    force_kill,
+                    neck_width_um=254.0,
+                )
+                self.assertIsNotNone(record)
+                self.assertEqual(record["neck_width_um"], 254.0)
+                cmd = mock_popen.call_args[0][0]
+                self.assertIn("--router.neck_width_um=254", cmd)
+
+                # Test without neck_width_um
+                record2 = store.route_single_board(
+                    jar,
+                    board_dir,
+                    tmp_path / "out",
+                    tmp_path / "logs",
+                    tmp_path / "user",
+                    "00:01:00",
+                    "test-ver",
+                    "dummy-sha",
+                    "dummy-jar-sha",
+                    1000,
+                    "A",
+                    1,
+                    {},
+                    {},
+                    threading.Lock(),
+                    cancel,
+                    force_kill,
+                    neck_width_um=None,
+                )
+                self.assertIsNotNone(record2)
+                self.assertIsNone(record2["neck_width_um"])
+                cmd2 = mock_popen.call_args[0][0]
+                self.assertFalse(any(arg.startswith("--router.neck_width_um=") for arg in cmd2))
+
     def test_default_worker_count_uses_three_quarters_of_logical_processors(self) -> None:
         from unittest.mock import patch
 
