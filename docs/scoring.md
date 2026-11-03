@@ -120,11 +120,17 @@ $$
 
 | Symbol | Settings key | Default | Technical meaning | In plain language |
 | --- | --- | --- | --- | --- |
-| \(N_{\mathrm{viol}}\) | `clearance_violations.total_count` | — | Count of clearance-violation pairs. | How many “these two coppers are too close” flags you have. |
-| \(\sum L_{\mathrm{um}}\) | `clearance_violations.total_violation_um` | — | Sum of positive clearance shortfalls, in µm. | How deep those overlaps are, stacked together — a 50 µm nibble plus a 200 µm crash is worse than two 1 µm nicks. |
+| \(N_{\mathrm{viol}}\) | `clearance_violations.total_count` − `clearance_violations.unfixable_count` | — | Count of clearance-violation pairs, except the unfixable ones. | How many “these two coppers are too close” flags routing can still do something about. |
+| \(\sum L_{\mathrm{um}}\) | `clearance_violations.fixable_violation_um` | — | Sum of positive clearance shortfalls of those pairs, in µm. | How deep those overlaps are, stacked together — a 50 µm nibble plus a 200 µm crash is worse than two 1 µm nicks. |
 | \(W_C\) | `clearance_violation_count_weight` | \(25\) | Points lost per violation, after dividing by \(D\). | A tax on **how many** clearance fights you have. |
 | \(W_D\) | `clearance_violation_depth_weight` | \(300\) | Points lost per scaled micrometre of stacked shortfall, after dividing by \(D\). | A tax on **how bad** those fights are. |
 | \(U_{\mathrm{scale}}\) | `clearance_violation_depth_scale` | \(1000\) µm | Converts stacked µm into a dimensionless depth of “one millimetre of shortfall.” | One millimetre of piled-up overlap is a full “depth unit.” |
+
+A violation is **unfixable** when neither of its two items is routable, for example two pads
+of one footprint, or a pad or a fixed or protected wire against a keepout or the board
+outline. No routing decision can change it, so it is reported in `total_count` and
+`unfixable_count` but left out of the score; it would only lower the score of every
+routing result of the board by the same amount.
 
 There is no extra cap. Typical incomplete or slightly dirty boards stay above 0
 because unrouted and DRC terms are scaled; the outer \(\max(0,\cdot)\) is only a
