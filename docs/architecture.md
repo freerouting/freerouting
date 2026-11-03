@@ -481,6 +481,12 @@ The autorouter is the "make it work" stage. It solves missing connections one at
 
 The autorouter may also temporarily rip up nearby conflicting traces or vias if needed to find a legal route. Its job is to turn an incomplete design into one that is electrically connected.
 
+- Remember who moved whom.
+
+    Two nets that want the same space can otherwise take it from each other pass after pass: net A rips net B to route, B rips A back on its next attempt, A rips B again, or a board restore replays the same rip-up, and the board never gets both. `RipupMemory` (in `autoroute.pipeline`) records every rip-up of the stage: which net was being routed and which nets it removed. Recording changes nothing; the memory only steps in when the same rip-up (A removes B) happens again in a later pass. B is then kept away from A: its maze search may not rip A (`AutorouteControl.netsNotToRip`, checked in `MazeRipupResolver.checkRipup`), and B is routed after A in the pass. B has to find another way, for example a via to the other layer.
+
+    The restriction is bounded. When B fails twice while kept away, the relation flips: A's traces and vias across B's open connections are removed and A is kept away from B, so B routes first and A looks for the other way. When the flipped relation fails twice as well, the pair is released and never restricted again. The memory is kept across board restores within a stage and is keyed by net number, so routing stays deterministic. A board that routes without such a repeat is routed exactly as before. The events are logged at debug level (`Pass #n: net 'B' ...`).
+
 #### Preserved Traces and Centerline Junction Connectivity
 
 Preserved traces (`USER_FIXED` and `SYSTEM_FIXED`, such as KiCad footprint tracks or SPECCTRA DSN `route`/`fix` wires) must retain their exact geometry without mutation or splitting throughout routing, normalization, and export:

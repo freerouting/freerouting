@@ -525,7 +525,7 @@ final class AutorouteBatchLoop {
               && incompleteNow <= LAST_MILE_INCOMPLETE_LIMIT
               && lastMileAttempts < LAST_MILE_MAX_ATTEMPTS
               && consecutiveNoImprovementPasses >= LAST_MILE_STAGNATION_PASSES) {
-            int removed = LastMileBlockerRipup.ripBlockers(router.board);
+            int removed = LastMileBlockerRipup.ripBlockers(router.board, router.ripupMemory);
             lastMileAttempts++;
             if (removed > 0) {
               boardStatisticsAfter = new BoardStatistics(router.board);

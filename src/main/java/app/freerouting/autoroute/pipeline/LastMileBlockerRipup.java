@@ -27,6 +27,14 @@ final class LastMileBlockerRipup {
 
   /** Rips blockers for the current incomplete airlines. Returns the number of items removed. */
   static int ripBlockers(RoutingBoard board) {
+    return ripBlockers(board, null);
+  }
+
+  /**
+   * Rips blockers for the current incomplete airlines, respecting nets kept away by the rip-up
+   * memory. Returns the number of items removed.
+   */
+  static int ripBlockers(RoutingBoard board, RipupMemory memory) {
     DesignRulesChecker drc = new DesignRulesChecker(board, null);
     AirLine[] airlines = drc.getAllAirlines();
     if (airlines.length == 0) {
@@ -46,7 +54,7 @@ final class LastMileBlockerRipup {
         if (blockers.size() >= MAX_ITEMS) {
           break;
         }
-        if (isRemovableBlocker(item, airline.net.netNumber)) {
+        if (isRemovableBlocker(item, airline.net.netNumber, memory)) {
           blockers.add(item);
         }
       }
@@ -63,6 +71,10 @@ final class LastMileBlockerRipup {
   }
 
   static boolean isRemovableBlocker(Item item, int airlineNetNumber) {
+    return isRemovableBlocker(item, airlineNetNumber, null);
+  }
+
+  static boolean isRemovableBlocker(Item item, int airlineNetNumber, RipupMemory memory) {
     if (!(item instanceof Trace) && !(item instanceof Via)) {
       return false;
     }
@@ -72,6 +84,16 @@ final class LastMileBlockerRipup {
     for (int i = 0; i < item.netCount(); i++) {
       if (item.getNetNumber(i) == airlineNetNumber) {
         return false;
+      }
+    }
+    if (memory != null) {
+      Set<Integer> keptAwayFrom = memory.netsNotToRip(airlineNetNumber);
+      if (!keptAwayFrom.isEmpty()) {
+        for (int i = 0; i < item.netCount(); i++) {
+          if (keptAwayFrom.contains(item.getNetNumber(i))) {
+            return false;
+          }
+        }
       }
     }
     return item.netCount() > 0;

@@ -81,6 +81,10 @@ public final class BatchAutorouter extends NamedAlgorithm {
   private final AutorouteConnectionRouter connectionRouter;
   private final AutoroutePassRunner passRunner;
   private final AutorouteBatchLoop batchLoop;
+
+  /** Which net ripped which during this stage, so a moved net does not take its space back. */
+  final RipupMemory ripupMemory = new RipupMemory();
+
   protected RoutingJob job;
   int totalItemsRouted;
   boolean fanoutTimedOut;

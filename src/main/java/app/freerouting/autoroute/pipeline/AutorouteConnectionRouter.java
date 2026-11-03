@@ -42,6 +42,7 @@ final class AutorouteConnectionRouter {
               router.board, routeNetNo, router.settings, currentViaCosts, router.getTraceCosts());
       autorouteControl.ripupAllowed = true;
       autorouteControl.ripupCosts = router.getStartRipupCosts() * ripupPassNo;
+      autorouteControl.netsNotToRip = router.ripupMemory.netsNotToRip(routeNetNo);
       autorouteControl.removeUnconnectedVias = router.isRemoveUnconnectedVias();
 
       Set<Item> unconnectedSet = item.getUnconnectedSet(routeNetNo);
@@ -231,6 +232,7 @@ final class AutorouteConnectionRouter {
             router.board, routeNetNo, router.settings, viaCosts, router.getTraceCosts());
     neckControl.ripupAllowed = true;
     neckControl.ripupCosts = router.getStartRipupCosts() * ripupPassNo;
+    neckControl.netsNotToRip = originalControl.netsNotToRip;
     neckControl.removeUnconnectedVias = router.isRemoveUnconnectedVias();
     for (int i = 0; i < neckControl.layerCount; i++) {
       int compensation = neckControl.compensatedTraceHalfWidth[i] - neckControl.traceHalfWidth[i];
