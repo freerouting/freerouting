@@ -392,7 +392,10 @@ public class TraceShover {
     }
     int tracePieceCount = shapeEntries.substituteTraceCount();
 
-    if (netNumbers != null && netNumbers.length > 0 && !obstacles.isEmpty()) {
+    if (FRLogger.isTraceEnabled()
+        && netNumbers != null
+        && netNumbers.length > 0
+        && !obstacles.isEmpty()) {
       StringBuilder obstacleLog = new StringBuilder();
       obstacleLog
           .append(tracePieceCount > 0 ? "[shove_check_obstacles]" : "[shove_check_obstacles_zero]")
@@ -590,7 +593,10 @@ public class TraceShover {
       return false;
     }
     int tracePieceCount = shapeEntries.substituteTraceCount();
-    if (netNumbers != null && netNumbers.length > 0 && !obstacles.isEmpty()) {
+    if (FRLogger.isTraceEnabled()
+        && netNumbers != null
+        && netNumbers.length > 0
+        && !obstacles.isEmpty()) {
       StringBuilder obstacleLog = new StringBuilder();
       obstacleLog
           .append(

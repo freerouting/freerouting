@@ -18,8 +18,6 @@ import java.util.SortedSet;
 /** Executes one autoroute connection, including necked retry and strict-DRC recovery. */
 final class AutorouteConnectionRouter {
 
-  private static final int TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP = 1000;
-
   private final BatchAutorouter router;
 
   AutorouteConnectionRouter(BatchAutorouter router) {
@@ -73,7 +71,7 @@ final class AutorouteConnectionRouter {
       maxMilliseconds = Math.min(maxMilliseconds, Integer.MAX_VALUE);
       TimeLimit timeLimit = new TimeLimit((int) maxMilliseconds);
 
-      boolean isStrictPass = router.settings.isStrictDrc();
+      boolean strictDrc = router.settings.isStrictDrc();
 
       // start_necked: a net that needed the neck before routes at the neck width, ripping like any
       // search, and
@@ -84,7 +82,7 @@ final class AutorouteConnectionRouter {
           && router.settings.getNeckWidthUm() > 0
           && router.neckedRouteNets.contains(routeNetNo)) {
         int beforeStart = router.board.communication.idGenerator.maxGeneratedId();
-        byte[] startSnapshot = isStrictPass ? router.board.serialize(false) : null;
+        byte[] startSnapshot = strictDrc ? router.board.serialize(false) : null;
         AutorouteAttemptResult started =
             retryConnectionNecked(
                 routeNetNo,
@@ -121,11 +119,10 @@ final class AutorouteConnectionRouter {
               timeLimit,
               router.isRetainAutorouteDatabase());
       int maxItemIdBeforeRoute = router.board.communication.idGenerator.maxGeneratedId();
-      // Snapshot the board state only when strict DRC is explicitly enabled; the implicit
-      // per-connection serialize that previously fired for every pass ≥ 3 caused significant
-      // allocation/GC pressure on large boards. The removeItems-based rollback in
-      // enforceStrictDrc() handles the common case without needing a full snapshot.
-      byte[] strictDrcBoardSnapshot = isStrictPass ? router.board.serialize(false) : null;
+      // Strict DRC needs this snapshot to undo a rejected route together with the ripups it made,
+      // so it is applied only when enabled explicitly: snapshotting every connection of every late
+      // pass would serialize the whole board per connection.
+      byte[] strictDrcBoardSnapshot = strictDrc ? router.board.serialize(false) : null;
 
       long mazeSearchStart = BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
       final AutorouteAttemptResult autorouteResult =
@@ -148,8 +145,7 @@ final class AutorouteConnectionRouter {
             null,
             router.getTracePullTightAccuracy(),
             autorouteControl.traceCosts,
-            router.thread,
-            TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
+            router.thread);
         if (BatchAutorouter.isBenchmarkProfileEnabled()) {
           router.addProfileOptChangedAreaNanos(System.nanoTime() - pullTightStart);
         }
@@ -270,8 +266,7 @@ final class AutorouteConnectionRouter {
         null,
         router.getTracePullTightAccuracy(),
         neckControl.traceCosts,
-        router.thread,
-        TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
+        router.thread);
     if (BatchAutorouter.isBenchmarkProfileEnabled()) {
       router.addProfileOptChangedAreaNanos(System.nanoTime() - neckPullTightStart);
     }
@@ -287,10 +282,14 @@ final class AutorouteConnectionRouter {
     return neckResult;
   }
 
+  /**
+   * Rejects the route when its new items carry clearance violations and restores the board from the
+   * snapshot taken before it. Without a snapshot the route is kept: removing only its new items
+   * would leave the connections it ripped up unrouted.
+   */
   private AutorouteAttemptResult applyStrictDrcAfterRoute(
       int routeNetNo, int maxItemIdBefore, byte[] boardSnapshotBeforeRoute, int ripupPassNo) {
-    boolean isStrictPass = router.settings.isStrictDrc() || ripupPassNo >= 3;
-    if (!isStrictPass) {
+    if (boardSnapshotBeforeRoute == null) {
       return null;
     }
     AutorouteAttemptResult rejection =
@@ -302,9 +301,7 @@ final class AutorouteConnectionRouter {
           "pass=" + ripupPassNo + ", net=" + routeNetNo + ", reason=" + rejection.details,
           "",
           null);
-      if (boardSnapshotBeforeRoute != null) {
-        router.board = (RoutingBoard) BasicBoard.deserialize(boardSnapshotBeforeRoute);
-      }
+      router.board = (RoutingBoard) BasicBoard.deserialize(boardSnapshotBeforeRoute);
     }
     return rejection;
   }

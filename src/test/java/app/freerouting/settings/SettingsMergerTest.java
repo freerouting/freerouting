@@ -294,15 +294,15 @@ class SettingsMergerTest {
   }
 
   @Test
-  void flatMaxThreadsDoesNotCapTheOptimizerPool() {
+  void flatMaxThreadsCapsBothAutorouterAndOptimizer() {
     DefaultSettings defaults = new DefaultSettings();
-    int defaultOptimizerThreads = new DefaultSettings().getSettings().optimizer.maxThreads;
     CliSettings cli = new CliSettings(new String[] {"--router.max_threads=1"});
 
     RouterSettings merged = new SettingsMerger(defaults, cli).merge();
 
     assertEquals(1, merged.maxThreads);
-    assertEquals(defaultOptimizerThreads, merged.optimizer.maxThreads);
+    assertEquals(1, merged.getAutorouterMaxThreads());
+    assertEquals(1, merged.getOptimizerMaxThreads());
   }
 
   @Test
@@ -317,5 +317,7 @@ class SettingsMergerTest {
     assertEquals(1, merged.autorouter.maxThreads);
     assertEquals(4, merged.optimizer.maxThreads);
     assertEquals(1, merged.getAutorouterMaxThreads());
+    assertEquals(
+        Math.min(4, Runtime.getRuntime().availableProcessors()), merged.getOptimizerMaxThreads());
   }
 }
