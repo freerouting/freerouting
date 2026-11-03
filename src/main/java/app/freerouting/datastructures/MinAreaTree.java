@@ -58,10 +58,24 @@ public class MinAreaTree extends ShapeTree {
 
   /** Appends overlapping leaves into {@code result} while read lock is held. */
   protected final void overlapsUnlocked(RegularTileShape shape, List<Leaf> result) {
+    int first = result.size();
+    collectOverlapsUnlocked(shape, result);
+    if (first == 0) {
+      Collections.sort(result);
+    } else {
+      result.subList(first, result.size()).sort(null);
+    }
+  }
+
+  /**
+   * Appends overlapping leaves into {@code result} in traversal order, without sorting them, while
+   * the read lock is held. A caller that drops some of the leaves can sort only the ones it keeps
+   * and get the same order as {@link #overlapsUnlocked(RegularTileShape, List)}.
+   */
+  protected final void collectOverlapsUnlocked(RegularTileShape shape, List<Leaf> result) {
     if (this.root == null) {
       return;
     }
-    int first = result.size();
     ArrayStack<TreeNode> stack = nodeStack.get();
     stack.reset();
     stack.push(this.root);
@@ -76,11 +90,6 @@ public class MinAreaTree extends ShapeTree {
           stack.push(((InnerNode) currentNode).secondChild);
         }
       }
-    }
-    if (first == 0) {
-      Collections.sort(result);
-    } else {
-      result.subList(first, result.size()).sort(null);
     }
   }
 
