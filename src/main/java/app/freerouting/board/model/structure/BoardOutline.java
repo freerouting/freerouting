@@ -551,16 +551,17 @@ public class BoardOutline extends Item implements Serializable {
   }
 
   private int currentSliceTolerance() {
-    return Math.max(HALF_WIDTH, this.board.rules.getMinTraceHalfWidth());
+    return Math.max(HALF_WIDTH, this.board.rules.getMinNetClassTraceHalfWidth());
   }
 
   /**
-   * Cuts the tree shapes of this outline again if the smallest trace half width of the board
-   * changed since they were cut, and reinserts the outline into the search trees. A rules file read
-   * after the board, or a trace width set in the GUI, can lower it; the slices cut for the former
-   * width would then let their bounding octagons reach further into the board than a trace of the
-   * new width can pass. The slice count may not change while the outline is in the trees, since
-   * {@link #shapeLayer} derives the layer of a tree shape from it.
+   * Cuts the tree shapes of this outline again if the smallest trace half width of the board, net
+   * classes included, changed since they were cut, and reinserts the outline into the search trees.
+   * The outline is inserted before the net classes are read, and a rules file read after the board
+   * or a trace width set in the GUI can lower that width too; the slices cut for the former width
+   * would then let their bounding octagons reach further into the board than a trace of the new
+   * width can pass. The slice count may not change while the outline is in the trees, since {@link
+   * #shapeLayer} derives the layer of a tree shape from it.
    */
   public void updateSlicesToTraceWidths() {
     if (this.sliceTolerance == 0 || this.sliceTolerance == currentSliceTolerance()) {
