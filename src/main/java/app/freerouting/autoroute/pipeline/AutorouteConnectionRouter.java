@@ -8,6 +8,7 @@ import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.ConductionArea;
 import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Pin;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.drc.ClearanceBaseline;
 import app.freerouting.logger.FRLogger;
@@ -15,6 +16,7 @@ import app.freerouting.rules.Net;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 /** Executes one autoroute connection, including necked retry and strict-DRC recovery. */
 final class AutorouteConnectionRouter {
@@ -25,12 +27,103 @@ final class AutorouteConnectionRouter {
     this.router = router;
   }
 
+  /** plane_as_priority retry: rip-up at its cheapest. */
+  private boolean forceCheapRipup;
+
+  /** True if a pad reaches its plane only after passing through another pin of the net. */
+  private static boolean reachesPlaneThroughAnotherPin(Item item, int netNo) {
+    if (item == null) {
+      return false;
+    }
+    for (Item other : item.getConnectedSet(netNo, true)) {
+      if (other != item && other instanceof Pin) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Set by {@link #route(Item, int, SortedSet, Map, int, boolean)} when it aimed at the plane only.
+   */
+  private boolean aimedAtPlaneOnly;
+
+  /**
+   * Routes one connection of {@code item}. A pad of a plane net is first routed to its plane only,
+   * so that it drops into the plane through a via of its own instead of reaching a neighbouring pad
+   * of the same net on the outer layers (a short trace costs less than a via, and every unconnected
+   * pad of the net used to be a valid destination). Only when no route to the plane is found is the
+   * rest of the net accepted as destination, so a pad with no room for a via still gets connected.
+   */
   AutorouteAttemptResult route(
       Item item,
       int routeNetNo,
       SortedSet<Item> rippedItemList,
       Map<Item, Integer> ripupCosts,
       int ripupPassNo) {
+    boolean ownVia =
+        item instanceof Pin pin
+            && pin.firstLayer() == pin.lastLayer()
+            && router.settings.autorouter != null
+            && Boolean.TRUE.equals(router.settings.autorouter.planeAsPriority);
+    int itemId = item.getId();
+    if (ownVia) {
+      router.board.generateSnapshot();
+    }
+    AutorouteAttemptResult result =
+        route(item, routeNetNo, rippedItemList, ripupCosts, ripupPassNo, true);
+    if (ownVia) {
+      Item routed = router.board.getItem(itemId);
+      if (aimedAtPlaneOnly
+          && result.state == AutorouteAttemptState.ROUTED
+          && reachesPlaneThroughAnotherPin(routed, routeNetNo)) {
+        // plane_as_priority: undo the chained route and search again with rip-up at its
+        // cheapest, so the pad clears room for a via of its own; that result is kept even if it
+        // chains again.
+        router.board.undo(null);
+        router.board.finishAutoroute();
+        forceCheapRipup = true;
+        try {
+          Item restored = router.board.getItem(itemId);
+          result =
+              route(
+                  restored != null ? restored : item,
+                  routeNetNo,
+                  rippedItemList,
+                  ripupCosts,
+                  ripupPassNo,
+                  true);
+        } finally {
+          forceCheapRipup = false;
+        }
+      } else {
+        router.board.popSnapshot();
+      }
+    }
+    if (aimedAtPlaneOnly
+        && (result.state == AutorouteAttemptState.FAILED
+            || result.state == AutorouteAttemptState.INSERT_ERROR)) {
+      Item current = router.board.getItem(itemId);
+      result =
+          route(
+              current != null ? current : item,
+              routeNetNo,
+              rippedItemList,
+              ripupCosts,
+              ripupPassNo,
+              false);
+    }
+    return result;
+  }
+
+  private AutorouteAttemptResult route(
+      Item item,
+      int routeNetNo,
+      SortedSet<Item> rippedItemList,
+      Map<Item, Integer> ripupCosts,
+      int ripupPassNo,
+      boolean planeOnly) {
+    aimedAtPlaneOnly = false;
     try {
       Net routeNet = router.board.rules.nets.get(routeNetNo);
       boolean containsPlane = routeNet != null && routeNet.containsPlane();
@@ -41,7 +134,7 @@ final class AutorouteConnectionRouter {
           new AutorouteControl(
               router.board, routeNetNo, router.settings, currentViaCosts, router.getTraceCosts());
       autorouteControl.ripupAllowed = true;
-      autorouteControl.ripupCosts = router.getStartRipupCosts() * ripupPassNo;
+      autorouteControl.ripupCosts = forceCheapRipup ? 1 : router.getStartRipupCosts() * ripupPassNo;
       autorouteControl.netsNotToRip = router.ripupMemory.netsNotToRip(routeNetNo);
       autorouteControl.removeUnconnectedVias = router.isRemoveUnconnectedVias();
 
@@ -61,6 +154,18 @@ final class AutorouteConnectionRouter {
         }
         routeStartSet = connectedSet;
         routeDestSet = unconnectedSet;
+        if (planeOnly) {
+          Set<Item> planes = new TreeSet<>();
+          for (Item currentItem : unconnectedSet) {
+            if (currentItem instanceof ConductionArea && currentItem.getComponentId() <= 0) {
+              planes.add(currentItem);
+            }
+          }
+          if (!planes.isEmpty()) {
+            routeDestSet = planes;
+            aimedAtPlaneOnly = true;
+          }
+        }
       } else {
         routeStartSet = unconnectedSet;
         routeDestSet = connectedSet;
