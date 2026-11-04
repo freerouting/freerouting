@@ -289,8 +289,8 @@ public class AutorouteEngine {
   /**
    * Returns true if a found connection must not start or end on this layer. A signal layer that is
    * not active for this net is off limits. A power layer is never active for routing (traces are
-   * not allowed on it), but a via that drops into a plane on that layer is the normal way to connect
-   * a plane net, so a connection that starts or ends there is kept.
+   * not allowed on it), but a via that drops into a plane on that layer is the normal way to
+   * connect a plane net, so a connection that starts or ends there is kept.
    */
   private boolean isDisabledSignalLayer(AutorouteControl ctrl, int layer) {
     return !ctrl.layerActive[layer] && board.layerStructure.layers[layer].isSignal;

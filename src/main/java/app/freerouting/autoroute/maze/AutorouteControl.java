@@ -416,8 +416,8 @@ public class AutorouteControl {
   }
 
   /**
-   * Distinguishes the two kinds of vias of a plane net. A via that drops from a signal layer into
-   * a plane of the net is the normal way to connect it and costs {@code viaCosts} (the plane via
+   * Distinguishes the two kinds of vias of a plane net. A via that drops from a signal layer into a
+   * plane of the net is the normal way to connect it and costs {@code viaCosts} (the plane via
    * costs chosen by the caller). A via between two signal layers is an ordinary layer change of a
    * trace and costs the regular via costs: the difference is added to that layer pair. The drill
    * entry keeps the cheaper value, so the destination distance stays a lower bound.

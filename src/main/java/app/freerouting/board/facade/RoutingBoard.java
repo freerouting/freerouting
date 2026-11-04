@@ -1068,7 +1068,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     boolean planeNet = pinNet != null && pinNet.containsPlane();
     if (planeNet) {
       sortedUnconnectedList.sort(
-          (item1, item2) -> Boolean.compare(isPlaneOnPowerLayer(item2), isPlaneOnPowerLayer(item1)));
+          (item1, item2) ->
+              Boolean.compare(isPlaneOnPowerLayer(item2), isPlaneOnPowerLayer(item1)));
     }
     int fanoutViaCosts =
         planeNet ? routerSettings.getPlaneViaCosts() : routerSettings.getViaCosts();
@@ -1174,7 +1175,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
         && !this.layerStructure.layers[item.firstLayer()].isSignal;
   }
 
-    public static app.freerouting.rules.ViaRule fanoutFallbackViaRule(
+  public static app.freerouting.rules.ViaRule fanoutFallbackViaRule(
       app.freerouting.rules.ViaRule netRule,
       app.freerouting.rules.ViaRule boardRule,
       Integer netViaClearance,
