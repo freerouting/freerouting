@@ -8,10 +8,14 @@ import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.ConductionArea;
 import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.structure.Unit;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.drc.ClearanceBaseline;
+import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
@@ -30,6 +34,46 @@ final class AutorouteConnectionRouter {
    * Set by {@link #route(Item, int, SortedSet, Map, int, boolean)} when it aimed at the plane only.
    */
   private boolean aimedAtPlaneOnly;
+
+  /**
+   * plane_as_priority: pads of the net already in the plane and at most plane_share_gap_um from
+   * {@code item}, edge to edge, are accepted as destinations next to the plane. No via fits between
+   * two such pads; sharing one is the usual practice for adjacent pins of a package.
+   */
+  private void addSharablePads(Item item, int netNo, Set<Item> destinations) {
+    if (!(item instanceof Pin pin)
+        || pin.firstLayer() != pin.lastLayer()
+        || router.settings.autorouter == null
+        || !Boolean.TRUE.equals(router.settings.autorouter.planeAsPriority)) {
+      return;
+    }
+    Double gapUm = router.settings.autorouter.planeShareGapUm;
+    double shareGapUm = gapUm != null ? gapUm : 500.0;
+    if (shareGapUm <= 0) {
+      return;
+    }
+    int resolution = Math.max(1, router.board.communication.resolution);
+    double maxGap = Unit.scale(shareGapUm * resolution, Unit.UM, router.board.communication.unit);
+    IntBox box = pin.boundingBox();
+    Set<Item> inPlane = new java.util.TreeSet<>();
+    for (Item plane : List.copyOf(destinations)) {
+      inPlane.addAll(plane.getConnectedSet(netNo));
+    }
+    for (Item other : inPlane) {
+      if (other instanceof Pin otherPin
+          && otherPin != pin
+          && otherPin.isOnLayer(pin.firstLayer())
+          && boxGap(box, otherPin.boundingBox()) <= maxGap) {
+        destinations.add(otherPin);
+      }
+    }
+  }
+
+  private static double boxGap(IntBox a, IntBox b) {
+    double dx = Math.max(0, Math.max(b.ll.x - a.ur.x, a.ll.x - b.ur.x));
+    double dy = Math.max(0, Math.max(b.ll.y - a.ur.y, a.ll.y - b.ur.y));
+    return Math.hypot(dx, dy);
+  }
 
   /**
    * Routes one connection of {@code item}. A pad of a plane net is first routed to its plane only,
@@ -100,6 +144,7 @@ final class AutorouteConnectionRouter {
             }
           }
           if (!planes.isEmpty()) {
+            addSharablePads(item, routeNetNo, planes);
             routeDestSet = planes;
             aimedAtPlaneOnly = true;
           }

@@ -127,6 +127,15 @@ public class AutorouterSettings implements Serializable, Cloneable {
   @Schema(description = "Plane pads skip the fanout; each drops into its plane through its own via")
   public Boolean planeAsPriority;
 
+  /**
+   * With plane_as_priority, a plane pad may share the via of a pad of its net already in the plane
+   * when the two pads are at most this far apart edge to edge (no via fits between them). Unset:
+   * 500 µm.
+   */
+  @SerializedName("plane_share_gap_um")
+  @Schema(description = "Plane pads closer than this (edge to edge, µm) may share one via")
+  public Double planeShareGapUm;
+
   /** Erik Gavriluk (freerouting.net): allows vias directly in SMD component pads of their net. */
   @SerializedName("via_in_pad")
   @Schema(description = "Allows vias directly in SMD component pads of their own net")
