@@ -668,6 +668,11 @@ public class MazeSearchEngine {
       if (safeTargetShape == null || safeTargetShape.isEmpty()) {
         continue;
       }
+      if (!ctrl.layerActive[listElement.nextRoom.getLayer()]
+          && !safeTargetShape.contains(shapeEntryMiddle)) {
+        // On an inactive power layer the via has to land inside the plane: no trace there.
+        continue;
+      }
       FloatPoint connectionPoint = safeTargetShape.nearestPointApprox(shapeEntryMiddle);
       if (!nextRoomIsThick) {
         // check the line from shapeEntryMiddle to the nearest point.
