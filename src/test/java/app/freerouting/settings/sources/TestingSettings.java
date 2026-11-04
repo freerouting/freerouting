@@ -57,6 +57,13 @@ public class TestingSettings implements SettingsSource {
     this.settings.setPlaneViaCosts(planeViaCosts);
   }
 
+  /**
+   * Drops each plane pad into its plane through its own via (router.autorouter.plane_as_priority).
+   */
+  public void setPlaneAsPriority(boolean enabled) {
+    this.settings.autorouter.planeAsPriority = enabled;
+  }
+
   /** Sets the maximum number of routing items per pass. */
   public void setMaxItems(int maxItems) {
     this.settings.autorouter.maxItems = maxItems;

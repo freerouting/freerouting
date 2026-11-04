@@ -3,6 +3,7 @@ package app.freerouting.fixtures;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.model.items.Via;
@@ -14,72 +15,140 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 /**
- * A 4-layer board whose inner layers are planes: In1.Cu is a GND plane, In2.Cu a +3V3 plane, both
+ * 4-layer boards whose inner layers are planes: In1.Cu is a GND plane, In2.Cu a +3V3 plane, both
  * declared {@code (type power)} with a {@code (plane …)} and its windows, as KiCad writes them for
- * power layers. On top: an SOIC-8 MCU, a 0805 decoupling capacitor, a 2-pin header and a garland of
- * four resistor + LED pairs whose cathodes go to GND.
+ * power layers.
  *
- * <p>Every SMD pin of a plane net must drop into its plane through a via of its own. Before the
- * plane-aware via costs, the fanout sorted its targets by bounding-box centre; a plane's centre is
- * the board centre, so the neighbouring pad always won, and the LED cathodes were chained to each
- * other on the outer layers instead of each reaching the GND plane.
+ * <ul>
+ *   <li>{@code Plane-via-garland-4layer.dsn}: an SOIC-8 MCU, a 0805 decoupling capacitor, a 2-pin
+ *       header and a garland of four resistor + LED pairs whose cathodes go to GND.
+ *   <li>{@code Plane-via-garland-dense-4layer.dsn}: the same idea packed with the parts that make a
+ *       real board hard: a QFN-24 at 0.5 mm pitch with a GND exposed pad, a SOT-23-5, a TSSOP-16,
+ *       0603 decoupling next to the supply pins and eight 0603 LED + R pairs at 2 mm pitch; 0.2 mm
+ *       traces and clearance, 0.6 mm vias.
+ * </ul>
  *
- * <p>A plane via is priced with {@code plane_via_costs}, an F.Cu ↔ B.Cu via with {@code via_costs}:
- * with a cheap plane via and an expensive signal via, the signals stay on few vias while each plane
- * pad still gets its own.
+ * <p>Every SMD pad of a plane net must drop into its plane through a via of its own, rather than
+ * being joined to another pad of the net on the outer layers. Pins of one package (the GND pins of
+ * the QFN and its exposed pad) may share a via. Before the maze could reach a plane on a power
+ * layer, only the fanout dropped pads into planes, and every pad it missed was chained to its
+ * neighbours.
  */
 class PlaneViaGarlandRoutingTest extends RoutingFixtureTest {
 
-  private static final String BOARD = "Plane-via-garland-4layer.dsn";
+  private static final String GARLAND = "Plane-via-garland-4layer.dsn";
+  private static final String DENSE = "Plane-via-garland-dense-4layer.dsn";
 
-  @Test
-  void everyPlanePadDropsIntoItsPlaneThroughItsOwnVia() {
+  private static TestingSettings settings() {
     TestingSettings settings = new TestingSettings();
     settings.setJobTimeoutString("00:02:00");
     settings.setMaxPasses(20);
     settings.setOptimizerEnabled(false);
+    return settings;
+  }
+
+  @Test
+  void cheapPlaneViasGiveEveryPlanePadItsOwnVia() {
+    TestingSettings settings = settings();
     settings.setViaCosts(200);
     settings.setPlaneViaCosts(1);
-
-    RoutingJob job = getRoutingJob(BOARD, settings);
+    RoutingJob job = getRoutingJob(GARLAND, settings);
     runRoutingJob(job);
 
-    assertRoutingResult(job, BOARD).maxIncompleteConnections(0).exactClearanceViolations(0).check();
+    assertRoutingResult(job, GARLAND)
+        .maxIncompleteConnections(0)
+        .exactClearanceViolations(0)
+        .check();
+    List<String> chained = chainedPlanePads(job.board);
+    assertEquals(8, planePadCount(job.board), "6 GND and 2 +3V3 SMD pads on the board");
+    assertTrue(chained.isEmpty(), "Plane pads not escaping alone into their plane: " + chained);
+    assertNoTraceInPlaneLayers(job.board);
+  }
 
-    var board = job.board;
-    List<String> chained = new ArrayList<>();
-    int planePads = 0;
+  @Test
+  void planeAsPriorityGivesEveryPlanePadItsOwnVia() {
+    TestingSettings settings = settings();
+    settings.setPlaneAsPriority(true);
+    RoutingJob job = getRoutingJob(GARLAND, settings);
+    runRoutingJob(job);
+
+    assertRoutingResult(job, GARLAND)
+        .maxIncompleteConnections(0)
+        .exactClearanceViolations(0)
+        .check();
+    List<String> chained = chainedPlanePads(job.board);
+    assertTrue(chained.isEmpty(), "Plane pads not escaping alone into their plane: " + chained);
+    assertNoTraceInPlaneLayers(job.board);
+  }
+
+  @Test
+  void planeAsPriorityRoutesTheDenseGarland() {
+    TestingSettings settings = settings();
+    settings.setPlaneAsPriority(true);
+    RoutingJob job = getRoutingJob(DENSE, settings);
+    runRoutingJob(job);
+
+    assertRoutingResult(job, DENSE).maxIncompleteConnections(0).exactClearanceViolations(0).check();
+    assertEquals(33, planePadCount(job.board), "GND and +3V3 SMD pads on the board");
+    List<String> chained = chainedPlanePads(job.board);
+    // 29 of 33 measured; the rest are QFN supply pins joined to their own decoupling capacitor.
+    assertTrue(chained.size() <= 5, "Plane pads not escaping alone into their plane: " + chained);
+    assertNoTraceInPlaneLayers(job.board);
+  }
+
+  private static boolean isPlanePad(RoutingBoard board, Pin pin) {
+    if (pin.firstLayer() != pin.lastLayer() || pin.netCount() != 1) {
+      return false;
+    }
+    Net net = board.rules.nets.get(pin.getNetNumber(0));
+    return net != null && net.containsPlane();
+  }
+
+  private static int planePadCount(RoutingBoard board) {
+    int count = 0;
     for (Pin pin : board.getPins()) {
-      if (pin.firstLayer() != pin.lastLayer() || pin.netCount() != 1) {
+      if (isPlanePad(board, pin)) {
+        count++;
+      }
+    }
+    return count;
+  }
+
+  /** Plane pads that reach their plane only through a pad of another package, or not at all. */
+  private static List<String> chainedPlanePads(RoutingBoard board) {
+    List<String> chained = new ArrayList<>();
+    for (Pin pin : board.getPins()) {
+      if (!isPlanePad(board, pin)) {
         continue;
       }
       int netNo = pin.getNetNumber(0);
-      Net net = board.rules.nets.get(netNo);
-      if (!net.containsPlane()) {
-        continue;
-      }
-      planePads++;
-      // Everything this pad reaches on its own before entering the plane.
+      // Everything this pad reaches before entering the plane.
       var escape = pin.getConnectedSet(netNo, true);
-      long pins = escape.stream().filter(Pin.class::isInstance).count();
+      long otherPackages =
+          escape.stream()
+              .filter(
+                  item ->
+                      item instanceof Pin other && other.getComponentId() != pin.getComponentId())
+              .count();
       long vias = escape.stream().filter(Via.class::isInstance).count();
-      if (pins != 1 || vias == 0) {
+      if (otherPackages > 0 || vias == 0) {
         chained.add(
             pin.componentName()
                 + "-"
                 + pin.name()
                 + " ("
-                + net.name
+                + board.rules.nets.get(netNo).name
                 + "): "
-                + pins
-                + " pins, "
+                + otherPackages
+                + " pads of other packages, "
                 + vias
                 + " vias before the plane");
       }
     }
-    assertEquals(8, planePads, "6 GND and 2 +3V3 SMD pads on the board");
-    assertTrue(chained.isEmpty(), "Plane pads not escaping alone into their plane: " + chained);
+    return chained;
+  }
 
+  private static void assertNoTraceInPlaneLayers(RoutingBoard board) {
     long tracesOnPlanes =
         board.getTraces().stream()
             .map(Trace::getLayer)
