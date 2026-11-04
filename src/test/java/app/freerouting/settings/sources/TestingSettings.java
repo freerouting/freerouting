@@ -47,6 +47,16 @@ public class TestingSettings implements SettingsSource {
     this.settings.scoring.defaultBendCost = defaultBendCost;
   }
 
+  /** Sets the cost of a via between two signal layers. */
+  public void setViaCosts(int viaCosts) {
+    this.settings.setViaCosts(viaCosts);
+  }
+
+  /** Sets the cost of a via that drops into a plane of its own net. */
+  public void setPlaneViaCosts(int planeViaCosts) {
+    this.settings.setPlaneViaCosts(planeViaCosts);
+  }
+
   /** Sets the maximum number of routing items per pass. */
   public void setMaxItems(int maxItems) {
     this.settings.autorouter.maxItems = maxItems;
