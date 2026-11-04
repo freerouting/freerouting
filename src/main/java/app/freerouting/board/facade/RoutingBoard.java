@@ -1060,7 +1060,21 @@ public class RoutingBoard extends BasicBoard implements Serializable {
           return Double.compare(distSq1, distSq2);
         });
 
-    AutorouteControl ctrlSettings = new AutorouteControl(this, pinNetNo, routerSettings);
+    // A pin of a plane net escapes into its plane: the plane is the first target, and the via
+    // that drops into it is priced as a plane via, not as a signal layer change. Sorting by the
+    // centre of the bounding box would otherwise always prefer a neighbouring pin of the net,
+    // since the centre of a plane is the centre of the board.
+    Net pinNet = this.rules.nets.get(pinNetNo);
+    boolean planeNet = pinNet != null && pinNet.containsPlane();
+    if (planeNet) {
+      sortedUnconnectedList.sort(
+          (item1, item2) -> Boolean.compare(isPlaneOnPowerLayer(item2), isPlaneOnPowerLayer(item1)));
+    }
+    int fanoutViaCosts =
+        planeNet ? routerSettings.getPlaneViaCosts() : routerSettings.getViaCosts();
+    AutorouteControl ctrlSettings =
+        new AutorouteControl(
+            this, pinNetNo, routerSettings, fanoutViaCosts, routerSettings.getTraceCosts());
     ctrlSettings.isFanout = true;
     if (routerSettings.fanout != null
         && Boolean.TRUE.equals(routerSettings.fanout.fallbackToBoardVias)
@@ -1079,7 +1093,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       ctrlSettings.viaRule =
           fanoutFallbackViaRule(
               ctrlSettings.viaRule, boardDefaultViaRule, netViaClearance, this.rules);
-      ctrlSettings.rebuildViaInfo(this, routerSettings.getViaCosts(), pinNetNo);
+      ctrlSettings.rebuildViaInfo(this, fanoutViaCosts, pinNetNo);
     }
     Component pinComponent = this.components.get(pin.getComponentId());
     if (pinComponent != null && pin.name() != null) {
@@ -1155,7 +1169,12 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     return result;
   }
 
-  public static app.freerouting.rules.ViaRule fanoutFallbackViaRule(
+  private boolean isPlaneOnPowerLayer(Item item) {
+    return item instanceof ConductionArea
+        && !this.layerStructure.layers[item.firstLayer()].isSignal;
+  }
+
+    public static app.freerouting.rules.ViaRule fanoutFallbackViaRule(
       app.freerouting.rules.ViaRule netRule,
       app.freerouting.rules.ViaRule boardRule,
       Integer netViaClearance,
