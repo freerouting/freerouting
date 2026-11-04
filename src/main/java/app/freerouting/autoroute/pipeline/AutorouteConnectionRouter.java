@@ -8,7 +8,6 @@ import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.ConductionArea;
 import app.freerouting.board.model.items.Item;
-import app.freerouting.board.model.items.Pin;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.drc.ClearanceBaseline;
 import app.freerouting.logger.FRLogger;
@@ -25,22 +24,6 @@ final class AutorouteConnectionRouter {
 
   AutorouteConnectionRouter(BatchAutorouter router) {
     this.router = router;
-  }
-
-  /** plane_as_priority retry: rip-up at its cheapest. */
-  private boolean forceCheapRipup;
-
-  /** True if a pad reaches its plane only after passing through another pin of the net. */
-  private static boolean reachesPlaneThroughAnotherPin(Item item, int netNo) {
-    if (item == null) {
-      return false;
-    }
-    for (Item other : item.getConnectedSet(netNo, true)) {
-      if (other != item && other instanceof Pin) {
-        return true;
-      }
-    }
-    return false;
   }
 
   /**
@@ -61,57 +44,12 @@ final class AutorouteConnectionRouter {
       SortedSet<Item> rippedItemList,
       Map<Item, Integer> ripupCosts,
       int ripupPassNo) {
-    boolean ownVia =
-        item instanceof Pin pin
-            && pin.firstLayer() == pin.lastLayer()
-            && router.settings.autorouter != null
-            && Boolean.TRUE.equals(router.settings.autorouter.planeAsPriority);
-    int itemId = item.getId();
-    if (ownVia) {
-      router.board.generateSnapshot();
-    }
     AutorouteAttemptResult result =
         route(item, routeNetNo, rippedItemList, ripupCosts, ripupPassNo, true);
-    if (ownVia) {
-      Item routed = router.board.getItem(itemId);
-      if (aimedAtPlaneOnly
-          && result.state == AutorouteAttemptState.ROUTED
-          && reachesPlaneThroughAnotherPin(routed, routeNetNo)) {
-        // plane_as_priority: undo the chained route and search again with rip-up at its
-        // cheapest, so the pad clears room for a via of its own; that result is kept even if it
-        // chains again.
-        router.board.undo(null);
-        router.board.finishAutoroute();
-        forceCheapRipup = true;
-        try {
-          Item restored = router.board.getItem(itemId);
-          result =
-              route(
-                  restored != null ? restored : item,
-                  routeNetNo,
-                  rippedItemList,
-                  ripupCosts,
-                  ripupPassNo,
-                  true);
-        } finally {
-          forceCheapRipup = false;
-        }
-      } else {
-        router.board.popSnapshot();
-      }
-    }
     if (aimedAtPlaneOnly
         && (result.state == AutorouteAttemptState.FAILED
             || result.state == AutorouteAttemptState.INSERT_ERROR)) {
-      Item current = router.board.getItem(itemId);
-      result =
-          route(
-              current != null ? current : item,
-              routeNetNo,
-              rippedItemList,
-              ripupCosts,
-              ripupPassNo,
-              false);
+      result = route(item, routeNetNo, rippedItemList, ripupCosts, ripupPassNo, false);
     }
     return result;
   }
@@ -134,7 +72,7 @@ final class AutorouteConnectionRouter {
           new AutorouteControl(
               router.board, routeNetNo, router.settings, currentViaCosts, router.getTraceCosts());
       autorouteControl.ripupAllowed = true;
-      autorouteControl.ripupCosts = forceCheapRipup ? 1 : router.getStartRipupCosts() * ripupPassNo;
+      autorouteControl.ripupCosts = router.getStartRipupCosts() * ripupPassNo;
       autorouteControl.netsNotToRip = router.ripupMemory.netsNotToRip(routeNetNo);
       autorouteControl.removeUnconnectedVias = router.isRemoveUnconnectedVias();
 

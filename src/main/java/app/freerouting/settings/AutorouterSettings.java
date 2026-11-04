@@ -119,12 +119,12 @@ public class AutorouterSettings implements Serializable, Cloneable {
   public Integer itemOrderSeed;
 
   /**
-   * Every SMD pad of a plane net drops into its plane through a via of its own: a route that
-   * reaches the plane through another pad of the net is undone and searched again with cheap
-   * rip-up, and kept only when no own via can be placed.
+   * Every SMD pad of a net with a plane on a power layer is left out of the fanout and dropped into
+   * its plane by the autorouter, which routes it to the plane first: each pad gets a via of its own
+   * next to it instead of being joined to the nearest pad or via of the net.
    */
   @SerializedName("plane_as_priority")
-  @Schema(description = "Every SMD pad of a plane net gets its own via into the plane, no chaining")
+  @Schema(description = "Plane pads skip the fanout; each drops into its plane through its own via")
   public Boolean planeAsPriority;
 
   /** Erik Gavriluk (freerouting.net): allows vias directly in SMD component pads of their net. */
