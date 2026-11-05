@@ -2,7 +2,10 @@ package app.freerouting.settings;
 
 import app.freerouting.autoroute.maze.AutorouteControl;
 import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.io.KiCadNetClassNames;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.rules.BoardRules;
+import app.freerouting.rules.NetClass;
 import app.freerouting.util.ReflectionUtil;
 import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -599,16 +602,61 @@ public class RouterSettings implements Serializable, Cloneable {
         || this.autorouter.ignoreNetClasses == null) {
       return;
     }
-    for (String netClassName : this.autorouter.ignoreNetClasses) {
-      if (netClassName == null || netClassName.isBlank()) {
-        continue;
-      }
-      for (int i = 0; i < board.rules.netClasses.count(); i++) {
-        if (board.rules.netClasses.get(i).getName().equalsIgnoreCase(netClassName)) {
-          board.rules.netClasses.get(i).isIgnoredByAutorouter = true;
-        }
+    for (NetClass netClass : resolveIgnoredNetClasses(board.rules, null)) {
+      netClass.isIgnoredByAutorouter = true;
+    }
+  }
+
+  /**
+   * The board net classes named in {@code ignore_net_classes}. KiCad names composite classes with a
+   * comma ({@code PWR,Default}), and a comma-separated list on the command line splits them in two:
+   * a name that matches no class is joined with the names that follow it until the joined name
+   * matches one. A name that matches a class on its own is always taken as is.
+   *
+   * @param unknown receives the names that match no class; may be {@code null}
+   */
+  private List<NetClass> resolveIgnoredNetClasses(BoardRules rules, List<String> unknown) {
+    List<String> names = new ArrayList<>();
+    for (String name : this.autorouter.ignoreNetClasses) {
+      if (name != null && !name.isBlank()) {
+        names.add(name.trim());
       }
     }
+    List<NetClass> result = new ArrayList<>();
+    for (int i = 0; i < names.size(); i++) {
+      NetClass netClass = findNetClass(rules, names.get(i));
+      StringBuilder joined = new StringBuilder(names.get(i));
+      for (int j = i + 1; netClass == null && j < names.size(); j++) {
+        joined.append(',').append(names.get(j));
+        netClass = findNetClass(rules, joined.toString());
+        if (netClass != null) {
+          i = j;
+        }
+      }
+      if (netClass != null) {
+        result.add(netClass);
+      } else if (unknown != null) {
+        unknown.add(names.get(i));
+      }
+    }
+    return result;
+  }
+
+  /**
+   * The board net class a user-given name refers to, ignoring case. KiCad's default class ({@code
+   * kicad_default} in a DSN, {@code Default} in KiCad) is read into the board's default class,
+   * whose own name is {@code default}; both names resolve to it.
+   */
+  private static NetClass findNetClass(BoardRules rules, String name) {
+    if (KiCadNetClassNames.isKiCadDefaultNetClassName(name)) {
+      return rules.getDefaultNetClass();
+    }
+    for (int i = 0; i < rules.netClasses.count(); i++) {
+      if (rules.netClasses.get(i).getName().equalsIgnoreCase(name)) {
+        return rules.netClasses.get(i);
+      }
+    }
+    return null;
   }
 
   /**
@@ -1321,25 +1369,15 @@ public class RouterSettings implements Serializable, Cloneable {
         && board.rules.netClasses != null
         && this.autorouter != null
         && this.autorouter.ignoreNetClasses != null) {
-      for (String netClassName : this.autorouter.ignoreNetClasses) {
-        if (netClassName == null || netClassName.isBlank()) {
-          continue;
-        }
-        boolean found = false;
-        for (int i = 0; i < board.rules.netClasses.count(); i++) {
-          if (board.rules.netClasses.get(i).getName().equalsIgnoreCase(netClassName)) {
-            found = true;
-            break;
-          }
-        }
-        if (!found) {
-          String warning =
-              "Unknown net class '"
-                  + netClassName
-                  + "' specified in ignoreNetClasses (not present on board)";
-          FRLogger.warn(warning);
-          this.validationWarnings.add(warning);
-        }
+      List<String> unknown = new ArrayList<>();
+      resolveIgnoredNetClasses(board.rules, unknown);
+      for (String netClassName : unknown) {
+        String warning =
+            "Unknown net class '"
+                + netClassName
+                + "' specified in ignoreNetClasses (not present on board)";
+        FRLogger.warn(warning);
+        this.validationWarnings.add(warning);
       }
     }
   }
