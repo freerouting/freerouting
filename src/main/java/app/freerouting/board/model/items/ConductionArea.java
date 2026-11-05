@@ -335,22 +335,45 @@ public class ConductionArea extends ObstacleArea implements Connectable {
 
   @Override
   public Set<Item> getNormalContacts() {
-    TileShape[] tiles = new TileShape[tileShapeCount()];
-    for (int i = 0; i < tiles.length; i++) {
-      tiles[i] = getTileShape(i);
-    }
-    // A plane spans most of its layer: the net and endpoint tests come before the exact overlap
-    // test, which most items on the layer would otherwise reach.
+    ShapeSearchTree defaultTree = board.searchTreeManager.getDefaultTree();
+    // A plane spans most of its layer, often in thousands of tiles: rather than one tree query per
+    // tile, look up the tiles that contain the ends of the items of the net.
     Set<SearchTreeObject> overlaps =
-        board
-            .searchTreeManager
-            .getDefaultTree()
-            .overlappingObjects(tiles, getLayer(), this::isContactInTile);
+        defaultTree.overlappingObjectsWithPointIn(this, getLayer(), this::contactPoints);
     Set<Item> result = new TreeSet<>();
+    if (overlaps == null) {
+      // Not in the tree: query tile by tile.
+      for (int i = 0; i < tileShapeCount(); i++) {
+        TileShape tile = getTileShape(i);
+        for (SearchTreeObject currentObject : board.overlappingObjects(tile, getLayer())) {
+          if (isContactInTile(currentObject, tile)) {
+            result.add((Item) currentObject);
+          }
+        }
+      }
+      return result;
+    }
     for (SearchTreeObject currentObject : overlaps) {
       result.add((Item) currentObject);
     }
     return result;
+  }
+
+  /**
+   * The points of object of which one must lie in a tile of this area for a contact, or null if
+   * object cannot be a contact.
+   */
+  private Point[] contactPoints(SearchTreeObject object) {
+    if (!(object instanceof Item item)
+        || item == this
+        || !item.sharesNet(this)
+        || !item.sharesLayer(this)) {
+      return null;
+    }
+    if (item instanceof Trace trace) {
+      return new Point[] {trace.firstCorner(), trace.lastCorner()};
+    }
+    return item instanceof DrillItem drillItem ? new Point[] {drillItem.getCenter()} : null;
   }
 
   private boolean isContactInTile(SearchTreeObject object, TileShape tile) {
