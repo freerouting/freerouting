@@ -598,26 +598,41 @@ public class RouterSettings implements Serializable, Cloneable {
     if (board == null
         || board.rules == null
         || board.rules.netClasses == null
-        || this.autorouter == null
-        || this.autorouter.ignoreNetClasses == null) {
+        || this.autorouter == null) {
       return;
     }
-    for (NetClass netClass : resolveIgnoredNetClasses(board.rules, null)) {
+    for (NetClass netClass :
+        resolveNetClasses(board.rules, this.autorouter.ignoreNetClasses, null)) {
       netClass.isIgnoredByAutorouter = true;
+    }
+    for (NetClass netClass :
+        resolveNetClasses(board.rules, this.autorouter.priorityNetClasses, null)) {
+      netClass.isRoutedFirst = true;
     }
   }
 
+  /** The via costs of a net of a priority net class. */
+  public int getPriorityViaCosts() {
+    return autorouter != null && autorouter.priorityViaCosts != null
+        ? Math.max(autorouter.priorityViaCosts, 1)
+        : getViaCosts();
+  }
+
   /**
-   * The board net classes named in {@code ignore_net_classes}. KiCad names composite classes with a
-   * comma ({@code PWR,Default}), and a comma-separated list on the command line splits them in two:
-   * a name that matches no class is joined with the names that follow it until the joined name
-   * matches one. A name that matches a class on its own is always taken as is.
+   * The board net classes named in a list such as {@code ignore_net_classes}. KiCad names composite
+   * classes with a comma ({@code PWR,Default}), and a comma-separated list on the command line
+   * splits them in two: a name that matches no class is joined with the names that follow it until
+   * the joined name matches one. A name that matches a class on its own is always taken as is.
    *
    * @param unknown receives the names that match no class; may be {@code null}
    */
-  private List<NetClass> resolveIgnoredNetClasses(BoardRules rules, List<String> unknown) {
+  private static List<NetClass> resolveNetClasses(
+      BoardRules rules, String[] listed, List<String> unknown) {
     List<String> names = new ArrayList<>();
-    for (String name : this.autorouter.ignoreNetClasses) {
+    if (listed == null) {
+      return new ArrayList<>();
+    }
+    for (String name : listed) {
       if (name != null && !name.isBlank()) {
         names.add(name.trim());
       }
@@ -1367,17 +1382,22 @@ public class RouterSettings implements Serializable, Cloneable {
     if (board != null
         && board.rules != null
         && board.rules.netClasses != null
-        && this.autorouter != null
-        && this.autorouter.ignoreNetClasses != null) {
-      List<String> unknown = new ArrayList<>();
-      resolveIgnoredNetClasses(board.rules, unknown);
-      for (String netClassName : unknown) {
-        String warning =
-            "Unknown net class '"
-                + netClassName
-                + "' specified in ignoreNetClasses (not present on board)";
-        FRLogger.warn(warning);
-        this.validationWarnings.add(warning);
+        && this.autorouter != null) {
+      String[][] lists = {this.autorouter.ignoreNetClasses, this.autorouter.priorityNetClasses};
+      String[] keys = {"ignoreNetClasses", "priorityNetClasses"};
+      for (int k = 0; k < lists.length; k++) {
+        List<String> unknown = new ArrayList<>();
+        resolveNetClasses(board.rules, lists[k], unknown);
+        for (String netClassName : unknown) {
+          String warning =
+              "Unknown net class '"
+                  + netClassName
+                  + "' specified in "
+                  + keys[k]
+                  + " (not present on board)";
+          FRLogger.warn(warning);
+          this.validationWarnings.add(warning);
+        }
       }
     }
   }

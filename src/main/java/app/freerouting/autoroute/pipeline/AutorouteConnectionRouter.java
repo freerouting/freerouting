@@ -119,15 +119,21 @@ final class AutorouteConnectionRouter {
     try {
       Net routeNet = router.board.rules.nets.get(routeNetNo);
       boolean containsPlane = routeNet != null && routeNet.containsPlane();
+      boolean routedFirst = routeNet != null && routeNet.isRoutedFirst();
       int currentViaCosts =
-          containsPlane ? router.settings.getPlaneViaCosts() : router.settings.getViaCosts();
+          containsPlane
+              ? router.settings.getPlaneViaCosts()
+              : routedFirst ? router.settings.getPriorityViaCosts() : router.settings.getViaCosts();
 
       AutorouteControl autorouteControl =
           new AutorouteControl(
               router.board, routeNetNo, router.settings, currentViaCosts, router.getTraceCosts());
       autorouteControl.ripupAllowed = true;
       autorouteControl.ripupCosts = router.getStartRipupCosts() * ripupPassNo;
-      autorouteControl.netsNotToRip = router.ripupMemory.netsNotToRip(routeNetNo);
+      autorouteControl.netsNotToRip =
+          routedFirst
+              ? router.ripupMemory.netsNotToRip(routeNetNo)
+              : router.netsNotToRipFor(routeNetNo);
       autorouteControl.removeUnconnectedVias = router.isRemoveUnconnectedVias();
 
       Set<Item> unconnectedSet = item.getUnconnectedSet(routeNetNo);
