@@ -92,31 +92,31 @@ In the overnight PCBench corpus run, Tier B boards with remaining incomplete con
 
 ### A. Fatal Crashes (JVM `OutOfMemoryError`, Exit Code 3)
 
-| Fixture | RC6 Result | RC9 Result | RC9 Wall Clock | RC9 Passes | Cumulative Memory Allocated |
-|---|---|---|---|---|---|
-| **`chip_lcd_dip_CHIP_LCD_DIP`** | Clean (313.4 s, 170 passes) | **FAILED (OOM)** | **17,110.0 s (4.75 h)** | **836** | **3,162.27 GB** |
-| **`icehat_icehat`** | Clean (418.7 s) | **FAILED (OOM)** | **20,880.9 s (5.80 h)** | > 800 | **2,775.83 GB** |
+| Fixture | RC6 Result | RC9 Result | RC10 Result (Fixed) |
+|---|---|---|---|
+| **`chip_lcd_dip_CHIP_LCD_DIP`** | Clean (313.4 s, 170 passes) | **FAILED (OOM)** (17,110.0 s, 836 passes, 3,162 GB) | **COMPLETED (617.2 s, 0 DRC violations)** |
+| **`icehat_icehat`** | Clean (418.7 s) | **FAILED (OOM)** (20,880.9 s, 2,775 GB) | **COMPLETED (819.6 s, 0 DRC violations)** |
 
-Both jobs repeatedly allocated routing trees, board clones, and undo history over hundreds of passes. The cumulative churn of 3+ terabytes of allocation overwhelmed JVM garbage collection and triggered `-XX:+ExitOnOutOfMemoryError`.
+Both jobs repeatedly allocated routing trees, board clones, and undo history over hundreds of passes in RC9. In RC10, the liveloop is eliminated and both jobs complete cleanly.
 
 ### B. New 6-Hour Timeouts (`TIMED_OUT`, Exit Code 0 / Exceeded Budget)
 
-| Fixture | RC5 Wall Time | RC6 Wall Time | RC9 Wall Time | Status in RC9 |
+| Fixture | RC5 Wall Time | RC6 Wall Time | RC9 Wall Time | RC10 Wall Time (Fixed) |
 |---|---|---|---|---|
-| **`Ttl_wlan_radar`** | 1,723.0 s | 2,159.8 s | **21,670.3 s (6.02 h)** | TIMED OUT |
-| **`eeg_brainboard_batteryv0`** | 839.8 s | 708.7 s | **21,606.2 s (6.00 h)** | TIMED OUT |
-| **`DoroidOscillo-Board_Android_Oscilloscope`** | 1,723.9 s | 985.7 s | **21,611.9 s (6.00 h)** | TIMED OUT |
-| **`kitspace_USB-C-Screen-Adapter`** | 1,354.3 s | 997.9 s | **21,627.3 s (6.01 h)** | TIMED OUT |
+| **`Ttl_wlan_radar`** | 1,723.0 s | 2,159.8 s | **21,670.3 s (6.02 h)** (TIMED OUT) | **2,778.9 s (COMPLETED)** |
+| **`eeg_brainboard_batteryv0`** | 839.8 s | 708.7 s | **21,606.2 s (6.00 h)** (TIMED OUT) | **894.8 s (COMPLETED)** |
+| **`DoroidOscillo-Board_Android_Oscilloscope`** | 1,723.9 s | 985.7 s | **21,611.9 s (6.00 h)** (TIMED OUT) | **3,247.1 s (COMPLETED)** |
+| **`kitspace_USB-C-Screen-Adapter`** | 1,354.3 s | 997.9 s | **21,627.3 s (6.01 h)** (TIMED OUT) | **1,318.7 s (COMPLETED)** |
 
 ### C. Severe Multi-Hour Slowdowns (Completed Just Before Timeout)
 
-| Fixture | RC6 Wall Time | RC9 Wall Time | Slowdown Factor | Incompletes |
+| Fixture | RC6 Wall Time | RC9 Wall Time | RC10 Wall Time (Fixed) | RC10 Status |
 |---|---|---|---|---|
-| **`LPC2148_Stick_LPC2148_stick`** | 361.1 s (~6 min) | **21,069.1 s (~5.85 h)** | **58.3x** | 0 (stuck during run) |
-| **`HW-ESP8266_Roomba_ESP8266_Roomba`** | 386.8 s (~6.5 min) | **16,832.3 s (~4.68 h)** | **43.5x** | 2 unrouted |
-| **`badge2015_badge2015`** | 293.9 s (~4.9 min) | **13,858.2 s (~3.85 h)** | **47.2x** | 4 unrouted |
-| **`cnlohr_wiflier`** | 442.0 s (~7.4 min) | **13,603.1 s (~3.78 h)** | **30.8x** | 1 unrouted |
-| **`HW-ESP8266_Roomba_panel_x_3`** | 514.6 s (~8.6 min) | **6,984.5 s (~1.94 h)** | **13.6x** | 3 unrouted |
+| **`LPC2148_Stick_LPC2148_stick`** | 361.1 s (~6 min) | **21,069.1 s (~5.85 h)** | **737.5 s (~12.3 min)** | Clean, 0 opens |
+| **`HW-ESP8266_Roomba_ESP8266_Roomba`** | 386.8 s (~6.5 min) | **16,832.3 s (~4.68 h)** | **482.3 s (~8.0 min)** | Completed |
+| **`badge2015_badge2015`** | 293.9 s (~4.9 min) | **13,858.2 s (~3.85 h)** | **371.4 s (~6.2 min)** | Completed |
+| **`cnlohr_wiflier`** | 442.0 s (~7.4 min) | **13,603.1 s (~3.78 h)** | **1,151.8 s (~19.2 min)** | Completed |
+| **`HW-ESP8266_Roomba_panel_x_3`** | 514.6 s (~8.6 min) | **6,984.5 s (~1.94 h)** | **649.2 s (~10.8 min)** | Completed |
 
 ---
 
@@ -171,7 +171,7 @@ if (incompleteNow > 0
   }
   ```
 - By resetting `passOfBestScore = currentPass` when blockers are ripped, `(currentPass - passOfBestScore)` is reset to `0`.
-- Because blocker rip-up triggers every `LAST_MILE_STAGNATION_PASSES` (3 passes), `(currentPass - passOfBestScore)` never reaches `stagnationPassLimit` (20 passes).
+- Because blocker rip-up triggers every `LAST_MILE_STAGNATION_PASSES` (3 passes), `(currentPass - passOfBestScore)` never reaches `stagnationPassLimit` (default 10 passes).
 - **Result:** The global stagnation detector never fires. The local stagnation detector never fires. Cycle detection (`alreadyRoutedBoardHashes`) is cleared on each ripup. The batch loop spins without bounds.
 
 ---
