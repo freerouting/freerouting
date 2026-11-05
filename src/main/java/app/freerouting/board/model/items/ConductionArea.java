@@ -256,29 +256,35 @@ public class ConductionArea extends ObstacleArea implements Connectable {
 
   @Override
   public Set<Item> getNormalContacts() {
+    TileShape[] tiles = new TileShape[tileShapeCount()];
+    for (int i = 0; i < tiles.length; i++) {
+      tiles[i] = getTileShape(i);
+    }
+    // A plane spans most of its layer: the net and endpoint tests come before the exact overlap
+    // test, which most items on the layer would otherwise reach.
+    Set<SearchTreeObject> overlaps =
+        board
+            .searchTreeManager
+            .getDefaultTree()
+            .overlappingObjects(tiles, getLayer(), this::isContactInTile);
     Set<Item> result = new TreeSet<>();
-    for (int i = 0; i < tileShapeCount(); i++) {
-      TileShape currentShape = getTileShape(i);
-      Set<SearchTreeObject> overlaps = board.overlappingObjects(currentShape, getLayer());
-      for (SearchTreeObject currentObject : overlaps) {
-        if (!(currentObject instanceof Item currentItem)) {
-          continue;
-        }
-        if (currentItem != this && currentItem.sharesNet(this) && currentItem.sharesLayer(this)) {
-          if (currentItem instanceof Trace currentTrace) {
-            if (currentShape.contains(currentTrace.firstCorner())
-                || currentShape.contains(currentTrace.lastCorner())) {
-              result.add(currentItem);
-            }
-          } else if (currentItem instanceof DrillItem currentDrillItem) {
-            if (currentShape.contains(currentDrillItem.getCenter())) {
-              result.add(currentItem);
-            }
-          }
-        }
-      }
+    for (SearchTreeObject currentObject : overlaps) {
+      result.add((Item) currentObject);
     }
     return result;
+  }
+
+  private boolean isContactInTile(SearchTreeObject object, TileShape tile) {
+    if (!(object instanceof Item item)
+        || item == this
+        || !item.sharesNet(this)
+        || !item.sharesLayer(this)) {
+      return false;
+    }
+    if (item instanceof Trace trace) {
+      return tile.contains(trace.firstCorner()) || tile.contains(trace.lastCorner());
+    }
+    return item instanceof DrillItem drillItem && tile.contains(drillItem.getCenter());
   }
 
   @Override
