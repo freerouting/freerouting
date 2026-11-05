@@ -35,7 +35,12 @@ public final class DifferentialPairDetector {
     D_PLUS_MINUS,
     PLUS_MINUS,
     POS_NEG,
-    BARE_D_PLUS_MINUS
+    BARE_D_PLUS_MINUS,
+    /**
+     * {@code P}/{@code N} right after the base name ({@code ETH_TXP}/{@code ETH_TXN}), as KiCad
+     * pairs them. Only used by {@link #detect}, where both nets must exist.
+     */
+    P_N_UNDELIMITED
   }
 
   /**
@@ -141,6 +146,33 @@ public final class DifferentialPairDetector {
     return null;
   }
 
+  /**
+   * {@code P}/{@code N} written right after the base name, which KiCad also pairs ({@code
+   * ETH_TXP}/{@code ETH_TXN}). On its own such a name says nothing ({@code STEP}, {@code OPEN}):
+   * {@link #detect} only pairs it with a net of the same base and the opposite letter.
+   */
+  private static ExtractedNetInfo extractUndelimited(String netName) {
+    if (netName == null || isExcludedNet(netName)) {
+      return null;
+    }
+    String trimmed = netName.trim();
+    String upper = trimmed.toUpperCase(Locale.ROOT);
+    if (!upper.endsWith("P") && !upper.endsWith("N")) {
+      return null;
+    }
+    String base = trimmed.substring(0, trimmed.length() - 1);
+    int localStart = base.lastIndexOf('/') + 1;
+    if (base.length() - localStart < 2
+        || !Character.isLetterOrDigit(base.charAt(base.length() - 1))
+        || isExcludedNet(base)) {
+      return null;
+    }
+    return new ExtractedNetInfo(
+        base,
+        upper.endsWith("P") ? Polarity.POSITIVE : Polarity.NEGATIVE,
+        SuffixStyle.P_N_UNDELIMITED);
+  }
+
   private record SuffixTokenPattern(String posToken, String negToken, SuffixStyle style) {}
 
   private static final SuffixTokenPattern[] DELIMITED_PATTERNS = {
@@ -215,7 +247,8 @@ public final class DifferentialPairDetector {
         continue;
       }
 
-      ExtractedNetInfo info = extract(net.name);
+      ExtractedNetInfo extracted = extract(net.name);
+      final ExtractedNetInfo info = extracted != null ? extracted : extractUndelimited(net.name);
       if (info == null) {
         continue;
       }
