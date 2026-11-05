@@ -1115,6 +1115,47 @@ public class RoutingBoard extends BasicBoard implements Serializable {
             pinNetNo, ctrlSettings.traceClearanceClassIndex, stoppableThread, timeLimit, false);
 
     AutorouteAttemptResult result = null;
+    // plane_as_priority: the pin first drops into its plane through a via of its own; the fanout
+    // targets below (closest item, or the whole net at once on a large net) would join it to the
+    // nearest pad of the net, typically its decoupling capacitor.
+    if (planeNet
+        && routerSettings.autorouter != null
+        && Boolean.TRUE.equals(routerSettings.autorouter.planeAsPriority)) {
+      Set<Item> planes = new java.util.HashSet<>();
+      for (Item target : unconnectedSet) {
+        if (isPlaneOnPowerLayer(target)) {
+          planes.add(target);
+        }
+      }
+      if (!planes.isEmpty()) {
+        Set<Item> obstacles = planeEscapeObstacles(pin, pinNetNo, pinConnectedSet, planes);
+        obstacles.forEach(obstacle -> obstacle.setPlaneEscapeObstacle(true));
+        try {
+          result =
+              currentAutorouteEngine.autorouteConnection(
+                  pinConnectedSet, planes, ctrlSettings, rippedItemList, null);
+        } finally {
+          obstacles.forEach(obstacle -> obstacle.setPlaneEscapeObstacle(false));
+        }
+        if (result.state == AutorouteAttemptState.ROUTED) {
+          optChangedArea(
+              new int[] {pinNetNo},
+              null,
+              routerSettings.tracePullTightAccuracy,
+              ctrlSettings.traceCosts,
+              stoppableThread);
+          return result;
+        }
+        if (result.state == AutorouteAttemptState.ALREADY_CONNECTED) {
+          return result;
+        }
+        result = null;
+        // rooms and drill pages of the search above saw the obstacles
+        currentAutorouteEngine =
+            initAutoroute(
+                pinNetNo, ctrlSettings.traceClearanceClassIndex, stoppableThread, timeLimit, false);
+      }
+    }
     if (sortedUnconnectedList.size() <= 4) {
       if (!sortedUnconnectedList.isEmpty()) {
         // 1. Try to route to the closest target first
@@ -1168,6 +1209,36 @@ public class RoutingBoard extends BasicBoard implements Serializable {
           stoppableThread);
     }
     return result;
+  }
+
+  /**
+   * The copper of its net a plane pad must not reach its plane through, while it searches its own
+   * way in ({@code plane_as_priority}): the pads of other packages and everything joined to them.
+   * The maze would otherwise cross them as free space, a short trace to a neighbour's via costing
+   * less than a via. The pad's own package stays open (pins of one QFN may share a via), and so do
+   * the destinations and the pads joined to a destination pad.
+   */
+  public Set<Item> planeEscapeObstacles(
+      Pin pin, int netNo, Set<Item> connectedSet, Set<Item> destinations) {
+    Set<Item> open = new java.util.HashSet<>(connectedSet);
+    open.addAll(destinations);
+    for (Item destination : destinations) {
+      if (destination instanceof Pin sharedPin) {
+        open.addAll(sharedPin.getConnectedSet(netNo, true));
+      }
+    }
+    for (Pin other : getPins()) {
+      if (other.getComponentId() == pin.getComponentId() && other.containsNet(netNo)) {
+        open.addAll(other.getConnectedSet(netNo, true));
+      }
+    }
+    Set<Item> obstacles = new java.util.HashSet<>();
+    for (Item other : getItems()) {
+      if (other.containsNet(netNo) && !(other instanceof ConductionArea) && !open.contains(other)) {
+        obstacles.add(other);
+      }
+    }
+    return obstacles;
   }
 
   private boolean isPlaneOnPowerLayer(Item item) {

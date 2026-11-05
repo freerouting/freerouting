@@ -26,6 +26,10 @@ import org.junit.jupiter.api.Test;
  *       real board hard: a QFN-24 at 0.5 mm pitch with a GND exposed pad, a SOT-23-5, a TSSOP-16,
  *       0603 decoupling next to the supply pins and eight 0603 LED + R pairs at 2 mm pitch; 0.2 mm
  *       traces and clearance, 0.6 mm vias.
+ *   <li>{@code Plane-via-adc-decoupling-4layer.dsn}: two TSSOP-16 ADCs, each with three 0603
+ *       decoupling capacitors in a row at 2 mm pitch beside its supply pins, as on a real board.
+ *       Without {@code plane_as_priority} the capacitors end up on a bus: each one's search to the
+ *       plane runs across its neighbour's pad to the neighbour's via, which costs less than a via.
  * </ul>
  *
  * <p>Every SMD pad of a plane net must drop into its plane through a via of its own, rather than
@@ -38,6 +42,7 @@ class PlaneViaGarlandRoutingTest extends RoutingFixtureTest {
 
   private static final String GARLAND = "Plane-via-garland-4layer.dsn";
   private static final String DENSE = "Plane-via-garland-dense-4layer.dsn";
+  private static final String ADC = "Plane-via-adc-decoupling-4layer.dsn";
 
   private static TestingSettings settings() {
     TestingSettings settings = new TestingSettings();
@@ -91,8 +96,23 @@ class PlaneViaGarlandRoutingTest extends RoutingFixtureTest {
     assertRoutingResult(job, DENSE).maxIncompleteConnections(0).exactClearanceViolations(0).check();
     assertEquals(33, planePadCount(job.board), "GND and +3V3 SMD pads on the board");
     List<String> chained = chainedPlanePads(job.board);
-    // 29 of 33 measured; the rest are QFN supply pins joined to their own decoupling capacitor.
-    assertTrue(chained.size() <= 5, "Plane pads not escaping alone into their plane: " + chained);
+    assertTrue(chained.isEmpty(), "Plane pads not escaping alone into their plane: " + chained);
+    assertNoTraceInPlaneLayers(job.board);
+  }
+
+  @Test
+  void planeAsPriorityGivesEachDecouplingCapacitorItsOwnVias() {
+    TestingSettings settings = settings();
+    settings.setPlaneAsPriority(true);
+    RoutingJob job = getRoutingJob(ADC, settings);
+    runRoutingJob(job);
+
+    assertRoutingResult(job, ADC).maxIncompleteConnections(0).exactClearanceViolations(0).check();
+    assertEquals(26, planePadCount(job.board), "GND and +3V3 SMD pads on the board");
+    List<String> chained = chainedPlanePads(job.board);
+    // 24 of 26 measured (12 before plane pads stopped crossing each other's copper, 8 without the
+    // option); the last two are neighbouring GND pads sharing the via set in the gap between them.
+    assertTrue(chained.size() <= 2, "Plane pads not escaping alone into their plane: " + chained);
     assertNoTraceInPlaneLayers(job.board);
   }
 

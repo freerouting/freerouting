@@ -69,6 +69,16 @@ final class AutorouteConnectionRouter {
     }
   }
 
+  private Set<Item> planeEscapeObstacles(
+      Item item, int netNo, Set<Item> connectedSet, Set<Item> destinations) {
+    if (!(item instanceof Pin pin)
+        || router.settings.autorouter == null
+        || !Boolean.TRUE.equals(router.settings.autorouter.planeAsPriority)) {
+      return Set.of();
+    }
+    return router.board.planeEscapeObstacles(pin, netNo, connectedSet, destinations);
+  }
+
   private static double boxGap(IntBox a, IntBox b) {
     double dx = Math.max(0, Math.max(b.ll.x - a.ur.x, a.ll.x - b.ur.x));
     double dy = Math.max(0, Math.max(b.ll.y - a.ur.y, a.ll.y - b.ur.y));
@@ -128,6 +138,7 @@ final class AutorouteConnectionRouter {
       Set<Item> connectedSet = item.getConnectedSet(routeNetNo);
       Set<Item> routeStartSet;
       Set<Item> routeDestSet;
+      Set<Item> planeEscapeObstacles = Set.of();
       if (containsPlane) {
         for (Item currentItem : connectedSet) {
           if (currentItem instanceof ConductionArea) {
@@ -147,6 +158,7 @@ final class AutorouteConnectionRouter {
             addSharablePads(item, routeNetNo, planes);
             routeDestSet = planes;
             aimedAtPlaneOnly = true;
+            planeEscapeObstacles = planeEscapeObstacles(item, routeNetNo, connectedSet, planes);
           }
         }
       } else {
@@ -200,13 +212,16 @@ final class AutorouteConnectionRouter {
         }
       }
 
+      // The obstacles below hold for this search only: rooms and drill pages built with them must
+      // not be retained for the next connection of the net.
+      boolean escaping = !planeEscapeObstacles.isEmpty();
       AutorouteEngine autorouteEngine =
           router.board.initAutoroute(
               routeNetNo,
               autorouteControl.traceClearanceClassIndex,
               router.thread,
               timeLimit,
-              router.isRetainAutorouteDatabase());
+              router.isRetainAutorouteDatabase() && !escaping);
       int maxItemIdBeforeRoute = router.board.communication.idGenerator.maxGeneratedId();
       // Strict DRC needs this snapshot to undo a rejected route together with the ripups it made,
       // so it is applied only when enabled explicitly: snapshotting every connection of every late
@@ -214,9 +229,19 @@ final class AutorouteConnectionRouter {
       byte[] strictDrcBoardSnapshot = strictDrc ? router.board.serialize(false) : null;
 
       long mazeSearchStart = BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
-      final AutorouteAttemptResult autorouteResult =
-          autorouteEngine.autorouteConnection(
-              routeStartSet, routeDestSet, autorouteControl, rippedItemList, ripupCosts);
+      AutorouteAttemptResult searchResult;
+      planeEscapeObstacles.forEach(obstacle -> obstacle.setPlaneEscapeObstacle(true));
+      try {
+        searchResult =
+            autorouteEngine.autorouteConnection(
+                routeStartSet, routeDestSet, autorouteControl, rippedItemList, ripupCosts);
+      } finally {
+        planeEscapeObstacles.forEach(obstacle -> obstacle.setPlaneEscapeObstacle(false));
+        if (escaping) {
+          router.board.finishAutoroute();
+        }
+      }
+      final AutorouteAttemptResult autorouteResult = searchResult;
       if (BatchAutorouter.isBenchmarkProfileEnabled()) {
         router.addProfileMazeSearchNanos(System.nanoTime() - mazeSearchStart);
       }
