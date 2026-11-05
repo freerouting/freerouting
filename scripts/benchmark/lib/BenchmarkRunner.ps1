@@ -1,3 +1,20 @@
+function New-BenchmarkPhaseSnapshot {
+    param(
+        $BoardStatistics,
+        $Score,
+        [string]$ScoreSource
+    )
+
+    return [PSCustomObject]@{
+        board_statistics       = $BoardStatistics
+        score                  = $Score
+        score_source           = $ScoreSource
+        current_router_score   = $null
+        current_optimizer_score = $null
+        current_score_source   = $null
+    }
+}
+
 function Get-ContentShared {
     param([string]$path)
     try {
