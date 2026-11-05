@@ -5,6 +5,7 @@ from __future__ import annotations
 import tempfile
 import threading
 import unittest
+from unittest import mock
 from pathlib import Path
 from typing import Any
 
@@ -514,6 +515,13 @@ class BenchmarkStoreTest(unittest.TestCase):
         self.assertTrue(store.fatal_process_output("java.lang.OutOfMemoryError: Java heap space"))
         self.assertTrue(store.fatal_process_output("Exception in thread \"main\" java.lang.IllegalStateException"))
         self.assertFalse(store.fatal_process_output("Optimizer pass #1: score 680.31 -> 680.18"))
+
+    def test_run_corpus_benchmark_main_without_boards(self) -> None:
+        with mock.patch("sys.argv", ["run_corpus_benchmark.py", "--filter", "non_existent_board_99999"]):
+            with mock.patch("run_corpus_benchmark.replace_file_retrying", return_value=True):
+                with mock.patch("run_corpus_benchmark.trigger_report_generation", return_value=True):
+                    exit_code = store.main()
+                    self.assertEqual(exit_code, 0)
 
     @staticmethod
     def _run(

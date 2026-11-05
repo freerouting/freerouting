@@ -427,6 +427,13 @@ def main() -> int:
     recent_messages: collections.deque[str] = collections.deque(maxlen=10)
     completed_samples: list[tuple[str, float, float]] = []
 
+    completed = 0
+    clean_count = 0
+    routed_viol_count = 0
+    unrouted_count = 0
+    timeout_count = 0
+    error_count = 0
+
     t_start = time.perf_counter()
 
     def trigger_render():
