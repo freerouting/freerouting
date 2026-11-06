@@ -43,6 +43,25 @@ class SerializedJdkTypesRegisteredTest extends RoutingFixtureTest {
 
     RecordingStream(OutputStream out) throws IOException {
       super(out);
+      enableReplaceObject(true);
+    }
+
+    @Override
+    protected Object replaceObject(Object obj) throws IOException {
+      if (obj != null) {
+        recordHierarchy(obj.getClass());
+      }
+      return super.replaceObject(obj);
+    }
+
+    private void recordHierarchy(Class<?> clazz) {
+      Class<?> current = clazz;
+      while (current != null && java.io.Serializable.class.isAssignableFrom(current)) {
+        if (!current.isArray() && !current.isPrimitive() && !current.isEnum()) {
+          written.add(current.getName());
+        }
+        current = current.getSuperclass();
+      }
     }
 
     @Override
@@ -116,7 +135,90 @@ class SerializedJdkTypesRegisteredTest extends RoutingFixtureTest {
     stream.writeObject(board.getVias());
     stream.writeObject(board.itemList);
     stream.close();
-    return stream.written;
+
+    Set<String> allClasses = new TreeSet<>(stream.written);
+    allClasses.addAll(collectSerializableRuntimeClasses(board));
+    allClasses.addAll(collectSerializableRuntimeClasses(board.getTraces()));
+    allClasses.addAll(collectSerializableRuntimeClasses(board.getVias()));
+    allClasses.addAll(collectSerializableRuntimeClasses(board.itemList));
+    return allClasses;
+  }
+
+  private static Set<String> collectSerializableRuntimeClasses(Object root) {
+    Set<String> classes = new TreeSet<>();
+    Set<Object> visited = java.util.Collections.newSetFromMap(new java.util.IdentityHashMap<>());
+    java.util.Deque<Object> queue = new java.util.ArrayDeque<>();
+    if (root != null) {
+      queue.add(root);
+    }
+    while (!queue.isEmpty()) {
+      Object current = queue.poll();
+      if (current == null || !visited.add(current)) {
+        continue;
+      }
+      Class<?> cl = current.getClass();
+      if (cl.isArray()) {
+        if (!cl.getComponentType().isPrimitive()) {
+          int length = java.lang.reflect.Array.getLength(current);
+          for (int i = 0; i < length; i++) {
+            Object element = java.lang.reflect.Array.get(current, i);
+            if (element != null) {
+              queue.add(element);
+            }
+          }
+        }
+        continue;
+      }
+      if (current instanceof Class || current instanceof ClassLoader) {
+        continue;
+      }
+      Class<?> c = cl;
+      while (c != null && java.io.Serializable.class.isAssignableFrom(c)) {
+        if (!c.isEnum() && !c.isPrimitive() && !c.isArray()) {
+          classes.add(c.getName());
+        }
+        c = c.getSuperclass();
+      }
+      for (Class<?> h = cl;
+          h != null && java.io.Serializable.class.isAssignableFrom(h);
+          h = h.getSuperclass()) {
+        for (java.lang.reflect.Field f : h.getDeclaredFields()) {
+          if (java.lang.reflect.Modifier.isStatic(f.getModifiers())
+              || java.lang.reflect.Modifier.isTransient(f.getModifiers())) {
+            continue;
+          }
+          if (f.getType().isPrimitive()) {
+            continue;
+          }
+          try {
+            f.setAccessible(true);
+            Object val = f.get(current);
+            if (val != null) {
+              queue.add(val);
+            }
+          } catch (Exception ignored) {
+            // Inaccessible reflective fields are skipped safely
+          }
+        }
+      }
+      if (current instanceof java.util.Collection<?> col) {
+        for (Object elem : col) {
+          if (elem != null) {
+            queue.add(elem);
+          }
+        }
+      } else if (current instanceof java.util.Map<?, ?> map) {
+        for (java.util.Map.Entry<?, ?> entry : map.entrySet()) {
+          if (entry.getKey() != null) {
+            queue.add(entry.getKey());
+          }
+          if (entry.getValue() != null) {
+            queue.add(entry.getValue());
+          }
+        }
+      }
+    }
+    return classes;
   }
 
   private static Set<String> registeredSerializableTypes() throws IOException {

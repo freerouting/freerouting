@@ -3941,6 +3941,18 @@
       "serializable": true
     },
     {
+      "type": "java.util.EnumSet",
+      "serializable": true
+    },
+    {
+      "type": "java.util.RegularEnumSet",
+      "serializable": true
+    },
+    {
+      "type": "java.util.JumboEnumSet",
+      "serializable": true
+    },
+    {
       "type": "java.util.EnumSet$SerializationProxy",
       "serializable": true
     },
