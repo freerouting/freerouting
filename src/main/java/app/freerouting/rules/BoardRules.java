@@ -73,7 +73,7 @@ public class BoardRules implements Serializable {
   private final java.util.Map<MeanderPatternType, NetMeanderConstraint> defaultMeanderConstraints =
       new java.util.EnumMap<>(MeanderPatternType.class);
   private final java.util.Set<MeanderPatternType> explicitMeanderConstraints =
-      java.util.EnumSet.noneOf(MeanderPatternType.class);
+      new java.util.HashSet<>();
 
   /**
    * Initializes default length-tuning meander constraints for all pattern types using the given
