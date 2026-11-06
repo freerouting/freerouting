@@ -31,9 +31,15 @@ import com.google.gson.annotations.SerializedName;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 /** Statistics of a board. */
 public class BoardStatistics implements Serializable {
@@ -463,11 +469,19 @@ public class BoardStatistics implements Serializable {
     int total = 0;
     int escaped = 0;
     int alreadyConnected = 0;
+    // The pins of a net walk the same items: query the contacts of each item, and the connectable
+    // items of each net, once for all pins.
+    Map<Item, Collection<Item>> contacts = new HashMap<>();
+    Map<Integer, Collection<Item>> connectableItems = new HashMap<>();
     for (Pin pin : smdPins) {
       if (pin.netCount() > 0) {
         total++;
         int netNumber = pin.getNetNumber(0);
-        if (pin.getUnconnectedSet(netNumber).isEmpty()) {
+        boolean connected =
+            netNumber > 0
+                ? isConnectedToWholeNet(board, pin, netNumber, contacts, connectableItems)
+                : pin.getUnconnectedSet(netNumber).isEmpty();
+        if (connected) {
           alreadyConnected++;
         }
         if (isPinEscaped(pin)) {
@@ -603,6 +617,40 @@ public class BoardStatistics implements Serializable {
         FRLogger.error("Failed to parse JSON statistics: " + e.getMessage(), e);
       }
     }
+  }
+
+  /**
+   * Same as {@code pin.getUnconnectedSet(netNumber).isEmpty()} for netNumber {@literal >} 0: the
+   * items reached from pin through normal contacts of the net include every connectable item of the
+   * net. contacts and connectableItems keep what earlier calls queried, the board unchanged.
+   */
+  private static boolean isConnectedToWholeNet(
+      BasicBoard board,
+      Pin pin,
+      int netNumber,
+      Map<Item, Collection<Item>> contacts,
+      Map<Integer, Collection<Item>> connectableItems) {
+    if (!pin.containsNet(netNumber)) {
+      return true;
+    }
+    Set<Item> connected = new TreeSet<>();
+    connected.add(pin);
+    ArrayDeque<Item> toExpand = new ArrayDeque<>();
+    toExpand.push(pin);
+    while (!toExpand.isEmpty()) {
+      Collection<Item> itemContacts =
+          contacts.computeIfAbsent(toExpand.pop(), Item::getNormalContacts);
+      if (itemContacts == null) {
+        continue;
+      }
+      for (Item contact : itemContacts) {
+        if (contact.containsNet(netNumber) && connected.add(contact)) {
+          toExpand.push(contact);
+        }
+      }
+    }
+    return connected.containsAll(
+        connectableItems.computeIfAbsent(netNumber, board::getConnectableItems));
   }
 
   /** Returns whether a pin has a valid trace or via escape. */
