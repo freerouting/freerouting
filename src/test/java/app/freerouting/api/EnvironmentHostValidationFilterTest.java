@@ -197,6 +197,8 @@ class EnvironmentHostValidationFilterTest {
         "v1/system/status",
         "v1/system/environment",
         "v1/analytics/track",
+        "v1/surveys/active",
+        "v1/surveys/s1/response",
         "dev/anything",
         "openapi/openapi.json",
         "swagger-ui",
