@@ -117,36 +117,39 @@ def load_version_runs(results_dir: Path, version: str) -> list[dict[str, Any]]:
 def load_all_runs(results_dir: Path) -> dict[str, dict[str, Any]]:
     """Loads all benchmark runs indexed by cache_key.
 
-    Merges per-version storage (versions/benchmarks-*.jsonl or .json) with
-    unified benchmarks.json so newly added runs are never missed.
+    Merges per-version storage (versions/benchmarks-*.jsonl and .json) with
+    unified benchmarks.json and benchmarks.jsonl so newly added runs are never missed.
     """
     v_dir = get_versions_dir(results_dir)
     cache: dict[str, dict[str, Any]] = {}
 
     jsonl_files = sorted(v_dir.glob("benchmarks-*.jsonl"))
-    versions_mtime = max((p.stat().st_mtime for p in jsonl_files), default=0.0)
+    json_files = sorted(v_dir.glob("benchmarks-*.json"))
+    versions_mtime = max(
+        [p.stat().st_mtime for p in jsonl_files + json_files],
+        default=0.0,
+    )
 
-    if jsonl_files:
-        for p in jsonl_files:
-            for run in load_runs_from_jsonl(p):
-                ck = run.get("cache_key")
-                if ck:
-                    cache[ck] = run
-    else:
-        json_files = sorted(v_dir.glob("benchmarks-*.json"))
-        versions_mtime = max((p.stat().st_mtime for p in json_files), default=0.0)
-        for p in json_files:
-            try:
-                with open(p, "r", encoding="utf-8") as f:
-                    data = json.load(f)
-                    for run in data.get("runs", []):
-                        ck = run.get("cache_key")
-                        if ck:
-                            cache[ck] = run
-            except Exception:
-                pass
+    # 1. Load from per-version JSONL files
+    for p in jsonl_files:
+        for run in load_runs_from_jsonl(p):
+            ck = run.get("cache_key")
+            if ck:
+                cache[ck] = run
 
-    # Check unified benchmarks.json for any new or updated runs
+    # 2. Also load from per-version JSON files (for any runs or versions not yet in JSONL)
+    for p in json_files:
+        try:
+            with open(p, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                for run in data.get("runs", []):
+                    ck = run.get("cache_key")
+                    if ck and ck not in cache:
+                        cache[ck] = run
+        except Exception:
+            pass
+
+    # 3. Check unified benchmarks.json for any new or updated runs
     unified_json = results_dir / "benchmarks.json"
     new_runs_found = False
     if unified_json.exists():
@@ -163,16 +166,18 @@ def load_all_runs(results_dir: Path) -> dict[str, dict[str, Any]]:
         except Exception:
             pass
 
-    # Fall back to unified benchmarks.jsonl if still empty
-    if not cache:
-        unified_jsonl = results_dir / "benchmarks.jsonl"
-        if unified_jsonl.exists():
-            for run in load_runs_from_jsonl(unified_jsonl):
-                ck = run.get("cache_key")
-                if ck:
-                    cache[ck] = run
+    # 4. Check unified benchmarks.jsonl for any additional or newer streamed records
+    unified_jsonl = results_dir / "benchmarks.jsonl"
+    if unified_jsonl.exists():
+        unified_jsonl_mtime = unified_jsonl.stat().st_mtime
+        for run in load_runs_from_jsonl(unified_jsonl):
+            ck = run.get("cache_key")
+            if ck and (ck not in cache or unified_jsonl_mtime > versions_mtime):
+                if ck not in cache:
+                    new_runs_found = True
+                cache[ck] = run
 
-    # If new runs were found in benchmarks.json that weren't in versions/, synchronize them
+    # If new runs were found in benchmarks.json or benchmarks.jsonl that weren't in versions/, synchronize them
     if new_runs_found and cache:
         try:
             from collections import defaultdict
@@ -247,6 +252,16 @@ def sync_all(results_dir: Path, retain_versions: set[str] | None = None) -> None
             for k, r in all_runs.items()
             if r.get("binary", {}).get("version_label") in retain_versions
         }
+        # Purge obsolete per-version files for un-retained versions
+        v_dir = get_versions_dir(results_dir)
+        if v_dir.exists():
+            for p in list(v_dir.glob("benchmarks-*.*")):
+                v_name = p.stem.replace("benchmarks-", "", 1)
+                if v_name not in retain_versions:
+                    try:
+                        p.unlink(missing_ok=True)
+                    except OSError:
+                        pass
 
     # Group by version
     from collections import defaultdict
