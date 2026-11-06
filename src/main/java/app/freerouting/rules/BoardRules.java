@@ -72,8 +72,7 @@ public class BoardRules implements Serializable {
 
   private final java.util.Map<MeanderPatternType, NetMeanderConstraint> defaultMeanderConstraints =
       new java.util.EnumMap<>(MeanderPatternType.class);
-  private final java.util.Set<MeanderPatternType> explicitMeanderConstraints =
-      new java.util.HashSet<>();
+  private java.util.Set<MeanderPatternType> explicitMeanderConstraints = new java.util.HashSet<>();
 
   /**
    * Initializes default length-tuning meander constraints for all pattern types using the given
@@ -602,6 +601,12 @@ public class BoardRules implements Serializable {
     this.clearanceToleranceUm = 1.0;
     if (this.exactCopper == null) {
       this.exactCopper = Boolean.TRUE;
+    }
+    if (!(this.explicitMeanderConstraints instanceof java.util.HashSet)) {
+      this.explicitMeanderConstraints =
+          (this.explicitMeanderConstraints != null)
+              ? new java.util.HashSet<>(this.explicitMeanderConstraints)
+              : new java.util.HashSet<>();
     }
   }
 }
