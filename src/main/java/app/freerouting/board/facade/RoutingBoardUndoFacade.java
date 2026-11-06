@@ -2,6 +2,7 @@ package app.freerouting.board.facade;
 
 import app.freerouting.board.model.items.Item;
 import app.freerouting.datastructures.UndoableObjects;
+import app.freerouting.drc.NetRoutingLedger;
 import app.freerouting.logger.FRLogger;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -43,6 +44,8 @@ public final class RoutingBoardUndoFacade {
     ObjectInputStream inputStream = null;
     try {
       ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      // Taken when the board is written: the copy has the same items, so the same counts.
+      NetRoutingLedger.Counts ledgerCounts = board.routingLedger().counts();
       outputStream = new ObjectOutputStream(byteArrayOutputStream);
       outputStream.writeObject(board);
       outputStream.flush();
@@ -55,6 +58,8 @@ public final class RoutingBoardUndoFacade {
       boardCopy.clearanceBaseline = board.clearanceBaseline;
       boardCopy.clearAllItemTemporaryAutorouteData();
       boardCopy.finishAutoroute();
+      // The copy has the same incomplete counts: no need to count every net again.
+      boardCopy.routingLedger().seed(ledgerCounts);
       return boardCopy;
     } catch (Exception exception) {
       FRLogger.error("Exception in deep_copy_routing_board" + exception, exception);
