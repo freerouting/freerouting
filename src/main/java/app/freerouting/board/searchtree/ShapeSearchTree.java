@@ -44,6 +44,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.locks.Lock;
+import java.util.function.Predicate;
 
 /**
  * Elementary geometric search functions making direct use of the MinAreaTree in the package
@@ -457,6 +458,51 @@ public class ShapeSearchTree extends MinAreaTree {
   public Set<SearchTreeObject> overlappingObjects(ConvexShape shape, int layer) {
     Set<SearchTreeObject> result = new TreeSet<>();
     this.overlappingObjects(shape, layer, new int[0], result);
+    return result;
+  }
+
+  /**
+   * Returns the objects on layer layer which overlap shape and for which accept answers true. If
+   * layer {@literal <} 0, the layer is ignored.
+   *
+   * <p>The result is the one of {@link #overlappingObjects(ConvexShape, int)} filtered by accept,
+   * but accept runs before the exact intersection test, so that the objects it rejects never reach
+   * that test. accept must therefore depend on nothing but its argument.
+   */
+  public Set<SearchTreeObject> overlappingObjects(
+      ConvexShape shape, int layer, Predicate<SearchTreeObject> accept) {
+    Set<SearchTreeObject> result = new TreeSet<>();
+    RegularTileShape bounds = shape == null ? null : shape.boundingShape(boundingDirections);
+    if (bounds == null) {
+      FRLogger.warn("ShapeSearchTree.overlaps: shape not bounded");
+      return result;
+    }
+    boolean is45Degree = shape instanceof IntOctagon;
+    Lock lock = readLock();
+    lock.lock();
+    List<Leaf> leaves = queryLeafBuffer.get();
+    try {
+      leaves.clear();
+      this.collectOverlapsUnlocked(bounds, leaves);
+      for (Leaf currentLeaf : leaves) {
+        SearchTreeObject currentObject = (SearchTreeObject) currentLeaf.object;
+        int shapeIndex = currentLeaf.shapeIndexInObject;
+        if ((layer >= 0 && currentObject.shapeLayer(shapeIndex) != layer)
+            || result.contains(currentObject)
+            || !accept.test(currentObject)) {
+          continue;
+        }
+        TileShape currentShape = currentObject.getTreeShape(this, shapeIndex);
+        // Same test as overlappingTreeEntriesUnlocked: two octagons that overlap by their
+        // bounding octagons overlap.
+        if ((is45Degree && currentShape instanceof IntOctagon) || currentShape.intersects(shape)) {
+          result.add(currentObject);
+        }
+      }
+    } finally {
+      leaves.clear();
+      lock.unlock();
+    }
     return result;
   }
 
