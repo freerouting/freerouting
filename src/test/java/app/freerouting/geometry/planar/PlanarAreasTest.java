@@ -89,4 +89,74 @@ class PlanarAreasTest {
     assertTrue(islands.get(0).contains(55, 55) || islands.get(1).contains(55, 55));
     assertFalse(combined.contains(25, 25));
   }
+
+  @Test
+  void circleApproximationIsCircumscribedEnclosingAllCirclePoints() {
+    Circle circle = new Circle(new IntPoint(1000, 1000), 500);
+    PlanarArea circlePoly = PlanarArea.fromCircle(circle, 32);
+
+    double circleExactArea = Math.PI * 500.0 * 500.0;
+    assertTrue(
+        circlePoly.getArea() >= circleExactArea,
+        "Circumscribed polygon area must be >= circle area");
+
+    // All sample perimeter points must be strictly enclosed by the circumscribed polygon
+    for (int i = 0; i < 72; i++) {
+      double angle = i * 2.0 * Math.PI / 72.0;
+      double px = 1000.0 + 499.9 * Math.cos(angle);
+      double py = 1000.0 + 499.9 * Math.sin(angle);
+      assertTrue(
+          circlePoly.contains(px, py),
+          "Circumscribed polygon must enclose circle point at angle " + angle);
+    }
+  }
+
+  @Test
+  void areaWithHolesAndContourExtractionPreservesTopology() {
+    TileShape border = TileShape.getInstance(0, 0, 1000, 1000);
+    TileShape hole = TileShape.getInstance(200, 200, 400, 400);
+    Area domainArea = new PolylineArea(border, new PolylineShape[] {hole});
+
+    PlanarArea planar = PlanarArea.fromArea(domainArea);
+    assertEquals(1000.0 * 1000.0 - 200.0 * 200.0, planar.getArea(), 1e-4);
+    assertTrue(planar.contains(100, 100));
+    assertFalse(planar.contains(300, 300));
+
+    List<PlanarArea.Contour> contours = planar.toContours();
+    assertEquals(1, contours.size());
+    assertEquals(1, contours.get(0).holes().size());
+  }
+
+  @Test
+  void thermalSpokeCutoutTopologyLeavesCenterConnected() {
+    PlanarArea pour = PlanarArea.fromBox(new IntBox(new IntPoint(0, 0), new IntPoint(1000, 1000)));
+    Circle clearanceCircle = new Circle(new IntPoint(500, 500), 200);
+    PlanarArea clearance = PlanarArea.fromCircle(clearanceCircle, 32);
+
+    PlanarArea spoke1 = PlanarArea.createRotatedSpoke(500, 500, 40.0, 600.0, Math.PI / 4.0);
+    PlanarArea spoke2 = PlanarArea.createRotatedSpoke(500, 500, 40.0, 600.0, -Math.PI / 4.0);
+    PlanarArea spokes = spoke1.union(spoke2);
+
+    PlanarArea moat = clearance.difference(spokes);
+    PlanarArea remainingPour = pour.difference(moat);
+
+    assertEquals(1, remainingPour.decomposeIntoIslands().size());
+    assertTrue(remainingPour.contains(500, 500), "Pad center must remain connected");
+    assertTrue(remainingPour.contains(100, 100), "Outer pour must remain connected");
+    assertFalse(remainingPour.contains(500, 650), "Moat sector cutout must be removed");
+  }
+
+  @Test
+  void unionAllDoesNotSilentlyOmitCutouts() {
+    List<PlanarArea> cutouts = new ArrayList<>();
+    for (int i = 0; i < 5; i++) {
+      int x = i * 100;
+      cutouts.add(PlanarArea.fromBox(new IntBox(new IntPoint(x, 0), new IntPoint(x + 50, 50))));
+    }
+    PlanarArea merged = PlanarArea.unionAll(cutouts);
+    assertEquals(5 * 50.0 * 50.0, merged.getArea(), 1e-4);
+    for (int i = 0; i < 5; i++) {
+      assertTrue(merged.contains(i * 100 + 25, 25));
+    }
+  }
 }

@@ -63,20 +63,25 @@ public final class PlanarArea {
   }
 
   /**
-   * Creates a PlanarArea approximating a {@link Circle}.
+   * Creates a PlanarArea approximating a {@link Circle} with a conservative circumscribed polygon.
+   *
+   * <p>The radius of the approximation is scaled so that all polygon edges are tangent to the
+   * circle, guaranteeing that every point in the domain {@link Circle} is enclosed.
    *
    * @param circle the circle shape
-   * @param numPoints number of vertices for polygon approximation (minimum 16)
-   * @return the resulting planar area
+   * @param numPoints number of vertices for polygon approximation (minimum 32)
+   * @return the resulting circumscribed planar area
    */
   public static PlanarArea fromCircle(Circle circle, int numPoints) {
     if (circle == null || circle.radius <= 0) {
       return empty();
     }
+    int n = Math.max(numPoints, 32);
+    double circumscribedRadius = circle.radius / Math.cos(Math.PI / n);
     GeometricShapeFactory gsf = new GeometricShapeFactory(GEOMETRY_FACTORY);
     gsf.setCentre(new Coordinate(circle.center.x, circle.center.y));
-    gsf.setSize(2.0 * circle.radius);
-    gsf.setNumPoints(Math.max(numPoints, 16));
+    gsf.setSize(2.0 * circumscribedRadius);
+    gsf.setNumPoints(n);
     return new PlanarArea(gsf.createCircle());
   }
 
@@ -209,6 +214,13 @@ public final class PlanarArea {
     return geometry == null || geometry.isEmpty() || geometry.getArea() <= 0.0;
   }
 
+  private static Geometry repairTopology(Geometry g) {
+    if (g == null || g.isEmpty()) {
+      return GEOMETRY_FACTORY.createPolygon();
+    }
+    return g.isValid() ? g : g.buffer(0);
+  }
+
   /**
    * Computes the geometric difference (this minus other).
    *
@@ -224,8 +236,14 @@ public final class PlanarArea {
     }
     try {
       return new PlanarArea(this.geometry.difference(other.geometry));
-    } catch (Exception _) {
-      return this;
+    } catch (Exception ex) {
+      try {
+        Geometry fixedThis = repairTopology(this.geometry);
+        Geometry fixedOther = repairTopology(other.geometry);
+        return new PlanarArea(fixedThis.difference(fixedOther));
+      } catch (Exception retryEx) {
+        throw new IllegalStateException("Failed to compute planar geometry difference", retryEx);
+      }
     }
   }
 
@@ -244,8 +262,14 @@ public final class PlanarArea {
     }
     try {
       return new PlanarArea(this.geometry.union(other.geometry));
-    } catch (Exception _) {
-      return this;
+    } catch (Exception ex) {
+      try {
+        Geometry fixedThis = repairTopology(this.geometry);
+        Geometry fixedOther = repairTopology(other.geometry);
+        return new PlanarArea(fixedThis.union(fixedOther));
+      } catch (Exception retryEx) {
+        throw new IllegalStateException("Failed to compute planar geometry union", retryEx);
+      }
     }
   }
 
@@ -261,8 +285,14 @@ public final class PlanarArea {
     }
     try {
       return new PlanarArea(this.geometry.intersection(other.geometry));
-    } catch (Exception _) {
-      return empty();
+    } catch (Exception ex) {
+      try {
+        Geometry fixedThis = repairTopology(this.geometry);
+        Geometry fixedOther = repairTopology(other.geometry);
+        return new PlanarArea(fixedThis.intersection(fixedOther));
+      } catch (Exception retryEx) {
+        throw new IllegalStateException("Failed to compute planar geometry intersection", retryEx);
+      }
     }
   }
 
@@ -287,16 +317,25 @@ public final class PlanarArea {
     }
     try {
       return new PlanarArea(UnaryUnionOp.union(geoms));
-    } catch (Exception _) {
-      Geometry result = geoms.get(0);
-      for (int i = 1; i < geoms.size(); i++) {
-        try {
-          result = result.union(geoms.get(i));
-        } catch (Exception _) {
-          // Continue best-effort merge
+    } catch (Exception ex) {
+      try {
+        List<Geometry> sanitized = new ArrayList<>(geoms.size());
+        for (Geometry g : geoms) {
+          sanitized.add(repairTopology(g));
         }
+        return new PlanarArea(UnaryUnionOp.union(sanitized));
+      } catch (Exception retryEx) {
+        Geometry result = repairTopology(geoms.get(0));
+        for (int i = 1; i < geoms.size(); i++) {
+          try {
+            result = result.union(repairTopology(geoms.get(i)));
+          } catch (Exception pairwiseEx) {
+            throw new IllegalStateException(
+                "Failed to compute planar geometry unionAll at index " + i, pairwiseEx);
+          }
+        }
+        return new PlanarArea(result);
       }
-      return new PlanarArea(result);
     }
   }
 
