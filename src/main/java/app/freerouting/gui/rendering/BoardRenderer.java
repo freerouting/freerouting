@@ -597,7 +597,8 @@ public final class BoardRenderer {
       if (useSimpleFill) {
         graphicsContext.fillArea(area.getArea(), graphics, color, fillOpacity);
       } else {
-        java.awt.geom.Area cachedFill = area.getDetailedFillArea(maxClearanceLookupBoard, layer);
+        app.freerouting.geometry.planar.PlanarArea cachedFill =
+            area.getDetailedFillArea(maxClearanceLookupBoard, layer);
         if (cachedFill != null && !cachedFill.isEmpty()) {
           var p0 = graphicsContext.coordinateTransform.boardToScreen(FloatPoint.ZERO);
           var px = graphicsContext.coordinateTransform.boardToScreen(new FloatPoint(1, 0));
@@ -610,7 +611,32 @@ public final class BoardRenderer {
                   py.getY() - p0.getY(),
                   p0.getX(),
                   p0.getY());
-          java.awt.geom.Area screenArea = cachedFill.createTransformedArea(boardToScreen);
+          java.awt.geom.Path2D.Double path = new java.awt.geom.Path2D.Double();
+          for (app.freerouting.geometry.planar.PlanarArea.Contour contour :
+              cachedFill.toContours()) {
+            if (!contour.outer().isEmpty()) {
+              FloatPoint first = contour.outer().get(0);
+              path.moveTo(first.x, first.y);
+              for (int i = 1; i < contour.outer().size(); i++) {
+                FloatPoint pt = contour.outer().get(i);
+                path.lineTo(pt.x, pt.y);
+              }
+              path.closePath();
+            }
+            for (java.util.List<FloatPoint> hole : contour.holes()) {
+              if (!hole.isEmpty()) {
+                FloatPoint first = hole.get(0);
+                path.moveTo(first.x, first.y);
+                for (int i = 1; i < hole.size(); i++) {
+                  FloatPoint pt = hole.get(i);
+                  path.lineTo(pt.x, pt.y);
+                }
+                path.closePath();
+              }
+            }
+          }
+          java.awt.geom.Area screenArea =
+              new java.awt.geom.Area(path).createTransformedArea(boardToScreen);
           java.awt.Graphics2D graphics2D = (java.awt.Graphics2D) graphics;
           java.awt.Paint oldPaint = graphics2D.getPaint();
           java.awt.Composite oldComposite = graphics2D.getComposite();

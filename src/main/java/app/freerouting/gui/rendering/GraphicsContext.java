@@ -2,7 +2,6 @@ package app.freerouting.gui.rendering;
 
 import app.freerouting.board.model.structure.LayerStructure;
 import app.freerouting.geometry.planar.Area;
-import app.freerouting.geometry.planar.AwtAreas;
 import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.Ellipse;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -402,7 +401,9 @@ public class GraphicsContext implements Serializable {
                     center.getX() - radius, center.getY() - radius, diameter, diameter)));
       }
     }
-    AwtAreas.subtractAll(awtArea, holeAreas);
+    for (java.awt.geom.Area holeArea : holeAreas) {
+      awtArea.subtract(holeArea);
+    }
     return awtArea;
   }
 

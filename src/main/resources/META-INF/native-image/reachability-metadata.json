@@ -515,6 +515,24 @@
       "serializable": true
     },
     {
+      "type": "app.freerouting.core.scoring.BoardStatisticsRectangle",
+      "fields": [
+        {
+          "name": "height"
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ],
+      "serializable": true
+    },
+    {
       "type": "app.freerouting.core.scoring.BoardStatisticsBounds",
       "fields": [
         {
@@ -2069,29 +2087,6 @@
     },
     {
       "type": "jakarta.servlet.Servlet"
-    },
-    {
-      "type": "java.awt.geom.Rectangle2D"
-    },
-    {
-      "type": "java.awt.geom.Rectangle2D$Float",
-      "fields": [
-        {
-          "name": "height"
-        },
-        {
-          "name": "width"
-        },
-        {
-          "name": "x"
-        },
-        {
-          "name": "y"
-        }
-      ]
-    },
-    {
-      "type": "java.awt.geom.RectangularShape"
     },
     {
       "type": "java.lang.Boolean",
