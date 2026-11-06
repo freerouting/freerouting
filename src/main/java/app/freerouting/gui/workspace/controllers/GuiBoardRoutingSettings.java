@@ -114,6 +114,9 @@ public final class GuiBoardRoutingSettings {
     RoutingBoard board = manager.getRoutingBoard();
     if (layer >= 0 && layer <= board.getLayerCount()) {
       board.rules.setDefaultTraceHalfWidth(layer, value);
+      if (board.getOutline() != null) {
+        board.getOutline().updateSlicesToTraceWidths();
+      }
     }
   }
 

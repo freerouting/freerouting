@@ -202,6 +202,26 @@ public class BoardRules implements Serializable {
     return minTraceHalfWidth;
   }
 
+  /**
+   * Returns the smallest trace half-width of all net classes on the layers they route on, or {@link
+   * #getMinTraceHalfWidth} if that is smaller. A width set on a net class only, by a {@code class}
+   * rule of a DSN or rules file, a KiCad net class or the net class window, does not reach {@link
+   * #getMinTraceHalfWidth}.
+   */
+  public int getMinNetClassTraceHalfWidth() {
+    int result = minTraceHalfWidth;
+    for (int i = 0; i < netClasses.count(); i++) {
+      NetClass netClass = netClasses.get(i);
+      for (int layer = 0; layer < netClass.layerCount(); layer++) {
+        int halfWidth = netClass.getTraceHalfWidth(layer);
+        if (halfWidth > 0 && netClass.isActiveRoutingLayer(layer)) {
+          result = Math.min(result, halfWidth);
+        }
+      }
+    }
+    return result;
+  }
+
   private int minAllowedTraceHalfWidth;
 
   /**

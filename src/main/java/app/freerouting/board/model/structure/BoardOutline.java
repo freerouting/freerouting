@@ -37,7 +37,11 @@ public class BoardOutline extends Item implements Serializable {
 
   private static final int HALF_WIDTH = 100;
 
-  /** Upper bound of the slices of one outline line. */
+  /**
+   * Upper bound of the slices of one outline line. It keeps a long outline line from filling the
+   * search trees: past it, the bounding octagons of the slices exceed the line by more than the
+   * tolerance, each by about 1/256 of the excess of the whole line.
+   */
   private static final int MAX_LINE_SLICES = 256;
 
   /** The board shapes inside the outline curves. */
@@ -64,6 +68,13 @@ public class BoardOutline extends Item implements Serializable {
 
   /** Number of slices per outline line, in the order of {@link #lineShape}. Rebuilt on demand. */
   private transient int[] lineSlices;
+
+  /**
+   * The tolerance keepoutTiles and lineSlices were cut with, 0 before they are cut. Kept with them
+   * so that both caches use the same value and a later change of the trace widths can be detected
+   * (see {@link #updateSlicesToTraceWidths}).
+   */
+  private transient int sliceTolerance;
 
   /** Creates a new instance of BoardOutline. */
   public BoardOutline(PolylineShape[] shapes, int clearanceClassIndex, int id, BasicBoard board) {
@@ -318,6 +329,7 @@ public class BoardOutline extends Item implements Serializable {
     keepoutLines = null;
     keepoutTiles = null;
     lineSlices = null;
+    sliceTolerance = 0;
     invalidateEdgePinNets();
   }
 
@@ -334,6 +346,7 @@ public class BoardOutline extends Item implements Serializable {
     keepoutLines = null;
     keepoutTiles = null;
     lineSlices = null;
+    sliceTolerance = 0;
     invalidateEdgePinNets();
   }
 
@@ -351,6 +364,7 @@ public class BoardOutline extends Item implements Serializable {
     keepoutLines = null;
     keepoutTiles = null;
     lineSlices = null;
+    sliceTolerance = 0;
     invalidateEdgePinNets();
   }
 
@@ -367,6 +381,7 @@ public class BoardOutline extends Item implements Serializable {
     keepoutLines = null;
     keepoutTiles = null;
     lineSlices = null;
+    sliceTolerance = 0;
     invalidateEdgePinNets();
   }
 
@@ -409,8 +424,9 @@ public class BoardOutline extends Item implements Serializable {
    * 90-degree trees store each piece as its bounding octagon or box. Next to an outline edge that
    * is neither orthogonal nor diagonal, the bounding octagon of a large piece reaches far into the
    * board, and pads near that edge end up inside the keepout. Pieces whose bounding octagon exceeds
-   * them by more than the smallest trace half width are therefore cut into smaller pieces. The
-   * union of the pieces is still the keepout area, so nothing outside the board becomes routable.
+   * them by more than the smallest trace half width are therefore cut into smaller pieces, up to
+   * the depth limit of {@link TileShape#splitToTightOctagons}. The union of the pieces is still the
+   * keepout area, so nothing outside the board becomes routable.
    */
   public TileShape[] getKeepoutTiles() {
     if (this.keepoutTiles == null) {
@@ -418,8 +434,7 @@ public class BoardOutline extends Item implements Serializable {
       if (convexShapes == null) {
         return null;
       }
-      int tolerance = Math.max(HALF_WIDTH, this.board.rules.getMinTraceHalfWidth());
-      this.keepoutTiles = TileShape.splitToTightOctagons(convexShapes, tolerance);
+      this.keepoutTiles = TileShape.splitToTightOctagons(convexShapes, this.sliceTolerance());
     }
     return this.keepoutTiles;
   }
@@ -511,13 +526,13 @@ public class BoardOutline extends Item implements Serializable {
   /**
    * Returns in how many slices the outline line with the given index goes into the search trees. An
    * oblique line is cut so that the bounding octagon of each slice exceeds it by at most the
-   * smallest trace half width (see {@link #getKeepoutTiles}). The count does not depend on the
-   * layer, so that {@link #shapeLayer} stays valid.
+   * smallest trace half width (see {@link #getKeepoutTiles}), within {@link #MAX_LINE_SLICES}. The
+   * count does not depend on the layer, so that {@link #shapeLayer} stays valid.
    */
   public int lineSlices(int lineIndex) {
     if (this.lineSlices == null) {
       int[] slices = new int[this.lineCount()];
-      double tolerance = Math.max(HALF_WIDTH, this.board.rules.getMinTraceHalfWidth());
+      double tolerance = this.sliceTolerance();
       for (int i = 0; i < slices.length; i++) {
         double excess = this.lineShape(i, HALF_WIDTH).boundingOctagonExcess();
         slices[i] = (int) Math.min(MAX_LINE_SLICES, Math.max(1, Math.ceil(excess / tolerance)));
@@ -525,6 +540,46 @@ public class BoardOutline extends Item implements Serializable {
       this.lineSlices = slices;
     }
     return this.lineSlices[lineIndex];
+  }
+
+  /** The tolerance of the current slices, chosen from the trace widths when they are first cut. */
+  private int sliceTolerance() {
+    if (this.sliceTolerance == 0) {
+      this.sliceTolerance = currentSliceTolerance();
+    }
+    return this.sliceTolerance;
+  }
+
+  private int currentSliceTolerance() {
+    return Math.max(HALF_WIDTH, this.board.rules.getMinNetClassTraceHalfWidth());
+  }
+
+  /**
+   * Cuts the tree shapes of this outline again if the smallest trace half width of the board, net
+   * classes included, changed since they were cut, and reinserts the outline into the search trees.
+   * The outline is inserted before the net classes are read, and a rules file read after the board
+   * or a trace width set in the GUI can lower that width too; the slices cut for the former width
+   * would then let their bounding octagons reach further into the board than a trace of the new
+   * width can pass. The slice count may not change while the outline is in the trees, since {@link
+   * #shapeLayer} derives the layer of a tree shape from it.
+   */
+  public void updateSlicesToTraceWidths() {
+    if (this.sliceTolerance == 0 || this.sliceTolerance == currentSliceTolerance()) {
+      return;
+    }
+    boolean inTrees = this.isOnTheBoard() && this.board.searchTreeManager != null;
+    if (inTrees) {
+      this.board.additionalUpdateAfterChange(this);
+      this.board.searchTreeManager.remove(this);
+    }
+    this.keepoutTiles = null;
+    this.lineSlices = null;
+    this.sliceTolerance = 0;
+    this.clearDerivedData();
+    if (inTrees) {
+      this.board.searchTreeManager.insert(this);
+      this.board.additionalUpdateAfterChange(this);
+    }
   }
 
   /** Returns the number of line slices of all outline polygons on one layer. */

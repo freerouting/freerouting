@@ -3,6 +3,7 @@ package app.freerouting.io.specctra.parser;
 import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.structure.BoardOutline;
 import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.core.library.LogicalPart;
 import app.freerouting.core.library.Package;
@@ -1530,6 +1531,11 @@ public class Network extends ScopeKeyword {
     insertClassPairs(classClassList, scopeParameter);
     insertComponents(scopeParameter);
     insertLogicalParts(scopeParameter);
+    // The outline was cut before the net classes existed; a narrower class needs finer slices.
+    BoardOutline outline = scopeParameter.boardHandling.getRoutingBoard().getOutline();
+    if (outline != null) {
+      outline.updateSlicesToTraceWidths();
+    }
     return true;
   }
 
