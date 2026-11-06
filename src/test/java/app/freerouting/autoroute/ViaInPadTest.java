@@ -164,31 +164,117 @@ class ViaInPadTest {
     assertTrue(new DesignRulesChecker(board, null).getAllClearanceViolations().isEmpty());
   }
 
-  @Test
-  void autoDetectionFromDsnEnablesViaInPad() {
-    String dsnWithVia =
-        """
-        (pcb viainpad (resolution um 1) (unit um)
-          (structure (layer top (type signal)) (layer bottom (type signal))
-            (boundary (rect pcb 0 0 7000 6000)) (via V) (rule (width 150) (clearance 150)))
-          (placement
-            (component CA (place A 5000 5000 front 0)) (component CB (place B 5095 4751 front 0)))
-          (library
-            (image CA (pin PA 1 0 0)) (image CB (pin PB 1 0 0))
-            (padstack PA (shape (rect top -200 -300 200 300)) (attach off))
-            (padstack PB (shape (rect bottom -300 -200 300 200)) (attach off))
-            (padstack V (shape (circle top 700)) (shape (circle bottom 700)) (attach off)))
-          (network (net N (pins A-1 B-1)))
-          (wiring (via V 5000 5000 (net N))))
-        """;
-    app.freerouting.core.RoutingJob job = new app.freerouting.core.RoutingJob();
-    job.routerSettings = new DefaultSettings().getSettings();
+  private static final String DSN_WITH_VIA_IN_PAD =
+      """
+      (pcb viainpad (resolution um 1) (unit um)
+        (structure (layer top (type signal)) (layer bottom (type signal))
+          (boundary (rect pcb 0 0 7000 6000)) (via V) (rule (width 150) (clearance 150)))
+        (placement
+          (component CA (place A 5000 5000 front 0)) (component CB (place B 5095 4751 front 0)))
+        (library
+          (image CA (pin PA 1 0 0)) (image CB (pin PB 1 0 0))
+          (padstack PA (shape (rect top -200 -300 200 300)) (attach off))
+          (padstack PB (shape (rect bottom -300 -200 300 200)) (attach off))
+          (padstack V (shape (circle top 700)) (shape (circle bottom 700)) (attach off)))
+        (network (net N (pins A-1 B-1)))
+        (wiring (via V 5000 5000 (net N))))
+      """;
+
+  private static final String DSN_WITH_VIA_TOUCHING_PAD =
+      """
+      (pcb viatouchingpad (resolution um 1) (unit um)
+        (structure (layer top (type signal)) (layer bottom (type signal))
+          (boundary (rect pcb 0 0 7000 6000)) (via V) (rule (width 150) (clearance 150)))
+        (placement
+          (component CA (place A 5000 5000 front 0)) (component CB (place B 2000 2000 bottom 0)))
+        (library
+          (image CA (pin PA 1 0 0)) (image CB (pin PB 1 0 0))
+          (padstack PA (shape (rect top -200 -300 200 300)) (attach off))
+          (padstack PB (shape (rect bottom -300 -200 300 200)) (attach off))
+          (padstack V (shape (circle top 700)) (shape (circle bottom 700)) (attach off)))
+        (network (net N (pins A-1 B-1)))
+        (wiring (via V 5400 5000 (net N))))
+      """;
+
+  private static app.freerouting.management.HeadlessBoardManager load(
+      app.freerouting.core.RoutingJob job) {
+    return load(job, DSN_WITH_VIA_IN_PAD);
+  }
+
+  private static app.freerouting.management.HeadlessBoardManager load(
+      app.freerouting.core.RoutingJob job, String dsnContent) {
     app.freerouting.management.HeadlessBoardManager manager =
         new app.freerouting.management.HeadlessBoardManager(job);
     ByteArrayInputStream stream =
-        new ByteArrayInputStream(dsnWithVia.getBytes(StandardCharsets.UTF_8));
+        new ByteArrayInputStream(dsnContent.getBytes(StandardCharsets.UTF_8));
     manager.loadFromSpecctraDsn(stream, null, null);
+    return manager;
+  }
+
+  @Test
+  void autoDetectionFromDsnEnablesViaInPad() {
+    app.freerouting.core.RoutingJob job = new app.freerouting.core.RoutingJob();
+    job.routerSettings = new DefaultSettings().getSettings();
+    load(job);
     assertTrue(job.routerSettings.autorouter.viaInPad);
     assertTrue(job.routerSettings.autorouter.viaTouchingPad);
+  }
+
+  @Test
+  void autoDetectionPreservesExplicitViaTouchingPadFalse() {
+    app.freerouting.core.RoutingJob job = new app.freerouting.core.RoutingJob();
+    job.routerSettings = new DefaultSettings().getSettings();
+    job.routerSettings.autorouter.viaTouchingPad = false;
+    RoutingBoard board = load(job).getRoutingBoard();
+    assertFalse(job.routerSettings.autorouter.viaTouchingPad);
+    assertFalse(job.routerSettings.autorouter.viaInPad);
+    assertFalse(board.rules.isViaTouchingPad());
+    assertFalse(board.rules.isViaInPad());
+    assertFalse(new DesignRulesChecker(board, null).getAllClearanceViolations().isEmpty());
+  }
+
+  @Test
+  void viaInPadAllowedBySettingsIsNotAClearanceViolation() {
+    app.freerouting.core.RoutingJob job = new app.freerouting.core.RoutingJob();
+    job.routerSettings = new DefaultSettings().getSettings();
+    RoutingBoard board = load(job).getRoutingBoard();
+    assertTrue(board.rules.isViaInPad());
+    assertFalse(board.getVias().iterator().next().attachAllowed);
+    assertTrue(new DesignRulesChecker(board, null).getAllClearanceViolations().isEmpty());
+  }
+
+  @Test
+  void viaInPadRefusedBySettingsStaysAClearanceViolation() {
+    app.freerouting.core.RoutingJob job = new app.freerouting.core.RoutingJob();
+    job.routerSettings = new DefaultSettings().getSettings();
+    job.routerSettings.autorouter.viaInPad = false;
+    job.routerSettings.autorouter.viaTouchingPad = false;
+    RoutingBoard board = load(job).getRoutingBoard();
+    assertFalse(board.rules.isViaInPad());
+    assertFalse(new DesignRulesChecker(board, null).getAllClearanceViolations().isEmpty());
+  }
+
+  @Test
+  void viaTouchingPadAllowedWhenHoleIsOutsidePad() {
+    app.freerouting.core.RoutingJob job = new app.freerouting.core.RoutingJob();
+    job.routerSettings = new DefaultSettings().getSettings();
+    job.routerSettings.autorouter.viaInPad = false;
+    job.routerSettings.autorouter.viaTouchingPad = true;
+    RoutingBoard board = load(job, DSN_WITH_VIA_TOUCHING_PAD).getRoutingBoard();
+    assertFalse(board.rules.isViaInPad());
+    assertTrue(board.rules.isViaTouchingPad());
+    assertTrue(new DesignRulesChecker(board, null).getAllClearanceViolations().isEmpty());
+  }
+
+  @Test
+  void viaTouchingPadRefusesViaWhenHoleIsInsidePad() {
+    app.freerouting.core.RoutingJob job = new app.freerouting.core.RoutingJob();
+    job.routerSettings = new DefaultSettings().getSettings();
+    job.routerSettings.autorouter.viaInPad = false;
+    job.routerSettings.autorouter.viaTouchingPad = true;
+    RoutingBoard board = load(job, DSN_WITH_VIA_IN_PAD).getRoutingBoard();
+    assertFalse(board.rules.isViaInPad());
+    assertTrue(board.rules.isViaTouchingPad());
+    assertFalse(new DesignRulesChecker(board, null).getAllClearanceViolations().isEmpty());
   }
 }

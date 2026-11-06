@@ -225,6 +225,8 @@ public class CompositeBoardInput {
 
     var importSettings = settingsMerger.merge();
     var importOptions = DsnReadOptions.forSettings(importSettings);
+    job.routerSettings = importSettings;
+    settingsMerger.addOrReplaceSources(new ApiSettings(importSettings));
     HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
     if (isDsn) {
       boardManager.loadFromSpecctraDsn(

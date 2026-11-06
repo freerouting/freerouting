@@ -28,7 +28,6 @@ import app.freerouting.settings.sources.DefaultSettings;
 import app.freerouting.util.TextManager;
 import app.freerouting.util.gson.GsonProvider;
 import com.google.gson.annotations.SerializedName;
-import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -137,13 +136,13 @@ public class BoardStatistics implements Serializable {
 
     // Board
     this.board.boundingBox =
-        new Rectangle2D.Float(
+        new BoardStatisticsRectangle(
             (float) bb.ll.x,
             (float) bb.ll.y,
             (float) (bb.ur.x - bb.ll.x),
             (float) (bb.ur.y - bb.ll.y));
     this.board.size =
-        new Rectangle2D.Float(
+        new BoardStatisticsRectangle(
             0,
             0,
             Math.abs((float) board.getBoundingBox().ll.x - (float) board.getBoundingBox().ur.x),
@@ -373,8 +372,7 @@ public class BoardStatistics implements Serializable {
         double maxViolation = 0.0;
         double sumViolation = 0.0;
         for (app.freerouting.drc.ClearanceViolation cv : violationsList) {
-          double shortfall = Math.max(0.0, cv.expectedClearance - cv.actualClearance);
-          double shortfallUm = shortfall * boardUnitToUmFactor;
+          double shortfallUm = shortfallUm(cv, boardUnitToUmFactor);
           minViolation = Math.min(minViolation, shortfallUm);
           maxViolation = Math.max(maxViolation, shortfallUm);
           sumViolation += shortfallUm;
@@ -391,12 +389,16 @@ public class BoardStatistics implements Serializable {
       }
       this.clearanceViolations.preExistingCount = board.preExistingClearanceViolationsCount;
       int unfixable = 0;
+      double fixableViolationUm = 0.0;
       for (app.freerouting.drc.ClearanceViolation cv : violationsList) {
         if (cv.isUnfixable()) {
           unfixable++;
+        } else {
+          fixableViolationUm += shortfallUm(cv, boardUnitToUmFactor);
         }
       }
       this.clearanceViolations.unfixableCount = unfixable;
+      this.clearanceViolations.fixableViolationUm = fixableViolationUm;
       this.clearanceViolations.newOrChangedCount =
           board.clearanceBaseline != null
               ? board.clearanceBaseline.countNewOrChanged(violationsList)
@@ -411,6 +413,7 @@ public class BoardStatistics implements Serializable {
       this.clearanceViolations.newOrChangedCount = 0;
       this.clearanceViolations.routerIntroducedCount = 0;
       this.clearanceViolations.totalViolationUm = 0.0;
+      this.clearanceViolations.fixableViolationUm = 0.0;
       this.clearanceViolations.minViolationUm = 0.0;
       this.clearanceViolations.maxViolationUm = 0.0;
       this.clearanceViolations.avgViolationUm = 0.0;
@@ -429,13 +432,13 @@ public class BoardStatistics implements Serializable {
 
       // Board
       this.board.boundingBox =
-          new Rectangle2D.Float(
+          new BoardStatisticsRectangle(
               (float) Unit.scale(this.board.boundingBox.x, fromUnit, toUnit),
               (float) Unit.scale(this.board.boundingBox.y, fromUnit, toUnit),
               (float) Unit.scale(this.board.boundingBox.width, fromUnit, toUnit),
               (float) Unit.scale(this.board.boundingBox.height, fromUnit, toUnit));
       this.board.size =
-          new Rectangle2D.Float(
+          new BoardStatisticsRectangle(
               0,
               0,
               (float) Unit.scale(this.board.size.width, fromUnit, toUnit),
@@ -625,6 +628,12 @@ public class BoardStatistics implements Serializable {
     return false;
   }
 
+  private static double shortfallUm(
+      app.freerouting.drc.ClearanceViolation violation, double boardUnitToUmFactor) {
+    return Math.max(0.0, violation.expectedClearance - violation.actualClearance)
+        * boardUnitToUmFactor;
+  }
+
   private static int countOccurrences(String text, String target) {
     int count = 0;
     int index = 0;
@@ -648,7 +657,7 @@ public class BoardStatistics implements Serializable {
     float maximumScore = getMaximumScore(scoringSettings);
     float penalties =
         this.connections.incompleteCount * scoringSettings.unroutedNetPenalty
-            + this.clearanceViolations.totalCount * scoringSettings.clearanceViolationPenalty
+            + this.clearanceViolations.fixableCount() * scoringSettings.clearanceViolationPenalty
             + this.bends.totalCount * scoringSettings.bendPenalty;
     // Use the mm-normalised trace length so that the trace-cost term is comparable
     // to the unroutedNetPenalty regardless of the DSN internal coordinate resolution.
@@ -710,14 +719,8 @@ public class BoardStatistics implements Serializable {
         this.connections.incompleteCount != null
             ? Math.max(0, this.connections.incompleteCount)
             : 0;
-    double violationCount =
-        this.clearanceViolations.totalCount != null
-            ? Math.max(0, this.clearanceViolations.totalCount)
-            : 0;
-    double violationDepth =
-        this.clearanceViolations.totalViolationUm != null
-            ? Math.max(0.0, this.clearanceViolations.totalViolationUm)
-            : 0.0;
+    double violationCount = this.clearanceViolations.fixableCount();
+    double violationDepth = this.clearanceViolations.fixableShortfallUm();
     double split =
         Math.min(1.0, Math.max(0.0, valueOrDefault(settings.unroutedFreeFraction, 0.5f)));
     double firstHalfWeight = valueOrDefault(settings.unroutedFirstHalfWeight, 1000.0f / 3.0f);

@@ -191,42 +191,31 @@ public class MazeOptimizerDefectsTest {
     app.freerouting.board.facade.BasicBoard board = ((BoardReadResult.Success) result).board();
     assertNotNull(board);
 
-    int clAB =
-        board.rules.clearanceMatrix.getValue(
-            board.rules.clearanceMatrix.getNo("A"),
-            board.rules.clearanceMatrix.getNo("B"),
-            0,
-            false);
-    int clAC =
-        board.rules.clearanceMatrix.getValue(
-            board.rules.clearanceMatrix.getNo("A"),
-            board.rules.clearanceMatrix.getNo("C"),
-            0,
-            false);
-    int clBC =
-        board.rules.clearanceMatrix.getValue(
-            board.rules.clearanceMatrix.getNo("B"),
-            board.rules.clearanceMatrix.getNo("C"),
-            0,
-            false);
-    int clAA =
-        board.rules.clearanceMatrix.getValue(
-            board.rules.clearanceMatrix.getNo("A"),
-            board.rules.clearanceMatrix.getNo("A"),
-            0,
-            false);
+    var classA = board.rules.netClasses.get("A");
+    var classB = board.rules.netClasses.get("B");
+    var classC = board.rules.netClasses.get("C");
+    var matrix = board.rules.clearanceMatrix;
+    int clearanceA = classA.getTraceClearanceClass();
+    int clearanceB = classB.getTraceClearanceClass();
+    int clearanceC = classC.getTraceClearanceClass();
 
-    assertEquals(900, clAB);
-    assertEquals(900, clAC);
-    assertEquals(900, clBC);
-    assertEquals(300, clAA);
+    assertEquals(900, matrix.getValue(clearanceA, clearanceB, 0, false));
+    assertEquals(900, matrix.getValue(clearanceA, clearanceC, 0, false));
+    assertEquals(900, matrix.getValue(clearanceB, clearanceC, 0, false));
+    assertEquals(300, matrix.getValue(clearanceA, clearanceA, 0, false));
 
-    ViaRule ruleA = board.rules.netClasses.get("A").getViaRule();
-    ViaRule ruleB = board.rules.netClasses.get("B").getViaRule();
+    ViaRule ruleA = classA.getViaRule();
+    ViaRule ruleB = classB.getViaRule();
     assertEquals(1, ruleA.viaCount());
     assertEquals(1, ruleB.viaCount());
     assertEquals("VA", ruleA.getVia(0).getPadstack().name);
     assertEquals("VB", ruleB.getVia(0).getPadstack().name);
+    assertEquals(
+        900, matrix.getValue(ruleA.getVia(0).getClearanceClassIndex(), clearanceB, 0, false));
+    assertEquals(
+        900, matrix.getValue(ruleB.getVia(0).getClearanceClassIndex(), clearanceC, 0, false));
+    assertEquals(
+        300, matrix.getValue(ruleA.getVia(0).getClearanceClassIndex(), clearanceA, 0, false));
   }
 
   /** FR-077: Final optimizer board must not regress open connections or violations. */

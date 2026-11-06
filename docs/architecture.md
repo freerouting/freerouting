@@ -40,7 +40,7 @@ flowchart TD
         IO["**io.specctra**\nDSN / SES reader-writer"]
         BOARD["**board.model/facade/state/actions/trace + searchtree + optimize**\nLive board model · search trees · optimization"]
         RULES["**rules**\nNets · clearances"]
-        AR["**autoroute.pipeline + maze + expansion + drill + path**\nRouting stages · maze · expansion · path"]
+        AR["**autoroute.pipeline + maze + expansion + drill + path + decoupling**\nRouting stages · maze · expansion · path · decoupling"]
         DRC["**drc**\nDesign-rule checking"]
         GEO["**geometry.planar**\nShapes · points · math"]
     end
@@ -181,6 +181,44 @@ This contract does not change the separate search/insertion envelope tolerance
 problem (#961), circle discretization (#954), or preserved-junction connectivity
 and normalization (#958/#960). The default tree remains uncompensated.
 
+### Net-tie clustering and pad-stacking DRC contracts
+
+Footprints often place multiple pads or through-holes at overlapping coordinates across
+distinct electrical nets (e.g. net-ties, star grounds, power distribution connectors).
+At board post-load time, `RoutingBoard.clusterNetTies()` identifies physically overlapping
+pads sharing copper layers within each footprint via Disjoint-Set Union (union-find) and
+assigns a shared positive `netTieClusterId` to each participating `Pin`.
+
+`Pin.isObstacle(Item other)` consults `netTieClusterId` in $O(1)$ time without allocations:
+pins sharing the same positive cluster ID within a footprint are treated as non-obstacles.
+`Item.clearanceViolations()` correspondingly exempts traces contacting their designated pin
+from clearance violations against foreign partner pins in the same net-tie cluster. Distinct
+clusters on the same footprint or overlapping pins on different footprints remain isolated
+and enforce standard clearance rules (#718).
+
+### Net topology: `fromto` and `order`
+
+A net is normally routed as a tree that joins its pins in any order. The Specctra DSN can
+constrain that topology inside the `net` scope, and `Network.readNetScope` turns it into subnets:
+
+- each `(fromto P1 P2)` becomes a subnet of its own that connects these two pins;
+- `(order P1 P2 P3 ...)` becomes a chain of two-pin subnets, P1-P2, P2-P3 and so on.
+
+The subnets get distinct net numbers and keep the name of the net, so the SES output lists one
+`net` block per subnet under the same name. A pin named in several subnets carries all their net
+numbers, like a net-tie pad. Copper of different subnets keeps its clearance from each other: two
+subnets only meet at the pins they share.
+
+A star ground is therefore written as one `fromto` per branch, all starting at the star point:
+
+```
+(net GND (fromto R-1 A-1) (fromto R-1 B-1) (fromto R-1 C-1))
+```
+
+Each of A, B and C then gets its own trace to R (`StarGroundFromtoTest`). The star point is the
+pin named in the `fromto` scopes; the router does not choose it. KiCad does not write `fromto`
+scopes when it exports a DSN, so they have to be added to the file before routing.
+
 ## Module Boundaries (ArchUnit)
 
 Architectural boundaries are codified in `src/test/java/app/freerouting/architecture/ModuleBoundariesArchTest.java`.
@@ -197,8 +235,8 @@ Architectural boundaries are codified in `src/test/java/app/freerouting/architec
     and action threads; it must not depend on `gui.interactive`.
   - `board` and `autoroute` must not depend on `gui.rendering`; rendering is GUI-owned.
   - Pipeline/support packages (`board`, `rules`, `autoroute`, `drc`, `geometry`, `datastructures`,
-    `settings`, `logger`, `debug`, `util`, `io`, `core`, `analytics`) must not depend on Swing or on
-    AWT types outside `java.awt.geom`.
+    `settings`, `logger`, `debug`, `util`, `io`, `core`, `analytics`, `cli`, `startup`) must not depend on Swing or on
+    any AWT / `java.desktop` types (`java.awt..`).
   - `io.specctra.parser` internals must not be used outside `io..` (the `io.kicad` importer is an allowed consumer).
   - `gui.workspace`, `gui.interactive`, and `gui.rendering` must stay cycle-free (slices rule).
   - Background workspace workers (`InteractiveActionThread`, `GuiRoutingJobWorker`) must reach
@@ -231,11 +269,11 @@ Application bootstrap and top-level wiring. Start here when you need the entry p
 Import and export for board files. The public DSN and SES entry points are in this package, and parser internals live in `io.specctra.parser`.
 
 `DsnReadOptions` carries immutable allocation decisions into `DsnReader`; the parser does not
-inspect application settings or GUI state. Existing reader overloads retain input order. Headless
-job scheduling and composite/API assembly resolve their existing settings sources before parsing,
-then request reference-name allocation when the effective item-order seed is non-null. They still
-apply the resolved settings and board rules after attachment. GUI and standalone imports retain
-legacy allocation; a seed selected after import cannot retroactively canonicalize item identities.
+inspect application settings or GUI state. Placements are allocated canonically in exact
+reference-name order by default across all imports (headless jobs, composite/API inputs, GUI
+sessions, and standalone reader overloads). Legacy file-order allocation remains accessible via
+explicit `DsnReadOptions.INPUT_ORDER`. Any configured `router.autorouter.item_order_seed` is
+applied after item identities exist as an explicit shuffle.
 
 ### `app.freerouting.board`
 
@@ -282,6 +320,12 @@ Drill-page indexing and expansion-drill support used during maze expansion.
 ### `app.freerouting.autoroute.path`
 
 Found-connection reconstruction and insertion, including path connection value objects.
+
+### `app.freerouting.autoroute.decoupling`
+
+Read-only, deterministic identification of IC supply decoupling capacitors on a `RoutingBoard`.
+Computes confidence scores, explainable bitmask reason codes, and candidate IC supply owners
+without modifying board items, routing traces, or locking copper.
 
 ### `app.freerouting.autoroute`
 
@@ -480,6 +524,12 @@ The autorouter is the "make it work" stage. It solves missing connections one at
     The new geometry is inserted into the board, temporary artifacts are removed, and the route is tightened so it fits better into nearby routing.
 
 The autorouter may also temporarily rip up nearby conflicting traces or vias if needed to find a legal route. Its job is to turn an incomplete design into one that is electrically connected.
+
+- Remember who moved whom.
+
+    Two nets that want the same space can otherwise take it from each other pass after pass: net A rips net B to route, B rips A back on its next attempt, A rips B again, or a board restore replays the same rip-up, and the board never gets both. `RipupMemory` (in `autoroute.pipeline`) records every rip-up of the stage: which net was being routed and which nets it removed. Recording changes nothing; the memory only steps in when the same rip-up (A removes B) happens again in a later pass. B is then kept away from A: its maze search may not rip A (`AutorouteControl.netsNotToRip`, checked in `MazeRipupResolver.checkRipup`), and B is routed after A in the pass. B has to find another way, for example a via to the other layer.
+
+    The restriction is bounded. When B fails twice while kept away, the relation flips: A's traces and vias across B's open connections are removed and A is kept away from B, so B routes first and A looks for the other way. When the flipped relation fails twice as well, the pair is released and never restricted again. The memory is kept across board restores within a stage and is keyed by net number, so routing stays deterministic. A board that routes without such a repeat is routed exactly as before. The events are logged at debug level (`Pass #n: net 'B' ...`).
 
 #### Preserved Traces and Centerline Junction Connectivity
 

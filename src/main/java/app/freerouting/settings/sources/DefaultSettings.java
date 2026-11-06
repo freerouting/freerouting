@@ -169,6 +169,12 @@ public class DefaultSettings implements SettingsSource {
    */
   public static final float DEFAULT_OPTIMIZER_IMPROVEMENT_THRESHOLD = 2.5F;
 
+  /**
+   * Default consecutive passes without score improvement before the autorouter stops. {@code 0} or
+   * negative disables stagnation detection and allows routing to proceed up to {@code max_passes}.
+   */
+  public static final int DEFAULT_STAGNATION_PASS_LIMIT = 10;
+
   private static final int PRIORITY = 0;
 
   @Override
@@ -186,6 +192,7 @@ public class DefaultSettings implements SettingsSource {
     settings.autorouter.algorithm = RouterSettings.ALGORITHM_CURRENT;
     settings.jobTimeoutString = "12:00:00";
     settings.autorouter.maxPasses = 0;
+    settings.autorouter.stagnationPassLimit = DEFAULT_STAGNATION_PASS_LIMIT;
     settings.autorouter.maxItems = Integer.MAX_VALUE;
     settings.tracePullTightAccuracy = 500;
     settings.viasAllowed = true;
@@ -201,8 +208,8 @@ public class DefaultSettings implements SettingsSource {
     settings.autorouter.fanoutViaPadGap = 0.0;
     settings.autorouter.ballEscapeOrder = "auto";
     settings.autorouter.exitStubs = true;
-    settings.maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
-    settings.autorouter.maxThreads = settings.maxThreads;
+    settings.maxThreads = null;
+    settings.autorouter.maxThreads = null;
     settings.copperToEdgeClearanceUm = DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM;
     settings.holeClearanceUm = DEFAULT_HOLE_CLEARANCE_UM;
     settings.holeToHoleUm = DEFAULT_HOLE_TO_HOLE_UM;
@@ -245,7 +252,7 @@ public class DefaultSettings implements SettingsSource {
     settings.optimizer.algorithm = "freerouting-optimizer";
     settings.optimizer.maxPasses = 100;
     settings.optimizer.maxItems = Integer.MAX_VALUE;
-    settings.optimizer.maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
+    settings.optimizer.maxThreads = null;
     settings.optimizer.optimizationImprovementThreshold = DEFAULT_OPTIMIZER_IMPROVEMENT_THRESHOLD;
     settings.optimizer.boardUpdateStrategy = BoardUpdateStrategy.GLOBAL_OPTIMAL;
     settings.optimizer.itemSelectionStrategy = ItemSelectionStrategy.SEQUENTIAL;

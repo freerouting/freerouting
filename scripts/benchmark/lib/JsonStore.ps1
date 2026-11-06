@@ -211,6 +211,10 @@ with open(p, 'w', encoding='utf-8', newline='\n') as f:
                 } else {
                     [System.IO.File]::Move($tempPath, $jsonFullPath)
                 }
+                $storePy = Join-Path $PSScriptRoot "..\benchmark_store.py"
+                if (Test-Path $storePy) {
+                    & python $storePy --sync --results-dir $jsonDirectory
+                }
                 break
             } catch {
                 $inner = $_.Exception

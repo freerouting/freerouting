@@ -2,8 +2,7 @@ package app.freerouting.drc;
 
 import app.freerouting.board.model.items.ConductionArea;
 import app.freerouting.board.model.items.Item;
-import java.awt.geom.Area;
-import java.awt.geom.Rectangle2D;
+import app.freerouting.geometry.planar.PlanarArea;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -18,7 +17,7 @@ public class ZoneIslandViolation {
   public final ConductionArea conductionArea;
 
   /** The isolated polygonal island geometry in board units. */
-  public final Area islandArea;
+  public final PlanarArea islandArea;
 
   /** The board layer index where this island resides. */
   public final int layer;
@@ -53,7 +52,7 @@ public class ZoneIslandViolation {
    */
   public ZoneIslandViolation(
       ConductionArea conductionArea,
-      Area islandArea,
+      PlanarArea islandArea,
       int layer,
       int netNumber,
       String type,
@@ -74,8 +73,7 @@ public class ZoneIslandViolation {
     if (islandArea == null || islandArea.isEmpty()) {
       return new double[] {0.0, 0.0};
     }
-    Rectangle2D bounds = islandArea.getBounds2D();
-    return new double[] {bounds.getCenterX(), bounds.getCenterY()};
+    return islandArea.getCenter();
   }
 
   /** Returns the approximate area in square board units. */
@@ -83,7 +81,6 @@ public class ZoneIslandViolation {
     if (islandArea == null || islandArea.isEmpty()) {
       return 0.0;
     }
-    Rectangle2D bounds = islandArea.getBounds2D();
-    return bounds.getWidth() * bounds.getHeight();
+    return islandArea.getArea();
   }
 }

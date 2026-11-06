@@ -27,6 +27,18 @@ public class AutorouterSettings implements Serializable, Cloneable {
   @Schema(description = "Maximum autorouter passes (0 means unlimited)")
   public Integer maxPasses;
 
+  /**
+   * Number of consecutive passes without score improvement before the autorouter stops. {@code 0}
+   * or negative disables stagnation detection and allows routing to proceed up to {@code
+   * max_passes}.
+   */
+  @SerializedName("stagnation_pass_limit")
+  @Schema(
+      description =
+          "Consecutive passes without score improvement before stopping"
+              + " (0 disables stagnation stop)")
+  public Integer stagnationPassLimit;
+
   /** Maximum items attempted in the autorouter stage. */
   @SerializedName("max_items")
   @Schema(description = "Maximum items attempted in the autorouter stage")
