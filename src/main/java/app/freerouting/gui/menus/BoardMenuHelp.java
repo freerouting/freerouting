@@ -2,10 +2,8 @@ package app.freerouting.gui.menus;
 
 import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.gui.board.BoardFrame;
-import app.freerouting.logger.FRLogger;
+import app.freerouting.gui.windows.board.WindowSponsor;
 import app.freerouting.util.TextManager;
-import java.awt.Desktop;
-import java.net.URI;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
@@ -33,14 +31,7 @@ public class BoardMenuHelp extends JMenu {
 
     JMenuItem helpSponsorMenuItem = new JMenuItem();
     helpSponsorMenuItem.setText(tm.getText("sponsor"));
-    helpSponsorMenuItem.addActionListener(
-        _ -> {
-          try {
-            Desktop.getDesktop().browse(new URI("https://www.freerouting.app/donate.html"));
-          } catch (Exception ex) {
-            FRLogger.error("Failed to open sponsor link", ex);
-          }
-        });
+    helpSponsorMenuItem.addActionListener(_ -> WindowSponsor.show(boardFrame));
     helpSponsorMenuItem.addActionListener(
         _ -> FRAnalytics.buttonClicked("helpSponsorMenuItem", helpSponsorMenuItem.getText()));
     this.add(helpSponsorMenuItem);
