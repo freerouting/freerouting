@@ -2,6 +2,7 @@ package app.freerouting.board.facade;
 
 import app.freerouting.board.model.items.Item;
 import app.freerouting.datastructures.UndoableObjects;
+import app.freerouting.drc.ClearanceBaseline;
 import app.freerouting.logger.FRLogger;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -38,38 +39,38 @@ public final class RoutingBoardUndoFacade {
     return result;
   }
 
-  synchronized RoutingBoard deepCopy() {
-    ObjectOutputStream outputStream = null;
-    ObjectInputStream inputStream = null;
-    try {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      outputStream = new ObjectOutputStream(byteArrayOutputStream);
-      outputStream.writeObject(board);
-      outputStream.flush();
-
-      ByteArrayInputStream byteArrayInputStream =
-          new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
-      inputStream = new app.freerouting.util.SafeObjectInputStream(byteArrayInputStream);
+  /**
+   * Copies the board through serialization. Only writing the board reads it, so only that part
+   * holds the board's lock: copies made at the same time, by the optimizer threads, read their own
+   * bytes back in parallel, which is most of the work (the search trees are rebuilt, planes split
+   * into convex tiles again).
+   */
+  RoutingBoard deepCopy() {
+    byte[] serializedBoard;
+    ClearanceBaseline clearanceBaseline;
+    synchronized (board) {
+      try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+          ObjectOutputStream outputStream = new ObjectOutputStream(byteArrayOutputStream)) {
+        outputStream.writeObject(board);
+        outputStream.flush();
+        serializedBoard = byteArrayOutputStream.toByteArray();
+        clearanceBaseline = board.clearanceBaseline;
+      } catch (Exception exception) {
+        FRLogger.error("Exception in deep_copy_routing_board" + exception, exception);
+        return null;
+      }
+    }
+    try (ObjectInputStream inputStream =
+        new app.freerouting.util.SafeObjectInputStream(new ByteArrayInputStream(serializedBoard))) {
       RoutingBoard boardCopy = (RoutingBoard) inputStream.readObject();
       // Transient, so not serialized: without it every pre-existing violation counts as new.
-      boardCopy.clearanceBaseline = board.clearanceBaseline;
+      boardCopy.clearanceBaseline = clearanceBaseline;
       boardCopy.clearAllItemTemporaryAutorouteData();
       boardCopy.finishAutoroute();
       return boardCopy;
     } catch (Exception exception) {
       FRLogger.error("Exception in deep_copy_routing_board" + exception, exception);
       return null;
-    } finally {
-      try {
-        if (outputStream != null) {
-          outputStream.close();
-        }
-        if (inputStream != null) {
-          inputStream.close();
-        }
-      } catch (Exception exception) {
-        FRLogger.error("Exception closing deep-copy streams" + exception, exception);
-      }
     }
   }
 
