@@ -330,6 +330,43 @@
       ]
     },
     {
+      "type": "app.freerouting.core.results.RoutingResultManifest$FallbackAttempt",
+      "fields": [
+        {
+          "name": "clearanceViolations"
+        },
+        {
+          "name": "durationSeconds"
+        },
+        {
+          "name": "newOrChangedViolations"
+        },
+        {
+          "name": "routerScore"
+        },
+        {
+          "name": "stopReason"
+        },
+        {
+          "name": "strategy"
+        },
+        {
+          "name": "unrouted"
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.core.results.RoutingResultManifest$FallbackDetail",
+      "fields": [
+        {
+          "name": "attempts"
+        },
+        {
+          "name": "chosen"
+        }
+      ]
+    },
+    {
       "type": "app.freerouting.core.results.RoutingResultManifest$FixtureInfo",
       "fields": [
         {
@@ -371,6 +408,9 @@
       "fields": [
         {
           "name": "autorouter"
+        },
+        {
+          "name": "fallback"
         },
         {
           "name": "fanout"
