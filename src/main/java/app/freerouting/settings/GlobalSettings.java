@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.Serializable;
 import java.io.Writer;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -45,36 +47,37 @@ public class GlobalSettings implements Serializable {
     return currentInstance;
   }
 
-  // Resolved once: every granular trace call reads the settings, and Class.forName plus getField
-  // on each read cost more than the trace itself.
-  private static volatile java.lang.reflect.Field freeroutingGlobalSettingsField;
-  private static volatile boolean freeroutingGlobalSettingsFieldResolved;
+  // Resolved once, in a holder class so that the JIT treats the getter as a constant: every
+  // clearance lookup asks whether granular tracing is on, which reads the settings, and
+  // Field.get repeats its access check on each read.
+  private static final class FreeroutingGlobalSettingsGetter {
+    static final MethodHandle GETTER = resolve();
 
-  private static GlobalSettings getFreeroutingGlobalSettingsIfAvailable() {
-    if (!freeroutingGlobalSettingsFieldResolved) {
+    private static MethodHandle resolve() {
       try {
         Class<?> freeroutingClass =
             Class.forName(
                 "app.freerouting.Freerouting", false, GlobalSettings.class.getClassLoader());
-        freeroutingGlobalSettingsField = freeroutingClass.getField("globalSettings");
+        return MethodHandles.publicLookup()
+            .findStaticGetter(freeroutingClass, "globalSettings", GlobalSettings.class);
       } catch (Throwable _) {
         // Ignored in environments where Freerouting is not loaded or unavailable
+        return null;
       }
-      freeroutingGlobalSettingsFieldResolved = true;
     }
-    java.lang.reflect.Field field = freeroutingGlobalSettingsField;
-    if (field == null) {
+  }
+
+  private static GlobalSettings getFreeroutingGlobalSettingsIfAvailable() {
+    MethodHandle getter = FreeroutingGlobalSettingsGetter.GETTER;
+    if (getter == null) {
       return null;
     }
     try {
-      Object val = field.get(null);
-      if (val instanceof GlobalSettings gs) {
-        return gs;
-      }
+      return (GlobalSettings) getter.invokeExact();
     } catch (Throwable _) {
       // Ignored in environments where Freerouting is not loaded or unavailable
+      return null;
     }
-    return null;
   }
 
   /** Sets the currently active GlobalSettings instance. */
