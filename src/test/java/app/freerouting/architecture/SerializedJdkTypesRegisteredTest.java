@@ -115,6 +115,15 @@ class SerializedJdkTypesRegisteredTest extends RoutingFixtureTest {
     assertEquals(RoutingJobState.COMPLETED, job.state);
     BasicBoard board = job.board;
     assertNotNull(board);
+
+    // Ensure failure tracking types in failureLog are exercised in serialization test
+    if (board instanceof app.freerouting.board.facade.RoutingBoard rb
+        && !board.getItems().isEmpty()) {
+      app.freerouting.board.model.items.Item sampleItem = board.getItems().iterator().next();
+      rb.failureLog.recordFailure(
+          sampleItem, 1, app.freerouting.autoroute.AutorouteAttemptState.FAILED, "test failure");
+    }
+
     assertNotNull(board.getHash(), "Trace-profile snapshot must serialize on the JVM");
     assertNotNull(board.clone(), "Full-board snapshot must serialize on the JVM");
 

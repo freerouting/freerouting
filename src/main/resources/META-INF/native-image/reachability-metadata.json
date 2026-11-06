@@ -65,6 +65,14 @@
       "serializable": true
     },
     {
+      "type": "app.freerouting.autoroute.RoutingFailureLog$ItemFailureInfo",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.autoroute.AutorouteAttemptState",
+      "serializable": true
+    },
+    {
       "type": "app.freerouting.board.actions.ItemIdGenerator",
       "serializable": true
     },
