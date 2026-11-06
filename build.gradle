@@ -215,6 +215,9 @@ dependencies {
     implementation 'io.swagger.core.v3:swagger-core-jakarta:2.2.55'
 
 
+    // JTS: pure-Java 2D planar topology and geometry engine (replaces java.awt.geom in core/CLI)
+    implementation 'org.locationtech.jts:jts-core:1.20.0'
+
     // Dedicated lightweight runtime classpath for standalone headless CLI native image
     cliRuntimeClasspath 'org.apache.logging.log4j:log4j-core:2.26.1'
     cliRuntimeClasspath 'org.apache.logging.log4j:log4j-api:2.26.1'
@@ -222,6 +225,7 @@ dependencies {
     cliRuntimeClasspath 'org.slf4j:slf4j-nop:2.0.20'
     cliRuntimeClasspath 'com.google.code.gson:gson:2.15.0'
     cliRuntimeClasspath 'org.apache.commons:commons-numbers-fraction:1.3'
+    cliRuntimeClasspath 'org.locationtech.jts:jts-core:1.20.0'
 
     // ArchUnit: package-architecture enforcement
     testImplementation 'com.tngtech.archunit:archunit-junit5:1.5.1'

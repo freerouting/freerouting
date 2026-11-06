@@ -40,7 +40,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
   }
 
   private transient int cachedBoardRevision = -1;
-  private transient java.awt.geom.Area cachedBoardFillArea;
+  private transient app.freerouting.geometry.planar.PlanarArea cachedBoardFillArea;
 
   /** Creates a new instance of ConductionArea. */
   public ConductionArea(
@@ -102,7 +102,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
    * Returns the detailed fill geometry for this conduction area, computing clearances against all
    * overlapping items if needed.
    */
-  public java.awt.geom.Area getDetailedFillArea() {
+  public app.freerouting.geometry.planar.PlanarArea getDetailedFillArea() {
     warmDetailedFillCache();
     return cachedBoardFillArea;
   }
@@ -113,7 +113,8 @@ public class ConductionArea extends ObstacleArea implements Connectable {
    * <p>The cache remains owned by the conduction-area model because it depends on board revision
    * and clearance geometry. The renderer owns the AWT paint operation that consumes this geometry.
    */
-  public java.awt.geom.Area getDetailedFillArea(double maxClearanceLookupBoard, int layerIndex) {
+  public app.freerouting.geometry.planar.PlanarArea getDetailedFillArea(
+      double maxClearanceLookupBoard, int layerIndex) {
     ensureDetailedFillCache(maxClearanceLookupBoard, layerIndex);
     return cachedBoardFillArea;
   }
@@ -124,9 +125,10 @@ public class ConductionArea extends ObstacleArea implements Connectable {
       return;
     }
 
-    java.awt.geom.Area fillArea = getAwtAreaInBoardUnits(this.getArea());
+    app.freerouting.geometry.planar.PlanarArea fillArea =
+        app.freerouting.geometry.planar.PlanarArea.fromArea(this.getArea());
     if (fillArea == null) {
-      fillArea = new java.awt.geom.Area();
+      fillArea = app.freerouting.geometry.planar.PlanarArea.empty();
     }
     if (!fillArea.isEmpty()) {
       IntBox bbox = this.boundingBox();
@@ -137,9 +139,10 @@ public class ConductionArea extends ObstacleArea implements Connectable {
               new IntPoint(bbox.ll.x - maxCl, bbox.ll.y - maxCl),
               new IntPoint(bbox.ur.x + maxCl, bbox.ur.y + maxCl));
 
-      java.util.List<java.awt.geom.Area> foreignClearances = new java.util.ArrayList<>();
-      java.util.List<java.awt.geom.Area> sameNetClearances = new java.util.ArrayList<>();
-      java.util.List<java.awt.geom.Area> sameNetSpokesList = new java.util.ArrayList<>();
+      java.util.List<app.freerouting.geometry.planar.PlanarArea> foreignClearances =
+          new java.util.ArrayList<>();
+      java.util.List<app.freerouting.geometry.planar.PlanarArea> sameNetClearances =
+          new java.util.ArrayList<>();
 
       Set<SearchTreeObject> overlaps = this.board.overlappingObjects(inflatedBbox, layerIndex);
       for (SearchTreeObject ob : overlaps) {
@@ -169,45 +172,42 @@ public class ConductionArea extends ObstacleArea implements Connectable {
             }
 
             Shape enlargedShape = shape.enlarge(clearanceDist);
-            java.awt.geom.Area clearanceAwt = getAwtAreaFromShapeInBoardUnits(enlargedShape);
-            if (clearanceAwt == null) {
+            app.freerouting.geometry.planar.PlanarArea clearanceArea =
+                app.freerouting.geometry.planar.PlanarArea.fromShape(enlargedShape);
+            if (clearanceArea == null || clearanceArea.isEmpty()) {
               continue;
             }
 
             IntBox itemBbox = drillItem.boundingBox();
-            double maxDim = Math.max(itemBbox.width(), itemBbox.height());
-            double expansionRadiusBoard = (maxDim / 2.0) + clearanceDist;
+            double expansionRadiusBoard =
+                Math.hypot(itemBbox.width() / 2.0, itemBbox.height() / 2.0)
+                    + clearanceDist
+                    + spokeWidth;
+            double spokeLength = 2 * expansionRadiusBoard;
 
-            double halfSpoke = spokeWidth / 2.0;
-            java.awt.geom.Rectangle2D.Double baseSpoke =
-                new java.awt.geom.Rectangle2D.Double(
-                    center.x - halfSpoke,
-                    center.y - expansionRadiusBoard,
-                    spokeWidth,
-                    2 * expansionRadiusBoard);
+            app.freerouting.geometry.planar.PlanarArea spoke1 =
+                app.freerouting.geometry.planar.PlanarArea.createRotatedSpoke(
+                    center.x, center.y, spokeWidth, spokeLength, Math.PI / 4.0);
+            app.freerouting.geometry.planar.PlanarArea spoke2 =
+                app.freerouting.geometry.planar.PlanarArea.createRotatedSpoke(
+                    center.x, center.y, spokeWidth, spokeLength, -Math.PI / 4.0);
+            app.freerouting.geometry.planar.PlanarArea spokes = spoke1.union(spoke2);
 
-            java.awt.geom.AffineTransform rotP45 =
-                java.awt.geom.AffineTransform.getRotateInstance(Math.PI / 4.0, center.x, center.y);
-            java.awt.geom.AffineTransform rotM45 =
-                java.awt.geom.AffineTransform.getRotateInstance(-Math.PI / 4.0, center.x, center.y);
-
-            java.awt.geom.Area spokes =
-                new java.awt.geom.Area(rotP45.createTransformedShape(baseSpoke));
-            spokes.add(new java.awt.geom.Area(rotM45.createTransformedShape(baseSpoke)));
-
-            spokes.intersect(clearanceAwt);
-
-            sameNetClearances.add(clearanceAwt);
-            sameNetSpokesList.add(spokes);
+            app.freerouting.geometry.planar.PlanarArea thermalCutout =
+                clearanceArea.difference(spokes);
+            if (!thermalCutout.isEmpty()) {
+              sameNetClearances.add(thermalCutout);
+            }
           }
         } else {
           if (currentItem instanceof DrillItem drillItem) {
             Shape shape = drillItem.getShapeOnLayer(layerIndex);
             if (shape != null) {
               Shape enlargedShape = shape.enlarge(clearanceDist);
-              java.awt.geom.Area clearanceAwt = getAwtAreaFromShapeInBoardUnits(enlargedShape);
-              if (clearanceAwt != null) {
-                foreignClearances.add(clearanceAwt);
+              app.freerouting.geometry.planar.PlanarArea clearanceArea =
+                  app.freerouting.geometry.planar.PlanarArea.fromShape(enlargedShape);
+              if (clearanceArea != null && !clearanceArea.isEmpty()) {
+                foreignClearances.add(clearanceArea);
               }
             }
           } else {
@@ -217,9 +217,10 @@ public class ConductionArea extends ObstacleArea implements Connectable {
                 TileShape tileShape = currentItem.getTileShape(i);
                 if (tileShape != null) {
                   Shape enlargedShape = tileShape.enlarge(clearanceDist);
-                  java.awt.geom.Area clearanceAwt = getAwtAreaFromShapeInBoardUnits(enlargedShape);
-                  if (clearanceAwt != null) {
-                    foreignClearances.add(clearanceAwt);
+                  app.freerouting.geometry.planar.PlanarArea clearanceArea =
+                      app.freerouting.geometry.planar.PlanarArea.fromShape(enlargedShape);
+                  if (clearanceArea != null && !clearanceArea.isEmpty()) {
+                    foreignClearances.add(clearanceArea);
                   }
                 }
               }
@@ -228,91 +229,11 @@ public class ConductionArea extends ObstacleArea implements Connectable {
         }
       }
 
-      for (java.awt.geom.Area fa : foreignClearances) {
-        fillArea.subtract(fa);
-      }
-      for (java.awt.geom.Area sa : sameNetClearances) {
-        fillArea.subtract(sa);
-      }
-      for (java.awt.geom.Area sp : sameNetSpokesList) {
-        fillArea.add(sp);
-      }
+      fillArea = fillArea.subtractAll(foreignClearances);
+      fillArea = fillArea.subtractAll(sameNetClearances);
     }
     cachedBoardFillArea = fillArea;
     cachedBoardRevision = this.board.getRevision();
-  }
-
-  private static java.awt.geom.Area getAwtAreaInBoardUnits(Area area) {
-    if (area == null || area.isEmpty()) {
-      return null;
-    }
-    if (area instanceof app.freerouting.geometry.planar.Circle circle) {
-      double radius = circle.radius;
-      double diameter = 2 * radius;
-      return new java.awt.geom.Area(
-          new java.awt.geom.Ellipse2D.Double(
-              circle.center.x - radius, circle.center.y - radius, diameter, diameter));
-    }
-
-    Shape borderShape = area.getBorder();
-    if (!(borderShape instanceof app.freerouting.geometry.planar.PolylineShape border)
-        || !border.isBounded()) {
-      return null;
-    }
-
-    java.awt.geom.Path2D.Double borderPath = new java.awt.geom.Path2D.Double();
-    int count = border.borderLineCount();
-    if (count > 0) {
-      FloatPoint p0 = border.cornerApprox(0);
-      borderPath.moveTo(p0.x, p0.y);
-      for (int i = 1; i < count; i++) {
-        FloatPoint pi = border.cornerApprox(i);
-        borderPath.lineTo(pi.x, pi.y);
-      }
-      borderPath.closePath();
-    }
-    java.awt.geom.Area awtArea = new java.awt.geom.Area(borderPath);
-
-    Shape[] holes = area.getHoles();
-    for (Shape hole : holes) {
-      java.awt.geom.Area holeArea = getAwtAreaFromShapeInBoardUnits(hole);
-      if (holeArea != null) {
-        awtArea.subtract(holeArea);
-      }
-    }
-    return awtArea;
-  }
-
-  private static java.awt.geom.Area getAwtAreaFromShapeInBoardUnits(Shape shape) {
-    if (shape == null) {
-      return null;
-    }
-    if (shape instanceof app.freerouting.geometry.planar.Circle circle) {
-      double radius = circle.radius;
-      double diameter = 2 * radius;
-      return new java.awt.geom.Area(
-          new java.awt.geom.Ellipse2D.Double(
-              circle.center.x - radius, circle.center.y - radius, diameter, diameter));
-    }
-    if (shape instanceof IntBox box) {
-      return new java.awt.geom.Area(
-          new java.awt.geom.Rectangle2D.Double(box.ll.x, box.ll.y, box.width(), box.height()));
-    }
-    if (shape instanceof app.freerouting.geometry.planar.PolylineShape poly) {
-      java.awt.geom.Path2D.Double path = new java.awt.geom.Path2D.Double();
-      int count = poly.borderLineCount();
-      if (count > 0) {
-        FloatPoint p0 = poly.cornerApprox(0);
-        path.moveTo(p0.x, p0.y);
-        for (int i = 1; i < count; i++) {
-          FloatPoint pi = poly.cornerApprox(i);
-          path.lineTo(pi.x, pi.y);
-        }
-        path.closePath();
-      }
-      return new java.awt.geom.Area(path);
-    }
-    return null;
   }
 
   @Override

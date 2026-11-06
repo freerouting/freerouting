@@ -28,7 +28,6 @@ import app.freerouting.settings.sources.DefaultSettings;
 import app.freerouting.util.TextManager;
 import app.freerouting.util.gson.GsonProvider;
 import com.google.gson.annotations.SerializedName;
-import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -137,13 +136,13 @@ public class BoardStatistics implements Serializable {
 
     // Board
     this.board.boundingBox =
-        new Rectangle2D.Float(
+        new BoardStatisticsRectangle(
             (float) bb.ll.x,
             (float) bb.ll.y,
             (float) (bb.ur.x - bb.ll.x),
             (float) (bb.ur.y - bb.ll.y));
     this.board.size =
-        new Rectangle2D.Float(
+        new BoardStatisticsRectangle(
             0,
             0,
             Math.abs((float) board.getBoundingBox().ll.x - (float) board.getBoundingBox().ur.x),
@@ -433,13 +432,13 @@ public class BoardStatistics implements Serializable {
 
       // Board
       this.board.boundingBox =
-          new Rectangle2D.Float(
+          new BoardStatisticsRectangle(
               (float) Unit.scale(this.board.boundingBox.x, fromUnit, toUnit),
               (float) Unit.scale(this.board.boundingBox.y, fromUnit, toUnit),
               (float) Unit.scale(this.board.boundingBox.width, fromUnit, toUnit),
               (float) Unit.scale(this.board.boundingBox.height, fromUnit, toUnit));
       this.board.size =
-          new Rectangle2D.Float(
+          new BoardStatisticsRectangle(
               0,
               0,
               (float) Unit.scale(this.board.size.width, fromUnit, toUnit),

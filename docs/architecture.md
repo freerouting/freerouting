@@ -235,8 +235,8 @@ Architectural boundaries are codified in `src/test/java/app/freerouting/architec
     and action threads; it must not depend on `gui.interactive`.
   - `board` and `autoroute` must not depend on `gui.rendering`; rendering is GUI-owned.
   - Pipeline/support packages (`board`, `rules`, `autoroute`, `drc`, `geometry`, `datastructures`,
-    `settings`, `logger`, `debug`, `util`, `io`, `core`, `analytics`) must not depend on Swing or on
-    AWT types outside `java.awt.geom`.
+    `settings`, `logger`, `debug`, `util`, `io`, `core`, `analytics`, `cli`, `startup`) must not depend on Swing or on
+    any AWT / `java.desktop` types (`java.awt..`).
   - `io.specctra.parser` internals must not be used outside `io..` (the `io.kicad` importer is an allowed consumer).
   - `gui.workspace`, `gui.interactive`, and `gui.rendering` must stay cycle-free (slices rule).
   - Background workspace workers (`InteractiveActionThread`, `GuiRoutingJobWorker`) must reach
