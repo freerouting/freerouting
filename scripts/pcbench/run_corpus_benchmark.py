@@ -103,6 +103,7 @@ try:
     if hasattr(sys.stderr, "reconfigure"):
         sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 except Exception:
+    # Ignore terminal reconfiguration errors in environments that do not support it
     pass
 
 # Enable ANSI colors on Windows Console
@@ -116,6 +117,7 @@ if sys.platform == "win32":
         if kernel32.GetConsoleMode(handle, ctypes.byref(mode)):
             kernel32.SetConsoleMode(handle, mode.value | 0x0004)
     except Exception:
+        # Ignore ANSI initialization failure on non-standard Windows consoles
         pass
 
 REPORT_GENERATION_INTERVAL_SECONDS = 600.0
@@ -137,6 +139,7 @@ def trigger_report_generation(*, verbose: bool = False) -> bool:
         if proc.returncode == 0:
             return True
     except Exception:
+        # PowerShell runner failed; fall back to direct Python generator
         pass
 
     # Direct Python fallback
@@ -152,6 +155,7 @@ def trigger_report_generation(*, verbose: bool = False) -> bool:
             )
             return proc.returncode == 0
     except Exception:
+        # Background report generation is non-fatal to live benchmarking
         pass
     return False
 
@@ -220,6 +224,7 @@ def main() -> int:
             if lock_file.exists():
                 existing_info = f" ({lock_file.read_text(encoding='utf-8').strip()})"
         except Exception:
+            # Lock file might have been removed or locked by sibling process
             pass
         print(
             f"\n{C_BRED}Error: Another instance of the benchmark is already running!{C_RESET}\n"
@@ -235,6 +240,7 @@ def main() -> int:
         try:
             stray_ses.unlink(missing_ok=True)
         except OSError:
+            # File may already be deleted or locked
             pass
 
     atexit.register(proc_lock.release)
@@ -273,6 +279,7 @@ def main() -> int:
         try:
             bench_data = json.loads(benchmarks_json.read_text(encoding="utf-8"))
         except Exception:
+            # Ignore malformed or incomplete existing benchmarks file
             pass
 
     existing_runs = {r.get("cache_key"): r for r in bench_data.get("runs", []) if r.get("cache_key")}
@@ -355,6 +362,7 @@ def main() -> int:
                     if ver_runs:
                         save_version_runs(benchmarks_json.parent, args.version_label, ver_runs)
                 except Exception:
+                    # Ignore version save errors during atomic file swap
                     pass
             return True
         except PermissionError:
@@ -363,6 +371,7 @@ def main() -> int:
             try:
                 tmp_file.unlink(missing_ok=True)
             except OSError:
+                # Temp file may have already been replaced
                 pass
 
     last_corpus_save_at: list[float | None] = [None]
@@ -383,6 +392,7 @@ def main() -> int:
         try:
             clear_run_journal()
         except PermissionError:
+            # Another process holds the journal open; will clear next cycle
             pass
         return "saved"
 
@@ -397,6 +407,7 @@ def main() -> int:
             try:
                 append_version_run(benchmarks_json.parent, args.version_label, record)
             except Exception:
+                # Version JSONL append is non-fatal to corpus progression
                 pass
         outcome = save_corpus()
         if outcome != "saved" and not journal_saved:
@@ -408,6 +419,7 @@ def main() -> int:
             try:
                 clear_run_journal()
             except PermissionError:
+                # Journal lock will release when process exits
                 pass
             print(
                 "All requested boards are already benchmarked in benchmarks.json! Regenerating reports...",
@@ -575,6 +587,7 @@ def main() -> int:
                 try:
                     p.kill()
                 except (ProcessLookupError, OSError):
+                    # Process may have already exited
                     pass
         else:
             cancel_event.set()
@@ -606,9 +619,11 @@ def main() -> int:
                             try:
                                 msvcrt.getch()
                             except Exception:
+                                # Consume extended key byte
                                 pass
                     time.sleep(0.05)
             except Exception:
+                # Keyboard monitoring unavailable
                 pass
         elif hasattr(sys, "stdin") and sys.stdin.isatty():
             try:
@@ -635,6 +650,7 @@ def main() -> int:
                 finally:
                     termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
             except Exception:
+                # Raw tty mode unavailable
                 pass
 
     with worker_lock:
@@ -664,6 +680,7 @@ def main() -> int:
                                 )
                             last_reported_completed = completed
                 except Exception:
+                    # Periodic report generation failure is non-fatal
                     pass
             last_report_at = now
 
@@ -700,6 +717,7 @@ def main() -> int:
                 try:
                     save_corpus()
                 except OSError:
+                    # Ignore save failure on transient lock; journal retains entry
                     pass
                 trigger_render()
                 continue
@@ -790,6 +808,7 @@ def main() -> int:
                 try:
                     p.kill()
                 except (ProcessLookupError, OSError):
+                    # Process may have already exited
                     pass
         for t in worker_threads:
             t.join(timeout=0.5)
@@ -801,6 +820,7 @@ def main() -> int:
             try:
                 stray_ses.unlink(missing_ok=True)
             except OSError:
+                # Stray SES cleanup is best-effort
                 pass
 
     if force_kill_event.is_set():

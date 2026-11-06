@@ -147,6 +147,7 @@ def load_all_runs(results_dir: Path) -> dict[str, dict[str, Any]]:
                     if ck and ck not in cache:
                         cache[ck] = run
         except Exception:
+            # Ignore unreadable or malformed version JSON files
             pass
 
     # 3. Check unified benchmarks.json for any new or updated runs
@@ -164,6 +165,7 @@ def load_all_runs(results_dir: Path) -> dict[str, dict[str, Any]]:
                             new_runs_found = True
                         cache[ck] = run
         except Exception:
+            # Ignore read or parse errors on unified benchmarks.json
             pass
 
     # 4. Check unified benchmarks.jsonl for any additional or newer streamed records
@@ -189,6 +191,7 @@ def load_all_runs(results_dir: Path) -> dict[str, dict[str, Any]]:
             for v, v_runs in by_version.items():
                 save_version_runs(results_dir, v, v_runs)
         except Exception:
+            # Ignore version save errors during background sync
             pass
 
     return cache
@@ -261,6 +264,7 @@ def sync_all(results_dir: Path, retain_versions: set[str] | None = None) -> None
                     try:
                         p.unlink(missing_ok=True)
                     except OSError:
+                        # File may already be removed or temporarily locked
                         pass
 
     # Group by version
