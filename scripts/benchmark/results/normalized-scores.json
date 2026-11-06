@@ -18394,5 +18394,77 @@
   "kitspace_d20_tri_r1.0--unrouted--2.6.0-RC10--ec33f0faa": {
     "router_score": 85.75,
     "is_failed": false
+  },
+  "CoreOne-xCORE200-Original_CoreOne--unrouted--2.6.0-RC10--f08a2c15c": {
+    "router_score": 0.00,
+    "is_failed": true
+  },
+  "VB-IoT1_VB-IoT1_v1--unrouted--2.6.0-RC10--f08a2c15c": {
+    "router_score": 0.00,
+    "is_failed": true
+  },
+  "MonApollo_analog-board--unrouted--2.6.0-RC10--f08a2c15c": {
+    "router_score": 0.00,
+    "is_failed": true
+  },
+  "kitspace_OtterCastAudioV2--unrouted--2.6.0-RC10--f08a2c15c": {
+    "router_score": 407.41,
+    "is_failed": false
+  },
+  "Aleste-520EX_aleste--unrouted--2.6.0-RC10--f08a2c15c": {
+    "router_score": 0.00,
+    "is_failed": true
+  },
+  "mini_mass_prog_bench_prog_rig--unrouted--2.6.0-RC10--f08a2c15c": {
+    "router_score": 1000.00,
+    "is_failed": false
+  },
+  "dorkyboard_keyboard--unrouted--2.6.0-RC10--f08a2c15c": {
+    "router_score": 0.00,
+    "is_failed": true
+  },
+  "KiCad-Library_Teensy_test_layout--unrouted--2.6.0-RC10--f08a2c15c": {
+    "router_score": 997.91,
+    "is_failed": false
+  },
+  "RainbowFox_RainbowFox--unrouted--2.6.0-RC10--f08a2c15c": {
+    "router_score": 1000.00,
+    "is_failed": false
+  },
+  "mechkeys_lfk_revd--unrouted--2.6.0-RC10--f08a2c15c": {
+    "router_score": 0.00,
+    "is_failed": true
+  },
+  "karabas-nano_karabas-nano-revG--unrouted--2.6.0-RC10--f08a2c15c": {
+    "router_score": 949.61,
+    "is_failed": false
+  },
+  "sbc_sbc--unrouted--2.6.0-RC10--f08a2c15c": {
+    "router_score": 925.20,
+    "is_failed": false
+  },
+  "TCKB_Kicad_TCKB--unrouted--2.6.0-RC10--f08a2c15c": {
+    "router_score": 937.47,
+    "is_failed": false
+  },
+  "zx-sizif-512-ext_sizif512ext--unrouted--2.6.0-RC10--f08a2c15c": {
+    "router_score": 911.65,
+    "is_failed": false
+  },
+  "LeeChee_1800--unrouted--2.6.0-RC10--f08a2c15c": {
+    "router_score": 977.17,
+    "is_failed": false
+  },
+  "DSP-ADAU1452_DSP-ADAU1452--unrouted--2.6.0-RC10--f08a2c15c": {
+    "router_score": 949.69,
+    "is_failed": false
+  },
+  "stm32_mech_keyboard_TCKB--unrouted--2.6.0-RC10--f08a2c15c": {
+    "router_score": 0.00,
+    "is_failed": true
+  },
+  "kitspace_XassetteAsterisk--unrouted--2.6.0-RC10--f08a2c15c": {
+    "router_score": 933.78,
+    "is_failed": false
   }
 }

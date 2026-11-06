@@ -22,9 +22,11 @@ _benchmark_dir = Path(__file__).resolve().parents[1] / "benchmark"
 if str(_benchmark_dir) not in sys.path:
     sys.path.insert(0, str(_benchmark_dir))
 try:
-    from benchmark_store import render_compact
+    from benchmark_store import append_version_run, render_compact, save_version_runs
 except ImportError:
+    append_version_run = None
     render_compact = None
+    save_version_runs = None
 
 # Re-export analysis, runner, and UI helpers for backward compatibility and test suites
 from pcbench_analysis import (
@@ -343,6 +345,17 @@ def main() -> int:
                 content = json.dumps(bench_data, separators=(",", ":")) + "\n"
             tmp_file.write_text(content, encoding="utf-8")
             replace_file_retrying(tmp_file, benchmarks_json, attempts=attempts)
+            if save_version_runs:
+                try:
+                    ver_runs = [
+                        r
+                        for r in existing_runs.values()
+                        if (r.get("binary") or {}).get("version_label") == args.version_label
+                    ]
+                    if ver_runs:
+                        save_version_runs(benchmarks_json.parent, args.version_label, ver_runs)
+                except Exception:
+                    pass
             return True
         except PermissionError:
             return False
@@ -380,6 +393,11 @@ def main() -> int:
             journal_saved = True
         except PermissionError:
             journal_saved = False
+        if append_version_run:
+            try:
+                append_version_run(benchmarks_json.parent, args.version_label, record)
+            except Exception:
+                pass
         outcome = save_corpus()
         if outcome != "saved" and not journal_saved:
             return "unsaved"

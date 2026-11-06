@@ -117,23 +117,24 @@ def load_version_runs(results_dir: Path, version: str) -> list[dict[str, Any]]:
 def load_all_runs(results_dir: Path) -> dict[str, dict[str, Any]]:
     """Loads all benchmark runs indexed by cache_key.
 
-    Checks per-version storage (versions/benchmarks-*.jsonl or .json) first,
-    falls back to benchmarks.jsonl, and finally benchmarks.json.
+    Merges per-version storage (versions/benchmarks-*.jsonl or .json) with
+    unified benchmarks.json so newly added runs are never missed.
     """
     v_dir = get_versions_dir(results_dir)
     cache: dict[str, dict[str, Any]] = {}
 
     jsonl_files = sorted(v_dir.glob("benchmarks-*.jsonl"))
+    versions_mtime = max((p.stat().st_mtime for p in jsonl_files), default=0.0)
+
     if jsonl_files:
         for p in jsonl_files:
             for run in load_runs_from_jsonl(p):
                 ck = run.get("cache_key")
                 if ck:
                     cache[ck] = run
-        return cache
-
-    json_files = sorted(v_dir.glob("benchmarks-*.json"))
-    if json_files:
+    else:
+        json_files = sorted(v_dir.glob("benchmarks-*.json"))
+        versions_mtime = max((p.stat().st_mtime for p in json_files), default=0.0)
         for p in json_files:
             try:
                 with open(p, "r", encoding="utf-8") as f:
@@ -144,27 +145,44 @@ def load_all_runs(results_dir: Path) -> dict[str, dict[str, Any]]:
                             cache[ck] = run
             except Exception:
                 pass
-        return cache
 
-    # Fall back to unified benchmarks.jsonl
-    unified_jsonl = results_dir / "benchmarks.jsonl"
-    if unified_jsonl.exists():
-        for run in load_runs_from_jsonl(unified_jsonl):
-            ck = run.get("cache_key")
-            if ck:
-                cache[ck] = run
-        return cache
-
-    # Fall back to monolithic benchmarks.json
+    # Check unified benchmarks.json for any new or updated runs
     unified_json = results_dir / "benchmarks.json"
+    new_runs_found = False
     if unified_json.exists():
+        unified_mtime = unified_json.stat().st_mtime
         try:
             with open(unified_json, "r", encoding="utf-8") as f:
                 data = json.load(f)
                 for run in data.get("runs", []):
                     ck = run.get("cache_key")
-                    if ck:
+                    if ck and (ck not in cache or unified_mtime > versions_mtime):
+                        if ck not in cache:
+                            new_runs_found = True
                         cache[ck] = run
+        except Exception:
+            pass
+
+    # Fall back to unified benchmarks.jsonl if still empty
+    if not cache:
+        unified_jsonl = results_dir / "benchmarks.jsonl"
+        if unified_jsonl.exists():
+            for run in load_runs_from_jsonl(unified_jsonl):
+                ck = run.get("cache_key")
+                if ck:
+                    cache[ck] = run
+
+    # If new runs were found in benchmarks.json that weren't in versions/, synchronize them
+    if new_runs_found and cache:
+        try:
+            from collections import defaultdict
+
+            by_version: dict[str, list[dict[str, Any]]] = defaultdict(list)
+            for r in cache.values():
+                v = (r.get("binary") or {}).get("version_label") or "unknown"
+                by_version[v].append(r)
+            for v, v_runs in by_version.items():
+                save_version_runs(results_dir, v, v_runs)
         except Exception:
             pass
 
@@ -178,6 +196,8 @@ def save_version_runs(
     schema_version: int = 1,
 ) -> None:
     """Saves runs for a specific version into per-version JSON and JSONL files."""
+    if not runs:
+        return
     v_dir = get_versions_dir(results_dir)
     v_dir.mkdir(parents=True, exist_ok=True)
 

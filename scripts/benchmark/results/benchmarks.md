@@ -1,5 +1,5 @@
 # Freerouting Nightly Benchmarks Report
-Generated on: 2026-11-05 18:33:12
+Generated on: 2026-11-06 07:44:36
 System: AMD Ryzen 5 3600 6-Core Processor (6 Cores, 31.9 GB RAM)
 
 This report lists the latest benchmark run results for each Freerouting version and fixture combination.
@@ -14,7 +14,7 @@ Comprehensive performance across all benchmark fixtures.
 | 1.9.0      |     1142 |  413/1142 ( 36.2%) |  563/1142 ( 49.3%) |   25/1142 (  2.2%) |   30/1142 (  2.6%) |     2469.6 |      935.8 |
 | 2.4.1      |     1142 |  357/1142 ( 31.3%) |  597/1142 ( 52.3%) |   74/1142 (  6.5%) |    0/1142 (  0.0%) |     3151.6 |      946.6 |
 | 2.5.0      |     1142 |  859/1142 ( 75.2%) |  862/1142 ( 75.5%) |   78/1142 (  6.8%) |    0/1142 (  0.0%) |     2984.9 |      971.5 |
-| 2.6.0-RC10 |     1128 | 1021/1128 ( 90.5%) | 1022/1128 ( 90.6%) |    5/1128 (  0.4%) |    4/1128 (  0.4%) |     7835.8 |  **987.8** |
+| 2.6.0-RC10 |     1142 | 1023/1142 ( 89.6%) | 1024/1142 ( 89.7%) |   10/1142 (  0.9%) |    7/1142 (  0.6%) |    11271.4 |  **984.4** |
 
 ### Timeout Summary
 Breakdown of timeouts by routing stage and configured job timeout budget across all benchmark fixtures.
@@ -24,7 +24,7 @@ Breakdown of timeouts by routing stage and configured job timeout budget across 
 | 1.9.0      |             25 |                  0 |          25 |         0 |               360m |
 | 2.4.1      |             74 |                  0 |          73 |         1 |             1m-30m |
 | 2.5.0      |             78 |                  0 |          48 |        30 |             5m-45m |
-| 2.6.0-RC10 |              5 |                  0 |           2 |         3 |               360m |
+| 2.6.0-RC10 |             10 |                  0 |           3 |         7 |               360m |
 
 ### Tier A: Canary Gate
 Fast-solving 2-layer boards (0 unrouted, 0 clearance violations expected).
@@ -54,7 +54,7 @@ Dense and 6+ layer boards requiring deeper pathfinding.
 | 1.9.0      |      141 |   23/ 141 ( 16.3%) |   34/ 141 ( 24.1%) |   10/ 141 (  7.1%) |   13/ 141 (  9.2%) |      954.9 |      869.5 |
 | 2.4.1      |      141 |   18/ 141 ( 12.8%) |   36/ 141 ( 25.5%) |   18/ 141 ( 12.8%) |    0/ 141 (  0.0%) |     1333.5 |      918.4 |
 | 2.5.0      |      141 |   70/ 141 ( 49.6%) |   71/ 141 ( 50.4%) |   25/ 141 ( 17.7%) |    0/ 141 (  0.0%) |     1007.4 |      952.5 |
-| 2.6.0-RC10 |      141 |  109/ 141 ( 77.3%) |  109/ 141 ( 77.3%) |    1/ 141 (  0.7%) |    3/ 141 (  2.1%) |     4291.7 |  **970.2** |
+| 2.6.0-RC10 |      141 |  109/ 141 ( 77.3%) |  109/ 141 ( 77.3%) |    1/ 141 (  0.7%) |    3/ 141 (  2.1%) |     4342.1 |  **970.2** |
 
 ### Tier D: Extreme Stress / Diagnostic
 High net-count and large surface-area stress boards.
@@ -64,7 +64,7 @@ High net-count and large surface-area stress boards.
 | 1.9.0      |       22 |    0/  22 (  0.0%) |    0/  22 (  0.0%) |   14/  22 ( 63.6%) |   14/  22 ( 63.6%) |      452.8 |      274.5 |
 | 2.4.1      |       22 |    0/  22 (  0.0%) |    0/  22 (  0.0%) |    9/  22 ( 40.9%) |    0/  22 (  0.0%) |      420.8 |      671.4 |
 | 2.5.0      |       22 |    2/  22 (  9.1%) |    2/  22 (  9.1%) |   22/  22 (100.0%) |    0/  22 (  0.0%) |      600.4 |  **742.5** |
-| 2.6.0-RC10 |        8 |    2/   8 ( 25.0%) |    2/   8 ( 25.0%) |    4/   8 ( 50.0%) |    1/   8 ( 12.5%) |     1793.5 |      740.7 |
+| 2.6.0-RC10 |       22 |    4/  22 ( 18.2%) |    4/  22 ( 18.2%) |    9/  22 ( 40.9%) |    4/  22 ( 18.2%) |     5178.6 |      723.4 |
 
 ## Group: [PCBench](../fixtures/PCBench)
 
@@ -402,12 +402,12 @@ Size: 49.6 kB · Layers: 2 · Nets: 36 · Components: 35 · Dimensions: 96.52 x 
 
 Size: 144.4 kB · Layers: 2 · Nets: 243 · Components: 313 · Dimensions: 334.01 x 193.04 mm (644.77 cm²) · CAD: KiCad's Pcbnew (v)
 
-| Version    | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes           |
-| :--------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
-| 1.9.0      | N/A  |                N/A |        N/A |        N/A |      N/A |       N/A |   0+  6+  0 |       37 |        302 |     0 |         0 |        0.0 |  511 / 0 | FAILED, TIMEOUT |
-| 2.4.1      | N/A  |                N/A |        N/A |    1805.45 |      N/A |   1805.45 |   0+  1+  0 |      875 |        219 |   311 |       615 |  1683613.8 |    3 / 0 | TIMEOUT         |
-| 2.5.0      | N/A  |                N/A |      34.74 |    2664.69 |      N/A |   2699.43 |   0+  2+  0 |      446 |         48 |   639 |       514 |  1037978.9 |    3 / 0 | TIMEOUT         |
-| 2.6.0-RC10 | N/A  |   72/  88 ( 81.8%) |       6.88 |    2953.28 |      N/A |   2960.16 |   6+ 22+  0 |        0 |          0 |     0 |       624 |     1302.8 |    2 / 0 | FAILED          |
+| Version    | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes                                   |
+| :--------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------------------------------- |
+| 1.9.0      | N/A  |                N/A |        N/A |        N/A |      N/A |       N/A |   0+  6+  0 |       37 |        302 |     0 |         0 |        0.0 |  511 / 0 | FAILED, TIMEOUT                         |
+| 2.4.1      | N/A  |                N/A |        N/A |    1805.45 |      N/A |   1805.45 |   0+  1+  0 |      875 |        219 |   311 |       615 |  1683613.8 |    3 / 0 | TIMEOUT                                 |
+| 2.5.0      | N/A  |                N/A |      34.74 |    2664.69 |      N/A |   2699.43 |   0+  2+  0 |      446 |         48 |   639 |       514 |  1037978.9 |    3 / 0 | TIMEOUT                                 |
+| 2.6.0-RC10 | N/A  |   72/  88 ( 81.8%) |      30.27 |    3388.57 |      N/A |   3418.84 |   6+ 18+  0 |        0 |          0 |     0 |       632 |     1225.3 |    4 / 0 | FAILED, TIMEOUT, SocketTimeoutException |
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Amiga-A1012-PCB_Amiga-A1012/unrouted.dsn)
 
@@ -990,7 +990,7 @@ Size: 100.7 kB · Layers: 4 · Nets: 133 · Components: 389 · Dimensions: 100.0
 | 1.9.0      | N/A  |                N/A |        N/A |     466.50 |   440.23 |    906.73 |   0+  0+  0 |        4 |         25 |   993 |       273 |     4096.0 |    1 / 0 |        |
 | 2.4.1      | N/A  |                N/A |        N/A |    1830.03 |      N/A |   1830.03 |   0+  8+  0 |        2 |         33 |   997 |       821 |  2960275.8 |    3 / 0 |        |
 | 2.5.0      | N/A  |                N/A |     139.09 |     836.59 |     0.00 |    975.68 |   0+ 18+  0 |        4 |          0 |   993 |       512 |   368514.2 |    2 / 0 |        |
-| 2.6.0-RC10 | N/A  |  867/ 878 ( 98.7%) |      44.11 |     358.34 |      N/A |    402.45 |  15+  9+  0 |        0 |          0 |     0 |       372 |      100.0 |    2 / 0 | FAILED |
+| 2.6.0-RC10 | N/A  |  867/ 878 ( 98.7%) |      58.19 |     307.57 |      N/A |    365.76 |  15+  9+  0 |        0 |          0 |     0 |       379 |       98.8 |    2 / 0 | FAILED |
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/CubeSAT-Reaction-Wheel_Edison_Motor_Servo/unrouted.dsn)
 
@@ -1095,11 +1095,12 @@ Size: 34.3 kB · Layers: 2 · Nets: 40 · Components: 88 · Dimensions: 141.83 x
 
 Size: 79.4 kB · Layers: 4 · Nets: 116 · Components: 377 · Dimensions: 100.0 x 100.0 mm (100.0 cm²) · CAD: KiCad's Pcbnew (v)
 
-| Version | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes           |
-| :------ | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
-| 1.9.0   | N/A  |                N/A |        N/A |        N/A |      N/A |       N/A |   0+ 16+  1 |       55 |          0 |     0 |         0 |        0.0 |  354 / 0 | FAILED, TIMEOUT |
-| 2.4.1   | N/A  |                N/A |        N/A |    1818.59 |      N/A |   1818.59 |   0+  4+  0 |       36 |          0 |   935 |       636 |  2660612.2 |    3 / 0 |                 |
-| 2.5.0   | N/A  |                N/A |      55.64 |    2646.28 |      N/A |   2701.92 |   0+ 13+  0 |       38 |          0 |   932 |       509 |  1164862.8 |    2 / 0 | TIMEOUT         |
+| Version    | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes           |
+| :--------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
+| 1.9.0      | N/A  |                N/A |        N/A |        N/A |      N/A |       N/A |   0+ 16+  1 |       55 |          0 |     0 |         0 |        0.0 |  354 / 0 | FAILED, TIMEOUT |
+| 2.4.1      | N/A  |                N/A |        N/A |    1818.59 |      N/A |   1818.59 |   0+  4+  0 |       36 |          0 |   935 |       636 |  2660612.2 |    3 / 0 |                 |
+| 2.5.0      | N/A  |                N/A |      55.64 |    2646.28 |      N/A |   2701.92 |   0+ 13+  0 |       38 |          0 |   932 |       509 |  1164862.8 |    2 / 0 | TIMEOUT         |
+| 2.6.0-RC10 | N/A  |                N/A |      17.29 |    4737.87 |  1611.15 |   6366.31 |   0+ 42+  1 |       17 |          0 |   950 |      1311 |  7571894.0 |    4 / 0 | TIMEOUT         |
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/DaWeather---Project__autosave-CarteDaWeather/unrouted.dsn)
 
@@ -2447,11 +2448,12 @@ Size: 12.8 kB · Layers: 2 · Nets: 21 · Components: 9 · Dimensions: 50.8 x 40
 
 Size: 161.3 kB · Layers: 2 · Nets: 248 · Components: 1441 · Dimensions: 254.0 x 127.0 mm (322.58 cm²) · CAD: KiCad's Pcbnew (v)
 
-| Version | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes           |
-| :------ | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
-| 1.9.0   | N/A  |                N/A |        N/A |    1605.72 |      N/A |   1605.72 |   0+ 20+  0 |       19 |        111 |     0 |         0 |        0.0 |   23 / 0 | FAILED, TIMEOUT |
-| 2.4.1   | N/A  |                N/A |        N/A |    1815.47 |      N/A |   1815.47 |   0+  2+  0 |       85 |        111 |   911 |       746 |  2820708.5 |    3 / 0 | TIMEOUT         |
-| 2.5.0   | N/A  |                N/A |      32.27 |    2676.60 |      N/A |   2708.87 |   0+ 15+  0 |       16 |         79 |   983 |       555 |   918016.9 |    3 / 0 | TIMEOUT         |
+| Version    | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes           |
+| :--------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
+| 1.9.0      | N/A  |                N/A |        N/A |    1605.72 |      N/A |   1605.72 |   0+ 20+  0 |       19 |        111 |     0 |         0 |        0.0 |   23 / 0 | FAILED, TIMEOUT |
+| 2.4.1      | N/A  |                N/A |        N/A |    1815.47 |      N/A |   1815.47 |   0+  2+  0 |       85 |        111 |   911 |       746 |  2820708.5 |    3 / 0 | TIMEOUT         |
+| 2.5.0      | N/A  |                N/A |      32.27 |    2676.60 |      N/A |   2708.87 |   0+ 15+  0 |       16 |         79 |   983 |       555 |   918016.9 |    3 / 0 | TIMEOUT         |
+| 2.6.0-RC10 | N/A  |                N/A |      14.72 |     472.51 |   501.31 |    988.54 |   0+ 18+  1 |        2 |         79 |   998 |      3885 |  4477221.0 |    5 / 0 |                 |
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/KiCad-Like-a-Pro-Tutorial_proj2-sevensegment/unrouted.dsn)
 
@@ -2710,11 +2712,12 @@ Size: 11.6 kB · Layers: 2 · Nets: 4 · Components: 6 · Dimensions: 42.16 x 24
 
 Size: 480.2 kB · Layers: 2 · Nets: 298 · Components: 587 · Dimensions: 378.41 x 156.86 mm (593.57 cm²) · CAD: KiCad's Pcbnew (v)
 
-| Version | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err   | Notes           |
-| :------ | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | ---------: | :-------------- |
-| 1.9.0   | N/A  |                N/A |        N/A |     454.40 |      N/A |    454.40 |   0+ 20+  1 |       22 |         64 |     0 |         0 |        0.0 | 236955 / 0 | FAILED, TIMEOUT |
-| 2.4.1   | N/A  |                N/A |        N/A |    1817.92 |      N/A |   1817.92 |   0+  1+  0 |      151 |         64 |   827 |       565 |  1934135.5 |    321 / 0 |                 |
-| 2.5.0   | N/A  |                N/A |      39.61 |    2681.75 |      N/A |   2721.36 |   0+ 11+  0 |       84 |          0 |   904 |       611 |   763121.6 |    429 / 0 | TIMEOUT         |
+| Version    | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err   | Notes           |
+| :--------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | ---------: | :-------------- |
+| 1.9.0      | N/A  |                N/A |        N/A |     454.40 |      N/A |    454.40 |   0+ 20+  1 |       22 |         64 |     0 |         0 |        0.0 | 236955 / 0 | FAILED, TIMEOUT |
+| 2.4.1      | N/A  |                N/A |        N/A |    1817.92 |      N/A |   1817.92 |   0+  1+  0 |      151 |         64 |   827 |       565 |  1934135.5 |    321 / 0 |                 |
+| 2.5.0      | N/A  |                N/A |      39.61 |    2681.75 |      N/A |   2721.36 |   0+ 11+  0 |       84 |          0 |   904 |       611 |   763121.6 |    429 / 0 | TIMEOUT         |
+| 2.6.0-RC10 | N/A  |                N/A |      32.97 |    1439.06 |      N/A |   1472.03 |   0+ 18+  0 |       16 |          0 |   977 |      3893 |  3059919.2 |  26009 / 0 | TIMEOUT         |
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/LiFePO4-Charge-Controller_LiFePO4-Charge-Controller/unrouted.dsn)
 
@@ -3149,11 +3152,12 @@ Size: 49.0 kB · Layers: 2 · Nets: 52 · Components: 76 · Dimensions: 62.23 x 
 
 Size: 146.7 kB · Layers: 2 · Nets: 303 · Components: 506 · Dimensions: 200.0 x 150.0 mm (300.0 cm²) · CAD: KiCad's Pcbnew (v)
 
-| Version | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes           |
-| :------ | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
-| 1.9.0   | N/A  |                N/A |        N/A |     855.18 |      N/A |    855.18 |   0+ 20+  1 |       11 |         65 |     0 |         0 |        0.0 |   12 / 0 | FAILED, TIMEOUT |
-| 2.4.1   | N/A  |                N/A |        N/A |    1820.83 |      N/A |   1820.83 |   0+  1+  0 |      172 |         66 |   807 |      1009 |  2360935.5 |    3 / 0 |                 |
-| 2.5.0   | N/A  |                N/A |     102.55 |    1829.71 |   782.49 |   2714.75 |   0+ 16+  1 |        0 |         58 |  1000 |      1515 |   578785.2 |    3 / 0 | TIMEOUT         |
+| Version    | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes           |
+| :--------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
+| 1.9.0      | N/A  |                N/A |        N/A |     855.18 |      N/A |    855.18 |   0+ 20+  1 |       11 |         65 |     0 |         0 |        0.0 |   12 / 0 | FAILED, TIMEOUT |
+| 2.4.1      | N/A  |                N/A |        N/A |    1820.83 |      N/A |   1820.83 |   0+  1+  0 |      172 |         66 |   807 |      1009 |  2360935.5 |    3 / 0 |                 |
+| 2.5.0      | N/A  |                N/A |     102.55 |    1829.71 |   782.49 |   2714.75 |   0+ 16+  1 |        0 |         58 |  1000 |      1515 |   578785.2 |    3 / 0 | TIMEOUT         |
+| 2.6.0-RC10 | N/A  | 1286/1309 ( 98.2%) |      51.60 |     829.27 |      N/A |    880.87 |  20+ 11+  0 |        0 |         58 |     0 |       393 |      277.3 |    3 / 0 | FAILED          |
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/MonApollo_digital-board/unrouted.dsn)
 
@@ -4314,11 +4318,12 @@ Size: 29.6 kB · Layers: 2 · Nets: 0 · Components: 33 · Dimensions: 0.0 x 0.0
 
 Size: 77.5 kB · Layers: 2 · Nets: 79 · Components: 316 · Dimensions: 304.8 x 95.25 mm (290.32 cm²) · CAD: KiCad's Pcbnew (v)
 
-| Version | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes           |
-| :------ | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
-| 1.9.0   | N/A  |                N/A |        N/A |        N/A |      N/A |       N/A |   0+ 15+  0 |        8 |        118 |     0 |         0 |        0.0 |    0 / 0 | FAILED, TIMEOUT |
-| 2.4.1   | N/A  |                N/A |        N/A |     904.94 |      N/A |    904.94 |   0+  2+  0 |      167 |        118 |   685 |       736 |  1011407.8 |    3 / 0 |                 |
-| 2.5.0   | N/A  |                N/A |      19.79 |    1181.22 |      N/A |   1201.01 |   0+  6+  0 |      131 |         52 |   754 |       506 |   440362.4 |    3 / 0 | TIMEOUT         |
+| Version    | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes           |
+| :--------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
+| 1.9.0      | N/A  |                N/A |        N/A |        N/A |      N/A |       N/A |   0+ 15+  0 |        8 |        118 |     0 |         0 |        0.0 |    0 / 0 | FAILED, TIMEOUT |
+| 2.4.1      | N/A  |                N/A |        N/A |     904.94 |      N/A |    904.94 |   0+  2+  0 |      167 |        118 |   685 |       736 |  1011407.8 |    3 / 0 |                 |
+| 2.5.0      | N/A  |                N/A |      19.79 |    1181.22 |      N/A |   1201.01 |   0+  6+  0 |      131 |         52 |   754 |       506 |   440362.4 |    3 / 0 | TIMEOUT         |
+| 2.6.0-RC10 | N/A  |                N/A |      15.10 |       3.45 |   323.24 |    341.79 |   0+  2+  1 |        0 |         22 |  1000 |      3591 |  2588641.5 |    4 / 0 |                 |
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Raspberry-Pi-Soft-Power-Controller_Switching Supply TPS563208 MCI/unrouted.dsn)
 
@@ -4896,11 +4901,12 @@ Size: 107.8 kB · Layers: 2 · Nets: 0 · Components: 75 · Dimensions: 86.36 x 
 
 Size: 98.7 kB · Layers: 2 · Nets: 92 · Components: 383 · Dimensions: 285.0 x 94.6 mm (269.61 cm²) · CAD: KiCad's Pcbnew (v)
 
-| Version | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes           |
-| :------ | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
-| 1.9.0   | N/A  |                N/A |        N/A |        N/A |      N/A |       N/A |   0+ 16+  1 |       27 |         47 |     0 |         0 |        0.0 |    6 / 0 | FAILED, TIMEOUT |
-| 2.4.1   | N/A  |                N/A |        N/A |    1808.69 |      N/A |   1808.69 |   0+  5+  0 |       43 |         47 |   903 |       639 |  1985612.1 |    3 / 0 | TIMEOUT         |
-| 2.5.0   | N/A  |                N/A |      18.80 |    2683.03 |      N/A |   2701.83 |   0+ 18+  0 |       44 |          0 |   902 |       507 |  1043274.6 |    2 / 0 | TIMEOUT         |
+| Version    | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes           |
+| :--------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
+| 1.9.0      | N/A  |                N/A |        N/A |        N/A |      N/A |       N/A |   0+ 16+  1 |       27 |         47 |     0 |         0 |        0.0 |    6 / 0 | FAILED, TIMEOUT |
+| 2.4.1      | N/A  |                N/A |        N/A |    1808.69 |      N/A |   1808.69 |   0+  5+  0 |       43 |         47 |   903 |       639 |  1985612.1 |    3 / 0 | TIMEOUT         |
+| 2.5.0      | N/A  |                N/A |      18.80 |    2683.03 |      N/A |   2701.83 |   0+ 18+  0 |       44 |          0 |   902 |       507 |  1043274.6 |    2 / 0 | TIMEOUT         |
+| 2.6.0-RC10 | N/A  |                N/A |      20.06 |    3082.69 |   962.01 |   4064.76 |   0+ 38+  1 |       21 |          6 |   937 |      3268 |  5113885.0 | 2015 / 0 | TIMEOUT         |
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/TLPHnodeV2_TLPHnodeV2/unrouted.dsn)
 
@@ -5329,7 +5335,7 @@ Size: 184.5 kB · Layers: 4 · Nets: 93 · Components: 178 · Dimensions: 66.0 x
 | 1.9.0      | N/A  |                N/A |        N/A |     529.21 |      N/A |    529.21 |   0+ 19+  1 |        0 |          3 |     0 |         0 |        0.0 |    0 / 0 | FAILED, TIMEOUT |
 | 2.4.1      | N/A  |                N/A |        N/A |     911.10 |      N/A |    911.10 |   0+  1+  0 |      135 |          5 |   693 |       509 |  1059844.0 |    3 / 0 |                 |
 | 2.5.0      | N/A  |                N/A |     154.26 |    1052.96 |      N/A |   1207.22 |   0+  2+  0 |       41 |          0 |   907 |       423 |   296865.4 |    2 / 0 | TIMEOUT         |
-| 2.6.0-RC10 | N/A  |  652/ 732 ( 89.1%) |      88.67 |     517.01 |      N/A |    605.68 |  20+ 11+  0 |        0 |          0 |     0 |       405 |      169.3 |    2 / 0 | FAILED          |
+| 2.6.0-RC10 | N/A  |  652/ 732 ( 89.1%) |      97.14 |     432.67 |      N/A |    529.81 |  20+ 11+  0 |        0 |          0 |     0 |       874 |      156.8 |    2 / 0 | FAILED          |
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/VC4000MultiROM_MultiRomCard/unrouted.dsn)
 
@@ -6715,7 +6721,7 @@ Size: 99.8 kB · Layers: 2 · Nets: 116 · Components: 433 · Dimensions: 436.82
 | 1.9.0      | N/A  |                N/A |        N/A |     759.82 |   301.53 |   1061.35 |   0+  0+  0 |        7 |          0 |   989 |       264 |     4096.0 |    0 / 0 |        |
 | 2.4.1      | N/A  |                N/A |        N/A |    1810.54 |      N/A |   1810.54 |   0+  8+  0 |        5 |          0 |   992 |       858 |  1960061.0 |    3 / 0 |        |
 | 2.5.0      | N/A  |                N/A |      32.62 |    1377.68 |     0.00 |   1410.30 |   0+ 20+  0 |        6 |          0 |   990 |       662 |   697661.3 |    2 / 0 |        |
-| 2.6.0-RC10 | N/A  |  355/ 359 ( 98.9%) |      13.45 |    4603.29 |      N/A |   4616.74 |  35+ 26+  0 |        2 |          0 |     0 |      1633 |     1682.8 |    2 / 0 | FAILED |
+| 2.6.0-RC10 | N/A  |  355/ 359 ( 98.9%) |      12.57 |    9654.09 |      N/A |   9666.66 |  35+ 26+  0 |        2 |          0 |     0 |      2113 |     1714.7 |    2 / 0 | FAILED |
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/draco_draco/unrouted.dsn)
 
@@ -7953,11 +7959,12 @@ Size: 36.0 kB · Layers: 2 · Nets: 0 · Components: 172 · Dimensions: 149.86 x
 
 Size: 129.0 kB · Layers: 2 · Nets: 70 · Components: 157 · Dimensions: 99.57 x 99.57 mm (99.14 cm²) · CAD: KiCad's Pcbnew (v)
 
-| Version | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes           |
-| :------ | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
-| 1.9.0   | N/A  |                N/A |        N/A |        N/A |      N/A |       N/A |   0+ 10+  0 |       33 |        141 |     0 |         0 |        0.0 |   39 / 0 | FAILED, TIMEOUT |
-| 2.4.1   | N/A  |                N/A |        N/A |     905.42 |      N/A |    905.42 |   0+  2+  0 |      123 |         10 |   742 |       739 |  1365398.0 |    3 / 0 | TIMEOUT         |
-| 2.5.0   | N/A  |                N/A |      40.19 |    1162.06 |      N/A |   1202.25 |   0+  7+  0 |       53 |          1 |   889 |       417 |   505840.7 |    4 / 0 | TIMEOUT         |
+| Version    | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes           |
+| :--------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
+| 1.9.0      | N/A  |                N/A |        N/A |        N/A |      N/A |       N/A |   0+ 10+  0 |       33 |        141 |     0 |         0 |        0.0 |   39 / 0 | FAILED, TIMEOUT |
+| 2.4.1      | N/A  |                N/A |        N/A |     905.42 |      N/A |    905.42 |   0+  2+  0 |      123 |         10 |   742 |       739 |  1365398.0 |    3 / 0 | TIMEOUT         |
+| 2.5.0      | N/A  |                N/A |      40.19 |    1162.06 |      N/A |   1202.25 |   0+  7+  0 |       53 |          1 |   889 |       417 |   505840.7 |    4 / 0 | TIMEOUT         |
+| 2.6.0-RC10 | N/A  |                N/A |      35.12 |    2236.58 |   117.91 |   2389.61 |   0+ 26+  1 |       24 |          0 |   950 |      1964 |  8596305.0 |    2 / 0 |                 |
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/karabas-nano_wifi_revA/unrouted.dsn)
 
@@ -8469,11 +8476,12 @@ Size: 70.5 kB · Layers: 2 · Nets: 39 · Components: 30 · Dimensions: 57.5 x 8
 
 Size: 85.8 kB · Layers: 4 · Nets: 266 · Components: 226 · Dimensions: 25.0 x 49.27 mm (12.32 cm²) · CAD: KiCad's Pcbnew (v)
 
-| Version | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
-| :------ | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
-| 1.9.0   | N/A  |                N/A |        N/A |     900.18 |    23.29 |    923.47 |   0+  0+  0 |      121 |          6 |   774 |       128 |     4096.0 |    2 / 0 |         |
-| 2.4.1   | N/A  |                N/A |        N/A |     902.12 |      N/A |    902.12 |   0+  4+  0 |      106 |          6 |   439 |       432 |  1269635.6 |    3 / 0 |         |
-| 2.5.0   | N/A  |                N/A |      33.70 |    1167.56 |      N/A |   1201.26 |   0+  9+  0 |      111 |          2 |   413 |       289 |   621000.1 |    3 / 0 | TIMEOUT |
+| Version    | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
+| :--------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
+| 1.9.0      | N/A  |                N/A |        N/A |     900.18 |    23.29 |    923.47 |   0+  0+  0 |      121 |          6 |   774 |       128 |     4096.0 |    2 / 0 |         |
+| 2.4.1      | N/A  |                N/A |        N/A |     902.12 |      N/A |    902.12 |   0+  4+  0 |      106 |          6 |   439 |       432 |  1269635.6 |    3 / 0 |         |
+| 2.5.0      | N/A  |                N/A |      33.70 |    1167.56 |      N/A |   1201.26 |   0+  9+  0 |      111 |          2 |   413 |       289 |   621000.1 |    3 / 0 | TIMEOUT |
+| 2.6.0-RC10 | N/A  |                N/A |        N/A |    1822.80 |   748.02 |   2570.82 |   0+ 27+  1 |      111 |          0 |   407 |      1031 |   989156.2 |    2 / 0 |         |
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace_OtterPill/unrouted.dsn)
 
@@ -8754,11 +8762,12 @@ Size: 126.6 kB · Layers: 4 · Nets: 261 · Components: 132 · Dimensions: 0.0 x
 
 Size: 101.0 kB · Layers: 2 · Nets: 46 · Components: 145 · Dimensions: 56.0 x 56.0 mm (31.36 cm²) · CAD: KiCad's Pcbnew (v)
 
-| Version | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes           |
-| :------ | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
-| 1.9.0   | N/A  |                N/A |        N/A |        N/A |      N/A |       N/A |   0+ 20+  1 |       22 |          6 |     0 |         0 |        0.0 |    6 / 0 | FAILED, TIMEOUT |
-| 2.4.1   | N/A  |                N/A |        N/A |     906.19 |      N/A |    906.19 |   0+  2+  0 |       87 |          2 |   738 |       728 |  1219360.6 |    3 / 0 |                 |
-| 2.5.0   | N/A  |                N/A |     132.70 |    1069.65 |      N/A |   1202.35 |   0+ 15+  0 |       26 |          0 |   922 |       432 |   484742.7 |    2 / 0 | TIMEOUT         |
+| Version    | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes           |
+| :--------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
+| 1.9.0      | N/A  |                N/A |        N/A |        N/A |      N/A |       N/A |   0+ 20+  1 |       22 |          6 |     0 |         0 |        0.0 |    6 / 0 | FAILED, TIMEOUT |
+| 2.4.1      | N/A  |                N/A |        N/A |     906.19 |      N/A |    906.19 |   0+  2+  0 |       87 |          2 |   738 |       728 |  1219360.6 |    3 / 0 |                 |
+| 2.5.0      | N/A  |                N/A |     132.70 |    1069.65 |      N/A |   1202.35 |   0+ 15+  0 |       26 |          0 |   922 |       432 |   484742.7 |    2 / 0 | TIMEOUT         |
+| 2.6.0-RC10 | N/A  |                N/A |      53.71 |    1150.29 | 14564.65 |  15768.65 |   0+ 33+  8 |       10 |          0 |   934 |      3889 |  3740911.2 |    3 / 0 | TIMEOUT         |
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/kitspace__autosave-nunchuk_breakout/unrouted.dsn)
 
@@ -9853,11 +9862,12 @@ Size: 4.8 kB · Layers: 2 · Nets: 10 · Components: 2 · Dimensions: 18.42 x 15
 
 Size: 80.6 kB · Layers: 2 · Nets: 108 · Components: 339 · Dimensions: 367.75 x 93.25 mm (342.93 cm²) · CAD: KiCad's Pcbnew (v)
 
-| Version | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes           |
-| :------ | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
-| 1.9.0   | N/A  |                N/A |        N/A |        N/A |      N/A |       N/A |   0+ 19+  0 |       10 |         75 |     0 |         0 |        0.0 | 1052 / 0 | FAILED, TIMEOUT |
-| 2.4.1   | N/A  |                N/A |        N/A |     905.26 |      N/A |    905.26 |   0+  3+  0 |      160 |         77 |   723 |       731 |  1602225.1 |    3 / 0 | TIMEOUT         |
-| 2.5.0   | N/A  |                N/A |      27.25 |    1179.38 |      N/A |   1206.63 |   0+  7+  0 |      133 |         53 |   770 |       423 |   450514.1 |    3 / 0 | TIMEOUT         |
+| Version    | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes           |
+| :--------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
+| 1.9.0      | N/A  |                N/A |        N/A |        N/A |      N/A |       N/A |   0+ 19+  0 |       10 |         75 |     0 |         0 |        0.0 | 1052 / 0 | FAILED, TIMEOUT |
+| 2.4.1      | N/A  |                N/A |        N/A |     905.26 |      N/A |    905.26 |   0+  3+  0 |      160 |         77 |   723 |       731 |  1602225.1 |    3 / 0 | TIMEOUT         |
+| 2.5.0      | N/A  |                N/A |      27.25 |    1179.38 |      N/A |   1206.63 |   0+  7+  0 |      133 |         53 |   770 |       423 |   450514.1 |    3 / 0 | TIMEOUT         |
+| 2.6.0-RC10 | N/A  |  463/ 479 ( 96.7%) |       9.73 |     215.94 |      N/A |    225.67 |   5+  9+  0 |        0 |         32 |     0 |       407 |       91.1 |    3 / 0 | FAILED          |
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/medusa_medusa_cape/unrouted.dsn)
 
@@ -9995,11 +10005,12 @@ Size: 34.3 kB · Layers: 4 · Nets: 79 · Components: 33 · Dimensions: 0.0 x 0.
 
 Size: 112.4 kB · Layers: 4 · Nets: 287 · Components: 441 · Dimensions: 600.0 x 110.0 mm (660.0 cm²) · CAD: KiCad's Pcbnew (v)
 
-| Version | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
-| :------ | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
-| 1.9.0   | N/A  |                N/A |        N/A |    1152.61 |   747.23 |   1899.84 |   0+  0+  0 |       10 |          0 |   989 |       633 |     4096.0 |    1 / 0 |         |
-| 2.4.1   | N/A  |                N/A |        N/A |    1813.72 |      N/A |   1813.72 |   0+  1+  0 |      225 |          0 |   698 |      1396 |  1895539.4 |    3 / 0 | TIMEOUT |
-| 2.5.0   | N/A  |                N/A |      41.96 |    2671.11 |      N/A |   2713.07 |   0+ 10+  0 |        3 |          0 |   996 |       859 |   988237.0 |    2 / 0 | TIMEOUT |
+| Version    | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
+| :--------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
+| 1.9.0      | N/A  |                N/A |        N/A |    1152.61 |   747.23 |   1899.84 |   0+  0+  0 |       10 |          0 |   989 |       633 |     4096.0 |    1 / 0 |         |
+| 2.4.1      | N/A  |                N/A |        N/A |    1813.72 |      N/A |   1813.72 |   0+  1+  0 |      225 |          0 |   698 |      1396 |  1895539.4 |    3 / 0 | TIMEOUT |
+| 2.5.0      | N/A  |                N/A |      41.96 |    2671.11 |      N/A |   2713.07 |   0+ 10+  0 |        3 |          0 |   996 |       859 |   988237.0 |    2 / 0 | TIMEOUT |
+| 2.6.0-RC10 | N/A  |                N/A |      31.60 |    1798.18 |  1315.70 |   3145.48 |   0+ 23+  1 |        0 |          0 |  1000 |      2142 |   944888.2 |    2 / 0 |         |
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/miniboard-opamp_miniboard-opamp/unrouted.dsn)
 
@@ -11413,11 +11424,12 @@ Size: 15.1 kB · Layers: 2 · Nets: 4 · Components: 19 · Dimensions: 20.0 x 45
 
 Size: 54.5 kB · Layers: 4 · Nets: 51 · Components: 91 · Dimensions: 67.9 x 30.4 mm (20.64 cm²) · CAD: KiCad's Pcbnew (v)
 
-| Version | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
-| :------ | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
-| 1.9.0   | N/A  |                N/A |        N/A |     301.11 |    76.16 |    377.27 |   0+  0+  0 |       20 |         25 |   949 |       163 |     4096.0 |    1 / 0 |         |
-| 2.4.1   | N/A  |                N/A |        N/A |     303.80 |      N/A |    303.80 |   0+  1+  0 |       98 |         24 |   681 |      1245 |   468963.0 |    5 / 0 |         |
-| 2.5.0   | N/A  |                N/A |     419.44 |     184.51 |      N/A |    603.95 |   0+  1+  0 |       81 |          0 |   737 |       282 |   146511.4 |    5 / 0 | TIMEOUT |
+| Version    | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
+| :--------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
+| 1.9.0      | N/A  |                N/A |        N/A |     301.11 |    76.16 |    377.27 |   0+  0+  0 |       20 |         25 |   949 |       163 |     4096.0 |    1 / 0 |         |
+| 2.4.1      | N/A  |                N/A |        N/A |     303.80 |      N/A |    303.80 |   0+  1+  0 |       98 |         24 |   681 |      1245 |   468963.0 |    5 / 0 |         |
+| 2.5.0      | N/A  |                N/A |     419.44 |     184.51 |      N/A |    603.95 |   0+  1+  0 |       81 |          0 |   737 |       282 |   146511.4 |    5 / 0 | TIMEOUT |
+| 2.6.0-RC10 | N/A  |                N/A |     109.58 |    3660.16 |  3601.62 |   7371.36 |   0+ 50+  1 |       12 |          0 |   925 |      2564 |  3696239.5 |    7 / 0 |         |
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/scimpy_amp/unrouted.dsn)
 
@@ -11797,11 +11809,12 @@ Size: 21.3 kB · Layers: 2 · Nets: 36 · Components: 30 · Dimensions: 18.5 x 0
 
 Size: 80.9 kB · Layers: 2 · Nets: 66 · Components: 242 · Dimensions: 285.0 x 94.6 mm (269.61 cm²) · CAD: KiCad's Pcbnew (v)
 
-| Version | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes           |
-| :------ | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
-| 1.9.0   | N/A  |                N/A |        N/A |        N/A |      N/A |       N/A |   0+  9+  1 |       33 |         46 |     0 |         0 |        0.0 |    3 / 0 | FAILED, TIMEOUT |
-| 2.4.1   | N/A  |                N/A |        N/A |     905.68 |      N/A |    905.68 |   0+  3+  0 |       52 |         46 |   841 |       591 |  1004334.0 |    3 / 0 | TIMEOUT         |
-| 2.5.0   | N/A  |                N/A |      13.14 |    1189.56 |      N/A |   1202.70 |   0+  7+  0 |       76 |          0 |   769 |       416 |   402097.5 |    2 / 0 | TIMEOUT         |
+| Version    | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes           |
+| :--------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :-------------- |
+| 1.9.0      | N/A  |                N/A |        N/A |        N/A |      N/A |       N/A |   0+  9+  1 |       33 |         46 |     0 |         0 |        0.0 |    3 / 0 | FAILED, TIMEOUT |
+| 2.4.1      | N/A  |                N/A |        N/A |     905.68 |      N/A |    905.68 |   0+  3+  0 |       52 |         46 |   841 |       591 |  1004334.0 |    3 / 0 | TIMEOUT         |
+| 2.5.0      | N/A  |                N/A |      13.14 |    1189.56 |      N/A |   1202.70 |   0+  7+  0 |       76 |          0 |   769 |       416 |   402097.5 |    2 / 0 | TIMEOUT         |
+| 2.6.0-RC10 | N/A  |  227/ 281 ( 80.8%) |      14.60 |    3596.70 |      N/A |   3611.30 |  43+ 26+  0 |       36 |          4 |     0 |       905 |     4986.4 |    8 / 0 | FAILED          |
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/stm32_nucleo-64_proto_shield_nucleo_pb/unrouted.dsn)
 
@@ -12577,11 +12590,12 @@ Size: 129.8 kB · Layers: 2 · Nets: 28 · Components: 112 · Dimensions: 140.0 
 
 Size: 194.2 kB · Layers: 2 · Nets: 45 · Components: 156 · Dimensions: 213.0 x 64.0 mm (136.32 cm²) · CAD: KiCad's Pcbnew (v)
 
-| Version | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
-| :------ | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
-| 1.9.0   | N/A  |                N/A |        N/A |     900.65 |    92.30 |    992.95 |   0+  0+  0 |       52 |        169 |   878 |       496 |     4096.0 |    2 / 0 |         |
-| 2.4.1   | N/A  |                N/A |        N/A |     901.32 |      N/A |    901.32 |   0+  6+  0 |       48 |         94 |   870 |       996 |  2765613.0 |    6 / 0 |         |
-| 2.5.0   | N/A  |                N/A |      38.57 |    1165.07 |      N/A |   1203.64 |   0+  5+  0 |      148 |          0 |   604 |       452 |   296569.4 |    2 / 0 | TIMEOUT |
+| Version    | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes   |
+| :--------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :------ |
+| 1.9.0      | N/A  |                N/A |        N/A |     900.65 |    92.30 |    992.95 |   0+  0+  0 |       52 |        169 |   878 |       496 |     4096.0 |    2 / 0 |         |
+| 2.4.1      | N/A  |                N/A |        N/A |     901.32 |      N/A |    901.32 |   0+  6+  0 |       48 |         94 |   870 |       996 |  2765613.0 |    6 / 0 |         |
+| 2.5.0      | N/A  |                N/A |      38.57 |    1165.07 |      N/A |   1203.64 |   0+  5+  0 |      148 |          0 |   604 |       452 |   296569.4 |    2 / 0 | TIMEOUT |
+| 2.6.0-RC10 | N/A  |                N/A |      12.06 |    2000.95 | 10130.37 |  12143.38 |   0+ 24+  1 |       24 |          0 |   912 |      3895 |  6148744.5 |    4 / 0 | TIMEOUT |
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/zx-sizif-512-wifi_sizif512-wifi/unrouted.dsn)
 

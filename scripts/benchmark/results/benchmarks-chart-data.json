@@ -36430,5 +36430,149 @@
     "score": 85.75,
     "unrouted": 481,
     "cpu_time": 15221.03
+  },
+  {
+    "fixture": "unrouted.dsn",
+    "version": "2.6.0-RC10",
+    "date": "2026-11-05T19:30:12.873508+00:00",
+    "score": 0.0,
+    "unrouted": 0,
+    "cpu_time": 272.06
+  },
+  {
+    "fixture": "unrouted.dsn",
+    "version": "2.6.0-RC10",
+    "date": "2026-11-05T19:45:17.754336+00:00",
+    "score": 0.0,
+    "unrouted": 0,
+    "cpu_time": 390.61
+  },
+  {
+    "fixture": "unrouted.dsn",
+    "version": "2.6.0-RC10",
+    "date": "2026-11-05T20:13:12.011779+00:00",
+    "score": 0.0,
+    "unrouted": 0,
+    "cpu_time": 761.34
+  },
+  {
+    "fixture": "unrouted.dsn",
+    "version": "2.6.0-RC10",
+    "date": "2026-11-05T20:28:12.272350+00:00",
+    "score": 407.41,
+    "unrouted": 111,
+    "cpu_time": 1772.95
+  },
+  {
+    "fixture": "unrouted.dsn",
+    "version": "2.6.0-RC10",
+    "date": "2026-11-05T21:17:33.596449+00:00",
+    "score": 0.0,
+    "unrouted": 0,
+    "cpu_time": 2138.73
+  },
+  {
+    "fixture": "unrouted.dsn",
+    "version": "2.6.0-RC10",
+    "date": "2026-11-05T21:48:02.841479+00:00",
+    "score": 1000.0,
+    "unrouted": 0,
+    "cpu_time": 3334.22
+  },
+  {
+    "fixture": "unrouted.dsn",
+    "version": "2.6.0-RC10",
+    "date": "2026-11-05T21:52:25.832848+00:00",
+    "score": 0.0,
+    "unrouted": 2,
+    "cpu_time": 4556.28
+  },
+  {
+    "fixture": "unrouted.dsn",
+    "version": "2.6.0-RC10",
+    "date": "2026-11-05T22:44:04.416424+00:00",
+    "score": 997.91,
+    "unrouted": 2,
+    "cpu_time": 10488.25
+  },
+  {
+    "fixture": "unrouted.dsn",
+    "version": "2.6.0-RC10",
+    "date": "2026-11-05T23:02:37.011998+00:00",
+    "score": 1000.0,
+    "unrouted": 0,
+    "cpu_time": 5553.08
+  },
+  {
+    "fixture": "unrouted.dsn",
+    "version": "2.6.0-RC10",
+    "date": "2026-11-05T23:22:12.607537+00:00",
+    "score": 0.0,
+    "unrouted": 0,
+    "cpu_time": 194.66
+  },
+  {
+    "fixture": "unrouted.dsn",
+    "version": "2.6.0-RC10",
+    "date": "2026-11-05T23:34:48.195767+00:00",
+    "score": 949.61,
+    "unrouted": 24,
+    "cpu_time": 16374.95
+  },
+  {
+    "fixture": "unrouted.dsn",
+    "version": "2.6.0-RC10",
+    "date": "2026-11-06T00:09:09.826853+00:00",
+    "score": 925.2,
+    "unrouted": 12,
+    "cpu_time": 8214.86
+  },
+  {
+    "fixture": "unrouted.dsn",
+    "version": "2.6.0-RC10",
+    "date": "2026-11-06T00:37:58.719749+00:00",
+    "score": 937.47,
+    "unrouted": 21,
+    "cpu_time": 12035.16
+  },
+  {
+    "fixture": "unrouted.dsn",
+    "version": "2.6.0-RC10",
+    "date": "2026-11-06T02:13:18.175286+00:00",
+    "score": 911.65,
+    "unrouted": 24,
+    "cpu_time": 10666.7
+  },
+  {
+    "fixture": "unrouted.dsn",
+    "version": "2.6.0-RC10",
+    "date": "2026-11-06T03:48:47.799008+00:00",
+    "score": 977.17,
+    "unrouted": 16,
+    "cpu_time": 9149.39
+  },
+  {
+    "fixture": "unrouted.dsn",
+    "version": "2.6.0-RC10",
+    "date": "2026-11-06T03:52:42.996997+00:00",
+    "score": 949.69,
+    "unrouted": 17,
+    "cpu_time": 17550.77
+  },
+  {
+    "fixture": "unrouted.dsn",
+    "version": "2.6.0-RC10",
+    "date": "2026-11-06T04:16:57.350222+00:00",
+    "score": 0.0,
+    "unrouted": 36,
+    "cpu_time": 10579.47
+  },
+  {
+    "fixture": "unrouted.dsn",
+    "version": "2.6.0-RC10",
+    "date": "2026-11-06T05:22:19.721262+00:00",
+    "score": 933.78,
+    "unrouted": 10,
+    "cpu_time": 6611.5
   }
 ]
