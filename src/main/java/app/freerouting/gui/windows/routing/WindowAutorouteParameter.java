@@ -804,6 +804,16 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     }
 
     setJobTimeoutFields(newValue);
+    syncSettingsToWorkspace();
+  }
+
+  private void syncSettingsToWorkspace() {
+    if (boardHandling != null) {
+      var workspaceSettings = boardHandling.getWorkspaceSettings();
+      if (workspaceSettings != null && boardHandling.getCurrentRoutingJob() != null) {
+        workspaceSettings.setSettings(boardHandling.getCurrentRoutingJob().routerSettings);
+      }
+    }
   }
 
   private String buildJobTimeoutString() {
@@ -845,6 +855,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
           .routerSettings
           .setLayerActive(
               currentLayerIndex, settingsAutorouterLayerActiveArr[this.signalLayerNo].isSelected());
+      syncSettingsToWorkspace();
     }
   }
 
@@ -866,6 +877,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
           .setPreferredDirectionIsHorizontal(
               currentLayerIndex,
               settingsAutorouterComboBoxArr.get(signalLayerNo).getSelectedItem() == horizontal);
+      syncSettingsToWorkspace();
     }
   }
 
@@ -878,6 +890,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         applyViasAllowedSelection(
             boardHandling.getCurrentRoutingJob().routerSettings,
             settingsAutorouterViasAllowed.isSelected());
+        syncSettingsToWorkspace();
       } finally {
         isUpdatingFromSettings = false;
       }
@@ -892,6 +905,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       isUpdatingFromSettings = true;
       try {
         applyFanoutEnabledSelection(autorouteSettings, settingsAutorouterFanoutButton.isSelected());
+        syncSettingsToWorkspace();
       } finally {
         isUpdatingFromSettings = false;
       }
@@ -907,6 +921,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       try {
         applyAutorouteEnabledSelection(
             autorouteSettings, settingsAutorouterAutoroutePassButton.isSelected());
+        syncSettingsToWorkspace();
       } finally {
         isUpdatingFromSettings = false;
       }
@@ -922,6 +937,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       try {
         applyOptimizerEnabledSelection(
             autorouteSettings, settingsAutorouterOptimizationButton.isSelected());
+        syncSettingsToWorkspace();
       } finally {
         isUpdatingFromSettings = false;
       }
@@ -939,6 +955,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         boardHandling.getCurrentRoutingJob().routerSettings.setViaCosts(inputValue);
         viaCostField.setValue(inputValue);
         viaCostInputCompleted = true;
+        syncSettingsToWorkspace();
 
       } else {
         viaCostInputCompleted = false;
@@ -977,6 +994,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         boardHandling.getCurrentRoutingJob().routerSettings.setViaCosts(inputValue);
         viaCostField.setValue(inputValue);
         viaCostInputCompleted = true;
+        syncSettingsToWorkspace();
       }
     }
 
@@ -995,6 +1013,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         boardHandling.getCurrentRoutingJob().routerSettings.setPlaneViaCosts(inputValue);
         planeViaCostField.setValue(inputValue);
         planeViaCostInputCompleted = true;
+        syncSettingsToWorkspace();
 
       } else {
         planeViaCostInputCompleted = false;
@@ -1033,6 +1052,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         boardHandling.getCurrentRoutingJob().routerSettings.setPlaneViaCosts(inputValue);
         planeViaCostField.setValue(inputValue);
         planeViaCostInputCompleted = true;
+        syncSettingsToWorkspace();
       }
     }
 
@@ -1051,6 +1071,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         boardHandling.getCurrentRoutingJob().routerSettings.setStartRipupCosts(inputValue);
         startRipupCosts.setValue(inputValue);
         startRipupCostInputCompleted = true;
+        syncSettingsToWorkspace();
       } else {
         startRipupCostInputCompleted = false;
       }
@@ -1086,6 +1107,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         boardHandling.getCurrentRoutingJob().routerSettings.setStartRipupCosts(inputValue);
         startRipupCosts.setValue(inputValue);
         startRipupCostInputCompleted = true;
+        syncSettingsToWorkspace();
       }
     }
 
@@ -1107,6 +1129,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         isUpdatingFromSettings = true;
         try {
           boardHandling.getCurrentRoutingJob().routerSettings.setMaxPasses(inputValue);
+          syncSettingsToWorkspace();
         } finally {
           isUpdatingFromSettings = false;
         }
@@ -1152,6 +1175,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         isUpdatingFromSettings = true;
         try {
           boardHandling.getCurrentRoutingJob().routerSettings.setMaxPasses(inputValue);
+          syncSettingsToWorkspace();
         } finally {
           isUpdatingFromSettings = false;
         }
@@ -1182,6 +1206,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         isUpdatingFromSettings = true;
         try {
           boardHandling.getCurrentRoutingJob().routerSettings.setMaxThreads(inputValue);
+          syncSettingsToWorkspace();
         } finally {
           isUpdatingFromSettings = false;
         }
@@ -1230,6 +1255,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         isUpdatingFromSettings = true;
         try {
           boardHandling.getCurrentRoutingJob().routerSettings.setMaxThreads(inputValue);
+          syncSettingsToWorkspace();
         } finally {
           isUpdatingFromSettings = false;
         }
@@ -1301,6 +1327,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
             .setPreferredDirectionTraceCosts(currentLayerIndex, inputValue);
         preferredDirectionTraceCostArr[this.signalLayerNo].setValue(inputValue);
         preferredDirectionTraceCostsInputCompleted[this.signalLayerNo] = true;
+        syncSettingsToWorkspace();
       }
     }
 
@@ -1367,6 +1394,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
             .setAgainstPreferredDirectionTraceCosts(currentLayerIndex, inputValue);
         againstPreferredDirectionTraceCostArr[this.signalLayerNo].setValue(inputValue);
         againstPreferredDirectionTraceCostsInputCompleted[this.signalLayerNo] = true;
+        syncSettingsToWorkspace();
       }
     }
 
@@ -1431,6 +1459,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
             .setBendCost(currentLayerIndex, inputValue);
         bendCostArr[this.signalLayerNo].setValue(inputValue);
         bendCostsInputCompleted[this.signalLayerNo] = true;
+        syncSettingsToWorkspace();
       }
     }
 
