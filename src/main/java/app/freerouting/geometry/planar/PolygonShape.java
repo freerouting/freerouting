@@ -548,6 +548,20 @@ public class PolygonShape extends PolylineShape {
   }
 
   /**
+   * Takes the convex pieces of source, if source is split already and has the same corners, so that
+   * a copy of a shape, read back from bytes, need not be split again. Both shapes share the pieces,
+   * which are immutable shapes.
+   */
+  public void reuseConvexPiecesOf(PolygonShape source) {
+    TileShape[] sourcePieces = source.precalculatedConvexPieces;
+    if (this.precalculatedConvexPieces == null
+        && sourcePieces != null
+        && Arrays.equals(this.corners, source.corners)) {
+      this.precalculatedConvexPieces = sourcePieces;
+    }
+  }
+
+  /**
    * Splits this polygon shape into convex pieces. The result is not exact, because rounded
    * intersections of lines are used in the result pieces. It can be made exact, if Polylines are
    * returned instead of Polygons, so that no intersection points are needed in the result.

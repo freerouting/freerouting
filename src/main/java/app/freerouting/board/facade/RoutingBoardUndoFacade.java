@@ -3,13 +3,20 @@ package app.freerouting.board.facade;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.drc.ClearanceBaseline;
+import app.freerouting.geometry.planar.PolygonShape;
+import app.freerouting.geometry.planar.PolylineArea;
 import app.freerouting.logger.FRLogger;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 /** Owns routing-board undo/redo side effects and deep-copy restoration. */
@@ -48,9 +55,14 @@ public final class RoutingBoardUndoFacade {
   RoutingBoard deepCopy() {
     byte[] serializedBoard;
     ClearanceBaseline clearanceBaseline;
+    // The areas and polygons in the order they are written, to give their copies their convex
+    // pieces back.
+    List<PolylineArea> writtenAreas = new ArrayList<>();
+    List<PolygonShape> writtenPolygons = new ArrayList<>();
     synchronized (board) {
       try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-          ObjectOutputStream outputStream = new ObjectOutputStream(byteArrayOutputStream)) {
+          ObjectOutputStream outputStream =
+              new AreaRecordingOutputStream(byteArrayOutputStream, writtenAreas, writtenPolygons)) {
         outputStream.writeObject(board);
         outputStream.flush();
         serializedBoard = byteArrayOutputStream.toByteArray();
@@ -61,7 +73,8 @@ public final class RoutingBoardUndoFacade {
       }
     }
     try (ObjectInputStream inputStream =
-        new app.freerouting.util.SafeObjectInputStream(new ByteArrayInputStream(serializedBoard))) {
+        new AreaRestoringInputStream(
+            new ByteArrayInputStream(serializedBoard), writtenAreas, writtenPolygons)) {
       RoutingBoard boardCopy = (RoutingBoard) inputStream.readObject();
       // Transient, so not serialized: without it every pre-existing violation counts as new.
       boardCopy.clearanceBaseline = clearanceBaseline;
@@ -71,6 +84,64 @@ public final class RoutingBoardUndoFacade {
     } catch (Exception exception) {
       FRLogger.error("Exception in deep_copy_routing_board" + exception, exception);
       return null;
+    }
+  }
+
+  /** Records the areas and polygons written, in order. */
+  private static final class AreaRecordingOutputStream extends ObjectOutputStream {
+    private final List<PolylineArea> writtenAreas;
+    private final List<PolygonShape> writtenPolygons;
+
+    AreaRecordingOutputStream(
+        OutputStream out, List<PolylineArea> writtenAreas, List<PolygonShape> writtenPolygons)
+        throws IOException {
+      super(out);
+      this.writtenAreas = writtenAreas;
+      this.writtenPolygons = writtenPolygons;
+      enableReplaceObject(true);
+    }
+
+    @Override
+    protected Object replaceObject(Object obj) {
+      if (obj instanceof PolylineArea area) {
+        writtenAreas.add(area);
+      } else if (obj instanceof PolygonShape polygon) {
+        writtenPolygons.add(polygon);
+      }
+      return obj;
+    }
+  }
+
+  /**
+   * Gives each area or polygon read back the convex pieces of the one written in the same position
+   * among its kind, if both have the same geometry: the planes of a copy are not split into tiles
+   * again. An area contains no area and a polygon no polygon, so each kind is read back in the
+   * order it was written.
+   */
+  private static final class AreaRestoringInputStream
+      extends app.freerouting.util.SafeObjectInputStream {
+    private final List<PolylineArea> writtenAreas;
+    private final List<PolygonShape> writtenPolygons;
+    private int readAreaCount;
+    private int readPolygonCount;
+
+    AreaRestoringInputStream(
+        InputStream in, List<PolylineArea> writtenAreas, List<PolygonShape> writtenPolygons)
+        throws IOException {
+      super(in);
+      this.writtenAreas = writtenAreas;
+      this.writtenPolygons = writtenPolygons;
+      enableResolveObject(true);
+    }
+
+    @Override
+    protected Object resolveObject(Object obj) {
+      if (obj instanceof PolylineArea area && readAreaCount < writtenAreas.size()) {
+        area.reuseConvexPiecesOf(writtenAreas.get(readAreaCount++));
+      } else if (obj instanceof PolygonShape polygon && readPolygonCount < writtenPolygons.size()) {
+        polygon.reuseConvexPiecesOf(writtenPolygons.get(readPolygonCount++));
+      }
+      return obj;
     }
   }
 
