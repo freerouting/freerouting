@@ -36,6 +36,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -744,10 +746,13 @@ public final class BatchOptimizer extends NamedAlgorithm {
             });
 
     CandidateResult winningCandidate = null;
-    // Up to window candidates are in flight, and a new one starts as soon as one is read back:
-    // the threads no longer wait for the slowest candidate of a batch. The results are still read
-    // in candidate order, so the winner and the early stop are the same.
-    int window = Math.max(threadPoolSize * 4, 8);
+    // A new candidate starts as soon as a thread is free, even while an older and slower
+    // candidate is still running, so one slow candidate does not idle the other threads. The
+    // results are still read in candidate order, so the winner and the early stop are the same.
+    // A result keeps no board, so the results waiting to be read are small: the winner is
+    // replayed on a copy of the baseline board at the end of the pass.
+    int maxRunning = threadPoolSize * 2;
+    int maxUnread = Math.max(threadPoolSize * 64, 128);
     boolean stoppedOrTimedOut = false;
     boolean earlyStopDueToFailures = false;
     int consecutiveFailures = 0;
@@ -762,11 +767,12 @@ public final class BatchOptimizer extends NamedAlgorithm {
                 ? this.settings.optimizer.maxConsecutiveFailures
                 : 50);
 
+    // The baseline board does not change during the pass: the winner replaces it at the end.
+    BoardStatistics.OptimizerMetrics baselineMetrics =
+        BoardStatistics.OptimizerMetrics.of(this.board);
     try {
-      // The baseline board does not change during the pass: the winner replaces it at the end.
-      BoardStatistics.OptimizerMetrics baselineMetrics =
-          BoardStatistics.OptimizerMetrics.of(this.board);
-      ArrayDeque<Future<CandidateResult>> futures = new ArrayDeque<>(window);
+      ArrayDeque<Future<CandidateResult>> futures = new ArrayDeque<>(maxUnread);
+      Semaphore completions = new Semaphore(0);
       int nextCandidate = 0;
       while (nextCandidate < candidateItemIds.size() || !futures.isEmpty()) {
         if (this.deadlineMs != null && System.currentTimeMillis() >= this.deadlineMs) {
@@ -780,9 +786,17 @@ public final class BatchOptimizer extends NamedAlgorithm {
           break;
         }
 
-        while (futures.size() < window && nextCandidate < candidateItemIds.size()) {
-          futures.add(
-              pool.submit(
+        int running = 0;
+        for (Future<CandidateResult> f : futures) {
+          if (!f.isDone()) {
+            running++;
+          }
+        }
+        while (running < maxRunning
+            && futures.size() < maxUnread
+            && nextCandidate < candidateItemIds.size()) {
+          FutureTask<CandidateResult> task =
+              new FutureTask<>(
                   new OptimizeCandidateTask(
                       job,
                       this.board,
@@ -793,7 +807,29 @@ public final class BatchOptimizer extends NamedAlgorithm {
                       this.thread,
                       this.deadlineMs,
                       this.workerBoardStates,
-                      baselineMetrics)));
+                      baselineMetrics,
+                      false)) {
+                @Override
+                protected void done() {
+                  completions.release();
+                }
+              };
+          pool.execute(task);
+          futures.add(task);
+          running++;
+        }
+
+        if (!futures.peek().isDone()) {
+          // Wait for any candidate to finish, then feed the free threads again.
+          try {
+            completions.acquire();
+          } catch (InterruptedException e) {
+            stoppedOrTimedOut = true;
+            Thread.currentThread().interrupt();
+            break;
+          }
+          completions.drainPermits();
+          continue;
         }
 
         Future<CandidateResult> future = futures.poll();
@@ -853,6 +889,13 @@ public final class BatchOptimizer extends NamedAlgorithm {
     float routeImproved = 0.0f;
 
     if (!stoppedOrTimedOut && winningCandidate != null && winningCandidate.result.improved()) {
+      winningCandidate =
+          replayWinner(job, winningCandidate, withPreferredDirections, baselineMetrics);
+    }
+    if (!stoppedOrTimedOut
+        && winningCandidate != null
+        && winningCandidate.result.improved()
+        && winningCandidate.board != null) {
       this.board = winningCandidate.board;
       this.job.board = this.board;
       this.minCumulativeTraceLength = this.board.getStatistics().traces.totalWeightedLength;
@@ -1048,6 +1091,43 @@ public final class BatchOptimizer extends NamedAlgorithm {
     return null;
   }
 
+  /**
+   * Reroutes the winning candidate again, on a fresh copy of the baseline board as every candidate
+   * is, and keeps that board. The deadline does not apply to it, so it repeats the candidate that
+   * won. Returns null if the replay does not reach the same result, for example after a stop
+   * request.
+   */
+  private CandidateResult replayWinner(
+      RoutingJob job,
+      CandidateResult winner,
+      boolean withPreferredDirections,
+      BoardStatistics.OptimizerMetrics baselineMetrics) {
+    CandidateResult replay =
+        new OptimizeCandidateTask(
+                job,
+                this.board,
+                winner.result.itemId(),
+                this.minCumulativeTraceLength,
+                withPreferredDirections,
+                this.useIncreasedRipupCosts,
+                this.thread,
+                null,
+                this.workerBoardStates,
+                baselineMetrics,
+                true)
+            .call();
+    if (replay.board == null
+        || replay.result.compareTo(winner.result) != 0
+        || replay.result.improvementPercentage() != winner.result.improvementPercentage()) {
+      job.logWarning(
+          "Optimizer: replaying the winning candidate (item "
+              + winner.result.itemId()
+              + ") did not give the same result; the pass keeps the current board.");
+      return null;
+    }
+    return replay;
+  }
+
   private static final class CandidateResult {
     final ItemRouteResult result;
     final RoutingBoard board;
@@ -1120,6 +1200,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
     private final Long deadlineMs;
     private final ThreadLocal<WorkerBoardState> workerBoardStates;
     private final BoardStatistics.OptimizerMetrics baselineMetrics;
+    private final boolean keepBoard;
 
     OptimizeCandidateTask(
         RoutingJob job,
@@ -1131,7 +1212,8 @@ public final class BatchOptimizer extends NamedAlgorithm {
         StoppableThread thread,
         Long deadlineMs,
         ThreadLocal<WorkerBoardState> workerBoardStates,
-        BoardStatistics.OptimizerMetrics baselineMetrics) {
+        BoardStatistics.OptimizerMetrics baselineMetrics,
+        boolean keepBoard) {
       this.job = job;
       this.baselineBoard = baselineBoard;
       this.itemId = itemId;
@@ -1142,6 +1224,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
       this.deadlineMs = deadlineMs;
       this.workerBoardStates = workerBoardStates;
       this.baselineMetrics = baselineMetrics;
+      this.keepBoard = keepBoard;
     }
 
     OptimizeCandidateTask(
@@ -1164,7 +1247,8 @@ public final class BatchOptimizer extends NamedAlgorithm {
           thread,
           deadlineMs,
           workerBoardStates,
-          null);
+          null,
+          true);
     }
 
     @Override
@@ -1233,7 +1317,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
           }
         }
 
-        boolean improved = result.improved();
+        boolean improved = result.improved() && keepBoard;
         workerBoardState.finish(improved);
         snapshotFinished = true;
         if (improved) {
