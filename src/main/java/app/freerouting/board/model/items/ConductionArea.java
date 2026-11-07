@@ -254,6 +254,61 @@ public class ConductionArea extends ObstacleArea implements Connectable {
         board);
   }
 
+  /**
+   * Adds the other conduction areas of the net of this one that overlap it on its layer: two zones
+   * of a net filled over each other are one piece of copper.
+   */
+  private void addOverlappingAreas(Set<Item> result) {
+    for (int netNo : netNumbers) {
+      for (Item item : board.getConnectableItems(netNo)) {
+        if (item instanceof ConductionArea other
+            && other != this
+            && other.getLayer() == getLayer()
+            && overlaps(other)) {
+          result.add(other);
+        }
+      }
+    }
+  }
+
+  private boolean overlaps(ConductionArea other) {
+    IntBox otherBox = other.getArea().boundingBox();
+    if (!getArea().boundingBox().intersects(otherBox)) {
+      return false;
+    }
+    TileShape[] otherPieces = other.getArea().splitToConvex();
+    for (TileShape piece : getArea().splitToConvex()) {
+      if (!piece.boundingBox().intersects(otherBox)) {
+        continue;
+      }
+      for (TileShape otherPiece : otherPieces) {
+        if (!piece.intersection(otherPiece).isEmpty()) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Whether this area is dead copper: a piece of a fill smaller than 1 mm\u00b2 (the threshold of
+   * {@code DesignRulesChecker.getZoneIslandViolations}), on a layer without traces, that touches
+   * nothing of its net. A zone with no connection yet keeps all its islands when it is filled, so
+   * an unrouted board can carry such pieces between the vias of another net: no via fits there, and
+   * they are neither a routing target nor an incomplete connection.
+   */
+  public boolean isDeadCopper() {
+    if (board == null || board.layerStructure.layers[getLayer()].isSignal) {
+      return false;
+    }
+    double mm = board.communication.getResolution(Unit.MM);
+    IntBox box = getArea().boundingBox();
+    if ((double) box.width() * box.height() >= mm * mm) {
+      return false;
+    }
+    return getNormalContacts().isEmpty();
+  }
+
   @Override
   public Set<Item> getNormalContacts() {
     Set<Item> result = new TreeSet<>();
@@ -278,6 +333,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
         }
       }
     }
+    addOverlappingAreas(result);
     return result;
   }
 

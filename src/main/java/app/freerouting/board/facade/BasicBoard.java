@@ -780,6 +780,48 @@ public class BasicBoard implements Serializable {
     return getConnectivityQueries().getConnectableItems(netNumber);
   }
 
+  /**
+   * Whether connectedSet, a set of items connected to each other on the net netNumber, is connected
+   * to the rest of that net through its conduction areas (planes).
+   *
+   * <p>The set must hold a plane of the net, and every plane of the net a connection can be routed
+   * to: a net may have several disjoint areas, for instance the teardrops of a via that is no
+   * longer there, and a set that touches one of them is not connected to the others. Dead copper
+   * ({@link ConductionArea#isDeadCopper}) is no target, as no plane was before: a set made only of
+   * dead copper, and a set that leaves only dead copper out, count as connected.
+   */
+  public boolean connectsAllPlanesOfNet(Collection<Item> connectedSet, int netNumber) {
+    boolean holdsPlane = false;
+    boolean holdsTarget = false;
+    for (Item item : connectedSet) {
+      if (item instanceof ConductionArea area && item.containsNet(netNumber)) {
+        holdsPlane = true;
+        holdsTarget = holdsTarget || isPlaneTarget(area);
+      } else {
+        holdsTarget = true;
+      }
+    }
+    if (!holdsPlane) {
+      return false;
+    }
+    if (!holdsTarget) {
+      // Only planes nothing can be routed to: nothing of the net to connect from here.
+      return true;
+    }
+    Set<Item> inSet = connectedSet instanceof Set<Item> set ? set : new HashSet<>(connectedSet);
+    for (Item item : getConnectableItems(netNumber)) {
+      if (item instanceof ConductionArea area && !inSet.contains(area) && isPlaneTarget(area)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /** Whether a connection can be routed to area: anything but dead copper. */
+  private static boolean isPlaneTarget(ConductionArea area) {
+    return !area.isDeadCopper();
+  }
+
   /** Returns the count of connectable items of the net with number netNumber. */
   public int connectableItemCount(int netNumber) {
     return getConnectivityQueries().connectableItemCount(netNumber);

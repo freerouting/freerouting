@@ -966,14 +966,12 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     ctrlSettings.removeUnconnectedVias = false;
     Set<Item> routeStartSet = item.getConnectedSet(routeNetNo);
     Net routeNet = rules.nets.get(routeNetNo);
-    if (routeNet != null && routeNet.containsPlane()) {
-      for (Item currentItem : routeStartSet) {
-        if (currentItem instanceof ConductionArea) {
-          return new AutorouteAttemptResult(
-              AutorouteAttemptState.CONNECTED_TO_PLANE,
-              "The item '" + currentItem + "' is connected to a plane.");
-        }
-      }
+    if (routeNet != null
+        && routeNet.containsPlane()
+        && connectsAllPlanesOfNet(routeStartSet, routeNetNo)) {
+      return new AutorouteAttemptResult(
+          AutorouteAttemptState.CONNECTED_TO_PLANE,
+          "The item '" + item + "' is connected to the planes of its net.");
     }
     Set<Item> routeDestSet = item.getUnconnectedSet(routeNetNo);
     if (routeDestSet.isEmpty()) {

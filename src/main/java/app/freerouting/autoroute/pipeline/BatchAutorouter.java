@@ -5,7 +5,6 @@ import app.freerouting.autoroute.AutorouteAttemptState;
 import app.freerouting.autoroute.BoardHistory;
 import app.freerouting.autoroute.maze.AutorouteControl;
 import app.freerouting.board.facade.RoutingBoard;
-import app.freerouting.board.model.items.ConductionArea;
 import app.freerouting.board.model.items.Connectable;
 import app.freerouting.board.model.items.DrillItem;
 import app.freerouting.board.model.items.Item;
@@ -497,7 +496,7 @@ public final class BatchAutorouter extends NamedAlgorithm {
                 boolean isPlane = net != null && net.containsPlane();
                 if (isPlane) {
                   boolean alreadyConnectedToPlane =
-                      connectedSet.stream().anyMatch(ConductionArea.class::isInstance);
+                      board.connectsAllPlanesOfNet(connectedSet, currentNetNumber);
                   if (alreadyConnectedToPlane) {
                     continue;
                   }

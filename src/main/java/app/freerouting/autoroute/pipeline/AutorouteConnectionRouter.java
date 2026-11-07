@@ -6,7 +6,6 @@ import app.freerouting.autoroute.maze.AutorouteControl;
 import app.freerouting.autoroute.maze.AutorouteEngine;
 import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.facade.RoutingBoard;
-import app.freerouting.board.model.items.ConductionArea;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.drc.ClearanceBaseline;
@@ -54,10 +53,8 @@ final class AutorouteConnectionRouter {
       Set<Item> routeStartSet;
       Set<Item> routeDestSet;
       if (containsPlane) {
-        for (Item currentItem : connectedSet) {
-          if (currentItem instanceof ConductionArea) {
-            return new AutorouteAttemptResult(AutorouteAttemptState.CONNECTED_TO_PLANE);
-          }
+        if (router.board.connectsAllPlanesOfNet(connectedSet, routeNetNo)) {
+          return new AutorouteAttemptResult(AutorouteAttemptState.CONNECTED_TO_PLANE);
         }
         routeStartSet = connectedSet;
         routeDestSet = unconnectedSet;
