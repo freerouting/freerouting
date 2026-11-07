@@ -3,6 +3,7 @@ package app.freerouting.board.facade;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.drc.ClearanceBaseline;
+import app.freerouting.drc.NetRoutingLedger;
 import app.freerouting.geometry.planar.PolygonShape;
 import app.freerouting.geometry.planar.PolylineArea;
 import app.freerouting.logger.FRLogger;
@@ -55,6 +56,7 @@ public final class RoutingBoardUndoFacade {
   RoutingBoard deepCopy() {
     byte[] serializedBoard;
     ClearanceBaseline clearanceBaseline;
+    NetRoutingLedger.Counts ledgerCounts;
     // The areas and polygons in the order they are written, to give their copies their convex
     // pieces back.
     List<PolylineArea> writtenAreas = new ArrayList<>();
@@ -67,6 +69,8 @@ public final class RoutingBoardUndoFacade {
         outputStream.flush();
         serializedBoard = byteArrayOutputStream.toByteArray();
         clearanceBaseline = board.clearanceBaseline;
+        // Taken with the board written: the copy has the same items, so the same counts.
+        ledgerCounts = board.routingLedger().counts();
       } catch (Exception exception) {
         FRLogger.error("Exception in deep_copy_routing_board" + exception, exception);
         return null;
@@ -80,6 +84,8 @@ public final class RoutingBoardUndoFacade {
       boardCopy.clearanceBaseline = clearanceBaseline;
       boardCopy.clearAllItemTemporaryAutorouteData();
       boardCopy.finishAutoroute();
+      // The copy has the same incomplete counts: no need to count every net again.
+      boardCopy.routingLedger().seed(ledgerCounts);
       return boardCopy;
     } catch (Exception exception) {
       FRLogger.error("Exception in deep_copy_routing_board" + exception, exception);
