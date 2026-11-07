@@ -78,6 +78,11 @@ public class Net implements Comparable<Net>, ItemInfoPrinter.Printable, Serializ
     return this.netClass;
   }
 
+  /** True if the class of this net is routed first (router.autorouter.priority_net_classes). */
+  public boolean isRoutedFirst() {
+    return this.netClass != null && this.netClass.isRoutedFirst;
+  }
+
   /** Sets the class of this net. */
   public void setClass(NetClass netClass) {
     this.netClass = netClass;

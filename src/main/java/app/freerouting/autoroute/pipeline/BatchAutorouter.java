@@ -85,6 +85,32 @@ public final class BatchAutorouter extends NamedAlgorithm {
   /** Which net ripped which during this stage, so a moved net does not take its space back. */
   final RipupMemory ripupMemory = new RipupMemory();
 
+  /** Nets of the priority net classes, in net order; null until first asked. */
+  private SortedSet<Integer> routedFirstNets;
+
+  /**
+   * Nets whose traces and vias {@code netNo} may not rip: those the rip-up memory keeps it away
+   * from, and, for a net outside the priority net classes, every net of those classes.
+   */
+  Set<Integer> netsNotToRipFor(int netNo) {
+    if (routedFirstNets == null) {
+      routedFirstNets = new TreeSet<>();
+      for (int i = 1; i <= board.rules.nets.maxNetNumber(); i++) {
+        Net net = board.rules.nets.get(i);
+        if (net != null && net.isRoutedFirst()) {
+          routedFirstNets.add(i);
+        }
+      }
+    }
+    Set<Integer> remembered = ripupMemory.netsNotToRip(netNo);
+    if (routedFirstNets.isEmpty()) {
+      return remembered;
+    }
+    SortedSet<Integer> result = new TreeSet<>(remembered);
+    result.addAll(routedFirstNets);
+    return result;
+  }
+
   protected RoutingJob job;
   int totalItemsRouted;
   boolean fanoutTimedOut;
