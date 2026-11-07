@@ -822,6 +822,23 @@ public class BasicBoard implements Serializable {
     return getItemRepository().getConductionAreas();
   }
 
+  /**
+   * Returns the conduction areas among items that are planes on a power layer, the planes a pad of
+   * a plane net drops into through a via. A teardrop or a pour on a signal layer is not one of
+   * them: it is reached like any other item of its net.
+   */
+  public Set<Item> powerLayerPlanes(Collection<Item> items) {
+    Set<Item> result = new TreeSet<>();
+    for (Item item : items) {
+      if (item instanceof ConductionArea area
+          && area.getComponentId() <= 0
+          && !layerStructure.layers[area.getLayer()].isSignal) {
+        result.add(area);
+      }
+    }
+    return result;
+  }
+
   /** Returns the list of all pins on the board. */
   public Collection<Pin> getPins() {
     return getItemRepository().getPins();
