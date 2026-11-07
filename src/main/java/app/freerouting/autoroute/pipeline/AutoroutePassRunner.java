@@ -66,6 +66,14 @@ final class AutoroutePassRunner {
 
       if (passNo > 1) {
         reorderSingleThreadItems(autorouteItemList, passNo);
+      } else if (router.settings.autorouter != null
+          && Boolean.TRUE.equals(router.settings.autorouter.planeAsPriority)) {
+        // plane_as_priority: the plane pads drop into their planes before the signals take the
+        // room around them (later passes already route plane items first).
+        List<Item> planeItems = new ArrayList<>();
+        autorouteItemList.removeIf(
+            item -> router.isPlaneItem(item, router.board) && planeItems.add(item));
+        autorouteItemList.addAll(0, planeItems);
       }
 
       // freerouting.net: the balls of ball grid parts first in the first pass, ring by ring
