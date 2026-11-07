@@ -30,6 +30,8 @@ class MicroNeckdownNearPinsTest extends RoutingFixtureTest {
     TestingSettings ts = new TestingSettings();
     ts.setMaxPasses(30);
     RoutingJob job = getRoutingJob("Issue153-wavefolder.dsn", ts);
+    // getRoutingJob sets 100 passes over the testing settings.
+    job.routerSettings.autorouter.maxPasses = 30;
     runRoutingJob(job);
 
     assertEquals(RoutingJobState.COMPLETED, job.state);
