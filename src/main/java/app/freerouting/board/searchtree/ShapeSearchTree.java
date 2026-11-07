@@ -44,6 +44,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.locks.Lock;
+import java.util.function.Function;
 
 /**
  * Elementary geometric search functions making direct use of the MinAreaTree in the package
@@ -457,6 +458,86 @@ public class ShapeSearchTree extends MinAreaTree {
   public Set<SearchTreeObject> overlappingObjects(ConvexShape shape, int layer) {
     Set<SearchTreeObject> result = new TreeSet<>();
     this.overlappingObjects(shape, layer, new int[0], result);
+    return result;
+  }
+
+  /**
+   * Returns the objects with a shape on layer layer which overlaps a tree shape of area containing
+   * one of their points, or null if area is not in this tree. points gives the points of an object,
+   * or null to leave the object out. If layer {@literal <} 0, the layer is ignored.
+   *
+   * <p>The result is the one of calling {@link #overlappingObjects(ConvexShape, int)} for each tree
+   * shape of area and keeping the objects with a point in that shape. But the tree is traversed
+   * once for the bounding shape of area, then once for each point, instead of once for each tree
+   * shape of area. points must depend on nothing but its argument.
+   */
+  public Set<SearchTreeObject> overlappingObjectsWithPointIn(
+      Item area, int layer, Function<SearchTreeObject, Point[]> points) {
+    Leaf[] areaLeaves = area.getSearchTreeEntries(this);
+    if (areaLeaves == null) {
+      return null;
+    }
+    RegularTileShape areaBounds = null;
+    for (Leaf areaLeaf : areaLeaves) {
+      if (areaLeaf != null) {
+        areaBounds =
+            areaBounds == null ? areaLeaf.boundingShape : areaBounds.union(areaLeaf.boundingShape);
+      }
+    }
+    Set<SearchTreeObject> result = new TreeSet<>();
+    if (areaBounds == null) {
+      return result;
+    }
+    Lock lock = readLock();
+    lock.lock();
+    List<Leaf> leaves = queryLeafBuffer.get();
+    List<Leaf> pointLeaves = new ArrayList<>();
+    try {
+      leaves.clear();
+      this.collectOverlapsUnlocked(areaBounds, leaves);
+      for (Leaf currentLeaf : leaves) {
+        SearchTreeObject currentObject = (SearchTreeObject) currentLeaf.object;
+        int shapeIndex = currentLeaf.shapeIndexInObject;
+        if ((layer >= 0 && currentObject.shapeLayer(shapeIndex) != layer)
+            || result.contains(currentObject)) {
+          continue;
+        }
+        Point[] objectPoints = points.apply(currentObject);
+        if (objectPoints == null) {
+          continue;
+        }
+        TileShape leafShape = null;
+        search:
+        for (Point point : objectPoints) {
+          pointLeaves.clear();
+          this.collectOverlapsUnlocked(
+              point.surroundingBox().boundingShape(boundingDirections), pointLeaves);
+          for (Leaf areaLeaf : pointLeaves) {
+            if (areaLeaf.object != area
+                || !currentLeaf.boundingShape.intersects(areaLeaf.boundingShape)) {
+              continue;
+            }
+            TileShape areaShape = area.getTreeShape(this, areaLeaf.shapeIndexInObject);
+            if (!areaShape.contains(point)) {
+              continue;
+            }
+            if (leafShape == null) {
+              leafShape = currentObject.getTreeShape(this, shapeIndex);
+            }
+            // Same test as overlappingTreeEntriesUnlocked: two octagons that overlap by their
+            // bounding octagons overlap.
+            if ((areaShape instanceof IntOctagon && leafShape instanceof IntOctagon)
+                || leafShape.intersects(areaShape)) {
+              result.add(currentObject);
+              break search;
+            }
+          }
+        }
+      }
+    } finally {
+      leaves.clear();
+      lock.unlock();
+    }
     return result;
   }
 
