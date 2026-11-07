@@ -65,6 +65,22 @@ public class AutorouterSettings implements Serializable, Cloneable {
   public String[] ignoreNetClasses;
 
   /**
+   * Net classes routed first: in every pass their connections are routed right after the plane pads
+   * and before the other signal nets, which may not rip them up. Names resolve as for {@code
+   * ignore_net_classes}.
+   */
+  @SerializedName("priority_net_classes")
+  @Schema(
+      description = "Net classes routed first in every pass; other signal nets may not rip them up",
+      example = "[\"ETH_DIFF\", \"ANALOG\"]")
+  public String[] priorityNetClasses;
+
+  /** Via costs of the nets of priority_net_classes; unset: the via costs of every other net. */
+  @SerializedName("priority_via_costs")
+  @Schema(description = "Via costs of the nets of priority_net_classes (unset: via_costs)")
+  public Integer priorityViaCosts;
+
+  /**
    * Erik Gavriluk (freerouting.net): whether nets that required necking on earlier connections
    * route at the neck width directly on later connections (skipping redundant class-width
    * searches).
@@ -118,6 +134,24 @@ public class AutorouterSettings implements Serializable, Cloneable {
   @Schema(description = "Extra seed for the autorouter item order")
   public Integer itemOrderSeed;
 
+  /**
+   * Every SMD pad of a net with a plane on a power layer is left out of the fanout and dropped into
+   * its plane by the autorouter, which routes it to the plane first: each pad gets a via of its own
+   * next to it instead of being joined to the nearest pad or via of the net.
+   */
+  @SerializedName("plane_as_priority")
+  @Schema(description = "Plane pads skip the fanout; each drops into its plane through its own via")
+  public Boolean planeAsPriority;
+
+  /**
+   * With plane_as_priority, a plane pad may share the via of a pad of its net already in the plane
+   * when the two pads are at most this far apart edge to edge (no via fits between them). Unset:
+   * 500 µm.
+   */
+  @SerializedName("plane_share_gap_um")
+  @Schema(description = "Plane pads closer than this (edge to edge, µm) may share one via")
+  public Double planeShareGapUm;
+
   /** Erik Gavriluk (freerouting.net): allows vias directly in SMD component pads of their net. */
   @SerializedName("via_in_pad")
   @Schema(description = "Allows vias directly in SMD component pads of their own net")
@@ -169,6 +203,9 @@ public class AutorouterSettings implements Serializable, Cloneable {
       AutorouterSettings copy = (AutorouterSettings) super.clone();
       if (this.ignoreNetClasses != null) {
         copy.ignoreNetClasses = this.ignoreNetClasses.clone();
+      }
+      if (this.priorityNetClasses != null) {
+        copy.priorityNetClasses = this.priorityNetClasses.clone();
       }
       return copy;
     } catch (CloneNotSupportedException e) {

@@ -9,6 +9,7 @@ import app.freerouting.drc.AirLine;
 import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
+import app.freerouting.rules.Net;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -84,6 +85,16 @@ final class LastMileBlockerRipup {
     for (int i = 0; i < item.netCount(); i++) {
       if (item.getNetNumber(i) == airlineNetNumber) {
         return false;
+      }
+    }
+    // a net outside the priority net classes may not remove copper of those classes
+    Net airlineNet = item.board != null ? item.board.rules.nets.get(airlineNetNumber) : null;
+    if (item.board != null && (airlineNet == null || !airlineNet.isRoutedFirst())) {
+      for (int i = 0; i < item.netCount(); i++) {
+        Net net = item.board.rules.nets.get(item.getNetNumber(i));
+        if (net != null && net.isRoutedFirst()) {
+          return false;
+        }
       }
     }
     if (memory != null) {

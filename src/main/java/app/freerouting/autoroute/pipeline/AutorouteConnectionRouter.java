@@ -8,13 +8,18 @@ import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.ConductionArea;
 import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.structure.Unit;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.drc.ClearanceBaseline;
+import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 /** Executes one autoroute connection, including necked retry and strict-DRC recovery. */
 final class AutorouteConnectionRouter {
@@ -25,24 +30,110 @@ final class AutorouteConnectionRouter {
     this.router = router;
   }
 
+  /**
+   * Set by {@link #route(Item, int, SortedSet, Map, int, boolean)} when it aimed at the plane only.
+   */
+  private boolean aimedAtPlaneOnly;
+
+  /**
+   * plane_as_priority: pads of the net already in the plane and at most plane_share_gap_um from
+   * {@code item}, edge to edge, are accepted as destinations next to the plane. No via fits between
+   * two such pads; sharing one is the usual practice for adjacent pins of a package.
+   */
+  private void addSharablePads(Item item, int netNo, Set<Item> destinations) {
+    if (!(item instanceof Pin pin)
+        || pin.firstLayer() != pin.lastLayer()
+        || router.settings.autorouter == null
+        || !Boolean.TRUE.equals(router.settings.autorouter.planeAsPriority)) {
+      return;
+    }
+    Double gapUm = router.settings.autorouter.planeShareGapUm;
+    double shareGapUm = gapUm != null ? gapUm : 500.0;
+    if (shareGapUm <= 0) {
+      return;
+    }
+    int resolution = Math.max(1, router.board.communication.resolution);
+    double maxGap = Unit.scale(shareGapUm * resolution, Unit.UM, router.board.communication.unit);
+    IntBox box = pin.boundingBox();
+    Set<Item> inPlane = new java.util.TreeSet<>();
+    for (Item plane : List.copyOf(destinations)) {
+      inPlane.addAll(plane.getConnectedSet(netNo));
+    }
+    for (Item other : inPlane) {
+      if (other instanceof Pin otherPin
+          && otherPin != pin
+          && otherPin.isOnLayer(pin.firstLayer())
+          && boxGap(box, otherPin.boundingBox()) <= maxGap) {
+        destinations.add(otherPin);
+      }
+    }
+  }
+
+  private Set<Item> planeEscapeObstacles(
+      Item item, int netNo, Set<Item> connectedSet, Set<Item> destinations) {
+    if (!(item instanceof Pin pin)
+        || router.settings.autorouter == null
+        || !Boolean.TRUE.equals(router.settings.autorouter.planeAsPriority)) {
+      return Set.of();
+    }
+    return router.board.planeEscapeObstacles(pin, netNo, connectedSet, destinations);
+  }
+
+  private static double boxGap(IntBox a, IntBox b) {
+    double dx = Math.max(0, Math.max(b.ll.x - a.ur.x, a.ll.x - b.ur.x));
+    double dy = Math.max(0, Math.max(b.ll.y - a.ur.y, a.ll.y - b.ur.y));
+    return Math.hypot(dx, dy);
+  }
+
+  /**
+   * Routes one connection of {@code item}. A pad of a plane net is first routed to its plane only,
+   * so that it drops into the plane through a via of its own instead of reaching a neighbouring pad
+   * of the same net on the outer layers (a short trace costs less than a via, and every unconnected
+   * pad of the net used to be a valid destination). Only when no route to the plane is found is the
+   * rest of the net accepted as destination, so a pad with no room for a via still gets connected.
+   */
   AutorouteAttemptResult route(
       Item item,
       int routeNetNo,
       SortedSet<Item> rippedItemList,
       Map<Item, Integer> ripupCosts,
       int ripupPassNo) {
+    AutorouteAttemptResult result =
+        route(item, routeNetNo, rippedItemList, ripupCosts, ripupPassNo, true);
+    if (aimedAtPlaneOnly
+        && (result.state == AutorouteAttemptState.FAILED
+            || result.state == AutorouteAttemptState.INSERT_ERROR)) {
+      result = route(item, routeNetNo, rippedItemList, ripupCosts, ripupPassNo, false);
+    }
+    return result;
+  }
+
+  private AutorouteAttemptResult route(
+      Item item,
+      int routeNetNo,
+      SortedSet<Item> rippedItemList,
+      Map<Item, Integer> ripupCosts,
+      int ripupPassNo,
+      boolean planeOnly) {
+    aimedAtPlaneOnly = false;
     try {
       Net routeNet = router.board.rules.nets.get(routeNetNo);
       boolean containsPlane = routeNet != null && routeNet.containsPlane();
+      boolean routedFirst = routeNet != null && routeNet.isRoutedFirst();
       int currentViaCosts =
-          containsPlane ? router.settings.getPlaneViaCosts() : router.settings.getViaCosts();
+          containsPlane
+              ? router.settings.getPlaneViaCosts()
+              : routedFirst ? router.settings.getPriorityViaCosts() : router.settings.getViaCosts();
 
       AutorouteControl autorouteControl =
           new AutorouteControl(
               router.board, routeNetNo, router.settings, currentViaCosts, router.getTraceCosts());
       autorouteControl.ripupAllowed = true;
       autorouteControl.ripupCosts = router.getStartRipupCosts() * ripupPassNo;
-      autorouteControl.netsNotToRip = router.ripupMemory.netsNotToRip(routeNetNo);
+      autorouteControl.netsNotToRip =
+          routedFirst
+              ? router.ripupMemory.netsNotToRip(routeNetNo)
+              : router.netsNotToRipFor(routeNetNo);
       autorouteControl.removeUnconnectedVias = router.isRemoveUnconnectedVias();
 
       Set<Item> unconnectedSet = item.getUnconnectedSet(routeNetNo);
@@ -53,6 +144,7 @@ final class AutorouteConnectionRouter {
       Set<Item> connectedSet = item.getConnectedSet(routeNetNo);
       Set<Item> routeStartSet;
       Set<Item> routeDestSet;
+      Set<Item> planeEscapeObstacles = Set.of();
       if (containsPlane) {
         for (Item currentItem : connectedSet) {
           if (currentItem instanceof ConductionArea) {
@@ -61,6 +153,20 @@ final class AutorouteConnectionRouter {
         }
         routeStartSet = connectedSet;
         routeDestSet = unconnectedSet;
+        if (planeOnly) {
+          Set<Item> planes = new TreeSet<>();
+          for (Item currentItem : unconnectedSet) {
+            if (currentItem instanceof ConductionArea && currentItem.getComponentId() <= 0) {
+              planes.add(currentItem);
+            }
+          }
+          if (!planes.isEmpty()) {
+            addSharablePads(item, routeNetNo, planes);
+            routeDestSet = planes;
+            aimedAtPlaneOnly = true;
+            planeEscapeObstacles = planeEscapeObstacles(item, routeNetNo, connectedSet, planes);
+          }
+        }
       } else {
         routeStartSet = unconnectedSet;
         routeDestSet = connectedSet;
@@ -112,13 +218,16 @@ final class AutorouteConnectionRouter {
         }
       }
 
+      // The obstacles below hold for this search only: rooms and drill pages built with them must
+      // not be retained for the next connection of the net.
+      boolean escaping = !planeEscapeObstacles.isEmpty();
       AutorouteEngine autorouteEngine =
           router.board.initAutoroute(
               routeNetNo,
               autorouteControl.traceClearanceClassIndex,
               router.thread,
               timeLimit,
-              router.isRetainAutorouteDatabase());
+              router.isRetainAutorouteDatabase() && !escaping);
       int maxItemIdBeforeRoute = router.board.communication.idGenerator.maxGeneratedId();
       // Strict DRC needs this snapshot to undo a rejected route together with the ripups it made,
       // so it is applied only when enabled explicitly: snapshotting every connection of every late
@@ -126,9 +235,19 @@ final class AutorouteConnectionRouter {
       byte[] strictDrcBoardSnapshot = strictDrc ? router.board.serialize(false) : null;
 
       long mazeSearchStart = BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
-      final AutorouteAttemptResult autorouteResult =
-          autorouteEngine.autorouteConnection(
-              routeStartSet, routeDestSet, autorouteControl, rippedItemList, ripupCosts);
+      AutorouteAttemptResult searchResult;
+      planeEscapeObstacles.forEach(obstacle -> obstacle.setPlaneEscapeObstacle(true));
+      try {
+        searchResult =
+            autorouteEngine.autorouteConnection(
+                routeStartSet, routeDestSet, autorouteControl, rippedItemList, ripupCosts);
+      } finally {
+        planeEscapeObstacles.forEach(obstacle -> obstacle.setPlaneEscapeObstacle(false));
+        if (escaping) {
+          router.board.finishAutoroute();
+        }
+      }
+      final AutorouteAttemptResult autorouteResult = searchResult;
       if (BatchAutorouter.isBenchmarkProfileEnabled()) {
         router.addProfileMazeSearchNanos(System.nanoTime() - mazeSearchStart);
       }

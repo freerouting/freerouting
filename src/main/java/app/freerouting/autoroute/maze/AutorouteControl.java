@@ -1,6 +1,7 @@
 package app.freerouting.autoroute.maze;
 
 import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.ConductionArea;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.structure.Unit;
@@ -13,6 +14,7 @@ import app.freerouting.rules.NetClass;
 import app.freerouting.rules.ViaInfo;
 import app.freerouting.rules.ViaRule;
 import app.freerouting.settings.RouterSettings;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
@@ -410,6 +412,50 @@ public class AutorouteControl {
     }
     minNormalViaCost = viaCosts * viaCostFactor;
     minCheapViaCost = 0.8 * minNormalViaCost;
+    applySignalLayerViaSurcharge(board, viaCosts, netNumber, viaCostFactor);
+  }
+
+  /**
+   * Distinguishes the two kinds of vias of a plane net. A via that drops from a signal layer into a
+   * plane of the net is the normal way to connect it and costs {@code viaCosts} (the plane via
+   * costs chosen by the caller). A via between two signal layers is an ordinary layer change of a
+   * trace and costs the regular via costs: the difference is added to that layer pair. The drill
+   * entry keeps the cheaper value, so the destination distance stays a lower bound.
+   */
+  private void applySignalLayerViaSurcharge(
+      RoutingBoard board, int viaCosts, int netNumber, double viaCostFactor) {
+    for (int i = 0; i < layerCount; i++) {
+      Arrays.fill(addViaCosts[i].toLayer, 0);
+    }
+    if (settings == null || netNumber <= 0) {
+      return;
+    }
+    int surcharge = (int) Math.round((settings.getViaCosts() - viaCosts) * viaCostFactor);
+    if (surcharge <= 0) {
+      return;
+    }
+    boolean[] planeLayer = new boolean[layerCount];
+    boolean anyPlane = false;
+    for (ConductionArea area : board.getConductionAreas()) {
+      int layer = area.getLayer();
+      if (layer >= 0
+          && layer < layerCount
+          && !board.layerStructure.layers[layer].isSignal
+          && area.containsNet(netNumber)) {
+        planeLayer[layer] = true;
+        anyPlane = true;
+      }
+    }
+    if (!anyPlane) {
+      return;
+    }
+    for (int i = 0; i < layerCount; i++) {
+      for (int j = 0; j < layerCount; j++) {
+        if (i != j && !planeLayer[i] && !planeLayer[j]) {
+          addViaCosts[i].toLayer[j] = surcharge;
+        }
+      }
+    }
   }
 
   /** Horizontal and vertical costs for traces on a board layer. */
