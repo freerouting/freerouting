@@ -16,7 +16,11 @@ import java.util.Random;
 public class PolygonShape extends PolylineShape {
 
   private static final int seed = 99;
-  private static final Random randomGenerator = new Random(seed);
+  // One generator per thread: each split resets the seed, so the pieces depend on the polygon
+  // only, even when threads split polygons at the same time (copies of a board read back in
+  // parallel).
+  private static final ThreadLocal<Random> randomGenerator =
+      ThreadLocal.withInitial(() -> new Random(seed));
   public final Point[] corners;
 
   /** Stores precalculated data for this polygon shape. */
@@ -553,7 +557,7 @@ public class PolygonShape extends PolylineShape {
     if (this.precalculatedConvexPieces == null) {
       // not yet precalculated
       // use a fixed seed to get reproducible result
-      randomGenerator.setSeed(seed);
+      randomGenerator.get().setSeed(seed);
       Collection<PolygonShape> convexPieces = splitToConvexRecu();
       if (convexPieces == null) {
         // split failed, maybe the polygon has selfontersections
@@ -572,7 +576,7 @@ public class PolygonShape extends PolylineShape {
   /** Private recursive part of split_to_convex. Returns a collection of polygon shape pieces. */
   private Collection<PolygonShape> splitToConvexRecu() {
     // start with a hashed corner and search the first concave corner
-    int startCornerNo = randomGenerator.nextInt(corners.length);
+    int startCornerNo = randomGenerator.get().nextInt(corners.length);
     Point currentCorner = corners[startCornerNo];
     Point prevCorner;
     if (startCornerNo != 0) {
