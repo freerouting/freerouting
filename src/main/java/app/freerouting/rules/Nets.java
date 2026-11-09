@@ -45,10 +45,10 @@ public class Nets implements Serializable {
       return null;
     }
     for (Net currentNet : nets) {
-      if (currentNet != null && name.equals(currentNet.name)) {
-        if (currentNet.subnetNumber == subnetNumber) {
-          return currentNet;
-        }
+      if (currentNet != null
+          && currentNet.subnetNumber == subnetNumber
+          && name.equals(currentNet.name)) {
+        return currentNet;
       }
     }
     return null;
@@ -73,7 +73,7 @@ public class Nets implements Serializable {
     if (netNumber < 1 || netNumber > nets.size()) {
       return null;
     }
-    Net result = nets.elementAt(netNumber - 1);
+    Net result = nets.get(netNumber - 1);
     if (result != null && result.netNumber != netNumber) {
       FRLogger.warn("Nets.get: inconsistent netNumber");
     }

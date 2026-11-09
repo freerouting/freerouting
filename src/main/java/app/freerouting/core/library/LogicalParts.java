@@ -40,7 +40,10 @@ public class LogicalParts implements Serializable {
 
   /** Returns the logical part with the specified index. Part IDs start at 1. */
   public LogicalPart get(int partId) {
-    LogicalPart result = partArr.elementAt(partId - 1);
+    if (partId < 1 || partId > partArr.size()) {
+      return null;
+    }
+    LogicalPart result = partArr.get(partId - 1);
     if (result != null && result.id != partId) {
       FRLogger.warn("LogicalParts.get: inconsistent part ID");
     }

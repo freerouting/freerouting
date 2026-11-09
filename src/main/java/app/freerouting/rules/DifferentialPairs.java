@@ -17,7 +17,7 @@ public class DifferentialPairs implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  /** Primary storage keyed by lowercase base name to preserve insertion order. */
+  /** Primary storage keyed by base name to preserve insertion order. */
   private final Map<String, DifferentialPair> pairsByName = new LinkedHashMap<>();
 
   /** Fast index mapping net numbers to their differential pair. */
