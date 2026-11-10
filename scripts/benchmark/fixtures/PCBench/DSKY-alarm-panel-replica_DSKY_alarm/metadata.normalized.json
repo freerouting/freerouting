@@ -51,11 +51,13 @@
     "2-layer",
     "complex",
     "medium",
-    "tier-c"
+    "tier-c",
+    "tier-t"
   ],
   "tier": "C",
   "expected_outcome": "partial",
   "timeout_budget": "06:00:00",
   "tier_index": 135,
-  "reference_seconds": 487.0
+  "reference_seconds": 487.0,
+  "tier_t": true
 }
