@@ -12,6 +12,7 @@ import app.freerouting.rules.Net;
 import app.freerouting.settings.sources.TestingSettings;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -38,6 +39,7 @@ import org.junit.jupiter.api.Test;
  * layer, only the fanout dropped pads into planes, and every pad it missed was chained to its
  * neighbours.
  */
+@Tag("slow")
 class PlaneViaGarlandRoutingTest extends RoutingFixtureTest {
 
   private static final String GARLAND = "Plane-via-garland-4layer.dsn";
@@ -112,6 +114,22 @@ class PlaneViaGarlandRoutingTest extends RoutingFixtureTest {
     List<String> chained = chainedPlanePads(job.board);
     // 24 of 26 measured (12 before plane pads stopped crossing each other's copper, 8 without the
     // option); the last two are neighbouring GND pads sharing the via set in the gap between them.
+    assertTrue(chained.size() <= 2, "Plane pads not escaping alone into their plane: " + chained);
+    assertNoTraceInPlaneLayers(job.board);
+  }
+
+  @Test
+  void planeAsPriorityKeepsItsObstaclesWhenNecking() {
+    TestingSettings settings = settings();
+    settings.setPlaneAsPriority(true);
+    settings.setNeckWidthUm(100);
+    RoutingJob job = getRoutingJob(ADC, settings);
+    runRoutingJob(job);
+
+    assertRoutingResult(job, ADC).maxIncompleteConnections(0).exactClearanceViolations(0).check();
+    List<String> chained = chainedPlanePads(job.board);
+    // A plane escape that failed at the class width used to be retried necked without its
+    // obstacles, through the neighbouring capacitor's pad: 4 chained pads instead of 2.
     assertTrue(chained.size() <= 2, "Plane pads not escaping alone into their plane: " + chained);
     assertNoTraceInPlaneLayers(job.board);
   }

@@ -417,10 +417,10 @@ public class AutorouteControl {
 
   /**
    * Distinguishes the two kinds of vias of a plane net. A via that drops from a signal layer into a
-   * plane of the net is the normal way to connect it and costs {@code viaCosts} (the plane via
-   * costs chosen by the caller). A via between two signal layers is an ordinary layer change of a
-   * trace and costs the regular via costs: the difference is added to that layer pair. The drill
-   * entry keeps the cheaper value, so the destination distance stays a lower bound.
+   * plane of the net costs {@code settings.getPlaneViaCosts()}, while a via between two signal
+   * layers costs {@code settings.getViaCosts()}. The base via cost is set to the cheaper of the two
+   * so that the destination distance stays an admissible lower bound, and the difference is charged
+   * through {@link #addViaCosts} on the more expensive layer pairs.
    */
   private void applySignalLayerViaSurcharge(
       RoutingBoard board, int viaCosts, int netNumber, double viaCostFactor) {
@@ -428,10 +428,6 @@ public class AutorouteControl {
       Arrays.fill(addViaCosts[i].toLayer, 0);
     }
     if (settings == null || netNumber <= 0) {
-      return;
-    }
-    int surcharge = (int) Math.round((settings.getViaCosts() - viaCosts) * viaCostFactor);
-    if (surcharge <= 0) {
       return;
     }
     boolean[] planeLayer = new boolean[layerCount];
@@ -449,10 +445,20 @@ public class AutorouteControl {
     if (!anyPlane) {
       return;
     }
+    int signalCost = settings.getViaCosts();
+    int planeCost = settings.getPlaneViaCosts();
+    int baseCost = Math.min(signalCost, planeCost);
+    minNormalViaCost = baseCost * viaCostFactor;
+    minCheapViaCost = 0.8 * minNormalViaCost;
+
+    int signalSurcharge = (int) Math.round((signalCost - baseCost) * viaCostFactor);
+    int planeSurcharge = (int) Math.round((planeCost - baseCost) * viaCostFactor);
+
     for (int i = 0; i < layerCount; i++) {
       for (int j = 0; j < layerCount; j++) {
-        if (i != j && !planeLayer[i] && !planeLayer[j]) {
-          addViaCosts[i].toLayer[j] = surcharge;
+        if (i != j) {
+          boolean touchesPlane = planeLayer[i] || planeLayer[j];
+          addViaCosts[i].toLayer[j] = touchesPlane ? planeSurcharge : signalSurcharge;
         }
       }
     }
