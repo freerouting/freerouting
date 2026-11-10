@@ -10,10 +10,13 @@ import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.datastructures.ShapeTree.TreeEntry;
+import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.PolylineArea;
 import app.freerouting.geometry.planar.TileShape;
+import app.freerouting.rules.Net;
+import app.freerouting.rules.ViaRule;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -62,6 +65,42 @@ public class DrillPage implements ExpandableObject {
     return result;
   }
 
+  /**
+   * For a net with a plane, offers in a free piece the via location nearest to each SMD pin of the
+   * net on this page, so that a plane pad finds a via next to itself. The centre of gravity of a
+   * large piece is often far from the pad, and the via of a neighbouring pad of the net was then
+   * the nearest drill, chaining the pads instead of dropping each into its plane.
+   */
+  private void addPlanePinCandidates(
+      AutorouteEngine autorouteEngine, TileShape drillShape, Collection<Pin> planePins, Net net) {
+    if (planePins.isEmpty() || net.getNetClass() == null) {
+      return;
+    }
+    ViaRule viaRule = net.getNetClass().getViaRule();
+    if (viaRule == null || viaRule.viaCount() == 0) {
+      return;
+    }
+    ConvexShape viaShape = viaRule.getVia(0).getPadstack().getShape(0);
+    if (viaShape == null) {
+      return;
+    }
+    ConvexShape shrunk = drillShape.shrink(0.5 * viaShape.maxWidth());
+    if (!(shrunk instanceof TileShape inner) || inner.isEmpty()) {
+      return;
+    }
+    for (Pin pin : planePins) {
+      Point location = inner.nearestPointApprox(pin.getCenter().toFloat()).round();
+      if (!drillShape.contains(location)) {
+        continue;
+      }
+      ExpansionDrill drill =
+          new ExpansionDrill(drillShape, location, 0, this.board.getLayerCount() - 1);
+      if (drill.calculateExpansionRooms(autorouteEngine)) {
+        this.drills.add(drill);
+      }
+    }
+  }
+
   /** Returns the drills on this page. If attachSmd, drilling to smd pins is allowed. */
   public Collection<ExpansionDrill> getDrills(AutorouteEngine autorouteEngine, boolean attachSmd) {
     return getDrills(autorouteEngine, attachSmd, true);
@@ -88,15 +127,28 @@ public class DrillPage implements ExpandableObject {
       Collection<TileShape> cutoutShapes = new LinkedList<>();
       // drills on top of existing vias are used in the ripup algorithm
       TileShape prevObstacleShape = IntBox.EMPTY;
+      Net net = this.board.rules.nets.get(this.netNumber);
+      boolean planeNet = net != null && net.containsPlane();
+      Collection<Pin> planePins = new LinkedList<>();
       for (TreeEntry currentEntry : overlaps) {
         if (!(currentEntry.object instanceof Item currentItem)) {
           continue;
+        }
+        if (planeNet
+            && currentItem instanceof Pin planePin
+            && planePin.firstLayer() == planePin.lastLayer()
+            && planePin.containsNet(this.netNumber)
+            && !planePins.contains(planePin)) {
+          planePins.add(planePin);
         }
         if (currentItem.isDrillable(this.netNumber)) {
           continue;
         }
         if (currentItem instanceof Pin pin) {
-          if (attachSmd && pin.drillAllowed() && pin.containsNet(this.netNumber)) {
+          if (attachSmd
+              && pin.drillAllowed()
+              && pin.containsNet(this.netNumber)
+              && !pin.isPlaneEscapeObstacle()) {
             continue;
           }
         }
@@ -147,6 +199,7 @@ public class DrillPage implements ExpandableObject {
         if (newDrill.calculateExpansionRooms(autorouteEngine)) {
           this.drills.add(newDrill);
         }
+        addPlanePinCandidates(autorouteEngine, currentDrillShape, planePins, net);
         if (centreOfGravityCandidate && pinCenter != null) {
           Point centreOfGravity = currentDrillShape.centreOfGravity().round();
           if (!centreOfGravity.equals(pinCenter)) {
