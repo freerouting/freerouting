@@ -261,10 +261,10 @@ def main() -> int:
         return False
 
     def board_tier_sort_key(board: dict[str, Any]) -> tuple[int, int]:
-        b_tier = board.get("tier")
-        rank = tier_rank.get(b_tier)
-        if rank is None and "T" in tier_rank and ("tier-t" in (board.get("tags") or []) or board.get("tier_t") is True):
+        if "T" in tier_rank and ("tier-t" in (board.get("tags") or []) or board.get("tier_t") is True):
             rank = tier_rank["T"]
+        else:
+            rank = tier_rank.get(board.get("tier"))
         return (rank if rank is not None else 10**9, board.get("tier_index", 10**9))
 
     boards = [b for b in boards if matches_tier_filter(b)]

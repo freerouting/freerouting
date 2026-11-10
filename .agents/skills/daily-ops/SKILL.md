@@ -61,10 +61,10 @@ When the user selects a batch of PRs to review (e.g. *"Review PRs #1001, #1002, 
 - Use `invoke_subagent` (`TypeName: "self"`, `Model: "inherit"`, `Workspace: "share"`) to launch parallel review workers.
 - **Concurrency Cap:** Launch at most **3 to 4 subagents concurrently** (the 12-core reference machine needs headroom for parallel Gradle test JVMs). If more than 4 PRs are requested, process them in waves of 3–4.
 
-### Step 2: Per-PR Subagent Checklist (8-Step Protocol + Copilot Loop)
+### Step 2: Per-PR Subagent Checklist (9-Step Protocol + Copilot Loop)
 Each subagent executes the following inside its isolated `share` workspace without polluting the main chat context:
 1. **Workspace Lean Setup (Sparse Checkout):**
-   - In the isolated shared workspace / worktree, immediately enable sparse-checkout to exclude heavy benchmark corpus fixtures, baseline binaries, and integration packages. This drops the worktree footprint from 2.3 GB down to ~280 MB, keeping parallel worktree disk usage minimal:
+   - In the isolated shared workspace / worktree, immediately enable sparse-checkout to exclude heavy benchmark corpus fixtures, baseline binaries, and integration packages. This drops the worktree footprint from 2.3 GB down to ~280 MB, keeping parallel worktree disk usage minimal (note: if reviewing a PR that specifically modifies benchmark fixtures or integration packages, include those paths or omit the exclusion):
      ```powershell
      git sparse-checkout set --no-cone "/*" "!/scripts/benchmark/fixtures" "!/scripts/benchmark/binaries" "!/integrations"
      ```
