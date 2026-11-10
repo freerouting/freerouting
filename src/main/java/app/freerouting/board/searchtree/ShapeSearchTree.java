@@ -473,26 +473,28 @@ public class ShapeSearchTree extends MinAreaTree {
    */
   public Set<SearchTreeObject> overlappingObjectsWithPointIn(
       Item area, int layer, Function<SearchTreeObject, Point[]> points) {
-    Leaf[] areaLeaves = area.getSearchTreeEntries(this);
-    if (areaLeaves == null) {
-      return null;
-    }
-    RegularTileShape areaBounds = null;
-    for (Leaf areaLeaf : areaLeaves) {
-      if (areaLeaf != null) {
-        areaBounds =
-            areaBounds == null ? areaLeaf.boundingShape : areaBounds.union(areaLeaf.boundingShape);
-      }
-    }
-    Set<SearchTreeObject> result = new TreeSet<>();
-    if (areaBounds == null) {
-      return result;
-    }
     Lock lock = readLock();
     lock.lock();
     List<Leaf> leaves = queryLeafBuffer.get();
-    List<Leaf> pointLeaves = new ArrayList<>();
     try {
+      Leaf[] areaLeaves = area.getSearchTreeEntries(this);
+      if (areaLeaves == null) {
+        return null;
+      }
+      RegularTileShape areaBounds = null;
+      for (Leaf areaLeaf : areaLeaves) {
+        if (areaLeaf != null) {
+          areaBounds =
+              areaBounds == null
+                  ? areaLeaf.boundingShape
+                  : areaBounds.union(areaLeaf.boundingShape);
+        }
+      }
+      Set<SearchTreeObject> result = new TreeSet<>();
+      if (areaBounds == null) {
+        return result;
+      }
+      List<Leaf> pointLeaves = new ArrayList<>();
       leaves.clear();
       this.collectOverlapsUnlocked(areaBounds, leaves);
       for (Leaf currentLeaf : leaves) {
@@ -534,11 +536,11 @@ public class ShapeSearchTree extends MinAreaTree {
           }
         }
       }
+      return result;
     } finally {
       leaves.clear();
       lock.unlock();
     }
-    return result;
   }
 
   /**
