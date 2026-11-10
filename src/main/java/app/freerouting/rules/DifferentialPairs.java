@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -18,7 +17,7 @@ public class DifferentialPairs implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  /** Primary storage keyed by lowercase base name to preserve insertion order. */
+  /** Primary storage keyed by base name to preserve insertion order. */
   private final Map<String, DifferentialPair> pairsByName = new LinkedHashMap<>();
 
   /** Fast index mapping net numbers to their differential pair. */
@@ -39,7 +38,7 @@ public class DifferentialPairs implements Serializable {
   public synchronized void add(DifferentialPair pair) {
     Objects.requireNonNull(pair, "pair cannot be null");
 
-    String key = pair.baseName().toLowerCase(Locale.ROOT);
+    String key = pair.baseName();
     DifferentialPair existingByName = this.pairsByName.get(key);
     if (existingByName != null && !hasSameIdentity(existingByName, pair)) {
       throw new IllegalArgumentException(
@@ -61,7 +60,7 @@ public class DifferentialPairs implements Serializable {
   }
 
   private static boolean hasSameIdentity(DifferentialPair a, DifferentialPair b) {
-    return a.baseName().equalsIgnoreCase(b.baseName())
+    return a.baseName().equals(b.baseName())
         && a.positiveNet().equals(b.positiveNet())
         && a.negativeNet().equals(b.negativeNet());
   }
@@ -120,7 +119,17 @@ public class DifferentialPairs implements Serializable {
     if (baseName == null) {
       return null;
     }
-    return this.pairsByName.get(baseName.toLowerCase(Locale.ROOT));
+    DifferentialPair exact = this.pairsByName.get(baseName);
+    if (exact != null) {
+      return exact;
+    }
+    // Case-insensitive fallback for loose lookups
+    for (Map.Entry<String, DifferentialPair> entry : this.pairsByName.entrySet()) {
+      if (entry.getKey().equalsIgnoreCase(baseName)) {
+        return entry.getValue();
+      }
+    }
+    return null;
   }
 
   /**
@@ -156,7 +165,7 @@ public class DifferentialPairs implements Serializable {
     if (pair == null) {
       return false;
     }
-    String key = pair.baseName().toLowerCase(Locale.ROOT);
+    String key = pair.baseName();
     DifferentialPair existing = this.pairsByName.get(key);
     if (existing != null && hasSameIdentity(existing, pair)) {
       this.pairsByName.remove(key);

@@ -20,6 +20,8 @@
   },
   "license": "GPL-3.0",
   "resources": {
+    "Homepage": "https://www.freerouting.app/",
+    "Donate": "https://www.freerouting.app/donate.html",
     "Github": "https://github.com/freerouting/freerouting/tree/master/integrations/KiCad"
   },
   "versions": [

@@ -1,7 +1,5 @@
 package app.freerouting.architecture;
 
-import static com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAnyPackage;
-import static com.tngtech.archunit.core.domain.JavaClass.Predicates.resideOutsideOfPackage;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.slices;
 
@@ -24,7 +22,7 @@ class ModuleBoundariesArchTest {
 
   /**
    * Pipeline + headless-support packages that must stay independent of the GUI layer, Swing, and
-   * AWT UI types (only {@code java.awt.geom} is whitelisted). See the SoC plan §1.1 (D15).
+   * AWT types. See the SoC plan §1.1 (D15).
    */
   private static final String[] PIPELINE_SUPPORT_PACKAGES = {
     "app.freerouting.board..",
@@ -204,20 +202,20 @@ class ModuleBoundariesArchTest {
   }
 
   /**
-   * F2 (strict): pipeline/support packages must not depend on AWT UI types; only {@code
-   * java.awt.geom} is whitelisted. Rendering and font concerns belong to the GUI layer.
+   * F2 (strict): pipeline/support packages must not depend on any AWT types ({@code java.awt..}).
+   * Rendering, font, and UI concerns belong to the GUI layer.
    */
   @Test
-  void pipelineMustNotDependOnAwtUiTypes() {
+  void pipelineMustNotDependOnAwtTypes() {
     JavaClasses classes = importMainClasses();
     noClasses()
         .that()
         .resideInAnyPackage(PIPELINE_SUPPORT_PACKAGES)
         .should()
-        .dependOnClassesThat(
-            resideInAnyPackage("java.awt..").and(resideOutsideOfPackage("java.awt.geom..")))
+        .dependOnClassesThat()
+        .resideInAnyPackage("java.awt..")
         .because(
-            "only java.awt.geom is whitelisted in pipeline/support packages (D15); AWT UI"
+            "pipeline/support packages must stay decoupled from java.desktop / AWT (D15); AWT"
                 + " types are GUI concerns")
         .check(classes);
   }

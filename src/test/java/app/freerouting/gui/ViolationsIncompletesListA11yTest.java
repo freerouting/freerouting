@@ -46,10 +46,9 @@ class ViolationsIncompletesListA11yTest {
   private static final int EXPECTED_UNIQUE_VIOLATIONS = 67;
 
   /**
-   * Current airline count for the incomplete fixture. Rational junction connectivity reduced it
-   * from 9.
+   * Current airline count for the fixture. All nets are fully routed, resulting in 0 incompletes.
    */
-  private static final int EXPECTED_INCOMPLETES = 3;
+  private static final int EXPECTED_INCOMPLETES = 0;
 
   @BeforeEach
   void setUp() {

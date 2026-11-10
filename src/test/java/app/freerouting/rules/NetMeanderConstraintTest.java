@@ -300,4 +300,33 @@ class NetMeanderConstraintTest {
         rules.getDefaultMeanderConstraint(MeanderPatternType.DIFF_PAIR),
         usbN.getMeanderConstraint());
   }
+
+  @Test
+  void testLegacyEnumSetDeserializationNormalization() throws Exception {
+    BoardRules rules = createTestBoard().rules;
+    // Simulate legacy serialized state holding an EnumSet
+    java.lang.reflect.Field field = BoardRules.class.getDeclaredField("explicitMeanderConstraints");
+    field.setAccessible(true);
+    field.set(rules, java.util.EnumSet.of(MeanderPatternType.DIFF_PAIR));
+
+    java.io.ByteArrayOutputStream bout = new java.io.ByteArrayOutputStream();
+    try (java.io.ObjectOutputStream out = new java.io.ObjectOutputStream(bout)) {
+      out.writeObject(rules);
+    }
+
+    BoardRules deserialized;
+    try (app.freerouting.util.SafeObjectInputStream in =
+        new app.freerouting.util.SafeObjectInputStream(
+            new java.io.ByteArrayInputStream(bout.toByteArray()))) {
+      deserialized = (BoardRules) in.readObject();
+    }
+
+    assertNotNull(deserialized);
+    assertTrue(deserialized.hasExplicitMeanderConstraint(MeanderPatternType.DIFF_PAIR));
+    assertFalse(deserialized.hasExplicitMeanderConstraint(MeanderPatternType.SINGLE_TRACK));
+    Object normalizedSet = field.get(deserialized);
+    assertTrue(
+        normalizedSet instanceof java.util.HashSet,
+        "Deserialized explicitMeanderConstraints must be normalized to HashSet");
+  }
 }

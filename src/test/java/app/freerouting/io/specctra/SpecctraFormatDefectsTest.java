@@ -295,9 +295,9 @@ class SpecctraFormatDefectsTest {
     assertNotNull(c2);
     assertNotNull(c3);
 
-    int cl1 = board.rules.clearanceMatrix.getNo(c1.getName());
-    int cl2 = board.rules.clearanceMatrix.getNo(c2.getName());
-    int cl3 = board.rules.clearanceMatrix.getNo(c3.getName());
+    int cl1 = c1.getTraceClearanceClass();
+    int cl2 = c2.getTraceClearanceClass();
+    int cl3 = c3.getTraceClearanceClass();
     assertTrue(cl1 > 0);
     assertTrue(cl2 > 0);
     assertTrue(cl3 > 0);

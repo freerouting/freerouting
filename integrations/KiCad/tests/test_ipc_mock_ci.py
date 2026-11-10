@@ -441,6 +441,38 @@ class TestIpcDialogAndClient(unittest.TestCase):
         self.assertEqual(out, '{"tracks": []}')
         client.download_json_output.assert_called_once_with("fake-job-id")
 
+    def test_success_shows_support_link_and_button(self):
+        from ipc_dialog import IpcRoutingDialog
+
+        dialog = IpcRoutingDialog()
+        dialog._root = MagicMock()
+        dialog._progressbar = MagicMock()
+        dialog._status_var = MagicMock()
+        dialog._detail_var = MagicMock()
+        dialog._cancel_btn = MagicMock()
+        dialog._support_btn = MagicMock()
+        dialog._support_lbl = MagicMock()
+        dialog._support_note_var = MagicMock()
+
+        dialog.complete_success("Committed 10 tracks and 2 vias to KiCad.")
+        dialog._poll_queue()
+
+        dialog._status_var.set.assert_called_with("✓ Routing Completed Successfully")
+        dialog._detail_var.set.assert_called_with("Committed 10 tracks and 2 vias to KiCad.")
+        dialog._support_note_var.set.assert_called_with(
+            "Freerouting is an open-source project supported by community donations."
+        )
+        dialog._support_btn.pack.assert_called_once()
+        dialog._cancel_btn.config.assert_called_once()
+
+    @patch("webbrowser.open")
+    def test_open_support_url_invokes_webbrowser(self, mock_webbrowser):
+        from ipc_dialog import IpcRoutingDialog
+
+        dialog = IpcRoutingDialog()
+        dialog._open_support_url()
+        mock_webbrowser.assert_called_once_with("https://www.freerouting.app/donate.html")
+
 
 if __name__ == "__main__":
     unittest.main()

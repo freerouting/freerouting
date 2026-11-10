@@ -5,6 +5,7 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.util.TextManager;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Vector;
@@ -40,11 +41,14 @@ public class Nets implements Serializable {
 
   /** Returns the net with the given name and subnet number, or null if no such net exists. */
   public Net get(String name, int subnetNumber) {
+    if (name == null) {
+      return null;
+    }
     for (Net currentNet : nets) {
-      if (currentNet != null && currentNet.name.equalsIgnoreCase(name)) {
-        if (currentNet.subnetNumber == subnetNumber) {
-          return currentNet;
-        }
+      if (currentNet != null
+          && currentNet.subnetNumber == subnetNumber
+          && name.equals(currentNet.name)) {
+        return currentNet;
       }
     }
     return null;
@@ -52,9 +56,12 @@ public class Nets implements Serializable {
 
   /** Returns all subnets with the given name. */
   public Collection<Net> get(String name) {
+    if (name == null) {
+      return Collections.emptyList();
+    }
     Collection<Net> result = new LinkedList<>();
     for (Net currentNet : nets) {
-      if (currentNet != null && currentNet.name.equalsIgnoreCase(name)) {
+      if (currentNet != null && name.equals(currentNet.name)) {
         result.add(currentNet);
       }
     }
@@ -66,7 +73,7 @@ public class Nets implements Serializable {
     if (netNumber < 1 || netNumber > nets.size()) {
       return null;
     }
-    Net result = nets.elementAt(netNumber - 1);
+    Net result = nets.get(netNumber - 1);
     if (result != null && result.netNumber != netNumber) {
       FRLogger.warn("Nets.get: inconsistent netNumber");
     }
