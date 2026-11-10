@@ -445,7 +445,10 @@ public class AutorouteControl {
     if (!anyPlane) {
       return;
     }
-    int signalCost = settings.getViaCosts();
+    Net net =
+        board.rules != null && board.rules.nets != null ? board.rules.nets.get(netNumber) : null;
+    boolean routedFirst = net != null && net.isRoutedFirst();
+    int signalCost = routedFirst ? settings.getPriorityViaCosts() : settings.getViaCosts();
     int planeCost = settings.getPlaneViaCosts();
     int baseCost = Math.min(signalCost, planeCost);
     minNormalViaCost = baseCost * viaCostFactor;

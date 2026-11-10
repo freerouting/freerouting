@@ -1071,8 +1071,11 @@ public class RoutingBoard extends BasicBoard implements Serializable {
           (item1, item2) ->
               Boolean.compare(isPlaneOnPowerLayer(item2), isPlaneOnPowerLayer(item1)));
     }
+    boolean routedFirst = pinNet != null && pinNet.isRoutedFirst();
     int fanoutViaCosts =
-        planeNet ? routerSettings.getPlaneViaCosts() : routerSettings.getViaCosts();
+        planeNet
+            ? routerSettings.getPlaneViaCosts()
+            : (routedFirst ? routerSettings.getPriorityViaCosts() : routerSettings.getViaCosts());
     AutorouteControl ctrlSettings =
         new AutorouteControl(
             this, pinNetNo, routerSettings, fanoutViaCosts, routerSettings.getTraceCosts());

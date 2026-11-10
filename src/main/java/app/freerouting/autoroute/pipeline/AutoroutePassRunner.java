@@ -75,6 +75,7 @@ final class AutoroutePassRunner {
             item -> router.isPlaneItem(item, router.board) && planeItems.add(item));
         autorouteItemList.addAll(0, planeItems);
       }
+      priorityItemsFirst(autorouteItemList);
 
       // freerouting.net: the balls of ball grid parts first in the first pass, ring by ring
       // (router.autorouter.ball_escape_order); a retry plan still goes ahead of them.
@@ -352,6 +353,43 @@ final class AutoroutePassRunner {
     autorouteItemList.clear();
     autorouteItemList.addAll(planeItems);
     autorouteItemList.addAll(signalItems);
+  }
+
+  /**
+   * Moves the items of the priority net classes (router.autorouter.priority_net_classes) ahead of
+   * the other signal items, after the plane items, keeping the order within each group. Nothing
+   * moves on a board without priority classes.
+   */
+  private void priorityItemsFirst(List<Item> autorouteItemList) {
+    List<Item> planeItems = new ArrayList<>();
+    List<Item> priorityItems = new ArrayList<>();
+    List<Item> otherItems = new ArrayList<>();
+    for (Item item : autorouteItemList) {
+      if (router.isPlaneItem(item, router.board)) {
+        planeItems.add(item);
+      } else if (isRoutedFirst(item)) {
+        priorityItems.add(item);
+      } else {
+        otherItems.add(item);
+      }
+    }
+    if (priorityItems.isEmpty()) {
+      return;
+    }
+    autorouteItemList.clear();
+    autorouteItemList.addAll(planeItems);
+    autorouteItemList.addAll(priorityItems);
+    autorouteItemList.addAll(otherItems);
+  }
+
+  private boolean isRoutedFirst(Item item) {
+    for (int i = 0; i < item.netCount(); i++) {
+      Net net = router.board.rules.nets.get(item.getNetNumber(i));
+      if (net != null && net.isRoutedFirst()) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
