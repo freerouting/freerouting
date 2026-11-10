@@ -142,6 +142,10 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
                     }
                     // ignore also all objects, whose intersection is contained in the
                     // 2-dim overlap-door with the fromRoom.
+                    if (!ignoreShape.contains(currentShape)) {
+                      newResult.add(currentRoom);
+                      newBoundingShape = newBoundingShape.union(currentShape);
+                    }
                     continue;
                   }
                 }

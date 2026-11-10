@@ -31,6 +31,8 @@ import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -333,6 +335,13 @@ public class MazeSearchEngine {
       currentDoorSection = listElement.door.getMazeSearchElement(currentSectionNo);
 
       if (!currentDoorSection.isOccupied) {
+        // A section left unoccupied may already be the backtrack door of elements expanded from
+        // it, for example the drill of a via room. Reassigning its backtrack door from one of
+        // those descendants would close a cycle in the backtrack chain.
+        if (currentDoorSection.backtrackDoor != null
+            && closesBacktrackCycle(listElement, currentDoorSection)) {
+          continue;
+        }
         nextElementFound = true;
         break;
       }
@@ -382,6 +391,30 @@ public class MazeSearchEngine {
     }
     currentDoorSection.isOccupied = true;
     return true;
+  }
+
+  /**
+   * Returns true, if the backtrack chain starting at the backtrack door of {@code listElement}
+   * passes through {@code section}, so that occupying {@code section} from {@code listElement}
+   * would close a cycle in the backtrack chain.
+   */
+  static boolean closesBacktrackCycle(MazeListElement listElement, MazeSearchElement section) {
+    Set<MazeSearchElement> visited = Collections.newSetFromMap(new IdentityHashMap<>());
+    ExpandableObject door = listElement.backtrackDoor;
+    int sectionNo = listElement.sectionNoOfBacktrackDoor;
+    while (door != null) {
+      MazeSearchElement current =
+          door.getMazeSearchElement(Math.min(sectionNo, door.mazeSearchElementCount() - 1));
+      if (current == section) {
+        return true;
+      }
+      if (!visited.add(current)) {
+        return false;
+      }
+      door = current.backtrackDoor;
+      sectionNo = current.sectionNoOfBacktrackDoor;
+    }
+    return false;
   }
 
   /**
