@@ -2,6 +2,7 @@ package app.freerouting.settings;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
@@ -44,8 +45,21 @@ class RouterMaxThreadsMergeTest {
     RouterSettings merged = mergeCli("-mt", "0");
 
     assertFalse(merged.getRunOptimizer());
+    assertNull(merged.maxThreads);
     int expected = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
     assertEquals(expected, merged.getOptimizerMaxThreads());
+    assertEquals(expected, merged.getAutorouterMaxThreads());
+  }
+
+  @Test
+  void optimizerDisabledFlagLeavesMaxThreadsUnset() {
+    RouterSettings merged = mergeCli("--router.optimizer.enabled=false");
+
+    assertFalse(merged.getRunOptimizer());
+    assertNull(merged.maxThreads);
+    int expected = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
+    assertEquals(expected, merged.getOptimizerMaxThreads());
+    assertEquals(expected, merged.getAutorouterMaxThreads());
   }
 
   @Test

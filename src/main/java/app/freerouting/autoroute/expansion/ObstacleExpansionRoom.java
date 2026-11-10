@@ -1,14 +1,17 @@
 package app.freerouting.autoroute.expansion;
 
 import app.freerouting.autoroute.AutorouteDiagnostic;
+import app.freerouting.board.actions.ItemSelectionFilter;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.searchtree.SearchTreeObject;
 import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.board.trace.PolylineTrace;
+import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.TileShape;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /** Expansion Room used for pushing and ripping obstacles in the autoroute algorithm. */
 public class ObstacleExpansionRoom implements CompleteExpansionRoom {
@@ -93,10 +96,35 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
         return false;
       }
     }
+    if (this.item != other.item && meetOnPin(this.item, other.item)) {
+      return false;
+    }
     ExpansionDoor newDoor = new ExpansionDoor(this, other, 2);
     this.addDoor(newDoor);
     other.addDoor(newDoor);
     return true;
+  }
+
+  /**
+   * Whether two traces meet at a common end lying on a pin, as two traces of a net leaving the same
+   * pad. Ripping both up does not remove the pin, so a path from one to the other through their
+   * overlap would run through it.
+   */
+  private static boolean meetOnPin(Item first, Item second) {
+    if (!(first instanceof PolylineTrace a) || !(second instanceof PolylineTrace b)) {
+      return false;
+    }
+    for (Point end : new Point[] {a.firstCorner(), a.lastCorner()}) {
+      if (end.equals(b.firstCorner()) || end.equals(b.lastCorner())) {
+        ItemSelectionFilter pinFilter =
+            new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.PINS);
+        Set<Item> pins = a.board.pickItems(end, a.getLayer(), pinFilter);
+        if (!pins.isEmpty()) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   /** Returns the list of doors of this room to neighbour expansion rooms. */

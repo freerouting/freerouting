@@ -747,6 +747,14 @@ public abstract class Item
   }
 
   /**
+   * The normal contacts, for a walk over the connected items that only reads them: they are reused
+   * while no item of the board changes.
+   */
+  private Collection<Item> normalContactsForWalk() {
+    return board == null ? getNormalContacts() : board.cachedNormalContacts(this);
+  }
+
+  /**
    * Returns the contact point, if this item and other are Connectable and have a unique normal
    * contact. Returns null otherwise
    */
@@ -791,7 +799,7 @@ public abstract class Item
 
   /** Recursive part of get_connected_set. */
   private void getConnectedSetRecu(Set<Item> result, int netNumber, boolean stopAtPlane) {
-    Collection<Item> contactList = getNormalContacts();
+    Collection<Item> contactList = normalContactsForWalk();
     if (contactList == null) {
       return;
     }
@@ -824,7 +832,7 @@ public abstract class Item
     if (ignoreAreas && this instanceof ConductionArea) {
       return false;
     }
-    Collection<Item> contactList = getNormalContacts();
+    Collection<Item> contactList = normalContactsForWalk();
     if (contactList == null) {
       return false;
     }
