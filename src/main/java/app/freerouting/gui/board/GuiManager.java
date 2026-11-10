@@ -174,9 +174,7 @@ public class GuiManager {
           bs.connections.incompleteCount,
           bs.clearanceViolations.totalCount);
       newFrame.boardPanel.boardHandling.setNumThreads(
-          routingJob.routerSettings.maxThreads != null
-              ? routingJob.routerSettings.maxThreads
-              : routingJob.routerSettings.getAutorouterMaxThreads());
+          routingJob.routerSettings.getAutorouterMaxThreads());
       newFrame.boardPanel.boardHandling.setBoardUpdateStrategy(
           routingJob.routerSettings.optimizer.boardUpdateStrategy);
       newFrame.boardPanel.boardHandling.setItemSelectionStrategy(

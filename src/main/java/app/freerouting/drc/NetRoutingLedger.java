@@ -74,6 +74,42 @@ public final class NetRoutingLedger {
     return maximumConnections;
   }
 
+  /** Returns the incomplete-connection count of one net, recomputing dirty nets first. */
+  public synchronized int incompleteCount(int netNumber) {
+    ensureBuilt();
+    flushDirty();
+    return netNumber >= 1 && netNumber < incompleteByNet.length ? incompleteByNet[netNumber] : 0;
+  }
+
+  /** The counts of a built ledger, for the ledger of a copy of its board. */
+  public record Counts(int[] incompleteByNet, int incompleteTotal, int maximumConnections) {}
+
+  /** Returns the current counts, or null if the ledger is not built. */
+  public synchronized Counts counts() {
+    if (!built) {
+      return null;
+    }
+    flushDirty();
+    return new Counts(incompleteByNet.clone(), incompleteTotal, maximumConnections);
+  }
+
+  /**
+   * Builds this ledger for a copy of the board whose ledger gave {@code counts}, taking them
+   * instead of counting every net again: the copy has the same items. The item lists are built from
+   * this board as a full build does. Does nothing if {@code counts} is null or the net count
+   * differs.
+   */
+  public synchronized void seed(Counts counts) {
+    if (counts == null || counts.incompleteByNet().length != board.rules.nets.maxNetNumber() + 1) {
+      return;
+    }
+    buildItemLists();
+    incompleteByNet = counts.incompleteByNet().clone();
+    incompleteTotal = counts.incompleteTotal();
+    maximumConnections = counts.maximumConnections();
+    built = true;
+  }
+
   /** Returns every net that still has at least one incomplete connection. */
   public synchronized Set<Integer> incompleteNetNumbers() {
     ensureBuilt();
@@ -91,11 +127,25 @@ public final class NetRoutingLedger {
     if (built) {
       return;
     }
+    int maxNet = buildItemLists();
+    incompleteByNet = new int[maxNet + 1];
+    maximumConnections = countMaximumConnections();
+    incompleteTotal = 0;
+    for (int netNumber = 1; netNumber <= maxNet; netNumber++) {
+      int count = countNet(netNumber);
+      incompleteByNet[netNumber] = count;
+      incompleteTotal += count;
+    }
+    dirtyNets.clear();
+    built = true;
+  }
+
+  /** Fills the item lists from the board, as the first step of a build. Returns the net count. */
+  private int buildItemLists() {
     int maxNet = board.rules.nets.maxNetNumber();
     @SuppressWarnings("unchecked")
     List<Item>[] lists = new List[maxNet + 1];
     itemsByNet = lists;
-    incompleteByNet = new int[maxNet + 1];
     dirtyNets.clear();
     itemNets.clear();
     for (int netNumber = 1; netNumber <= maxNet; netNumber++) {
@@ -107,15 +157,7 @@ public final class NetRoutingLedger {
         itemNets.put(item, item.netNumbers.clone());
       }
     }
-    maximumConnections = countMaximumConnections();
-    incompleteTotal = 0;
-    for (int netNumber = 1; netNumber <= maxNet; netNumber++) {
-      int count = countNet(netNumber);
-      incompleteByNet[netNumber] = count;
-      incompleteTotal += count;
-    }
-    dirtyNets.clear();
-    built = true;
+    return maxNet;
   }
 
   private void flushDirty() {
