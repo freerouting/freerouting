@@ -61,40 +61,45 @@ When the user selects a batch of PRs to review (e.g. *"Review PRs #1001, #1002, 
 - Use `invoke_subagent` (`TypeName: "self"`, `Model: "inherit"`, `Workspace: "share"`) to launch parallel review workers.
 - **Concurrency Cap:** Launch at most **3 to 4 subagents concurrently** (the 12-core reference machine needs headroom for parallel Gradle test JVMs). If more than 4 PRs are requested, process them in waves of 3–4.
 
-### Step 2: Per-PR Subagent Checklist (7-Step Protocol + Copilot Loop)
+### Step 2: Per-PR Subagent Checklist (9-Step Protocol + Copilot Loop)
 Each subagent executes the following inside its isolated `share` workspace without polluting the main chat context:
-1. **Checkout & Access Check:**
+1. **Workspace Lean Setup (Sparse Checkout):**
+   - In the isolated shared workspace / worktree, immediately enable sparse-checkout to exclude heavy benchmark corpus fixtures, baseline binaries, and integration packages. This drops the worktree footprint from 2.3 GB down to ~280 MB, keeping parallel worktree disk usage minimal (note: if reviewing a PR that specifically modifies benchmark fixtures or integration packages, include those paths or omit the exclusion):
+     ```powershell
+     git sparse-checkout set --no-cone "/*" "!/scripts/benchmark/fixtures" "!/scripts/benchmark/binaries" "!/integrations"
+     ```
+2. **Checkout & Access Check:**
    - Check `gh pr view <number> --json maintainerCanModify,headRefName,baseRefName,mergeStateStatus`.
    - Checkout the PR (`gh pr checkout <number>`).
-2. **Update with Base Branch:**
+3. **Update with Base Branch:**
    - Fetch `origin/master` (`git fetch origin master`).
    - If behind or conflicting, merge `origin/master` (`git merge origin/master`), cleanly resolve conflicts, and verify compilation (`./gradlew compileJava compileTestJava -q`).
-3. **GitHub Copilot (Lite) Review Verification & Wait Loop:**
+4. **GitHub Copilot (Lite) Review Verification & Wait Loop:**
    - Inspect `gh pr view <number> --json reviews,reviewRequests,comments`.
    - If GitHub Copilot (`copilot-pull-request-reviewer[bot]`) has **not** reviewed the PR yet and is not currently requested:
      - Trigger Copilot review: `gh api --method POST repos/freerouting/freerouting/pulls/<number>/requested_reviewers -f "reviewers[]=copilot-pull-request-reviewer[bot]"` (or `gh pr edit <number> --add-reviewer "@copilot"`).
    - **Wait for Copilot:** Poll `gh pr view <number> --json reviews,reviewRequests` every 20 seconds (up to 5 minutes) until Copilot's review is posted.
    - Read all review comments (`gh api repos/freerouting/freerouting/pulls/<number>/comments`), evaluate every remark objectively, fix all valid issues, and reply to/resolve the review threads.
-4. **Diff-First Code Review & Unit Test Verification:**
+5. **Diff-First Code Review & Unit Test Verification:**
    - Inspect `gh pr diff <number>` and only the affected line ranges in source files.
    - Ensure unit tests exist and pass using **targeted, quiet execution**:
      ```powershell
      ./gradlew.bat test --tests "<AffectedTestClass>" -q
      ```
-5. **Security & Privacy Audit:**
+6. **Security & Privacy Audit:**
    - Secrets & Credentials: Ensure no API keys, tokens, or private credentials are included in code, fixtures, or tests.
    - Privacy & Telemetry: Ensure no user tracking, telemetry, or unsanctioned external network requests are introduced.
    - Boundaries & Input Validation: Guard against path traversal (`../`), command injection, unsafe reflection, and deserialization vulnerabilities in file formats (DSN/SES/rules), CLI arguments, and API endpoints.
    - Dependency Safety: Verify dependencies come from trusted sources with zero known CVEs.
-6. **Quality Gates:**
+7. **Quality Gates:**
    - Run `./gradlew.bat spotlessCheck checkstyleMain checkstyleTest -q` and `pre-commit run --all-files`.
    - If any fixes, conflict resolutions, or Copilot refinements were made, commit and push directly to the PR branch.
-7. **Milestone Verification:**
+8. **Milestone Verification:**
    - Check the PR milestone (`gh pr view <number> --json milestone`). If unset or set to `"Future"`, update it to the target release version (highest version-numbered open milestone, e.g. `2.6`, `2.7`):
      ```powershell
      gh pr edit <number> --milestone "<next-release-milestone>"
      ```
-8. **Return Compact Report:**
+9. **Return Compact Report:**
    - Return a concise summary to the parent orchestrator: PR `#`, Title, Files Changed, Copilot Findings Fixed, Security Audit Result, Test & Gate Status, Milestone, and Merge Readiness (`READY` / `NEEDS_ATTENTION`).
 
 ### Step 3: Present Unified Merge Dashboard & Wait for Confirmation

@@ -168,7 +168,7 @@ def main() -> int:
         "--tier",
         default="All",
         help="Tier filter and run order. Default All runs A, D, C, then B. "
-        "A comma-separated list runs those tiers in that order, for example C,A.",
+        "A comma-separated list runs those tiers in that order, for example C,A or T.",
     )
     parser.add_argument(
         "--workers",
@@ -252,8 +252,23 @@ def main() -> int:
     catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
     boards = catalog.get("boards", [])
     tier_rank = {tier: index for index, tier in enumerate(tier_order)}
-    boards = [b for b in boards if b.get("tier") in tier_rank]
-    boards.sort(key=lambda board: (tier_rank[board.get("tier")], board.get("tier_index", 10**9)))
+
+    def matches_tier_filter(board: dict[str, Any]) -> bool:
+        if board.get("tier") in tier_rank:
+            return True
+        if "T" in tier_rank and ("tier-t" in (board.get("tags") or []) or board.get("tier_t") is True):
+            return True
+        return False
+
+    def board_tier_sort_key(board: dict[str, Any]) -> tuple[int, int]:
+        if "T" in tier_rank and ("tier-t" in (board.get("tags") or []) or board.get("tier_t") is True):
+            rank = tier_rank["T"]
+        else:
+            rank = tier_rank.get(board.get("tier"))
+        return (rank if rank is not None else 10**9, board.get("tier_index", 10**9))
+
+    boards = [b for b in boards if matches_tier_filter(b)]
+    boards.sort(key=board_tier_sort_key)
 
     if args.filter:
         filter_terms = [f.strip().lower() for f in args.filter.split(",") if f.strip()]
