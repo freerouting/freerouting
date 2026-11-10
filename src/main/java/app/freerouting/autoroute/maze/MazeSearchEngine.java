@@ -687,7 +687,11 @@ public class MazeSearchEngine {
     }
     boolean result = false;
     for (TargetItemExpansionDoor toDoor : listElement.nextRoom.getTargetDoors()) {
-      if (toDoor.room != null && !ctrl.layerActive[toDoor.room.getLayer()]) {
+      // A target on an inactive signal layer is out of reach; an inactive power layer is a plane
+      // the routed net drops into through a via, so its targets stay reachable.
+      if (toDoor.room != null
+          && !ctrl.layerActive[toDoor.room.getLayer()]
+          && autorouteEngine.board.layerStructure.layers[toDoor.room.getLayer()].isSignal) {
         continue;
       }
       if (toDoor == listElement.door) {
@@ -695,6 +699,11 @@ public class MazeSearchEngine {
       }
       TileShape safeTargetShape = getWidthSafeTargetShape(toDoor);
       if (safeTargetShape == null || safeTargetShape.isEmpty()) {
+        continue;
+      }
+      if (!ctrl.layerActive[listElement.nextRoom.getLayer()]
+          && !safeTargetShape.contains(shapeEntryMiddle)) {
+        // On an inactive power layer the via has to land inside the plane: no trace there.
         continue;
       }
       FloatPoint connectionPoint = safeTargetShape.nearestPointApprox(shapeEntryMiddle);
@@ -1025,7 +1034,10 @@ public class MazeSearchEngine {
         if (currentTreeShape != null) {
           destinationDistance.join(currentTreeShape.boundingBox(), currentItem.shapeLayer(i));
         }
-        if (this.ctrl.layerActive[currentItem.shapeLayer(i)]) {
+        int shapeLayer = currentItem.shapeLayer(i);
+        // A plane on an inactive power layer is reached through a via: a valid destination.
+        if (this.ctrl.layerActive[shapeLayer]
+            || !this.autorouteEngine.board.layerStructure.layers[shapeLayer].isSignal) {
           anyActive = true;
         } else {
           anyInactive = true;
