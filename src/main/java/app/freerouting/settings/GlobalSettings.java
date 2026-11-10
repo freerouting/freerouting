@@ -21,6 +21,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 
 /** Aggregates persisted, runtime, and source-specific Freerouting settings. */
@@ -537,8 +538,15 @@ public class GlobalSettings implements Serializable {
 
   /** Applies non-router {@code FREEROUTING__} environment variables to this object. */
   public void applyNonRouterEnvironmentVariables() {
+    applyNonRouterEnvironmentVariables(System.getenv());
+  }
+
+  /**
+   * Applies non-router {@code FREEROUTING__} environment variables from the given environment map.
+   */
+  void applyNonRouterEnvironmentVariables(Map<String, String> environment) {
     // Read all the environment variables that begins with "FREEROUTING__"
-    for (var entry : System.getenv().entrySet()) {
+    for (var entry : environment.entrySet()) {
       if (entry.getKey().startsWith("FREEROUTING__")) {
         String propertyName =
             entry.getKey().substring("FREEROUTING__".length()).toLowerCase().replace("__", ".");
@@ -546,6 +554,11 @@ public class GlobalSettings implements Serializable {
         // Skip router settings - they're handled by EnvironmentVariablesSource
         // to prevent conflicts with the SettingsMerger
         if (propertyName.startsWith("router.")) {
+          continue;
+        }
+
+        // Skip user_data_path - handled and locked early by UserDataPathResolver
+        if ("user_data_path".equals(propertyName)) {
           continue;
         }
 

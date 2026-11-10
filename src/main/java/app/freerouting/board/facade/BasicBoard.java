@@ -1563,6 +1563,11 @@ public class BasicBoard implements Serializable {
     if (!connectionItems.contains(trace)) {
       return false;
     }
+    // getConnectionItems also returns the via at a fork that ends the connection. Such a via still
+    // joins the other items it touches (other traces, or a plane its drill passes through): keep
+    // it, or removing the cycle cuts them off from each other.
+    Set<Item> walked = Set.copyOf(connectionItems);
+    connectionItems.removeIf(item -> item instanceof Via via && touchesItemOutside(via, walked));
     // Remove tails at the endpoints after removing the cycle,
     // if there was no tail before.
     int currentLayer = trace.getLayer();
@@ -1585,6 +1590,15 @@ public class BasicBoard implements Serializable {
       }
     }
     return true;
+  }
+
+  private static boolean touchesItemOutside(Via via, Set<Item> items) {
+    for (Item contact : via.getNormalContacts()) {
+      if (!items.contains(contact)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private BoardItemRepository getItemRepository() {
