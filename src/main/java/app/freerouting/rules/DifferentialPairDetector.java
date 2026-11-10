@@ -3,10 +3,12 @@ package app.freerouting.rules;
 import app.freerouting.logger.FRLogger;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -162,7 +164,7 @@ public final class DifferentialPairDetector {
     }
     String base = trimmed.substring(0, trimmed.length() - 1);
     int localStart = base.lastIndexOf('/') + 1;
-    if (base.length() - localStart < 2
+    if (base.length() - localStart < 1
         || !Character.isLetterOrDigit(base.charAt(base.length() - 1))
         || isExcludedNet(base)) {
       return null;
@@ -214,12 +216,14 @@ public final class DifferentialPairDetector {
 
   private static final class CandidateEntry {
     private final String baseName;
+    private final SuffixStyle style;
     private Net positiveNet;
     private Net negativeNet;
     private boolean ambiguous;
 
-    CandidateEntry(String baseName) {
+    CandidateEntry(String baseName, SuffixStyle style) {
       this.baseName = baseName;
+      this.style = style;
     }
   }
 
@@ -258,7 +262,7 @@ public final class DifferentialPairDetector {
 
       CandidateKey key = new CandidateKey(info.baseName().toLowerCase(Locale.ROOT), info.style());
       CandidateEntry entry =
-          candidates.computeIfAbsent(key, k -> new CandidateEntry(info.baseName()));
+          candidates.computeIfAbsent(key, k -> new CandidateEntry(info.baseName(), info.style()));
 
       if (info.polarity() == Polarity.POSITIVE) {
         if (entry.positiveNet != null) {
@@ -281,14 +285,29 @@ public final class DifferentialPairDetector {
       }
     }
 
-    List<DifferentialPair> result = new ArrayList<>();
+    Map<String, CandidateEntry> bestByBase = new LinkedHashMap<>();
     for (CandidateEntry entry : candidates.values()) {
       if (!entry.ambiguous && entry.positiveNet != null && entry.negativeNet != null) {
-        if (boardRules.differentialPairs.findForNet(entry.positiveNet) == null
-            && boardRules.differentialPairs.findForNet(entry.negativeNet) == null
-            && boardRules.differentialPairs.get(entry.baseName) == null) {
-          result.add(new DifferentialPair(entry.positiveNet, entry.negativeNet, entry.baseName));
+        String baseKey = entry.baseName.toLowerCase(Locale.ROOT);
+        CandidateEntry existing = bestByBase.get(baseKey);
+        if (existing == null || entry.style.ordinal() < existing.style.ordinal()) {
+          bestByBase.put(baseKey, entry);
         }
+      }
+    }
+
+    List<DifferentialPair> result = new ArrayList<>();
+    Set<Net> takenNets = new HashSet<>();
+    for (CandidateEntry entry : bestByBase.values()) {
+      if (takenNets.contains(entry.positiveNet) || takenNets.contains(entry.negativeNet)) {
+        continue;
+      }
+      if (boardRules.differentialPairs.findForNet(entry.positiveNet) == null
+          && boardRules.differentialPairs.findForNet(entry.negativeNet) == null
+          && boardRules.differentialPairs.get(entry.baseName) == null) {
+        result.add(new DifferentialPair(entry.positiveNet, entry.negativeNet, entry.baseName));
+        takenNets.add(entry.positiveNet);
+        takenNets.add(entry.negativeNet);
       }
     }
 

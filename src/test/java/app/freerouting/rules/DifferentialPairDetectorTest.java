@@ -391,6 +391,51 @@ class DifferentialPairDetectorTest {
   }
 
   @Test
+  void testUndelimitedOneCharacterBaseName() {
+    app.freerouting.board.facade.RoutingBoard board = createTestBoard();
+    Net aP = board.rules.nets.add("AP", 1, false);
+    Net aN = board.rules.nets.add("AN", 1, false);
+    Net xP = board.rules.nets.add("/BUS/XP", 1, false);
+    Net xN = board.rules.nets.add("/BUS/XN", 1, false);
+    // Bare P/N without a base name must not be paired
+    board.rules.nets.add("P", 1, false);
+    board.rules.nets.add("N", 1, false);
+    board.rules.nets.add("/BUS/P", 1, false);
+    board.rules.nets.add("/BUS/N", 1, false);
+
+    java.util.List<DifferentialPair> detected =
+        DifferentialPairDetector.detectAndRegister(board.rules);
+
+    assertEquals(2, detected.size());
+    DifferentialPair pairA = board.rules.differentialPairs.get("A");
+    assertNotNull(pairA);
+    assertEquals(aP, pairA.positiveNet());
+    assertEquals(aN, pairA.negativeNet());
+    DifferentialPair pairX = board.rules.differentialPairs.get("/BUS/X");
+    assertNotNull(pairX);
+    assertEquals(xP, pairX.positiveNet());
+    assertEquals(xN, pairX.negativeNet());
+  }
+
+  @Test
+  void testDeduplicateCandidatesWithSameBaseName() {
+    app.freerouting.board.facade.RoutingBoard board = createTestBoard();
+    Net delimitedP = board.rules.nets.add("ETH_TX_P", 1, false);
+    Net delimitedN = board.rules.nets.add("ETH_TX_N", 1, false);
+    board.rules.nets.add("ETH_TXP", 1, false);
+    board.rules.nets.add("ETH_TXN", 1, false);
+
+    java.util.List<DifferentialPair> detected =
+        DifferentialPairDetector.detectAndRegister(board.rules);
+
+    assertEquals(1, detected.size());
+    DifferentialPair pair = board.rules.differentialPairs.get("ETH_TX");
+    assertNotNull(pair);
+    assertEquals(delimitedP, pair.positiveNet());
+    assertEquals(delimitedN, pair.negativeNet());
+  }
+
+  @Test
   void testMismatchedStylesNotPaired() {
     app.freerouting.board.facade.RoutingBoard board = createTestBoard();
     board.rules.nets.add("DATA_D+", 1, false);
