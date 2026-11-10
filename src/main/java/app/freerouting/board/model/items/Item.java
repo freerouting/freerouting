@@ -69,6 +69,12 @@ public abstract class Item
   /** Temporary data used in the autoroute algorithm. */
   private transient ItemAutorouteInfo autorouteInfo;
 
+  /**
+   * Set while a plane pad searches its own way into its plane: this item of the same net is then an
+   * obstacle like copper of another net, so the pad cannot reach the plane through it.
+   */
+  private transient boolean planeEscapeObstacle;
+
   public Item(
       int[] netNumbers,
       int clearanceClassIndex,
@@ -174,7 +180,17 @@ public abstract class Item
 
   @Override
   public boolean isTraceObstacle(int netNumber) {
-    return !containsNet(netNumber);
+    return planeEscapeObstacle || !containsNet(netNumber);
+  }
+
+  /** See {@link #planeEscapeObstacle}. */
+  public boolean isPlaneEscapeObstacle() {
+    return planeEscapeObstacle;
+  }
+
+  /** See {@link #planeEscapeObstacle}. */
+  public void setPlaneEscapeObstacle(boolean value) {
+    this.planeEscapeObstacle = value;
   }
 
   /** Returns true if the net number arrays of this and other have a common number. */
