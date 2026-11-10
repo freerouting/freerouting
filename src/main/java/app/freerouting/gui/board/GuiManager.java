@@ -16,7 +16,6 @@ import app.freerouting.io.specctra.SesReader;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.jobs.ThreadActionListener;
 import app.freerouting.management.sessions.SessionManager;
-import app.freerouting.rules.NetClasses;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.DsnFileSettings;
@@ -174,9 +173,7 @@ public class GuiManager {
           bs.connections.incompleteCount,
           bs.clearanceViolations.totalCount);
       newFrame.boardPanel.boardHandling.setNumThreads(
-          routingJob.routerSettings.maxThreads != null
-              ? routingJob.routerSettings.maxThreads
-              : routingJob.routerSettings.getAutorouterMaxThreads());
+          routingJob.routerSettings.getAutorouterMaxThreads());
       newFrame.boardPanel.boardHandling.setBoardUpdateStrategy(
           routingJob.routerSettings.optimizer.boardUpdateStrategy);
       newFrame.boardPanel.boardHandling.setItemSelectionStrategy(
@@ -457,19 +454,10 @@ public class GuiManager {
             confirmImportRulesMessage);
       }
 
-      // ignore net classes if they were defined by a command line argument
-      if (routingJob.routerSettings.autorouter.ignoreNetClasses != null) {
-        for (String netClassName : routingJob.routerSettings.autorouter.ignoreNetClasses) {
-          NetClasses netClasses =
-              newFrame.boardPanel.boardHandling.getRoutingBoard().rules.netClasses;
-
-          for (int i = 0; i < netClasses.count(); i++) {
-            if (netClasses.get(i).getName().equalsIgnoreCase(netClassName)) {
-              netClasses.get(i).isIgnoredByAutorouter = true;
-            }
-          }
-        }
-      }
+      // ignore net classes if they were defined by a command line argument, with the same name
+      // resolution as the headless and API paths (KiCad's default class, composite class names)
+      routingJob.routerSettings.applyNetClassExclusions(
+          newFrame.boardPanel.boardHandling.getRoutingBoard());
 
       newFrame.refreshWindows();
     }

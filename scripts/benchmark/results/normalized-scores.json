@@ -18466,5 +18466,85 @@
   "kitspace_XassetteAsterisk--unrouted--2.6.0-RC10--f08a2c15c": {
     "router_score": 933.78,
     "is_failed": false
+  },
+  "kassenautomat.mdb-interface_mdb-interface--unrouted--2.6.0-RC11--9fef543f3": {
+    "router_score": 1000.00,
+    "is_failed": false
+  },
+  "PoEPi-hardware__autosave-pizero-poe--unrouted--2.6.0-RC11--9fef543f3": {
+    "router_score": 1000.00,
+    "is_failed": false
+  },
+  "Usb_dac_dac--unrouted--2.6.0-RC11--9fef543f3": {
+    "router_score": 1000.00,
+    "is_failed": false
+  },
+  "4_digit_hex_display_4_digit_display--unrouted--2.6.0-RC11--9fef543f3": {
+    "router_score": 1000.00,
+    "is_failed": false
+  },
+  "can_firewall_hardware_CAN_Firewall--unrouted--2.6.0-RC11--9fef543f3": {
+    "router_score": 1000.00,
+    "is_failed": false
+  },
+  "OpenHardwareExG_Shield_OpenHardwareExG_Shield--unrouted--2.6.0-RC11--9fef543f3": {
+    "router_score": 1000.00,
+    "is_failed": false
+  },
+  "ChirpHardware_chirp--unrouted--2.6.0-RC11--9fef543f3": {
+    "router_score": 1000.00,
+    "is_failed": false
+  },
+  "1-Wire-Wing-pcb_1-Wire_Wing--unrouted--2.6.0-RC11--9fef543f3": {
+    "router_score": 1000.00,
+    "is_failed": false
+  },
+  "boatcontrol_NonLatchingNO30A--unrouted--2.6.0-RC11--9fef543f3": {
+    "router_score": 984.50,
+    "is_failed": false
+  },
+  "minievse_minievse--unrouted--2.6.0-RC11--9fef543f3": {
+    "router_score": 1000.00,
+    "is_failed": false
+  },
+  "CANadapter_CANadapter--unrouted--2.6.0-RC11--9fef543f3": {
+    "router_score": 1000.00,
+    "is_failed": false
+  },
+  "kitspace_Spikeling_ESP32--unrouted--2.6.0-RC11--9fef543f3": {
+    "router_score": 1000.00,
+    "is_failed": false
+  },
+  "jadonk_PocketBone--unrouted--2.6.0-RC11--9fef543f3": {
+    "router_score": 1000.00,
+    "is_failed": false
+  },
+  "data-manager_data-manager--unrouted--2.6.0-RC11--9fef543f3": {
+    "router_score": 1000.00,
+    "is_failed": false
+  },
+  "DSKY-alarm-panel-replica_DSKY_alarm--unrouted--2.6.0-RC11--9fef543f3": {
+    "router_score": 1000.00,
+    "is_failed": false
+  },
+  "led-wordclock_wordclock--unrouted--2.6.0-RC11--9fef543f3": {
+    "router_score": 1000.00,
+    "is_failed": false
+  },
+  "ti_cc3200_quadcopter_cc3200_quad--unrouted--2.6.0-RC11--9fef543f3": {
+    "router_score": 1000.00,
+    "is_failed": false
+  },
+  "antdroid-board_antdroid-board--unrouted--2.6.0-RC11--9fef543f3": {
+    "router_score": 990.41,
+    "is_failed": false
+  },
+  "FlashProgrammer_flash_programmer--unrouted--2.6.0-RC11--9fef543f3": {
+    "router_score": 1000.00,
+    "is_failed": false
+  },
+  "DAC-ADAU1966_DAC-ADAU1966--unrouted--2.6.0-RC11--9fef543f3": {
+    "router_score": 1000.00,
+    "is_failed": false
   }
 }

@@ -110,14 +110,13 @@ final class AutoroutePassRunner {
       routerCounters.routedCount = 0;
 
       long statisticsStart = BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
-      DesignRulesChecker tempDrc = new DesignRulesChecker(router.board, null);
-      tempDrc.calculateAllIncompletes();
-      routerCounters.incompleteCount = tempDrc.getIncompleteCount();
+      // The ledger keeps these counts up to date; a full DRC scan would count every net again.
+      routerCounters.incompleteCount = router.calculateIncompleteCount(router.board);
       if (BatchAutorouter.isBenchmarkProfileEnabled()) {
         router.profileIntermediateStatisticsNanos += System.nanoTime() - statisticsStart;
       }
 
-      logIncompleteDetails(passNo, itemsToGoCount, routerCounters, tempDrc);
+      logIncompleteDetails(passNo, itemsToGoCount, routerCounters);
       router.fireBoardUpdatedEvent(stats, routerCounters, router.board);
 
       int rippedItemCount = 0;
@@ -538,8 +537,7 @@ final class AutoroutePassRunner {
     this.stagnationCount = 0;
   }
 
-  private void logIncompleteDetails(
-      int passNo, int itemsToGoCount, RouterCounters counters, DesignRulesChecker drc) {
+  private void logIncompleteDetails(int passNo, int itemsToGoCount, RouterCounters counters) {
     if (counters.incompleteCount <= 0) {
       return;
     }
@@ -552,7 +550,7 @@ final class AutoroutePassRunner {
             + itemsToGoCount
             + " items to route");
     for (int netNumber = 1; netNumber <= router.board.rules.nets.maxNetNumber(); netNumber++) {
-      int netIncompletes = drc.getIncompleteCount(netNumber);
+      int netIncompletes = router.board.routingLedger().incompleteCount(netNumber);
       if (netIncompletes > 0) {
         Net net = router.board.rules.nets.get(netNumber);
         String netName = net != null ? net.name : "net#" + netNumber;
