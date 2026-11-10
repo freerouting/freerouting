@@ -8,8 +8,8 @@ plugins {
     id 'maven-publish'
     id 'checkstyle'
     id "com.vanniktech.maven.publish" version "0.37.0"
-    id 'io.github.ben-manes.versions' version '0.66.0'
-    id "com.diffplug.spotless" version "8.10.4"
+    id 'io.github.ben-manes.versions' version '0.67.0'
+    id "com.diffplug.spotless" version "8.11.0"
     id 'org.graalvm.buildtools.native' version '1.1.18'
 }
 
@@ -191,12 +191,12 @@ dependencies {
     implementation 'org.slf4j:slf4j-nop:2.0.20'
 
     // Add Google Cloud BigQuery dependencies for telemetry
-    implementation 'com.google.auth:google-auth-library-oauth2-http:1.55.0'
-    implementation 'com.google.api:gax:2.88.0'
+    implementation 'com.google.auth:google-auth-library-oauth2-http:1.57.0'
+    implementation 'com.google.api:gax:2.90.0'
     implementation 'com.google.api-client:google-api-client-appengine:2.9.2'
-    implementation 'com.google.cloud:google-cloud-core:2.78.0'
-    implementation 'com.google.cloud:google-cloud-core-http:2.78.0'
-    implementation 'com.google.cloud:google-cloud-bigquery:2.74.0'
+    implementation 'com.google.cloud:google-cloud-core:2.80.0'
+    implementation 'com.google.cloud:google-cloud-core-http:2.80.0'
+    implementation 'com.google.cloud:google-cloud-bigquery:2.76.0'
 
     // Add Google Sheets API dependencies for API key validation
     implementation 'com.google.api-client:google-api-client:2.9.2'
@@ -204,7 +204,7 @@ dependencies {
 
     // Security constraints for transitive dependencies
     constraints {
-        implementation('io.netty:netty-common:4.2.19.Final') {
+        implementation('io.netty:netty-common:4.2.20.Final') {
             because 'CVE-2024-47535 and CVE-2025-25193: DoS vulnerability in Netty on Windows'
         }
     }
