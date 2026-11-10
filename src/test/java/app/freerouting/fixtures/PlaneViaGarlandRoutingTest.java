@@ -116,6 +116,22 @@ class PlaneViaGarlandRoutingTest extends RoutingFixtureTest {
     assertNoTraceInPlaneLayers(job.board);
   }
 
+  @Test
+  void planeAsPriorityKeepsItsObstaclesWhenNecking() {
+    TestingSettings settings = settings();
+    settings.setPlaneAsPriority(true);
+    settings.setNeckWidthUm(100);
+    RoutingJob job = getRoutingJob(ADC, settings);
+    runRoutingJob(job);
+
+    assertRoutingResult(job, ADC).maxIncompleteConnections(0).exactClearanceViolations(0).check();
+    List<String> chained = chainedPlanePads(job.board);
+    // A plane escape that failed at the class width used to be retried necked without its
+    // obstacles, through the neighbouring capacitor's pad: 4 chained pads instead of 2.
+    assertTrue(chained.size() <= 2, "Plane pads not escaping alone into their plane: " + chained);
+    assertNoTraceInPlaneLayers(job.board);
+  }
+
   private static boolean isPlanePad(RoutingBoard board, Pin pin) {
     if (pin.firstLayer() != pin.lastLayer() || pin.netCount() != 1) {
       return false;

@@ -168,6 +168,11 @@ final class AutorouteConnectionRouter {
       TimeLimit timeLimit = new TimeLimit((int) maxMilliseconds);
 
       boolean strictDrc = router.settings.isStrictDrc();
+      // The obstacles of a plane escape are set around the class-width search below only. A necked
+      // search builds its own engine without them and would reach the plane through the copper
+      // they block, so a plane escape is never necked: when it fails, the search to the whole net
+      // follows and may neck.
+      boolean escaping = !planeEscapeObstacles.isEmpty();
 
       // start_necked: a net that needed the neck before routes at the neck width, ripping like any
       // search, and
@@ -175,6 +180,7 @@ final class AutorouteConnectionRouter {
       // necked retry
       // and, when it routes, displace the neighbours the neck fits beside.
       if (router.startNecked
+          && !escaping
           && router.settings.getNeckWidthUm() > 0
           && router.neckedRouteNets.contains(routeNetNo)) {
         int beforeStart = router.board.communication.idGenerator.maxGeneratedId();
@@ -209,7 +215,6 @@ final class AutorouteConnectionRouter {
 
       // The obstacles below hold for this search only: rooms and drill pages built with them must
       // not be retained for the next connection of the net.
-      boolean escaping = !planeEscapeObstacles.isEmpty();
       AutorouteEngine autorouteEngine =
           router.board.initAutoroute(
               routeNetNo,
@@ -270,6 +275,7 @@ final class AutorouteConnectionRouter {
 
       if ((autorouteResult.state == AutorouteAttemptState.FAILED
               || autorouteResult.state == AutorouteAttemptState.INSERT_ERROR)
+          && !escaping
           && router.settings.getNeckWidthUm() > 0) {
         AutorouteAttemptResult neckedResult =
             retryConnectionNecked(
