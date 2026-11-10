@@ -8,6 +8,7 @@ import app.freerouting.board.model.items.Trace;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.rules.Net;
 import app.freerouting.settings.sources.TestingSettings;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -21,6 +22,7 @@ import org.junit.jupiter.api.Test;
  * priority_net_classes} the pair and the analog inputs are routed right after the plane pads, and
  * the other nets may not rip them up.
  */
+@Tag("slow")
 class PriorityNetClassesRoutingTest extends RoutingFixtureTest {
 
   private static final String BOARD = "Priority-net-classes-adc-pair-4layer.dsn";

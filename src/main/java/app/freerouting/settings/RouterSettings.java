@@ -599,10 +599,13 @@ public class RouterSettings implements Serializable, Cloneable {
    * @param board routing board whose net classes to update
    */
   public void applyNetClassExclusions(RoutingBoard board) {
-    if (board == null
-        || board.rules == null
-        || board.rules.netClasses == null
-        || this.autorouter == null) {
+    if (board == null || board.rules == null || board.rules.netClasses == null) {
+      return;
+    }
+    for (int i = 0; i < board.rules.netClasses.count(); i++) {
+      board.rules.netClasses.get(i).isRoutedFirst = false;
+    }
+    if (this.autorouter == null) {
       return;
     }
     for (NetClass netClass :

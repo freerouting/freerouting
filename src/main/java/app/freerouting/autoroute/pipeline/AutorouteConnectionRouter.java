@@ -120,10 +120,12 @@ final class AutorouteConnectionRouter {
       Net routeNet = router.board.rules.nets.get(routeNetNo);
       boolean containsPlane = routeNet != null && routeNet.containsPlane();
       boolean routedFirst = routeNet != null && routeNet.isRoutedFirst();
+      int signalViaCosts =
+          routedFirst ? router.settings.getPriorityViaCosts() : router.settings.getViaCosts();
       int currentViaCosts =
           containsPlane
-              ? Math.min(router.settings.getPlaneViaCosts(), router.settings.getViaCosts())
-              : routedFirst ? router.settings.getPriorityViaCosts() : router.settings.getViaCosts();
+              ? Math.min(router.settings.getPlaneViaCosts(), signalViaCosts)
+              : signalViaCosts;
 
       AutorouteControl autorouteControl =
           new AutorouteControl(
