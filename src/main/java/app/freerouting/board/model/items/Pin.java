@@ -839,16 +839,23 @@ public class Pin extends DrillItem implements Serializable {
       return result;
     }
     IntBox box = this.boundingBox();
-    for (SearchTreeObject obj : board.overlappingObjects(box, -1)) {
-      if (!(obj instanceof Pin other)) {
-        continue;
-      }
-      if (other == this
-          || !accept.test(other)
-          || !other.sharesLayer(this)
-          || !box.intersects(other.boundingBox())) {
-        continue;
-      }
+    // The pin tests come before the exact overlap test of the search tree, which every item under
+    // the pin, planes and traces included, would otherwise reach.
+    Set<SearchTreeObject> candidates =
+        board
+            .searchTreeManager
+            .getDefaultTree()
+            .overlappingObjects(
+                box,
+                -1,
+                obj ->
+                    obj instanceof Pin other
+                        && other != this
+                        && accept.test(other)
+                        && other.sharesLayer(this)
+                        && box.intersects(other.boundingBox()));
+    for (SearchTreeObject obj : candidates) {
+      Pin other = (Pin) obj;
       boolean overlaps = false;
       for (int i = 0; i < tileShapeCount() && !overlaps; i++) {
         Shape mine = getShape(i);
