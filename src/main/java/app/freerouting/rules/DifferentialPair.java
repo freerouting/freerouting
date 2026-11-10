@@ -64,8 +64,8 @@ public record DifferentialPair(
     }
     return this.positiveNet.equals(net)
         || this.negativeNet.equals(net)
-        || this.positiveNet.name.equalsIgnoreCase(net.name)
-        || this.negativeNet.name.equalsIgnoreCase(net.name);
+        || this.positiveNet.name.equals(net.name)
+        || this.negativeNet.name.equals(net.name);
   }
 
   /**
@@ -78,10 +78,10 @@ public record DifferentialPair(
     if (net == null) {
       return null;
     }
-    if (this.positiveNet.equals(net) || this.positiveNet.name.equalsIgnoreCase(net.name)) {
+    if (this.positiveNet.equals(net) || this.positiveNet.name.equals(net.name)) {
       return this.negativeNet;
     }
-    if (this.negativeNet.equals(net) || this.negativeNet.name.equalsIgnoreCase(net.name)) {
+    if (this.negativeNet.equals(net) || this.negativeNet.name.equals(net.name)) {
       return this.positiveNet;
     }
     return null;
@@ -94,8 +94,7 @@ public record DifferentialPair(
    * @return true if {@code net} is positive
    */
   public boolean isPositive(Net net) {
-    return net != null
-        && (this.positiveNet.equals(net) || this.positiveNet.name.equalsIgnoreCase(net.name));
+    return net != null && (this.positiveNet.equals(net) || this.positiveNet.name.equals(net.name));
   }
 
   /**
@@ -105,8 +104,7 @@ public record DifferentialPair(
    * @return true if {@code net} is negative
    */
   public boolean isNegative(Net net) {
-    return net != null
-        && (this.negativeNet.equals(net) || this.negativeNet.name.equalsIgnoreCase(net.name));
+    return net != null && (this.negativeNet.equals(net) || this.negativeNet.name.equals(net.name));
   }
 
   /** Returns true if a specific coupled spacing constraint is configured for this pair. */
