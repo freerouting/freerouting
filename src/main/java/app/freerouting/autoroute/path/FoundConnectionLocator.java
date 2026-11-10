@@ -10,6 +10,7 @@ import app.freerouting.autoroute.maze.AutorouteControl;
 import app.freerouting.autoroute.maze.MazeSearchElement;
 import app.freerouting.autoroute.maze.MazeSearchEngine;
 import app.freerouting.board.facade.BasicBoard;
+import app.freerouting.board.model.items.ConductionArea;
 import app.freerouting.board.model.items.Connectable;
 import app.freerouting.board.model.items.DrillItem;
 import app.freerouting.board.model.items.Item;
@@ -177,7 +178,9 @@ public abstract class FoundConnectionLocator {
         this.currentTargetDoorIndex = this.backtrackArray.length - 1;
         TileShape targetShape =
             ((Connectable) startItem).getTraceConnectionShape(searchTree, startDoor.treeEntryNo);
-        TileShape boundedShape = calculateWidthSafeTargetShape(startDoor, targetShape, this.ctrl);
+        TileShape boundedShape =
+            insideConductionArea(
+                startItem, calculateWidthSafeTargetShape(startDoor, targetShape, this.ctrl));
         if (boundedShape.dimension() >= 2 && !(startItem instanceof DrillItem)) {
           // the target is a conduction area, make a safe connection
           // by shrinking the shape by the trace halfwidth.
@@ -266,6 +269,30 @@ public abstract class FoundConnectionLocator {
   }
 
   /**
+   * The part of shape inside the copper of a conduction area. The tree shapes of an area are its
+   * convex pieces enlarged by the clearance compensation, so a connection shape taken from them can
+   * reach out of the area; a trace ending there touches the area without being connected to it
+   * (Trace.getNormalContacts asks for its end point inside the area). Returns shape unchanged for
+   * other items, or when no piece of the area meets it.
+   */
+  private static TileShape insideConductionArea(Item item, TileShape shape) {
+    if (!(item instanceof ConductionArea area) || shape == null || shape.isEmpty()) {
+      return shape;
+    }
+    TileShape[] pieces = area.splitToConvex();
+    if (pieces == null) {
+      return shape;
+    }
+    for (TileShape piece : pieces) {
+      TileShape inside = shape.intersection(piece);
+      if (!inside.isEmpty()) {
+        return inside;
+      }
+    }
+    return shape;
+  }
+
+  /**
    * Calculates the starting point of the next trace on fromDoor.item, ensuring it is positioned
    * inside the width-safe clearance region of fromDoor.room.
    */
@@ -276,7 +303,9 @@ public abstract class FoundConnectionLocator {
     if (connectionShape == null || connectionShape.isEmpty()) {
       return fromDoor.room.getShape().centreOfGravity().round().toFloat();
     }
-    connectionShape = calculateWidthSafeTargetShape(fromDoor, connectionShape, ctrl);
+    connectionShape =
+        insideConductionArea(
+            fromDoor.item, calculateWidthSafeTargetShape(fromDoor, connectionShape, ctrl));
     return connectionShape.centreOfGravity().round().toFloat();
   }
 
