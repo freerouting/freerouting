@@ -370,7 +370,8 @@ public class MazeSearchEngine {
     }
     if (ctrl.isFanout
         && listElement.door instanceof ExpansionDrill
-        && listElement.backtrackDoor instanceof ExpansionDrill) {
+        && listElement.backtrackDoor instanceof ExpansionDrill
+        && fanoutMayStopOnLayer(listElement.nextRoom.getLayer())) {
       // algorithm completed after the first drill;
       this.destinationDoor = listElement.door;
       this.sectionNoOfDestinationDoor = listElement.sectionNoOfDoor;
@@ -391,6 +392,15 @@ public class MazeSearchEngine {
     }
     currentDoorSection.isOccupied = true;
     return true;
+  }
+
+  /**
+   * Whether a fanout search may end at a drill that leads to {@code layer}. A drill to a signal
+   * layer the net may not use is no escape: the search goes on from there instead of ending with a
+   * result that is dropped afterwards. A drill to a plane layer still ends the search.
+   */
+  private boolean fanoutMayStopOnLayer(int layer) {
+    return ctrl.layerActive[layer] || !autorouteEngine.board.layerStructure.layers[layer].isSignal;
   }
 
   /**
