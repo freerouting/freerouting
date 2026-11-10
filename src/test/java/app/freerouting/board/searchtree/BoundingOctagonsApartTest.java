@@ -64,6 +64,37 @@ class BoundingOctagonsApartTest {
   }
 
   @Test
+  void testEnlargedSimplexApartOnlyWhenTheEnlargedEntryIsApart() {
+    Random random = new Random(20261106);
+    int skipped = 0;
+    int apart = 0;
+    for (int i = 0; i < 20000; i++) {
+      int spread = random.nextInt(2) == 0 ? 2000 : 200000;
+      TileShape entry = randomSegment(random, spread);
+      if (!(entry instanceof Simplex)) {
+        continue;
+      }
+      TileShape query =
+          random.nextInt(2) == 0 ? randomSegment(random, spread) : randomOctagon(random, spread);
+      int half = random.nextInt(spread / 10 + 1);
+      ConvexShape enlargedQuery = (ConvexShape) query.enlarge(half);
+      ConvexShape enlargedEntry = (ConvexShape) entry.enlarge(half);
+      boolean exactApart = ShapeSearchTree.boundingOctagonsApart(enlargedQuery, enlargedEntry);
+      if (exactApart) {
+        apart++;
+      }
+      if (ShapeSearchTree.enlargedSimplexApart(
+          ((TileShape) enlargedQuery).boundingOctagon(), entry, half)) {
+        skipped++;
+        assertTrue(exactApart, "pair " + i + ": " + enlargedQuery + " and " + entry);
+      }
+    }
+    // The pre-test must catch nearly every pair the octagon test rejects, or it saves nothing.
+    assertTrue(apart > 1000);
+    assertTrue(skipped > apart * 9 / 10, skipped + " of " + apart);
+  }
+
+  @Test
   void testOverlappingOrTouchingShapesAreNotApart() {
     TileShape segment =
         new Polyline(new IntPoint[] {new IntPoint(0, 0), new IntPoint(1000, 577)})

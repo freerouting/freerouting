@@ -262,7 +262,7 @@ public final class DifferentialPairDetector {
 
       if (info.polarity() == Polarity.POSITIVE) {
         if (entry.positiveNet != null) {
-          if (!entry.positiveNet.name.equalsIgnoreCase(net.name)
+          if (!entry.positiveNet.name.equals(net.name)
               || entry.positiveNet.subnetNumber == net.subnetNumber) {
             entry.ambiguous = true;
           }
@@ -271,7 +271,7 @@ public final class DifferentialPairDetector {
         }
       } else {
         if (entry.negativeNet != null) {
-          if (!entry.negativeNet.name.equalsIgnoreCase(net.name)
+          if (!entry.negativeNet.name.equals(net.name)
               || entry.negativeNet.subnetNumber == net.subnetNumber) {
             entry.ambiguous = true;
           }
