@@ -20,6 +20,7 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.sources.DefaultSettings;
 import com.sun.management.ThreadMXBean;
 import java.lang.management.ManagementFactory;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -743,7 +744,10 @@ public final class BatchOptimizer extends NamedAlgorithm {
             });
 
     CandidateResult winningCandidate = null;
-    int chunkSize = Math.max(threadPoolSize * 4, 8);
+    // Up to window candidates are in flight, and a new one starts as soon as one is read back:
+    // the threads no longer wait for the slowest candidate of a batch. The results are still read
+    // in candidate order, so the winner and the early stop are the same.
+    int window = Math.max(threadPoolSize * 4, 8);
     boolean stoppedOrTimedOut = false;
     boolean earlyStopDueToFailures = false;
     int consecutiveFailures = 0;
@@ -759,7 +763,12 @@ public final class BatchOptimizer extends NamedAlgorithm {
                 : 50);
 
     try {
-      for (int i = 0; i < candidateItemIds.size(); i += chunkSize) {
+      // The baseline board does not change during the pass: the winner replaces it at the end.
+      BoardStatistics.OptimizerMetrics baselineMetrics =
+          BoardStatistics.OptimizerMetrics.of(this.board);
+      ArrayDeque<Future<CandidateResult>> futures = new ArrayDeque<>(window);
+      int nextCandidate = 0;
+      while (nextCandidate < candidateItemIds.size() || !futures.isEmpty()) {
         if (this.deadlineMs != null && System.currentTimeMillis() >= this.deadlineMs) {
           job.logInfo("Optimizer stage timed out.");
           this.isTimedOut = true;
@@ -771,72 +780,65 @@ public final class BatchOptimizer extends NamedAlgorithm {
           break;
         }
 
-        int end = Math.min(i + chunkSize, candidateItemIds.size());
-        List<Integer> chunk = candidateItemIds.subList(i, end);
-        List<Future<CandidateResult>> futures = new ArrayList<>(chunk.size());
-
-        BoardStatistics.OptimizerMetrics chunkBaselineMetrics =
-            BoardStatistics.OptimizerMetrics.of(this.board);
-        for (int itemId : chunk) {
+        while (futures.size() < window && nextCandidate < candidateItemIds.size()) {
           futures.add(
               pool.submit(
                   new OptimizeCandidateTask(
                       job,
                       this.board,
-                      itemId,
+                      candidateItemIds.get(nextCandidate++),
                       this.minCumulativeTraceLength,
                       withPreferredDirections,
                       this.useIncreasedRipupCosts,
                       this.thread,
                       this.deadlineMs,
                       this.workerBoardStates,
-                      chunkBaselineMetrics)));
+                      baselineMetrics)));
         }
 
-        for (Future<CandidateResult> future : futures) {
-          try {
-            CandidateResult res = future.get();
-            this.totalItemsOptimized++;
-            if (res != null) {
-              this.workerCpuNanos.addAndGet(res.cpuUsedNanos);
-              this.workerAllocBytes.addAndGet(res.allocUsedBytes);
-              this.resultMap.put(res.result.itemId(), res.result);
+        Future<CandidateResult> future = futures.poll();
+        try {
+          CandidateResult res = future.get();
+          this.totalItemsOptimized++;
+          if (res != null) {
+            this.workerCpuNanos.addAndGet(res.cpuUsedNanos);
+            this.workerAllocBytes.addAndGet(res.allocUsedBytes);
+            this.resultMap.put(res.result.itemId(), res.result);
 
-              if (res.itemPosition != null) {
-                this.currentPosition = res.itemPosition;
+            if (res.itemPosition != null) {
+              this.currentPosition = res.itemPosition;
+            }
+
+            if (res.result.improved()) {
+              consecutiveFailures = 0;
+              if (winningCandidate == null || res.result.improvedOver(winningCandidate.result)) {
+                winningCandidate = res;
               }
-
-              if (res.result.improved()) {
-                consecutiveFailures = 0;
-                if (winningCandidate == null || res.result.improvedOver(winningCandidate.result)) {
-                  winningCandidate = res;
-                }
-              } else {
-                consecutiveFailures++;
-                if (consecutiveFailures >= maxConsecutiveFailures) {
-                  job.logInfo(
-                      String.format(
-                          Locale.US,
-                          "Stopping optimization pass #%d early after %d consecutive items could "
-                              + "not be improved.",
-                          passNo,
-                          consecutiveFailures));
-                  earlyStopDueToFailures = true;
-                  break;
-                }
+            } else {
+              consecutiveFailures++;
+              if (consecutiveFailures >= maxConsecutiveFailures) {
+                job.logInfo(
+                    String.format(
+                        Locale.US,
+                        "Stopping optimization pass #%d early after %d consecutive items could "
+                            + "not be improved.",
+                        passNo,
+                        consecutiveFailures));
+                earlyStopDueToFailures = true;
+                break;
               }
             }
-          } catch (InterruptedException e) {
-            stoppedOrTimedOut = true;
-            Thread.currentThread().interrupt();
-            break;
-          } catch (ExecutionException e) {
-            Throwable cause = e.getCause();
-            job.logError("Error in candidate optimization task", cause);
-            if (cause instanceof VirtualMachineError fatal) {
-              // The heap is already exhausted. Continuing the pass only wedges the process.
-              throw fatal;
-            }
+          }
+        } catch (InterruptedException e) {
+          stoppedOrTimedOut = true;
+          Thread.currentThread().interrupt();
+          break;
+        } catch (ExecutionException e) {
+          Throwable cause = e.getCause();
+          job.logError("Error in candidate optimization task", cause);
+          if (cause instanceof VirtualMachineError fatal) {
+            // The heap is already exhausted. Continuing the pass only wedges the process.
+            throw fatal;
           }
         }
 
