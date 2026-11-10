@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.logger.FRLogger;
 import java.util.Arrays;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -141,5 +142,36 @@ class GlobalSettingsTest {
     assertTrue(
         Arrays.stream(FRLogger.getLogEntries().get())
             .anyMatch(s -> s.contains("Unknown command line argument: --someflag")));
+  }
+
+  @Test
+  void applyNonRouterEnvironmentVariablesSkipsUserDataPathWithoutError() {
+    GlobalSettings settings = new GlobalSettings();
+    settings.applyNonRouterEnvironmentVariables(
+        Map.of("FREEROUTING__USER_DATA_PATH", "/tmp/custom_freerouting_data"));
+
+    assertEquals(
+        0,
+        FRLogger.getLogEntries().getErrorCount(),
+        "FREEROUTING__USER_DATA_PATH must be skipped and not produce reflection errors");
+    assertEquals(
+        0,
+        FRLogger.getLogEntries().getWarningCount(),
+        "FREEROUTING__USER_DATA_PATH must be skipped without warnings");
+  }
+
+  @Test
+  void applyNonRouterEnvironmentVariablesAppliesNonRouterAndSkipsRouter() {
+    GlobalSettings settings = new GlobalSettings();
+    settings.applyNonRouterEnvironmentVariables(
+        Map.of(
+            "FREEROUTING__GUI__INPUT_DIRECTORY", "/tmp/test-input",
+            "FREEROUTING__ROUTER__MAX_PASSES", "99"));
+
+    assertEquals("/tmp/test-input", settings.guiSettings.inputDirectory);
+    assertEquals(
+        0,
+        FRLogger.getLogEntries().getErrorCount(),
+        "Should apply non-router settings without errors");
   }
 }
