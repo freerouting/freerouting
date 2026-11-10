@@ -166,6 +166,10 @@ public final class RulesReader {
       return false;
     } finally {
       closeQuietly(in);
+      // The width rules read above, net class rules included, can lower the smallest trace width.
+      if (board.getOutline() != null) {
+        board.getOutline().updateSlicesToTraceWidths();
+      }
     }
   }
 
