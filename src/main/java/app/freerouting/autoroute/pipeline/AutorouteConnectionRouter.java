@@ -120,7 +120,9 @@ final class AutorouteConnectionRouter {
       Net routeNet = router.board.rules.nets.get(routeNetNo);
       boolean containsPlane = routeNet != null && routeNet.containsPlane();
       int currentViaCosts =
-          containsPlane ? router.settings.getPlaneViaCosts() : router.settings.getViaCosts();
+          containsPlane
+              ? Math.min(router.settings.getPlaneViaCosts(), router.settings.getViaCosts())
+              : router.settings.getViaCosts();
 
       AutorouteControl autorouteControl =
           new AutorouteControl(

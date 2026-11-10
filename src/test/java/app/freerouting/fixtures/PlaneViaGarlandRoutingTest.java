@@ -12,6 +12,7 @@ import app.freerouting.rules.Net;
 import app.freerouting.settings.sources.TestingSettings;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -38,6 +39,7 @@ import org.junit.jupiter.api.Test;
  * layer, only the fanout dropped pads into planes, and every pad it missed was chained to its
  * neighbours.
  */
+@Tag("slow")
 class PlaneViaGarlandRoutingTest extends RoutingFixtureTest {
 
   private static final String GARLAND = "Plane-via-garland-4layer.dsn";
