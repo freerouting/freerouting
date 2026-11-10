@@ -362,6 +362,80 @@ class DifferentialPairDetectorTest {
   }
 
   @Test
+  void testUndelimitedPnPairedLikeKiCad() {
+    app.freerouting.board.facade.RoutingBoard board = createTestBoard();
+    Net txP = board.rules.nets.add("/Ethernet/ETH_TXP", 1, false);
+    Net txN = board.rules.nets.add("/Ethernet/ETH_TXN", 1, false);
+    Net rxP = board.rules.nets.add("RXP", 1, false);
+    Net rxN = board.rules.nets.add("RXN", 1, false);
+    // On their own, names that merely end in P or N stay single-ended
+    board.rules.nets.add("STEP", 1, false);
+    board.rules.nets.add("OPEN", 1, false);
+    board.rules.nets.add("GPIO_EN", 1, false);
+    board.rules.nets.add("VIN", 1, false);
+
+    java.util.List<DifferentialPair> detected =
+        DifferentialPairDetector.detectAndRegister(board.rules);
+
+    assertEquals(2, detected.size());
+    DifferentialPair tx = board.rules.differentialPairs.get("/Ethernet/ETH_TX");
+    assertNotNull(tx);
+    assertEquals(txP, tx.positiveNet());
+    assertEquals(txN, tx.negativeNet());
+    DifferentialPair rx = board.rules.differentialPairs.get("RX");
+    assertNotNull(rx);
+    assertEquals(rxP, rx.positiveNet());
+    assertEquals(rxN, rx.negativeNet());
+    // extract() keeps reporting only delimited suffixes
+    assertNull(DifferentialPairDetector.extract("/Ethernet/ETH_TXP"));
+  }
+
+  @Test
+  void testUndelimitedOneCharacterBaseName() {
+    app.freerouting.board.facade.RoutingBoard board = createTestBoard();
+    Net aP = board.rules.nets.add("AP", 1, false);
+    Net aN = board.rules.nets.add("AN", 1, false);
+    Net xP = board.rules.nets.add("/BUS/XP", 1, false);
+    Net xN = board.rules.nets.add("/BUS/XN", 1, false);
+    // Bare P/N without a base name must not be paired
+    board.rules.nets.add("P", 1, false);
+    board.rules.nets.add("N", 1, false);
+    board.rules.nets.add("/BUS/P", 1, false);
+    board.rules.nets.add("/BUS/N", 1, false);
+
+    java.util.List<DifferentialPair> detected =
+        DifferentialPairDetector.detectAndRegister(board.rules);
+
+    assertEquals(2, detected.size());
+    DifferentialPair pairA = board.rules.differentialPairs.get("A");
+    assertNotNull(pairA);
+    assertEquals(aP, pairA.positiveNet());
+    assertEquals(aN, pairA.negativeNet());
+    DifferentialPair pairX = board.rules.differentialPairs.get("/BUS/X");
+    assertNotNull(pairX);
+    assertEquals(xP, pairX.positiveNet());
+    assertEquals(xN, pairX.negativeNet());
+  }
+
+  @Test
+  void testDeduplicateCandidatesWithSameBaseName() {
+    app.freerouting.board.facade.RoutingBoard board = createTestBoard();
+    Net delimitedP = board.rules.nets.add("ETH_TX_P", 1, false);
+    Net delimitedN = board.rules.nets.add("ETH_TX_N", 1, false);
+    board.rules.nets.add("ETH_TXP", 1, false);
+    board.rules.nets.add("ETH_TXN", 1, false);
+
+    java.util.List<DifferentialPair> detected =
+        DifferentialPairDetector.detectAndRegister(board.rules);
+
+    assertEquals(1, detected.size());
+    DifferentialPair pair = board.rules.differentialPairs.get("ETH_TX");
+    assertNotNull(pair);
+    assertEquals(delimitedP, pair.positiveNet());
+    assertEquals(delimitedN, pair.negativeNet());
+  }
+
+  @Test
   void testMismatchedStylesNotPaired() {
     app.freerouting.board.facade.RoutingBoard board = createTestBoard();
     board.rules.nets.add("DATA_D+", 1, false);
