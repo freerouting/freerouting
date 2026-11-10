@@ -779,6 +779,10 @@ public class WindowNetClasses extends BoardSavableSubWindow {
         if (!applyTraceWidth(netRule, value, coordinateTransform)) {
           return;
         }
+        var outline = boardFrame.boardPanel.boardHandling.getRoutingBoard().getOutline();
+        if (outline != null) {
+          outline.updateSlicesToTraceWidths();
+        }
         boardFrame.boardPanel.repaint();
       }
       this.data[row][col] = value;
