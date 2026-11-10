@@ -721,7 +721,9 @@ public class ShapeSearchTree extends MinAreaTree {
     List<Leaf> tmpList = queryLeafBuffer.get();
     tmpList.clear();
     // sort the found items by its clearances to clearanceClassIndex on layer layer
-    Set<EntrySortedByClearance> sortedItems = new TreeSet<>();
+    // Entries never compare equal (see EntrySortedByClearance), so sorting a list gives the
+    // order a TreeSet would, without its rebalancing on every insertion.
+    List<EntrySortedByClearance> sortedItems = new ArrayList<>();
     try {
       // Filter in traversal order, then sort only the kept leaves: the same order as sorting all
       // candidates first, for a fraction of the comparisons.
@@ -767,20 +769,27 @@ public class ShapeSearchTree extends MinAreaTree {
     } finally {
       tmpList.clear();
     }
+    sortedItems.sort(null);
     boolean exactCopper = board != null && board.rules != null && board.rules.isExactCopper();
     ExactCopper[] queryCopperHolder = new ExactCopper[] {exactQuery};
     boolean[] queryCopperKnownHolder = new boolean[] {exactQuery != null};
     int currentHalfClearance = 0;
     ConvexShape currentOffsetShape = shape;
+    IntOctagon currentOffsetOctagon = boundingOctagonOf(currentOffsetShape);
     for (EntrySortedByClearance tmpEntry : sortedItems) {
       int tmpHalfClearance =
           isClearanceCompensationUsed() ? (tmpEntry.clearance + 1) / 2 : tmpEntry.clearance / 2;
       if (tmpHalfClearance != currentHalfClearance) {
         currentHalfClearance = tmpHalfClearance;
         currentOffsetShape = (ConvexShape) shape.enlarge(currentHalfClearance);
+        currentOffsetOctagon = boundingOctagonOf(currentOffsetShape);
       }
       TileShape tmpShape =
           tmpEntry.leaf.object.getTreeShape(this, tmpEntry.leaf.shapeIndexInObject);
+      if (enlargedSimplexApart(currentOffsetOctagon, tmpShape, currentHalfClearance)) {
+        // boundingOctagonsApart below would reject this entry: skip enlarging its shape.
+        continue;
+      }
       // enlarge both item shapes by the half clearance to create
       // symmetry.
       ConvexShape tmpOffsetShape = (ConvexShape) tmpShape.enlarge(currentHalfClearance);
@@ -882,6 +891,30 @@ public class ShapeSearchTree extends MinAreaTree {
    * so the shapes share none and the exact test would answer false. The exact simplex test sorts
    * and reduces the half-planes of both shapes; the octagon test is eight comparisons.
    */
+  /** The bounding octagon of a tile shape, or null for other shapes and unbounded tiles. */
+  private static IntOctagon boundingOctagonOf(ConvexShape shape) {
+    return shape instanceof TileShape tile ? tile.boundingOctagon() : null;
+  }
+
+  /**
+   * Whether {@link #boundingOctagonsApart} is sure to hold between a query tile with bounding
+   * octagon {@code queryOctagon} and {@code entryShape} enlarged by {@code halfClearance}, judged
+   * without enlarging the entry. A simplex enlarged by d lies inside its bounding octagon offset by
+   * d, and the bounding octagon of the enlarged simplex is rounded outwards from its corners by
+   * less than one unit; the margin of 2 covers that rounding on the diagonals too.
+   */
+  static boolean enlargedSimplexApart(
+      IntOctagon queryOctagon, TileShape entryShape, int halfClearance) {
+    if (queryOctagon == null || !(entryShape instanceof Simplex entrySimplex)) {
+      return false;
+    }
+    IntOctagon entryOctagon = entrySimplex.boundingOctagon();
+    return entryOctagon != null
+        && !entryOctagon.offset(halfClearance + ENLARGED_OCTAGON_MARGIN).intersects(queryOctagon);
+  }
+
+  private static final int ENLARGED_OCTAGON_MARGIN = 2;
+
   static boolean boundingOctagonsApart(ConvexShape a, ConvexShape b) {
     if (!(a instanceof Simplex) && !(b instanceof Simplex)) {
       return false;
