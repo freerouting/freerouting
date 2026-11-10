@@ -644,8 +644,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
             ? 0
             : settings.autorouter.maxPasses);
     setJobTimeoutFields(settings.jobTimeoutString);
-    this.maxThreadsField.setValue(
-        settings.maxThreads != null ? settings.maxThreads : settings.getAutorouterMaxThreads());
+    this.maxThreadsField.setValue(settings.getAutorouterMaxThreads());
     for (int i = 0; i < preferredDirectionTraceCostArr.length; i++) {
       this.preferredDirectionTraceCostArr[i].setValue(
           settings.getPreferredDirectionTraceCosts(layerStructure.getLayerNo(i)));
@@ -1169,11 +1168,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void keyTyped(KeyEvent evt) {
       if (evt.getKeyChar() == '\n') {
-        Integer currentVal = boardHandling.getCurrentRoutingJob().routerSettings.maxThreads;
         int oldValue =
-            currentVal != null
-                ? currentVal
-                : boardHandling.getCurrentRoutingJob().routerSettings.getAutorouterMaxThreads();
+            boardHandling.getCurrentRoutingJob().routerSettings.getAutorouterMaxThreads();
         Object input = maxThreadsField.getValue();
         int inputValue;
         int maxAvailable = Runtime.getRuntime().availableProcessors();
@@ -1199,11 +1195,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     public void focusLost(FocusEvent evt) {
       if (!maxThreadsInputCompleted) {
         // Save the value when focus is lost
-        Integer currentVal = boardHandling.getCurrentRoutingJob().routerSettings.maxThreads;
         int oldValue =
-            currentVal != null
-                ? currentVal
-                : boardHandling.getCurrentRoutingJob().routerSettings.getAutorouterMaxThreads();
+            boardHandling.getCurrentRoutingJob().routerSettings.getAutorouterMaxThreads();
 
         // Commit the edit to ensure getValue() returns the typed value
         try {

@@ -118,10 +118,7 @@ public final class WorkspacePortAdapter implements WorkspacePort {
           }
           GuiBoardManager current = managerSupplier.get();
           if (current != null) {
-            current.setNumThreads(
-                job.routerSettings.maxThreads != null
-                    ? job.routerSettings.maxThreads
-                    : job.routerSettings.getAutorouterMaxThreads());
+            current.setNumThreads(job.routerSettings.getAutorouterMaxThreads());
             current.setBoardReadOnly(true);
             if (current.getRatsnest() != null && !ratsNestWasHidden) {
               current.getRatsnest().hide();
