@@ -496,7 +496,6 @@ final class AutorouteBatchLoop {
         if (boardScoreAfter > lastBestScore + STAGNATION_SCORE_THRESHOLD) {
           consecutiveNoImprovementPasses = 0;
           lastBestScore = boardScoreAfter;
-          lastMileAttempts = 0;
         } else {
           consecutiveNoImprovementPasses++;
 
@@ -538,7 +537,6 @@ final class AutorouteBatchLoop {
               boardScoreAfter = boardStatisticsAfter.getRouterScore(job.routerSettings);
               lastBestScore = boardScoreAfter;
               consecutiveNoImprovementPasses = 0;
-              passOfBestScore = currentPass;
               alreadyRoutedBoardHashes.clear();
               job.logInfo(
                   "Last-mile rip-up removed "
