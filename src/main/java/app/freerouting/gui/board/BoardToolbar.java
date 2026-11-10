@@ -189,11 +189,14 @@ public class BoardToolbar extends JPanel {
             FRLogger.warn(tm.getText("warn_no_input_file"));
             return;
           }
+          var interactiveSettings = boardFrame.boardPanel.boardHandling.getWorkspaceSettings();
+          if (interactiveSettings != null) {
+            interactiveSettings.setSettings(guiRoutingJob.routerSettings);
+          }
           var merger = boardFrame.boardPanel.boardHandling.settingsMerger;
           if (merger != null) {
             var mergedSettings = merger.merge();
             guiRoutingJob.setSettings(mergedSettings);
-            var interactiveSettings = boardFrame.boardPanel.boardHandling.getWorkspaceSettings();
             if (interactiveSettings != null) {
               interactiveSettings.setSettings(guiRoutingJob.routerSettings);
             }
