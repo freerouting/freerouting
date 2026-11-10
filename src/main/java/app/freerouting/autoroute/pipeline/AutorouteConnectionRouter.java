@@ -65,13 +65,13 @@ final class AutorouteConnectionRouter {
 
       Set<Item> routeStartSet = new TreeSet<>();
       for (Item it : rawStartSet) {
-        if (!(it instanceof ConductionArea)) {
+        if (!(it instanceof ConductionArea ca && ca.isFractured())) {
           routeStartSet.add(it);
         }
       }
       Set<Item> routeDestSet = new TreeSet<>();
       for (Item it : rawDestSet) {
-        if (!(it instanceof ConductionArea)) {
+        if (!(it instanceof ConductionArea ca && ca.isFractured())) {
           routeDestSet.add(it);
         }
       }

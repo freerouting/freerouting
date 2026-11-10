@@ -47,6 +47,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
   private transient int cachedBoardRevision = -1;
   private transient app.freerouting.geometry.planar.PlanarArea cachedBoardFillArea;
   private transient int cachedFractureRevision = -1;
+  private transient long cachedNetAssignmentStamp = -1;
   private transient FastPlaneConnectivityGrid.PlaneFractureResult cachedFractureResult;
   private transient FastPlaneConnectivityGrid connectivityGrid;
 
@@ -87,6 +88,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     this.cachedBoardRevision = -1;
     this.cachedBoardFillArea = null;
     this.cachedFractureRevision = -1;
+    this.cachedNetAssignmentStamp = -1;
     this.cachedFractureResult = null;
     this.connectivityGrid = null;
   }
@@ -326,7 +328,10 @@ public class ConductionArea extends ObstacleArea implements Connectable {
       return null;
     }
     int currentRevision = this.board.getRevision();
-    if (this.cachedFractureResult != null && this.cachedFractureRevision == currentRevision) {
+    long currentNetAssignmentStamp = this.board.getNetAssignmentChangeCount();
+    if (this.cachedFractureResult != null
+        && this.cachedFractureRevision == currentRevision
+        && this.cachedNetAssignmentStamp == currentNetAssignmentStamp) {
       return this.cachedFractureResult;
     }
     if (this.connectivityGrid == null) {
@@ -335,6 +340,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     Collection<Item> contacts = getNormalContacts();
     this.cachedFractureResult = this.connectivityGrid.evaluateFracture(this, this.board, contacts);
     this.cachedFractureRevision = currentRevision;
+    this.cachedNetAssignmentStamp = currentNetAssignmentStamp;
     return this.cachedFractureResult;
   }
 

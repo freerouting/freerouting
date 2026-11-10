@@ -4,12 +4,14 @@ import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.model.items.ConductionArea;
 import app.freerouting.board.model.items.DrillItem;
 import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.ObstacleArea;
 import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.searchtree.SearchTreeObject;
 import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
+import app.freerouting.geometry.planar.Shape;
 import app.freerouting.geometry.planar.TileShape;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -102,7 +104,8 @@ public class FastPlaneConnectivityGrid {
     int width = Math.max(1, bbox.ur.x - bbox.ll.x);
     int height = Math.max(1, bbox.ur.y - bbox.ll.y);
 
-    int calculatedCellSize = Math.max(MIN_CELL_SIZE, requestedCellSize);
+    int maxAllowedCell = Math.max(1, Math.min(width, height) / 2);
+    int calculatedCellSize = Math.max(1, Math.min(requestedCellSize, maxAllowedCell));
     int c = (width + calculatedCellSize - 1) / calculatedCellSize + 1;
     int r = (height + calculatedCellSize - 1) / calculatedCellSize + 1;
 
@@ -157,6 +160,17 @@ public class FastPlaneConnectivityGrid {
     int layer = ca.getLayer();
 
     double baseClearance = board.clearanceValue(clearanceClass, clearanceClass, layer);
+    double maxClearance = baseClearance;
+    if (board.rules != null && board.rules.clearanceMatrix != null) {
+      maxClearance =
+          Math.max(maxClearance, board.rules.clearanceMatrix.maxValue(clearanceClass, layer));
+    }
+    int clearanceInflate = (int) Math.ceil(maxClearance);
+    IntBox queryBbox =
+        new IntBox(
+            new IntPoint(bbox.ll.x - clearanceInflate, bbox.ll.y - clearanceInflate),
+            new IntPoint(bbox.ur.x + clearanceInflate, bbox.ur.y + clearanceInflate));
+
     int desiredCell = (int) Math.max(MIN_CELL_SIZE, Math.round(baseClearance / 2.0));
     init(bbox, desiredCell);
 
@@ -164,7 +178,8 @@ public class FastPlaneConnectivityGrid {
     rasterizeConductionArea(ca);
 
     // 2. Query spatial index for obstacles overlapping conduction area
-    Set<SearchTreeObject> overlaps = board.overlappingObjects(bbox, layer);
+    Set<SearchTreeObject> overlaps = board.overlappingObjects(queryBbox, layer);
+    boolean hasForeignObstacles = false;
     for (SearchTreeObject ob : overlaps) {
       if (!(ob instanceof Item item) || item == ca || !item.sharesLayer(ca)) {
         continue;
@@ -173,6 +188,7 @@ public class FastPlaneConnectivityGrid {
       // Foreign traces and vias are obstacles
       boolean isForeign = !item.sharesNet(ca);
       if (isForeign) {
+        hasForeignObstacles = true;
         int itemClearanceClass = item.clearanceClassIndex();
         double clearance = board.clearanceValue(clearanceClass, itemClearanceClass, layer);
 
@@ -196,19 +212,42 @@ public class FastPlaneConnectivityGrid {
           int radius =
               (int) Math.round(Math.max(itemBbox.width(), itemBbox.height()) / 2.0 + clearance);
           rasterizeThickSegment(center.x, center.y, center.x, center.y, radius);
+        } else if (item instanceof ObstacleArea && !(item instanceof ConductionArea)) {
+          int shapeCount = item.tileShapeCount();
+          for (int i = 0; i < shapeCount; i++) {
+            if (item.shapeLayer(i) == layer) {
+              TileShape tileShape = item.getTileShape(i);
+              if (tileShape != null) {
+                double dilatedClearance = clearance + (cellSize + 1.0) / 2.0;
+                Shape enlargedShape = tileShape.enlarge(dilatedClearance);
+                rasterizeObstacleShape(enlargedShape);
+              }
+            }
+          }
         }
       }
     }
 
+    if (!hasForeignObstacles) {
+      Map<Integer, List<Item>> singleIsland = new HashMap<>();
+      singleIsland.put(0, new ArrayList<>(sameNetItems));
+      return new PlaneFractureResult(singleIsland);
+    }
+
     // 3. Partition same-net items into connected islands using bitwise BFS
-    return partitionItemsByIsland(sameNetItems);
+    return partitionItemsByIsland(ca, sameNetItems);
   }
 
   /** Rasterizes the convex tile shapes of a conduction area into the copper mask. */
   public void rasterizeConductionArea(ConductionArea ca) {
-    int tileCount = ca.tileShapeCount();
-    for (int t = 0; t < tileCount; t++) {
-      TileShape tile = ca.getTileShape(t);
+    if (ca == null || ca.getArea() == null) {
+      return;
+    }
+    TileShape[] pieces = ca.getArea().splitToConvex();
+    if (pieces == null) {
+      return;
+    }
+    for (TileShape tile : pieces) {
       if (tile == null) {
         continue;
       }
@@ -218,32 +257,107 @@ public class FastPlaneConnectivityGrid {
       int startRow = Math.max(0, (box.ll.y - originY) / cellSize);
       int endRow = Math.min(rows - 1, (box.ur.y - originY) / cellSize);
 
+      if (startCol > endCol || startRow > endRow) {
+        continue;
+      }
+
+      boolean tileMarked = false;
       if (tile.isIntBox()) {
         for (int r = startRow; r <= endRow; r++) {
           setRowSpan(copperMask, r, startCol, endCol);
+          tileMarked = true;
         }
       } else {
         // Precise point-in-convex-tile test along cell centers
         for (int r = startRow; r <= endRow; r++) {
           int cellY = originY + r * cellSize + cellSize / 2;
           int spanStart = -1;
-          int spanEnd = -1;
           for (int c = startCol; c <= endCol; c++) {
             int cellX = originX + c * cellSize + cellSize / 2;
             if (tile.contains(new IntPoint(cellX, cellY))) {
               if (spanStart == -1) {
                 spanStart = c;
               }
-              spanEnd = c;
             } else if (spanStart != -1) {
-              setRowSpan(copperMask, r, spanStart, spanEnd);
+              setRowSpan(copperMask, r, spanStart, c - 1);
               spanStart = -1;
-              spanEnd = -1;
+              tileMarked = true;
             }
           }
           if (spanStart != -1) {
-            setRowSpan(copperMask, r, spanStart, spanEnd);
+            setRowSpan(copperMask, r, spanStart, endCol);
+            tileMarked = true;
           }
+        }
+      }
+
+      // Fallback for thin or tiny features whose cell centers fall outside the shape:
+      // mark the cells containing the tile corners and center of gravity
+      if (!tileMarked) {
+        app.freerouting.geometry.planar.FloatPoint[] corners = tile.cornerApproxArr();
+        if (corners != null) {
+          for (app.freerouting.geometry.planar.FloatPoint corner : corners) {
+            int c =
+                Math.max(
+                    0,
+                    Math.min(cols - 1, (int) Math.floor((corner.x - originX) / (double) cellSize)));
+            int r =
+                Math.max(
+                    0,
+                    Math.min(rows - 1, (int) Math.floor((corner.y - originY) / (double) cellSize)));
+            setBit(copperMask, r, c);
+          }
+        }
+        app.freerouting.geometry.planar.FloatPoint cog = tile.centreOfGravity();
+        if (cog != null) {
+          int c =
+              Math.max(
+                  0, Math.min(cols - 1, (int) Math.floor((cog.x - originX) / (double) cellSize)));
+          int r =
+              Math.max(
+                  0, Math.min(rows - 1, (int) Math.floor((cog.y - originY) / (double) cellSize)));
+          setBit(copperMask, r, c);
+        }
+      }
+    }
+  }
+
+  /** Rasterizes an obstacle shape into the obstacle mask. */
+  public void rasterizeObstacleShape(Shape shape) {
+    if (shape == null || shape.isEmpty()) {
+      return;
+    }
+    IntBox box = shape.boundingBox();
+    int startCol = Math.max(0, (box.ll.x - originX) / cellSize);
+    int endCol = Math.min(cols - 1, (box.ur.x - originX) / cellSize);
+    int startRow = Math.max(0, (box.ll.y - originY) / cellSize);
+    int endRow = Math.min(rows - 1, (box.ur.y - originY) / cellSize);
+
+    if (startCol > endCol || startRow > endRow) {
+      return;
+    }
+
+    if (shape instanceof IntBox) {
+      for (int r = startRow; r <= endRow; r++) {
+        setRowSpan(obstacleMask, r, startCol, endCol);
+      }
+    } else {
+      for (int r = startRow; r <= endRow; r++) {
+        int cellY = originY + r * cellSize + cellSize / 2;
+        int spanStart = -1;
+        for (int c = startCol; c <= endCol; c++) {
+          int cellX = originX + c * cellSize + cellSize / 2;
+          if (shape.contains(new IntPoint(cellX, cellY))) {
+            if (spanStart == -1) {
+              spanStart = c;
+            }
+          } else if (spanStart != -1) {
+            setRowSpan(obstacleMask, r, spanStart, c - 1);
+            spanStart = -1;
+          }
+        }
+        if (spanStart != -1) {
+          setRowSpan(obstacleMask, r, spanStart, endCol);
         }
       }
     }
@@ -286,7 +400,7 @@ public class FastPlaneConnectivityGrid {
       for (int r = startRow; r <= endRow; r++) {
         int cellY = originY + r * cellSize + cellSize / 2;
         long distY = Math.abs(cellY - y1);
-        if (distY <= radius) {
+        if (distY <= dilatedRadius) {
           int deltaX = (int) Math.sqrt(radiusSq - distY * distY);
           int spanStartCol = Math.max(startCol, (segMinX - deltaX - originX) / cellSize);
           int spanEndCol = Math.min(endCol, (segMaxX + deltaX - originX) / cellSize);
@@ -306,7 +420,7 @@ public class FastPlaneConnectivityGrid {
         int cellY = originY + r * cellSize + cellSize / 2;
         int clampedY = Math.max(segMinY, Math.min(segMaxY, cellY));
         long distY = Math.abs(cellY - clampedY);
-        if (distY <= radius) {
+        if (distY <= dilatedRadius) {
           int deltaX = (int) Math.sqrt(radiusSq - distY * distY);
           int sCol = Math.max(startCol, (x1 - deltaX - originX) / cellSize);
           int eCol = Math.min(endCol, (x1 + deltaX - originX) / cellSize);
@@ -374,10 +488,12 @@ public class FastPlaneConnectivityGrid {
   /**
    * Partitions items into isolated connected components using BFS flood fill.
    *
+   * @param ca conduction area whose pour contains or touches the items
    * @param items same-net items to cluster
    * @return fracture result containing items grouped per island
    */
-  private PlaneFractureResult partitionItemsByIsland(Collection<? extends Item> items) {
+  private PlaneFractureResult partitionItemsByIsland(
+      ConductionArea ca, Collection<? extends Item> items) {
     Map<Integer, List<Item>> islands = new HashMap<>();
     Map<Item, Integer> itemIslandMap = new HashMap<>();
     int nextIslandId = 0;
@@ -387,7 +503,7 @@ public class FastPlaneConnectivityGrid {
         continue;
       }
 
-      IntPoint pt = getItemLocation(item);
+      IntPoint pt = getItemLocation(item, ca);
       if (pt == null) {
         continue;
       }
@@ -407,7 +523,7 @@ public class FastPlaneConnectivityGrid {
       // Check if this seed was already visited by an earlier island flood fill
       if (isBitSet(visitedMask, seed[1], seed[0])) {
         // Find which island visited this seed
-        int existingIsland = findIslandContainingCell(items, itemIslandMap, seed[0], seed[1]);
+        int existingIsland = findIslandContainingCell(ca, items, itemIslandMap, seed[0], seed[1]);
         if (existingIsland != -1) {
           islands.computeIfAbsent(existingIsland, k -> new ArrayList<>()).add(item);
           itemIslandMap.put(item, existingIsland);
@@ -425,7 +541,7 @@ public class FastPlaneConnectivityGrid {
       // Check remaining unassigned items to see if they are reached by this flood fill
       for (Item other : items) {
         if (!itemIslandMap.containsKey(other)) {
-          IntPoint otherPt = getItemLocation(other);
+          IntPoint otherPt = getItemLocation(other, ca);
           if (otherPt != null) {
             int oc = (otherPt.x - originX) / cellSize;
             int or = (otherPt.y - originY) / cellSize;
@@ -495,11 +611,15 @@ public class FastPlaneConnectivityGrid {
   }
 
   private int findIslandContainingCell(
-      Collection<? extends Item> items, Map<Item, Integer> itemIslandMap, int c, int r) {
+      ConductionArea ca,
+      Collection<? extends Item> items,
+      Map<Item, Integer> itemIslandMap,
+      int c,
+      int r) {
     for (Item it : items) {
       Integer id = itemIslandMap.get(it);
       if (id != null) {
-        IntPoint pt = getItemLocation(it);
+        IntPoint pt = getItemLocation(it, ca);
         if (pt != null) {
           int ic = (pt.x - originX) / cellSize;
           int ir = (pt.y - originY) / cellSize;
@@ -519,10 +639,26 @@ public class FastPlaneConnectivityGrid {
     return p.toFloat().round();
   }
 
-  private static IntPoint getItemLocation(Item item) {
+  private static IntPoint getItemLocation(Item item, ConductionArea ca) {
     if (item instanceof DrillItem drillItem) {
       return toIntPoint(drillItem.getCenter());
     } else if (item instanceof Trace trace) {
+      if (ca != null && ca.getArea() != null) {
+        if (ca.getArea().contains(trace.firstCorner())) {
+          return toIntPoint(trace.firstCorner());
+        }
+        if (ca.getArea().contains(trace.lastCorner())) {
+          return toIntPoint(trace.lastCorner());
+        }
+        if (trace instanceof PolylineTrace polylineTrace) {
+          Point[] corners = polylineTrace.polyline().corners();
+          for (Point c : corners) {
+            if (ca.getArea().contains(c)) {
+              return toIntPoint(c);
+            }
+          }
+        }
+      }
       return toIntPoint(trace.firstCorner());
     }
     return null;

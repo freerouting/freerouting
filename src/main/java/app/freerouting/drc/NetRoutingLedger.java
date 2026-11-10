@@ -5,6 +5,8 @@ import app.freerouting.board.model.items.ConductionArea;
 import app.freerouting.board.model.items.Connectable;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Pin;
+import app.freerouting.geometry.planar.IntBox;
+import app.freerouting.geometry.planar.IntPoint;
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -248,12 +250,28 @@ public final class NetRoutingLedger {
         dirtyNets.add(netNumber);
       }
     }
+    IntBox itemBox = item.boundingBox();
     for (ConductionArea ca : conductionAreas) {
       if (ca.getLayer() >= item.firstLayer() && ca.getLayer() <= item.lastLayer()) {
-        for (int index = 0; index < ca.netCount(); index++) {
-          int netNumber = ca.getNetNumber(index);
-          if (netNumber >= 1 && netNumber < itemsByNet.length) {
-            dirtyNets.add(netNumber);
+        IntBox caBox = ca.boundingBox();
+        double maxClearance = 2_000_000.0;
+        if (board != null && board.rules != null && board.rules.clearanceMatrix != null) {
+          maxClearance =
+              Math.max(
+                  maxClearance,
+                  board.rules.clearanceMatrix.maxValue(ca.clearanceClassIndex(), ca.getLayer()));
+        }
+        int cl = (int) Math.ceil(maxClearance);
+        IntBox inflatedItemBox =
+            new IntBox(
+                new IntPoint(itemBox.ll.x - cl, itemBox.ll.y - cl),
+                new IntPoint(itemBox.ur.x + cl, itemBox.ur.y + cl));
+        if (caBox.intersects(inflatedItemBox)) {
+          for (int index = 0; index < ca.netCount(); index++) {
+            int netNumber = ca.getNetNumber(index);
+            if (netNumber >= 1 && netNumber < itemsByNet.length) {
+              dirtyNets.add(netNumber);
+            }
           }
         }
       }
