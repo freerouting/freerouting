@@ -45,8 +45,10 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.CompletableFuture;
@@ -99,6 +101,11 @@ public class BasicBoard implements Serializable {
   public transient SearchTreeManager searchTreeManager;
 
   private transient NetRoutingLedger routingLedger;
+
+  /** Normal contacts by item, valid while the content version of the item list is unchanged. */
+  private transient Map<Item, Set<Item>> normalContactCache;
+
+  private transient long normalContactCacheVersion;
 
   private transient Set<Integer> normalizeSuppressedNetNos = new HashSet<>();
   private transient int revision;
@@ -158,6 +165,27 @@ public class BasicBoard implements Serializable {
    * Incomplete-connection counts maintained across inserts and removals. The counts match {@link
    * app.freerouting.drc.DesignRulesChecker#calculateAllIncompletes()}.
    */
+  /**
+   * Returns the normal contacts of {@code item}, computed once until an item of the board changes
+   * (the content version of the item list moves). The walks over connected items ask for the
+   * contacts of the same items again and again; the set returned must not be modified.
+   */
+  public Set<Item> cachedNormalContacts(Item item) {
+    long version = itemList.getContentVersion();
+    if (normalContactCache == null || normalContactCacheVersion != version) {
+      normalContactCache = new IdentityHashMap<>();
+      normalContactCacheVersion = version;
+    }
+    Set<Item> contacts = normalContactCache.get(item);
+    if (contacts == null) {
+      contacts = item.getNormalContacts();
+      if (contacts != null) {
+        normalContactCache.put(item, contacts);
+      }
+    }
+    return contacts;
+  }
+
   public NetRoutingLedger routingLedger() {
     if (routingLedger == null) {
       routingLedger = new NetRoutingLedger(this);
