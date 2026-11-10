@@ -913,6 +913,8 @@ public final class FoundConnectionInserter {
         continue;
       }
       foundSuitableSpan = true;
+      // Check with the same attach rule the maze search and the insert below use: with
+      // via_in_pad or via_touching_pad the via may attach to an SMD pad of its own net.
       if (ForcedViaInserter.check(
               currentViaInfo,
               location,
@@ -921,7 +923,8 @@ public final class FoundConnectionInserter {
               this.ctrl.maxShoveViaRecursionDepth,
               this.board,
               this.ctrl.traceHalfWidth,
-              this.ctrl.traceClearanceClassIndex)
+              this.ctrl.traceClearanceClassIndex,
+              this.ctrl.viaAttachAllowed(currentViaInfo))
           && this.ctrl.viaHoleAllowed(this.board, currentViaInfo, location, netNumbers)) {
         viaInfo = currentViaInfo;
         break;

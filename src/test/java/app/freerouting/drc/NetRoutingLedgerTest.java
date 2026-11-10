@@ -214,6 +214,46 @@ class NetRoutingLedgerTest {
         FixedState.UNFIXED);
   }
 
+  @Test
+  void deepCopyTakesTheCountsAndStaysInStepWithTheCopy() {
+    BoardReadResult result =
+        DsnReader.readBoard(DsnTestFixtures.openResource("Issue508-DAC2020_bm01.dsn"), null, null);
+    assertInstanceOf(BoardReadResult.Success.class, result);
+    RoutingBoard board = (RoutingBoard) ((BoardReadResult.Success) result).board();
+    int sourceCount = board.routingLedger().incompleteCount();
+
+    RoutingBoard copy = board.deepCopy();
+
+    assertMatchesFullScan(copy);
+    assertEquals(sourceCount, copy.routingLedger().incompleteCount());
+    for (int netNumber = 1; netNumber <= copy.rules.nets.maxNetNumber(); netNumber++) {
+      assertEquals(
+          board.routingLedger().incompleteCount(netNumber),
+          copy.routingLedger().incompleteCount(netNumber));
+    }
+
+    // The copy tracks its own changes, and the source is left as it was.
+    List<Pin> pins = new ArrayList<>(copy.getPins());
+    Pin first = pins.get(0);
+    Pin second =
+        pins.stream()
+            .filter(pin -> pin != first && pin.getNetNumber(0) == first.getNetNumber(0))
+            .findFirst()
+            .orElseThrow();
+    int netNumber = first.getNetNumber(0);
+    NetClass netClass = copy.rules.nets.get(netNumber).getNetClass();
+    copy.insertTraceWithoutCleaning(
+        new Polyline(first.getCenter(), second.getCenter()),
+        first.firstLayer(),
+        netClass.getTraceHalfWidth(first.firstLayer()),
+        new int[] {netNumber},
+        netClass.getTraceClearanceClass(),
+        FixedState.UNFIXED);
+    assertMatchesFullScan(copy);
+    assertMatchesFullScan(board);
+    assertEquals(sourceCount, board.routingLedger().incompleteCount());
+  }
+
   private static void assertMatchesFullScan(BasicBoard board) {
     DesignRulesChecker checker = new DesignRulesChecker(board, null);
     checker.calculateAllIncompletes();

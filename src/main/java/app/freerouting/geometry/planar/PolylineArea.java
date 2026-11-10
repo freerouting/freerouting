@@ -149,6 +149,40 @@ public class PolylineArea implements Area, Serializable {
   }
 
   /**
+   * Takes the convex pieces of source, if source is split already and has the same border and
+   * holes, so that a copy of an area, read back from bytes, need not be split again. Both areas
+   * share the pieces, which are immutable shapes.
+   */
+  public void reuseConvexPiecesOf(PolylineArea source) {
+    TileShape[] sourcePieces = source.precalculatedConvexPieces;
+    if (this.precalculatedConvexPieces != null
+        || sourcePieces == null
+        || this.holeArr.length != source.holeArr.length
+        || !sameBorder(this.borderShape, source.borderShape)) {
+      return;
+    }
+    for (int i = 0; i < this.holeArr.length; i++) {
+      if (!sameBorder(this.holeArr[i], source.holeArr[i])) {
+        return;
+      }
+    }
+    this.precalculatedConvexPieces = sourcePieces;
+  }
+
+  private static boolean sameBorder(PolylineShape first, PolylineShape second) {
+    if (first.getClass() != second.getClass()
+        || first.borderLineCount() != second.borderLineCount()) {
+      return false;
+    }
+    for (int i = 0; i < first.borderLineCount(); i++) {
+      if (!first.borderLine(i).equals(second.borderLine(i))) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
    * Splits this polygon shape with holes into convex pieces. The result is not exact, because
    * rounded intersections of lines are used in the result pieces. It can be made exact, if
    * Polylines are returned instead of Polygons, so that no intersection points are needed in the

@@ -99,10 +99,10 @@ public class NetIncompletes {
       // EXCEPT for DrillItems (pins/vias) - unrouted pins legitimately have no
       // contacts
       // and SHOULD appear in the ratsnest
-      // EXCEPT for ConductionArea which acts as a connection medium
-      if (!(item instanceof ConductionArea)
-          && !(item instanceof DrillItem)
-          && item.getNormalContacts().isEmpty()) {
+      // EXCEPT for ConductionArea which acts as a connection medium, unless it is dead copper
+      if (item instanceof ConductionArea area
+          ? area.isDeadCopper()
+          : !(item instanceof DrillItem) && item.getNormalContacts().isEmpty()) {
         unconnectedCount++;
         continue;
       }
