@@ -11,7 +11,7 @@ import time
 from typing import Any
 
 DEFAULT_TIER_ORDER = ("A", "D", "C", "B")
-_KNOWN_TIERS = frozenset({"A", "B", "C", "D"})
+_KNOWN_TIERS = frozenset({"A", "B", "C", "D", "T"})
 CORPUS_SAVE_INTERVAL_SECONDS = 180.0
 
 _VERSION_LABEL = re.compile(
@@ -124,7 +124,7 @@ def parse_tier_order(raw: str) -> list[str]:
         if token == "ALL":
             raise ValueError("'All' cannot be combined with named tiers")
         if token not in _KNOWN_TIERS:
-            raise ValueError(f"Unknown tier '{token}'. Use A, B, C, D, or a comma-separated list.")
+            raise ValueError(f"Unknown tier '{token}'. Use A, B, C, D, T, or a comma-separated list.")
         if token not in order:
             order.append(token)
     return order
