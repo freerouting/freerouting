@@ -8,7 +8,7 @@ description: >
   review verification, rebase/conflict resolution, targeted tests, and a unified
   merge dashboard; and (3) Post-Merge Nightly PCBench Regression Benchmarking
   (compiling executableJar, versioning the next -RCx.jar in scripts/benchmark/binaries/,
-  and running PCBench Tiers A & B) whenever routing-engine changes land on master.
+  and running PCBench Tier T canaries first, followed by Tiers A & B) whenever routing-engine changes land on master.
   Triggers on: daily briefing, morning summary, summarize open PRs, batch review,
   parallel PR review, nightly benchmark, PCBench regression, RC jar benchmark.
 metadata:
@@ -136,16 +136,28 @@ Verify that `build\libs\freerouting-current-executable.jar` was freshly generate
    Copy-Item "build/libs/freerouting-current-executable.jar" "scripts/benchmark/binaries/freerouting-current.jar" -Force
    ```
 
-### Step 3: Run PCBench Corpus Benchmark on Tiers A and B
-Execute the PCBench benchmark for the new `-RCx.jar` across **Tiers A and B** (`-Tier "A,B"`), piping verbose output to a log file so the conversation context stays clean:
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/pcbench/Run-PCBenchCorpusBenchmark.ps1 `
-  -Tier "A,B" `
-  -VersionLabel $nextLabel `
-  -JarPath $destJar `
-  -Workers 8 > "logs/pcbench-$nextLabel.log" 2>&1
-```
-*(Note: Run this as a background task or via a scheduled nightly job; do not poll in a tight loop.)*
+### Step 3: Run PCBench Corpus Benchmark (Tier T First, then Tiers A and B)
+1. **Tier T Canary Benchmark:**
+   Execute the PCBench benchmark for the new `-RCx.jar` on the **Tier T canary suite** (`-Tier "T"`), piping verbose output to a log file so the conversation context stays clean:
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File scripts/pcbench/Run-PCBenchCorpusBenchmark.ps1 `
+     -Tier "T" `
+     -VersionLabel $nextLabel `
+     -JarPath $destJar `
+     -Workers 8 > "logs/pcbench-$nextLabel-tier-t.log" 2>&1
+   ```
+   Inspect results for immediate regressions (0 router-introduced violations, clean canary completion).
+
+2. **Full Regression Benchmark (Tiers A & B):**
+   Continue the regression benchmark across **Tiers A and B** (`-Tier "A,B"`):
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File scripts/pcbench/Run-PCBenchCorpusBenchmark.ps1 `
+     -Tier "A,B" `
+     -VersionLabel $nextLabel `
+     -JarPath $destJar `
+     -Workers 8 > "logs/pcbench-$nextLabel.log" 2>&1
+   ```
+   *(Note: Alternatively, `-Tier "T,A,B"` can be passed to execute Tier T canaries first followed by Tiers A and B in a single pass. Always run as a background task; do not poll in a tight loop.)*
 
 ### Step 4: Regenerate Reports & Check for Regressions
 1. Regenerate the Markdown and HTML benchmark summaries:
