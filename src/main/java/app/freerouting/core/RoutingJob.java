@@ -7,6 +7,7 @@ import app.freerouting.core.events.RoutingJobUpdatedEvent;
 import app.freerouting.core.events.RoutingJobUpdatedEventListener;
 import app.freerouting.core.results.RoutingResultManifest;
 import app.freerouting.io.FileFormat;
+import app.freerouting.io.kicad.KiCadDesignRules;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.logger.LogEntry;
 import app.freerouting.settings.DesignRulesCheckerSettings;
@@ -19,6 +20,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
@@ -106,6 +109,12 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   @SerializedName("rules")
   @Schema(description = "Details of the uploaded design rules (.rules) file")
   public BoardFileDetails rules;
+
+  /**
+   * KiCad custom design rules (.kicad_dru), translated into clearance classes once the board is
+   * loaded. Null if there are none.
+   */
+  public transient KiCadDesignRules kicadDesignRules;
 
   @SerializedName("initial_session")
   @Schema(description = "Details of the initial session (.ses or .json) file to import")
@@ -355,6 +364,48 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
         this.rules.setFilename(rulesFile.getName());
         this.rules.setData(in.readAllBytes());
       }
+    }
+  }
+
+  /**
+   * Reads the KiCad custom design rules of this job: {@code explicitFile} if it is given, else the
+   * {@code <design>.kicad_dru} next to a DSN input file, if there is one.
+   *
+   * @param explicitFile the .kicad_dru given with the design, or null
+   * @return false if {@code explicitFile} cannot be read
+   */
+  public boolean loadKiCadDesignRules(String explicitFile) {
+    Path path = null;
+    if (explicitFile != null) {
+      path = Path.of(explicitFile);
+    } else if (this.input != null
+        && this.input.format == FileFormat.DSN
+        && this.input.getDirectoryPath() != null
+        && !this.input.getFilename().isEmpty()) {
+      Path adjacent =
+          Path.of(
+              this.input.getDirectoryPath(),
+              this.input.getFilenameWithoutExtension() + ".kicad_dru");
+      if (Files.isRegularFile(adjacent)) {
+        path = adjacent;
+      }
+    }
+    if (path == null) {
+      return true;
+    }
+    try {
+      this.kicadDesignRules = KiCadDesignRules.read(path);
+      FRLogger.info("Using the KiCad design rules of '" + path + "'.");
+      return true;
+    } catch (IOException | IllegalArgumentException e) {
+      String reason = e instanceof NoSuchFileException ? "file not found" : e.getMessage();
+      String message = "Couldn't read the KiCad design rules file '" + path + "': " + reason;
+      if (explicitFile != null) {
+        FRLogger.error(message, null);
+        return false;
+      }
+      FRLogger.warn(message + ". The board is routed with the clearances of the design only.");
+      return true;
     }
   }
 

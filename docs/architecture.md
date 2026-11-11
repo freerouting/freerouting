@@ -418,7 +418,7 @@ Analytics telemetry and metrics dispatch (`FRAnalytics`, `BigQueryClient`, `Segm
 
 ### `app.freerouting.io`
 
-Board and design file input/output serialization, parsing, and multi-format generation. Specific formats include Specctra (`io.specctra`), KiCad JSON (`io.kicad`), and multi-output synthesis (`MultiOutputGenerator`).
+Board and design file input/output serialization, parsing, and multi-format generation. Specific formats include Specctra (`io.specctra`), KiCad JSON and KiCad custom design rules (`io.kicad`; `KiCadDesignRulesTranslator` applies a `.kicad_dru` to a board loaded from DSN), and multi-output synthesis (`MultiOutputGenerator`).
 
 ### `app.freerouting.management`
 

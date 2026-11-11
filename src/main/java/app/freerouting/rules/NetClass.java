@@ -109,6 +109,37 @@ public class NetClass implements Serializable, ItemInfoPrinter.Printable {
     return traceHalfWidthArr[layer];
   }
 
+  /**
+   * Copies every setting of {@code other} into this class, except its name: trace widths, routing
+   * layers, clearance classes, via rule, autorouter flags and length and meander constraints.
+   */
+  public void copySettingsFrom(NetClass other) {
+    System.arraycopy(
+        other.traceHalfWidthArr,
+        0,
+        this.traceHalfWidthArr,
+        0,
+        Math.min(other.traceHalfWidthArr.length, this.traceHalfWidthArr.length));
+    System.arraycopy(
+        other.activeRoutingLayerArr,
+        0,
+        this.activeRoutingLayerArr,
+        0,
+        Math.min(other.activeRoutingLayerArr.length, this.activeRoutingLayerArr.length));
+    this.defaultItemClearanceClasses =
+        new DefaultItemClearanceClasses(other.defaultItemClearanceClasses);
+    this.isIgnoredByAutorouter = other.isIgnoredByAutorouter;
+    this.isRoutedFirst = other.isRoutedFirst;
+    this.viaRule = other.viaRule;
+    this.traceClearanceClass = other.traceClearanceClass;
+    this.shoveFixed = other.shoveFixed;
+    this.pullTight = other.pullTight;
+    this.ignoreCyclesWithAreas = other.ignoreCyclesWithAreas;
+    this.minimumTraceLength = other.minimumTraceLength;
+    this.maximumTraceLength = other.maximumTraceLength;
+    this.meanderConstraint = other.meanderConstraint;
+  }
+
   /** Gets the clearance class used for routing traces with this net class. */
   public int getTraceClearanceClass() {
     return this.traceClearanceClass;

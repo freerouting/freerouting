@@ -89,6 +89,12 @@ public final class CliRunner {
       }
     }
 
+    // Routing without the rules of a .kicad_dru given on the command line would produce a board
+    // that fails the KiCad DRC.
+    if (!routingJob.loadKiCadDesignRules(globalSettings.initialKiCadDesignRulesFile)) {
+      return false;
+    }
+
     routingJob.routerSettings = settingsMerger.merge();
     routingJob.drcSettings = globalSettings.drcSettings.clone();
     routingJob.state = RoutingJobState.READY_TO_START;
