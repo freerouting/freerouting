@@ -45,6 +45,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.locks.Lock;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * Elementary geometric search functions making direct use of the MinAreaTree in the package
@@ -515,9 +516,15 @@ public class ShapeSearchTree extends MinAreaTree {
    * shape of area and keeping the objects with a point in that shape. But the tree is traversed
    * once for the bounding shape of area, then once for each point, instead of once for each tree
    * shape of area. points must depend on nothing but its argument.
+   *
+   * <p>An object for which byShape is true is kept instead when one of its tree shapes on layer
+   * overlaps a tree shape of area with a positive area, wherever its points are.
    */
   public Set<SearchTreeObject> overlappingObjectsWithPointIn(
-      Item area, int layer, Function<SearchTreeObject, Point[]> points) {
+      Item area,
+      int layer,
+      Function<SearchTreeObject, Point[]> points,
+      Predicate<SearchTreeObject> byShape) {
     Lock lock = readLock();
     lock.lock();
     List<Leaf> leaves = queryLeafBuffer.get();
@@ -547,6 +554,22 @@ public class ShapeSearchTree extends MinAreaTree {
         int shapeIndex = currentLeaf.shapeIndexInObject;
         if ((layer >= 0 && currentObject.shapeLayer(shapeIndex) != layer)
             || result.contains(currentObject)) {
+          continue;
+        }
+        if (byShape.test(currentObject)) {
+          TileShape objectShape = currentObject.getTreeShape(this, shapeIndex);
+          pointLeaves.clear();
+          this.collectOverlapsUnlocked(currentLeaf.boundingShape, pointLeaves);
+          for (Leaf areaLeaf : pointLeaves) {
+            if (areaLeaf.object == area
+                && area.getTreeShape(this, areaLeaf.shapeIndexInObject)
+                        .intersection(objectShape)
+                        .dimension()
+                    == 2) {
+              result.add(currentObject);
+              break;
+            }
+          }
           continue;
         }
         Point[] objectPoints = points.apply(currentObject);
