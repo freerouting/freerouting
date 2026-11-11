@@ -39,4 +39,19 @@ class BatchOptimizerKeepRipupCostsTest {
   void missingOptimizerSettingsDropIncreasedRipupCosts() {
     assertFalse(BatchOptimizer.increasedRipupCostsAfterPassWithoutGain(null));
   }
+
+  @Test
+  void defaultGoesOnOnceWithNormalRipupCosts() {
+    RouterSettings merged = mergeCli();
+
+    assertTrue(BatchOptimizer.continueAfterPassWithoutGain(merged.optimizer, 1));
+  }
+
+  @Test
+  void keptRipupCostsStopAfterTwoPassesWithoutGainInARow() {
+    RouterSettings merged = mergeCli("--router.optimizer.keep_increased_ripup_costs=true");
+
+    assertTrue(BatchOptimizer.continueAfterPassWithoutGain(merged.optimizer, 1));
+    assertFalse(BatchOptimizer.continueAfterPassWithoutGain(merged.optimizer, 2));
+  }
 }

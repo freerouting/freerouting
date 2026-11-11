@@ -381,6 +381,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
 
     double scoreImprovement = -1;
     int currentPass = 0;
+    int passesWithoutGainInARow = 0;
     while ((this.settings.optimizer.maxPasses == null
             || currentPass < this.settings.optimizer.maxPasses)
         && (this.settings.optimizer.maxItems == null
@@ -461,12 +462,19 @@ public final class BatchOptimizer extends NamedAlgorithm {
               passStats.clearanceViolations.totalCount));
 
       if (this.useIncreasedRipupCosts && scoreAfterPass <= scoreBeforePass) {
+        ++passesWithoutGainInARow;
         this.useIncreasedRipupCosts =
             increasedRipupCostsAfterPassWithoutGain(job.routerSettings.optimizer);
-        // Keep the optimizer going: with normal ripup costs, or with the increased ones from the
-        // other preferred directions of the next pass
-        scoreImprovement = -1;
+        // Keep the optimizer going: with normal ripup costs, or with the increased ones and the
+        // other preferred directions of the next pass. With the increased costs kept, a second
+        // pass in a row without gain has tried both directions from the same incumbent: the next
+        // passes would only repeat them, so the stop rule applies.
+        scoreImprovement =
+            continueAfterPassWithoutGain(job.routerSettings.optimizer, passesWithoutGainInARow)
+                ? -1
+                : stopRuleView.percent();
       } else {
+        passesWithoutGainInARow = 0;
         scoreImprovement = stopRuleView.percent();
       }
 
@@ -1479,5 +1487,18 @@ public final class BatchOptimizer extends NamedAlgorithm {
   static boolean increasedRipupCostsAfterPassWithoutGain(OptimizerSettings optimizerSettings) {
     return optimizerSettings != null
         && Boolean.TRUE.equals(optimizerSettings.keepIncreasedRipupCosts);
+  }
+
+  /**
+   * Whether the optimizer goes on, whatever the stop rule says, after a pass with the increased
+   * ripup costs that did not improve the board. By default it always does, once, with the normal
+   * ripup costs. With {@code optimizer.keep_increased_ripup_costs}, it does after the first such
+   * pass, to try the other preferred directions, but not after a second one in a row: each pass
+   * restarts from the same incumbent, so the next ones would only repeat the last two.
+   */
+  static boolean continueAfterPassWithoutGain(
+      OptimizerSettings optimizerSettings, int passesWithoutGainInARow) {
+    return !increasedRipupCostsAfterPassWithoutGain(optimizerSettings)
+        || passesWithoutGainInARow < 2;
   }
 }

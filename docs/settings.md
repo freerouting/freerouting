@@ -258,7 +258,8 @@ Configures the optional route-optimization stage that runs after autorouting.
   first passes after a pass that does not improve the board. By default (`false`) it drops them for
   the rest of the run, and each later pass rips and reroutes far more items (several times the CPU
   time of a pass with the increased costs). With `true`, a pass without gain still restarts from the
-  best board, and the next pass keeps the increased costs. CLI:
+  best board, and the next pass keeps the increased costs; after two passes in a row without gain,
+  the optimizer stops. CLI:
   `--router.optimizer.keep_increased_ripup_costs=true`.
 - **`enable_preflight_guards`**: Whether pre-flight optimization guards are evaluated before starting the
   optimizer loop. If enabled, bypasses the optimizer stage when the board has no vias to eliminate (with trace
