@@ -2,10 +2,12 @@ package app.freerouting.geometry.planar;
 
 import app.freerouting.logger.FRLogger;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * A Polygon is a list of points in the plane, where no 2 consecutive points may be equal and no 3
@@ -69,6 +71,58 @@ public class Polygon implements Serializable {
         current = next;
       }
     }
+  }
+
+  /**
+   * Returns corners, the corners of a closed border, without the corners at which the border turns
+   * back along itself, lying within one unit of the line through their neighbours: needles of no
+   * width, such as a fill rounded to the resolution of the board leaves where its border steps back
+   * by a unit. The border turns there by about 180 degrees, so that the sense of the polygon cannot
+   * be told and its split into convex pieces fails. A last corner equal to the first is kept.
+   */
+  public static Point[] withoutSpikes(Point[] corners) {
+    List<Point> result = new ArrayList<>(Arrays.asList(corners));
+    boolean closed = result.size() > 1 && result.getFirst().equals(result.getLast());
+    if (closed) {
+      result.removeLast();
+    }
+    boolean removed = true;
+    while (removed && result.size() > 3) {
+      removed = false;
+      int count = result.size();
+      for (int i = 0; i < count; i++) {
+        if (isSpike(
+            result.get((i + count - 1) % count), result.get(i), result.get((i + 1) % count))) {
+          result.remove(i);
+          removed = true;
+          break;
+        }
+      }
+    }
+    if (result.size() == corners.length - (closed ? 1 : 0)) {
+      return corners;
+    }
+    if (closed) {
+      result.add(result.getFirst());
+    }
+    return result.toArray(new Point[0]);
+  }
+
+  private static boolean isSpike(Point prevCorner, Point corner, Point nextCorner) {
+    FloatPoint prev = prevCorner.toFloat();
+    FloatPoint current = corner.toFloat();
+    FloatPoint next = nextCorner.toFloat();
+    double inX = current.x - prev.x;
+    double inY = current.y - prev.y;
+    double outX = next.x - current.x;
+    double outY = next.y - current.y;
+    if (inX * outX + inY * outY >= 0) {
+      return false;
+    }
+    double chordX = next.x - prev.x;
+    double chordY = next.y - prev.y;
+    double cross = inX * chordY - inY * chordX;
+    return cross * cross <= chordX * chordX + chordY * chordY;
   }
 
   /** Returns the array of corners of this polygon. */
