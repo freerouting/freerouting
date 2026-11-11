@@ -17,6 +17,7 @@ import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.settings.OptimizerSettings;
 import app.freerouting.settings.sources.DefaultSettings;
 import com.sun.management.ThreadMXBean;
 import java.lang.management.ManagementFactory;
@@ -460,8 +461,10 @@ public final class BatchOptimizer extends NamedAlgorithm {
               passStats.clearanceViolations.totalCount));
 
       if (this.useIncreasedRipupCosts && scoreAfterPass <= scoreBeforePass) {
-        this.useIncreasedRipupCosts = false;
-        // Keep the optimizer going to try with normal ripup costs
+        this.useIncreasedRipupCosts =
+            increasedRipupCostsAfterPassWithoutGain(job.routerSettings.optimizer);
+        // Keep the optimizer going: with normal ripup costs, or with the increased ones from the
+        // other preferred directions of the next pass
         scoreImprovement = -1;
       } else {
         scoreImprovement = stopRuleView.percent();
@@ -1466,5 +1469,15 @@ public final class BatchOptimizer extends NamedAlgorithm {
     FloatPoint getCurrentPosition() {
       return minItemCoor;
     }
+  }
+
+  /**
+   * Whether the increased ripup costs of the start are still used after a pass that did not improve
+   * the board. By default they are dropped, and the optimizer goes on with the normal ripup costs;
+   * {@code optimizer.keep_increased_ripup_costs} keeps them.
+   */
+  static boolean increasedRipupCostsAfterPassWithoutGain(OptimizerSettings optimizerSettings) {
+    return optimizerSettings != null
+        && Boolean.TRUE.equals(optimizerSettings.keepIncreasedRipupCosts);
   }
 }
