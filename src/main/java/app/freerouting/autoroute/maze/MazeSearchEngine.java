@@ -396,26 +396,20 @@ public class MazeSearchEngine {
 
   /**
    * Whether a fanout search may end at the drill of {@code listElement}. The via is an escape only
-   * if the net can use it: the drill leads to a layer the net may route on, or to a plane layer
-   * while the net may route on another signal layer than the pin's, or into the net's own plane.
-   * Otherwise the search goes on from there instead of ending with a via the net cannot use: a
-   * drill to a signal layer the net may not use is dropped afterwards, and a drill into the plane
-   * of another net would leave a via that leads nowhere for a net restricted to the pin's layer.
+   * if the net can use it: the drill leads to a layer the net may route on, or into the net's own
+   * plane. Otherwise the search goes on from there instead of ending with a via the net cannot use:
+   * a drill to a signal layer the net may not use is dropped afterwards, and a drill into the plane
+   * of another net would leave a via that leads nowhere.
    */
   private boolean fanoutMayStopAt(MazeListElement listElement) {
-    int layer = listElement.nextRoom.getLayer();
+    ExpansionDrill drill = (ExpansionDrill) listElement.door;
+    int layer = drill.firstLayer + listElement.sectionNoOfDoor;
     if (ctrl.layerActive[layer]) {
       return true;
     }
     if (autorouteEngine.board.layerStructure.layers[layer].isSignal) {
       return false;
     }
-    for (int i = 0; i < ctrl.layerCount; i++) {
-      if (ctrl.layerActive[i] && i != ctrl.fanoutStartPinLayer) {
-        return true;
-      }
-    }
-    ExpansionDrill drill = (ExpansionDrill) listElement.door;
     ItemSelectionFilter filter =
         new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.CONDUCTION);
     for (Item item : autorouteEngine.board.pickItems(drill.location, layer, filter)) {
