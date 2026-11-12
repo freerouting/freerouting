@@ -178,7 +178,7 @@ public class GlobalSettings implements Serializable {
 
   /**
    * The KiCad custom design rules file (.kicad_dru) provided with the design file via the -de
-   * command line argument. Without one, a {@code <design>.kicad_dru} next to a DSN design is used.
+   * command line argument.
    */
   public transient String initialKiCadDesignRulesFile;
 

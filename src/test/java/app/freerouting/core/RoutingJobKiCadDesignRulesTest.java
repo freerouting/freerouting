@@ -13,7 +13,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-/** Which .kicad_dru a routing job uses (-de, or the file next to the design). */
+/** Which .kicad_dru a routing job uses (-de, or explicit argument only). */
 class RoutingJobKiCadDesignRulesTest {
 
   private static final String RULES =
@@ -30,25 +30,25 @@ class RoutingJobKiCadDesignRulesTest {
   }
 
   @Test
-  void usesTheRulesFileNextToTheDesign() throws Exception {
+  void doesNotAutomaticallyLoadRulesFileNextToTheDesign() throws Exception {
     Files.writeString(dir.resolve("board.kicad_dru"), RULES);
     RoutingJob job = job();
 
     assertTrue(job.loadKiCadDesignRules(null));
-    assertNotNull(job.kicadDesignRules);
-    assertEquals("board.kicad_dru", job.kicadDesignRules.sourceName());
-    assertEquals(1, job.kicadDesignRules.rules().size());
+    assertNull(
+        job.kicadDesignRules, "Must not auto-load adjacent .kicad_dru without explicit input");
   }
 
   @Test
   @AllowErrorLogs("An explicit .kicad_dru that cannot be read is reported as an error")
-  void anExplicitFileWinsAndMustBeReadable() throws Exception {
-    Files.writeString(dir.resolve("board.kicad_dru"), RULES);
-    Path other = Files.writeString(dir.resolve("project.kicad_dru"), RULES);
+  void anExplicitFileIsLoadedAndMustBeReadable() throws Exception {
+    Path file = Files.writeString(dir.resolve("project.kicad_dru"), RULES);
     RoutingJob job = job();
 
-    assertTrue(job.loadKiCadDesignRules(other.toString()));
+    assertTrue(job.loadKiCadDesignRules(file.toString()));
+    assertNotNull(job.kicadDesignRules);
     assertEquals("project.kicad_dru", job.kicadDesignRules.sourceName());
+    assertEquals(1, job.kicadDesignRules.rules().size());
 
     RoutingJob missing = job();
     assertFalse(missing.loadKiCadDesignRules(dir.resolve("missing.kicad_dru").toString()));

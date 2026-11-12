@@ -368,31 +368,16 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   }
 
   /**
-   * Reads the KiCad custom design rules of this job: {@code explicitFile} if it is given, else the
-   * {@code <design>.kicad_dru} next to a DSN input file, if there is one.
+   * Reads the KiCad custom design rules of this job when explicitly provided.
    *
    * @param explicitFile the .kicad_dru given with the design, or null
    * @return false if {@code explicitFile} cannot be read
    */
   public boolean loadKiCadDesignRules(String explicitFile) {
-    Path path = null;
-    if (explicitFile != null) {
-      path = Path.of(explicitFile);
-    } else if (this.input != null
-        && this.input.format == FileFormat.DSN
-        && this.input.getDirectoryPath() != null
-        && !this.input.getFilename().isEmpty()) {
-      Path adjacent =
-          Path.of(
-              this.input.getDirectoryPath(),
-              this.input.getFilenameWithoutExtension() + ".kicad_dru");
-      if (Files.isRegularFile(adjacent)) {
-        path = adjacent;
-      }
-    }
-    if (path == null) {
+    if (explicitFile == null) {
       return true;
     }
+    Path path = Path.of(explicitFile);
     try {
       this.kicadDesignRules = KiCadDesignRules.read(path);
       FRLogger.info("Using the KiCad design rules of '" + path + "'.");
@@ -400,12 +385,8 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     } catch (IOException | IllegalArgumentException e) {
       String reason = e instanceof NoSuchFileException ? "file not found" : e.getMessage();
       String message = "Couldn't read the KiCad design rules file '" + path + "': " + reason;
-      if (explicitFile != null) {
-        FRLogger.error(message, null);
-        return false;
-      }
-      FRLogger.warn(message + ". The board is routed with the clearances of the design only.");
-      return true;
+      FRLogger.error(message, null);
+      return false;
     }
   }
 
@@ -546,8 +527,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   private void setInputFromFile(File inputFile) throws IOException {
     // Read the file contents into a byte array and initialize the RoutingJob object
     // with it
-    FileInputStream fileInputStream = new FileInputStream(inputFile);
-    byte[] content = fileInputStream.readAllBytes();
+    byte[] content = Files.readAllBytes(inputFile.toPath());
 
     setInput(content);
     input.setFilename(inputFile.getAbsolutePath());
