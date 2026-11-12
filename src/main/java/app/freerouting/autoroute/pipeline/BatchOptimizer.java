@@ -436,9 +436,13 @@ public final class BatchOptimizer extends NamedAlgorithm {
         restoreIncumbentBoard();
       }
 
+      float effectiveScoreAfterPass = rejectionReason == null ? scoreAfterPass : this.bestScore;
+      boolean effectiveConnectionsOpen =
+          rejectionReason == null
+              ? passStats.connections.incompleteCount > 0
+              : this.bestIncompleteCount > 0;
       StopRuleView stopRuleView =
-          stopRuleScores(
-              scoreBeforePass, scoreAfterPass, passStats.connections.incompleteCount > 0);
+          stopRuleScores(scoreBeforePass, effectiveScoreAfterPass, effectiveConnectionsOpen);
       double passImprovementPercent = scoreImprovementPercent(scoreBeforePass, scoreAfterPass);
       String passOutcome =
           scoreAfterPass > scoreBeforePass
@@ -461,7 +465,9 @@ public final class BatchOptimizer extends NamedAlgorithm {
               passStats.connections.incompleteCount,
               passStats.clearanceViolations.totalCount));
 
-      if (this.useIncreasedRipupCosts && scoreAfterPass <= scoreBeforePass) {
+      boolean passHadGain = hasPassGain(rejectionReason, scoreBeforePass, scoreAfterPass);
+
+      if (this.useIncreasedRipupCosts && !passHadGain) {
         ++passesWithoutGainInARow;
         this.useIncreasedRipupCosts =
             increasedRipupCostsAfterPassWithoutGain(job.routerSettings.optimizer);
@@ -469,10 +475,16 @@ public final class BatchOptimizer extends NamedAlgorithm {
         // other preferred directions of the next pass. With the increased costs kept, a second
         // pass in a row without gain has tried both directions from the same incumbent: the next
         // passes would only repeat them, so the stop rule applies.
-        scoreImprovement =
-            continueAfterPassWithoutGain(job.routerSettings.optimizer, passesWithoutGainInARow)
-                ? -1
-                : stopRuleView.percent();
+        if (shouldStopAfterConsecutivePassesWithoutGain(
+            job.routerSettings.optimizer, passesWithoutGainInARow)) {
+          job.logInfo(
+              String.format(
+                  Locale.US,
+                  "Stopping optimizer after %d consecutive passes without gain with increased ripup costs.",
+                  passesWithoutGainInARow));
+          break;
+        }
+        scoreImprovement = -1;
       } else {
         passesWithoutGainInARow = 0;
         scoreImprovement = stopRuleView.percent();
@@ -1500,5 +1512,25 @@ public final class BatchOptimizer extends NamedAlgorithm {
       OptimizerSettings optimizerSettings, int passesWithoutGainInARow) {
     return !increasedRipupCostsAfterPassWithoutGain(optimizerSettings)
         || passesWithoutGainInARow < 2;
+  }
+
+  /**
+   * Evaluates whether an optimizer pass produced an accepted improvement. A pass has gain only if
+   * the candidate was not vetoed and its optimizer score improved over the score before the pass.
+   */
+  static boolean hasPassGain(String rejectionReason, float scoreBeforePass, float scoreAfterPass) {
+    return rejectionReason == null && scoreAfterPass > scoreBeforePass;
+  }
+
+  /**
+   * Decides whether the optimizer should stop after evaluating consecutive passes without gain.
+   *
+   * @param optimizerSettings router optimizer settings
+   * @param passesWithoutGainInARow consecutive passes without gain
+   * @return true if the optimizer should stop immediately due to consecutive passes without gain
+   */
+  static boolean shouldStopAfterConsecutivePassesWithoutGain(
+      OptimizerSettings optimizerSettings, int passesWithoutGainInARow) {
+    return !continueAfterPassWithoutGain(optimizerSettings, passesWithoutGainInARow);
   }
 }
