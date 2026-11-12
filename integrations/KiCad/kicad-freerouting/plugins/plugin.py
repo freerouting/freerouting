@@ -42,7 +42,7 @@ from .config import (
     DEBUG_OUTPUT_JSON_FILENAME,
     LOG_DIR,
 )
-from .gui_helpers import has_pcbnew_api, wx_show_error, wx_safe_invoke
+from .gui_helpers import has_pcbnew_api, wx_show_error, wx_safe_invoke, refill_board_zones
 from .board_json_helpers import is_json_api_mode_available, serialize_board_to_json
 from .process_utils import (
     ProcessDialog,
@@ -1224,6 +1224,8 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
                     # Commit rollback failed or already finalized
                     pass
             raise
+
+        refill_board_zones(board)
 
         try:
             pcbnew.Refresh()

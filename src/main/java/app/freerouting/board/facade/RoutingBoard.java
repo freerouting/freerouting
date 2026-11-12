@@ -968,7 +968,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     Net routeNet = rules.nets.get(routeNetNo);
     if (routeNet != null && routeNet.containsPlane()) {
       for (Item currentItem : routeStartSet) {
-        if (currentItem instanceof ConductionArea) {
+        if (currentItem instanceof ConductionArea ca && !ca.isFractured()) {
           return new AutorouteAttemptResult(
               AutorouteAttemptState.CONNECTED_TO_PLANE,
               "The item '" + currentItem + "' is connected to a plane.");
@@ -1461,6 +1461,16 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       somethingChanged = true;
     }
     if (somethingChanged) {
+      Iterator<UndoableObjects.UndoableObjectNode> clearIt = itemList.startReadObject();
+      for (; ; ) {
+        Item currentItem = (Item) itemList.readObject(clearIt);
+        if (currentItem == null) {
+          break;
+        }
+        if (currentItem instanceof ConductionArea ca) {
+          ca.clearDerivedData();
+        }
+      }
       this.searchTreeManager.reinsertTreeItems();
     }
   }
