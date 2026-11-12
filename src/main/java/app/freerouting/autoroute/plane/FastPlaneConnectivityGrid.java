@@ -36,11 +36,11 @@ public class FastPlaneConnectivityGrid {
   /** Maximum dimension of the grid in either axis (1024 * 1024 bits = 128 KB max ceiling). */
   public static final int MAX_GRID_DIM = 1024;
 
-  /** Minimum cell size in internal board units (50 um in nm coordinates). */
-  public static final int MIN_CELL_SIZE = 50_000;
+  /** Minimum cell size in internal board units (e.g. 10 um at 10 units/um resolution). */
+  public static final int MIN_CELL_SIZE = 100;
 
-  /** Default cell size in internal board units (200 um in nm coordinates). */
-  public static final int DEFAULT_CELL_SIZE = 200_000;
+  /** Default cell size in internal board units (e.g. 100 um at 10 units/um resolution). */
+  public static final int DEFAULT_CELL_SIZE = 1_000;
 
   private int originX;
   private int originY;
@@ -52,6 +52,7 @@ public class FastPlaneConnectivityGrid {
   private long[] copperMask;
   private long[] obstacleMask;
   private long[] visitedMask;
+  private int[] cellIslandMap;
 
   private int[] queueX;
   private int[] queueY;
@@ -84,6 +85,7 @@ public class FastPlaneConnectivityGrid {
     this.copperMask = new long[0];
     this.obstacleMask = new long[0];
     this.visitedMask = new long[0];
+    this.cellIslandMap = new int[0];
     this.queueX = new int[0];
     this.queueY = new int[0];
   }
@@ -133,6 +135,12 @@ public class FastPlaneConnectivityGrid {
       Arrays.fill(this.visitedMask, 0, totalWords, 0L);
     }
 
+    int totalCells = this.cols * this.rows;
+    if (this.cellIslandMap.length < totalCells) {
+      this.cellIslandMap = new int[totalCells];
+    }
+    Arrays.fill(this.cellIslandMap, 0, totalCells, -1);
+
     int maxQueueSize = this.cols * this.rows;
     if (this.queueX.length < maxQueueSize) {
       this.queueX = new int[maxQueueSize];
@@ -154,12 +162,21 @@ public class FastPlaneConnectivityGrid {
       return new PlaneFractureResult(Collections.emptyMap());
     }
 
+    if (sameNetItems.size() <= 1) {
+      Map<Integer, List<Item>> singleIsland = new HashMap<>();
+      singleIsland.put(0, new ArrayList<>(sameNetItems));
+      return new PlaneFractureResult(singleIsland);
+    }
+
     IntBox bbox = ca.boundingBox();
     int netClassNo = ca.netCount() > 0 ? ca.getNetNumber(0) : 0;
     int clearanceClass = ca.clearanceClassIndex();
     int layer = ca.getLayer();
 
     double baseClearance = board.clearanceValue(clearanceClass, clearanceClass, layer);
+    if (baseClearance <= 0) {
+      baseClearance = DEFAULT_CELL_SIZE;
+    }
     double maxClearance = baseClearance;
     if (board.rules != null && board.rules.clearanceMatrix != null) {
       maxClearance =
@@ -171,7 +188,11 @@ public class FastPlaneConnectivityGrid {
             new IntPoint(bbox.ll.x - clearanceInflate, bbox.ll.y - clearanceInflate),
             new IntPoint(bbox.ur.x + clearanceInflate, bbox.ur.y + clearanceInflate));
 
+    int maxDim = Math.max(bbox.width(), bbox.height());
     int desiredCell = (int) Math.max(MIN_CELL_SIZE, Math.round(baseClearance / 2.0));
+    if (maxDim > 0 && maxDim / 64 < desiredCell) {
+      desiredCell = Math.max(MIN_CELL_SIZE, maxDim / 64);
+    }
     init(bbox, desiredCell);
 
     // 1. Rasterize conduction area boundary
@@ -496,6 +517,7 @@ public class FastPlaneConnectivityGrid {
       ConductionArea ca, Collection<? extends Item> items) {
     Map<Integer, List<Item>> islands = new HashMap<>();
     Map<Item, Integer> itemIslandMap = new HashMap<>();
+    List<Item> unseededItems = new ArrayList<>();
     int nextIslandId = 0;
 
     for (Item item : items) {
@@ -505,6 +527,7 @@ public class FastPlaneConnectivityGrid {
 
       IntPoint pt = getItemLocation(item, ca);
       if (pt == null) {
+        unseededItems.add(item);
         continue;
       }
 
@@ -513,22 +536,16 @@ public class FastPlaneConnectivityGrid {
 
       int[] seed = findNearestConductiveCell(targetCol, targetRow);
       if (seed == null) {
-        // Item is completely cut off from conductive copper (isolated dead copper)
-        int isolatedId = nextIslandId++;
-        islands.computeIfAbsent(isolatedId, k -> new ArrayList<>()).add(item);
-        itemIslandMap.put(item, isolatedId);
+        unseededItems.add(item);
         continue;
       }
 
-      // Check if this seed was already visited by an earlier island flood fill
-      if (isBitSet(visitedMask, seed[1], seed[0])) {
-        // Find which island visited this seed
-        int existingIsland = findIslandContainingCell(ca, items, itemIslandMap, seed[0], seed[1]);
-        if (existingIsland != -1) {
-          islands.computeIfAbsent(existingIsland, k -> new ArrayList<>()).add(item);
-          itemIslandMap.put(item, existingIsland);
-          continue;
-        }
+      int seedIndex = seed[1] * cols + seed[0];
+      int existingIsland = cellIslandMap[seedIndex];
+      if (existingIsland >= 0) {
+        islands.computeIfAbsent(existingIsland, k -> new ArrayList<>()).add(item);
+        itemIslandMap.put(item, existingIsland);
+        continue;
       }
 
       // Start new BFS flood fill for this island
@@ -536,29 +553,56 @@ public class FastPlaneConnectivityGrid {
       islands.computeIfAbsent(currentIslandId, k -> new ArrayList<>()).add(item);
       itemIslandMap.put(item, currentIslandId);
 
-      runFloodFill(seed[0], seed[1]);
+      runFloodFill(seed[0], seed[1], currentIslandId);
 
       // Check remaining unassigned items to see if they are reached by this flood fill
       for (Item other : items) {
-        if (!itemIslandMap.containsKey(other)) {
+        if (!itemIslandMap.containsKey(other) && !unseededItems.contains(other)) {
           IntPoint otherPt = getItemLocation(other, ca);
           if (otherPt != null) {
             int oc = (otherPt.x - originX) / cellSize;
             int or = (otherPt.y - originY) / cellSize;
             int[] otherSeed = findNearestConductiveCell(oc, or);
-            if (otherSeed != null && isBitSet(visitedMask, otherSeed[1], otherSeed[0])) {
-              islands.get(currentIslandId).add(other);
-              itemIslandMap.put(other, currentIslandId);
+            if (otherSeed != null) {
+              int otherIndex = otherSeed[1] * cols + otherSeed[0];
+              if (cellIslandMap[otherIndex] == currentIslandId) {
+                islands.get(currentIslandId).add(other);
+                itemIslandMap.put(other, currentIslandId);
+              }
             }
           }
         }
       }
     }
 
+    if (nextIslandId == 0) {
+      Map<Integer, List<Item>> single = new HashMap<>();
+      single.put(0, new ArrayList<>(items));
+      return new PlaneFractureResult(single);
+    }
+
+    for (Item unseeded : unseededItems) {
+      if (itemIslandMap.containsKey(unseeded)) {
+        continue;
+      }
+      IntPoint pt = getItemLocation(unseeded, ca);
+      int assignedIsland = 0;
+      if (pt != null) {
+        int targetCol = (pt.x - originX) / cellSize;
+        int targetRow = (pt.y - originY) / cellSize;
+        int nearestIsland = findNearestMappedIsland(targetCol, targetRow, 10);
+        if (nearestIsland >= 0) {
+          assignedIsland = nearestIsland;
+        }
+      }
+      islands.computeIfAbsent(assignedIsland, k -> new ArrayList<>()).add(unseeded);
+      itemIslandMap.put(unseeded, assignedIsland);
+    }
+
     return new PlaneFractureResult(islands);
   }
 
-  private void runFloodFill(int startCol, int startRow) {
+  private void runFloodFill(int startCol, int startRow, int islandId) {
     int head = 0;
     int tail = 0;
 
@@ -566,6 +610,7 @@ public class FastPlaneConnectivityGrid {
     queueY[tail] = startRow;
     tail++;
     setBit(visitedMask, startRow, startCol);
+    cellIslandMap[startRow * cols + startCol] = islandId;
 
     int[] dc = {1, -1, 0, 0};
     int[] dr = {0, 0, 1, -1};
@@ -582,6 +627,7 @@ public class FastPlaneConnectivityGrid {
         if (nc >= 0 && nc < cols && nr >= 0 && nr < rows) {
           if (!isBitSet(visitedMask, nr, nc) && isConductive(nc, nr)) {
             setBit(visitedMask, nr, nc);
+            cellIslandMap[nr * cols + nc] = islandId;
             queueX[tail] = nc;
             queueY[tail] = nr;
             tail++;
@@ -595,8 +641,8 @@ public class FastPlaneConnectivityGrid {
     if (col >= 0 && col < cols && row >= 0 && row < rows && isConductive(col, row)) {
       return new int[] {col, row};
     }
-    // Search 3x3 then 5x5 neighborhood
-    for (int radius = 1; radius <= 2; radius++) {
+    // Search expanding neighborhood up to radius 4
+    for (int radius = 1; radius <= 4; radius++) {
       for (int dr = -radius; dr <= radius; dr++) {
         for (int dc = -radius; dc <= radius; dc++) {
           int nc = col + dc;
@@ -610,21 +656,17 @@ public class FastPlaneConnectivityGrid {
     return null;
   }
 
-  private int findIslandContainingCell(
-      ConductionArea ca,
-      Collection<? extends Item> items,
-      Map<Item, Integer> itemIslandMap,
-      int c,
-      int r) {
-    for (Item it : items) {
-      Integer id = itemIslandMap.get(it);
-      if (id != null) {
-        IntPoint pt = getItemLocation(it, ca);
-        if (pt != null) {
-          int ic = (pt.x - originX) / cellSize;
-          int ir = (pt.y - originY) / cellSize;
-          if (Math.abs(ic - c) <= 2 && Math.abs(ir - r) <= 2) {
-            return id;
+  private int findNearestMappedIsland(int col, int row, int maxRadius) {
+    for (int r = 1; r <= maxRadius; r++) {
+      for (int dr = -r; dr <= r; dr++) {
+        for (int dc = -r; dc <= r; dc++) {
+          int nc = col + dc;
+          int nr = row + dr;
+          if (nc >= 0 && nc < cols && nr >= 0 && nr < rows) {
+            int island = cellIslandMap[nr * cols + nc];
+            if (island >= 0) {
+              return island;
+            }
           }
         }
       }
@@ -641,7 +683,21 @@ public class FastPlaneConnectivityGrid {
 
   private static IntPoint getItemLocation(Item item, ConductionArea ca) {
     if (item instanceof DrillItem drillItem) {
-      return toIntPoint(drillItem.getCenter());
+      IntPoint center = toIntPoint(drillItem.getCenter());
+      if (ca != null && ca.getArea() != null && !ca.getArea().contains(center)) {
+        IntBox box = drillItem.boundingBox();
+        if (box != null) {
+          IntPoint[] corners = {
+            box.ll, box.ur, new IntPoint(box.ll.x, box.ur.y), new IntPoint(box.ur.x, box.ll.y)
+          };
+          for (IntPoint cp : corners) {
+            if (ca.getArea().contains(cp)) {
+              return cp;
+            }
+          }
+        }
+      }
+      return center;
     } else if (item instanceof Trace trace) {
       if (ca != null && ca.getArea() != null) {
         if (ca.getArea().contains(trace.firstCorner())) {
