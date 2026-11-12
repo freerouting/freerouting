@@ -228,13 +228,8 @@ class FastPlaneConnectivityGridTest {
     }
 
     FastPlaneConnectivityGrid grid = new FastPlaneConnectivityGrid();
-    // Warm up JIT
-    grid.evaluateFracture(ca, board, List.of(via1, via2));
-
-    long startNanos = System.nanoTime();
     FastPlaneConnectivityGrid.PlaneFractureResult result =
         grid.evaluateFracture(ca, board, List.of(via1, via2));
-    long elapsedMs = (System.nanoTime() - startNanos) / 1_000_000;
 
     assertNotNull(result);
     // Since traces leave corridors on left and right, vias should still be connected
