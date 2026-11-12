@@ -54,13 +54,15 @@
         "plane",
         "routine",
         "small",
-        "tier-b"
+        "tier-b",
+        "tier-t"
       ],
       "tier": "B",
       "expected_outcome": "complete",
       "timeout_budget": "06:00:00",
       "tier_index": 250,
-      "reference_seconds": 14.0
+      "reference_seconds": 14.0,
+      "tier_t": true
     },
     {
       "board_id": "16x12-bits-I2C_I2C_Servo",
@@ -356,13 +358,15 @@
         "complex",
         "medium",
         "plane",
-        "tier-c"
+        "tier-c",
+        "tier-t"
       ],
       "tier": "C",
       "expected_outcome": "partial",
       "timeout_budget": "06:00:00",
       "tier_index": 34,
-      "reference_seconds": 42.8
+      "reference_seconds": 42.8,
+      "tier_t": true
     },
     {
       "board_id": "4N35-TTL-Serial-Optoisolator_4N35-TTL-Serial-Optoisolator",
@@ -1991,13 +1995,15 @@
         "medium",
         "plane",
         "routine",
-        "tier-b"
+        "tier-b",
+        "tier-t"
       ],
       "tier": "B",
       "expected_outcome": "complete",
       "timeout_budget": "06:00:00",
       "tier_index": 301,
-      "reference_seconds": 128.5
+      "reference_seconds": 128.5,
+      "tier_t": true
     },
     {
       "board_id": "apa102lantern_apa102-lantern-esp8266",
@@ -7327,13 +7333,15 @@
         "plane",
         "routine",
         "small",
-        "tier-b"
+        "tier-b",
+        "tier-t"
       ],
       "tier": "B",
       "expected_outcome": "complete",
       "timeout_budget": "06:00:00",
       "tier_index": 335,
-      "reference_seconds": 105.5
+      "reference_seconds": 105.5,
+      "tier_t": true
     },
     {
       "board_id": "bobc_control_panel",
@@ -9298,13 +9306,15 @@
         "golden-canary",
         "medium",
         "plane",
-        "tier-a"
+        "tier-a",
+        "tier-t"
       ],
       "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "06:00:00",
       "tier_index": 11,
-      "reference_seconds": 523.2
+      "reference_seconds": 523.2,
+      "tier_t": true
     },
     {
       "board_id": "CANadapter_CANadapter",
@@ -9360,13 +9370,15 @@
         "plane",
         "routine",
         "small",
-        "tier-b"
+        "tier-b",
+        "tier-t"
       ],
       "tier": "B",
       "expected_outcome": "complete",
       "timeout_budget": "06:00:00",
       "tier_index": 442,
-      "reference_seconds": 28.6
+      "reference_seconds": 28.6,
+      "tier_t": true
     },
     {
       "board_id": "cap-soil-moisture-v2_soil-moisture2x4",
@@ -10053,13 +10065,15 @@
         "plane",
         "routine",
         "small",
-        "tier-b"
+        "tier-b",
+        "tier-t"
       ],
       "tier": "B",
       "expected_outcome": "complete",
       "timeout_budget": "06:00:00",
       "tier_index": 267,
-      "reference_seconds": 152.8
+      "reference_seconds": 152.8,
+      "tier_t": true
     },
     {
       "board_id": "ciurlys_ciurlys",
@@ -11544,13 +11558,15 @@
         "complex",
         "medium",
         "plane",
-        "tier-c"
+        "tier-c",
+        "tier-t"
       ],
       "tier": "C",
       "expected_outcome": "partial",
       "timeout_budget": "06:00:00",
       "tier_index": 76,
-      "reference_seconds": 126.2
+      "reference_seconds": 126.2,
+      "tier_t": true
     },
     {
       "board_id": "DasBlinkinput_Das Blinkinput",
@@ -11670,13 +11686,15 @@
         "plane",
         "routine",
         "small",
-        "tier-b"
+        "tier-b",
+        "tier-t"
       ],
       "tier": "B",
       "expected_outcome": "complete",
       "timeout_budget": "06:00:00",
       "tier_index": 450,
-      "reference_seconds": 30.0
+      "reference_seconds": 30.0,
+      "tier_t": true
     },
     {
       "board_id": "DaWeather---Project__autosave-CarteDaWeather",
@@ -13783,13 +13801,15 @@
         "2-layer",
         "complex",
         "medium",
-        "tier-c"
+        "tier-c",
+        "tier-t"
       ],
       "tier": "C",
       "expected_outcome": "partial",
       "timeout_budget": "06:00:00",
       "tier_index": 135,
-      "reference_seconds": 487.0
+      "reference_seconds": 487.0,
+      "tier_t": true
     },
     {
       "board_id": "DSP-ADAU1452_DSP-ADAU1452",
@@ -19139,13 +19159,15 @@
         "plane",
         "routine",
         "small",
-        "tier-b"
+        "tier-b",
+        "tier-t"
       ],
       "tier": "B",
       "expected_outcome": "complete",
       "timeout_budget": "06:00:00",
       "tier_index": 490,
-      "reference_seconds": 32.8
+      "reference_seconds": 32.8,
+      "tier_t": true
     },
     {
       "board_id": "flatpack2-adapter_EltekFlatpack2",
@@ -27275,13 +27297,15 @@
         "complex",
         "large",
         "plane",
-        "tier-c"
+        "tier-c",
+        "tier-t"
       ],
       "tier": "C",
       "expected_outcome": "partial",
       "timeout_budget": "06:00:00",
       "tier_index": 74,
-      "reference_seconds": 119.8
+      "reference_seconds": 119.8,
+      "tier_t": true
     },
     {
       "board_id": "JavierIH_kameshield",
@@ -27716,13 +27740,15 @@
         "golden-canary",
         "plane",
         "small",
-        "tier-a"
+        "tier-a",
+        "tier-t"
       ],
       "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "06:00:00",
       "tier_index": 61,
-      "reference_seconds": 166.4
+      "reference_seconds": 166.4,
+      "tier_t": true
     },
     {
       "board_id": "Kefersender_UKW TX",
@@ -34953,14 +34979,16 @@
         "2-layer",
         "routine",
         "small",
-        "zone",
-        "tier-b"
+        "tier-b",
+        "tier-t",
+        "zone"
       ],
       "tier": "B",
       "expected_outcome": "complete",
       "timeout_budget": "06:00:00",
       "tier_index": 469,
-      "reference_seconds": 47.4
+      "reference_seconds": 47.4,
+      "tier_t": true
     },
     {
       "board_id": "kitspace_Spikeling_V2.2",
@@ -37745,13 +37773,15 @@
         "plane",
         "routine",
         "small",
-        "tier-b"
+        "tier-b",
+        "tier-t"
       ],
       "tier": "B",
       "expected_outcome": "complete",
       "timeout_budget": "06:00:00",
       "tier_index": 449,
-      "reference_seconds": 58.0
+      "reference_seconds": 58.0,
+      "tier_t": true
     },
     {
       "board_id": "led_array_atmega8_led_array",
@@ -43524,13 +43554,15 @@
         "canary",
         "golden-canary",
         "small",
-        "tier-a"
+        "tier-a",
+        "tier-t"
       ],
       "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "06:00:00",
       "tier_index": 337,
-      "reference_seconds": 38.9
+      "reference_seconds": 38.9,
+      "tier_t": true
     },
     {
       "board_id": "minima-hardware_FrontPanel",
@@ -48419,13 +48451,15 @@
         "complex",
         "medium",
         "plane",
-        "tier-c"
+        "tier-c",
+        "tier-t"
       ],
       "tier": "C",
       "expected_outcome": "partial",
       "timeout_budget": "06:00:00",
       "tier_index": 132,
-      "reference_seconds": 405.5
+      "reference_seconds": 405.5,
+      "tier_t": true
     },
     {
       "board_id": "OpenHardwareExG_Shield_OpenHardwareExG_Shield_Test_Board",
@@ -52510,13 +52544,15 @@
         "medium",
         "plane",
         "routine",
-        "tier-b"
+        "tier-b",
+        "tier-t"
       ],
       "tier": "B",
       "expected_outcome": "complete",
       "timeout_budget": "06:00:00",
       "tier_index": 131,
-      "reference_seconds": 468.1
+      "reference_seconds": 468.1,
+      "tier_t": true
     },
     {
       "board_id": "PoEPi-hardware_pizero-poe",
@@ -66687,13 +66723,15 @@
         "plane",
         "routine",
         "small",
-        "tier-b"
+        "tier-b",
+        "tier-t"
       ],
       "tier": "B",
       "expected_outcome": "complete",
       "timeout_budget": "06:00:00",
       "tier_index": 99,
-      "reference_seconds": 677.3
+      "reference_seconds": 677.3,
+      "tier_t": true
     },
     {
       "board_id": "timecircuits-hardware_BTTF-TimeCircuits",
@@ -69168,13 +69206,15 @@
         "golden-canary",
         "plane",
         "small",
-        "tier-a"
+        "tier-a",
+        "tier-t"
       ],
       "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "06:00:00",
       "tier_index": 133,
-      "reference_seconds": 79.0
+      "reference_seconds": 79.0,
+      "tier_t": true
     },
     {
       "board_id": "usb_rs232c_usb_rs232c_rev_a",
@@ -72532,6 +72572,7 @@
       "reclassified_to_tier_b": 212,
       "elapsed_seconds": 1465.2,
       "calibrated_at": "2026-08-18T20:56:33.174334+00:00"
-    }
+    },
+    "tier_t_canary": 20
   }
 }

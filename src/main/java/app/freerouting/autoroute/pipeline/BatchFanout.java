@@ -53,7 +53,9 @@ public final class BatchFanout {
     // fanout and would inflate total pin counts and escape statistics.
     Collection<app.freerouting.board.model.items.Pin> boardSmdPinListWithNets = new LinkedList<>();
     for (app.freerouting.board.model.items.Pin pin : boardSmdPinList) {
-      if (pin.netCount() > 0 && !pin.hasIgnoredNets()) {
+      if (pin.netCount() > 0
+          && !pin.hasIgnoredNets()
+          && !leftToPlaneRouting(routingBoard, settings, pin)) {
         boardSmdPinListWithNets.add(pin);
       }
     }
@@ -83,6 +85,62 @@ public final class BatchFanout {
     }
     this.totalSmdPinCount = pinCount;
     this.alreadyConnectedPinCount = alreadyConnected;
+  }
+
+  /**
+   * plane_as_priority: a pad of a net with a plane on a power layer is left to the autorouter,
+   * which routes it to the plane first and gives it a via of its own; the fanout would join it to
+   * the nearest pad or via of the net.
+   */
+  static boolean leftToPlaneRouting(
+      RoutingBoard board, RouterSettings settings, app.freerouting.board.model.items.Pin pin) {
+    if (settings.autorouter == null
+        || !Boolean.TRUE.equals(settings.autorouter.planeAsPriority)
+        || pin.netCount() != 1) {
+      return false;
+    }
+    int netNo = pin.getNetNumber(0);
+    boolean powerPlane = false;
+    for (var area : board.getConductionAreas()) {
+      if (area.containsNet(netNo) && !board.layerStructure.layers[area.firstLayer()].isSignal) {
+        powerPlane = true;
+        break;
+      }
+    }
+    return powerPlane && !isFinePitch(board, pin, netNo);
+  }
+
+  /**
+   * A pad closer to another pad of its package than a via and two clearances (QFN, TSSOP, SOT-23)
+   * keeps its fanout: it needs the fanout's escape stub to leave the package at all.
+   */
+  private static boolean isFinePitch(
+      RoutingBoard board, app.freerouting.board.model.items.Pin pin, int netNo) {
+    var net = board.rules.nets.get(netNo);
+    if (net == null || net.getNetClass() == null) {
+      return true;
+    }
+    var viaRule = net.getNetClass().getViaRule();
+    if (viaRule == null || viaRule.viaCount() == 0) {
+      return true;
+    }
+    var viaShape = viaRule.getVia(0).getPadstack().getShape(pin.firstLayer());
+    if (viaShape == null) {
+      return true;
+    }
+    int layer = pin.firstLayer();
+    double clearance =
+        board.clearanceValue(pin.clearanceClassIndex(), pin.clearanceClassIndex(), layer);
+    double limit = viaShape.maxWidth() + 2 * clearance;
+    var center = pin.getCenter().toFloat();
+    for (var other : board.getPins()) {
+      if (other != pin
+          && other.getComponentId() == pin.getComponentId()
+          && other.getCenter().toFloat().distance(center) < limit) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /** Performs fanout routing for SMD components on board. */

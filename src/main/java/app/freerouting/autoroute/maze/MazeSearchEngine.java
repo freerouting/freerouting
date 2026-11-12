@@ -31,6 +31,8 @@ import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -333,6 +335,13 @@ public class MazeSearchEngine {
       currentDoorSection = listElement.door.getMazeSearchElement(currentSectionNo);
 
       if (!currentDoorSection.isOccupied) {
+        // A section left unoccupied may already be the backtrack door of elements expanded from
+        // it, for example the drill of a via room. Reassigning its backtrack door from one of
+        // those descendants would close a cycle in the backtrack chain.
+        if (currentDoorSection.backtrackDoor != null
+            && closesBacktrackCycle(listElement, currentDoorSection)) {
+          continue;
+        }
         nextElementFound = true;
         break;
       }
@@ -382,6 +391,30 @@ public class MazeSearchEngine {
     }
     currentDoorSection.isOccupied = true;
     return true;
+  }
+
+  /**
+   * Returns true, if the backtrack chain starting at the backtrack door of {@code listElement}
+   * passes through {@code section}, so that occupying {@code section} from {@code listElement}
+   * would close a cycle in the backtrack chain.
+   */
+  static boolean closesBacktrackCycle(MazeListElement listElement, MazeSearchElement section) {
+    Set<MazeSearchElement> visited = Collections.newSetFromMap(new IdentityHashMap<>());
+    ExpandableObject door = listElement.backtrackDoor;
+    int sectionNo = listElement.sectionNoOfBacktrackDoor;
+    while (door != null) {
+      MazeSearchElement current =
+          door.getMazeSearchElement(Math.min(sectionNo, door.mazeSearchElementCount() - 1));
+      if (current == section) {
+        return true;
+      }
+      if (!visited.add(current)) {
+        return false;
+      }
+      door = current.backtrackDoor;
+      sectionNo = current.sectionNoOfBacktrackDoor;
+    }
+    return false;
   }
 
   /**
@@ -654,7 +687,11 @@ public class MazeSearchEngine {
     }
     boolean result = false;
     for (TargetItemExpansionDoor toDoor : listElement.nextRoom.getTargetDoors()) {
-      if (toDoor.room != null && !ctrl.layerActive[toDoor.room.getLayer()]) {
+      // A target on an inactive signal layer is out of reach; an inactive power layer is a plane
+      // the routed net drops into through a via, so its targets stay reachable.
+      if (toDoor.room != null
+          && !ctrl.layerActive[toDoor.room.getLayer()]
+          && autorouteEngine.board.layerStructure.layers[toDoor.room.getLayer()].isSignal) {
         continue;
       }
       if (toDoor == listElement.door) {
@@ -662,6 +699,11 @@ public class MazeSearchEngine {
       }
       TileShape safeTargetShape = getWidthSafeTargetShape(toDoor);
       if (safeTargetShape == null || safeTargetShape.isEmpty()) {
+        continue;
+      }
+      if (!ctrl.layerActive[listElement.nextRoom.getLayer()]
+          && !safeTargetShape.contains(shapeEntryMiddle)) {
+        // On an inactive power layer the via has to land inside the plane: no trace there.
         continue;
       }
       FloatPoint connectionPoint = safeTargetShape.nearestPointApprox(shapeEntryMiddle);
@@ -977,6 +1019,11 @@ public class MazeSearchEngine {
   private boolean init(Set<Item> startItems, Set<Item> destinationItems) {
     reduceTraceShapesAtTiePins(startItems, this.ctrl.netNumber, this.searchTree);
     reduceTraceShapesAtTiePins(destinationItems, this.ctrl.netNumber, this.searchTree);
+    for (Item currentItem : this.autorouteEngine.board.getConnectableItems(this.ctrl.netNumber)) {
+      ItemAutorouteInfo currentInfo = currentItem.getAutorouteInfo();
+      currentInfo.setStartInfo(false);
+      currentInfo.setDestinationInfo(false);
+    }
     // process the destination items
     boolean destinationOk = false;
     for (Item currentItem : destinationItems) {
@@ -985,6 +1032,7 @@ public class MazeSearchEngine {
       }
       ItemAutorouteInfo currentInfo = currentItem.getAutorouteInfo();
       currentInfo.setStartInfo(false);
+      currentInfo.setDestinationInfo(true);
       boolean anyInactive = false;
       boolean anyActive = false;
       for (int i = 0; i < currentItem.treeShapeCount(this.searchTree); i++) {
@@ -992,7 +1040,10 @@ public class MazeSearchEngine {
         if (currentTreeShape != null) {
           destinationDistance.join(currentTreeShape.boundingBox(), currentItem.shapeLayer(i));
         }
-        if (this.ctrl.layerActive[currentItem.shapeLayer(i)]) {
+        int shapeLayer = currentItem.shapeLayer(i);
+        // A plane on an inactive power layer is reached through a via: a valid destination.
+        if (this.ctrl.layerActive[shapeLayer]
+            || !this.autorouteEngine.board.layerStructure.layers[shapeLayer].isSignal) {
           anyActive = true;
         } else {
           anyInactive = true;
@@ -1028,6 +1079,7 @@ public class MazeSearchEngine {
       }
       ItemAutorouteInfo currentInfo = currentItem.getAutorouteInfo();
       currentInfo.setStartInfo(true);
+      currentInfo.setDestinationInfo(false);
       if (currentItem instanceof Connectable connectable) {
         for (int i = 0; i < currentItem.treeShapeCount(searchTree); i++) {
           TileShape containedShape = connectable.getTraceConnectionShape(searchTree, i);
@@ -1070,6 +1122,9 @@ public class MazeSearchEngine {
         }
         if (currentDoor.isDestinationDoor()) {
           expansionDoorsDestination++;
+          continue;
+        }
+        if (!currentDoor.isStartDoor()) {
           continue;
         }
         TileShape safeConnectionShape = getWidthSafeTargetShape(currentDoor);

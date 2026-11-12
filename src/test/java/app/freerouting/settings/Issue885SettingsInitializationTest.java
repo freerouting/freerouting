@@ -2,6 +2,7 @@ package app.freerouting.settings;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -100,5 +101,17 @@ class Issue885SettingsInitializationTest {
     settings.applyNetClassExclusions(board);
 
     assertTrue(powerClass.isIgnoredByAutorouter);
+  }
+
+  @Test
+  void applyNetClassExclusionsClearsStaleRoutedFirstFlags() {
+    NetClass powerClass = board.rules.netClasses.get("POWER");
+    assertNotNull(powerClass);
+    powerClass.isRoutedFirst = true;
+
+    settings.autorouter.priorityNetClasses = new String[0];
+    settings.applyNetClassExclusions(board);
+
+    assertFalse(powerClass.isRoutedFirst);
   }
 }

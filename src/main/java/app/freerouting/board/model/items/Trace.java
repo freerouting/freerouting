@@ -370,7 +370,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
 
   @Override
   public boolean isDrillable(int netNumber) {
-    return this.containsNet(netNumber);
+    return !isPlaneEscapeObstacle() && this.containsNet(netNumber);
   }
 
   /** Looks, if this trace is connected to the same object at its start and its end point. */

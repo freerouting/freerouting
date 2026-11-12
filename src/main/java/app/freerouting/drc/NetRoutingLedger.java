@@ -5,6 +5,8 @@ import app.freerouting.board.model.items.ConductionArea;
 import app.freerouting.board.model.items.Connectable;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Pin;
+import app.freerouting.geometry.planar.IntBox;
+import app.freerouting.geometry.planar.IntPoint;
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -21,6 +23,7 @@ import java.util.TreeSet;
 public final class NetRoutingLedger {
 
   private final BasicBoard board;
+  private final List<ConductionArea> conductionAreas = new ArrayList<>();
   private boolean built;
   private List<Item>[] itemsByNet;
   private int[] incompleteByNet = new int[0];
@@ -36,6 +39,7 @@ public final class NetRoutingLedger {
   /** Drops the cache. The next read rebuilds it from the current item list. */
   public synchronized void invalidate() {
     built = false;
+    conductionAreas.clear();
     dirtyNets.clear();
     itemNets.clear();
     itemsByNet = emptyLists();
@@ -74,6 +78,42 @@ public final class NetRoutingLedger {
     return maximumConnections;
   }
 
+  /** Returns the incomplete-connection count of one net, recomputing dirty nets first. */
+  public synchronized int incompleteCount(int netNumber) {
+    ensureBuilt();
+    flushDirty();
+    return netNumber >= 1 && netNumber < incompleteByNet.length ? incompleteByNet[netNumber] : 0;
+  }
+
+  /** The counts of a built ledger, for the ledger of a copy of its board. */
+  public record Counts(int[] incompleteByNet, int incompleteTotal, int maximumConnections) {}
+
+  /** Returns the current counts, or null if the ledger is not built. */
+  public synchronized Counts counts() {
+    if (!built) {
+      return null;
+    }
+    flushDirty();
+    return new Counts(incompleteByNet.clone(), incompleteTotal, maximumConnections);
+  }
+
+  /**
+   * Builds this ledger for a copy of the board whose ledger gave {@code counts}, taking them
+   * instead of counting every net again: the copy has the same items. The item lists are built from
+   * this board as a full build does. Does nothing if {@code counts} is null or the net count
+   * differs.
+   */
+  public synchronized void seed(Counts counts) {
+    if (counts == null || counts.incompleteByNet().length != board.rules.nets.maxNetNumber() + 1) {
+      return;
+    }
+    buildItemLists();
+    incompleteByNet = counts.incompleteByNet().clone();
+    incompleteTotal = counts.incompleteTotal();
+    maximumConnections = counts.maximumConnections();
+    built = true;
+  }
+
   /** Returns every net that still has at least one incomplete connection. */
   public synchronized Set<Integer> incompleteNetNumbers() {
     ensureBuilt();
@@ -91,22 +131,8 @@ public final class NetRoutingLedger {
     if (built) {
       return;
     }
-    int maxNet = board.rules.nets.maxNetNumber();
-    @SuppressWarnings("unchecked")
-    List<Item>[] lists = new List[maxNet + 1];
-    itemsByNet = lists;
+    int maxNet = buildItemLists();
     incompleteByNet = new int[maxNet + 1];
-    dirtyNets.clear();
-    itemNets.clear();
-    for (int netNumber = 1; netNumber <= maxNet; netNumber++) {
-      itemsByNet[netNumber] = new ArrayList<>();
-    }
-    for (Item item : board.getItems()) {
-      if (item instanceof Connectable) {
-        addItemToLists(item);
-        itemNets.put(item, item.netNumbers.clone());
-      }
-    }
     maximumConnections = countMaximumConnections();
     incompleteTotal = 0;
     for (int netNumber = 1; netNumber <= maxNet; netNumber++) {
@@ -116,6 +142,30 @@ public final class NetRoutingLedger {
     }
     dirtyNets.clear();
     built = true;
+  }
+
+  /** Fills the item lists from the board, as the first step of a build. Returns the net count. */
+  private int buildItemLists() {
+    int maxNet = board.rules.nets.maxNetNumber();
+    @SuppressWarnings("unchecked")
+    List<Item>[] lists = new List[maxNet + 1];
+    itemsByNet = lists;
+    dirtyNets.clear();
+    itemNets.clear();
+    for (int netNumber = 1; netNumber <= maxNet; netNumber++) {
+      itemsByNet[netNumber] = new ArrayList<>();
+    }
+    conductionAreas.clear();
+    for (Item item : board.getItems()) {
+      if (item instanceof Connectable) {
+        addItemToLists(item);
+        itemNets.put(item, item.netNumbers.clone());
+      }
+      if (item instanceof ConductionArea ca) {
+        conductionAreas.add(ca);
+      }
+    }
+    return maxNet;
   }
 
   private void flushDirty() {
@@ -154,6 +204,9 @@ public final class NetRoutingLedger {
 
   private void addItem(Item item) {
     addItemToLists(item);
+    if (item instanceof ConductionArea ca && !conductionAreas.contains(ca)) {
+      conductionAreas.add(ca);
+    }
     markNets(item);
   }
 
@@ -171,9 +224,12 @@ public final class NetRoutingLedger {
       int netNumber = item.getNetNumber(index);
       if (netNumber >= 1 && netNumber < itemsByNet.length) {
         itemsByNet[netNumber].remove(item);
-        dirtyNets.add(netNumber);
       }
     }
+    if (item instanceof ConductionArea ca) {
+      conductionAreas.remove(ca);
+    }
+    markNets(item);
   }
 
   private void addItemToLists(Item item) {
@@ -192,6 +248,37 @@ public final class NetRoutingLedger {
       int netNumber = item.getNetNumber(index);
       if (netNumber >= 1 && netNumber < itemsByNet.length) {
         dirtyNets.add(netNumber);
+      }
+    }
+    IntBox itemBox = item.boundingBox();
+    for (ConductionArea ca : conductionAreas) {
+      if (ca.getLayer() >= item.firstLayer() && ca.getLayer() <= item.lastLayer()) {
+        IntBox caBox = ca.boundingBox();
+        double maxClearance = 0.0;
+        if (board != null && board.rules != null && board.rules.clearanceMatrix != null) {
+          maxClearance =
+              board.rules.clearanceMatrix.maxValue(ca.clearanceClassIndex(), ca.getLayer());
+        } else if (board != null) {
+          maxClearance =
+              board.clearanceValue(
+                  ca.clearanceClassIndex(), item.clearanceClassIndex(), ca.getLayer());
+        }
+        if (maxClearance <= 0.0) {
+          maxClearance = 1000.0;
+        }
+        int cl = (int) Math.ceil(maxClearance);
+        IntBox inflatedItemBox =
+            new IntBox(
+                new IntPoint(itemBox.ll.x - cl, itemBox.ll.y - cl),
+                new IntPoint(itemBox.ur.x + cl, itemBox.ur.y + cl));
+        if (caBox.intersects(inflatedItemBox)) {
+          for (int index = 0; index < ca.netCount(); index++) {
+            int netNumber = ca.getNetNumber(index);
+            if (netNumber >= 1 && netNumber < itemsByNet.length) {
+              dirtyNets.add(netNumber);
+            }
+          }
+        }
       }
     }
   }
