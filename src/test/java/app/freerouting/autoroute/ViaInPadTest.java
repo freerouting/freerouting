@@ -3,11 +3,15 @@ package app.freerouting.autoroute;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.autoroute.maze.AutorouteControl;
+import app.freerouting.autoroute.path.FoundConnectionInserter;
+import app.freerouting.autoroute.path.PlannedConnection;
 import app.freerouting.board.actions.ForcedViaInserter;
 import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Via;
 import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.geometry.planar.IntPoint;
@@ -21,6 +25,8 @@ import app.freerouting.settings.sources.DefaultSettings;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 /** Tests for via-in-pad auto-detection and placement permissions (FR-103). */
 class ViaInPadTest {
@@ -162,6 +168,75 @@ class ViaInPadTest {
     Via via = board.getVias().iterator().next();
     assertTrue(via.attachAllowed);
     assertTrue(new DesignRulesChecker(board, null).getAllClearanceViolations().isEmpty());
+  }
+
+  private static final String DSN_FOUND_VIA =
+      """
+      (pcb foundvia (resolution um 1) (unit um)
+        (structure (layer top (type signal)) (layer bottom (type signal))
+          (boundary (rect pcb 0 0 7000 6000)) (via V) (rule (width 150) (clearance 150)))
+        (placement
+          (component CA (place A 5000 5000 front 0)) (component CB (place B 2000 2000 front 0)))
+        (library
+          (image CA (pin PA 1 0 0)) (image CB (pin PB 1 0 0))
+          (padstack PA (shape (rect top -200 -300 200 300)) (attach off))
+          (padstack PB (shape (rect bottom -300 -200 300 200)) (attach off))
+          (padstack V (shape (circle top 700)) (shape (circle bottom 700)) (attach off)))
+        (network (net N (pins A-1 B-1))))
+      """;
+
+  /**
+   * A found connection from the bottom pad B to the top pad A whose via lands in pad A (via_in_pad)
+   * or overlaps it with the hole outside (via_touching_pad). The via rule itself does not allow SMD
+   * attachment, so the insert has to use the same permission as the maze search.
+   */
+  @ParameterizedTest
+  @ValueSource(booleans = {true, false})
+  void foundConnectionViaAttachesToOwnNetSmdPad(boolean viaInPad) {
+    RoutingBoard board = readBoard(DSN_FOUND_VIA);
+    board.rules.setViaInPad(viaInPad, !viaInPad);
+    RouterSettings settings = new DefaultSettings().getSettings();
+    settings.autorouter.viaInPad = viaInPad;
+    settings.autorouter.viaTouchingPad = !viaInPad;
+    AutorouteControl control = new AutorouteControl(board, 1, settings);
+    assertTrue(control.attachSmdAllowed);
+    assertFalse(control.viaRule.getVia(0).attachSmdAllowed());
+    Pin padA = pinAt(board, new IntPoint(5000, 5000));
+    Pin padB = pinAt(board, new IntPoint(2000, 2000));
+    IntPoint viaLocation = viaInPad ? new IntPoint(5000, 5000) : new IntPoint(5400, 5000);
+    board.startMarkingChangedArea();
+
+    // Segments run from the target to the start; the layer change between them is the via.
+    assertNotNull(
+        FoundConnectionInserter.insertSegments(
+            board,
+            control,
+            padA,
+            padB,
+            0,
+            1,
+            new PlannedConnection.Segment[] {
+              new PlannedConnection.Segment(
+                  new IntPoint[] {new IntPoint(2000, 2000), new IntPoint(2000, 5000), viaLocation},
+                  1),
+              new PlannedConnection.Segment(
+                  viaInPad
+                      ? new IntPoint[] {viaLocation}
+                      : new IntPoint[] {viaLocation, new IntPoint(5000, 5000)},
+                  0)
+            }));
+
+    assertEquals(1, board.getVias().size());
+    assertTrue(board.getVias().iterator().next().attachAllowed);
+    assertTrue(padA.getConnectedSet(1).contains(padB));
+    assertTrue(new DesignRulesChecker(board, null).getAllClearanceViolations().isEmpty());
+  }
+
+  private static Pin pinAt(RoutingBoard board, Point center) {
+    return board.getPins().stream()
+        .filter(pin -> pin.getCenter().equals(center))
+        .findFirst()
+        .orElseThrow();
   }
 
   private static final String DSN_WITH_VIA_IN_PAD =
