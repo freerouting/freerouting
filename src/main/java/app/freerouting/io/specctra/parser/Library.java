@@ -1,6 +1,7 @@
 package app.freerouting.io.specctra.parser;
 
 import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.structure.Unit;
 import app.freerouting.core.library.Packages;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.core.library.Padstacks;
@@ -122,6 +123,20 @@ public class Library extends ScopeKeyword {
       LayerStructure layerStructure,
       CoordinateTransform coordinateTransform,
       Padstacks boardPadstacks) {
+    return readPadstackScope(scanner, layerStructure, coordinateTransform, boardPadstacks, null);
+  }
+
+  /**
+   * Reads a padstack scope. If {@code kicadDsnUnit} is not null, the file was written by KiCad in
+   * that unit, and the rounded-rectangle pads of its legacy exporter are corrected (see {@link
+   * KiCadRoundRectPad}).
+   */
+  public static boolean readPadstackScope(
+      IJFlexScanner scanner,
+      LayerStructure layerStructure,
+      CoordinateTransform coordinateTransform,
+      Padstacks boardPadstacks,
+      Unit kicadDsnUnit) {
     String padstackName;
     boolean isDrilllable = true;
     boolean placedAbsolute = false;
@@ -154,6 +169,11 @@ public class Library extends ScopeKeyword {
           if (nextToken == Keyword.SHAPE) {
             Shape currentShape = Shape.readScope(scanner, layerStructure);
             if (currentShape != null) {
+              if (kicadDsnUnit != null) {
+                currentShape =
+                    KiCadRoundRectPad.correct(
+                        padstackName, currentShape, kicadDsnUnit, coordinateTransform);
+              }
               shapeList.add(currentShape);
             }
             // overread the closing bracket and unknown scopes.
@@ -408,7 +428,8 @@ public class Library extends ScopeKeyword {
               scopeParameter.scanner,
               scopeParameter.layerStructure,
               scopeParameter.coordinateTransform,
-              board.library.padstacks)) {
+              board.library.padstacks,
+              isKiCad(scopeParameter) ? scopeParameter.unit : null)) {
             return false;
           }
         } else if (nextToken == Keyword.IMAGE) {
@@ -532,6 +553,11 @@ public class Library extends ScopeKeyword {
           currentPackage.isFront);
     }
     return true;
+  }
+
+  private static boolean isKiCad(ReadScopeParameter scopeParameter) {
+    return scopeParameter.hostCad != null
+        && scopeParameter.hostCad.toLowerCase(java.util.Locale.ROOT).contains("kicad");
   }
 
   private void generateMissingKeepoutNames(
