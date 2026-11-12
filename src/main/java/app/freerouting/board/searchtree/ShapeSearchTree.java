@@ -54,12 +54,8 @@ public class ShapeSearchTree extends MinAreaTree {
 
   private static final int DRILL_HOLE_CLEARANCE_MARGIN = 10;
 
-  /** Reusable traversal stack for complete-shape queries, isolated per caller thread. */
-  protected final ThreadLocal<ArrayStack<TreeNode>> completeShapeStack =
-      ThreadLocal.withInitial(() -> new ArrayStack<>(10000));
-
   /** Reusable result list for spatial overlap queries, isolated per caller thread. */
-  private final ThreadLocal<List<Leaf>> queryLeafBuffer =
+  private static final ThreadLocal<List<Leaf>> QUERY_LEAF_BUFFER =
       ThreadLocal.withInitial(() -> new ArrayList<>(128));
 
   /**
@@ -470,7 +466,7 @@ public class ShapeSearchTree extends MinAreaTree {
     boolean is45Degree = shape instanceof IntOctagon;
     Lock lock = readLock();
     lock.lock();
-    List<Leaf> leaves = queryLeafBuffer.get();
+    List<Leaf> leaves = QUERY_LEAF_BUFFER.get();
     try {
       leaves.clear();
       this.collectOverlapsUnlocked(bounds, leaves);
@@ -520,7 +516,7 @@ public class ShapeSearchTree extends MinAreaTree {
       Item area, int layer, Function<SearchTreeObject, Point[]> points) {
     Lock lock = readLock();
     lock.lock();
-    List<Leaf> leaves = queryLeafBuffer.get();
+    List<Leaf> leaves = QUERY_LEAF_BUFFER.get();
     try {
       Leaf[] areaLeaves = area.getSearchTreeEntries(this);
       if (areaLeaves == null) {
@@ -650,7 +646,7 @@ public class ShapeSearchTree extends MinAreaTree {
       FRLogger.warn("ShapeSearchTree.overlaps: shape not bounded");
       return;
     }
-    List<Leaf> tmpList = queryLeafBuffer.get();
+    List<Leaf> tmpList = QUERY_LEAF_BUFFER.get();
     tmpList.clear();
     boolean is45Degree = shape instanceof IntOctagon;
     try {
@@ -846,7 +842,7 @@ public class ShapeSearchTree extends MinAreaTree {
     // a factor less than sqr2 has evtl. be added because
     // enlarging is not symmetric.
     RegularTileShape offsetBounds = (RegularTileShape) bounds.offset(maxClearance);
-    List<Leaf> tmpList = queryLeafBuffer.get();
+    List<Leaf> tmpList = QUERY_LEAF_BUFFER.get();
     tmpList.clear();
     // sort the found items by its clearances to clearanceClassIndex on layer layer
     // Entries never compare equal (see EntrySortedByClearance), so sorting a list gives the
@@ -1218,21 +1214,24 @@ public class ShapeSearchTree extends MinAreaTree {
     // in a deterministic order. The non-deterministic order of tree traversal
     // causes different room partitioning.
     List<Leaf> overlappingLeaves = new ArrayList<>();
-    ArrayStack<TreeNode> stack = completeShapeStack.get();
-    stack.reset();
-    stack.push(this.root);
-    TreeNode currentNode;
     int roomLayer = room.getLayer();
+    ArrayStack<TreeNode> stack = acquireScratchStack();
+    try {
+      stack.push(this.root);
+      TreeNode currentNode;
 
-    while ((currentNode = stack.pop()) != null) {
-      if (currentNode.boundingShape.intersects(boundingShape)) {
-        if (currentNode instanceof Leaf leaf) {
-          overlappingLeaves.add(leaf);
-        } else {
-          stack.push(((InnerNode) currentNode).firstChild);
-          stack.push(((InnerNode) currentNode).secondChild);
+      while ((currentNode = stack.pop()) != null) {
+        if (currentNode.boundingShape.intersects(boundingShape)) {
+          if (currentNode instanceof Leaf leaf) {
+            overlappingLeaves.add(leaf);
+          } else {
+            stack.push(((InnerNode) currentNode).firstChild);
+            stack.push(((InnerNode) currentNode).secondChild);
+          }
         }
       }
+    } finally {
+      releaseScratchStack(stack);
     }
 
     // Sort obstacles to ensure deterministic room partitioning.

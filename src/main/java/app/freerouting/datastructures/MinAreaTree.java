@@ -18,9 +18,48 @@ import java.util.concurrent.locks.Lock;
  */
 public class MinAreaTree extends ShapeTree {
 
-  /** Reusable traversal stack for overlap queries, isolated per caller thread. */
-  protected final ThreadLocal<ArrayStack<TreeNode>> nodeStack =
-      ThreadLocal.withInitial(() -> new ArrayStack<>(10000));
+  /** Reusable traversal stack pool for overlap queries, isolated per caller thread. */
+  private static final ThreadLocal<ThreadScratchStacks> SCRATCH_STACKS =
+      ThreadLocal.withInitial(ThreadScratchStacks::new);
+
+  /**
+   * Thread-local scratch stack pool supporting re-entrant tree queries on the same thread without
+   * cross-query stack corruption or memory retention across queries.
+   */
+  private static final class ThreadScratchStacks {
+    private static final int INITIAL_STACK_CAPACITY = 1024;
+    private final List<ArrayStack<TreeNode>> stacks = new ArrayList<>(2);
+    private int activeDepth = 0;
+
+    ArrayStack<TreeNode> acquire() {
+      if (activeDepth == stacks.size()) {
+        stacks.add(new ArrayStack<>(INITIAL_STACK_CAPACITY));
+      }
+      ArrayStack<TreeNode> stack = stacks.get(activeDepth++);
+      stack.reset();
+      return stack;
+    }
+
+    void release(ArrayStack<TreeNode> stack) {
+      stack.reset();
+      if (activeDepth > 0) {
+        activeDepth--;
+      }
+    }
+  }
+
+  /**
+   * Acquires a thread-local scratch stack for tree traversal. Must be released via {@link
+   * #releaseScratchStack(ArrayStack)} in a finally block.
+   */
+  protected static ArrayStack<TreeNode> acquireScratchStack() {
+    return SCRATCH_STACKS.get().acquire();
+  }
+
+  /** Releases a thread-local scratch stack, clearing all node references. */
+  protected static void releaseScratchStack(ArrayStack<TreeNode> stack) {
+    SCRATCH_STACKS.get().release(stack);
+  }
 
   /** Constructor with a fixed set of directions defining the keys and the surrounding shapes. */
   public MinAreaTree(ShapeBoundingDirections directions) {
@@ -76,20 +115,23 @@ public class MinAreaTree extends ShapeTree {
     if (this.root == null) {
       return;
     }
-    ArrayStack<TreeNode> stack = nodeStack.get();
-    stack.reset();
-    stack.push(this.root);
-    TreeNode currentNode;
-    while ((currentNode = stack.pop()) != null) {
-      onNodeVisited();
-      if (currentNode.boundingShape.intersects(shape)) {
-        if (currentNode instanceof Leaf leaf) {
-          result.add(leaf);
-        } else {
-          stack.push(((InnerNode) currentNode).firstChild);
-          stack.push(((InnerNode) currentNode).secondChild);
+    ArrayStack<TreeNode> stack = acquireScratchStack();
+    try {
+      stack.push(this.root);
+      TreeNode currentNode;
+      while ((currentNode = stack.pop()) != null) {
+        onNodeVisited();
+        if (currentNode.boundingShape.intersects(shape)) {
+          if (currentNode instanceof Leaf leaf) {
+            result.add(leaf);
+          } else {
+            stack.push(((InnerNode) currentNode).firstChild);
+            stack.push(((InnerNode) currentNode).secondChild);
+          }
         }
       }
+    } finally {
+      releaseScratchStack(stack);
     }
   }
 
