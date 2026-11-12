@@ -17,6 +17,7 @@ import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.settings.OptimizerSettings;
 import app.freerouting.settings.sources.DefaultSettings;
 import com.sun.management.ThreadMXBean;
 import java.lang.management.ManagementFactory;
@@ -380,6 +381,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
 
     double scoreImprovement = -1;
     int currentPass = 0;
+    int passesWithoutGainInARow = 0;
     while ((this.settings.optimizer.maxPasses == null
             || currentPass < this.settings.optimizer.maxPasses)
         && (this.settings.optimizer.maxItems == null
@@ -434,9 +436,13 @@ public final class BatchOptimizer extends NamedAlgorithm {
         restoreIncumbentBoard();
       }
 
+      float effectiveScoreAfterPass = rejectionReason == null ? scoreAfterPass : this.bestScore;
+      boolean effectiveConnectionsOpen =
+          rejectionReason == null
+              ? passStats.connections.incompleteCount > 0
+              : this.bestIncompleteCount > 0;
       StopRuleView stopRuleView =
-          stopRuleScores(
-              scoreBeforePass, scoreAfterPass, passStats.connections.incompleteCount > 0);
+          stopRuleScores(scoreBeforePass, effectiveScoreAfterPass, effectiveConnectionsOpen);
       double passImprovementPercent = scoreImprovementPercent(scoreBeforePass, scoreAfterPass);
       String passOutcome =
           scoreAfterPass > scoreBeforePass
@@ -459,11 +465,28 @@ public final class BatchOptimizer extends NamedAlgorithm {
               passStats.connections.incompleteCount,
               passStats.clearanceViolations.totalCount));
 
-      if (this.useIncreasedRipupCosts && scoreAfterPass <= scoreBeforePass) {
-        this.useIncreasedRipupCosts = false;
-        // Keep the optimizer going to try with normal ripup costs
+      boolean passHadGain = hasPassGain(rejectionReason, scoreBeforePass, scoreAfterPass);
+
+      if (this.useIncreasedRipupCosts && !passHadGain) {
+        ++passesWithoutGainInARow;
+        this.useIncreasedRipupCosts =
+            increasedRipupCostsAfterPassWithoutGain(job.routerSettings.optimizer);
+        // Keep the optimizer going: with normal ripup costs, or with the increased ones and the
+        // other preferred directions of the next pass. With the increased costs kept, a second
+        // pass in a row without gain has tried both directions from the same incumbent: the next
+        // passes would only repeat them, so the stop rule applies.
+        if (shouldStopAfterConsecutivePassesWithoutGain(
+            job.routerSettings.optimizer, passesWithoutGainInARow)) {
+          job.logInfo(
+              String.format(
+                  Locale.US,
+                  "Stopping optimizer after %d consecutive passes without gain with increased ripup costs.",
+                  passesWithoutGainInARow));
+          break;
+        }
         scoreImprovement = -1;
       } else {
+        passesWithoutGainInARow = 0;
         scoreImprovement = stopRuleView.percent();
       }
 
@@ -1466,5 +1489,48 @@ public final class BatchOptimizer extends NamedAlgorithm {
     FloatPoint getCurrentPosition() {
       return minItemCoor;
     }
+  }
+
+  /**
+   * Whether the increased ripup costs of the start are still used after a pass that did not improve
+   * the board. By default they are dropped, and the optimizer goes on with the normal ripup costs;
+   * {@code optimizer.keep_increased_ripup_costs} keeps them.
+   */
+  static boolean increasedRipupCostsAfterPassWithoutGain(OptimizerSettings optimizerSettings) {
+    return optimizerSettings != null
+        && Boolean.TRUE.equals(optimizerSettings.keepIncreasedRipupCosts);
+  }
+
+  /**
+   * Whether the optimizer goes on, whatever the stop rule says, after a pass with the increased
+   * ripup costs that did not improve the board. By default it always does, once, with the normal
+   * ripup costs. With {@code optimizer.keep_increased_ripup_costs}, it does after the first such
+   * pass, to try the other preferred directions, but not after a second one in a row: each pass
+   * restarts from the same incumbent, so the next ones would only repeat the last two.
+   */
+  static boolean continueAfterPassWithoutGain(
+      OptimizerSettings optimizerSettings, int passesWithoutGainInARow) {
+    return !increasedRipupCostsAfterPassWithoutGain(optimizerSettings)
+        || passesWithoutGainInARow < 2;
+  }
+
+  /**
+   * Evaluates whether an optimizer pass produced an accepted improvement. A pass has gain only if
+   * the candidate was not vetoed and its optimizer score improved over the score before the pass.
+   */
+  static boolean hasPassGain(String rejectionReason, float scoreBeforePass, float scoreAfterPass) {
+    return rejectionReason == null && scoreAfterPass > scoreBeforePass;
+  }
+
+  /**
+   * Decides whether the optimizer should stop after evaluating consecutive passes without gain.
+   *
+   * @param optimizerSettings router optimizer settings
+   * @param passesWithoutGainInARow consecutive passes without gain
+   * @return true if the optimizer should stop immediately due to consecutive passes without gain
+   */
+  static boolean shouldStopAfterConsecutivePassesWithoutGain(
+      OptimizerSettings optimizerSettings, int passesWithoutGainInARow) {
+    return !continueAfterPassWithoutGain(optimizerSettings, passesWithoutGainInARow);
   }
 }

@@ -370,7 +370,8 @@ public class MazeSearchEngine {
     }
     if (ctrl.isFanout
         && listElement.door instanceof ExpansionDrill
-        && listElement.backtrackDoor instanceof ExpansionDrill) {
+        && listElement.backtrackDoor instanceof ExpansionDrill
+        && fanoutMayStopAt(listElement)) {
       // algorithm completed after the first drill;
       this.destinationDoor = listElement.door;
       this.sectionNoOfDestinationDoor = listElement.sectionNoOfDoor;
@@ -391,6 +392,32 @@ public class MazeSearchEngine {
     }
     currentDoorSection.isOccupied = true;
     return true;
+  }
+
+  /**
+   * Whether a fanout search may end at the drill of {@code listElement}. The via is an escape only
+   * if the net can use it: the drill leads to a layer the net may route on, or into the net's own
+   * plane. Otherwise the search goes on from there instead of ending with a via the net cannot use:
+   * a drill to a signal layer the net may not use is dropped afterwards, and a drill into the plane
+   * of another net would leave a via that leads nowhere.
+   */
+  private boolean fanoutMayStopAt(MazeListElement listElement) {
+    ExpansionDrill drill = (ExpansionDrill) listElement.door;
+    int layer = drill.firstLayer + listElement.sectionNoOfDoor;
+    if (ctrl.layerActive[layer]) {
+      return true;
+    }
+    if (autorouteEngine.board.layerStructure.layers[layer].isSignal) {
+      return false;
+    }
+    ItemSelectionFilter filter =
+        new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.CONDUCTION);
+    for (Item item : autorouteEngine.board.pickItems(drill.location, layer, filter)) {
+      if (item.containsNet(ctrl.netNumber)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -1019,6 +1046,11 @@ public class MazeSearchEngine {
   private boolean init(Set<Item> startItems, Set<Item> destinationItems) {
     reduceTraceShapesAtTiePins(startItems, this.ctrl.netNumber, this.searchTree);
     reduceTraceShapesAtTiePins(destinationItems, this.ctrl.netNumber, this.searchTree);
+    for (Item currentItem : this.autorouteEngine.board.getConnectableItems(this.ctrl.netNumber)) {
+      ItemAutorouteInfo currentInfo = currentItem.getAutorouteInfo();
+      currentInfo.setStartInfo(false);
+      currentInfo.setDestinationInfo(false);
+    }
     // process the destination items
     boolean destinationOk = false;
     for (Item currentItem : destinationItems) {
@@ -1027,6 +1059,7 @@ public class MazeSearchEngine {
       }
       ItemAutorouteInfo currentInfo = currentItem.getAutorouteInfo();
       currentInfo.setStartInfo(false);
+      currentInfo.setDestinationInfo(true);
       boolean anyInactive = false;
       boolean anyActive = false;
       for (int i = 0; i < currentItem.treeShapeCount(this.searchTree); i++) {
@@ -1073,6 +1106,7 @@ public class MazeSearchEngine {
       }
       ItemAutorouteInfo currentInfo = currentItem.getAutorouteInfo();
       currentInfo.setStartInfo(true);
+      currentInfo.setDestinationInfo(false);
       if (currentItem instanceof Connectable connectable) {
         for (int i = 0; i < currentItem.treeShapeCount(searchTree); i++) {
           TileShape containedShape = connectable.getTraceConnectionShape(searchTree, i);
@@ -1115,6 +1149,9 @@ public class MazeSearchEngine {
         }
         if (currentDoor.isDestinationDoor()) {
           expansionDoorsDestination++;
+          continue;
+        }
+        if (!currentDoor.isStartDoor()) {
           continue;
         }
         TileShape safeConnectionShape = getWidthSafeTargetShape(currentDoor);

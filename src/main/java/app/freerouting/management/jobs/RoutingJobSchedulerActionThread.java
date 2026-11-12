@@ -2,6 +2,7 @@ package app.freerouting.management.jobs;
 
 import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.analytics.model.JobLifecycleStatus;
+import app.freerouting.autoroute.events.BoardUpdatedEventListener;
 import app.freerouting.autoroute.pipeline.BatchAutorouter;
 import app.freerouting.autoroute.pipeline.BatchOptimizer;
 import app.freerouting.autoroute.pipeline.RoutingPipeline;
@@ -128,7 +129,9 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
           inputFormat);
 
       RoutingPipeline pipeline = RoutingPipeline.createForHeadless(job);
-      pipeline.addBoardUpdatedEventListener(event -> RoutingJobOutputWriter.write(job));
+      // Writes the output from the board: the statistics of the events are not read.
+      pipeline.addBoardUpdatedEventListener(
+          BoardUpdatedEventListener.ignoringStatistics(event -> RoutingJobOutputWriter.write(job)));
       pipeline.addStageListener(
           new RoutingPipeline.StageListener() {
             @Override

@@ -86,6 +86,52 @@ class SesRoundTripTest {
   }
 
   /**
+   * A footprint without a library id is exported by KiCad as {@code (component "" ...)} and {@code
+   * (image "" ...)}. The session file must keep the empty image id as a quoted empty string: a bare
+   * {@code (component} followed by {@code (place ...)} has no image id token, and KiCad rejects the
+   * whole session file on import.
+   */
+  @Test
+  void sesWriterQuotesEmptyImageName() throws Exception {
+    String dsn =
+        """
+        (pcb empty-image-name
+         (parser (string_quote ") (space_in_quoted_tokens on))
+         (resolution um 10) (unit um)
+         (structure
+          (layer F.Cu (type signal) (property (index 0)))
+          (layer B.Cu (type signal) (property (index 1)))
+          (boundary (path pcb 0 0 0 20000 0 20000 12000 0 12000 0 0))
+          (via VIA) (rule (width 150) (clearance 200)))
+         (placement
+          (component "" (place X1 5000 5000 front 0))
+          (component PAD (place X2 15000 5000 front 0)))
+         (library
+          (image "" (pin SMD 1 0 0))
+          (image PAD (pin SMD 1 0 0))
+          (padstack SMD (shape (circle F.Cu 800)) (attach off))
+          (padstack VIA (shape (circle F.Cu 560)) (shape (circle B.Cu 560)) (attach off)))
+         (network
+          (net A (pins X1-1 X2-1))
+          (class default "" A (circuit (use_via VIA))))
+        )
+        """;
+    RoutingBoard board = DsnTestFixtures.loadBoard(dsn.getBytes(StandardCharsets.UTF_8));
+
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    SesWriter.write(board, out, "empty-image-name");
+    String content = out.toString(StandardCharsets.UTF_8);
+
+    assertTrue(
+        Pattern.compile("\\(component \"\"\\s+\\(place X1 ").matcher(content).find(),
+        "The component scope of an unnamed image must carry a quoted empty image id; got: "
+            + content);
+    assertFalse(
+        Pattern.compile("\\(component\\s*\\(place").matcher(content).find(),
+        "No component scope may be written without an image id; got: " + content);
+  }
+
+  /**
    * Verifies that feeding syntactically garbage bytes to {@link SesReader} throws {@link
    * IOException} (it should not silently return a summary with 0 items).
    */

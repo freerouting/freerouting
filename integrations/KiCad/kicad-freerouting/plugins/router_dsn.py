@@ -14,7 +14,7 @@ import logging
 import pcbnew
 
 from .config import LOG_DIR
-from .gui_helpers import wx_show_error, wx_safe_invoke
+from .gui_helpers import wx_show_error, wx_safe_invoke, refill_board_zones
 from .process_utils import ProcessDialog, ProcessThread, clean_log_line
 
 
@@ -289,6 +289,7 @@ class DsnRouter:
 
         if ok:
             logger.info("SES import succeeded.")
+            refill_board_zones(board)
             try:
                 if hasattr(pcbnew, "UpdateUserInterface"):
                     pcbnew.UpdateUserInterface()

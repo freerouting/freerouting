@@ -1580,11 +1580,7 @@ public class BasicBoard implements Serializable {
     if (!connectionItems.contains(trace)) {
       return false;
     }
-    // getConnectionItems also returns the via at a fork that ends the connection. Such a via still
-    // joins the other items it touches (other traces, or a plane its drill passes through): keep
-    // it, or removing the cycle cuts them off from each other.
-    Set<Item> walked = Set.copyOf(connectionItems);
-    connectionItems.removeIf(item -> item instanceof Via via && touchesItemOutside(via, walked));
+    keepJunctionVias(connectionItems);
     // Remove tails at the endpoints after removing the cycle,
     // if there was no tail before.
     int currentLayer = trace.getLayer();
@@ -1602,11 +1598,23 @@ public class BasicBoard implements Serializable {
       if (!tailAtEndpointBefore[i]) {
         Trace tail = getTraceTail(endCorners[i], currentLayer, currentNetNumbers);
         if (tail != null) {
-          removeItems(tail.getConnectionItems());
+          Set<Item> tailItems = tail.getConnectionItems();
+          keepJunctionVias(tailItems);
+          removeItems(tailItems);
         }
       }
     }
     return true;
+  }
+
+  /**
+   * getConnectionItems also returns the via at a fork that ends the connection. Such a via still
+   * joins the other items it touches (other traces, or a plane its drill passes through): it is
+   * taken out of connectionItems, or removing the connection cuts them off from each other.
+   */
+  private static void keepJunctionVias(Set<Item> connectionItems) {
+    Set<Item> walked = Set.copyOf(connectionItems);
+    connectionItems.removeIf(item -> item instanceof Via via && touchesItemOutside(via, walked));
   }
 
   private static boolean touchesItemOutside(Via via, Set<Item> items) {

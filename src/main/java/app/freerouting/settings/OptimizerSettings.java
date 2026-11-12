@@ -68,6 +68,14 @@ public class OptimizerSettings implements Serializable, Cloneable {
   public Integer additionalRipupCostFactorAtStart;
 
   /**
+   * Whether the optimizer keeps the increased ripup costs of the start after a pass that does not
+   * improve the board. By default it drops them, and the passes after that rip and reroute much
+   * more (several times the CPU of a pass with the increased costs).
+   */
+  @SerializedName("keep_increased_ripup_costs")
+  public Boolean keepIncreasedRipupCosts;
+
+  /**
    * A cost discount factor applied when ripping up trace items (as opposed to vias). Typically less
    * than 1.0 to make traces easier to rip up and reroute than vias.
    */

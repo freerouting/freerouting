@@ -1,0 +1,39 @@
+(pcb Plane-cycle-tail-via.dsn
+  (parser (string_quote ") (space_in_quoted_tokens on) (host_cad "hand") (host_version "1"))
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer Top (type signal) (property (index 0)))
+    (layer In1 (type power) (property (index 1)))
+    (layer In2 (type signal) (property (index 2)))
+    (layer Bottom (type signal) (property (index 3)))
+    (boundary (path pcb 0  0 0  16000 0  16000 10000  0 10000  0 0))
+    (plane GND (polygon In1 0  500 500  15500 500  15500 9500  500 9500  500 500))
+    (via "Via[0-3]_600:300_um")
+    (rule (width 200) (clearance 150))
+  )
+  (placement
+    (component SMD
+      (place A 1500 1500 front 0)
+      (place B 14500 7500 front 0)
+    )
+  )
+  (library
+    (image SMD (pin Pad 1 0 0))
+    (padstack Pad (shape (rect Top -500 -500 500 500)) (attach off))
+    (padstack "Via[0-3]_600:300_um" (shape (circle Top 600)) (shape (circle In1 600)) (shape (circle In2 600)) (shape (circle Bottom 600)) (attach off))
+  )
+  (network
+    (net GND (pins A-1 B-1))
+    (class kicad_default GND (circuit (use_via "Via[0-3]_600:300_um")) (rule (width 200) (clearance 150)))
+  )
+  (wiring
+    (wire (path Top 200  1500 1500  4000 1500)(net GND)(type route))
+    (via "Via[0-3]_600:300_um"  4000 1500 (net GND)(type route))
+    (wire (path In2 200  4000 1500  8000 1500)(net GND)(type route))
+    (wire (path In2 200  8000 1500  12000 1500)(net GND)(type route))
+    (wire (path In2 250  12000 1500  12000 4500  8000 4500  8000 1500)(net GND)(type route))
+    (wire (path Top 200  14500 7500  12000 7500)(net GND)(type route))
+    (via "Via[0-3]_600:300_um"  12000 7500 (net GND)(type route))
+  )
+)
