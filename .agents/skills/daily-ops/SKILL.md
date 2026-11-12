@@ -109,7 +109,7 @@ Each subagent executes the following inside its isolated `share` workspace witho
 - The main agent aggregates all subagent reports into a single **Merge Readiness Table**.
 - Verify that every ready PR has its Milestone assigned to the upcoming release version (not `"Future"` or unset).
 - **Never merge automatically.** Ask the user: *"Which of these ready PRs should I merge now?"*
-- Once confirmed by the user, merge the selected PRs sequentially (`gh pr merge <number> --merge` or `--squash` per repo convention) and track whether any merged PR touched the **Routing Engine**.
+- Once confirmed by the user, merge the selected PRs sequentially (`gh pr merge <number> --merge --admin` or via GitHub Merge Queue `gh pr merge <number> --auto --merge`) and track whether any merged PR touched the **Routing Engine**.
 
 ---
 
