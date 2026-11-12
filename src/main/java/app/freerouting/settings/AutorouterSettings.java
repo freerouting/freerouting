@@ -65,6 +65,22 @@ public class AutorouterSettings implements Serializable, Cloneable {
   public String[] ignoreNetClasses;
 
   /**
+   * Net classes routed first: in every pass their connections are routed right after the plane pads
+   * and before the other signal nets, which may not rip them up. Names resolve as for {@code
+   * ignore_net_classes}.
+   */
+  @SerializedName("priority_net_classes")
+  @Schema(
+      description = "Net classes routed first in every pass; other signal nets may not rip them up",
+      example = "[\"ETH_DIFF\", \"ANALOG\"]")
+  public String[] priorityNetClasses;
+
+  /** Via costs of the nets of priority_net_classes; unset: the via costs of every other net. */
+  @SerializedName("priority_via_costs")
+  @Schema(description = "Via costs of the nets of priority_net_classes (unset: via_costs)")
+  public Integer priorityViaCosts;
+
+  /**
    * Erik Gavriluk (freerouting.net): whether nets that required necking on earlier connections
    * route at the neck width directly on later connections (skipping redundant class-width
    * searches).
@@ -187,6 +203,9 @@ public class AutorouterSettings implements Serializable, Cloneable {
       AutorouterSettings copy = (AutorouterSettings) super.clone();
       if (this.ignoreNetClasses != null) {
         copy.ignoreNetClasses = this.ignoreNetClasses.clone();
+      }
+      if (this.priorityNetClasses != null) {
+        copy.priorityNetClasses = this.priorityNetClasses.clone();
       }
       return copy;
     } catch (CloneNotSupportedException e) {

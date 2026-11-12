@@ -143,7 +143,14 @@ The primary way to configure Freerouting is through a JSON settings file. This f
       autorouter pass, for example `--router.autorouter.item_order_seed=42`. The first pass
       retains its existing ordering policy.
     - **`save_intermediate_stages`**: Save board snapshots between passes.
-    - **`ignore_net_classes`**: Net class names the autorouter should skip.
+    - **`ignore_net_classes`**: Net class names the autorouter should skip. KiCad's default class may be given as `kicad_default` or `Default`; a composite KiCad name such as `PWR,Default` may be written as is on the command line.
+    - **`priority_net_classes`**: Net classes routed first: in every pass their connections are
+      routed right after the plane pads and before the other signal nets, which may not rip them up
+      (in the maze search or when last-mile blockers are removed); priority nets may still rip each
+      other. Use it for nets that must stay short or direct, such as differential pairs or analog
+      inputs. Names resolve as for `ignore_net_classes`. CLI:
+      `--router.autorouter.priority_net_classes=ETH_DIFF,ANALOG`.
+    - **`priority_via_costs`**: Via costs of the nets of `priority_net_classes`. Unset: `via_costs`.
     - **`plane_as_priority`**: For nets with a plane on a power layer, leave each SMD pad out of
       the fanout and route it to its plane first, so that it drops into the plane through a via of
       its own instead of being joined to the nearest pad of the net. While it searches, copper of the

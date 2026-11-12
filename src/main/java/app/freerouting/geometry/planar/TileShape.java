@@ -929,6 +929,11 @@ public abstract sealed class TileShape extends PolylineShape implements ConvexSh
    * tolerance. A piece bounded only by orthogonal and diagonal lines is its own bounding octagon
    * and stays whole; a piece with an oblique border line is halved across the longer side of its
    * bounding box. The pieces cover the same area as the input shapes.
+   *
+   * <p>The halving stops after {@link #MAX_TIGHT_OCTAGON_SPLIT_DEPTH} levels, so that a very long
+   * oblique edge does not produce an unbounded number of pieces. A piece reached at that depth is
+   * kept even if its octagon still exceeds it by more than tolerance; the tolerance is then not met
+   * for that piece.
    */
   public static TileShape[] splitToTightOctagons(TileShape[] convexShapes, double tolerance) {
     Collection<TileShape> pieces = new LinkedList<>();
