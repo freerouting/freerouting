@@ -183,5 +183,8 @@ public final class RoutingBoardUndoFacade {
         }
       }
     }
+    if (!cancelledObjects.isEmpty() || !restoredObjects.isEmpty()) {
+      board.incrementRevision();
+    }
   }
 }
