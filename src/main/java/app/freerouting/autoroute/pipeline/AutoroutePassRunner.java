@@ -66,7 +66,16 @@ final class AutoroutePassRunner {
 
       if (passNo > 1) {
         reorderSingleThreadItems(autorouteItemList, passNo);
+      } else if (router.settings.autorouter != null
+          && Boolean.TRUE.equals(router.settings.autorouter.planeAsPriority)) {
+        // plane_as_priority: the plane pads drop into their planes before the signals take the
+        // room around them (later passes already route plane items first).
+        List<Item> planeItems = new ArrayList<>();
+        autorouteItemList.removeIf(
+            item -> router.isPlaneItem(item, router.board) && planeItems.add(item));
+        autorouteItemList.addAll(0, planeItems);
       }
+      priorityItemsFirst(autorouteItemList);
 
       // freerouting.net: the balls of ball grid parts first in the first pass, ring by ring
       // (router.autorouter.ball_escape_order); a retry plan still goes ahead of them.
@@ -101,14 +110,13 @@ final class AutoroutePassRunner {
       routerCounters.routedCount = 0;
 
       long statisticsStart = BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
-      DesignRulesChecker tempDrc = new DesignRulesChecker(router.board, null);
-      tempDrc.calculateAllIncompletes();
-      routerCounters.incompleteCount = tempDrc.getIncompleteCount();
+      // The ledger keeps these counts up to date; a full DRC scan would count every net again.
+      routerCounters.incompleteCount = router.calculateIncompleteCount(router.board);
       if (BatchAutorouter.isBenchmarkProfileEnabled()) {
         router.profileIntermediateStatisticsNanos += System.nanoTime() - statisticsStart;
       }
 
-      logIncompleteDetails(passNo, itemsToGoCount, routerCounters, tempDrc);
+      logIncompleteDetails(passNo, itemsToGoCount, routerCounters);
       router.fireBoardUpdatedEvent(stats, routerCounters, router.board);
 
       int rippedItemCount = 0;
@@ -348,6 +356,43 @@ final class AutoroutePassRunner {
   }
 
   /**
+   * Moves the items of the priority net classes (router.autorouter.priority_net_classes) ahead of
+   * the other signal items, after the plane items, keeping the order within each group. Nothing
+   * moves on a board without priority classes.
+   */
+  private void priorityItemsFirst(List<Item> autorouteItemList) {
+    List<Item> planeItems = new ArrayList<>();
+    List<Item> priorityItems = new ArrayList<>();
+    List<Item> otherItems = new ArrayList<>();
+    for (Item item : autorouteItemList) {
+      if (router.isPlaneItem(item, router.board)) {
+        planeItems.add(item);
+      } else if (isRoutedFirst(item)) {
+        priorityItems.add(item);
+      } else {
+        otherItems.add(item);
+      }
+    }
+    if (priorityItems.isEmpty()) {
+      return;
+    }
+    autorouteItemList.clear();
+    autorouteItemList.addAll(planeItems);
+    autorouteItemList.addAll(priorityItems);
+    autorouteItemList.addAll(otherItems);
+  }
+
+  private boolean isRoutedFirst(Item item) {
+    for (int i = 0; i < item.netCount(); i++) {
+      Net net = router.board.rules.nets.get(item.getNetNumber(i));
+      if (net != null && net.isRoutedFirst()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
    * Moves the items of nets that the rip-up memory keeps away from other nets to the end of the
    * pass, keeping the order otherwise: the nets they were moved for route first.
    */
@@ -492,8 +537,7 @@ final class AutoroutePassRunner {
     this.stagnationCount = 0;
   }
 
-  private void logIncompleteDetails(
-      int passNo, int itemsToGoCount, RouterCounters counters, DesignRulesChecker drc) {
+  private void logIncompleteDetails(int passNo, int itemsToGoCount, RouterCounters counters) {
     if (counters.incompleteCount <= 0) {
       return;
     }
@@ -506,7 +550,7 @@ final class AutoroutePassRunner {
             + itemsToGoCount
             + " items to route");
     for (int netNumber = 1; netNumber <= router.board.rules.nets.maxNetNumber(); netNumber++) {
-      int netIncompletes = drc.getIncompleteCount(netNumber);
+      int netIncompletes = router.board.routingLedger().incompleteCount(netNumber);
       if (netIncompletes > 0) {
         Net net = router.board.rules.nets.get(netNumber);
         String netName = net != null ? net.name : "net#" + netNumber;

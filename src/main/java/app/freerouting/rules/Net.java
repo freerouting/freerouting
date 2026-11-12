@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Locale;
+import java.util.Objects;
 
 /** Describes properties for an individual electrical net. */
 public class Net implements Comparable<Net>, ItemInfoPrinter.Printable, Serializable {
@@ -70,12 +71,30 @@ public class Net implements Comparable<Net>, ItemInfoPrinter.Printable, Serializ
   /** Compares two nets by name, which is useful for displaying nets alphabetically. */
   @Override
   public int compareTo(Net other) {
-    return this.name.compareToIgnoreCase(other.name);
+    Objects.requireNonNull(other, "other net cannot be null");
+    int res = this.name.compareToIgnoreCase(other.name);
+    if (res != 0) {
+      return res;
+    }
+    res = this.name.compareTo(other.name);
+    if (res != 0) {
+      return res;
+    }
+    res = Integer.compare(this.subnetNumber, other.subnetNumber);
+    if (res != 0) {
+      return res;
+    }
+    return Integer.compare(this.netNumber, other.netNumber);
   }
 
   /** Returns the class of this net. */
   public NetClass getNetClass() {
     return this.netClass;
+  }
+
+  /** True if the class of this net is routed first (router.autorouter.priority_net_classes). */
+  public boolean isRoutedFirst() {
+    return this.netClass != null && this.netClass.isRoutedFirst;
   }
 
   /** Sets the class of this net. */
