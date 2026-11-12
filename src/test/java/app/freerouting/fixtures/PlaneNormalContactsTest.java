@@ -7,6 +7,7 @@ import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.model.items.ConductionArea;
 import app.freerouting.board.model.items.DrillItem;
 import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.searchtree.SearchTreeObject;
 import app.freerouting.geometry.planar.TileShape;
@@ -50,7 +51,7 @@ class PlaneNormalContactsTest extends RoutingFixtureTest {
     assertTrue(contacts > 0, fixture + " has no plane contact: nothing was compared");
   }
 
-  /** ConductionArea.getNormalContacts before it was batched. */
+  /** ConductionArea.getNormalContacts tile by tile, as before it was batched. */
   private static Set<Item> tileByTileContacts(BasicBoard board, ConductionArea plane) {
     Set<Item> result = new TreeSet<>();
     for (int i = 0; i < plane.tileShapeCount(); i++) {
@@ -66,6 +67,14 @@ class PlaneNormalContactsTest extends RoutingFixtureTest {
           if (currentItem instanceof Trace currentTrace) {
             if (currentShape.contains(currentTrace.firstCorner())
                 || currentShape.contains(currentTrace.lastCorner())) {
+              result.add(currentItem);
+            }
+          } else if (currentItem instanceof Pin currentPin) {
+            // A pin is a contact where its copper overlaps the tile.
+            TileShape pinShape =
+                currentPin.getTreeShapeOnLayer(
+                    board.searchTreeManager.getDefaultTree(), plane.getLayer());
+            if (currentShape.intersection(pinShape).dimension() == 2) {
               result.add(currentItem);
             }
           } else if (currentItem instanceof DrillItem currentDrillItem) {
