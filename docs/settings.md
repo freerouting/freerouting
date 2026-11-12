@@ -143,7 +143,21 @@ The primary way to configure Freerouting is through a JSON settings file. This f
       autorouter pass, for example `--router.autorouter.item_order_seed=42`. The first pass
       retains its existing ordering policy.
     - **`save_intermediate_stages`**: Save board snapshots between passes.
-    - **`ignore_net_classes`**: Net class names the autorouter should skip.
+    - **`ignore_net_classes`**: Net class names the autorouter should skip. KiCad's default class may be given as `kicad_default` or `Default`; a composite KiCad name such as `PWR,Default` may be written as is on the command line.
+    - **`priority_net_classes`**: Net classes routed first: in every pass their connections are
+      routed right after the plane pads and before the other signal nets, which may not rip them up
+      (in the maze search or when last-mile blockers are removed); priority nets may still rip each
+      other. Use it for nets that must stay short or direct, such as differential pairs or analog
+      inputs. Names resolve as for `ignore_net_classes`. CLI:
+      `--router.autorouter.priority_net_classes=ETH_DIFF,ANALOG`.
+    - **`priority_via_costs`**: Via costs of the nets of `priority_net_classes`. Unset: `via_costs`.
+    - **`plane_as_priority`**: For nets with a plane on a power layer, leave each SMD pad out of
+      the fanout and route it to its plane first, so that it drops into the plane through a via of
+      its own instead of being joined to the nearest pad of the net. While it searches, copper of the
+      same net belonging to other packages is an obstacle; pins of its own package are not. Default
+      is `false`. CLI: `--router.autorouter.plane_as_priority=true`.
+    - **`plane_share_gap_um`**: With `plane_as_priority`, two plane pads at most this far apart
+      edge to edge (no room for a via between them) may share one via. Default is `500`.
     - **`max_threads`**: Stage-specific autorouter worker-thread limit. Canonical CLI is
       `--router.autorouter.max_threads`. Bounded by the global `--router.max_threads` ceiling.
       The autorouter stage currently runs single-threaded; this setting is reserved for future multi-threaded passes.
@@ -160,7 +174,7 @@ The primary way to configure Freerouting is through a JSON settings file. This f
 - **`trace_pull_tight_accuracy`**: Accuracy for pulling traces tight.
 - **`allowed_via_types`**: Enables or disables the use of different via types.
 - **`via_costs`**: Cost factor for using vias.
-- **`plane_via_costs`**: Cost factor for using vias on plane layers.
+- **`plane_via_costs`**: Cost factor for using vias on plane layers: a via that drops into a plane is priced with this factor, separately from a signal layer change (`via_costs`).
 - **`plane_nets`**: Explicit array of net names to treat as power-plane nets, enabling plane-routing mode and discounted plane via costs for these nets.
 - **`plane_as_obstacle`**: Boolean controlling whether conduction areas (copper pours) act as obstacles blocking foreign traces from passing through. Default is `false` (foreign traces may route through fills).
 - **`start_ripup_costs`**: Cost factor for ripping up existing traces.

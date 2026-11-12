@@ -26,6 +26,13 @@ public class NetClass implements Serializable, ItemInfoPrinter.Printable {
       new DefaultItemClearanceClasses();
 
   public boolean isIgnoredByAutorouter;
+
+  /**
+   * Routed ahead of the other signal nets in every autorouter pass, and not ripped by them (setting
+   * {@code router.autorouter.priority_net_classes}).
+   */
+  public boolean isRoutedFirst;
+
   private String name;
   private ViaRule viaRule;
   private int traceClearanceClass;

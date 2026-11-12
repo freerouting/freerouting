@@ -372,6 +372,10 @@ public final class KiCadJsonReader {
         applyKiCadNetClassParameters(boardNetClass, nc, layerCount, scaleFactor, clNo);
         netClassIndexMap.put(nc.name, clNo);
       }
+      // The outline was cut in the board constructor, before the net class widths were known.
+      if (board.getOutline() != null) {
+        board.getOutline().updateSlicesToTraceWidths();
+      }
 
       // Create via rules and register via padstacks so that the router is allowed to use vias
       double defaultViaDiameter = 0.8;

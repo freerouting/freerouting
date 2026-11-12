@@ -212,7 +212,7 @@ public class FastPlaneConnectivityGrid {
           int radius =
               (int) Math.round(Math.max(itemBbox.width(), itemBbox.height()) / 2.0 + clearance);
           rasterizeThickSegment(center.x, center.y, center.x, center.y, radius);
-        } else if (item instanceof ObstacleArea && !(item instanceof ConductionArea)) {
+        } else if (item instanceof ObstacleArea) {
           int shapeCount = item.tileShapeCount();
           for (int i = 0; i < shapeCount; i++) {
             if (item.shapeLayer(i) == layer) {
