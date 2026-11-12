@@ -133,6 +133,49 @@ class FastPlaneConnectivityGridTest {
   }
 
   @Test
+  void testForeignNonObstacleConductionAreaDoesNotFracturePlane() {
+    Area area = TileShape.getInstance(1_000_000, 1_000_000, 9_000_000, 9_000_000);
+    ConductionArea ca =
+        board.insertConductionArea(
+            area, 0, new int[] {gndNet.netNumber}, 0, false, FixedState.UNFIXED);
+
+    Via via1 =
+        board.insertVia(
+            defaultPadstack,
+            new IntPoint(2_000_000, 5_000_000),
+            new int[] {gndNet.netNumber},
+            0,
+            FixedState.UNFIXED,
+            true);
+
+    Via via2 =
+        board.insertVia(
+            defaultPadstack,
+            new IntPoint(8_000_000, 5_000_000),
+            new int[] {gndNet.netNumber},
+            0,
+            FixedState.UNFIXED,
+            true);
+
+    // Foreign conduction area cutting across the middle with isObstacle = false
+    Area foreignArea = TileShape.getInstance(4_500_000, 500_000, 5_500_000, 9_500_000);
+    ConductionArea foreignCa =
+        board.insertConductionArea(
+            foreignArea, 0, new int[] {sigNet.netNumber}, 0, false, FixedState.UNFIXED);
+    foreignCa.setIsObstacle(false);
+
+    FastPlaneConnectivityGrid grid = new FastPlaneConnectivityGrid();
+    FastPlaneConnectivityGrid.PlaneFractureResult result =
+        grid.evaluateFracture(ca, board, List.of(via1, via2));
+
+    assertNotNull(result);
+    assertFalse(
+        result.isFractured,
+        "Foreign conduction area with isObstacle=false must not fracture the plane");
+    assertEquals(1, result.islandCount);
+  }
+
+  @Test
   void testCuttingTraceDetectsSeveredIslands() {
     Area area = TileShape.getInstance(1_000_000, 1_000_000, 9_000_000, 9_000_000);
     ConductionArea ca =
@@ -300,14 +343,21 @@ class FastPlaneConnectivityGridTest {
         "Bridge route must not introduce clearance violations");
 
     // Verify that the resulting Specctra SES export (used by Altium, EAGLE, KiCad, etc.)
-    // contains the physical bridge wire, guaranteeing cross-EDA connectivity upon re-pour
+    // contains the physical bridge wire for net GND, guaranteeing cross-EDA connectivity upon
+    // re-pour
     ByteArrayOutputStream sesStream = new ByteArrayOutputStream();
     SesWriter.write(job.board, sesStream, "test_design");
     String sesContent = sesStream.toString(StandardCharsets.UTF_8);
     assertTrue(sesContent.contains("(net GND"), "SES output must contain net GND wiring");
+    int gndIndex = sesContent.indexOf("(net GND");
+    int nextNetIndex = sesContent.indexOf("(net ", gndIndex + 8);
+    String gndSection =
+        nextNetIndex >= 0
+            ? sesContent.substring(gndIndex, nextNetIndex)
+            : sesContent.substring(gndIndex);
     assertTrue(
-        sesContent.contains("(wire"),
-        "SES output must contain physical bridge wires connecting severed islands");
+        gndSection.contains("(wire"),
+        "SES output must contain physical bridge wires specifically in the (net GND ...) block");
   }
 
   private static final class TestStoppableThread extends StoppableThread {

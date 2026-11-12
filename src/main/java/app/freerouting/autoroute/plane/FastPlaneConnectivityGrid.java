@@ -33,8 +33,8 @@ import java.util.Set;
  */
 public class FastPlaneConnectivityGrid {
 
-  /** Maximum dimension of the grid in either axis (1024 * 1024 bits = 128 KB max ceiling). */
-  public static final int MAX_GRID_DIM = 1024;
+  /** Maximum dimension of the grid in either axis (512 * 512 = 256K cells). */
+  public static final int MAX_GRID_DIM = 512;
 
   /** Minimum cell size in internal board units (e.g. 10 um at 10 units/um resolution). */
   public static final int MIN_CELL_SIZE = 100;
@@ -52,10 +52,9 @@ public class FastPlaneConnectivityGrid {
   private long[] copperMask;
   private long[] obstacleMask;
   private long[] visitedMask;
-  private int[] cellIslandMap;
+  private short[] cellIslandMap;
 
-  private int[] queueX;
-  private int[] queueY;
+  private int[] queue;
 
   /** Result container holding partitioned same-net items per isolated copper island. */
   public static class PlaneFractureResult {
@@ -85,9 +84,8 @@ public class FastPlaneConnectivityGrid {
     this.copperMask = new long[0];
     this.obstacleMask = new long[0];
     this.visitedMask = new long[0];
-    this.cellIslandMap = new int[0];
-    this.queueX = new int[0];
-    this.queueY = new int[0];
+    this.cellIslandMap = new short[0];
+    this.queue = new int[0];
   }
 
   /**
@@ -137,14 +135,13 @@ public class FastPlaneConnectivityGrid {
 
     int totalCells = this.cols * this.rows;
     if (this.cellIslandMap.length < totalCells) {
-      this.cellIslandMap = new int[totalCells];
+      this.cellIslandMap = new short[totalCells];
     }
-    Arrays.fill(this.cellIslandMap, 0, totalCells, -1);
+    Arrays.fill(this.cellIslandMap, 0, totalCells, (short) -1);
 
     int maxQueueSize = this.cols * this.rows;
-    if (this.queueX.length < maxQueueSize) {
-      this.queueX = new int[maxQueueSize];
-      this.queueY = new int[maxQueueSize];
+    if (this.queue.length < maxQueueSize) {
+      this.queue = new int[maxQueueSize];
     }
   }
 
@@ -206,9 +203,12 @@ public class FastPlaneConnectivityGrid {
         continue;
       }
 
-      // Foreign traces and vias are obstacles
+      // Foreign traces, vias, and blocking obstacles are obstacles
       boolean isForeign = !item.sharesNet(ca);
       if (isForeign) {
+        if (item instanceof ConductionArea foreignCa && !foreignCa.getIsObstacle()) {
+          continue;
+        }
         hasForeignObstacles = true;
         int itemClearanceClass = item.clearanceClassIndex();
         double clearance = board.clearanceValue(clearanceClass, itemClearanceClass, layer);
@@ -553,7 +553,7 @@ public class FastPlaneConnectivityGrid {
       islands.computeIfAbsent(currentIslandId, k -> new ArrayList<>()).add(item);
       itemIslandMap.put(item, currentIslandId);
 
-      runFloodFill(seed[0], seed[1], currentIslandId);
+      runFloodFill(seed[0], seed[1], (short) currentIslandId);
 
       // Check remaining unassigned items to see if they are reached by this flood fill
       for (Item other : items) {
@@ -602,13 +602,11 @@ public class FastPlaneConnectivityGrid {
     return new PlaneFractureResult(islands);
   }
 
-  private void runFloodFill(int startCol, int startRow, int islandId) {
+  private void runFloodFill(int startCol, int startRow, short islandId) {
     int head = 0;
     int tail = 0;
 
-    queueX[tail] = startCol;
-    queueY[tail] = startRow;
-    tail++;
+    queue[tail++] = (startRow << 16) | (startCol & 0xFFFF);
     setBit(visitedMask, startRow, startCol);
     cellIslandMap[startRow * cols + startCol] = islandId;
 
@@ -616,9 +614,9 @@ public class FastPlaneConnectivityGrid {
     int[] dr = {0, 0, 1, -1};
 
     while (head < tail) {
-      int c = queueX[head];
-      int r = queueY[head];
-      head++;
+      int packed = queue[head++];
+      int r = packed >>> 16;
+      int c = packed & 0xFFFF;
 
       for (int i = 0; i < 4; i++) {
         int nc = c + dc[i];
@@ -628,9 +626,7 @@ public class FastPlaneConnectivityGrid {
           if (!isBitSet(visitedMask, nr, nc) && isConductive(nc, nr)) {
             setBit(visitedMask, nr, nc);
             cellIslandMap[nr * cols + nc] = islandId;
-            queueX[tail] = nc;
-            queueY[tail] = nr;
-            tail++;
+            queue[tail++] = (nr << 16) | (nc & 0xFFFF);
           }
         }
       }

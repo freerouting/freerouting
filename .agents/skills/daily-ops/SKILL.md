@@ -78,8 +78,8 @@ Each subagent executes the following inside its isolated `share` workspace witho
    - Inspect `gh pr view <number> --json reviews,reviewRequests,comments`.
    - If GitHub Copilot (`copilot-pull-request-reviewer[bot]`) has **not** reviewed the PR yet and is not currently requested:
      - Trigger Copilot review: `gh api --method POST repos/freerouting/freerouting/pulls/<number>/requested_reviewers -f "reviewers[]=copilot-pull-request-reviewer[bot]"` (or `gh pr edit <number> --add-reviewer "@copilot"`).
-   - **Wait for Copilot:** Poll `gh pr view <number> --json reviews,reviewRequests` every 20 seconds (up to 5 minutes) until Copilot's review is posted.
-   - Read all review comments (`gh api repos/freerouting/freerouting/pulls/<number>/comments`), evaluate every remark objectively, fix all valid issues, and reply to/resolve the review threads.
+   - **Wait for Copilot:** Poll `gh pr view <number> --json reviews,reviewRequests` every 20 seconds (up to 5 minutes) until Copilot's review is posted. Copilot Lite must be triggered at least once, its remarks analyzed, and all valid issues fixed before marking a PR ready to merge.
+   - Read all review comments (`gh api repos/freerouting/freerouting/pulls/<number>/comments`), evaluate every remark objectively, fix all valid issues, reply to each thread, and formally resolve all review threads via GraphQL (`resolveReviewThread`). All review comments on the PR must be resolved before marking the PR ready to merge.
 5. **Diff-First Code Review & Unit Test Verification:**
    - Inspect `gh pr diff <number>` and only the affected line ranges in source files.
    - Ensure unit tests exist and pass using **targeted, quiet execution**:

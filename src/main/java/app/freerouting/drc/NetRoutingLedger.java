@@ -254,12 +254,17 @@ public final class NetRoutingLedger {
     for (ConductionArea ca : conductionAreas) {
       if (ca.getLayer() >= item.firstLayer() && ca.getLayer() <= item.lastLayer()) {
         IntBox caBox = ca.boundingBox();
-        double maxClearance = 2_000_000.0;
+        double maxClearance = 0.0;
         if (board != null && board.rules != null && board.rules.clearanceMatrix != null) {
           maxClearance =
-              Math.max(
-                  maxClearance,
-                  board.rules.clearanceMatrix.maxValue(ca.clearanceClassIndex(), ca.getLayer()));
+              board.rules.clearanceMatrix.maxValue(ca.clearanceClassIndex(), ca.getLayer());
+        } else if (board != null) {
+          maxClearance =
+              board.clearanceValue(
+                  ca.clearanceClassIndex(), item.clearanceClassIndex(), ca.getLayer());
+        }
+        if (maxClearance <= 0.0) {
+          maxClearance = 1000.0;
         }
         int cl = (int) Math.ceil(maxClearance);
         IntBox inflatedItemBox =

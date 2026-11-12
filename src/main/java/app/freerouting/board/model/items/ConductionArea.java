@@ -49,7 +49,6 @@ public class ConductionArea extends ObstacleArea implements Connectable {
   private transient int cachedFractureRevision = -1;
   private transient long cachedNetAssignmentStamp = -1;
   private transient FastPlaneConnectivityGrid.PlaneFractureResult cachedFractureResult;
-  private transient FastPlaneConnectivityGrid connectivityGrid;
 
   /** Creates a new instance of ConductionArea. */
   public ConductionArea(
@@ -90,7 +89,6 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     this.cachedFractureRevision = -1;
     this.cachedNetAssignmentStamp = -1;
     this.cachedFractureResult = null;
-    this.connectivityGrid = null;
   }
 
   /** Pre-computes detailed plane-fill geometry off the EDT so zoom-in paints stay responsive. */
@@ -363,11 +361,9 @@ public class ConductionArea extends ObstacleArea implements Connectable {
         && this.cachedNetAssignmentStamp == currentNetAssignmentStamp) {
       return this.cachedFractureResult;
     }
-    if (this.connectivityGrid == null) {
-      this.connectivityGrid = new FastPlaneConnectivityGrid();
-    }
+    FastPlaneConnectivityGrid connectivityGrid = new FastPlaneConnectivityGrid();
     Collection<Item> contacts = getNormalContacts();
-    this.cachedFractureResult = this.connectivityGrid.evaluateFracture(this, this.board, contacts);
+    this.cachedFractureResult = connectivityGrid.evaluateFracture(this, this.board, contacts);
     this.cachedFractureRevision = currentRevision;
     this.cachedNetAssignmentStamp = currentNetAssignmentStamp;
     return this.cachedFractureResult;
@@ -451,9 +447,6 @@ public class ConductionArea extends ObstacleArea implements Connectable {
       if (currentContact == comeFromItem) {
         continue;
       }
-      if (currentContact == searchItem) {
-        return true;
-      }
       if (fromIsland != null) {
         boolean onSameIsland = false;
         List<Item> islandMembers = fractureResult.islandItems.get(fromIsland);
@@ -463,6 +456,9 @@ public class ConductionArea extends ObstacleArea implements Connectable {
         if (!onSameIsland) {
           continue;
         }
+      }
+      if (currentContact == searchItem) {
+        return true;
       }
       if (visitedItems.add(currentContact)) {
         if (currentContact.isCycleRecu(visitedItems, searchItem, this, ignoreAreas)) {
@@ -509,7 +505,10 @@ public class ConductionArea extends ObstacleArea implements Connectable {
 
   /** Sets, if this conduction area is regarded as obstacle to traces and vias of foreign nets. */
   public void setIsObstacle(boolean value) {
-    this.isObstacle = value;
+    if (this.isObstacle != value) {
+      this.isObstacle = value;
+      this.clearDerivedData();
+    }
   }
 
   @Override
