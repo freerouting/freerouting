@@ -8,6 +8,7 @@ import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.board.model.structure.Unit;
 import app.freerouting.board.searchtree.SearchTreeObject;
 import app.freerouting.board.searchtree.ShapeSearchTree;
+import app.freerouting.datastructures.ShapeTree.TreeEntry;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
@@ -18,6 +19,7 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.TextManager;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -288,9 +290,11 @@ public class ConductionArea extends ObstacleArea implements Connectable {
   public Set<Item> getNormalContacts() {
     ShapeSearchTree defaultTree = board.searchTreeManager.getDefaultTree();
     // A plane spans most of its layer, often in thousands of tiles: rather than one tree query per
-    // tile, look up the tiles that contain the ends of the items of the net.
+    // tile, look up the tiles that contain the ends of the traces and the centres of the vias, and
+    // that overlap the pins of the net.
     Set<SearchTreeObject> overlaps =
-        defaultTree.overlappingObjectsWithPointIn(this, getLayer(), this::contactPoints);
+        defaultTree.overlappingObjectsWithPointIn(
+            this, getLayer(), this::contactPoints, this::isPinCandidate);
     Set<Item> result = new TreeSet<>();
     if (overlaps == null) {
       // Not in the tree: query tile by tile.
@@ -312,7 +316,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
 
   /**
    * The points of object of which one must lie in a tile of this area for a contact, or null if
-   * object cannot be a contact.
+   * object cannot be a contact or is a pin, looked up by its shape.
    */
   private Point[] contactPoints(SearchTreeObject object) {
     if (!(object instanceof Item item)
@@ -324,20 +328,77 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     if (item instanceof Trace trace) {
       return new Point[] {trace.firstCorner(), trace.lastCorner()};
     }
-    return item instanceof DrillItem drillItem ? new Point[] {drillItem.getCenter()} : null;
+    return item instanceof Via via ? new Point[] {via.getCenter()} : null;
+  }
+
+  /**
+   * Whether object is a pin of the net of this area, which is a contact when its copper overlaps a
+   * tile. Its centre need not be in the area: a thermal relief of a filled zone leaves the centre
+   * of the pad in a hole, the spokes covering only its edge. A via, placed by the router with its
+   * centre in the area, keeps that rule.
+   */
+  private boolean isPinCandidate(SearchTreeObject object) {
+    return object instanceof Pin pin && pin.sharesNet(this) && pin.sharesLayer(this);
   }
 
   private boolean isContactInTile(SearchTreeObject object, TileShape tile) {
-    if (!(object instanceof Item item)
-        || item == this
-        || !item.sharesNet(this)
-        || !item.sharesLayer(this)) {
+    if (isPinCandidate(object)) {
+      return overlapsTile((Pin) object, tile);
+    }
+    Point[] points = contactPoints(object);
+    if (points != null) {
+      for (Point point : points) {
+        if (tile.contains(point)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Whether the copper of drillItem on the layer of this area overlaps tile with a positive area.
+   */
+  private boolean overlapsTile(DrillItem drillItem, TileShape tile) {
+    TileShape drillShape =
+        drillItem.getTreeShapeOnLayer(board.searchTreeManager.getDefaultTree(), getLayer());
+    return drillShape != null && tile.intersection(drillShape).dimension() == 2;
+  }
+
+  /**
+   * Whether drillItem, a pin of the net of this area, overlaps a tile of this area with a positive
+   * area: the counterpart of {@link #getNormalContacts()} for {@link
+   * DrillItem#getNormalContacts()}.
+   */
+  boolean overlapsCopperOf(DrillItem drillItem) {
+    if (!isPinCandidate(drillItem)) {
       return false;
     }
-    if (item instanceof Trace trace) {
-      return tile.contains(trace.firstCorner()) || tile.contains(trace.lastCorner());
+    ShapeSearchTree defaultTree = board.searchTreeManager.getDefaultTree();
+    TileShape drillShape = drillItem.getTreeShapeOnLayer(defaultTree, getLayer());
+    if (drillShape == null) {
+      return false;
     }
-    return item instanceof DrillItem drillItem && tile.contains(drillItem.getCenter());
+    if (getSearchTreeEntries(defaultTree) == null) {
+      for (int i = 0; i < tileShapeCount(); i++) {
+        if (getTileShape(i).intersection(drillShape).dimension() == 2) {
+          return true;
+        }
+      }
+      return false;
+    }
+    Collection<TreeEntry> entries = new ArrayList<>();
+    defaultTree.overlappingTreeEntries(drillShape, getLayer(), entries);
+    for (TreeEntry entry : entries) {
+      if (entry.object == this
+          && getTreeShape(defaultTree, entry.shapeIndexInObject)
+                  .intersection(drillShape)
+                  .dimension()
+              == 2) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**

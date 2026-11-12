@@ -287,6 +287,19 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     TileShape searchShape = TileShape.getInstance(drillCenter);
     Set<SearchTreeObject> overlaps = board.overlappingObjects(searchShape, -1);
     Set<Item> result = new TreeSet<>();
+    // A plane is a contact where it overlaps the copper of a pin, its centre lying in the plane or
+    // not: look up the planes on each layer by the shape of the pin there.
+    for (int layer = firstLayer(); this instanceof Pin && layer <= lastLayer(); layer++) {
+      TileShape layerShape = getTreeShapeOnLayer(board.searchTreeManager.getDefaultTree(), layer);
+      if (layerShape == null) {
+        continue;
+      }
+      for (SearchTreeObject currentObject : board.overlappingObjects(layerShape, layer)) {
+        if (currentObject instanceof ConductionArea area && area.overlapsCopperOf(this)) {
+          result.add(area);
+        }
+      }
+    }
     for (SearchTreeObject currentObject : overlaps) {
       if (!(currentObject instanceof Item currentItem)) {
         continue;
