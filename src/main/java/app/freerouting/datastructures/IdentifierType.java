@@ -35,7 +35,8 @@ public class IdentifierType {
         name = name.replace(stringQuote, "");
       }
 
-      boolean needQuotes = false;
+      // an empty name must be written as an empty quoted string, otherwise the token is missing
+      boolean needQuotes = name.isEmpty();
       // if the name contains a reserved character, we must put it into quotes
       for (String reservedChar : reservedChars) {
         if (name.contains(reservedChar)) {
