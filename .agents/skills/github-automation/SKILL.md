@@ -46,18 +46,21 @@ gh pr edit <pr-number> --body-file "path/to/pr_body.md"
      - Always trigger Copilot Lite review at least once before considering a PR ready to merge (e.g. `gh pr edit <number> --add-reviewer "@copilot"` or posting a comment `@copilot review`).
      - **Wait for Copilot to finish:** Poll at ≥15-second intervals until the Copilot review appears in `reviews`. Do not mark the PR ready or push fixes prematurely while Copilot is still analyzing.
      - Fetch all inline review threads and comments (`gh api repos/freerouting/freerouting/pulls/<number>/comments`), evaluate every remark objectively, fix all valid issues in local commits, reply to each thread explaining the action taken, and formally resolve all review threads via the GitHub GraphQL API (`resolveReviewThread`). All comments on a PR must be resolved before marking that PR ready to merge.
-  4. **Issue Validity on Current Codebase:** Verify whether the issue or feature the PR addresses is still valid on the current codebase. It is possible that the bug was already fixed or the area refactored elsewhere in the codebase since the PR was created.
-  5. **Unit Test Demonstration & Full Coverage:** For functional or executable code changes, make sure that the PR has unit tests that demonstrate the issue correctly. Add more unit tests if needed to ensure:
+  4. **Approve and Run CI Checks & Monitor Progress:**
+     - If workflow runs on the PR require approval (e.g., first-time contributors or external fork runs awaiting maintainer authorization), approve and trigger the checks immediately (`gh run list --commit <head_sha>`, `gh run approve <run-id>`, or `gh pr checks`).
+     - Always check if CI checks/actions are running and monitor their progress while waiting (`gh pr checks <number> --watch` or polling `gh pr view <number> --json statusCheckRollup`). Do not proceed to merge readiness while CI checks are pending, failing, or unapproved.
+  5. **Issue Validity on Current Codebase:** Verify whether the issue or feature the PR addresses is still valid on the current codebase. It is possible that the bug was already fixed or the area refactored elsewhere in the codebase since the PR was created.
+  6. **Unit Test Demonstration & Full Coverage:** For functional or executable code changes, make sure that the PR has unit tests that demonstrate the issue correctly. Add more unit tests if needed to ensure:
      - (a) we have the right unit test demonstrating the exact issue that the PR fixes (failing before the fix, passing after), and
      - (b) we have full test coverage over the modified logic and edge cases.
      (For documentation, asset, or non-executable changes, verify that the relevant linters and quality checks pass instead.)
-  6. **Critical Code Review & Refinement:** Always be critical of the PR's code. Review and refine it in every way possible: adhere strictly to Clean Code principles, naming conventions, and architectural boundaries (e.g. `ModuleBoundariesArchTest`), eliminate dead code or suboptimal patterns, optimize performance where appropriate, and ensure quality gates pass (`./gradlew spotlessCheck checkstyleMain checkstyleTest -q` and `pre-commit run --all-files`).
-  7. **Security & Privacy Audit:** Conduct a strict security and privacy review of all changes:
+  7. **Critical Code Review & Refinement:** Always be critical of the PR's code. Review and refine it in every way possible: adhere strictly to Clean Code principles, naming conventions, and architectural boundaries (e.g. `ModuleBoundariesArchTest`), eliminate dead code or suboptimal patterns, optimize performance where appropriate, and ensure quality gates pass (`./gradlew spotlessCheck checkstyleMain checkstyleTest -q` and `pre-commit run --all-files`).
+  8. **Security & Privacy Audit:** Conduct a strict security and privacy review of all changes:
      - **Secrets & Credentials:** Ensure no API keys, tokens, credentials, or private internal hostnames/URLs are introduced in code, tests, or documentation.
      - **Privacy & Telemetry:** Ensure no unsanctioned tracking, telemetry, phone-home beacons, or unauthorized external network requests are added. Maintain strict user privacy.
      - **Input Validation & Boundaries:** Guard against path traversal (e.g., unchecked relative file paths or `../`), command injection, unsafe reflection, or insecure deserialization in file parsers (DSN/SES/rules), CLI flags, and API endpoints.
      - **Dependency Safety:** Verify that any new or bumped dependencies are trusted, actively maintained, and free of known vulnerabilities.
-  8. **Pre-Merge Summary & Milestone Verification:**
+  9. **Pre-Merge Summary & Milestone Verification:**
      - Ensure all review comment threads on the PR are formally resolved (`isResolved: true`). Never mark a PR ready to merge if unresolved comments remain.
      - Verify that Copilot Lite was triggered at least once, its review has completed, and all valid remarks have been addressed and verified.
      - Check the PR milestone (`gh pr view <number> --json milestone`).
@@ -66,7 +69,7 @@ gh pr edit <pr-number> --body-file "path/to/pr_body.md"
        gh pr edit <number> --milestone "<next-release-milestone>"
        ```
      - Write a brief, structured summary of findings, refinements, security audit results, resolved comment threads, and test verification for the maintainer so they can review and decide on merging.
-- **PR Merge Rule:** **Never merge PRs automatically without explicit user confirmation.** Before marking a PR ready to merge, ensure that: (1) Copilot Lite was triggered at least once, its remarks were analyzed, and all valid issues were fixed; (2) all PR comments and review threads are formally resolved; and (3) the Milestone is set to the correct upcoming release version. Present the PR link and check status to the user, and wait for their explicit confirmation before merging.
+- **PR Merge Rule:** **Never merge PRs automatically without explicit user confirmation.** Before marking a PR ready to merge, ensure that: (1) Copilot Lite was triggered at least once, its remarks were analyzed, and all valid issues were fixed; (2) all PR comments and review threads are formally resolved; (3) CI workflow checks have been approved, executed, and passed (monitor progress while waiting); and (4) the Milestone is set to the correct upcoming release version. Present the PR link and check status to the user, and wait for their explicit confirmation before merging.
 - **Quality Gates:** Before creating a PR or requesting review, ensure the local verification passes:
   ```powershell
   ./gradlew spotlessCheck checkstyleMain checkstyleTest -q
