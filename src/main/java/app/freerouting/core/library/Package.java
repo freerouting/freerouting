@@ -10,6 +10,7 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.util.TextManager;
 import java.io.Serializable;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * Component package templates describing the padstacks and relative locations of the package pins,
@@ -71,7 +72,16 @@ public class Package implements Comparable<Package>, ItemInfoPrinter.Printable, 
   /** Compares 2 packages by name. Useful for example to display packages in alphabetic order. */
   @Override
   public int compareTo(Package other) {
-    return this.name.compareToIgnoreCase(other.name);
+    Objects.requireNonNull(other, "other package cannot be null");
+    int res = this.name.compareToIgnoreCase(other.name);
+    if (res != 0) {
+      return res;
+    }
+    res = this.name.compareTo(other.name);
+    if (res != 0) {
+      return res;
+    }
+    return Integer.compare(this.id, other.id);
   }
 
   /** Returns the pin with the input index from this package. */

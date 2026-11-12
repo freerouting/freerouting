@@ -14,6 +14,8 @@ public class ItemAutorouteInfo {
   /** Defines, if this item belongs to the start or destination set of the maze search algorithm. */
   private boolean startInfo;
 
+  private boolean destinationInfo;
+
   private Connection precalculatedConnection;
 
   /** ExpansionRoom for pushing or ripping this object for each tree shape. */
@@ -38,6 +40,16 @@ public class ItemAutorouteInfo {
    */
   public void setStartInfo(boolean value) {
     startInfo = value;
+  }
+
+  /** Returns true if this item belongs to the destination set of the maze search algorithm. */
+  public boolean isDestinationInfo() {
+    return destinationInfo;
+  }
+
+  /** Sets whether this item belongs to the destination set of the maze search algorithm. */
+  public void setDestinationInfo(boolean value) {
+    destinationInfo = value;
   }
 
   /** Returns the precalculated connection of this item or null, if it is not yet precalculated. */

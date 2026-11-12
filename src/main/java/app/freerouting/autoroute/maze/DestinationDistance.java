@@ -98,6 +98,23 @@ public class DestinationDistance {
         Math.min(minComponentInnerTraceCost, minSolderInnerTraceCost);
   }
 
+  /**
+   * With two active layers the inner box only holds a destination on an inactive inner layer: a
+   * plane on a power layer, reached from an outer layer through one via. Without this term the
+   * bound of a plane-only destination came from the empty outer boxes and grew with the
+   * coordinates, steering the search to the board corner instead of to a via next to the pin.
+   */
+  private void considerInactiveInnerPlane(
+      LowerBound result, double innerSideMaxDelta, double innerSideMinDelta) {
+    if (!innerSideBoxIsEmpty) {
+      result.consider(
+          innerSideMaxDelta
+              + innerSideMinDelta * minComponentSolderInnerTraceCost
+              + minNormalViaCost,
+          1);
+    }
+  }
+
   /** Joins box to the bounding box of the specified layer. */
   public void join(IntBox box, int layer) {
     if (layer == 0) {
@@ -275,6 +292,7 @@ public class DestinationDistance {
       result.consider(tmpDistance, 2);
 
       if (activeLayerCount == 2) {
+        considerInactiveInnerPlane(result, innerSideMaxDelta, innerSideMinDelta);
         return result;
       }
 
@@ -339,6 +357,7 @@ public class DestinationDistance {
           solderSideMaxDelta + solderSideMinDelta * minSolderInnerTraceCost + 2 * minNormalViaCost;
       result.consider(tmpDistance, 2);
       if (activeLayerCount <= 2) {
+        considerInactiveInnerPlane(result, innerSideMaxDelta, innerSideMinDelta);
         return result;
       }
       tmpDistance =

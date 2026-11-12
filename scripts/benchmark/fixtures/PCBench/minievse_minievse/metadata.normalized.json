@@ -50,11 +50,13 @@
     "canary",
     "golden-canary",
     "small",
-    "tier-a"
+    "tier-a",
+    "tier-t"
   ],
   "tier": "A",
   "expected_outcome": "complete",
   "timeout_budget": "06:00:00",
   "tier_index": 337,
-  "reference_seconds": 38.9
+  "reference_seconds": 38.9,
+  "tier_t": true
 }
