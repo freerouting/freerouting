@@ -45,8 +45,6 @@ final class KiCadRoundRectPad {
    */
   private static final double MAX_CORNER_EXCESS_UM = 0.5;
 
-  private static final int MAX_SEGMENTS_PER_QUARTER = 32;
-
   private KiCadRoundRectPad() {}
 
   /**
@@ -101,6 +99,19 @@ final class KiCadRoundRectPad {
 
     double centreX = (minX + maxX) / 2;
     double centreY = (minY + maxY) / 2;
+    // The bounding box alone does not tell a legacy pad from another polygon of the same extent:
+    // the legacy exporter writes a polygon whose vertices all lie on the enlarged rounded
+    // rectangle (straight edges and chords inscribed in the arcs of radius R), once around.
+    if (!isOnOutlineOnceAround(
+        polygon.coor,
+        centreX,
+        centreY,
+        (maxX - minX) / 2,
+        (maxY - minY) / 2,
+        Unit.scale(radiusUm + extraUm, Unit.UM, dsnUnit),
+        Unit.scale(extraUm / 2, Unit.UM, dsnUnit))) {
+      return shape;
+    }
     double halfWidth = Unit.scale(widthUm / 2, Unit.UM, dsnUnit);
     double halfHeight = Unit.scale(heightUm / 2, Unit.UM, dsnUnit);
     double radius = Unit.scale(radiusUm, Unit.UM, dsnUnit);
@@ -146,11 +157,65 @@ final class KiCadRoundRectPad {
     return nameRadiusUm / (1 + LEGACY_COMPENSATION);
   }
 
+  /**
+   * Whether every vertex of {@code coor} lies within {@code tolerance} of the outline of the
+   * rounded rectangle centred on {@code (centreX, centreY)}, of half sizes {@code halfWidth} and
+   * {@code halfHeight} and corner radius {@code radius}, and the polygon turns exactly once around
+   * it (total turning of 2 PI), as the polygon written by the legacy exporter does.
+   */
+  static boolean isOnOutlineOnceAround(
+      double[] coor,
+      double centreX,
+      double centreY,
+      double halfWidth,
+      double halfHeight,
+      double radius,
+      double tolerance) {
+    int count = coor.length / 2;
+    double[] x = new double[count];
+    double[] y = new double[count];
+    int distinct = 0;
+    for (int i = 0; i < count; i++) {
+      double px = coor[2 * i];
+      double py = coor[2 * i + 1];
+      double qx = Math.abs(px - centreX) - (halfWidth - radius);
+      double qy = Math.abs(py - centreY) - (halfHeight - radius);
+      double distance =
+          Math.hypot(Math.max(qx, 0), Math.max(qy, 0)) + Math.min(Math.max(qx, qy), 0) - radius;
+      if (Math.abs(distance) > tolerance) {
+        return false;
+      }
+      // vertices closer than the tolerance are one (KiCad writes 0 and 0.001 at a half circle)
+      if (distinct == 0 || Math.hypot(px - x[distinct - 1], py - y[distinct - 1]) > tolerance) {
+        x[distinct] = px;
+        y[distinct] = py;
+        distinct++;
+      }
+    }
+    if (distinct > 1 && Math.hypot(x[0] - x[distinct - 1], y[0] - y[distinct - 1]) <= tolerance) {
+      distinct--;
+    }
+    if (distinct < 3) {
+      return false;
+    }
+    double turning = 0;
+    for (int i = 0; i < distinct; i++) {
+      int j = (i + 1) % distinct;
+      int k = (i + 2) % distinct;
+      double ax = x[j] - x[i];
+      double ay = y[j] - y[i];
+      double bx = x[k] - x[j];
+      double by = y[k] - y[j];
+      turning += Math.atan2(ax * by - ay * bx, ax * bx + ay * by);
+    }
+    return Math.abs(Math.abs(turning) - 2 * Math.PI) < 1e-6;
+  }
+
   /** Smallest segment count whose circumscribed corner exceeds the arc by at most 0.5 um. */
   static int segmentsPerQuarter(double radiusUm) {
+    // The excess r * (1 / cos(PI / (4 n)) - 1) decreases to 0 as n grows, for any radius.
     int n = 1;
-    while (n < MAX_SEGMENTS_PER_QUARTER
-        && radiusUm * (1 / Math.cos(Math.PI / (4 * n)) - 1) > MAX_CORNER_EXCESS_UM) {
+    while (radiusUm * (1 / Math.cos(Math.PI / (4 * n)) - 1) > MAX_CORNER_EXCESS_UM) {
       n++;
     }
     return n;

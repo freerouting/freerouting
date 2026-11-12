@@ -55,4 +55,18 @@ class KiCadRoundRectPadFixtureTest {
     assertEquals(0, padToPad, "pads exactly at clearance must not be reported");
     assertEquals(1, viaToPad, "the via 198.5 um from the real corner must be reported");
   }
+
+  /**
+   * Two 20 x 20 mm pads with 9 mm corners (KiCad 10.0.8 export), corner to corner 200 um + 2.5 um
+   * apart (KiCad reports nothing), on the diagonal of a vertex of the corrected corner. With at
+   * most 32 segments per quarter, that corner exceeded the real arc by 2.7 um on each pad, beyond
+   * the 1 um tolerance of the checker, and the two pads were reported as a violation.
+   */
+  @Test
+  void largeCornersStayWithinHalfAMicrometreOfTheRealArc() throws Exception {
+    RoutingBoard board = DsnTestFixtures.loadBoard("KiCad10-large-roundrect-pads.dsn");
+    Collection<ClearanceViolation> violations =
+        new DesignRulesChecker(board, null).getAllClearanceViolations();
+    assertEquals(0, violations.size(), "pads 2.5 um beyond the clearance must not be reported");
+  }
 }

@@ -39,6 +39,13 @@ class KiCadRoundRectPadTest {
   void cornerSegmentCountFollowsTheRadius() {
     assertEquals(12, KiCadRoundRectPad.segmentsPerQuarter(200));
     assertEquals(1, KiCadRoundRectPad.segmentsPerQuarter(1));
+    // large corners need more than 32 segments to stay within 0.5 um of the arc
+    for (double r : new double[] {200, 2000, 2250, 10000}) {
+      int n = KiCadRoundRectPad.segmentsPerQuarter(r);
+      assertTrue(r * (1 / Math.cos(Math.PI / (4 * n)) - 1) <= 0.5, "excess above 0.5 um at " + r);
+      assertTrue(r * (1 / Math.cos(Math.PI / (4 * (n - 1))) - 1) > 0.5, "not the smallest at " + r);
+    }
+    assertEquals(36, KiCadRoundRectPad.segmentsPerQuarter(2000));
   }
 
   /** The KiCad 10.0.8 polygon cuts up to 3 um into the real corner; the corrected one does not. */
@@ -64,7 +71,12 @@ class KiCadRoundRectPadTest {
   @Test
   void correctedPadContainsTheRealPadForAnySizeAndResolution() {
     double[][] pads = {
-      {800, 950, 200}, {600, 1450, 150}, {1000, 1000, 500}, {250, 400, 62.5}, {1750, 600, 25}
+      {800, 950, 200},
+      {600, 1450, 150},
+      {1000, 1000, 500},
+      {250, 400, 62.5},
+      {1750, 600, 25},
+      {5000, 4500, 2000}
     };
     double[] scales = {1, 10, 100, 1000};
     double[][] offsets = {{0, 0}, {123.4, -56.7}};
@@ -83,14 +95,13 @@ class KiCadRoundRectPadTest {
                   pad[1],
                   r + e);
           double[] legacy =
-              KiCadRoundRectPad.corners(
+              legacyPolygon(
                   offset[0] - pad[0] / 2 - e,
                   offset[1] - pad[1] / 2 - e,
                   offset[0] + pad[0] / 2 + e,
                   offset[1] + pad[1] / 2 + e,
                   r + e,
-                  4,
-                  0);
+                  4);
           CoordinateTransform transform = new CoordinateTransform(scale, 0, 0);
           Shape corrected =
               KiCadRoundRectPad.correct(name, new Polygon(Layer.PCB, legacy), Unit.UM, transform);
@@ -112,6 +123,47 @@ class KiCadRoundRectPadTest {
         }
       }
     }
+  }
+
+  /** A polygon with the legacy bounding box but not the legacy outline is not replaced. */
+  @Test
+  void polygonOffTheLegacyOutlineIsLeftUntouched() {
+    CoordinateTransform transform = new CoordinateTransform(10, 0, 0);
+    // one chord vertex of the upper right corner pulled 2 um towards the corner centre: the
+    // polygon stays convex, but that vertex is no longer on the legacy outline
+    double[] notched = KICAD_10_0603_POLYGON.clone();
+    notched[14] -= 2 * Math.cos(Math.PI / 4);
+    notched[15] -= 2 * Math.sin(Math.PI / 4);
+    Polygon polygon = new Polygon(Layer.PCB, notched);
+    assertSame(polygon, KiCadRoundRectPad.correct(KICAD_10_0603_NAME, polygon, Unit.UM, transform));
+  }
+
+  /** The legacy outline walked twice turns twice around: not replaced. */
+  @Test
+  void polygonTurningTwiceIsLeftUntouched() {
+    CoordinateTransform transform = new CoordinateTransform(10, 0, 0);
+    int length = KICAD_10_0603_POLYGON.length - 2; // without the closing vertex
+    double[] twice = new double[2 * length + 2];
+    System.arraycopy(KICAD_10_0603_POLYGON, 0, twice, 0, length);
+    System.arraycopy(KICAD_10_0603_POLYGON, 0, twice, length, length + 2);
+    Polygon polygon = new Polygon(Layer.PCB, twice);
+    assertSame(polygon, KiCadRoundRectPad.correct(KICAD_10_0603_NAME, polygon, Unit.UM, transform));
+  }
+
+  /** The legacy vertices in another order make a self-crossing polygon: not replaced. */
+  @Test
+  void selfCrossingPolygonOnTheLegacyOutlineIsLeftUntouched() {
+    CoordinateTransform transform = new CoordinateTransform(10, 0, 0);
+    double[] swapped = KICAD_10_0603_POLYGON.clone();
+    // swap the second and third vertices of the upper left corner
+    double x = swapped[2];
+    double y = swapped[3];
+    swapped[2] = swapped[4];
+    swapped[3] = swapped[5];
+    swapped[4] = x;
+    swapped[5] = y;
+    Polygon polygon = new Polygon(Layer.PCB, swapped);
+    assertSame(polygon, KiCadRoundRectPad.correct(KICAD_10_0603_NAME, polygon, Unit.UM, transform));
   }
 
   @Test
@@ -171,6 +223,30 @@ class KiCadRoundRectPadTest {
     Rectangle rectangle = new Rectangle(Layer.PCB, new double[] {-400, -475, 400, 475});
     assertSame(
         rectangle, KiCadRoundRectPad.correct(KICAD_10_0603_NAME, rectangle, Unit.UM, transform));
+  }
+
+  /**
+   * A polygon as the legacy KiCad exporter writes it: the rectangle {@code [left, right] x [bottom,
+   * top]} with corners of radius {@code radius} made of {@code n} chords inscribed in the arcs.
+   */
+  private static double[] legacyPolygon(
+      double left, double bottom, double right, double top, double radius, int n) {
+    double[] edgeX = {right, left, left, right};
+    double[] edgeY = {top, top, bottom, bottom};
+    double[] signX = {1, -1, -1, 1};
+    double[] signY = {1, 1, -1, -1};
+    double[] coor = new double[8 * (n + 1)];
+    int index = 0;
+    for (int quarter = 0; quarter < 4; quarter++) {
+      double arcCentreX = edgeX[quarter] - signX[quarter] * radius;
+      double arcCentreY = edgeY[quarter] - signY[quarter] * radius;
+      for (int k = 0; k <= n; k++) {
+        double angle = quarter * Math.PI / 2 + k * Math.PI / 2 / n;
+        coor[index++] = arcCentreX + radius * Math.cos(angle);
+        coor[index++] = arcCentreY + radius * Math.sin(angle);
+      }
+    }
+    return coor;
   }
 
   private static FloatPoint cornerPoint(
