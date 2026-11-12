@@ -8,6 +8,7 @@ import app.freerouting.core.events.RoutingJobUpdatedEventListener;
 import app.freerouting.core.results.RoutingResultManifest;
 import app.freerouting.io.FileFormat;
 import app.freerouting.io.kicad.KiCadDesignRules;
+import app.freerouting.io.kicad.KiCadProject;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.logger.LogEntry;
 import app.freerouting.settings.DesignRulesCheckerSettings;
@@ -115,6 +116,12 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
    * loaded. Null if there are none.
    */
   public transient KiCadDesignRules kicadDesignRules;
+
+  /**
+   * The board settings of the KiCad project (.kicad_pro) given with the design, whose minimum track
+   * width becomes the default neck width of the router. Null if there is none.
+   */
+  public transient KiCadProject kicadProject;
 
   @SerializedName("initial_session")
   @Schema(description = "Details of the initial session (.ses or .json) file to import")
@@ -386,6 +393,35 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
       String reason = e instanceof NoSuchFileException ? "file not found" : e.getMessage();
       String message = "Couldn't read the KiCad design rules file '" + path + "': " + reason;
       FRLogger.error(message, null);
+      return false;
+    }
+  }
+
+  /**
+   * Reads the KiCad project file of this job when explicitly provided.
+   *
+   * @param explicitFile the .kicad_pro given with the design, or null
+   * @return false if {@code explicitFile} cannot be read
+   */
+  public boolean loadKiCadProject(String explicitFile) {
+    if (explicitFile == null) {
+      return true;
+    }
+    Path path = Path.of(explicitFile);
+    try {
+      this.kicadProject = KiCadProject.read(path);
+      Double minWidth = this.kicadProject.minTrackWidthUm();
+      FRLogger.info(
+          "Using the KiCad project '"
+              + path
+              + "': "
+              + (minWidth == null
+                  ? "it sets no minimum track width."
+                  : "minimum track width " + minWidth + " um."));
+      return true;
+    } catch (IOException | IllegalArgumentException e) {
+      String reason = e instanceof NoSuchFileException ? "file not found" : e.getMessage();
+      FRLogger.error("Couldn't read the KiCad project file '" + path + "': " + reason, null);
       return false;
     }
   }

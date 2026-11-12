@@ -9,7 +9,9 @@ import app.freerouting.io.FileFormat;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.sessions.SessionManager;
 import app.freerouting.settings.GlobalSettings;
+import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.DsnFileSettings;
+import app.freerouting.settings.sources.KiCadProjectSettings;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -92,6 +94,11 @@ public final class CliRunner {
     // Routing without the rules of a .kicad_dru given on the command line would produce a board
     // that fails the KiCad DRC.
     if (!routingJob.loadKiCadDesignRules(globalSettings.initialKiCadDesignRulesFile)) {
+      return false;
+    }
+    // Without the minimum track width of the .kicad_pro, the router may neck traces down below it.
+    if (!addKiCadProjectSettings(
+        routingJob, globalSettings.initialKiCadProjectFile, settingsMerger)) {
       return false;
     }
 
@@ -205,6 +212,22 @@ public final class CliRunner {
   }
 
   /** Returns whether the CLI should stop waiting for routing updates. */
+  /**
+   * Reads the .kicad_pro given with the design, if any, and adds its settings to the merger.
+   *
+   * @return false if the file cannot be read
+   */
+  static boolean addKiCadProjectSettings(
+      RoutingJob routingJob, String kicadProjectFile, SettingsMerger settingsMerger) {
+    if (!routingJob.loadKiCadProject(kicadProjectFile)) {
+      return false;
+    }
+    if (routingJob.kicadProject != null) {
+      settingsMerger.addOrReplaceSources(new KiCadProjectSettings(routingJob.kicadProject));
+    }
+    return true;
+  }
+
   public static boolean isCliTerminalState(RoutingJobState state) {
     return state != null && state.isTerminal();
   }
