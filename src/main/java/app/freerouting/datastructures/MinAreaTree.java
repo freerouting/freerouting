@@ -48,6 +48,19 @@ public class MinAreaTree extends ShapeTree {
     }
   }
 
+  /**
+   * Acquires a thread-local scratch stack for tree traversal. Must be released via {@link
+   * #releaseScratchStack(ArrayStack)} in a finally block.
+   */
+  protected static ArrayStack<TreeNode> acquireScratchStack() {
+    return SCRATCH_STACKS.get().acquire();
+  }
+
+  /** Releases a thread-local scratch stack, clearing all node references. */
+  protected static void releaseScratchStack(ArrayStack<TreeNode> stack) {
+    SCRATCH_STACKS.get().release(stack);
+  }
+
   /** Constructor with a fixed set of directions defining the keys and the surrounding shapes. */
   public MinAreaTree(ShapeBoundingDirections directions) {
     super(directions);
@@ -102,8 +115,7 @@ public class MinAreaTree extends ShapeTree {
     if (this.root == null) {
       return;
     }
-    ThreadScratchStacks scratch = SCRATCH_STACKS.get();
-    ArrayStack<TreeNode> stack = scratch.acquire();
+    ArrayStack<TreeNode> stack = acquireScratchStack();
     try {
       stack.push(this.root);
       TreeNode currentNode;
@@ -119,7 +131,7 @@ public class MinAreaTree extends ShapeTree {
         }
       }
     } finally {
-      scratch.release(stack);
+      releaseScratchStack(stack);
     }
   }
 

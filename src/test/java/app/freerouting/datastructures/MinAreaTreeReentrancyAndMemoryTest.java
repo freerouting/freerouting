@@ -33,13 +33,13 @@ class MinAreaTreeReentrancyAndMemoryTest {
       innerTree.insert(new TestStorable(100 + i, new IntBox(i * 5, i * 5, i * 5 + 3, i * 5 + 3)));
     }
 
-    AtomicInteger reentrantCalls = new AtomicInteger();
+    AtomicInteger visitCount = new AtomicInteger();
     MinAreaTree reentrantTree =
         new MinAreaTree(FortyfiveDegreeBoundingDirections.INSTANCE) {
           @Override
           protected void onNodeVisited() {
-            // Trigger an inner query on the same thread during outer query traversal
-            if (reentrantCalls.incrementAndGet() == 1) {
+            // Trigger an inner query while outer query has pending children on stack
+            if (visitCount.incrementAndGet() == 2) {
               List<ShapeTree.Leaf> innerResult = innerTree.overlaps(QUERY_SHAPE);
               assertEquals(20, innerResult.size());
             }
@@ -56,16 +56,15 @@ class MinAreaTreeReentrancyAndMemoryTest {
   }
 
   @Test
-  void traversalStackResetsCleanlyAfterException() {
+  void traversalStackResetsCleanlyAfterExceptionWithPendingChildren() {
+    AtomicInteger visitCount = new AtomicInteger();
     MinAreaTree tree =
         new MinAreaTree(FortyfiveDegreeBoundingDirections.INSTANCE) {
-          private boolean shouldFail = true;
-
           @Override
           protected void onNodeVisited() {
-            if (shouldFail) {
-              shouldFail = false;
-              throw new IllegalStateException("Simulated query failure");
+            // Fail on visit 2 when root's children are already pushed and pending on stack
+            if (visitCount.incrementAndGet() == 2) {
+              throw new IllegalStateException("Simulated query failure with pending children");
             }
           }
         };
@@ -79,6 +78,8 @@ class MinAreaTreeReentrancyAndMemoryTest {
     // The subsequent query on the same thread must succeed cleanly with a reset stack
     assertDoesNotThrow(
         () -> {
+          // Reset visit count so second query completes without exception
+          visitCount.set(100);
           List<ShapeTree.Leaf> result = tree.overlaps(QUERY_SHAPE);
           assertEquals(10, result.size());
         });
@@ -88,7 +89,7 @@ class MinAreaTreeReentrancyAndMemoryTest {
   void discardedTreesAreGarbageCollectedWithoutThreadLocalRetention() {
     WeakReference<MinAreaTree> weakTree = createAndQueryTree();
 
-    for (int i = 0; i < 5 && weakTree.get() != null; i++) {
+    for (int i = 0; i < 10 && weakTree.get() != null; i++) {
       System.gc();
       try {
         Thread.sleep(50);

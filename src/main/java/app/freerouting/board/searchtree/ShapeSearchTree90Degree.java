@@ -82,133 +82,137 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
     // Process obstacles inline during tree traversal with dynamic boundingShape updates.
     // This matches v1.9's algorithm exactly: as obstacles are processed, boundingShape
     // shrinks, which prunes subsequent tree traversal (just like v1.9 does).
-    ArrayStack<TreeNode> stack = completeShapeStack.get();
-    stack.reset();
-    stack.push(this.root);
-    TreeNode currentNode;
+    ArrayStack<TreeNode> stack = acquireScratchStack();
+    try {
+      stack.push(this.root);
+      TreeNode currentNode;
 
-    for (; ; ) {
-      currentNode = stack.pop();
-      if (currentNode == null) {
-        break;
-      }
-      if (currentNode.boundingShape.intersects(boundingShape)) {
-        if (currentNode instanceof Leaf currentLeaf) {
-          SearchTreeObject currentObject = (SearchTreeObject) currentLeaf.object;
-          int shapeIndex = currentLeaf.shapeIndexInObject;
-          boolean isObstacle = currentObject.isTraceObstacle(netNumber);
-          int objectLayer = currentObject.shapeLayer(shapeIndex);
-          boolean sameLayer = objectLayer == roomLayer;
-          boolean ignoredObject = currentObject == ignoreObject;
-          if (debugAnchor) {
-            traceCompleteShapeFilter(
-                debugStep,
-                netNumber,
-                roomLayer,
-                shapeIndex,
-                objectLayer,
-                isObstacle,
-                sameLayer,
-                ignoredObject,
-                currentObject);
-          }
-          if (isObstacle && sameLayer && !ignoredObject) {
-
-            IntBox currentObjectShape = currentObject.getTreeShape(this, shapeIndex).boundingBox();
+      for (; ; ) {
+        currentNode = stack.pop();
+        if (currentNode == null) {
+          break;
+        }
+        if (currentNode.boundingShape.intersects(boundingShape)) {
+          if (currentNode instanceof Leaf currentLeaf) {
+            SearchTreeObject currentObject = (SearchTreeObject) currentLeaf.object;
+            int shapeIndex = currentLeaf.shapeIndexInObject;
+            boolean isObstacle = currentObject.isTraceObstacle(netNumber);
+            int objectLayer = currentObject.shapeLayer(shapeIndex);
+            boolean sameLayer = objectLayer == roomLayer;
+            boolean ignoredObject = currentObject == ignoreObject;
             if (debugAnchor) {
-              traceCompleteShapeCandidate(
-                  debugStep, netNumber, roomLayer, currentObject, currentObjectShape);
+              traceCompleteShapeFilter(
+                  debugStep,
+                  netNumber,
+                  roomLayer,
+                  shapeIndex,
+                  objectLayer,
+                  isObstacle,
+                  sameLayer,
+                  ignoredObject,
+                  currentObject);
             }
-            Collection<IncompleteFreeSpaceExpansionRoom> newResult = new ArrayList<>();
-            IntBox newBoundingShape = IntBox.EMPTY;
-            boolean hadRoomsBeforeObstacle = !result.isEmpty();
-            for (IncompleteFreeSpaceExpansionRoom currentRoom : result) {
-              IntBox currentShape = (IntBox) currentRoom.getShape();
-              boolean overlaps = currentShape.overlaps(currentObjectShape);
-              if (overlaps) {
-                if (currentObject instanceof CompleteFreeSpaceExpansionRoom
-                    && ignoreShape != null) {
-                  IntBox intersection = currentShape.intersection(currentObjectShape);
-                  if (ignoreShape.contains(intersection)) {
-                    if (debugAnchor) {
-                      traceCompleteShapeDecision(
-                          debugStep,
-                          netNumber,
-                          roomLayer,
-                          "SKIP_BY_IGNORE_SHAPE",
-                          overlaps,
-                          currentShape,
-                          currentObjectShape);
-                    }
-                    // ignore also all objects, whose intersection is contained in the
-                    // 2-dim overlap-door with the fromRoom.
-                    if (!ignoreShape.contains(currentShape)) {
-                      newResult.add(currentRoom);
-                      newBoundingShape = newBoundingShape.union(currentShape);
-                    }
-                    continue;
-                  }
-                }
-                if (debugAnchor) {
-                  traceCompleteShapeDecision(
-                      debugStep,
-                      netNumber,
-                      roomLayer,
-                      "RESTRAIN",
-                      overlaps,
-                      currentShape,
-                      currentObjectShape);
-                }
-                Collection<IncompleteFreeSpaceExpansionRoom> newRestrainedShapes =
-                    restrainShape(currentRoom, currentObjectShape);
-                newResult.addAll(newRestrainedShapes);
+            if (isObstacle && sameLayer && !ignoredObject) {
 
-                for (IncompleteFreeSpaceExpansionRoom tmpShape : newResult) {
-                  newBoundingShape = newBoundingShape.union(tmpShape.getShape().boundingBox());
-                }
-              } else {
-                if (debugAnchor) {
-                  traceCompleteShapeDecision(
-                      debugStep,
-                      netNumber,
-                      roomLayer,
-                      "KEEP_NON_OVERLAP",
-                      overlaps,
-                      currentShape,
-                      currentObjectShape);
-                }
-                newResult.add(currentRoom);
-                newBoundingShape = newBoundingShape.union(currentShape.boundingBox());
+              IntBox currentObjectShape =
+                  currentObject.getTreeShape(this, shapeIndex).boundingBox();
+              if (debugAnchor) {
+                traceCompleteShapeCandidate(
+                    debugStep, netNumber, roomLayer, currentObject, currentObjectShape);
               }
-            }
-            if (hadRoomsBeforeObstacle && newResult.isEmpty()) {
-              if (FRLogger.isTraceEnabled()) {
-                FRLogger.trace(
-                    "COMPLETE_SHAPE_BLOCKED net="
-                        + netNumber
-                        + ", layer="
-                        + roomLayer
-                        + ", contained="
-                        + describeBounds(shapeToBeContained)
-                        + ", obstacle_type="
-                        + currentObject.getClass().getSimpleName()
-                        + ", obstacle_id="
-                        + obstacleId(currentObject)
-                        + ", obstacle_bounds="
-                        + describeBounds(currentObjectShape));
+              Collection<IncompleteFreeSpaceExpansionRoom> newResult = new ArrayList<>();
+              IntBox newBoundingShape = IntBox.EMPTY;
+              boolean hadRoomsBeforeObstacle = !result.isEmpty();
+              for (IncompleteFreeSpaceExpansionRoom currentRoom : result) {
+                IntBox currentShape = (IntBox) currentRoom.getShape();
+                boolean overlaps = currentShape.overlaps(currentObjectShape);
+                if (overlaps) {
+                  if (currentObject instanceof CompleteFreeSpaceExpansionRoom
+                      && ignoreShape != null) {
+                    IntBox intersection = currentShape.intersection(currentObjectShape);
+                    if (ignoreShape.contains(intersection)) {
+                      if (debugAnchor) {
+                        traceCompleteShapeDecision(
+                            debugStep,
+                            netNumber,
+                            roomLayer,
+                            "SKIP_BY_IGNORE_SHAPE",
+                            overlaps,
+                            currentShape,
+                            currentObjectShape);
+                      }
+                      // ignore also all objects, whose intersection is contained in the
+                      // 2-dim overlap-door with the fromRoom.
+                      if (!ignoreShape.contains(currentShape)) {
+                        newResult.add(currentRoom);
+                        newBoundingShape = newBoundingShape.union(currentShape);
+                      }
+                      continue;
+                    }
+                  }
+                  if (debugAnchor) {
+                    traceCompleteShapeDecision(
+                        debugStep,
+                        netNumber,
+                        roomLayer,
+                        "RESTRAIN",
+                        overlaps,
+                        currentShape,
+                        currentObjectShape);
+                  }
+                  Collection<IncompleteFreeSpaceExpansionRoom> newRestrainedShapes =
+                      restrainShape(currentRoom, currentObjectShape);
+                  newResult.addAll(newRestrainedShapes);
+
+                  for (IncompleteFreeSpaceExpansionRoom tmpShape : newResult) {
+                    newBoundingShape = newBoundingShape.union(tmpShape.getShape().boundingBox());
+                  }
+                } else {
+                  if (debugAnchor) {
+                    traceCompleteShapeDecision(
+                        debugStep,
+                        netNumber,
+                        roomLayer,
+                        "KEEP_NON_OVERLAP",
+                        overlaps,
+                        currentShape,
+                        currentObjectShape);
+                  }
+                  newResult.add(currentRoom);
+                  newBoundingShape = newBoundingShape.union(currentShape.boundingBox());
+                }
               }
+              if (hadRoomsBeforeObstacle && newResult.isEmpty()) {
+                if (FRLogger.isTraceEnabled()) {
+                  FRLogger.trace(
+                      "COMPLETE_SHAPE_BLOCKED net="
+                          + netNumber
+                          + ", layer="
+                          + roomLayer
+                          + ", contained="
+                          + describeBounds(shapeToBeContained)
+                          + ", obstacle_type="
+                          + currentObject.getClass().getSimpleName()
+                          + ", obstacle_id="
+                          + obstacleId(currentObject)
+                          + ", obstacle_bounds="
+                          + describeBounds(currentObjectShape));
+                }
+              }
+              result = newResult;
+              boundingShape = newBoundingShape;
             }
-            result = newResult;
-            boundingShape = newBoundingShape;
+            if (debugAnchor) {
+              debugStep++;
+            }
+          } else {
+            stack.push(((InnerNode) currentNode).firstChild);
+            stack.push(((InnerNode) currentNode).secondChild);
           }
-          if (debugAnchor) {
-            debugStep++;
-          }
-        } else {
-          stack.push(((InnerNode) currentNode).firstChild);
-          stack.push(((InnerNode) currentNode).secondChild);
         }
       }
+    } finally {
+      releaseScratchStack(stack);
     }
     return result;
   }
