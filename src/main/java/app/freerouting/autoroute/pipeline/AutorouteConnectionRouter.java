@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 /** Executes one autoroute connection, including necked retry and strict-DRC recovery. */
 final class AutorouteConnectionRouter {
@@ -149,7 +150,7 @@ final class AutorouteConnectionRouter {
       Set<Item> planeEscapeObstacles = Set.of();
       if (containsPlane) {
         for (Item currentItem : connectedSet) {
-          if (currentItem instanceof ConductionArea) {
+          if (currentItem instanceof ConductionArea ca && !ca.isFractured()) {
             return new AutorouteAttemptResult(AutorouteAttemptState.CONNECTED_TO_PLANE);
           }
         }
@@ -157,6 +158,7 @@ final class AutorouteConnectionRouter {
         routeDestSet = unconnectedSet;
         if (planeOnly) {
           Set<Item> planes = router.board.powerLayerPlanes(unconnectedSet);
+          planes.removeIf(p -> p instanceof ConductionArea ca && ca.isFractured());
           if (!planes.isEmpty()) {
             addSharablePads(item, routeNetNo, planes);
             routeDestSet = planes;
@@ -164,11 +166,28 @@ final class AutorouteConnectionRouter {
             planeEscapeObstacles = planeEscapeObstacles(item, routeNetNo, connectedSet, planes);
           }
         }
+        Set<Item> filteredStartSet = new TreeSet<>();
+        for (Item it : routeStartSet) {
+          if (!(it instanceof ConductionArea ca && ca.isFractured())) {
+            filteredStartSet.add(it);
+          }
+        }
+        if (!filteredStartSet.isEmpty()) {
+          routeStartSet = filteredStartSet;
+        }
+        Set<Item> filteredDestSet = new TreeSet<>();
+        for (Item it : routeDestSet) {
+          if (!(it instanceof ConductionArea ca && ca.isFractured())) {
+            filteredDestSet.add(it);
+          }
+        }
+        if (!filteredDestSet.isEmpty()) {
+          routeDestSet = filteredDestSet;
+        }
       } else {
         routeStartSet = unconnectedSet;
         routeDestSet = connectedSet;
       }
-
       router.setAirLine(AutorouteAirlineCalculator.calculateAirline(routeStartSet, routeDestSet));
 
       double maxMilliseconds = 100000 * Math.pow(2, ripupPassNo - 1);
