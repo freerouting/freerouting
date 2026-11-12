@@ -8,7 +8,7 @@ description: >
   review verification, rebase/conflict resolution, targeted tests, and a unified
   merge dashboard; and (3) Post-Merge Nightly PCBench Regression Benchmarking
   (compiling executableJar, versioning the next -RCx.jar in scripts/benchmark/binaries/,
-  and running PCBench Tiers A & B) whenever routing-engine changes land on master.
+  and running PCBench Tier T canaries first, followed by Tiers A & B) whenever routing-engine changes land on master.
   Triggers on: daily briefing, morning summary, summarize open PRs, batch review,
   parallel PR review, nightly benchmark, PCBench regression, RC jar benchmark.
 metadata:
@@ -78,28 +78,31 @@ Each subagent executes the following inside its isolated `share` workspace witho
    - Inspect `gh pr view <number> --json reviews,reviewRequests,comments`.
    - If GitHub Copilot (`copilot-pull-request-reviewer[bot]`) has **not** reviewed the PR yet and is not currently requested:
      - Trigger Copilot review: `gh api --method POST repos/freerouting/freerouting/pulls/<number>/requested_reviewers -f "reviewers[]=copilot-pull-request-reviewer[bot]"` (or `gh pr edit <number> --add-reviewer "@copilot"`).
-   - **Wait for Copilot:** Poll `gh pr view <number> --json reviews,reviewRequests` every 20 seconds (up to 5 minutes) until Copilot's review is posted.
-   - Read all review comments (`gh api repos/freerouting/freerouting/pulls/<number>/comments`), evaluate every remark objectively, fix all valid issues, and reply to/resolve the review threads.
-5. **Diff-First Code Review & Unit Test Verification:**
+   - **Wait for Copilot:** Poll `gh pr view <number> --json reviews,reviewRequests` every 20 seconds (up to 5 minutes) until Copilot's review is posted. Copilot Lite must be triggered at least once, its remarks analyzed, and all valid issues fixed before marking a PR ready to merge.
+   - Read all review comments (`gh api repos/freerouting/freerouting/pulls/<number>/comments`), evaluate every remark objectively, fix all valid issues, reply to each thread, and formally resolve all review threads via GraphQL (`resolveReviewThread`). All review comments on the PR must be resolved before marking the PR ready to merge.
+5. **Approve and Run CI Checks & Monitor Progress:**
+   - If CI checks require maintainer approval (external fork or first-time contributor), approve and trigger the workflow runs immediately (`gh run list --commit <head_sha>`, `gh run approve <run-id>`).
+   - Monitor the progress of all running CI actions (`gh pr checks <number> --watch` or periodic polling of `statusCheckRollup`) while waiting for checks to complete. Do not consider a PR ready to merge while checks are pending, unapproved, or failing.
+6. **Diff-First Code Review & Unit Test Verification:**
    - Inspect `gh pr diff <number>` and only the affected line ranges in source files.
    - Ensure unit tests exist and pass using **targeted, quiet execution**:
      ```powershell
      ./gradlew.bat test --tests "<AffectedTestClass>" -q
      ```
-6. **Security & Privacy Audit:**
+7. **Security & Privacy Audit:**
    - Secrets & Credentials: Ensure no API keys, tokens, or private credentials are included in code, fixtures, or tests.
    - Privacy & Telemetry: Ensure no user tracking, telemetry, or unsanctioned external network requests are introduced.
    - Boundaries & Input Validation: Guard against path traversal (`../`), command injection, unsafe reflection, and deserialization vulnerabilities in file formats (DSN/SES/rules), CLI arguments, and API endpoints.
    - Dependency Safety: Verify dependencies come from trusted sources with zero known CVEs.
-7. **Quality Gates:**
+8. **Quality Gates:**
    - Run `./gradlew.bat spotlessCheck checkstyleMain checkstyleTest -q` and `pre-commit run --all-files`.
    - If any fixes, conflict resolutions, or Copilot refinements were made, commit and push directly to the PR branch.
-8. **Milestone Verification:**
+9. **Milestone Verification:**
    - Check the PR milestone (`gh pr view <number> --json milestone`). If unset or set to `"Future"`, update it to the target release version (highest version-numbered open milestone, e.g. `2.6`, `2.7`):
      ```powershell
      gh pr edit <number> --milestone "<next-release-milestone>"
      ```
-9. **Return Compact Report:**
+10. **Return Compact Report:**
    - Return a concise summary to the parent orchestrator: PR `#`, Title, Files Changed, Copilot Findings Fixed, Security Audit Result, Test & Gate Status, Milestone, and Merge Readiness (`READY` / `NEEDS_ATTENTION`).
 
 ### Step 3: Present Unified Merge Dashboard & Wait for Confirmation
@@ -136,16 +139,28 @@ Verify that `build\libs\freerouting-current-executable.jar` was freshly generate
    Copy-Item "build/libs/freerouting-current-executable.jar" "scripts/benchmark/binaries/freerouting-current.jar" -Force
    ```
 
-### Step 3: Run PCBench Corpus Benchmark on Tiers A and B
-Execute the PCBench benchmark for the new `-RCx.jar` across **Tiers A and B** (`-Tier "A,B"`), piping verbose output to a log file so the conversation context stays clean:
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/pcbench/Run-PCBenchCorpusBenchmark.ps1 `
-  -Tier "A,B" `
-  -VersionLabel $nextLabel `
-  -JarPath $destJar `
-  -Workers 8 > "logs/pcbench-$nextLabel.log" 2>&1
-```
-*(Note: Run this as a background task or via a scheduled nightly job; do not poll in a tight loop.)*
+### Step 3: Run PCBench Corpus Benchmark (Tier T First, then Tiers A and B)
+1. **Tier T Canary Benchmark:**
+   Execute the PCBench benchmark for the new `-RCx.jar` on the **Tier T canary suite** (`-Tier "T"`), piping verbose output to a log file so the conversation context stays clean:
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File scripts/pcbench/Run-PCBenchCorpusBenchmark.ps1 `
+     -Tier "T" `
+     -VersionLabel $nextLabel `
+     -JarPath $destJar `
+     -Workers 8 > "logs/pcbench-$nextLabel-tier-t.log" 2>&1
+   ```
+   Inspect results for immediate regressions (0 router-introduced violations, clean canary completion).
+
+2. **Full Regression Benchmark (Tiers A & B):**
+   Continue the regression benchmark across **Tiers A and B** (`-Tier "A,B"`):
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File scripts/pcbench/Run-PCBenchCorpusBenchmark.ps1 `
+     -Tier "A,B" `
+     -VersionLabel $nextLabel `
+     -JarPath $destJar `
+     -Workers 8 > "logs/pcbench-$nextLabel.log" 2>&1
+   ```
+   *(Note: Alternatively, `-Tier "T,A,B"` can be passed to execute Tier T canaries first followed by Tiers A and B in a single pass. Always run as a background task; do not poll in a tight loop.)*
 
 ### Step 4: Regenerate Reports & Check for Regressions
 1. Regenerate the Markdown and HTML benchmark summaries:
