@@ -166,11 +166,14 @@ foreach ($board in $selected) {
             }
         }
 
-        # 3. Strip processed.kicad_pcb and export unrouted.dsn
+        # 3. Strip processed.kicad_pcb and export unrouted.dsn.
+        #    processed.kicad_pcb has no zones (#1122): graft those of raw.kicad_pcb back first.
         Write-Host "  [$name] Stripping routing elements & zone fills..."
+        $stripArgs = @($stripScript, $sourcePcb, $fixtureUnroutedPcb)
+        if (Test-Path $rawPcb) { $stripArgs += @("--zones-from", $rawPcb) }
         $prevEap = $ErrorActionPreference
         $ErrorActionPreference = "Continue"
-        python $stripScript $sourcePcb $fixtureUnroutedPcb 2>$null
+        python @stripArgs 2>$null
         $ErrorActionPreference = $prevEap
         if (-not (Test-Path $fixtureUnroutedPcb)) {
             Write-Warning "Strip failed for $name"
