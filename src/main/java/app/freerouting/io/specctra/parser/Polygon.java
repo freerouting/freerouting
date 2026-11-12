@@ -32,7 +32,9 @@ public class Polygon extends Shape {
       currentPoint[1] = coor[2 * i + 1];
       corners[i] = coordinateTransform.dsnToBoard(currentPoint).round();
     }
-    return new PolygonShape(corners);
+    // Rounded to the resolution of the board, a border stepping back by less than a unit becomes a
+    // spike.
+    return new PolygonShape(app.freerouting.geometry.planar.Polygon.withoutSpikes(corners));
   }
 
   @Override
@@ -47,7 +49,7 @@ public class Polygon extends Shape {
       int currentY = (int) Math.round(coordinateTransform.dsnToBoard(coor[2 * i + 1]));
       corners[i] = new IntPoint(currentX, currentY);
     }
-    return new PolygonShape(corners);
+    return new PolygonShape(app.freerouting.geometry.planar.Polygon.withoutSpikes(corners));
   }
 
   @Override
