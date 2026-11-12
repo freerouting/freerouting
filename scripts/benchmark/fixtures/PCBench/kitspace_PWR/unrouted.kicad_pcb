@@ -1459,5 +1459,15 @@
   
   
   
-
+  (zone (net 1) (net_name GND) (layer F.Cu) (tstamp 5BF01ED8) (hatch edge 0.508)
+    (connect_pads (clearance 0.25))
+    (min_thickness 0.25)
+    (fill yes (arc_segments 16) (thermal_gap 0.5) (thermal_bridge_width 0.5))
+    (polygon
+      (pts
+        (xy 126.365 128.27) (xy 153.035 128.27) (xy 153.035 85.09) (xy 126.365 85.09)
+      )
+    )
+    
+  )
 )

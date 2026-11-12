@@ -8796,5 +8796,15 @@
   
   
   
-
+  (zone (net 121) (net_name CUR_SENSE) (layer Front) (tstamp 619FE452) (hatch edge 0.508)
+    (connect_pads (clearance 0.6))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 38.735 36.195) (xy 113.665 36.195) (xy 113.665 85.725) (xy 38.735 85.725)
+      )
+    )
+    
+  )
 )

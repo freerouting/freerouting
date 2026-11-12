@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -36,6 +36,15 @@
       (path pcb 0  124000 -124000  58000 -124000  58000 -38000  124000 -38000
             124000 -124000)
     )
+    (plane "BatteryIN-" (polygon Back.Layer 0  58005 -38480  124005 -37970  124005 -123570  58135 -123700
+            58015 -38500  58035 -38480  58005 -38480))
+    (plane "BatteryIN-" (polygon Front.Layer 0  58055 -38170  123985 -38000  123725 -123740  58295 -123950
+            58055 -38220  58055 -38170))
+    (plane "BatteryIN-" (polygon Signal.Layer 0  123935 -38010  124055 -123230  57915 -124210  57915 -37970
+            123935 -38010))
+    (plane "BatteryIN-" (polygon Signal2.Layer 0  124025 -38080  124155 -123930  57915 -124210  58035 -37970.2
+            124025 -38080))
+    (plane "BatteryIN-" (polygon Signal2.Layer 0  57915 -37970  58035 -37970  58035 -37970.2  57915 -37970))
     (via "Via[0-3]_600:400_um")
     (rule
       (width 200)

@@ -970,5 +970,31 @@
   
   
   
-
+  (zone (net 2) (net_name VSS) (layer B.Cu) (tstamp 557FC958) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 106.68 89.154) (xy 126.3904 89.154) (xy 126.3904 100.6348) (xy 106.68 100.6348)
+      )
+    )
+    
+    
+    
+  )
+  (zone (net 2) (net_name VSS) (layer F.Cu) (tstamp 557FD89B) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508) (smoothing fillet))
+    (polygon
+      (pts
+        (xy 126.3904 100.584) (xy 107.5436 100.584) (xy 107.5436 96.6216) (xy 108.5088 96.6216) (xy 108.5088 93.1672)
+        (xy 107.5436 93.1672) (xy 107.5436 89.154) (xy 126.3904 89.154)
+      )
+    )
+    
+    
+    
+  )
 )

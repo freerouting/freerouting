@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -24,6 +24,28 @@
       (path pcb 0  161290 -140970  111760 -140970  111760 -41910  161290 -41910
             161290 -140970)
     )
+    (plane GND (polygon F.Cu 0  160020 -139700  113030 -139700  113030 -43180  160020 -43180
+            160020 -139700))
+    (plane GND (polygon B.Cu 0  160020 -139700  113030 -139700  113030 -43180  160020 -43180
+            160020 -139700))
+    (keepout "" (polygon B.Cu 0  120650 -62738  115824 -62738  115824 -60452  120650 -60452
+            120650 -62738))
+    (keepout "" (polygon B.Cu 0  124968 -56896  116332 -56896  116332 -52832  124968 -52832
+            124968 -56896))
+    (keepout "" (polygon F.Cu 0  157480 -68834  153924 -68834  153924 -75438  150876 -75438
+            150876 -67818  152400 -66294  157480 -66294  157480 -68834))
+    (keepout "" (polygon F.Cu 0  144780 -48514  141224 -48514  141224 -43688  144780 -43688
+            144780 -48514))
+    (keepout "" (polygon F.Cu 0  136017 -67818  130810 -67818  130810 -61976  136017 -61976
+            136017 -67818))
+    (keepout "" (polygon F.Cu 0  142875 -105740  131572 -105740  131572 -94869  142875 -94869
+            142875 -105740))
+    (keepout "" (polygon B.Cu 0  140640 -53111.4  148133 -53111.4  148133 -66395.6  140589 -66395.6
+            140589 -53111.4  140640 -53111.4))
+    (keepout "" (polygon B.Cu 0  158115 -61849  152654 -61849  152654 -53721  158115 -53721
+            158115 -61849))
+    (keepout "" (polygon F.Cu 0  141351 -117094  132461 -117094  132461 -110998  141351 -110998
+            141351 -117094))
     (via "Via[0-1]_700:400_um")
     (rule
       (width 150)
@@ -1232,6 +1254,15 @@
         (clearance 150)
       )
     )
+    (class "Heavy Power" "Net-(CON2-Pad1)" "Net-(D9-Pad2)" "Net-(P1-Pad2)"
+      (circuit
+        (use_via "Via[0-1]_700:400_um")
+      )
+      (rule
+        (width 800)
+        (clearance 200)
+      )
+    )
     (class Power /motors/MOT1_1 /motors/MOT1_2 /motors/MOT2_1 /motors/MOT2_2
       /motors/VG /motors/V_Bat /power/V_USB "Net-(CON2-Pad3)"
       (circuit
@@ -1239,15 +1270,6 @@
       )
       (rule
         (width 400)
-        (clearance 200)
-      )
-    )
-    (class "Heavy Power" "Net-(CON2-Pad1)" "Net-(D9-Pad2)" "Net-(P1-Pad2)"
-      (circuit
-        (use_via "Via[0-1]_700:400_um")
-      )
-      (rule
-        (width 800)
         (clearance 200)
       )
     )

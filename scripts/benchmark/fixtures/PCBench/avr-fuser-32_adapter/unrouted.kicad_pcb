@@ -2083,5 +2083,42 @@
   
   
   
-
+  (zone (net 20) (net_name GND) (layer Back) (tstamp 5016F3DC) (hatch edge 0.508)
+    (connect_pads (clearance 0.70104))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 235.585 142.24) (xy 235.585 62.865) (xy 76.2 62.865) (xy 76.2 142.24)
+      )
+    )
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  )
+  (zone (net 16) (net_name /VCC) (layer Front) (tstamp 5016F485) (hatch edge 0.508)
+    (connect_pads (clearance 0.70104))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 235.585 142.24) (xy 235.585 62.865) (xy 76.2 62.865) (xy 76.2 142.24)
+      )
+    )
+    
+    
+    
+    
+    
+    
+  )
 )

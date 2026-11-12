@@ -1139,5 +1139,69 @@
   
   
   
+  (zone (net 2) (net_name GND) (layer Bottom) (tstamp 33522F80) (hatch edge 0.508)
 
+    (priority 6)
+
+    (connect_pads (clearance 0.000001))
+
+    (min_thickness 0.2032)
+
+    (fill (arc_segments 32) (thermal_gap 0.4564) (thermal_bridge_width 0.4564))
+
+    (polygon
+
+      (pts
+
+        (xy 173.7043 115.2068) (xy 123.2979 115.2068) (xy 123.2979 94.8004) (xy 173.7043 94.8004)
+
+      )
+
+    )
+
+  )
+  (zone (net 2) (net_name GND) (layer Top) (tstamp 33523D40) (hatch edge 0.508)
+
+    (priority 3)
+
+    (connect_pads (clearance 0.000001))
+
+    (min_thickness 0.2032)
+
+    (fill (arc_segments 32) (thermal_gap 0.4564) (thermal_bridge_width 0.4564))
+
+    (polygon
+
+      (pts
+
+        (xy 173.7043 115.2068) (xy 123.2979 115.2068) (xy 123.2979 94.8004) (xy 173.7043 94.8004)
+
+      )
+
+    )
+
+  )
+  (zone (net 0) (net_name "") (layer Top) (tstamp 6082AF63) (hatch none 0.508)
+
+    (priority 4)
+
+    (connect_pads (clearance 0.000001))
+
+    (min_thickness 0.0762)
+
+    (keepout (tracks not_allowed) (vias not_allowed) (copperpour not_allowed))
+
+    (fill (arc_segments 32) (thermal_gap 0.2024) (thermal_bridge_width 0.2024))
+
+    (polygon
+
+      (pts
+
+        (xy 152.1523 110.6348) (xy 132.3149 110.6348) (xy 132.3149 106.6724) (xy 152.1523 106.6724)
+
+      )
+
+    )
+
+  )
 )

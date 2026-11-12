@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -26,6 +26,10 @@
             95000 -80000  95000 -46000  100000 -46000  100000 -48000  110000 -48000
             110000 -46000  135000 -46000  135000 -35000  195000 -35000  195000 -80000)
     )
+    (plane GND (polygon B.Cu 0  70000 -35000  70000 -80000  258000 -80000  258000 -35000
+            70000 -35000))
+    (plane GND (polygon F.Cu 0  70000 -35000  70000 -80000  258000 -80000  258000 -35000
+            70000 -35000))
     (via "Via[0-1]_701.6:330.2_um" "Via[0-1]_685.8:330.2_um")
     (rule
       (width 203.2)
@@ -818,15 +822,6 @@
         (clearance 190.5)
       )
     )
-    (class Power +3V3 +5V GND VBUS3
-      (circuit
-        (use_via "Via[0-1]_701.6:330.2_um")
-      )
-      (rule
-        (width 304.8)
-        (clearance 190.5)
-      )
-    )
     (class USB D+ "D-" D0+ "D0-" D1+ "D1-" D1D+ "D1D-" D2+ "D2-" D2D+ "D2D-"
       D3+ "D3-" D3D+ "D3D-"
       (circuit
@@ -835,6 +830,15 @@
       (rule
         (width 152.4)
         (clearance 152.4)
+      )
+    )
+    (class Power +3V3 +5V GND VBUS3
+      (circuit
+        (use_via "Via[0-1]_701.6:330.2_um")
+      )
+      (rule
+        (width 304.8)
+        (clearance 190.5)
       )
     )
   )

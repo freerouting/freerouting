@@ -1598,5 +1598,32 @@
   
   
   
-
+  (zone (net 4) (net_name 12V) (layer F.Cu) (tstamp 595444DF) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 145 136.5) (xy 141 136.5) (xy 136.5 140.5) (xy 136.5 150) (xy 70 150)
+        (xy 70 140) (xy 63 134.5) (xy 63 129.5) (xy 79.5 130) (xy 81.5 128)
+        (xy 81.5 92.5) (xy 104.5 92.5) (xy 111.5 86.5) (xy 111.5 78.5) (xy 145 78.5)
+      )
+    )
+    
+  )
+  (zone (net 5) (net_name RTN) (layer B.Cu) (tstamp 595444E4) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 111.5 86.5) (xy 118.5 92.5) (xy 131.5 92.5) (xy 145 105.5) (xy 145 136.5)
+        (xy 141 136.5) (xy 136.5 140.5) (xy 136.5 150) (xy 70 150) (xy 70 140)
+        (xy 63 134.5) (xy 63 129.5) (xy 79.5 130) (xy 81.5 128) (xy 81.5 121.5)
+        (xy 75 117.5) (xy 75 115.5) (xy 81.5 112) (xy 81.5 89) (xy 78.5 86.5)
+        (xy 78.5 78.5) (xy 111.5 78.5)
+      )
+    )
+    
+  )
 )

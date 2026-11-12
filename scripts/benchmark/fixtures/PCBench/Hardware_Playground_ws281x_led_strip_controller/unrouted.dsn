@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -24,6 +24,12 @@
       (path pcb 0  118300 -95750  73500 -95750  73500 -72400  118300 -72400
             118300 -95750)
     )
+    (plane GND (polygon B.Cu 0  73500 -72400  118300 -72400  118300 -95800  73500 -95800
+            73500 -72400))
+    (plane GND (polygon F.Cu 0  73500 -72400  118300 -72400  118300 -95800  73500 -95800
+            73500 -72400))
+    (keepout "" (polygon F.Cu 0  104900 -83900  107500 -83900  107500 -91500  104900 -91500
+            104900 -83900))
     (via "Via[0-1]_800:400_um")
     (rule
       (width 250)
@@ -289,7 +295,7 @@
       (pin Rect[T]Pad_1200.000000x750.000000_um 1 -950 0)
     )
     (image myfootprints:AVR_ISP_SMT_Small_02x03
-      (outline (polygon signal 0  4045 3595.17  4045 -3595  -4045 -3595  -4045 3595))
+      (outline (polygon signal 0  4045 3595.17  4045 -3595  -4045 -3595.16  -4045 3595.17))
       (outline (path signal 150  1270 -2250  1270 2250))
       (outline (path signal 150  1524 -2500  1270 -2246))
       (outline (path signal 150  1270 -2246  1016 -2500))

@@ -2999,5 +2999,27 @@
   
   
   
-
+  (zone (net 10) (net_name GNDREF) (layer GNDREF) (tstamp 0) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 100.965 99.695) (xy 163.195 99.695) (xy 163.195 121.285) (xy 100.965 121.285)
+      )
+    )
+    
+    
+  )
+  (zone (net 19) (net_name +5V) (layer +5V) (tstamp 0) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 100.965 99.695) (xy 163.195 99.695) (xy 163.195 121.285) (xy 100.965 121.285)
+      )
+    )
+    
+  )
 )

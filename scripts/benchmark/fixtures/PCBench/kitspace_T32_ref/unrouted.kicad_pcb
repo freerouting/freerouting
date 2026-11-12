@@ -3877,5 +3877,17 @@
   
   
   
-
+  (zone (net 1) (net_name GND) (layer GND) (tstamp 1191AC10) (hatch none 0.508)
+    (priority 6)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.127)
+    (fill yes (arc_segments 32) (thermal_gap 0.177) (thermal_bridge_width 0.177))
+    (polygon
+      (pts
+        (xy 109.3851 90.1446) (xy 109.2581 90.1446) (xy 109.2581 119.7356) (xy 189.6491 119.7356) (xy 189.6491 90.0176)
+        (xy 109.3851 90.0176)
+      )
+    )
+    
+  )
 )

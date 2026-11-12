@@ -357,5 +357,70 @@
   
   
   
-
+  (zone (net 1) (net_name GND) (layer 1_top) (tstamp 533F955B) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.3))
+    (min_thickness 0.3)
+    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 127 90) (xy 155.4 90) (xy 155.4 96.8) (xy 127 96.8)
+      )
+    )
+    
+  )
+  (zone (net 1) (net_name GND) (layer 1_top) (tstamp 533F959A) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.3))
+    (min_thickness 0.3)
+    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 127 103.2) (xy 155.4 103.2) (xy 155.4 110) (xy 127 110)
+      )
+    )
+    
+  )
+  (zone (net 1) (net_name GND) (layer 2_gnd) (tstamp 533F95B7) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.3))
+    (min_thickness 0.3)
+    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 127 90) (xy 155.4 90) (xy 155.4 110) (xy 127 110)
+      )
+    )
+    
+  )
+  (zone (net 1) (net_name GND) (layer 3_gnd) (tstamp 534032EB) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.3))
+    (min_thickness 0.3)
+    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 127 90) (xy 155.4 90) (xy 155.4 110) (xy 127 110)
+      )
+    )
+    
+  )
+  (zone (net 1) (net_name GND) (layer 4_bot) (tstamp 5340330B) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.3))
+    (min_thickness 0.3)
+    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 127 90) (xy 155.4 90) (xy 155.4 110) (xy 127 110)
+      )
+    )
+    
+  )
+  (zone (net 0) (net_name "") (layer F.SilkS) (tstamp 5340F34E) (hatch edge 0.508)
+    (connect_pads (clearance 0.3))
+    (min_thickness 0.1524)
+    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 141.4 91.8) (xy 149 91.8) (xy 149 95.4) (xy 141.4 95.4)
+      )
+    )
+    
+  )
 )

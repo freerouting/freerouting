@@ -2937,5 +2937,32 @@
   
   
   
-
+  (zone (net 8) (net_name -5V) (layer B.Cu) (tstamp 0) (hatch edge 0.508)
+    (connect_pads (clearance 0.12))
+    (min_thickness 0.12)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 145 65) (xy 215 65) (xy 215 115) (xy 145 115)
+      )
+    )
+    
+    
+    
+  )
+  (zone (net 8) (net_name -5V) (layer F.Cu) (tstamp 0) (hatch edge 0.508)
+    (connect_pads (clearance 0.12))
+    (min_thickness 0.12)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 145 65) (xy 215 65) (xy 215 115) (xy 145 115)
+      )
+    )
+    
+    
+    
+    
+    
+  )
 )

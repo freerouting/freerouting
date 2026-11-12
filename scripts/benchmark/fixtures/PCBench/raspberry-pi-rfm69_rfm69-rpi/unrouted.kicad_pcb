@@ -1971,5 +1971,30 @@
   
   
   
-
+  (zone (net 2) (net_name Earth) (layer F.Cu) (tstamp 0) (hatch edge 0.508)
+    (connect_pads (clearance 0.5))
+    (min_thickness 0.25)
+    (fill yes (arc_segments 32) (thermal_gap 0.5) (thermal_bridge_width 0.5))
+    (polygon
+      (pts
+        (xy 100.75 65.5) (xy 160.75 65.5) (xy 160.75 121.5) (xy 95.25 121.5) (xy 95.5 65.25)
+      )
+    )
+    
+    
+    
+    
+  )
+  (zone (net 2) (net_name Earth) (layer B.Cu) (tstamp 0) (hatch edge 0.508)
+    (connect_pads (clearance 0.5))
+    (min_thickness 0.25)
+    (fill yes (arc_segments 32) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 95.574 65.29) (xy 95.32 121.424) (xy 160.598 121.424) (xy 160.852 65.29)
+      )
+    )
+    
+    
+  )
 )

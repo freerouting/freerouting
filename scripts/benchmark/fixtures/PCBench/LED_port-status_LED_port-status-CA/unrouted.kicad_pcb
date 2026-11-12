@@ -1257,5 +1257,70 @@
   
   
   
-
+  (zone (net 9) (net_name N-0000017) (layer Front) (tstamp 51D365FF) (hatch edge 0.508)
+    (connect_pads (clearance 0.2))
+    (min_thickness 0.2)
+    (fill (arc_segments 32) (thermal_gap 0.25) (thermal_bridge_width 0.499999) (smoothing fillet) (radius 0.5))
+    (polygon
+      (pts
+        (xy 79.6 84.3) (xy 103.2 84.3) (xy 103.2 93.1) (xy 79.6 93.1)
+      )
+    )
+    
+  )
+  (zone (net 9) (net_name N-0000017) (layer Back) (tstamp 51D365FE) (hatch edge 0.508)
+    (connect_pads (clearance 0.2))
+    (min_thickness 0.2)
+    (fill (arc_segments 32) (thermal_gap 0.25) (thermal_bridge_width 0.499999) (smoothing fillet) (radius 0.5))
+    (polygon
+      (pts
+        (xy 79.6 84.3) (xy 103.2 84.3) (xy 103.2 93.1) (xy 79.6 93.1)
+      )
+    )
+    
+  )
+  (zone (net 0) (net_name "") (layer Back) (tstamp 5120E206) (hatch edge 0.508)
+    (connect_pads (clearance 0.2032))
+    (min_thickness 0.2032)
+    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
+    (fill (arc_segments 32) (thermal_gap 0.25) (thermal_bridge_width 0.499999))
+    (polygon
+      (pts
+        (xy 93.35 86.3) (xy 97.25 86.3) (xy 97.25 89.7) (xy 93.35 89.7)
+      )
+    )
+  )
+  (zone (net 0) (net_name "") (layer Back) (tstamp 5120E208) (hatch edge 0.508)
+    (connect_pads (clearance 0.2032))
+    (min_thickness 0.2032)
+    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
+    (fill (arc_segments 32) (thermal_gap 0.25) (thermal_bridge_width 0.499999))
+    (polygon
+      (pts
+        (xy 83.15 86.3) (xy 87.05 86.3) (xy 87.05 89.7) (xy 83.15 89.7)
+      )
+    )
+  )
+  (zone (net 0) (net_name "") (layer F.Mask) (tstamp 51D56C17) (hatch full 0.508)
+    (connect_pads (clearance 0.2))
+    (min_thickness 0.254)
+    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 100.4824 89.8398) (xy 100.4824 87.7824) (xy 102.7176 87.7824) (xy 102.7176 89.8398)
+      )
+    )
+    
+  )
+  (zone (net 0) (net_name "") (layer B.Mask) (tstamp 51D56C17) (hatch full 0.508)
+    (connect_pads (clearance 0.2))
+    (min_thickness 0.254)
+    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 100.4824 89.8398) (xy 100.4824 87.7824) (xy 102.7176 87.7824) (xy 102.7176 89.8398)
+      )
+    )
+    
+  )
 )

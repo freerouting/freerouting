@@ -16264,5 +16264,138 @@
   
   
   
-
+  (zone (net 129) (net_name GND) (layer Gorna) (tstamp 5665E2A3) (hatch edge 0.508)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.0635)
+    (fill (arc_segments 16) (thermal_gap 0.254) (thermal_bridge_width 0.254))
+    (polygon
+      (pts
+        (xy 225.2853 23.1521) (xy 225.3107 120.0912) (xy 29.972 119.888) (xy 29.9593 23.0378)
+      )
+    )
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  )
+  (zone (net 129) (net_name GND) (layer Dolna) (tstamp 54B3F963) (hatch edge 0.508)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.0635)
+    (fill (arc_segments 16) (thermal_gap 0.254) (thermal_bridge_width 0.254))
+    (polygon
+      (pts
+        (xy 225.2726 23.1648) (xy 225.2726 120.0912) (xy 29.972 119.888) (xy 30.226 23.0378)
+      )
+    )
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  )
 )

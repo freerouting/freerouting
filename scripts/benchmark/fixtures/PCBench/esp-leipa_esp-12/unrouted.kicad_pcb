@@ -886,5 +886,31 @@
   
   
   
-
+  (zone (net 3) (net_name EN) (layer Top) (tstamp 5782E4ED) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 32) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 170.815 103.632) (xy 171.196 103.632) (xy 171.196 137.922) (xy 169.418 139.7) (xy 147.066 139.7)
+        (xy 144.78 137.414) (xy 144.78 103.632) (xy 145.415 103.632) (xy 145.415 103.505) (xy 170.815 103.505)
+        (xy 170.815 103.632)
+      )
+    )
+    
+    
+    
+  )
+  (zone (net 1) (net_name GND) (layer Bottom) (tstamp 5782E4ED) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 32) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 170.815 137.795) (xy 169.545 139.065) (xy 146.685 139.065) (xy 145.415 137.795) (xy 145.415 103.505)
+        (xy 170.815 103.505) (xy 170.815 137.795)
+      )
+    )
+    
+  )
 )

@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -26,6 +26,10 @@
     )
     (keepout "" (polygon signal 0  276089 -76461  293964 -76461  293964 -56211  276089 -56211
             276089 -76461))
+    (keepout "" (polygon B.Cu 0  275181 -77624.9  295031 -77663  295031 -56060.3  275181 -56022.2
+            275181 -77624.9))
+    (keepout "" (polygon B.Cu 0  64152.2 -136119  68952.8 -136042  68993.5 -140960  64004.9 -140884
+            64152.2 -136119))
     (via "Via[0-1]_600:400_um")
     (rule
       (width 500)

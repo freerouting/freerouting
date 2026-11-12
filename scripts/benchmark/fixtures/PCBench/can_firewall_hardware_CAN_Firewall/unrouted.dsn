@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -41,6 +41,18 @@
             43412.7 -105041  43803.6 -105002  44000 -105000  104000 -105000
             104196 -105002)
     )
+    (plane GND (polygon F.Cu 0  107900 -105000  108000 -163000  40000 -163000  40000 -105000
+            107900 -105000))
+    (plane "Net-(C7-Pad1)" (polygon F.Cu 0  55700 -124700  53100 -124700  51500 -126300  49200 -126300
+            47300 -128200  44600 -128200  44600 -124600  47800 -124600  48500 -124600
+            48500 -123300  48500 -119100  56900 -119100  56900 -123500  56800 -123500
+            55700 -124700))
+    (plane GND (polygon B.Cu 0  107900 -105000  108000 -163000  40000 -163000  40000 -105000
+            107900 -105000))
+    (plane "Net-(C2-Pad1)" (polygon F.Cu 0  106500 -128400  103700 -128400  101400 -126100  101400 -116200
+            101700 -115900  104300 -115900  104300 -117100  102800 -117100
+            102800 -117700  105500 -120400  105500 -125200  106500 -126200
+            106500 -128400))
     (via "Via[0-1]_600:400_um" "Via[0-1]_750:500_um")
     (rule
       (width 250)
@@ -1503,15 +1515,6 @@
         (clearance 200)
       )
     )
-    (class PWR +12V
-      (circuit
-        (use_via "Via[0-1]_750:500_um")
-      )
-      (rule
-        (width 500)
-        (clearance 300)
-      )
-    )
     (class NET CAR_CANH CAR_CANL GND IVI_CANH IVI_CANL LOOP_A LOOP_B "Net-(C1-Pad1)"
       "Net-(C2-Pad1)" "Net-(C3-Pad1)"
       (circuit
@@ -1520,6 +1523,15 @@
       (rule
         (width 250)
         (clearance 200)
+      )
+    )
+    (class PWR +12V
+      (circuit
+        (use_via "Via[0-1]_750:500_um")
+      )
+      (rule
+        (width 500)
+        (clearance 300)
       )
     )
   )

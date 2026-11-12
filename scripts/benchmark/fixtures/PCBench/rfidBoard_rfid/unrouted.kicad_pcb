@@ -1415,5 +1415,70 @@
   
   
   
-
+  (zone (net 4) (net_name 3V3) (layer F.Cu) (tstamp 5428B39B) (hatch full 0.508)
+    (connect_pads (clearance 0.15))
+    (min_thickness 0.15)
+    (fill yes (arc_segments 16) (thermal_gap 0.15) (thermal_bridge_width 0.5))
+    (polygon
+      (pts
+        (xy 180.2 101.4) (xy 170.3 101.4) (xy 170.3 98.2) (xy 178.2 98.2) (xy 178.2 100.2)
+        (xy 180.2 100.2)
+      )
+    )
+    
+  )
+  (zone (net 5) (net_name 3V3_RF) (layer F.Cu) (tstamp 0) (hatch full 0.508)
+    (connect_pads (clearance 0.15))
+    (min_thickness 0.15)
+    (fill yes (arc_segments 16) (thermal_gap 0.15) (thermal_bridge_width 0.5))
+    (polygon
+      (pts
+        (xy 178.9 99.8) (xy 180.2 99.8) (xy 180.2 96.3) (xy 176.7 96.3) (xy 176.7 97.8)
+        (xy 178.9 97.8)
+      )
+    )
+    
+  )
+  (zone (net 2) (net_name GND) (layer F.Cu) (tstamp 5428C5D1) (hatch edge 0.508)
+    (connect_pads (clearance 0.15))
+    (min_thickness 0.15)
+    (fill yes (arc_segments 16) (thermal_gap 0.2) (thermal_bridge_width 0.3))
+    (polygon
+      (pts
+        (xy 180 61) (xy 159 61) (xy 157 63) (xy 157 105) (xy 157 106)
+        (xy 159 109) (xy 180 109) (xy 180 102) (xy 170 102) (xy 170 98)
+        (xy 176.5 98) (xy 176.5 96) (xy 180 96) (xy 180 87) (xy 174 87)
+        (xy 174 89.5) (xy 172.5 89.5) (xy 172.5 91) (xy 171 91) (xy 171 89.1)
+        (xy 167.4 89.1) (xy 167.4 85.6) (xy 171 85.590979) (xy 171 79.5) (xy 173 79.5)
+        (xy 173 81) (xy 174 81) (xy 174 83) (xy 180 83)
+      )
+    )
+    
+    
+    
+    
+  )
+  (zone (net 2) (net_name GND) (layer B.Cu) (tstamp 0) (hatch edge 0.508)
+    (connect_pads (clearance 0.15))
+    (min_thickness 0.15)
+    (fill yes (arc_segments 16) (thermal_gap 0.2) (thermal_bridge_width 0.3))
+    (polygon
+      (pts
+        (xy 180 61) (xy 159 61) (xy 157 63) (xy 157 106) (xy 159 109)
+        (xy 180 109)
+      )
+    )
+    
+  )
+  (zone (net 0) (net_name "") (layer F.SilkS) (tstamp 0) (hatch edge 0.508)
+    (connect_pads (clearance 0.15))
+    (min_thickness 0.15)
+    (fill yes (arc_segments 16) (thermal_gap 0.2) (thermal_bridge_width 0.3))
+    (polygon
+      (pts
+        (xy 186 93) (xy 215 93) (xy 215 96) (xy 186 96)
+      )
+    )
+    
+  )
 )

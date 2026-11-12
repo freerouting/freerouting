@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -24,6 +24,8 @@
       (path pcb 0  217430 -145500  76930 -145500  76930 -66500  217430 -66500
             217430 -145500)
     )
+    (plane GND (polygon B.Cu 0  76896.6 -66926  74930 -145500  142430 -145500  142430 -66500
+            76896.6 -66926))
     (via "Via[0-1]_900:500_um" "Via[0-1]_1500:1000_um")
     (rule
       (width 600)
@@ -1530,13 +1532,13 @@
         (clearance 200)
       )
     )
-    (class vcc -12VA GND VCC
+    (class "margen en mosfets" "Net-(Q4-Pad1)" "Net-(Q6-Pad1)"
       (circuit
         (use_via "Via[0-1]_900:500_um")
       )
       (rule
-        (width 900)
-        (clearance 300)
+        (width 1000)
+        (clearance 900)
       )
     )
     (class POWER GNDPWR "Net-(C4-Pad2)" "Net-(C6-Pad1)" "Net-(C7-Pad2)" "Net-(C9-Pad2)"
@@ -1549,13 +1551,13 @@
         (clearance 900)
       )
     )
-    (class "margen en mosfets" "Net-(Q4-Pad1)" "Net-(Q6-Pad1)"
+    (class vcc -12VA GND VCC
       (circuit
         (use_via "Via[0-1]_900:500_um")
       )
       (rule
-        (width 1000)
-        (clearance 900)
+        (width 900)
+        (clearance 300)
       )
     )
   )

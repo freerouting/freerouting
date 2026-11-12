@@ -1477,5 +1477,118 @@
   
   
   
-
+  (zone (net 16) (net_name "Net-(J5-Pad2)") (layer F.Cu) (tstamp 5519A5FA) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 224.155 155.575) (xy 217.17 155.575) (xy 217.17 144.78) (xy 224.155 144.78)
+      )
+    )
+    
+  )
+  (zone (net 17) (net_name "Net-(J7-Pad2)") (layer F.Cu) (tstamp 5519A638) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 222.885 120.015) (xy 219.075 120.015) (xy 213.36 123.19) (xy 200.025 123.19) (xy 200.025 118.745)
+        (xy 213.36 118.745) (xy 217.17 116.205) (xy 222.885 116.205)
+      )
+    )
+    
+  )
+  (zone (net 17) (net_name "Net-(J7-Pad2)") (layer B.Cu) (tstamp 5519A667) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 222.885 120.015) (xy 219.075 120.015) (xy 213.36 123.19) (xy 200.025 123.19) (xy 200.025 118.745)
+        (xy 213.36 118.745) (xy 217.17 116.205) (xy 222.885 116.205)
+      )
+    )
+    
+  )
+  (zone (net 1) (net_name +3.3V) (layer F.Cu) (tstamp 5519A848) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 175.768 107.696) (xy 168.656 107.696) (xy 168.656 95.504) (xy 175.768 95.504)
+      )
+    )
+    
+  )
+  (zone (net 8) (net_name GND) (layer B.Cu) (tstamp 5519E26F) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 203.2 105.664) (xy 187.96 105.664) (xy 187.96 139.192) (xy 198.12 139.192) (xy 198.12 149.352)
+        (xy 181.864 149.352) (xy 181.864 168.656) (xy 166.624 168.656) (xy 166.624 158.496) (xy 156.464 158.496)
+        (xy 156.464 124.968) (xy 180.848 124.968) (xy 180.848 107.696) (xy 168.656 107.696) (xy 168.656 95.504)
+        (xy 203.2 95.504)
+      )
+    )
+    
+  )
+  (zone (net 8) (net_name GND) (layer F.Cu) (tstamp 5519DF53) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 180.848 107.696) (xy 180.848 124.968) (xy 156.464 124.968) (xy 156.464 158.496) (xy 166.624 158.496)
+        (xy 166.624 168.656) (xy 181.864 168.656) (xy 181.864 149.5552) (xy 198.12 149.352) (xy 198.12 139.192)
+        (xy 187.96 139.192) (xy 187.96 105.664) (xy 203.2 105.664) (xy 203.2 95.504) (xy 183.0832 95.504)
+        (xy 183.0832 106.0704) (xy 180.848 107.696)
+      )
+    )
+    
+    
+    
+    
+    
+    
+  )
+  (zone (net 16) (net_name "Net-(J5-Pad2)") (layer B.Cu) (tstamp 5519E3A2) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 224.155 155.575) (xy 217.17 155.575) (xy 217.17 144.78) (xy 224.155 144.78)
+      )
+    )
+    
+  )
+  (zone (net 10) (net_name "Net-(F1-Pad2)") (layer F.Cu) (tstamp 5519F191) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 222.885 128.27) (xy 216.535 128.27) (xy 212.725 129.54) (xy 200.025 129.54) (xy 200.025 125.73)
+        (xy 213.36 125.73) (xy 216.535 124.46) (xy 222.885 124.46)
+      )
+    )
+    
+  )
+  (zone (net 10) (net_name "Net-(F1-Pad2)") (layer B.Cu) (tstamp 5519F1C5) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 222.885 128.27) (xy 216.535 128.27) (xy 212.725 129.54) (xy 200.025 129.54) (xy 200.025 125.73)
+        (xy 213.36 125.73) (xy 216.535 124.46) (xy 222.885 124.46)
+      )
+    )
+    
+  )
 )

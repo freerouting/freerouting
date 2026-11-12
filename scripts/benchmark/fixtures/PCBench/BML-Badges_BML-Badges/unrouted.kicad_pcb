@@ -802,5 +802,56 @@
   
   
   
-
+  (zone (net 0) (net_name "") (layer F.SilkS) (tstamp 55D6E35A) (hatch edge 0.508)
+    (connect_pads (clearance 0.3))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 177.165 168.275) (xy 179.07 168.275) (xy 181.61 170.815) (xy 181.61 182.245) (xy 184.15 184.785)
+        (xy 191.77 184.785) (xy 194.31 187.325) (xy 194.31 200.66) (xy 191.77 203.2) (xy 173.99 203.2)
+        (xy 173.99 170.815) (xy 176.53 168.275) (xy 177.165 168.275)
+      )
+    )
+    
+  )
+  (zone (net 0) (net_name "") (layer F.SilkS) (tstamp 55D6E373) (hatch edge 0.508)
+    (connect_pads (clearance 0.3))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 234.315 200.66) (xy 231.775 203.2) (xy 227.965 203.2) (xy 225.425 200.66) (xy 225.425 191.135)
+        (xy 222.885 188.595) (xy 222.885 194.945) (xy 220.345 197.485) (xy 216.535 197.485) (xy 213.995 194.945)
+        (xy 213.995 188.595) (xy 211.455 191.135) (xy 211.455 200.66) (xy 208.915 203.2) (xy 205.105 203.2)
+        (xy 202.565 200.66) (xy 202.565 185.42) (xy 205.105 182.88) (xy 215.9 182.88) (xy 218.44 185.42)
+        (xy 220.98 182.88) (xy 231.775 182.88) (xy 234.315 185.42)
+      )
+    )
+    
+  )
+  (zone (net 0) (net_name "") (layer F.SilkS) (tstamp 55D6E375) (hatch edge 0.508)
+    (connect_pads (clearance 0.3))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 260.985 200.66) (xy 258.445 203.2) (xy 245.11 203.2) (xy 241.935 200.66) (xy 241.935 170.815)
+        (xy 244.475 168.275) (xy 247.015 168.275) (xy 249.555 170.815) (xy 249.555 191.77) (xy 252.095 194.31)
+        (xy 258.445 194.31) (xy 260.985 196.85)
+      )
+    )
+    
+  )
+  (zone (net 2) (net_name GND) (layer B.Cu) (tstamp 55D6E4DD) (hatch edge 0.508)
+    (connect_pads (clearance 0.635))
+    (min_thickness 0.127)
+    (fill yes (arc_segments 16) (thermal_gap 0.254) (thermal_bridge_width 0.4064))
+    (polygon
+      (pts
+        (xy 262.89 204.47) (xy 171.45 204.47) (xy 171.45 166.37) (xy 262.89 166.37)
+      )
+    )
+    
+  )
 )

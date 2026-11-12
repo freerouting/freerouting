@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -44,6 +44,10 @@
             82413.9 -66677.4  82550 -66675  84455 -66675  104140 -66675
             109855 -66675  109991 -66677.4)
     )
+    (plane GND (polygon B.Cu 0  111760 -102235  57785 -102235  57785 -75565  80645 -75565
+            80645 -66675  111760 -66675  111760 -102235))
+    (plane GND (polygon F.Cu 0  111760 -102235  57785 -102235  57785 -75565  80645 -75565
+            80645 -66675  111760 -66675  111760 -102235))
     (via "Via[0-1]_600:400_um")
     (rule
       (width 250)
@@ -263,7 +267,12 @@
         (clearance 200)
       )
     )
-    (class +3.3V +3V3
+    (class Signal "Net-(GPIO1-Pad10)" "Net-(GPIO1-Pad2)" "Net-(GPIO1-Pad3)"
+      "Net-(GPIO1-Pad4)" "Net-(GPIO1-Pad5)" "Net-(GPIO1-Pad6)" "Net-(GPIO1-Pad7)"
+      "Net-(GPIO1-Pad8)" "Net-(GPIO1-Pad9)" "Net-(MaL2-Pad7)" "Net-(MaR1-Pad3)"
+      "Net-(MaR1-Pad5)" "Net-(MbL2-Pad7)" "Net-(MbR1-Pad3)" "Net-(MbR1-Pad5)"
+      "Net-(PWM1-Pad2)" "Net-(PWM1-Pad3)" "Net-(PWM1-Pad4)" "Net-(PWM1-Pad5)"
+      "Net-(PWM1-Pad6)"
       (circuit
         (use_via "Via[0-1]_600:400_um")
       )
@@ -282,15 +291,6 @@
         (clearance 200)
       )
     )
-    (class +Batt +BATT
-      (circuit
-        (use_via "Via[0-1]_600:400_um")
-      )
-      (rule
-        (width 1500)
-        (clearance 200)
-      )
-    )
     (class GND GND
       (circuit
         (use_via "Via[0-1]_600:400_um")
@@ -300,12 +300,16 @@
         (clearance 200)
       )
     )
-    (class Signal "Net-(GPIO1-Pad10)" "Net-(GPIO1-Pad2)" "Net-(GPIO1-Pad3)"
-      "Net-(GPIO1-Pad4)" "Net-(GPIO1-Pad5)" "Net-(GPIO1-Pad6)" "Net-(GPIO1-Pad7)"
-      "Net-(GPIO1-Pad8)" "Net-(GPIO1-Pad9)" "Net-(MaL2-Pad7)" "Net-(MaR1-Pad3)"
-      "Net-(MaR1-Pad5)" "Net-(MbL2-Pad7)" "Net-(MbR1-Pad3)" "Net-(MbR1-Pad5)"
-      "Net-(PWM1-Pad2)" "Net-(PWM1-Pad3)" "Net-(PWM1-Pad4)" "Net-(PWM1-Pad5)"
-      "Net-(PWM1-Pad6)"
+    (class +Batt +BATT
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 1500)
+        (clearance 200)
+      )
+    )
+    (class +3.3V +3V3
       (circuit
         (use_via "Via[0-1]_600:400_um")
       )

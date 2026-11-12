@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -24,6 +24,24 @@
       (path pcb 0  161000 -103000  86000 -103000  86000 -53000  161000 -53000
             161000 -103000)
     )
+    (plane GND (polygon B.Cu 0  160875 -54000  86750 -54000  86337.5 -102800  160462 -102800
+            160875 -54000))
+    (keepout "" (polygon F.Cu 0  86300 -93000  96000 -93000  96200 -102600  86500 -102600
+            86300 -93000))
+    (keepout "" (polygon B.Cu 0  86300 -93000  96000 -93000  96200 -102600  86500 -102600
+            86300 -93000))
+    (keepout "" (polygon F.Cu 0  86400 -54000  95000 -54000  95000 -62000  86400 -62000
+            86400 -54000))
+    (keepout "" (polygon B.Cu 0  86400 -54000  95000 -54000  95000 -62000  86400 -62000
+            86400 -54000))
+    (keepout "" (polygon F.Cu 0  151800 -92600  160800 -92700  160800 -102900  151800 -102800
+            151800 -92600))
+    (keepout "" (polygon B.Cu 0  151800 -92600  160800 -92700  160800 -102900  151800 -102800
+            151800 -92600))
+    (keepout "" (polygon F.Cu 0  151800 -53800  160800 -53800  160800 -62800  151800 -62800
+            151800 -53800))
+    (keepout "" (polygon B.Cu 0  151800 -53800  160800 -53800  160800 -62800  151800 -62800
+            151800 -53800))
     (via "Via[0-1]_800:400_um")
     (rule
       (width 250)
@@ -1602,16 +1620,6 @@
         (clearance 200)
       )
     )
-    (class thick GND "Net-(C1-Pad1)" "Net-(J3-Pad1)" "Net-(Q1-Pad5)" "Net-(R1-Pad1)"
-      "Net-(R2-Pad2)" "Net-(R3-Pad2)" "Net-(RV1-Pad2)"
-      (circuit
-        (use_via "Via[0-1]_800:400_um")
-      )
-      (rule
-        (width 750)
-        (clearance 300)
-      )
-    )
     (class power_line "Net-(C2-Pad1)" "Net-(D1-Pad1)" "Net-(J2-Pad1)" "Net-(Q2-Pad5)"
       "Net-(R7-Pad1)" VDD
       (circuit
@@ -1619,6 +1627,16 @@
       )
       (rule
         (width 1000)
+        (clearance 300)
+      )
+    )
+    (class thick GND "Net-(C1-Pad1)" "Net-(J3-Pad1)" "Net-(Q1-Pad5)" "Net-(R1-Pad1)"
+      "Net-(R2-Pad2)" "Net-(R3-Pad2)" "Net-(RV1-Pad2)"
+      (circuit
+        (use_via "Via[0-1]_800:400_um")
+      )
+      (rule
+        (width 750)
         (clearance 300)
       )
     )

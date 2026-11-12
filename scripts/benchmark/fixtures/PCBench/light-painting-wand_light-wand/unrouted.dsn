@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -45,6 +45,10 @@
             163083 -96561.6  163581 -96522.4  163830 -96520  201930 -96520
             202179 -96522.4)
     )
+    (plane GND (polygon B.Cu 0  157480 -96520  208280 -96520  208280 -134620  157480 -134620
+            157480 -96520))
+    (plane GND (polygon F.Cu 0  157480 -96520  208280 -96520  208280 -134620  157480 -134620
+            157480 -96520))
     (via "Via[0-1]_889:635_um")
     (rule
       (width 203.2)

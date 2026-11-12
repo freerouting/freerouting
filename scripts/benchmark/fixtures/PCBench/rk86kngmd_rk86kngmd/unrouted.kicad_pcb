@@ -6443,4 +6443,16 @@
   
   
   
+  
+  (zone (net 0) (net_name "") (layer F.Mask) (tstamp 0) (hatch full 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 244.605 117.43) (xy 258.575 117.43) (xy 258.575 121.24) (xy 244.605 121.24)
+      )
+    )
+    
   )
+)

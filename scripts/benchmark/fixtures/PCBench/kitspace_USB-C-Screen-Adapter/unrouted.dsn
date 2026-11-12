@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -48,6 +48,20 @@
             101574 -100043  101857 -100003  102000 -100000  138000 -100000
             138143 -100003)
     )
+    (plane +5V (polygon F.Cu 0  117600 -110600  120300 -110600  120300 -114200  118100 -114200
+            118100 -112500  117600 -112000  117600 -110600))
+    (plane +5V (polygon B.Cu 0  117600 -110600  120300 -110600  120300 -114200  118100 -114200
+            118100 -112500  117600 -112000  117600 -110600))
+    (plane +3V3 (polygon B.Cu 0  118100 -105400  120300 -105400  120300 -109000  117600 -109000
+            117600 -107300  118100 -106800  118100 -105400))
+    (plane +3V3 (polygon F.Cu 0  118100 -105400  120300 -105400  120300 -109000  117600 -109000
+            117600 -107300  118100 -106800  118100 -105400))
+    (plane GND (polygon In1.Cu 0  99500 -99500  99500 -121000  140500 -121000  140500 -99500
+            99500 -99500))
+    (plane GND (polygon F.Cu 0  99500 -99500  99500 -121000  140500 -121000  140500 -99500
+            99500 -99500))
+    (plane GND (polygon B.Cu 0  99500 -99500  99500 -121000  140500 -121000  140500 -99500
+            99500 -99500))
     (via "Via[0-3]_800:400_um" "Via[0-3]_600:400_um")
     (rule
       (width 250)
@@ -1294,15 +1308,6 @@
         (clearance 100)
       )
     )
-    (class diff AUX_N AUX_P L0_N L0_P L1_N L1_P L2_N L2_P L3_N L3_P
-      (circuit
-        (use_via "Via[0-3]_600:400_um")
-      )
-      (rule
-        (width 200)
-        (clearance 100)
-      )
-    )
     (class signal CC1 CC2 CC_RX CC_TX DFU HPD NRST PWM RXREF SBU1 SBU2 SBU_ENABLE
       STM_HPD SWCLK SWDIO USB_N USB_P VBUS_SENSE _DP_AUX_N _DP_AUX_P
       (circuit
@@ -1310,6 +1315,15 @@
       )
       (rule
         (width 130)
+        (clearance 100)
+      )
+    )
+    (class diff AUX_N AUX_P L0_N L0_P L1_N L1_P L2_N L2_P L3_N L3_P
+      (circuit
+        (use_via "Via[0-3]_600:400_um")
+      )
+      (rule
+        (width 200)
         (clearance 100)
       )
     )
