@@ -63,6 +63,19 @@ class GlobalSettingsCommandLineTest {
   }
 
   @Test
+  void kicadDesignRulesFileWithTheDesign() {
+    settings.applyCommandLineArguments(new String[] {"-de", "myboard.dsn+myboard.kicad_dru"});
+    assertEquals("myboard.dsn", settings.initialInputFile);
+    assertEquals("myboard.kicad_dru", settings.initialKiCadDesignRulesFile);
+    assertNull(settings.initialRulesFile);
+
+    settings = new GlobalSettings();
+    settings.applyCommandLineArguments(new String[] {"-de", "myboard.dsn", "myboard.kicad_dru"});
+    assertEquals("myboard.dsn", settings.initialInputFile);
+    assertEquals("myboard.kicad_dru", settings.initialKiCadDesignRulesFile);
+  }
+
+  @Test
   void filesInDifferentOrder() {
     String[] args = {"-de", "myboard.rules+myboard.dsn+myboard.ses"};
     settings.applyCommandLineArguments(args);

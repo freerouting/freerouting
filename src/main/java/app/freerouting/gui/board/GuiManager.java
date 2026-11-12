@@ -149,6 +149,8 @@ public class GuiManager {
         FRLogger.warn(tm.getText("file_not_found", globalSettings.initialInputFile));
         return false;
       }
+      // the error, if a .kicad_dru given with -de cannot be read, is in the log
+      routingJob.loadKiCadDesignRules(globalSettings.initialKiCadDesignRulesFile);
       var settingsMerger = globalSettings.settingsMergerProtype.clone();
       settingsMerger.addOrReplaceSources(
           new DsnFileSettings(routingJob.input.getData(), routingJob.input.getFilename()),

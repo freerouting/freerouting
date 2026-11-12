@@ -1,0 +1,23 @@
+(version 1)
+
+# Custom rules for Issue110-RelayModule.dsn (KiCadDesignRulesFixtureTest). The DSN exported by
+# KiCad only carries the 2 mm clearance of the HighVoltage net class.
+
+# Freerouting cannot evaluate intersectsArea(): it applies the rule wherever it may match, unless
+# a later rule surely matches.
+(rule "near_the_edge"
+	(condition "A.NetClass == 'HighVoltage' && A.intersectsArea('edge_zone')")
+	(constraint clearance (min 4mm)))
+
+(rule "mains_isolation"
+	(condition "A.NetClass == 'HighVoltage' && B.NetClass != 'HighVoltage'")
+	(constraint clearance (min 3mm))
+	(constraint creepage (min 3mm)))
+
+(rule "fuse_1_poles"
+	(condition "A.NetName == 'Net-(FU1-*' && B.NetName == 'Net-(FU1-*'")
+	(constraint clearance (min 1.5mm)))
+
+(rule "k1_coil_to_contacts"
+	(condition "A.NetClass == 'HighVoltage' && B.NetClass != 'HighVoltage' && A.memberOfFootprint('K1') && B.memberOfFootprint('K1')")
+	(constraint clearance (min 2.5mm)))
