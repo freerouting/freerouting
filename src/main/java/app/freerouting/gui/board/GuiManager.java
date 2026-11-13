@@ -141,12 +141,12 @@ public class GuiManager {
       }
 
       if (routingJob.input == null) {
-        FRLogger.warn(tm.getText("file_not_found", globalSettings.initialInputFile));
+        FRLogger.warn("File '" + globalSettings.initialInputFile + "' not found.");
         return false;
       }
 
       if (routingJob.input.format == FileFormat.UNKNOWN) {
-        FRLogger.warn(tm.getText("file_not_found", globalSettings.initialInputFile));
+        FRLogger.warn("File '" + globalSettings.initialInputFile + "' not found.");
         return false;
       }
       // the error, if a .kicad_dru given with -de cannot be read, is in the log

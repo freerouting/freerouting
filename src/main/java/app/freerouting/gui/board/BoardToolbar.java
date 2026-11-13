@@ -186,7 +186,8 @@ public class BoardToolbar extends JPanel {
 
           var guiRoutingJob = Arrays.stream(routingJobs).findFirst().get();
           if (guiRoutingJob.input == null) {
-            FRLogger.warn(tm.getText("warn_no_input_file"));
+            FRLogger.warn(
+                "Cannot start routing because no input file is loaded. Open a DSN or SES file first.");
             return;
           }
           var interactiveSettings = boardFrame.boardPanel.boardHandling.getWorkspaceSettings();
