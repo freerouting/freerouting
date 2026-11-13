@@ -2626,5 +2626,43 @@
   
   
   
-
+  (zone (net 1) (net_name GNDPWR) (layer F.Cu) (tstamp 53C17C24) (hatch edge 0.508)
+    (connect_pads (clearance 0.2032))
+    (min_thickness 0.2032)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 50.6 52) (xy 134.6 52) (xy 134.6 98) (xy 50.6 98)
+      )
+    )
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  )
+  (zone (net 1) (net_name GNDPWR) (layer B.Cu) (tstamp 53C17B68) (hatch edge 0.508)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.254) (thermal_bridge_width 0.2794))
+    (polygon
+      (pts
+        (xy 134.6 52) (xy 134.6 98) (xy 50.6 98) (xy 50.6 52)
+      )
+    )
+    
+    
+    
+  )
 )

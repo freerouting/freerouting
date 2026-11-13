@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -24,6 +24,10 @@
       (path pcb 0  135200 -98600  50000 -98600  50000 -51400  135200 -51400
             135200 -98600)
     )
+    (plane GNDPWR (polygon F.Cu 0  50600 -52000  134600 -52000  134600 -98000  50600 -98000
+            50600 -52000))
+    (plane GNDPWR (polygon B.Cu 0  134600 -52000  134600 -98000  50600 -98000  50600 -52000
+            134600 -52000))
     (via "Via[0-1]_584.2:330.2_um")
     (rule
       (width 254)
@@ -927,21 +931,21 @@
         (clearance 203.2)
       )
     )
-    (class powersmall +3.3V
-      (circuit
-        (use_via "Via[0-1]_584.2:330.2_um")
-      )
-      (rule
-        (width 292.1)
-        (clearance 203.2)
-      )
-    )
     (class power +5V
       (circuit
         (use_via "Via[0-1]_584.2:330.2_um")
       )
       (rule
         (width 381)
+        (clearance 203.2)
+      )
+    )
+    (class powersmall +3.3V
+      (circuit
+        (use_via "Via[0-1]_584.2:330.2_um")
+      )
+      (rule
+        (width 292.1)
         (clearance 203.2)
       )
     )

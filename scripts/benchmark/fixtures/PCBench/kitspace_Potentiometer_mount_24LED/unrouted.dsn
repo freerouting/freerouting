@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -24,6 +24,8 @@
       (path pcb 0  162080 -44000  162080 -80500  18470 -80500  18470 -43990
             162080 -44000)
     )
+    (plane @:no_net_0 (polygon B.Cu 0  18470 -43990  18400 -80500  162100 -80500  162060 -44010
+            18470 -43990))
     (via "Via[0-1]_800:400_um")
     (rule
       (width 250)
@@ -255,6 +257,8 @@
     )
   )
   (network
+    (net @:no_net_0
+    )
     (net "Net-(J1-Pad1)"
       (pins "LED 1"-3 "From Stimulator"-1)
     )

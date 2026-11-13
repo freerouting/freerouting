@@ -6770,5 +6770,98 @@
   
   
   
-
+  (zone (net 2) (net_name GND) (layer B.Cu) (tstamp 0) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 19 19) (xy 71 19) (xy 71 71) (xy 19 71)
+      )
+    )
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  )
+  (zone (net 2) (net_name GND) (layer F.Cu) (tstamp 57EC44C7) (hatch edge 0.508)
+    (connect_pads (clearance 0.4))
+    (min_thickness 0.2)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 19 19) (xy 71 19) (xy 71 71) (xy 19 71)
+      )
+    )
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  )
+  (zone (net 17) (net_name /BAT_-) (layer F.Cu) (tstamp 57ED029A) (hatch edge 0.508)
+    (priority 1)
+    (connect_pads yes (clearance 0.25))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 28.1 33.2) (xy 28.6 33.7) (xy 28.6 35.1) (xy 29.8 35.1) (xy 30.5 34.4)
+        (xy 30.5 33.8) (xy 31.7 33.8) (xy 31.7 36.3) (xy 28.1 36.3) (xy 27.4 35.6)
+        (xy 27.4 33.7) (xy 26.8 33.1) (xy 26.8 32) (xy 28.1 32)
+      )
+    )
+    
+  )
 )

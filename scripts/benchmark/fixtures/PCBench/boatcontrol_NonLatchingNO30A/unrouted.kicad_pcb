@@ -3280,5 +3280,32 @@
   
   
   
-
+  (zone (net 22) (net_name "Net-(J102-Pad5)") (layer F.Cu) (tstamp 606FD9C3) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 32) (thermal_gap 0.508) (thermal_bridge_width 0.508) (smoothing fillet) (radius 3))
+    (polygon
+      (pts
+        (xy 98.5 64.5) (xy 159.5 64.5) (xy 162.5 62) (xy 197 62.3) (xy 199.6 62.9)
+        (xy 199.5 66.6) (xy 196 67.5) (xy 192.5 71) (xy 158.5 71) (xy 156.5 73)
+        (xy 129 73) (xy 124 68) (xy 90.8 67.8) (xy 89.2 67.2) (xy 88.3 65.8)
+        (xy 88.4 64) (xy 89.4 62.6) (xy 91.6 62.3) (xy 96 62)
+      )
+    )
+    
+  )
+  (zone (net 22) (net_name "Net-(J102-Pad5)") (layer B.Cu) (tstamp 606FD9C0) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 32) (thermal_gap 0.508) (thermal_bridge_width 0.508) (smoothing fillet) (radius 3))
+    (polygon
+      (pts
+        (xy 98.5 64.5) (xy 159.5 64.5) (xy 162.5 62) (xy 197 62.3) (xy 199.6 62.9)
+        (xy 199.5 66.6) (xy 196 67.5) (xy 192.5 71) (xy 158.5 71) (xy 156.5 73)
+        (xy 129 73) (xy 124 68) (xy 90.8 67.8) (xy 89.2 67.2) (xy 88.3 65.8)
+        (xy 88.4 64) (xy 89.4 62.6) (xy 91.6 62.3) (xy 96 62)
+      )
+    )
+    
+  )
 )

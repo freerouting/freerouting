@@ -4775,5 +4775,68 @@
   
   
   
-
+  (zone (net 103) (net_name GND) (layer B.Cu) (tstamp 55044B62) (hatch edge 0.508)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.254)
+    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 5.08))
+    (polygon
+      (pts
+        (xy 128.27 87.63) (xy 48.895 87.63) (xy 48.895 18.415) (xy 128.27 18.415)
+      )
+    )
+    
+    
+    
+  )
+  (zone (net 104) (net_name GNDPWR) (layer B.Cu) (tstamp 55044BE8) (hatch edge 0.508)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.254)
+    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 5.08))
+    (polygon
+      (pts
+        (xy 194.945 98.425) (xy 48.895 98.425) (xy 48.895 88.265) (xy 66.04 88.265) (xy 66.675 88.9)
+        (xy 70.485 88.9) (xy 71.12 88.265) (xy 128.905 88.265) (xy 128.905 18.415) (xy 194.945 18.415)
+      )
+    )
+    
+    
+  )
+  (zone (net 23) (net_name /ARDUINO_VCC) (layer F.Cu) (tstamp 55044BE8) (hatch edge 0.508)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.254)
+    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 5.08))
+    (polygon
+      (pts
+        (xy 194.945 98.425) (xy 48.895 98.425) (xy 48.895 88.265) (xy 66.04 88.265) (xy 66.675 88.9)
+        (xy 70.485 88.9) (xy 71.12 88.265) (xy 128.905 88.265) (xy 128.905 18.415) (xy 194.945 18.415)
+      )
+    )
+    
+    
+    
+    
+    
+    
+  )
+  (zone (net 105) (net_name VCC) (layer F.Cu) (tstamp 5544B9EB) (hatch edge 0.508)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.254)
+    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 5.08))
+    (polygon
+      (pts
+        (xy 128.27 80.645) (xy 120.65 80.645) (xy 120.65 87.63) (xy 48.895 87.63) (xy 48.895 18.415)
+        (xy 128.27 18.415)
+      )
+    )
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  )
 )

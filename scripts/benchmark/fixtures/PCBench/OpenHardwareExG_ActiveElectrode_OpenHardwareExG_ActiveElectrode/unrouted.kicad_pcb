@@ -693,5 +693,49 @@
   
   
   
-
+  (zone (net 4) (net_name /GUARD_RING) (layer B.Cu) (tstamp 56895B07) (hatch edge 0.508)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.254) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 90.678 40.64) (xy 112.776 40.64) (xy 112.776 62.23) (xy 90.678 62.23)
+      )
+    )
+    
+  )
+  (zone (net 4) (net_name /GUARD_RING) (layer In2.Cu) (tstamp 56895B07) (hatch edge 0.508)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.254) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 90.678 40.64) (xy 112.776 40.64) (xy 112.776 62.23) (xy 90.678 62.23)
+      )
+    )
+    
+  )
+  (zone (net 4) (net_name /GUARD_RING) (layer In1.Cu) (tstamp 56895B07) (hatch edge 0.508)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.254) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 90.678 40.64) (xy 112.776 40.64) (xy 110.77 51.16) (xy 112.776 62.23) (xy 90.678 62.23)
+      )
+    )
+    
+  )
+  (zone (net 4) (net_name /GUARD_RING) (layer F.Cu) (tstamp 56895B07) (hatch edge 0.508)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.254) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 90.678 40.64) (xy 112.776 40.64) (xy 112.776 62.23) (xy 90.678 62.23)
+      )
+    )
+    
+    
+  )
 )

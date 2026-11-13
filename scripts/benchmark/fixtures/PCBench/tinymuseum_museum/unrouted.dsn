@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -24,6 +24,10 @@
       (path pcb 0  194500 -134500  134500 -134500  134500 -89000  194500 -89000
             194500 -134500)
     )
+    (plane GND (polygon F.Cu 0  194000 -134000  135000 -134000  135000 -89500  194000 -89500
+            194000 -134000))
+    (plane GND (polygon B.Cu 0  194000 -134000  135000 -134000  135000 -89500  194000 -89500
+            194000 -134000))
     (via "Via[0-1]_600:400_um")
     (rule
       (width 250)
@@ -427,8 +431,7 @@
         (clearance 200)
       )
     )
-    (class Power +12V +3.3V +5V 12V_BATT "Net-(P4-Pad2)" "Net-(P6-Pad2)" RASPI_5V
-      TRACER_12V
+    (class Ground /5V_GND_SW GND
       (circuit
         (use_via "Via[0-1]_600:400_um")
       )
@@ -437,7 +440,8 @@
         (clearance 300)
       )
     )
-    (class Ground /5V_GND_SW GND
+    (class Power +12V +3.3V +5V 12V_BATT "Net-(P4-Pad2)" "Net-(P6-Pad2)" RASPI_5V
+      TRACER_12V
       (circuit
         (use_via "Via[0-1]_600:400_um")
       )

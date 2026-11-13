@@ -3592,5 +3592,32 @@
   
   
   
-
+  (zone (net 18) (net_name GND) (layer Vorderseite) (tstamp 4F80CDBD) (hatch edge 0.508)
+    (connect_pads (clearance 0.4318))
+    (min_thickness 0.2032)
+    (fill yes (arc_segments 32) (thermal_gap 0.635) (thermal_bridge_width 0.3048))
+    (polygon
+      (pts
+        (xy 252.9332 90.1446) (xy 252.6538 32.9946) (xy 167.132 34.417) (xy 167.4876 89.9668)
+      )
+    )
+    
+    
+    
+    
+    
+    
+    
+  )
+  (zone (net 18) (net_name GND) (layer Rückseite) (tstamp 50112459) (hatch edge 0.508)
+    (connect_pads (clearance 0.4318))
+    (min_thickness 0.2032)
+    (fill yes (arc_segments 32) (thermal_gap 0.635) (thermal_bridge_width 0.3048))
+    (polygon
+      (pts
+        (xy 255.27 91.44) (xy 254.508 35.941) (xy 165.608 35.56) (xy 165.862 91.059)
+      )
+    )
+    
+  )
 )

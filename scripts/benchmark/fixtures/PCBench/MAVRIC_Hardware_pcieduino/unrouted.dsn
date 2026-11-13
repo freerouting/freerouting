@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -33,6 +33,10 @@
             52017.5 -101917  52129.5 -101777  52207.5 -101615  52247.5 -101440
             52250 -101350  52250 -100000  100000 -100000  100000 -130000)
     )
+    (plane GND (polygon F.Cu 0  52350 -100100  99900 -100100  99900 -129900  52350 -129850
+            52350 -100100))
+    (plane GND (polygon B.Cu 0  52350 -100100  99900 -100100  99900 -129900  52350 -129850
+            52350 -100100))
     (via "Via[0-1]_600:304.8_um")
     (rule
       (width 254)
@@ -582,21 +586,21 @@
         (clearance 200)
       )
     )
-    (class Power /UVCC VCC
-      (circuit
-        (use_via "Via[0-1]_600:304.8_um")
-      )
-      (rule
-        (width 400)
-        (clearance 200)
-      )
-    )
     (class PCI GND
       (circuit
         (use_via "Via[0-1]_600:304.8_um")
       )
       (rule
         (width 300)
+        (clearance 200)
+      )
+    )
+    (class Power /UVCC VCC
+      (circuit
+        (use_via "Via[0-1]_600:304.8_um")
+      )
+      (rule
+        (width 400)
         (clearance 200)
       )
     )

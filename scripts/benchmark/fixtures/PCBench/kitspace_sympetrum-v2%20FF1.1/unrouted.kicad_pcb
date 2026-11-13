@@ -4819,5 +4819,114 @@
   
   
   
+  (zone (net 1) (net_name GND) (layer Bottom_Copper) (tstamp 0) (hatch edge 0.508)
 
+    (connect_pads (clearance 0))
+
+    (min_thickness 0.254)
+
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508) (smoothing chamfer) (radius 0.5))
+
+    (polygon
+
+      (pts
+
+        (xy 152.4 49.8) (xy 150.2 57) (xy 142.4 57.2) (xy 141.8 58) (xy 142.8 60)
+
+        (xy 148 60.6) (xy 188 48.6) (xy 187.2 56.2) (xy 179.6 62.8) (xy 162.2 69)
+
+        (xy 147.2 67.4) (xy 147.2 70.2) (xy 184.4 72.6) (xy 180.4 78.4) (xy 157.6 85.2)
+
+        (xy 145.6 80.2) (xy 143 83) (xy 143 118.6) (xy 138.8 122.8) (xy 134.6 118.6)
+
+        (xy 134.6 82.8) (xy 132 80.2) (xy 119.8 85.2) (xy 97.2 78.4) (xy 93.6 72.4)
+
+        (xy 130.4 70.2) (xy 130.4 67.6) (xy 115.4 69.2) (xy 98 62.8) (xy 90.4 56)
+
+        (xy 89.8 48.8) (xy 129.6 60.6) (xy 134.8 60) (xy 135.8 58) (xy 135.2 57.2)
+
+        (xy 127.4 57) (xy 125.2 49.8) (xy 131.4 46) (xy 138.8 51.2) (xy 146.2 45.8)
+
+      )
+
+    )
+
+    
+
+  )
+  (zone (net 10) (net_name "Net-(L301-Pad2)") (layer Top_Copper) (tstamp 0) (hatch full 0.508)
+
+    (priority 1)
+
+    (connect_pads yes (clearance 0))
+
+    (min_thickness 0.254)
+
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+
+    (polygon
+
+      (pts
+
+        (xy 123.7 75.6) (xy 124.75 75.5) (xy 126.2 77.75) (xy 126.45 80.25) (xy 123.95 80.45)
+
+        (xy 123.75 78)
+
+      )
+
+    )
+
+    
+
+  )
+  (zone (net 5) (net_name +3V3) (layer Top_Copper) (tstamp 0) (hatch full 0.508)
+
+    (priority 1)
+
+    (connect_pads yes (clearance 0))
+
+    (min_thickness 0.254)
+
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+
+    (polygon
+
+      (pts
+
+        (xy 122.5 74.75) (xy 121.15 74.7) (xy 120.7 73.95) (xy 120 73.95) (xy 119 75.5)
+
+        (xy 119.2 75.9) (xy 120.8 75.85) (xy 121.15 75.5) (xy 122.55 75.35)
+
+      )
+
+    )
+
+    
+
+  )
+  (zone (net 2) (net_name +BATT) (layer Top_Copper) (tstamp 0) (hatch full 0.508)
+
+    (priority 1)
+
+    (connect_pads yes (clearance 0))
+
+    (min_thickness 0.254)
+
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+
+    (polygon
+
+      (pts
+
+        (xy 122.55 75.7) (xy 122.75 78.05) (xy 122.95 80.55) (xy 120.45 80.8) (xy 111.25 78.25)
+
+        (xy 111.25 76.75) (xy 112 75.75) (xy 117.4 76) (xy 120.3 76.15) (xy 121.5 75.8)
+
+      )
+
+    )
+
+    
+
+  )
 )

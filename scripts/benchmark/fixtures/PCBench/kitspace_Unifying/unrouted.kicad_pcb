@@ -23875,4 +23875,584 @@
   
   
   
+  
+  (zone (net 1) (net_name "GND") (layer "In1.Cu") (tstamp c32b878e-cf8c-4994-b707-dec8fc14550f) (hatch edge 0.508)
+
+    (priority 1)
+
+    (connect_pads yes (clearance 0.4))
+
+    (min_thickness 0.254) (filled_areas_thickness no)
+
+    (fill yes (thermal_gap 0.508) (thermal_bridge_width 0.508))
+
+    (polygon
+
+      (pts
+
+        (xy 217.94 152.8)
+
+        (xy 97.050383 153.106266)
+
+        (xy 97.15 74.57)
+
+        (xy 217.49 74.805)
+
+      )
+
+    )
+
+    
+
   )
+  (zone (net 93) (net_name "/+3.3v") (layer "In2.Cu") (tstamp 0c5c9a25-90f2-45c9-98e7-cb090d756cae) (name "3V3_power") (hatch edge 0.508)
+
+    (connect_pads (clearance 0.4))
+
+    (min_thickness 0.254) (filled_areas_thickness no)
+
+    (fill yes (thermal_gap 0.508) (thermal_bridge_width 0.508) (island_removal_mode 2) (island_area_min 10))
+
+    (polygon
+
+      (pts
+
+        (xy 172.99 115.25)
+
+        (xy 175.57 117.89)
+
+        (xy 176.52 123.93)
+
+        (xy 192.67 132.45)
+
+        (xy 188.92 137.29)
+
+        (xy 175.05 137.33)
+
+        (xy 170.82 133.57)
+
+        (xy 169.35 133.63)
+
+        (xy 168.87 152.92)
+
+        (xy 97.12 153.09)
+
+        (xy 96.87 128.52)
+
+        (xy 126.24 128.57)
+
+        (xy 132 134.27)
+
+        (xy 155.49 134.21)
+
+        (xy 163.3 127.75)
+
+        (xy 164.71 120.18)
+
+        (xy 169.3 115.24)
+
+      )
+
+    )
+
+    
+
+    
+
+    
+
+  )
+  (zone (net 228) (net_name "/+3.3vSSD") (layer "In2.Cu") (tstamp 1f6dd6bf-f3d6-4667-9c46-1f30f641c5db) (hatch edge 0.508)
+
+    (connect_pads (clearance 0.4))
+
+    (min_thickness 0.254) (filled_areas_thickness no)
+
+    (fill yes (thermal_gap 0.508) (thermal_bridge_width 0.508) (island_removal_mode 2) (island_area_min 10))
+
+    (polygon
+
+      (pts
+
+        (xy 169.92 113.26)
+
+        (xy 168.84 113.47)
+
+        (xy 163.54 119.27)
+
+        (xy 162.41 120.94)
+
+        (xy 162.19 124.58)
+
+        (xy 162.05 125.41)
+
+        (xy 158.62 125.6)
+
+        (xy 157.16 127.26)
+
+        (xy 156.78 129.63)
+
+        (xy 155.14 130.84)
+
+        (xy 145.77 130.84)
+
+        (xy 145.77 125.83)
+
+        (xy 147.49 125.56)
+
+        (xy 149 125.61)
+
+        (xy 160.33 124.72)
+
+        (xy 160.76 123.69)
+
+        (xy 161.32 123.14)
+
+        (xy 161.57 120.48)
+
+        (xy 167.27 112.93)
+
+        (xy 169.93 112.47)
+
+      )
+
+    )
+
+    
+
+    
+
+  )
+  (zone (net 109) (net_name "/USB2-HUB/VBUS") (layer "In2.Cu") (tstamp 52805651-bdb3-4ea5-960e-b91fef8ef065) (name "VBUS_power") (hatch edge 0.508)
+
+    (connect_pads (clearance 0.4))
+
+    (min_thickness 0.254) (filled_areas_thickness no)
+
+    (fill yes (thermal_gap 0.508) (thermal_bridge_width 0.508) (island_removal_mode 2) (island_area_min 10))
+
+    (polygon
+
+      (pts
+
+        (xy 217.32372 153.098555)
+
+        (xy 169.40372 152.928555)
+
+        (xy 170.23372 134.198555)
+
+        (xy 174.36372 138.048555)
+
+        (xy 190.86372 138.098555)
+
+        (xy 198.86372 128.728555)
+
+        (xy 198.78372 104.348555)
+
+        (xy 217.21372 104.358555)
+
+      )
+
+    )
+
+    
+
+    
+
+  )
+  (zone (net 4) (net_name "/+5v") (layer "In2.Cu") (tstamp 67c72a96-f8c7-4e04-b4fa-1f17b2a48d32) (hatch edge 0.508)
+
+    (connect_pads (clearance 0.4))
+
+    (min_thickness 0.254) (filled_areas_thickness no)
+
+    (fill yes (thermal_gap 0.508) (thermal_bridge_width 0.508) (island_removal_mode 2) (island_area_min 10))
+
+    (polygon
+
+      (pts
+
+        (xy 180.436681 115.707577)
+
+        (xy 180.646681 116.527577)
+
+        (xy 181.186681 117.007577)
+
+        (xy 181.716681 117.057577)
+
+        (xy 189.306681 125.247577)
+
+        (xy 190.016681 125.467577)
+
+        (xy 191.546681 126.107577)
+
+        (xy 191.316681 130.957577)
+
+        (xy 177.25 123.45)
+
+        (xy 177.25 117.36)
+
+        (xy 174.57 115)
+
+        (xy 174.07 114.93)
+
+        (xy 173.5 114.85)
+
+        (xy 173.59 114.41)
+
+        (xy 174.09 114.24)
+
+        (xy 176.17 114.26)
+
+        (xy 178.7 114.22)
+
+      )
+
+    )
+
+    
+
+    
+
+  )
+  (zone (net 109) (net_name "/USB2-HUB/VBUS") (layer "In2.Cu") (tstamp 8b3ae4aa-cd58-4dbc-80b3-a9a399e50672) (hatch edge 0.508)
+
+    (connect_pads (clearance 0.4))
+
+    (min_thickness 0.254) (filled_areas_thickness no)
+
+    (fill yes (thermal_gap 0.508) (thermal_bridge_width 0.508) (island_removal_mode 2) (island_area_min 10))
+
+    (polygon
+
+      (pts
+
+        (xy 129.2 98.17)
+
+        (xy 131.61 98.45)
+
+        (xy 142.82 114)
+
+        (xy 142.91 119.5)
+
+        (xy 148.75 119.57)
+
+        (xy 151.96 122.02)
+
+        (xy 160.1 122.18)
+
+        (xy 160.14 123.61)
+
+        (xy 150.73 123.63)
+
+        (xy 148.93 121.22)
+
+        (xy 138.25 121.18)
+
+        (xy 132.43 115.39)
+
+        (xy 129.83 115.34)
+
+        (xy 128.52 114.08)
+
+        (xy 128.48 111.46)
+
+        (xy 126.65 109.75)
+
+        (xy 125.11 109.53)
+
+        (xy 121.66 105.69)
+
+        (xy 103.81 105.96)
+
+        (xy 103.61 98.91)
+
+        (xy 121.91 98.76)
+
+      )
+
+    )
+
+    
+
+  )
+  (zone (net 228) (net_name "/+3.3vSSD") (layer "In2.Cu") (tstamp 9f6d5dd6-71c0-40c7-b6a9-e8ea4cbca2cc) (hatch edge 0.508)
+
+    (connect_pads (clearance 0.4))
+
+    (min_thickness 0.254) (filled_areas_thickness no)
+
+    (fill yes (thermal_gap 0.508) (thermal_bridge_width 0.508) (island_removal_mode 2) (island_area_min 10))
+
+    (polygon
+
+      (pts
+
+        (xy 184.45 100.2)
+
+        (xy 184.6 103.17)
+
+        (xy 184.5 105.89)
+
+        (xy 184.7 109.45)
+
+        (xy 182.89 110.81)
+
+        (xy 180.22 110.81)
+
+        (xy 180.16 113.26)
+
+        (xy 174.31 113.19)
+
+        (xy 169.73 113.33)
+
+        (xy 169.59 95.19)
+
+        (xy 172.3 95.19)
+
+        (xy 178.46 90.12)
+
+        (xy 184.74 88.32)
+
+        (xy 186.4 89.39)
+
+        (xy 185.67 91.05)
+
+        (xy 185.28 93.19)
+
+        (xy 184.94 95.33)
+
+      )
+
+    )
+
+    
+
+    
+
+  )
+  (zone (net 2) (net_name "Net-(J1-Pin_1)") (layer "In2.Cu") (tstamp ad2d20db-4faf-4f7d-87eb-bf0666261360) (name "12V_power") (hatch edge 0.508)
+
+    (connect_pads (clearance 0.4))
+
+    (min_thickness 0.254) (filled_areas_thickness no)
+
+    (fill yes (thermal_gap 0.508) (thermal_bridge_width 0.508) (island_removal_mode 2) (island_area_min 10))
+
+    (polygon
+
+      (pts
+
+        (xy 124.51 127.7)
+
+        (xy 96.91 127.84)
+
+        (xy 96.82 119.86)
+
+        (xy 96.82 117.65)
+
+        (xy 96.83 116.29)
+
+        (xy 124.29 116.04)
+
+      )
+
+    )
+
+    
+
+  )
+  (zone (net 4) (net_name "/+5v") (layer "In2.Cu") (tstamp b7bfe395-a9ee-4124-83d9-fff647a1c33f) (hatch edge 0.508)
+
+    (connect_pads (clearance 0.4))
+
+    (min_thickness 0.254) (filled_areas_thickness no)
+
+    (fill yes (thermal_gap 0.508) (thermal_bridge_width 0.508) (island_removal_mode 2) (island_area_min 10))
+
+    (polygon
+
+      (pts
+
+        (xy 125.2 79)
+
+        (xy 125.2 97.6)
+
+        (xy 101.79 97.6)
+
+        (xy 100.96 98.02)
+
+        (xy 100.88 106.92)
+
+        (xy 96.82 106.99)
+
+        (xy 96.77 78.92)
+
+      )
+
+    )
+
+    
+
+  )
+  (zone (net 4) (net_name "/+5v") (layer "In2.Cu") (tstamp cafab957-52af-40f5-a057-cce926726086) (hatch edge 0.508)
+
+    (connect_pads (clearance 0.4))
+
+    (min_thickness 0.254) (filled_areas_thickness no)
+
+    (fill yes (thermal_gap 0.508) (thermal_bridge_width 0.508) (island_removal_mode 2) (island_area_min 10))
+
+    (polygon
+
+      (pts
+
+        (xy 124.22 110.52)
+
+        (xy 126.8 110.52)
+
+        (xy 127.82 111.5)
+
+        (xy 127.86 114.48)
+
+        (xy 129.64 115.99)
+
+        (xy 132.26 116.08)
+
+        (xy 138.18 121.72)
+
+        (xy 148.58 121.63)
+
+        (xy 149.78 123.77)
+
+        (xy 150.56 124.14)
+
+        (xy 151.86 124.1)
+
+        (xy 151.85 124.76)
+
+        (xy 150.06 124.66)
+
+        (xy 149.24 124.6)
+
+        (xy 148.54 124.54)
+
+        (xy 146.53 124.83)
+
+        (xy 144.49 125.41)
+
+        (xy 144.58 131.5)
+
+        (xy 144.62 131.72)
+
+        (xy 155.16 131.72)
+
+        (xy 157.69 129.41)
+
+        (xy 157.73 127.54)
+
+        (xy 159.16 126.21)
+
+        (xy 159.25 127.99)
+
+        (xy 161.96 127.99)
+
+        (xy 155.73 133.46)
+
+        (xy 132.04 133.63)
+
+        (xy 126.89 128.48)
+
+        (xy 126.84 115.28)
+
+        (xy 96.84 115.32)
+
+        (xy 96.84 106.79)
+
+        (xy 120.4 106.7)
+
+      )
+
+    )
+
+    
+
+  )
+  (zone (net 93) (net_name "/+3.3v") (layer "In2.Cu") (tstamp e64c508f-5a23-4be2-abae-db24efbe6e12) (hatch edge 0.508)
+
+    (connect_pads (clearance 0.4))
+
+    (min_thickness 0.254) (filled_areas_thickness no)
+
+    (fill yes (thermal_gap 0.508) (thermal_bridge_width 0.508) (island_removal_mode 2) (island_area_min 10))
+
+    (polygon
+
+      (pts
+
+        (xy 217.44 103.34)
+
+        (xy 197.67 103.64)
+
+        (xy 197.97 123.29)
+
+        (xy 191.79 123.28)
+
+        (xy 192.03 120.43)
+
+        (xy 190.02 120.64)
+
+        (xy 182.63 116.54)
+
+        (xy 182.3075 112.035)
+
+        (xy 185.98 109.69)
+
+        (xy 188.28 88.92)
+
+        (xy 186.97 88.33)
+
+        (xy 185.67 86.69)
+
+        (xy 179.77 86.79)
+
+        (xy 172.66 93.99)
+
+        (xy 168.15 95.05)
+
+        (xy 168.69 111.94)
+
+        (xy 166.47 112.42)
+
+        (xy 162.11 118.2)
+
+        (xy 160.99 120.2)
+
+        (xy 160.66 120.99)
+
+        (xy 153.05 121.06)
+
+        (xy 148.73 118.56)
+
+        (xy 143.71 118.02)
+
+        (xy 143.64 112.98)
+
+        (xy 131.81 96.79)
+
+        (xy 126.21 96.74)
+
+        (xy 126.06 75.07)
+
+        (xy 180.06 74.96)
+
+        (xy 217.21 75.19)
+
+      )
+
+    )
+
+    
+
+  )
+)

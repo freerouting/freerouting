@@ -3070,5 +3070,52 @@
   
   
   
-
+  (zone (net 25) (net_name GND) (layer B.Cu) (tstamp 55FEC007) (hatch edge 0.508)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.254) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 164.95428 172.34252) (xy 157.95428 172.34252) (xy 157.95428 176.84252) (xy 164.45428 176.84252) (xy 164.47008 185.7883)
+        (xy 142.45428 185.84252) (xy 142.45428 190.94832) (xy 120.82002 190.9026) (xy 120.34542 150.08066) (xy 147.97548 149.99938)
+        (xy 147.89912 156.3243) (xy 147.953026 162.98984) (xy 164.95428 162.84252)
+      )
+    )
+    
+  )
+  (zone (net 30) (net_name PWR) (layer B.Cu) (tstamp 561BD55B) (hatch edge 0.508)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.254) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 176.4492 150.33212) (xy 176.5 198.1) (xy 122.174 198.18) (xy 122.174 191.216) (xy 143.129 191.216)
+        (xy 143.127 186.5) (xy 165 186.5) (xy 165 176.5) (xy 158.5 176.5) (xy 158.5 173)
+        (xy 165.5 173) (xy 165.5 162.5) (xy 148.5 162.5) (xy 148.4492 150.33212)
+      )
+    )
+    
+  )
+  (zone (net 0) (net_name "") (layer B.Cu) (tstamp 560915A9) (hatch full 0.508)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.254)
+    (keepout (tracks not_allowed) (vias not_allowed) (copperpour not_allowed))
+    (fill yes (arc_segments 16) (thermal_gap 0.254) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 121.641066 150.0886) (xy 121.5898 150.0886) (xy 121.6406 150.0632)
+      )
+    )
+  )
+  (zone (net 0) (net_name "") (layer B.Cu) (tstamp 560915CD) (hatch full 0.508)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.254)
+    (keepout (tracks not_allowed) (vias not_allowed) (copperpour not_allowed))
+    (fill yes (arc_segments 16) (thermal_gap 0.254) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 145.288 150.0886) (xy 145.20164 157.36062) (xy 121.70664 157.36062) (xy 121.641066 150.0886)
+      )
+    )
+  )
 )

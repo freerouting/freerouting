@@ -595,5 +595,53 @@
   
   
   
-
+  (zone (net 1) (net_name GND) (layer F.Cu) (tstamp 0) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 32) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 98.044 48.006) (xy 99.314 43.18) (xy 100.838 43.18) (xy 102.87 50.165) (xy 102.997 55.245)
+        (xy 110.998 57.658) (xy 106.934 61.976) (xy 100.33 63.5) (xy 93.218 62.23) (xy 89.154 57.531)
+        (xy 92.456 54.356) (xy 98.171 55.0545)
+      )
+    )
+    
+  )
+  (zone (net 16) (net_name /LED-connect) (layer F.Cu) (tstamp 0) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.7))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 32) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 90.932 47.498) (xy 90.932 44.577) (xy 96.012 41.656) (xy 104.394 41.656) (xy 106.172 46.99)
+        (xy 108.458 46.99) (xy 108.458 38.862) (xy 100.076 36.576) (xy 90.17 40.386) (xy 86.868 47.498)
+      )
+    )
+    
+  )
+  (zone (net 2) (net_name VCC) (layer F.Cu) (tstamp 0) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 32) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 109.22 44.958) (xy 113.284 44.958) (xy 112.776 56.642) (xy 105.41 54.864) (xy 103.505 54.102)
+        (xy 109.22 48.006)
+      )
+    )
+    
+  )
+  (zone (net 17) (net_name /LEDPower) (layer F.Cu) (tstamp 0) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 32) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 91.44 45.974) (xy 93.472 45.974) (xy 93.345 51.562) (xy 88.138 56.515) (xy 86.614 48.514)
+        (xy 91.44 48.514)
+      )
+    )
+    
+  )
 )

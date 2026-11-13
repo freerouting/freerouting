@@ -4000,5 +4000,75 @@
   
   
   
-
+  (zone (net 3) (net_name GND) (layer B.Cu) (tstamp 0) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.16))
+    (min_thickness 0.16)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 106 70) (xy 179.5 70) (xy 179.5 90) (xy 106 90)
+      )
+    )
+    
+    
+    
+  )
+  (zone (net 3) (net_name GND) (layer F.Cu) (tstamp 0) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.16))
+    (min_thickness 0.16)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 106 70) (xy 179.5 70) (xy 179.5 90) (xy 106 90)
+      )
+    )
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  )
+  (zone (net 35) (net_name "Net-(IC1-Pad3)") (layer F.Cu) (tstamp 0) (hatch edge 0.508)
+    (priority 2)
+    (connect_pads yes (clearance 0.16))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 145.49 78.41) (xy 145.49 79.8) (xy 145.71 80.23) (xy 145.9 80.4) (xy 146.9 80.4)
+        (xy 146.9 80.8) (xy 145.7 80.8) (xy 145.51 80.7) (xy 145.37 80.53) (xy 145.2 80.1)
+        (xy 144.7 79.5) (xy 142.59 79.51) (xy 142.6 78.410033) (xy 145.49 78.41)
+      )
+    )
+    
+  )
+  (zone (net 35) (net_name "Net-(IC1-Pad3)") (layer F.Cu) (tstamp 5734E923) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.16))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 142.46 78.4) (xy 142.47 78.4) (xy 142.47 78.400033) (xy 142.46 78.4)
+      )
+    )
+  )
+  (zone (net 38) (net_name "Net-(C14-Pad1)") (layer F.Cu) (tstamp 0) (hatch edge 0.508)
+    (priority 1)
+    (connect_pads yes (clearance 0.16))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 142.6 80.7) (xy 145.5 80.7) (xy 145.9 81.2) (xy 146.4 81.3) (xy 147.1 81.3)
+        (xy 147.1 81.9) (xy 147.1 85.5) (xy 144.7 85.5) (xy 144.7 81.8) (xy 142.6 81.8)
+        (xy 142.6 80.7)
+      )
+    )
+    
+  )
 )

@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -36,6 +36,28 @@
       (path pcb 0  650075 -155075  49925 -155075  49925 -44925  650075 -44925
             650075 -155075)
     )
+    (plane "/Programming Socket #8/5V_SOCKET" (polygon In2.Cu 0  170000 -120000  140000 -120000  140000 -87500  170000 -87500
+            170000 -120000))
+    (plane "/Programming Socket #7/5V_SOCKET" (polygon In2.Cu 0  225000 -120000  195000 -120000  195000 -87500  225000 -87500
+            225000 -120000))
+    (plane "/Programming Socket #6/5V_SOCKET" (polygon In2.Cu 0  280000 -120000  250000 -120000  250000 -87500  280000 -87500
+            280000 -120000))
+    (plane "/Programming Socket #5/5V_SOCKET" (polygon In2.Cu 0  350000 -115000  320000 -115000  320000 -80000  350000 -80000
+            350000 -115000))
+    (plane "/Programming Socket #4/5V_SOCKET" (polygon In2.Cu 0  405000 -115000  375000 -115000  375000 -80000  405000 -80000
+            405000 -115000))
+    (plane "/Programming Socket #3/5V_SOCKET" (polygon In2.Cu 0  430000 -112500  430000 -80000  460000 -80000  460000 -115000
+            430000 -115000  430000 -112500))
+    (plane "/Programming Socket #2/5V_SOCKET" (polygon In2.Cu 0  515100 -120000  485100 -120000  485100 -85000  515100 -85000
+            515100 -120000))
+    (plane "/Programming Socket #1/5V_SOCKET" (polygon In2.Cu 0  570100 -120000  540100 -120000  540100 -85000  570100 -85000
+            570100 -120000))
+    (plane "/Programming Socket #0/5V_SOCKET" (polygon In2.Cu 0  625100 -120000  595100 -120000  595100 -85000  625100 -85000
+            625100 -120000))
+    (plane +5V (polygon In2.Cu 0  649000 -154000  51000 -154000  51000 -46000  649000 -46000
+            649000 -154000))
+    (plane GND (polygon In1.Cu 0  649000 -154000  51000 -154000  51000 -46000  649000 -46000
+            649000 -154000))
     (via "Via[0-3]_700:300_um")
     (rule
       (width 200)

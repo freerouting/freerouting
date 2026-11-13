@@ -1939,5 +1939,39 @@
   
   
   
-
+  (zone (net 1) (net_name +12V) (layer F.Cu) (tstamp 55FDAF64) (hatch edge 0.508)
+    (connect_pads yes (clearance 0))
+    (min_thickness 0.0254)
+    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 166.9 148.45) (xy 159.6 148.45) (xy 159.6 143.35) (xy 147.5 143.35) (xy 147.5 153.55)
+        (xy 151.85 153.55) (xy 151.85 155.25) (xy 166.85 155.25)
+      )
+    )
+    
+  )
+  (zone (net 32) (net_name N-0000032) (layer F.Cu) (tstamp 55FDCD1D) (hatch edge 0.508)
+    (connect_pads yes (clearance 0))
+    (min_thickness 0.0254)
+    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 157.15 129.7) (xy 150.55 129.7) (xy 147.35 132.2) (xy 147.35 141.4) (xy 157.15 141.4)
+      )
+    )
+    
+  )
+  (zone (net 45) (net_name N-0000048) (layer F.Cu) (tstamp 55FDCD45) (hatch edge 0.508)
+    (connect_pads yes (clearance 0))
+    (min_thickness 0.0254)
+    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 144.15 143.9) (xy 133.15 143.9) (xy 133.1 159.95) (xy 136.95 159.95) (xy 137.05 155)
+        (xy 144.1 155)
+      )
+    )
+    
+  )
 )

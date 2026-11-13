@@ -5179,5 +5179,64 @@
   
   
   
-
+  (zone (net 1) (net_name GND) (layer B.Cu) (tstamp 60B782B3) (hatch edge 0.508)
+    (connect_pads (clearance 0.1524))
+    (min_thickness 0.1524)
+    (fill yes (arc_segments 32) (thermal_gap 0.1524) (thermal_bridge_width 0.254))
+    (polygon
+      (pts
+        (xy 68.2498 81.5594) (xy 133.096 81.5594) (xy 134.8994 83.3628) (xy 134.8994 94.869) (xy 137.4394 97.409)
+        (xy 137.4394 130.175) (xy 134.9502 132.6642) (xy 134.9502 135.509) (xy 68.2498 135.509)
+      )
+    )
+    
+  )
+  (zone (net 8) (net_name +3.3V) (layer F.Cu) (tstamp 60B782B0) (hatch edge 0.508)
+    (connect_pads (clearance 0.1524))
+    (min_thickness 0.1524)
+    (fill yes (arc_segments 32) (thermal_gap 0.1524) (thermal_bridge_width 0.254))
+    (polygon
+      (pts
+        (xy 68.2498 81.5594) (xy 133.096 81.5594) (xy 134.8994 83.3628) (xy 134.8994 94.869) (xy 137.4394 97.409)
+        (xy 137.4394 130.175) (xy 134.9502 132.6642) (xy 134.9502 135.509) (xy 68.2498 135.509)
+      )
+    )
+    
+  )
+  (zone (net 6) (net_name V+) (layer F.Cu) (tstamp 60B782AD) (hatch edge 0.508)
+    (priority 2)
+    (connect_pads (clearance 0.1524))
+    (min_thickness 0.1524)
+    (fill yes (arc_segments 32) (thermal_gap 0.1524) (thermal_bridge_width 0.254))
+    (polygon
+      (pts
+        (xy 70.739 113.0935) (xy 80.264 113.03) (xy 80.264 119.47525) (xy 70.739 119.53875)
+      )
+    )
+    
+  )
+  (zone (net 13) (net_name "Net-(D3-Pad2)") (layer F.Cu) (tstamp 60B782AA) (hatch edge 0.508)
+    (priority 4)
+    (connect_pads (clearance 0.1524))
+    (min_thickness 0.1524)
+    (fill yes (arc_segments 32) (thermal_gap 0.1524) (thermal_bridge_width 0.254))
+    (polygon
+      (pts
+        (xy 70.739 119.761) (xy 81.026 119.761) (xy 81.026 130.302) (xy 70.739 130.302)
+      )
+    )
+    
+  )
+  (zone (net 7) (net_name +5V) (layer F.Cu) (tstamp 60B782A7) (hatch edge 0.508)
+    (priority 2)
+    (connect_pads (clearance 0.1524))
+    (min_thickness 0.1524)
+    (fill yes (arc_segments 32) (thermal_gap 0.1524) (thermal_bridge_width 0.254))
+    (polygon
+      (pts
+        (xy 80.408924 110.744) (xy 88.628076 110.744) (xy 88.646 122.047) (xy 80.518 122.047)
+      )
+    )
+    
+  )
 )

@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -24,6 +24,18 @@
       (path pcb 0  162500 -143500  127100 -143500  127100 -86390  162500 -86390
             162500 -143500)
     )
+    (plane GND (polygon F.Cu 0  132340 -93220  156840 -93220  156840 -136560  132340 -136560
+            132340 -93220))
+    (plane GND (polygon B.Cu 0  132340 -93220  156840 -93220  156840 -136560  132340 -136560
+            132340 -93220))
+    (keepout "" (polygon F.Cu 0  132800 -136300  156550 -136290  156550 -136660  132800 -136660
+            132800 -136300))
+    (keepout "" (polygon B.Cu 0  132800 -136660  156550 -136660  156550 -136290  132800 -136300
+            132800 -136660))
+    (keepout "" (polygon F.Cu 0  156840 -94900  156840 -102530  157190 -102530  157190 -94890
+            156840 -94890  156840 -94900))
+    (keepout "" (polygon B.Cu 0  156840 -94900  156840 -102530  157190 -102530  157190 -94890
+            156840 -94890  156840 -94900))
     (via "Via[0-1]_600:300_um")
     (rule
       (width 250)
@@ -668,21 +680,21 @@
         (clearance 200)
       )
     )
-    (class VCC 12V VCC
-      (circuit
-        (use_via "Via[0-1]_600:300_um")
-      )
-      (rule
-        (width 500)
-        (clearance 200)
-      )
-    )
     (class TS T1+ "T1-" T2+ "T2-" T3+ "T3-" T4+ "T4-"
       (circuit
         (use_via "Via[0-1]_600:300_um")
       )
       (rule
         (width 750)
+        (clearance 200)
+      )
+    )
+    (class VCC 12V VCC
+      (circuit
+        (use_via "Via[0-1]_600:300_um")
+      )
+      (rule
+        (width 500)
         (clearance 200)
       )
     )

@@ -1103,5 +1103,61 @@
   
   
   
-
+  (zone (net 10) (net_name GNDPWR) (layer Front) (tstamp 519FDA83) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.25))
+    (min_thickness 0.25)
+    (fill (arc_segments 32) (thermal_gap 0.25) (thermal_bridge_width 0.5) (smoothing fillet) (radius 0.5))
+    (polygon
+      (pts
+        (xy 82.3 50.9) (xy 84.6 50.9) (xy 84.6 53.2) (xy 82.3 53.2)
+      )
+    )
+    
+  )
+  (zone (net 10) (net_name GNDPWR) (layer Back) (tstamp 519FDA83) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.25))
+    (min_thickness 0.25)
+    (fill (arc_segments 32) (thermal_gap 0.25) (thermal_bridge_width 0.5) (smoothing fillet) (radius 0.5))
+    (polygon
+      (pts
+        (xy 82.3 50.9) (xy 84.6 50.9) (xy 84.6 53.2) (xy 82.3 53.2)
+      )
+    )
+    
+  )
+  (zone (net 9) (net_name GND) (layer Front) (tstamp 51A54212) (hatch full 0.508)
+    (connect_pads (clearance 0.15))
+    (min_thickness 0.15)
+    (fill (arc_segments 32) (thermal_gap 0.2) (thermal_bridge_width 0.2))
+    (polygon
+      (pts
+        (xy 92.15 53.8) (xy 92.71 53.8) (xy 92.71 56.49) (xy 93.7 56.49) (xy 93.7 57.3)
+        (xy 92.15 57.3)
+      )
+    )
+    
+  )
+  (zone (net 0) (net_name "") (layer F.Paste) (tstamp 51A541C2) (hatch edge 0.508)
+    (connect_pads (clearance 0.15))
+    (min_thickness 0.15)
+    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 92.21 56.5) (xy 92.21 53.9) (xy 92.63 53.9) (xy 92.63 56.5)
+      )
+    )
+    
+  )
+  (zone (net 0) (net_name "") (layer F.Mask) (tstamp 51CE09AE) (hatch edge 0.508)
+    (connect_pads (clearance 0.15))
+    (min_thickness 0.15)
+    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 92.15 53.8) (xy 92.71 53.8) (xy 92.71 56.49) (xy 93.7 56.49) (xy 93.7 57.3)
+        (xy 92.15 57.3)
+      )
+    )
+    
+  )
 )

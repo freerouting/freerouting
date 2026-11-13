@@ -11520,5 +11520,56 @@
   
   
   
-
+  (zone (net 91) (net_name GND) (layer In2.Cu) (tstamp 633CCF70) (hatch edge 0.508)
+    (connect_pads (clearance 0.7))
+    (min_thickness 0.508)
+    (fill yes (arc_segments 32) (thermal_gap 0.508) (thermal_bridge_width 1))
+    (polygon
+      (pts
+        (xy 295.402 172.72) (xy 4.826 172.725723) (xy 4.826 45.725723) (xy 295.402 45.72)
+      )
+    )
+    
+  )
+  (zone (net 91) (net_name GND) (layer In1.Cu) (tstamp 633CCF6D) (hatch edge 0.508)
+    (connect_pads (clearance 0.75))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 32) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 295.402 172.72) (xy 4.826 172.72) (xy 4.826 45.72) (xy 295.402 45.72)
+      )
+    )
+    
+  )
+  (zone (net 0) (net_name "") (layer F.Mask) (tstamp 633CCF6A) (hatch edge 0.508)
+    (connect_pads (clearance 0.7))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 32) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 178.562 51.308) (xy 180.086 51.308) (xy 180.594 52.07) (xy 206.502 52.07) (xy 206.502 52.324)
+        (xy 207.264 52.324) (xy 208.915 51.689) (xy 210.82 52.578) (xy 211.582 54.356) (xy 210.82 56.515)
+        (xy 207.01 56.515) (xy 206.502 56.642) (xy 206.502 57.658) (xy 179.832 57.658) (xy 178.562 57.912)
+        (xy 177.292 58.928) (xy 175.768 57.912) (xy 174.244 57.658) (xy 173.99 56.134) (xy 172.72 54.61)
+        (xy 173.99 53.086) (xy 173.99 51.562) (xy 175.768 51.308) (xy 177.292 50.292)
+      )
+    )
+    
+  )
+  (zone (net 0) (net_name "") (layer B.Mask) (tstamp 633CCF67) (hatch edge 0.508)
+    (connect_pads (clearance 0.7))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 32) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 178.562 51.308) (xy 180.086 51.308) (xy 180.594 52.07) (xy 206.502 52.07) (xy 206.502 52.324)
+        (xy 207.264 52.324) (xy 208.915 51.689) (xy 210.82 52.578) (xy 211.582 54.356) (xy 210.82 56.515)
+        (xy 207.01 56.515) (xy 206.502 56.642) (xy 206.502 57.658) (xy 179.832 57.658) (xy 178.562 57.912)
+        (xy 177.292 58.928) (xy 175.768 57.912) (xy 174.244 57.658) (xy 173.99 56.134) (xy 172.72 54.61)
+        (xy 173.99 53.086) (xy 173.99 51.562) (xy 175.768 51.308) (xy 177.292 50.292)
+      )
+    )
+    
+  )
 )

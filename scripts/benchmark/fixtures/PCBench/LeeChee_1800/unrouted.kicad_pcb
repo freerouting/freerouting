@@ -31699,5 +31699,119 @@
   
   
   
-
+  (zone (net 1) (net_name Earth) (layer F.Cu) (tstamp 0) (hatch full 0.508)
+    (connect_pads yes (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508) (smoothing fillet) (radius 5))
+    (polygon
+      (pts
+        (xy 19.558 94.361) (xy 18.161 275.6535) (xy 405.765 273.177) (xy 403.86 105.029)
+      )
+    )
+    
+    
+    
+    
+    
+  )
+  (zone (net 1) (net_name Earth) (layer B.Cu) (tstamp 0) (hatch full 0.508)
+    (connect_pads yes (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508) (smoothing fillet) (radius 5))
+    (polygon
+      (pts
+        (xy 16.764 100.711) (xy 14.986 274.3835) (xy 407.543 274.828) (xy 404.0505 98.9965)
+      )
+    )
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  )
+  (zone (net 0) (net_name "") (layer B.Cu) (tstamp 0) (hatch full 0.508)
+    (connect_pads yes (clearance 0.508))
+    (min_thickness 0.254)
+    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
+    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 113.411 156.718) (xy 139.065 156.718) (xy 139.065 164.211) (xy 113.411 164.1475)
+      )
+    )
+  )
 )

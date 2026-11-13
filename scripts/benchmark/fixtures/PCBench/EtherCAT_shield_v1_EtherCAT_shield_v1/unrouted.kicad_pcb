@@ -6525,5 +6525,71 @@
   
   
   
-
+  (zone (net 1) (net_name GND) (layer F.Cu) (tstamp 0) (hatch edge 0.508)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 168.91 50.8) (xy 168.91 129.54) (xy 170.18 132.08) (xy 97.79 132.08) (xy 97.79 50.8)
+        (xy 113.3 50.8) (xy 113.3 67.8) (xy 153.4 67.8) (xy 153.4 50.8)
+      )
+    )
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  )
+  (zone (net 1) (net_name GND) (layer B.Cu) (tstamp 0) (hatch edge 0.508)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 168.91 50.8) (xy 153.4 50.8) (xy 153.4 67.8) (xy 113.3 67.8) (xy 113.3 50.8)
+        (xy 97.79 50.8) (xy 97.79 130.81) (xy 97.79 132.08) (xy 168.91 132.08)
+      )
+    )
+    
+    
+  )
+  (zone (net 33) (net_name GNDPWR) (layer B.Cu) (tstamp 0) (hatch edge 0.508)
+    (priority 2)
+    (connect_pads yes (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 153.1 65.8) (xy 153.1 55.7) (xy 153.1 50.8) (xy 113.6 50.8) (xy 113.6 65.9)
+        (xy 116 65.9) (xy 116 62.2) (xy 117.3 60.9) (xy 128.9 60.9) (xy 131 63)
+        (xy 135.7 63) (xy 137.8 60.9) (xy 149.6 60.9) (xy 150.7 62) (xy 150.7 65.9)
+        (xy 153.1 65.9)
+      )
+    )
+    
+  )
+  (zone (net 33) (net_name GNDPWR) (layer F.Cu) (tstamp 0) (hatch edge 0.508)
+    (priority 2)
+    (connect_pads yes (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 153.1 64.7) (xy 150.7 64.7) (xy 150.7 62) (xy 149.6 60.9) (xy 137.8 60.9)
+        (xy 135.7 63) (xy 131 63) (xy 128.9 60.9) (xy 117.3 60.9) (xy 116 62.2)
+        (xy 116 64.7) (xy 113.6 64.7) (xy 113.6 50.8) (xy 153.1 50.8)
+      )
+    )
+    
+  )
 )

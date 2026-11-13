@@ -4569,4 +4569,155 @@
   
   
   
+  
+  (zone (net 5) (net_name "GND") (layer "F.Cu") (tstamp d3fbec84-5615-4ed4-af26-1d28d9b30e3e) (hatch edge 0.508)
+
+    (priority 6)
+
+    (connect_pads (clearance 0.000001))
+
+    (min_thickness 0.0762) (filled_areas_thickness no)
+
+    (fill yes (thermal_gap 0.2024) (thermal_bridge_width 0.2024))
+
+    (polygon
+
+      (pts
+
+        (xy 173.0688 110.8443)
+
+        (xy 170.3304 110.8443)
+
+        (xy 170.3304 108.7103)
+
+        (xy 156.8104 108.7103)
+
+        (xy 156.8104 102.0174)
+
+        (xy 170.3304 102.0174)
+
+        (xy 170.3304 97.6359)
+
+        (xy 173.0688 97.6359)
+
+      )
+
+    )
+
+    
+
   )
+  (zone (net 6) (net_name "+3V3") (layer "F.Cu") (tstamp eb347e9d-7000-4d52-991e-ec0422073c79) (hatch edge 0.508)
+
+    (priority 6)
+
+    (connect_pads (clearance 0.000001))
+
+    (min_thickness 0.0762) (filled_areas_thickness no)
+
+    (fill yes (thermal_gap 0.2024) (thermal_bridge_width 0.2024))
+
+    (polygon
+
+      (pts
+
+        (xy 142.9873 133.0943)
+
+        (xy 131.4049 133.0943)
+
+        (xy 131.4049 119.7974)
+
+        (xy 142.9873 119.7974)
+
+      )
+
+    )
+
+    
+
+  )
+  (zone (net 5) (net_name "GND") (layer "In1.Cu") (tstamp abd42902-500d-4058-bb13-4ad5fdfcca92) (hatch edge 0.508)
+
+    (priority 6)
+
+    (connect_pads (clearance 0.000001))
+
+    (min_thickness 0.0762) (filled_areas_thickness no)
+
+    (fill yes (thermal_gap 0.2024) (thermal_bridge_width 0.2024))
+
+    (polygon
+
+      (pts
+
+        (xy 196.200392 79.069184)
+
+        (xy 196.073209 130.959988)
+
+        (xy 179.005201 144.2068)
+
+        (xy 150.994264 144.2068)
+
+        (xy 145.914263 135.0628)
+
+        (xy 101.159664 135.0628)
+
+        (xy 100.9249 135.297563)
+
+        (xy 100.9249 74.8394)
+
+        (xy 145.913456 74.8394)
+
+        (xy 150.739456 65.8224)
+
+        (xy 179.005048 65.8224)
+
+      )
+
+    )
+
+    
+
+  )
+  (zone (net 6) (net_name "+3V3") (layer "In2.Cu") (tstamp 1d8e8d1d-2152-4e6c-bfee-49de3b4ceb8f) (hatch edge 0.508)
+
+    (priority 6)
+
+    (connect_pads (clearance 0.000001))
+
+    (min_thickness 0.0762) (filled_areas_thickness no)
+
+    (fill yes (thermal_gap 0.2024) (thermal_bridge_width 0.2024))
+
+    (polygon
+
+      (pts
+
+        (xy 196.0733 78.814613)
+
+        (xy 196.0733 131.08719)
+
+        (xy 179.132108 144.079683)
+
+        (xy 150.99413 144.207004)
+
+        (xy 146.041017 135.1898)
+
+        (xy 100.924739 135.1898)
+
+        (xy 101.05206 74.966615)
+
+        (xy 145.914255 74.839526)
+
+        (xy 150.867326 65.9494)
+
+        (xy 179.004601 65.9494)
+
+      )
+
+    )
+
+    
+
+  )
+)

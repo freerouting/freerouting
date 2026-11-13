@@ -1723,5 +1723,49 @@
   
   
   
-
+  (zone (net 2) (net_name Earth) (layer B.Cu) (tstamp 57E24528) (hatch edge 0.508)
+    (connect_pads (clearance 1))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 124.46 64.643) (xy 124.46 151.511) (xy 220.98 151.511) (xy 220.98 64.389) (xy 124.714 64.389)
+        (xy 124.714 64.643)
+      )
+    )
+    
+  )
+  (zone (net 0) (net_name "") (layer B.Cu) (tstamp 57E24A9C) (hatch edge 0.508)
+    (connect_pads (clearance 1))
+    (min_thickness 0.254)
+    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 193.294 68.453) (xy 214.122 68.453) (xy 214.122 73.279) (xy 193.294 73.279) (xy 193.294 68.707)
+      )
+    )
+  )
+  (zone (net 0) (net_name "") (layer B.Cu) (tstamp 57E24C1B) (hatch edge 0.508)
+    (connect_pads (clearance 1))
+    (min_thickness 0.254)
+    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 219.202 148.463) (xy 189.738 148.463) (xy 189.738 141.097) (xy 219.202 141.097)
+      )
+    )
+  )
+  (zone (net 0) (net_name "") (layer B.Cu) (tstamp 57E25DA1) (hatch edge 0.508)
+    (connect_pads (clearance 1))
+    (min_thickness 0.254)
+    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 166.116 120.015) (xy 163.83 120.015) (xy 163.83 118.491) (xy 166.116 118.491)
+      )
+    )
+  )
 )

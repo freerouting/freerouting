@@ -14267,5 +14267,104 @@
   
   
   
-
+  (zone (net 1) (net_name +5V) (layer Back) (tstamp 57402051) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 68.7705 80.9625) (xy 68.7705 82.8675) (xy 68.6435 82.9945) (xy 68.6435 84.5185) (xy 67.437 85.725)
+        (xy 67.437 81.534) (xy 67.945 81.026) (xy 68.0085 80.9625) (xy 68.7705 80.9625)
+      )
+    )
+    
+  )
+  (zone (net 26) (net_name GND) (layer Front) (tstamp 574038B2) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 131.826 150.114) (xy 131.826 160.528) (xy 125.476 160.528) (xy 123.571 162.433) (xy 123.571 163.957)
+        (xy 124.206 163.957) (xy 125.095 164.846) (xy 124.968 164.973) (xy 120.777 164.973) (xy 118.999 163.195)
+        (xy 118.999 161.544) (xy 118.237 160.782) (xy 115.443 160.782) (xy 114.046 159.385) (xy 114.046 158.369)
+        (xy 115.316 157.099) (xy 117.729 157.099) (xy 120.142 154.686) (xy 120.142 150.622) (xy 122.936 147.828)
+        (xy 129.54 147.828) (xy 131.826 150.114)
+      )
+    )
+    
+  )
+  (zone (net 26) (net_name GND) (layer Front) (tstamp 57405CCC) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 227.33 162.814) (xy 227.076 162.814) (xy 227.076 163.83) (xy 223.774 167.132) (xy 201.676 167.132)
+        (xy 200.152 165.608) (xy 200.152 158.242) (xy 199.39 158.242) (xy 201.676 155.956) (xy 220.472 155.956)
+        (xy 227.33 162.814)
+      )
+    )
+    
+  )
+  (zone (net 1) (net_name +5V) (layer Back) (tstamp 5779DB13) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.2))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 208.788 162.56) (xy 208.661 162.687) (xy 208.661 163.322) (xy 208.407 163.576) (xy 208.026 163.576)
+        (xy 208.026 162.814) (xy 208.407 162.433) (xy 208.407 161.671) (xy 208.788 161.671) (xy 208.788 162.56)
+      )
+    )
+    
+  )
+  (zone (net 1) (net_name +5V) (layer Back) (tstamp 5779DB30) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 127.508 152.4) (xy 128.143 151.765) (xy 128.143 150.495) (xy 127.635 150.495) (xy 127.635 151.511)
+        (xy 127.254 151.892) (xy 127.254 152.4)
+      )
+    )
+    
+  )
+  (zone (net 1) (net_name +5V) (layer Back) (tstamp 5779DB33) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 205.994 161.671) (xy 205.994 162.306) (xy 206.502 162.306) (xy 206.502 161.671) (xy 206.629 161.544)
+        (xy 206.629 161.29) (xy 205.994 161.29)
+      )
+    )
+    
+  )
+  (zone (net 1) (net_name +5V) (layer Back) (tstamp 5779DB38) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.2))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 130.683 156.845) (xy 130.429 156.845) (xy 130.175 157.099) (xy 128.905 155.829) (xy 128.143 155.829)
+        (xy 128.143 155.448) (xy 129.286 155.448) (xy 130.683 156.845)
+      )
+    )
+    
+  )
+  (zone (net 26) (net_name GND) (layer Back) (tstamp 5765383E) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 71.0565 82.9945) (xy 70.9295 82.8675) (xy 70.9295 80.9625) (xy 71.755 80.9625) (xy 72.263 81.4705)
+        (xy 72.263 85.471) (xy 71.3105 84.5185) (xy 71.247 84.5185)
+      )
+    )
+    
+  )
 )

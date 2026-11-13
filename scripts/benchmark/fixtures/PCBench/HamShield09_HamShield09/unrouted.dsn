@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -36,6 +36,14 @@
       (path pcb 0  143250 -85650  145750 -85650  145750 -151675  92450 -151675
             92450 -83100  140700 -83100  143250 -85650)
     )
+    (plane GND (polygon Front 0  92410 -81140  147660 -81140  147660 -153265  92410 -153265
+            92410 -140465  92410 -81140))
+    (plane GND (polygon GND.Cu 0  92410 -81140  147660 -81140  147660 -153265  92410 -153265
+            92410 -140465  92410 -81140))
+    (plane GND (polygon PWR.Cu 0  92410 -81140  147660 -81140  147660 -153265  92410 -153265
+            92410 -140465  92410 -81140))
+    (plane GND (polygon Back 0  92410 -81140  147660 -81140  147660 -153265  92410 -153265
+            92410 -140465  92410 -81140))
     (via "Via[0-3]_558.8:254_um" "Via[0-3]_750:254_um")
     (rule
       (width 203.2)
@@ -1464,15 +1472,6 @@
         (clearance 200.66)
       )
     )
-    (class pwr +5V AVDD VCC VTX V_1.2M V_2M V_70CM
-      (circuit
-        (use_via "Via[0-3]_750:254_um")
-      )
-      (rule
-        (width 599.44)
-        (clearance 254)
-      )
-    )
     (class RF "/RF Front End/1.2m_IN" "/RF Front End/1.2m_OUT" "/RF Front End/2m_IN"
       "/RF Front End/2m_OUT" "/RF Front End/70cm_IN" "/RF Front End/70cm_OUT"
       "/RF Front End/ANT" "/RF Front End/RF_IN" "/RF Front End/RF_OUT" "/RF Front End/STAGE1_OUT"
@@ -1492,6 +1491,15 @@
       (rule
         (width 314.96)
         (clearance 200.66)
+      )
+    )
+    (class pwr +5V AVDD VCC VTX V_1.2M V_2M V_70CM
+      (circuit
+        (use_via "Via[0-3]_750:254_um")
+      )
+      (rule
+        (width 599.44)
+        (clearance 254)
       )
     )
   )
