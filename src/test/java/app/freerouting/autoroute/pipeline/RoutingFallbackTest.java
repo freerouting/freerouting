@@ -158,4 +158,28 @@ class RoutingFallbackTest {
     List<RoutingFallback.Strategy> withProject = RoutingFallbackRunner.automaticContinuations(job);
     assertTrue(withProject.stream().noneMatch(s -> "continue-no-neck".equals(s.name)));
   }
+
+  @Test
+  void autoNeckWarningLogsOnlyWhenAutoNeckFallbackIsChosenWithUnsetNeckWidth() {
+    List<app.freerouting.logger.LogEntry> entries = new ArrayList<>();
+    app.freerouting.core.RoutingJob job = new app.freerouting.core.RoutingJob();
+    job.routerSettings = new DefaultSettings().getSettings();
+    job.addLogEntryAddedEventListener(event -> entries.add(event.getLogEntry()));
+
+    // Non-auto-neck strategy does not emit the warning.
+    RoutingFallbackRunner.warnIfAutoNeckFallbackUsed(job, "direct-first");
+    assertTrue(entries.isEmpty());
+
+    // Explicit neck_width_um > 0 does not emit the warning even for continue-auto-neck.
+    job.routerSettings.setNeckWidthUm(150.0);
+    RoutingFallbackRunner.warnIfAutoNeckFallbackUsed(job, "continue-auto-neck");
+    assertTrue(entries.isEmpty());
+
+    // Unset neck_width_um (<= 0) with continue-auto-neck emits a WARNING log.
+    job.routerSettings.setNeckWidthUm(0.0);
+    RoutingFallbackRunner.warnIfAutoNeckFallbackUsed(job, "continue-auto-neck");
+    assertEquals(1, entries.size());
+    assertEquals(app.freerouting.logger.LogEntryType.Warning, entries.get(0).getType());
+    assertTrue(entries.get(0).getMessage().contains("neck_width_um=150.0"));
+  }
 }

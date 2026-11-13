@@ -149,12 +149,15 @@ final class RoutingFallbackRunner {
             + "': "
             + bestAttempt.outcome
             + ".");
-    if ("continue-auto-neck".equals(bestAttempt.outcome.strategy)
-        && job.routerSettings.getNeckWidthUm() <= 0) {
+    warnIfAutoNeckFallbackUsed(job, bestAttempt.outcome.strategy);
+    return bestAttempt.router;
+  }
+
+  static void warnIfAutoNeckFallbackUsed(RoutingJob job, String strategy) {
+    if ("continue-auto-neck".equals(strategy) && job.routerSettings.getNeckWidthUm() <= 0) {
       job.logWarning(
           "Fallback auto-neckdown (neck_width_um=150.0) was used because routing remained incomplete with no explicit neck_width_um configured.");
     }
-    return bestAttempt.router;
   }
 
   /**

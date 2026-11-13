@@ -339,7 +339,7 @@ final class AutoroutePassRunner {
     }
   }
 
-  private static Map<Integer, IntBox> buildPaddedNetBounds(List<Item> autorouteItemList) {
+  static Map<Integer, IntBox> buildPaddedNetBounds(List<Item> autorouteItemList) {
     Map<Integer, IntBox> bounds = new LinkedHashMap<>();
     for (Item item : autorouteItemList) {
       IntBox box = item.boundingBox();
@@ -356,7 +356,7 @@ final class AutoroutePassRunner {
     return bounds;
   }
 
-  private static void invalidateZeroRipupPairs(
+  static void invalidateZeroRipupPairs(
       Map<FailedConnectionPair, IntBox> zeroRipupFailedPairs,
       java.util.Collection<Item> rippedItems) {
     if (zeroRipupFailedPairs.isEmpty() || rippedItems.isEmpty()) {
@@ -379,7 +379,7 @@ final class AutoroutePassRunner {
             });
   }
 
-  private static int componentPinCount(RoutingBoard board, Item item) {
+  static int componentPinCount(RoutingBoard board, Item item) {
     int componentId = item.getComponentId();
     if (componentId <= 0 || board == null || board.components == null) {
       return 0;
@@ -389,6 +389,13 @@ final class AutoroutePassRunner {
       return 0;
     }
     return component.getPackage().pinCount();
+  }
+
+  static Comparator<Item> deterministicItemComparator(RoutingBoard board) {
+    return Comparator.comparingInt((Item item) -> item.netCount() > 0 ? item.getNetNumber(0) : 0)
+        .thenComparing(
+            Comparator.comparingInt((Item item) -> componentPinCount(board, item)).reversed())
+        .thenComparingInt(Item::getId);
   }
 
   private void reorderSingleThreadItems(List<Item> autorouteItemList, int passNo) {
@@ -406,12 +413,7 @@ final class AutoroutePassRunner {
       return;
     }
 
-    Comparator<Item> deterministicItemComparator =
-        Comparator.comparingInt((Item item) -> item.netCount() > 0 ? item.getNetNumber(0) : 0)
-            .thenComparing(
-                Comparator.comparingInt((Item item) -> componentPinCount(router.board, item))
-                    .reversed())
-            .thenComparingInt(Item::getId);
+    Comparator<Item> deterministicItemComparator = deterministicItemComparator(router.board);
 
     Integer orderSeed =
         router.settings.autorouter != null ? router.settings.autorouter.itemOrderSeed : null;
@@ -986,7 +988,7 @@ final class AutoroutePassRunner {
     }
   }
 
-  private record FailedConnectionPair(int netNo, Set<Integer> sideA, Set<Integer> sideB) {
+  record FailedConnectionPair(int netNo, Set<Integer> sideA, Set<Integer> sideB) {
     static FailedConnectionPair of(Item item, int netNo) {
       Set<Item> connected = item.getConnectedSet(netNo);
       Set<Item> unconnected = item.getUnconnectedSet(netNo);
