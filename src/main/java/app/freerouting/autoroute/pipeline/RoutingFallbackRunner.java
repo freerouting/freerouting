@@ -149,7 +149,15 @@ final class RoutingFallbackRunner {
             + "': "
             + bestAttempt.outcome
             + ".");
+    warnIfAutoNeckFallbackUsed(job, bestAttempt.outcome.strategy);
     return bestAttempt.router;
+  }
+
+  static void warnIfAutoNeckFallbackUsed(RoutingJob job, String strategy) {
+    if ("continue-auto-neck".equals(strategy) && job.routerSettings.getNeckWidthUm() <= 0) {
+      job.logWarning(
+          "Fallback auto-neckdown (neck_width_um=150.0) was used because routing remained incomplete with no explicit neck_width_um configured.");
+    }
   }
 
   /**
@@ -304,6 +312,7 @@ final class RoutingFallbackRunner {
       boolean removeUnconnectedVias = !keepFanoutVias && !settings.isFanoutEnabled();
       BatchAutorouter router =
           BatchAutorouter.createAttempt(job, board, settings, removeUnconnectedVias);
+      router.setStrategyName(strategyName);
       router.copyListenersFrom(this.listenerSource);
       RoutingFallback.Strategy strategy = RoutingFallback.find(strategyName);
       if (strategy != null && strategy.fanoutOnly) {

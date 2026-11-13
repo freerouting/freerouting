@@ -589,9 +589,7 @@
   },
   "warn_no_input_file": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.board.BoardToolbar"
-    ],
+    "code_references": [],
     "english_hash": "78806578135afe99cebe28536024dd851a1e2de3aede12ca6fa2e6f84583eba5",
     "grammatical_role": "full_sentence",
     "has_placeholders": false,

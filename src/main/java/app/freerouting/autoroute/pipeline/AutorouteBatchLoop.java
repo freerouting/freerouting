@@ -353,11 +353,12 @@ final class AutorouteBatchLoop {
 
       bh.add(router.board);
 
+      final String passStartBoardHash = currentBoardHash;
       FRLogger.traceEntry(
           "BatchAutorouter.autoroute_pass #"
               + currentPass
               + " on board '"
-              + currentBoardHash
+              + passStartBoardHash
               + "'");
 
       continueAutorouting = autoroutePass(currentPass);
@@ -418,14 +419,17 @@ final class AutorouteBatchLoop {
               "BatchAutorouter.autoroute_pass #"
                   + currentPass
                   + " on board '"
-                  + currentBoardHash
+                  + passStartBoardHash
                   + "'");
 
+      String strategyTag =
+          router.getStrategyName() != null ? " [" + router.getStrategyName() + "]" : "";
       String passCompletedMessage =
           String.format(
               java.util.Locale.US,
-              "Auto-routing pass #%d on board '%s' was completed in %.2f seconds with score %s",
+              "Auto-routing pass #%d%s on board '%s' was completed in %.2f seconds with score %s",
               currentPass,
+              strategyTag,
               currentBoardHash,
               autorouterPassDuration,
               FRLogger.formatScore(

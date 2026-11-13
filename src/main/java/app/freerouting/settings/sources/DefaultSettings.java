@@ -132,7 +132,7 @@ public class DefaultSettings implements SettingsSource {
   public static final float DEFAULT_ROUTER_UNROUTED_CONNECTION_WEIGHT = 1000.0F;
 
   public static final String DEFAULT_FALLBACK_STRATEGIES =
-      "direct-first,fanout-retry,short-escape,open-escape,no-fanout";
+      "direct-first,fanout-retry,short-escape,open-escape,no-fanout,continue-auto-neck";
   public static final String DEFAULT_EXPLORE_FALLBACK_STRATEGIES = "short-escape,open-escape";
   public static final double DEFAULT_SMD_NET_VIA_COST_FACTOR = 0.1;
 
