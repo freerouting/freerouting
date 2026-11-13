@@ -20,6 +20,7 @@ import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.DsnFileSettings;
 import app.freerouting.settings.sources.GuiSettingsSource;
+import app.freerouting.settings.sources.KiCadProjectSettings;
 import app.freerouting.util.TextManager;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -151,10 +152,14 @@ public class GuiManager {
       }
       // the error, if a .kicad_dru given with -de cannot be read, is in the log
       routingJob.loadKiCadDesignRules(globalSettings.initialKiCadDesignRulesFile);
+      routingJob.loadKiCadProject(globalSettings.initialKiCadProjectFile);
       var settingsMerger = globalSettings.settingsMergerProtype.clone();
       settingsMerger.addOrReplaceSources(
           new DsnFileSettings(routingJob.input.getData(), routingJob.input.getFilename()),
           new GuiSettingsSource(routingJob.routerSettings));
+      if (routingJob.kicadProject != null) {
+        settingsMerger.addOrReplaceSources(new KiCadProjectSettings(routingJob.kicadProject));
+      }
       routingJob.routerSettings = settingsMerger.merge();
       guiSession.addJob(routingJob);
 

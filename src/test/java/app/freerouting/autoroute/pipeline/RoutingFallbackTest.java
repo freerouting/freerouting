@@ -140,4 +140,22 @@ class RoutingFallbackTest {
     settings.fanout.maxItems = 3;
     assertEquals(3, DirectPinRouting.fanoutItemLimit(settings));
   }
+
+  @Test
+  void automaticContinuationsPreserveProjectMinTrackWidthFloor() {
+    app.freerouting.core.RoutingJob job = new app.freerouting.core.RoutingJob();
+    job.routerSettings = new DefaultSettings().getSettings();
+    job.routerSettings.setNeckWidthUm(200.0);
+
+    List<RoutingFallback.Strategy> withoutProject =
+        RoutingFallbackRunner.automaticContinuations(job);
+    assertTrue(withoutProject.stream().anyMatch(s -> "continue-no-neck".equals(s.name)));
+
+    job.kicadProject =
+        app.freerouting.io.kicad.KiCadProject.parse(
+            "{\"board\": {\"design_settings\": {\"rules\": {\"min_track_width\": 0.2}}}}",
+            "board.kicad_pro");
+    List<RoutingFallback.Strategy> withProject = RoutingFallbackRunner.automaticContinuations(job);
+    assertTrue(withProject.stream().noneMatch(s -> "continue-no-neck".equals(s.name)));
+  }
 }
