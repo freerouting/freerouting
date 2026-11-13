@@ -33,6 +33,31 @@ class KiCadProjectMinTrackWidthRoutingTest extends RoutingFixtureTest {
   void noTraceNarrowerThanTheMinimumTrackWidthOfTheProject() throws IOException {
     // The default settings of a CLI run, as in discussion #508: with the testing settings, this
     // board is routed without the narrow segment.
+    RoutingJob job = jobWithTheProject();
+    assertEquals(200.0, job.routerSettings.getNeckWidthUm(), 1e-9);
+
+    runRoutingJob(job);
+
+    assertNoTraceNarrowerThanTheMinimum(job);
+  }
+
+  /**
+   * The fallback strategies {@code no-neck} and {@code continue-no-neck} set the neck width to 0;
+   * the minimum track width of the project still holds, because it is also the narrowest trace the
+   * board allows.
+   */
+  @Test
+  void theMinimumTrackWidthHoldsWhenTheNeckWidthIsRelaxed() throws IOException {
+    RoutingJob job = jobWithTheProject();
+    // what no-neck and continue-no-neck do to the settings of a run
+    job.routerSettings.setNeckWidthUm(0);
+
+    runRoutingJob(job);
+
+    assertNoTraceNarrowerThanTheMinimum(job);
+  }
+
+  private RoutingJob jobWithTheProject() throws IOException {
     RoutingJob job = getRoutingJob("Issue508-DAC2020_bm07-kicad10.dsn");
     job.kicadProject =
         KiCadProject.read(TestFixtures.resolvePath("Issue508-DAC2020_bm07-kicad10.kicad_pro"));
@@ -50,10 +75,10 @@ class KiCadProjectMinTrackWidthRoutingTest extends RoutingFixtureTest {
                       "--router.job_timeout=00:01:00"
                     }))
             .merge();
-    assertEquals(200.0, job.routerSettings.getNeckWidthUm(), 1e-9);
+    return job;
+  }
 
-    runRoutingJob(job);
-
+  private static void assertNoTraceNarrowerThanTheMinimum(RoutingJob job) {
     assertEquals(RoutingJobState.COMPLETED, job.state);
     assertEquals(0, new BoardStatistics(job.board).connections.incompleteCount);
     int minHalfWidth =
