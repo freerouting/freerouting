@@ -1,0 +1,14 @@
+{
+  "board": {
+    "design_settings": {
+      "rules": {
+        "min_clearance": 0.0,
+        "min_track_width": 0.2
+      }
+    }
+  },
+  "meta": {
+    "filename": "Issue508-DAC2020_bm07-kicad10.kicad_pro",
+    "version": 3
+  }
+}
