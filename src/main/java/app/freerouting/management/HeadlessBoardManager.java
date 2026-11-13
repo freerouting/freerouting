@@ -1241,20 +1241,35 @@ public class HeadlessBoardManager implements BoardManager {
    * @see #loadFromSpecctraDsn
    */
   public boolean saveAsSpecctraSessionSes(OutputStream outputStream, String designName) {
-    boolean wasSaveSuccessful;
-    try {
-      SesWriter.write(this.getRoutingBoard(), outputStream, designName);
-      wasSaveSuccessful = true;
-    } catch (IOException e) {
-      FRLogger.error("unable to write session file", e);
-      wasSaveSuccessful = false;
-    }
+    boolean wasSaveSuccessful = exportSpecctraSessionSes(outputStream, designName);
 
     if (wasSaveSuccessful) {
       originalBoardChecksum = calculateCrc32();
     }
 
     return wasSaveSuccessful;
+  }
+
+  /**
+   * Writes the current routing board state as a Specctra session (.ses) without recording it as the
+   * saved state.
+   *
+   * <p>Produces the same bytes as {@link #saveAsSpecctraSessionSes}, but leaves {@link
+   * #originalBoardChecksum} untouched, so the board is not serialised a second time as DSN for the
+   * checksum. Meant for output snapshots published while a job is still routing.
+   *
+   * @param outputStream the stream to write SES data to (caller must close)
+   * @param designName the design name to include in the SES file header
+   * @return true if the export was successful, false if an error occurred
+   */
+  public boolean exportSpecctraSessionSes(OutputStream outputStream, String designName) {
+    try {
+      SesWriter.write(this.getRoutingBoard(), outputStream, designName);
+      return true;
+    } catch (IOException e) {
+      FRLogger.error("unable to write session file", e);
+      return false;
+    }
   }
 
   /**
@@ -1265,8 +1280,29 @@ public class HeadlessBoardManager implements BoardManager {
    * @return true if save was successful, false otherwise
    */
   public boolean saveAsFusionScriptScr(OutputStream outputStream, String designName) {
+    return writeFusionScriptScr(outputStream, designName, true);
+  }
+
+  /**
+   * Writes the current routing board state as an Autodesk Fusion script (.scr) without recording it
+   * as the saved state; see {@link #exportSpecctraSessionSes}.
+   *
+   * @param outputStream target output stream for the script
+   * @param designName name of the design
+   * @return true if the export was successful, false otherwise
+   */
+  public boolean exportFusionScriptScr(OutputStream outputStream, String designName) {
+    return writeFusionScriptScr(outputStream, designName, false);
+  }
+
+  private boolean writeFusionScriptScr(
+      OutputStream outputStream, String designName, boolean recordSavedState) {
     try (java.io.ByteArrayOutputStream sesBaos = new java.io.ByteArrayOutputStream()) {
-      if (!saveAsSpecctraSessionSes(sesBaos, designName)) {
+      boolean sessionWritten =
+          recordSavedState
+              ? saveAsSpecctraSessionSes(sesBaos, designName)
+              : exportSpecctraSessionSes(sesBaos, designName);
+      if (!sessionWritten) {
         return false;
       }
       try (java.io.ByteArrayInputStream sesBais =
