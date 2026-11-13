@@ -132,6 +132,22 @@ class ApiKeyValidationFilterTest {
   }
 
   /**
+   * Paths under v1/surveys/ are always public, regardless of authentication setting, so that fresh
+   * desktop client installs without an API key can participate in micro-surveys.
+   */
+  @Test
+  void surveysPathsAreAlwaysPublic() throws Exception {
+    ContainerRequestContext ctx = mock(ContainerRequestContext.class);
+    UriInfo uriInfo = mock(UriInfo.class);
+    when(uriInfo.getPath()).thenReturn("v1/surveys/active");
+    when(ctx.getUriInfo()).thenReturn(uriInfo);
+
+    filter.filter(ctx);
+
+    verify(ctx, never()).abortWith(any(Response.class));
+  }
+
+  /**
    * {@link ApiKeyValidationService#isAuthenticationEnabled()} must accurately reflect the
    * configured setting. Note: authentication is ENABLED by default — the flag must be explicitly
    * set to false for unauthenticated local deployments.
