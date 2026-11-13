@@ -211,7 +211,6 @@ public final class CliRunner {
     return cliExitCode == 0;
   }
 
-  /** Returns whether the CLI should stop waiting for routing updates. */
   /**
    * Reads the .kicad_pro given with the design, if any, and adds its settings to the merger.
    *
@@ -228,6 +227,7 @@ public final class CliRunner {
     return true;
   }
 
+  /** Returns whether the CLI should stop waiting for routing updates. */
   public static boolean isCliTerminalState(RoutingJobState state) {
     return state != null && state.isTerminal();
   }
