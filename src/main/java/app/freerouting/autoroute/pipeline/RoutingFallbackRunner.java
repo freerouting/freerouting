@@ -304,6 +304,7 @@ final class RoutingFallbackRunner {
       boolean removeUnconnectedVias = !keepFanoutVias && !settings.isFanoutEnabled();
       BatchAutorouter router =
           BatchAutorouter.createAttempt(job, board, settings, removeUnconnectedVias);
+      router.setStrategyName(strategyName);
       router.copyListenersFrom(this.listenerSource);
       RoutingFallback.Strategy strategy = RoutingFallback.find(strategyName);
       if (strategy != null && strategy.fanoutOnly) {

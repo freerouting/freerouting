@@ -181,6 +181,15 @@ public final class BatchAutorouter extends NamedAlgorithm {
   public String passLoopStartHash;
 
   private java.util.function.Predicate<String> repeatsPassLoop;
+  private String strategyName;
+
+  void setStrategyName(String strategyName) {
+    this.strategyName = strategyName;
+  }
+
+  String getStrategyName() {
+    return this.strategyName;
+  }
 
   /** Why {@link #runBatchLoop()} stopped. */
   public enum StopReason {
