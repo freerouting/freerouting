@@ -184,7 +184,8 @@ public class GlobalSettings implements Serializable {
 
   /**
    * The KiCad project file (.kicad_pro) provided with the design file via the -de command line
-   * argument. Its minimum track width becomes the default {@code router.neck_width_um}.
+   * argument. The larger of its minimum track width and minimum connection width becomes the
+   * default {@code router.neck_width_um}.
    */
   public transient String initialKiCadProjectFile;
 

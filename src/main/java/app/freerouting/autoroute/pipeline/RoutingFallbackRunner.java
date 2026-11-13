@@ -357,7 +357,7 @@ final class RoutingFallbackRunner {
       result.add(continueStrategy);
     }
     boolean hasProjectMinTrackWidth =
-        job != null && job.kicadProject != null && job.kicadProject.minTrackWidthUm() != null;
+        job != null && job.kicadProject != null && job.kicadProject.narrowestTraceWidthUm() != null;
     if (job != null
         && job.routerSettings != null
         && job.routerSettings.getNeckWidthUm() > 0

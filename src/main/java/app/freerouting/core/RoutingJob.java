@@ -411,13 +411,20 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     try {
       this.kicadProject = KiCadProject.read(path);
       Double minWidth = this.kicadProject.minTrackWidthUm();
+      Double minConnection = this.kicadProject.minConnectionWidthUm();
       FRLogger.info(
           "Using the KiCad project '"
               + path
               + "': "
-              + (minWidth == null
-                  ? "it sets no minimum track width."
-                  : "minimum track width " + minWidth + " um."));
+              + (minWidth == null && minConnection == null
+                  ? "it sets no minimum track or connection width."
+                  : "minimum track width "
+                      + (minWidth == null ? "not set" : minWidth + " um")
+                      + ", minimum connection width "
+                      + (minConnection == null ? "not set" : minConnection + " um")
+                      + ": traces are not necked below "
+                      + this.kicadProject.narrowestTraceWidthUm()
+                      + " um."));
       return true;
     } catch (IOException | IllegalArgumentException e) {
       String reason = e instanceof NoSuchFileException ? "file not found" : e.getMessage();
