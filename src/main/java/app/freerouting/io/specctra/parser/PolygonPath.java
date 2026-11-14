@@ -1,5 +1,6 @@
 package app.freerouting.io.specctra.parser;
 
+import app.freerouting.core.library.PadOval;
 import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -79,6 +80,27 @@ public class PolygonPath extends Path {
       result = result.boundingTile().enlarge(offset);
     }
     return result;
+  }
+
+  /**
+   * The exact copper of this path, in the same coordinates as {@link #transformToBoardRel}, when it
+   * is a round or oval pad: a wide path of one or two corners. Null otherwise.
+   */
+  public PadOval padOvalRel(CoordinateTransform coordinateTransform) {
+    int cornerCount = this.coordinateArr.length / 2;
+    double radius = coordinateTransform.dsnToBoard(this.width) / 2;
+    if (cornerCount < 1 || cornerCount > 2 || !(radius > 0)) {
+      return null;
+    }
+    FloatPoint start =
+        coordinateTransform.dsnToBoardRel(
+            new double[] {this.coordinateArr[0], this.coordinateArr[1]});
+    FloatPoint end =
+        coordinateTransform.dsnToBoardRel(
+            new double[] {
+              this.coordinateArr[2 * cornerCount - 2], this.coordinateArr[2 * cornerCount - 1]
+            });
+    return new PadOval(start, end, radius);
   }
 
   @Override

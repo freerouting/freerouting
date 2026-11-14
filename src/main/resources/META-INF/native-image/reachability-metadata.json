@@ -269,6 +269,14 @@
       "serializable": true
     },
     {
+      "type": "app.freerouting.core.library.PadOval",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.core.library.PadOval[]",
+      "serializable": true
+    },
+    {
       "type": "app.freerouting.core.library.Padstack",
       "serializable": true
     },

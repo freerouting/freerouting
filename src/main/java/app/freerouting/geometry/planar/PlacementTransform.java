@@ -70,7 +70,11 @@ public final class PlacementTransform {
     return new PolygonShape(placed);
   }
 
-  private FloatPoint padPoint(FloatPoint point, FloatPoint offset, double pinRotation) {
+  /**
+   * Places a point of a pad, given relative to the pad's origin, as {@link #shape} places the pad's
+   * corners, without rounding it to the board grid.
+   */
+  public FloatPoint padPoint(FloatPoint point, FloatPoint offset, double pinRotation) {
     FloatPoint rotated = rotate(point, pinRotation);
     return point(new FloatPoint(offset.x + rotated.x, offset.y + rotated.y));
   }

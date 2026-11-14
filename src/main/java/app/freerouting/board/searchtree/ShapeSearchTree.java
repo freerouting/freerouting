@@ -11,6 +11,7 @@ import app.freerouting.board.model.structure.AngleRestriction;
 import app.freerouting.board.model.structure.BoardOutline;
 import app.freerouting.board.model.structure.Unit;
 import app.freerouting.board.trace.PolylineTrace;
+import app.freerouting.core.library.PadOval;
 import app.freerouting.datastructures.ArrayStack;
 import app.freerouting.datastructures.MinAreaTree;
 import app.freerouting.datastructures.Signum;
@@ -1021,7 +1022,12 @@ public class ShapeSearchTree extends MinAreaTree {
       int grow =
           this.clearanceCompensationValue(drillItem.clearanceClassIndex(), layer)
               + drillHoleClearanceDelta(drillItem, shape, layer);
-      result = ExactCopper.of(shape, grow);
+      PadOval oval =
+          drillItem instanceof Pin pin && shape == drillItem.getShape(index)
+              ? pin.getPlacedOval(index)
+              : null;
+      // A round or oval pad's shape is the bounding polygon of its copper; measure the copper.
+      result = oval != null ? ExactCopper.ofOval(oval, grow) : ExactCopper.of(shape, grow);
     }
     if (treeShape != null) {
       if (cache == null || cache.length != drillItem.tileShapeCount()) {
