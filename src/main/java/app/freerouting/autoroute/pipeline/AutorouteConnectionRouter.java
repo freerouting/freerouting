@@ -149,10 +149,8 @@ final class AutorouteConnectionRouter {
       Set<Item> routeDestSet;
       Set<Item> planeEscapeObstacles = Set.of();
       if (containsPlane) {
-        for (Item currentItem : connectedSet) {
-          if (currentItem instanceof ConductionArea ca && !ca.isFractured()) {
-            return new AutorouteAttemptResult(AutorouteAttemptState.CONNECTED_TO_PLANE);
-          }
+        if (ConductionArea.coversAllPlanesOfNet(connectedSet, unconnectedSet, routeNetNo)) {
+          return new AutorouteAttemptResult(AutorouteAttemptState.CONNECTED_TO_PLANE);
         }
         routeStartSet = connectedSet;
         routeDestSet = unconnectedSet;

@@ -23,6 +23,7 @@ import app.freerouting.rules.Net;
 import app.freerouting.settings.RouterSettings;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -494,6 +495,7 @@ public final class BatchAutorouter extends NamedAlgorithm {
     reusableHandledItems.clear();
     List<Item> autorouteItemList = reusableAutorouteItemList;
     Set<Item> handledItems = reusableHandledItems;
+    Map<Integer, NetPlanes> planesByNet = new HashMap<>();
     Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.startReadObject();
     for (; ; ) {
       UndoableObjects.Storable currentObject = board.itemList.readObject(it);
@@ -531,10 +533,7 @@ public final class BatchAutorouter extends NamedAlgorithm {
                 Net net = board.rules.nets.get(currentNetNumber);
                 boolean isPlane = net != null && net.containsPlane();
                 if (isPlane) {
-                  boolean alreadyConnectedToPlane =
-                      connectedSet.stream()
-                          .anyMatch(item -> item instanceof ConductionArea ca && !ca.isFractured());
-                  if (alreadyConnectedToPlane) {
+                  if (coversAllPlanesOfNet(connectedSet, planesByNet, board, currentNetNumber)) {
                     continue;
                   }
                   hasPlaneNet = true;
@@ -576,6 +575,55 @@ public final class BatchAutorouter extends NamedAlgorithm {
     autorouteItemList.addAll(reusablePlaneItemList);
     autorouteItemList.addAll(reusableSignalItemList);
     return autorouteItemList;
+  }
+
+  /** The unfractured planes of a net, and those of them that a pin of the net reaches. */
+  record NetPlanes(List<ConductionArea> all, List<ConductionArea> withPins) {}
+
+  /**
+   * Returns true if the connected set reaches an unfractured plane of the net and contains every
+   * unfractured plane of that net that a pin reaches. A net can have several disjoint planes: an
+   * item on one of them still needs routing to the pins on the others. A floating plane fragment
+   * (no pin of the net reaches it) needs no connection, and an item on such fragments only is not
+   * routed. The planes of each net are collected once per call of {@link #getAutorouteItems}, so
+   * each item costs one membership test per plane.
+   */
+  static boolean coversAllPlanesOfNet(
+      Set<Item> connectedSet, Map<Integer, NetPlanes> planesByNet, RoutingBoard board, int netNo) {
+    NetPlanes planes =
+        planesByNet.computeIfAbsent(
+            netNo,
+            n -> {
+              List<ConductionArea> all = new ArrayList<>();
+              List<ConductionArea> withPins = new ArrayList<>();
+              for (ConductionArea ca : board.getConductionAreas()) {
+                if (ca.containsNet(n) && !ca.isFractured()) {
+                  all.add(ca);
+                  if (ca.reachesPinOfNet(n)) {
+                    withPins.add(ca);
+                  }
+                }
+              }
+              return new NetPlanes(all, withPins);
+            });
+    boolean onPlane = false;
+    for (ConductionArea plane : planes.all()) {
+      if (connectedSet.contains(plane)) {
+        onPlane = true;
+        break;
+      }
+    }
+    if (!onPlane) {
+      return false;
+    }
+    int reached = 0;
+    for (ConductionArea plane : planes.withPins()) {
+      if (connectedSet.contains(plane)) {
+        reached++;
+      }
+    }
+    // reached == 0: the item is on floating fragments only, which nothing needs
+    return reached == 0 || reached == planes.withPins().size();
   }
 
   /** Returns true if the given item belongs to at least one net with containsPlane = true. */
