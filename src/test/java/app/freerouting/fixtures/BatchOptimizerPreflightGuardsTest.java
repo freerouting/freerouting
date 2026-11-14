@@ -332,6 +332,45 @@ class BatchOptimizerPreflightGuardsTest extends RoutingFixtureTest {
   }
 
   @Test
+  void areAllViasMandatoryLayerTransitionsReturnsFalseWhenEveryViaIsFixed() {
+    // A KiCad board exported to DSN carries its existing wiring as fixed items: guard 4 must not
+    // call those vias mandatory transitions without having examined a single one.
+    RoutingBoard board = mock(RoutingBoard.class);
+    Via fixedVia1 = mock(Via.class);
+    Via fixedVia2 = mock(Via.class);
+    when(fixedVia1.isUserFixed()).thenReturn(true);
+    when(fixedVia2.isUserFixed()).thenReturn(true);
+    when(board.getVias()).thenReturn(List.of(fixedVia1, fixedVia2));
+
+    assertFalse(BatchOptimizer.areAllViasMandatoryLayerTransitions(board));
+  }
+
+  @Test
+  void areAllViasMandatoryLayerTransitionsIgnoresFixedViasNextToAMandatoryOne() {
+    RoutingBoard board = mock(RoutingBoard.class);
+    Via fixedVia = mock(Via.class);
+    when(fixedVia.isUserFixed()).thenReturn(true);
+
+    Via via = mock(Via.class);
+    when(via.isUserFixed()).thenReturn(false);
+    when(via.netCount()).thenReturn(1);
+    when(via.getNetNumber(0)).thenReturn(1);
+
+    Pin pinTop = mock(Pin.class);
+    when(pinTop.firstLayer()).thenReturn(0);
+    when(pinTop.lastLayer()).thenReturn(0);
+
+    Pin pinBottom = mock(Pin.class);
+    when(pinBottom.firstLayer()).thenReturn(1);
+    when(pinBottom.lastLayer()).thenReturn(1);
+
+    when(via.getConnectedSet(1, true)).thenReturn(Set.of(via, pinTop, pinBottom));
+    when(board.getVias()).thenReturn(List.of(fixedVia, via));
+
+    assertTrue(BatchOptimizer.areAllViasMandatoryLayerTransitions(board));
+  }
+
+  @Test
   void guardsCanBeDisabledViaSettings() {
     TestingSettings settings = new TestingSettings();
     settings.setOptimizerEnablePreflightGuards(false);

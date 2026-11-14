@@ -218,16 +218,22 @@ public final class BatchOptimizer extends NamedAlgorithm {
   /**
    * Checks if all vias on the board are mandatory layer transitions between SMD pins on different
    * layers, with no alternative routing possible.
+   *
+   * <p>Fixed vias are skipped, since the optimizer cannot remove them anyway. When every via is
+   * fixed, no via has been examined and this returns false: the vias say nothing about whether the
+   * traces can still be improved.
    */
   public static boolean areAllViasMandatoryLayerTransitions(RoutingBoard routingBoard) {
     Collection<Via> vias = routingBoard.getVias();
     if (vias.isEmpty()) {
       return false;
     }
+    int examinedViaCount = 0;
     for (Via via : vias) {
       if (via.isUserFixed()) {
         continue;
       }
+      examinedViaCount++;
       if (via.netCount() == 0) {
         return false;
       }
@@ -268,7 +274,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
         return false;
       }
     }
-    return true;
+    return examinedViaCount > 0;
   }
 
   /** Optimize the route on the board. */
