@@ -1,0 +1,46 @@
+(pcb classe-croisee
+  (parser (string_quote ") (space_in_quoted_tokens on) (host_cad "hand") (host_version "1"))
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer Top (type signal) (property (index 0)))
+    (boundary (rect pcb 0 0 20000 12000))
+    (keepout (rect Top 0 5900 20000 6100))
+    (via "Via[0-0]_600:300_um")
+    (rule (width 200) (clearance 300))
+  )
+  (placement
+    (component WALL
+      (place W1 10000 7475 front 0)
+      (place W2 10000 10625 front 0)
+      (place W3 10000 1375 front 0)
+      (place W4 10000 4525 front 0)
+    )
+    (component SMD
+      (place L1 3000 9050 front 0)
+      (place R1 17000 9050 front 0)
+      (place L2 3000 2950 front 0)
+      (place R2 17000 2950 front 0)
+    )
+  )
+  (library
+    (image WALL (pin Wall 1 0 0))
+    (image SMD (pin Pad 1 0 0))
+    (padstack Wall (shape (rect Top -200 -1275 200 1275)) (attach off))
+    (padstack Pad (shape (rect Top -400 -400 400 400)) (attach off))
+    (padstack "Via[0-0]_600:300_um" (shape (circle Top 600)) (attach off))
+  )
+  (network
+    (net WA1 (pins W1-1))
+    (net WA2 (pins W2-1))
+    (net WD1 (pins W3-1))
+    (net WD2 (pins W4-1))
+    (net B (pins L1-1 R1-1))
+    (net D (pins L2-1 R2-1))
+    (class kicad_default WD1 WD2 (circuit (use_via "Via[0-0]_600:300_um")) (rule (width 200) (clearance 300)))
+    (class CA WA1 WA2 D (circuit (use_via "Via[0-0]_600:300_um")) (rule (width 200) (clearance 150)))
+    (class CB B (circuit (use_via "Via[0-0]_600:300_um")) (rule (width 200) (clearance 150)))
+  )
+  (wiring
+  )
+)
