@@ -510,7 +510,7 @@ public class Network extends ScopeKeyword {
         int traceHalfwidth = (int) Math.round(coordinateTransform.dsnToBoard(rule1.value / 2));
         boardNetClass.setTraceHalfWidth(traceHalfwidth);
       } else if (currentRule instanceof Rule.ClearanceRule rule) {
-        addClearanceRule(board.rules.clearanceMatrix, boardNetClass, rule, -1, coordinateTransform);
+        addClearanceRule(board.rules, boardNetClass, rule, -1, coordinateTransform);
         clearanceRuleFound = true;
       } else if (currentRule instanceof Rule.LengthRule rule) {
         if (rule.maxLength > 0) {
@@ -545,8 +545,7 @@ public class Network extends ScopeKeyword {
             int traceHalfwidth = (int) Math.round(coordinateTransform.dsnToBoard(rule1.value / 2));
             boardNetClass.setTraceHalfWidth(layerIndex, traceHalfwidth);
           } else if (currentRule instanceof Rule.ClearanceRule rule) {
-            addClearanceRule(
-                board.rules.clearanceMatrix, boardNetClass, rule, layerIndex, coordinateTransform);
+            addClearanceRule(board.rules, boardNetClass, rule, layerIndex, coordinateTransform);
             clearanceRuleFound = true;
           } else {
             FRLogger.warn(
@@ -901,11 +900,12 @@ public class Network extends ScopeKeyword {
   }
 
   private static void addClearanceRule(
-      ClearanceMatrix clearanceMatrix,
+      BoardRules rules,
       app.freerouting.rules.NetClass netClass,
       Rule.ClearanceRule rule,
       int layerIndex,
       CoordinateTransform coordinateTransform) {
+    ClearanceMatrix clearanceMatrix = rules.clearanceMatrix;
     int currentClearance = (int) Math.round(coordinateTransform.dsnToBoard(rule.value));
     final String className = netClass.getName();
     int classNo = clearanceMatrix.getNo(className);
@@ -913,12 +913,21 @@ public class Network extends ScopeKeyword {
       // class not yet existing, create a new class
       clearanceMatrix.appendClass(className);
       classNo = clearanceMatrix.getNo(className);
-      // set the clearance values of the new class to the maximum of currentClearance and
-      // the existing values.
+      // Against the clearance class of another net class, the larger of the two net class
+      // clearances applies, as in KiCad. Against any other class, the new class gets the maximum
+      // of currentClearance and the default value that appendClass copied in.
+      Set<Integer> netClassClearanceClasses = new LinkedHashSet<>();
+      for (int i = 0; i < rules.netClasses.count(); i++) {
+        netClassClearanceClasses.add(rules.netClasses.get(i).getTraceClearanceClass());
+      }
       for (int i = 1; i < clearanceMatrix.getClassCount(); i++) {
+        boolean otherNetClass = i != classNo && netClassClearanceClasses.contains(i);
         for (int j = 0; j < clearanceMatrix.getLayerCount(); j++) {
-          int currentValue =
-              Math.max(clearanceMatrix.getValue(classNo, i, j, false), currentClearance);
+          int otherValue =
+              otherNetClass
+                  ? clearanceMatrix.getValue(i, i, j, false)
+                  : clearanceMatrix.getValue(classNo, i, j, false);
+          int currentValue = Math.max(otherValue, currentClearance);
           clearanceMatrix.setValue(classNo, i, j, currentValue);
           clearanceMatrix.setValue(i, classNo, j, currentValue);
         }
