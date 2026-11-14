@@ -542,6 +542,52 @@ class ExitStubsTest {
   }
 
   @Test
+  void aStubFromAPadTurned45DegreesOffTheOriginStartsOnThePinCentre() {
+    // Pads 300 x 700 um on a 450 um pitch, the part turned 45 degrees and placed off the origin:
+    // the midpoint of each turned pad's bounding box then lies one unit beside the pin centre. A
+    // trace only joins a pin at its centre, so a stub started from that midpoint is placed, but
+    // the pin has no contact with it, and a route ended on the stub leaves the pin unconnected.
+    RouterSettings settings =
+        new SettingsMerger(
+                new DefaultSettings(),
+                new CliSettings(
+                    new String[] {
+                      "--router.drc_epsilon_um=0.5", "--router.autorouter.exit_stubs=true"
+                    }))
+            .merge();
+    for (String place : new String[] {"3000 0", "0 -3000", "2000.1 -1999.9"}) {
+      for (int rotation : new int[] {45, 135}) {
+        String dsn =
+            QUAD_DSN
+                .replace("(place U 0 0 front 0)", "(place U " + place + " front " + rotation + ")")
+                .replace("(rect top -100 -350 100 350)", "(rect top -150 -350 150 350)")
+                .replace("-3W", at(-675))
+                .replace("-1W", at(-225))
+                .replace(" 1W", " " + at(225))
+                .replace(" 3W", " " + at(675));
+        String label = place + " turned " + rotation;
+        BoardReadResult result =
+            DsnReader.readBoard(
+                new ByteArrayInputStream(dsn.getBytes(StandardCharsets.UTF_8)), null, null);
+        RoutingBoard board = (RoutingBoard) ((BoardReadResult.Success) result).board();
+        board.rules.setMinAllowedTraceHalfWidth(1000);
+        List<ExitStubs.Stub> stubs = ExitStubs.plan(board, settings);
+        assertEquals(8, stubs.size(), label);
+        List<Integer> ids = new ArrayList<>();
+        assertNotNull(ExitStubs.apply(settings, board, ids), label);
+        assertEquals(8, ids.size(), label);
+        for (ExitStubs.Stub stub : stubs) {
+          Pin pin = stub.pin();
+          assertTrue(
+              pin.getNormalContacts().stream()
+                  .anyMatch(i -> i instanceof Trace t && ids.contains(t.getId())),
+              label + ": no stub joins " + pin + " at " + pin.getCenter());
+        }
+      }
+    }
+  }
+
+  @Test
   void theDistanceToAShapeIsExact() {
     IntBox box = new IntBox(0, 0, 100, 50);
     assertEquals(
