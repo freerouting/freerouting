@@ -1,6 +1,7 @@
 package app.freerouting.io.kicad;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -150,6 +151,28 @@ class KiCadDesignRulesTest {
     ClearanceMatrix matrix = board.rules.clearanceMatrix;
     // both relays, K2 through its variant image, keep 7 mm to the other footprints
     assertEquals(mm(board, 7.0), value(matrix, pin(board, "K1", "1"), pin(board, "VD4", "1")));
+    assertEquals(mm(board, 7.0), value(matrix, pin(board, "K2", "1"), pin(board, "VD4", "1")));
+  }
+
+  @Test
+  void footprintSelectorIsCaseSensitive() throws IOException {
+    BasicBoard board = loadBoard();
+    KiCadDesignRulesTranslator.apply(
+        board,
+        KiCadDesignRules.parse(
+            """
+            (version 1)
+            (rule "around_k1_lower"
+              (condition "A.memberOfFootprint('k1') && !B.memberOfFootprint('k1')")
+              (constraint clearance (min 9mm)))
+            (rule "around_k2"
+              (condition "A.memberOfFootprint('K2') && !B.memberOfFootprint('K2')")
+              (constraint clearance (min 7mm)))
+            """,
+            "test.kicad_dru"));
+    ClearanceMatrix matrix = board.rules.clearanceMatrix;
+    // KiCad's wxString::Matches: 'k1' is not the reference K1, 'K2' is K2
+    assertNotEquals(mm(board, 9.0), value(matrix, pin(board, "K1", "1"), pin(board, "VD4", "1")));
     assertEquals(mm(board, 7.0), value(matrix, pin(board, "K2", "1"), pin(board, "VD4", "1")));
   }
 

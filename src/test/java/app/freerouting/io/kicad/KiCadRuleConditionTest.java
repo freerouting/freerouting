@@ -69,6 +69,24 @@ class KiCadRuleConditionTest {
   }
 
   @Test
+  void functionsMatchCaseSensitivelyLikeWxStringMatches() {
+    // KiCad tests memberOfFootprint and hasNetclass with wxString::Matches, which is
+    // case-sensitive, while '==' and '!=' compare without case (WildCompareString)
+    assertEquals(Tri.FALSE, eval("A.memberOfFootprint('k1')", COIL_PAD, COIL_PAD));
+    assertEquals(Tri.FALSE, eval("A.memberOfFootprint('k?')", COIL_PAD, COIL_PAD));
+    assertEquals(Tri.TRUE, eval("!A.memberOfFootprint('k1')", COIL_PAD, COIL_PAD));
+    assertEquals(Tri.TRUE, eval("A.memberOfFootprint('K1')", COIL_PAD, COIL_PAD));
+    Item connector = new Item(ItemType.PAD, "/RF", "Default", "J1", "1", true, "sma-j:SMA-J");
+    assertEquals(Tri.FALSE, eval("A.memberOfFootprint('SMA-J:SMA-J')", connector, connector));
+    assertEquals(Tri.FALSE, eval("A.memberOfFootprint('sma-j:sma-*')", connector, connector));
+    assertEquals(Tri.TRUE, eval("A.memberOfFootprint('sma-j:SMA-*')", connector, connector));
+    assertEquals(Tri.FALSE, eval("A.hasNetclass('mains')", MAINS_TRACK, MAINS_TRACK));
+    assertEquals(Tri.TRUE, eval("A.hasNetclass('MAI*')", MAINS_TRACK, MAINS_TRACK));
+    assertEquals(Tri.TRUE, eval("A.Reference == 'k1'", COIL_PAD, COIL_PAD));
+    assertEquals(Tri.TRUE, eval("A.NetName == '/relay1/*'", MAINS_TRACK, MAINS_TRACK));
+  }
+
+  @Test
   void propertiesAnItemDoesNotHaveAreNeitherEqualNorUnequal() {
     // A.Reference resolves to the footprint for a pad, and is undefined for a track
     assertEquals(Tri.TRUE, eval("A.Reference == 'K1'", COIL_PAD, COIL_PAD));
