@@ -14,10 +14,14 @@ import app.freerouting.board.model.structure.Unit;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.specctra.DsnReader;
 import app.freerouting.rules.ClearanceMatrix;
-import java.io.FileInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.List;
+import java.util.Map;
+import java.util.function.UnaryOperator;
 import org.junit.jupiter.api.Test;
 
 /** Reading a .kicad_dru file and translating its clearance rules onto a loaded board. */
@@ -229,6 +233,39 @@ class KiCadDesignRulesTest {
     assertEquals(mm(board, 7.0), value(matrix, pin(board, "K2", "1"), pin(board, "VD4", "1")));
   }
 
+  @Test
+  void footprintPossiblyRenamedByTheExportGetsTheRuleAndAWarning() throws IOException {
+    // A board with two footprints K1: the KiCad export names the second one K1_1
+    BasicBoard board =
+        loadBoard(
+            dsn -> dsn.replace("(place K2 ", "(place K1_1 ").replaceAll("(?<=[ (])K2-", "K1_1-"));
+    var result =
+        KiCadDesignRulesTranslator.apply(
+            board,
+            KiCadDesignRules.parse(
+                """
+                (version 1)
+                (rule "around_k1"
+                  (condition "A.memberOfFootprint('K1') && !B.memberOfFootprint('K1')")
+                  (constraint clearance (min 7mm)))
+                """,
+                "test.kicad_dru"));
+    ClearanceMatrix matrix = board.rules.clearanceMatrix;
+    assertEquals(mm(board, 7.0), value(matrix, pin(board, "K1", "1"), pin(board, "VD4", "1")));
+    // K1_1 may be the second K1: the rule may apply, so it does (never less strict than KiCad)
+    assertEquals(mm(board, 7.0), value(matrix, pin(board, "K1_1", "1"), pin(board, "VD4", "1")));
+    assertTrue(
+        result.warnings().stream().anyMatch(w -> w.contains("K1_1")), result.warnings().toString());
+  }
+
+  @Test
+  void componentsRenamedByTheExport() {
+    assertEquals(
+        Map.of("P1_1", "P1", "p1_2", "p1"),
+        KiCadDesignRulesTranslator.possiblyRenamed(
+            List.of("P1", "P1_1", "p1_2", "U1_1", "R", "R_", "_1")));
+  }
+
   private static String libraryId(BasicBoard board, String reference) {
     var component = board.components.get(reference);
     assertNotNull(component, reference);
@@ -236,7 +273,12 @@ class KiCadDesignRulesTest {
   }
 
   private static BasicBoard loadBoard() throws IOException {
-    InputStream input = new FileInputStream(TestFixtures.resolveFile(DSN));
+    return loadBoard(dsn -> dsn);
+  }
+
+  private static BasicBoard loadBoard(UnaryOperator<String> edit) throws IOException {
+    String dsn = Files.readString(TestFixtures.resolveFile(DSN).toPath(), StandardCharsets.UTF_8);
+    InputStream input = new ByteArrayInputStream(edit.apply(dsn).getBytes(StandardCharsets.UTF_8));
     BoardReadResult result = DsnReader.readBoard(input, null, null, DSN);
     assertTrue(result instanceof BoardReadResult.Success, "fixture must load");
     return ((BoardReadResult.Success) result).board();

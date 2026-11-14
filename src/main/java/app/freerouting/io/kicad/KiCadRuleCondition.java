@@ -84,6 +84,9 @@ public final class KiCadRuleCondition {
    *     connector pad cannot be told apart in a Specctra design and is seen as one too)
    * @param libraryId the library identifier of the footprint of a pad ({@code lib:name}, the
    *     Specctra image name without the {@code ::N} suffix KiCad adds to variants), else null
+   * @param renamedFrom the other reference the footprint of a pad may have: the KiCad export names
+   *     the second footprint {@code P1} {@code P1_1}, so a footprint {@code P1_1} on a board that
+   *     has a {@code P1} may be either; else null
    */
   public record Item(
       ItemType type,
@@ -92,7 +95,8 @@ public final class KiCadRuleCondition {
       String footprint,
       String padNumber,
       boolean smd,
-      String libraryId) {
+      String libraryId,
+      String renamedFrom) {
 
     /** An item whose footprint, if any, has no known library identifier. */
     public Item(
@@ -104,7 +108,28 @@ public final class KiCadRuleCondition {
         boolean smd) {
       this(type, netName, netClass, footprint, padNumber, smd, null);
     }
+
+    /** An item whose footprint, if any, has a single possible reference. */
+    public Item(
+        ItemType type,
+        String netName,
+        String netClass,
+        String footprint,
+        String padNumber,
+        boolean smd,
+        String libraryId) {
+      this(type, netName, netClass, footprint, padNumber, smd, libraryId, null);
+    }
+
+    /** The item as it would be if its footprint had its other possible reference. */
+    Item renamed() {
+      return new Item(type, netName, netClass, renamedFrom, padNumber, smd, libraryId, null);
+    }
   }
+
+  /** Whether a condition asks about the footprint of an item: its reference or library. */
+  private static final Pattern FOOTPRINT_TEST =
+      Pattern.compile("(?i)memberOfFootprint|\\.\\s*(reference|parent)\\b");
 
   private static final Set<String> PROPERTIES =
       Set.of("netclass", "netname", "type", "pad_type", "reference", "parent", "pad_number");
@@ -147,12 +172,39 @@ public final class KiCadRuleCondition {
     return List.copyOf(unsupportedParts);
   }
 
-  /** Evaluates the condition for a pair of items in both orders, as KiCad does. */
+  /** True if the condition asks about the footprint of an item (reference, parent, library). */
+  public boolean testsTheFootprint() {
+    return FOOTPRINT_TEST.matcher(expression).find();
+  }
+
+  /**
+   * Evaluates the condition for a pair of items in both orders, as KiCad does. For a footprint
+   * which may have two references ({@link Item#renamedFrom()}), the result is unknown where the two
+   * references give different results.
+   */
   public Tri evaluate(Item a, Item b) {
     if (expression.isEmpty()) {
       return Tri.TRUE;
     }
+    Tri result = evaluateOnce(a, b);
+    if (a.renamedFrom() != null) {
+      result = agree(result, evaluateOnce(a.renamed(), b));
+    }
+    if (b.renamedFrom() != null) {
+      result = agree(result, evaluateOnce(a, b.renamed()));
+      if (a.renamedFrom() != null) {
+        result = agree(result, evaluateOnce(a.renamed(), b.renamed()));
+      }
+    }
+    return result;
+  }
+
+  private Tri evaluateOnce(Item a, Item b) {
     return truth(root.eval(a, b)).or(truth(root.eval(b, a)));
+  }
+
+  private static Tri agree(Tri first, Tri second) {
+    return first == second ? first : Tri.UNKNOWN;
   }
 
   /**
@@ -162,6 +214,10 @@ public final class KiCadRuleCondition {
   public String signature(Item item) {
     StringBuilder result = new StringBuilder();
     root.signature(item, result);
+    if (item.renamedFrom() != null) {
+      result.append('\u0002');
+      root.signature(item.renamed(), result);
+    }
     return result.toString();
   }
 

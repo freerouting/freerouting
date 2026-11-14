@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -85,10 +86,41 @@ public final class KiCadDesignRulesTranslator {
   private final int layerCount;
   private final List<String> warnings = new ArrayList<>();
 
+  /** The components the KiCad export may have renamed, with the reference they may have had. */
+  private final Map<String, String> renamed;
+
   private KiCadDesignRulesTranslator(BasicBoard board) {
     this.board = board;
     this.matrix = board.rules.clearanceMatrix;
     this.layerCount = matrix.getLayerCount();
+    List<String> names = new ArrayList<>();
+    for (Component component : board.components.getAll()) {
+      names.add(component.name);
+    }
+    this.renamed = possiblyRenamed(names);
+  }
+
+  private static final Pattern RENAMED = Pattern.compile("(.+)_\\d+");
+
+  /**
+   * The components whose name may not be their KiCad reference, with the reference they may have.
+   * The KiCad DSN export makes component names unique, ignoring case, by appending {@code _1},
+   * {@code _2}... to a reference already taken ({@code specctra_export.cpp}): a component {@code
+   * P1_1} on a board that also has a {@code P1} may be a second {@code P1}, or a real {@code P1_1}.
+   */
+  static Map<String, String> possiblyRenamed(Iterable<String> componentNames) {
+    Set<String> taken = new HashSet<>();
+    for (String name : componentNames) {
+      taken.add(name.toLowerCase(Locale.ROOT));
+    }
+    Map<String, String> result = new LinkedHashMap<>();
+    for (String name : componentNames) {
+      Matcher matcher = RENAMED.matcher(name);
+      if (matcher.matches() && taken.contains(matcher.group(1).toLowerCase(Locale.ROOT))) {
+        result.put(name, matcher.group(1));
+      }
+    }
+    return result;
   }
 
   /** Applies the clearance rules to the board. */
@@ -107,6 +139,16 @@ public final class KiCadDesignRulesTranslator {
     warnDuplicateReferences();
     if (rules.isEmpty()) {
       return new Result(0, 0, Map.of(), List.copyOf(warnings));
+    }
+    if (!renamed.isEmpty()
+        && rules.stream()
+            .anyMatch(r -> r.condition() != null && r.condition().testsTheFootprint())) {
+      warnings.add(
+          source
+              + ": "
+              + String.join(", ", renamed.keySet())
+              + " may be duplicate references renamed by the KiCad export: the rules that test the"
+              + " footprint are applied to them wherever they may match");
     }
 
     // 1. The copper items, by entity
@@ -468,7 +510,8 @@ public final class KiCadDesignRulesTranslator {
         component == null ? null : component.name,
         padNumber,
         pin.firstLayer() == pin.lastLayer(),
-        libraryId(component));
+        libraryId(component),
+        component == null ? null : renamed.get(component.name));
   }
 
   /**
