@@ -1,6 +1,7 @@
 package app.freerouting.io.kicad;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -146,6 +147,72 @@ public final class KiCadRuleCondition {
     StringBuilder result = new StringBuilder();
     root.signature(item, result);
     return result.toString();
+  }
+
+  /**
+   * The parts of the condition that name a net class, a net or a footprint ({@code NetClass} or
+   * {@code NetName} compared with a text, {@code memberOfFootprint()}, {@code hasNetclass()}) and
+   * that no item of {@code items} satisfies. Such a name is most often misspelt or renamed: the
+   * rule then silently applies nowhere (or, under {@code !=}, everywhere).
+   */
+  public List<String> namesMatchingNothing(Collection<Item> items) {
+    List<Node> tests = new ArrayList<>();
+    collectNameTests(root, tests);
+    List<String> result = new ArrayList<>();
+    for (Node test : tests) {
+      boolean found = false;
+      for (Item item : items) {
+        if (nameTest(test, item) != Tri.FALSE) {
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        result.add("'" + (test instanceof Compare c ? c.text() : ((Call) test).text()) + "'");
+      }
+    }
+    return result;
+  }
+
+  private static void collectNameTests(Node node, List<Node> out) {
+    switch (node) {
+      case Or(Node left, Node right) -> {
+        collectNameTests(left, out);
+        collectNameTests(right, out);
+      }
+      case And(Node left, Node right) -> {
+        collectNameTests(left, out);
+        collectNameTests(right, out);
+      }
+      case Not(Node operand) -> collectNameTests(operand, out);
+      case Compare c when isNameComparison(c) -> out.add(c);
+      case Call c
+          when ("memberoffootprint".equals(c.name()) || "hasnetclass".equals(c.name()))
+              && !c.args().isEmpty()
+              && !c.args().getFirst().startsWith("${") ->
+          out.add(c);
+      default -> {}
+    }
+  }
+
+  private static boolean isNameComparison(Compare c) {
+    if (!"==".equals(c.op()) && !"!=".equals(c.op())) {
+      return false;
+    }
+    return (isNameProperty(c.left()) && c.right() instanceof Literal(Str _))
+        || (isNameProperty(c.right()) && c.left() instanceof Literal(Str _));
+  }
+
+  private static boolean isNameProperty(Node node) {
+    return node instanceof Member m && ("netclass".equals(m.name()) || "netname".equals(m.name()));
+  }
+
+  /** Whether the item has the name a name test asks for (an equality, whatever the operator). */
+  private static Tri nameTest(Node test, Item item) {
+    if (test instanceof Compare c) {
+      return compare("==", c.left().eval(item, item), c.right().eval(item, item));
+    }
+    return truth(test.eval(item, item));
   }
 
   // ------------------------------------------------------------------------------------------

@@ -26,6 +26,47 @@ class KiCadDesignRulesTest {
   private static final String DRU = "Issue110-RelayModule.kicad_dru";
 
   @Test
+  void warnsAboutNamesThatMatchNothingInTheDesign() throws IOException {
+    KiCadDesignRules rules =
+        KiCadDesignRules.parse(
+            """
+            (version 1)
+            (rule "renamed_class" (condition "A.NetClass == 'HV'")
+              (constraint clearance (min 3mm)))
+            (rule "misspelt_net" (condition "A.NetName != 'GDN' && B.NetClass == 'HighVoltage'")
+              (constraint clearance (min 3mm)))
+            (rule "no_such_footprint"
+              (condition "A.memberOfFootprint('K9') || A.hasNetclass('Mains')")
+              (constraint clearance (min 3mm)))
+            (rule "all_exist"
+              (condition "A.NetClass == 'Default' && A.NetName == 'Net-(FU1-*' && 'GND' == B.NetName && A.memberOfFootprint('K*') && B.hasNetclass('HighVoltage')")
+              (constraint clearance (min 3mm)))
+            """,
+            "names.kicad_dru");
+    KiCadDesignRulesTranslator.Result result = KiCadDesignRulesTranslator.apply(loadBoard(), rules);
+
+    List<String> noMatch =
+        result.warnings().stream().filter(w -> w.contains("matches no net class")).toList();
+    assertEquals(
+        List.of(
+            "rule 'renamed_class': 'A.NetClass == 'HV''",
+            "rule 'misspelt_net': 'A.NetName != 'GDN''",
+            "rule 'no_such_footprint': 'A.memberOfFootprint('K9')'",
+            "rule 'no_such_footprint': 'A.hasNetclass('Mains')'"),
+        noMatch.stream().map(w -> w.substring(0, w.indexOf(" matches no net class"))).toList());
+  }
+
+  @Test
+  void noNameWarningWhenEveryNameExists() throws IOException {
+    KiCadDesignRulesTranslator.Result result =
+        KiCadDesignRulesTranslator.apply(
+            loadBoard(), KiCadDesignRules.read(TestFixtures.resolvePath(DRU)));
+    assertTrue(
+        result.warnings().stream().noneMatch(w -> w.contains("matches no net class")),
+        result.warnings().toString());
+  }
+
+  @Test
   void readsRulesConstraintsAndUnits() {
     KiCadDesignRules rules =
         KiCadDesignRules.parse(
