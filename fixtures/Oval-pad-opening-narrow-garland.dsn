@@ -1,0 +1,38 @@
+(pcb oval-pad-opening-narrow
+  (parser (string_quote ") (space_in_quoted_tokens on) (host_cad "hand") (host_version "1"))
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer Top (type signal) (property (index 0)))
+    (boundary (rect pcb -6000 -1700 8304 3640))
+    (keepout (rect Top -6000 -1700 8304 -700))
+    (keepout (rect Top -6000 2640 8304 3640))
+    (via "Via[0-0]_600:300_um")
+    (rule (width 250) (clearance 200))
+  )
+  (placement
+    (component OVAL
+      (place O1 0 0 front 0)
+      (place O2 2304 1940 front 0)
+    )
+    (component SMD
+      (place P1 -4500 970 front 0)
+      (place P2 6804 970 front 0)
+    )
+  )
+  (library
+    (image OVAL (pin Oval 1 0 0))
+    (image SMD (pin Pad 1 0 0))
+    (padstack Oval (shape (path Top 1500 -750 0 750 0)) (attach off))
+    (padstack Pad (shape (rect Top -300 -300 300 300)) (attach off))
+    (padstack "Via[0-0]_600:300_um" (shape (circle Top 600)) (attach off))
+  )
+  (network
+    (net W1 (pins O1-1))
+    (net W2 (pins O2-1))
+    (net S (pins P1-1 P2-1))
+    (class kicad_default W1 W2 S (circuit (use_via "Via[0-0]_600:300_um")) (rule (width 250) (clearance 200)))
+  )
+  (wiring
+  )
+)
