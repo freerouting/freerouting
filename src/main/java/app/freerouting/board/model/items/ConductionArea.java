@@ -402,6 +402,59 @@ public class ConductionArea extends ObstacleArea implements Connectable {
   }
 
   /**
+   * Returns true if the connected set reaches an unfractured plane of the net, and no other
+   * unfractured plane of the net that carries a pin is left in the unconnected set. A net can have
+   * several disjoint planes (for example two zones of the same net on one layer): being on one of
+   * them does not connect an item to the pads of the others, so the connection must still be
+   * routed. A plane piece that no pin of the net reaches (a floating fill fragment) does not need a
+   * connection: routing to it would only add an antenna, and a connected set without a pin that
+   * reaches such a fragment is not routed either.
+   *
+   * @param connectedSet the connected set of the item to route
+   * @param unconnectedSet the items of the same net outside {@code connectedSet}
+   * @param netNo the net of the connection
+   * @return true if the connection can be left to the planes the item already touches
+   */
+  public static boolean coversAllPlanesOfNet(
+      Collection<Item> connectedSet, Collection<Item> unconnectedSet, int netNo) {
+    boolean onPlane = false;
+    boolean hasPin = false;
+    for (Item item : connectedSet) {
+      if (item instanceof ConductionArea ca && !ca.isFractured()) {
+        onPlane = true;
+      } else if (item instanceof Pin) {
+        hasPin = true;
+      }
+    }
+    if (!onPlane) {
+      return false;
+    }
+    if (!hasPin) {
+      // a floating fragment, or copper that only hangs on one: nothing needs it
+      return true;
+    }
+    for (Item item : unconnectedSet) {
+      if (item instanceof ConductionArea ca && !ca.isFractured() && ca.reachesPinOfNet(netNo)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Returns true if a pin of the net can be reached from this conduction area through items of the
+   * net. A plane piece without such a pin is a floating fragment.
+   */
+  public boolean reachesPinOfNet(int netNo) {
+    for (Item item : getConnectedSet(netNo)) {
+      if (item instanceof Pin) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
    * Returns true if this conduction area is split into multiple isolated copper islands by
    * obstacles.
    */
