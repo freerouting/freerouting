@@ -98,7 +98,7 @@ public final class AcceleratorRegistry {
    * failure. It does not go through the Apple Silicon OpenCL check, because TornadoVM can use its
    * Metal backend there.
    */
-  private static ComputeBackend discoverTornadoVm(String preference) {
+  private static synchronized ComputeBackend discoverTornadoVm(String preference) {
     CachedTornadoVm existing = CACHED_TORNADOVM_BACKEND.get();
     if (existing != null && existing.preference().equals(preference)) {
       return existing.backend();
@@ -131,6 +131,32 @@ public final class AcceleratorRegistry {
 
     CACHED_TORNADOVM_BACKEND.set(new CachedTornadoVm(preference, discovered));
     return discovered;
+  }
+
+  /**
+   * Starts TornadoVM and compiles the escape kernels on a background thread when the settings ask
+   * for the TornadoVM backend. Called at start-up, so that the one-time TornadoVM start-up and
+   * kernel compilation overlap with loading the board instead of delaying the first fanout. Does
+   * nothing for any other preference.
+   *
+   * @param settings fanout settings known at start-up (may be {@code null})
+   */
+  public static void warmUpAsync(FanoutSettings settings) {
+    if (settings == null
+        || !Boolean.TRUE.equals(settings.gpuAccelerationEnabled)
+        || !isTornadoVmPreference(settings.gpuDevicePreference)) {
+      return;
+    }
+    String preference = settings.gpuDevicePreference;
+    Thread.ofPlatform()
+        .daemon()
+        .name("tornadovm-warm-up")
+        .start(
+            () -> {
+              if (discoverTornadoVm(preference) instanceof TornadoVmComputeBackend tornadoVm) {
+                tornadoVm.warmUp();
+              }
+            });
   }
 
   /**

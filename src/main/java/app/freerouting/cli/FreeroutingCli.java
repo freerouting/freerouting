@@ -1,6 +1,7 @@
 package app.freerouting.cli;
 
 import app.freerouting.analytics.FRAnalytics;
+import app.freerouting.autoroute.accelerator.AcceleratorRegistry;
 import app.freerouting.constants.Constants;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.GlobalSettings;
@@ -91,6 +92,10 @@ public final class FreeroutingCli {
             new JsonFileSettings(),
             new CliSettings(args),
             new EnvironmentVariablesSource());
+
+    // With the TornadoVM GPU backend selected, start it and compile its kernels while the board
+    // loads.
+    AcceleratorRegistry.warmUpAsync(globalSettings.settingsMergerProtype.merge().fanout);
 
     int exitCode;
     if (globalSettings.drcReportFile != null) {

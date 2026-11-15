@@ -5,6 +5,7 @@ import app.freerouting.api.AppContextListener;
 import app.freerouting.api.mcp.McpApplication;
 import app.freerouting.api.mcp.McpContextListener;
 import app.freerouting.api.mcp.McpWebSocketEndpoint;
+import app.freerouting.autoroute.accelerator.AcceleratorRegistry;
 import app.freerouting.cli.BenchmarkAndCompareCommands;
 import app.freerouting.constants.Constants;
 import app.freerouting.gui.board.GuiManager;
@@ -651,6 +652,10 @@ public class Freerouting {
             new JsonFileSettings(),
             new CliSettings(args),
             new EnvironmentVariablesSource());
+
+    // With the TornadoVM GPU backend selected, start it and compile its kernels while the board
+    // loads.
+    AcceleratorRegistry.warmUpAsync(globalSettings.settingsMergerProtype.merge().fanout);
 
     // Initialize the API server
     if (globalSettings.apiServerSettings.isEnabled) {

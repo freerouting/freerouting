@@ -143,12 +143,61 @@ public final class TornadoVmComputeBackend implements ComputeBackend, BgaEscapeK
     return (device != null) ? null : GpuFallbackReason.NO_DEVICE_FOUND;
   }
 
+  /**
+   * Runs the escape kernels once on a small synthetic package, so that TornadoVM has compiled them
+   * and warmed up its own code before the first real solve. Meant to run on a background thread
+   * while the board is still loading; a solve that starts meanwhile waits for it to finish.
+   */
+  public synchronized void warmUp() {
+    if (device == null) {
+      return;
+    }
+    long start = System.nanoTime();
+    try {
+      BgaEscapeRunner.runOnDevice(warmUpGrid(), device);
+      FRLogger.info(
+          "GPU acceleration: TornadoVM kernels compiled for "
+              + deviceInfo.deviceName()
+              + " in "
+              + (System.nanoTime() - start) / 1_000_000
+              + " ms (background warm-up).");
+    } catch (Throwable t) {
+      // The real solve reports any lasting problem and falls back on its own.
+      FRLogger.debug("GPU acceleration: TornadoVM warm-up failed: " + t);
+    }
+  }
+
   @Override
-  public int[] runBgaEscape(BgaEscapeGrid grid) {
+  public synchronized int[] runBgaEscape(BgaEscapeGrid grid) {
     if (device == null) {
       throw new IllegalStateException("TornadoVM backend is not available");
     }
     return BgaEscapeRunner.runOnDevice(grid, device);
+  }
+
+  /** Two by two balls at 800 units pitch, two layers, one obstacle outside the grid. */
+  private static BgaEscapeGrid warmUpGrid() {
+    int pitch = 800;
+    int step = 100;
+    int[] pins = new int[4 * BgaEscapeKernels.PIN_STRIDE];
+    for (int i = 0; i < 4; i++) {
+      int u = (i % 2 == 0 ? -1 : 1) * pitch / 2;
+      int v = (i < 2 ? -1 : 1) * pitch / 2;
+      int o = i * BgaEscapeKernels.PIN_STRIDE;
+      int halfWidth = pitch / 4;
+      pins[o] = u;
+      pins[o + 1] = v;
+      pins[o + 2] = u - halfWidth;
+      pins[o + 3] = u + halfWidth;
+      pins[o + 4] = v - halfWidth;
+      pins[o + 5] = v + halfWidth;
+      pins[o + 6] = 1;
+      pins[o + 8] = u >= 0 ? 1 : -1;
+      pins[o + 9] = v >= 0 ? 1 : -1;
+      pins[o + 11] = 2;
+    }
+    int[] obstacle = {100_000, 100_100, 100_000, 100_100, -100, 100, 200_000, 200_200, -1, 0};
+    return new BgaEscapeGrid(pins, 4, obstacle, 1, 32, 32, 2, step, -1600, -1600, pitch, 0);
   }
 
   private static final class TornadoVmSession implements GpuComputeSession {
