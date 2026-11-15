@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Helper class that contains some structured properties and helper functions for the DSN parser.
@@ -42,6 +44,12 @@ public class ReadScopeParameter {
    * boards, because the layers may not be read completely.
    */
   final Collection<PlaneInfo> planeList = new LinkedList<>();
+
+  /**
+   * Nets of the {@code (wire (polygon ...))} copper areas of the wiring scope, by layer name, found
+   * before the structure scope is read (see {@link PolygonWireScan}). Empty when not scanned.
+   */
+  public Map<String, Set<String>> polygonWireNetsByLayer = Map.of();
 
   /** Planes whose inherited clearance must follow their net class after network rules are read. */
   final Collection<ConductionArea> planesWithInheritedClearance = new ArrayList<>();

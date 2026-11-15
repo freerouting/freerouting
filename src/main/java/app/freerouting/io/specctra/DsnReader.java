@@ -9,10 +9,12 @@ import app.freerouting.io.BoardMetadata;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.specctra.parser.DsnFile;
 import app.freerouting.io.specctra.parser.Keyword;
+import app.freerouting.io.specctra.parser.PolygonWireScan;
 import app.freerouting.io.specctra.parser.ReadScopeParameter;
 import app.freerouting.io.specctra.parser.ScopeKeyword;
 import app.freerouting.io.specctra.parser.SpecctraDsnStreamReader;
 import app.freerouting.logger.FRLogger;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -88,7 +90,17 @@ public final class DsnReader {
       idGenerator = new ItemIdGenerator();
     }
 
-    SpecctraDsnStreamReader scanner = new SpecctraDsnStreamReader(inputStream);
+    // The whole file is read first: the layer types of the structure scope depend on the copper
+    // areas of the wiring scope, which comes after it (see PolygonWireScan).
+    byte[] dsnBytes;
+    try {
+      dsnBytes = inputStream.readAllBytes();
+    } catch (IOException e) {
+      closeQuietly(inputStream);
+      return new BoardReadResult.IoError(e);
+    }
+    SpecctraDsnStreamReader scanner =
+        new SpecctraDsnStreamReader(new ByteArrayInputStream(dsnBytes));
 
     // -----------------------------------------------------------------------
     // Validate the "(pcb <name>" header — identical check to DsnFile.read
@@ -140,6 +152,7 @@ public final class DsnReader {
     ReadScopeParameter scopeParameter =
         new ReadScopeParameter(
             scanner, observers, idGenerator, effectiveOptions.canonicalPlacementOrder());
+    scopeParameter.polygonWireNetsByLayer = PolygonWireScan.netsByLayer(dsnBytes);
     boolean readOk = Keyword.PCB_SCOPE.readScope(scopeParameter);
 
     BasicBoard board = scopeParameter.getBoard();
