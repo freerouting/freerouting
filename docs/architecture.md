@@ -586,6 +586,20 @@ A fanout without a destination item must reach its newly inserted via. Failed in
 returns failure while leaving successfully inserted copper to the existing retry and
 cleanup flow.
 
+#### GPU/iGPU Accelerated BGA Fanout Architecture
+
+Freerouting includes an accelerated fanout engine for dense Ball Grid Array (BGA) components ($\ge 64$ pins) designed to eliminate routing bottlenecks in high-pin-count packages:
+
+- **Hardware Acceleration SPI (`autoroute.accelerator`):** Built on Java 25 Foreign Function & Memory (FFM / Project Panama) API, directly interfacing with the platform's native OpenCL 1.2 runtime (`OpenCL.dll` on Windows, `libOpenCL.so` on Linux, `OpenCL.framework` on macOS). It requires zero third-party JNI or native compilation dependencies and safely reaps off-heap resources via `GpuResourceReaper`.
+- **4-Quadrant $45^\circ$ Interstitial Dogbones:** Evaluates via placement sites at $(\pm p/2, \pm p/2)$ diagonal offsets into the four quadrant spaces between surrounding balls, preserving routing clearance and preventing sector-boundary crossings.
+- **4-Sector Breakout Directionality:** Partitions escape corridor directions into 4 triangular edge sectors using the package diagonals ($|\Delta u| > |\Delta v|$ for East/West, $|\Delta v| \ge |\Delta u|$ for North/South), ensuring inner-layer escape corridors on the same layer remain non-intersecting.
+- **Dynamic Multi-Layer Ring Peeling:** Outer rings escape cleanly without consuming unnecessary internal routing layers:
+  - **Ring 0:** Escapes directly on the component mounting layer (`pinLayer`) along orthogonal rays out to the BGA perimeter without vias.
+  - **Ring 1:** When clearance permits, escapes on `pinLayer` using a 2-segment half-pitch jog into the adjacent ball gap, bypassing Ring 0 pads without vias.
+  - **Ring 2+:** Escapes to internal routing layers via interstitial microvias and pad-centerline breakout corridors.
+- **Plane Drop Sharing & Locality Defense:** Nets connected to power planes (`net.containsPlane()`) or intra-BGA power nets drop directly into internal layers with via deduplication, saving perimeter channels for external signal traces.
+- **Deterministic CPU Simulation Fallback:** If no compatible OpenCL 1.2 device is detected or off-heap compilation fails, `GpuBgaEscapeSolver` executes an identical deterministic wavefront simulation (`executeDeterministicWavefront`), ensuring bit-for-bit reproducible results across CI runners and headless servers.
+
 #### Optimizer
 
 The optimizer is the "make it better" stage. It runs after routing is already complete and tries to improve the quality of existing routes without changing what connects to what.

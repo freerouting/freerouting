@@ -1,10 +1,11 @@
 /* Freerouting BGA Escape Kernels — OpenCL 1.2 C
  *
- * Massively parallel four-stage BGA escape router:
+ * Massively parallel multi-stage BGA escape router:
  * 1. rasterize_obstacles_and_rudy: 2D half-plane octagon evaluation + RUDY density
- * 2. evaluate_via_dogbone_sites: 8 octilinear dogbone sites + plane drop sharing
+ * 2. evaluate_via_dogbone_sites: 4-quadrant 45-degree interstitial dogbone sites + plane drop sharing
  * 3. expand_ring_candidates: bounded octilinear A* wavefront per unescaped pin
- * 4. resolve_and_commit_paths: clamped 16-bit atomic negotiation & congestion update
+ * 4a. elect_cell_winners: atomic cell negotiation across competing pin candidates
+ * 4b. commit_cell_winners: commit unique winners and apply contention penalties
  */
 
 #pragma OPENCL EXTENSION cl_khr_global_int32_base_atomics : enable

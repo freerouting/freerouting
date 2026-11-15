@@ -3,6 +3,7 @@ package app.freerouting.autoroute.accelerator;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import app.freerouting.autoroute.fanout.BgaEscapeDescriptor;
 import app.freerouting.autoroute.fanout.BgaFootprintDetector;
@@ -87,11 +88,11 @@ class OpenClHardwareExecutionTest {
             + ", fallbackReason="
             + backend.fallbackReason());
     assertNotNull(backend, "Accelerator backend must not be null");
-    if (!backend.isAvailable()) {
-      System.out.println(
-          "No OpenCL accelerator available on host, skipping hardware execution test");
-      return;
-    }
+    assumeTrue(
+        backend.isAvailable(),
+        "Skipping OpenCL hardware test: No OpenCL accelerator available on host ("
+            + backend.fallbackReason()
+            + ")");
 
     RoutingBoard board = createTestBoard();
 

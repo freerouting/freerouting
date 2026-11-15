@@ -575,8 +575,13 @@ public final class GpuBgaEscapeSolver {
   }
 
   /**
-   * Deterministic two-phase ring-staged wavefront solver. Runs the exact same algorithmic logic and
-   * clamped 16-bit atomics as the OpenCL C kernels.
+   * Deterministic two-phase ring-staged wavefront solver (CPU fallback).
+   *
+   * <p>Runs congruent 4-quadrant interstitial dogbone evaluations and concentric ring ordering as
+   * the OpenCL C kernels. Note: Unlike the GPU OpenCL pipeline which rasterizes obstacles into a 3D
+   * occupancy grid on device, the CPU simulation evaluates candidate sites geometrically using
+   * quantized local cell grids, delegating fine-grained obstacle clearance verification to {@link
+   * BgaEscapeCommitter#commit}.
    */
   public static List<PinEscapeProposal> executeDeterministicWavefront(
       RoutingBoard board, BgaEscapeDescriptor bga, MarshaledBgaData data) {

@@ -38,7 +38,7 @@ The primary way to configure Freerouting is through a JSON settings file. This f
     },
     "fanout": {
       "enabled": true,
-      "gpu_acceleration_enabled": false,
+      "gpu_acceleration_enabled": true,
       "gpu_device_preference": "auto",
       "gpu_min_bga_pins": 64,
       "gpu_max_vram_mb": 256,
@@ -292,7 +292,7 @@ Configures the SMD-pin fanout pre-pass stage.
 - **`max_escape_length_mm`**: The maximum physical escape trace length in millimeters. Default is `4.5`. Enforced directly during maze expansion.
 - **`start_via_diameter_mm`**: The diameter of starting/escape vias used inside the pins during the fanout/escape stage (in millimeters). Default is `0.25`.
 - **`end_via_diameter_mm`**: The diameter of landing/end vias used at the end of escaping wires during the fanout/escape stage (in millimeters). Default is `0.25`.
-- **`gpu_acceleration_enabled`**: Enables OpenCL 1.2 GPU/iGPU acceleration for BGA escape routing during the fanout pre-pass. When `true`, Freerouting scans components for dense BGA footprints ($\ge \text{gpu\_min\_bga\_pins}$) and executes a SIMD/wavefront escape solver on the target accelerator device before falling back to the sequential CPU fanout loop. Default is `false`. CLI: `--router.fanout.gpu_acceleration_enabled=true`. Env: `FREEROUTING_ROUTER_FANOUT_GPU_ACCELERATION_ENABLED=true`.
+- **`gpu_acceleration_enabled`**: Enables OpenCL 1.2 GPU/iGPU acceleration for BGA escape routing during the fanout pre-pass. When `true`, Freerouting scans components for dense BGA footprints ($\ge \text{gpu\_min\_bga\_pins}$) and executes a SIMD/wavefront escape solver on the target accelerator device before falling back to the sequential CPU fanout loop. Default is `true` in `DefaultSettings` (enabled for systems with supported OpenCL hardware; gracefully falls back to deterministic CPU simulation or sequential routing when no accelerator is detected). CLI: `--router.fanout.gpu_acceleration_enabled=true`. Env: `FREEROUTING_ROUTER_FANOUT_GPU_ACCELERATION_ENABLED=true`.
 - **`gpu_device_preference`**: Target accelerator preference strategy (`"auto"`, `"dgpu"`, `"igpu"`, `"cpu"`, or `"opencl_experimental"`). Default is `"auto"`, which prioritizes discrete GPUs, then integrated GPUs, then OpenCL CPUs, falling back safely to host CPU `BatchFanout` if no compliant OpenCL platform/device is detected. Setting `"opencl_experimental"` permits bypassing platform checks (such as Apple Silicon) for experimental testing. CLI: `--router.fanout.gpu_device_preference=auto`.
 - **`gpu_min_bga_pins`**: Minimum pin threshold required for a component footprint to be classified as a BGA candidate and offloaded to the GPU escape solver. Default is `64`. Smaller ICs bypass accelerator dispatch to avoid kernel launch overhead. CLI: `--router.fanout.gpu_min_bga_pins=64`.
 - **`gpu_max_vram_mb`**: Maximum device VRAM memory budget allocated for BGA pitch-harmonic obstacle and congestion raster grids in megabytes. Default is `256`. CLI: `--router.fanout.gpu_max_vram_mb=256`.
