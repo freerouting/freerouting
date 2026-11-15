@@ -165,6 +165,8 @@ public final class BgaEscapeKernels {
     int targetLayer = pins.get(po + 6);
     int quadrantU = pins.get(po + 8);
     int quadrantV = pins.get(po + 9);
+    // Sectors 0 and 2 (east and west) escape along u, sectors 1 and 3 along v.
+    boolean outwardAlongU = pins.get(po + 7) == 0 || pins.get(po + 7) == 2;
     int disposition = pins.get(po + 11);
     int base = pin * VIA_SITE_STRIDE;
 
@@ -175,11 +177,17 @@ public final class BgaEscapeKernels {
       int layer = -1;
       int cost = NO_SITE_COST;
 
-      // Sites 0..3 are the four 45 degree interstitial positions (+-p/2, +-p/2), starting with the
-      // quadrant that points away from the package centre. Sites 4..7 are unused.
+      // Sites 0..3 are the four 45 degree interstitial positions (+-p/2, +-p/2): the quadrant that
+      // points away from the package centre, then the one that keeps the outward axis of the
+      // breakout sector, then the one that keeps the other axis, then the opposite one. Sites 4..7
+      // are unused.
       if (disposition != 0 && site < 4) {
-        int signU = (site < 2) ? quadrantU : -quadrantU;
-        int signV = (site == 0 || site == 2) ? quadrantV : -quadrantV;
+        boolean keepOutward = site == 0 || site == 1;
+        boolean keepTransverse = site == 0 || site == 2;
+        boolean keepU = outwardAlongU ? keepOutward : keepTransverse;
+        boolean keepV = outwardAlongU ? keepTransverse : keepOutward;
+        int signU = keepU ? quadrantU : -quadrantU;
+        int signV = keepV ? quadrantV : -quadrantV;
         int cx = (u + signU * halfPitch - originX) / step;
         int cy = (v + signV * halfPitch - originY) / step;
         if (cx >= 0 && cx < gridW && cy >= 0 && cy < gridH) {
