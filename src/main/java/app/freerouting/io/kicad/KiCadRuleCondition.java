@@ -79,7 +79,9 @@ public final class KiCadRuleCondition {
    * @param netClass the KiCad name of the class of its net, {@code Default} without net; a
    *     composite class is named by its constituents joined with commas ({@code HV,Default})
    * @param footprint the reference of the footprint of a pad, else null
-   * @param padNumber the number of a pad, else null
+   * @param padNumber the number of a pad, else null; null for a pad too when the design does not
+   *     give it (a pad without net that the KiCad export wrote as a keepout of its footprint),
+   *     whose number and plating are then unknown
    * @param smd for a pad, true if it has copper on a single layer (KiCad {@code SMD} pad; an edge
    *     connector pad cannot be told apart in a Specctra design and is seen as one too)
    * @param libraryId the library identifier of the footprint of a pad ({@code lib:name}, the
@@ -312,6 +314,20 @@ public final class KiCadRuleCondition {
     };
   }
 
+  /**
+   * Whether the item is a pad whose number and plating are unknown: a pad without net that the
+   * KiCad export wrote as a keepout of its footprint, not as a pin.
+   */
+  private static boolean unknownPad(Item item) {
+    return item.type() == ItemType.PAD && item.padNumber() == null;
+  }
+
+  /** Whether the value of a property is unknown for the item. */
+  private static boolean unknownProperty(Prop prop) {
+    return ("pad_number".equals(prop.name()) || "pad_type".equals(prop.name()))
+        && unknownPad(prop.item());
+  }
+
   /** The value of a property for an item; null if the item does not have the property. */
   private static String propertyText(String name, Item item) {
     boolean pad = item.type() == ItemType.PAD;
@@ -396,6 +412,11 @@ public final class KiCadRuleCondition {
       return compare(op, right, left);
     }
     boolean equality = "==".equals(op) || "!=".equals(op);
+    if (equality
+        && ((left instanceof Prop p && unknownProperty(p))
+            || (right instanceof Prop q && unknownProperty(q)))) {
+      return Tri.UNKNOWN;
+    }
     if (left instanceof Prop p && right instanceof Str s && equality) {
       Boolean equal = propertyEquals(p, s.value());
       if (equal == null) {
@@ -542,6 +563,9 @@ public final class KiCadRuleCondition {
     }
 
     String text(Item item) {
+      if (unknownProperty(new Prop(name, item))) {
+        return "\u0003";
+      }
       String value = PROPERTIES.contains(name) ? propertyText(name, item) : null;
       return value == null ? "\u0000" : value.toLowerCase(Locale.ROOT);
     }
@@ -584,7 +608,10 @@ public final class KiCadRuleCondition {
               }
               yield Tri.of(found);
             }
-            case "isplated" -> Tri.of(item.type() == ItemType.VIA || (pad && !item.smd()));
+            case "isplated" ->
+                unknownPad(item)
+                    ? Tri.UNKNOWN
+                    : Tri.of(item.type() == ItemType.VIA || (pad && !item.smd()));
             default -> Tri.UNKNOWN;
           });
     }

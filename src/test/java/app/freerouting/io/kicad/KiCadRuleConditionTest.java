@@ -50,6 +50,25 @@ class KiCadRuleConditionTest {
   }
 
   @Test
+  void padExportedAsKeepoutHasAnUnknownNumberAndPlating() {
+    // a pad without net that the KiCad export wrote as a keepout of its footprint
+    Item keepout = new Item(ItemType.PAD, "", "Default", "K1", null, false);
+    assertEquals(Tri.UNKNOWN, eval("A.Pad_Number == '1'", keepout, keepout));
+    assertEquals(Tri.UNKNOWN, eval("A.Pad_Number != '1'", keepout, keepout));
+    assertEquals(Tri.UNKNOWN, eval("A.Pad_Type == 'Through-hole'", keepout, keepout));
+    assertEquals(Tri.UNKNOWN, eval("A.isPlated()", keepout, keepout));
+    assertEquals(Tri.UNKNOWN, eval("A.Pad_Number == B.Pad_Number", keepout, COIL_PAD));
+    // what the design gives stays known
+    assertEquals(
+        Tri.TRUE,
+        eval(
+            "A.memberOfFootprint('K1') && A.Type == 'Pad' && A.NetName != 'GND'",
+            keepout,
+            keepout));
+    assertEquals(Tri.FALSE, eval("A.Pad_Number == '1'", SIGNAL_TRACK, SIGNAL_TRACK));
+  }
+
+  @Test
   void footprintSelectorWithColonMatchesTheLibraryIdentifier() {
     Item connector = new Item(ItemType.PAD, "/RF", "Default", "J1", "1", true, "sma-j:SMA-J");
     String around = "A.memberOfFootprint('sma-j:SMA-J') && !B.memberOfFootprint('sma-j:SMA-J')";

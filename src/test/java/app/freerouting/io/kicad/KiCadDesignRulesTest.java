@@ -9,8 +9,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import app.freerouting.TestFixtures;
 import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.ObstacleArea;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.structure.Unit;
+import app.freerouting.geometry.planar.Circle;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.specctra.DsnReader;
 import app.freerouting.rules.ClearanceMatrix;
@@ -19,6 +21,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.UnaryOperator;
@@ -263,6 +267,150 @@ class KiCadDesignRulesTest {
         result.warnings().stream()
             .anyMatch(w -> w.contains("'K1_1' appears to be a KiCad-renamed duplicate of 'K1'")),
         result.warnings().toString());
+  }
+
+  /** K1 with a plated pad without net, which the KiCad export writes as a round keepout. */
+  private static BasicBoard loadBoardWithPadKeepout() throws IOException {
+    return loadBoard(
+        dsn ->
+            dsn.replace(
+                "(image \"Реле:SRD-xxVDC-SL-C\"\n",
+                "(image \"Реле:SRD-xxVDC-SL-C\"\n"
+                    + "      (keepout \"\" (circle F.Cu 1500 -6000 -6000))\n"
+                    + "      (keepout \"\" (circle B.Cu 1500 -6000 -6000))\n"));
+  }
+
+  private static ObstacleArea padKeepout(BasicBoard board, String reference) {
+    for (Item item : board.getItems()) {
+      if (item.getClass() == ObstacleArea.class
+          && item.getComponentId() > 0
+          && ((ObstacleArea) item).getRelativeArea() instanceof Circle
+          && reference.equals(board.components.get(item.getComponentId()).name)) {
+        return (ObstacleArea) item;
+      }
+    }
+    throw new AssertionError("no keepout in " + reference);
+  }
+
+  @Test
+  void padWithoutNetExportedAsKeepoutGetsTheRulesOfItsFootprint() throws IOException {
+    BasicBoard board = loadBoardWithPadKeepout();
+    var result =
+        KiCadDesignRulesTranslator.apply(
+            board,
+            KiCadDesignRules.parse(
+                """
+                (version 1)
+                (rule "around_k1"
+                  (condition "A.memberOfFootprint('K1') && !B.memberOfFootprint('K1')")
+                  (constraint clearance (min 7mm)))
+                """,
+                "test.kicad_dru"));
+    ClearanceMatrix matrix = board.rules.clearanceMatrix;
+    // KiCad applies the rule to the pad: Freerouting to the keepout it was exported as
+    assertEquals(mm(board, 7.0), value(matrix, padKeepout(board, "K1"), pin(board, "VD4", "1")));
+    assertEquals(
+        mm(board, 7.0),
+        matrix.getValue(
+            padKeepout(board, "K1").clearanceClassIndex(),
+            board.rules.nets.get("GND", 1).getNetClass().getTraceClearanceClass(),
+            0,
+            false));
+    assertTrue(
+        result.warnings().stream().anyMatch(w -> w.contains("keepout") && w.contains("K1")),
+        result.warnings().toString());
+  }
+
+  @Test
+  void padWithoutNetExportedAsKeepoutIsAPadWithoutNet() throws IOException {
+    BasicBoard board = loadBoardWithPadKeepout();
+    KiCadDesignRulesTranslator.apply(
+        board,
+        KiCadDesignRules.parse(
+            """
+            (version 1)
+            (rule "gnd_wide"
+              (condition "A.NetName == 'GND' && B.NetName != 'GND' && B.Type == 'Pad'")
+              (constraint clearance (min 3mm)))
+            """,
+            "test.kicad_dru"));
+    // The Own-Mailbox case: a GND trace at 3 mm from the pad without net
+    assertEquals(
+        mm(board, 3.0),
+        board.rules.clearanceMatrix.getValue(
+            padKeepout(board, "K1").clearanceClassIndex(),
+            board.rules.nets.get("GND", 1).getNetClass().getTraceClearanceClass(),
+            0,
+            false));
+  }
+
+  @Test
+  void numberAndPlatingOfAPadExportedAsKeepoutAreUnknown() throws IOException {
+    BasicBoard board = loadBoardWithPadKeepout();
+    KiCadDesignRulesTranslator.apply(
+        board,
+        KiCadDesignRules.parse(
+            """
+            (version 1)
+            (rule "pad_9"
+              (condition "A.Pad_Number == '9' && B.Type == 'Pad'")
+              (constraint clearance (min 5mm)))
+            (rule "npth"
+              (condition "!A.isPlated() && A.Type == 'Pad' && B.Type == 'Pad'")
+              (constraint clearance (min 6mm)))
+            """,
+            "test.kicad_dru"));
+    // K1 has no pad 9, but the pad exported as a keepout may be one, and may be unplated: the
+    // largest clearance that may apply applies
+    assertEquals(
+        mm(board, 6.0),
+        value(board.rules.clearanceMatrix, padKeepout(board, "K1"), pin(board, "VD4", "1")));
+    // the pins of K1 are known: neither rule applies to them
+    assertNotEquals(
+        mm(board, 5.0),
+        value(board.rules.clearanceMatrix, pin(board, "K1", "1"), pin(board, "VD4", "1")));
+  }
+
+  @Test
+  void otherKeepoutsKeepTheirClearance() throws IOException {
+    // a polygonal keepout of K1 (a rule area of the footprint) and a round keepout of the board
+    BasicBoard board =
+        loadBoard(
+            dsn ->
+                dsn.replace(
+                        "(image \"Реле:SRD-xxVDC-SL-C\"\n",
+                        "(image \"Реле:SRD-xxVDC-SL-C\"\n"
+                            + "      (keepout \"\" (polygon F.Cu 0  -7000 -5000  -5000 -5000"
+                            + "  -5000 -7000  -7000 -7000  -7000 -5000))\n")
+                    .replaceFirst(
+                        "\\(keepout \"\" \\(polygon signal 0",
+                        "(keepout \"\" (circle F.Cu 1500 140000 -200000))\n    $0"));
+    List<ObstacleArea> others = new ArrayList<>();
+    for (Item item : board.getItems()) {
+      if (item.getClass() == ObstacleArea.class
+          && ((item.getComponentId() > 0)
+              != (((ObstacleArea) item).getRelativeArea() instanceof Circle))) {
+        others.add((ObstacleArea) item);
+      }
+    }
+    assertTrue(others.size() >= 2, "both keepouts must load: " + others);
+    int[] before = others.stream().mapToInt(Item::clearanceClassIndex).toArray();
+    KiCadDesignRulesTranslator.apply(
+        board,
+        KiCadDesignRules.parse(
+            """
+            (version 1)
+            (rule "around_k1"
+              (condition "A.memberOfFootprint('K1') && !B.memberOfFootprint('K1')")
+              (constraint clearance (min 7mm)))
+            (rule "no_net"
+              (condition "A.Type == 'Pad' && B.Type == 'Pad'")
+              (constraint clearance (min 5mm)))
+            """,
+            "test.kicad_dru"));
+    assertEquals(
+        Arrays.toString(before),
+        Arrays.toString(others.stream().mapToInt(Item::clearanceClassIndex).toArray()));
   }
 
   @Test
