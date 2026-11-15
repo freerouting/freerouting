@@ -1248,11 +1248,16 @@ public class Structure extends ScopeKeyword {
         updatedLayers.add(new Layer(currentLayer.name, currentLayer.no, false, wireNets));
         changed = true;
       } else {
-        FRLogger.warn(
+        String message =
             "Layer '"
                 + currentLayer.name
                 + "' is declared as a power layer but no plane is defined for it. It will be"
-                + " treated as a signal layer.");
+                + " treated as a signal layer.";
+        if (scopeParameter.wiringIsRead) {
+          FRLogger.warn(message);
+        } else {
+          FRLogger.debug(message);
+        }
         updatedLayers.add(
             new Layer(currentLayer.name, currentLayer.no, true, currentLayer.netNames));
         changed = true;

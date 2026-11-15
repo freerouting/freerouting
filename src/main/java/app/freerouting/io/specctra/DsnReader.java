@@ -250,6 +250,9 @@ public final class DsnReader {
     // skipping all subsequent heavy scopes.
     // -----------------------------------------------------------------------
     ReadScopeParameter scopeParameter = new ReadScopeParameter(scanner, observers, idGenerator);
+    // The wiring is never read here: power layers whose copper comes as wire polygons cannot be
+    // told apart from empty ones, so the layer types are not final.
+    scopeParameter.wiringIsRead = false;
     Object nextToken = null;
     outer:
     for (; ; ) {

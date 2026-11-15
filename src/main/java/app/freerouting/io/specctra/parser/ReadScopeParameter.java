@@ -51,6 +51,13 @@ public class ReadScopeParameter {
    */
   public Map<String, Set<String>> polygonWireNetsByLayer = Map.of();
 
+  /**
+   * False when the wiring scope is never read (metadata read, which stops after the structure): the
+   * layer types decided from the structure alone are then not final, so no warning is logged about
+   * them.
+   */
+  public boolean wiringIsRead = true;
+
   /** Planes whose inherited clearance must follow their net class after network rules are read. */
   final Collection<ConductionArea> planesWithInheritedClearance = new ArrayList<>();
 
