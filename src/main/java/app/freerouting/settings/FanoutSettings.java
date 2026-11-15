@@ -132,7 +132,9 @@ public class FanoutSettings implements Serializable, Cloneable {
 
   /**
    * GPU compute device selection preference: "auto", "dgpu", "igpu", "cpu", or
-   * "opencl_experimental".
+   * "opencl_experimental" for the built-in OpenCL backend, or "tornadovm", "tornadovm:opencl",
+   * "tornadovm:cuda", "tornadovm:metal" or "tornadovm:&lt;backend&gt;:&lt;device&gt;" for the
+   * optional TornadoVM backend.
    */
   @SerializedName("gpu_device_preference")
   public String gpuDevicePreference;

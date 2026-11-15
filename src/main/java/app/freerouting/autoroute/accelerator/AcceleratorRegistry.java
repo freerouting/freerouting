@@ -1,8 +1,10 @@
 package app.freerouting.autoroute.accelerator;
 
 import app.freerouting.autoroute.accelerator.opencl.PanamaOpenClBackend;
+import app.freerouting.autoroute.accelerator.tornadovm.TornadoVmComputeBackend;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.FanoutSettings;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -11,6 +13,11 @@ import java.util.concurrent.atomic.AtomicReference;
 public final class AcceleratorRegistry {
 
   private static final AtomicReference<ComputeBackend> CACHED_BACKEND = new AtomicReference<>();
+  private static final AtomicReference<CachedTornadoVm> CACHED_TORNADOVM_BACKEND =
+      new AtomicReference<>();
+
+  /** The TornadoVM backend is cached per preference, which selects the device. */
+  private record CachedTornadoVm(String preference, ComputeBackend backend) {}
 
   private AcceleratorRegistry() {}
 
@@ -26,6 +33,10 @@ public final class AcceleratorRegistry {
         || !Boolean.TRUE.equals(settings.gpuAccelerationEnabled)
         || "cpu".equalsIgnoreCase(settings.gpuDevicePreference)) {
       return new NoOpCpuComputeBackend(GpuFallbackReason.DISABLED_BY_SETTINGS);
+    }
+
+    if (isTornadoVmPreference(settings.gpuDevicePreference)) {
+      return discoverTornadoVm(settings.gpuDevicePreference);
     }
 
     String os = System.getProperty("os.name", "").toLowerCase();
@@ -73,6 +84,55 @@ public final class AcceleratorRegistry {
     return CACHED_BACKEND.get();
   }
 
+  private static boolean isTornadoVmPreference(String preference) {
+    return preference != null
+        && preference
+            .trim()
+            .toLowerCase(Locale.ROOT)
+            .startsWith(TornadoVmComputeBackend.PREFERENCE_PREFIX);
+  }
+
+  /**
+   * TornadoVM is an optional dependency: if its classes are not on the class path, creating the
+   * backend throws {@link NoClassDefFoundError}, which is caught here like any other start-up
+   * failure. It does not go through the Apple Silicon OpenCL check, because TornadoVM can use its
+   * Metal backend there.
+   */
+  private static ComputeBackend discoverTornadoVm(String preference) {
+    CachedTornadoVm existing = CACHED_TORNADOVM_BACKEND.get();
+    if (existing != null && existing.preference().equals(preference)) {
+      return existing.backend();
+    }
+
+    ComputeBackend discovered;
+    try {
+      discovered = new TornadoVmComputeBackend(preference);
+      if (discovered.isAvailable()) {
+        FRLogger.info(
+            "GPU acceleration: discovered "
+                + discovered.getDeviceInfo().deviceName()
+                + " ("
+                + discovered.getDeviceInfo().vendor()
+                + ")");
+      } else {
+        FRLogger.info(
+            "GPU acceleration: no TornadoVM device available for '"
+                + preference
+                + "'; using CPU fanout.");
+        discovered = new NoOpCpuComputeBackend(GpuFallbackReason.NO_DEVICE_FOUND);
+      }
+    } catch (Throwable t) {
+      FRLogger.info(
+          "GPU acceleration: TornadoVM is not available ("
+              + t
+              + "); using CPU fanout. Run Freerouting with TornadoVM on the class path to use it.");
+      discovered = new NoOpCpuComputeBackend(GpuFallbackReason.NO_DEVICE_FOUND);
+    }
+
+    CACHED_TORNADOVM_BACKEND.set(new CachedTornadoVm(preference, discovered));
+    return discovered;
+  }
+
   /**
    * Trips the session circuit breaker on fatal errors or kernel timeouts, forcing future calls to
    * CPU.
@@ -81,11 +141,17 @@ public final class AcceleratorRegistry {
    */
   public static void tripCircuitBreaker(GpuFallbackReason reason) {
     CACHED_BACKEND.set(new NoOpCpuComputeBackend(reason));
+    CachedTornadoVm tornadoVm = CACHED_TORNADOVM_BACKEND.get();
+    if (tornadoVm != null) {
+      CACHED_TORNADOVM_BACKEND.set(
+          new CachedTornadoVm(tornadoVm.preference(), new NoOpCpuComputeBackend(reason)));
+    }
     FRLogger.warn("GPU acceleration circuit breaker tripped: " + reason);
   }
 
   /** Resets the registry cache (primarily for testing purposes). */
   public static void reset() {
     CACHED_BACKEND.set(null);
+    CACHED_TORNADOVM_BACKEND.set(null);
   }
 }

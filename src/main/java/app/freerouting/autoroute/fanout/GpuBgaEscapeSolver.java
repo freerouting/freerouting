@@ -1,6 +1,8 @@
 package app.freerouting.autoroute.fanout;
 
 import app.freerouting.autoroute.accelerator.AcceleratorRegistry;
+import app.freerouting.autoroute.accelerator.BgaEscapeGrid;
+import app.freerouting.autoroute.accelerator.BgaEscapeKernelBackend;
 import app.freerouting.autoroute.accelerator.ComputeBackend;
 import app.freerouting.autoroute.accelerator.GpuComputeSession;
 import app.freerouting.autoroute.accelerator.opencl.PanamaOpenClBackend;
@@ -103,6 +105,20 @@ public final class GpuBgaEscapeSolver {
     int pinCount = data.pinCount();
     if (pinCount <= 0) {
       return Collections.emptyList();
+    }
+
+    if (backend instanceof BgaEscapeKernelBackend kernelBackend) {
+      try {
+        return executeKernelBackend(backend, kernelBackend, bga, data, infoLogger);
+      } catch (Throwable t) {
+        String msg =
+            "GPU kernel execution failed, falling back to deterministic wavefront: "
+                + t.getMessage();
+        FRLogger.warn(msg);
+        if (infoLogger != null) {
+          infoLogger.accept(msg);
+        }
+      }
     }
 
     if (backend instanceof PanamaOpenClBackend openClBackend) {
@@ -477,63 +493,12 @@ public final class GpuBgaEscapeSolver {
             MemorySegment.NULL,
             MemorySegment.NULL);
 
-        List<PinEscapeProposal> proposals = new ArrayList<>(pinCount);
-        List<BgaPinDescriptor> pins = bga.pins();
-        int step = data.gridStepBoardUnits();
-        int origX = data.originX();
-        int origY = data.originY();
-
-        int pinLayer = pins.isEmpty() ? 0 : pins.get(0).pin().firstLayer();
-        int escapedCount = 0;
-
-        for (int i = 0; i < pinCount; i++) {
-          BgaPinDescriptor pd = pins.get(i);
-          if (pd.disposition() == BgaEscapeDescriptor.PinDisposition.PASSIVE_OBSTACLE) {
-            proposals.add(new PinEscapeProposal(pd, null, pd.targetLayer(), 999999, false));
-            continue;
-          }
-          if (pd.targetLayer() == pinLayer
-              && pd.disposition() == BgaEscapeDescriptor.PinDisposition.SIGNAL_ESCAPE) {
-            proposals.add(new PinEscapeProposal(pd, null, pd.targetLayer(), 0, true));
-            escapedCount++;
-            continue;
-          }
-          long off = (long) i * 16;
-          int status = hostSolutions.get(ValueLayout.JAVA_INT, (off + 8) * 4);
-
-          if (status == 2 || status == 1) { // Committed or resolved
-            int tgx = hostSolutions.get(ValueLayout.JAVA_INT, (off + 3) * 4);
-            int tgy = hostSolutions.get(ValueLayout.JAVA_INT, (off + 4) * 4);
-            int tl = hostSolutions.get(ValueLayout.JAVA_INT, (off + 5) * 4);
-            int cost = hostSolutions.get(ValueLayout.JAVA_INT, (off + 6) * 4);
-
-            int viaBx = origX + tgx * step;
-            int viaBy = origY + tgy * step;
-
-            proposals.add(new PinEscapeProposal(pd, new IntPoint(viaBx, viaBy), tl, cost, true));
-            escapedCount++;
-          } else {
-            proposals.add(new PinEscapeProposal(pd, null, pd.targetLayer(), 999999, false));
-          }
-        }
-
         String deviceName =
             openClBackend.getDeviceInfo() != null
                 ? openClBackend.getDeviceInfo().deviceName()
                 : "GPU";
-        String kernelCompletionMsg =
-            "GPU BGA escape kernel execution complete: "
-                + escapedCount
-                + "/"
-                + pinCount
-                + " pins escaped on "
-                + deviceName;
-        FRLogger.info(kernelCompletionMsg);
-        if (infoLogger != null) {
-          infoLogger.accept(kernelCompletionMsg);
-        }
-
-        return proposals;
+        return toProposals(
+            bga, data, hostSolutions.toArray(ValueLayout.JAVA_INT), deviceName, infoLogger);
 
       } finally {
         for (MemorySegment k : kernels) {
@@ -550,6 +515,117 @@ public final class GpuBgaEscapeSolver {
         }
       }
     }
+  }
+
+  /**
+   * Runs the escape kernels on a backend that manages its own device memory (TornadoVM). The
+   * kernels and the host loop are the same as in {@link #executeOpenClKernels}, so the solution
+   * buffer is decoded the same way.
+   */
+  private static List<PinEscapeProposal> executeKernelBackend(
+      ComputeBackend backend,
+      BgaEscapeKernelBackend kernelBackend,
+      BgaEscapeDescriptor bga,
+      MarshaledBgaData data,
+      java.util.function.Consumer<String> infoLogger) {
+
+    BgaEscapeGrid grid =
+        new BgaEscapeGrid(
+            data.pinBuffer().toArray(ValueLayout.JAVA_INT),
+            data.pinCount(),
+            data.obstacleBuffer().toArray(ValueLayout.JAVA_INT),
+            Math.max(1, data.obstacleCount()),
+            data.gridWidth(),
+            data.gridHeight(),
+            data.layerCount(),
+            data.gridStepBoardUnits(),
+            data.originX(),
+            data.originY(),
+            (int) Math.round(bga.pitchBoardUnits()),
+            bga.maxRing());
+
+    String deviceName =
+        backend.getDeviceInfo() != null ? backend.getDeviceInfo().deviceName() : "GPU";
+    FRLogger.info(
+        "GPU acceleration: executing BGA escape kernels on "
+            + deviceName
+            + " for component "
+            + bga.component().name
+            + " ("
+            + grid.pinCount()
+            + " pins, grid "
+            + grid.gridWidth()
+            + "x"
+            + grid.gridHeight()
+            + "x"
+            + grid.layerCount()
+            + ")...");
+
+    int[] solutions = kernelBackend.runBgaEscape(grid);
+    return toProposals(bga, data, solutions, deviceName, infoLogger);
+  }
+
+  /** Turns the solution buffer written by the escape kernels into one proposal per pin. */
+  private static List<PinEscapeProposal> toProposals(
+      BgaEscapeDescriptor bga,
+      MarshaledBgaData data,
+      int[] solutions,
+      String deviceName,
+      java.util.function.Consumer<String> infoLogger) {
+    int pinCount = data.pinCount();
+    List<PinEscapeProposal> proposals = new ArrayList<>(pinCount);
+    List<BgaPinDescriptor> pins = bga.pins();
+    int step = data.gridStepBoardUnits();
+    int origX = data.originX();
+    int origY = data.originY();
+
+    int pinLayer = pins.isEmpty() ? 0 : pins.get(0).pin().firstLayer();
+    int escapedCount = 0;
+
+    for (int i = 0; i < pinCount; i++) {
+      BgaPinDescriptor pd = pins.get(i);
+      if (pd.disposition() == BgaEscapeDescriptor.PinDisposition.PASSIVE_OBSTACLE) {
+        proposals.add(new PinEscapeProposal(pd, null, pd.targetLayer(), 999999, false));
+        continue;
+      }
+      if (pd.targetLayer() == pinLayer
+          && pd.disposition() == BgaEscapeDescriptor.PinDisposition.SIGNAL_ESCAPE) {
+        proposals.add(new PinEscapeProposal(pd, null, pd.targetLayer(), 0, true));
+        escapedCount++;
+        continue;
+      }
+      int off = i * BgaEscapeGrid.SOLUTION_STRIDE;
+      int status = solutions[off + 8];
+
+      if (status == 2 || status == 1) { // Committed or resolved
+        int tgx = solutions[off + 3];
+        int tgy = solutions[off + 4];
+        int tl = solutions[off + 5];
+        int cost = solutions[off + 6];
+
+        int viaBx = origX + tgx * step;
+        int viaBy = origY + tgy * step;
+
+        proposals.add(new PinEscapeProposal(pd, new IntPoint(viaBx, viaBy), tl, cost, true));
+        escapedCount++;
+      } else {
+        proposals.add(new PinEscapeProposal(pd, null, pd.targetLayer(), 999999, false));
+      }
+    }
+
+    String kernelCompletionMsg =
+        "GPU BGA escape kernel execution complete: "
+            + escapedCount
+            + "/"
+            + pinCount
+            + " pins escaped on "
+            + deviceName;
+    FRLogger.info(kernelCompletionMsg);
+    if (infoLogger != null) {
+      infoLogger.accept(kernelCompletionMsg);
+    }
+
+    return proposals;
   }
 
   private static void setKernelArgMem(
