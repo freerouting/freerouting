@@ -234,6 +234,8 @@ public class CliSettings implements SettingsSource {
       case "spl" -> "router.autorouter.stagnation_pass_limit";
       case "inc" -> "router.autorouter.ignore_net_classes";
       case "oit" -> "router.optimizer.improvement_threshold";
+      case "op" -> "router.optimizer.patience";
+      case "omp" -> "router.optimizer.max_passes";
       case "router-scoring-version" -> "router.scoring.version";
       case "optimizer-scoring-version" -> "optimizer.scoring.version";
       case "scoring-version" -> "scoring-version";

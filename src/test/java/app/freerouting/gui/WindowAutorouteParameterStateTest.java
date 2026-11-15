@@ -144,4 +144,17 @@ class WindowAutorouteParameterStateTest {
     assertEquals(
         "00:30:00", WindowAutorouteParameterState.normalizeTimeoutInput("invalid", "00:30:00"));
   }
+
+  @Test
+  void applyOptimizerEnabledSelectionUpdatesSettings() {
+    var settings = new app.freerouting.settings.RouterSettings();
+    settings.setOptimizerEnabled(false);
+    org.junit.jupiter.api.Assertions.assertFalse(settings.getRunOptimizer());
+    app.freerouting.gui.windows.routing.WindowAutorouteParameter.applyOptimizerEnabledSelection(
+        settings, true);
+    org.junit.jupiter.api.Assertions.assertTrue(settings.getRunOptimizer());
+    app.freerouting.gui.windows.routing.WindowAutorouteParameter.applyOptimizerEnabledSelection(
+        settings, false);
+    org.junit.jupiter.api.Assertions.assertFalse(settings.getRunOptimizer());
+  }
 }

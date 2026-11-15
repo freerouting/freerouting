@@ -2,6 +2,7 @@ package app.freerouting.settings.sources;
 
 import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
+import app.freerouting.settings.OptimizerPatience;
 import app.freerouting.settings.OptimizerScoringVersion;
 import app.freerouting.settings.RouterScoringVersion;
 import app.freerouting.settings.RouterSettings;
@@ -128,6 +129,9 @@ public class DefaultSettings implements SettingsSource {
   /** Current default optimizer score formula. */
   public static final OptimizerScoringVersion DEFAULT_OPTIMIZER_SCORING_VERSION =
       OptimizerScoringVersion.V2_LOWER_BOUND;
+
+  /** Current default optimizer patience preset. */
+  public static final OptimizerPatience DEFAULT_OPTIMIZER_PATIENCE = OptimizerPatience.BALANCED;
 
   public static final float DEFAULT_ROUTER_UNROUTED_CONNECTION_WEIGHT = 1000.0F;
 
@@ -261,8 +265,9 @@ public class DefaultSettings implements SettingsSource {
     settings.optimizer.traceRipupCostFactor = 0.6f;
     settings.optimizer.maxAutoroutePasses = 6;
     settings.optimizer.enablePreflightGuards = true;
-    settings.optimizer.maxConsecutiveFailures = 50;
-    settings.optimizer.maxConsecutiveFailuresPass1 = 12;
+    settings.optimizer.patience = DEFAULT_OPTIMIZER_PATIENCE;
+    settings.optimizer.maxConsecutiveFailures = null;
+    settings.optimizer.maxConsecutiveFailuresPass1 = null;
 
     // Scalar trace-cost defaults (layer-specific arrays are omitted for the same reason as
     // the layer arrays above – their sizes depend on the board).

@@ -33,6 +33,10 @@ public class OptimizerSettings implements Serializable, Cloneable {
   @SerializedName("max_threads")
   public Integer maxThreads;
 
+  /** Post-routing optimizer patience preset profile (BALANCED, PATIENT, or EXHAUSTIVE). */
+  @SerializedName("patience")
+  public OptimizerPatience patience;
+
   /**
    * Relative pass-improvement threshold expressed directly as a percentage (e.g., 2.5 = 2.5% of the
    * incumbent optimizer score). {@code BatchOptimizer} stops when the relative percentage

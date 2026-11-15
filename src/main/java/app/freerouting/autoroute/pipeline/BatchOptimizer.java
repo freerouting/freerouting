@@ -17,6 +17,7 @@ import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.settings.OptimizerPatience;
 import app.freerouting.settings.OptimizerSettings;
 import app.freerouting.settings.sources.DefaultSettings;
 import com.sun.management.ThreadMXBean;
@@ -351,28 +352,43 @@ public final class BatchOptimizer extends NamedAlgorithm {
       }
     }
 
-    if (this.settings.optimizer != null
-        && this.settings.optimizer.optimizationImprovementThreshold != null) {
-      float threshold = this.settings.optimizer.optimizationImprovementThreshold;
-      if (Float.isNaN(threshold) || Float.isInfinite(threshold) || threshold < 0.0f) {
-        job.logWarning(
-            String.format(
-                Locale.US,
-                "Invalid optimizer improvement threshold: %.4f. Resetting to default %.2f%%.",
-                threshold,
-                DefaultSettings.DEFAULT_OPTIMIZER_IMPROVEMENT_THRESHOLD));
-        this.settings.optimizer.optimizationImprovementThreshold =
-            DefaultSettings.DEFAULT_OPTIMIZER_IMPROVEMENT_THRESHOLD;
-      } else if (threshold > 0.0f && threshold < 0.1f) {
-        float scaled = threshold * 100.0f;
-        job.logInfo(
-            String.format(
-                Locale.US,
-                "Optimizer improvement threshold appears to be specified as a fraction (%.4f). "
-                    + "Auto-scaling to percentage (%.2f%%).",
-                threshold,
-                scaled));
-        this.settings.optimizer.optimizationImprovementThreshold = scaled;
+    OptimizerPatience patience =
+        (this.settings.optimizer != null && this.settings.optimizer.patience != null)
+            ? this.settings.optimizer.patience
+            : OptimizerPatience.BALANCED;
+    float defaultThreshold = patience.getDefaultImprovementThreshold();
+
+    if (this.settings.optimizer != null) {
+      if (this.settings.optimizer.optimizationImprovementThreshold != null) {
+        if (patience != OptimizerPatience.BALANCED
+            && Math.abs(
+                    this.settings.optimizer.optimizationImprovementThreshold
+                        - DefaultSettings.DEFAULT_OPTIMIZER_IMPROVEMENT_THRESHOLD)
+                <= 1e-5f) {
+          this.settings.optimizer.optimizationImprovementThreshold = defaultThreshold;
+        }
+        float threshold = this.settings.optimizer.optimizationImprovementThreshold;
+        if (Float.isNaN(threshold) || Float.isInfinite(threshold) || threshold < 0.0f) {
+          job.logWarning(
+              String.format(
+                  Locale.US,
+                  "Invalid optimizer improvement threshold: %.4f. Resetting to default %.2f%%.",
+                  threshold,
+                  defaultThreshold));
+          this.settings.optimizer.optimizationImprovementThreshold = defaultThreshold;
+        } else if (threshold > 0.0f && threshold < 0.1f) {
+          float scaled = threshold * 100.0f;
+          job.logInfo(
+              String.format(
+                  Locale.US,
+                  "Optimizer improvement threshold appears to be specified as a fraction (%.4f). "
+                      + "Auto-scaling to percentage (%.2f%%).",
+                  threshold,
+                  scaled));
+          this.settings.optimizer.optimizationImprovementThreshold = scaled;
+        }
+      } else {
+        this.settings.optimizer.optimizationImprovementThreshold = defaultThreshold;
       }
     }
 
@@ -383,6 +399,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
     int currentPass = 0;
     int passesWithoutGainInARow = 0;
     while ((this.settings.optimizer.maxPasses == null
+            || this.settings.optimizer.maxPasses <= 0
             || currentPass < this.settings.optimizer.maxPasses)
         && (this.settings.optimizer.maxItems == null
             || this.totalItemsOptimized < this.settings.optimizer.maxItems)
@@ -491,6 +508,8 @@ public final class BatchOptimizer extends NamedAlgorithm {
       }
 
       if (scoreImprovement != -1
+          && this.settings.optimizer.optimizationImprovementThreshold != null
+          && this.settings.optimizer.optimizationImprovementThreshold > 0.0f
           && scoreImprovement < this.settings.optimizer.optimizationImprovementThreshold) {
         job.logInfo(
             String.format(
@@ -779,16 +798,20 @@ public final class BatchOptimizer extends NamedAlgorithm {
     boolean stoppedOrTimedOut = false;
     boolean earlyStopDueToFailures = false;
     int consecutiveFailures = 0;
+    OptimizerPatience patience =
+        (this.settings.optimizer != null && this.settings.optimizer.patience != null)
+            ? this.settings.optimizer.patience
+            : OptimizerPatience.BALANCED;
     int maxConsecutiveFailures =
         passNo == 1
             ? (this.settings.optimizer != null
                     && this.settings.optimizer.maxConsecutiveFailuresPass1 != null
                 ? this.settings.optimizer.maxConsecutiveFailuresPass1
-                : 12)
+                : patience.getDefaultMaxConsecutiveFailuresPass1())
             : (this.settings.optimizer != null
                     && this.settings.optimizer.maxConsecutiveFailures != null
                 ? this.settings.optimizer.maxConsecutiveFailures
-                : 50);
+                : patience.getDefaultMaxConsecutiveFailures());
 
     // The baseline board does not change during the pass: the winner replaces it at the end.
     BoardStatistics.OptimizerMetrics baselineMetrics =
@@ -875,7 +898,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
               }
             } else {
               consecutiveFailures++;
-              if (consecutiveFailures >= maxConsecutiveFailures) {
+              if (maxConsecutiveFailures > 0 && consecutiveFailures >= maxConsecutiveFailures) {
                 job.logInfo(
                     String.format(
                         Locale.US,
