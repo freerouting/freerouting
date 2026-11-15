@@ -334,6 +334,8 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
   void showFinalBoard() {
     if (routingJob.board != null && routingJob.board != sessionPort.routingBoard()) {
       sessionPort.replaceBoard(new BoardReplacement(generation, routingJob.board));
+    } else {
+      sessionPort.repaint();
     }
   }
 
@@ -636,8 +638,11 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
               handleOptimizationStageFinished();
             }
           });
-      this.pipeline.run();
-      showFinalBoard();
+      try {
+        this.pipeline.run();
+      } finally {
+        showFinalBoard();
+      }
 
       // Save the result to the output field as a Specctra SES file
       if (routingJob.output.format == FileFormat.SES) {

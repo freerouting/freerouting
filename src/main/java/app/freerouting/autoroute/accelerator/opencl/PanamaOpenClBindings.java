@@ -25,6 +25,7 @@ public final class PanamaOpenClBindings {
   public static final int CL_DEVICE_MAX_COMPUTE_UNITS = 0x1002;
   public static final int CL_DEVICE_GLOBAL_MEM_SIZE = 0x101F;
   public static final int CL_DEVICE_HOST_UNIFIED_MEMORY = 0x1035;
+  public static final int CL_PROGRAM_BUILD_LOG = 0x1183;
 
   public static final long CL_MEM_READ_WRITE = (1L << 0);
   public static final long CL_MEM_WRITE_ONLY = (1L << 1);
@@ -508,8 +509,33 @@ public final class PanamaOpenClBindings {
             event);
   }
 
+  public int clGetEventInfo(
+      MemorySegment event,
+      int paramName,
+      long paramValueSize,
+      MemorySegment paramValue,
+      MemorySegment paramValueSizeRet)
+      throws Throwable {
+    return (int)
+        clGetEventInfoHandle.invokeExact(
+            event, paramName, paramValueSize, paramValue, paramValueSizeRet);
+  }
+
   public int clWaitForEvents(int numEvents, MemorySegment eventList) throws Throwable {
     return (int) clWaitForEventsHandle.invokeExact(numEvents, eventList);
+  }
+
+  public int clGetProgramBuildInfo(
+      MemorySegment program,
+      MemorySegment device,
+      int paramName,
+      long paramValueSize,
+      MemorySegment paramValue,
+      MemorySegment paramValueSizeRet)
+      throws Throwable {
+    return (int)
+        clGetProgramBuildInfoHandle.invokeExact(
+            program, device, paramName, paramValueSize, paramValue, paramValueSizeRet);
   }
 
   public int clReleaseMemObject(MemorySegment memobj) throws Throwable {

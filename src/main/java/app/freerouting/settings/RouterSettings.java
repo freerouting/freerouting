@@ -875,9 +875,9 @@ public class RouterSettings implements Serializable, Cloneable {
     return fanout != null && fanout.enabled != null ? fanout.enabled : true;
   }
 
-  /** Returns whether the fanout pre-pass should run. */
+  /** Returns whether the fanout pre-pass is enabled (defaults to true if unspecified). */
   public boolean isFanoutEnabled() {
-    return fanout != null && Boolean.TRUE.equals(fanout.enabled);
+    return getRunFanout();
   }
 
   /** Enables or disables the fanout pre-pass. */
@@ -889,6 +889,18 @@ public class RouterSettings implements Serializable, Cloneable {
     this.fanout.enabled = value;
     if (pcs != null) {
       pcs.firePropertyChange("fanout.enabled", oldValue, value);
+    }
+  }
+
+  /** Enables or disables GPU acceleration for BGA escape routing. */
+  public void setGpuAccelerationEnabled(Boolean value) {
+    if (this.fanout == null) {
+      this.fanout = new FanoutSettings();
+    }
+    Boolean oldValue = this.fanout.gpuAccelerationEnabled;
+    this.fanout.gpuAccelerationEnabled = value;
+    if (pcs != null) {
+      pcs.firePropertyChange("fanout.gpuAccelerationEnabled", oldValue, value);
     }
   }
 
@@ -1277,6 +1289,10 @@ public class RouterSettings implements Serializable, Cloneable {
           "optimizer.enabled", null, this.optimizer != null ? this.optimizer.enabled : null);
       pcs.firePropertyChange(
           "fanout.enabled", null, this.fanout != null ? this.fanout.enabled : null);
+      pcs.firePropertyChange(
+          "fanout.gpuAccelerationEnabled",
+          null,
+          this.fanout != null ? this.fanout.gpuAccelerationEnabled : null);
     }
 
     return changedCount;

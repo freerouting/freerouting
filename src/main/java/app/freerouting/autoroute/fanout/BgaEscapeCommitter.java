@@ -172,12 +172,14 @@ public final class BgaEscapeCommitter {
       }
 
       // 3. Atomically commit valid escape to board model
+      // Mark as USER_FIXED so subsequent maze fanout ripup passes cannot rip them up
       Polyline polyline = new Polyline(new Point[] {pinCenter, globalViaCenter});
       board.insertTrace(
-          polyline, pinLayer, traceHalfWidth, netNumbers, clClass, FixedState.UNFIXED);
+          polyline, pinLayer, traceHalfWidth, netNumbers, clClass, FixedState.USER_FIXED);
       tracesInserted++;
 
-      board.insertVia(viaPadstack, globalViaCenter, netNumbers, clClass, FixedState.UNFIXED, true);
+      board.insertVia(
+          viaPadstack, globalViaCenter, netNumbers, clClass, FixedState.USER_FIXED, true);
       viasInserted++;
 
       committed++;

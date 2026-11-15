@@ -147,6 +147,42 @@ public final class GlobalSettingsBootstrap {
         Locale.getDefault().getLanguage() + "," + Locale.getDefault();
     globalSettings.runtimeEnvironment.cpuCores = Runtime.getRuntime().availableProcessors();
     globalSettings.runtimeEnvironment.ram = (int) (Runtime.getRuntime().maxMemory() / 1024 / 1024);
+
+    // Discover GPU compute device metadata and VRAM
+    try {
+      app.freerouting.autoroute.accelerator.ComputeBackend gpuBackend =
+          app.freerouting.autoroute.accelerator.AcceleratorRegistry.discover(null);
+      if (gpuBackend != null && gpuBackend.isAvailable() && gpuBackend.getDeviceInfo() != null) {
+        app.freerouting.autoroute.accelerator.AcceleratorDeviceInfo devInfo =
+            gpuBackend.getDeviceInfo();
+        globalSettings.runtimeEnvironment.gpuDevice = devInfo.deviceName();
+        globalSettings.runtimeEnvironment.gpuVendor = devInfo.vendor();
+        globalSettings.runtimeEnvironment.gpuVramMb =
+            (int) (devInfo.maxVramBytes() / (1024L * 1024L));
+        globalSettings.runtimeEnvironment.gpuComputeUnits = devInfo.computeUnits();
+        // Compute scaled GPU score based on compute units and bandwidth capability
+        globalSettings.runtimeEnvironment.gpuScore =
+            Math.max(
+                1,
+                devInfo.computeUnits() * 100 + (globalSettings.runtimeEnvironment.gpuVramMb / 64));
+      }
+    } catch (Throwable t) {
+      FRLogger.debug("GPU discovery during bootstrap skipped: " + t.getMessage());
+    }
+
+    String gpuInfo =
+        (globalSettings.runtimeEnvironment.gpuDevice != null)
+            ? (", GPU: "
+                + globalSettings.runtimeEnvironment.gpuDevice
+                + " ("
+                + globalSettings.runtimeEnvironment.gpuVramMb
+                + " MB VRAM, "
+                + globalSettings.runtimeEnvironment.gpuComputeUnits
+                + " CUs, score "
+                + globalSettings.runtimeEnvironment.gpuScore
+                + ")")
+            : "";
+
     if (!deferCpuCalibration) {
       globalSettings.runtimeEnvironment.cpuScore = RuntimeEnvironment.measureCpuScore();
       FRLogger.info(
@@ -156,14 +192,16 @@ public final class GlobalSettingsBootstrap {
               + globalSettings.runtimeEnvironment.cpuScore
               + " CPU score, "
               + globalSettings.runtimeEnvironment.ram
-              + " MB RAM");
+              + " MB RAM"
+              + gpuInfo);
     } else {
       FRLogger.info(
           "Hardware: "
               + globalSettings.runtimeEnvironment.cpuCores
               + " CPU cores, "
               + globalSettings.runtimeEnvironment.ram
-              + " MB RAM");
+              + " MB RAM"
+              + gpuInfo);
     }
     FRLogger.debug("UTC Time: " + globalSettings.runtimeEnvironment.appStartedAt);
 

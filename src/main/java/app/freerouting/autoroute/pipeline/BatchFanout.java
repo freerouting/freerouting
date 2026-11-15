@@ -146,7 +146,7 @@ public final class BatchFanout {
   /** Performs fanout routing for SMD components on board. */
   public static FanoutRunSummary fanoutBoard(
       RoutingBoard board, RouterSettings settings, StoppableThread thread) {
-    return fanoutBoard(board, settings, thread, null);
+    return fanoutBoard(board, settings, thread, null, null);
   }
 
   /** Performs fanout routing for SMD components on board with a progress listener. */
@@ -155,32 +155,89 @@ public final class BatchFanout {
       RouterSettings settings,
       StoppableThread thread,
       FanoutProgressListener progressListener) {
+    return fanoutBoard(board, settings, thread, progressListener, null);
+  }
+
+  /**
+   * Performs fanout routing for SMD components on board with a progress listener and optional info
+   * logger.
+   */
+  public static FanoutRunSummary fanoutBoard(
+      RoutingBoard board,
+      RouterSettings settings,
+      StoppableThread thread,
+      FanoutProgressListener progressListener,
+      java.util.function.Consumer<String> infoLogger) {
     if (settings.usesDirectPinRouting()) {
       return DirectPinRouting.run(board, settings, thread);
     }
 
     // Pre-pass: GPU/iGPU accelerated BGA escape routing
+    // Only runs when Fanout is enabled AND GPU acceleration is enabled
+    boolean fanoutEnabled = settings.isFanoutEnabled();
     boolean gpuEnabled =
-        (settings.fanout == null || settings.fanout.gpuAccelerationEnabled == null)
-            || Boolean.TRUE.equals(settings.fanout.gpuAccelerationEnabled);
+        fanoutEnabled
+            && ((settings.fanout == null || settings.fanout.gpuAccelerationEnabled == null)
+                || Boolean.TRUE.equals(settings.fanout.gpuAccelerationEnabled));
 
     if (gpuEnabled && board != null && board.components != null && board.components.count() > 0) {
       try {
         java.util.List<app.freerouting.autoroute.fanout.BgaEscapeDescriptor> bgas =
-            app.freerouting.autoroute.fanout.BgaFootprintDetector.detect(board, settings);
+            app.freerouting.autoroute.fanout.BgaFootprintDetector.detect(
+                board, settings, infoLogger);
         for (app.freerouting.autoroute.fanout.BgaEscapeDescriptor bga : bgas) {
           if (thread != null && thread.isInterrupted()) {
             break;
           }
           java.util.List<app.freerouting.autoroute.fanout.GpuBgaEscapeSolver.PinEscapeProposal>
               proposals =
-                  app.freerouting.autoroute.fanout.GpuBgaEscapeSolver.solve(board, bga, settings);
+                  app.freerouting.autoroute.fanout.GpuBgaEscapeSolver.solve(
+                      board, bga, settings, infoLogger);
           if (!proposals.isEmpty()) {
-            app.freerouting.autoroute.fanout.BgaEscapeCommitter.commit(board, bga, proposals);
+            var commitResult =
+                app.freerouting.autoroute.fanout.BgaEscapeCommitter.commit(board, bga, proposals);
+            String committedMsg =
+                "BGA escape committer: committed "
+                    + commitResult.pinsCommitted()
+                    + "/"
+                    + proposals.size()
+                    + " GPU escape routes for "
+                    + bga.component().name
+                    + (commitResult.drcRejections() > 0
+                        ? " (" + commitResult.drcRejections() + " rejected by DRC)"
+                        : "")
+                    + ".";
+            FRLogger.info(committedMsg);
+            if (infoLogger != null) {
+              infoLogger.accept(committedMsg);
+            }
+            if (progressListener != null) {
+              BoardStatistics stats = new BoardStatistics(board, null, false);
+              EscapeStatistics escapeStats = EscapeStatistics.fromBoardStatistics(stats);
+              progressListener.onProgress(
+                  new FanoutPassStatus(
+                      0,
+                      0,
+                      bga.pins().size(),
+                      0,
+                      commitResult.pinsCommitted(),
+                      0,
+                      commitResult.drcRejections(),
+                      commitResult.viasInserted(),
+                      commitResult.viasInserted(),
+                      0L,
+                      stats,
+                      true,
+                      escapeStats));
+            }
           }
         }
       } catch (Throwable t) {
-        FRLogger.warn("GPU BGA fanout pre-pass skipped due to error: " + t.getMessage());
+        String errMsg = "GPU BGA fanout pre-pass skipped due to error: " + t.getMessage();
+        FRLogger.warn(errMsg);
+        if (infoLogger != null) {
+          infoLogger.accept(errMsg);
+        }
       }
     }
 

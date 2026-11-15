@@ -44,6 +44,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   private final JCheckBox settingsAutorouterViasAllowed;
   private final JCheckBox settingsAutorouterFanoutButton;
   private final JCheckBox settingsGpuAccelerationButton;
+  private final JComboBox<DeviceItem> settingsGpuDeviceComboBox;
+  private final boolean hasGpu;
   private final JCheckBox settingsAutorouterAutoroutePassButton;
   private final JCheckBox settingsAutorouterOptimizationButton;
   private final String horizontal;
@@ -195,7 +197,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     tm.setText(stagesLabel, "routing_stages");
 
     gridbagConstraints.gridwidth = 2;
-    gridbagConstraints.gridheight = 3;
+    gridbagConstraints.gridheight = 4;
     gridbag.setConstraints(stagesLabel, gridbagConstraints);
     mainPanel.add(stagesLabel);
 
@@ -203,6 +205,12 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     tm.setText(this.settingsAutorouterFanoutButton, "fanout");
     this.settingsGpuAccelerationButton = new JCheckBox();
     tm.setText(this.settingsGpuAccelerationButton, "gpu_acceleration");
+    this.settingsGpuDeviceComboBox = new JComboBox<>();
+    java.util.List<app.freerouting.autoroute.accelerator.AcceleratorDeviceInfo> availableGpus =
+        app.freerouting.autoroute.accelerator.opencl.PanamaOpenClBackend.listAvailableDevices();
+    this.hasGpu = !availableGpus.isEmpty();
+    populateGpuDevices(availableGpus);
+    this.settingsGpuDeviceComboBox.addActionListener(new GpuDeviceListener());
     this.settingsAutorouterAutoroutePassButton = new JCheckBox();
     tm.setText(this.settingsAutorouterAutoroutePassButton, "autoroute");
     this.settingsAutorouterOptimizationButton = new JCheckBox();
@@ -241,8 +249,14 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     gridbag.setConstraints(settingsAutorouterFanoutButton, gridbagConstraints);
     mainPanel.add(settingsAutorouterFanoutButton, gridbagConstraints);
-    gridbag.setConstraints(settingsGpuAccelerationButton, gridbagConstraints);
-    mainPanel.add(settingsGpuAccelerationButton, gridbagConstraints);
+
+    JPanel gpuPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
+    gpuPanel.setOpaque(false);
+    gpuPanel.add(settingsGpuAccelerationButton);
+    gpuPanel.add(settingsGpuDeviceComboBox);
+    gridbag.setConstraints(gpuPanel, gridbagConstraints);
+    mainPanel.add(gpuPanel, gridbagConstraints);
+
     gridbag.setConstraints(settingsAutorouterAutoroutePassButton, gridbagConstraints);
     mainPanel.add(settingsAutorouterAutoroutePassButton, gridbagConstraints);
     gridbag.setConstraints(settingsAutorouterOptimizationButton, gridbagConstraints);
@@ -610,6 +624,16 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         case "fanout.enabled" -> {
           if (newValue instanceof Boolean bool) {
             settingsAutorouterFanoutButton.setSelected(bool);
+            settingsGpuAccelerationButton.setEnabled(bool && hasGpu);
+            settingsGpuDeviceComboBox.setEnabled(
+                bool && hasGpu && settingsGpuAccelerationButton.isSelected());
+          }
+        }
+        case "fanout.gpuAccelerationEnabled", "gpuAccelerationEnabled" -> {
+          if (newValue instanceof Boolean bool) {
+            settingsGpuAccelerationButton.setSelected(bool && hasGpu);
+            settingsGpuDeviceComboBox.setEnabled(
+                bool && hasGpu && settingsAutorouterFanoutButton.isSelected());
           }
         }
         case "optimizer.enabled" -> {
@@ -632,11 +656,33 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     this.settingsAutorouterViasAllowed.setSelected(settings.getViasAllowed());
     this.settingsAutorouterFanoutButton.setSelected(settings.getRunFanout());
+    boolean fanoutOn = settings.getRunFanout();
     boolean gpuEnabled =
-        (settings.fanout != null && settings.fanout.gpuAccelerationEnabled != null)
-            ? settings.fanout.gpuAccelerationEnabled
-            : true;
+        hasGpu
+            && ((settings.fanout != null && settings.fanout.gpuAccelerationEnabled != null)
+                ? settings.fanout.gpuAccelerationEnabled
+                : true);
     this.settingsGpuAccelerationButton.setSelected(gpuEnabled);
+    this.settingsGpuAccelerationButton.setEnabled(fanoutOn && hasGpu);
+    this.settingsGpuDeviceComboBox.setEnabled(fanoutOn && hasGpu && gpuEnabled);
+    if (settings.fanout != null && settings.fanout.gpuDevicePreference != null) {
+      String pref = settings.fanout.gpuDevicePreference;
+      for (int idx = 0; idx < this.settingsGpuDeviceComboBox.getItemCount(); idx++) {
+        DeviceItem item = this.settingsGpuDeviceComboBox.getItemAt(idx);
+        if (item != null
+            && (item.preferenceKey().equalsIgnoreCase(pref)
+                || item.displayName().toLowerCase().contains(pref.toLowerCase())
+                || ("igpu".equalsIgnoreCase(pref)
+                    && item.displayName().toLowerCase().contains("intel"))
+                || ("dgpu".equalsIgnoreCase(pref)
+                    && item.displayName().toLowerCase().contains("nvidia"))
+                || ("auto".equalsIgnoreCase(pref)
+                    && item.preferenceKey().equalsIgnoreCase("auto")))) {
+          this.settingsGpuDeviceComboBox.setSelectedIndex(idx);
+          break;
+        }
+      }
+    }
     this.settingsAutorouterAutoroutePassButton.setSelected(settings.getRunRouter());
     this.settingsAutorouterOptimizationButton.setSelected(settings.getRunOptimizer());
 
@@ -919,10 +965,57 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       RouterSettings autorouteSettings = boardHandling.getCurrentRoutingJob().routerSettings;
       isUpdatingFromSettings = true;
       try {
-        applyFanoutEnabledSelection(autorouteSettings, settingsAutorouterFanoutButton.isSelected());
+        boolean fanoutSelected = settingsAutorouterFanoutButton.isSelected();
+        applyFanoutEnabledSelection(autorouteSettings, fanoutSelected);
+        settingsGpuAccelerationButton.setEnabled(fanoutSelected && hasGpu);
+        settingsGpuDeviceComboBox.setEnabled(
+            fanoutSelected && hasGpu && settingsGpuAccelerationButton.isSelected());
         syncSettingsToWorkspace();
       } finally {
         isUpdatingFromSettings = false;
+      }
+    }
+  }
+
+  private record DeviceItem(String preferenceKey, String displayName) {
+    @Override
+    public String toString() {
+      return displayName;
+    }
+  }
+
+  private void populateGpuDevices(
+      java.util.List<app.freerouting.autoroute.accelerator.AcceleratorDeviceInfo> devs) {
+    this.settingsGpuDeviceComboBox.removeAllItems();
+    if (devs.isEmpty()) {
+      this.settingsGpuDeviceComboBox.addItem(new DeviceItem("none", "No GPU Detected"));
+      this.settingsGpuDeviceComboBox.setEnabled(false);
+      this.settingsGpuAccelerationButton.setEnabled(false);
+      this.settingsGpuAccelerationButton.setSelected(false);
+      this.settingsGpuAccelerationButton.setToolTipText("No OpenCL compatible GPU was detected.");
+      this.settingsGpuDeviceComboBox.setToolTipText("No OpenCL compatible GPU was detected.");
+      return;
+    }
+    this.settingsGpuDeviceComboBox.addItem(new DeviceItem("auto", "Auto (Best Available)"));
+    for (var dev : devs) {
+      String key = dev.deviceName();
+      String label = dev.deviceName() + " (" + (dev.maxVramBytes() / (1024 * 1024)) + " MB)";
+      this.settingsGpuDeviceComboBox.addItem(new DeviceItem(key, label));
+    }
+  }
+
+  private class GpuDeviceListener implements ActionListener {
+    @Override
+    public void actionPerformed(ActionEvent evt) {
+      if (isUpdatingFromSettings) return;
+      DeviceItem selected = (DeviceItem) settingsGpuDeviceComboBox.getSelectedItem();
+      if (selected != null) {
+        RouterSettings autorouteSettings = boardHandling.getCurrentRoutingJob().routerSettings;
+        if (autorouteSettings.fanout == null) {
+          autorouteSettings.fanout = new app.freerouting.settings.FanoutSettings();
+        }
+        autorouteSettings.fanout.gpuDevicePreference = selected.preferenceKey();
+        syncSettingsToWorkspace();
       }
     }
   }
@@ -934,11 +1027,10 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       RouterSettings autorouteSettings = boardHandling.getCurrentRoutingJob().routerSettings;
       isUpdatingFromSettings = true;
       try {
-        if (autorouteSettings.fanout == null) {
-          autorouteSettings.fanout = new app.freerouting.settings.FanoutSettings();
-        }
-        autorouteSettings.fanout.gpuAccelerationEnabled =
-            settingsGpuAccelerationButton.isSelected();
+        boolean gpuSelected = settingsGpuAccelerationButton.isSelected();
+        autorouteSettings.setGpuAccelerationEnabled(gpuSelected);
+        settingsGpuDeviceComboBox.setEnabled(
+            gpuSelected && hasGpu && settingsAutorouterFanoutButton.isSelected());
         syncSettingsToWorkspace();
       } finally {
         isUpdatingFromSettings = false;

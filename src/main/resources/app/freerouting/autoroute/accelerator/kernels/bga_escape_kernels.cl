@@ -82,12 +82,9 @@ __kernel void rasterize_obstacles_and_rudy(
       int prx = pinBuffer[pOffset + 3];
       int ply = pinBuffer[pOffset + 4];
       int puy = pinBuffer[pOffset + 5];
-      int pulx = pinBuffer[pOffset + 6];
-      int plrx = pinBuffer[pOffset + 7];
 
       if (bx >= plx && bx <= prx &&
-          by >= ply && by <= puy &&
-          (bx - by) >= pulx && (bx - by) <= plrx) {
+          by >= ply && by <= puy) {
         // Tag with pin index + 1
         isOccupied = p + 1;
         break;
@@ -237,6 +234,11 @@ __kernel void expand_ring_candidates(
     return;
   }
 
+  int solOffset = pinIdx * 16;
+  if (solutionBuffer[solOffset + 8] == 2) {
+    return; // Already committed in an earlier negotiation pass
+  }
+
   int pinU = pinBuffer[pOffset + 0];
   int pinV = pinBuffer[pOffset + 1];
   int startGx = (pinU - originX) / gridStepBoardUnits;
@@ -276,7 +278,6 @@ __kernel void expand_ring_candidates(
     }
   }
 
-  int solOffset = pinIdx * 16;
   if (bestSite >= 0) {
     solutionBuffer[solOffset + 0] = startGx;
     solutionBuffer[solOffset + 1] = startGy;
@@ -293,15 +294,14 @@ __kernel void expand_ring_candidates(
 }
 
 /*
- * Kernel 4: Resolve and Commit Paths with Clamped 16-bit Atomics
+ * Kernel 4a: Elect Cell Winners with Clamped 16-bit Atomics
  * Global size: [pinCount]
  * Local size:  [64]
  */
-__kernel void resolve_and_commit_paths(
-    __global int* solutionBuffer,         // [pinCount * 16]
+__kernel void elect_cell_winners(
+    __global const int* solutionBuffer,   // [pinCount * 16]
     __global uint* cellWinner,            // [gridW * gridH * layers]
     __global uint* cellDemand,            // [gridW * gridH * layers]
-    __global uint* cellHistoryCost,       // [gridW * gridH * layers]
     int pinCount,
     int currentRing,
     int gridW,
@@ -334,13 +334,47 @@ __kernel void resolve_and_commit_paths(
   // Atomic min to resolve congestion winner
   atomic_min(&cellWinner[cell], candidateVal);
   atomic_inc(&cellDemand[cell]);
+}
 
-  // Read winner back
+/*
+ * Kernel 4b: Commit Cell Winners (Dispatched after elect_cell_winners queue barrier)
+ * Global size: [pinCount]
+ * Local size:  [64]
+ */
+__kernel void commit_cell_winners(
+    __global int* solutionBuffer,         // [pinCount * 16]
+    __global const uint* cellWinner,      // [gridW * gridH * layers]
+    __global uint* cellHistoryCost,       // [gridW * gridH * layers]
+    int pinCount,
+    int currentRing,
+    int gridW,
+    int gridH,
+    int layers,
+    int negotiationPass) {
+
+  int pinIdx = get_global_id(0);
+  if (pinIdx >= pinCount) {
+    return;
+  }
+
+  int solOffset = pinIdx * 16;
+  if (solutionBuffer[solOffset + 8] != 1) {
+    return;
+  }
+
+  int tgx = solutionBuffer[solOffset + 3];
+  int tgy = solutionBuffer[solOffset + 4];
+  int tl = solutionBuffer[solOffset + 5];
+
+  int cell = (tl * gridH + tgy) * gridW + tgx;
+
+  // Read winner back after all candidates across all workgroups have completed atomic_min
   uint winningVal = cellWinner[cell];
   uint winningPin = winningVal & 0xFFFF;
+  uint pinIdx16 = (uint)(pinIdx & 0xFFFF);
 
   if (winningPin == pinIdx16) {
-    // Winner retains path
+    // Winner exclusively retains path
     solutionBuffer[solOffset + 8] = 2; // Status: 2 = committed
   } else {
     // Loser must negotiate in next pass: penalize cell with history cost

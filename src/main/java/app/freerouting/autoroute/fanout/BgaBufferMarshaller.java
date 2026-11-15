@@ -4,11 +4,12 @@ import app.freerouting.autoroute.fanout.BgaEscapeDescriptor.BgaPinDescriptor;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Pin;
-import app.freerouting.board.model.structure.BoardOutline;
 import app.freerouting.board.model.structure.Unit;
+import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.geometry.planar.IntPoint;
+import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.RegularTileShape;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.rules.ClearanceMatrix;
@@ -40,7 +41,9 @@ public final class BgaBufferMarshaller {
       int gridStepBoardUnits,
       int gridWidth,
       int gridHeight,
-      int layerCount)
+      int layerCount,
+      int originX,
+      int originY)
       implements AutoCloseable {
 
     @Override
@@ -167,9 +170,53 @@ public final class BgaBufferMarshaller {
     }
 
     // 2. Query obstacles from searchTreeManager
+    // Compute component centroid and global bounding box around BGA pins
+    double sumX = 0;
+    double sumY = 0;
+    int minGlobalX = Integer.MAX_VALUE;
+    int maxGlobalX = Integer.MIN_VALUE;
+    int minGlobalY = Integer.MAX_VALUE;
+    int maxGlobalY = Integer.MIN_VALUE;
+
+    for (BgaPinDescriptor pd : pins) {
+      Point c = pd.pin().getCenter();
+      if (c != null) {
+        FloatPoint fp = c.toFloat();
+        sumX += fp.x;
+        sumY += fp.y;
+        minGlobalX = Math.min(minGlobalX, (int) Math.floor(fp.x));
+        maxGlobalX = Math.max(maxGlobalX, (int) Math.ceil(fp.x));
+        minGlobalY = Math.min(minGlobalY, (int) Math.floor(fp.y));
+        maxGlobalY = Math.max(maxGlobalY, (int) Math.ceil(fp.y));
+      }
+    }
+
+    double centroidX = pinCount > 0 ? sumX / pinCount : 0;
+    double centroidY = pinCount > 0 ? sumY / pinCount : 0;
+
+    double rotDeg = bga.rotationDeg();
+    double rad = Math.toRadians(-rotDeg);
+    double cos = Math.cos(rad);
+    double sin = Math.sin(rad);
+
     IntBox searchBox =
-        new IntBox(new IntPoint(localMinX, localMinY), new IntPoint(localMaxX, localMaxY));
-    List<IntOctagon> obstacleOctagons = new ArrayList<>();
+        new IntBox(
+            new IntPoint(minGlobalX - escapeMarginBoardUnits, minGlobalY - escapeMarginBoardUnits),
+            new IntPoint(maxGlobalX + escapeMarginBoardUnits, maxGlobalY + escapeMarginBoardUnits));
+
+    record LocalObstacle(
+        int minU,
+        int maxU,
+        int minV,
+        int maxV,
+        int ulx,
+        int lrx,
+        int llx,
+        int urx,
+        int layer,
+        int clearanceClass) {}
+
+    List<LocalObstacle> localObstacles = new ArrayList<>();
     int[] emptyNets = new int[0];
 
     for (int l = 0; l < layers; l++) {
@@ -184,41 +231,59 @@ public final class BgaBufferMarshaller {
         }
         TileShape shape = item.getTreeShape(board.searchTreeManager.getDefaultTree(), l);
         if (shape instanceof RegularTileShape rts) {
-          obstacleOctagons.add(rts.boundingOctagon().enlarge(inflation));
+          IntOctagon oct = rts.boundingOctagon();
+          // Transform obstacle corners from global board space into component-local (u, v) space
+          int[] xs = new int[] {oct.leftX, oct.rightX, oct.leftX, oct.rightX};
+          int[] ys = new int[] {oct.bottomY, oct.bottomY, oct.topY, oct.topY};
+
+          double uMin = Double.MAX_VALUE;
+          double uMax = -Double.MAX_VALUE;
+          double vMin = Double.MAX_VALUE;
+          double vMax = -Double.MAX_VALUE;
+
+          for (int k = 0; k < 4; k++) {
+            double dx = xs[k] - centroidX;
+            double dy = ys[k] - centroidY;
+            double u = dx * cos - dy * sin;
+            double v = dx * sin + dy * cos;
+            if (u < uMin) uMin = u;
+            if (u > uMax) uMax = u;
+            if (v < vMin) vMin = v;
+            if (v > vMax) vMax = v;
+          }
+
+          int lu = (int) Math.floor(uMin) - inflation;
+          int ru = (int) Math.ceil(uMax) + inflation;
+          int lv = (int) Math.floor(vMin) - inflation;
+          int uv = (int) Math.ceil(vMax) + inflation;
+
+          int ulx = lu - uv;
+          int lrx = ru - lv;
+          int llx = lu + lv;
+          int urx = ru + uv;
+
+          localObstacles.add(
+              new LocalObstacle(lu, ru, lv, uv, ulx, lrx, llx, urx, l, item.clearanceClassIndex()));
         }
       }
     }
 
-    // Add board edge outline obstacle
-    BoardOutline outline = board.getOutline();
-    if (outline != null) {
-      double edgeClearanceUm =
-          (settings != null && settings.copperToEdgeClearanceUm != null)
-              ? settings.copperToEdgeClearanceUm
-              : 250.0;
-      int edgeClearanceBoardUnits = (int) Math.round(edgeClearanceUm * res);
-      IntBox b = board.getBoundingBox();
-      if (b != null) {
-        obstacleOctagons.add(b.enlarge(edgeClearanceBoardUnits).boundingOctagon());
-      }
-    }
-
-    int obsCount = obstacleOctagons.size();
+    int obsCount = localObstacles.size();
     MemorySegment obsBuf =
         arena.allocate((long) Math.max(1, obsCount) * 10 * ValueLayout.JAVA_INT.byteSize(), 64);
     for (int i = 0; i < obsCount; i++) {
-      IntOctagon oct = obstacleOctagons.get(i);
+      LocalObstacle obs = localObstacles.get(i);
       long offset = (long) i * 10 * ValueLayout.JAVA_INT.byteSize();
-      obsBuf.set(ValueLayout.JAVA_INT, offset, oct.leftX);
-      obsBuf.set(ValueLayout.JAVA_INT, offset + 4, oct.rightX);
-      obsBuf.set(ValueLayout.JAVA_INT, offset + 8, oct.bottomY);
-      obsBuf.set(ValueLayout.JAVA_INT, offset + 12, oct.topY);
-      obsBuf.set(ValueLayout.JAVA_INT, offset + 16, oct.upperLeftDiagonalX);
-      obsBuf.set(ValueLayout.JAVA_INT, offset + 20, oct.lowerRightDiagonalX);
-      obsBuf.set(ValueLayout.JAVA_INT, offset + 24, oct.lowerLeftDiagonalX);
-      obsBuf.set(ValueLayout.JAVA_INT, offset + 28, oct.upperRightDiagonalX);
-      obsBuf.set(ValueLayout.JAVA_INT, offset + 32, 0); // layer
-      obsBuf.set(ValueLayout.JAVA_INT, offset + 36, 0); // clearance class
+      obsBuf.set(ValueLayout.JAVA_INT, offset, obs.minU());
+      obsBuf.set(ValueLayout.JAVA_INT, offset + 4, obs.maxU());
+      obsBuf.set(ValueLayout.JAVA_INT, offset + 8, obs.minV());
+      obsBuf.set(ValueLayout.JAVA_INT, offset + 12, obs.maxV());
+      obsBuf.set(ValueLayout.JAVA_INT, offset + 16, obs.ulx());
+      obsBuf.set(ValueLayout.JAVA_INT, offset + 20, obs.lrx());
+      obsBuf.set(ValueLayout.JAVA_INT, offset + 24, obs.llx());
+      obsBuf.set(ValueLayout.JAVA_INT, offset + 28, obs.urx());
+      obsBuf.set(ValueLayout.JAVA_INT, offset + 32, obs.layer());
+      obsBuf.set(ValueLayout.JAVA_INT, offset + 36, obs.clearanceClass());
     }
 
     // 3. Flatten ClearanceMatrix & Layer rules
@@ -252,6 +317,7 @@ public final class BgaBufferMarshaller {
     }
 
     return new MarshaledBgaData(
-        arena, pinBuf, pinCount, obsBuf, obsCount, ruleBuf, gridStep, gridW, gridH, layers);
+        arena, pinBuf, pinCount, obsBuf, obsCount, ruleBuf, gridStep, gridW, gridH, layers,
+        localMinX, localMinY);
   }
 }

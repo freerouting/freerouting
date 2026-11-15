@@ -48,7 +48,8 @@ public final class AcceleratorRegistry {
 
     ComputeBackend discovered;
     try {
-      discovered = new PanamaOpenClBackend();
+      String pref = (settings != null) ? settings.gpuDevicePreference : "auto";
+      discovered = new PanamaOpenClBackend(pref);
       if (!discovered.isAvailable()) {
         discovered = new NoOpCpuComputeBackend(GpuFallbackReason.NO_DEVICE_FOUND);
         FRLogger.info("GPU acceleration: no compatible OpenCL 1.2 device found; using CPU fanout.");

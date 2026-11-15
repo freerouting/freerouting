@@ -61,7 +61,7 @@ public class WorkspaceSettings extends GuiSettingsSource implements Serializable
   public static final String PROP_TRACE_PULL_TIGHT_ACCURACY = "tracePullTightAccuracy";
   public static final String PROP_AUTOMATIC_NECKDOWN = "automaticNeckdown";
   public static final String PROP_MANUAL_TRACE_HALF_WIDTH = "manual_trace_half_width";
-  public static final String PROP_GPU_ACCELERATION_ENABLED = "gpuAccelerationEnabled";
+  public static final String PROP_GPU_ACCELERATION_ENABLED = "fanout.gpuAccelerationEnabled";
   public static final String PROP_GPU_DEVICE_PREFERENCE = "gpuDevicePreference";
 
   /** The single GUI-session instance; {@code null} when running headless. */

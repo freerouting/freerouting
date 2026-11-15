@@ -44,6 +44,21 @@ public class RuntimeEnvironment implements Serializable {
   @SerializedName("cpu_score")
   public int cpuScore;
 
+  @SerializedName("gpu_device")
+  public String gpuDevice;
+
+  @SerializedName("gpu_vendor")
+  public String gpuVendor;
+
+  @SerializedName("gpu_vram_mb")
+  public int gpuVramMb;
+
+  @SerializedName("gpu_compute_units")
+  public int gpuComputeUnits;
+
+  @SerializedName("gpu_score")
+  public int gpuScore;
+
   /** Returns the measured CPU score, computing it lazily if not yet calibrated. */
   public synchronized int getCpuScore() {
     if (this.cpuScore <= 0) {

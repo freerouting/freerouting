@@ -8,6 +8,7 @@ import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.structure.Component;
 import app.freerouting.board.model.structure.Unit;
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import app.freerouting.settings.RouterSettings;
 import java.util.ArrayList;
@@ -33,29 +34,38 @@ public final class BgaFootprintDetector {
    * @return list of detected BGA escape descriptors
    */
   public static List<BgaEscapeDescriptor> detect(RoutingBoard board, RouterSettings settings) {
+    return detect(board, settings, null);
+  }
+
+  /**
+   * Scans the board's components and returns descriptors for all components that qualify as BGAs,
+   * reporting detection messages to an optional info logger.
+   *
+   * @param board routing board
+   * @param settings router settings
+   * @param infoLogger optional logger callback for UI/job messaging
+   * @return list of detected BGA escape descriptors
+   */
+  public static List<BgaEscapeDescriptor> detect(
+      RoutingBoard board, RouterSettings settings, java.util.function.Consumer<String> infoLogger) {
     if (board == null || board.components == null) {
       return Collections.emptyList();
     }
 
-    int minPins = 64;
+    int minPins = 16;
     if (settings != null && settings.fanout != null && settings.fanout.gpuMinBgaPins != null) {
       minPins = Math.max(16, settings.fanout.gpuMinBgaPins);
     }
 
     // Group board SMD pins by component
     Map<Integer, List<Pin>> smdPinsByComp = new HashMap<>();
-    int topLayer = 0;
-    int bottomLayer = board.getLayerCount() - 1;
 
     for (Pin pin : board.getSmdPins()) {
       int compId = pin.getComponentId();
       if (compId <= 0) {
         continue;
       }
-      int layer = pin.firstLayer();
-      if (layer == topLayer || layer == bottomLayer) {
-        smdPinsByComp.computeIfAbsent(compId, _ -> new ArrayList<>()).add(pin);
-      }
+      smdPinsByComp.computeIfAbsent(compId, _ -> new ArrayList<>()).add(pin);
     }
 
     List<BgaEscapeDescriptor> result = new ArrayList<>();
@@ -72,6 +82,35 @@ public final class BgaFootprintDetector {
       BgaEscapeDescriptor descriptor = analyzeComponent(board, comp, pins, settings);
       if (descriptor != null) {
         result.add(descriptor);
+        String msg =
+            "BGA detector: identified component '"
+                + comp.name
+                + "' ("
+                + pins.size()
+                + " pins, pitch="
+                + String.format(java.util.Locale.US, "%.2f", descriptor.pitchUm())
+                + " um, lattice="
+                + descriptor.latticeClass()
+                + ", rings="
+                + (descriptor.maxRing() + 1)
+                + ")";
+        FRLogger.info(msg);
+        if (infoLogger != null) {
+          infoLogger.accept(msg);
+        }
+      }
+    }
+
+    if (result.isEmpty() && !smdPinsByComp.isEmpty()) {
+      String msg =
+          "BGA detector: evaluated "
+              + smdPinsByComp.size()
+              + " SMD component(s); none met the BGA area-array threshold (minPins="
+              + minPins
+              + ").";
+      FRLogger.info(msg);
+      if (infoLogger != null) {
+        infoLogger.accept(msg);
       }
     }
 
