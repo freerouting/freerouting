@@ -2,6 +2,7 @@ package app.freerouting.autoroute.fanout;
 
 import app.freerouting.autoroute.fanout.BgaEscapeDescriptor.BgaPinDescriptor;
 import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.ConductionArea;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.structure.Unit;
@@ -228,6 +229,11 @@ public final class BgaBufferMarshaller {
       for (Item item : obstacles) {
         if (item instanceof Pin p && p.getComponentId() == bga.component().id) {
           continue; // Already handled in pinBuffer
+        }
+        if (item instanceof ConductionArea ca && !ca.getIsObstacle()) {
+          // Poured copper planes and zones do not block via barrels; through-hole vias
+          // passing through a plane receive antipad clearance cutouts automatically.
+          continue;
         }
         TileShape shape = item.getTreeShape(board.searchTreeManager.getDefaultTree(), l);
         if (shape instanceof RegularTileShape rts) {

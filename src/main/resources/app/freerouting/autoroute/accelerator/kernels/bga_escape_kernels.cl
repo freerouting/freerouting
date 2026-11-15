@@ -164,12 +164,23 @@ __kernel void evaluate_via_dogbone_sites(
 
   // 4-Quadrant 45-degree interstitial dogbone offsets (+-p/2, +-p/2):
   // Site 0: Primary quadrant centroid (qU, qV)
-  // Site 1: Alternate diagonal along X (qU, -qV)
-  // Site 2: Alternate diagonal along Y (-qU, qV)
+  // Site 1: Sector-aligned alternate (maintains outward axis, flips transverse axis)
+  // Site 2: Cross-sector alternate (flips outward axis, maintains transverse axis)
   // Site 3: Opposite diagonal (-qU, -qV)
   int halfPitch = pitchBoardUnits / 2;
-  int dX[4] = { qU * halfPitch,  qU * halfPitch, -qU * halfPitch, -qU * halfPitch };
-  int dY[4] = { qV * halfPitch, -qV * halfPitch,  qV * halfPitch, -qV * halfPitch };
+  int dX[4];
+  int dY[4];
+  if (sector == 0 || sector == 2) { // East/West: outward axis is U
+    dX[0] =  qU * halfPitch; dY[0] =  qV * halfPitch;
+    dX[1] =  qU * halfPitch; dY[1] = -qV * halfPitch;
+    dX[2] = -qU * halfPitch; dY[2] =  qV * halfPitch;
+    dX[3] = -qU * halfPitch; dY[3] = -qV * halfPitch;
+  } else { // North/South: outward axis is V
+    dX[0] =  qU * halfPitch; dY[0] =  qV * halfPitch;
+    dX[1] = -qU * halfPitch; dY[1] =  qV * halfPitch;
+    dX[2] =  qU * halfPitch; dY[2] = -qV * halfPitch;
+    dX[3] = -qU * halfPitch; dY[3] = -qV * halfPitch;
+  }
   int siteCosts[4] = { 1000, 1500, 1500, 2500 };
 
   for (int siteIdx = 0; siteIdx < 4; siteIdx++) {

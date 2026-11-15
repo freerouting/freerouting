@@ -139,4 +139,127 @@ class BgaEscapeCommitterTest {
         new ArrayList<>(new DesignRulesChecker(board, null).getAllClearanceViolations());
     assertEquals(0, violations.size(), "Committed escapes must have 0 DRC clearance violations");
   }
+
+  @Test
+  void testFallbackCandidateChosenWhenPrimaryViaObstructed() {
+    RoutingBoard board = createTestBoard();
+
+    // 8x8 = 64 pin BGA on 1000 um pitch
+    int pitch = 1000;
+    Padstack pad =
+        board.library.padstacks.add(
+            new ConvexShape[] {new Circle(Point.ZERO, 150), new Circle(Point.ZERO, 150)});
+
+    List<Package.Pin> pkgPins = new ArrayList<>();
+    for (int r = 0; r < 8; r++) {
+      for (int c = 0; c < 8; c++) {
+        double lx = (c - 3.5) * pitch;
+        double ly = (r - 3.5) * pitch;
+        pkgPins.add(new Package.Pin("P" + (r * 8 + c), pad.id, new FloatPoint(lx, ly), 0));
+      }
+    }
+
+    Package pkg = board.library.packages.add(pkgPins.toArray(new Package.Pin[0]));
+    Component comp =
+        board.components.addPrecise(
+            "U1", new FloatPoint(50000, 50000), 0.0, true, pkg, pkg, false, null);
+
+    List<Pin> boardPins = new ArrayList<>();
+    for (int i = 0; i < 64; i++) {
+      Pin p = board.insertPin(comp.id, i, new int[] {i + 1}, 1, FixedState.UNFIXED);
+      boardPins.add(p);
+    }
+
+    // Place an obstacle passive pad at the primary via site of an inner pin (P18: r=2, c=2)
+    // P18 is at (48500, 48500). Primary via site is (48500 - 500, 48500 - 500) = (48000, 48000)
+    Package.Pin obstPin = new Package.Pin("C1_1", pad.id, FloatPoint.ZERO, 0);
+    Package obstPkg = board.library.packages.add(new Package.Pin[] {obstPin});
+    Component obstComp =
+        board.components.addPrecise(
+            "C1", new FloatPoint(48000, 48000), 0.0, true, obstPkg, obstPkg, false, null);
+    board.insertPin(obstComp.id, 0, new int[] {99}, 1, FixedState.USER_FIXED);
+
+    RouterSettings settings = new RouterSettings();
+    settings.fanout.gpuMinBgaPins = 64;
+
+    BgaEscapeDescriptor desc =
+        BgaFootprintDetector.analyzeComponent(board, comp, boardPins, settings);
+    assertNotNull(desc);
+
+    List<PinEscapeProposal> proposals;
+    try (MarshaledBgaData data = BgaBufferMarshaller.marshal(board, desc, settings)) {
+      proposals = GpuBgaEscapeSolver.executeDeterministicWavefront(board, desc, data);
+    }
+    assertNotNull(proposals);
+
+    CommitResult result = BgaEscapeCommitter.commit(board, desc, proposals);
+    assertTrue(result.pinsCommitted() > 0);
+
+    // Verify ZERO DRC clearance violations with obstacle and alternate candidate
+    List<?> violations =
+        new ArrayList<>(new DesignRulesChecker(board, null).getAllClearanceViolations());
+    assertEquals(0, violations.size(), "Committed escapes must have 0 DRC clearance violations");
+  }
+
+  @Test
+  void testContinuousOkLengthTruncationWhenObstacleInHalo() {
+    RoutingBoard board = createTestBoard();
+
+    // 8x8 = 64 pin BGA on 1000 um pitch
+    int pitch = 1000;
+    Padstack pad =
+        board.library.padstacks.add(
+            new ConvexShape[] {new Circle(Point.ZERO, 150), new Circle(Point.ZERO, 150)});
+
+    List<Package.Pin> pkgPins = new ArrayList<>();
+    for (int r = 0; r < 8; r++) {
+      for (int c = 0; c < 8; c++) {
+        double lx = (c - 3.5) * pitch;
+        double ly = (r - 3.5) * pitch;
+        pkgPins.add(new Package.Pin("P" + (r * 8 + c), pad.id, new FloatPoint(lx, ly), 0));
+      }
+    }
+
+    Package pkg = board.library.packages.add(pkgPins.toArray(new Package.Pin[0]));
+    Component comp =
+        board.components.addPrecise(
+            "U1", new FloatPoint(50000, 50000), 0.0, true, pkg, pkg, false, null);
+
+    List<Pin> boardPins = new ArrayList<>();
+    for (int i = 0; i < 64; i++) {
+      Pin p = board.insertPin(comp.id, i, new int[] {i + 1}, 1, FixedState.UNFIXED);
+      boardPins.add(p);
+    }
+
+    // Place an obstacle passive in the halo corridor outside the East perimeter
+    // BGA maxX is 53500. Standard exit is 53500 + 1500 = 55000.
+    // Place obstacle at X = 54400, Y = 50500 (in the path of P39)
+    Package.Pin obstPin = new Package.Pin("R1_1", pad.id, FloatPoint.ZERO, 0);
+    Package obstPkg = board.library.packages.add(new Package.Pin[] {obstPin});
+    Component obstComp =
+        board.components.addPrecise(
+            "R1", new FloatPoint(54400, 50500), 0.0, true, obstPkg, obstPkg, false, null);
+    board.insertPin(obstComp.id, 0, new int[] {99}, 1, FixedState.USER_FIXED);
+
+    RouterSettings settings = new RouterSettings();
+    settings.fanout.gpuMinBgaPins = 64;
+
+    BgaEscapeDescriptor desc =
+        BgaFootprintDetector.analyzeComponent(board, comp, boardPins, settings);
+    assertNotNull(desc);
+
+    List<PinEscapeProposal> proposals;
+    try (MarshaledBgaData data = BgaBufferMarshaller.marshal(board, desc, settings)) {
+      proposals = GpuBgaEscapeSolver.executeDeterministicWavefront(board, desc, data);
+    }
+    assertNotNull(proposals);
+
+    CommitResult result = BgaEscapeCommitter.commit(board, desc, proposals);
+    assertTrue(result.pinsCommitted() > 0);
+
+    // Verify ZERO DRC violations (continuous okLength snapped cleanly before R1)
+    List<?> violations =
+        new ArrayList<>(new DesignRulesChecker(board, null).getAllClearanceViolations());
+    assertEquals(0, violations.size(), "Committed escapes must have 0 DRC clearance violations");
+  }
 }

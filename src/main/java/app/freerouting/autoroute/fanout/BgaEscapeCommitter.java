@@ -5,24 +5,30 @@ import app.freerouting.autoroute.fanout.BgaEscapeDescriptor.PinDisposition;
 import app.freerouting.autoroute.fanout.GpuBgaEscapeSolver.PinEscapeProposal;
 import app.freerouting.board.actions.DrillItemMover;
 import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Via;
 import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.ConvexShape;
+import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.rules.DefaultItemClearanceClasses;
+import app.freerouting.rules.HoleSpacing;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.NetClass;
 import app.freerouting.rules.ViaInfo;
 import app.freerouting.rules.ViaRule;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Commits GPU-negotiated BGA escape proposals to the host {@link RoutingBoard}.
@@ -34,9 +40,15 @@ import java.util.Map;
  *       $R(+\theta)$.
  *   <li>Snaps trace endpoints exactly to {@link Pin#getCenter()} and dogbone via location.
  *   <li>Pre-validates trace clearances via {@link RoutingBoard#checkTraceSegment}.
- *   <li>Pre-validates via placement via {@link DrillItemMover#check}.
+ *   <li>Pre-validates via placement via {@link DrillItemMover#check} and {@link HoleSpacing#clear}.
+ *   <li>Explores 4-candidate interstitial fallback sites when primary via sites are obstructed by
+ *       back-side passives.
+ *   <li>Computes dynamic exact $45^\circ$ breakout jogs from the chosen via site onto the sector
+ *       corridor centerline.
+ *   <li>Applies continuous {@code okLength} truncation to outer-perimeter escape rays.
  *   <li>Atomically inserts valid traces and vias into the board model with {@link
- *       FixedState#USER_FIXED}.
+ *       FixedState#USER_FIXED} for interior fanout and {@link FixedState#SHOVE_FIXED} for perimeter
+ *       stubs.
  *   <li>Checks {@link Thread#isInterrupted()} between commits for clean cancellation.
  * </ol>
  */
@@ -78,14 +90,10 @@ public final class BgaEscapeCommitter {
     double cos = Math.cos(rad);
     double sin = Math.sin(rad);
 
-    Padstack viaPadstack = resolveViaPadstack(board);
-    if (viaPadstack == null) {
-      FRLogger.warn("BGA escape committer: no default via padstack configured on board");
-      return new CommitResult(proposals.size(), 0, 0, 0, proposals.size());
-    }
-
     // Maintain placed plane vias for deduplication of shared ground/power vias
     Map<Long, Via> placedPlaneVias = new HashMap<>();
+    // Maintain committed via locations to prevent double-via collisions
+    Set<IntPoint> committedViaLocations = new HashSet<>();
 
     for (PinEscapeProposal proposal : proposals) {
       if (Thread.currentThread().isInterrupted()) {
@@ -110,7 +118,6 @@ public final class BgaEscapeCommitter {
       int[] netNumbers = (netNo > 0) ? new int[] {netNo} : new int[0];
       int pinLayer = pin.firstLayer();
       int targetLayer = pd.targetLayer();
-      int clClass = pd.clearanceClassIdx();
       int sector = pd.breakoutSector();
       int ring = pd.ring();
 
@@ -126,8 +133,24 @@ public final class BgaEscapeCommitter {
               ? nc.getTraceHalfWidth(targetLayer)
               : board.rules.getMinAllowedTraceHalfWidth();
 
+      int traceClClass =
+          (nc != null && nc.defaultItemClearanceClasses != null)
+              ? nc.defaultItemClearanceClasses.get(DefaultItemClearanceClasses.ItemClass.TRACE)
+              : pd.clearanceClassIdx();
+      int viaClClass =
+          (nc != null && nc.defaultItemClearanceClasses != null)
+              ? nc.defaultItemClearanceClasses.get(DefaultItemClearanceClasses.ItemClass.VIA)
+              : pd.clearanceClassIdx();
+
+      Padstack viaPadstack = resolveViaPadstack(board, pinLayer, targetLayer, nc);
+      if (viaPadstack == null) {
+        FRLogger.warn("BGA escape committer: no default via padstack configured on board");
+        return new CommitResult(proposals.size(), 0, 0, 0, proposals.size());
+      }
+
       double exitMargin = bga.pitchBoardUnits() * 1.5;
       double p = bga.pitchBoardUnits();
+      double minPerimeterClearance = p * 0.25;
 
       // Case A: Ring 0 direct perimeter escape on pinLayer (no via)
       if (ring == 0
@@ -149,15 +172,28 @@ public final class BgaEscapeCommitter {
             toGlobalPoint(pinCenter, pd.localU(), pd.localV(), localExitU, localExitV, cos, sin);
         double maxAllowed =
             board.checkTraceSegment(
-                pinCenter, globalExit, pinLayer, netNumbers, traceHalfWidthPin, clClass, true);
-        if (maxAllowed < pinCenter.toFloat().distance(globalExit.toFloat())) {
-          drcRejections++;
-          continue;
+                pinCenter, globalExit, pinLayer, netNumbers, traceHalfWidthPin, traceClClass, true);
+        double fullDist = pinCenter.toFloat().distance(globalExit.toFloat());
+
+        if (maxAllowed < fullDist) {
+          double distToPerimeter = getDistToPerimeter(pd, sector, bga);
+          if (maxAllowed >= distToPerimeter + minPerimeterClearance) {
+            double safeLen = Math.max(distToPerimeter + minPerimeterClearance, maxAllowed - 10.0);
+            globalExit = interpolatePoint(pinCenter, globalExit, safeLen / fullDist);
+          } else {
+            drcRejections++;
+            continue;
+          }
         }
 
         Polyline polyline = new Polyline(new Point[] {pinCenter, globalExit});
         board.insertTrace(
-            polyline, pinLayer, traceHalfWidthPin, netNumbers, clClass, FixedState.USER_FIXED);
+            polyline,
+            pinLayer,
+            traceHalfWidthPin,
+            netNumbers,
+            traceClClass,
+            FixedState.SHOVE_FIXED);
         tracesInserted++;
         committed++;
         continue;
@@ -206,7 +242,7 @@ public final class BgaEscapeCommitter {
 
         double maxAllowed1 =
             board.checkTraceSegment(
-                pinCenter, globalJog, pinLayer, netNumbers, traceHalfWidthPin, clClass, true);
+                pinCenter, globalJog, pinLayer, netNumbers, traceHalfWidthPin, traceClClass, true);
         if (maxAllowed1 < pinCenter.toFloat().distance(globalJog.toFloat())) {
           drcRejections++;
           continue;
@@ -214,164 +250,216 @@ public final class BgaEscapeCommitter {
 
         double maxAllowed2 =
             board.checkTraceSegment(
-                globalJog, globalExit, pinLayer, netNumbers, traceHalfWidthPin, clClass, true);
-        if (maxAllowed2 < globalJog.toFloat().distance(globalExit.toFloat())) {
-          drcRejections++;
-          continue;
+                globalJog, globalExit, pinLayer, netNumbers, traceHalfWidthPin, traceClClass, true);
+        double dist2 = globalJog.toFloat().distance(globalExit.toFloat());
+
+        if (maxAllowed2 < dist2) {
+          double distToPerimeter = Math.max(0.0, getDistToPerimeter(pd, sector, bga) - p / 2.0);
+          if (maxAllowed2 >= distToPerimeter + minPerimeterClearance) {
+            double safeLen = Math.max(distToPerimeter + minPerimeterClearance, maxAllowed2 - 10.0);
+            globalExit = interpolatePoint(globalJog, globalExit, safeLen / dist2);
+          } else {
+            drcRejections++;
+            continue;
+          }
         }
 
         Polyline polyline = new Polyline(new Point[] {pinCenter, globalJog, globalExit});
         board.insertTrace(
-            polyline, pinLayer, traceHalfWidthPin, netNumbers, clClass, FixedState.USER_FIXED);
+            polyline,
+            pinLayer,
+            traceHalfWidthPin,
+            netNumbers,
+            traceClClass,
+            FixedState.SHOVE_FIXED);
         tracesInserted++;
         committed++;
         continue;
       }
 
-      // Case C: Ring 2+ or via-escaped pins
-      if (proposal.viaCenter() == null) {
-        drcRejections++;
-        continue;
+      // Case C: Ring 2+ or via-escaped pins (4-candidate interstitial exploration)
+      int pinU = (int) Math.round(pd.localU());
+      int pinV = (int) Math.round(pd.localV());
+      int halfPitch = (int) Math.round(p / 2.0);
+      double centerU = (bga.minX() + bga.maxX()) / 2.0;
+      double centerV = (bga.minY() + bga.maxY()) / 2.0;
+      int qU = (pd.localU() >= centerU) ? 1 : -1;
+      int qV = (pd.localV() >= centerV) ? 1 : -1;
+
+      int[] dX;
+      int[] dY;
+      if (sector == 0 || sector == 2) { // East/West: outward axis is U
+        dX = new int[] {qU * halfPitch, qU * halfPitch, -qU * halfPitch, -qU * halfPitch};
+        dY = new int[] {qV * halfPitch, -qV * halfPitch, qV * halfPitch, -qV * halfPitch};
+      } else { // North/South: outward axis is V
+        dX = new int[] {qU * halfPitch, -qU * halfPitch, qU * halfPitch, -qU * halfPitch};
+        dY = new int[] {qV * halfPitch, qV * halfPitch, -qV * halfPitch, -qV * halfPitch};
       }
 
-      IntPoint globalViaCenter =
-          toGlobalPoint(
-              pinCenter,
-              pd.localU(),
-              pd.localV(),
-              proposal.viaCenter().x,
-              proposal.viaCenter().y,
-              cos,
-              sin);
+      boolean candidateCommitted = false;
 
-      // Check via clearance across all padstack layers
-      long viaKey = (((long) globalViaCenter.x) << 32) | ((long) globalViaCenter.y & 0xFFFFFFFFL);
-      boolean isPlaneDrop = (pd.disposition() == PinDisposition.PLANE_DROP);
-      boolean viaAlreadyPlaced = isPlaneDrop && placedPlaneVias.containsKey(viaKey);
+      for (int s = 0; s < 4; s++) {
+        int viaU = pinU + dX[s];
+        int viaV = pinV + dY[s];
 
-      if (!viaAlreadyPlaced) {
-        boolean viaClear =
-            checkViaClearance(board, viaPadstack, globalViaCenter, pin, netNo, netNumbers, clClass);
-        if (!viaClear) {
-          drcRejections++;
-          continue;
-        }
-      }
+        IntPoint globalViaCenter =
+            toGlobalPoint(pinCenter, pd.localU(), pd.localV(), viaU, viaV, cos, sin);
 
-      // Check dogbone trace from pinCenter to globalViaCenter on pinLayer
-      double maxAllowedDogbone =
-          board.checkTraceSegment(
-              pinCenter, globalViaCenter, pinLayer, netNumbers, traceHalfWidthPin, clClass, true);
-      if (maxAllowedDogbone < pinCenter.toFloat().distance(globalViaCenter.toFloat())) {
-        drcRejections++;
-        continue;
-      }
+        long viaKey = (((long) globalViaCenter.x) << 32) | ((long) globalViaCenter.y & 0xFFFFFFFFL);
+        boolean isPlaneDrop = (pd.disposition() == PinDisposition.PLANE_DROP);
+        boolean viaAlreadyPlaced = isPlaneDrop && placedPlaneVias.containsKey(viaKey);
 
-      // If not PLANE_DROP, check breakout corridor trace on targetLayer
-      IntPoint globalCorridor = null;
-      IntPoint globalBreakoutExit = null;
-      if (!isPlaneDrop) {
-        double localCorridorU = pd.localU();
-        double localCorridorV = pd.localV();
-        double localBreakoutExitU = pd.localU();
-        double localBreakoutExitV = pd.localV();
-
-        if (sector == 0) { // East
-          localCorridorU = pd.localU() + p;
-          localCorridorV = pd.localV();
-          localBreakoutExitU = bga.maxX() + exitMargin;
-          localBreakoutExitV = pd.localV();
-        } else if (sector == 1) { // North
-          localCorridorU = pd.localU();
-          localCorridorV = pd.localV() + p;
-          localBreakoutExitU = pd.localU();
-          localBreakoutExitV = bga.maxY() + exitMargin;
-        } else if (sector == 2) { // West
-          localCorridorU = pd.localU() - p;
-          localCorridorV = pd.localV();
-          localBreakoutExitU = bga.minX() - exitMargin;
-          localBreakoutExitV = pd.localV();
-        } else { // South (sector 3)
-          localCorridorU = pd.localU();
-          localCorridorV = pd.localV() - p;
-          localBreakoutExitU = pd.localU();
-          localBreakoutExitV = bga.minY() - exitMargin;
+        if (!viaAlreadyPlaced) {
+          if (committedViaLocations.contains(globalViaCenter)) {
+            continue; // Collides with already committed via site
+          }
+          boolean viaClear =
+              checkViaClearance(
+                  board, viaPadstack, globalViaCenter, pin, netNo, netNumbers, viaClClass);
+          if (!viaClear) {
+            continue; // Clearance violation or hole spacing violation
+          }
         }
 
-        globalCorridor =
-            toGlobalPoint(
-                pinCenter, pd.localU(), pd.localV(), localCorridorU, localCorridorV, cos, sin);
-        globalBreakoutExit =
-            toGlobalPoint(
+        // Validate dogbone trace on pinLayer
+        double maxAllowedDogbone =
+            board.checkTraceSegment(
                 pinCenter,
-                pd.localU(),
-                pd.localV(),
-                localBreakoutExitU,
-                localBreakoutExitV,
-                cos,
-                sin);
-
-        double maxAllowedJog =
-            board.checkTraceSegment(
                 globalViaCenter,
-                globalCorridor,
-                targetLayer,
+                pinLayer,
                 netNumbers,
-                traceHalfWidthTarget,
-                clClass,
+                traceHalfWidthPin,
+                traceClClass,
                 true);
-        if (maxAllowedJog < globalViaCenter.toFloat().distance(globalCorridor.toFloat())) {
-          drcRejections++;
-          continue;
+        if (maxAllowedDogbone < pinCenter.toFloat().distance(globalViaCenter.toFloat())) {
+          continue; // Dogbone obstructed on pinLayer
         }
 
-        double maxAllowedCorridor =
-            board.checkTraceSegment(
-                globalCorridor,
-                globalBreakoutExit,
-                targetLayer,
-                netNumbers,
-                traceHalfWidthTarget,
-                clClass,
-                true);
-        if (maxAllowedCorridor < globalCorridor.toFloat().distance(globalBreakoutExit.toFloat())) {
-          drcRejections++;
-          continue;
+        IntPoint globalCorridor = null;
+        IntPoint globalBreakoutExit = null;
+
+        if (!isPlaneDrop) {
+          // Recompute exact 45° breakout jog P1 -> P2 onto sector centerline
+          int corridorU;
+          int corridorV;
+          int exitU;
+          int exitV;
+
+          if (sector == 0) { // East: centerline is V = pinV
+            int step = Math.abs(pinV - viaV);
+            corridorU = viaU + step;
+            corridorV = pinV;
+            exitU = (int) Math.round(bga.maxX() + exitMargin);
+            exitV = pinV;
+          } else if (sector == 2) { // West: centerline is V = pinV
+            int step = Math.abs(pinV - viaV);
+            corridorU = viaU - step;
+            corridorV = pinV;
+            exitU = (int) Math.round(bga.minX() - exitMargin);
+            exitV = pinV;
+          } else if (sector == 1) { // North: centerline is U = pinU
+            int step = Math.abs(pinU - viaU);
+            corridorU = pinU;
+            corridorV = viaV + step;
+            exitU = pinU;
+            exitV = (int) Math.round(bga.maxY() + exitMargin);
+          } else { // South: centerline is U = pinU
+            int step = Math.abs(pinU - viaU);
+            corridorU = pinU;
+            corridorV = viaV - step;
+            exitU = pinU;
+            exitV = (int) Math.round(bga.minY() - exitMargin);
+          }
+
+          globalCorridor =
+              toGlobalPoint(pinCenter, pd.localU(), pd.localV(), corridorU, corridorV, cos, sin);
+          globalBreakoutExit =
+              toGlobalPoint(pinCenter, pd.localU(), pd.localV(), exitU, exitV, cos, sin);
+
+          // Validate 45° jog on targetLayer
+          double maxAllowedJog =
+              board.checkTraceSegment(
+                  globalViaCenter,
+                  globalCorridor,
+                  targetLayer,
+                  netNumbers,
+                  traceHalfWidthTarget,
+                  traceClClass,
+                  true);
+          if (maxAllowedJog < globalViaCenter.toFloat().distance(globalCorridor.toFloat())) {
+            continue; // Jog obstructed on targetLayer
+          }
+
+          // Validate corridor on targetLayer with continuous okLength truncation
+          double maxAllowedCorridor =
+              board.checkTraceSegment(
+                  globalCorridor,
+                  globalBreakoutExit,
+                  targetLayer,
+                  netNumbers,
+                  traceHalfWidthTarget,
+                  traceClClass,
+                  true);
+          double corridorDist = globalCorridor.toFloat().distance(globalBreakoutExit.toFloat());
+
+          if (maxAllowedCorridor < corridorDist) {
+            double distToPerimeter = getDistToPerimeter(pd, sector, bga);
+            if (maxAllowedCorridor >= distToPerimeter + minPerimeterClearance) {
+              double safeLen =
+                  Math.max(distToPerimeter + minPerimeterClearance, maxAllowedCorridor - 10.0);
+              globalBreakoutExit =
+                  interpolatePoint(globalCorridor, globalBreakoutExit, safeLen / corridorDist);
+            } else {
+              continue; // Corridor blocked before exiting perimeter
+            }
+          }
         }
-      }
 
-      // Commit dogbone trace
-      Polyline dogbone = new Polyline(new Point[] {pinCenter, globalViaCenter});
-      board.insertTrace(
-          dogbone, pinLayer, traceHalfWidthPin, netNumbers, clClass, FixedState.USER_FIXED);
-      tracesInserted++;
-
-      // Commit via
-      if (!viaAlreadyPlaced) {
-        Via insertedVia =
-            board.insertVia(
-                viaPadstack, globalViaCenter, netNumbers, clClass, FixedState.USER_FIXED, true);
-        viasInserted++;
-        if (isPlaneDrop && insertedVia != null) {
-          placedPlaneVias.put(viaKey, insertedVia);
-        }
-      }
-
-      // Commit breakout trace on targetLayer
-      if (!isPlaneDrop && globalCorridor != null && globalBreakoutExit != null) {
-        Polyline breakout =
-            new Polyline(new Point[] {globalViaCenter, globalCorridor, globalBreakoutExit});
+        // Commit dogbone trace
+        Polyline dogbone = new Polyline(new Point[] {pinCenter, globalViaCenter});
         board.insertTrace(
-            breakout,
-            targetLayer,
-            traceHalfWidthTarget,
-            netNumbers,
-            clClass,
-            FixedState.USER_FIXED);
+            dogbone, pinLayer, traceHalfWidthPin, netNumbers, traceClClass, FixedState.USER_FIXED);
         tracesInserted++;
+
+        // Commit via
+        if (!viaAlreadyPlaced) {
+          Via insertedVia =
+              board.insertVia(
+                  viaPadstack,
+                  globalViaCenter,
+                  netNumbers,
+                  viaClClass,
+                  FixedState.USER_FIXED,
+                  true);
+          viasInserted++;
+          committedViaLocations.add(globalViaCenter);
+          if (isPlaneDrop && insertedVia != null) {
+            placedPlaneVias.put(viaKey, insertedVia);
+          }
+        }
+
+        // Commit breakout trace on targetLayer
+        if (!isPlaneDrop && globalCorridor != null && globalBreakoutExit != null) {
+          Polyline breakout =
+              new Polyline(new Point[] {globalViaCenter, globalCorridor, globalBreakoutExit});
+          board.insertTrace(
+              breakout,
+              targetLayer,
+              traceHalfWidthTarget,
+              netNumbers,
+              traceClClass,
+              FixedState.SHOVE_FIXED);
+          tracesInserted++;
+        }
+
+        committed++;
+        candidateCommitted = true;
+        break; // Successfully committed this pin!
       }
 
-      committed++;
+      if (!candidateCommitted) {
+        drcRejections++;
+      }
     }
 
     FRLogger.info(
@@ -403,6 +491,28 @@ public final class BgaEscapeCommitter {
         (int) Math.round(pinCenter.toFloat().y + dGlobalY));
   }
 
+  private static IntPoint interpolatePoint(Point from, Point to, double ratio) {
+    FloatPoint f1 = from.toFloat();
+    FloatPoint f2 = to.toFloat();
+    double clampedRatio = Math.clamp(ratio, 0.0, 1.0);
+    double rx = f1.x + (f2.x - f1.x) * clampedRatio;
+    double ry = f1.y + (f2.y - f1.y) * clampedRatio;
+    return new IntPoint((int) Math.round(rx), (int) Math.round(ry));
+  }
+
+  private static double getDistToPerimeter(
+      BgaPinDescriptor pd, int sector, BgaEscapeDescriptor bga) {
+    if (sector == 0) { // East
+      return Math.max(0.0, bga.maxX() - pd.localU());
+    } else if (sector == 1) { // North
+      return Math.max(0.0, bga.maxY() - pd.localV());
+    } else if (sector == 2) { // West
+      return Math.max(0.0, pd.localU() - bga.minX());
+    } else { // South
+      return Math.max(0.0, pd.localV() - bga.minY());
+    }
+  }
+
   private static boolean checkViaClearance(
       RoutingBoard board,
       Padstack viaPadstack,
@@ -410,7 +520,10 @@ public final class BgaEscapeCommitter {
       Pin pin,
       int netNo,
       int[] netNumbers,
-      int clClass) {
+      int viaClClass) {
+    if (!HoleSpacing.clear(board, viaPadstack, globalViaCenter)) {
+      return false;
+    }
     for (int l = viaPadstack.fromLayer(); l <= viaPadstack.toLayer(); l++) {
       ConvexShape shape = viaPadstack.getShape(l);
       if (shape != null) {
@@ -423,19 +536,62 @@ public final class BgaEscapeCommitter {
           viaTile = translatedShape.boundingOctagon();
         }
         Collection<?> obstacles =
-            board.overlappingItemsWithClearance(viaTile, l, netNumbers, clClass);
+            board.overlappingItemsWithClearance(viaTile, l, netNumbers, viaClClass);
         for (Object obs : obstacles) {
           if (obs instanceof Pin p && p.equals(pin)) {
             continue; // Pin pad is our starting point
           }
-          if (obs instanceof app.freerouting.board.model.items.Item it
-              && it.isTraceObstacle(netNo)) {
+          if (obs instanceof Pin otherPin) {
+            if (otherPin.containsNet(netNo)) {
+              if (board.rules != null && !board.rules.isViaInPad()) {
+                return false; // Via-in-pad forbidden on same-net passive pad
+              }
+            } else {
+              return false; // Foreign pin pad obstacle
+            }
+          } else if (obs instanceof Item it && !it.isDrillable(netNo)) {
             return false;
           }
         }
       }
     }
     return true;
+  }
+
+  private static Padstack resolveViaPadstack(
+      RoutingBoard board, int fromLayer, int toLayer, NetClass nc) {
+    int lowL = Math.min(fromLayer, toLayer);
+    int highL = Math.max(fromLayer, toLayer);
+
+    // 1. Check NetClass via rule for a matching layer-span (e.g. blind/microvia)
+    if (nc != null && nc.getViaRule() != null) {
+      ViaRule vr = nc.getViaRule();
+      for (int i = 0; i < vr.viaCount(); i++) {
+        ViaInfo vi = vr.getVia(i);
+        if (vi != null && vi.getPadstack() != null) {
+          Padstack ps = vi.getPadstack();
+          if (ps.fromLayer() == lowL && ps.toLayer() == highL) {
+            return ps;
+          }
+        }
+      }
+    }
+
+    // 2. Check board.rules.viaInfos for a matching layer-span
+    if (board.rules != null && board.rules.viaInfos != null) {
+      for (int i = 0; i < board.rules.viaInfos.count(); i++) {
+        ViaInfo vi = board.rules.viaInfos.get(i);
+        if (vi != null && vi.getPadstack() != null) {
+          Padstack ps = vi.getPadstack();
+          if (ps.fromLayer() == lowL && ps.toLayer() == highL) {
+            return ps;
+          }
+        }
+      }
+    }
+
+    // 3. Fallback to standard through-hole default via padstack
+    return resolveViaPadstack(board);
   }
 
   private static Padstack resolveViaPadstack(RoutingBoard board) {
@@ -451,7 +607,7 @@ public final class BgaEscapeCommitter {
         }
       }
       if (board.rules.viaInfos != null && board.rules.viaInfos.count() > 0) {
-        ViaInfo vi = board.rules.viaInfos.get(1);
+        ViaInfo vi = board.rules.viaInfos.get(0);
         if (vi != null) {
           return vi.getPadstack();
         }

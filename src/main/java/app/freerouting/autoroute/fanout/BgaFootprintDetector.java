@@ -4,10 +4,14 @@ import app.freerouting.autoroute.fanout.BgaEscapeDescriptor.BgaPinDescriptor;
 import app.freerouting.autoroute.fanout.BgaEscapeDescriptor.LatticeClass;
 import app.freerouting.autoroute.fanout.BgaEscapeDescriptor.PinDisposition;
 import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.ConductionArea;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.structure.Component;
 import app.freerouting.board.model.structure.Unit;
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.geometry.planar.IntBox;
+import app.freerouting.geometry.planar.IntPoint;
+import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Shape;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
@@ -222,12 +226,51 @@ public final class BgaFootprintDetector {
 
     // 5. Concentric Chebyshev Ring Peeling & Layer Allocation
     int pinLayer = pins.isEmpty() ? 0 : pins.get(0).firstLayer();
+
+    // Compute component bounding box in board coordinates
+    int minBx = Integer.MAX_VALUE;
+    int maxBx = Integer.MIN_VALUE;
+    int minBy = Integer.MAX_VALUE;
+    int maxBy = Integer.MIN_VALUE;
+    for (Pin p : pins) {
+      Point pt = p.getCenter();
+      if (pt != null) {
+        IntPoint ip = pt.toFloat().round();
+        if (ip.x < minBx) minBx = ip.x;
+        if (ip.x > maxBx) maxBx = ip.x;
+        if (ip.y < minBy) minBy = ip.y;
+        if (ip.y > maxBy) maxBy = ip.y;
+      }
+    }
+    IntBox bgaBox = new IntBox(new IntPoint(minBx, minBy), new IntPoint(maxBx, maxBy));
+
+    // Identify inner layers containing a BGA-spanning ConductionArea (solid pour)
+    Set<Integer> pouredLayers = new HashSet<>();
+    if (board.getConductionAreas() != null) {
+      for (ConductionArea ca : board.getConductionAreas()) {
+        int l = ca.getLayer();
+        if (l != pinLayer && ca.getArea() != null) {
+          IntBox caBox = ca.boundingBox();
+          if (caBox != null && caBox.intersects(bgaBox)) {
+            IntBox intersection = caBox.intersection(bgaBox);
+            double interArea =
+                (double) (intersection.ur.x - intersection.ll.x)
+                    * (intersection.ur.y - intersection.ll.y);
+            double bgaArea = (double) (bgaBox.ur.x - bgaBox.ll.x) * (bgaBox.ur.y - bgaBox.ll.y);
+            if (caBox.contains(bgaBox) || (bgaArea > 0 && interArea / bgaArea >= 0.5)) {
+              pouredLayers.add(l);
+            }
+          }
+        }
+      }
+    }
+
     List<Integer> signalLayers = new ArrayList<>();
     if (pinLayer == 0) {
       for (int l = 0; l < board.getLayerCount(); l++) {
         boolean layerActive =
             (settings == null || l >= settings.getLayerCount() || settings.getLayerActive(l));
-        if (board.layerStructure.layers[l].isSignal && layerActive) {
+        if (board.layerStructure.layers[l].isSignal && layerActive && !pouredLayers.contains(l)) {
           signalLayers.add(l);
         }
       }
@@ -235,7 +278,7 @@ public final class BgaFootprintDetector {
       for (int l = board.getLayerCount() - 1; l >= 0; l--) {
         boolean layerActive =
             (settings == null || l >= settings.getLayerCount() || settings.getLayerActive(l));
-        if (board.layerStructure.layers[l].isSignal && layerActive) {
+        if (board.layerStructure.layers[l].isSignal && layerActive && !pouredLayers.contains(l)) {
           signalLayers.add(l);
         }
       }
@@ -267,6 +310,24 @@ public final class BgaFootprintDetector {
       if (p.getComponentId() != comp.id) {
         for (int n = 0; n < p.netCount(); n++) {
           netsWithExternalPins.add(p.getNetNumber(n));
+        }
+      }
+    }
+
+    // Pre-index nets that have a ConductionArea overlapping the BGA footprint
+    Set<Integer> pouredNetsInBga = new HashSet<>();
+    if (board.getConductionAreas() != null) {
+      for (ConductionArea ca : board.getConductionAreas()) {
+        if (ca.getArea() != null) {
+          IntBox caBox = ca.boundingBox();
+          if (caBox != null && caBox.intersects(bgaBox)) {
+            for (int n = 0; n < ca.netCount(); n++) {
+              int netNum = ca.getNetNumber(n);
+              if (netNum > 0) {
+                pouredNetsInBga.add(netNum);
+              }
+            }
+          }
         }
       }
     }
@@ -306,7 +367,8 @@ public final class BgaFootprintDetector {
         Net net =
             (board.rules != null && board.rules.nets != null) ? board.rules.nets.get(netNo) : null;
         boolean containsPlane = (net != null && net.containsPlane());
-        if (containsPlane) {
+        boolean matchesConductionArea = pouredNetsInBga.contains(netNo);
+        if (containsPlane || matchesConductionArea) {
           disposition = PinDisposition.PLANE_DROP;
         } else if (netNo > 0) {
           boolean hasExternalTerminals = netsWithExternalPins.contains(netNo);

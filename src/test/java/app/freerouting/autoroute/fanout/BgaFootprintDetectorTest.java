@@ -197,4 +197,105 @@ class BgaFootprintDetectorTest {
     assertEquals(192, desc.pins().size());
     assertEquals(LatticeClass.DEPOPULATED_CAVITY_GRID, desc.latticeClass());
   }
+
+  @Test
+  void testPouredLayerExclusionAndConductionAreaPlaneDrop() {
+    Layer l0 = new Layer("F.Cu", true);
+    Layer l1 = new Layer("In1.Cu", true); // Will contain BGA-spanning GND copper pour
+    Layer l2 = new Layer("In2.Cu", true); // Open signal layer
+    Layer l3 = new Layer("B.Cu", true);
+    LayerStructure layerStructure = new LayerStructure(new Layer[] {l0, l1, l2, l3});
+
+    ClearanceMatrix clearanceMatrix = ClearanceMatrix.getDefaultInstance(layerStructure, 10);
+    BoardRules boardRules = new BoardRules(layerStructure, clearanceMatrix);
+    boardRules.createDefaultNetClass();
+
+    Communication communication =
+        new Communication(
+            Unit.UM,
+            1,
+            new Communication.SpecctraParserInfo("\"", null, null, null, null, false),
+            new CoordinateTransform(1, 0, 0),
+            new ItemIdGenerator(),
+            new BoardObserverAdaptor());
+
+    RoutingBoard board =
+        new RoutingBoard(
+            new IntBox(0, 0, 100_000, 100_000),
+            layerStructure,
+            new PolylineShape[] {TileShape.getInstance(0, 0, 100_000, 100_000)},
+            0,
+            boardRules,
+            communication);
+
+    board.library.padstacks = new app.freerouting.core.library.Padstacks(layerStructure);
+    board.library.packages = new Packages(board.library.padstacks);
+    board.rules.nets.add("SIG", 1, false);
+    board.rules.nets.add("GND", 2, false);
+
+    // Insert BGA-spanning GND ConductionArea on In1.Cu (layer 1)
+    board.insertConductionArea(
+        TileShape.getInstance(0, 0, 100_000, 100_000),
+        1,
+        new int[] {2},
+        1,
+        false,
+        FixedState.SYSTEM_FIXED);
+
+    // 8x8 BGA component on Top (layer 0)
+    int pitch = 1000;
+    Padstack pad =
+        board.library.padstacks.add(
+            new ConvexShape[] {new Circle(Point.ZERO, 150), new Circle(Point.ZERO, 150)});
+
+    List<Package.Pin> pkgPins = new ArrayList<>();
+    for (int r = 0; r < 8; r++) {
+      for (int c = 0; c < 8; c++) {
+        double lx = (c - 3.5) * pitch;
+        double ly = (r - 3.5) * pitch;
+        pkgPins.add(new Package.Pin("P" + (r * 8 + c), pad.id, new FloatPoint(lx, ly), 0));
+      }
+    }
+
+    Package pkg = board.library.packages.add(pkgPins.toArray(new Package.Pin[0]));
+    Component comp =
+        board.components.addPrecise(
+            "U1", new FloatPoint(50000, 50000), 0.0, true, pkg, pkg, false, null);
+
+    List<Pin> boardPins = new ArrayList<>();
+    for (int i = 0; i < 64; i++) {
+      // Pins 0..15 are GND (net 2); pins 16..63 are SIG (net 1)
+      int netNo = (i < 16) ? 2 : 1;
+      Pin p = board.insertPin(comp.id, i, new int[] {netNo}, 1, FixedState.UNFIXED);
+      boardPins.add(p);
+    }
+
+    RouterSettings settings = new RouterSettings();
+    settings.fanout.gpuMinBgaPins = 64;
+
+    BgaEscapeDescriptor desc =
+        BgaFootprintDetector.analyzeComponent(board, comp, boardPins, settings);
+    assertNotNull(desc);
+
+    // Verify GND pins classified as PLANE_DROP
+    for (int i = 0; i < 16; i++) {
+      BgaEscapeDescriptor.BgaPinDescriptor pd = desc.pins().get(i);
+      if (pd.netNo() == 2) {
+        assertEquals(
+            BgaEscapeDescriptor.PinDisposition.PLANE_DROP,
+            pd.disposition(),
+            "GND pin matching ConductionArea must be classified as PLANE_DROP");
+      }
+    }
+
+    // Verify In1.Cu (layer 1) excluded from peelable signalLayers for inner ring signal breakouts
+    for (BgaEscapeDescriptor.BgaPinDescriptor pd : desc.pins()) {
+      if (pd.netNo() == 1 && pd.ring() >= 2) {
+        assertEquals(
+            2,
+            pd.targetLayer(),
+            "Signal escape must bypass poured In1.Cu and route on open signal layer In2.Cu");
+      }
+    }
+  }
 }

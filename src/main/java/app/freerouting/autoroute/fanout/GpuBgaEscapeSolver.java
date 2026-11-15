@@ -628,8 +628,15 @@ public final class GpuBgaEscapeSolver {
         int qV = (pd.localV() >= centerV) ? 1 : -1;
 
         // 4-Quadrant 45-degree interstitial dog-bone sites: (+-p/2, +-p/2)
-        int[] dX = {qU * halfPitch, qU * halfPitch, -qU * halfPitch, -qU * halfPitch};
-        int[] dY = {qV * halfPitch, -qV * halfPitch, qV * halfPitch, -qV * halfPitch};
+        int[] dX;
+        int[] dY;
+        if (pd.breakoutSector() == 0 || pd.breakoutSector() == 2) { // East/West: outward axis is U
+          dX = new int[] {qU * halfPitch, qU * halfPitch, -qU * halfPitch, -qU * halfPitch};
+          dY = new int[] {qV * halfPitch, -qV * halfPitch, qV * halfPitch, -qV * halfPitch};
+        } else { // North/South: outward axis is V
+          dX = new int[] {qU * halfPitch, -qU * halfPitch, qU * halfPitch, -qU * halfPitch};
+          dY = new int[] {qV * halfPitch, qV * halfPitch, -qV * halfPitch, -qV * halfPitch};
+        }
         int[] siteCosts = {1000, 1500, 1500, 2500};
 
         for (int s = 0; s < 4; s++) {
