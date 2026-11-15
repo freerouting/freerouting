@@ -87,6 +87,16 @@ public final class BgaFootprintDetector {
         continue;
       }
 
+      int unescapedCount = 0;
+      for (Pin p : pins) {
+        if (p.getNormalContacts().isEmpty()) {
+          unescapedCount++;
+        }
+      }
+      if (unescapedCount == 0) {
+        continue; // Component is already fully fanned out / escaped
+      }
+
       BgaEscapeDescriptor descriptor = analyzeComponent(board, comp, pins, settings);
       if (descriptor != null) {
         result.add(descriptor);

@@ -60,7 +60,24 @@ public final class BgaEscapeCommitter {
       int pinsCommitted,
       int viasInserted,
       int tracesInserted,
-      int drcRejections) {}
+      int drcRejections,
+      Set<Pin> committedPins) {
+
+    public CommitResult(
+        int pinsAttempted,
+        int pinsCommitted,
+        int viasInserted,
+        int tracesInserted,
+        int drcRejections) {
+      this(
+          pinsAttempted,
+          pinsCommitted,
+          viasInserted,
+          tracesInserted,
+          drcRejections,
+          java.util.Collections.emptySet());
+    }
+  }
 
   private BgaEscapeCommitter() {}
 
@@ -94,6 +111,8 @@ public final class BgaEscapeCommitter {
     Map<Long, Via> placedPlaneVias = new HashMap<>();
     // Maintain committed via locations to prevent double-via collisions
     Set<IntPoint> committedViaLocations = new HashSet<>();
+    // Maintain successfully escaped pins to bypass redundant CPU fanout retries
+    Set<Pin> committedPins = new HashSet<>();
 
     for (PinEscapeProposal proposal : proposals) {
       if (Thread.currentThread().isInterrupted()) {
@@ -196,6 +215,7 @@ public final class BgaEscapeCommitter {
             FixedState.SHOVE_FIXED);
         tracesInserted++;
         committed++;
+        committedPins.add(pin);
         continue;
       }
 
@@ -274,6 +294,7 @@ public final class BgaEscapeCommitter {
             FixedState.SHOVE_FIXED);
         tracesInserted++;
         committed++;
+        committedPins.add(pin);
         continue;
       }
 
@@ -418,7 +439,7 @@ public final class BgaEscapeCommitter {
         // Commit dogbone trace
         Polyline dogbone = new Polyline(new Point[] {pinCenter, globalViaCenter});
         board.insertTrace(
-            dogbone, pinLayer, traceHalfWidthPin, netNumbers, traceClClass, FixedState.USER_FIXED);
+            dogbone, pinLayer, traceHalfWidthPin, netNumbers, traceClClass, FixedState.SHOVE_FIXED);
         tracesInserted++;
 
         // Commit via
@@ -429,7 +450,7 @@ public final class BgaEscapeCommitter {
                   globalViaCenter,
                   netNumbers,
                   viaClClass,
-                  FixedState.USER_FIXED,
+                  FixedState.SHOVE_FIXED,
                   true);
           viasInserted++;
           committedViaLocations.add(globalViaCenter);
@@ -453,6 +474,7 @@ public final class BgaEscapeCommitter {
         }
 
         committed++;
+        committedPins.add(pin);
         candidateCommitted = true;
         break; // Successfully committed this pin!
       }
@@ -471,7 +493,8 @@ public final class BgaEscapeCommitter {
             + drcRejections
             + " rejected by DRC)");
 
-    return new CommitResult(attempted, committed, viasInserted, tracesInserted, drcRejections);
+    return new CommitResult(
+        attempted, committed, viasInserted, tracesInserted, drcRejections, committedPins);
   }
 
   private static IntPoint toGlobalPoint(
@@ -538,17 +561,18 @@ public final class BgaEscapeCommitter {
         Collection<?> obstacles =
             board.overlappingItemsWithClearance(viaTile, l, netNumbers, viaClClass);
         for (Object obs : obstacles) {
-          if (obs instanceof Pin p && p.equals(pin)) {
-            continue; // Pin pad is our starting point
-          }
           if (obs instanceof Pin otherPin) {
-            if (otherPin.containsNet(netNo)) {
-              if (board.rules != null && !board.rules.isViaInPad()) {
-                return false; // Via-in-pad forbidden on same-net passive pad
+            if (otherPin.equals(pin)) {
+              // Via must not physically overlap the ball's pad shape (strict via-in-pad rejection)
+              TileShape pinTile = pin.getTreeShape(board.searchTreeManager.getDefaultTree(), l);
+              if (pinTile != null && viaTile.intersects(pinTile)) {
+                return false;
               }
-            } else {
-              return false; // Foreign pin pad obstacle
+              continue;
             }
+            // Strict no via-in-pad: any overlap with other pins (decoupling caps, adjacent balls)
+            // is rejected
+            return false;
           } else if (obs instanceof Item it && !it.isDrillable(netNo)) {
             return false;
           }

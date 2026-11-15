@@ -92,8 +92,7 @@ class BgaEscapeCommitterTest {
     // 8x8 = 64 pin BGA on 1000 um pitch
     int pitch = 1000;
     Padstack pad =
-        board.library.padstacks.add(
-            new ConvexShape[] {new Circle(Point.ZERO, 150), new Circle(Point.ZERO, 150)});
+        board.library.padstacks.add(new ConvexShape[] {new Circle(Point.ZERO, 150), null});
 
     List<Package.Pin> pkgPins = new ArrayList<>();
     for (int r = 0; r < 8; r++) {
@@ -147,8 +146,7 @@ class BgaEscapeCommitterTest {
     // 8x8 = 64 pin BGA on 1000 um pitch
     int pitch = 1000;
     Padstack pad =
-        board.library.padstacks.add(
-            new ConvexShape[] {new Circle(Point.ZERO, 150), new Circle(Point.ZERO, 150)});
+        board.library.padstacks.add(new ConvexShape[] {new Circle(Point.ZERO, 150), null});
 
     List<Package.Pin> pkgPins = new ArrayList<>();
     for (int r = 0; r < 8; r++) {
@@ -208,8 +206,7 @@ class BgaEscapeCommitterTest {
     // 8x8 = 64 pin BGA on 1000 um pitch
     int pitch = 1000;
     Padstack pad =
-        board.library.padstacks.add(
-            new ConvexShape[] {new Circle(Point.ZERO, 150), new Circle(Point.ZERO, 150)});
+        board.library.padstacks.add(new ConvexShape[] {new Circle(Point.ZERO, 150), null});
 
     List<Package.Pin> pkgPins = new ArrayList<>();
     for (int r = 0; r < 8; r++) {
@@ -256,10 +253,65 @@ class BgaEscapeCommitterTest {
 
     CommitResult result = BgaEscapeCommitter.commit(board, desc, proposals);
     assertTrue(result.pinsCommitted() > 0);
+    assertEquals(result.pinsCommitted(), result.committedPins().size());
 
     // Verify ZERO DRC violations (continuous okLength snapped cleanly before R1)
     List<?> violations =
         new ArrayList<>(new DesignRulesChecker(board, null).getAllClearanceViolations());
     assertEquals(0, violations.size(), "Committed escapes must have 0 DRC clearance violations");
+  }
+
+  @Test
+  void testCommittedPinsBypassedByBatchFanout() {
+    RoutingBoard board = createTestBoard();
+
+    int pitch = 1000;
+    Padstack pad =
+        board.library.padstacks.add(new ConvexShape[] {new Circle(Point.ZERO, 150), null});
+
+    List<Package.Pin> pkgPins = new ArrayList<>();
+    for (int r = 0; r < 8; r++) {
+      for (int c = 0; c < 8; c++) {
+        double lx = (c - 3.5) * pitch;
+        double ly = (r - 3.5) * pitch;
+        pkgPins.add(new Package.Pin("P" + (r * 8 + c), pad.id, new FloatPoint(lx, ly), 0));
+      }
+    }
+
+    Package pkg = board.library.packages.add(pkgPins.toArray(new Package.Pin[0]));
+    Component comp =
+        board.components.addPrecise(
+            "U1", new FloatPoint(50000, 50000), 0.0, true, pkg, pkg, false, null);
+
+    for (int i = 0; i < 64; i++) {
+      board.insertPin(comp.id, i, new int[] {i + 1}, 1, FixedState.UNFIXED);
+    }
+
+    RouterSettings settings = new RouterSettings();
+    settings.setFanoutEnabled(true);
+    settings.fanout.gpuMinBgaPins = 64;
+    settings.fanout.gpuAccelerationEnabled = true;
+
+    int viasBefore = board.getViaCount();
+    int tracesBefore = board.getTraces().size();
+
+    // Run BatchFanout pipeline
+    app.freerouting.autoroute.pipeline.BatchFanout.FanoutRunSummary summary =
+        app.freerouting.autoroute.pipeline.BatchFanout.fanoutBoard(board, settings, null);
+
+    assertNotNull(summary);
+    // BGA escape committer handles all 64 pins in pre-pass; CPU fanout has 0 remaining pins
+    assertTrue(summary.completedPassCount() <= 1);
+    assertTrue(board.getTraces().size() > tracesBefore);
+
+    int tracesAfter = board.getTraces().size();
+    int viasAfter = board.getViaCount();
+
+    // Re-running BatchFanout must find 0 pins to fanout and make 0 modifications
+    app.freerouting.autoroute.pipeline.BatchFanout.FanoutRunSummary summary2 =
+        app.freerouting.autoroute.pipeline.BatchFanout.fanoutBoard(board, settings, null);
+    assertNotNull(summary2);
+    assertEquals(tracesAfter, board.getTraces().size(), "No duplicate traces should be created");
+    assertEquals(viasAfter, board.getViaCount(), "No duplicate vias should be created");
   }
 }
