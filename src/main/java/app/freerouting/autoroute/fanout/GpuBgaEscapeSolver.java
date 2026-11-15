@@ -483,11 +483,21 @@ public final class GpuBgaEscapeSolver {
         int origX = data.originX();
         int origY = data.originY();
 
-        int targetLayer = Math.min(layers - 1, 1);
+        int pinLayer = pins.isEmpty() ? 0 : pins.get(0).pin().firstLayer();
         int escapedCount = 0;
 
         for (int i = 0; i < pinCount; i++) {
           BgaPinDescriptor pd = pins.get(i);
+          if (pd.disposition() == BgaEscapeDescriptor.PinDisposition.PASSIVE_OBSTACLE) {
+            proposals.add(new PinEscapeProposal(pd, null, pd.targetLayer(), 999999, false));
+            continue;
+          }
+          if (pd.targetLayer() == pinLayer
+              && pd.disposition() == BgaEscapeDescriptor.PinDisposition.SIGNAL_ESCAPE) {
+            proposals.add(new PinEscapeProposal(pd, null, pd.targetLayer(), 0, true));
+            escapedCount++;
+            continue;
+          }
           long off = (long) i * 16;
           int status = hostSolutions.get(ValueLayout.JAVA_INT, (off + 8) * 4);
 
@@ -503,7 +513,7 @@ public final class GpuBgaEscapeSolver {
             proposals.add(new PinEscapeProposal(pd, new IntPoint(viaBx, viaBy), tl, cost, true));
             escapedCount++;
           } else {
-            proposals.add(new PinEscapeProposal(pd, null, targetLayer, 999999, false));
+            proposals.add(new PinEscapeProposal(pd, null, pd.targetLayer(), 999999, false));
           }
         }
 
@@ -576,18 +586,14 @@ public final class GpuBgaEscapeSolver {
     int maxRing = bga.maxRing();
 
     int pitch = (int) Math.round(bga.pitchBoardUnits());
-    int dogboneDist = (int) Math.round(pitch * 0.7071067811865475);
-    int targetLayer = Math.min(data.layerCount() - 1, 1);
-
-    // 8 octilinear dog-bone offsets
-    int[] dx = {1, 1, 0, -1, -1, -1, 0, 1};
-    int[] dy = {0, 1, 1, 1, 0, -1, -1, -1};
-    int[] cost = {1000, 1414, 1000, 1414, 1000, 1414, 1000, 1414};
+    int pinLayer = pins.isEmpty() ? 0 : pins.get(0).pin().firstLayer();
+    int halfPitch = pitch / 2;
+    double centerU = (bga.minX() + bga.maxX()) / 2.0;
+    double centerV = (bga.minY() + bga.maxY()) / 2.0;
 
     List<PinEscapeProposal> proposals = new ArrayList<>(pinCount);
 
     // Track occupied dog-bone target sites (cell index -> winning candidate)
-    // cell = (gx, gy)
     java.util.Map<Long, Integer> cellWinners = new java.util.HashMap<>();
 
     // Process concentric rings from outer perimeter (ring 0) inward (ring maxRing)
@@ -599,6 +605,13 @@ public final class GpuBgaEscapeSolver {
           continue;
         }
 
+        // If targetLayer is pinLayer, this pin escapes directly on surface with NO via
+        if (pd.targetLayer() == pinLayer
+            && pd.disposition() == BgaEscapeDescriptor.PinDisposition.SIGNAL_ESCAPE) {
+          proposals.add(new PinEscapeProposal(pd, null, pd.targetLayer(), 0, true));
+          continue;
+        }
+
         int pinU = (int) Math.round(pd.localU());
         int pinV = (int) Math.round(pd.localV());
 
@@ -606,11 +619,18 @@ public final class GpuBgaEscapeSolver {
         IntPoint bestVia = null;
         long bestCell = -1;
 
-        // Try 8 octilinear dog-bone sites
-        for (int s = 0; s < 8; s++) {
-          int vx = pinU + dx[s] * dogboneDist;
-          int vy = pinV + dy[s] * dogboneDist;
-          int scost = cost[s];
+        int qU = (pd.localU() >= centerU) ? 1 : -1;
+        int qV = (pd.localV() >= centerV) ? 1 : -1;
+
+        // 4-Quadrant 45-degree interstitial dog-bone sites: (+-p/2, +-p/2)
+        int[] dX = {qU * halfPitch, qU * halfPitch, -qU * halfPitch, -qU * halfPitch};
+        int[] dY = {qV * halfPitch, -qV * halfPitch, qV * halfPitch, -qV * halfPitch};
+        int[] siteCosts = {1000, 1500, 1500, 2500};
+
+        for (int s = 0; s < 4; s++) {
+          int vx = pinU + dX[s];
+          int vy = pinV + dY[s];
+          int scost = siteCosts[s];
 
           // PLANE_DROP sharing incentive
           if (pd.disposition() == BgaEscapeDescriptor.PinDisposition.PLANE_DROP) {
@@ -618,9 +638,8 @@ public final class GpuBgaEscapeSolver {
           }
 
           // Quantized cell hash in local coordinate frame
-          long cellKey =
-              (((long) (vx / (data.gridStepBoardUnits() * 2))) << 32)
-                  | ((long) (vy / (data.gridStepBoardUnits() * 2)) & 0xFFFFFFFFL);
+          int cellStep = Math.max(1, data.gridStepBoardUnits() * 2);
+          long cellKey = (((long) (vx / cellStep)) << 32) | ((long) (vy / cellStep) & 0xFFFFFFFFL);
 
           if (!cellWinners.containsKey(cellKey)) {
             if (scost < bestCost) {
@@ -633,9 +652,9 @@ public final class GpuBgaEscapeSolver {
 
         if (bestVia != null && bestCell != -1) {
           cellWinners.put(bestCell, i);
-          proposals.add(new PinEscapeProposal(pd, bestVia, targetLayer, bestCost, true));
+          proposals.add(new PinEscapeProposal(pd, bestVia, pd.targetLayer(), bestCost, true));
         } else {
-          proposals.add(new PinEscapeProposal(pd, null, targetLayer, 999999, false));
+          proposals.add(new PinEscapeProposal(pd, null, pd.targetLayer(), 999999, false));
         }
       }
     }

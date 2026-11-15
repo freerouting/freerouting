@@ -150,10 +150,10 @@ public final class BgaBufferMarshaller {
       int rx = u + halfW;
       int ly = v - halfW;
       int uy = v + halfW;
-      int ulx = u - halfW;
-      int lrx = u + halfW;
-      int llx = u - halfW;
-      int urx = u + halfW;
+      double centerU = (bga.minX() + bga.maxX()) / 2.0;
+      double centerV = (bga.minY() + bga.maxY()) / 2.0;
+      int qU = (pd.localU() >= centerU) ? 1 : -1;
+      int qV = (pd.localV() >= centerV) ? 1 : -1;
 
       pinBuf.set(ValueLayout.JAVA_INT, offset, u);
       pinBuf.set(ValueLayout.JAVA_INT, offset + 4, v);
@@ -161,10 +161,10 @@ public final class BgaBufferMarshaller {
       pinBuf.set(ValueLayout.JAVA_INT, offset + 12, rx);
       pinBuf.set(ValueLayout.JAVA_INT, offset + 16, ly);
       pinBuf.set(ValueLayout.JAVA_INT, offset + 20, uy);
-      pinBuf.set(ValueLayout.JAVA_INT, offset + 24, ulx);
-      pinBuf.set(ValueLayout.JAVA_INT, offset + 28, lrx);
-      pinBuf.set(ValueLayout.JAVA_INT, offset + 32, pd.netNo());
-      pinBuf.set(ValueLayout.JAVA_INT, offset + 36, pd.clearanceClassIdx());
+      pinBuf.set(ValueLayout.JAVA_INT, offset + 24, pd.targetLayer());
+      pinBuf.set(ValueLayout.JAVA_INT, offset + 28, pd.breakoutSector());
+      pinBuf.set(ValueLayout.JAVA_INT, offset + 32, qU);
+      pinBuf.set(ValueLayout.JAVA_INT, offset + 36, qV);
       pinBuf.set(ValueLayout.JAVA_INT, offset + 40, pd.ring());
       pinBuf.set(ValueLayout.JAVA_INT, offset + 44, pd.disposition().ordinal());
     }

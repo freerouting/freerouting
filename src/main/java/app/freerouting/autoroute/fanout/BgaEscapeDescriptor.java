@@ -70,5 +70,21 @@ public record BgaEscapeDescriptor(
       int canonicalIndex,
       PinDisposition disposition,
       int netNo,
-      int clearanceClassIdx) {}
+      int clearanceClassIdx,
+      int targetLayer,
+      int breakoutSector) {
+
+    /** Backwards-compatible constructor defaulting targetLayer and breakoutSector to 0. */
+    public BgaPinDescriptor(
+        Pin pin,
+        double localU,
+        double localV,
+        int ring,
+        int canonicalIndex,
+        PinDisposition disposition,
+        int netNo,
+        int clearanceClassIdx) {
+      this(pin, localU, localV, ring, canonicalIndex, disposition, netNo, clearanceClassIdx, 0, 0);
+    }
+  }
 }

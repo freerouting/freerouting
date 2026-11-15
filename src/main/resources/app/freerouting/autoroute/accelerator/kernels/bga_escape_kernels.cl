@@ -141,16 +141,39 @@ __kernel void evaluate_via_dogbone_sites(
   int pOffset = pinIdx * 12;
   int u = pinBuffer[pOffset + 0];
   int v = pinBuffer[pOffset + 1];
+  int targetLayer = pinBuffer[pOffset + 6];
+  int sector = pinBuffer[pOffset + 7];
+  int qU = pinBuffer[pOffset + 8];
+  int qV = pinBuffer[pOffset + 9];
+  int ring = pinBuffer[pOffset + 10];
   int disposition = pinBuffer[pOffset + 11];
 
   int baseSiteOffset = pinIdx * 8 * 4;
 
-  // Distance from pad center to dogbone via center (nominally pitch / sqrt(2) for diagonal)
-  int dogboneDist = (int)(pitchBoardUnits * 0.7071f);
+  if (disposition == 0) { // PASSIVE_OBSTACLE
+    for (int siteIdx = 0; siteIdx < 8; siteIdx++) {
+      int siteRecord = baseSiteOffset + siteIdx * 4;
+      viaSiteBuffer[siteRecord + 0] = -1;
+      viaSiteBuffer[siteRecord + 1] = -1;
+      viaSiteBuffer[siteRecord + 2] = -1;
+      viaSiteBuffer[siteRecord + 3] = 999999;
+    }
+    return;
+  }
 
-  for (int siteIdx = 0; siteIdx < 8; siteIdx++) {
-    int targetX = u + (int)(DIR_DX[siteIdx] * dogboneDist);
-    int targetY = v + (int)(DIR_DY[siteIdx] * dogboneDist);
+  // 4-Quadrant 45-degree interstitial dogbone offsets (+-p/2, +-p/2):
+  // Site 0: Primary quadrant centroid (qU, qV)
+  // Site 1: Alternate diagonal along X (qU, -qV)
+  // Site 2: Alternate diagonal along Y (-qU, qV)
+  // Site 3: Opposite diagonal (-qU, -qV)
+  int halfPitch = pitchBoardUnits / 2;
+  int dX[4] = { qU * halfPitch,  qU * halfPitch, -qU * halfPitch, -qU * halfPitch };
+  int dY[4] = { qV * halfPitch, -qV * halfPitch,  qV * halfPitch, -qV * halfPitch };
+  int siteCosts[4] = { 1000, 1500, 1500, 2500 };
+
+  for (int siteIdx = 0; siteIdx < 4; siteIdx++) {
+    int targetX = u + dX[siteIdx];
+    int targetY = v + dY[siteIdx];
 
     int gx = (targetX - originX) / gridStepBoardUnits;
     int gy = (targetY - originY) / gridStepBoardUnits;
@@ -165,11 +188,11 @@ __kernel void evaluate_via_dogbone_sites(
       continue;
     }
 
-    // Check collision across layers 0 and 1
-    int siteCost = DIR_COST[siteIdx];
+    // Check collision across all layers for the through-hole via
+    int siteCost = siteCosts[siteIdx];
     int valid = 1;
 
-    for (int l = 0; l < min(layers, 2); l++) {
+    for (int l = 0; l < layers; l++) {
       int cell = (l * gridH + gy) * gridW + gx;
       int occ = occupancyGrid[cell];
       if (occ != 0 && occ != (pinIdx + 1)) {
@@ -186,7 +209,7 @@ __kernel void evaluate_via_dogbone_sites(
     if (valid) {
       viaSiteBuffer[siteRecord + 0] = gx;
       viaSiteBuffer[siteRecord + 1] = gy;
-      viaSiteBuffer[siteRecord + 2] = min(layers - 1, 1); // Drop to inner layer
+      viaSiteBuffer[siteRecord + 2] = targetLayer;
       viaSiteBuffer[siteRecord + 3] = siteCost;
     } else {
       viaSiteBuffer[siteRecord + 0] = -1;
@@ -194,6 +217,15 @@ __kernel void evaluate_via_dogbone_sites(
       viaSiteBuffer[siteRecord + 2] = -1;
       viaSiteBuffer[siteRecord + 3] = 999999;
     }
+  }
+
+  // Clear remaining site records (4..7)
+  for (int siteIdx = 4; siteIdx < 8; siteIdx++) {
+    int siteRecord = baseSiteOffset + siteIdx * 4;
+    viaSiteBuffer[siteRecord + 0] = -1;
+    viaSiteBuffer[siteRecord + 1] = -1;
+    viaSiteBuffer[siteRecord + 2] = -1;
+    viaSiteBuffer[siteRecord + 3] = 999999;
   }
 }
 

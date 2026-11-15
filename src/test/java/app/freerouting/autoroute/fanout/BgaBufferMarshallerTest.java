@@ -155,9 +155,13 @@ class BgaBufferMarshallerTest {
       long expectedPinBytes = 64L * 12 * 4;
       assertEquals(expectedPinBytes, data.pinBuffer().byteSize());
 
-      // Read first pin netNo (offset 32)
-      int pin0Net = data.pinBuffer().get(ValueLayout.JAVA_INT, 32);
-      assertEquals(1, pin0Net);
+      // Read first pin targetLayer (offset 24) and quadrant U (offset 32)
+      int pin0TargetLayer = data.pinBuffer().get(ValueLayout.JAVA_INT, 24);
+      assertTrue(
+          pin0TargetLayer >= 0 && pin0TargetLayer < data.layerCount(),
+          "Target layer must be within valid layer bounds");
+      int pin0Qu = data.pinBuffer().get(ValueLayout.JAVA_INT, 32);
+      assertTrue(pin0Qu == 1 || pin0Qu == -1, "Quadrant U must be +1 or -1");
     }
   }
 }
