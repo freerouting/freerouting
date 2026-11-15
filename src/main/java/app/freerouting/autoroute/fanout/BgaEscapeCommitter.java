@@ -536,7 +536,7 @@ public final class BgaEscapeCommitter {
     }
   }
 
-  private static boolean checkViaClearance(
+  static boolean checkViaClearance(
       RoutingBoard board,
       Padstack viaPadstack,
       IntPoint globalViaCenter,
@@ -558,20 +558,18 @@ public final class BgaEscapeCommitter {
         } else {
           viaTile = translatedShape.boundingOctagon();
         }
+        // Strict no via-in-pad: physical overlap with any Pin (starting ball pad,
+        // same-net decoupling cap, or foreign pin) on layer l is strictly rejected
+        for (Item it : board.overlappingItems(viaTile, l)) {
+          if (it instanceof Pin) {
+            return false;
+          }
+        }
+
         Collection<?> obstacles =
             board.overlappingItemsWithClearance(viaTile, l, netNumbers, viaClClass);
         for (Object obs : obstacles) {
-          if (obs instanceof Pin otherPin) {
-            if (otherPin.equals(pin)) {
-              // Via must not physically overlap the ball's pad shape (strict via-in-pad rejection)
-              TileShape pinTile = pin.getTreeShape(board.searchTreeManager.getDefaultTree(), l);
-              if (pinTile != null && viaTile.intersects(pinTile)) {
-                return false;
-              }
-              continue;
-            }
-            // Strict no via-in-pad: any overlap with other pins (decoupling caps, adjacent balls)
-            // is rejected
+          if (obs instanceof Pin) {
             return false;
           } else if (obs instanceof Item it && !it.isDrillable(netNo)) {
             return false;

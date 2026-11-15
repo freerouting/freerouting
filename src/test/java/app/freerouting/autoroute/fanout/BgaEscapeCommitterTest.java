@@ -1,6 +1,7 @@
 package app.freerouting.autoroute.fanout;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -25,6 +26,7 @@ import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
+import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.geometry.planar.TileShape;
@@ -313,5 +315,96 @@ class BgaEscapeCommitterTest {
     assertNotNull(summary2);
     assertEquals(tracesAfter, board.getTraces().size(), "No duplicate traces should be created");
     assertEquals(viasAfter, board.getViaCount(), "No duplicate vias should be created");
+  }
+
+  @Test
+  void testStrictViaInPadRejectionOnBallAndSameNetPassive() {
+    RoutingBoard board = createTestBoard();
+    Padstack pad =
+        board.library.padstacks.add(new ConvexShape[] {new Circle(Point.ZERO, 150), null});
+
+    Package.Pin bgaPin = new Package.Pin("BGA_1", pad.id, FloatPoint.ZERO, 0);
+    Package bgaPkg = board.library.packages.add(new Package.Pin[] {bgaPin});
+    Component bgaComp =
+        board.components.addPrecise(
+            "U1", new FloatPoint(50000, 50000), 0.0, true, bgaPkg, bgaPkg, false, null);
+    Pin pin = board.insertPin(bgaComp.id, 0, new int[] {1}, 1, FixedState.UNFIXED);
+
+    // Place a same-net decoupling capacitor pad on layer 1 (Bottom layer) at (50500, 50500)
+    Padstack bottomPad =
+        board.library.padstacks.add(new ConvexShape[] {null, new Circle(Point.ZERO, 150)});
+    Package.Pin capPin = new Package.Pin("C1_1", bottomPad.id, FloatPoint.ZERO, 0);
+    Package capPkg = board.library.packages.add(new Package.Pin[] {capPin});
+    Component capComp =
+        board.components.addPrecise(
+            "C1", new FloatPoint(50500, 50500), 0.0, true, capPkg, capPkg, false, null);
+    board.insertPin(capComp.id, 0, new int[] {1}, 1, FixedState.USER_FIXED);
+
+    Padstack viaPadstack = board.rules.viaInfos.get(0).getPadstack();
+
+    // 1. Via positioned directly over the BGA ball pad itself (50000, 50000) -> must be rejected
+    boolean clearOverBall =
+        BgaEscapeCommitter.checkViaClearance(
+            board, viaPadstack, new IntPoint(50000, 50000), pin, 1, new int[] {1}, 0);
+    assertFalse(clearOverBall, "Via directly on ball pad must be rejected as via-in-pad");
+
+    // 2. Via directly over same-net passive pad on Bottom layer (50500, 50500) -> must be rejected
+    boolean clearOverCap =
+        BgaEscapeCommitter.checkViaClearance(
+            board, viaPadstack, new IntPoint(50500, 50500), pin, 1, new int[] {1}, 0);
+    assertFalse(clearOverCap, "Via on same-net decoupling cap must be rejected as via-in-pad");
+
+    // 3. Via placed in interstitial site with clear spacing (52000, 52000) -> must be accepted
+    boolean clearInterstitial =
+        BgaEscapeCommitter.checkViaClearance(
+            board, viaPadstack, new IntPoint(52000, 52000), pin, 1, new int[] {1}, 0);
+    assertTrue(clearInterstitial, "Via in clear interstitial location should be accepted");
+  }
+
+  @Test
+  void testBgaWithNoConnectPinsSkippedWhenRoutablePinsEscaped() {
+    RoutingBoard board = createTestBoard();
+    int pitch = 1000;
+    Padstack pad =
+        board.library.padstacks.add(new ConvexShape[] {new Circle(Point.ZERO, 150), null});
+
+    List<Package.Pin> pkgPins = new ArrayList<>();
+    for (int r = 0; r < 8; r++) {
+      for (int c = 0; c < 8; c++) {
+        double lx = (c - 3.5) * pitch;
+        double ly = (r - 3.5) * pitch;
+        pkgPins.add(new Package.Pin("P" + (r * 8 + c), pad.id, new FloatPoint(lx, ly), 0));
+      }
+    }
+
+    Package pkg = board.library.packages.add(pkgPins.toArray(new Package.Pin[0]));
+    Component comp =
+        board.components.addPrecise(
+            "U1", new FloatPoint(50000, 50000), 0.0, true, pkg, pkg, false, null);
+
+    // Make first 4 pins No-Connect (netCount == 0), remaining 60 pins routable
+    for (int i = 0; i < 4; i++) {
+      board.insertPin(comp.id, i, new int[0], 0, FixedState.UNFIXED);
+    }
+    for (int i = 4; i < 64; i++) {
+      board.insertPin(comp.id, i, new int[] {i + 1}, 1, FixedState.UNFIXED);
+    }
+
+    RouterSettings settings = new RouterSettings();
+    settings.setFanoutEnabled(true);
+    settings.fanout.gpuMinBgaPins = 64;
+    settings.fanout.gpuAccelerationEnabled = true;
+
+    // First detection must find U1
+    List<BgaEscapeDescriptor> detected = BgaFootprintDetector.detect(board, settings);
+    assertEquals(1, detected.size());
+
+    // Fanout the board
+    app.freerouting.autoroute.pipeline.BatchFanout.fanoutBoard(board, settings, null);
+
+    // Second detection must skip U1 even though 4 NC pins have no contacts
+    List<BgaEscapeDescriptor> detectedAfter = BgaFootprintDetector.detect(board, settings);
+    assertEquals(
+        0, detectedAfter.size(), "BGA with NC pins must be skipped once routable pins are escaped");
   }
 }

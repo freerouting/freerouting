@@ -89,7 +89,7 @@ public final class BgaFootprintDetector {
 
       int unescapedCount = 0;
       for (Pin p : pins) {
-        if (p.getNormalContacts().isEmpty()) {
+        if (p.netCount() > 0 && !p.hasIgnoredNets() && p.getNormalContacts().isEmpty()) {
           unescapedCount++;
         }
       }
