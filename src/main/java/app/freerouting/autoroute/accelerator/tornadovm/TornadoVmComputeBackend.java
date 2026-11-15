@@ -9,6 +9,7 @@ import app.freerouting.autoroute.accelerator.GpuFallbackReason;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.FanoutSettings;
 import java.util.Locale;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import uk.ac.manchester.tornado.api.TornadoBackend;
 import uk.ac.manchester.tornado.api.common.TornadoDevice;
@@ -33,6 +34,11 @@ public final class TornadoVmComputeBackend implements ComputeBackend, BgaEscapeK
   /** Prefix of the {@code gpu_device_preference} values handled by this backend. */
   public static final String PREFERENCE_PREFIX = "tornadovm";
 
+  /** TornadoVM system property that limits which installed backends are started. */
+  public static final String ENABLED_BACKENDS_PROPERTY = "tornado.enabled.backends";
+
+  private static final Set<String> BACKEND_NAMES = Set.of("opencl", "cuda", "metal");
+
   private final TornadoDevice device;
   private final AcceleratorDeviceInfo deviceInfo;
 
@@ -55,13 +61,22 @@ public final class TornadoVmComputeBackend implements ComputeBackend, BgaEscapeK
   }
 
   private static TornadoDevice selectDevice(String preference) {
+    String spec = (preference == null) ? "" : preference.trim().toLowerCase(Locale.ROOT);
+    spec = spec.startsWith(PREFERENCE_PREFIX) ? spec.substring(PREFERENCE_PREFIX.length()) : spec;
+    spec = spec.startsWith(":") ? spec.substring(1) : spec;
+
+    // TornadoVM starts a backend the first time it is looked up, and the lookup below has to go
+    // through the backends in order. When the preference names a backend, only that one is
+    // enabled, so the others (about 0.15 s each to start) are never started. An explicit
+    // -Dtornado.enabled.backends is left alone.
+    if (BACKEND_NAMES.contains(spec) && System.getProperty(ENABLED_BACKENDS_PROPERTY) == null) {
+      System.setProperty(ENABLED_BACKENDS_PROPERTY, spec);
+    }
+
     var runtime = TornadoRuntimeProvider.getTornadoRuntime();
     if (runtime.getNumBackends() == 0) {
       return null;
     }
-    String spec = (preference == null) ? "" : preference.trim().toLowerCase(Locale.ROOT);
-    spec = spec.startsWith(PREFERENCE_PREFIX) ? spec.substring(PREFERENCE_PREFIX.length()) : spec;
-    spec = spec.startsWith(":") ? spec.substring(1) : spec;
     if (spec.isEmpty()) {
       return runtime.getDefaultDevice();
     }
@@ -81,8 +96,8 @@ public final class TornadoVmComputeBackend implements ComputeBackend, BgaEscapeK
 
     for (int b = 0; b < runtime.getNumBackends(); b++) {
       TornadoBackend backend = runtime.getBackend(b);
-      if (backend.getNumDevices() > 0
-          && backend.getBackendType().name().toLowerCase(Locale.ROOT).equals(spec)) {
+      if (backend.getBackendType().name().toLowerCase(Locale.ROOT).equals(spec)
+          && backend.getNumDevices() > 0) {
         return backend.getDevice(0);
       }
     }

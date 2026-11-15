@@ -30,6 +30,14 @@ import org.junit.jupiter.params.provider.ValueSource;
  */
 class TornadoVmBgaEscapeParityTest {
 
+  static {
+    // The backend only enables the TornadoVM backend named in the preference. This test compares
+    // all of them in one JVM, so it enables every one before TornadoVM starts.
+    if (System.getProperty(TornadoVmComputeBackend.ENABLED_BACKENDS_PROPERTY) == null) {
+      System.setProperty(TornadoVmComputeBackend.ENABLED_BACKENDS_PROPERTY, "opencl,cuda,metal");
+    }
+  }
+
   @AfterEach
   void resetRegistry() {
     AcceleratorRegistry.reset();
