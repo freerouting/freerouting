@@ -69,6 +69,20 @@ final class AutorouteConnectionRouter {
     }
   }
 
+  /**
+   * Returns the items of {@code items} that are not fractured conduction areas, or {@code items}
+   * itself when nothing else is left.
+   */
+  static Set<Item> withoutFracturedAreas(Set<Item> items) {
+    Set<Item> filtered = new TreeSet<>();
+    for (Item it : items) {
+      if (!(it instanceof ConductionArea ca && ca.isFractured())) {
+        filtered.add(it);
+      }
+    }
+    return filtered.isEmpty() ? items : filtered;
+  }
+
   private Set<Item> planeEscapeObstacles(
       Item item, int netNo, Set<Item> connectedSet, Set<Item> destinations) {
     if (!(item instanceof Pin pin)
@@ -166,28 +180,16 @@ final class AutorouteConnectionRouter {
             planeEscapeObstacles = planeEscapeObstacles(item, routeNetNo, connectedSet, planes);
           }
         }
-        Set<Item> filteredStartSet = new TreeSet<>();
-        for (Item it : routeStartSet) {
-          if (!(it instanceof ConductionArea ca && ca.isFractured())) {
-            filteredStartSet.add(it);
-          }
-        }
-        if (!filteredStartSet.isEmpty()) {
-          routeStartSet = filteredStartSet;
-        }
-        Set<Item> filteredDestSet = new TreeSet<>();
-        for (Item it : routeDestSet) {
-          if (!(it instanceof ConductionArea ca && ca.isFractured())) {
-            filteredDestSet.add(it);
-          }
-        }
-        if (!filteredDestSet.isEmpty()) {
-          routeDestSet = filteredDestSet;
-        }
       } else {
         routeStartSet = unconnectedSet;
         routeDestSet = connectedSet;
       }
+      // A fractured area belongs to the connected set through one island only, but its shape still
+      // spans the others. As a start or destination it would let the search end on an island the
+      // net does not reach, without a connection being made. This holds for any net that owns a
+      // conduction area, not only for nets routed as planes.
+      routeStartSet = withoutFracturedAreas(routeStartSet);
+      routeDestSet = withoutFracturedAreas(routeDestSet);
       router.setAirLine(AutorouteAirlineCalculator.calculateAirline(routeStartSet, routeDestSet));
 
       double maxMilliseconds = 100000 * Math.pow(2, ripupPassNo - 1);
