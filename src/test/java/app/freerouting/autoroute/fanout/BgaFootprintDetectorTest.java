@@ -298,4 +298,43 @@ class BgaFootprintDetectorTest {
       }
     }
   }
+
+  @Test
+  void testSmallBgaWlcspDetection() {
+    RoutingBoard board = createTestBoard();
+
+    // 4x4 = 16 balls on 500 um pitch (typical small WLCSP / IoT micro-BGA)
+    int pitch = 500;
+    Padstack pad =
+        board.library.padstacks.add(new ConvexShape[] {new Circle(Point.ZERO, 100), null});
+
+    List<Package.Pin> pkgPins = new ArrayList<>();
+    for (int r = 0; r < 4; r++) {
+      for (int c = 0; c < 4; c++) {
+        double lx = (c - 1.5) * pitch;
+        double ly = (r - 1.5) * pitch;
+        pkgPins.add(new Package.Pin("P" + (r * 4 + c), pad.id, new FloatPoint(lx, ly), 0));
+      }
+    }
+
+    Package pkg = board.library.packages.add(pkgPins.toArray(new Package.Pin[0]));
+    Component comp =
+        board.components.addPrecise(
+            "U_WLCSP16", new FloatPoint(50000, 50000), 0.0, true, pkg, pkg, false, null);
+
+    for (int i = 0; i < 16; i++) {
+      board.insertPin(comp.id, i, new int[] {1}, 1, FixedState.UNFIXED);
+    }
+
+    RouterSettings settings = new RouterSettings();
+    settings.fanout.gpuMinBgaPins = 9;
+
+    List<BgaEscapeDescriptor> detected = BgaFootprintDetector.detect(board, settings, null);
+    assertEquals(1, detected.size(), "Small 16-pin 4x4 WLCSP must be detected as BGA");
+    BgaEscapeDescriptor desc = detected.get(0);
+    assertEquals(16, desc.pins().size());
+    assertEquals(LatticeClass.ORTHOGONAL_GRID, desc.latticeClass());
+    assertTrue(Math.abs(desc.pitchBoardUnits() - pitch) < 5.0, "Pitch should match 500 um");
+    assertEquals(1, desc.maxRing(), "4x4 BGA has ring 0 (perimeter) and ring 1 (interior)");
+  }
 }

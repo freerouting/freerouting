@@ -248,7 +248,7 @@ public class DefaultSettings implements SettingsSource {
     settings.fanout.twoLayerBga = "no_fanout";
     settings.fanout.gpuAccelerationEnabled = true;
     settings.fanout.gpuDevicePreference = "auto";
-    settings.fanout.gpuMinBgaPins = 64;
+    settings.fanout.gpuMinBgaPins = 9;
     settings.fanout.gpuMaxVramMb = 256;
     settings.fanout.gpuKernelTimeoutMs = 2000;
 

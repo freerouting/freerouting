@@ -60,9 +60,9 @@ public final class BgaFootprintDetector {
       return Collections.emptyList();
     }
 
-    int minPins = 64;
+    int minPins = 9;
     if (settings != null && settings.fanout != null && settings.fanout.gpuMinBgaPins != null) {
-      minPins = Math.max(16, settings.fanout.gpuMinBgaPins);
+      minPins = Math.max(9, settings.fanout.gpuMinBgaPins);
     }
 
     // Group board SMD pins by component

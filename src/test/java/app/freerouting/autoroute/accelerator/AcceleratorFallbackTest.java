@@ -65,7 +65,7 @@ class AcceleratorFallbackTest {
 
   @Test
   void settingsMergerCliOverridePrecedence() {
-    // Priority 0: DefaultSettings has gpuMinBgaPins = 64
+    // Priority 0: DefaultSettings has gpuMinBgaPins = 9
     // Priority 60: CliSettings overrides with --router.fanout.gpu_min_bga_pins=128
     String[] cliArgs =
         new String[] {
