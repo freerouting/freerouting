@@ -8,6 +8,7 @@ import app.freerouting.board.model.items.ObstacleArea;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.searchtree.ShapeSearchTree;
+import app.freerouting.datastructures.ShapeTree;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.FloatLine;
@@ -27,10 +28,15 @@ import app.freerouting.util.TextManager;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.TreeSet;
 
 /** Class describing a board outline. */
 public class BoardOutline extends Item implements Serializable {
@@ -144,27 +150,7 @@ public class BoardOutline extends Item implements Serializable {
       Set<Integer> set = new HashSet<>();
       if (this.board != null) {
         for (Pin pin : this.board.getPins()) {
-          Point center = pin.getCenter();
-          boolean isEdgeOrOutside = false;
-          if (center != null && !this.contains(center)) {
-            isEdgeOrOutside = true;
-          } else {
-            for (int layer = pin.firstLayer(); layer <= pin.lastLayer(); layer++) {
-              Shape shape = pin.getShape(layer - pin.firstLayer());
-              if (shape instanceof TileShape tileShape) {
-                for (int c = 0; c < tileShape.borderLineCount(); c++) {
-                  if (!this.contains(tileShape.corner(c))) {
-                    isEdgeOrOutside = true;
-                    break;
-                  }
-                }
-              }
-              if (isEdgeOrOutside) {
-                break;
-              }
-            }
-          }
-          if (isEdgeOrOutside) {
+          if (this.isEdgePin(pin)) {
             for (int net : pin.netNumbers) {
               set.add(net);
             }
@@ -251,16 +237,101 @@ public class BoardOutline extends Item implements Serializable {
 
   /**
    * Erik Gavriluk (freerouting.net): whether a net with a pin on or beyond the outline (such as an
-   * edge connector's fingers) may route across the outline everywhere on the board. Default true
-   * for Specctra/DSN compatibility; can be set false when edge pins must not exempt other traces of
-   * that net from respecting edge clearance.
+   * edge connector's fingers) may route across the outline everywhere on the board.
+   *
+   * <p>Default false: only the stretch of the outline next to an edge pin is exempt, for the nets
+   * of that pin (see {@link #isTraceObstacle(int, int)}), so that a trace can reach the pin. Every
+   * other trace and via, including those of the edge pin's net, keeps its clearance to the outline,
+   * as KiCad's DRC ({@code copper_edge_clearance}) requires. Set true to restore the earlier
+   * net-wide exemption. With {@link #keepoutOutsideOutlineGenerated} the net-wide exemption is
+   * kept, since the keepout tiles are not cut around the edge pins.
    */
-  public boolean edgePinNetsCrossOutline = true;
+  public boolean edgePinNetsCrossOutline = false;
+
+  /**
+   * The stretch of the outline next to one edge pin on one layer: the pin's bounding box, widened
+   * by the clearance and the trace half width of the pin's nets. The outline lines are cut at its
+   * borders, and the pieces inside it do not block traces of these nets on this layer.
+   */
+  private record EdgeWindow(IntBox box, int layer, int[] nets) {}
+
+  /** Edge pin windows the line pieces were cut with; derived with lineSlices, rebuilt on demand. */
+  private transient EdgeWindow[] edgeWindows;
+
+  /**
+   * Per outline line, the coordinates its tree shapes are cut at along {@link #lineCutAlongX}, or
+   * null if no edge window touches the line (the line is then cut by {@link
+   * TileShape#splitIntoSlices}). Rebuilt with lineSlices.
+   */
+  private transient int[][] lineCuts;
+
+  private transient boolean[] lineCutAlongX;
+
+  /** Per line piece of one layer, the indices of the edge windows that contain it. */
+  private transient int[][] pieceWindows;
 
   @Override
   public boolean isTraceObstacle(int netNumber) {
-    if (edgePinNetsCrossOutline && netNumber > 0 && getEdgePinNets().contains(netNumber)) {
+    if ((edgePinNetsCrossOutline || keepoutOutsideOutline)
+        && netNumber > 0
+        && getEdgePinNets().contains(netNumber)) {
       return false;
+    }
+    return true;
+  }
+
+  /**
+   * Like {@link #isTraceObstacle(int)}, but a tree shape of the outline line next to an edge pin of
+   * the net (inside its {@link EdgeWindow}, on the pin's layer) is no obstacle to the net's traces.
+   */
+  @Override
+  public boolean isTraceObstacle(int netNumber, int shapeIndex) {
+    if (!isTraceObstacle(netNumber)) {
+      return false;
+    }
+    return !exemptsPiece(shapeIndex, netNumber);
+  }
+
+  /** Whether the tree shape with the given index lies next to an edge pin of the given net. */
+  private boolean exemptsPiece(int shapeIndex, int netNumber) {
+    if (netNumber <= 0 || this.keepoutOutsideOutline || this.board == null) {
+      return false;
+    }
+    int perLayer = this.lineSliceCount();
+    if (perLayer <= 0 || shapeIndex < 0 || this.pieceWindows == null) {
+      return false;
+    }
+    int layer = shapeIndex / perLayer;
+    int[] windows = this.pieceWindows[shapeIndex % perLayer];
+    if (windows == null) {
+      return false;
+    }
+    for (int w : windows) {
+      EdgeWindow window = this.edgeWindows[w];
+      if (window.layer() != layer) {
+        continue;
+      }
+      for (int net : window.nets()) {
+        if (net == netNumber) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Whether the tree shape with the given index is exempt for a trace with all the given nets, so
+   * that the clearance check accepts what the router was allowed to do.
+   */
+  public boolean exemptsTrace(int shapeIndex, int[] netNumbers) {
+    if (netNumbers == null || netNumbers.length == 0) {
+      return false;
+    }
+    for (int net : netNumbers) {
+      if (isTraceObstacle(net, shapeIndex)) {
+        return false;
+      }
     }
     return true;
   }
@@ -279,6 +350,39 @@ public class BoardOutline extends Item implements Serializable {
       }
     }
     return false;
+  }
+
+  /**
+   * Like {@link #blocksNets}, for a trace of the given nets whose shape overlaps this outline on
+   * the given layer: false if every tree shape of this outline that the trace shape reaches, with
+   * its clearance, lies next to an edge pin of these nets. Used by the shove and insertion checks,
+   * which see the outline as one item.
+   */
+  public boolean blocksTraceAt(
+      TileShape traceShape, int layer, int[] netNumbers, int clearanceClassIndex) {
+    if (!blocksNets(netNumbers)) {
+      return false;
+    }
+    if (this.board == null || this.lineSliceCount() <= 0 || this.pieceWindows == null) {
+      return true;
+    }
+    Collection<ShapeTree.TreeEntry> entries = new ArrayList<>();
+    this.board
+        .searchTreeManager
+        .getDefaultTree()
+        .overlappingTreeEntriesWithClearance(
+            traceShape, layer, new int[0], clearanceClassIndex, entries);
+    boolean reached = false;
+    for (ShapeTree.TreeEntry entry : entries) {
+      if (entry.object != this) {
+        continue;
+      }
+      reached = true;
+      if (!exemptsTrace(entry.shapeIndexInObject, netNumbers)) {
+        return true;
+      }
+    }
+    return !reached;
   }
 
   @Override
@@ -329,6 +433,7 @@ public class BoardOutline extends Item implements Serializable {
     keepoutLines = null;
     keepoutTiles = null;
     lineSlices = null;
+    clearLineCuts();
     sliceTolerance = 0;
     invalidateEdgePinNets();
   }
@@ -346,6 +451,7 @@ public class BoardOutline extends Item implements Serializable {
     keepoutLines = null;
     keepoutTiles = null;
     lineSlices = null;
+    clearLineCuts();
     sliceTolerance = 0;
     invalidateEdgePinNets();
   }
@@ -364,6 +470,7 @@ public class BoardOutline extends Item implements Serializable {
     keepoutLines = null;
     keepoutTiles = null;
     lineSlices = null;
+    clearLineCuts();
     sliceTolerance = 0;
     invalidateEdgePinNets();
   }
@@ -381,6 +488,7 @@ public class BoardOutline extends Item implements Serializable {
     keepoutLines = null;
     keepoutTiles = null;
     lineSlices = null;
+    clearLineCuts();
     sliceTolerance = 0;
     invalidateEdgePinNets();
   }
@@ -537,9 +645,189 @@ public class BoardOutline extends Item implements Serializable {
         double excess = this.lineShape(i, HALF_WIDTH).boundingOctagonExcess();
         slices[i] = (int) Math.min(MAX_LINE_SLICES, Math.max(1, Math.ceil(excess / tolerance)));
       }
+      this.cutAtEdgeWindows(slices, this.computeEdgeWindows());
       this.lineSlices = slices;
     }
     return this.lineSlices[lineIndex];
+  }
+
+  /** Forgets the cuts at the edge windows; they are made again with the line slices. */
+  private void clearLineCuts() {
+    this.edgeWindows = null;
+    this.lineCuts = null;
+    this.lineCutAlongX = null;
+    this.pieceWindows = null;
+    this.lineSliceTotal = -1;
+  }
+
+  private transient int lineSliceTotal = -1;
+
+  /**
+   * Cuts every outline line that an edge window touches at the window borders, and at the borders
+   * of its equal slices, and records which pieces lie inside which windows. Updates slices to the
+   * new piece counts.
+   */
+  private void cutAtEdgeWindows(int[] slices, EdgeWindow[] windows) {
+    this.edgeWindows = windows;
+    this.lineCuts = new int[slices.length][];
+    this.lineCutAlongX = new boolean[slices.length];
+    if (windows.length == 0) {
+      this.pieceWindows = null;
+      return;
+    }
+    List<int[]> pieces = new ArrayList<>();
+    for (int i = 0; i < slices.length; i++) {
+      TileShape base = this.lineShape(i, HALF_WIDTH);
+      IntBox box = base.boundingBox();
+      boolean alongX = box.width() >= box.height();
+      int low = alongX ? box.ll.x : box.ll.y;
+      int high = alongX ? box.ur.x : box.ur.y;
+      TreeSet<Integer> cuts = new TreeSet<>();
+      for (EdgeWindow window : windows) {
+        if (!window.box().intersects(box)
+            || base.intersectionWithSimplify(window.box()).dimension() < 2) {
+          continue;
+        }
+        cuts.add(alongX ? window.box().ll.x : window.box().ll.y);
+        cuts.add(alongX ? window.box().ur.x : window.box().ur.y);
+      }
+      cuts.removeIf(c -> c <= low || c >= high);
+      if (cuts.isEmpty()) {
+        for (int k = 0; k < slices[i]; k++) {
+          pieces.add(null);
+        }
+        continue;
+      }
+      long extent = (long) high - low;
+      for (int k = 1; k < slices[i]; k++) {
+        cuts.add((int) (low + extent * k / slices[i]));
+      }
+      int[] cutArray = cuts.stream().mapToInt(Integer::intValue).toArray();
+      this.lineCuts[i] = cutArray;
+      this.lineCutAlongX[i] = alongX;
+      slices[i] = cutArray.length + 1;
+      for (int k = 0; k <= cutArray.length; k++) {
+        int from = k == 0 ? low : cutArray[k - 1];
+        int to = k == cutArray.length ? high : cutArray[k];
+        IntBox slab =
+            alongX
+                ? new IntBox(from, box.ll.y, to, box.ur.y)
+                : new IntBox(box.ll.x, from, box.ur.x, to);
+        TileShape piece = base.intersectionWithSimplify(slab);
+        List<Integer> inside = new ArrayList<>();
+        if (piece != null && !piece.isEmpty() && piece.dimension() >= 2) {
+          IntBox pieceBox = piece.boundingBox();
+          for (int w = 0; w < windows.length; w++) {
+            if (windows[w].box().contains(pieceBox)) {
+              inside.add(w);
+            }
+          }
+        }
+        pieces.add(inside.isEmpty() ? null : inside.stream().mapToInt(Integer::intValue).toArray());
+      }
+    }
+    this.pieceWindows = pieces.toArray(new int[0][]);
+  }
+
+  /**
+   * Returns the tree shapes of the outline line with the given index, cut from lineShape, the line
+   * widened for one search tree. A line next to an edge pin is cut at the borders of the pin's
+   * window, and each piece reaches beyond its cuts by the widening, so that the pieces outside the
+   * window keep their clearance into it. Other lines are cut by {@link TileShape#splitIntoSlices}.
+   * Returns exactly {@link #lineSlices} shapes.
+   */
+  public TileShape[] splitLine(int lineIndex, TileShape lineShape, int widening) {
+    int count = this.lineSlices(lineIndex);
+    int[] cuts = this.lineCuts == null ? null : this.lineCuts[lineIndex];
+    if (cuts == null) {
+      return lineShape.splitIntoSlices(count);
+    }
+    boolean alongX = this.lineCutAlongX[lineIndex];
+    IntBox box = lineShape.boundingBox();
+    int low = alongX ? box.ll.x : box.ll.y;
+    int high = alongX ? box.ur.x : box.ur.y;
+    TileShape[] result = new TileShape[count];
+    for (int k = 0; k < count; k++) {
+      int from = k == 0 ? low : Math.max(low, cuts[k - 1] - widening);
+      int to = k == cuts.length ? high : Math.min(high, cuts[k] + widening);
+      IntBox slab =
+          alongX
+              ? new IntBox(from, box.ll.y, to, box.ur.y)
+              : new IntBox(box.ll.x, from, box.ur.x, to);
+      TileShape piece = to > from ? lineShape.intersectionWithSimplify(slab) : null;
+      result[k] = piece == null || piece.isEmpty() || piece.dimension() < 2 ? lineShape : piece;
+    }
+    return result;
+  }
+
+  /**
+   * The windows next to the edge pins: per pin that touches or crosses the outline and per layer of
+   * the pin, its bounding box widened by the clearance to the outline and the trace half width of
+   * its nets. Empty with {@link #keepoutOutsideOutlineGenerated}.
+   */
+  private EdgeWindow[] computeEdgeWindows() {
+    if (this.board == null || this.keepoutOutsideOutline || this.board.rules == null) {
+      return new EdgeWindow[0];
+    }
+    List<EdgeWindow> result = new ArrayList<>();
+    for (Pin pin : this.board.getPins()) {
+      int[] nets = Arrays.stream(pin.netNumbers).filter(n -> n > 0).toArray();
+      if (nets.length == 0 || !this.isEdgePin(pin)) {
+        continue;
+      }
+      for (int layer = pin.firstLayer(); layer <= pin.lastLayer(); layer++) {
+        Shape shape = pin.getShape(layer - pin.firstLayer());
+        if (shape == null || shape.isEmpty() || !shape.isBounded()) {
+          continue;
+        }
+        int margin = 0;
+        for (int net : nets) {
+          int traceClass = this.board.rules.nets.get(net).getNetClass().getTraceClearanceClass();
+          int clearance =
+              this.board.rules.clearanceMatrix.getValue(
+                  this.clearanceClassIndex(), traceClass, layer, false);
+          margin =
+              Math.max(
+                  margin, clearance + this.board.rules.getTraceHalfWidth(net, layer) + HALF_WIDTH);
+        }
+        result.add(new EdgeWindow(shape.boundingBox().offset(margin), layer, nets));
+      }
+    }
+    return result.toArray(new EdgeWindow[0]);
+  }
+
+  /** Whether the copper of the pin touches or crosses the outline. */
+  public boolean isEdgePin(Pin pin) {
+    Point center = pin.getCenter();
+    if (center != null && !this.contains(center)) {
+      return true;
+    }
+    for (int layer = pin.firstLayer(); layer <= pin.lastLayer(); layer++) {
+      Shape shape = pin.getShape(layer - pin.firstLayer());
+      if (shape instanceof TileShape tileShape) {
+        for (int c = 0; c < tileShape.borderLineCount(); c++) {
+          if (!this.contains(tileShape.corner(c))) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  private static boolean sameWindows(EdgeWindow[] a, EdgeWindow[] b) {
+    if (a == null || b == null || a.length != b.length) {
+      return a == b;
+    }
+    for (int i = 0; i < a.length; i++) {
+      if (a[i].layer() != b[i].layer()
+          || !a[i].box().ll.equals(b[i].box().ll)
+          || !a[i].box().ur.equals(b[i].box().ur)
+          || !Arrays.equals(a[i].nets(), b[i].nets())) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /** The tolerance of the current slices, chosen from the trace widths when they are first cut. */
@@ -564,7 +852,11 @@ public class BoardOutline extends Item implements Serializable {
    * #shapeLayer} derives the layer of a tree shape from it.
    */
   public void updateSlicesToTraceWidths() {
-    if (this.sliceTolerance == 0 || this.sliceTolerance == currentSliceTolerance()) {
+    if (this.lineSlices == null || this.sliceTolerance == 0) {
+      return;
+    }
+    if (this.sliceTolerance == currentSliceTolerance()
+        && sameWindows(this.edgeWindows, this.computeEdgeWindows())) {
       return;
     }
     boolean inTrees = this.isOnTheBoard() && this.board.searchTreeManager != null;
@@ -574,6 +866,7 @@ public class BoardOutline extends Item implements Serializable {
     }
     this.keepoutTiles = null;
     this.lineSlices = null;
+    clearLineCuts();
     this.sliceTolerance = 0;
     this.clearDerivedData();
     if (inTrees) {
@@ -584,11 +877,14 @@ public class BoardOutline extends Item implements Serializable {
 
   /** Returns the number of line slices of all outline polygons on one layer. */
   public int lineSliceCount() {
-    int result = 0;
-    for (int i = 0; i < this.lineCount(); i++) {
-      result += this.lineSlices(i);
+    if (this.lineSlices == null || this.lineSliceTotal < 0) {
+      int result = 0;
+      for (int i = 0; i < this.lineCount(); i++) {
+        result += this.lineSlices(i);
+      }
+      this.lineSliceTotal = result;
     }
-    return result;
+    return this.lineSliceTotal;
   }
 
   /** Returns the half width of the lines of this outline. */

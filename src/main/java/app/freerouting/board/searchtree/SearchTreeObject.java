@@ -11,6 +11,14 @@ public interface SearchTreeObject extends ShapeTree.Storable {
   /** Returns true if this object is an obstacle to traces containing the net number netNumber. */
   boolean isTraceObstacle(int netNumber);
 
+  /**
+   * Returns true if the tree shape with index shapeIndex of this object is an obstacle to traces
+   * containing the net number netNumber. By default the same for all shapes of the object.
+   */
+  default boolean isTraceObstacle(int netNumber, int shapeIndex) {
+    return isTraceObstacle(netNumber);
+  }
+
   /** Returns for this object the layer of the shape with index index. */
   int shapeLayer(int index);
 

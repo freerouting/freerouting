@@ -206,7 +206,11 @@ public class ShapeTraceEntries {
       if (currentItem instanceof ConductionArea area && (containsOwnNet || !area.getIsObstacle())) {
         continue;
       }
-      if (currentItem instanceof BoardOutline outline && !outline.blocksNets(this.ownNetNos)) {
+      if (currentItem instanceof BoardOutline outline
+          && !(isPadCheck
+              ? outline.blocksNets(this.ownNetNos)
+              : outline.blocksTraceAt(
+                  this.shape, this.layer, this.ownNetNos, this.clearanceClassIndex))) {
         continue;
       }
       if (currentItem.isShoveFixed() && !containsOwnNet) {

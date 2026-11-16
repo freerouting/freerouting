@@ -270,6 +270,7 @@ public final class ExitStubs {
       }
       for (int i = 0; i < item.tileShapeCount(); i++) {
         if (item.shapeLayer(i) == layer
+            && item.isTraceObstacle(net, i)
             && item.getTileShape(i) != null
             && !item.getTileShape(i).isEmpty()
             && segmentDistance(at, at, item.getTileShape(i)) <= needed + reach) {
@@ -1274,6 +1275,7 @@ public final class ExitStubs {
       int required = ruleClearance(board, traceClass, item, layer, allowance);
       for (int i = 0; i < item.tileShapeCount(); i++) {
         if (item.shapeLayer(i) != layer
+            || !item.isTraceObstacle(net, i)
             || item.getTileShape(i) == null
             || item.getTileShape(i).isEmpty()) {
           continue;

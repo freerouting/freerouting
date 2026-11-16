@@ -1272,7 +1272,7 @@ public class ShapeSearchTree extends MinAreaTree {
     for (Leaf currentLeaf : overlappingLeaves) {
       SearchTreeObject currentObject = (SearchTreeObject) currentLeaf.object;
       int shapeIndex = currentLeaf.shapeIndexInObject;
-      if (currentObject.isTraceObstacle(netNumber)
+      if (currentObject.isTraceObstacle(netNumber, shapeIndex)
           && currentObject.shapeLayer(shapeIndex) == roomLayer
           && currentObject != ignoreObject) {
 
@@ -1637,7 +1637,8 @@ public class ShapeSearchTree extends MinAreaTree {
             this.clearanceCompensationValue(boardOutline.clearanceClassIndex(), layerIndex);
         for (int lineIndex = 0; lineIndex < lineCount; lineIndex++) {
           TileShape lineShape = boardOutline.lineShape(lineIndex, halfWidth + cmpValue);
-          for (TileShape slice : lineShape.splitIntoSlices(boardOutline.lineSlices(lineIndex))) {
+          for (TileShape slice :
+              boardOutline.splitLine(lineIndex, lineShape, halfWidth + cmpValue)) {
             result[currentNo] = slice;
             ++currentNo;
           }
