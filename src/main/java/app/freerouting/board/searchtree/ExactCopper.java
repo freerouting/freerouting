@@ -1,18 +1,19 @@
 package app.freerouting.board.searchtree;
 
+import app.freerouting.core.library.PadOval;
 import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Shape;
 import app.freerouting.geometry.planar.TileShape;
 
 /**
- * Copper as a convex core grown by a radius. A circle is its centre grown by its radius; a pad
- * polygon or a trace tile is its polygon grown by nothing (or by a tree's clearance compensation
- * and a drill's hole envelope). The search trees keep copper as a bounding tile, an octagon on a
- * 45-degree board, which reaches past a circle at 22.5 degrees by 8% of its radius and past a
- * turned pad's slanted edges by up to tan(22.5 degrees) of half the edge. The clearance query keeps
- * the tiles as its fast test and measures this shape where they overlap, so a legal position is not
- * refused because of the tile.
+ * Copper as a convex core grown by a radius. A circle is its centre grown by its radius, an oval
+ * pad its centre line grown by its half width; a pad polygon or a trace tile is its polygon grown
+ * by nothing (or by a tree's clearance compensation and a drill's hole envelope). The search trees
+ * keep copper as a bounding tile, an octagon on a 45-degree board, which reaches past a circle at
+ * 22.5 degrees by 8% of its radius and past a turned pad's slanted edges by up to tan(22.5 degrees)
+ * of half the edge. The clearance query keeps the tiles as its fast test and measures this shape
+ * where they overlap, so a legal position is not refused because of the tile.
  */
 public final class ExactCopper {
 
@@ -25,6 +26,14 @@ public final class ExactCopper {
     this.polygon = polygon;
     this.corners = polygon != null ? polygon.cornerApproxArr() : null;
     this.centre = centre;
+    this.radius = radius;
+  }
+
+  /** A segment grown by a radius: the copper of an oval pad. */
+  private ExactCopper(FloatPoint[] segment, double radius) {
+    this.polygon = null;
+    this.corners = segment;
+    this.centre = segment[0];
     this.radius = radius;
   }
 
@@ -47,6 +56,17 @@ public final class ExactCopper {
     return null;
   }
 
+  /**
+   * The copper of a round or oval pad, every point within its radius of its centre line, grown by
+   * {@code grow}. The pad's board shape is a polygon around it, which reaches past the round ends.
+   */
+  public static ExactCopper ofOval(PadOval oval, double grow) {
+    if (oval.start().x == oval.end().x && oval.start().y == oval.end().y) {
+      return new ExactCopper(null, oval.start(), oval.radius() + grow);
+    }
+    return new ExactCopper(new FloatPoint[] {oval.start(), oval.end()}, oval.radius() + grow);
+  }
+
   /** The distance between the copper of {@code a} and {@code b}, 0 where they overlap. */
   public static double distance(ExactCopper a, ExactCopper b) {
     double core;
@@ -56,10 +76,54 @@ public final class ExactCopper {
       core = pointDistance(b.corners, a.centre);
     } else if (b.corners == null) {
       core = pointDistance(a.corners, b.centre);
-    } else {
+    } else if (a.polygon != null && b.polygon != null) {
       core = polygonDistance(a, b);
+    } else {
+      core = segmentDistance(a, b);
     }
     return Math.max(0, core - a.radius - b.radius);
+  }
+
+  /**
+   * The distance between two cores, one of them at least a segment: 0 where they cross, else the
+   * smallest distance from a corner of one to the other, where the distance between two convex sets
+   * that do not meet is reached.
+   */
+  private static double segmentDistance(ExactCopper a, ExactCopper b) {
+    ExactCopper segment = a.polygon == null ? a : b;
+    ExactCopper other = segment == a ? b : a;
+    FloatPoint start = segment.corners[0];
+    FloatPoint end = segment.corners[1];
+    int count = other.corners.length;
+    FloatPoint previous = other.corners[count - 1];
+    for (int i = 0; i < count; i++) {
+      FloatPoint current = other.corners[i];
+      if (segmentsCross(start, end, previous, current)) {
+        return 0;
+      }
+      previous = current;
+    }
+    double result = Double.MAX_VALUE;
+    for (FloatPoint corner : segment.corners) {
+      result = Math.min(result, pointDistance(other.corners, corner));
+    }
+    for (FloatPoint corner : other.corners) {
+      result = Math.min(result, pointDistance(segment.corners, corner));
+    }
+    return result;
+  }
+
+  /** Whether the segments p1-p2 and q1-q2 cross at a point inside both. */
+  private static boolean segmentsCross(FloatPoint p1, FloatPoint p2, FloatPoint q1, FloatPoint q2) {
+    double d1 = cross(q1, q2, p1);
+    double d2 = cross(q1, q2, p2);
+    double d3 = cross(p1, p2, q1);
+    double d4 = cross(p1, p2, q2);
+    return ((d1 > 0 && d2 < 0) || (d1 < 0 && d2 > 0)) && ((d3 > 0 && d4 < 0) || (d3 < 0 && d4 > 0));
+  }
+
+  private static double cross(FloatPoint from, FloatPoint to, FloatPoint point) {
+    return (to.x - from.x) * (point.y - from.y) - (to.y - from.y) * (point.x - from.x);
   }
 
   private static double polygonDistance(ExactCopper a, ExactCopper b) {

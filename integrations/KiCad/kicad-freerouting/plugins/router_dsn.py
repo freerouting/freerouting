@@ -145,6 +145,9 @@ class DsnRouter:
         # KiCad writes only the net class clearances into the DSN: hand Freerouting the custom
         # design rules of the board too, which it translates into clearance classes.
         design_rules = self._design_rules_file()
+        # Nor does it carry the minimum track width of the board: the project file has it, and
+        # Freerouting does not neck a trace down below it.
+        project = self._board_file_with_suffix(".kicad_pro")
 
         self.plugin.module_command = [
             str(self.plugin.java_path),
@@ -153,6 +156,7 @@ class DsnRouter:
             "-de",
             str(self.plugin.module_input),
             *([str(design_rules)] if design_rules else []),
+            *([str(project)] if project else []),
             "-do",
             str(self.plugin.module_output),
             "-host",
@@ -166,6 +170,10 @@ class DsnRouter:
 
     def _design_rules_file(self):
         """The ``.kicad_dru`` file of the board, or ``None`` if it has none."""
+        return self._board_file_with_suffix(".kicad_dru")
+
+    def _board_file_with_suffix(self, suffix):
+        """The file next to the board with this suffix, or ``None`` if there is none."""
         from pathlib import Path
 
         try:
@@ -174,8 +182,8 @@ class DsnRouter:
             return None
         if not board_file:
             return None
-        rules = Path(board_file).with_suffix(".kicad_dru")
-        return rules if rules.is_file() else None
+        candidate = Path(board_file).with_suffix(suffix)
+        return candidate if candidate.is_file() else None
 
     def run(self):
         """Run Freerouting and show a progress dialog.

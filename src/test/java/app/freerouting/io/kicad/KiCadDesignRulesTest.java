@@ -26,6 +26,47 @@ class KiCadDesignRulesTest {
   private static final String DRU = "Issue110-RelayModule.kicad_dru";
 
   @Test
+  void warnsAboutNamesThatMatchNothingInTheDesign() throws IOException {
+    KiCadDesignRules rules =
+        KiCadDesignRules.parse(
+            """
+            (version 1)
+            (rule "renamed_class" (condition "A.NetClass == 'HV'")
+              (constraint clearance (min 3mm)))
+            (rule "misspelt_net" (condition "A.NetName != 'GDN' && B.NetClass == 'HighVoltage'")
+              (constraint clearance (min 3mm)))
+            (rule "no_such_footprint"
+              (condition "A.memberOfFootprint('K9') || A.hasNetclass('Mains')")
+              (constraint clearance (min 3mm)))
+            (rule "all_exist"
+              (condition "A.NetClass == 'Default' && A.NetName == 'Net-(FU1-*' && 'GND' == B.NetName && A.memberOfFootprint('K*') && B.hasNetclass('HighVoltage')")
+              (constraint clearance (min 3mm)))
+            """,
+            "names.kicad_dru");
+    KiCadDesignRulesTranslator.Result result = KiCadDesignRulesTranslator.apply(loadBoard(), rules);
+
+    List<String> noMatch =
+        result.warnings().stream().filter(w -> w.contains("matches no net class")).toList();
+    assertEquals(
+        List.of(
+            "rule 'renamed_class': 'A.NetClass == 'HV''",
+            "rule 'misspelt_net': 'A.NetName != 'GDN''",
+            "rule 'no_such_footprint': 'A.memberOfFootprint('K9')'",
+            "rule 'no_such_footprint': 'A.hasNetclass('Mains')'"),
+        noMatch.stream().map(w -> w.substring(0, w.indexOf(" matches no net class"))).toList());
+  }
+
+  @Test
+  void noNameWarningWhenEveryNameExists() throws IOException {
+    KiCadDesignRulesTranslator.Result result =
+        KiCadDesignRulesTranslator.apply(
+            loadBoard(), KiCadDesignRules.read(TestFixtures.resolvePath(DRU)));
+    assertTrue(
+        result.warnings().stream().noneMatch(w -> w.contains("matches no net class")),
+        result.warnings().toString());
+  }
+
+  @Test
   void readsRulesConstraintsAndUnits() {
     KiCadDesignRules rules =
         KiCadDesignRules.parse(
@@ -82,6 +123,40 @@ class KiCadDesignRulesTest {
     // pairs without a matching rule keep the clearance of the design
     BasicBoard original = loadBoard();
     assertEquals(traceValue(original, "GND", "+5V"), traceValue(board, "GND", "+5V"));
+  }
+
+  @Test
+  void libraryIdentifierIsTheImageNameWithoutTheVariantSuffix() throws IOException {
+    BasicBoard board = loadBoard();
+    // K2 is placed with the image "Реле:SRD-xxVDC-SL-C::1", a variant of K1's footprint
+    assertEquals("Реле:SRD-xxVDC-SL-C", libraryId(board, "K1"));
+    assertEquals("Реле:SRD-xxVDC-SL-C", libraryId(board, "K2"));
+    assertEquals("Diode_THT:D_DO-41_SOD81_P7.62mm_Horizontal", libraryId(board, "VD4"));
+  }
+
+  @Test
+  void footprintSelectorWithLibraryIdentifierSetsTheClearance() throws IOException {
+    BasicBoard board = loadBoard();
+    KiCadDesignRulesTranslator.apply(
+        board,
+        KiCadDesignRules.parse(
+            """
+            (version 1)
+            (rule "around_relays"
+              (condition "A.memberOfFootprint('Реле:SRD-*') && !B.memberOfFootprint('Реле:*')")
+              (constraint clearance (min 7mm)))
+            """,
+            "test.kicad_dru"));
+    ClearanceMatrix matrix = board.rules.clearanceMatrix;
+    // both relays, K2 through its variant image, keep 7 mm to the other footprints
+    assertEquals(mm(board, 7.0), value(matrix, pin(board, "K1", "1"), pin(board, "VD4", "1")));
+    assertEquals(mm(board, 7.0), value(matrix, pin(board, "K2", "1"), pin(board, "VD4", "1")));
+  }
+
+  private static String libraryId(BasicBoard board, String reference) {
+    var component = board.components.get(reference);
+    assertNotNull(component, reference);
+    return KiCadDesignRulesTranslator.libraryId(component);
   }
 
   private static BasicBoard loadBoard() throws IOException {

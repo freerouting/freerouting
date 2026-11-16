@@ -3,6 +3,7 @@ package app.freerouting.io.specctra.parser;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.structure.Unit;
 import app.freerouting.core.library.Packages;
+import app.freerouting.core.library.PadOval;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.core.library.Padstacks;
 import app.freerouting.geometry.planar.Area;
@@ -238,6 +239,8 @@ public class Library extends ScopeKeyword {
       layerPieces.add(new java.util.ArrayList<>());
     }
 
+    // The exact copper of round and oval pads, by the piece that bounds it.
+    java.util.Map<ConvexShape, PadOval> ovalOfPiece = new java.util.IdentityHashMap<>();
     for (Shape padShape : shapeList) {
       app.freerouting.geometry.planar.Shape currentShape =
           padShape.transformToBoardRel(coordinateTransform);
@@ -245,6 +248,12 @@ public class Library extends ScopeKeyword {
 
       if (currentShape instanceof ConvexShape shape1) {
         pieces.add(shape1);
+        if (padShape instanceof PolygonPath path) {
+          PadOval oval = path.padOvalRel(coordinateTransform);
+          if (oval != null) {
+            ovalOfPiece.put(shape1, oval);
+          }
+        }
       } else {
         TileShape[] convexPieces = null;
         if (currentShape instanceof PolygonShape shape) {
@@ -331,6 +340,8 @@ public class Library extends ScopeKeyword {
 
     ConvexShape[] padstackShapes = new ConvexShape[layerStructure.layers.length];
     ConvexShape[][] auxiliaryShapes = new ConvexShape[layerStructure.layers.length][];
+    PadOval[] ovals = new PadOval[layerStructure.layers.length];
+    boolean hasOvals = false;
     boolean hasNonConvex = false;
 
     for (int l = 0; l < layerStructure.layers.length; l++) {
@@ -340,6 +351,8 @@ public class Library extends ScopeKeyword {
       }
       if (pieces.size() == 1) {
         padstackShapes[l] = pieces.get(0);
+        ovals[l] = ovalOfPiece.get(pieces.get(0));
+        hasOvals |= ovals[l] != null;
       } else {
         hasNonConvex = true;
         FRLogger.warn(
@@ -392,6 +405,9 @@ public class Library extends ScopeKeyword {
     }
     if (hasNonConvex) {
       padstack.hasNonConvexGeometry = true;
+    }
+    if (hasOvals) {
+      padstack.setOvals(ovals);
     }
     return true;
   }

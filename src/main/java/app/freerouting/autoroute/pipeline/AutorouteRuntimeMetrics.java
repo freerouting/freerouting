@@ -1,8 +1,8 @@
 package app.freerouting.autoroute.pipeline;
 
 import app.freerouting.core.RoutingJob;
-import com.sun.management.ThreadMXBean;
-import java.lang.management.ManagementFactory;
+import app.freerouting.util.RuntimeTelemetryProvider;
+import java.util.Locale;
 
 /** Collects optional runtime metrics used by autoroute stage diagnostics. */
 final class AutorouteRuntimeMetrics {
@@ -30,34 +30,28 @@ final class AutorouteRuntimeMetrics {
     return job.resourceUsage.peakMemoryUsed;
   }
 
+  static long currentThreadCpuNanos() {
+    return RuntimeTelemetryProvider.get().currentThreadCpuNanos();
+  }
+
   static float currentThreadCpuSeconds() {
-    try {
-      ThreadMXBean threadMxBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
-      long cpuNanos = threadMxBean.getThreadCpuTime(Thread.currentThread().threadId());
-      return cpuNanos < 0 ? -1f : cpuNanos / 1_000_000_000.0f;
-    } catch (Throwable t) {
-      return -1f;
-    }
+    return RuntimeTelemetryProvider.get().currentThreadCpuSeconds();
+  }
+
+  static long currentThreadAllocatedBytes() {
+    return RuntimeTelemetryProvider.get().currentThreadAllocatedBytes();
   }
 
   static float currentThreadAllocatedMb() {
-    try {
-      ThreadMXBean threadMxBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
-      threadMxBean.setThreadAllocatedMemoryEnabled(true);
-      long allocatedBytes = threadMxBean.getThreadAllocatedBytes(Thread.currentThread().threadId());
-      return allocatedBytes < 0 ? -1f : allocatedBytes / (1024.0f * 1024.0f);
-    } catch (Throwable t) {
-      return -1f;
-    }
+    return RuntimeTelemetryProvider.get().currentThreadAllocatedMb();
   }
 
   static float currentHeapUsageMb() {
-    try {
-      long heapUsed = ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed();
-      return heapUsed / (1024.0f * 1024.0f);
-    } catch (Throwable t) {
-      return 0f;
-    }
+    return RuntimeTelemetryProvider.get().currentHeapUsageMb();
+  }
+
+  static String formatOptionalMetric(float value, String format) {
+    return value < 0f ? "N/A" : String.format(Locale.US, format, value);
   }
 
   static double nanosToMillis(long nanos) {

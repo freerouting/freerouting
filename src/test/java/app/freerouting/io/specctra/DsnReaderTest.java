@@ -131,6 +131,10 @@ class DsnReaderTest {
   // Power layers without a plane
 
   private static String dsnWithPowerLayer(String planeScope) {
+    return dsnWithPowerLayer(planeScope, "");
+  }
+
+  private static String dsnWithPowerLayer(String planeScope, String wires) {
     return "(pcb test\n"
         + "  (parser (string_quote \") (host_cad \"KiCad's Pcbnew\"))\n"
         + "  (resolution um 10)\n"
@@ -158,7 +162,9 @@ class DsnReaderTest {
         + "    (class kicad_default GND (circuit (use_via \"Via[0-2]_800:400_um\"))"
         + " (rule (width 200) (clearance 200)))\n"
         + "  )\n"
-        + "  (wiring)\n"
+        + "  (wiring\n"
+        + wires
+        + "  )\n"
         + ")\n";
   }
 
@@ -199,6 +205,47 @@ class DsnReaderTest {
     assertTrue(
         !board.layerStructure.layers[1].isSignal,
         "a power layer that carries a plane must stay non-routable");
+  }
+
+  @Test
+  void powerLayerWithWirePolygonCopperStaysPlaneLayer() {
+    // KiCad exports the zones as (wire (polygon ...)) in the wiring, even on power layers.
+    String wire =
+        "    (wire (polygon In1.Cu 0 0 0 20000 0 20000 20000 0 20000 0 0)(net GND)(type protect)\n"
+            + "      (window (polygon In1.Cu 0 9000 9000 11000 9000 11000 11000 9000 11000)))\n";
+    InputStream in =
+        new ByteArrayInputStream(dsnWithPowerLayer("", wire).getBytes(StandardCharsets.UTF_8));
+    BoardReadResult result = DsnReader.readBoard(in, null, null);
+
+    assertInstanceOf(BoardReadResult.Success.class, result);
+    RoutingBoard board = (RoutingBoard) ((BoardReadResult.Success) result).board();
+    assertTrue(
+        !board.layerStructure.layers[1].isSignal,
+        "a power layer whose copper is a wire polygon must stay a plane layer");
+    var gnd = board.rules.nets.get("GND", 1);
+    assertNotNull(gnd);
+    assertTrue(gnd.containsPlane(), "the net of the wire polygon must be a plane net");
+    var areas = board.getConductionAreas();
+    assertEquals(1, areas.size(), "only the wire polygon, no full-board plane added");
+    var area = areas.iterator().next();
+    assertEquals(1, area.getLayer());
+    assertEquals(gnd.netNumber, area.getNetNumber(0));
+  }
+
+  @Test
+  void wirePolygonOnSignalLayerDoesNotChangeLayerTypes() {
+    String wire =
+        "    (wire (polygon F.Cu 0 0 0 20000 0 20000 20000 0 20000 0 0)(net GND)(type protect))\n";
+    InputStream in =
+        new ByteArrayInputStream(dsnWithPowerLayer("", wire).getBytes(StandardCharsets.UTF_8));
+    BoardReadResult result = DsnReader.readBoard(in, null, null);
+
+    assertInstanceOf(BoardReadResult.Success.class, result);
+    RoutingBoard board = (RoutingBoard) ((BoardReadResult.Success) result).board();
+    assertTrue(board.layerStructure.layers[0].isSignal, "F.Cu stays a signal layer");
+    assertTrue(
+        board.layerStructure.layers[1].isSignal,
+        "In1.Cu has no copper of its own and is still promoted to a signal layer");
   }
 
   // Sealed-switch exhaustiveness check (compile-time guarantee)

@@ -256,6 +256,7 @@ def route_single_board(
     cmd = [
         "java",
         "-Dsun.stdout.buffered=false",
+        "-Djava.awt.headless=true",
         "-Xmx4g",
         # First heap failure ends the JVM. A swallowed OutOfMemoryError otherwise leaves the
         # process alive and the worker slot busy until the job timeout.
@@ -292,15 +293,25 @@ def route_single_board(
     stdout_lines: list[str] = []
 
     try:
-        proc = subprocess.Popen(
-            cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
-            bufsize=1,
-        )
+        popen_kwargs: dict[str, Any] = {
+            "stdout": subprocess.PIPE,
+            "stderr": subprocess.STDOUT,
+            "text": True,
+            "encoding": "utf-8",
+            "errors": "replace",
+            "bufsize": 1,
+        }
+        if sys.platform == "win32" and hasattr(subprocess, "BELOW_NORMAL_PRIORITY_CLASS"):
+            popen_kwargs["creationflags"] = subprocess.BELOW_NORMAL_PRIORITY_CLASS
+
+        proc = subprocess.Popen(cmd, **popen_kwargs)
+
+        if sys.platform != "win32" and hasattr(os, "setpriority") and hasattr(os, "PRIO_PROCESS"):
+            try:
+                os.setpriority(os.PRIO_PROCESS, proc.pid, 10)
+            except (OSError, TypeError):
+                # Best-effort nice adjustment; do not fail the run if unsupported or process already exited
+                pass
         with status_lock:
             if force_kill_event.is_set():
                 try:
@@ -329,7 +340,7 @@ def route_single_board(
                         if fatal_process_output(short) or fatal_process_output(clean):
                             fatal_seen.set()
                         with status_lock:
-                            worker_status[wid]["last_line"] = short[:90]
+                            worker_status[wid]["last_line"] = short[:86]
                             worker_status[wid]["last_line_time"] = time.perf_counter()
 
         reader_thread = threading.Thread(target=stream_reader, daemon=True)

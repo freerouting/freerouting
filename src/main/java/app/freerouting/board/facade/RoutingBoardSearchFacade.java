@@ -5,6 +5,7 @@ import app.freerouting.board.model.items.Connectable;
 import app.freerouting.board.model.items.DrillItem;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Trace;
+import app.freerouting.board.model.structure.BoardOutline;
 import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.datastructures.ShapeTree.TreeEntry;
@@ -72,6 +73,10 @@ public final class RoutingBoardSearchFacade {
 
     for (TreeEntry currentObstacleEntry : obstacleEntries) {
       if (!(currentObstacleEntry.object instanceof Item currentObstacle)) {
+        continue;
+      }
+      if (currentObstacle instanceof BoardOutline outline
+          && outline.exemptsTrace(currentObstacleEntry.shapeIndexInObject, netNumbers)) {
         continue;
       }
       if (onlyNotShovableObstacles

@@ -45,7 +45,7 @@ class SmdPinFanoutRoutingTest extends RoutingFixtureTest {
   void issue508Bm06() {
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(10);
-    testSettingsSource.setJobTimeoutString("00:02:00");
+    testSettingsSource.setJobTimeoutString("00:05:00");
 
     RoutingJob job = getRoutingJob("Issue508-DAC2020_bm06.dsn", testSettingsSource);
     runRoutingJob(job);

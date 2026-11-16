@@ -219,7 +219,7 @@ public final class SortedRoomNeighbours {
         continue;
       }
       if ((room instanceof IncompleteFreeSpaceExpansionRoom)
-          && !currentObject.isTraceObstacle(netNumber)) {
+          && !currentObject.isTraceObstacle(netNumber, currentEntry.shapeIndexInObject)) {
         // delay processing the target doors until the room shape will not change anymore
         result.ownNetObjects.add(currentEntry);
         continue;

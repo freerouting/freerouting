@@ -83,7 +83,7 @@ final class RoutingFallbackRunner {
     Attempt bestAttempt = new Attempt(best, job.board, defaultRouter, defaultClearance);
     RoutingBoard continuedFrom = null;
     if (residual && !alternatives.isEmpty()) {
-      bestAttempt = runContinuations(job, bestAttempt, automaticContinuations(job.routerSettings));
+      bestAttempt = runContinuations(job, bestAttempt, automaticContinuations(job));
       continuedFrom = bestAttempt.board;
     }
     for (RoutingFallback.Strategy strategy : alternatives) {
@@ -137,7 +137,7 @@ final class RoutingFallbackRunner {
             "Routing fallback: no alternative replaced the board the continuations ran on; not continuing it again.");
       }
     } else {
-      after.addAll(automaticContinuations(job.routerSettings));
+      after.addAll(automaticContinuations(job));
     }
     if (!after.isEmpty()) {
       bestAttempt = runContinuations(job, bestAttempt, after);
@@ -149,7 +149,15 @@ final class RoutingFallbackRunner {
             + "': "
             + bestAttempt.outcome
             + ".");
+    warnIfAutoNeckFallbackUsed(job, bestAttempt.outcome.strategy);
     return bestAttempt.router;
+  }
+
+  static void warnIfAutoNeckFallbackUsed(RoutingJob job, String strategy) {
+    if ("continue-auto-neck".equals(strategy) && job.routerSettings.getNeckWidthUm() <= 0) {
+      job.logWarning(
+          "Fallback auto-neckdown (neck_width_um=150.0) was used because routing remained incomplete with no explicit neck_width_um configured.");
+    }
   }
 
   /**
@@ -304,6 +312,7 @@ final class RoutingFallbackRunner {
       boolean removeUnconnectedVias = !keepFanoutVias && !settings.isFanoutEnabled();
       BatchAutorouter router =
           BatchAutorouter.createAttempt(job, board, settings, removeUnconnectedVias);
+      router.setStrategyName(strategyName);
       router.copyListenersFrom(this.listenerSource);
       RoutingFallback.Strategy strategy = RoutingFallback.find(strategyName);
       if (strategy != null && strategy.fanoutOnly) {
@@ -341,13 +350,18 @@ final class RoutingFallbackRunner {
     return job.thread.isStopRequested() || job.state == RoutingJobState.TIMED_OUT;
   }
 
-  private static List<RoutingFallback.Strategy> automaticContinuations(RouterSettings settings) {
+  static List<RoutingFallback.Strategy> automaticContinuations(RoutingJob job) {
     List<RoutingFallback.Strategy> result = new ArrayList<>();
     RoutingFallback.Strategy continueStrategy = RoutingFallback.find("continue");
     if (continueStrategy != null) {
       result.add(continueStrategy);
     }
-    if (settings.getNeckWidthUm() > 0) {
+    boolean hasProjectMinTrackWidth =
+        job != null && job.kicadProject != null && job.kicadProject.narrowestTraceWidthUm() != null;
+    if (job != null
+        && job.routerSettings != null
+        && job.routerSettings.getNeckWidthUm() > 0
+        && !hasProjectMinTrackWidth) {
       RoutingFallback.Strategy noNeck = RoutingFallback.find("continue-no-neck");
       if (noNeck != null) {
         result.add(noNeck);
