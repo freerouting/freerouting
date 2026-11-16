@@ -241,12 +241,11 @@ dependencies {
     // (required for Java 21+ inline-mock-maker, per Mockito docs section 0.3)
     mockitoAgent('org.mockito:mockito-core:5.24.0') { transitive = false }
 
-    // TornadoVM: optional backend for the GPU BGA escape pre-pass. Only the API is needed to
-    // compile, and Freerouting runs without it. Pass -Ptornadovm=opencl,cuda (any of opencl,
-    // cuda, metal) to put the TornadoVM runtime and those backends on the test and run class
-    // paths. The executable JAR never includes them.
-    compileOnly "io.github.beehive-lab:tornado-api:${tornadovmVersion}"
-    testImplementation "io.github.beehive-lab:tornado-api:${tornadovmVersion}"
+    // TornadoVM: the BGA escape kernels are written against tornado-api (pure Java, no native
+    // code), which also runs them on the CPU when there is no GPU. The TornadoVM runtime and its
+    // GPU backends stay optional: pass -Ptornadovm=opencl,cuda (any of opencl, cuda, metal) to put
+    // them on the test and run class paths. The executable JAR never includes them.
+    implementation "io.github.beehive-lab:tornado-api:${tornadovmVersion}"
     if (project.hasProperty('tornadovm')) {
         tornadovmRuntime "io.github.beehive-lab:tornado-runtime:${tornadovmVersion}"
         project.property('tornadovm').toString().split(',').each { backend ->

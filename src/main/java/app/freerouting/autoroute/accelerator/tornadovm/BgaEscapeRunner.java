@@ -14,6 +14,7 @@ import static app.freerouting.autoroute.accelerator.tornadovm.BgaEscapeKernels.P
 import static app.freerouting.autoroute.accelerator.tornadovm.BgaEscapeKernels.VIA_SITE_STRIDE;
 
 import app.freerouting.autoroute.accelerator.BgaEscapeGrid;
+import java.util.stream.IntStream;
 import uk.ac.manchester.tornado.api.GridScheduler;
 import uk.ac.manchester.tornado.api.KernelContext;
 import uk.ac.manchester.tornado.api.TaskGraph;
@@ -157,7 +158,10 @@ public final class BgaEscapeRunner {
     return solutions.toHeapArray();
   }
 
-  /** Runs the same kernels as plain Java on the calling thread. */
+  /**
+   * Runs the same kernels as plain Java. Gives the same solution buffer as {@link #runOnDevice},
+   * and is the CPU fallback when no GPU is available.
+   */
   public static int[] runOnCpu(BgaEscapeGrid grid) {
     IntArray params = params(grid);
     IntArray pins = IntArray.fromArray(grid.pins());
@@ -174,12 +178,15 @@ public final class BgaEscapeRunner {
     solutions.init(0);
     winners.init(BgaEscapeKernels.NO_WINNER);
 
-    for (int cell = 0; cell < grid.totalCells(); cell++) {
-      BgaEscapeKernels.rasterizeCell(cell, params, obstacles, pins, occupancy, rudy);
-    }
-    for (int pin = 0; pin < grid.pinCount(); pin++) {
-      BgaEscapeKernels.evaluateViaSites(pin, params, pins, occupancy, viaSites);
-    }
+    // Each cell and each pin writes only its own entries, so these two loops can run in parallel
+    // without changing the result. The negotiation passes below stay sequential.
+    IntStream.range(0, grid.totalCells())
+        .parallel()
+        .forEach(
+            cell -> BgaEscapeKernels.rasterizeCell(cell, params, obstacles, pins, occupancy, rudy));
+    IntStream.range(0, grid.pinCount())
+        .parallel()
+        .forEach(pin -> BgaEscapeKernels.evaluateViaSites(pin, params, pins, occupancy, viaSites));
     for (int ring = 0; ring <= grid.maxRing(); ring++) {
       params.set(P_CURRENT_RING, ring);
       for (int pass = 0; pass < NEGOTIATION_PASSES; pass++) {

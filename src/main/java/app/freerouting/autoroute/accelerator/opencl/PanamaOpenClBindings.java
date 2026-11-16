@@ -7,7 +7,6 @@ import java.lang.foreign.MemorySegment;
 import java.lang.foreign.SymbolLookup;
 import java.lang.foreign.ValueLayout;
 import java.lang.invoke.MethodHandle;
-import java.nio.file.Path;
 import java.util.Optional;
 
 /**
@@ -74,9 +73,11 @@ public final class PanamaOpenClBindings {
       } else if (os.contains("linux")) {
         lookup = SymbolLookup.libraryLookup("libOpenCL.so.1", arena);
       } else if (os.contains("mac")) {
+        // Passed as a string so that it goes straight to dlopen. Since macOS 11 the framework
+        // binary only exists in the dyld shared cache, not on disk, and the Path overload resolves
+        // the real path on disk first, which fails.
         lookup =
-            SymbolLookup.libraryLookup(
-                Path.of("/System/Library/Frameworks/OpenCL.framework/OpenCL"), arena);
+            SymbolLookup.libraryLookup("/System/Library/Frameworks/OpenCL.framework/OpenCL", arena);
       }
     } catch (Throwable t) {
       // Library not found or inaccessible
