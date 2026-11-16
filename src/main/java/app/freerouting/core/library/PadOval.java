@@ -13,4 +13,6 @@ import java.io.Serializable;
  * @param end the other end of the centre line
  * @param radius half the width of the path, in board units
  */
-public record PadOval(FloatPoint start, FloatPoint end, double radius) implements Serializable {}
+public record PadOval(FloatPoint start, FloatPoint end, double radius) implements Serializable {
+  private static final long serialVersionUID = 1L;
+}
