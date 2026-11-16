@@ -176,6 +176,13 @@ class TornadoVmBgaEscapeParityTest {
         AcceleratorRegistry.reset();
         reference = GpuBgaEscapeSolver.solve(board, bga, openClSettings);
       }
+      // The CPU fallback runs the same kernels and must give the same proposals.
+      List<PinEscapeProposal> cpu = GpuBgaEscapeSolver.solveOnCpu(board, bga, openClSettings, null);
+      if (reference == null) {
+        reference = cpu;
+      } else {
+        assertSameProposals(cpu, reference, "cpu");
+      }
       for (String preference : preferences) {
         AcceleratorRegistry.reset();
         RouterSettings tornadoSettings = settings(preference);

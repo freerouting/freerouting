@@ -5,9 +5,11 @@ import app.freerouting.autoroute.accelerator.BgaEscapeGrid;
 import app.freerouting.autoroute.accelerator.BgaEscapeKernelBackend;
 import app.freerouting.autoroute.accelerator.ComputeBackend;
 import app.freerouting.autoroute.accelerator.GpuComputeSession;
+import app.freerouting.autoroute.accelerator.GpuFallbackReason;
 import app.freerouting.autoroute.accelerator.opencl.PanamaOpenClBackend;
 import app.freerouting.autoroute.accelerator.opencl.PanamaOpenClBackend.PanamaGpuSession;
 import app.freerouting.autoroute.accelerator.opencl.PanamaOpenClBindings;
+import app.freerouting.autoroute.accelerator.tornadovm.BgaEscapeRunner;
 import app.freerouting.autoroute.fanout.BgaBufferMarshaller.MarshaledBgaData;
 import app.freerouting.autoroute.fanout.BgaEscapeDescriptor.BgaPinDescriptor;
 import app.freerouting.board.facade.RoutingBoard;
@@ -73,6 +75,15 @@ public final class GpuBgaEscapeSolver {
     FanoutSettings fs = (settings != null) ? settings.fanout : null;
     ComputeBackend backend = AcceleratorRegistry.discover(fs);
     if (backend == null || !backend.isAvailable()) {
+      if (backend != null && backend.fallbackReason() != GpuFallbackReason.DISABLED_BY_SETTINGS) {
+        // Enabled, but no usable device: run the same kernels on the CPU, so that the result does
+        // not depend on the machine.
+        try {
+          return solveOnCpu(board, bga, settings, infoLogger);
+        } catch (Throwable t) {
+          FRLogger.warn("BGA escape kernels could not run on the CPU: " + t.getMessage());
+        }
+      }
       String msg = "GPU acceleration unavailable, using CPU fanout fallback";
       FRLogger.info(msg);
       if (infoLogger != null) {
@@ -112,8 +123,7 @@ public final class GpuBgaEscapeSolver {
         return executeKernelBackend(backend, kernelBackend, bga, data, infoLogger);
       } catch (Throwable t) {
         String msg =
-            "GPU kernel execution failed, falling back to deterministic wavefront: "
-                + t.getMessage();
+            "GPU kernel execution failed, running the same kernels on the CPU: " + t.getMessage();
         FRLogger.warn(msg);
         if (infoLogger != null) {
           infoLogger.accept(msg);
@@ -126,7 +136,7 @@ public final class GpuBgaEscapeSolver {
         return executeOpenClKernels(openClBackend, board, bga, data, settings, infoLogger);
       } catch (Throwable t) {
         String msg =
-            "OpenCL execution failed, falling back to deterministic wavefront: " + t.getMessage();
+            "OpenCL execution failed, running the same kernels on the CPU: " + t.getMessage();
         FRLogger.warn(msg);
         if (infoLogger != null) {
           infoLogger.accept(msg);
@@ -134,9 +144,52 @@ public final class GpuBgaEscapeSolver {
       }
     }
 
-    // Use host-side simulation when running against headless or synthetic backend
-    // to guarantee determinism in test suites and zero-device CI environments.
-    return executeDeterministicWavefront(board, bga, data);
+    return executeOnCpu(board, bga, data, infoLogger);
+  }
+
+  /**
+   * Solves the BGA escape with the escape kernels running as plain Java on the CPU. Gives the same
+   * proposals as the GPU backends; used when GPU acceleration is enabled but no device is usable.
+   *
+   * @param board routing board
+   * @param bga BGA escape descriptor
+   * @param settings router settings
+   * @param infoLogger optional logger callback for UI/job messaging
+   * @return one proposal per pin
+   */
+  public static List<PinEscapeProposal> solveOnCpu(
+      RoutingBoard board,
+      BgaEscapeDescriptor bga,
+      RouterSettings settings,
+      java.util.function.Consumer<String> infoLogger) {
+    try (MarshaledBgaData data = BgaBufferMarshaller.marshal(board, bga, settings)) {
+      return executeOnCpu(board, bga, data, infoLogger);
+    }
+  }
+
+  /**
+   * Runs the escape kernels as plain Java on the CPU ({@link BgaEscapeRunner#runOnCpu}). This is
+   * the same code the GPU backends run, so a board gets the same escapes with or without a GPU; the
+   * GPU only changes how long it takes. Falls back to {@link #executeDeterministicWavefront} where
+   * the kernel classes are not available (the CLI native image).
+   */
+  private static List<PinEscapeProposal> executeOnCpu(
+      RoutingBoard board,
+      BgaEscapeDescriptor bga,
+      MarshaledBgaData data,
+      java.util.function.Consumer<String> infoLogger) {
+    if (data.pinCount() <= 0) {
+      return Collections.emptyList();
+    }
+    int[] solutions;
+    try {
+      solutions = BgaEscapeRunner.runOnCpu(toGrid(bga, data));
+    } catch (LinkageError e) {
+      FRLogger.warn(
+          "BGA escape kernels are not available on the CPU (" + e + "); using the wavefront.");
+      return executeDeterministicWavefront(board, bga, data);
+    }
+    return toProposals(bga, data, solutions, "CPU", infoLogger);
   }
 
   private static List<PinEscapeProposal> executeOpenClKernels(
@@ -150,7 +203,7 @@ public final class GpuBgaEscapeSolver {
 
     try (GpuComputeSession rawSession = openClBackend.openSession(settings)) {
       if (!(rawSession instanceof PanamaGpuSession session)) {
-        return executeDeterministicWavefront(board, bga, data);
+        return executeOnCpu(board, bga, data, infoLogger);
       }
 
       int pinCount = data.pinCount();
@@ -521,20 +574,7 @@ public final class GpuBgaEscapeSolver {
       MarshaledBgaData data,
       java.util.function.Consumer<String> infoLogger) {
 
-    BgaEscapeGrid grid =
-        new BgaEscapeGrid(
-            data.pinBuffer().toArray(ValueLayout.JAVA_INT),
-            data.pinCount(),
-            data.obstacleBuffer().toArray(ValueLayout.JAVA_INT),
-            Math.max(1, data.obstacleCount()),
-            data.gridWidth(),
-            data.gridHeight(),
-            data.layerCount(),
-            data.gridStepBoardUnits(),
-            data.originX(),
-            data.originY(),
-            (int) Math.round(bga.pitchBoardUnits()),
-            bga.maxRing());
+    BgaEscapeGrid grid = toGrid(bga, data);
 
     String deviceName =
         backend.getDeviceInfo() != null ? backend.getDeviceInfo().deviceName() : "GPU";
@@ -555,6 +595,23 @@ public final class GpuBgaEscapeSolver {
 
     int[] solutions = kernelBackend.runBgaEscape(grid);
     return toProposals(bga, data, solutions, deviceName, infoLogger);
+  }
+
+  /** The marshalled package in the flat layout of the escape kernels. */
+  private static BgaEscapeGrid toGrid(BgaEscapeDescriptor bga, MarshaledBgaData data) {
+    return new BgaEscapeGrid(
+        data.pinBuffer().toArray(ValueLayout.JAVA_INT),
+        data.pinCount(),
+        data.obstacleBuffer().toArray(ValueLayout.JAVA_INT),
+        Math.max(1, data.obstacleCount()),
+        data.gridWidth(),
+        data.gridHeight(),
+        data.layerCount(),
+        data.gridStepBoardUnits(),
+        data.originX(),
+        data.originY(),
+        (int) Math.round(bga.pitchBoardUnits()),
+        bga.maxRing());
   }
 
   /** Turns the solution buffer written by the escape kernels into one proposal per pin. */
