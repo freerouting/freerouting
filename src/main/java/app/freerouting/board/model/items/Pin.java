@@ -8,6 +8,7 @@ import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.board.searchtree.SearchTreeObject;
 import app.freerouting.core.library.LogicalPart;
 import app.freerouting.core.library.Package;
+import app.freerouting.core.library.PadOval;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.Direction;
@@ -258,6 +259,34 @@ public class Pin extends DrillItem implements Serializable {
     return component
         .placementTransform(board.components.getFlipStyleRotateFirst())
         .shape(padstackShape, packagePin.getExactRelativeLocation(), packagePin.rotationInDegree);
+  }
+
+  /**
+   * The exact copper of the round or oval pad behind the shape with index {@code index}, placed on
+   * the board as {@link #transformToBoard} places that shape; null when the pad there is not one.
+   */
+  public PadOval getPlacedOval(int index) {
+    Padstack padstack = getPadstack();
+    if (padstack == null || index < 0 || index >= padstack.toLayer() - padstack.fromLayer() + 1) {
+      return null;
+    }
+    PadOval oval = padstack.getOval(getPadstackLayer(index));
+    if (oval == null) {
+      return null;
+    }
+    Component component = board.components.get(this.getComponentId());
+    Package libPackage = component != null ? component.getPackage() : null;
+    Package.Pin packagePin = libPackage != null ? libPackage.getPin(this.getPinIndex()) : null;
+    if (packagePin == null) {
+      return null;
+    }
+    PlacementTransform placement =
+        component.placementTransform(board.components.getFlipStyleRotateFirst());
+    FloatPoint offset = packagePin.getExactRelativeLocation();
+    return new PadOval(
+        placement.padPoint(oval.start(), offset, packagePin.rotationInDegree),
+        placement.padPoint(oval.end(), offset, packagePin.rotationInDegree),
+        oval.radius());
   }
 
   /** Returns the layer of the padstack shape corresponding to the shape with index index. */
