@@ -424,8 +424,8 @@ def generate_reports(
                     if is_clean:
                         perfects += 1
 
-                effective_score = score if (not failed and score is not None) else 0.0
-                score_values.append(effective_score)
+                if not failed and score is not None:
+                    score_values.append(score)
 
                 wall_clock = quality.get("wall_clock_seconds")
                 if wall_clock is not None:
@@ -445,10 +445,19 @@ def generate_reports(
                 "avg_score": avg_score,
             }
 
-        valid_scores = [
-            s["avg_score"] for s in version_stats.values() if s["avg_score"] is not None
+        scored_stats = [
+            s for s in version_stats.values() if s["avg_score"] is not None
         ]
-        max_avg_score = max(valid_scores) if valid_scores else None
+        best_stat = (
+            min(scored_stats, key=lambda s: (s["failures"], -s["avg_score"]))
+            if scored_stats
+            else None
+        )
+        best_tuple = (
+            (best_stat["failures"], best_stat["avg_score"])
+            if best_stat is not None
+            else None
+        )
 
         # Format Markdown
         headers = [
@@ -476,7 +485,10 @@ def generate_reports(
 
             if stat["avg_score"] is not None:
                 score_formatted = f"{stat['avg_score']:.1f}"
-                if max_avg_score is not None and stat["avg_score"] == max_avg_score:
+                if (
+                    best_tuple is not None
+                    and (stat["failures"], stat["avg_score"]) == best_tuple
+                ):
                     md_score_str = f"**{score_formatted}**"
                     html_score_str = f"<strong>{score_formatted}</strong>"
                 else:

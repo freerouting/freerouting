@@ -37,6 +37,35 @@ def version_sort_key(label: str) -> tuple:
     )
 
 
+def infer_version_from_jar_path(jar_path: Path) -> str | None:
+    """Infer the version label from a freerouting JAR filename, skipping -current."""
+    stem = jar_path.stem
+    if not stem.lower().startswith("freerouting-"):
+        return None
+    candidate = stem[len("freerouting-"):].strip()
+    if not candidate or candidate.lower() == "current" or candidate.lower().endswith("-current"):
+        return None
+    if not _VERSION_LABEL.match(candidate):
+        return None
+    return candidate
+
+
+def select_default_jar(binaries_dir: Path) -> Path | None:
+    """Select the highest-versioned freerouting JAR in binaries_dir, skipping -current."""
+    if not binaries_dir.is_dir():
+        return None
+    candidates: list[tuple[tuple, str, Path]] = []
+    for jar in binaries_dir.glob("*.jar"):
+        version = infer_version_from_jar_path(jar)
+        if version is None:
+            continue
+        candidates.append((version_sort_key(version), jar.name, jar))
+    if not candidates:
+        return None
+    candidates.sort(key=lambda item: (item[0], item[1]), reverse=True)
+    return candidates[0][2]
+
+
 def _parse_run_at(value: str) -> datetime:
     if not value:
         return datetime.min.replace(tzinfo=timezone.utc)
@@ -97,6 +126,41 @@ def latest_successful_reference_seconds(runs: Any) -> dict[str, float]:
         if current is None or rank > (current[0], current[1]):
             best[board_id] = (version_sort_key(version), run_at, seconds)
     return {board_id: item[2] for board_id, item in best.items()}
+
+
+def latest_timeout_reference_seconds(runs: Any) -> dict[str, float]:
+    """Wall-clock seconds of the newest timed-out run, per fixture (fallback when never completed)."""
+    best: dict[str, tuple[tuple, datetime, float]] = {}
+    for run in runs:
+        if not isinstance(run, dict):
+            continue
+        exit_info = run.get("exit") or {}
+        if not exit_info.get("timed_out"):
+            continue
+        board_id = fixture_id_from_run(run)
+        if not board_id:
+            continue
+        seconds = float((run.get("quality") or {}).get("wall_clock_seconds") or 0.0)
+        if seconds <= 0:
+            continue
+        version = str((run.get("binary") or {}).get("version_label") or "")
+        run_at = _parse_run_at(str(run.get("run_at") or ""))
+        rank = (version_sort_key(version), run_at)
+        current = best.get(board_id)
+        if current is None or rank > (current[0], current[1]):
+            best[board_id] = (rank[0], run_at, seconds)
+    return {board_id: item[2] for board_id, item in best.items()}
+
+
+def parse_timeout_seconds(timeout_budget: str) -> float:
+    """Convert HH:MM:SS timeout budget string into seconds."""
+    parts = (timeout_budget or "").strip().split(":")
+    if len(parts) == 3:
+        try:
+            return max(0.0, int(parts[0]) * 3600.0 + int(parts[1]) * 60.0 + int(parts[2]))
+        except ValueError:
+            pass
+    return 0.0
 
 
 def should_stop_main_loop(
