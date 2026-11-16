@@ -248,7 +248,8 @@ public final class BatchFanout {
           }
         }
       } catch (Exception | LinkageError ex) {
-        if (Thread.currentThread().isInterrupted()) {
+        if (Thread.currentThread().isInterrupted() || ex instanceof InterruptedException) {
+          Thread.currentThread().interrupt();
           FRLogger.warn("GPU BGA fanout pre-pass interrupted");
         } else {
           String errMsg = "GPU BGA fanout pre-pass skipped due to error: " + ex.getMessage();
