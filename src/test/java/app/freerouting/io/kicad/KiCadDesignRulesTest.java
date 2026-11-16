@@ -84,6 +84,40 @@ class KiCadDesignRulesTest {
     assertEquals(traceValue(original, "GND", "+5V"), traceValue(board, "GND", "+5V"));
   }
 
+  @Test
+  void libraryIdentifierIsTheImageNameWithoutTheVariantSuffix() throws IOException {
+    BasicBoard board = loadBoard();
+    // K2 is placed with the image "Реле:SRD-xxVDC-SL-C::1", a variant of K1's footprint
+    assertEquals("Реле:SRD-xxVDC-SL-C", libraryId(board, "K1"));
+    assertEquals("Реле:SRD-xxVDC-SL-C", libraryId(board, "K2"));
+    assertEquals("Diode_THT:D_DO-41_SOD81_P7.62mm_Horizontal", libraryId(board, "VD4"));
+  }
+
+  @Test
+  void footprintSelectorWithLibraryIdentifierSetsTheClearance() throws IOException {
+    BasicBoard board = loadBoard();
+    KiCadDesignRulesTranslator.apply(
+        board,
+        KiCadDesignRules.parse(
+            """
+            (version 1)
+            (rule "around_relays"
+              (condition "A.memberOfFootprint('Реле:SRD-*') && !B.memberOfFootprint('Реле:*')")
+              (constraint clearance (min 7mm)))
+            """,
+            "test.kicad_dru"));
+    ClearanceMatrix matrix = board.rules.clearanceMatrix;
+    // both relays, K2 through its variant image, keep 7 mm to the other footprints
+    assertEquals(mm(board, 7.0), value(matrix, pin(board, "K1", "1"), pin(board, "VD4", "1")));
+    assertEquals(mm(board, 7.0), value(matrix, pin(board, "K2", "1"), pin(board, "VD4", "1")));
+  }
+
+  private static String libraryId(BasicBoard board, String reference) {
+    var component = board.components.get(reference);
+    assertNotNull(component, reference);
+    return KiCadDesignRulesTranslator.libraryId(component);
+  }
+
   private static BasicBoard loadBoard() throws IOException {
     InputStream input = new FileInputStream(TestFixtures.resolveFile(DSN));
     BoardReadResult result = DsnReader.readBoard(input, null, null, DSN);

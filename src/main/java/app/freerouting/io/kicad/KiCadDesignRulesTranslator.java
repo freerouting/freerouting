@@ -358,7 +358,30 @@ public final class KiCadDesignRulesTranslator {
         netClass,
         component == null ? null : component.name,
         padNumber,
-        pin.firstLayer() == pin.lastLayer());
+        pin.firstLayer() == pin.lastLayer(),
+        libraryId(component));
+  }
+
+  /**
+   * The KiCad library identifier of a component, null if unknown: the name of its Specctra image,
+   * less the suffix ({@code ::1}, {@code ::2}...) the KiCad export gives to footprint variants.
+   */
+  static String libraryId(Component component) {
+    if (component == null || component.getPackage() == null) {
+      return null;
+    }
+    String name = component.getPackage().name;
+    int variant = name.lastIndexOf("::");
+    if (variant > 0 && variant + 2 < name.length()) {
+      boolean digits = true;
+      for (int i = variant + 2; i < name.length(); i++) {
+        digits &= Character.isDigit(name.charAt(i));
+      }
+      if (digits) {
+        name = name.substring(0, variant);
+      }
+    }
+    return name;
   }
 
   /**
