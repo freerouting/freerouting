@@ -1,6 +1,7 @@
 package app.freerouting.autoroute.path;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -59,6 +60,27 @@ class FailedNeckdownAttemptTest {
         necked.stream().noneMatch(trace -> !trace.startsWith("w" + HALF_WIDTH + " ")),
         () -> "narrowed copper left by failed attempts: " + necked);
     assertEquals(plain, necked);
+  }
+
+  @Test
+  void popSnapshotClearsBothItemAndComponentUndoStacks() {
+    Freerouting.globalSettings = new GlobalSettings();
+    LayerStructure layers =
+        new LayerStructure(new Layer[] {new Layer("Top", true), new Layer("Bottom", true)});
+    BoardRules rules = new BoardRules(layers, ClearanceMatrix.getDefaultInstance(layers, 10));
+    RoutingBoard board =
+        new RoutingBoard(
+            new IntBox(-200000, -200000, 200000, 200000),
+            layers,
+            new PolylineShape[0],
+            0,
+            rules,
+            new Communication());
+
+    board.generateSnapshot();
+    assertTrue(board.popSnapshot());
+    assertFalse(board.undo(null));
+    assertFalse(board.components.undo(null));
   }
 
   /**
