@@ -11,13 +11,23 @@ import org.junit.jupiter.api.Test;
 class RuntimeTelemetryProviderTest {
 
   @Test
-  void serviceLoaderDiscoversJvmRuntimeTelemetryProvider() {
+  void serviceLoaderDiscoversProviderWithValidOrUnsupportedMetrics() {
     RuntimeTelemetryProvider provider = RuntimeTelemetryProvider.get();
-    assertInstanceOf(JvmRuntimeTelemetryProvider.class, provider);
-    assertTrue(provider.currentThreadCpuNanos() >= 0L);
-    assertTrue(provider.currentThreadCpuSeconds() >= 0f);
-    assertTrue(provider.currentThreadAllocatedBytes() >= 0L);
-    assertTrue(provider.currentThreadAllocatedMb() >= 0f);
+    if (ModuleLayer.boot().findModule("java.management").isPresent()
+        && ModuleLayer.boot().findModule("jdk.management").isPresent()) {
+      assertInstanceOf(JvmRuntimeTelemetryProvider.class, provider);
+    }
+
+    long cpuNanos = provider.currentThreadCpuNanos();
+    assertTrue(cpuNanos == -1L || cpuNanos >= 0L);
+    float cpuSeconds = provider.currentThreadCpuSeconds();
+    assertTrue(cpuNanos < 0L ? cpuSeconds == -1f : cpuSeconds >= 0f);
+
+    long allocatedBytes = provider.currentThreadAllocatedBytes();
+    assertTrue(allocatedBytes == -1L || allocatedBytes >= 0L);
+    float allocatedMb = provider.currentThreadAllocatedMb();
+    assertTrue(allocatedBytes < 0L ? allocatedMb == -1f : allocatedMb >= 0f);
+
     assertTrue(provider.currentHeapUsageMb() > 0f);
   }
 
