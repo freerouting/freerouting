@@ -1493,5 +1493,32 @@
   
   
   
-
+  (zone (net 16) (net_name Vss) (layer F.Cu) (tstamp 0) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 79.4492 37.4492) (xy 79.4492 60.4492) (xy 37.4492 60.4492) (xy 37.4492 37.4492)
+      )
+    )
+    
+    
+    
+    
+    
+    
+  )
+  (zone (net 16) (net_name Vss) (layer B.Cu) (tstamp 0) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 79.4492 37.4492) (xy 79.4492 60.4492) (xy 37.4492 60.4492) (xy 37.4492 37.4492)
+      )
+    )
+    
+    
+  )
 )

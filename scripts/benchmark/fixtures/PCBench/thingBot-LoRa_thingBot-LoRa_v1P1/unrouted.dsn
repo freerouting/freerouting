@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -21,9 +21,13 @@
       )
     )
     (boundary
-      (path pcb 0  195360 -104510  195370 -130920  170990 -130920  170990 -104510
-            178600 -97990  187820 -97990  195360 -104510)
+      (path pcb 0  195370 -104510  195370 -130920  170990 -130920  170990 -104510
+            178600 -97990  187820 -97990  195370 -104510)
     )
+    (plane GND (polygon F.Cu 0  195330 -130870  171040 -130860  171030 -104520  195300 -104520
+            195330 -130870))
+    (plane GND (polygon B.Cu 0  171040 -130870  195320 -130870  195290 -104500  171030 -104520
+            171040 -130870))
     (via "Via[0-1]_600:400_um")
     (rule
       (width 203.2)
@@ -463,15 +467,6 @@
         (clearance 200)
       )
     )
-    (class Antenna ANT
-      (circuit
-        (use_via "Via[0-1]_600:400_um")
-      )
-      (rule
-        (width 381)
-        (clearance 400)
-      )
-    )
     (class Signals DIO0 DIO1 DIO2 DIO3 DIO4 DIO5 "Net-(D1-Pad1)" "Net-(U3-Pad12)"
       "Net-(U3-Pad13)" "Net-(U3-Pad14)" "Net-(U3-Pad16)" "Net-(U3-Pad2)" "Net-(U3-Pad3)"
       "Net-(U3-Pad8)" SPI_SCK SPI_SIMO SPI_SOMI SPI_nCS nRESET
@@ -481,6 +476,15 @@
       (rule
         (width 203.2)
         (clearance 200)
+      )
+    )
+    (class Antenna ANT
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 381)
+        (clearance 400)
       )
     )
   )

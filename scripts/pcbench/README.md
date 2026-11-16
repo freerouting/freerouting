@@ -19,7 +19,9 @@ KiCad 10 CLI is expected at **`C:\Program Files\KiCad\10.0\bin\kicad-cli.exe`**
 ## Pipeline
 
 1. `Fetch-PCBench.ps1` — verify the local PCBench clone (does not re-clone).
-2. `strip_kicad_routing.py` — remove segments, vias, and zone fills from `.kicad_pcb`.
+2. `strip_kicad_routing.py` — remove segments, vias, and zone fills from `.kicad_pcb`. With
+   `--zones-from raw.kicad_pcb`, first graft the zones of `raw.kicad_pcb` onto PCBench's
+   `processed.kicad_pcb`, which has none (issue #1122); `Convert-PCBenchBoards.ps1` does this.
 3. `Convert-PCBenchBoards.ps1` — export stripped boards to Specctra `.dsn` via `pcbnew.ExportSpecctraDSN`.
 4. `Build-GroundTruth.ps1` — record reference via/segment counts and KiCad DRC on `raw.kicad_pcb`.
 5. `Run-PCBenchGate.ps1` — route converted boards and collect benchmark metrics (G3 gate).
@@ -51,3 +53,11 @@ Converted DSNs land in `scripts/benchmark/fixtures/PCBench/` (gitignored). Cache
   until SES reimport is reliable.
 - `strip_kicad_routing.py` must remove `segment`/`via` children of the `(kicad_pcb ...)`
   wrapper; dropping only file-level s-exprs leaves the original copper in place.
+- PCBench's `processed.kicad_pcb` drops every zone of `raw.kicad_pcb` but fixes other things
+  (duplicate references, pads taken off their net, redrawn outlines). The unrouted board is
+  therefore built from `processed.kicad_pcb` with the zones of `raw.kicad_pcb` grafted back,
+  each zone taking its net code from `processed.kicad_pcb` by net name. A zone whose net is
+  not in `processed.kicad_pcb` is dropped.
+- `export_specctra_dsn.py --fallback` exports `reference-routed.dsn` from
+  `processed.kicad_pcb` without a warning when `raw.kicad_pcb` fails to export. Such a
+  reference has no planes.

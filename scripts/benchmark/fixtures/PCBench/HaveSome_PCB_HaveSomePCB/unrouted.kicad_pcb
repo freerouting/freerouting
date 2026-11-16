@@ -667,5 +667,26 @@
   
   
   
-
+  (zone (net 1) (net_name "Net-(PINS1-Pad2)") (layer F.Cu) (tstamp 57514E19) (hatch edge 0.508)
+    (connect_pads (clearance 0.1))
+    (min_thickness 0.0254)
+    (fill yes (arc_segments 16) (thermal_gap 0) (thermal_bridge_width 2))
+    (polygon
+      (pts
+        (xy 143.51 97.028) (xy 135.89 97.028) (xy 135.89 93.98) (xy 143.51 93.98)
+      )
+    )
+    
+  )
+  (zone (net 1) (net_name "Net-(PINS1-Pad2)") (layer B.Cu) (tstamp 5751451B) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.1))
+    (min_thickness 0.0254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 143.51 107.95) (xy 135.89 107.95) (xy 135.89 93.98) (xy 143.51 93.98)
+      )
+    )
+    
+  )
 )

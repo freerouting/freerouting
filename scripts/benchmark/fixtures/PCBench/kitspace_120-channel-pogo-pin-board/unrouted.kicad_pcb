@@ -3501,5 +3501,44 @@
   
   
   
-
+  (zone (net 129) (net_name CHASIS_GND) (layer GND) (tstamp 619FDB54) (hatch edge 0.508)
+    (connect_pads (clearance 0.762))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 153.65 143.95) (xy 150.9 146.75) (xy 150.8635 136.7665) (xy 146.5455 132.4485) (xy 146.5455 130.7975)
+        (xy 150.3555 126.9875) (xy 150.3555 91.300499) (xy 141.597357 82.542356) (xy 141.58668 76.251) (xy 124.5985 76.251)
+        (xy 124.5985 75.489) (xy 151.4 75.6) (xy 153.7 77.9)
+      )
+    )
+    
+  )
+  (zone (net 129) (net_name CHASIS_GND) (layer GND) (tstamp 619FDB51) (hatch edge 0.508)
+    (connect_pads (clearance 0.762))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 46.3 145.1) (xy 49.2 147.9) (xy 49.2 138.227) (xy 54.153 133.274) (xy 54.153 131.3055)
+        (xy 49.454 126.6065) (xy 49.454 92.120967) (xy 58.4075 83.178731) (xy 58.4075 76.378) (xy 75.438 76.378)
+        (xy 75.438 75.249061) (xy 49.1 75.2) (xy 46.2 78.1)
+      )
+    )
+    
+  )
+  (zone (net 124) (net_name GND) (layer GND) (tstamp 619FDB4E) (hatch edge 0.508)
+    (connect_pads (clearance 0.6))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 59.5 77.5) (xy 75.5 77.5) (xy 75.5 129) (xy 124.5 129) (xy 124.5 77.5)
+        (xy 140.5 77.5) (xy 140.5 83) (xy 149 91.5) (xy 149 126.5) (xy 145.5 130)
+        (xy 145.5 133) (xy 150 137.5) (xy 150 146.8) (xy 50 146.7) (xy 50 139)
+        (xy 55 134) (xy 55 130.5) (xy 50.5 126) (xy 50.5 92.5) (xy 59.5 83.5)
+      )
+    )
+    
+  )
 )

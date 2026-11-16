@@ -1457,5 +1457,82 @@
   
   
   
-
+  (zone (net 2) (net_name GND) (layer Dolna) (tstamp 56699122) (hatch full 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 99.314 66.294) (xy 93.345 66.294) (xy 93.345 63.119) (xy 99.314 63.119)
+      )
+    )
+    
+  )
+  (zone (net 1) (net_name +5V) (layer Dolna) (tstamp 5669920B) (hatch full 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 99.568 62.357) (xy 93.345 62.357) (xy 93.345 60.325) (xy 99.568 60.325)
+      )
+    )
+    
+  )
+  (zone (net 2) (net_name GND) (layer Dolna) (tstamp 56699248) (hatch full 0.508)
+    (connect_pads yes (clearance 0.508))
+    (min_thickness 0.254)
+    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 76.454 77.724) (xy 76.454 84.074) (xy 87.884 84.074) (xy 91.186 80.772) (xy 91.186 80.391)
+        (xy 86.614 80.391) (xy 86.614 74.549) (xy 83.312 75.565) (xy 81.788 73.787) (xy 81.788 72.009)
+        (xy 83.82 69.723) (xy 76.581 69.723) (xy 76.581 70.866) (xy 76.962 71.247) (xy 78.74 71.247)
+        (xy 79.375 72.136) (xy 79.375 74.168) (xy 77.978 75.565) (xy 76.708 75.565) (xy 76.454 75.946)
+        (xy 76.454 77.724)
+      )
+    )
+    
+  )
+  (zone (net 2) (net_name GND) (layer Dolna) (tstamp 566992BE) (hatch full 0.508)
+    (connect_pads yes (clearance 0.508))
+    (min_thickness 0.254)
+    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 121.158 88.011) (xy 116.459 88.011) (xy 116.459 79.883) (xy 113.157 79.883) (xy 114.046 78.105)
+        (xy 115.443 78.105) (xy 119.126 74.422) (xy 119.126 63.754) (xy 118.237 62.865) (xy 112.014 62.865)
+        (xy 110.871 64.643) (xy 109.093 64.643) (xy 108.331 65.405) (xy 105.41 65.405) (xy 105.41 64.262)
+        (xy 106.172 63.5) (xy 106.172 61.722) (xy 107.315 61.722) (xy 110.236 58.801) (xy 114.3 58.928)
+        (xy 115.57 57.658) (xy 115.57 53.086) (xy 120.015 48.641) (xy 121.158 48.641)
+      )
+    )
+    
+  )
+  (zone (net 2) (net_name GND) (layer Dolna) (tstamp 56699AE2) (hatch full 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 103.378 46.101) (xy 100.711 46.101) (xy 98.298 48.514) (xy 76.454 48.514) (xy 75.946 48.006)
+        (xy 75.946 43.688) (xy 76.835 42.926) (xy 79.883 42.926) (xy 103.378 43.053)
+      )
+    )
+    
+  )
+  (zone (net 1) (net_name +5V) (layer Dolna) (tstamp 56699BDA) (hatch full 0.508)
+    (connect_pads yes (clearance 0.508))
+    (min_thickness 0.254)
+    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 117.221 65.278) (xy 117.094 73.279) (xy 115.443 73.279) (xy 114.173 74.422) (xy 114.173 76.2)
+        (xy 110.236 76.2) (xy 110.109 74.168) (xy 109.728 73.66) (xy 107.95 73.66) (xy 107.442 73.152)
+        (xy 107.442 70.104) (xy 107.95 69.596) (xy 111.633 69.596) (xy 112.395 68.707) (xy 112.395 65.786)
+        (xy 112.745345 65.523241) (xy 112.522 65.151) (xy 113.284 64.897)
+      )
+    )
+    
+  )
 )

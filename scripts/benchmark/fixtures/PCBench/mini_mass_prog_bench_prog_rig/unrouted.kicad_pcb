@@ -18952,5 +18952,134 @@
   
   
   
-
+  (zone (net 45) (net_name "/Programming Socket #8/5V_SOCKET") (layer In2.Cu) (tstamp 5814E80D) (hatch edge 0.508)
+    (priority 1)
+    (connect_pads (clearance 0.25))
+    (min_thickness 0.15)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 170 120) (xy 140 120) (xy 140 87.5) (xy 170 87.5)
+      )
+    )
+    
+  )
+  (zone (net 41) (net_name "/Programming Socket #7/5V_SOCKET") (layer In2.Cu) (tstamp 5814E816) (hatch edge 0.508)
+    (priority 1)
+    (connect_pads (clearance 0.25))
+    (min_thickness 0.15)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 225 120) (xy 195 120) (xy 195 87.5) (xy 225 87.5)
+      )
+    )
+    
+  )
+  (zone (net 37) (net_name "/Programming Socket #6/5V_SOCKET") (layer In2.Cu) (tstamp 5814E817) (hatch edge 0.508)
+    (priority 1)
+    (connect_pads (clearance 0.25))
+    (min_thickness 0.15)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 280 120) (xy 250 120) (xy 250 87.5) (xy 280 87.5)
+      )
+    )
+    
+  )
+  (zone (net 33) (net_name "/Programming Socket #5/5V_SOCKET") (layer In2.Cu) (tstamp 5814E818) (hatch edge 0.508)
+    (priority 1)
+    (connect_pads (clearance 0.25))
+    (min_thickness 0.15)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 350 115) (xy 320 115) (xy 320 80) (xy 350 80)
+      )
+    )
+    
+  )
+  (zone (net 29) (net_name "/Programming Socket #4/5V_SOCKET") (layer In2.Cu) (tstamp 5814E819) (hatch edge 0.508)
+    (priority 1)
+    (connect_pads (clearance 0.25))
+    (min_thickness 0.15)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 405 115) (xy 375 115) (xy 375 80) (xy 405 80)
+      )
+    )
+    
+  )
+  (zone (net 25) (net_name "/Programming Socket #3/5V_SOCKET") (layer In2.Cu) (tstamp 5814E81A) (hatch edge 0.508)
+    (priority 1)
+    (connect_pads (clearance 0.25))
+    (min_thickness 0.15)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 430 112.5) (xy 430 80) (xy 460 80) (xy 460 115) (xy 430 115)
+      )
+    )
+    
+  )
+  (zone (net 21) (net_name "/Programming Socket #2/5V_SOCKET") (layer In2.Cu) (tstamp 5814E81B) (hatch edge 0.508)
+    (priority 1)
+    (connect_pads (clearance 0.25))
+    (min_thickness 0.15)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 515.1 120) (xy 485.1 120) (xy 485.1 85) (xy 515.1 85)
+      )
+    )
+    
+  )
+  (zone (net 17) (net_name "/Programming Socket #1/5V_SOCKET") (layer In2.Cu) (tstamp 5814E81D) (hatch edge 0.508)
+    (priority 1)
+    (connect_pads (clearance 0.25))
+    (min_thickness 0.15)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 570.1 120) (xy 540.1 120) (xy 540.1 85) (xy 570.1 85)
+      )
+    )
+    
+  )
+  (zone (net 13) (net_name "/Programming Socket #0/5V_SOCKET") (layer In2.Cu) (tstamp 5814E81E) (hatch edge 0.508)
+    (priority 1)
+    (connect_pads (clearance 0.25))
+    (min_thickness 0.15)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 625.1 120) (xy 595.1 120) (xy 595.1 85) (xy 625.1 85)
+      )
+    )
+    
+  )
+  (zone (net 1) (net_name +5V) (layer In2.Cu) (tstamp 58220582) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 649 154) (xy 51 154) (xy 51 46) (xy 649 46) (xy 649 154)
+      )
+    )
+    
+  )
+  (zone (net 2) (net_name GND) (layer In1.Cu) (tstamp 5822059C) (hatch edge 0.508)
+    (connect_pads (clearance 0.25))
+    (min_thickness 0.25)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 649 154) (xy 51 154) (xy 51 46) (xy 649 46) (xy 649 154)
+      )
+    )
+    
+  )
 )

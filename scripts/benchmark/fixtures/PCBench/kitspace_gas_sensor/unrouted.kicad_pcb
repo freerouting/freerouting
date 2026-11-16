@@ -2790,4 +2790,60 @@
   
   
   
+  
+  (zone (net 1) (net_name GND) (layer B.Cu) (tstamp 61E40F36) (hatch edge 0.508)
+    (connect_pads (clearance 0.5))
+    (min_thickness 0.5)
+    (fill yes (arc_segments 32) (thermal_gap 0.5) (thermal_bridge_width 1))
+    (polygon
+      (pts
+        (xy 124.5 87.5) (xy 169 87.5) (xy 169 119) (xy 124.5 119)
+      )
+    )
+    
   )
+  (zone (net 0) (net_name "") (layers F&B.Cu) (tstamp 0) (hatch edge 0.508)
+    (connect_pads (clearance 0.5))
+    (min_thickness 0.254)
+    (keepout (tracks not_allowed) (vias not_allowed) (copperpour not_allowed))
+    (fill (arc_segments 32) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 130.683 93.726) (xy 124.333 93.726) (xy 124.333 87.249) (xy 130.683 87.249)
+      )
+    )
+  )
+  (zone (net 0) (net_name "") (layers F&B.Cu) (tstamp 61E40C89) (hatch edge 0.508)
+    (connect_pads (clearance 0.5))
+    (min_thickness 0.254)
+    (keepout (tracks not_allowed) (vias not_allowed) (copperpour not_allowed))
+    (fill (arc_segments 32) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 130.683 119.223457) (xy 124.333 119.223457) (xy 124.333 112.746457) (xy 130.683 112.746457)
+      )
+    )
+  )
+  (zone (net 0) (net_name "") (layers F&B.Cu) (tstamp 61E40C89) (hatch edge 0.508)
+    (connect_pads (clearance 0.5))
+    (min_thickness 0.254)
+    (keepout (tracks not_allowed) (vias not_allowed) (copperpour not_allowed))
+    (fill (arc_segments 32) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 169.164 119.253) (xy 162.814 119.253) (xy 162.814 112.776) (xy 169.164 112.776)
+      )
+    )
+  )
+  (zone (net 0) (net_name "") (layers F&B.Cu) (tstamp 61E40C89) (hatch edge 0.508)
+    (connect_pads (clearance 0.5))
+    (min_thickness 0.254)
+    (keepout (tracks not_allowed) (vias not_allowed) (copperpour not_allowed))
+    (fill (arc_segments 32) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 169.164 93.726) (xy 162.814 93.726) (xy 162.814 87.249) (xy 169.164 87.249)
+      )
+    )
+  )
+)

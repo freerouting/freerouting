@@ -2802,5 +2802,70 @@
   
   
   
-
+  (zone (net 5) (net_name GND) (layer Bottom) (tstamp 595096C7) (hatch edge 0.508)
+    (connect_pads yes (clearance 0))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.1) (thermal_bridge_width 2.286) (smoothing fillet) (radius 1))
+    (polygon
+      (pts
+        (xy 175.133 92.583) (xy 68.707 92.583) (xy 68.707 85.217) (xy 175.133 85.217)
+      )
+    )
+    
+  )
+  (zone (net 6) (net_name -12V) (layer Bottom) (tstamp 595096CE) (hatch edge 0.508)
+    (connect_pads yes (clearance 0))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.1) (thermal_bridge_width 2.286) (smoothing fillet) (radius 1))
+    (polygon
+      (pts
+        (xy 175.133 95.123) (xy 68.707 95.123) (xy 68.707 92.837) (xy 175.133 92.837)
+      )
+    )
+    
+  )
+  (zone (net 4) (net_name +12V) (layer Bottom) (tstamp 595096CF) (hatch edge 0.508)
+    (connect_pads yes (clearance 0))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.1) (thermal_bridge_width 2.286) (smoothing fillet) (radius 1))
+    (polygon
+      (pts
+        (xy 175.133 84.963) (xy 68.707 84.963) (xy 68.707 82.677) (xy 175.133 82.677)
+      )
+    )
+    
+  )
+  (zone (net 3) (net_name +5V) (layer Bottom) (tstamp 595096D0) (hatch edge 0.508)
+    (connect_pads yes (clearance 0))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.1) (thermal_bridge_width 2.286) (smoothing fillet) (radius 1))
+    (polygon
+      (pts
+        (xy 175.133 82.423) (xy 68.707 82.423) (xy 68.707 80.137) (xy 175.133 80.137)
+      )
+    )
+    
+  )
+  (zone (net 2) (net_name CV) (layer Bottom) (tstamp 595096D1) (hatch edge 0.508)
+    (connect_pads yes (clearance 0))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.1) (thermal_bridge_width 2.286) (smoothing fillet) (radius 1))
+    (polygon
+      (pts
+        (xy 175.133 79.883) (xy 68.707 79.883) (xy 68.707 77.597) (xy 175.133 77.597)
+      )
+    )
+    
+  )
+  (zone (net 1) (net_name GATE) (layer Bottom) (tstamp 595096D2) (hatch edge 0.508)
+    (connect_pads yes (clearance 0))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.1) (thermal_bridge_width 2.286) (smoothing fillet) (radius 1))
+    (polygon
+      (pts
+        (xy 175.133 77.343) (xy 68.707 77.343) (xy 68.707 75.057) (xy 175.133 75.057)
+      )
+    )
+    
+  )
 )
