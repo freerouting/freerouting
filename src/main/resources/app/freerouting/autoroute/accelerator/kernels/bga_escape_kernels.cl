@@ -70,7 +70,7 @@ __kernel void rasterize_obstacles_and_rudy(
         by >= ly && by <= uy &&
         (bx - by) >= ulx && (bx - by) <= lrx &&
         (bx + by) >= llx && (bx + by) <= urx) {
-      isOccupied = 1;
+      isOccupied = -1;
       break;
     }
   }

@@ -101,7 +101,7 @@ public final class BgaEscapeKernels {
             && (bx - by) <= obstacles.get(o + 5)
             && (bx + by) >= obstacles.get(o + 6)
             && (bx + by) <= obstacles.get(o + 7)) {
-          occupied = 1;
+          occupied = -1;
         }
       }
     }

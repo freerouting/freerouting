@@ -116,9 +116,6 @@ class BgaEscapeKernelsTest {
 
   @Test
   void blockedSiteMovesTheViaToTheNextSite() {
-    // The pin under test is pin 1: the occupancy grid tags obstacles with 1 and pin pads with
-    // index + 1, so for pin 0 an obstacle cell is indistinguishable from its own pad (the same
-    // holds for the OpenCL kernel).
     int[] pins = new int[2 * BgaEscapeKernels.PIN_STRIDE];
     pin(pins, 0, 3600, 600, 1, -1, PASSIVE);
     pin(pins, 1, 2000, 2000, 1, 1, SIGNAL);
@@ -133,6 +130,23 @@ class BgaEscapeKernelsTest {
         primary / STEP * 1000 + primary / STEP,
         field(solutions, 1, VIA_X) * 1000 + field(solutions, 1, VIA_Y),
         "via must not land on the blocked site");
+  }
+
+  @Test
+  void pinZeroBlockedSiteMovesViaToNextSite() {
+    int[] pins = new int[BgaEscapeKernels.PIN_STRIDE];
+    pin(pins, 0, 2000, 2000, 1, 1, SIGNAL);
+    int primary = 2000 + PITCH / 2;
+
+    int[] solutions =
+        BgaEscapeRunner.runOnCpu(
+            grid(pins, boxObstacle(primary - 50, primary + 50, primary - 50, primary + 50)));
+
+    assertEquals(2, field(solutions, 0, STATUS));
+    assertNotEquals(
+        primary / STEP * 1000 + primary / STEP,
+        field(solutions, 0, VIA_X) * 1000 + field(solutions, 0, VIA_Y),
+        "via for pin 0 must not land on the blocked site");
   }
 
   @Test

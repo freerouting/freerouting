@@ -242,20 +242,22 @@ public final class GpuBgaEscapeSolver {
                 MemorySegment.NULL,
                 errBuf);
         memObjects.add(clViaSites);
+        MemorySegment zeroHistCost = arena.allocate(cellHistCostSize, 4);
         MemorySegment clHistCost =
             bindings.clCreateBuffer(
                 context,
-                PanamaOpenClBindings.CL_MEM_READ_WRITE,
+                PanamaOpenClBindings.CL_MEM_READ_WRITE | PanamaOpenClBindings.CL_MEM_COPY_HOST_PTR,
                 cellHistCostSize,
-                MemorySegment.NULL,
+                zeroHistCost,
                 errBuf);
         memObjects.add(clHistCost);
+        MemorySegment zeroSolBuf = arena.allocate(solBufSize, 4);
         MemorySegment clSolBuf =
             bindings.clCreateBuffer(
                 context,
-                PanamaOpenClBindings.CL_MEM_READ_WRITE,
+                PanamaOpenClBindings.CL_MEM_READ_WRITE | PanamaOpenClBindings.CL_MEM_COPY_HOST_PTR,
                 solBufSize,
-                MemorySegment.NULL,
+                zeroSolBuf,
                 errBuf);
         memObjects.add(clSolBuf);
         MemorySegment clCellWinner =
