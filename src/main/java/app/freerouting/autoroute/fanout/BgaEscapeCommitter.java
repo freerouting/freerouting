@@ -47,8 +47,7 @@ import java.util.Set;
  *       corridor centerline.
  *   <li>Applies continuous {@code okLength} truncation to outer-perimeter escape rays.
  *   <li>Atomically inserts valid traces and vias into the board model with {@link
- *       FixedState#USER_FIXED} for interior fanout and {@link FixedState#SHOVE_FIXED} for perimeter
- *       stubs.
+ *       FixedState#USER_FIXED} to protect them from premature removal by tail cleanup.
  *   <li>Checks {@link Thread#isInterrupted()} between commits for clean cancellation.
  * </ol>
  */
@@ -108,7 +107,8 @@ public final class BgaEscapeCommitter {
     double sin = Math.sin(rad);
 
     // Maintain placed plane vias for deduplication of shared ground/power vias
-    Map<Long, Via> placedPlaneVias = new HashMap<>();
+    record PlaneViaKey(IntPoint location, int netNo) {}
+    Map<PlaneViaKey, Via> placedPlaneVias = new HashMap<>();
     // Maintain committed via locations to prevent double-via collisions
     Set<IntPoint> committedViaLocations = new HashSet<>();
     // Maintain successfully escaped pins to bypass redundant CPU fanout retries
@@ -124,9 +124,17 @@ public final class BgaEscapeCommitter {
         continue;
       }
 
-      attempted++;
       BgaPinDescriptor pd = proposal.pinDescriptor();
       Pin pin = pd.pin();
+      if (pin == null || committedPins.contains(pin)) {
+        continue;
+      }
+      if (!pin.getNormalContacts().isEmpty()) {
+        committedPins.add(pin);
+        continue; // Pin already escaped or connected
+      }
+
+      attempted++;
       Point pinCenter = pin.getCenter();
       if (pinCenter == null) {
         drcRejections++;
@@ -161,15 +169,10 @@ public final class BgaEscapeCommitter {
               ? nc.defaultItemClearanceClasses.get(DefaultItemClearanceClasses.ItemClass.VIA)
               : pd.clearanceClassIdx();
 
-      Padstack viaPadstack = resolveViaPadstack(board, pinLayer, targetLayer, nc);
-      if (viaPadstack == null) {
-        FRLogger.warn("BGA escape committer: no default via padstack configured on board");
-        return new CommitResult(proposals.size(), 0, 0, 0, proposals.size());
-      }
-
       double exitMargin = bga.pitchBoardUnits() * 1.5;
       double p = bga.pitchBoardUnits();
       double minPerimeterClearance = p * 0.25;
+      double safetyMargin = Math.max(1.0, Math.min(10.0, traceHalfWidthPin * 0.1));
 
       // Case A: Ring 0 direct perimeter escape on pinLayer (no via)
       if (ring == 0
@@ -191,13 +194,20 @@ public final class BgaEscapeCommitter {
             toGlobalPoint(pinCenter, pd.localU(), pd.localV(), localExitU, localExitV, cos, sin);
         double maxAllowed =
             board.checkTraceSegment(
-                pinCenter, globalExit, pinLayer, netNumbers, traceHalfWidthPin, traceClClass, true);
+                pinCenter,
+                globalExit,
+                pinLayer,
+                netNumbers,
+                traceHalfWidthPin,
+                traceClClass,
+                false);
         double fullDist = pinCenter.toFloat().distance(globalExit.toFloat());
 
         if (maxAllowed < fullDist) {
           double distToPerimeter = getDistToPerimeter(pd, sector, bga);
           if (maxAllowed >= distToPerimeter + minPerimeterClearance) {
-            double safeLen = Math.max(distToPerimeter + minPerimeterClearance, maxAllowed - 10.0);
+            double safeLen =
+                Math.max(distToPerimeter + minPerimeterClearance, maxAllowed - safetyMargin);
             globalExit = interpolatePoint(pinCenter, globalExit, safeLen / fullDist);
           } else {
             drcRejections++;
@@ -207,12 +217,7 @@ public final class BgaEscapeCommitter {
 
         Polyline polyline = new Polyline(new Point[] {pinCenter, globalExit});
         board.insertTrace(
-            polyline,
-            pinLayer,
-            traceHalfWidthPin,
-            netNumbers,
-            traceClClass,
-            FixedState.SHOVE_FIXED);
+            polyline, pinLayer, traceHalfWidthPin, netNumbers, traceClClass, FixedState.USER_FIXED);
         tracesInserted++;
         committed++;
         committedPins.add(pin);
@@ -262,7 +267,7 @@ public final class BgaEscapeCommitter {
 
         double maxAllowed1 =
             board.checkTraceSegment(
-                pinCenter, globalJog, pinLayer, netNumbers, traceHalfWidthPin, traceClClass, true);
+                pinCenter, globalJog, pinLayer, netNumbers, traceHalfWidthPin, traceClClass, false);
         if (maxAllowed1 < pinCenter.toFloat().distance(globalJog.toFloat())) {
           drcRejections++;
           continue;
@@ -270,13 +275,20 @@ public final class BgaEscapeCommitter {
 
         double maxAllowed2 =
             board.checkTraceSegment(
-                globalJog, globalExit, pinLayer, netNumbers, traceHalfWidthPin, traceClClass, true);
+                globalJog,
+                globalExit,
+                pinLayer,
+                netNumbers,
+                traceHalfWidthPin,
+                traceClClass,
+                false);
         double dist2 = globalJog.toFloat().distance(globalExit.toFloat());
 
         if (maxAllowed2 < dist2) {
           double distToPerimeter = Math.max(0.0, getDistToPerimeter(pd, sector, bga) - p / 2.0);
           if (maxAllowed2 >= distToPerimeter + minPerimeterClearance) {
-            double safeLen = Math.max(distToPerimeter + minPerimeterClearance, maxAllowed2 - 10.0);
+            double safeLen =
+                Math.max(distToPerimeter + minPerimeterClearance, maxAllowed2 - safetyMargin);
             globalExit = interpolatePoint(globalJog, globalExit, safeLen / dist2);
           } else {
             drcRejections++;
@@ -286,12 +298,7 @@ public final class BgaEscapeCommitter {
 
         Polyline polyline = new Polyline(new Point[] {pinCenter, globalJog, globalExit});
         board.insertTrace(
-            polyline,
-            pinLayer,
-            traceHalfWidthPin,
-            netNumbers,
-            traceClClass,
-            FixedState.SHOVE_FIXED);
+            polyline, pinLayer, traceHalfWidthPin, netNumbers, traceClClass, FixedState.USER_FIXED);
         tracesInserted++;
         committed++;
         committedPins.add(pin);
@@ -299,6 +306,20 @@ public final class BgaEscapeCommitter {
       }
 
       // Case C: Ring 2+ or via-escaped pins (4-candidate interstitial exploration)
+      Padstack viaPadstack = resolveViaPadstack(board, pinLayer, targetLayer, nc);
+      if (viaPadstack == null) {
+        FRLogger.warn(
+            "BGA escape committer: no suitable via padstack configured on board for net "
+                + netNo
+                + " (pinLayer "
+                + pinLayer
+                + " to targetLayer "
+                + targetLayer
+                + ")");
+        drcRejections++;
+        continue;
+      }
+
       int pinU = (int) Math.round(pd.localU());
       int pinV = (int) Math.round(pd.localV());
       int halfPitch = (int) Math.round(p / 2.0);
@@ -326,7 +347,7 @@ public final class BgaEscapeCommitter {
         IntPoint globalViaCenter =
             toGlobalPoint(pinCenter, pd.localU(), pd.localV(), viaU, viaV, cos, sin);
 
-        long viaKey = (((long) globalViaCenter.x) << 32) | ((long) globalViaCenter.y & 0xFFFFFFFFL);
+        PlaneViaKey viaKey = new PlaneViaKey(globalViaCenter, netNo);
         boolean isPlaneDrop = (pd.disposition() == PinDisposition.PLANE_DROP);
         boolean viaAlreadyPlaced = isPlaneDrop && placedPlaneVias.containsKey(viaKey);
 
@@ -351,7 +372,7 @@ public final class BgaEscapeCommitter {
                 netNumbers,
                 traceHalfWidthPin,
                 traceClClass,
-                true);
+                false);
         if (maxAllowedDogbone < pinCenter.toFloat().distance(globalViaCenter.toFloat())) {
           continue; // Dogbone obstructed on pinLayer
         }
@@ -406,7 +427,7 @@ public final class BgaEscapeCommitter {
                   netNumbers,
                   traceHalfWidthTarget,
                   traceClClass,
-                  true);
+                  false);
           if (maxAllowedJog < globalViaCenter.toFloat().distance(globalCorridor.toFloat())) {
             continue; // Jog obstructed on targetLayer
           }
@@ -420,14 +441,15 @@ public final class BgaEscapeCommitter {
                   netNumbers,
                   traceHalfWidthTarget,
                   traceClClass,
-                  true);
+                  false);
           double corridorDist = globalCorridor.toFloat().distance(globalBreakoutExit.toFloat());
 
           if (maxAllowedCorridor < corridorDist) {
             double distToPerimeter = getDistToPerimeter(pd, sector, bga);
             if (maxAllowedCorridor >= distToPerimeter + minPerimeterClearance) {
               double safeLen =
-                  Math.max(distToPerimeter + minPerimeterClearance, maxAllowedCorridor - 10.0);
+                  Math.max(
+                      distToPerimeter + minPerimeterClearance, maxAllowedCorridor - safetyMargin);
               globalBreakoutExit =
                   interpolatePoint(globalCorridor, globalBreakoutExit, safeLen / corridorDist);
             } else {
@@ -436,25 +458,32 @@ public final class BgaEscapeCommitter {
           }
         }
 
-        // Commit dogbone trace
-        Polyline dogbone = new Polyline(new Point[] {pinCenter, globalViaCenter});
-        board.insertTrace(
-            dogbone, pinLayer, traceHalfWidthPin, netNumbers, traceClClass, FixedState.SHOVE_FIXED);
-        tracesInserted++;
-
-        // Commit via
+        // Commit via first so no orphaned traces exist if via placement fails
+        Via insertedVia = null;
         if (!viaAlreadyPlaced) {
-          Via insertedVia =
+          insertedVia =
               board.insertVia(
                   viaPadstack,
                   globalViaCenter,
                   netNumbers,
                   viaClClass,
-                  FixedState.SHOVE_FIXED,
+                  FixedState.USER_FIXED,
                   true);
+          if (insertedVia == null) {
+            continue;
+          }
+        }
+
+        // Commit dogbone trace
+        Polyline dogbone = new Polyline(new Point[] {pinCenter, globalViaCenter});
+        board.insertTrace(
+            dogbone, pinLayer, traceHalfWidthPin, netNumbers, traceClClass, FixedState.USER_FIXED);
+        tracesInserted++;
+
+        if (insertedVia != null) {
           viasInserted++;
           committedViaLocations.add(globalViaCenter);
-          if (isPlaneDrop && insertedVia != null) {
+          if (isPlaneDrop) {
             placedPlaneVias.put(viaKey, insertedVia);
           }
         }
@@ -469,7 +498,7 @@ public final class BgaEscapeCommitter {
               traceHalfWidthTarget,
               netNumbers,
               traceClClass,
-              FixedState.SHOVE_FIXED);
+              FixedState.USER_FIXED);
           tracesInserted++;
         }
 

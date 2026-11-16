@@ -247,11 +247,15 @@ public final class BatchFanout {
             }
           }
         }
-      } catch (Throwable t) {
-        String errMsg = "GPU BGA fanout pre-pass skipped due to error: " + t.getMessage();
-        FRLogger.warn(errMsg);
-        if (infoLogger != null) {
-          infoLogger.accept(errMsg);
+      } catch (Exception | LinkageError ex) {
+        if (Thread.currentThread().isInterrupted()) {
+          FRLogger.warn("GPU BGA fanout pre-pass interrupted");
+        } else {
+          String errMsg = "GPU BGA fanout pre-pass skipped due to error: " + ex.getMessage();
+          FRLogger.warn(errMsg);
+          if (infoLogger != null) {
+            infoLogger.accept(errMsg);
+          }
         }
       }
     }

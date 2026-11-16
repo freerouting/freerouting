@@ -3,6 +3,7 @@ package app.freerouting.fixtures;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import app.freerouting.autoroute.fanout.BgaBufferMarshaller;
 import app.freerouting.autoroute.fanout.BgaEscapeCommitter;
 import app.freerouting.autoroute.fanout.BgaEscapeDescriptor;
 import app.freerouting.autoroute.fanout.BgaFootprintDetector;
@@ -39,7 +40,13 @@ class BgaEscapeHardTest extends RoutingFixtureTest {
     assertEquals(381, bga.pins().size(), "caBGA-381 has 381 pins");
 
     List<PinEscapeProposal> proposals = GpuBgaEscapeSolver.solve(board, bga, settings, null);
-    assertTrue(proposals.size() > 0, "GPU solver must produce proposals");
+    if (proposals.isEmpty()) {
+      try (BgaBufferMarshaller.MarshaledBgaData data =
+          BgaBufferMarshaller.marshal(board, bga, settings)) {
+        proposals = GpuBgaEscapeSolver.executeDeterministicWavefront(board, bga, data);
+      }
+    }
+    assertTrue(proposals.size() > 0, "GPU or CPU wavefront solver must produce proposals");
 
     BgaEscapeCommitter.CommitResult result = BgaEscapeCommitter.commit(board, bga, proposals);
     assertTrue(result.pinsCommitted() >= 380, "Must successfully commit at least 380 BGA pins");

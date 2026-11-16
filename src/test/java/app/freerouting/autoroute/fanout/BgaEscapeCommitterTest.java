@@ -407,4 +407,140 @@ class BgaEscapeCommitterTest {
     assertEquals(
         0, detectedAfter.size(), "BGA with NC pins must be skipped once routable pins are escaped");
   }
+
+  @Test
+  void testCommitterIdempotencyAndNoDuplicates() {
+    RoutingBoard board = createTestBoard();
+
+    int pitch = 1000;
+    Padstack pad =
+        board.library.padstacks.add(new ConvexShape[] {new Circle(Point.ZERO, 150), null});
+
+    List<Package.Pin> pkgPins = new ArrayList<>();
+    for (int r = 0; r < 8; r++) {
+      for (int c = 0; c < 8; c++) {
+        double lx = (c - 3.5) * pitch;
+        double ly = (r - 3.5) * pitch;
+        pkgPins.add(new Package.Pin("P" + (r * 8 + c), pad.id, new FloatPoint(lx, ly), 0));
+      }
+    }
+
+    Package pkg = board.library.packages.add(pkgPins.toArray(new Package.Pin[0]));
+    Component comp =
+        board.components.addPrecise(
+            "U1", new FloatPoint(50000, 50000), 0.0, true, pkg, pkg, false, null);
+
+    for (int i = 0; i < 64; i++) {
+      board.insertPin(comp.id, i, new int[] {i + 1}, 1, FixedState.UNFIXED);
+    }
+
+    RouterSettings settings = new RouterSettings();
+    settings.fanout.gpuMinBgaPins = 64;
+
+    BgaEscapeDescriptor bga =
+        BgaFootprintDetector.analyzeComponent(
+            board, comp, new ArrayList<>(board.getSmdPins()), settings);
+    assertNotNull(bga);
+
+    List<PinEscapeProposal> proposals;
+    try (MarshaledBgaData data = BgaBufferMarshaller.marshal(board, bga, settings)) {
+      proposals = GpuBgaEscapeSolver.executeDeterministicWavefront(board, bga, data);
+    }
+    assertFalse(proposals.isEmpty());
+
+    // First commit: should commit pins successfully
+    CommitResult res1 = BgaEscapeCommitter.commit(board, bga, proposals);
+    assertTrue(res1.pinsCommitted() > 0, "First commit must commit pins");
+    int traceCountAfterFirst = board.getTraces().size();
+    int viaCountAfterFirst = board.getVias().size();
+
+    // Second commit: must be idempotent and insert 0 duplicates
+    CommitResult res2 = BgaEscapeCommitter.commit(board, bga, proposals);
+    assertEquals(0, res2.pinsCommitted(), "Second commit must commit 0 new pins");
+    assertEquals(0, res2.tracesInserted(), "Second commit must insert 0 new traces");
+    assertEquals(0, res2.viasInserted(), "Second commit must insert 0 new vias");
+    assertEquals(
+        traceCountAfterFirst,
+        board.getTraces().size(),
+        "Trace count must remain identical after duplicate commit");
+    assertEquals(
+        viaCountAfterFirst,
+        board.getVias().size(),
+        "Via count must remain identical after duplicate commit");
+
+    // Verify zero clearance violations
+    List<?> violations =
+        new ArrayList<>(new DesignRulesChecker(board, null).getAllClearanceViolations());
+    assertEquals(0, violations.size());
+  }
+
+  @Test
+  void testCommittedEscapesSurviveTailRemovalAndDanglingCopper() {
+    RoutingBoard board = createTestBoard();
+
+    int pitch = 1000;
+    Padstack pad =
+        board.library.padstacks.add(new ConvexShape[] {new Circle(Point.ZERO, 150), null});
+
+    List<Package.Pin> pkgPins = new ArrayList<>();
+    for (int r = 0; r < 8; r++) {
+      for (int c = 0; c < 8; c++) {
+        double lx = (c - 3.5) * pitch;
+        double ly = (r - 3.5) * pitch;
+        pkgPins.add(new Package.Pin("P" + (r * 8 + c), pad.id, new FloatPoint(lx, ly), 0));
+      }
+    }
+
+    Package pkg = board.library.packages.add(pkgPins.toArray(new Package.Pin[0]));
+    Component comp =
+        board.components.addPrecise(
+            "U1", new FloatPoint(50000, 50000), 0.0, true, pkg, pkg, false, null);
+
+    for (int i = 0; i < 64; i++) {
+      board.insertPin(comp.id, i, new int[] {i + 1}, 1, FixedState.UNFIXED);
+    }
+
+    RouterSettings settings = new RouterSettings();
+    settings.fanout.gpuMinBgaPins = 64;
+
+    BgaEscapeDescriptor bga =
+        BgaFootprintDetector.analyzeComponent(
+            board, comp, new ArrayList<>(board.getSmdPins()), settings);
+    assertNotNull(bga);
+
+    List<PinEscapeProposal> proposals;
+    try (MarshaledBgaData data = BgaBufferMarshaller.marshal(board, bga, settings)) {
+      proposals = GpuBgaEscapeSolver.executeDeterministicWavefront(board, bga, data);
+    }
+    assertFalse(proposals.isEmpty());
+
+    CommitResult res = BgaEscapeCommitter.commit(board, bga, proposals);
+    assertTrue(res.pinsCommitted() > 0);
+    int tracesCommitted = board.getTraces().size();
+    int viasCommitted = board.getVias().size();
+    assertTrue(tracesCommitted > 0);
+    assertTrue(viasCommitted > 0);
+
+    // Execute aggressive tail removal (NONE stops at nothing)
+    board.removeTraceTails(-1, app.freerouting.board.model.items.Item.StopConnectionOption.NONE);
+    assertEquals(
+        tracesCommitted,
+        board.getTraces().size(),
+        "Committed BGA escape traces must survive removeTraceTails(NONE)");
+    assertEquals(
+        viasCommitted,
+        board.getVias().size(),
+        "Committed BGA escape vias must survive removeTraceTails(NONE)");
+
+    // Execute DanglingCopper cleanup
+    app.freerouting.autoroute.pipeline.DanglingCopper.remove(board, "after the last stage");
+    assertEquals(
+        tracesCommitted,
+        board.getTraces().size(),
+        "Committed BGA escape traces must survive DanglingCopper.remove()");
+    assertEquals(
+        viasCommitted,
+        board.getVias().size(),
+        "Committed BGA escape vias must survive DanglingCopper.remove()");
+  }
 }
