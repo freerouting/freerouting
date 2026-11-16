@@ -264,6 +264,10 @@ Let's suppose that the new version is `<version>` (e.g. `2.5.0`). You need to co
 * Change `ext.publishInfo.versionId` in `gradle/project-info.gradle` to the next snapshot version (e.g. `2.5.1-SNAPSHOT`).
 * Commit, push, open a PR from `chore/bump-to-next-snapshot` → `master`, and merge it into `master`.
 
+## How to update donors and sponsors
+
+Freerouting displays vetted community donors on the website and dynamically in the desktop app (`WindowSponsor`) without requiring app releases. Detailed instructions for reviewing, updating, and synchronizing `website/donors.json` live in [`docs/donors.md`](donors.md).
+
 ## How to update the MCP Server NPM package
 
 The `@freerouting/freerouting-mcp-server` package lives in `integrations/mcp-server`. Its npm semver tracks the main Freerouting release (not an independent version line).

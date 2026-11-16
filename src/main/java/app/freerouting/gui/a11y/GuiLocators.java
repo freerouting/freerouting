@@ -130,6 +130,12 @@ public final class GuiLocators {
   public static final String MENU_HELP_SPONSOR = "menu.help.sponsor";
   public static final String MENU_PROFILE = "menu.profile";
 
+  /** Sponsor / Donors dialog (WindowSponsor). */
+  public static final String WINDOW_SPONSOR = "window.sponsor";
+
+  public static final String WINDOW_SPONSOR_DONATE_BUTTON = "window.sponsor.donate_button";
+  public static final String WINDOW_SPONSOR_DONORS_LIST = "window.sponsor.donors_list";
+
   /** Component-only display/settings panel. */
   public static final String DISPLAY_SETTINGS = "display.settings";
 
