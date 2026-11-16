@@ -31,6 +31,33 @@ class KiCadProjectTest {
   }
 
   @Test
+  void theNarrowestTraceIsTheLargerOfTheTwoMinimums() {
+    KiCadProject both =
+        KiCadProject.parse(
+            project("\"min_connection\": 0.2032, \"min_track_width\": 0.15"), "board.kicad_pro");
+    assertEquals(150.0, both.minTrackWidthUm(), 1e-9);
+    assertEquals(203.2, both.minConnectionWidthUm(), 1e-9);
+    assertEquals(203.2, both.narrowestTraceWidthUm(), 1e-9);
+
+    assertEquals(
+        250.0,
+        KiCadProject.parse(project("\"min_connection\": 0.1, \"min_track_width\": 0.25"), "p")
+            .narrowestTraceWidthUm(),
+        1e-9);
+    // Only one of them set
+    assertEquals(
+        200.0,
+        KiCadProject.parse(project("\"min_connection\": 0.2"), "p").narrowestTraceWidthUm(),
+        1e-9);
+    assertEquals(
+        200.0,
+        KiCadProject.parse(project("\"min_track_width\": 0.2, \"min_connection\": 0.0"), "p")
+            .narrowestTraceWidthUm(),
+        1e-9);
+    assertNull(KiCadProject.parse(project("\"min_clearance\": 0.2"), "p").narrowestTraceWidthUm());
+  }
+
+  @Test
   void noPositiveMinimumMeansNone() {
     assertNull(KiCadProject.parse(project("\"min_track_width\": 0.0"), "p").minTrackWidthUm());
     assertNull(KiCadProject.parse(project("\"min_clearance\": 0.2"), "p").minTrackWidthUm());

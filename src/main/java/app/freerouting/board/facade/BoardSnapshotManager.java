@@ -89,7 +89,9 @@ public final class BoardSnapshotManager {
 
   /** Removes the top snapshot from the undo stack. */
   boolean popSnapshot() {
-    return board.itemList.popSnapshot();
+    boolean itemPopped = board.itemList.popSnapshot();
+    boolean componentPopped = board.components.popSnapshot();
+    return itemPopped && componentPopped;
   }
 
   /** Returns the number of trace IDs that differ from another board. */

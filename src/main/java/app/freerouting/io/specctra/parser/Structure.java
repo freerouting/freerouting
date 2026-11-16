@@ -537,10 +537,14 @@ public class Structure extends ScopeKeyword {
   }
 
   private static void insertMissingPowerPlanes(
-      Collection<Layer> layerInfo, NetList netlist, BasicBoard board) {
+      Collection<Layer> layerInfo,
+      NetList netlist,
+      BasicBoard board,
+      Set<String> layersWithWireCopper) {
     Collection<ConductionArea> conductionAreas = board.getConductionAreas();
     for (Layer currentLayer : layerInfo) {
-      if (currentLayer.isSignal) {
+      if (currentLayer.isSignal || layersWithWireCopper.contains(currentLayer.name)) {
+        // a layer whose copper comes from the wiring scope gets its plane there
         continue;
       }
       boolean conductionAreaFound = false;
@@ -1183,7 +1187,11 @@ public class Structure extends ScopeKeyword {
         return false;
       }
     }
-    insertMissingPowerPlanes(boardConstructionInfo.layerInfo, scopeParameter.netlist, board);
+    insertMissingPowerPlanes(
+        boardConstructionInfo.layerInfo,
+        scopeParameter.netlist,
+        board,
+        scopeParameter.polygonWireNetsByLayer.keySet());
 
     // Apply DSN autoroute settings to the current routing job if they were parsed
     if (scopeParameter.autorouteSettings != null) {
@@ -1220,19 +1228,39 @@ public class Structure extends ScopeKeyword {
     List<Layer> updatedLayers = new ArrayList<>(boardConstructionInfo.layerInfo.size());
     boolean changed = false;
     for (Layer currentLayer : boardConstructionInfo.layerInfo) {
-      if (!currentLayer.isSignal
-          && currentLayer.netNames.isEmpty()
-          && !layersWithPlane.contains(currentLayer.no)) {
-        FRLogger.warn(
+      if (currentLayer.isSignal
+          || !currentLayer.netNames.isEmpty()
+          || layersWithPlane.contains(currentLayer.no)) {
+        updatedLayers.add(currentLayer);
+        continue;
+      }
+      Set<String> wireNets = scopeParameter.polygonWireNetsByLayer.get(currentLayer.name);
+      if (wireNets != null && !wireNets.isEmpty()) {
+        // The plane copper comes later, as (wire (polygon ...)) in the wiring scope: the layer
+        // stays a plane layer, and its nets are plane nets, as with a (plane ...) scope.
+        FRLogger.info(
+            "Layer '"
+                + currentLayer.name
+                + "' is declared as a power layer and its copper is given as wire polygon(s) of"
+                + " net(s) "
+                + wireNets
+                + " in the wiring. It stays a plane layer.");
+        updatedLayers.add(new Layer(currentLayer.name, currentLayer.no, false, wireNets));
+        changed = true;
+      } else {
+        String message =
             "Layer '"
                 + currentLayer.name
                 + "' is declared as a power layer but no plane is defined for it. It will be"
-                + " treated as a signal layer.");
+                + " treated as a signal layer.";
+        if (scopeParameter.wiringIsRead) {
+          FRLogger.warn(message);
+        } else {
+          FRLogger.debug(message);
+        }
         updatedLayers.add(
             new Layer(currentLayer.name, currentLayer.no, true, currentLayer.netNames));
         changed = true;
-      } else {
-        updatedLayers.add(currentLayer);
       }
     }
     if (changed) {

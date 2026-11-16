@@ -174,9 +174,8 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
         if (currentNode.boundingShape.intersects(boundingShape)) {
           if (currentNode instanceof Leaf currentLeaf) {
             SearchTreeObject currentObject = (SearchTreeObject) currentLeaf.object;
-            boolean isObstacle = currentObject.isTraceObstacle(netNumber);
-
             int shapeIndex = currentLeaf.shapeIndexInObject;
+            boolean isObstacle = currentObject.isTraceObstacle(netNumber, shapeIndex);
             int objectLayer = currentObject.shapeLayer(shapeIndex);
             boolean sameLayer = objectLayer == roomLayer;
             boolean ignoredObject = currentObject == ignoreObject;

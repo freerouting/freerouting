@@ -96,7 +96,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
           if (currentNode instanceof Leaf currentLeaf) {
             SearchTreeObject currentObject = (SearchTreeObject) currentLeaf.object;
             int shapeIndex = currentLeaf.shapeIndexInObject;
-            boolean isObstacle = currentObject.isTraceObstacle(netNumber);
+            boolean isObstacle = currentObject.isTraceObstacle(netNumber, shapeIndex);
             int objectLayer = currentObject.shapeLayer(shapeIndex);
             boolean sameLayer = objectLayer == roomLayer;
             boolean ignoredObject = currentObject == ignoreObject;
