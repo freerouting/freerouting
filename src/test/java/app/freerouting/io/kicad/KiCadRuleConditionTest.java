@@ -57,6 +57,13 @@ class KiCadRuleConditionTest {
     assertEquals(Tri.TRUE, eval("A.memberOfFootprint('sma-j:*')", connector, connector));
     // without a ':' the selector is a reference only, as in KiCad
     assertEquals(Tri.FALSE, eval("A.memberOfFootprint('SMA-J')", connector, connector));
+    // with a ':' the selector matches only the library identifier, not a colliding reference
+    Item collidingRef =
+        new Item(ItemType.PAD, "/RF", "Default", "sma-j:SMA-J", "1", true, "other:Footprint");
+    assertEquals(Tri.FALSE, eval("A.memberOfFootprint('sma-j:SMA-J')", collidingRef, collidingRef));
+    // library identifier matching is case-sensitive (both literal and wildcard)
+    assertEquals(Tri.FALSE, eval("A.memberOfFootprint('sma-j:sma-j')", connector, connector));
+    assertEquals(Tri.FALSE, eval("A.memberOfFootprint('SMA-J:*')", connector, connector));
     // an item without a footprint is never a member
     assertEquals(Tri.FALSE, eval("A.memberOfFootprint('sma-j:*')", MAINS_TRACK, MAINS_TRACK));
   }

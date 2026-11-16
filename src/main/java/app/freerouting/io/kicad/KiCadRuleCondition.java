@@ -207,15 +207,30 @@ public final class KiCadRuleCondition {
   /** The compiled wildcard patterns, which come from rules files and are few. */
   private static final Map<String, Pattern> WILDCARDS = new ConcurrentHashMap<>();
 
+  private static final Map<String, Pattern> CASE_SENSITIVE_WILDCARDS = new ConcurrentHashMap<>();
+
   private static boolean matches(String pattern, String text) {
+    return matches(pattern, text, false);
+  }
+
+  private static boolean matches(String pattern, String text, boolean caseSensitive) {
     if (pattern.indexOf('*') < 0 && pattern.indexOf('?') < 0) {
-      return pattern.equalsIgnoreCase(text);
+      return caseSensitive ? pattern.equals(text) : pattern.equalsIgnoreCase(text);
     }
-    return WILDCARDS.computeIfAbsent(pattern, KiCadRuleCondition::wildcard).matcher(text).matches();
+    Map<String, Pattern> cache = caseSensitive ? CASE_SENSITIVE_WILDCARDS : WILDCARDS;
+    return cache
+        .computeIfAbsent(pattern, glob -> wildcard(glob, caseSensitive))
+        .matcher(text)
+        .matches();
   }
 
   /** A KiCad wildcard ({@code *} and {@code ?}) as a case-insensitive regular expression. */
   static Pattern wildcard(String glob) {
+    return wildcard(glob, false);
+  }
+
+  /** A KiCad wildcard ({@code *} and {@code ?}) as a regular expression. */
+  static Pattern wildcard(String glob, boolean caseSensitive) {
     StringBuilder regex = new StringBuilder();
     for (char c : glob.toCharArray()) {
       switch (c) {
@@ -224,7 +239,8 @@ public final class KiCadRuleCondition {
         default -> regex.append(Pattern.quote(String.valueOf(c)));
       }
     }
-    return Pattern.compile(regex.toString(), Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+    int flags = Pattern.DOTALL | (caseSensitive ? 0 : Pattern.CASE_INSENSITIVE);
+    return Pattern.compile(regex.toString(), flags);
   }
 
   private static List<String> constituents(String netClass) {
@@ -427,14 +443,13 @@ public final class KiCadRuleCondition {
               if (arg.startsWith("${")) {
                 yield Tri.UNKNOWN; // component class selector
               }
-              // KiCad tests the reference, then the library identifier when the selector has a
-              // ':' (testFootprintSelector in pcbexpr_functions.cpp)
-              yield Tri.of(
-                  pad
-                      && ((item.footprint() != null && matches(arg, item.footprint()))
-                          || (arg.indexOf(':') >= 0
-                              && item.libraryId() != null
-                              && matches(arg, item.libraryId()))));
+              // KiCad tests the library identifier (case-sensitively) when the selector has a ':',
+              // and the reference otherwise (testFootprintSelector in pcbexpr_functions.cpp)
+              if (arg.indexOf(':') >= 0) {
+                yield Tri.of(
+                    pad && item.libraryId() != null && matches(arg, item.libraryId(), true));
+              }
+              yield Tri.of(pad && item.footprint() != null && matches(arg, item.footprint()));
             }
             case "hasnetclass" -> {
               boolean found = item.netClass().equalsIgnoreCase(arg);
