@@ -437,6 +437,11 @@ Headless board management (using `BoardManager` and `HeadlessBoardManager`), com
 Shared application data such as routing jobs, sessions, job/board-file events (`core.events`),
 scoring (`core.scoring`), CLI result manifests (`core.results`), and board library definitions (`core.library`).
 
+### `app.freerouting.core.facade`
+
+Single-entry, in-memory headless routing facade (`FreeroutingHeadlessEngine`, `HeadlessRoutingRequest`, `HeadlessRoutingResult`, `CancellationToken`, `HeadlessRoutingProgressListener`).
+Acts as the primary driving port of the routing engine, executing board parsing, settings resolution, pipeline execution, DRC, and SES serialization synchronously on the caller thread without requiring disk I/O, daemon schedulers, GUI managers, or cloud telemetry. Designed for embedding in WebAssembly (TeaVM, CheerpJ), Web Workers, CLI pipelines, microservices, and in-memory unit tests.
+
 ### `app.freerouting.settings`
 
 Application configuration, defaults, and the priority-based `SettingsMerger`. Stage knobs live under `router.fanout`, `router.autorouter`, and `router.optimizer`; `max_threads` stays on the parent `router` object.
