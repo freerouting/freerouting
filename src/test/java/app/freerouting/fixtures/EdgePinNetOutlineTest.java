@@ -10,11 +10,18 @@ import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.model.structure.BoardOutline;
 import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.core.RoutingJob;
+import app.freerouting.drc.ClearanceViolation;
+import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
+import app.freerouting.geometry.planar.IntPoint;
+import app.freerouting.geometry.planar.IntVector;
 import app.freerouting.geometry.planar.Polyline;
+import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.rules.Net;
 import app.freerouting.settings.sources.TestingSettings;
+import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -112,9 +119,119 @@ class EdgePinNetOutlineTest extends RoutingFixtureTest {
       }
     }
     assertTrue(edgeTraces > 0, "EDGE must be routed");
+    List<ClearanceViolation> traceOutlineViolations =
+        new DesignRulesChecker(board, null)
+            .getAllClearanceViolations().stream()
+                .filter(
+                    v ->
+                        (v.firstItem instanceof Trace && v.secondItem instanceof BoardOutline)
+                            || (v.secondItem instanceof Trace
+                                && v.firstItem instanceof BoardOutline))
+                .toList();
+    assertEquals(
+        0,
+        traceOutlineViolations.size(),
+        "routed traces must keep copper-to-edge clearance from the board outline");
     assertEquals(
         0,
         getBoardStatistics(job).connections.incompleteCount,
         "both nets, the finger pad included, must be routed inside the board");
+  }
+
+  @Test
+  void checkTraceShapeBlocksMultiNetTieTraceAtEdgeWindow() {
+    RoutingJob job = runRoutingJob(getRoutingJob(FIXTURE, settings(false)));
+    RoutingBoard board = job.board;
+    int edge = netNumber(board, "EDGE");
+    int ctrl = netNumber(board, "CTRL");
+    Pin edgePin = findEdgePin(board);
+    IntBox padBox = edgePin.getShape(0).boundingBox();
+    int layer = edgePin.firstLayer();
+    int clClass = board.rules.nets.get(edge).getNetClass().getTraceClearanceClass();
+    int halfWidth = board.rules.getTraceHalfWidth(edge, layer);
+    int centerX = (padBox.ll.x + padBox.ur.x) / 2;
+    IntPoint from = new IntPoint(centerX, padBox.ll.y - halfWidth * 2);
+    IntPoint to = new IntPoint(centerX, padBox.ur.y);
+    TileShape segment = new Polyline(from, to).offsetShape(halfWidth, 0);
+
+    assertTrue(
+        board.checkTraceShape(segment, layer, new int[] {edge}, clClass, Set.of(edgePin)),
+        "single-net EDGE trace must be allowed inside the edge-pin window");
+    assertFalse(
+        board.checkTraceShape(segment, layer, new int[] {edge, ctrl}, clClass, Set.of(edgePin)),
+        "tie trace carrying an ordinary net must be blocked at the edge-pin window");
+  }
+
+  @Test
+  void checkTraceSegmentExemptsEdgePinWindow() {
+    RoutingJob job = runRoutingJob(getRoutingJob(FIXTURE, settings(false)));
+    RoutingBoard board = job.board;
+    int edge = netNumber(board, "EDGE");
+    int ctrl = netNumber(board, "CTRL");
+    Pin edgePin = findEdgePin(board);
+    IntBox padBox = edgePin.getShape(0).boundingBox();
+    int layer = edgePin.firstLayer();
+    int clClass = board.rules.nets.get(edge).getNetClass().getTraceClearanceClass();
+    int halfWidth = board.rules.getTraceHalfWidth(edge, layer);
+    int centerX = (padBox.ll.x + padBox.ur.x) / 2;
+    IntPoint from = new IntPoint(centerX, padBox.ll.y - 5000);
+    IntPoint to = new IntPoint(centerX, padBox.ur.y);
+
+    double edgeOkLength =
+        board.checkTraceSegment(from, to, layer, new int[] {edge}, halfWidth, clClass, false);
+    double ctrlOkLength =
+        board.checkTraceSegment(from, to, layer, new int[] {ctrl}, halfWidth, clClass, false);
+
+    assertTrue(
+        edgeOkLength > to.toFloat().distance(from.toFloat()),
+        "EDGE trace segment inside the edge-pin window must not be blocked by the outline");
+    assertTrue(
+        ctrlOkLength < to.toFloat().distance(from.toFloat()),
+        "CTRL trace segment crossing the outline at the edge-pin window must be blocked");
+  }
+
+  @Test
+  void movingEdgePinUpdatesOutlineExemptionWindows() {
+    RoutingJob job = runRoutingJob(getRoutingJob(FIXTURE, settings(false)));
+    RoutingBoard board = job.board;
+    int edge = netNumber(board, "EDGE");
+    Pin edgePin = findEdgePin(board);
+    IntBox oldBox = edgePin.getShape(0).boundingBox();
+    int layer = edgePin.firstLayer();
+    int clClass = board.rules.nets.get(edge).getNetClass().getTraceClearanceClass();
+    int halfWidth = board.rules.getTraceHalfWidth(edge, layer);
+
+    IntVector shift = new IntVector(20000, 0);
+    edgePin.moveBy(shift);
+    IntBox newBox = edgePin.getShape(0).boundingBox();
+
+    int oldCenterX = (oldBox.ll.x + oldBox.ur.x) / 2;
+    int newCenterX = (newBox.ll.x + newBox.ur.x) / 2;
+    TileShape oldSegment =
+        new Polyline(
+                new IntPoint(oldCenterX, oldBox.ll.y - halfWidth * 2),
+                new IntPoint(oldCenterX, oldBox.ur.y))
+            .offsetShape(halfWidth, 0);
+    TileShape newSegment =
+        new Polyline(
+                new IntPoint(newCenterX, newBox.ll.y - halfWidth * 2),
+                new IntPoint(newCenterX, newBox.ur.y))
+            .offsetShape(halfWidth, 0);
+
+    assertFalse(
+        board.checkTraceShape(oldSegment, layer, new int[] {edge}, clClass, Set.of()),
+        "old edge-pin location must no longer be exempt after moving the pin");
+    assertTrue(
+        board.checkTraceShape(newSegment, layer, new int[] {edge}, clClass, Set.of(edgePin)),
+        "new edge-pin location must be exempt after moving the pin");
+  }
+
+  private static Pin findEdgePin(RoutingBoard board) {
+    for (Pin pin : board.getPins()) {
+      if ("E".equals(pin.componentName())) {
+        return pin;
+      }
+    }
+    throw new IllegalStateException("edge pin E not found");
   }
 }

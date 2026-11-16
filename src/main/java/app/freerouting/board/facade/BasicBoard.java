@@ -761,11 +761,12 @@ public class BasicBoard implements Serializable {
     return getItemRepository().getOutline();
   }
 
-  /** Drops the outline's cached edge-pin net set after a pin or outline mutation. */
+  /** Drops the outline's cached edge-pin net set and refreshes outline slices after a mutation. */
   public void invalidateEdgePinNetCache() {
     BoardOutline outline = getOutline();
     if (outline != null) {
       outline.invalidateEdgePinNets();
+      outline.updateSlicesToTraceWidths();
     }
   }
 
@@ -773,10 +774,7 @@ public class BasicBoard implements Serializable {
   public void removeItem(Item item) {
     getItemRepository().removeItem(item);
     if (item instanceof Pin || item instanceof BoardOutline) {
-      BoardOutline outline = getOutline();
-      if (outline != null) {
-        outline.invalidateEdgePinNets();
-      }
+      invalidateEdgePinNetCache();
     }
   }
 
@@ -1242,9 +1240,13 @@ public class BasicBoard implements Serializable {
         }
       }
       boolean isObstacle = true;
-      for (int i = 0; i < netNumbers.length; i++) {
-        if (!currentItem.isTraceObstacle(netNumbers[i], currentTreeEntry.shapeIndexInObject)) {
-          isObstacle = false;
+      if (currentItem instanceof BoardOutline outline) {
+        isObstacle = !outline.exemptsTrace(currentTreeEntry.shapeIndexInObject, netNumbers);
+      } else {
+        for (int i = 0; i < netNumbers.length; i++) {
+          if (!currentItem.isTraceObstacle(netNumbers[i], currentTreeEntry.shapeIndexInObject)) {
+            isObstacle = false;
+          }
         }
       }
       if (isObstacle && (currentItem instanceof PolylineTrace) && contactPins != null) {
@@ -1446,7 +1448,15 @@ public class BasicBoard implements Serializable {
   /** Inserts an item into the board database. */
   public void insertItem(Item item) {
     getItemRepository().insertItem(item);
-    if (item instanceof Pin || item instanceof BoardOutline) {
+    if (item instanceof Pin pin) {
+      BoardOutline outline = getOutline();
+      if (outline != null) {
+        outline.invalidateEdgePinNets();
+        if (outline.isEdgePin(pin)) {
+          outline.updateSlicesToTraceWidths();
+        }
+      }
+    } else if (item instanceof BoardOutline) {
       BoardOutline outline = getOutline();
       if (outline != null) {
         outline.invalidateEdgePinNets();

@@ -797,7 +797,7 @@ public class BoardOutline extends Item implements Serializable {
   }
 
   /** Whether the copper of the pin touches or crosses the outline. */
-  private boolean isEdgePin(Pin pin) {
+  public boolean isEdgePin(Pin pin) {
     Point center = pin.getCenter();
     if (center != null && !this.contains(center)) {
       return true;
