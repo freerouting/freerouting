@@ -339,10 +339,12 @@ class BenchmarkStoreTest(unittest.TestCase):
         self.assertNotIn("", places)
 
     def test_worker_clock_shows_expected_completion_from_previous_runtime(self) -> None:
-        self.assertEqual(store.format_worker_progress(22 * 60 + 51, 42 * 60 + 12), "[22:51 ~42m]")
-        self.assertEqual(store.format_worker_progress(5, None), "[00:05]")
-        self.assertEqual(store.format_worker_progress(5, 20), "[00:05]")
-        self.assertEqual(store.format_worker_progress(5, 30), "[00:05 ~1m]")
+        self.assertEqual(store.format_worker_progress(22 * 60 + 51, 42 * 60 + 12), "[ 22:51 ~ 42m]")
+        self.assertEqual(store.format_worker_progress(153 * 60 + 16, 50 * 60), "[153:16 ~ 50m]")
+        self.assertEqual(store.format_worker_progress(16 * 60 + 19, 150 * 60), "[ 16:19 ~150m]")
+        self.assertEqual(store.format_worker_progress(5, None), "[ 00:05]")
+        self.assertEqual(store.format_worker_progress(5, 20), "[ 00:05 ~  1m]")
+        self.assertEqual(store.format_worker_progress(5, 30), "[ 00:05 ~  1m]")
         self.assertEqual(store.expected_fixture_seconds(100, "C", {"": 1.0}), 100.0)
         self.assertEqual(store.expected_fixture_seconds(100, "C", {"": 1.0, "C": 2.0}), 200.0)
         self.assertIsNone(store.expected_fixture_seconds(0, "C", {"": 1.0}))
@@ -379,7 +381,45 @@ class BenchmarkStoreTest(unittest.TestCase):
                 completed_samples=[("C", 2_000.0, 2_000.0)],
             )
         plain = re.sub(r"\033\[[0-9;]*m", "", captured.getvalue())
-        self.assertIn("[22:51 ~42m]", plain)
+        self.assertIn("[ 22:51 ~ 42m]", plain)
+        self.assertIn("( 22m ago)", plain)
+
+    def test_colorize_status_line_and_idle_padding(self) -> None:
+        import collections
+        import io
+        import re
+        import threading
+        from unittest.mock import patch
+
+        report_colored = store.colorize_status_line("[report] Updated benchmark reports (461/1120 boards completed)")
+        self.assertTrue(report_colored.startswith(store.C_BBLUE))
+        self.assertTrue(report_colored.endswith(store.C_RESET))
+
+        row = "[ 460/1120   3/527 of T-B] CLEAN    (    1.2m) eeg_brainboardv0"
+        row_colored = store.colorize_status_line(row)
+        self.assertIn(f"{store.C_BMAGENTA}[ 460/1120   3/527 of T-B]{store.C_RESET}", row_colored)
+        self.assertIn(f"{store.C_BGREEN}CLEAN{store.C_RESET}", row_colored)
+        self.assertIn(f"{store.C_BYELLOW}(    1.2m){store.C_RESET}", row_colored)
+
+        long_status = "X" * 86
+        captured = io.StringIO()
+        worker_status = {
+            1: {"board": "b1", "tier": "A", "start": 100.0, "last_line": long_status, "last_line_time": 90.0, "active": True},
+            2: {"board": "b2", "tier": "A", "start": 100.0, "last_line": long_status, "last_line_time": 10.0, "active": True},
+        }
+        with patch("sys.stdout", captured), patch("run_corpus_benchmark.time.perf_counter", return_value=130.0):
+            store.render_dashboard(
+                completed=0,
+                total=2,
+                t_start=100.0,
+                worker_status=worker_status,
+                recent_messages=collections.deque(),
+                status_lock=threading.Lock(),
+                in_place=False,
+            )
+        plain = re.sub(r"\033\[[0-9;]*m", "", captured.getvalue())
+        self.assertIn("-> " + ("X" * 86), plain)
+        self.assertIn("-> " + ("X" * 75) + " (  2m ago)", plain)
 
     def test_fixture_name_keeps_both_ends_when_longer_than_37_characters(self) -> None:
         short = "bee-light-measurement-matrix"
@@ -516,13 +556,57 @@ class BenchmarkStoreTest(unittest.TestCase):
         self.assertTrue(store.fatal_process_output("Exception in thread \"main\" java.lang.IllegalStateException"))
         self.assertFalse(store.fatal_process_output("Optimizer pass #1: score 680.31 -> 680.18"))
 
+    def test_infer_version_from_jar_path_skips_current(self) -> None:
+        self.assertEqual(store.infer_version_from_jar_path(Path("freerouting-2.6.0-RC15.jar")), "2.6.0-RC15")
+        self.assertEqual(store.infer_version_from_jar_path(Path("freerouting-2.5.0.jar")), "2.5.0")
+        self.assertIsNone(store.infer_version_from_jar_path(Path("freerouting-current.jar")))
+        self.assertIsNone(store.infer_version_from_jar_path(Path("freerouting-2.6.0-current.jar")))
+        self.assertIsNone(store.infer_version_from_jar_path(Path("custom.jar")))
+
+    def test_select_default_jar_picks_latest_non_current(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            bin_dir = Path(tmp)
+            for name in (
+                "freerouting-current.jar",
+                "freerouting-2.5.0.jar",
+                "freerouting-2.6.0-RC9.jar",
+                "freerouting-2.6.0-RC15.jar",
+            ):
+                (bin_dir / name).write_bytes(b"")
+            selected = store.select_default_jar(bin_dir)
+            self.assertIsNotNone(selected)
+            self.assertEqual(selected.name, "freerouting-2.6.0-RC15.jar")
+
     def test_run_corpus_benchmark_main_without_boards(self) -> None:
+        mock_lock = mock.MagicMock()
+        mock_lock.acquire.return_value = True
         with mock.patch("sys.argv", ["run_corpus_benchmark.py", "--filter", "non_existent_board_99999"]):
-            with mock.patch("run_corpus_benchmark.replace_file_retrying", return_value=True):
-                with mock.patch("run_corpus_benchmark.save_version_runs", return_value=None):
-                    with mock.patch("run_corpus_benchmark.trigger_report_generation", return_value=True):
-                        exit_code = store.main()
-                        self.assertEqual(exit_code, 0)
+            with mock.patch("run_corpus_benchmark.ProcessLock", return_value=mock_lock):
+                with mock.patch("run_corpus_benchmark.replace_file_retrying", return_value=True):
+                    with mock.patch("run_corpus_benchmark.save_version_runs", return_value=None):
+                        with mock.patch("run_corpus_benchmark.trigger_report_generation", return_value=True):
+                            exit_code = store.main()
+                            self.assertEqual(exit_code, 0)
+
+    def test_run_corpus_benchmark_waits_for_active_lock(self) -> None:
+        import io
+
+        mock_lock = mock.MagicMock()
+        mock_lock.acquire.side_effect = [False, False, True]
+        stderr_buf = io.StringIO()
+        with mock.patch("sys.argv", ["run_corpus_benchmark.py", "--filter", "non_existent_board_99999"]):
+            with mock.patch("run_corpus_benchmark.ProcessLock", return_value=mock_lock):
+                with mock.patch("run_corpus_benchmark.time.sleep") as mock_sleep:
+                    with mock.patch("run_corpus_benchmark.replace_file_retrying", return_value=True):
+                        with mock.patch("run_corpus_benchmark.save_version_runs", return_value=None):
+                            with mock.patch("run_corpus_benchmark.trigger_report_generation", return_value=True):
+                                with mock.patch("sys.stderr", stderr_buf):
+                                    exit_code = store.main()
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(mock_lock.acquire.call_count, 3)
+        self.assertEqual(mock_sleep.call_count, 1)
+        self.assertIn("Warning: Another instance of the benchmark is already running!", stderr_buf.getvalue())
+        self.assertIn("Waiting for the active run to finish", stderr_buf.getvalue())
 
     @staticmethod
     def _run(
