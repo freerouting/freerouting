@@ -422,9 +422,9 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
                       + (minWidth == null ? "not set" : minWidth + " um")
                       + ", minimum connection width "
                       + (minConnection == null ? "not set" : minConnection + " um")
-                      + ": traces are not necked below "
+                      + ": default neck width is "
                       + this.kicadProject.narrowestTraceWidthUm()
-                      + " um."));
+                      + " um (unless overridden)."));
       return true;
     } catch (IOException | IllegalArgumentException e) {
       String reason = e instanceof NoSuchFileException ? "file not found" : e.getMessage();
