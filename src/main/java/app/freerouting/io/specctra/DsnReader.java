@@ -14,10 +14,12 @@ import app.freerouting.io.specctra.parser.ReadScopeParameter;
 import app.freerouting.io.specctra.parser.ScopeKeyword;
 import app.freerouting.io.specctra.parser.SpecctraDsnStreamReader;
 import app.freerouting.logger.FRLogger;
-import java.io.ByteArrayInputStream;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 /**
@@ -90,104 +92,107 @@ public final class DsnReader {
       idGenerator = new ItemIdGenerator();
     }
 
-    // The whole file is read first: the layer types of the structure scope depend on the copper
-    // areas of the wiring scope, which comes after it (see PolygonWireScan).
-    byte[] dsnBytes;
+    // Spool to a temporary file so both the wiring pre-scan and the full parse can stream without
+    // retaining a full-file byte array on the heap for large designs (see PolygonWireScan).
+    Path tempFile = null;
     try {
-      dsnBytes = inputStream.readAllBytes();
+      tempFile = Files.createTempFile("freerouting-dsn-", ".dsn");
+      try (InputStream in = inputStream) {
+        Files.copy(in, tempFile, StandardCopyOption.REPLACE_EXISTING);
+      }
     } catch (IOException e) {
       closeQuietly(inputStream);
+      deleteQuietly(tempFile);
       return new BoardReadResult.IoError(e);
     }
-    SpecctraDsnStreamReader scanner =
-        new SpecctraDsnStreamReader(new ByteArrayInputStream(dsnBytes));
 
-    // -----------------------------------------------------------------------
-    // Validate the "(pcb <name>" header — identical check to DsnFile.read
-    // -----------------------------------------------------------------------
-    String pcbTokenName = null;
-    for (int i = 0; i < 3; i++) {
-      Object token;
-      try {
-        token = scanner.nextToken();
-      } catch (IOException e) {
-        closeQuietly(inputStream);
-        return new BoardReadResult.IoError(e);
-      }
-      boolean ok = true;
-      if (i == 0) {
-        ok = token == Keyword.OPEN_BRACKET;
-      } else if (i == 1) {
-        ok = token == Keyword.PCB_SCOPE;
-        // switch the scanner to NAME mode so the pcb-name token is consumed cleanly
-        scanner.yybegin(SpecctraDsnStreamReader.NAME);
-      } else {
-        // i == 2: the design name string immediately following "(pcb"
-        if (token instanceof String s) {
-          pcbTokenName = s;
+    try (InputStream parseStream = new BufferedInputStream(Files.newInputStream(tempFile))) {
+      SpecctraDsnStreamReader scanner = new SpecctraDsnStreamReader(parseStream);
+
+      // ---------------------------------------------------------------------
+      // Validate the "(pcb <name>" header — identical check to DsnFile.read
+      // ---------------------------------------------------------------------
+      String pcbTokenName = null;
+      for (int i = 0; i < 3; i++) {
+        Object token = scanner.nextToken();
+        boolean ok = true;
+        if (i == 0) {
+          ok = token == Keyword.OPEN_BRACKET;
+        } else if (i == 1) {
+          ok = token == Keyword.PCB_SCOPE;
+          // switch the scanner to NAME mode so the pcb-name token is consumed cleanly
+          scanner.yybegin(SpecctraDsnStreamReader.NAME);
+        } else {
+          // i == 2: the design name string immediately following "(pcb"
+          if (token instanceof String s) {
+            pcbTokenName = s;
+          }
+        }
+        if (!ok) {
+          return new BoardReadResult.ParseError(
+              "(pcb", "Not a Specctra DSN file: expected '(pcb <name>' header");
         }
       }
-      if (!ok) {
-        closeQuietly(inputStream);
-        return new BoardReadResult.ParseError(
-            "(pcb", "Not a Specctra DSN file: expected '(pcb <name>' header");
+
+      // Resolve the effective design name for log messages:
+      // prefer the caller-supplied filename, then the pcb-name token, then a fallback.
+      final String effectiveDesignName;
+      if (designName != null && !designName.isBlank()) {
+        effectiveDesignName = Path.of(designName).getFileName().toString();
+      } else if (pcbTokenName != null && !pcbTokenName.isBlank()) {
+        effectiveDesignName = pcbTokenName;
+      } else {
+        effectiveDesignName = "unknown";
       }
-    }
 
-    // Resolve the effective design name for log messages:
-    // prefer the caller-supplied filename, then the pcb-name token, then a fallback.
-    final String effectiveDesignName;
-    if (designName != null && !designName.isBlank()) {
-      effectiveDesignName = Path.of(designName).getFileName().toString();
-    } else if (pcbTokenName != null && !pcbTokenName.isBlank()) {
-      effectiveDesignName = pcbTokenName;
-    } else {
-      effectiveDesignName = "unknown";
-    }
-
-    // -----------------------------------------------------------------------
-    // Parse the body — board is constructed inside ReadScopeParameter's shim
-    // -----------------------------------------------------------------------
-    DsnReadOptions effectiveOptions = options != null ? options : DsnReadOptions.DEFAULT;
-    ReadScopeParameter scopeParameter =
-        new ReadScopeParameter(
-            scanner, observers, idGenerator, effectiveOptions.canonicalPlacementOrder());
-    scopeParameter.polygonWireNetsByLayer = PolygonWireScan.netsByLayer(dsnBytes);
-    boolean readOk = Keyword.PCB_SCOPE.readScope(scopeParameter);
-
-    BasicBoard board = scopeParameter.getBoard();
-
-    closeQuietly(inputStream);
-
-    if (readOk) {
-      DsnFile.convertPlatedSlotKeepouts(board);
-      // Apply power-plane autoroute settings if the DSN had no (autoroute ...) scope
-      if (scopeParameter.autorouteSettings == null) {
-        DsnFile.adjustPlaneAutorouteSettings(board);
+      // ---------------------------------------------------------------------
+      // Parse the body — board is constructed inside ReadScopeParameter's shim
+      // ---------------------------------------------------------------------
+      DsnReadOptions effectiveOptions = options != null ? options : DsnReadOptions.DEFAULT;
+      ReadScopeParameter scopeParameter =
+          new ReadScopeParameter(
+              scanner, observers, idGenerator, effectiveOptions.canonicalPlacementOrder());
+      try (InputStream scanStream = new BufferedInputStream(Files.newInputStream(tempFile))) {
+        scopeParameter.polygonWireNetsByLayer = PolygonWireScan.netsByLayer(scanStream);
       }
-      List<String> warnings = scopeParameter.getWarnings();
-      if (!warnings.isEmpty()) {
-        FRLogger.warn(
-            "DSN file '"
-                + effectiveDesignName
-                + "' was loaded with "
-                + warnings.size()
-                + " warning(s).");
+      boolean readOk = Keyword.PCB_SCOPE.readScope(scopeParameter);
+
+      BasicBoard board = scopeParameter.getBoard();
+
+      if (readOk) {
+        DsnFile.convertPlatedSlotKeepouts(board);
+        // Apply power-plane autoroute settings if the DSN had no (autoroute ...) scope
+        if (scopeParameter.autorouteSettings == null) {
+          DsnFile.adjustPlaneAutorouteSettings(board);
+        }
+        List<String> warnings = scopeParameter.getWarnings();
+        if (!warnings.isEmpty()) {
+          FRLogger.warn(
+              "DSN file '"
+                  + effectiveDesignName
+                  + "' was loaded with "
+                  + warnings.size()
+                  + " warning(s).");
+        }
+        return new BoardReadResult.Success(board, null, warnings);
+      } else if (!scopeParameter.boardOutlineOk) {
+        List<String> warnings = scopeParameter.getWarnings();
+        if (!warnings.isEmpty()) {
+          FRLogger.warn(
+              "DSN file '"
+                  + effectiveDesignName
+                  + "' was loaded with "
+                  + warnings.size()
+                  + " warning(s).");
+        }
+        return new BoardReadResult.OutlineMissing(board, null, warnings);
+      } else {
+        return new BoardReadResult.ParseError("(pcb", "DSN structure parsing failed");
       }
-      return new BoardReadResult.Success(board, null, warnings);
-    } else if (!scopeParameter.boardOutlineOk) {
-      List<String> warnings = scopeParameter.getWarnings();
-      if (!warnings.isEmpty()) {
-        FRLogger.warn(
-            "DSN file '"
-                + effectiveDesignName
-                + "' was loaded with "
-                + warnings.size()
-                + " warning(s).");
-      }
-      return new BoardReadResult.OutlineMissing(board, null, warnings);
-    } else {
-      return new BoardReadResult.ParseError("(pcb", "DSN structure parsing failed");
+    } catch (IOException e) {
+      return new BoardReadResult.IoError(e);
+    } finally {
+      deleteQuietly(tempFile);
     }
   }
 
@@ -320,6 +325,16 @@ public final class DsnReader {
       stream.close();
     } catch (IOException _) {
       // ignore — nothing useful to do here
+    }
+  }
+
+  private static void deleteQuietly(Path path) {
+    if (path != null) {
+      try {
+        Files.deleteIfExists(path);
+      } catch (IOException _) {
+        // ignore — nothing useful to do here
+      }
     }
   }
 }

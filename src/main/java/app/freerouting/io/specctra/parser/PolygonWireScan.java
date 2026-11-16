@@ -1,7 +1,7 @@
 package app.freerouting.io.specctra.parser;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -26,9 +26,9 @@ public final class PolygonWireScan {
    * the nets of those wires, in file order. Wires without a net are counted with no net name.
    * Returns an empty map if the file cannot be scanned.
    */
-  public static Map<String, Set<String>> netsByLayer(byte[] dsn) {
+  public static Map<String, Set<String>> netsByLayer(InputStream dsn) {
     Map<String, Set<String>> result = new LinkedHashMap<>();
-    SpecctraDsnStreamReader scanner = new SpecctraDsnStreamReader(new ByteArrayInputStream(dsn));
+    SpecctraDsnStreamReader scanner = new SpecctraDsnStreamReader(dsn);
     int depth = 0;
     int wireDepth = -1;
     String wireLayer = null;
