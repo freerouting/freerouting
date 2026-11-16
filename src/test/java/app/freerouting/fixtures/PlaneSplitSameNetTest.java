@@ -1,6 +1,7 @@
 package app.freerouting.fixtures;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.board.facade.RoutingBoard;
@@ -80,5 +81,28 @@ class PlaneSplitSameNetTest extends RoutingFixtureTest {
     assertTrue(
         j1.getConnectedSet(j1.getNetNumber(0)).contains(j2),
         "J1 and J2 (GND, on the same plane) are not connected");
+  }
+
+  /**
+   * Exercises {@link RoutingBoard#autoroute} directly on {@code Plane-split-same-net-2layer.dsn}
+   * rather than going through {@code BatchAutorouter}.
+   */
+  @Test
+  void directBoardAutorouteConnectsPinsOnDisjointPlanes() {
+    TestingSettings loadOnly = routerOnly();
+    loadOnly.setRouterEnabled(false);
+    RoutingJob job = getRoutingJob("Plane-split-same-net-2layer.dsn", loadOnly);
+    runRoutingJob(job);
+
+    Pin j1 = pin(job.board, "J1");
+    Pin j2 = pin(job.board, "J2");
+    int gnd = j1.getNetNumber(0);
+    assertFalse(j1.getConnectedSet(gnd).contains(j2), "J1 and J2 should start disconnected");
+
+    job.board.autoroute(j1, job.routerSettings, 50, null, null);
+
+    assertTrue(
+        j1.getConnectedSet(gnd).contains(j2),
+        "J1 and J2 (GND, on two disjoint planes) were not connected by RoutingBoard.autoroute");
   }
 }

@@ -577,16 +577,21 @@ public final class BatchAutorouter extends NamedAlgorithm {
     return autorouteItemList;
   }
 
-  /** The unfractured planes of a net, and those of them that a pin of the net reaches. */
-  record NetPlanes(List<ConductionArea> all, List<ConductionArea> withPins) {}
+  /**
+   * The unfractured planes of a net, those of them that a pin of the net reaches, and one
+   * representative pin per pin-bearing island of any fractured planes of the net.
+   */
+  record NetPlanes(
+      List<ConductionArea> all, List<ConductionArea> withPins, List<Pin> fracturedIslandPins) {}
 
   /**
    * Returns true if the connected set reaches an unfractured plane of the net and contains every
-   * unfractured plane of that net that a pin reaches. A net can have several disjoint planes: an
-   * item on one of them still needs routing to the pins on the others. A floating plane fragment
-   * (no pin of the net reaches it) needs no connection, and an item on such fragments only is not
-   * routed. The planes of each net are collected once per call of {@link #getAutorouteItems}, so
-   * each item costs one membership test per plane.
+   * unfractured plane of that net that a pin reaches, as well as every pin-bearing island of any
+   * fractured planes of that net. A net can have several disjoint planes: an item on one of them
+   * still needs routing to the pins on the others. A floating plane fragment (no pin of the net
+   * reaches it) needs no connection, and an item on such fragments only is not routed. The planes
+   * of each net are collected once per call of {@link #getAutorouteItems}, so each item costs one
+   * membership test per plane/island.
    */
   static boolean coversAllPlanesOfNet(
       Set<Item> connectedSet, Map<Integer, NetPlanes> planesByNet, RoutingBoard board, int netNo) {
@@ -596,15 +601,20 @@ public final class BatchAutorouter extends NamedAlgorithm {
             n -> {
               List<ConductionArea> all = new ArrayList<>();
               List<ConductionArea> withPins = new ArrayList<>();
+              List<Pin> fracturedIslandPins = new ArrayList<>();
               for (ConductionArea ca : board.getConductionAreas()) {
-                if (ca.containsNet(n) && !ca.isFractured()) {
-                  all.add(ca);
-                  if (ca.reachesPinOfNet(n)) {
-                    withPins.add(ca);
+                if (ca.containsNet(n)) {
+                  if (!ca.isFractured()) {
+                    all.add(ca);
+                    if (ca.reachesPinOfNet(n)) {
+                      withPins.add(ca);
+                    }
+                  } else {
+                    ca.collectPinsOnFracturedIslands(fracturedIslandPins);
                   }
                 }
               }
-              return new NetPlanes(all, withPins);
+              return new NetPlanes(all, withPins, fracturedIslandPins);
             });
     boolean onPlane = false;
     for (ConductionArea plane : planes.all()) {
@@ -622,8 +632,19 @@ public final class BatchAutorouter extends NamedAlgorithm {
         reached++;
       }
     }
-    // reached == 0: the item is on floating fragments only, which nothing needs
-    return reached == 0 || reached == planes.withPins().size();
+    if (reached == 0) {
+      // the item is on floating unfractured fragments only, which nothing needs
+      return true;
+    }
+    if (reached < planes.withPins().size()) {
+      return false;
+    }
+    for (Pin pin : planes.fracturedIslandPins()) {
+      if (!connectedSet.contains(pin)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /** Returns true if the given item belongs to at least one net with containsPlane = true. */

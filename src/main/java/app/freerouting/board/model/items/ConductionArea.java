@@ -434,11 +434,56 @@ public class ConductionArea extends ObstacleArea implements Connectable {
       return true;
     }
     for (Item item : unconnectedSet) {
-      if (item instanceof ConductionArea ca && !ca.isFractured() && ca.reachesPinOfNet(netNo)) {
+      if (item instanceof ConductionArea ca) {
+        if (!ca.isFractured() && ca.reachesPinOfNet(netNo)) {
+          return false;
+        }
+        if (ca.isFractured() && ca.hasPinOnAnyIsland()) {
+          return false;
+        }
+      }
+    }
+    for (Item item : connectedSet) {
+      if (item instanceof ConductionArea ca && ca.hasUnreachedPinIsland(connectedSet)) {
         return false;
       }
     }
     return true;
+  }
+
+  /** Returns true if any island of this fractured conduction area contains a pin. */
+  public boolean hasPinOnAnyIsland() {
+    FastPlaneConnectivityGrid.PlaneFractureResult res = getFractureResult();
+    if (res == null || !res.isFractured) {
+      return false;
+    }
+    for (List<Item> island : res.islandItems.values()) {
+      for (Item item : island) {
+        if (item instanceof Pin) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Returns true if this fractured conduction area has an island containing a pin that is not in
+   * {@code connectedSet}.
+   */
+  public boolean hasUnreachedPinIsland(Collection<Item> connectedSet) {
+    FastPlaneConnectivityGrid.PlaneFractureResult res = getFractureResult();
+    if (res == null || !res.isFractured) {
+      return false;
+    }
+    for (List<Item> island : res.islandItems.values()) {
+      for (Item item : island) {
+        if (item instanceof Pin && !connectedSet.contains(item)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   /**
@@ -452,6 +497,25 @@ public class ConductionArea extends ObstacleArea implements Connectable {
       }
     }
     return false;
+  }
+
+  /**
+   * Collects one representative {@link Pin} from each island of this fractured conduction area that
+   * contains a pin.
+   */
+  public void collectPinsOnFracturedIslands(Collection<Pin> out) {
+    FastPlaneConnectivityGrid.PlaneFractureResult res = getFractureResult();
+    if (res == null || !res.isFractured) {
+      return;
+    }
+    for (List<Item> island : res.islandItems.values()) {
+      for (Item item : island) {
+        if (item instanceof Pin pin) {
+          out.add(pin);
+          break;
+        }
+      }
+    }
   }
 
   /**
