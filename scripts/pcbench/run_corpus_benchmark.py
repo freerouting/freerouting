@@ -39,11 +39,15 @@ from pcbench_analysis import (
     corpus_save_is_due,
     default_worker_count,
     fixture_id_from_run,
+    infer_version_from_jar_path,
     latest_successful_reference_seconds,
+    latest_timeout_reference_seconds,
     parse_tier_order,
+    parse_timeout_seconds,
     read_jsonl_records,
     replace_file_retrying,
     run_is_failure,
+    select_default_jar,
     should_stop_main_loop,
     version_sort_key,
 )
@@ -162,7 +166,12 @@ def trigger_report_generation(*, verbose: bool = False) -> bool:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--jar", default="scripts/benchmark/binaries/freerouting-current.jar", type=Path)
+    parser.add_argument(
+        "--jar",
+        default=None,
+        type=Path,
+        help="Path to freerouting JAR (default: latest versioned JAR in scripts/benchmark/binaries/, skipping -current)",
+    )
     parser.add_argument("--fixtures-dir", default="scripts/benchmark/fixtures/PCBench", type=Path)
     parser.add_argument(
         "--tier",
@@ -177,7 +186,11 @@ def main() -> int:
         help="Parallel routing workers (default: round(logical processors * 0.75))",
     )
     parser.add_argument("--max-boards", default=0, type=int)
-    parser.add_argument("--version-label", default="v2.3.1-SNAPSHOT")
+    parser.add_argument(
+        "--version-label",
+        default=None,
+        help="Version label for the run (default: implied from --jar filename)",
+    )
     parser.add_argument("--filter", default="", help="Filter fixtures by substring/pattern")
     parser.add_argument("--force", action="store_true", help="Force rerun even if already in benchmarks.json")
     parser.add_argument("--timeout", default="06:00:00", help="Job timeout budget for all tiers (default: 06:00:00)")
@@ -202,7 +215,26 @@ def main() -> int:
 
     fixtures_dir = args.fixtures_dir
     catalog_path = fixtures_dir / "catalog.json"
-    jar_path = args.jar
+    if args.jar is None:
+        jar_path = select_default_jar(Path("scripts/benchmark/binaries"))
+        if jar_path is None:
+            print(
+                "No versioned freerouting JAR found in scripts/benchmark/binaries (excluding -current)",
+                file=sys.stderr,
+            )
+            return 1
+    else:
+        jar_path = args.jar
+
+    if not args.version_label:
+        inferred_version = infer_version_from_jar_path(jar_path)
+        if inferred_version is None:
+            print(
+                f"Could not infer version label from JAR filename '{jar_path.name}'; pass --version-label explicitly.",
+                file=sys.stderr,
+            )
+            return 1
+        args.version_label = inferred_version
     output_dir = Path("scripts/benchmark/outputs")
     log_dir = Path("scripts/benchmark/logs")
     results_dir = Path("scripts/benchmark/results")
@@ -215,7 +247,7 @@ def main() -> int:
     results_dir.mkdir(parents=True, exist_ok=True)
     user_data_dir.mkdir(parents=True, exist_ok=True)
 
-    # Enforce single active benchmark instance
+    # Enforce single active benchmark instance: wait if another run is in progress
     lock_file = results_dir / ".benchmark.lock"
     proc_lock = ProcessLock(lock_file)
     if not proc_lock.acquire():
@@ -227,13 +259,19 @@ def main() -> int:
             # Lock file might have been removed or locked by sibling process
             pass
         print(
-            f"\n{C_BRED}Error: Another instance of the benchmark is already running!{C_RESET}\n"
+            f"\n{C_YELLOW}Warning: Another instance of the benchmark is already running!{C_RESET}\n"
             f"{C_YELLOW}Lock file: {lock_file}{existing_info}{C_RESET}\n"
-            f"Please wait for the active run to finish or terminate it before starting a new one.\n",
+            f"Waiting for the active run to finish before starting (Ctrl+C to cancel)...\n",
             file=sys.stderr,
             flush=True,
         )
-        return 1
+        try:
+            while not proc_lock.acquire():
+                time.sleep(2.0)
+        except KeyboardInterrupt:
+            print("\nCancelled while waiting for active benchmark run.", file=sys.stderr, flush=True)
+            return 130
+        print(f"{C_BGREEN}Active run finished; starting benchmark.{C_RESET}\n", file=sys.stderr, flush=True)
 
     # Clean up any stray SES files created in root working directory
     for stray_ses in Path(".").glob("*--unrouted--*.ses"):
@@ -306,13 +344,33 @@ def main() -> int:
     board_neck_width: dict[str, float | None] = {}
     queued_ids: list[str] = []
     already_completed = 0
-    historical_reference = latest_successful_reference_seconds(existing_runs.values())
+    timeout_seconds = parse_timeout_seconds(args.timeout)
+    prior_runs = [
+        r for r in existing_runs.values() if (r.get("binary") or {}).get("version_label") != args.version_label
+    ]
+    historical_reference = latest_successful_reference_seconds(prior_runs or existing_runs.values())
+    timeout_reference = latest_timeout_reference_seconds(prior_runs or existing_runs.values())
+    board_tier_by_id = {b.get("board_id"): (b.get("tier") or "?") for b in boards if b.get("board_id")}
+    initial_completed_samples: list[tuple[str, float, float]] = []
+    for r in existing_runs.values():
+        if (r.get("binary") or {}).get("version_label") != args.version_label or run_is_failure(r):
+            continue
+        r_bid = fixture_id_from_run(r)
+        r_ref = float(historical_reference.get(r_bid) or 0.0) if r_bid else 0.0
+        r_act = float((r.get("quality") or {}).get("wall_clock_seconds") or 0.0)
+        if r_bid and r_ref > 0 and r_act > 0:
+            r_tier = str((r.get("fixture") or {}).get("tier") or board_tier_by_id.get(r_bid) or "?")
+            initial_completed_samples.append((r_tier, r_ref, r_act))
+
     for b in boards:
         b_id = b.get("board_id")
         b_dir = fixtures_dir / b_id
         budget = args.timeout
         board_tier = b.get("tier") or "?"
-        reference_seconds = float(historical_reference.get(b_id) or b.get("reference_seconds") or 0.0)
+        ref_val = historical_reference.get(b_id) or b.get("reference_seconds")
+        if not ref_val and b_id in timeout_reference:
+            ref_val = min(timeout_reference[b_id], timeout_seconds) if timeout_seconds > 0 else timeout_reference[b_id]
+        reference_seconds = float(ref_val or 0.0)
 
         if not args.force:
             is_already_run = any(
@@ -470,7 +528,7 @@ def main() -> int:
 
     tracker = {"completed": 0, "total": len(tasks)}
     recent_messages: collections.deque[str] = collections.deque(maxlen=10)
-    completed_samples: list[tuple[str, float, float]] = []
+    completed_samples: list[tuple[str, float, float]] = list(initial_completed_samples)
 
     completed = 0
     clean_count = 0
