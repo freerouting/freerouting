@@ -349,6 +349,7 @@ Hardware-agnostic hardware acceleration service provider interface (SPI) and Ope
 - `PanamaOpenClBindings` — Pure Java 25 Foreign Function & Memory (FFM) API (JEP 454) downcalls to native OpenCL runtime (`OpenCL.dll`, `libOpenCL.so`, `OpenCL.framework`) with zero external native wrapper dependencies.
 - `OpenClAcceleratorDevice` & `SafeResourceReaper` — Robust platform/device lifecycle, command queues, JNI/native pointer tracking, and leak-free resource release.
 - `OpenClBgaWavefrontSolver` — Parallel SIMD wavefront escape solver with 16-bit clamped atomic congestion negotiation and dogbone via placement across concentric BGA rings.
+- `tornadovm.TornadoVmComputeBackend` — Optional backend that runs the same escape kernels, written in Java (`tornadovm.BgaEscapeKernels`), through TornadoVM on OpenCL, CUDA or Metal devices. TornadoVM is a compile-only dependency; without it on the class path the registry falls back to the CPU fanout.
 
 ### `app.freerouting.autoroute`
 

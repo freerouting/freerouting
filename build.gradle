@@ -126,6 +126,8 @@ configurations {
         canBeResolved = true
         canBeConsumed = false
     }
+    // Optional TornadoVM runtime, filled only with -Ptornadovm=<backends> (see dependencies).
+    tornadovmRuntime
 }
 
 repositories {
@@ -142,6 +144,8 @@ repositories {
 
     google()
 }
+
+def tornadovmVersion = '8.1.0-jdk22plus'
 
 dependencies {
     // https://mvnrepository.com/artifact/javax.help/javahelp
@@ -236,6 +240,19 @@ dependencies {
     // Separate non-transitive configuration so Mockito can be attached as a -javaagent
     // (required for Java 21+ inline-mock-maker, per Mockito docs section 0.3)
     mockitoAgent('org.mockito:mockito-core:5.24.0') { transitive = false }
+
+    // TornadoVM: optional backend for the GPU BGA escape pre-pass. Only the API is needed to
+    // compile, and Freerouting runs without it. Pass -Ptornadovm=opencl,cuda (any of opencl,
+    // cuda, metal) to put the TornadoVM runtime and those backends on the test and run class
+    // paths. The executable JAR never includes them.
+    compileOnly "io.github.beehive-lab:tornado-api:${tornadovmVersion}"
+    testImplementation "io.github.beehive-lab:tornado-api:${tornadovmVersion}"
+    if (project.hasProperty('tornadovm')) {
+        tornadovmRuntime "io.github.beehive-lab:tornado-runtime:${tornadovmVersion}"
+        project.property('tornadovm').toString().split(',').each { backend ->
+            tornadovmRuntime "io.github.beehive-lab:tornado-drivers-${backend.trim()}:${tornadovmVersion}"
+        }
+    }
 }
 
 ext {
@@ -396,7 +413,7 @@ tasks.register('dist', Copy) {
 
 
 tasks.register('run', JavaExec) {
-    classpath = sourceSets.main.runtimeClasspath
+    classpath = sourceSets.main.runtimeClasspath + configurations.tornadovmRuntime
 
     mainClass = project.mainClassName
 
@@ -404,7 +421,7 @@ tasks.register('run', JavaExec) {
 }
 
 tasks.register('runCli', JavaExec) {
-    classpath = sourceSets.main.runtimeClasspath
+    classpath = sourceSets.main.runtimeClasspath + configurations.tornadovmRuntime
     mainClass = 'app.freerouting.cli.FreeroutingCli'
     jvmArgs '--enable-native-access=ALL-UNNAMED'
 }
@@ -446,6 +463,9 @@ tasks.withType(Test).configureEach { Test task ->
     }
 
     timeout = Duration.ofMinutes(30)
+
+    // Empty unless the build is run with -Ptornadovm=<backends>.
+    classpath += configurations.tornadovmRuntime
 
     // Attach Mockito as a Java agent so that the inline-mock-maker can function
     // on Java 21+ without the JVM's self-attach restriction warning.

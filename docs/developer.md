@@ -355,6 +355,15 @@ Java 25 enforces native access restrictions for foreign downcalls. The JVM flag 
 - Gradle test tasks (`tasks.withType(Test)`) for headless CI test execution.
 - `jpackage` bundling scripts for desktop distributions.
 
+### TornadoVM Backend (optional)
+
+The same escape kernels are also written in Java in `app.freerouting.autoroute.accelerator.tornadovm.BgaEscapeKernels`. [TornadoVM](https://github.com/beehive-lab/TornadoVM) compiles them at run time for OpenCL, CUDA (PTX) and Apple Metal devices, which gives macOS users a GPU path without OpenCL. Each kernel calls a plain static method per grid cell or pin, so `BgaEscapeRunner.runOnCpu` runs exactly the same code on the CPU; the tests compare the two.
+
+TornadoVM is not bundled. The build only compiles against `tornado-api`, and the backend is selected with `--router.fanout.gpu_device_preference=tornadovm` (see `docs/settings.md`). To run it:
+
+- From Gradle: `./gradlew run -Ptornadovm=opencl` (any of `opencl`, `cuda`, `metal`, comma separated) adds the TornadoVM runtime and those backends from Maven Central to the class path. The same flag on `test` enables `TornadoVmBgaEscapeParityTest`, which is skipped otherwise.
+- With an installed TornadoVM SDK: `tornado --classpath build/libs/freerouting-current-executable.jar app.freerouting.Freerouting --router.fanout.gpu_device_preference=tornadovm ...`.
+
 ### GraalVM Native Image Reachability
 
 Downcall descriptors, restricted native method handles, and JNI entry points are declared in:
