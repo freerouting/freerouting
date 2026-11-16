@@ -18,6 +18,7 @@ import app.freerouting.rules.ViaInfo;
 import app.freerouting.rules.ViaRule;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -106,6 +107,7 @@ public final class KiCadDesignRulesTranslator {
     Map<EntityKey, Entity> entities = new LinkedHashMap<>();
     Map<Item, EntityKey> itemEntities = new LinkedHashMap<>();
     collectEntities(entities, itemEntities);
+    warnNamesMatchingNothing(rules, entities.values());
 
     // 2. Cells: entities that every condition treats alike, with the same clearance class
     List<Entity> entityList = new ArrayList<>(entities.values());
@@ -275,6 +277,30 @@ public final class KiCadDesignRulesTranslator {
       result.add(new ClearanceRule(rule.name(), layers, rule.condition(), value));
     }
     return result;
+  }
+
+  /**
+   * Reports the net classes, nets and footprints named by a condition that exist nowhere in the
+   * design: a misspelt or renamed name leaves the rule without effect, and nothing else says so.
+   */
+  private void warnNamesMatchingNothing(List<ClearanceRule> rules, Collection<Entity> entities) {
+    List<KiCadRuleCondition.Item> items = new ArrayList<>();
+    for (Entity entity : entities) {
+      items.add(entity.item());
+    }
+    for (ClearanceRule rule : rules) {
+      if (rule.condition() == null) {
+        continue;
+      }
+      for (String part : rule.condition().namesMatchingNothing(items)) {
+        warnings.add(
+            "rule '"
+                + rule.name()
+                + "': "
+                + part
+                + " matches no net class, net or footprint of the design (misspelt or renamed?)");
+      }
+    }
   }
 
   /**
