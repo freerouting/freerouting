@@ -345,7 +345,6 @@ __kernel void expand_ring_candidates(
 __kernel void elect_cell_winners(
     __global const int* solutionBuffer,   // [pinCount * 16]
     __global uint* cellWinner,            // [gridW * gridH * layers]
-    __global uint* cellDemand,            // [gridW * gridH * layers]
     int pinCount,
     int currentRing,
     int gridW,
@@ -377,7 +376,6 @@ __kernel void elect_cell_winners(
 
   // Atomic min to resolve congestion winner
   atomic_min(&cellWinner[cell], candidateVal);
-  atomic_inc(&cellDemand[cell]);
 }
 
 /*

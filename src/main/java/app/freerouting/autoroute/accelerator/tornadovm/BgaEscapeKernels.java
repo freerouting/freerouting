@@ -309,8 +309,7 @@ public final class BgaEscapeKernels {
    * resolved pins, computes the same minimum for its own cell and stores it. Every pin that targets
    * a cell stores the same value, so the winner buffer ends up identical to the atomic version.
    * Only cells with a resolved pin are read afterwards, so the buffer does not need a reset between
-   * passes. The OpenCL {@code cellDemand} counter is not ported: no kernel reads it and it is never
-   * copied back.
+   * passes.
    */
   public static void electCellWinners(
       KernelContext context, IntArray params, IntArray solutions, IntArray winners) {

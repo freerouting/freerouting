@@ -196,7 +196,6 @@ public final class GpuBgaEscapeSolver {
       long cellHistCostSize = (long) totalCells * 4;
       long solBufSize = (long) pinCount * 16 * 4;
       long cellWinnerSize = (long) totalCells * 4;
-      long cellDemandSize = (long) totalCells * 4;
 
       List<MemorySegment> memObjects = new ArrayList<>();
       List<MemorySegment> kernels = new ArrayList<>();
@@ -268,14 +267,6 @@ public final class GpuBgaEscapeSolver {
                 MemorySegment.NULL,
                 errBuf);
         memObjects.add(clCellWinner);
-        MemorySegment clCellDemand =
-            bindings.clCreateBuffer(
-                context,
-                PanamaOpenClBindings.CL_MEM_READ_WRITE,
-                cellDemandSize,
-                MemorySegment.NULL,
-                errBuf);
-        memObjects.add(clCellDemand);
 
         MemorySegment k1Name = arena.allocateFrom("rasterize_obstacles_and_rudy");
         MemorySegment k2Name = arena.allocateFrom("evaluate_via_dogbone_sites");
@@ -403,13 +394,12 @@ public final class GpuBgaEscapeSolver {
         // Kernel 4a (elect_cell_winners) args setup
         setKernelArgMem(bindings, k4a, 0, clSolBuf, argBuf);
         setKernelArgMem(bindings, k4a, 1, clCellWinner, argBuf);
-        setKernelArgMem(bindings, k4a, 2, clCellDemand, argBuf);
-        setKernelArgInt(bindings, k4a, 3, pinCount, argInt);
-        // arg 4 is currentRing
-        setKernelArgInt(bindings, k4a, 5, gridW, argInt);
-        setKernelArgInt(bindings, k4a, 6, gridH, argInt);
-        setKernelArgInt(bindings, k4a, 7, layers, argInt);
-        // arg 8 is negotiationPass
+        setKernelArgInt(bindings, k4a, 2, pinCount, argInt);
+        // arg 3 is currentRing
+        setKernelArgInt(bindings, k4a, 4, gridW, argInt);
+        setKernelArgInt(bindings, k4a, 5, gridH, argInt);
+        setKernelArgInt(bindings, k4a, 6, layers, argInt);
+        // arg 7 is negotiationPass
 
         // Kernel 4b (commit_cell_winners) args setup
         setKernelArgMem(bindings, k4b, 0, clSolBuf, argBuf);
@@ -425,7 +415,7 @@ public final class GpuBgaEscapeSolver {
         int maxRing = bga.maxRing();
         for (int r = 0; r <= maxRing; r++) {
           setKernelArgInt(bindings, k3, 7, r, argInt);
-          setKernelArgInt(bindings, k4a, 4, r, argInt);
+          setKernelArgInt(bindings, k4a, 3, r, argInt);
           setKernelArgInt(bindings, k4b, 4, r, argInt);
 
           for (int pass = 0; pass < 6; pass++) {
@@ -441,7 +431,7 @@ public final class GpuBgaEscapeSolver {
                 MemorySegment.NULL,
                 MemorySegment.NULL);
 
-            setKernelArgInt(bindings, k4a, 8, pass, argInt);
+            setKernelArgInt(bindings, k4a, 7, pass, argInt);
             setKernelArgInt(bindings, k4b, 8, pass, argInt);
 
             // Dispatch K3: Expand ring candidates
