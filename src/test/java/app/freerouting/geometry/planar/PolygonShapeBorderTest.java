@@ -3,6 +3,7 @@ package app.freerouting.geometry.planar;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.math.BigInteger;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -67,5 +68,26 @@ class PolygonShapeBorderTest {
       inTile |= tile.contains(new IntPoint(70, 40));
     }
     assertTrue(inTile);
+  }
+
+  @Test
+  void rationalPointOnEdgeUsesExactBounds() {
+    PolygonShape shape = lShape();
+    BigInteger scale = BigInteger.TEN.pow(400);
+    // (70 + 1/10^400, 40) has a huge unreduced denominator that overflows double in toFloat()
+    Point onEdge =
+        Point.getInstance(
+            BigInteger.valueOf(70).multiply(scale).add(BigInteger.ONE),
+            BigInteger.valueOf(40).multiply(scale),
+            scale);
+    // (100 + 1/10^20, 40) is past the edge (40,40)-(100,40) even though double rounds it to 100.0
+    BigInteger tinyScale = BigInteger.TEN.pow(20);
+    Point justPastEdge =
+        Point.getInstance(
+            BigInteger.valueOf(100).multiply(tinyScale).add(BigInteger.ONE),
+            BigInteger.valueOf(40).multiply(tinyScale),
+            tinyScale);
+    assertTrue(shape.containsOnBorder(onEdge));
+    assertFalse(shape.containsOnBorder(justPastEdge));
   }
 }

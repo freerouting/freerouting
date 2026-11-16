@@ -259,7 +259,6 @@ public class PolygonShape extends PolylineShape {
    */
   @Override
   public boolean containsOnBorder(Point point) {
-    FloatPoint floatPoint = point.toFloat();
     for (int i = 0; i < corners.length; i++) {
       Point a = corners[i];
       Point b = corners[(i + 1) % corners.length];
@@ -269,12 +268,8 @@ public class PolygonShape extends PolylineShape {
       if (point.sideOf(a, b) != Side.COLLINEAR) {
         continue;
       }
-      FloatPoint fa = a.toFloat();
-      FloatPoint fb = b.toFloat();
-      if (floatPoint.x >= Math.min(fa.x, fb.x)
-          && floatPoint.x <= Math.max(fa.x, fb.x)
-          && floatPoint.y >= Math.min(fa.y, fb.y)
-          && floatPoint.y <= Math.max(fa.y, fb.y)) {
+      if (point.compareX(a) * point.compareX(b) <= 0
+          && point.compareY(a) * point.compareY(b) <= 0) {
         return true;
       }
     }
