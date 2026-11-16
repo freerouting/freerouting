@@ -559,7 +559,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   }
 
   /** Handle property change events from RouterSettings to update GUI controls. */
-  private void onSettingsChanged(java.beans.PropertyChangeEvent evt) {
+  private void onSettingsChanged(app.freerouting.settings.PropertyChangeEvent evt) {
     if (isUpdatingFromSettings) {
       return; // Prevent circular updates
     }
