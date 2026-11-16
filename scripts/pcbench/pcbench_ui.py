@@ -101,7 +101,16 @@ def format_worker_tag(wid: int, tier: str | None = None) -> str:
 
 
 def colorize_status_line(msg: str) -> str:
-    """Highlight status keywords in color."""
+    """Highlight status keywords, result tags, and timings in color."""
+    if msg.startswith("[report]"):
+        return f"{C_BBLUE}{msg}{C_RESET}"
+    msg = re.sub(r"^(\[[^\]]+\])", f"{C_BMAGENTA}\\1{C_RESET}", msg)
+    msg = re.sub(
+        r"\b(CLEAN|ROUTED|UNROUTED|TIMEOUT|ERROR)(\s+)(\([^)]*\))",
+        lambda m: f"{m.group(1)}{m.group(2)}{C_BYELLOW}{m.group(3)}{C_RESET}",
+        msg,
+        count=1,
+    )
     msg = re.sub(r"\bCLEAN\b", f"{C_BGREEN}CLEAN{C_RESET}", msg)
     msg = re.sub(r"\bROUTED\b", f"{C_BYELLOW}ROUTED{C_RESET}", msg)
     msg = re.sub(r"\bUNROUTED\b", f"{C_BBLUE}UNROUTED{C_RESET}", msg)
@@ -119,26 +128,25 @@ def format_duration(seconds: float) -> str:
 
 
 def format_elapsed_clock(seconds: float) -> str:
-    """Minutes and seconds for the worker clock. Minutes grow past 59."""
+    """Minutes and seconds for the worker clock, padded to 3-digit minutes."""
     whole = max(0, int(seconds))
-    return f"{whole // 60:02d}:{whole % 60:02d}"
+    return f"{f'{whole // 60:02d}':>3}:{whole % 60:02d}"
 
 
 def format_worker_progress(elapsed_seconds: float, expected_seconds: float | None) -> str:
-    """``[22:51]`` or ``[22:51 ~42m]`` when the estimate rounds to at least one minute."""
+    """``[ 22:51]`` or ``[ 22:51 ~ 42m]`` (with ``~  1m`` minimum when an estimate exists)."""
     clock = format_elapsed_clock(elapsed_seconds)
     if expected_seconds is None or expected_seconds <= 0:
         return f"[{clock}]"
-    minutes = int(expected_seconds / 60 + 0.5)
-    if minutes <= 0:
-        return f"[{clock}]"
-    return f"[{clock} ~{minutes}m]"
+    minutes = max(1, int(expected_seconds / 60 + 0.5))
+    return f"[{clock} ~{minutes:3d}m]"
 
 
 def expected_fixture_seconds(
     reference_seconds: float,
     tier: str,
     scales: dict[str, float],
+    timeout_seconds: float | None = None,
 ) -> float | None:
     """Seconds this fixture should take on the current build.
 
@@ -146,11 +154,14 @@ def expected_fixture_seconds(
     recorded version, or the catalog time when no such run exists. The tier
     scale is the current build's speed on boards of the same difficulty, and
     it stays at 1 until this run has enough evidence. The product is the same
-    estimate the suite ETA uses for that board.
+    estimate the suite ETA uses for that board, capped at timeout_seconds when set.
     """
     if reference_seconds <= 0:
         return None
-    return reference_seconds * scale_for(scales, tier)
+    expected = reference_seconds * scale_for(scales, tier)
+    if timeout_seconds is not None and timeout_seconds > 0:
+        expected = min(expected, timeout_seconds)
+    return expected
 
 
 def duration_scales(completed: list[tuple[str, float, float]]) -> dict[str, float]:
@@ -185,12 +196,14 @@ def estimate_remaining_seconds(
     running: list[tuple[str, float, float]],
     completed: list[tuple[str, float, float]],
     workers: int,
+    timeout_seconds: float | None = None,
 ) -> tuple[float, float]:
     """Estimate suite seconds left, and the reference-weighted speed ratio.
 
-    Running boards keep only their remaining expected time. Waiting boards go
-    to the worker that becomes free first. Expected time is the fixture's
-    latest successful duration times the tier ratio.
+    Running boards keep only their remaining expected time (projecting forward
+    when elapsed already exceeds the initial estimate). Waiting boards go to the
+    worker that becomes free first. Expected time is the fixture's reference
+    duration times the tier ratio, capped at timeout_seconds when provided.
     """
     scales = duration_scales(completed)
     slots = max(1, workers)
@@ -198,9 +211,21 @@ def estimate_remaining_seconds(
     extras: list[float] = []
     weighted = 0.0
     weight = 0.0
+    has_timeout = timeout_seconds is not None and timeout_seconds > 0
     for index, (tier, reference, elapsed) in enumerate(running):
         expected = max(0.0, reference) * scale_for(scales, tier)
-        remaining = max(0.0, expected - max(0.0, elapsed))
+        if has_timeout:
+            expected = min(expected, timeout_seconds)
+        elapsed_pos = max(0.0, elapsed)
+        if expected > 0 and elapsed_pos <= expected:
+            remaining = expected - elapsed_pos
+        elif elapsed_pos > 0:
+            # Board has overrun its estimate (or has no reference): project forward
+            remaining = max(60.0, elapsed_pos * 0.25)
+            if has_timeout:
+                remaining = min(remaining, max(0.0, timeout_seconds - elapsed_pos))
+        else:
+            remaining = expected
         if index < slots:
             free[index] = remaining
         else:
@@ -209,6 +234,8 @@ def estimate_remaining_seconds(
         weight += max(0.0, reference)
     for tier, reference in queued:
         expected = max(0.0, reference) * scale_for(scales, tier)
+        if has_timeout:
+            expected = min(expected, timeout_seconds)
         slot = min(range(slots), key=lambda item: free[item])
         free[slot] += expected
         weighted += expected
@@ -242,6 +269,7 @@ def render_dashboard(
     board_reference: dict[str, tuple[str, float]] | None = None,
     queued_ids: list[str] | None = None,
     completed_samples: list[tuple[str, float, float]] | None = None,
+    timeout_seconds: float | None = None,
 ) -> None:
     """Print updated multi-worker dashboard with live logs and recent history."""
     now = time.perf_counter()
@@ -265,7 +293,9 @@ def render_dashboard(
                 )
             )
     slots = target_workers if target_workers is not None else max(1, len(running))
-    remaining_secs, _shown_scale = estimate_remaining_seconds(queued, running, samples, slots)
+    remaining_secs, _shown_scale = estimate_remaining_seconds(
+        queued, running, samples, slots, timeout_seconds=timeout_seconds
+    )
     eta_str = format_duration(remaining_secs)
     scales = duration_scales(samples)
     pct = (completed / total) * 100.0 if total > 0 else 0.0
@@ -309,16 +339,18 @@ def render_dashboard(
                     float(info.get("reference_seconds") or 0.0),
                     tier,
                     scales,
+                    timeout_seconds=timeout_seconds,
                 )
                 progress = format_worker_progress(run_sec, expected)
                 last = info.get("last_line", "")
                 last_time = info.get("last_line_time")
                 idle_sec = int(now - last_time) if last_time else run_sec
-                idle_str = f" ({idle_sec // 60}m ago)" if idle_sec >= 60 and last else ""
+                idle_str = f" ({idle_sec // 60:3d}m ago)" if idle_sec >= 60 and last else ""
+                last_display = last[:75] if idle_str else last[:86]
                 lines.append(
                     f"  {C_BMAGENTA}{format_worker_tag(wid, tier)}{C_RESET} "
                     f"{C_BWHITE}{board:<37}{C_RESET} "
-                    f"{C_BYELLOW}{progress}{C_RESET} -> {C_GRAY}{last}{idle_str}{C_RESET}"
+                    f"{C_BYELLOW}{progress}{C_RESET} -> {C_GRAY}{last_display}{idle_str}{C_RESET}"
                 )
             else:
                 lines.append(f"  {C_BMAGENTA}{format_worker_tag(wid)}{C_RESET} {C_DIM}Idle{C_RESET}")
