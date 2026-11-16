@@ -1226,13 +1226,18 @@ public final class ExitStubs {
         : half;
   }
 
+  /**
+   * The point a stub starts from: the pin centre, the only point at which a trace joins a pin (see
+   * {@link app.freerouting.board.model.items.DrillItem#getNormalContacts()}). The midpoint of the
+   * pad's bounding box is not always that point: on a pad turned 45 degrees off the origin it lies
+   * one unit away, and a stub started there is left unconnected to its pin.
+   */
   public static IntPoint centre(Pin pin) {
-    if (pin.getTileShape(0) != null) {
-      IntBox box = pin.getTileShape(0).boundingBox();
-      return new IntPoint(
-          (int) (((long) box.ll.x + box.ur.x) / 2), (int) (((long) box.ll.y + box.ur.y) / 2));
+    Point centre = pin.getCenter();
+    if (centre instanceof IntPoint point) {
+      return point;
     }
-    return pin.getCenter().toFloat().round();
+    return centre.toFloat().round();
   }
 
   public static double slack(
