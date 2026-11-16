@@ -80,6 +80,28 @@ class GraftZonesTest(unittest.TestCase):
         self.assertNotIn("(segment", stripped)
         self.assertIn("(polygon (pts (xy 0 0) (xy 20 0) (xy 20 20) (xy 0 20)))", stripped)
 
+    def test_unmatched_paren_inside_quoted_net_name_is_ignored(self) -> None:
+        processed = """(kicad_pcb (version 20171130) (host pcbnew "(5.1.12)-1")
+  (net 0 "")
+  (net 1 "A(")
+  (segment (start 0 0) (end 1 1) (width 0.25) (layer F.Cu) (net 1))
+)
+"""
+        raw = """(kicad_pcb (version 20171130) (host pcbnew "(5.1.12)-1")
+  (net 0 "")
+  (net 2 "A(")
+  (zone (net 2) (net_name "A(") (layer F.Cu) (tstamp 0) (hatch edge 0.508)
+    (polygon (pts (xy 0 0) (xy 5 0) (xy 5 5)))
+    (filled_polygon (pts (xy 1 1) (xy 4 1) (xy 4 4))))
+)
+"""
+        out, grafted, dropped = graft_zones(processed, raw)
+        self.assertEqual((1, 0), (grafted, dropped))
+        stripped = strip_routing(out)
+        self.assertEqual(['(zone (net 1) (net_name "A(") (layer F.Cu) (tstamp 0) (hatch edge 0.508)'], zones(stripped))
+        self.assertNotIn("filled_polygon", stripped)
+        self.assertNotIn("(segment", stripped)
+
 
 if __name__ == "__main__":
     unittest.main()

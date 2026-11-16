@@ -17,31 +17,39 @@ from __future__ import annotations
 import argparse
 import re
 import sys
+from collections.abc import Callable
 from pathlib import Path
 
 
-def _balanced_parens(text: str, start: int) -> int:
-    depth = 0
-    i = start
+def _paren_delta(text: str) -> int:
+    """Net ``(`` minus ``)`` count in ``text``, ignoring parentheses inside quoted strings."""
+    delta = 0
+    i = 0
     n = len(text)
+    in_str = False
     while i < n:
         ch = text[i]
-        if ch == "(":
-            depth += 1
+        if in_str:
+            if ch == "\\":
+                i += 1
+            elif ch == '"':
+                in_str = False
+        elif ch == '"':
+            in_str = True
+        elif ch == "(":
+            delta += 1
         elif ch == ")":
-            depth -= 1
-            if depth == 0:
-                return i
+            delta -= 1
         i += 1
-    raise ValueError(f"Unbalanced parentheses at offset {start}")
+    return delta
 
 
-def _paren_delta(text: str) -> int:
-    return text.count("(") - text.count(")")
-
-
-def _remove_named_children(block: str, names: set[str]) -> str:
-    """Remove nested s-expr children whose head symbol is in ``names``."""
+def _filter_children(
+    block: str,
+    drop: set[str],
+    transforms: dict[str, Callable[[str], str]] | None = None,
+) -> str:
+    """Drop direct s-expr children in ``drop`` and apply optional per-head transforms."""
     open_paren = block.find("(")
     if open_paren < 0:
         return block
@@ -54,56 +62,46 @@ def _remove_named_children(block: str, names: set[str]) -> str:
     out: list[str] = []
     i = 0
     n = len(inner)
+    in_str = False
     while i < n:
-        if inner[i] == "(":
-            end = _balanced_parens(inner, i)
+        ch = inner[i]
+        if in_str:
+            out.append(ch)
+            if ch == "\\":
+                if i + 1 < n:
+                    out.append(inner[i + 1])
+                i += 2
+                continue
+            if ch == '"':
+                in_str = False
+            i += 1
+        elif ch == '"':
+            in_str = True
+            out.append(ch)
+            i += 1
+        elif ch == "(":
+            end = _sexpr_end(inner, i)
             child = inner[i : end + 1]
             m = re.match(r"\(\s*([A-Za-z_][\w-]*)", child)
             name = m.group(1) if m else ""
-            if name not in names:
+            if name not in drop:
+                if transforms and name in transforms:
+                    child = transforms[name](child)
                 out.append(child)
             i = end + 1
         else:
-            out.append(inner[i])
+            out.append(ch)
             i += 1
     return block[:inner_start] + "".join(out) + block[inner_end:]
 
 
 def _unfill_zone(zone_text: str) -> str:
-    return _remove_named_children(zone_text, {"filled_polygon"})
+    return _filter_children(zone_text, {"filled_polygon"})
 
 
 def _strip_kicad_pcb_children(block: str) -> str:
     """Drop copper children of a ``kicad_pcb`` wrapper and unfill zones."""
-    drop = {"segment", "via", "track"}
-    open_paren = block.find("(")
-    if open_paren < 0:
-        return block
-    inner_start = open_paren + 1
-    inner_end = len(block) - 1
-    if inner_end <= inner_start:
-        return block
-    inner = block[inner_start:inner_end]
-    out: list[str] = []
-    i = 0
-    n = len(inner)
-    while i < n:
-        if inner[i] == "(":
-            end = _balanced_parens(inner, i)
-            child = inner[i : end + 1]
-            m = re.match(r"\(\s*([A-Za-z_][\w-]*)", child)
-            name = m.group(1) if m else ""
-            if name in drop:
-                i = end + 1
-                continue
-            if name == "zone":
-                child = _unfill_zone(child)
-            out.append(child)
-            i = end + 1
-        else:
-            out.append(inner[i])
-            i += 1
-    return block[:inner_start] + "".join(out) + block[inner_end:]
+    return _filter_children(block, {"segment", "via", "track"}, {"zone": _unfill_zone})
 
 
 def _sexpr_end(text: str, start: int) -> int:
@@ -208,9 +206,25 @@ def strip_routing(text: str) -> str:
     i = 0
     n = len(text)
     drop = {"segment", "via", "track"}
+    in_str = False
     while i < n:
-        if text[i] == "(":
-            end = _balanced_parens(text, i)
+        ch = text[i]
+        if in_str:
+            out.append(ch)
+            if ch == "\\":
+                if i + 1 < n:
+                    out.append(text[i + 1])
+                i += 2
+                continue
+            if ch == '"':
+                in_str = False
+            i += 1
+        elif ch == '"':
+            in_str = True
+            out.append(ch)
+            i += 1
+        elif ch == "(":
+            end = _sexpr_end(text, i)
             block = text[i : end + 1]
             m = re.match(r"\(\s*([A-Za-z_][\w-]*)", block)
             name = m.group(1) if m else ""
@@ -223,7 +237,7 @@ def strip_routing(text: str) -> str:
                 out.append(block)
             i = end + 1
         else:
-            out.append(text[i])
+            out.append(ch)
             i += 1
     result = "".join(out)
     if _paren_delta(result) != 0:
