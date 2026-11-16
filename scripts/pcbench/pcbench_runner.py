@@ -340,7 +340,7 @@ def route_single_board(
                         if fatal_process_output(short) or fatal_process_output(clean):
                             fatal_seen.set()
                         with status_lock:
-                            worker_status[wid]["last_line"] = short[:90]
+                            worker_status[wid]["last_line"] = short[:86]
                             worker_status[wid]["last_line_time"] = time.perf_counter()
 
         reader_thread = threading.Thread(target=stream_reader, daemon=True)
