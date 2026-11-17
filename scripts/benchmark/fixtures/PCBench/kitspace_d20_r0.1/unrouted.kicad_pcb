@@ -6122,17 +6122,6 @@
     )
     
   )
-  (zone (net 0) (net_name "") (layers F.Cu In1.Cu In2.Cu B.Cu) (tstamp 0) (hatch edge 0.508)
-    (connect_pads yes (clearance 0.25))
-    (min_thickness 0.15)
-    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
-    (fill (arc_segments 32) (thermal_gap 0.508) (thermal_bridge_width 0.508))
-    (polygon
-      (pts
-        (xy 141.3 107.4) (xy 141.3 110.7) (xy 144.1 110.7) (xy 144.1 107.4)
-      )
-    )
-  )
   (zone (net 67) (net_name _led0_sclk) (layer F.Cu) (tstamp 0) (hatch edge 0.508)
     (priority 16962)
     (connect_pads yes (clearance 0.1016))
