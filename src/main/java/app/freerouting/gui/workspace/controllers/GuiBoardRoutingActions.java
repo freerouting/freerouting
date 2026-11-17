@@ -26,6 +26,14 @@ public final class GuiBoardRoutingActions {
       return null;
     }
 
+    if (job == null) {
+      job = manager.getCurrentRoutingJob();
+    }
+    if (job == null) {
+      app.freerouting.logger.FRLogger.warn("Cannot start routing: no active routing job found.");
+      return null;
+    }
+
     manager.getRoutingBoard().generateSnapshot();
     job.setSettings(manager.getSessionPort().settingsSnapshot().copy());
     RunGeneration generation = manager.getSessionPort().beginRoute(job);

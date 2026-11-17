@@ -1,6 +1,8 @@
 package app.freerouting.board.model.items;
 
 import app.freerouting.autoroute.ItemAutorouteInfo;
+import app.freerouting.autoroute.scope.ForeignTracePolicy;
+import app.freerouting.autoroute.scope.RoutingScopeContext;
 import app.freerouting.board.actions.ItemInfoPrinter;
 import app.freerouting.board.actions.ItemSearchTreesInfo;
 import app.freerouting.board.actions.ItemSelectionFilter;
@@ -1069,6 +1071,15 @@ public abstract class Item
    * Returns true, if it is not allowed to change the location of this item by the push algorithm.
    */
   public boolean isShoveFixed() {
+    if (this.board != null) {
+      RoutingScopeContext scopeContext = this.board.getRoutingScopeContext();
+      if (scopeContext != null
+          && scopeContext.isActive()
+          && scopeContext.getForeignTracePolicy() == ForeignTracePolicy.FIXED
+          && scopeContext.isForeignProtectedItem(this)) {
+        return true;
+      }
+    }
     return this.fixedState.ordinal() >= FixedState.SHOVE_FIXED.ordinal();
   }
 

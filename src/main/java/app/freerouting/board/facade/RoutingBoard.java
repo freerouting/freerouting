@@ -6,6 +6,7 @@ import app.freerouting.autoroute.expansion.CompleteFreeSpaceExpansionRoom;
 import app.freerouting.autoroute.maze.AutorouteControl;
 import app.freerouting.autoroute.maze.AutorouteControl.ExpansionCostFactor;
 import app.freerouting.autoroute.maze.AutorouteEngine;
+import app.freerouting.autoroute.scope.RoutingScopeContext;
 import app.freerouting.board.actions.DrillItemMover;
 import app.freerouting.board.actions.ForcedViaInserter;
 import app.freerouting.board.actions.ItemSelectionFilter;
@@ -72,6 +73,9 @@ public class RoutingBoard extends BasicBoard implements Serializable {
 
   /** The area marked for optimizing the route. */
   public transient ChangedArea changedArea;
+
+  /** Active scope coordinator for selective component-scoped routing. */
+  private transient RoutingScopeContext routingScopeContext = RoutingScopeContext.UNSCOPED;
 
   /** Contains the database for the auto-route algorithm. */
   private transient AutorouteEngine autorouteEngine;
@@ -149,6 +153,29 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   /** Marks the whole board as changed. */
   public void markAllChangedArea() {
     getOperations().markAllChangedArea();
+  }
+
+  /** Returns the active selective routing scope context. */
+  public RoutingScopeContext getRoutingScopeContext() {
+    if (this.routingScopeContext == null) {
+      this.routingScopeContext = RoutingScopeContext.UNSCOPED;
+    }
+    return this.routingScopeContext;
+  }
+
+  /** Sets the active selective routing scope context. */
+  public void setRoutingScopeContext(RoutingScopeContext context) {
+    this.routingScopeContext = context != null ? context : RoutingScopeContext.UNSCOPED;
+  }
+
+  /** Takes a snapshot of the current changed area. */
+  public ChangedArea getChangedAreaSnapshot() {
+    return this.changedArea != null ? this.changedArea.copy() : null;
+  }
+
+  /** Restores a previously captured changed area snapshot. */
+  public void restoreChangedAreaSnapshot(ChangedArea snapshot) {
+    this.changedArea = snapshot != null ? snapshot.copy() : null;
   }
 
   /**

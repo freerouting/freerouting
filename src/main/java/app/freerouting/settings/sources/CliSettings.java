@@ -194,6 +194,9 @@ public class CliSettings implements SettingsSource {
           // Fall back to raw string value if parsing as float fails
         }
       }
+      if ("scope.components".equals(fieldPath) && "none".equalsIgnoreCase(value.trim())) {
+        value = "";
+      }
 
       ReflectionUtil.setFieldValue(settings, fieldPath, value);
       parsedArguments.put(propertyName, value);
@@ -237,6 +240,7 @@ public class CliSettings implements SettingsSource {
       case "router-scoring-version" -> "router.scoring.version";
       case "optimizer-scoring-version" -> "optimizer.scoring.version";
       case "scoring-version" -> "scoring-version";
+      case "sc" -> "router.scope.components";
       // Add more mappings as needed
       default -> null;
     };

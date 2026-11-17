@@ -80,6 +80,7 @@ public final class InspectItemsInRegionState extends SelectRegionState {
     if (somethingFound) {
       if (this.returnState instanceof InspectedItemState state) {
         state.getItemList().addAll(foundItems);
+        state.syncScopeFromSelection();
       } else {
         this.returnState = InspectedItemState.getInstance(foundItems, this.returnState, hdlg);
       }

@@ -113,6 +113,12 @@ public class BasicBoard implements Serializable {
   private transient BoardItemRepository itemRepository;
   private transient BoardConnectivityQueries connectivityQueries;
   private transient BoardSnapshotManager snapshotManager;
+
+  /** Returns the active routing scope context, or UNSCOPED if in unscoped full-board mode. */
+  public app.freerouting.autoroute.scope.RoutingScopeContext getRoutingScopeContext() {
+    return app.freerouting.autoroute.scope.RoutingScopeContext.UNSCOPED;
+  }
+
   public int preExistingClearanceViolationsCount = 0;
   public transient int unfixableClearanceViolationsCount = 0;
   public transient Set<Integer> ruleBlockedPins;

@@ -61,6 +61,8 @@ public class WorkspaceSettings extends GuiSettingsSource implements Serializable
   public static final String PROP_TRACE_PULL_TIGHT_ACCURACY = "tracePullTightAccuracy";
   public static final String PROP_AUTOMATIC_NECKDOWN = "automaticNeckdown";
   public static final String PROP_MANUAL_TRACE_HALF_WIDTH = "manual_trace_half_width";
+  public static final String PROP_SCOPE_COMPONENTS = "scopeComponents";
+  public static final String PROP_FOREIGN_TRACE_POLICY = "foreignTracePolicy";
 
   /** The single GUI-session instance; {@code null} when running headless. */
   private static volatile WorkspaceSettings instance;
@@ -82,6 +84,15 @@ public class WorkspaceSettings extends GuiSettingsSource implements Serializable
 
   /** Router parameter: enables automatic neckdown in interactive routing. */
   private boolean automaticNeckdown = true;
+
+  /** Scope parameter: selective component designators in GUI session. */
+  private String[] scopeComponents;
+
+  /** Scope parameter: foreign trace policy in GUI session. */
+  private String foreignTracePolicy;
+
+  /** Lock-free EDT mask for active scope rendering/dimming. */
+  private transient volatile app.freerouting.autoroute.scope.RoutingScopeMask activeScopeMask;
 
   /** The current layer index. */
   private int layer;
@@ -139,6 +150,12 @@ public class WorkspaceSettings extends GuiSettingsSource implements Serializable
   /** The filter used in interactive selection of board items. */
   private ItemSelectionFilter itemSelectionFilter;
 
+  /** Reference to the active board for on-the-fly scope mask compilation. */
+  private transient RoutingBoard board;
+
+  /** Indicates whether the active scope was set from user selection on the board. */
+  private transient boolean scopeFromSelection;
+
   /**
    * Indicates, if the data of this class are not allowed to be changed in interactive board
    * editing.
@@ -148,6 +165,7 @@ public class WorkspaceSettings extends GuiSettingsSource implements Serializable
   /** Creates a new interactive settings variable. */
   public WorkspaceSettings(RoutingBoard board) {
     super(null);
+    this.board = board;
     // Initialise with default values.
     layer = 0;
     pushEnabled = true;
@@ -350,16 +368,28 @@ public class WorkspaceSettings extends GuiSettingsSource implements Serializable
   @Override
   public RouterSettings getSettings() {
     RouterSettings baseSettings = super.getSettings();
+    RouterSettings result;
     if (baseSettings != null) {
-      RouterSettings clone = baseSettings.clone();
-      clone.tracePullTightAccuracy = this.getTracePullTightAccuracy();
-      clone.automaticNeckdown = this.getAutomaticNeckdown();
-      return clone;
+      result = baseSettings.clone();
+      result.tracePullTightAccuracy = this.getTracePullTightAccuracy();
+      result.automaticNeckdown = this.getAutomaticNeckdown();
+    } else {
+      result = new RouterSettings();
+      result.tracePullTightAccuracy = this.tracePullTightAccuracy;
+      result.automaticNeckdown = this.automaticNeckdown;
     }
-    RouterSettings snapshot = new RouterSettings();
-    snapshot.tracePullTightAccuracy = this.tracePullTightAccuracy;
-    snapshot.automaticNeckdown = this.automaticNeckdown;
-    return snapshot;
+    if (this.scopeComponents != null || this.foreignTracePolicy != null) {
+      if (result.scope == null) {
+        result.scope = new app.freerouting.settings.RouterScopeSettings();
+      }
+      if (this.scopeComponents != null) {
+        result.scope.components = Arrays.copyOf(this.scopeComponents, this.scopeComponents.length);
+      }
+      if (this.foreignTracePolicy != null) {
+        result.scope.foreignTracePolicy = this.foreignTracePolicy;
+      }
+    }
+    return result;
   }
 
   /**
@@ -383,6 +413,16 @@ public class WorkspaceSettings extends GuiSettingsSource implements Serializable
     }
     if (settings.automaticNeckdown != null) {
       this.automaticNeckdown = settings.automaticNeckdown;
+    }
+    if (settings.scope != null) {
+      if (settings.scope.components != null) {
+        this.scopeComponents =
+            Arrays.copyOf(settings.scope.components, settings.scope.components.length);
+      }
+      if (settings.scope.foreignTracePolicy != null) {
+        this.foreignTracePolicy = settings.scope.foreignTracePolicy;
+      }
+      updateActiveScopeMask();
     }
   }
 
@@ -703,6 +743,106 @@ public class WorkspaceSettings extends GuiSettingsSource implements Serializable
   /** Defines, if the setting attributes are allowed to be changed interactively or not. */
   public void setReadOnly(Boolean value) {
     this.readOnly = value;
+  }
+
+  /** Returns the active scope component designators, or null if unset. */
+  public String[] getScopeComponents() {
+    return this.scopeComponents != null
+        ? Arrays.copyOf(this.scopeComponents, this.scopeComponents.length)
+        : null;
+  }
+
+  /** Binds the routing board to this workspace settings instance and refreshes the scope mask. */
+  public void setBoard(RoutingBoard board) {
+    this.board = board;
+    updateActiveScopeMask();
+  }
+
+  /** Sets the active scope component designators. Fires {@link #PROP_SCOPE_COMPONENTS}. */
+  public void setScopeComponents(String[] newComponents) {
+    if (readOnly) {
+      return;
+    }
+    this.scopeFromSelection = false;
+    final String[] old = this.scopeComponents;
+    this.scopeComponents =
+        newComponents != null && newComponents.length > 0
+            ? Arrays.copyOf(newComponents, newComponents.length)
+            : null;
+    updateActiveScopeMask();
+    pcs.firePropertyChange(PROP_SCOPE_COMPONENTS, old, this.scopeComponents);
+  }
+
+  /** Sets the active scope components from user selection on the board. */
+  public void setScopeComponentsFromSelection(String[] newComponents) {
+    if (readOnly) {
+      return;
+    }
+    final String[] old = this.scopeComponents;
+    this.scopeComponents =
+        newComponents != null && newComponents.length > 0
+            ? Arrays.copyOf(newComponents, newComponents.length)
+            : null;
+    this.scopeFromSelection = this.scopeComponents != null;
+    updateActiveScopeMask();
+    pcs.firePropertyChange(PROP_SCOPE_COMPONENTS, old, this.scopeComponents);
+  }
+
+  /** Clears the active scope components if they were set from GUI selection. */
+  public void clearScopeFromSelection() {
+    if (this.scopeFromSelection) {
+      this.scopeFromSelection = false;
+      final String[] old = this.scopeComponents;
+      this.scopeComponents = null;
+      updateActiveScopeMask();
+      pcs.firePropertyChange(PROP_SCOPE_COMPONENTS, old, null);
+    }
+  }
+
+  /** Returns true if the active scope was set from GUI selection. */
+  public boolean isScopeFromSelection() {
+    return this.scopeFromSelection;
+  }
+
+  /** Returns the active foreign trace policy string, or null if unset. */
+  public String getForeignTracePolicy() {
+    return this.foreignTracePolicy;
+  }
+
+  /** Sets the active foreign trace policy. Fires {@link #PROP_FOREIGN_TRACE_POLICY}. */
+  public void setForeignTracePolicy(String newPolicy) {
+    if (readOnly) {
+      return;
+    }
+    String old = this.foreignTracePolicy;
+    this.foreignTracePolicy = newPolicy;
+    updateActiveScopeMask();
+    pcs.firePropertyChange(PROP_FOREIGN_TRACE_POLICY, old, newPolicy);
+  }
+
+  /** Recompiles the lock-free EDT scope mask based on active component scope. */
+  private void updateActiveScopeMask() {
+    if (this.board != null && this.scopeComponents != null && this.scopeComponents.length > 0) {
+      app.freerouting.settings.RouterScopeSettings tempScope =
+          new app.freerouting.settings.RouterScopeSettings();
+      tempScope.components = this.scopeComponents;
+      tempScope.foreignTracePolicy = this.foreignTracePolicy;
+      app.freerouting.autoroute.scope.RoutingScopeContext context =
+          app.freerouting.autoroute.scope.RoutingScopeCompiler.compile(this.board, tempScope);
+      this.activeScopeMask = context.isActive() ? context.getMask() : null;
+    } else {
+      this.activeScopeMask = null;
+    }
+  }
+
+  /** Returns the lock-free EDT mask for active scope rendering/dimming. */
+  public app.freerouting.autoroute.scope.RoutingScopeMask getActiveScopeMask() {
+    return this.activeScopeMask;
+  }
+
+  /** Sets the lock-free EDT mask for active scope rendering/dimming. */
+  public void setActiveScopeMask(app.freerouting.autoroute.scope.RoutingScopeMask activeScopeMask) {
+    this.activeScopeMask = activeScopeMask;
   }
 
   /**

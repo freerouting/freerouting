@@ -2,6 +2,8 @@ package app.freerouting.autoroute.pipeline;
 
 import app.freerouting.autoroute.events.BoardUpdatedEventListener;
 import app.freerouting.autoroute.events.TaskStateChangedEventListener;
+import app.freerouting.autoroute.scope.RoutingScopeCompiler;
+import app.freerouting.autoroute.scope.RoutingScopeContext;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingStage;
 import app.freerouting.settings.RouterSettings;
@@ -87,6 +89,17 @@ public final class RoutingPipeline {
   public void run() {
     if (this.job != null && this.job.board != null) {
       this.job.board.awaitPostLoad();
+      RoutingScopeContext context =
+          RoutingScopeCompiler.compile(
+              this.job.board,
+              this.job.routerSettings != null ? this.job.routerSettings.scope : null);
+      this.job.board.setRoutingScopeContext(context);
+      if (context.isNoOp()) {
+        this.job.logWarning(
+            "Selective component routing requested but no valid routable pins found for scope; exiting in 0 passes.");
+        this.job.stage = RoutingStage.IDLE;
+        return;
+      }
       String chosen = TwoLayerBga.apply(this.job.routerSettings, this.job.board);
       if (chosen != null) {
         this.job.logInfo(chosen);
@@ -138,7 +151,8 @@ public final class RoutingPipeline {
       this.job.stage = RoutingStage.ROUTING;
     }
 
-    if (routerEnabled && !this.job.thread.isStopAutoRouterRequested()) {
+    if (routerEnabled
+        && (this.job.thread == null || !this.job.thread.isStopAutoRouterRequested())) {
       List<RoutingFallback.Strategy> strategies =
           RoutingFallback.parse(
               this.job.routerSettings,
@@ -167,7 +181,7 @@ public final class RoutingPipeline {
         this.autorouter = fallback.explore(this.job, this.autorouter);
       }
     } else if (this.job.routerSettings.isFanoutEnabled()
-        && !this.job.thread.isStopAutoRouterRequested()) {
+        && (this.job.thread == null || !this.job.thread.isStopAutoRouterRequested())) {
       Integer originalMaxPasses = this.job.routerSettings.autorouter.maxPasses;
       try {
         this.job.routerSettings.autorouter.maxPasses = 0;
@@ -184,7 +198,7 @@ public final class RoutingPipeline {
   }
 
   private void runOptimizationStage() {
-    if (this.optimizer == null || this.job.thread.isStopRequested()) {
+    if (this.optimizer == null || (this.job.thread != null && this.job.thread.isStopRequested())) {
       return;
     }
 

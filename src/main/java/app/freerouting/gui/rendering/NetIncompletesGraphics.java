@@ -30,6 +30,13 @@ public class NetIncompletesGraphics {
       if (drawIntensity <= 0) {
         return;
       }
+      app.freerouting.autoroute.scope.RoutingScopeMask mask = graphicsContext.getActiveScopeMask();
+      if (mask != null
+          && mask.isActive()
+          && netIncompletes.getNet() != null
+          && !mask.isNetInScope(netIncompletes.getNet().netNumber)) {
+        drawIntensity *= 0.35;
+      }
       FloatPoint[] drawPoints = new FloatPoint[2];
       int drawWidth = 1;
       for (AirLine currentIncomplete : netIncompletes.getIncompletes()) {

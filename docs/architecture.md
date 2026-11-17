@@ -111,6 +111,7 @@ Use the table below to jump to the package most likely to own the behavior you a
 | DSN / SES file loading or writing | `app.freerouting.io.specctra` |
 | Board items, board state, or board-level helpers | `app.freerouting.board.model.items`, `app.freerouting.board.model.structure`, `app.freerouting.board.facade`, `app.freerouting.board.state`, `app.freerouting.board.actions`, and `app.freerouting.board.trace` |
 | Routing decisions, fanout, maze search, or optimization | `app.freerouting.autoroute.pipeline`, `app.freerouting.autoroute.maze`, `app.freerouting.autoroute.expansion`, `app.freerouting.autoroute.drill`, `app.freerouting.autoroute.path`, and `app.freerouting.board.optimize` |
+| Selective component-scoped routing and foreign trace preservation | `app.freerouting.autoroute.scope` |
 | Nets, vias, clearance classes, or board rules | `app.freerouting.rules` |
 | Clearance violations or design-rule checks | `app.freerouting.drc` |
 | GUI windows, panels, menus, editor state, accessibility locators, or drawing | `app.freerouting.gui.windows.board`, `app.freerouting.gui.windows.routing`, `app.freerouting.gui.menus`, `app.freerouting.gui.board`, `app.freerouting.gui.controls`, `app.freerouting.gui.support`, `app.freerouting.gui.workspace`, `app.freerouting.gui.interactive`, `app.freerouting.gui.a11y`, and `app.freerouting.gui.rendering` |

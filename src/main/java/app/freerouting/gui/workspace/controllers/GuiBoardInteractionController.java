@@ -224,6 +224,12 @@ public final class GuiBoardInteractionController {
     stateController().displaySelectedItemInfo();
   }
 
+  public java.util.Collection<Item> getSelectedItems() {
+    return stateController() != null
+        ? stateController().getSelectedItems()
+        : java.util.Collections.emptyList();
+  }
+
   public void extendSelectionToWholeNets() {
     if (isReadOnlyInspectedState()) {
       return;

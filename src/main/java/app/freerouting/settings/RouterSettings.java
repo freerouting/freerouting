@@ -27,6 +27,10 @@ public class RouterSettings implements Serializable, Cloneable {
   @SerializedName("fanout")
   public FanoutSettings fanout;
 
+  /** Configuration for selective component-scoped routing. */
+  @SerializedName("scope")
+  public RouterScopeSettings scope;
+
   @SerializedName("copper_to_edge_clearance_um")
   public Double copperToEdgeClearanceUm;
 
@@ -214,6 +218,7 @@ public class RouterSettings implements Serializable, Cloneable {
     this.optimizerScoring = new OptimizerScoreSettings();
     this.fanout = new FanoutSettings();
     this.autorouter = new AutorouterSettings();
+    this.scope = new RouterScopeSettings();
   }
 
   /** Creates router settings sized and tuned for the supplied board. */
@@ -799,6 +804,7 @@ public class RouterSettings implements Serializable, Cloneable {
     result.fanout = this.fanout != null ? this.fanout.clone() : new FanoutSettings();
     result.autorouter =
         this.autorouter != null ? this.autorouter.clone() : new AutorouterSettings();
+    result.scope = this.scope != null ? this.scope.clone() : new RouterScopeSettings();
     result.boardSpecificTraceCostsApplied = this.boardSpecificTraceCostsApplied;
 
     return result;

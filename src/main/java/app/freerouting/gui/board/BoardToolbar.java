@@ -194,6 +194,14 @@ public class BoardToolbar extends JPanel {
           if (interactiveSettings != null) {
             interactiveSettings.setSettings(guiRoutingJob.routerSettings);
           }
+          if (boardFrame.boardPanel.boardHandling.hasSelection()) {
+            String[] selectedComps =
+                app.freerouting.gui.SelectionScopeResolver.extractSelectedComponentNames(
+                    boardFrame.boardPanel.boardHandling);
+            if (selectedComps.length > 0 && interactiveSettings != null) {
+              interactiveSettings.setScopeComponents(selectedComps);
+            }
+          }
           var merger = boardFrame.boardPanel.boardHandling.settingsMerger;
           if (merger != null) {
             var mergedSettings = merger.merge();

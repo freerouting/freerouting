@@ -15,6 +15,7 @@ import app.freerouting.autoroute.expansion.SortedRoomNeighbours;
 import app.freerouting.autoroute.expansion.TargetItemExpansionDoor;
 import app.freerouting.autoroute.path.FoundConnectionInserter;
 import app.freerouting.autoroute.path.FoundConnectionLocator;
+import app.freerouting.autoroute.scope.RoutingScopeContext;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.searchtree.SearchTreeObject;
@@ -28,6 +29,7 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -133,9 +135,24 @@ public class AutorouteEngine {
       AutorouteControl ctrl,
       SortedSet<Item> rippedItemList,
       Map<Item, Integer> ripupCosts) {
+    Set<Item> effectiveDestSet = destSet;
+    RoutingScopeContext scopeContext =
+        this.board != null ? this.board.getRoutingScopeContext() : null;
+    if (scopeContext != null && scopeContext.isActive()) {
+      Collection<Item> filtered =
+          scopeContext.filterDestinationSet(this.board, ctrl.netNumber, startSet, destSet);
+      if (filtered == null || filtered.isEmpty()) {
+        return new AutorouteAttemptResult(
+            AutorouteAttemptState.ALREADY_CONNECTED,
+            "No valid destination targets under active routing scope policy.");
+      }
+      if (filtered != destSet) {
+        effectiveDestSet = new HashSet<>(filtered);
+      }
+    }
     MazeSearchEngine mazeSearchAlgo;
     try {
-      mazeSearchAlgo = MazeSearchEngine.getInstance(startSet, destSet, this, ctrl);
+      mazeSearchAlgo = MazeSearchEngine.getInstance(startSet, effectiveDestSet, this, ctrl);
     } catch (Exception e) {
       FRLogger.error(
           "AutorouteEngine.autoroute_connection: Exception in MazeSearchEngine.get_instance", e);

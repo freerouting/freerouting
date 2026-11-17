@@ -59,6 +59,12 @@ public class BoardToolbarInspectedItem extends JToolBar {
         GuiLocators.INSPECT_EXTEND_COMPONENTS,
         "toolbarWholeGroupsButton",
         actionListener);
+    addInspectButton(
+        tm,
+        "route_components",
+        GuiLocators.INSPECT_ROUTE_COMPONENTS,
+        "toolbarRouteComponentsButton",
+        actionListener);
 
     addSeparator();
 
@@ -143,6 +149,8 @@ public class BoardToolbarInspectedItem extends JToolBar {
           boardFrame.boardPanel.boardHandling.extendSelectionToWholeConnections();
       case GuiLocators.INSPECT_EXTEND_COMPONENTS ->
           boardFrame.boardPanel.boardHandling.extendSelectionToWholeComponents();
+      case GuiLocators.INSPECT_ROUTE_COMPONENTS ->
+          app.freerouting.gui.SelectionScopeResolver.routeSelectedComponents(boardFrame);
       case GuiLocators.INSPECT_VIOLATIONS ->
           boardFrame.boardPanel.boardHandling.toggleSelectedItemViolations();
       case GuiLocators.INSPECT_ZOOM_SELECTION ->

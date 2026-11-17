@@ -4,6 +4,8 @@ import app.freerouting.autoroute.expansion.CompleteExpansionRoom;
 import app.freerouting.autoroute.expansion.ExpansionDoor;
 import app.freerouting.autoroute.expansion.ObstacleExpansionRoom;
 import app.freerouting.autoroute.path.Connection;
+import app.freerouting.autoroute.scope.ForeignTracePolicy;
+import app.freerouting.autoroute.scope.RoutingScopeContext;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Trace;
@@ -74,6 +76,24 @@ final class MazeRipupResolver {
     if (!obstacleItem.isRoutable()) {
       return -1;
     }
+    RoutingScopeContext scopeContext =
+        search.autorouteEngine != null && search.autorouteEngine.board != null
+            ? search.autorouteEngine.board.getRoutingScopeContext()
+            : null;
+    if (scopeContext != null && scopeContext.isActive()) {
+      if (scopeContext.isAnchorShielded(obstacleItem.getId())) {
+        return -1;
+      }
+      if (scopeContext.isForeignProtectedItem(obstacleItem)) {
+        if (ctrl.isFanout
+            || ctrl.ripupPassNo <= scopeContext.getNudgeOnlyPasses()
+            || scopeContext.getForeignTracePolicy() == ForeignTracePolicy.NUDGE_ONLY
+            || scopeContext.getForeignTracePolicy() == ForeignTracePolicy.FIXED
+            || scopeContext.isInForeignRecoverySubPass()) {
+          return -1;
+        }
+      }
+    }
     if (!ctrl.netsNotToRip.isEmpty()) {
       for (int i = 0; i < obstacleItem.netCount(); i++) {
         if (ctrl.netsNotToRip.contains(obstacleItem.getNetNumber(i))) {
@@ -133,6 +153,11 @@ final class MazeRipupResolver {
     }
 
     double ripupCost = ctrl.ripupCosts * costFactor;
+    if (scopeContext != null
+        && scopeContext.isActive()
+        && scopeContext.isForeignProtectedItem(obstacleItem)) {
+      ripupCost *= scopeContext.getForeignRipupCostMultiplier();
+    }
     double detour = 1;
     double traceLength = 0;
     double minTraceLength = 0;

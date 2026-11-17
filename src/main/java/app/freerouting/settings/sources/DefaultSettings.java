@@ -129,6 +129,24 @@ public class DefaultSettings implements SettingsSource {
   public static final OptimizerScoringVersion DEFAULT_OPTIMIZER_SCORING_VERSION =
       OptimizerScoringVersion.V2_LOWER_BOUND;
 
+  /** Default components to route selectively (empty array = full board routing). */
+  public static final String[] DEFAULT_SCOPE_COMPONENTS = new String[0];
+
+  /** Default multi-pin net scoping policy. */
+  public static final String DEFAULT_SCOPE_MULTI_PIN_POLICY = "anchor_to_nearest";
+
+  /** Default non-selected trace protection policy. */
+  public static final String DEFAULT_SCOPE_FOREIGN_TRACE_POLICY = "nudge_then_conditional_ripup";
+
+  /** Default cost multiplier for ripping up non-selected traces in Tier 2 passes. */
+  public static final double DEFAULT_SCOPE_FOREIGN_RIPUP_COST_MULTIPLIER = 10.0;
+
+  /** Default number of passes restricted to push-and-shove nudging before conditional rip-up. */
+  public static final int DEFAULT_SCOPE_NUDGE_ONLY_PASSES = 2;
+
+  /** Default flag for including bypass capacitor companions of selected ICs. */
+  public static final boolean DEFAULT_SCOPE_INCLUDE_DECOUPLING_COMPANIONS = false;
+
   public static final float DEFAULT_ROUTER_UNROUTED_CONNECTION_WEIGHT = 1000.0F;
 
   public static final String DEFAULT_FALLBACK_STRATEGIES =
@@ -292,6 +310,14 @@ public class DefaultSettings implements SettingsSource {
     settings.optimizerScoring.excessBendWeight = DEFAULT_OPTIMIZER_EXCESS_BEND_WEIGHT;
     settings.optimizerScoring.lengthFloor = DEFAULT_OPTIMIZER_LENGTH_FLOOR;
     settings.optimizerScoring.difficultyScaleFloor = DEFAULT_OPTIMIZER_DIFFICULTY_SCALE_FLOOR;
+
+    // Selective component-scoped routing defaults
+    settings.scope.components = DEFAULT_SCOPE_COMPONENTS;
+    settings.scope.multiPinPolicy = DEFAULT_SCOPE_MULTI_PIN_POLICY;
+    settings.scope.foreignTracePolicy = DEFAULT_SCOPE_FOREIGN_TRACE_POLICY;
+    settings.scope.foreignRipupCostMultiplier = DEFAULT_SCOPE_FOREIGN_RIPUP_COST_MULTIPLIER;
+    settings.scope.nudgeOnlyPasses = DEFAULT_SCOPE_NUDGE_ONLY_PASSES;
+    settings.scope.includeDecouplingCompanions = DEFAULT_SCOPE_INCLUDE_DECOUPLING_COMPANIONS;
 
     return settings;
   }

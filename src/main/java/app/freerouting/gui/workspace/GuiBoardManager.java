@@ -681,6 +681,13 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
     this.workspaceSettings = WorkspaceSettings.reset(this.board, this.routingJob.routerSettings);
     this.initializeManualTraceHalfWidths();
     this.settingsMerger.addOrReplaceSources(this.workspaceSettings);
+    this.workspaceSettings.addPropertyChangeListener(
+        evt -> {
+          if (WorkspaceSettings.PROP_SCOPE_COMPONENTS.equals(evt.getPropertyName())
+              || WorkspaceSettings.PROP_FOREIGN_TRACE_POLICY.equals(evt.getPropertyName())) {
+            this.repaint();
+          }
+        });
 
     double unitFactor = this.board.communication.coordinateTransform.boardToDsn(1);
     this.coordinateTransform =
@@ -881,6 +888,19 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
   /** GUI workspace member. */
   public WorkspacePort getSessionPort() {
     return sessionPort;
+  }
+
+  /** Returns the currently selected items on the board. */
+  public java.util.Collection<app.freerouting.board.model.items.Item> getSelectedItems() {
+    return interactionController != null
+        ? interactionController.getSelectedItems()
+        : java.util.Collections.emptyList();
+  }
+
+  /** Returns true if there are currently selected items on the board. */
+  public boolean hasSelection() {
+    java.util.Collection<app.freerouting.board.model.items.Item> sel = getSelectedItems();
+    return sel != null && !sel.isEmpty();
   }
 
   /** GUI workspace member. */

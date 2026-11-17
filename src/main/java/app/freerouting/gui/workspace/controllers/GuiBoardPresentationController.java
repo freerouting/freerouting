@@ -118,6 +118,11 @@ public final class GuiBoardPresentationController {
       return;
     }
 
+    WorkspaceSettings ws = manager.getWorkspaceSettings();
+    if (ws != null && graphicsContext != null) {
+      graphicsContext.setActiveScopeMask(ws.getActiveScopeMask());
+    }
+
     BoardRenderer.draw(board, graphics, graphicsContext);
     if (manager.getPresentationRatsNest() != null) {
       manager.getPresentationRatsNest().draw(graphics, graphicsContext);

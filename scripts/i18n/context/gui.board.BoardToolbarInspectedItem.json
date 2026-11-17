@@ -461,6 +461,38 @@
     ],
     "ui_role": "tooltip"
   },
+  "route_components": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [],
+    "english_hash": "8598f2c21811252ac0f968d1f513138d5894baab2fe7ac6ca01c5ec6ecf13509",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.board.BoardToolbarInspectedItem",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "route_components_tooltip"
+    ],
+    "ui_role": "label"
+  },
+  "route_components_tooltip": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [],
+    "english_hash": "e9c3a608c52a160a1483d6ceb0a474506c1924bd2eea869650f6639521152d77",
+    "grammatical_role": "full_sentence",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.board.BoardToolbarInspectedItem",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "route_components"
+    ],
+    "ui_role": "tooltip"
+  },
   "select_clearance_class": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],

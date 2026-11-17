@@ -530,6 +530,13 @@ public final class BatchAutorouter extends NamedAlgorithm {
               // If the item is not connected to all other items of the net, we add it to the
               // auto-router's to-do list
               if ((connectedSet.size() < netItemCount) && (!currentItem.hasIgnoredNets())) {
+                app.freerouting.autoroute.scope.RoutingScopeContext scopeContext =
+                    board.getRoutingScopeContext();
+                if (scopeContext != null
+                    && scopeContext.isActive()
+                    && !scopeContext.shouldEnqueueItem(board, currentNetNumber, currentItem)) {
+                  continue;
+                }
                 Net net = board.rules.nets.get(currentNetNumber);
                 boolean isPlane = net != null && net.containsPlane();
                 if (isPlane) {
@@ -743,10 +750,26 @@ public final class BatchAutorouter extends NamedAlgorithm {
   void removeTails(Item.StopConnectionOption stopConnectionOption) {
     final long tailRemovalStart = BENCHMARK_PROFILE_ENABLED ? System.nanoTime() : 0;
     board.startMarkingChangedArea();
-    board.removeTraceTails(-1, stopConnectionOption);
+    app.freerouting.autoroute.scope.RoutingScopeContext scopeContext =
+        board.getRoutingScopeContext();
+    int[] scopedNets =
+        (scopeContext != null && scopeContext.isActive())
+            ? scopeContext.getScopedNetNumbers()
+            : null;
+    if (scopedNets != null && scopedNets.length > 0) {
+      for (int netNo : scopedNets) {
+        board.removeTraceTails(netNo, stopConnectionOption);
+      }
+    } else {
+      board.removeTraceTails(-1, stopConnectionOption);
+    }
     long pullTightStart = BENCHMARK_PROFILE_ENABLED ? System.nanoTime() : 0;
     board.optChangedArea(
-        new int[0], null, this.tracePullTightAccuracy, this.traceCosts, this.thread);
+        scopedNets != null ? scopedNets : new int[0],
+        null,
+        this.tracePullTightAccuracy,
+        this.traceCosts,
+        this.thread);
     if (BENCHMARK_PROFILE_ENABLED) {
       this.profileTailRemovalNanos += System.nanoTime() - tailRemovalStart;
       this.profileOptChangedAreaNanos += System.nanoTime() - pullTightStart;

@@ -1791,6 +1791,9 @@
           "name": "scoring"
         },
         {
+          "name": "scope"
+        },
+        {
           "name": "strictDrc"
         },
         {
@@ -1801,6 +1804,36 @@
         },
         {
           "name": "viasAllowed"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ],
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.settings.RouterScopeSettings",
+      "fields": [
+        {
+          "name": "components"
+        },
+        {
+          "name": "foreignRipupCostMultiplier"
+        },
+        {
+          "name": "foreignTracePolicy"
+        },
+        {
+          "name": "includeDecouplingCompanions"
+        },
+        {
+          "name": "multiPinPolicy"
+        },
+        {
+          "name": "nudgeOnlyPasses"
         }
       ],
       "methods": [

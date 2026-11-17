@@ -348,7 +348,8 @@ public final class BoardRenderer {
     Color color = colors[layer];
     double intensity =
         (style == null ? graphicsContext.getTraceColorIntensity() : style.intensity())
-            * graphicsContext.getLayerVisibility(layer);
+            * graphicsContext.getLayerVisibility(layer)
+            * getScopeDimmingFactor(trace, graphicsContext);
     graphicsContext.draw(
         trace.polyline().cornerApproxArr(), trace.getHalfWidth(), color, graphics, intensity);
   }
@@ -372,7 +373,8 @@ public final class BoardRenderer {
 
     final Color[] colors = style == null ? drillColors(drillItem, graphicsContext) : style.colors();
     double intensity =
-        style == null ? drillIntensity(drillItem, graphicsContext) : style.intensity();
+        (style == null ? drillIntensity(drillItem, graphicsContext) : style.intensity())
+            * getScopeDimmingFactor(drillItem, graphicsContext);
     if (intensity <= 0) {
       return;
     }
@@ -462,7 +464,8 @@ public final class BoardRenderer {
           visibility
               * (style == null
                   ? graphicsContext.getComponentOutlineColorIntensity()
-                  : style.intensity());
+                  : style.intensity())
+              * getScopeDimmingFactor(outline, graphicsContext);
       double drawWidth = Math.min(outline.board.communication.getResolution(Unit.MIL), 100);
       if (outline.isCourtyard() || outline.isClosed()) {
         graphicsContext.drawBoundary(outline.getArea(), drawWidth, color, graphics, intensity);
@@ -491,7 +494,8 @@ public final class BoardRenderer {
           visibility
               * (style == null
                   ? graphicsContext.getComponentOutlineColorIntensity()
-                  : style.intensity());
+                  : style.intensity())
+              * getScopeDimmingFactor(area, graphicsContext);
       double drawWidth = Math.min(area.board.communication.getResolution(Unit.MIL), 100);
       graphicsContext.drawBoundary(area.getArea(), drawWidth, color, graphics, intensity);
     }
@@ -721,6 +725,30 @@ public final class BoardRenderer {
       graphics2D.setComposite(originalComposite);
       graphics2D.setFont(originalFont);
     }
+  }
+
+  private static double getScopeDimmingFactor(Item item, GraphicsContext graphicsContext) {
+    if (item == null || graphicsContext == null) {
+      return 1.0;
+    }
+    app.freerouting.autoroute.scope.RoutingScopeMask mask = graphicsContext.getActiveScopeMask();
+    if (mask == null || !mask.isActive()) {
+      return 1.0;
+    }
+    if (item instanceof Pin pin) {
+      if (mask.isAnchorPinId(pin.getId()) || mask.isComponentSelected(pin.getComponentId())) {
+        return 1.0;
+      }
+    } else if (item.getComponentId() > 0 && mask.isComponentSelected(item.getComponentId())) {
+      return 1.0;
+    } else if (item.netCount() > 0) {
+      for (int i = 0; i < item.netCount(); i++) {
+        if (mask.isNetInScope(item.getNetNumber(i))) {
+          return 1.0;
+        }
+      }
+    }
+    return 0.35;
   }
 
   private record RenderStep(boolean virtual, int index) {}

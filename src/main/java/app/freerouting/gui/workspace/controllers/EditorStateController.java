@@ -92,6 +92,12 @@ public interface EditorStateController {
   /** Extends selection to whole connections. */
   public void extendSelectionToWholeConnections();
 
+  /** Returns currently selected items, or empty if none. */
+  default java.util.Collection<Item> getSelectedItems() {
+    EditorStateHandle handle = currentState();
+    return handle != null ? handle.getSelectedItems() : java.util.Collections.emptyList();
+  }
+
   /** Toggles selected-item violation display. */
   public void toggleSelectedItemViolations();
 

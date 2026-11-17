@@ -86,6 +86,9 @@ public final class RoutingBoardUndoFacade {
       boardCopy.finishAutoroute();
       // The copy has the same incomplete counts: no need to count every net again.
       boardCopy.routingLedger().seed(ledgerCounts);
+      if (board.getRoutingScopeContext() != null) {
+        boardCopy.setRoutingScopeContext(board.getRoutingScopeContext().deepCopy());
+      }
       return boardCopy;
     } catch (Exception exception) {
       FRLogger.error("Exception in deep_copy_routing_board" + exception, exception);

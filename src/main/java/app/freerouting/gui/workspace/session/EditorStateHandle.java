@@ -12,4 +12,12 @@ public interface EditorStateHandle {
   default boolean hasSelection() {
     return false;
   }
+
+  /**
+   * Returns the collection of selected items if supported by this state, or empty collection
+   * otherwise.
+   */
+  default java.util.Collection<app.freerouting.board.model.items.Item> getSelectedItems() {
+    return java.util.Collections.emptyList();
+  }
 }

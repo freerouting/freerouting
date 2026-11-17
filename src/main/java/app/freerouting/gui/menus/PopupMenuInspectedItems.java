@@ -72,7 +72,14 @@ public class PopupMenuInspectedItems extends PopupMenuDisplay {
         "toolbarWholeGroupsButton",
         () -> boardPanel.boardHandling.extendSelectionToWholeComponents());
 
-    this.insert(new JSeparator(), baseIndex);
+    this.insert(new JSeparator(), baseIndex++);
+    addExtendItem(
+        baseIndex++,
+        tm,
+        "route_components",
+        GuiLocators.INSPECT_ROUTE_COMPONENTS,
+        "toolbarRouteComponentsButton",
+        () -> app.freerouting.gui.SelectionScopeResolver.routeSelectedComponents(boardFrame));
     compactVerticalSpacing();
     clampHeaderToItemWidth(extendHeader);
   }

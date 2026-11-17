@@ -5,6 +5,8 @@ import app.freerouting.autoroute.drill.ExpansionDrill;
 import app.freerouting.autoroute.expansion.CompleteExpansionRoom;
 import app.freerouting.autoroute.expansion.ExpandableObject;
 import app.freerouting.autoroute.expansion.ObstacleExpansionRoom;
+import app.freerouting.autoroute.scope.ForeignTracePolicy;
+import app.freerouting.autoroute.scope.RoutingScopeContext;
 import app.freerouting.board.actions.ForcedPadRouter;
 import app.freerouting.board.actions.ForcedViaInserter;
 import app.freerouting.board.model.items.Item;
@@ -266,6 +268,24 @@ final class MazeExpansionEngine {
       Item currentObstacleItem = room.getItem();
       if (!(currentObstacleItem instanceof Via)) {
         return;
+      }
+      RoutingScopeContext scopeContext =
+          search.autorouteEngine != null && search.autorouteEngine.board != null
+              ? search.autorouteEngine.board.getRoutingScopeContext()
+              : null;
+      if (scopeContext != null && scopeContext.isActive()) {
+        if (scopeContext.isAnchorShielded(currentObstacleItem.getId())) {
+          return;
+        }
+        if (scopeContext.isForeignProtectedItem(currentObstacleItem)) {
+          if (ctrl.isFanout
+              || ctrl.ripupPassNo <= scopeContext.getNudgeOnlyPasses()
+              || scopeContext.getForeignTracePolicy() == ForeignTracePolicy.NUDGE_ONLY
+              || scopeContext.getForeignTracePolicy() == ForeignTracePolicy.FIXED
+              || scopeContext.isInForeignRecoverySubPass()) {
+            return;
+          }
+        }
       }
       if (!ctrl.netsNotToRip.isEmpty()) {
         for (int i = 0; i < currentObstacleItem.netCount(); i++) {
