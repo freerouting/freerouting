@@ -298,7 +298,10 @@ public class NetIncompletes {
    */
   private NetItem[] calculateNetItems(Collection<Item> itemList) {
     ArrayList<NetItem> result = new ArrayList<>();
-    Set<Item> uniqueItems = new HashSet<>(itemList);
+    // Ordered by item id: on a fractured plane the connected set depends on the start item, so a
+    // HashSet (identity hash order, which changes from one JVM run to the next) made the groups,
+    // the airlines and the routing that follows them differ between runs of the same board.
+    Set<Item> uniqueItems = new TreeSet<>(itemList);
     int uniqueItemsCount = uniqueItems.size();
 
     while (!uniqueItems.isEmpty()) {
