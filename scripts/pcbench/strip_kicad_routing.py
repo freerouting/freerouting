@@ -163,12 +163,28 @@ def _atom(m: re.Match, first: int) -> str:
     return m.group(first) if m.group(first) is not None else m.group(first + 1)
 
 
+def _leaves_routing_free(zone: str) -> bool:
+    """True for a rule area that allows both tracks and vias.
+
+    Such an area only forbids copper pours, pads or footprints, none of which a
+    router places. KiCad's Specctra export still writes every rule area that
+    forbids neither tracks nor vias as a full ``keepout`` (``specctra_export.cpp``),
+    which would forbid all copper there.
+    """
+    m = re.search(r"\(keepout((?:\s*\([^()]*\))*)\s*\)", zone)
+    if not m:
+        return False
+    rules = dict(re.findall(r"\((\w+)\s+(\w+)\)", m.group(1)))
+    return rules.get("tracks") == "allowed" and rules.get("vias") == "allowed"
+
+
 def graft_zones(target: str, source: str) -> tuple[str, int, int]:
     """Copy the top-level zones of ``source`` into ``target``.
 
-    Returns the new text, the number of zones grafted, and the number dropped
-    because their net does not exist in ``target``. A ``target`` that already
-    has zones is returned unchanged: there is nothing to restore.
+    Returns the new text, the number of zones grafted, and the number dropped:
+    zones whose net does not exist in ``target``, and rule areas that allow
+    both tracks and vias (see ``_leaves_routing_free``). A ``target`` that
+    already has zones is returned unchanged: there is nothing to restore.
     """
     target_children = _top_level_children(target)
     if any(head == "zone" for head, _s, _e in target_children):
@@ -185,6 +201,9 @@ def graft_zones(target: str, source: str) -> tuple[str, int, int]:
         if head != "zone":
             continue
         zone = source[start : end + 1]
+        if _leaves_routing_free(zone):
+            dropped += 1
+            continue
         m = re.search(r"\(net_name\s+" + _ATOM + r"\)", zone)
         name = _atom(m, 1) if m else ""
         if name and name not in codes:
@@ -263,7 +282,12 @@ def main() -> int:
         if grafted or dropped:
             print(
                 f"Grafted {grafted} zone(s) from {args.zones_from}"
-                + (f", dropped {dropped} whose net is not in {args.input}" if dropped else ""),
+                + (
+                    f", dropped {dropped} (net not in {args.input}, or rule area that"
+                    " allows tracks and vias)"
+                    if dropped
+                    else ""
+                ),
                 file=sys.stderr,
             )
     dst = strip_routing(src)
