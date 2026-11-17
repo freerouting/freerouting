@@ -101,7 +101,7 @@ public class NetIncompletes {
       // and SHOULD appear in the ratsnest
       // EXCEPT for ConductionArea which acts as a connection medium, unless it is dead copper
       if (item instanceof ConductionArea area
-          ? area.isDeadCopper()
+          ? area.isDeadCopper() || area.isFloatingFragment(netNumber)
           : !(item instanceof DrillItem) && item.getNormalContacts().isEmpty()) {
         unconnectedCount++;
         continue;

@@ -451,6 +451,17 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     return true;
   }
 
+  /**
+   * Returns true if no pin of the net is reached from this conduction area: a fill piece that the
+   * net needs no connection to (see {@link #coversAllPlanesOfNet}).
+   */
+  public boolean isFloatingFragment(int netNo) {
+    if (isFractured()) {
+      return !hasPinOnAnyIsland();
+    }
+    return !reachesPinOfNet(netNo);
+  }
+
   /** Returns true if any island of this fractured conduction area contains a pin. */
   public boolean hasPinOnAnyIsland() {
     FastPlaneConnectivityGrid.PlaneFractureResult res = getFractureResult();
