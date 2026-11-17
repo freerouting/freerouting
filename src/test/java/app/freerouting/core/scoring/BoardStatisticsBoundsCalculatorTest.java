@@ -47,6 +47,22 @@ class BoardStatisticsBoundsCalculatorTest {
   }
 
   @Test
+  void diagonalConnectionUsesFortyFiveDegreeDistance() {
+    // U1 (2, 2) mm to U2 (8, 8) mm: a 45-degree trace is 6 * sqrt(2) mm long, shorter than the
+    // 12 mm Manhattan distance, so the lower bound must not exceed it.
+    BoardStatistics stats = statisticsFromFixture("scoring-mixed-layer.dsn");
+    assertEquals(6.0f * (float) Math.sqrt(2), stats.bounds.minTraceLengthMm, 0.01f);
+  }
+
+  @Test
+  void pinsCoveredByAPlaneNeedNoTrace() {
+    // U1 and U2 lie inside the GND plane (1..9 mm square), which connects them without traces.
+    // U3 at (12, 5) mm is 3 mm from its edge.
+    BoardStatistics stats = statisticsFromFixture("scoring-plane-net.dsn");
+    assertEquals(3.0f, stats.bounds.minTraceLengthMm, 0.01f);
+  }
+
+  @Test
   void emptyBoardHasZeroBoundsAndDefinedDifficulty() {
     BoardStatistics stats = statisticsFromFixture("empty_board.dsn");
     assertEquals(0.0f, stats.bounds.minTraceLengthMm, 0.001f);

@@ -4,7 +4,9 @@ import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.model.items.ConductionArea;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.structure.AngleRestriction;
 import app.freerouting.board.model.structure.Unit;
+import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.ViaInfo;
@@ -44,6 +46,7 @@ final class BoardStatisticsBoundsCalculator {
     double boardUnitToMmFactor =
         Unit.scale(1.0, board.communication.unit, Unit.MM)
             / (board.communication.resolution > 0 ? board.communication.resolution : 1);
+    AngleRestriction angleRestriction = board.rules.getTraceAngleRestriction();
 
     for (int netNumber = 1; netNumber <= board.rules.nets.maxNetNumber(); netNumber++) {
       Net net = board.rules.nets.get(netNumber);
@@ -56,7 +59,7 @@ final class BoardStatisticsBoundsCalculator {
         continue;
       }
 
-      MstResult mst = calculateMst(terminals);
+      MstResult mst = calculateMst(terminals, angleRestriction);
       minTraceLength += mst.length * boardUnitToMmFactor;
       minBendCount += mst.bendCount;
       minViaCount += calculateMinimumViaCount(net, terminals);
@@ -98,11 +101,12 @@ final class BoardStatisticsBoundsCalculator {
       x = center.x;
       y = center.y;
       addSignalLayer(board, area.getLayer(), signalLayers);
+      return new Terminal(x, y, signalLayers, area.getArea());
     } else {
       return null;
     }
 
-    return new Terminal(x, y, signalLayers);
+    return new Terminal(x, y, signalLayers, null);
   }
 
   private static void addSignalLayer(BasicBoard board, int layer, Set<Integer> signalLayers) {
@@ -113,19 +117,39 @@ final class BoardStatisticsBoundsCalculator {
     }
   }
 
-  private static MstResult calculateMst(List<Terminal> terminals) {
-    boolean[] used = new boolean[terminals.size()];
-    double[] distances = new double[terminals.size()];
-    int[] parents = new int[terminals.size()];
+  /**
+   * Returns the length and bend count of a minimum spanning tree over the terminals of a net.
+   *
+   * <p>Pins are points. All conduction areas of the net form a single node, at distance 0 from the
+   * pins they cover: the plane connects them without traces. Distances follow the trace angle
+   * restriction (Manhattan for 90 degrees, octilinear for 45 degrees, Euclidean otherwise), so the
+   * tree length never exceeds the length of a routing that the rules allow.
+   */
+  private static MstResult calculateMst(
+      List<Terminal> terminals, AngleRestriction angleRestriction) {
+    List<Terminal> pins = new ArrayList<>();
+    List<Area> areas = new ArrayList<>();
+    for (Terminal terminal : terminals) {
+      if (terminal.area == null) {
+        pins.add(terminal);
+      } else {
+        areas.add(terminal.area);
+      }
+    }
+    // Node indexes: 0 .. pins.size() - 1 are the pins, pins.size() is the plane, if any.
+    int nodeCount = pins.size() + (areas.isEmpty() ? 0 : 1);
+    boolean[] used = new boolean[nodeCount];
+    double[] distances = new double[nodeCount];
+    int[] parents = new int[nodeCount];
     Arrays.fill(distances, Double.POSITIVE_INFINITY);
     Arrays.fill(parents, -1);
     distances[0] = 0.0;
 
     double length = 0.0;
     int bendCount = 0;
-    for (int edge = 0; edge < terminals.size(); edge++) {
+    for (int edge = 0; edge < nodeCount; edge++) {
       int current = -1;
-      for (int index = 0; index < terminals.size(); index++) {
+      for (int index = 0; index < nodeCount; index++) {
         if (!used[index] && (current < 0 || distances[index] < distances[current])) {
           current = index;
         }
@@ -136,17 +160,24 @@ final class BoardStatisticsBoundsCalculator {
 
       used[current] = true;
       if (parents[current] >= 0) {
-        Terminal from = terminals.get(parents[current]);
-        Terminal to = terminals.get(current);
         length += distances[current];
-        if (from.x != to.x && from.y != to.y) {
-          bendCount++;
+        if (current < pins.size() && parents[current] < pins.size()) {
+          Terminal from = pins.get(parents[current]);
+          Terminal to = pins.get(current);
+          if (from.x != to.x && from.y != to.y) {
+            bendCount++;
+          }
         }
       }
 
-      for (int index = 0; index < terminals.size(); index++) {
+      for (int index = 0; index < nodeCount; index++) {
         if (!used[index]) {
-          double distance = manhattanDistance(terminals.get(current), terminals.get(index));
+          double distance;
+          if (current < pins.size() && index < pins.size()) {
+            distance = distance(pins.get(current), pins.get(index), angleRestriction);
+          } else {
+            distance = distanceToAreas(pins.get(Math.min(current, index)), areas);
+          }
           if (distance < distances[index]) {
             distances[index] = distance;
             parents[index] = current;
@@ -157,8 +188,28 @@ final class BoardStatisticsBoundsCalculator {
     return new MstResult(length, bendCount);
   }
 
-  private static double manhattanDistance(Terminal first, Terminal second) {
-    return Math.abs(first.x - second.x) + Math.abs(first.y - second.y);
+  private static double distance(
+      Terminal first, Terminal second, AngleRestriction angleRestriction) {
+    double dx = Math.abs(first.x - second.x);
+    double dy = Math.abs(first.y - second.y);
+    return switch (angleRestriction) {
+      case NINETY_DEGREE -> dx + dy;
+      case FORTYFIVE_DEGREE -> Math.max(dx, dy) + (Math.sqrt(2) - 1) * Math.min(dx, dy);
+      default -> Math.hypot(dx, dy);
+    };
+  }
+
+  /** Euclidean distance from a pin to the nearest conduction area of its net, 0 inside one. */
+  private static double distanceToAreas(Terminal pin, List<Area> areas) {
+    FloatPoint point = new FloatPoint(pin.x, pin.y);
+    double result = Double.POSITIVE_INFINITY;
+    for (Area area : areas) {
+      if (area.contains(point)) {
+        return 0.0;
+      }
+      result = Math.min(result, point.distance(area.nearestPointApprox(point)));
+    }
+    return result;
   }
 
   private static int calculateMinimumViaCount(Net net, List<Terminal> terminals) {
@@ -205,7 +256,8 @@ final class BoardStatisticsBoundsCalculator {
     return viaCount;
   }
 
-  private record Terminal(double x, double y, Set<Integer> signalLayers) {}
+  /** A pin, or a conduction area when {@code area} is set ({@code x}, {@code y} its centroid). */
+  private record Terminal(double x, double y, Set<Integer> signalLayers, Area area) {}
 
   private record MstResult(double length, int bendCount) {}
 
