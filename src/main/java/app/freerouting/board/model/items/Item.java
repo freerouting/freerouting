@@ -823,6 +823,7 @@ public abstract class Item
     }
     result.add(this);
     getConnectedSetRecu(result, netNumber, stopAtPlane);
+    ConductionArea.addLaterReachedIslands(result, netNumber, stopAtPlane);
     return result;
   }
 
