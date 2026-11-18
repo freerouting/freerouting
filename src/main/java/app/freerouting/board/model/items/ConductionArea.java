@@ -42,6 +42,15 @@ public class ConductionArea extends ObstacleArea implements Connectable {
   /** The narrowest neck the fill of the zone keeps, in board units; 0 if unknown. */
   private int fillMinWidth;
 
+  /** How the fill connects the pads of the net; null if unknown. */
+  private PadPlaneConnection.Mode padConnection;
+
+  /** The gap of the thermal reliefs of the fill, in board units. */
+  private int thermalGap;
+
+  /** The width of the spokes of the thermal reliefs of the fill, in board units. */
+  private int thermalSpokeWidth;
+
   /**
    * Sets how the host CAD system fills this area, when the design file does not say it: the
    * clearance the fill keeps to the copper of other nets, if larger than the clearance of the
@@ -62,6 +71,35 @@ public class ConductionArea extends ObstacleArea implements Connectable {
   /** The minimum width set by {@link #setFillRules(int, int)}, in board units; 0 if unknown. */
   public int getFillMinWidth() {
     return this.fillMinWidth;
+  }
+
+  /**
+   * Sets how the host CAD system connects the pads of the net to the fill of this area, when the
+   * design file does not say it: the kind of connection, and for thermal reliefs their gap and the
+   * width of their spokes, in board units. A pad can override them ({@link
+   * Pin#setPlaneConnection}). They only change on which island of this area a pad counts.
+   */
+  public void setPadConnectionRules(
+      PadPlaneConnection.Mode padConnection, int thermalGap, int thermalSpokeWidth) {
+    this.padConnection = padConnection;
+    this.thermalGap = Math.max(0, thermalGap);
+    this.thermalSpokeWidth = Math.max(0, thermalSpokeWidth);
+    this.clearDerivedData();
+  }
+
+  /** The connection set by {@link #setPadConnectionRules}; null if unknown. */
+  public PadPlaneConnection.Mode getPadConnection() {
+    return this.padConnection;
+  }
+
+  /** The thermal gap set by {@link #setPadConnectionRules}, in board units. */
+  public int getThermalGap() {
+    return this.thermalGap;
+  }
+
+  /** The spoke width set by {@link #setPadConnectionRules}, in board units. */
+  public int getThermalSpokeWidth() {
+    return this.thermalSpokeWidth;
   }
 
   /**
@@ -306,6 +344,9 @@ public class ConductionArea extends ObstacleArea implements Connectable {
             board);
     result.fillClearance = this.fillClearance;
     result.fillMinWidth = this.fillMinWidth;
+    result.padConnection = this.padConnection;
+    result.thermalGap = this.thermalGap;
+    result.thermalSpokeWidth = this.thermalSpokeWidth;
     return result;
   }
 

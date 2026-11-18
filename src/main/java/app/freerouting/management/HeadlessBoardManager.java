@@ -8,6 +8,7 @@ import app.freerouting.board.model.items.ComponentOutline;
 import app.freerouting.board.model.items.ConductionArea;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.ObstacleArea;
+import app.freerouting.board.model.items.PadPlaneConnection;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.model.items.Via;
@@ -22,6 +23,7 @@ import app.freerouting.core.RoutingJob;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.IdGenerator;
 import app.freerouting.drc.ClearanceViolation;
+import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.PolylineShape;
@@ -55,7 +57,9 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Manages routing board operations in headless (non-GUI) mode for automated processing.
@@ -558,7 +562,19 @@ public class HeadlessBoardManager implements BoardManager {
       if (clearance != area.getFillClearance() || minWidth != area.getFillMinWidth()) {
         area.setFillRules(clearance, minWidth);
       }
+      PadPlaneConnection.Mode padConnection =
+          PadPlaneConnection.Mode.valueOf(best.padConnection().name());
+      int thermalGap =
+          (int) Math.round(communication.physicalToBoard(best.thermalGapUm(), Unit.UM));
+      int spokeWidth =
+          (int) Math.round(communication.physicalToBoard(best.thermalBridgeWidthUm(), Unit.UM));
+      if (padConnection != area.getPadConnection()
+          || thermalGap != area.getThermalGap()
+          || spokeWidth != area.getThermalSpokeWidth()) {
+        area.setPadConnectionRules(padConnection, thermalGap, spokeWidth);
+      }
     }
+    int matchedPads = applyKiCadPadConnections(boardZones);
     this.routingJob.logInfo(
         "KiCad board '"
             + boardZones.sourceName()
@@ -566,7 +582,84 @@ public class HeadlessBoardManager implements BoardManager {
             + matched
             + " of "
             + areas.size()
-            + " planes.");
+            + " planes, pad connection to "
+            + matchedPads
+            + " pads.");
+  }
+
+  /**
+   * Gives each pin the zone connection of its pad in the KiCad board: the pad at the position of
+   * the pin, on a layer of the pin. Returns the number of pins that found their pad.
+   */
+  private int applyKiCadPadConnections(KiCadBoardZones boardZones) {
+    Communication communication = this.board.communication;
+    // the pads by cells of 10 um, to find the pad of a pin without comparing each with each
+    double cell = 10.0;
+    Map<Long, List<KiCadBoardZones.Pad>> padsByCell = new HashMap<>();
+    for (KiCadBoardZones.Pad pad : boardZones.pads()) {
+      long key = cellKey(Math.round(pad.xUm() / cell), Math.round(-pad.yUm() / cell));
+      padsByCell.computeIfAbsent(key, k -> new ArrayList<>()).add(pad);
+    }
+    int matched = 0;
+    List<Pin> pins = new ArrayList<>(this.board.getPins());
+    pins.sort(Comparator.comparingInt(Item::getId));
+    for (Pin pin : pins) {
+      // the centre of the pin in micrometres, the y axis pointing up as in the DSN
+      double[] centre = communication.coordinateTransform.boardToDsn(pin.getCenter().toFloat());
+      double x = Unit.scale(centre[0], communication.unit, Unit.UM);
+      double y = Unit.scale(centre[1], communication.unit, Unit.UM);
+      String firstLayer = this.board.layerStructure.layers[pin.firstLayer()].name;
+      String lastLayer = this.board.layerStructure.layers[pin.lastLayer()].name;
+      KiCadBoardZones.Pad best = null;
+      double bestDistance = 5.0;
+      long cellX = Math.round(x / cell);
+      long cellY = Math.round(y / cell);
+      for (long dx = -1; dx <= 1; dx++) {
+        for (long dy = -1; dy <= 1; dy++) {
+          List<KiCadBoardZones.Pad> candidates = padsByCell.get(cellKey(cellX + dx, cellY + dy));
+          if (candidates == null) {
+            continue;
+          }
+          for (KiCadBoardZones.Pad pad : candidates) {
+            double distance = Math.hypot(pad.xUm() - x, -pad.yUm() - y);
+            if (distance < bestDistance
+                && (pad.isOnLayer(firstLayer) || pad.isOnLayer(lastLayer))) {
+              bestDistance = distance;
+              best = pad;
+            }
+          }
+        }
+      }
+      if (best == null) {
+        continue;
+      }
+      matched++;
+      FloatPoint shapeCentre =
+          communication.coordinateTransform.dsnToBoard(
+              new double[] {
+                Unit.scale(best.shapeXUm(), Unit.UM, communication.unit),
+                Unit.scale(-best.shapeYUm(), Unit.UM, communication.unit)
+              });
+      pin.setPlaneConnection(
+          new PadPlaneConnection(
+              PadPlaneConnection.Mode.valueOf(best.connection().name()),
+              best.throughHole(),
+              shapeCentre.x,
+              shapeCentre.y,
+              communication.physicalToBoard(best.sizeXUm() / 2.0, Unit.UM),
+              communication.physicalToBoard(best.sizeYUm() / 2.0, Unit.UM),
+              best.angleDeg(),
+              best.spokeAngleDeg(),
+              best.circular(),
+              (int) Math.round(communication.physicalToBoard(best.thermalGapUm(), Unit.UM)),
+              (int)
+                  Math.round(communication.physicalToBoard(best.thermalBridgeWidthUm(), Unit.UM))));
+    }
+    return matched;
+  }
+
+  private static long cellKey(long x, long y) {
+    return x * 4_000_037L + y;
   }
 
   private void applyHoleClearanceOverride() {

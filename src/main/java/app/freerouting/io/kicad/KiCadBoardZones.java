@@ -16,10 +16,81 @@ import java.util.List;
  * traces than Freerouting assumed and removes every neck narrower than the minimum width: a plane
  * that Freerouting saw in one piece can come back in several. This class reads the two values back.
  *
- * <p>Only the zones are read; the fill polygons, which can make up most of the file, are skipped
- * without being stored.
+ * <p>The way a pad is connected to a zone is lost as well: solidly, through the spokes of a thermal
+ * relief, or not at all. It is set on the zone, and can be overridden on a footprint or on a pad.
+ * The pads are read with the settings that decide it.
+ *
+ * <p>Only the zones and the pads are read; the fill polygons, which can make up most of the file,
+ * are skipped without being stored.
  */
 public final class KiCadBoardZones {
+
+  /** How a pad is connected to the fill of a zone ({@code zone_connect} of KiCad). */
+  public enum PadConnection {
+    /** Not set here: the footprint, then the zone, decides. */
+    INHERITED,
+    /** The fill keeps its clearance to the pad. */
+    NONE,
+    /** The fill stops at the thermal gap; up to four spokes cross it. */
+    THERMAL,
+    /** The fill covers the pad. */
+    SOLID,
+    /** A thermal relief for a through-hole pad, a solid connection for any other pad. */
+    THT_THERMAL;
+
+    static PadConnection fromKiCad(String value) {
+      return switch (value) {
+        case "0" -> NONE;
+        case "1" -> THERMAL;
+        case "2" -> SOLID;
+        case "3" -> THT_THERMAL;
+        default -> INHERITED;
+      };
+    }
+  }
+
+  /**
+   * One pad of a footprint of the board, with what decides its connection to a zone. Positions are
+   * absolute, in the frame of KiCad (the y axis points down); angles are in degrees,
+   * counter-clockwise on screen.
+   *
+   * @param xUm the position of the pad (its hole, if it has one), in micrometres
+   * @param yUm the position of the pad
+   * @param shapeXUm the centre of its copper shape, which a drill offset moves away from the hole
+   * @param shapeYUm the centre of its copper shape
+   * @param angleDeg its orientation on the board
+   * @param sizeXUm the width of its shape before rotation
+   * @param sizeYUm the height of its shape before rotation
+   * @param circular whether its shape is a circle
+   * @param throughHole whether it is a plated through-hole pad
+   * @param layers its layers as written
+   * @param connection {@code zone_connect} of the pad, else of its footprint, else INHERITED
+   * @param thermalGapUm {@code thermal_gap} of the pad, 0 if it sets none
+   * @param thermalBridgeWidthUm {@code thermal_bridge_width} of the pad, 0 if it sets none
+   * @param spokeAngleDeg the angle of its first thermal spoke in the frame of the pad ({@code
+   *     thermal_bridge_angle}, or the default of KiCad for its shape)
+   */
+  public record Pad(
+      double xUm,
+      double yUm,
+      double shapeXUm,
+      double shapeYUm,
+      double angleDeg,
+      double sizeXUm,
+      double sizeYUm,
+      boolean circular,
+      boolean throughHole,
+      List<String> layers,
+      PadConnection connection,
+      double thermalGapUm,
+      double thermalBridgeWidthUm,
+      double spokeAngleDeg) {
+
+    /** Whether the pad has copper on the layer of this name. */
+    public boolean isOnLayer(String layerName) {
+      return matchesLayer(layers, layerName);
+    }
+  }
 
   /**
    * One copper zone of the board.
@@ -35,6 +106,11 @@ public final class KiCadBoardZones {
    * @param minYUm the top side of the bounding box of its outline (the KiCad y axis points down)
    * @param maxXUm the right side of the bounding box of its outline
    * @param maxYUm the bottom side of the bounding box of its outline
+   * @param padConnection how its fill is connected to the pads of its net ({@code connect_pads}):
+   *     THERMAL, SOLID, NONE or THT_THERMAL
+   * @param thermalGapUm the gap of its thermal reliefs in micrometres ({@code thermal_gap})
+   * @param thermalBridgeWidthUm the width of the spokes of its thermal reliefs ({@code
+   *     thermal_bridge_width})
    */
   public record Zone(
       String netName,
@@ -44,27 +120,41 @@ public final class KiCadBoardZones {
       double minXUm,
       double minYUm,
       double maxXUm,
-      double maxYUm) {
+      double maxYUm,
+      PadConnection padConnection,
+      double thermalGapUm,
+      double thermalBridgeWidthUm) {
 
     /** Whether the zone is on the copper layer of this name. */
     public boolean isOnLayer(String layerName) {
-      for (String layer : layers) {
-        if (layer.equals(layerName)
-            || ("*.Cu".equals(layer) && layerName.endsWith(".Cu"))
-            || ("F&B.Cu".equals(layer) && ("F.Cu".equals(layerName) || "B.Cu".equals(layerName)))) {
-          return true;
-        }
-      }
-      return false;
+      return matchesLayer(layers, layerName);
     }
+  }
+
+  private static boolean matchesLayer(List<String> layers, String layerName) {
+    for (String layer : layers) {
+      if (layer.equals(layerName)
+          || ("*.Cu".equals(layer) && layerName.endsWith(".Cu"))
+          || ("F&B.Cu".equals(layer) && ("F.Cu".equals(layerName) || "B.Cu".equals(layerName)))) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private final String sourceName;
   private final List<Zone> zones;
+  private final List<Pad> pads;
 
-  private KiCadBoardZones(String sourceName, List<Zone> zones) {
+  private KiCadBoardZones(String sourceName, List<Zone> zones, List<Pad> pads) {
     this.sourceName = sourceName;
     this.zones = List.copyOf(zones);
+    this.pads = List.copyOf(pads);
+  }
+
+  /** The pads of the footprints of the board, in file order. */
+  public List<Pad> pads() {
+    return pads;
   }
 
   /** The file name, for messages. */
@@ -94,6 +184,8 @@ public final class KiCadBoardZones {
       throw new IllegalArgumentException("not a KiCad board file: no (kicad_pcb ...)");
     }
     List<Zone> zones = new ArrayList<>();
+    List<Pad> pads = new ArrayList<>();
+    int version = 0;
     while (true) {
       reader.skipBlanks();
       if (reader.isFinished()) {
@@ -106,16 +198,221 @@ public final class KiCadBoardZones {
         reader.readAtom();
         continue;
       }
-      if ("zone".equals(reader.readAtom())) {
-        Zone zone = readZone(reader);
-        if (zone != null) {
-          zones.add(zone);
+      switch (reader.readAtom()) {
+        case "zone" -> {
+          Zone zone = readZone(reader);
+          if (zone != null) {
+            zones.add(zone);
+          }
         }
-      } else {
-        reader.skipToEndOfList();
+        case "footprint", "module" -> readFootprint(reader, version, pads);
+        case "version" -> {
+          version = (int) toNumber(reader.readAtom());
+          reader.skipToEndOfList();
+        }
+        default -> reader.skipToEndOfList();
       }
     }
-    return new KiCadBoardZones(sourceName, zones);
+    return new KiCadBoardZones(sourceName, zones, pads);
+  }
+
+  /** Reads the rest of a {@code (footprint ...)} and adds its pads. */
+  private static void readFootprint(Reader reader, int version, List<Pad> pads) {
+    double[] at = new double[3];
+    PadConnection connection = PadConnection.INHERITED;
+    List<PadDraft> drafts = new ArrayList<>();
+    while (true) {
+      reader.skipBlanks();
+      if (reader.isFinished()) {
+        throw new IllegalArgumentException("not a KiCad board file: unfinished footprint");
+      }
+      if (reader.leaveList()) {
+        break;
+      }
+      if (!reader.enterList()) {
+        reader.readAtom();
+        continue;
+      }
+      switch (reader.readAtom()) {
+        case "at" -> {
+          readNumbers(reader, at);
+          at[0] *= 1000.0;
+          at[1] *= 1000.0;
+          reader.skipToEndOfList();
+        }
+        case "zone_connect" -> {
+          connection = PadConnection.fromKiCad(reader.readAtom());
+          reader.skipToEndOfList();
+        }
+        case "pad" -> drafts.add(readPad(reader, version));
+        default -> reader.skipToEndOfList();
+      }
+    }
+    // the position of the footprint can follow its pads in the file
+    double cos = Math.cos(Math.toRadians(at[2]));
+    double sin = Math.sin(Math.toRadians(at[2]));
+    for (PadDraft draft : drafts) {
+      // RotatePoint of KiCad: the y axis points down, a positive angle turns counter-clockwise
+      double x = at[0] + draft.at[0] * cos + draft.at[1] * sin;
+      double y = at[1] - draft.at[0] * sin + draft.at[1] * cos;
+      double padCos = Math.cos(Math.toRadians(draft.at[2]));
+      double padSin = Math.sin(Math.toRadians(draft.at[2]));
+      double shapeX = x + draft.offset[0] * padCos + draft.offset[1] * padSin;
+      double shapeY = y - draft.offset[0] * padSin + draft.offset[1] * padCos;
+      pads.add(
+          new Pad(
+              x,
+              y,
+              shapeX,
+              shapeY,
+              draft.at[2],
+              draft.size[0],
+              draft.size[1],
+              draft.circular,
+              draft.throughHole,
+              List.copyOf(draft.layers),
+              draft.connection != PadConnection.INHERITED ? draft.connection : connection,
+              draft.thermalGap,
+              draft.thermalBridgeWidth,
+              draft.spokeAngle));
+    }
+  }
+
+  /** A pad as written in its footprint: positions relative to it, in micrometres. */
+  private static final class PadDraft {
+    final double[] at = new double[3];
+    final double[] size = new double[2];
+    final double[] offset = new double[2];
+    final List<String> layers = new ArrayList<>();
+    boolean circular;
+    boolean throughHole;
+    PadConnection connection = PadConnection.INHERITED;
+    double thermalGap;
+    double thermalBridgeWidth;
+    double spokeAngle;
+  }
+
+  /** Reads the rest of {@code (pad "1" thru_hole circle (at ...) (size ...) ...)}. */
+  private static PadDraft readPad(Reader reader, int version) {
+    PadDraft pad = new PadDraft();
+    reader.readAtom(); // its number, which can be empty
+    pad.throughHole = "thru_hole".equals(reader.readAtom());
+    String shape = reader.readAtom();
+    boolean circleAnchor = false;
+    Double spokeAngle = null;
+    while (true) {
+      reader.skipBlanks();
+      if (reader.isFinished()) {
+        throw new IllegalArgumentException("not a KiCad board file: unfinished pad");
+      }
+      if (reader.leaveList()) {
+        break;
+      }
+      if (!reader.enterList()) {
+        reader.readAtom();
+        continue;
+      }
+      switch (reader.readAtom()) {
+        case "at" -> {
+          readNumbers(reader, pad.at);
+          pad.at[0] *= 1000.0;
+          pad.at[1] *= 1000.0;
+          reader.skipToEndOfList();
+        }
+        case "size" -> {
+          readNumbers(reader, pad.size);
+          pad.size[0] *= 1000.0;
+          pad.size[1] *= 1000.0;
+          reader.skipToEndOfList();
+        }
+        case "drill" -> readDrillOffset(reader, pad.offset);
+        case "layers" -> {
+          for (String layer = reader.readAtom(); !layer.isEmpty(); layer = reader.readAtom()) {
+            pad.layers.add(layer);
+          }
+          reader.skipToEndOfList();
+        }
+        case "zone_connect" -> {
+          pad.connection = PadConnection.fromKiCad(reader.readAtom());
+          reader.skipToEndOfList();
+        }
+        case "thermal_gap" -> {
+          pad.thermalGap = toUm(reader.readAtom());
+          reader.skipToEndOfList();
+        }
+        case "thermal_bridge_width", "thermal_width" -> {
+          pad.thermalBridgeWidth = toUm(reader.readAtom());
+          reader.skipToEndOfList();
+        }
+        case "thermal_bridge_angle" -> {
+          spokeAngle = toNumber(reader.readAtom());
+          reader.skipToEndOfList();
+        }
+        case "options" -> circleAnchor = readCircleAnchor(reader);
+        default -> reader.skipToEndOfList();
+      }
+    }
+    pad.circular = "circle".equals(shape) || ("oval".equals(shape) && pad.size[0] == pad.size[1]);
+    if (spokeAngle != null) {
+      pad.spokeAngle = spokeAngle;
+    } else if ("circle".equals(shape)
+        || ("custom".equals(shape) && circleAnchor && version > 20211014)) {
+      // the defaults of the board reader of KiCad
+      pad.spokeAngle = 45;
+    } else {
+      pad.spokeAngle = 90;
+    }
+    return pad;
+  }
+
+  /** Reads the numbers that follow, at most as many as the array holds. */
+  private static void readNumbers(Reader reader, double[] numbers) {
+    for (int i = 0; i < numbers.length; i++) {
+      String value = reader.readAtom();
+      if (value.isEmpty() || !isNumber(value)) {
+        return;
+      }
+      numbers[i] = Double.parseDouble(value);
+    }
+  }
+
+  /** Reads the rest of {@code (drill [oval] 0.8 [1.2] (offset 0.1 0))} for the offset, in um. */
+  private static void readDrillOffset(Reader reader, double[] offset) {
+    while (true) {
+      reader.skipBlanks();
+      if (reader.isFinished() || reader.leaveList()) {
+        return;
+      }
+      if (!reader.enterList()) {
+        reader.readAtom();
+        continue;
+      }
+      if ("offset".equals(reader.readAtom())) {
+        readNumbers(reader, offset);
+        offset[0] *= 1000.0;
+        offset[1] *= 1000.0;
+      }
+      reader.skipToEndOfList();
+    }
+  }
+
+  /** Reads the rest of {@code (options (clearance outline) (anchor circle))}. */
+  private static boolean readCircleAnchor(Reader reader) {
+    boolean circle = false;
+    while (true) {
+      reader.skipBlanks();
+      if (reader.isFinished() || reader.leaveList()) {
+        return circle;
+      }
+      if (!reader.enterList()) {
+        reader.readAtom();
+        continue;
+      }
+      if ("anchor".equals(reader.readAtom())) {
+        circle = "circle".equals(reader.readAtom());
+      }
+      reader.skipToEndOfList();
+    }
   }
 
   /** Reads the rest of a {@code (zone ...)}; returns null for a rule area. */
@@ -125,6 +422,8 @@ public final class KiCadBoardZones {
     double clearance = 0;
     double minThickness = 0;
     boolean ruleArea = false;
+    PadConnection[] padConnection = {PadConnection.THERMAL};
+    double[] thermal = new double[2];
     double[] box = {
       Double.POSITIVE_INFINITY,
       Double.POSITIVE_INFINITY,
@@ -171,7 +470,8 @@ public final class KiCadBoardZones {
           minThickness = toUm(reader.readAtom());
           reader.skipToEndOfList();
         }
-        case "connect_pads" -> clearance = readClearance(reader);
+        case "connect_pads" -> clearance = readConnectPads(reader, padConnection);
+        case "fill" -> readFill(reader, thermal);
         case "polygon" -> readOutline(reader, box);
         default -> reader.skipToEndOfList();
       }
@@ -179,11 +479,47 @@ public final class KiCadBoardZones {
     if (ruleArea || box[0] > box[2]) {
       return null;
     }
-    return new Zone(netName, layers, clearance, minThickness, box[0], box[1], box[2], box[3]);
+    return new Zone(
+        netName,
+        layers,
+        clearance,
+        minThickness,
+        box[0],
+        box[1],
+        box[2],
+        box[3],
+        padConnection[0],
+        thermal[0],
+        thermal[1]);
   }
 
-  /** Reads the rest of {@code (connect_pads [yes|no|thru_hole_only] (clearance 0.5))}. */
-  private static double readClearance(Reader reader) {
+  /** Reads the rest of {@code (fill [yes] (thermal_gap 0.5) (thermal_bridge_width 0.5) ...)}. */
+  private static void readFill(Reader reader, double[] thermal) {
+    while (true) {
+      reader.skipBlanks();
+      if (reader.isFinished() || reader.leaveList()) {
+        return;
+      }
+      if (!reader.enterList()) {
+        reader.readAtom();
+        continue;
+      }
+      switch (reader.readAtom()) {
+        case "thermal_gap" -> thermal[0] = toUm(reader.readAtom());
+        case "thermal_bridge_width" -> thermal[1] = toUm(reader.readAtom());
+        default -> {
+          // nothing else is needed
+        }
+      }
+      reader.skipToEndOfList();
+    }
+  }
+
+  /**
+   * Reads the rest of {@code (connect_pads [yes|no|thru_hole_only] (clearance 0.5))}: returns the
+   * clearance and sets the connection, a thermal relief when no keyword is written.
+   */
+  private static double readConnectPads(Reader reader, PadConnection[] padConnection) {
     double clearance = 0;
     while (true) {
       reader.skipBlanks();
@@ -191,7 +527,14 @@ public final class KiCadBoardZones {
         return clearance;
       }
       if (!reader.enterList()) {
-        reader.readAtom();
+        switch (reader.readAtom()) {
+          case "yes" -> padConnection[0] = PadConnection.SOLID;
+          case "no" -> padConnection[0] = PadConnection.NONE;
+          case "thru_hole_only" -> padConnection[0] = PadConnection.THT_THERMAL;
+          default -> {
+            // an unknown keyword changes nothing
+          }
+        }
         continue;
       }
       if ("clearance".equals(reader.readAtom())) {
@@ -233,6 +576,15 @@ public final class KiCadBoardZones {
       return true;
     } catch (NumberFormatException e) {
       return false;
+    }
+  }
+
+  /** A number as written; 0 if it is not a number. */
+  private static double toNumber(String value) {
+    try {
+      return Double.parseDouble(value);
+    } catch (NumberFormatException e) {
+      return 0;
     }
   }
 

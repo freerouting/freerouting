@@ -96,4 +96,64 @@ class KiCadBoardZonesTest {
         IllegalArgumentException.class,
         () -> KiCadBoardZones.parse("(kicad_pcb (zone (net \"GND\")", "cut.kicad_pcb"));
   }
+
+  @Test
+  void readsThePadConnectionOfTheZonesAndThePads() {
+    KiCadBoardZones board =
+        KiCadBoardZones.parse(
+            "(kicad_pcb (version 20171130) (host pcbnew 5.1)\n"
+                + " (module Lib:R (layer F.Cu) (tedit 0) (at 100 50 90) (zone_connect 2)\n"
+                + "  (fp_text reference R1 (at 3 3) (layer F.SilkS))\n"
+                + "  (pad 1 thru_hole circle (at 2 0 90) (size 1.6 1.6) (drill 0.8)"
+                + " (layers *.Cu *.Mask) (net 1 GND))\n"
+                + "  (pad 2 smd rect (at -2 0 90) (size 1 2) (drill (offset 0.5 0))"
+                + " (layers F.Cu F.Paste) (net 2 SIG) (zone_connect 1) (thermal_width 0.3)"
+                + " (thermal_gap 0.4) (thermal_bridge_angle 45)))\n"
+                + " (zone (net 1) (net_name GND) (layer F.Cu) (connect_pads thru_hole_only"
+                + " (clearance 0.3)) (min_thickness 0.2)\n"
+                + "  (fill yes (thermal_gap 0.6) (thermal_bridge_width 0.7))\n"
+                + "  (polygon (pts (xy 0 0) (xy 10 0) (xy 10 10))))\n"
+                + " (zone (net 1) (net_name GND) (layer B.Cu) (connect_pads no (clearance 0.3))\n"
+                + "  (polygon (pts (xy 0 0) (xy 10 0) (xy 10 10))))\n"
+                + " (zone (net 1) (net_name GND) (layer In1.Cu) (connect_pads yes)\n"
+                + "  (polygon (pts (xy 0 0) (xy 10 0) (xy 10 10))))\n"
+                + " (zone (net 1) (net_name GND) (layer In2.Cu) (connect_pads (clearance 0.3))\n"
+                + "  (polygon (pts (xy 0 0) (xy 10 0) (xy 10 10)))))",
+            "pads.kicad_pcb");
+
+    assertEquals(KiCadBoardZones.PadConnection.THT_THERMAL, board.zones().get(0).padConnection());
+    assertEquals(600.0, board.zones().get(0).thermalGapUm(), 1e-9);
+    assertEquals(700.0, board.zones().get(0).thermalBridgeWidthUm(), 1e-9);
+    assertEquals(KiCadBoardZones.PadConnection.NONE, board.zones().get(1).padConnection());
+    assertEquals(KiCadBoardZones.PadConnection.SOLID, board.zones().get(2).padConnection());
+    assertEquals(KiCadBoardZones.PadConnection.THERMAL, board.zones().get(3).padConnection());
+
+    assertEquals(2, board.pads().size());
+    // the footprint is turned by 90 degrees: its x axis points up on screen (y down)
+    KiCadBoardZones.Pad first = board.pads().get(0);
+    assertEquals(100000.0, first.xUm(), 1e-6);
+    assertEquals(48000.0, first.yUm(), 1e-6);
+    assertTrue(first.circular());
+    assertTrue(first.throughHole());
+    assertEquals(45.0, first.spokeAngleDeg(), 1e-9, "the default of KiCad for a round pad");
+    assertEquals(
+        KiCadBoardZones.PadConnection.SOLID, first.connection(), "inherited from the footprint");
+    assertTrue(first.isOnLayer("B.Cu"));
+
+    KiCadBoardZones.Pad second = board.pads().get(1);
+    assertEquals(100000.0, second.xUm(), 1e-6);
+    assertEquals(52000.0, second.yUm(), 1e-6);
+    // the offset of 0.5 mm along the x axis of the pad, itself turned by 90 degrees
+    assertEquals(100000.0, second.shapeXUm(), 1e-6);
+    assertEquals(51500.0, second.shapeYUm(), 1e-6);
+    assertEquals(1000.0, second.sizeXUm(), 1e-9);
+    assertEquals(2000.0, second.sizeYUm(), 1e-9);
+    assertFalse(second.circular());
+    assertFalse(second.throughHole());
+    assertEquals(KiCadBoardZones.PadConnection.THERMAL, second.connection());
+    assertEquals(400.0, second.thermalGapUm(), 1e-9);
+    assertEquals(300.0, second.thermalBridgeWidthUm(), 1e-9);
+    assertEquals(45.0, second.spokeAngleDeg(), 1e-9);
+    assertFalse(second.isOnLayer("B.Cu"));
+  }
 }
