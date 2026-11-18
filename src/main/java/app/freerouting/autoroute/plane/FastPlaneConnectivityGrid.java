@@ -470,40 +470,47 @@ public class FastPlaneConnectivityGrid {
    * pieceOfCell (-1 elsewhere) and returns the number of cells of each piece.
    */
   private int[] labelPieces(int[] pieceOfCell) {
-    Arrays.fill(pieceOfCell, -1);
+    // -1: fill not yet numbered, -2: no fill
+    for (int row = 0; row < rows; row++) {
+      for (int col = 0; col < cols; col++) {
+        pieceOfCell[row * cols + col] = isConductive(col, row) ? -1 : -2;
+      }
+    }
     List<Integer> sizes = new ArrayList<>();
     // diagonal neighbours too: what separates two pieces is much thicker than a cell
     int[] dc = {1, -1, 0, 0, 1, 1, -1, -1};
     int[] dr = {0, 0, 1, -1, 1, -1, 1, -1};
-    for (int row = 0; row < rows; row++) {
-      for (int col = 0; col < cols; col++) {
-        if (pieceOfCell[row * cols + col] >= 0 || !isConductive(col, row)) {
-          continue;
-        }
-        int piece = sizes.size();
-        int head = 0;
-        int tail = 0;
-        queue[tail++] = row * cols + col;
-        pieceOfCell[row * cols + col] = piece;
-        while (head < tail) {
-          int cell = queue[head++];
-          int r = cell / cols;
-          int c = cell % cols;
-          for (int i = 0; i < dc.length; i++) {
-            int nc = c + dc[i];
-            int nr = r + dr[i];
-            if (nc >= 0
-                && nc < cols
-                && nr >= 0
-                && nr < rows
-                && pieceOfCell[nr * cols + nc] < 0
-                && isConductive(nc, nr)) {
-              pieceOfCell[nr * cols + nc] = piece;
-              queue[tail++] = nr * cols + nc;
-            }
+    for (int start = 0; start < cols * rows; start++) {
+      if (pieceOfCell[start] != -1) {
+        continue;
+      }
+      int piece = sizes.size();
+      int head = 0;
+      int tail = 0;
+      queue[tail++] = start;
+      pieceOfCell[start] = piece;
+      while (head < tail) {
+        int cell = queue[head++];
+        int r = cell / cols;
+        int c = cell - r * cols;
+        for (int i = 0; i < dc.length; i++) {
+          int nc = c + dc[i];
+          int nr = r + dr[i];
+          if (nc < 0 || nc >= cols || nr < 0 || nr >= rows) {
+            continue;
+          }
+          int neighbour = nr * cols + nc;
+          if (pieceOfCell[neighbour] == -1) {
+            pieceOfCell[neighbour] = piece;
+            queue[tail++] = neighbour;
           }
         }
-        sizes.add(tail);
+      }
+      sizes.add(tail);
+    }
+    for (int cell = 0; cell < cols * rows; cell++) {
+      if (pieceOfCell[cell] == -2) {
+        pieceOfCell[cell] = -1;
       }
     }
     int[] result = new int[sizes.size()];
@@ -786,7 +793,9 @@ public class FastPlaneConnectivityGrid {
         }
         continue;
       }
-      if (!isStripFree(
+      // the end first: it costs less to tell
+      if (!isEndInFill(start, end, minWidth, ownShape, ownGap, foreignShapes, foreignClearances)
+          || !isStripFree(
               start,
               end,
               spoke.halfWidth(),
@@ -794,9 +803,7 @@ public class FastPlaneConnectivityGrid {
               ownShape,
               ownGap,
               foreignShapes,
-              foreignClearances)
-          || !isEndInFill(
-              start, end, minWidth, ownShape, ownGap, foreignShapes, foreignClearances)) {
+              foreignClearances)) {
         continue;
       }
       IntPoint endPoint = end.round();
@@ -811,33 +818,44 @@ public class FastPlaneConnectivityGrid {
 
   /**
    * Joins the node with every piece of the fill that has a free sample point no further than reach
-   * from the point: the centre of a disc of fill. Returns whether there is one.
+   * from the point: the centre of a disc of fill.
    */
-  private boolean attachPiecesNear(
+  private void attachPiecesNear(
       FloatPoint point, double reach, int[] pieceOfCell, int[] parent, int node) {
     double fine = (double) cellSize / FINE;
     // the sample points are that far apart
     double limit = reach + fine * 0.75;
-    int startCol = Math.max(0, (int) Math.floor((point.x - limit - originX) / fine));
-    int endCol = Math.min(fineCols - 1, (int) Math.floor((point.x + limit - originX) / fine));
-    int startRow = Math.max(0, (int) Math.floor((point.y - limit - originY) / fine));
-    int endRow = Math.min(fineRows - 1, (int) Math.floor((point.y + limit - originY) / fine));
-    boolean attached = false;
+    int startCol = Math.max(0, (int) Math.floor((point.x - limit - originX) / cellSize));
+    int endCol = Math.min(cols - 1, (int) Math.floor((point.x + limit - originX) / cellSize));
+    int startRow = Math.max(0, (int) Math.floor((point.y - limit - originY) / cellSize));
+    int endRow = Math.min(rows - 1, (int) Math.floor((point.y + limit - originY) / cellSize));
+    int root = find(parent, node);
     for (int row = startRow; row <= endRow; row++) {
-      double dy = originY + (row + 0.5) * fine - point.y;
       for (int col = startCol; col <= endCol; col++) {
-        int piece = pieceOfCell[(row / FINE) * cols + col / FINE];
-        if (piece < 0 || isFineSet(row, col)) {
-          continue;
-        }
-        double dx = originX + (col + 0.5) * fine - point.x;
-        if (dx * dx + dy * dy <= limit * limit) {
+        int piece = pieceOfCell[row * cols + col];
+        // a piece the node is already joined with needs no second look
+        if (piece >= 0
+            && find(parent, piece) != root
+            && hasFreeSampleNear(row, col, point, limit, fine)) {
           union(parent, node, piece);
-          attached = true;
+          root = find(parent, node);
         }
       }
     }
-    return attached;
+  }
+
+  /** Whether the cell has a free sample point no further than limit from the point. */
+  private boolean hasFreeSampleNear(int row, int col, FloatPoint point, double limit, double fine) {
+    for (int fineRow = FINE * row; fineRow < FINE * row + FINE; fineRow++) {
+      double dy = originY + (fineRow + 0.5) * fine - point.y;
+      for (int fineCol = FINE * col; fineCol < FINE * col + FINE; fineCol++) {
+        double dx = originX + (fineCol + 0.5) * fine - point.x;
+        if (dx * dx + dy * dy <= limit * limit && !isFineSet(fineRow, fineCol)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   /**
@@ -853,6 +871,7 @@ public class FastPlaneConnectivityGrid {
     // the centre of a disc of fill that touches the trace, to the centre of the cell it lies in
     double reach = trace.getHalfWidth() + minWidth / 2.0 + cellSize * 0.5;
     int span = (int) Math.ceil(reach / cellSize);
+    int root = find(parent, node);
     for (int i = 0; i < corners.length; i++) {
       FloatPoint from = corners[i].toFloat();
       FloatPoint to = corners[Math.min(i + 1, corners.length - 1)].toFloat();
@@ -867,12 +886,13 @@ public class FastPlaneConnectivityGrid {
           double dy = originY + (r + 0.5) * cellSize - y;
           for (int c = Math.max(0, col - span); c <= Math.min(cols - 1, col + span); c++) {
             int piece = pieceOfCell[r * cols + c];
-            if (piece < 0 || find(parent, piece) == find(parent, node)) {
+            if (piece < 0 || find(parent, piece) == root) {
               continue;
             }
             double dx = originX + (c + 0.5) * cellSize - x;
             if (dx * dx + dy * dy <= reach * reach) {
               union(parent, node, piece);
+              root = find(parent, node);
             }
           }
         }
@@ -1246,6 +1266,19 @@ public class FastPlaneConnectivityGrid {
     double alongX = (end.x - start.x) / length;
     double alongY = (end.y - start.y) / length;
     double fillDistance = gap + minWidth / 2.0 - 1.0;
+    // only the foreign copper that can reach one of these points
+    FloatPoint farEnd =
+        new FloatPoint(
+            start.x + alongX * (along - 1) * step, start.y + alongY * (along - 1) * step);
+    List<TileShape> nearShapes = new ArrayList<>();
+    List<double[]> nearClearances = new ArrayList<>();
+    for (int i = 0; i < foreignShapes.size(); i++) {
+      if (distance(start, farEnd, foreignShapes.get(i))
+          < foreignClearances.get(i)[0] + half * step) {
+        nearShapes.add(foreignShapes.get(i));
+        nearClearances.add(foreignClearances.get(i));
+      }
+    }
     boolean[] reached = new boolean[across];
     for (int m = 0; m < along; m++) {
       double distance = m * step;
@@ -1260,7 +1293,7 @@ public class FastPlaneConnectivityGrid {
         inFill[n] = padShape.distance(point) >= fillDistance;
         free[n] =
             (inFill[n] || Math.abs(offset) <= side + 1e-6)
-                && isFree(point, point, 0, foreignShapes, foreignClearances);
+                && isFree(point, point, 0, nearShapes, nearClearances);
       }
       boolean[] next = new boolean[across];
       for (int n = 0; n < across; n++) {
