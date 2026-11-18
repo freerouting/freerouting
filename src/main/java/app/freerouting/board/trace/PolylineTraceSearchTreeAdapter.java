@@ -37,6 +37,7 @@ final class PolylineTraceSearchTreeAdapter {
     trace.setPolyline(newPolyline);
     trace.clearDerivedData();
     trace.board.searchTreeManager.insert(trace);
+    trace.board.incrementRevision();
   }
 
   static void mergeEntriesInFront(
