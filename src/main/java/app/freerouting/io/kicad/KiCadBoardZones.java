@@ -63,7 +63,8 @@ public final class KiCadBoardZones {
    * @param sizeYUm the height of its shape before rotation
    * @param circular whether its shape is a circle
    * @param throughHole whether it is a plated through-hole pad
-   * @param layers its layers as written
+   * @param layers its layers as written, the wildcards {@code *.Cu} and {@code F&B.Cu} replaced by
+   *     the copper layers of the layer table of the board, which can rename them
    * @param connection {@code zone_connect} of the pad, else of its footprint, else INHERITED
    * @param thermalGapUm {@code thermal_gap} of the pad, 0 if it sets none
    * @param thermalBridgeWidthUm {@code thermal_bridge_width} of the pad, 0 if it sets none
@@ -142,6 +143,13 @@ public final class KiCadBoardZones {
     return false;
   }
 
+  /**
+   * The distance in micrometres that the fill of a zone keeps to the edge of the board when the
+   * project does not set another one: the default of KiCad for its copper to edge clearance. The
+   * value is kept in the project file, not in the board file.
+   */
+  public static final double DEFAULT_EDGE_CLEARANCE_UM = 500.0;
+
   private final String sourceName;
   private final List<Zone> zones;
   private final List<Pad> pads;
@@ -155,6 +163,14 @@ public final class KiCadBoardZones {
   /** The pads of the footprints of the board, in file order. */
   public List<Pad> pads() {
     return pads;
+  }
+
+  /**
+   * The distance in micrometres that the fill of the zones keeps to the edge of the board, whatever
+   * the clearance of a zone: {@link #DEFAULT_EDGE_CLEARANCE_UM}.
+   */
+  public double edgeClearanceUm() {
+    return DEFAULT_EDGE_CLEARANCE_UM;
   }
 
   /** The file name, for messages. */
@@ -185,6 +201,7 @@ public final class KiCadBoardZones {
     }
     List<Zone> zones = new ArrayList<>();
     List<Pad> pads = new ArrayList<>();
+    List<String> copperLayers = new ArrayList<>();
     int version = 0;
     while (true) {
       reader.skipBlanks();
@@ -205,7 +222,8 @@ public final class KiCadBoardZones {
             zones.add(zone);
           }
         }
-        case "footprint", "module" -> readFootprint(reader, version, pads);
+        case "footprint", "module" -> readFootprint(reader, version, copperLayers, pads);
+        case "layers" -> readCopperLayers(reader, copperLayers);
         case "version" -> {
           version = (int) toNumber(reader.readAtom());
           reader.skipToEndOfList();
@@ -216,8 +234,62 @@ public final class KiCadBoardZones {
     return new KiCadBoardZones(sourceName, zones, pads);
   }
 
+  /**
+   * Reads the rest of the layer table of the board, {@code (layers (0 F.Cu signal) (31 B.Cu signal)
+   * (32 B.Adhes user) ...)}, for the names of its copper layers, from front to back. A board can
+   * rename them: {@code (0 Top signal)} up to KiCad 5, {@code (0 "F.Cu" signal "Top")} since.
+   */
+  private static void readCopperLayers(Reader reader, List<String> copperLayers) {
+    while (true) {
+      reader.skipBlanks();
+      if (reader.isFinished() || reader.leaveList()) {
+        return;
+      }
+      if (!reader.enterList()) {
+        reader.readAtom();
+        continue;
+      }
+      reader.readAtom(); // its number
+      String name = reader.readAtom();
+      String type = reader.readAtom();
+      if (!name.isEmpty()
+          && ("signal".equals(type)
+              || "power".equals(type)
+              || "mixed".equals(type)
+              || "jumper".equals(type))) {
+        copperLayers.add(name);
+      }
+      reader.skipToEndOfList();
+    }
+  }
+
+  /**
+   * The layers of a pad with the wildcards of KiCad replaced by the copper layers of the board they
+   * stand for: {@code *.Cu} by all of them, {@code F&B.Cu} by the first and the last. A board that
+   * renames its copper layers still writes the wildcards. Without a layer table the layers are
+   * returned as written.
+   */
+  private static List<String> resolveLayers(List<String> layers, List<String> copperLayers) {
+    if (copperLayers.isEmpty()) {
+      return List.copyOf(layers);
+    }
+    List<String> result = new ArrayList<>();
+    for (String layer : layers) {
+      if ("*.Cu".equals(layer)) {
+        result.addAll(copperLayers);
+      } else if ("F&B.Cu".equals(layer)) {
+        result.add(copperLayers.get(0));
+        result.add(copperLayers.get(copperLayers.size() - 1));
+      } else {
+        result.add(layer);
+      }
+    }
+    return List.copyOf(result);
+  }
+
   /** Reads the rest of a {@code (footprint ...)} and adds its pads. */
-  private static void readFootprint(Reader reader, int version, List<Pad> pads) {
+  private static void readFootprint(
+      Reader reader, int version, List<String> copperLayers, List<Pad> pads) {
     double[] at = new double[3];
     PadConnection connection = PadConnection.INHERITED;
     List<PadDraft> drafts = new ArrayList<>();
@@ -270,7 +342,7 @@ public final class KiCadBoardZones {
               draft.size[1],
               draft.circular,
               draft.throughHole,
-              List.copyOf(draft.layers),
+              resolveLayers(draft.layers, copperLayers),
               draft.connection != PadConnection.INHERITED ? draft.connection : connection,
               draft.thermalGap,
               draft.thermalBridgeWidth,

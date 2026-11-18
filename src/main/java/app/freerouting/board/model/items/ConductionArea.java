@@ -51,6 +51,9 @@ public class ConductionArea extends ObstacleArea implements Connectable {
   /** The width of the spokes of the thermal reliefs of the fill, in board units. */
   private int thermalSpokeWidth;
 
+  /** The distance the fill keeps to the edge of the board, in board units; 0 if unknown. */
+  private int fillEdgeClearance;
+
   /**
    * Sets how the host CAD system fills this area, when the design file does not say it: the
    * clearance the fill keeps to the copper of other nets, if larger than the clearance of the
@@ -85,6 +88,20 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     this.thermalGap = Math.max(0, thermalGap);
     this.thermalSpokeWidth = Math.max(0, thermalSpokeWidth);
     this.clearDerivedData();
+  }
+
+  /**
+   * Sets the distance the fill of the host CAD system keeps to the edge of the board, in board
+   * units, when it is not the clearance of the fill to other copper.
+   */
+  public void setFillEdgeClearance(int edgeClearance) {
+    this.fillEdgeClearance = Math.max(0, edgeClearance);
+    this.clearDerivedData();
+  }
+
+  /** The distance set by {@link #setFillEdgeClearance}, in board units; 0 if unknown. */
+  public int getFillEdgeClearance() {
+    return this.fillEdgeClearance;
   }
 
   /** The connection set by {@link #setPadConnectionRules}; null if unknown. */
@@ -347,6 +364,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     result.padConnection = this.padConnection;
     result.thermalGap = this.thermalGap;
     result.thermalSpokeWidth = this.thermalSpokeWidth;
+    result.fillEdgeClearance = this.fillEdgeClearance;
     return result;
   }
 

@@ -8,9 +8,11 @@ import app.freerouting.board.model.items.ObstacleArea;
 import app.freerouting.board.model.items.PadPlaneConnection;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Trace;
+import app.freerouting.board.model.structure.BoardOutline;
 import app.freerouting.board.model.structure.Unit;
 import app.freerouting.board.searchtree.SearchTreeObject;
 import app.freerouting.board.trace.PolylineTrace;
+import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
@@ -59,6 +61,22 @@ public class FastPlaneConnectivityGrid {
   private short[] cellIslandMap;
 
   private int[] queue;
+
+  /**
+   * The number of points per cell and axis at which the obstacles are sampled ({@link #fineMask}).
+   */
+  private static final int FINE = 8;
+
+  /**
+   * The obstacles at {@link #FINE} times the resolution of the cells, when the fill rules of the
+   * design are known: a cell is then free of fill only if all its sample points are. A passage
+   * narrower than a cell is kept this way.
+   */
+  private long[] fineMask = new long[0];
+
+  private int fineCols;
+  private int fineRows;
+  private int fineWordsPerRow;
 
   /** Result container holding partitioned same-net items per isolated copper island. */
   public static class PlaneFractureResult {
@@ -203,6 +221,13 @@ public class FastPlaneConnectivityGrid {
     // 2. Query spatial index for obstacles overlapping conduction area
     Set<SearchTreeObject> overlaps = board.overlappingObjects(queryBbox, layer);
     boolean hasForeignObstacles = false;
+    // With the fill rules of the design, a cell stands for the centre of a disc of fill as wide as
+    // the minimum width: it is free when that centre keeps its distance to the foreign copper,
+    // without the margin of half a cell that would close the narrow passages the fill keeps.
+    boolean exact = ca.getPadConnection() != null;
+    if (exact) {
+      initFineMask();
+    }
     for (SearchTreeObject ob : overlaps) {
       if (!(ob instanceof Item item) || item == ca || !item.sharesLayer(ca)) {
         continue;
@@ -219,7 +244,16 @@ public class FastPlaneConnectivityGrid {
         double clearance =
             ca.fillKeepout(board.clearanceValue(clearanceClass, itemClearanceClass, layer));
 
-        if (item instanceof Trace trace) {
+        if (exact) {
+          double leniency = FILL_LENIENCY * ca.getFillMinWidth();
+          if (item instanceof BoardOutline outline && ca.getFillEdgeClearance() > 0) {
+            // the fill keeps its own distance to the edge of the board
+            rasterizeOutline(
+                outline, ca.getFillEdgeClearance() + ca.getFillMinWidth() / 2.0 - leniency);
+          } else {
+            rasterizeForeignItem(item, layer, clearance - leniency);
+          }
+        } else if (item instanceof Trace trace) {
           int radius = (int) Math.round(trace.getHalfWidth() + clearance);
           if (trace instanceof PolylineTrace polylineTrace) {
             Point[] corners = polylineTrace.polyline().corners();
@@ -287,32 +321,19 @@ public class FastPlaneConnectivityGrid {
    *   <li>no connection: to no piece.
    * </ul>
    *
-   * <p>A pad attached to nothing is alone on an island; a pad attached to two pieces joins them.
-   * Vias, trace ends and pads without a known connection are placed as before, in the piece of the
-   * nearest cell of fill.
+   * <p>The fill stops at the thermal gap of a pad with a thermal relief and at the clearance of a
+   * pad it does not connect, as it stops at foreign copper, and at its own distance from the edge
+   * of the board. A pad attached to nothing is alone on an island; a pad attached to two pieces
+   * joins them. A via, a trace or a pad without a known connection is attached to every piece whose
+   * copper reaches it, a trace along its whole length, and to none where the fill leaves it out.
    */
   private PlaneFractureResult partitionItemsByPadConnection(
       ConductionArea ca, BasicBoard board, Collection<? extends Item> sameNetItems) {
     int layer = ca.getLayer();
-    int[] pieceOfCell = new int[cols * rows];
-    int[] pieceSizes = labelPieces(pieceOfCell);
-    int pieceCount = pieceSizes.length;
-    int largestPiece = -1;
-    for (int i = 0; i < pieceCount; i++) {
-      if (largestPiece < 0 || pieceSizes[i] > pieceSizes[largestPiece]) {
-        largestPiece = i;
-      }
-    }
-
     List<Item> items = new ArrayList<>(sameNetItems);
     Map<Item, Integer> indexOfItem = new HashMap<>();
     for (int i = 0; i < items.size(); i++) {
       indexOfItem.put(items.get(i), i);
-    }
-    // nodes: the pieces of the fill, then the items
-    int[] parent = new int[pieceCount + items.size()];
-    for (int i = 0; i < parent.length; i++) {
-      parent[i] = i;
     }
 
     double minWidth = ca.getFillMinWidth();
@@ -335,6 +356,35 @@ public class FastPlaneConnectivityGrid {
     }
     double maxKeepout = ca.fillKeepout(maxClearanceOf(ca, board));
 
+    // The fill stops at the thermal gap of a pad of the net, and at the clearance of a pad it does
+    // not connect: a row of such pads can close a passage as foreign copper does.
+    for (int i = 0; i < items.size(); i++) {
+      if (modes[i] != PadPlaneConnection.Mode.THERMAL && modes[i] != PadPlaneConnection.Mode.NONE) {
+        continue;
+      }
+      Pin pin = (Pin) items.get(i);
+      TileShape padShape = pin.getTreeShapeOnLayer(board.searchTreeManager.getDefaultTree(), layer);
+      if (padShape == null) {
+        continue;
+      }
+      double relief =
+          modes[i] == PadPlaneConnection.Mode.THERMAL
+              ? pin.getPlaneConnection().gapOn(ca.getThermalGap()) + minWidth / 2.0
+              : ca.fillKeepout(
+                  board.clearanceValue(ca.clearanceClassIndex(), pin.clearanceClassIndex(), layer));
+      if (!rasterizeRoundPad(pin, layer, relief - FILL_LENIENCY * minWidth)) {
+        rasterizeKeepout(padShape, relief - FILL_LENIENCY * minWidth);
+      }
+    }
+
+    foldFineMask();
+    int[] pieceOfCell = new int[cols * rows];
+    int pieceCount = labelPieces(pieceOfCell).length;
+    // nodes: the pieces of the fill, then the items
+    int[] parent = new int[pieceCount + items.size()];
+    for (int i = 0; i < parent.length; i++) {
+      parent[i] = i;
+    }
     for (int i = 0; i < items.size(); i++) {
       Item item = items.get(i);
       int node = pieceCount + i;
@@ -361,24 +411,19 @@ public class FastPlaneConnectivityGrid {
             pieceCount);
         continue;
       }
-      IntPoint location = getItemLocation(item, ca);
-      int piece = -1;
-      if (location != null) {
-        int col = (location.x - originX) / cellSize;
-        int row = (location.y - originY) / cellSize;
-        int[] seed = findNearestConductiveCell(col, row);
-        if (seed == null) {
-          seed = findNearestConductiveCell(col, row, 10);
+      // A via or a trace is covered by the fill: it is attached to every piece whose copper
+      // reaches it, and to none if the fill leaves it out.
+      if (item instanceof Trace trace) {
+        attachTrace(trace, ca, minWidth, pieceOfCell, parent, node);
+      } else if (item instanceof DrillItem drillItem) {
+        IntBox box = drillItem.boundingBox();
+        TileShape shape =
+            drillItem.getTreeShapeOnLayer(board.searchTreeManager.getDefaultTree(), layer);
+        if (shape != null) {
+          box = shape.boundingBox();
         }
-        if (seed != null) {
-          piece = pieceOfCell[seed[1] * cols + seed[0]];
-        }
-      }
-      if (piece < 0) {
-        piece = largestPiece;
-      }
-      if (piece >= 0) {
-        union(parent, node, piece);
+        double reach = Math.min(box.width(), box.height()) / 2.0 + minWidth / 2.0;
+        attachPiecesNear(drillItem.getCenter().toFloat(), reach, pieceOfCell, parent, node);
       }
     }
 
@@ -427,8 +472,9 @@ public class FastPlaneConnectivityGrid {
   private int[] labelPieces(int[] pieceOfCell) {
     Arrays.fill(pieceOfCell, -1);
     List<Integer> sizes = new ArrayList<>();
-    int[] dc = {1, -1, 0, 0};
-    int[] dr = {0, 0, 1, -1};
+    // diagonal neighbours too: what separates two pieces is much thicker than a cell
+    int[] dc = {1, -1, 0, 0, 1, 1, -1, -1};
+    int[] dr = {0, 0, 1, -1, 1, -1, 1, -1};
     for (int row = 0; row < rows; row++) {
       for (int col = 0; col < cols; col++) {
         if (pieceOfCell[row * cols + col] >= 0 || !isConductive(col, row)) {
@@ -443,7 +489,7 @@ public class FastPlaneConnectivityGrid {
           int cell = queue[head++];
           int r = cell / cols;
           int c = cell % cols;
-          for (int i = 0; i < 4; i++) {
+          for (int i = 0; i < dc.length; i++) {
             int nc = c + dc[i];
             int nr = r + dr[i];
             if (nc >= 0
@@ -581,7 +627,7 @@ public class FastPlaneConnectivityGrid {
         IntPoint point = centre.round();
         if (ca.getArea() == null
             || !ca.getArea().contains(point)
-            || !isFree(centre, centre, minWidth, foreignShapes, foreignClearances)) {
+            || !isFree(centre, centre, 0, foreignShapes, foreignClearances)) {
           continue;
         }
         int[] seed =
@@ -740,7 +786,15 @@ public class FastPlaneConnectivityGrid {
         }
         continue;
       }
-      if (!isStripFree(start, end, spoke.halfWidth(), minWidth, foreignShapes, foreignClearances)
+      if (!isStripFree(
+              start,
+              end,
+              spoke.halfWidth(),
+              minWidth,
+              ownShape,
+              ownGap,
+              foreignShapes,
+              foreignClearances)
           || !isEndInFill(
               start, end, minWidth, ownShape, ownGap, foreignShapes, foreignClearances)) {
         continue;
@@ -749,11 +803,286 @@ public class FastPlaneConnectivityGrid {
       if (ca.getArea() == null || !ca.getArea().contains(endPoint)) {
         continue;
       }
-      int[] seed =
-          findNearestConductiveCell(
-              (endPoint.x - originX) / cellSize, (endPoint.y - originY) / cellSize, 3);
-      if (seed != null) {
-        union(parent, pieceCount + index, pieceOfCell[seed[1] * cols + seed[0]]);
+      // the piece of the fill the end lies in; a piece too small for the grid connects nothing
+      attachPiecesNear(
+          end, minWidth / 2.0 + FILL_LENIENCY * minWidth, pieceOfCell, parent, pieceCount + index);
+    }
+  }
+
+  /**
+   * Joins the node with every piece of the fill that has a free sample point no further than reach
+   * from the point: the centre of a disc of fill. Returns whether there is one.
+   */
+  private boolean attachPiecesNear(
+      FloatPoint point, double reach, int[] pieceOfCell, int[] parent, int node) {
+    double fine = (double) cellSize / FINE;
+    // the sample points are that far apart
+    double limit = reach + fine * 0.75;
+    int startCol = Math.max(0, (int) Math.floor((point.x - limit - originX) / fine));
+    int endCol = Math.min(fineCols - 1, (int) Math.floor((point.x + limit - originX) / fine));
+    int startRow = Math.max(0, (int) Math.floor((point.y - limit - originY) / fine));
+    int endRow = Math.min(fineRows - 1, (int) Math.floor((point.y + limit - originY) / fine));
+    boolean attached = false;
+    for (int row = startRow; row <= endRow; row++) {
+      double dy = originY + (row + 0.5) * fine - point.y;
+      for (int col = startCol; col <= endCol; col++) {
+        int piece = pieceOfCell[(row / FINE) * cols + col / FINE];
+        if (piece < 0 || isFineSet(row, col)) {
+          continue;
+        }
+        double dx = originX + (col + 0.5) * fine - point.x;
+        if (dx * dx + dy * dy <= limit * limit) {
+          union(parent, node, piece);
+          attached = true;
+        }
+      }
+    }
+    return attached;
+  }
+
+  /**
+   * Joins the node of a trace of the net with every piece of the fill that its copper crosses on
+   * its way: a trace is covered by the fill wherever the fill reaches it, not only at its ends.
+   */
+  private void attachTrace(
+      Trace trace, ConductionArea ca, double minWidth, int[] pieceOfCell, int[] parent, int node) {
+    Point[] corners =
+        trace instanceof PolylineTrace polylineTrace
+            ? polylineTrace.polyline().corners()
+            : new Point[] {trace.firstCorner(), trace.lastCorner()};
+    // the centre of a disc of fill that touches the trace, to the centre of the cell it lies in
+    double reach = trace.getHalfWidth() + minWidth / 2.0 + cellSize * 0.5;
+    int span = (int) Math.ceil(reach / cellSize);
+    for (int i = 0; i < corners.length; i++) {
+      FloatPoint from = corners[i].toFloat();
+      FloatPoint to = corners[Math.min(i + 1, corners.length - 1)].toFloat();
+      double length = from.distance(to);
+      int steps = Math.max(1, (int) Math.ceil(length / cellSize));
+      for (int k = 0; k <= steps; k++) {
+        double x = from.x + (to.x - from.x) * k / steps;
+        double y = from.y + (to.y - from.y) * k / steps;
+        int col = (int) Math.floor((x - originX) / cellSize);
+        int row = (int) Math.floor((y - originY) / cellSize);
+        for (int r = Math.max(0, row - span); r <= Math.min(rows - 1, row + span); r++) {
+          double dy = originY + (r + 0.5) * cellSize - y;
+          for (int c = Math.max(0, col - span); c <= Math.min(cols - 1, col + span); c++) {
+            int piece = pieceOfCell[r * cols + c];
+            if (piece < 0 || find(parent, piece) == find(parent, node)) {
+              continue;
+            }
+            double dx = originX + (c + 0.5) * cellSize - x;
+            if (dx * dx + dy * dy <= reach * reach) {
+              union(parent, node, piece);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /** Clears the obstacles at the resolution of the sample points. */
+  private void initFineMask() {
+    this.fineCols = FINE * this.cols;
+    this.fineRows = FINE * this.rows;
+    this.fineWordsPerRow = (this.fineCols + 63) / 64;
+    int words = this.fineRows * this.fineWordsPerRow;
+    if (this.fineMask.length < words) {
+      this.fineMask = new long[words];
+    } else {
+      Arrays.fill(this.fineMask, 0, words, 0L);
+    }
+  }
+
+  /** Marks the sample points of a row from startCol to endCol as free of fill. */
+  private void setFineSpan(int row, int startCol, int endCol) {
+    if (row < 0 || row >= fineRows) {
+      return;
+    }
+    int from = Math.max(0, startCol);
+    int to = Math.min(fineCols - 1, endCol);
+    if (from > to) {
+      return;
+    }
+    int startWord = row * fineWordsPerRow + (from >> 6);
+    int endWord = row * fineWordsPerRow + (to >> 6);
+    long startBits = ~0L << (from & 63);
+    long endBits = ~0L >>> (63 - (to & 63));
+    if (startWord == endWord) {
+      fineMask[startWord] |= startBits & endBits;
+      return;
+    }
+    fineMask[startWord] |= startBits;
+    for (int word = startWord + 1; word < endWord; word++) {
+      fineMask[word] = ~0L;
+    }
+    fineMask[endWord] |= endBits;
+  }
+
+  private boolean isFineSet(int row, int col) {
+    return (fineMask[row * fineWordsPerRow + (col >> 6)] & (1L << (col & 63))) != 0L;
+  }
+
+  /** Marks as free of fill the cells whose sample points all are. */
+  private void foldFineMask() {
+    for (int row = 0; row < rows; row++) {
+      for (int word = 0; word < fineWordsPerRow; word++) {
+        long all = ~0L;
+        for (int k = 0; k < FINE; k++) {
+          all &= fineMask[(FINE * row + k) * fineWordsPerRow + word];
+        }
+        if (all == 0L) {
+          continue;
+        }
+        for (int col = word * 64 / FINE; col < (word + 1) * 64 / FINE && col < cols; col++) {
+          long cell = ((1L << FINE) - 1) << ((col * FINE) & 63);
+          if ((all & cell) == cell) {
+            setBit(obstacleMask, row, col);
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Marks as free of fill the sample points that are closer than distance to the copper of a
+   * foreign item on the layer: to the centre line of a trace less its half width, to the shapes of
+   * any other item.
+   */
+  private void rasterizeForeignItem(Item item, int layer, double distance) {
+    if (item instanceof PolylineTrace trace) {
+      double reach = trace.getHalfWidth() + distance;
+      Point[] corners = trace.polyline().corners();
+      for (int i = 0; i < corners.length - 1; i++) {
+        rasterizeSegment(corners[i].toFloat(), corners[i + 1].toFloat(), reach);
+      }
+      return;
+    }
+    if (item instanceof DrillItem drillItem && rasterizeRoundPad(drillItem, layer, distance)) {
+      return;
+    }
+    for (int i = 0; i < item.tileShapeCount(); i++) {
+      if (item.shapeLayer(i) == layer && item.getTileShape(i) != null) {
+        rasterizeKeepout(item.getTileShape(i), distance);
+      }
+    }
+  }
+
+  /**
+   * Marks as free of fill the sample points that are closer than distance to the pad of the item on
+   * the layer, if that pad is round: as a circle, not as the octagon that stands for it in the
+   * search tree and reaches further out at its corners. Returns false for any other pad.
+   */
+  private boolean rasterizeRoundPad(DrillItem drillItem, int layer, double distance) {
+    if (drillItem.getShapeOnLayer(layer) instanceof Circle circle) {
+      rasterizeConvex(new FloatPoint[] {circle.center.toFloat()}, circle.radius + distance);
+      return true;
+    }
+    return false;
+  }
+
+  /** Marks as free of fill the sample points that are closer than distance to the board edge. */
+  private void rasterizeOutline(BoardOutline outline, double distance) {
+    for (int i = 0; i < outline.shapeCount(); i++) {
+      FloatPoint[] corners = outline.getShape(i).cornerApproxArr();
+      if (corners == null) {
+        continue;
+      }
+      for (int k = 0; k < corners.length; k++) {
+        rasterizeSegment(corners[k], corners[(k + 1) % corners.length], distance);
+      }
+    }
+  }
+
+  /**
+   * Marks as free of fill the sample points that are closer than reach to the segment, row by row:
+   * what a row cuts out of the two discs around the ends and of the band between them.
+   */
+  private void rasterizeSegment(FloatPoint from, FloatPoint to, double reach) {
+    rasterizeConvex(new FloatPoint[] {from, to}, reach);
+  }
+
+  /** Marks as free of fill the sample points that are closer to the shape than distance. */
+  private void rasterizeKeepout(TileShape shape, double distance) {
+    FloatPoint[] corners = shape.cornerApproxArr();
+    if (corners == null || corners.length == 0) {
+      return;
+    }
+    rasterizeConvex(corners, distance);
+  }
+
+  /**
+   * Marks as free of fill the sample points that are closer than reach to the convex polygon with
+   * these corners (a segment with two, a point with one), row by row. The points within reach of a
+   * convex shape form a convex shape, of which a row cuts one span: from the leftmost to the
+   * rightmost point that the row cuts out of the surroundings of the sides.
+   */
+  private void rasterizeConvex(FloatPoint[] corners, double reach) {
+    double fine = (double) cellSize / FINE;
+    double minY = Double.MAX_VALUE;
+    double maxY = -Double.MAX_VALUE;
+    for (FloatPoint corner : corners) {
+      minY = Math.min(minY, corner.y);
+      maxY = Math.max(maxY, corner.y);
+    }
+    int startRow = Math.max(0, (int) Math.floor((minY - reach - originY) / fine));
+    int endRow = Math.min(fineRows - 1, (int) Math.floor((maxY + reach - originY) / fine));
+    int sides = corners.length > 2 ? corners.length : corners.length - 1;
+    // the corners of the band around each side
+    double[][] bandX = new double[Math.max(sides, 0)][4];
+    double[][] bandY = new double[Math.max(sides, 0)][4];
+    boolean[] hasBand = new boolean[Math.max(sides, 0)];
+    for (int i = 0; i < sides; i++) {
+      FloatPoint from = corners[i];
+      FloatPoint to = corners[(i + 1) % corners.length];
+      double dx = to.x - from.x;
+      double dy = to.y - from.y;
+      double length = Math.hypot(dx, dy);
+      if (length <= 0) {
+        continue;
+      }
+      hasBand[i] = true;
+      double offsetX = -dy / length * reach;
+      double offsetY = dx / length * reach;
+      bandX[i][0] = from.x + offsetX;
+      bandY[i][0] = from.y + offsetY;
+      bandX[i][1] = to.x + offsetX;
+      bandY[i][1] = to.y + offsetY;
+      bandX[i][2] = to.x - offsetX;
+      bandY[i][2] = to.y - offsetY;
+      bandX[i][3] = from.x - offsetX;
+      bandY[i][3] = from.y - offsetY;
+    }
+    for (int row = startRow; row <= endRow; row++) {
+      double y = originY + (row + 0.5) * fine;
+      double low = Double.MAX_VALUE;
+      double high = -Double.MAX_VALUE;
+      for (FloatPoint corner : corners) {
+        double offset = y - corner.y;
+        if (Math.abs(offset) < reach) {
+          double halfChord = Math.sqrt(reach * reach - offset * offset);
+          low = Math.min(low, corner.x - halfChord);
+          high = Math.max(high, corner.x + halfChord);
+        }
+      }
+      for (int i = 0; i < sides; i++) {
+        if (!hasBand[i]) {
+          continue;
+        }
+        for (int k = 0; k < 4; k++) {
+          double y1 = bandY[i][k];
+          double y2 = bandY[i][(k + 1) % 4];
+          if ((y1 - y) * (y2 - y) <= 0 && y1 != y2) {
+            double x = bandX[i][k] + (y - y1) * (bandX[i][(k + 1) % 4] - bandX[i][k]) / (y2 - y1);
+            low = Math.min(low, x);
+            high = Math.max(high, x);
+          }
+        }
+      }
+      if (low < high) {
+        setFineSpan(
+            row,
+            (int) Math.ceil((low - originX) / fine - 0.5),
+            (int) Math.floor((high - originX) / fine - 0.5));
       }
     }
   }
@@ -803,8 +1132,8 @@ public class FastPlaneConnectivityGrid {
             continue;
           }
         }
-        if (isFree(a[0], meet, minWidth, foreignShapes, foreignClearances)
-            && isFree(b[0], meet, minWidth, foreignShapes, foreignClearances)) {
+        if (isFree(a[0], meet, 0, foreignShapes, foreignClearances)
+            && isFree(b[0], meet, 0, foreignShapes, foreignClearances)) {
           return true;
         }
       }
@@ -864,21 +1193,29 @@ public class FastPlaneConnectivityGrid {
   /**
    * The share of the minimum width by which the zone filler of KiCad 10.0.8 is more lenient than
    * the exact distance (clearance plus half the minimum width) when it decides whether fill is
-   * left: measured with a via in front of a spoke, moved in steps of 10 um.
+   * left: measured with a via in front of a spoke, moved in steps of 10 um. It also keeps a neck
+   * that is exactly as wide as the minimum width, which designs drawn on a grid are full of: the
+   * pieces of the fill are told apart with this leniency. A spoke is not: the filler cuts it
+   * exactly.
    */
   private static final double FILL_LENIENCY = 0.06;
 
   /**
    * Whether foreign copper leaves a part of the spoke between two points of its centre line that
    * the fill keeps: a strip as wide as the minimum width of the fill, whose centre line stays at
-   * the clearance of the fill plus half the minimum width from any foreign copper. Three positions
-   * of the strip are tried: in the middle of the spoke and along each side.
+   * the clearance of the fill plus half the minimum width from any foreign copper. Three straight
+   * strips are tried first: in the middle of the spoke and along each side. Foreign copper that
+   * cuts a corner of the spoke can leave a strip that moves from one side to the other, or that
+   * joins the fill beside the spoke: the centre line is then searched among the points of a small
+   * grid over the spoke.
    */
   private static boolean isStripFree(
       FloatPoint start,
       FloatPoint end,
       double halfWidth,
       double minWidth,
+      TileShape padShape,
+      double gap,
       List<TileShape> foreignShapes,
       List<double[]> foreignClearances) {
     if (foreignShapes.isEmpty()) {
@@ -890,9 +1227,67 @@ public class FastPlaneConnectivityGrid {
       double shiftY = length > 0 ? (end.x - start.x) / length * offset : 0;
       FloatPoint from = new FloatPoint(start.x + shiftX, start.y + shiftY);
       FloatPoint to = new FloatPoint(end.x + shiftX, end.y + shiftY);
-      if (isFree(from, to, minWidth, foreignShapes, foreignClearances)) {
+      if (isFree(from, to, 0, foreignShapes, foreignClearances)) {
         return true;
       }
+    }
+    double side = halfWidth - minWidth / 2.0;
+    if (side < 0 || length <= 0 || minWidth <= 0 || padShape == null) {
+      return false;
+    }
+    // Points every eighth of the minimum width, as centres of a disc of that width. Within the
+    // spoke the disc must stay between its sides; past the relief of the pad it is a disc of the
+    // fill around the spoke. The spoke holds if such discs lead from the edge of the pad into the
+    // fill.
+    double step = minWidth / 8.0;
+    int half = (int) Math.ceil((side + minWidth / 2.0) / step);
+    int across = 2 * half + 1;
+    int along = (int) Math.ceil((length + minWidth / 2.0) / step) + 1;
+    double alongX = (end.x - start.x) / length;
+    double alongY = (end.y - start.y) / length;
+    double fillDistance = gap + minWidth / 2.0 - 1.0;
+    boolean[] reached = new boolean[across];
+    for (int m = 0; m < along; m++) {
+      double distance = m * step;
+      boolean[] free = new boolean[across];
+      boolean[] inFill = new boolean[across];
+      for (int n = 0; n < across; n++) {
+        double offset = (n - half) * step;
+        FloatPoint point =
+            new FloatPoint(
+                start.x + alongX * distance - alongY * offset,
+                start.y + alongY * distance + alongX * offset);
+        inFill[n] = padShape.distance(point) >= fillDistance;
+        free[n] =
+            (inFill[n] || Math.abs(offset) <= side + 1e-6)
+                && isFree(point, point, 0, foreignShapes, foreignClearances);
+      }
+      boolean[] next = new boolean[across];
+      for (int n = 0; n < across; n++) {
+        next[n] =
+            free[n]
+                && (m == 0
+                    || reached[n]
+                    || (n > 0 && reached[n - 1])
+                    || (n < across - 1 && reached[n + 1]));
+      }
+      for (int n = 1; n < across; n++) {
+        next[n] = next[n] || (free[n] && next[n - 1]);
+      }
+      for (int n = across - 2; n >= 0; n--) {
+        next[n] = next[n] || (free[n] && next[n + 1]);
+      }
+      boolean any = false;
+      for (int n = 0; n < across; n++) {
+        if (next[n] && inFill[n]) {
+          return true;
+        }
+        any = any || next[n];
+      }
+      if (!any) {
+        return false;
+      }
+      reached = next;
     }
     return false;
   }
@@ -933,23 +1328,25 @@ public class FastPlaneConnectivityGrid {
           continue;
         }
       }
-      if (isFree(centre, centre, minWidth, foreignShapes, foreignClearances)) {
+      if (isFree(centre, centre, FILL_LENIENCY * minWidth, foreignShapes, foreignClearances)) {
         return true;
       }
     }
     return false;
   }
 
-  /** Whether the segment keeps the clearance of the fill plus half its minimum width. */
+  /**
+   * Whether the segment keeps the clearance of the fill plus half its minimum width, less the
+   * leniency.
+   */
   private static boolean isFree(
       FloatPoint from,
       FloatPoint to,
-      double minWidth,
+      double leniency,
       List<TileShape> foreignShapes,
       List<double[]> foreignClearances) {
     for (int i = 0; i < foreignShapes.size(); i++) {
-      if (distance(from, to, foreignShapes.get(i))
-          < foreignClearances.get(i)[0] - FILL_LENIENCY * minWidth) {
+      if (distance(from, to, foreignShapes.get(i)) < foreignClearances.get(i)[0] - leniency) {
         return false;
       }
     }

@@ -156,4 +156,32 @@ class KiCadBoardZonesTest {
     assertEquals(45.0, second.spokeAngleDeg(), 1e-9);
     assertFalse(second.isOnLayer("B.Cu"));
   }
+
+  @Test
+  void aThroughHolePadIsOnTheCopperLayersThatTheBoardRenamed() {
+    KiCadBoardZones board =
+        KiCadBoardZones.parse(
+            "(kicad_pcb (version 20171130) (host pcbnew 5.1)\n"
+                + " (layers (0 Top signal) (1 Inner power) (31 Bottom signal) (36 B.SilkS user))\n"
+                + " (module Lib:J (layer Top) (tedit 0) (at 10 10)\n"
+                + "  (pad 1 thru_hole circle (at 0 0) (size 1.6 1.6) (drill 0.8)"
+                + " (layers *.Cu *.Mask B.SilkS) (net 1 GND))\n"
+                + "  (pad 2 thru_hole circle (at 2 0) (size 1.6 1.6) (drill 0.8)"
+                + " (layers F&B.Cu) (net 1 GND))\n"
+                + "  (pad 3 smd rect (at 4 0) (size 1 1) (layers Bottom B.Paste) (net 1 GND))))",
+            "renamed.kicad_pcb");
+
+    KiCadBoardZones.Pad all = board.pads().get(0);
+    assertTrue(all.isOnLayer("Top"));
+    assertTrue(all.isOnLayer("Inner"));
+    assertTrue(all.isOnLayer("Bottom"));
+    assertFalse(all.isOnLayer("B.SilkS.Cu"));
+    KiCadBoardZones.Pad outer = board.pads().get(1);
+    assertTrue(outer.isOnLayer("Top"));
+    assertFalse(outer.isOnLayer("Inner"));
+    assertTrue(outer.isOnLayer("Bottom"));
+    KiCadBoardZones.Pad back = board.pads().get(2);
+    assertFalse(back.isOnLayer("Top"));
+    assertTrue(back.isOnLayer("Bottom"));
+  }
 }

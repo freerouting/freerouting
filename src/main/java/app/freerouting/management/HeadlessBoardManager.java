@@ -573,6 +573,11 @@ public class HeadlessBoardManager implements BoardManager {
           || spokeWidth != area.getThermalSpokeWidth()) {
         area.setPadConnectionRules(padConnection, thermalGap, spokeWidth);
       }
+      int edgeClearance =
+          (int) Math.round(communication.physicalToBoard(boardZones.edgeClearanceUm(), Unit.UM));
+      if (edgeClearance != area.getFillEdgeClearance()) {
+        area.setFillEdgeClearance(edgeClearance);
+      }
     }
     int matchedPads = applyKiCadPadConnections(boardZones);
     this.routingJob.logInfo(
