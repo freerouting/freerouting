@@ -85,6 +85,15 @@ public class OptimizerSettings implements Serializable, Cloneable {
   public Boolean viaNudgeEnabled;
 
   /**
+   * Whether the optimizer ends with a pass that slides the steps of the traces along them, with
+   * shoving, wherever that makes the board as a whole better: no more vias, incomplete connections,
+   * clearance violations, trace length or bends, and less trace length or fewer bends. It
+   * straightens the staircases that bundles of traces get when they are routed at the clearance.
+   */
+  @SerializedName("step_slide_enabled")
+  public Boolean stepSlideEnabled;
+
+  /**
    * A cost discount factor applied when ripping up trace items (as opposed to vias). Typically less
    * than 1.0 to make traces easier to rip up and reroute than vias.
    */
