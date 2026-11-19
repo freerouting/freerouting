@@ -1020,6 +1020,9 @@ public class PolylineTrace extends Trace implements Serializable {
     PolylineTraceSearchTreeAdapter.changeEntries(
         this, newPolyline, keepAtStartCount, keepAtEndCount);
     lines = newPolyline;
+    // the geometry changed in place: caches keyed on the revision of the board (the islands of a
+    // fractured plane) must not keep the old ends
+    board.incrementRevision();
 
     // let the observers synchronize the changes
     if ((board.communication != null) && (board.communication.observers != null)) {
