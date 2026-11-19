@@ -249,7 +249,9 @@ public class FastPlaneConnectivityGrid {
       }
     }
 
-    if (!hasForeignObstacles) {
+    // Without foreign obstacles, only the area's own holes can split it: an area given as an
+    // outline minus windows (KiCad exports filled zones this way) can already be several islands.
+    if (!hasForeignObstacles && (ca.getArea() == null || ca.getArea().getHoles().length == 0)) {
       Map<Integer, List<Item>> singleIsland = new HashMap<>();
       singleIsland.put(0, new ArrayList<>(sameNetItems));
       return new PlaneFractureResult(singleIsland);
