@@ -31,6 +31,7 @@ public record HeadlessRoutingRequest(
     }
     dsnBytes = dsnBytes.clone();
     rulesBytes = rulesBytes != null ? rulesBytes.clone() : null;
+    settings = settings != null ? settings.clone() : null;
     if (designName == null || designName.isBlank()) {
       designName = "design.dsn";
     }
@@ -47,6 +48,11 @@ public record HeadlessRoutingRequest(
   @Override
   public byte[] rulesBytes() {
     return rulesBytes != null ? rulesBytes.clone() : null;
+  }
+
+  @Override
+  public RouterSettings settings() {
+    return settings != null ? settings.clone() : null;
   }
 
   @Override

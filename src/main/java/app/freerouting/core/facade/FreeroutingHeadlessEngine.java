@@ -8,12 +8,15 @@ import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.RoutingStage;
 import app.freerouting.core.scoring.BoardStatistics;
+import app.freerouting.drc.ClearanceBaseline;
 import app.freerouting.drc.ClearanceViolation;
 import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.specctra.DsnReader;
+import app.freerouting.io.specctra.RulesReader;
 import app.freerouting.io.specctra.SesWriter;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.rules.DifferentialPairDetector;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.ApiSettings;
@@ -24,6 +27,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -58,10 +62,9 @@ public final class FreeroutingHeadlessEngine {
       return HeadlessRoutingResult.cancelled(null, null, System.currentTimeMillis() - startTime);
     }
 
-    // 1. Parse DSN into RoutingBoard
+    // 1. Parse DSN into RoutingBoard (purely in-memory, no temporary files)
     byte[] dsnBytes = request.dsnBytes();
-    BoardReadResult readResult =
-        DsnReader.readBoard(new ByteArrayInputStream(dsnBytes), null, null, request.designName());
+    BoardReadResult readResult = DsnReader.readBoard(dsnBytes, null, null, request.designName());
 
     RoutingBoard board;
     if (readResult instanceof BoardReadResult.Success s) {
@@ -87,10 +90,10 @@ public final class FreeroutingHeadlessEngine {
 
     if (request.cancellationToken().isCancelled()) {
       return HeadlessRoutingResult.cancelled(
-          board, board.getStatistics(), System.currentTimeMillis() - startTime);
+          board, new BoardStatistics(board, null, false), System.currentTimeMillis() - startTime);
     }
 
-    // 2. Resolve settings using SettingsMerger priority ladder
+    // 2. Resolve settings using SettingsMerger priority ladder and apply .rules to the board
     SettingsMerger settingsMerger =
         new SettingsMerger(
             new DefaultSettings(),
@@ -98,10 +101,16 @@ public final class FreeroutingHeadlessEngine {
 
     byte[] rulesBytes = request.rulesBytes();
     if (rulesBytes != null && rulesBytes.length > 0) {
+      String rulesName = request.rulesName() != null ? request.rulesName() : "rules.rules";
+      boolean rulesApplied =
+          RulesReader.read(new ByteArrayInputStream(rulesBytes), rulesName, board);
+      if (!rulesApplied) {
+        return HeadlessRoutingResult.failure(
+            "Failed to apply rules file '" + rulesName + "' to board",
+            System.currentTimeMillis() - startTime);
+      }
       settingsMerger.addOrReplaceSources(
-          new RulesFileSettings(
-              new ByteArrayInputStream(rulesBytes),
-              request.rulesName() != null ? request.rulesName() : "rules.rules"));
+          new RulesFileSettings(new ByteArrayInputStream(rulesBytes), rulesName));
     }
 
     if (request.settings() != null) {
@@ -109,14 +118,24 @@ public final class FreeroutingHeadlessEngine {
     }
 
     RouterSettings routerSettings = settingsMerger.merge();
+    int boardLayerCount = board.getLayerCount();
+    if (routerSettings.getLayerCount() != boardLayerCount) {
+      routerSettings.setLayerCount(boardLayerCount);
+    }
     routerSettings.applyBoardSpecificOptimizations(board);
+    routerSettings.applyNetClassExclusions(board);
+    applyBoardSettingsOverrides(board, routerSettings);
+    prepareBoardConnectivity(board, routerSettings);
+    captureInitialClearanceBaseline(board);
 
     // 3. Prepare RoutingJob
     RoutingJob job = new RoutingJob();
     job.board = board;
     job.routerSettings = routerSettings;
     job.name = request.designName();
-    HeadlessStoppableThread thread = new HeadlessStoppableThread(request.cancellationToken());
+    Long deadlineMillis = parseDeadlineMillis(startTime, routerSettings.jobTimeoutString);
+    HeadlessStoppableThread thread =
+        new HeadlessStoppableThread(request.cancellationToken(), deadlineMillis);
     job.thread = thread;
     job.state = RoutingJobState.RUNNING;
 
@@ -204,24 +223,40 @@ public final class FreeroutingHeadlessEngine {
           System.currentTimeMillis() - startTime);
     }
 
+    // Refresh board reference in case the autorouter or optimizer installed a snapshot/candidate
+    board = job.board;
+
     boolean cancelled = request.cancellationToken().isCancelled();
-    job.state = cancelled ? RoutingJobState.CANCELLED : RoutingJobState.COMPLETED;
+    boolean timedOut = !cancelled && thread.isTimedOut();
+    if (cancelled) {
+      job.state = RoutingJobState.CANCELLED;
+    } else if (timedOut) {
+      job.state = RoutingJobState.TIMED_OUT;
+    } else {
+      job.state = RoutingJobState.COMPLETED;
+    }
 
-    // 6. Gather results & statistics
-    BoardStatistics stats = board.getStatistics();
-    int unrouted =
-        stats != null && stats.connections != null ? stats.connections.incompleteCount : 0;
+    // 6. Gather results & statistics without duplicating the clearance check
+    BoardStatistics stats = new BoardStatistics(board, null, false);
+    int unrouted = stats.connections != null ? stats.connections.incompleteCount : 0;
 
-    String errorMessage = cancelled ? "Routing was cancelled" : null;
+    String errorMessage = null;
+    if (cancelled) {
+      errorMessage = "Routing was cancelled";
+    } else if (timedOut) {
+      errorMessage = "Routing timed out";
+    }
 
-    // 7. Perform DRC if requested
+    // 7. Perform authoritative DRC once if requested
     Collection<ClearanceViolation> violations = Collections.emptyList();
     if (request.runDrc() && !cancelled) {
       try {
         violations = new DesignRulesChecker(board, null).getAllClearanceViolations();
       } catch (Exception e) {
         FRLogger.warn("DRC check encountered an error: " + e.getMessage());
-        errorMessage = "DRC check failed: " + e.getMessage();
+        if (errorMessage == null) {
+          errorMessage = "DRC check failed: " + e.getMessage();
+        }
       }
     }
 
@@ -289,18 +324,86 @@ public final class FreeroutingHeadlessEngine {
     return new DesignRulesChecker(board, null).getAllClearanceViolations();
   }
 
-  /** Standalone DRC check for a board represented by DSN bytes. */
+  /**
+   * Standalone DRC check for a board represented by DSN bytes.
+   *
+   * @throws IllegalArgumentException if {@code dsnBytes} is null, empty, or fails to parse
+   * @throws UncheckedIOException if an I/O error occurs while reading the DSN bytes
+   */
   public static Collection<ClearanceViolation> checkDrc(byte[] dsnBytes) {
     if (dsnBytes == null || dsnBytes.length == 0) {
-      return Collections.emptyList();
+      throw new IllegalArgumentException("dsnBytes must not be null or empty");
     }
-    BoardReadResult result =
-        DsnReader.readBoard(new ByteArrayInputStream(dsnBytes), null, null, "drc_check.dsn");
+    BoardReadResult result = DsnReader.readBoard(dsnBytes, null, null, "drc_check.dsn");
     if (result instanceof BoardReadResult.Success s) {
       return checkDrc((RoutingBoard) s.board());
     } else if (result instanceof BoardReadResult.OutlineMissing o) {
       return checkDrc((RoutingBoard) o.board());
+    } else if (result instanceof BoardReadResult.ParseError p) {
+      throw new IllegalArgumentException(
+          "DSN parse error at '" + p.location() + "': " + p.detail());
+    } else if (result instanceof BoardReadResult.IoError io) {
+      throw new UncheckedIOException("DSN IO error", io.cause());
     }
-    return Collections.emptyList();
+    throw new IllegalArgumentException("Unknown DSN board read result");
+  }
+
+  private static void applyBoardSettingsOverrides(
+      RoutingBoard board, RouterSettings routerSettings) {
+    if (board == null || routerSettings == null) {
+      return;
+    }
+    if (routerSettings.planeAsObstacle != null) {
+      board.changePlaneAsObstacle(routerSettings.planeAsObstacle);
+    }
+  }
+
+  private static void prepareBoardConnectivity(RoutingBoard board, RouterSettings routerSettings) {
+    if (board == null) {
+      return;
+    }
+    board.expandBoundingBoxToIncludeAllItems();
+    board.reduceNetsOfRouteItems();
+    boolean fixKicadFootprints =
+        routerSettings != null && Boolean.TRUE.equals(routerSettings.fixKicadFootprints);
+    board.connectNetlessPads(false, fixKicadFootprints, new int[1]);
+    board.clusterNetTies();
+    DifferentialPairDetector.detectAndRegister(board.rules);
+  }
+
+  private static void captureInitialClearanceBaseline(RoutingBoard board) {
+    if (board == null) {
+      return;
+    }
+    Collection<ClearanceViolation> initialViolations =
+        new DesignRulesChecker(board, null).getAllClearanceViolations();
+    board.preExistingClearanceViolationsCount = initialViolations.size();
+    int unfixable = 0;
+    for (ClearanceViolation v : initialViolations) {
+      if (v.isUnfixable()) {
+        unfixable++;
+      }
+    }
+    board.unfixableClearanceViolationsCount = unfixable;
+    board.clearanceBaseline = new ClearanceBaseline(initialViolations);
+  }
+
+  private static Long parseDeadlineMillis(long startTimeMillis, String timeoutString) {
+    if (timeoutString == null || timeoutString.isBlank()) {
+      return null;
+    }
+    String[] parts = timeoutString.trim().split(":");
+    if (parts.length != 3) {
+      return null;
+    }
+    try {
+      long hours = Long.parseLong(parts[0]);
+      long minutes = Long.parseLong(parts[1]);
+      long seconds = Long.parseLong(parts[2]);
+      long totalMillis = ((hours * 3600L) + (minutes * 60L) + seconds) * 1000L;
+      return totalMillis > 0 ? startTimeMillis + totalMillis : null;
+    } catch (NumberFormatException e) {
+      return null;
+    }
   }
 }
