@@ -42,6 +42,7 @@ import app.freerouting.rules.BoardRules;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
 import java.util.HashSet;
@@ -109,6 +110,34 @@ public class BasicBoard implements Serializable {
 
   private transient Set<Integer> normalizeSuppressedNetNos = new HashSet<>();
   private transient int revision;
+
+  /**
+   * The last changes of the board, one per revision: the layers and the box of the item that
+   * changed, or no box when the change is not known. A ring of {@link #CHANGE_JOURNAL_SIZE}.
+   */
+  private transient int[] changeRevisions;
+
+  private transient IntBox[] changeBoxes;
+  private transient int[] changeFirstLayers;
+  private transient int[] changeLastLayers;
+  private static final int CHANGE_JOURNAL_SIZE = 1024;
+
+  /**
+   * The changes of the search trees since the last revision ({@link #noteChange}), merged into the
+   * entry of the next one: a trace changed in place counts at the next revision, as before.
+   */
+  private transient IntBox pendingBox;
+
+  private transient int pendingFirstLayer = Integer.MAX_VALUE;
+  private transient int pendingLastLayer = Integer.MIN_VALUE;
+  private transient boolean pendingUnknown;
+
+  /**
+   * Whether the journal is kept: from the first plane that asks for it ({@link #changedSince}), so
+   * that a board without such a plane does not pay for it.
+   */
+  private transient boolean journalEnabled;
+
   private transient long netAssignmentChangeCount;
   private transient BoardItemRepository itemRepository;
   private transient BoardConnectivityQueries connectivityQueries;
@@ -197,9 +226,112 @@ public class BasicBoard implements Serializable {
     return revision;
   }
 
-  /** Increment revision. */
+  /**
+   * Increment revision. The change is the one of the search trees since the last revision ({@link
+   * #noteChange}); without any, its place on the board is not known.
+   */
   public void incrementRevision() {
     revision++;
+    if (!journalEnabled) {
+      return;
+    }
+    if (pendingUnknown || pendingBox == null) {
+      journalChange(null, 0, -1);
+    } else {
+      journalChange(pendingBox, pendingFirstLayer, pendingLastLayer);
+    }
+    pendingBox = null;
+    pendingFirstLayer = Integer.MAX_VALUE;
+    pendingLastLayer = Integer.MIN_VALUE;
+    pendingUnknown = false;
+  }
+
+  /** Increment revision, for the insertion, removal or restoration of this item. */
+  public void incrementRevision(Item item) {
+    noteChange(item);
+    incrementRevision();
+  }
+
+  /**
+   * Notes that the item changes on the board (its entries in the search trees, its geometry, its
+   * clearance class): the change counts at the next revision, inside the box of the item as it is
+   * now. Called before and after a change in place.
+   */
+  public void noteChange(Item item) {
+    if (!journalEnabled) {
+      return;
+    }
+    IntBox box = item.boundingBox();
+    if (box == null) {
+      pendingUnknown = true;
+      return;
+    }
+    noteChange(box, item.firstLayer(), item.lastLayer());
+  }
+
+  /** Notes a change on these layers inside the box, counted at the next revision. */
+  public void noteChange(IntBox box, int firstLayer, int lastLayer) {
+    if (!journalEnabled) {
+      return;
+    }
+    pendingBox = pendingBox == null ? box : pendingBox.union(box);
+    pendingFirstLayer = Math.min(pendingFirstLayer, firstLayer);
+    pendingLastLayer = Math.max(pendingLastLayer, lastLayer);
+  }
+
+  /** Notes a change whose place is not known: every cache is renewed at the next revision. */
+  public void noteUnknownChange() {
+    if (!journalEnabled) {
+      return;
+    }
+    pendingUnknown = true;
+  }
+
+  private void journalChange(IntBox box, int firstLayer, int lastLayer) {
+    if (changeRevisions == null) {
+      changeRevisions = new int[CHANGE_JOURNAL_SIZE];
+      Arrays.fill(changeRevisions, Integer.MIN_VALUE);
+      changeBoxes = new IntBox[CHANGE_JOURNAL_SIZE];
+      changeFirstLayers = new int[CHANGE_JOURNAL_SIZE];
+      changeLastLayers = new int[CHANGE_JOURNAL_SIZE];
+    }
+    int slot = Math.floorMod(revision, CHANGE_JOURNAL_SIZE);
+    changeRevisions[slot] = revision;
+    changeBoxes[slot] = box;
+    changeFirstLayers[slot] = firstLayer;
+    changeLastLayers[slot] = lastLayer;
+  }
+
+  /**
+   * Whether the board may have changed on the layer inside the box since the revision: true if a
+   * change after it touches the box on that layer, or is not known, or is too old to be told.
+   */
+  public boolean changedSince(int sinceRevision, int layer, IntBox box) {
+    if (sinceRevision == revision) {
+      return false;
+    }
+    if (!journalEnabled) {
+      // the changes so far are not known: from now on they are
+      journalEnabled = true;
+      return true;
+    }
+    if (changeRevisions == null
+        || sinceRevision > revision
+        || revision - sinceRevision > CHANGE_JOURNAL_SIZE) {
+      return true;
+    }
+    for (int r = sinceRevision + 1; r <= revision; r++) {
+      int slot = Math.floorMod(r, CHANGE_JOURNAL_SIZE);
+      if (changeRevisions[slot] != r || changeBoxes[slot] == null) {
+        return true;
+      }
+      if (layer >= changeFirstLayers[slot]
+          && layer <= changeLastLayers[slot]
+          && changeBoxes[slot].intersects(box)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**

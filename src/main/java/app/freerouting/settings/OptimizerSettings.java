@@ -80,6 +80,15 @@ public class OptimizerSettings implements Serializable, Cloneable {
   public Boolean keepIncreasedRipupCosts;
 
   /**
+   * Whether the optimizer ends with a pass that moves vias, with shoving, wherever that makes the
+   * board as a whole better: no more vias, incomplete connections, clearance violations, trace
+   * length or bends, and less trace length or fewer bends. It removes the short detours that
+   * foreign traces make around a via.
+   */
+  @SerializedName("via_nudge_enabled")
+  public Boolean viaNudgeEnabled;
+
+  /**
    * A cost discount factor applied when ripping up trace items (as opposed to vias). Typically less
    * than 1.0 to make traces easier to rip up and reroute than vias.
    */

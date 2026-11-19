@@ -8,6 +8,8 @@ import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.model.items.Via;
+import app.freerouting.board.model.structure.Unit;
+import app.freerouting.board.optimize.ViaNudger;
 import app.freerouting.core.ProgressThrottler;
 import app.freerouting.core.RouterCounters;
 import app.freerouting.core.RoutingJob;
@@ -537,6 +539,8 @@ public non-sealed class BatchOptimizer extends NamedAlgorithm {
     }
     this.bestBoard = null;
 
+    nudgeVias();
+
     this.fireTaskStateChangedEvent(
         new TaskStateChangedEvent(this, TaskState.FINISHED, currentPass, this.board.getHash()));
 
@@ -592,6 +596,53 @@ public non-sealed class BatchOptimizer extends NamedAlgorithm {
             cpuSummary,
             allocSummary,
             peakHeapMb));
+  }
+
+  /** Whether the optimizer ends with the via nudge pass: {@code optimizer.via_nudge_enabled}. */
+  static boolean viaNudgeEnabled(OptimizerSettings optimizerSettings) {
+    return optimizerSettings != null && Boolean.TRUE.equals(optimizerSettings.viaNudgeEnabled);
+  }
+
+  /**
+   * After the last pass, moves vias where that shortens or straightens the traces of the board as a
+   * whole. Not done on a job that was stopped or timed out: the pass has no partial result worth
+   * more than the board it started from.
+   */
+  private void nudgeVias() {
+    if (!viaNudgeEnabled(job.routerSettings.optimizer)
+        || this.isTimedOut
+        || this.thread.isStopRequested()) {
+      return;
+    }
+    long startNanos = System.nanoTime();
+    float cpuStart = AutorouteRuntimeMetrics.currentThreadCpuSeconds();
+    ViaNudger.Result result =
+        ViaNudger.run(this.board, job.routerSettings.tracePullTightAccuracy, this.thread);
+    double toMm = this.board.communication.getResolution(Unit.MM);
+    job.logInfo(
+        String.format(
+            Locale.US,
+            "Via nudge: %d of %d tried moves kept in %d passes, trace length %.2f -> %.2f mm, "
+                + "bends %d -> %d, vias %d -> %d, incomplete connections %d -> %d, "
+                + "clearance violations %d -> %d, in %.2f seconds using %.2f CPU seconds.",
+            result.acceptedMoves(),
+            result.triedMoves(),
+            result.passes(),
+            result.lengthBefore() / toMm,
+            result.lengthAfter() / toMm,
+            result.bendsBefore(),
+            result.bendsAfter(),
+            result.viasBefore(),
+            result.viasAfter(),
+            result.incompleteBefore(),
+            result.incompleteAfter(),
+            result.violationsBefore(),
+            result.violationsAfter(),
+            (System.nanoTime() - startNanos) / 1e9,
+            AutorouteRuntimeMetrics.currentThreadCpuSeconds() - cpuStart));
+    if (result.acceptedMoves() > 0) {
+      this.fireBoardUpdatedEvent(new BoardStatistics(this.board), null, this.board);
+    }
   }
 
   /**

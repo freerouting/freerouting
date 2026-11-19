@@ -199,7 +199,8 @@ final class AutorouteBatchLoop {
                             status.ripupCosts());
                     job.logInfo(fanoutMessage);
                   }
-                });
+                },
+                job::logInfo);
         router.fanoutTimedOut = fanoutSummary.isTimedOut();
 
         float fanoutCpuSecondsEnd = AutorouteRuntimeMetrics.currentThreadCpuSeconds();

@@ -271,6 +271,20 @@ Configures the optional route-optimization stage that runs after autorouting.
   best board, and the next pass keeps the increased costs; after two passes in a row without gain,
   the optimizer stops. CLI:
   `--router.optimizer.keep_increased_ripup_costs=true`.
+- **`via_nudge_enabled`**: Whether the optimizer ends with a pass that moves vias to shorten and
+  straighten the traces of the whole board. `ViaOptimizer` moves a via along its own two traces
+  only, without shoving; a via that sits in a channel of foreign traces stays there, and these traces
+  keep a short detour around it. This pass tries a fixed set of translations for each via (8
+  directions, 0.5 to 3 times the pitch of its thinnest trace), with shoving and pull tight, and
+  keeps a translation only if the board has no more vias, incomplete connections, clearance
+  violations, trace length or bends than before, and less trace length or fewer bends. A plane or
+  copper zone is only known by its outline, not by the copper that is left once it is filled, so
+  the pass stays away from them: a via that touches a plane, or that is inside a zone or closer to
+  its outline than the clearance, is not moved, no via is moved to such a place, and a translation
+  that shoves a trace into a zone is refused. On a board covered by a ground pour the pass does
+  nothing, and neither on a board that already has clearance violations. The pass is
+  deterministic and single-threaded, and it is skipped when the job was stopped or timed out.
+  Default is `false`. CLI: `--router.optimizer.via_nudge_enabled=true`.
 - **`enable_preflight_guards`**: Whether pre-flight optimization guards are evaluated before starting the
   optimizer loop. If enabled, bypasses the optimizer stage when the board has no vias to eliminate (with trace
   length already near optimal), has an initial score at or near theoretical maximum, or all vias are mandatory
@@ -294,6 +308,8 @@ Configures the SMD-pin fanout pre-pass stage.
 - **`max_escape_length_mm`**: The maximum physical escape trace length in millimeters. Default is `4.5`. Enforced directly during maze expansion.
 - **`start_via_diameter_mm`**: The diameter of starting/escape vias used inside the pins during the fanout/escape stage (in millimeters). Default is `0.25`.
 - **`end_via_diameter_mm`**: The diameter of landing/end vias used at the end of escaping wires during the fanout/escape stage (in millimeters). Default is `0.25`.
+- **`bga_escape_enabled`**: Enables the deterministic CPU multi-layer BGA escape pre-pass during fanout. When `true`, Freerouting detects area-array BGA footprints with at least `bga_escape_min_pins` SMD pins and escapes them with concentric Chebyshev ring peeling, 4-quadrant interstitial dogbones, and continuous DRC verification before the sequential SMD fanout pass runs. Default is `true`. CLI: `--router.fanout.bga_escape_enabled=true`.
+- **`bga_escape_min_pins`**: Minimum SMD pin count required for a component footprint to be handled by the multi-layer BGA escape pre-pass. Default is `9` (the geometric minimum for a $3 \times 3$ area-array lattice). CLI: `--router.fanout.bga_escape_min_pins=9`.
 - **`pin_sorting_order`**: Specifies the sorting order for pins within a component during fanout. Available strategies:
     - `"outer_first"` (Default): Pins further from the component center are processed first. This helps escape periphery pins early.
     - `"inner_first"`: Pins closer to the component center are processed first.
