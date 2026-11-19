@@ -31,6 +31,8 @@ import java.util.TreeSet;
 /** A ObstacleArea, which can be electrically connected to other items. */
 public class ConductionArea extends ObstacleArea implements Connectable {
 
+  private static final long serialVersionUID = 9006217382369120553L;
+
   private static final double PLANE_HATCH_OPACITY = 0.85;
 
   private boolean isObstacle;
