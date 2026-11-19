@@ -2501,5 +2501,62 @@
   
   
   
-
+  (zone (net 11) (net_name /SWCONV) (layer F.Cu) (tstamp 553E5124) (hatch edge 0.508)
+    (priority 1)
+    (connect_pads yes (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 204.6224 126.1872) (xy 197.5104 126.1872) (xy 197.5104 118.2624) (xy 204.6224 118.2624)
+      )
+    )
+    
+  )
+  (zone (net 19) (net_name GND) (layer F.Cu) (tstamp 553E53A5) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 234.188 156.972) (xy 227.076 156.972) (xy 227.076 164.338) (xy 192.786 164.338) (xy 192.786 157.226)
+        (xy 185.674 157.226) (xy 185.674 122.682) (xy 192.786 122.682) (xy 192.786 115.824) (xy 227.33 115.824)
+        (xy 227.33 122.682) (xy 234.188 122.682)
+      )
+    )
+    
+    
+    
+    
+    
+    
+    
+  )
+  (zone (net 19) (net_name GND) (layer B.Cu) (tstamp 553E544A) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 234.188 156.972) (xy 227.076 156.972) (xy 227.076 164.338) (xy 192.786 164.338) (xy 192.786 157.226)
+        (xy 185.674 157.226) (xy 185.674 122.682) (xy 192.786 122.682) (xy 192.786 115.824) (xy 227.33 115.824)
+        (xy 227.33 122.682) (xy 234.188 122.682)
+      )
+    )
+    
+  )
+  (zone (net 3) (net_name /CONVOUT) (layer F.Cu) (tstamp 553E5153) (hatch edge 0.508)
+    (priority 1)
+    (connect_pads yes (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 216.8144 132.6896) (xy 213.7664 132.6896) (xy 213.7664 129.032) (xy 210.7184 126.3904) (xy 208.0768 126.3904)
+        (xy 208.0768 118.2624) (xy 213.36 118.2624) (xy 213.36 122.5296) (xy 214.9856 122.5296) (xy 214.9856 124.5616)
+        (xy 216.8144 128.6256)
+      )
+    )
+    
+  )
 )

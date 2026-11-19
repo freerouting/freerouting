@@ -420,5 +420,26 @@
   
   
   
-
+  (zone (net 1) (net_name "Net-(P1-Pad1)") (layer F.Cu) (tstamp 58503AE6) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 194.056 107.188) (xy 145.796 107.188) (xy 145.796 91.948) (xy 194.056 91.948) (xy 194.056 107.188)
+      )
+    )
+    
+  )
+  (zone (net 1) (net_name "Net-(P1-Pad1)") (layer B.Cu) (tstamp 58503B33) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 194.056 107.188) (xy 145.796 107.188) (xy 145.796 91.948) (xy 194.056 91.948) (xy 194.056 107.188)
+      )
+    )
+    
+  )
 )

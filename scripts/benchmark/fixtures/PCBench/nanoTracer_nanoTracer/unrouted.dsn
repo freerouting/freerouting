@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -25,6 +25,8 @@
             176530 -104902  162560 -104902  160020 -102362  160020 -52578
             162560 -50038  167640 -50038  170180 -47498  248920 -47498  251460 -50038)
     )
+    (plane GND (polygon F.Cu 0  159258 -45466  252730 -46228  253492 -107950  158496 -108712
+            159258 -45466))
     (via "Via[0-1]_1000:600_um")
     (rule
       (width 500)
@@ -1073,15 +1075,6 @@
         (clearance 500)
       )
     )
-    (class HT A+ "Net-(C4-Pad2)" "Net-(C5-Pad2)"
-      (circuit
-        (use_via "Via[0-1]_1000:600_um")
-      )
-      (rule
-        (width 500)
-        (clearance 2500)
-      )
-    )
     (class Heater "Net-(D1-Pad2)"
       (circuit
         (use_via "Via[0-1]_1000:600_um")
@@ -1089,6 +1082,15 @@
       (rule
         (width 2000)
         (clearance 500)
+      )
+    )
+    (class HT A+ "Net-(C4-Pad2)" "Net-(C5-Pad2)"
+      (circuit
+        (use_via "Via[0-1]_1000:600_um")
+      )
+      (rule
+        (width 500)
+        (clearance 2500)
       )
     )
   )

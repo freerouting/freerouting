@@ -2125,5 +2125,40 @@
   
   
   
-
+  (zone (net 0) (net_name "") (layer F.Cu) (tstamp 57866FC0) (hatch edge 0.508)
+    (connect_pads (clearance 0.1524))
+    (min_thickness 0.1524)
+    (keepout (tracks not_allowed) (vias not_allowed) (copperpour not_allowed))
+    (fill (arc_segments 16) (thermal_gap 0.254) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 157.988 97.536) (xy 157.988 91.186) (xy 149.606 91.186) (xy 149.606 94.996) (xy 153.162 94.996)
+        (xy 153.162 97.536)
+      )
+    )
+  )
+  (zone (net 1) (net_name VCC) (layer B.Cu) (tstamp 57868B83) (hatch edge 0.508)
+    (connect_pads (clearance 0.1524))
+    (min_thickness 0.1524)
+    (fill yes (arc_segments 16) (thermal_gap 0.254) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 160.02 111.76) (xy 129.54 111.76) (xy 129.54 88.9) (xy 160.02 88.9) (xy 160.02 111.76)
+      )
+    )
+    
+  )
+  (zone (net 2) (net_name GND) (layer F.Cu) (tstamp 5782D3AA) (hatch edge 0.508)
+    (connect_pads (clearance 0.1524))
+    (min_thickness 0.1524)
+    (fill yes (arc_segments 16) (thermal_gap 0.254) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 160.02 111.76) (xy 129.54 111.76) (xy 129.54 88.9) (xy 160.02 88.9) (xy 160.02 111.76)
+      )
+    )
+    
+    
+    
+  )
 )

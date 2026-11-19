@@ -1460,5 +1460,62 @@
   
   
   
-
+  (zone (net 18) (net_name GND) (layer Back) (tstamp 4E40C708) (hatch none 0.508)
+    (connect_pads (clearance 0.20066))
+    (min_thickness 0.24892)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 131.82346 105.69956) (xy 131.82346 92.40012) (xy 105.26522 92.40012) (xy 105.26522 105.69956)
+      )
+    )
+    
+  )
+  (zone (net 18) (net_name GND) (layer Front) (tstamp 4E40C754) (hatch none 0.508)
+    (connect_pads (clearance 0.20066))
+    (min_thickness 0.24892)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 126.3396 92.3925) (xy 126.3396 95.5421) (xy 126.0348 95.5421) (xy 126.0348 100.5713) (xy 125.0188 100.5713)
+        (xy 125.01626 105.6767) (xy 105.30586 105.6767) (xy 105.30586 92.37726) (xy 126.3396 92.3925)
+      )
+    )
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  )
+  (zone (net 17) (net_name /VBUS) (layer Front) (tstamp 4E8506F2) (hatch edge 0.508)
+    (connect_pads (clearance 0.20066))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 125.4252 105.7021) (xy 131.9276 105.6767) (xy 131.9276 92.2401) (xy 126.5936 92.2401) (xy 126.5936 95.8469)
+        (xy 126.3396 95.8469) (xy 126.3396 100.8253) (xy 125.4252 100.8253)
+      )
+    )
+    
+    
+  )
+  (zone (net 0) (net_name "") (layer Front) (tstamp 57C66D0D) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
+    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 116.459 96.7105) (xy 119.634 96.7105) (xy 119.634 100.2665) (xy 116.459 100.2665)
+      )
+    )
+  )
 )

@@ -6896,5 +6896,233 @@
   
   
   
-
+  (zone (net 113) (net_name +VPSU) (layer F.Cu) (tstamp 57091827) (hatch edge 0.508)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 212.63864 98.4504) (xy 204.83068 98.48088) (xy 203.6445 102.235) (xy 203.6445 106.1085) (xy 189.484 106.1085)
+        (xy 189.484 100.33) (xy 187.6044 98.298) (xy 187.4012 93.5228) (xy 183.8452 93.5228) (xy 183.8452 91.0336)
+        (xy 153.0096 91.0336) (xy 151.638 89.662) (xy 151.638 80.9752) (xy 187.3758 80.9752) (xy 187.3758 86.3092)
+        (xy 192.2272 86.3092) (xy 200.5076 94.5896) (xy 204.73416 95.885) (xy 213.741 95.885) (xy 213.79688 71.3486)
+        (xy 206.8068 63.1444) (xy 105.2068 63.1444) (xy 105.2068 48.0314) (xy 218.7448 48.0568) (xy 218.15044 98.46056)
+      )
+    )
+    
+  )
+  (zone (net 95) (net_name /VAA_IN) (layer F.Cu) (tstamp 57092670) (hatch edge 0.508)
+    (connect_pads (clearance 0.3556))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 212.43036 91.11488) (xy 200.025 91.0082) (xy 194.056 85.0392) (xy 194.056 77.6224) (xy 213.11108 77.6732)
+        (xy 213.11108 91.13012)
+      )
+    )
+    
+  )
+  (zone (net 0) (net_name "") (layer F.Mask) (tstamp 5709297D) (hatch edge 0.508)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 204.42936 83.90636) (xy 197.29704 83.9216) (xy 197.28688 79.13116) (xy 204.44968 79.13116) (xy 204.44968 86.24316)
+      )
+    )
+    
+  )
+  (zone (net 0) (net_name "") (layer F.Mask) (tstamp 570929F2) (hatch edge 0.508)
+    (connect_pads (clearance 0.3556))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 204.34808 102.17912) (xy 197.13448 102.17912) (xy 197.1548 97.07372) (xy 204.38364 97.06356) (xy 204.34808 102.17912)
+      )
+    )
+    
+  )
+  (zone (net 109) (net_name /HE2_D) (layer F.Cu) (tstamp 5715997A) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 151.1046 91.2876) (xy 154.9908 91.2876) (xy 154.9908 96.8248) (xy 148.8694 96.8248) (xy 148.8694 94.3356)
+        (xy 148.844 94.3356) (xy 148.844 91.313) (xy 148.8694 91.313) (xy 148.8694 91.1352) (xy 145.6944 91.1352)
+        (xy 145.6944 81.3816) (xy 151.1046 81.3816) (xy 151.1046 91.2876)
+      )
+    )
+    
+  )
+  (zone (net 141) (net_name /Q3_D) (layer B.Cu) (tstamp 5717B1B9) (hatch edge 0.508)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508) (smoothing chamfer))
+    (polygon
+      (pts
+        (xy 177.3555 91.567) (xy 183.3245 91.567) (xy 183.3245 101.6) (xy 171.958 101.6) (xy 171.958 81.534)
+        (xy 177.3555 81.534) (xy 177.3555 91.567)
+      )
+    )
+    
+  )
+  (zone (net 1) (net_name GND) (layer B.Cu) (tstamp 5717B324) (hatch edge 0.508)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508) (smoothing chamfer))
+    (polygon
+      (pts
+        (xy 218.7575 122.936) (xy 195.453 122.936) (xy 195.3768 127.508) (xy 190.1444 127.4826) (xy 190.1444 142.3416)
+        (xy 105.2195 142.3035) (xy 105.2195 48.0695) (xy 218.7575 48.0695) (xy 218.7575 122.936)
+      )
+    )
+    (polygon
+      (pts
+        (xy 170.434 79.883) (xy 170.5102 102.3112) (xy 183.7944 102.3112) (xy 183.9595 79.883) (xy 170.434 79.883)
+      )
+    )
+    
+  )
+  (zone (net 16) (net_name +12V) (layer F.Cu) (tstamp 5717D3D3) (hatch edge 0.508)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508) (smoothing chamfer))
+    (polygon
+      (pts
+        (xy 170.053 112.4585) (xy 190.5 112.522) (xy 190.5 122.301) (xy 147.8915 122.301) (xy 144.399 118.8085)
+        (xy 144.399 107.061) (xy 141.1605 107.061) (xy 141.1605 101.5365) (xy 170.053 101.5365) (xy 170.053 112.4585)
+      )
+    )
+    
+  )
+  (zone (net 108) (net_name /HE1_D) (layer F.Cu) (tstamp 5718130D) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 162.5092 91.6432) (xy 168.8084 91.6432) (xy 168.8084 97.1296) (xy 162.179 97.1296) (xy 162.179 91.6432)
+        (xy 162.5092 91.6432)
+      )
+    )
+    
+  )
+  (zone (net 0) (net_name "") (layer B.Mask) (tstamp 5718134E) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 183.3372 101.6) (xy 171.958 101.6) (xy 171.958 91.6686) (xy 183.3372 91.6686) (xy 183.3372 101.6)
+      )
+    )
+    
+  )
+  (zone (net 154) (net_name /DRV_VCC) (layer F.Cu) (tstamp 5804370A) (hatch edge 0.508)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 198.2724 63.9826) (xy 198.2724 67.0306) (xy 106.0704 67.0306) (xy 106.0704 63.7794) (xy 198.2724 63.7794)
+        (xy 198.2724 63.9826)
+      )
+    )
+    
+  )
+  (zone (net 19) (net_name VCC) (layer F.Cu) (tstamp 58043730) (hatch edge 0.508)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 123.5202 85.35416) (xy 140.5382 85.4202) (xy 140.5382 108.0008) (xy 142.5448 108.0008) (xy 142.5702 141.9352)
+        (xy 104.9782 141.9352) (xy 104.9782 72.644) (xy 105.2322 72.644) (xy 108.8644 72.65416)
+      )
+    )
+    
+  )
+  (zone (net 19) (net_name VCC) (layer F.Cu) (tstamp 58043788) (hatch edge 0.508)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 183.769 141.9352) (xy 142.5702 141.9352) (xy 142.5702 126.4158) (xy 183.769 126.4158) (xy 183.769 141.9352)
+      )
+    )
+    
+  )
+  (zone (net 0) (net_name "") (layer F.Mask) (tstamp 58894F6A) (hatch edge 0.508)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 209.64144 81.48828) (xy 211.4042 81.49336) (xy 211.38896 84.09432) (xy 207.8482 84.09432) (xy 207.8482 81.49844)
+        (xy 208.14792 81.48828)
+      )
+    )
+    
+  )
+  (zone (net 0) (net_name "") (layer F.Mask) (tstamp 58894F88) (hatch edge 0.508)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 208.00568 87.11184) (xy 211.42452 87.15248) (xy 211.43468 89.74328) (xy 207.85328 89.73312) (xy 207.85328 87.20328)
+      )
+    )
+    
+  )
+  (zone (net 161) (net_name +5VL) (layer F.Cu) (tstamp 5891283F) (hatch edge 0.508)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.254) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 179.75072 75.057) (xy 142.40256 74.90968) (xy 142.39748 74.0918) (xy 128.68656 74.12736) (xy 128.69164 82.87004)
+        (xy 142.9004 82.87004) (xy 142.9004 78.76032) (xy 179.99964 78.76032) (xy 180.00472 75.0824) (xy 179.89296 75.057)
+      )
+    )
+    
+  )
+  (zone (net 0) (net_name "") (layer F.Mask) (tstamp 58E2F9D2) (hatch edge 0.508)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 212.1408 93.43136) (xy 212.1408 95.36176) (xy 207.264 95.36176) (xy 207.264 93.43136) (xy 212.1408 93.43136)
+      )
+    )
+    
+  )
+  (zone (net 0) (net_name "") (layer F.Mask) (tstamp 58E2F9E5) (hatch edge 0.508)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 207.264 93.41104) (xy 207.264 93.43136) (xy 207.24368 93.41104) (xy 207.264 93.41104)
+      )
+    )
+  )
+  (zone (net 0) (net_name "") (layer F.Mask) (tstamp 58E2F9E6) (hatch edge 0.508)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 207.22336 99.32416) (xy 212.2424 99.32416) (xy 212.2424 101.35616) (xy 207.24368 101.35616) (xy 207.24368 99.3648)
+        (xy 207.18272 99.3648)
+      )
+    )
+    
+  )
 )

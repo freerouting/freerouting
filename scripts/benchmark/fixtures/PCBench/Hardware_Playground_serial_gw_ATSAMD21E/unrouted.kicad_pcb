@@ -2999,5 +2999,63 @@
   
   
   
-
+  (zone (net 1) (net_name GND) (layer F.Cu) (tstamp 0) (hatch edge 0.508)
+    (connect_pads (clearance 0.4))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 32) (thermal_gap 0.4) (thermal_bridge_width 0.4))
+    (polygon
+      (pts
+        (xy 104.6 77.4) (xy 143.5 77.4) (xy 143.5 98.6) (xy 104.6 98.6)
+      )
+    )
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  )
+  (zone (net 1) (net_name GND) (layer B.Cu) (tstamp 58C15312) (hatch edge 0.508)
+    (connect_pads (clearance 0.4))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 32) (thermal_gap 0.4) (thermal_bridge_width 0.4))
+    (polygon
+      (pts
+        (xy 104.6 77.4) (xy 143.5 77.4) (xy 143.5 98.6) (xy 104.6 98.6)
+      )
+    )
+    
+    
+    
+    
+    
+    
+  )
+  (zone (net 0) (net_name "") (layer F.Cu) (tstamp 0) (hatch edge 0.508)
+    (connect_pads (clearance 0.4))
+    (min_thickness 0.254)
+    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
+    (fill yes (arc_segments 32) (thermal_gap 0.4) (thermal_bridge_width 0.4))
+    (polygon
+      (pts
+        (xy 114.4 90.2) (xy 121.9 90.2) (xy 121.9 98.5) (xy 114.4 98.5)
+      )
+    )
+  )
+  (zone (net 0) (net_name "") (layer B.Cu) (tstamp 58C15A7A) (hatch edge 0.508)
+    (connect_pads (clearance 0.4))
+    (min_thickness 0.254)
+    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
+    (fill yes (arc_segments 32) (thermal_gap 0.4) (thermal_bridge_width 0.4))
+    (polygon
+      (pts
+        (xy 118 90.2) (xy 122.3 90.2) (xy 122.3 98.5) (xy 118 98.5)
+      )
+    )
+  )
 )

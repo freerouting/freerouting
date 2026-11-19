@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -24,7 +24,15 @@
       (path pcb 0  198694 -74356  198694 -126675  99248 -126675  99248 -72959
             197297 -72959  198694 -74356)
     )
-    (via "Via[0-1]_600:400_um" "Via[0-1]_1200:600_um" "Via[0-1]_3000:2500_um" "Via[0-1]_4500:3000_um")
+    (plane VCC (polygon F.Cu 0  122072 -114056  118217 -114071  118466 -125618  101478 -125562
+            101092 -108712  106172 -108712  106172 -102997  100838 -102997
+            100752 -98379.3  100808 -74152.8  115783 -74152.8  115783 -82199.5
+            121036 -82031.8  120980 -94157.8  116957 -94213.7  116957 -101813
+            122042 -101757  122072 -114056))
+    (plane GND (polygon B.Cu 0  100457 -74295  100584 -97028  106934 -97028  106934 -103124
+            100584 -103124  100584 -126111  197358 -126111  198247 -74485.5
+            196977 -73406  99885.5 -73469.5  100462 -74259.4  100457 -74295))
+    (via "Via[0-1]_600:400_um" "Via[0-1]_4500:3000_um" "Via[0-1]_3000:2500_um" "Via[0-1]_1200:600_um")
     (rule
       (width 250)
       (clearance 100)
@@ -893,9 +901,9 @@
       (shape (circle B.Cu 600))
       (attach off)
     )
-    (padstack "Via[0-1]_1200:600_um"
-      (shape (circle F.Cu 1200))
-      (shape (circle B.Cu 1200))
+    (padstack "Via[0-1]_4500:3000_um"
+      (shape (circle F.Cu 4500))
+      (shape (circle B.Cu 4500))
       (attach off)
     )
     (padstack "Via[0-1]_3000:2500_um"
@@ -903,9 +911,9 @@
       (shape (circle B.Cu 3000))
       (attach off)
     )
-    (padstack "Via[0-1]_4500:3000_um"
-      (shape (circle F.Cu 4500))
-      (shape (circle B.Cu 4500))
+    (padstack "Via[0-1]_1200:600_um"
+      (shape (circle F.Cu 1200))
+      (shape (circle B.Cu 1200))
       (attach off)
     )
   )
@@ -1222,12 +1230,12 @@
         (clearance 100)
       )
     )
-    (class "Power Rpi" +5V "Net-(C10-Pad1)"
+    (class Batterry VCC
       (circuit
-        (use_via "Via[0-1]_1200:600_um")
+        (use_via "Via[0-1]_4500:3000_um")
       )
       (rule
-        (width 600)
+        (width 3000)
         (clearance 200)
       )
     )
@@ -1240,12 +1248,12 @@
         (clearance 200)
       )
     )
-    (class Batterry VCC
+    (class "Power Rpi" +5V "Net-(C10-Pad1)"
       (circuit
-        (use_via "Via[0-1]_4500:3000_um")
+        (use_via "Via[0-1]_1200:600_um")
       )
       (rule
-        (width 3000)
+        (width 600)
         (clearance 200)
       )
     )

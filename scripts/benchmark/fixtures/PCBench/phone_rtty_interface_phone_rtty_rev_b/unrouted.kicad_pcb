@@ -2451,5 +2451,15 @@
   
   
   
-
+  (zone (net 3) (net_name GNDREF) (layer B.Cu) (tstamp 5845F145) (hatch edge 0.508)
+    (connect_pads (clearance 0.35))
+    (min_thickness 0.2)
+    (fill yes (arc_segments 32) (thermal_gap 0.508) (thermal_bridge_width 0.5))
+    (polygon
+      (pts
+        (xy 149.75 99.75) (xy 100.25 99.75) (xy 100.25 50.25) (xy 149.75 50.25)
+      )
+    )
+    
+  )
 )

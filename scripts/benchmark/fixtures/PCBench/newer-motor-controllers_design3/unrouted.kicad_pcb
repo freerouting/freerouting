@@ -1742,5 +1742,74 @@
   
   
   
-
+  (zone (net 11) (net_name /Ti_120vgate/phase_a_in) (layer B.Cu) (tstamp 0) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 128 36) (xy 156 36) (xy 156 56) (xy 114 56) (xy 114 71)
+        (xy 101 71) (xy 101 36)
+      )
+    )
+    
+  )
+  (zone (net 18) (net_name "Net-(P5-Pad1)") (layer B.Cu) (tstamp 0) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 115 57) (xy 115 71) (xy 190 71) (xy 190 57)
+      )
+    )
+    
+  )
+  (zone (net 12) (net_name /mosfet/VBUS) (layer F.Cu) (tstamp 0) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 126 35) (xy 126 25) (xy 195 25) (xy 195 35)
+      )
+    )
+    
+  )
+  (zone (net 1) (net_name GND) (layer F.Cu) (tstamp 0) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 128.25 52.75) (xy 128.25 66.75) (xy 156.75 66.75) (xy 165.25 60) (xy 195 60)
+        (xy 195 45) (xy 157.5 45) (xy 157.5 52.5)
+      )
+    )
+    
+  )
+  (zone (net 18) (net_name "Net-(P5-Pad1)") (layer F.Cu) (tstamp 0) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 106 58.25) (xy 106 51) (xy 126.75 51) (xy 126.75 70) (xy 112.25 70)
+        (xy 112.25 58.25)
+      )
+    )
+    
+  )
+  (zone (net 11) (net_name /Ti_120vgate/phase_a_in) (layer F.Cu) (tstamp 0) (hatch edge 0.508)
+    (priority 1)
+    (connect_pads yes (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 105.75 63.75) (xy 105.75 71) (xy 112.25 71) (xy 112.25 63.75)
+      )
+    )
+    
+  )
 )

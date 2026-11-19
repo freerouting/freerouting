@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -24,6 +24,10 @@
       (path pcb 0  360000 -21500  398250 -21500  398250 -111750  30500 -111750
             30500 -21500  347000 -21500  347000 -18500  360000 -18500  360000 -21500)
     )
+    (plane GND (polygon F.Cu 0  28575 -19050  28575 -114300  400050 -114300  400050 -19050
+            28575 -19050))
+    (plane GND (polygon B.Cu 0  28575 -19050  28575 -114300  400050 -114300  400050 -19050
+            28575 -19050))
     (via "Via[0-1]_685.8:330.2_um")
     (rule
       (width 381)
@@ -1815,47 +1819,6 @@
         (clearance 196.85)
       )
     )
-    (class USB D+ "D-" USB+ "USB-"
-      (circuit
-        (use_via "Via[0-1]_685.8:330.2_um")
-      )
-      (rule
-        (width 203.2)
-        (clearance 196.85)
-      )
-    )
-    (class 10m AUDIO TCK TDI TDO TMS
-      (circuit
-        (use_via "Via[0-1]_685.8:330.2_um")
-      )
-      (rule
-        (width 254)
-        (clearance 203.2)
-      )
-    )
-    (class matrix C1 C10 C11 C12 C13 C14 C15 C16 C17 C18 C2 C3 C4 C5 C6 C7
-      C8 C9 MISO MOSI R1 R2 R3 R4 R5 R6 R7 RESET SCK
-      (circuit
-        (use_via "Via[0-1]_685.8:330.2_um")
-      )
-      (rule
-        (width 254)
-        (clearance 203.2)
-      )
-    )
-    (class backlight LED_SCL LED_SDA L_CA1 L_CA2 L_CA3 L_CA4 L_CA5 L_CA6 L_CA7
-      L_CA8 L_CA9 L_CB1 L_CB2 L_CB3 L_CB4 L_CB5 L_CB6 L_CB7 L_CB8 L_CB9 "Net-(R6-Pad1)"
-      "Net-(R7-Pad1)" "Net-(R8-Pad1)" PWM_BLUE PWM_GREEN PWM_RED R_CA1 R_CA2
-      R_CA3 R_CA4 R_CA5 R_CA6 R_CA7 R_CA8 R_CA9 R_CB1 R_CB2 R_CB3 R_CB4 R_CB5
-      R_CB6 R_CB7 R_CB8 R_CB9
-      (circuit
-        (use_via "Via[0-1]_685.8:330.2_um")
-      )
-      (rule
-        (width 254)
-        (clearance 196.85)
-      )
-    )
     (class diodes "Net-(D1-Pad2)" "Net-(D10-Pad2)" "Net-(D11-Pad2)" "Net-(D12-Pad2)"
       "Net-(D13-Pad2)" "Net-(D14-Pad2)" "Net-(D15-Pad2)" "Net-(D16-Pad2)"
       "Net-(D17-Pad2)" "Net-(D18-Pad2)" "Net-(D19-Pad2)" "Net-(D2-Pad2)" "Net-(D20-Pad2)"
@@ -1879,6 +1842,47 @@
       )
       (rule
         (width 381)
+        (clearance 203.2)
+      )
+    )
+    (class backlight LED_SCL LED_SDA L_CA1 L_CA2 L_CA3 L_CA4 L_CA5 L_CA6 L_CA7
+      L_CA8 L_CA9 L_CB1 L_CB2 L_CB3 L_CB4 L_CB5 L_CB6 L_CB7 L_CB8 L_CB9 "Net-(R6-Pad1)"
+      "Net-(R7-Pad1)" "Net-(R8-Pad1)" PWM_BLUE PWM_GREEN PWM_RED R_CA1 R_CA2
+      R_CA3 R_CA4 R_CA5 R_CA6 R_CA7 R_CA8 R_CA9 R_CB1 R_CB2 R_CB3 R_CB4 R_CB5
+      R_CB6 R_CB7 R_CB8 R_CB9
+      (circuit
+        (use_via "Via[0-1]_685.8:330.2_um")
+      )
+      (rule
+        (width 254)
+        (clearance 196.85)
+      )
+    )
+    (class matrix C1 C10 C11 C12 C13 C14 C15 C16 C17 C18 C2 C3 C4 C5 C6 C7
+      C8 C9 MISO MOSI R1 R2 R3 R4 R5 R6 R7 RESET SCK
+      (circuit
+        (use_via "Via[0-1]_685.8:330.2_um")
+      )
+      (rule
+        (width 254)
+        (clearance 203.2)
+      )
+    )
+    (class USB D+ "D-" USB+ "USB-"
+      (circuit
+        (use_via "Via[0-1]_685.8:330.2_um")
+      )
+      (rule
+        (width 203.2)
+        (clearance 196.85)
+      )
+    )
+    (class 10m AUDIO TCK TDI TDO TMS
+      (circuit
+        (use_via "Via[0-1]_685.8:330.2_um")
+      )
+      (rule
+        (width 254)
         (clearance 203.2)
       )
     )

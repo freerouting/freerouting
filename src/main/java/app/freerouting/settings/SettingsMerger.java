@@ -36,6 +36,8 @@ import java.util.List;
  *   <li>Default settings (priority 0) — lowest priority, applied first as the base
  *   <li>JSON file settings (priority 10) — {@code freerouting.json} in user-data folder
  *   <li>DSN file settings (priority 20) — metadata extracted from the Specctra design file
+ *   <li>KiCad project file settings (priority 25) — the minimum track width of the project file
+ *       given with the design
  *   <li>SES file settings (priority 30) — metadata from Specctra session files
  *   <li>RULES file settings (priority 40) — explicit routing-rule overrides
  *   <li>Environment variables (priority 55) — {@code FREEROUTING__ROUTER__*} env vars

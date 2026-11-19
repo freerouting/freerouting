@@ -3778,5 +3778,61 @@
   
   
   
-
+  (zone (net 2) (net_name GND) (layer Ground_1) (tstamp 0) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 111 60) (xy 111 114) (xy 157 114) (xy 157 61) (xy 157 60)
+      )
+    )
+    
+  )
+  (zone (net 2) (net_name GND) (layer Ground_2) (tstamp 0) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 110 59) (xy 110 115) (xy 158 115) (xy 158 59)
+      )
+    )
+    
+  )
+  (zone (net 58) (net_name LIPO_IN2) (layer V+2) (tstamp 0) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 109 58) (xy 109 116) (xy 159 116) (xy 159 58)
+      )
+    )
+    
+  )
+  (zone (net 3) (net_name LIPO_IN) (layer Signal1) (tstamp 0) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 142.7 77) (xy 142.7 73.8) (xy 146.8 73.8) (xy 146.8 77) (xy 156 77)
+        (xy 156 61) (xy 112 61) (xy 112 77)
+      )
+    )
+    
+  )
+  (zone (net 58) (net_name LIPO_IN2) (layer Signal1) (tstamp 0) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.254))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 156 77.5) (xy 146.3 77.5) (xy 146.3 74.3) (xy 143.2 74.3) (xy 143.2 77.5)
+        (xy 112 77.5) (xy 112 113) (xy 156 113)
+      )
+    )
+    
+  )
 )

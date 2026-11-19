@@ -3860,5 +3860,183 @@
   
   
   
-
+  (zone (net 1) (net_name +1.2V) (layer L1_front) (tstamp 524B0809) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.2032))
+    (min_thickness 0.2032)
+    (fill (arc_segments 16) (thermal_gap 0.2032) (thermal_bridge_width 4.4958))
+    (polygon
+      (pts
+        (xy 132 81) (xy 160 81) (xy 160 109) (xy 132 109)
+      )
+    )
+    
+  )
+  (zone (net 103) (net_name GND) (layer L2) (tstamp 524E59A6) (hatch edge 0.508)
+    (connect_pads (clearance 0.2032))
+    (min_thickness 0.2032)
+    (fill (arc_segments 16) (thermal_gap 0.2032) (thermal_bridge_width 0.4064))
+    (polygon
+      (pts
+        (xy 113 41) (xy 169 41) (xy 169 129) (xy 113 129)
+      )
+    )
+    
+  )
+  (zone (net 3) (net_name +3.3V) (layer L3) (tstamp 524E5A0E) (hatch edge 0.508)
+    (connect_pads (clearance 0.2032))
+    (min_thickness 0.2032)
+    (fill (arc_segments 16) (thermal_gap 0.2032) (thermal_bridge_width 0.4064))
+    (polygon
+      (pts
+        (xy 113 41) (xy 169 41) (xy 169 129) (xy 113 129)
+      )
+    )
+    
+  )
+  (zone (net 2) (net_name +2.5V) (layer L4_back) (tstamp 524E5C0C) (hatch edge 0.508)
+    (connect_pads (clearance 0.2032))
+    (min_thickness 0.2032)
+    (fill (arc_segments 16) (thermal_gap 0.2032) (thermal_bridge_width 0.4064))
+    (polygon
+      (pts
+        (xy 132.4 83.4) (xy 156 83.4) (xy 157.4 82) (xy 157.4 62.4) (xy 162.4 62.4)
+        (xy 162.4 106.6) (xy 132.4 106.6)
+      )
+    )
+    
+  )
+  (zone (net 102) (net_name /FPGA/V_RAW) (layer L4_back) (tstamp 52507388) (hatch edge 0.508)
+    (priority 1)
+    (connect_pads (clearance 0.2032))
+    (min_thickness 0.2032)
+    (fill (arc_segments 16) (thermal_gap 0.2032) (thermal_bridge_width 0.4064))
+    (polygon
+      (pts
+        (xy 161.8 119) (xy 113 119) (xy 113 65) (xy 119.2 65) (xy 122.2 68)
+        (xy 154.2 68) (xy 154.2 74) (xy 122.2 74) (xy 120 76.2) (xy 120 113)
+        (xy 161.8 113)
+      )
+    )
+    
+  )
+  (zone (net 1) (net_name +1.2V) (layer L1_front) (tstamp 524F7A85) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.2032))
+    (min_thickness 0.2032)
+    (fill (arc_segments 16) (thermal_gap 0.2032) (thermal_bridge_width 0.4064))
+    (polygon
+      (pts
+        (xy 133.4 53.1) (xy 133.4 57.4) (xy 128.3 57.4) (xy 127.4 57.4) (xy 127.4 57.8)
+        (xy 132.2 57.8) (xy 132.2 59) (xy 125.9 59) (xy 125.9 53.1)
+      )
+    )
+    
+  )
+  (zone (net 3) (net_name +3.3V) (layer L1_front) (tstamp 524F7A99) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.2032))
+    (min_thickness 0.2032)
+    (fill (arc_segments 16) (thermal_gap 0.2032) (thermal_bridge_width 0.4064))
+    (polygon
+      (pts
+        (xy 133.4 44.4) (xy 133.4 48.7) (xy 125.9 48.7) (xy 125.9 42.8) (xy 132.2 42.9)
+        (xy 132.2 44) (xy 127.4 44) (xy 127.4 44.4)
+      )
+    )
+    
+  )
+  (zone (net 106) (net_name Net-<L1-Pad2>) (layer L1_front) (tstamp 524F7AFB) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.2032))
+    (min_thickness 0.2032)
+    (fill (arc_segments 16) (thermal_gap 0.2032) (thermal_bridge_width 0.4064))
+    (polygon
+      (pts
+        (xy 133.4 49.1) (xy 133.4 50.7) (xy 125.5 50.7) (xy 125.5 49.1)
+      )
+    )
+    
+  )
+  (zone (net 107) (net_name Net-<L2-Pad1>) (layer L1_front) (tstamp 524F7B10) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.2032))
+    (min_thickness 0.2032)
+    (fill (arc_segments 16) (thermal_gap 0.2032) (thermal_bridge_width 0.4064))
+    (polygon
+      (pts
+        (xy 133.4 51.1) (xy 133.4 52.7) (xy 125.5 52.7) (xy 125.5 51.1)
+      )
+    )
+    
+  )
+  (zone (net 103) (net_name GND) (layer L1_front) (tstamp 52504B9F) (hatch edge 0.508)
+    (priority 2)
+    (connect_pads yes (clearance 0.2032))
+    (min_thickness 0.2032)
+    (fill (arc_segments 16) (thermal_gap 0.2032) (thermal_bridge_width 0.4064))
+    (polygon
+      (pts
+        (xy 125.5 42.8) (xy 125.5 48.7) (xy 125.1 48.7) (xy 125.1 53.1) (xy 125.5 53.1)
+        (xy 125.5 59) (xy 121.9 59) (xy 121.9 42.8)
+      )
+    )
+    
+  )
+  (zone (net 102) (net_name /FPGA/V_RAW) (layer L1_front) (tstamp 525052A6) (hatch edge 0.508)
+    (priority 1)
+    (connect_pads (clearance 0.2032))
+    (min_thickness 0.2032)
+    (fill (arc_segments 16) (thermal_gap 0.2032) (thermal_bridge_width 0.4064))
+    (polygon
+      (pts
+        (xy 113 41) (xy 122.3 41) (xy 122.2 68) (xy 113 68)
+      )
+    )
+    
+  )
+  (zone (net 103) (net_name GND) (layer L1_front) (tstamp 52505473) (hatch edge 0.508)
+    (priority 2)
+    (connect_pads yes (clearance 0.2032))
+    (min_thickness 0.2032)
+    (fill (arc_segments 16) (thermal_gap 0.2032) (thermal_bridge_width 0.4064))
+    (polygon
+      (pts
+        (xy 117 48.9) (xy 119.6 48.9) (xy 119.6 51.8) (xy 117 51.8)
+      )
+    )
+    
+  )
+  (zone (net 103) (net_name GND) (layer L1_front) (tstamp 5250556D) (hatch edge 0.508)
+    (priority 2)
+    (connect_pads yes (clearance 0.2032))
+    (min_thickness 0.2032)
+    (fill (arc_segments 16) (thermal_gap 0.2032) (thermal_bridge_width 0.4064))
+    (polygon
+      (pts
+        (xy 128.4 59.4) (xy 128.4 62) (xy 122.8 62) (xy 122.8 59.4)
+      )
+    )
+    
+  )
+  (zone (net 1) (net_name +1.2V) (layer L3) (tstamp 5250759E) (hatch edge 0.508)
+    (priority 1)
+    (connect_pads (clearance 0.2032))
+    (min_thickness 0.2032)
+    (fill (arc_segments 16) (thermal_gap 0.2032) (thermal_bridge_width 0.4064))
+    (polygon
+      (pts
+        (xy 125 57) (xy 132 57) (xy 132 63) (xy 132 77) (xy 141 86)
+        (xy 141 90) (xy 137 90) (xy 125 78)
+      )
+    )
+    
+  )
+  (zone (net 0) (net_name "") (layer F.SilkS) (tstamp 5250FFA2) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.2032))
+    (min_thickness 0.2032)
+    (fill (arc_segments 16) (thermal_gap 0.2032) (thermal_bridge_width 4.4958))
+    (polygon
+      (pts
+        (xy 154 50) (xy 155 49) (xy 161 49) (xy 162 50) (xy 162 60)
+        (xy 161 61) (xy 155 61) (xy 154 60)
+      )
+    )
+    
+  )
 )

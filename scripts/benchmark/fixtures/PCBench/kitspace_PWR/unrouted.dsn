@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -34,7 +34,9 @@
             127306 -74970.9  127524 -74932.4  127635 -74930  151765 -74930
             151876 -74932.4)
     )
-    (via "Via[0-1]_800:400_um" "Via[0-1]_1000:400_um" "Via[0-1]_1000:500_um")
+    (plane GND (polygon F.Cu 0  126365 -128270  153035 -128270  153035 -85090  126365 -85090
+            126365 -128270))
+    (via "Via[0-1]_800:400_um" "Via[0-1]_1000:500_um" "Via[0-1]_1000:400_um")
     (rule
       (width 750)
       (clearance 500)
@@ -647,12 +649,12 @@
       (shape (circle B.Cu 800))
       (attach off)
     )
-    (padstack "Via[0-1]_1000:400_um"
+    (padstack "Via[0-1]_1000:500_um"
       (shape (circle F.Cu 1000))
       (shape (circle B.Cu 1000))
       (attach off)
     )
-    (padstack "Via[0-1]_1000:500_um"
+    (padstack "Via[0-1]_1000:400_um"
       (shape (circle F.Cu 1000))
       (shape (circle B.Cu 1000))
       (attach off)
@@ -717,15 +719,6 @@
         (clearance 500)
       )
     )
-    (class power +5V GND
-      (circuit
-        (use_via "Via[0-1]_1000:400_um")
-      )
-      (rule
-        (width 1000)
-        (clearance 500)
-      )
-    )
     (class ac NEUT "Net-(D1-Pad3)" "Net-(D1-Pad4)" "Net-(J1-Pad3)" VAC
       (circuit
         (use_via "Via[0-1]_1000:500_um")
@@ -733,6 +726,15 @@
       (rule
         (width 1750)
         (clearance 1000)
+      )
+    )
+    (class power +5V GND
+      (circuit
+        (use_via "Via[0-1]_1000:400_um")
+      )
+      (rule
+        (width 1000)
+        (clearance 500)
       )
     )
   )

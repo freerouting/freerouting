@@ -3259,5 +3259,34 @@
   
   
   
-
+  (zone (net 1) (net_name GND) (layer Bottom) (tstamp 0) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 74.298195 127.619957) (xy 74.295 74.93) (xy 177.165 74.93) (xy 177.168195 127.619957)
+      )
+    )
+    
+    
+    
+    
+    
+    
+    
+    
+  )
+  (zone (net 1) (net_name GND) (layer Top) (tstamp 0) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 74.295 74.93) (xy 74.295 127.635) (xy 177.165 127.635) (xy 177.165 74.93)
+      )
+    )
+    
+    
+  )
 )

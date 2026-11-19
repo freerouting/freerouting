@@ -1002,7 +1002,7 @@ public final class ExitStubs {
     IntPoint centre = centre(pin);
     int classHalf = netClass.getTraceHalfWidth(layer);
     int minHalf = board.rules.getMinAllowedTraceHalfWidth();
-    int half = minHalf > 0 ? Math.min(classHalf, minHalf) : classHalf;
+    int half = minHalf > 0 ? minHalf : classHalf;
     int traceClass = netClass.getTraceClearanceClass();
     if (w == h || Math.max(w, h) < 3 * Math.min(w, h) / 2) {
       return diagonalOutward(
