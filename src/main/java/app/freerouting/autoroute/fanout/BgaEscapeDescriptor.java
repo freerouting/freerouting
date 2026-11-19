@@ -36,7 +36,6 @@ public record BgaEscapeDescriptor(
   /** Lattice topology classification. */
   public enum LatticeClass {
     ORTHOGONAL_GRID,
-    STAGGERED_HEX_GRID,
     DEPOPULATED_CAVITY_GRID
   }
 

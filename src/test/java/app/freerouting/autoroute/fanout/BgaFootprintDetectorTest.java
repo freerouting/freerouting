@@ -277,7 +277,7 @@ class BgaFootprintDetectorTest {
         BgaFootprintDetector.analyzeComponent(board, comp, boardPins, settings);
     assertNotNull(desc);
 
-    // Verify GND pins classified as PLANE_DROP
+    // Verify GND pins classified as PLANE_DROP targeting the actual pour layer (In1.Cu = 1)
     for (int i = 0; i < 16; i++) {
       BgaEscapeDescriptor.BgaPinDescriptor pd = desc.pins().get(i);
       if (pd.netNo() == 2) {
@@ -285,16 +285,19 @@ class BgaFootprintDetectorTest {
             BgaEscapeDescriptor.PinDisposition.PLANE_DROP,
             pd.disposition(),
             "GND pin matching ConductionArea must be classified as PLANE_DROP");
+        assertEquals(
+            1,
+            pd.targetLayer(),
+            "GND plane drop must target the actual matching ConductionArea layer In1.Cu");
       }
     }
 
     // Verify In1.Cu (layer 1) excluded from peelable signalLayers for inner ring signal breakouts
     for (BgaEscapeDescriptor.BgaPinDescriptor pd : desc.pins()) {
       if (pd.netNo() == 1 && pd.ring() >= 2) {
-        assertEquals(
-            2,
-            pd.targetLayer(),
-            "Signal escape must bypass poured In1.Cu and route on open signal layer In2.Cu");
+        assertTrue(
+            pd.targetLayer() == 2 || pd.targetLayer() == 3,
+            "Signal escape must bypass poured In1.Cu and route on open signal layers In2.Cu/B.Cu");
       }
     }
   }

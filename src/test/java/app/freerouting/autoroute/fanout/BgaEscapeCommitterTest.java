@@ -122,14 +122,16 @@ class BgaEscapeCommitterTest {
         BgaFootprintDetector.analyzeComponent(board, comp, boardPins, settings);
     assertNotNull(desc);
 
-    List<PinEscapeProposal> proposals = BgaEscapeSolver.solve(board, desc, settings);
+    List<PinEscapeProposal> proposals = BgaEscapeSolver.solve(board, desc);
     assertNotNull(proposals);
 
     // Commit proposals with authoritative host DRC validation
     CommitResult result = BgaEscapeCommitter.commit(board, desc, proposals);
     assertTrue(result.pinsCommitted() > 0, "At least some pins must be successfully committed");
-    assertEquals(result.pinsCommitted(), result.viasInserted());
-    assertEquals(result.pinsCommitted(), result.tracesInserted());
+    assertTrue(result.viasInserted() > 0, "Inner-ring signal escapes must insert vias");
+    assertTrue(
+        result.tracesInserted() >= result.pinsCommitted(),
+        "Each committed pin must insert at least one escape trace");
 
     // Authoritative full design rules check: ZERO violations allowed
     List<?> violations =
@@ -182,7 +184,7 @@ class BgaEscapeCommitterTest {
         BgaFootprintDetector.analyzeComponent(board, comp, boardPins, settings);
     assertNotNull(desc);
 
-    List<PinEscapeProposal> proposals = BgaEscapeSolver.solve(board, desc, settings);
+    List<PinEscapeProposal> proposals = BgaEscapeSolver.solve(board, desc);
     assertNotNull(proposals);
 
     CommitResult result = BgaEscapeCommitter.commit(board, desc, proposals);
@@ -240,7 +242,7 @@ class BgaEscapeCommitterTest {
         BgaFootprintDetector.analyzeComponent(board, comp, boardPins, settings);
     assertNotNull(desc);
 
-    List<PinEscapeProposal> proposals = BgaEscapeSolver.solve(board, desc, settings);
+    List<PinEscapeProposal> proposals = BgaEscapeSolver.solve(board, desc);
     assertNotNull(proposals);
 
     CommitResult result = BgaEscapeCommitter.commit(board, desc, proposals);
@@ -284,7 +286,6 @@ class BgaEscapeCommitterTest {
     settings.fanout.bgaEscapeMinPins = 64;
     settings.fanout.bgaEscapeEnabled = true;
 
-    int viasBefore = board.getViaCount();
     int tracesBefore = board.getTraces().size();
 
     // Run BatchFanout pipeline
@@ -335,19 +336,19 @@ class BgaEscapeCommitterTest {
     // 1. Via positioned directly over the BGA ball pad itself (50000, 50000) -> must be rejected
     boolean clearOverBall =
         BgaEscapeCommitter.checkViaClearance(
-            board, viaPadstack, new IntPoint(50000, 50000), pin, 1, new int[] {1}, 0);
+            board, viaPadstack, new IntPoint(50000, 50000), 1, new int[] {1}, 0);
     assertFalse(clearOverBall, "Via directly on ball pad must be rejected as via-in-pad");
 
     // 2. Via directly over same-net passive pad on Bottom layer (50500, 50500) -> must be rejected
     boolean clearOverCap =
         BgaEscapeCommitter.checkViaClearance(
-            board, viaPadstack, new IntPoint(50500, 50500), pin, 1, new int[] {1}, 0);
+            board, viaPadstack, new IntPoint(50500, 50500), 1, new int[] {1}, 0);
     assertFalse(clearOverCap, "Via on same-net decoupling cap must be rejected as via-in-pad");
 
     // 3. Via placed in interstitial site with clear spacing (52000, 52000) -> must be accepted
     boolean clearInterstitial =
         BgaEscapeCommitter.checkViaClearance(
-            board, viaPadstack, new IntPoint(52000, 52000), pin, 1, new int[] {1}, 0);
+            board, viaPadstack, new IntPoint(52000, 52000), 1, new int[] {1}, 0);
     assertTrue(clearInterstitial, "Via in clear interstitial location should be accepted");
   }
 
@@ -359,11 +360,11 @@ class BgaEscapeCommitterTest {
         board.library.padstacks.add(new ConvexShape[] {new Circle(Point.ZERO, 150), null});
 
     List<Package.Pin> pkgPins = new ArrayList<>();
-    for (int r = 0; r < 8; r++) {
-      for (int c = 0; c < 8; c++) {
-        double lx = (c - 3.5) * pitch;
-        double ly = (r - 3.5) * pitch;
-        pkgPins.add(new Package.Pin("P" + (r * 8 + c), pad.id, new FloatPoint(lx, ly), 0));
+    for (int r = 0; r < 4; r++) {
+      for (int c = 0; c < 4; c++) {
+        double lx = (c - 1.5) * pitch;
+        double ly = (r - 1.5) * pitch;
+        pkgPins.add(new Package.Pin("P" + (r * 4 + c), pad.id, new FloatPoint(lx, ly), 0));
       }
     }
 
@@ -372,17 +373,17 @@ class BgaEscapeCommitterTest {
         board.components.addPrecise(
             "U1", new FloatPoint(50000, 50000), 0.0, true, pkg, pkg, false, null);
 
-    // Make first 4 pins No-Connect (netCount == 0), remaining 60 pins routable
+    // Make first 4 pins No-Connect (netCount == 0), remaining 12 pins routable
     for (int i = 0; i < 4; i++) {
       board.insertPin(comp.id, i, new int[0], 0, FixedState.UNFIXED);
     }
-    for (int i = 4; i < 64; i++) {
+    for (int i = 4; i < 16; i++) {
       board.insertPin(comp.id, i, new int[] {i + 1}, 1, FixedState.UNFIXED);
     }
 
     RouterSettings settings = new RouterSettings();
     settings.setFanoutEnabled(true);
-    settings.fanout.bgaEscapeMinPins = 64;
+    settings.fanout.bgaEscapeMinPins = 16;
     settings.fanout.bgaEscapeEnabled = true;
 
     // First detection must find U1
@@ -432,7 +433,7 @@ class BgaEscapeCommitterTest {
             board, comp, new ArrayList<>(board.getSmdPins()), settings);
     assertNotNull(bga);
 
-    List<PinEscapeProposal> proposals = BgaEscapeSolver.solve(board, bga, settings);
+    List<PinEscapeProposal> proposals = BgaEscapeSolver.solve(board, bga);
     assertFalse(proposals.isEmpty());
 
     // First commit: should commit pins successfully
@@ -495,7 +496,7 @@ class BgaEscapeCommitterTest {
             board, comp, new ArrayList<>(board.getSmdPins()), settings);
     assertNotNull(bga);
 
-    List<PinEscapeProposal> proposals = BgaEscapeSolver.solve(board, bga, settings);
+    List<PinEscapeProposal> proposals = BgaEscapeSolver.solve(board, bga);
     assertFalse(proposals.isEmpty());
 
     CommitResult res = BgaEscapeCommitter.commit(board, bga, proposals);

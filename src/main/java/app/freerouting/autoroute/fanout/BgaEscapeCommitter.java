@@ -91,7 +91,11 @@ public final class BgaEscapeCommitter {
   public static CommitResult commit(
       RoutingBoard board, BgaEscapeDescriptor bga, List<PinEscapeProposal> proposals) {
 
-    if (board == null || bga == null || proposals == null || proposals.isEmpty()) {
+    if (board == null
+        || board.rules == null
+        || bga == null
+        || proposals == null
+        || proposals.isEmpty()) {
       return new CommitResult(0, 0, 0, 0, 0);
     }
 
@@ -148,10 +152,7 @@ public final class BgaEscapeCommitter {
       int sector = pd.breakoutSector();
       int ring = pd.ring();
 
-      Net net =
-          (board.rules != null && board.rules.nets != null && netNo > 0)
-              ? board.rules.nets.get(netNo)
-              : null;
+      Net net = (board.rules.nets != null && netNo > 0) ? board.rules.nets.get(netNo) : null;
       NetClass nc = (net != null) ? net.getNetClass() : null;
       int traceHalfWidthPin =
           (nc != null) ? nc.getTraceHalfWidth(pinLayer) : board.rules.getMinAllowedTraceHalfWidth();
@@ -218,6 +219,10 @@ public final class BgaEscapeCommitter {
         Polyline polyline = new Polyline(new Point[] {pinCenter, globalExit});
         board.insertTrace(
             polyline, pinLayer, traceHalfWidthPin, netNumbers, traceClClass, FixedState.USER_FIXED);
+        if (pin.getNormalContacts().isEmpty()) {
+          drcRejections++;
+          continue;
+        }
         tracesInserted++;
         committed++;
         committedPins.add(pin);
@@ -299,6 +304,10 @@ public final class BgaEscapeCommitter {
         Polyline polyline = new Polyline(new Point[] {pinCenter, globalJog, globalExit});
         board.insertTrace(
             polyline, pinLayer, traceHalfWidthPin, netNumbers, traceClClass, FixedState.USER_FIXED);
+        if (pin.getNormalContacts().isEmpty()) {
+          drcRejections++;
+          continue;
+        }
         tracesInserted++;
         committed++;
         committedPins.add(pin);
@@ -306,8 +315,8 @@ public final class BgaEscapeCommitter {
       }
 
       // Case C: Ring 2+ or via-escaped pins (4-candidate interstitial exploration)
-      Padstack viaPadstack = resolveViaPadstack(board, pinLayer, targetLayer, nc);
-      if (viaPadstack == null) {
+      ResolvedVia resolvedVia = resolveVia(board, pinLayer, targetLayer, nc, viaClClass);
+      if (resolvedVia == null) {
         FRLogger.warn(
             "BGA escape committer: no suitable via padstack configured on board for net "
                 + netNo
@@ -319,6 +328,8 @@ public final class BgaEscapeCommitter {
         drcRejections++;
         continue;
       }
+      Padstack viaPadstack = resolvedVia.padstack();
+      int effectiveViaClClass = resolvedVia.clearanceClassIdx();
 
       int pinU = (int) Math.round(pd.localU());
       int pinV = (int) Math.round(pd.localV());
@@ -357,7 +368,7 @@ public final class BgaEscapeCommitter {
           }
           boolean viaClear =
               checkViaClearance(
-                  board, viaPadstack, globalViaCenter, pin, netNo, netNumbers, viaClClass);
+                  board, viaPadstack, globalViaCenter, netNo, netNumbers, effectiveViaClClass);
           if (!viaClear) {
             continue; // Clearance violation or hole spacing violation
           }
@@ -466,7 +477,7 @@ public final class BgaEscapeCommitter {
                   viaPadstack,
                   globalViaCenter,
                   netNumbers,
-                  viaClClass,
+                  effectiveViaClClass,
                   FixedState.USER_FIXED,
                   true);
           if (insertedVia == null) {
@@ -474,22 +485,21 @@ public final class BgaEscapeCommitter {
           }
         }
 
-        // Commit dogbone trace
+        // Commit dogbone trace and verify insertion before proceeding
         Polyline dogbone = new Polyline(new Point[] {pinCenter, globalViaCenter});
         board.insertTrace(
             dogbone, pinLayer, traceHalfWidthPin, netNumbers, traceClClass, FixedState.USER_FIXED);
-        tracesInserted++;
-
-        if (insertedVia != null) {
-          viasInserted++;
-          committedViaLocations.add(globalViaCenter);
-          if (isPlaneDrop) {
-            placedPlaneVias.put(viaKey, insertedVia);
+        if (pin.getNormalContacts().isEmpty()) {
+          if (insertedVia != null) {
+            board.removeItem(insertedVia);
           }
+          continue;
         }
 
-        // Commit breakout trace on targetLayer
+        // Commit breakout trace on targetLayer and verify insertion
+        boolean breakoutInserted = false;
         if (!isPlaneDrop && globalCorridor != null && globalBreakoutExit != null) {
+          int tracesBeforeBreakout = board.getTraces().size();
           Polyline breakout =
               new Polyline(new Point[] {globalViaCenter, globalCorridor, globalBreakoutExit});
           board.insertTrace(
@@ -499,7 +509,30 @@ public final class BgaEscapeCommitter {
               netNumbers,
               traceClClass,
               FixedState.USER_FIXED);
+          if (board.getTraces().size() <= tracesBeforeBreakout) {
+            // Roll back dogbone traces contacting this pin and the newly inserted via
+            for (Item contact : List.copyOf(pin.getNormalContacts())) {
+              board.removeItem(contact);
+            }
+            if (insertedVia != null) {
+              board.removeItem(insertedVia);
+            }
+            continue;
+          }
+          breakoutInserted = true;
+        }
+
+        tracesInserted++;
+        if (breakoutInserted) {
           tracesInserted++;
+        }
+
+        if (insertedVia != null) {
+          viasInserted++;
+          committedViaLocations.add(globalViaCenter);
+          if (isPlaneDrop) {
+            placedPlaneVias.put(viaKey, insertedVia);
+          }
         }
 
         committed++;
@@ -569,7 +602,6 @@ public final class BgaEscapeCommitter {
       RoutingBoard board,
       Padstack viaPadstack,
       IntPoint globalViaCenter,
-      Pin pin,
       int netNo,
       int[] netNumbers,
       int viaClClass) {
@@ -609,12 +641,18 @@ public final class BgaEscapeCommitter {
     return true;
   }
 
-  private static Padstack resolveViaPadstack(
-      RoutingBoard board, int fromLayer, int toLayer, NetClass nc) {
+  private record ResolvedVia(Padstack padstack, int clearanceClassIdx) {}
+
+  private static boolean coversSpan(Padstack ps, int lowL, int highL) {
+    return ps != null && ps.fromLayer() <= lowL && ps.toLayer() >= highL;
+  }
+
+  private static ResolvedVia resolveVia(
+      RoutingBoard board, int fromLayer, int toLayer, NetClass nc, int defaultViaClClass) {
     int lowL = Math.min(fromLayer, toLayer);
     int highL = Math.max(fromLayer, toLayer);
 
-    // 1. Check NetClass via rule for a matching layer-span (e.g. blind/microvia)
+    // 1. Check NetClass via rule for an exact layer-span match (e.g. blind/microvia)
     if (nc != null && nc.getViaRule() != null) {
       ViaRule vr = nc.getViaRule();
       for (int i = 0; i < vr.viaCount(); i++) {
@@ -622,52 +660,50 @@ public final class BgaEscapeCommitter {
         if (vi != null && vi.getPadstack() != null) {
           Padstack ps = vi.getPadstack();
           if (ps.fromLayer() == lowL && ps.toLayer() == highL) {
-            return ps;
+            return new ResolvedVia(ps, vi.getClearanceClassIndex());
           }
         }
       }
     }
 
-    // 2. Check board.rules.viaInfos for a matching layer-span
-    if (board.rules != null && board.rules.viaInfos != null) {
-      for (int i = 0; i < board.rules.viaInfos.count(); i++) {
-        ViaInfo vi = board.rules.viaInfos.get(i);
-        if (vi != null && vi.getPadstack() != null) {
-          Padstack ps = vi.getPadstack();
-          if (ps.fromLayer() == lowL && ps.toLayer() == highL) {
-            return ps;
-          }
+    // 2. Check board.rules.viaInfos for an exact layer-span match
+    for (int i = 0; i < board.rules.viaInfos.count(); i++) {
+      ViaInfo vi = board.rules.viaInfos.get(i);
+      if (vi != null && vi.getPadstack() != null) {
+        Padstack ps = vi.getPadstack();
+        if (ps.fromLayer() == lowL && ps.toLayer() == highL) {
+          return new ResolvedVia(ps, vi.getClearanceClassIndex());
         }
       }
     }
 
-    // 3. Fallback to standard through-hole default via padstack
-    return resolveViaPadstack(board);
-  }
-
-  private static Padstack resolveViaPadstack(RoutingBoard board) {
-    if (board.rules != null) {
-      NetClass defaultNc = board.rules.getDefaultNetClass();
-      if (defaultNc != null) {
-        ViaRule vr = defaultNc.getViaRule();
-        if (vr != null && vr.viaCount() > 0) {
-          ViaInfo vi = vr.getVia(0);
-          if (vi != null) {
-            return vi.getPadstack();
+    // 3. Fallback to any via whose layer span covers [lowL, highL]
+    NetClass defaultNc = board.rules.getDefaultNetClass();
+    if (defaultNc != null) {
+      ViaRule vr = defaultNc.getViaRule();
+      if (vr != null) {
+        for (int i = 0; i < vr.viaCount(); i++) {
+          ViaInfo vi = vr.getVia(i);
+          if (vi != null && coversSpan(vi.getPadstack(), lowL, highL)) {
+            return new ResolvedVia(vi.getPadstack(), vi.getClearanceClassIndex());
           }
         }
       }
-      if (board.rules.viaInfos != null && board.rules.viaInfos.count() > 0) {
-        ViaInfo vi = board.rules.viaInfos.get(0);
-        if (vi != null) {
-          return vi.getPadstack();
-        }
+    }
+    for (int i = 0; i < board.rules.viaInfos.count(); i++) {
+      ViaInfo vi = board.rules.viaInfos.get(i);
+      if (vi != null && coversSpan(vi.getPadstack(), lowL, highL)) {
+        return new ResolvedVia(vi.getPadstack(), vi.getClearanceClassIndex());
       }
     }
-    return (board.library != null
-            && board.library.padstacks != null
-            && board.library.padstacks.count() > 0)
-        ? board.library.padstacks.get(1)
-        : null;
+    if (board.library != null
+        && board.library.padstacks != null
+        && board.library.padstacks.count() > 0) {
+      Padstack ps = board.library.padstacks.get(1);
+      if (coversSpan(ps, lowL, highL)) {
+        return new ResolvedVia(ps, defaultViaClClass);
+      }
+    }
+    return null;
   }
 }

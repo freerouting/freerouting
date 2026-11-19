@@ -14,7 +14,6 @@ import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Shape;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.rules.Net;
 import app.freerouting.rules.NetClass;
 import app.freerouting.settings.RouterSettings;
 import java.util.ArrayList;
@@ -203,6 +202,13 @@ public final class BgaFootprintDetector {
       return null;
     }
 
+    // Enforce supported BGA pitch limit (up to 1.27 mm = 1270 um)
+    double resolution = board.communication.getResolution(Unit.UM);
+    double pitchUm = minPitch / resolution;
+    if (pitchUm > 1270.0) {
+      return null;
+    }
+
     double pitchTol = minPitch * 0.35;
     List<Double> uCoords = new ArrayList<>(pins.size());
     List<Double> vCoords = new ArrayList<>(pins.size());
@@ -314,18 +320,8 @@ public final class BgaFootprintDetector {
             : 100;
     boolean surfaceChannelsFit = padGap >= (traceWidth + 2 * clearance);
 
-    // Pre-index nets having terminals outside this BGA component (for terminal-locality checking)
-    Set<Integer> netsWithExternalPins = new HashSet<>();
-    for (Pin p : board.getPins()) {
-      if (p.getComponentId() != comp.id) {
-        for (int n = 0; n < p.netCount(); n++) {
-          netsWithExternalPins.add(p.getNetNumber(n));
-        }
-      }
-    }
-
-    // Pre-index nets that have a ConductionArea overlapping the BGA footprint
-    Set<Integer> pouredNetsInBga = new HashSet<>();
+    // Pre-index ConductionAreas overlapping the BGA footprint by net number
+    Map<Integer, List<ConductionArea>> conductionAreasByNet = new HashMap<>();
     if (board.getConductionAreas() != null) {
       for (ConductionArea ca : board.getConductionAreas()) {
         if (ca.getArea() != null) {
@@ -334,7 +330,7 @@ public final class BgaFootprintDetector {
             for (int n = 0; n < ca.netCount(); n++) {
               int netNum = ca.getNetNumber(n);
               if (netNum > 0) {
-                pouredNetsInBga.add(netNum);
+                conductionAreasByNet.computeIfAbsent(netNum, _ -> new ArrayList<>()).add(ca);
               }
             }
           }
@@ -368,22 +364,32 @@ public final class BgaFootprintDetector {
         maxRing = ring;
       }
 
-      // Net disposition with terminal-locality guard for unpoured / plane-less boards
+      // Net disposition: classify as PLANE_DROP only when a matching ConductionArea covers this pin
       PinDisposition disposition = PinDisposition.SIGNAL_ESCAPE;
+      int planeTargetLayer = -1;
       int netNo = pin.netCount() > 0 ? pin.getNetNumber(0) : 0;
       if (netNo <= 0 || pin.hasIgnoredNets()) {
         disposition = PinDisposition.PASSIVE_OBSTACLE;
       } else {
-        Net net =
-            (board.rules != null && board.rules.nets != null) ? board.rules.nets.get(netNo) : null;
-        boolean containsPlane = (net != null && net.containsPlane());
-        boolean matchesConductionArea = pouredNetsInBga.contains(netNo);
-        if (containsPlane || matchesConductionArea) {
+        List<ConductionArea> netAreas = conductionAreasByNet.get(netNo);
+        Point pinCenter = pin.getCenter();
+        if (netAreas != null && pinCenter != null) {
+          FloatPoint fp = pinCenter.toFloat();
+          int bestDist = Integer.MAX_VALUE;
+          for (ConductionArea ca : netAreas) {
+            if (ca.getArea().contains(fp)) {
+              int caLayer = ca.getLayer();
+              int layerDist =
+                  (caLayer == pinLayer) ? Integer.MAX_VALUE - 1 : Math.abs(caLayer - pinLayer);
+              if (layerDist < bestDist) {
+                bestDist = layerDist;
+                planeTargetLayer = caLayer;
+              }
+            }
+          }
+        }
+        if (planeTargetLayer >= 0) {
           disposition = PinDisposition.PLANE_DROP;
-        } else if (netNo > 0) {
-          boolean hasExternalTerminals = netsWithExternalPins.contains(netNo);
-          disposition =
-              hasExternalTerminals ? PinDisposition.SIGNAL_ESCAPE : PinDisposition.PLANE_DROP;
         }
       }
 
@@ -400,7 +406,7 @@ public final class BgaFootprintDetector {
       // Assign target routing layer based on ring depth and surface channel capacity
       int targetLayer;
       if (disposition == PinDisposition.PLANE_DROP) {
-        targetLayer = (signalLayers.size() > 1) ? signalLayers.get(1) : pinLayer;
+        targetLayer = planeTargetLayer;
       } else if (surfaceChannelsFit) {
         if (ring == 0 || ring == 1) {
           targetLayer = pinLayer;
@@ -430,10 +436,6 @@ public final class BgaFootprintDetector {
               targetLayer,
               sector));
     }
-
-    // Convert pitch to micrometers
-    double resolution = board.communication.getResolution(Unit.UM);
-    double pitchUm = minPitch / resolution;
 
     return new BgaEscapeDescriptor(
         comp, rotDeg, pitchUm, minPitch, lattice, pinDescriptors, minU, maxU, minV, maxV, maxRing);

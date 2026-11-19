@@ -6,7 +6,6 @@ import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.structure.Unit;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.settings.RouterSettings;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -74,12 +73,10 @@ public final class BgaEscapeSolver {
    *
    * @param board routing board
    * @param bga BGA escape descriptor
-   * @param settings router settings
    * @return list of pin escape proposals
    */
-  public static List<PinEscapeProposal> solve(
-      RoutingBoard board, BgaEscapeDescriptor bga, RouterSettings settings) {
-    return solve(board, bga, settings, null);
+  public static List<PinEscapeProposal> solve(RoutingBoard board, BgaEscapeDescriptor bga) {
+    return solve(board, bga, null);
   }
 
   /**
@@ -88,21 +85,17 @@ public final class BgaEscapeSolver {
    *
    * @param board routing board
    * @param bga BGA escape descriptor
-   * @param settings router settings
    * @param infoLogger optional logger callback for UI/job messaging
    * @return list of pin escape proposals
    */
   public static List<PinEscapeProposal> solve(
-      RoutingBoard board,
-      BgaEscapeDescriptor bga,
-      RouterSettings settings,
-      Consumer<String> infoLogger) {
+      RoutingBoard board, BgaEscapeDescriptor bga, Consumer<String> infoLogger) {
     if (board == null || bga == null || bga.pins() == null || bga.pins().isEmpty()) {
       return Collections.emptyList();
     }
 
     int gridStep = computeGridStep(board, bga.pitchUm(), bga.pitchBoardUnits());
-    List<PinEscapeProposal> proposals = executeDeterministicWavefront(board, bga, gridStep);
+    List<PinEscapeProposal> proposals = executeDeterministicWavefront(bga, gridStep);
 
     int escapedCount = 0;
     for (PinEscapeProposal proposal : proposals) {
@@ -135,7 +128,7 @@ public final class BgaEscapeSolver {
    * verification is delegated to {@link BgaEscapeCommitter#commit}.
    */
   public static List<PinEscapeProposal> executeDeterministicWavefront(
-      RoutingBoard board, BgaEscapeDescriptor bga, int gridStepBoardUnits) {
+      BgaEscapeDescriptor bga, int gridStepBoardUnits) {
     if (bga == null || bga.pins() == null || bga.pins().isEmpty()) {
       return Collections.emptyList();
     }
@@ -202,8 +195,10 @@ public final class BgaEscapeSolver {
             scost /= 2;
           }
 
-          // Quantized cell hash in local coordinate frame
-          long cellKey = (((long) (vx / cellStep)) << 32) | ((long) (vy / cellStep) & 0xFFFFFFFFL);
+          // Quantized cell hash in local coordinate frame (floor division for negative coords)
+          long cellKey =
+              (((long) Math.floorDiv(vx, cellStep)) << 32)
+                  | ((long) Math.floorDiv(vy, cellStep) & 0xFFFFFFFFL);
 
           if (!cellWinners.containsKey(cellKey)) {
             if (scost < bestCost) {

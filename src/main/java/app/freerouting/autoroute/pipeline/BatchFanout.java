@@ -211,7 +211,7 @@ public final class BatchFanout {
             break;
           }
           List<BgaEscapeSolver.PinEscapeProposal> proposals =
-              BgaEscapeSolver.solve(board, bga, settings, infoLogger);
+              BgaEscapeSolver.solve(board, bga, infoLogger);
           if (!proposals.isEmpty()) {
             var commitResult = BgaEscapeCommitter.commit(board, bga, proposals);
             if (commitResult.committedPins() != null) {

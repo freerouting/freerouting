@@ -138,13 +138,13 @@ class BgaEscapeSolverTest {
         BgaFootprintDetector.analyzeComponent(board, comp, boardPins, settings);
     assertNotNull(desc);
 
-    List<PinEscapeProposal> run1 = BgaEscapeSolver.solve(board, desc, settings);
+    List<PinEscapeProposal> run1 = BgaEscapeSolver.solve(board, desc);
     assertNotNull(run1);
     assertFalse(run1.isEmpty());
 
     // 50 consecutive runs must produce identical via targets and costs
     for (int run = 2; run <= 50; run++) {
-      List<PinEscapeProposal> runK = BgaEscapeSolver.solve(board, desc, settings);
+      List<PinEscapeProposal> runK = BgaEscapeSolver.solve(board, desc);
       assertEquals(run1.size(), runK.size(), "Run " + run + " size mismatch");
 
       for (int i = 0; i < run1.size(); i++) {
@@ -196,7 +196,7 @@ class BgaEscapeSolverTest {
         BgaFootprintDetector.analyzeComponent(board, comp, boardPins, settings);
     assertNotNull(desc);
 
-    List<PinEscapeProposal> proposals = BgaEscapeSolver.solve(board, desc, settings);
+    List<PinEscapeProposal> proposals = BgaEscapeSolver.solve(board, desc);
 
     Set<Point> usedViaPoints = new HashSet<>();
     for (PinEscapeProposal prop : proposals) {
