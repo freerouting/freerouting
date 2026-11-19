@@ -2566,15 +2566,4 @@
     
     
   )
-  (zone (net 0) (net_name "") (layer B.Cu) (tstamp 0) (hatch edge 0.508)
-    (connect_pads (clearance 0.254))
-    (min_thickness 0.254)
-    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
-    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
-    (polygon
-      (pts
-        (xy 85.1 96.71) (xy 85.1 98.41) (xy 105.4 98.41) (xy 105.4 96.71)
-      )
-    )
-  )
 )

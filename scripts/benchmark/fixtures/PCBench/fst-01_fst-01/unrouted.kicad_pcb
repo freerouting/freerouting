@@ -1507,15 +1507,4 @@
     
     
   )
-  (zone (net 0) (net_name "") (layer Front) (tstamp 57C66D0D) (hatch edge 0.508)
-    (connect_pads (clearance 0.508))
-    (min_thickness 0.254)
-    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
-    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
-    (polygon
-      (pts
-        (xy 116.459 96.7105) (xy 119.634 96.7105) (xy 119.634 100.2665) (xy 116.459 100.2665)
-      )
-    )
-  )
 )

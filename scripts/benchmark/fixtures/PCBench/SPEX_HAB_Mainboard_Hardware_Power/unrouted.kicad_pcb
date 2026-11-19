@@ -5688,20 +5688,4 @@
     
     
   )
-  (zone (net 0) (net_name "") (layer F.Cu) (tstamp 0) (hatch edge 0.508)
-    (connect_pads (clearance 0.3))
-    (min_thickness 0.2)
-    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
-    (fill (arc_segments 16) (thermal_gap 0.3) (thermal_bridge_width 0.4))
-    (polygon
-      (pts
-        (xy 153.65 64) (xy 158.2 62.65) (xy 160.75 60.1) (xy 158.85 57.4) (xy 157.05 56.1)
-        (xy 153.95 55.75) (xy 153.85 53.5) (xy 156.55 51.4) (xy 156.6 51.15) (xy 155.55 49.4)
-        (xy 151.75 51.65) (xy 151.65 51.8) (xy 151.15 60.85) (xy 153.6 63.95) (xy 153.45 64.1)
-        (xy 151 60.9) (xy 151.6 51.6) (xy 155.55 49.3) (xy 156.85 51.35) (xy 153.95 53.5)
-        (xy 154.05 55.65) (xy 157.15 56) (xy 158.95 57.35) (xy 160.9 60.1) (xy 158.25 62.75)
-        (xy 153.65 64.15) (xy 153.4 64.05) (xy 153.55 63.85)
-      )
-    )
-  )
 )
