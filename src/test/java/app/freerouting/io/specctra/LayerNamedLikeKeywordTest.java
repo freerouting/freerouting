@@ -25,23 +25,28 @@ import org.junit.jupiter.api.Test;
  */
 class LayerNamedLikeKeywordTest {
 
+  private static BoardReadResult read(String dsn) {
+    return DsnReader.readBoard(
+        new ByteArrayInputStream(dsn.getBytes(StandardCharsets.UTF_8)), null, null);
+  }
+
   private static RoutingBoard load(String dsn) {
-    BoardReadResult result =
-        DsnReader.readBoard(
-            new ByteArrayInputStream(dsn.getBytes(StandardCharsets.UTF_8)), null, null);
+    BoardReadResult result = read(dsn);
     assertInstanceOf(BoardReadResult.Success.class, result, "the board must load");
     return (RoutingBoard) ((BoardReadResult.Success) result).board();
   }
 
-  /** Three signal layers, the middle one named {@code Signal}, and one keepout. */
-  private static String dsnWithKeepout(String keepoutLayer) {
+  /** Three signal layers, the middle one named {@code middleLayerName}, and one keepout. */
+  private static String dsnWithKeepout(String middleLayerName, String keepoutLayer) {
     return "(pcb test\n"
         + "  (parser (string_quote \") (host_cad \"KiCad's Pcbnew\"))\n"
         + "  (resolution um 10)\n"
         + "  (unit um)\n"
         + "  (structure\n"
         + "    (layer F.Cu (type signal) (property (index 0)))\n"
-        + "    (layer Signal (type signal) (property (index 1)))\n"
+        + "    (layer "
+        + middleLayerName
+        + " (type signal) (property (index 1)))\n"
         + "    (layer B.Cu (type signal) (property (index 2)))\n"
         + "    (boundary (path pcb 0 0 0 20000 0 20000 20000 0 20000 0 0))\n"
         + "    (keepout \"\" (polygon "
@@ -54,7 +59,9 @@ class LayerNamedLikeKeywordTest {
         + "  (library\n"
         + "    (padstack \"Via[0-2]_800:400_um\"\n"
         + "      (shape (circle F.Cu 800))\n"
-        + "      (shape (circle Signal 800))\n"
+        + "      (shape (circle "
+        + middleLayerName
+        + " 800))\n"
         + "      (shape (circle B.Cu 800))\n"
         + "      (attach off)\n"
         + "    )\n"
@@ -91,11 +98,25 @@ class LayerNamedLikeKeywordTest {
 
   @Test
   void keepoutOnLayerNamedSignalStaysOnThatLayer() {
-    assertEquals(Set.of(1), keepoutLayers(load(dsnWithKeepout("Signal"))));
+    assertEquals(Set.of(1), keepoutLayers(load(dsnWithKeepout("Signal", "Signal"))));
   }
 
   @Test
   void keepoutWithTheKeywordSpellingStillCoversEverySignalLayer() {
-    assertEquals(Set.of(0, 1, 2), keepoutLayers(load(dsnWithKeepout("signal"))));
+    assertEquals(Set.of(0, 1, 2), keepoutLayers(load(dsnWithKeepout("Signal", "signal"))));
+  }
+
+  @Test
+  void keepoutOnLayerNamedPcbStaysOnThatLayer() {
+    assertEquals(Set.of(1), keepoutLayers(load(dsnWithKeepout("PCB", "PCB"))));
+    // Exact lowercase "pcb" still resolves to Layer.PCB, which keepout rejects as non-layer.
+    assertInstanceOf(BoardReadResult.ParseError.class, read(dsnWithKeepout("PCB", "pcb")));
+  }
+
+  @Test
+  void keepoutWithCapitalizedKeywordFallsBackWhenNoSuchLayerExists() {
+    assertEquals(Set.of(0, 1, 2), keepoutLayers(load(dsnWithKeepout("In1.Cu", "Signal"))));
+    // Without a layer named "PCB", capitalized "PCB" falls back to Layer.PCB (rejected in keepout).
+    assertInstanceOf(BoardReadResult.ParseError.class, read(dsnWithKeepout("In1.Cu", "PCB")));
   }
 }
