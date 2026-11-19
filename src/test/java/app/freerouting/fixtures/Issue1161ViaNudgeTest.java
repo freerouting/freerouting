@@ -120,6 +120,17 @@ class Issue1161ViaNudgeTest extends RoutingFixtureTest {
   }
 
   /**
+   * {@code Issue1161-via-next-to-zone-tip.dsn}: a trace from a pad to a via, plus the thin tip of a
+   * GND zone that points at the via at 22.5 degrees, 350 um from its centre: closer than the pad
+   * radius and the clearance (300 + 150 um), but between the directions that a test of a few points
+   * around the via would look at. The via must stay.
+   */
+  @Test
+  void viaNextToTheTipOfAZoneStaysInPlace() throws IOException {
+    assertTheViaStaysInPlace("Issue1161-via-next-to-zone-tip.dsn");
+  }
+
+  /**
    * {@code Issue1161-shove-into-zone.dsn}: the via starts outside the GND zone and stays outside it
    * when shifted left, which would shorten both traces; however, shifting it left pulls the Top
    * trace into the zone's clearance envelope, so the move must be tried and rejected.
