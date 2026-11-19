@@ -1026,7 +1026,8 @@ public class GlobalSettings implements Serializable {
             i++;
           }
         } else if (args[i].startsWith("-dct")) {
-          CliDeprecationWarnings.warnDeprecatedFlag("-dct", "--gui.dialog_confirmation_timeout");
+          CliDeprecationWarnings.warnDeprecatedFlag(
+              "-dct", "--gui.dialog_confirmation_timeout=<seconds>");
           if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
             guiSettings.dialogConfirmationTimeout = Integer.parseInt(args[i + 1]);
 
@@ -1038,7 +1039,7 @@ public class GlobalSettings implements Serializable {
         } else if (args[i].startsWith("-ll")) {
           // get the log level from the command line arguments
           // and save it to the settings
-          CliDeprecationWarnings.warnDeprecatedFlag("-ll", "--logging.console.level");
+          CliDeprecationWarnings.warnDeprecatedFlag("-ll", "--logging.console.level=<level>");
           if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
             logging.console.level = args[i + 1].toUpperCase();
             i++;

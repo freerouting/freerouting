@@ -80,7 +80,7 @@ public class CliSettings implements SettingsSource {
             applyRouterSetting(settings, "router.optimizer.enabled", "false");
             continue;
           }
-          CliDeprecationWarnings.warnDeprecatedFlag("-mt", "--router.optimizer.max_threads");
+          CliDeprecationWarnings.warnDeprecatedFlag("-mt", "--router.max_threads=<n>");
         } else if ("oit".equals(flag)) {
           CliDeprecationWarnings.warnDeprecatedFlag(
               "-oit", "--router.optimizer.improvement_threshold");

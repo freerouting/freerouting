@@ -21,7 +21,7 @@ Converge Freerouting's CLI onto the standard long-form `--<section>.<property>=<
 | `-di <dir>` | `--gui.input_directory=<dir>` | Warn that `-di` will be removed; use `--gui.input_directory=<dir>` |
 | `-dr <file>` | **None** (`-de <design.dsn>+<rules.rules>`) | Warn that `-dr` will be removed; pass `.rules` via `-de <design.dsn>+<rules.rules>` |
 | *(auto-discovered `<boardname>.rules`)* | **None** (`-de <design.dsn>+<rules.rules>`) | Warn whenever an adjacent `.rules` file is automatically discovered and loaded, stating automatic loading will be removed in a future release |
-| `-mt <n>` | `--router.optimizer.max_threads=<n>` (or `--router.optimizer.enabled=false` for `<= 0`) | Standardize warning to state it will be removed and point to `--router.optimizer.max_threads` / `--router.optimizer.enabled=false` |
+| `-mt <n>` | `--router.max_threads=<n>` (or `--router.optimizer.enabled=false` for `<= 0`) | Standardize warning to state it will be removed and point to `--router.max_threads=<n>` / `--router.optimizer.enabled=false` |
 | `-oit <val>` | `--router.optimizer.improvement_threshold=<val>` | Standardize warning to state it will be removed and point to `--router.optimizer.improvement_threshold` |
 | `-inc <list>` | `--router.autorouter.ignore_net_classes=<list>` | Standardize warning to state it will be removed (avoid duplicate warnings across `GlobalSettings` and `CliSettings`) |
 | `-is <mode>` | `--router.optimizer.item_selection_strategy=<sequential\|prioritized>` | Standardize warning to state it will be removed and point to `--router.optimizer.item_selection_strategy` |
