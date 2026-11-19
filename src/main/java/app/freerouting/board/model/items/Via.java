@@ -83,6 +83,7 @@ public class Via extends DrillItem implements Serializable {
             board);
     copy.isEscapeVia = this.isEscapeVia;
     copy.escapeViaSmdLayer = this.escapeViaSmdLayer;
+    copy.setDecouplingFlags(this.getDecouplingFlags());
     return copy;
   }
 

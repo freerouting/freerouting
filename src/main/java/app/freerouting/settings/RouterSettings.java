@@ -27,6 +27,10 @@ public class RouterSettings implements Serializable, Cloneable {
   @SerializedName("fanout")
   public FanoutSettings fanout;
 
+  /** Configuration for the decoupling capacitor pre-routing pass. */
+  @SerializedName("decoupling")
+  public DecouplingSettings decoupling;
+
   @SerializedName("copper_to_edge_clearance_um")
   public Double copperToEdgeClearanceUm;
 
@@ -60,6 +64,22 @@ public class RouterSettings implements Serializable, Cloneable {
    */
   @SerializedName("plane_nets")
   public String[] planeNets;
+
+  /**
+   * Explicit list of net names to treat as positive/negative DC power supply rails (e.g. VCC, VDD).
+   * In addition to built-in EDA naming patterns, these nets are classified as power rails by the
+   * routing engine, decoupling capacitor router, and differential pair detector.
+   */
+  @SerializedName("power_nets")
+  public String[] powerNets;
+
+  /**
+   * Explicit list of net names to treat as ground / return nets (e.g. GND, VSS, 0V). In addition to
+   * built-in EDA naming patterns, these nets are classified as ground nets by the routing engine,
+   * decoupling capacitor router, and differential pair detector.
+   */
+  @SerializedName("ground_nets")
+  public String[] groundNets;
 
   /**
    * When true, conduction areas (copper pours) act as obstacles blocking foreign traces from
@@ -778,6 +798,8 @@ public class RouterSettings implements Serializable, Cloneable {
     result.meanderRadiusPercentage = this.meanderRadiusPercentage;
     result.meanderSingleSided = this.meanderSingleSided;
     result.planeNets = this.planeNets != null ? this.planeNets.clone() : null;
+    result.powerNets = this.powerNets != null ? this.powerNets.clone() : null;
+    result.groundNets = this.groundNets != null ? this.groundNets.clone() : null;
     result.planeAsObstacle = this.planeAsObstacle;
     result.neckWidthUm = this.neckWidthUm;
     result.exactCopper = this.exactCopper;
@@ -797,6 +819,8 @@ public class RouterSettings implements Serializable, Cloneable {
             ? this.optimizerScoring.clone()
             : new OptimizerScoreSettings();
     result.fanout = this.fanout != null ? this.fanout.clone() : new FanoutSettings();
+    result.decoupling =
+        this.decoupling != null ? this.decoupling.clone() : new DecouplingSettings();
     result.autorouter =
         this.autorouter != null ? this.autorouter.clone() : new AutorouterSettings();
     result.boardSpecificTraceCostsApplied = this.boardSpecificTraceCostsApplied;
@@ -824,6 +848,132 @@ public class RouterSettings implements Serializable, Cloneable {
       throw new IllegalArgumentException("router.fanout.strategy must be eager or direct_first");
     }
     return true;
+  }
+
+  /** Returns whether decoupling capacitor pre-routing is enabled. */
+  public boolean isDecouplingEnabled() {
+    return this.decoupling != null && Boolean.TRUE.equals(this.decoupling.enabled);
+  }
+
+  /** Enables or disables the decoupling capacitor pre-routing pass. */
+  public void setDecouplingEnabled(Boolean value) {
+    if (this.decoupling == null) {
+      this.decoupling = new DecouplingSettings();
+    }
+    Boolean oldValue = this.decoupling.enabled;
+    this.decoupling.enabled = value;
+    if (pcs != null) {
+      pcs.firePropertyChange("decoupling.enabled", oldValue, value);
+    }
+  }
+
+  // TODO: Notice the units and later come back and unify the units so they match user's choice of
+  // units.
+  /** Returns the maximum allowable decoupling strap length in millimetres. */
+  public double getDecouplingMaxStrapLengthMm() {
+    return this.decoupling != null && this.decoupling.maxStrapLengthMm != null
+        ? this.decoupling.maxStrapLengthMm
+        : app.freerouting.settings.sources.DefaultSettings.DEFAULT_DECOUPLING_MAX_STRAP_LENGTH_MM;
+  }
+
+  /** Sets the maximum allowable decoupling strap length in millimetres. */
+  public void setDecouplingMaxStrapLengthMm(Double value) {
+    if (this.decoupling == null) {
+      this.decoupling = new DecouplingSettings();
+    }
+    this.decoupling.maxStrapLengthMm = value;
+  }
+
+  // TODO: Notice the units and later come back and unify the units so they match user's choice of
+  // units.
+  /** Returns the maximum Euclidean search radius in millimetres around decoupling capacitors. */
+  public double getDecouplingMaxOwnerRadiusMm() {
+    return this.decoupling != null && this.decoupling.maxOwnerRadiusMm != null
+        ? this.decoupling.maxOwnerRadiusMm
+        : app.freerouting.settings.sources.DefaultSettings.DEFAULT_DECOUPLING_MAX_OWNER_RADIUS_MM;
+  }
+
+  /** Sets the maximum Euclidean search radius in millimetres around decoupling capacitors. */
+  public void setDecouplingMaxOwnerRadiusMm(Double value) {
+    if (this.decoupling == null) {
+      this.decoupling = new DecouplingSettings();
+    }
+    this.decoupling.maxOwnerRadiusMm = value;
+  }
+
+  /** Returns the trace width scaling multiplier for low-inductance decoupling surface straps. */
+  public double getDecouplingTraceWidthScale() {
+    return this.decoupling != null && this.decoupling.traceWidthScale != null
+        ? this.decoupling.traceWidthScale
+        : app.freerouting.settings.sources.DefaultSettings.DEFAULT_DECOUPLING_TRACE_WIDTH_SCALE;
+  }
+
+  /** Sets the trace width scaling multiplier for low-inductance decoupling surface straps. */
+  public void setDecouplingTraceWidthScale(Double value) {
+    if (this.decoupling == null) {
+      this.decoupling = new DecouplingSettings();
+    }
+    this.decoupling.traceWidthScale = value;
+  }
+
+  /** Returns the locking mode applied to decoupling straps and vias. */
+  public DecouplingLockMode getDecouplingLockMode() {
+    return this.decoupling != null && this.decoupling.lockMode != null
+        ? this.decoupling.lockMode
+        : DecouplingLockMode.SOFT;
+  }
+
+  /** Sets the locking mode applied to decoupling straps and vias. */
+  public void setDecouplingLockMode(DecouplingLockMode value) {
+    if (this.decoupling == null) {
+      this.decoupling = new DecouplingSettings();
+    }
+    this.decoupling.lockMode = value;
+  }
+
+  /** Returns the ripup cost multiplier for soft-locked decoupling items during autoroute passes. */
+  public double getDecouplingRipupCostMultiplier() {
+    return this.decoupling != null && this.decoupling.ripupCostMultiplier != null
+        ? this.decoupling.ripupCostMultiplier
+        : app.freerouting.settings.sources.DefaultSettings.DEFAULT_DECOUPLING_RIPUP_COST_MULTIPLIER;
+  }
+
+  /** Sets the ripup cost multiplier for soft-locked decoupling items during autoroute passes. */
+  public void setDecouplingRipupCostMultiplier(Double value) {
+    if (this.decoupling == null) {
+      this.decoupling = new DecouplingSettings();
+    }
+    this.decoupling.ripupCostMultiplier = value;
+  }
+
+  /** Returns whether opposite-side SMD decoupling capacitor routing is enabled. */
+  public boolean isDecouplingOppositeSideRouting() {
+    return this.decoupling == null
+        || this.decoupling.oppositeSideRouting == null
+        || Boolean.TRUE.equals(this.decoupling.oppositeSideRouting);
+  }
+
+  /** Sets whether opposite-side SMD decoupling capacitor routing is enabled. */
+  public void setDecouplingOppositeSideRouting(Boolean value) {
+    if (this.decoupling == null) {
+      this.decoupling = new DecouplingSettings();
+    }
+    this.decoupling.oppositeSideRouting = value;
+  }
+
+  /** Returns whether mutual-inductance via bias is enabled. */
+  public boolean isDecouplingMutualInductanceBias() {
+    return this.decoupling == null
+        || this.decoupling.mutualInductanceBias == null
+        || Boolean.TRUE.equals(this.decoupling.mutualInductanceBias);
+  }
+
+  /** Sets whether mutual-inductance via bias is enabled. */
+  public void setDecouplingMutualInductanceBias(Boolean value) {
+    if (this.decoupling == null) {
+      this.decoupling = new DecouplingSettings();
+    }
+    this.decoupling.mutualInductanceBias = value;
   }
 
   /** Returns whether connections with newly introduced clearance violations are rejected. */
@@ -932,6 +1082,34 @@ public class RouterSettings implements Serializable, Cloneable {
     this.planeNets = value != null ? value.clone() : null;
     if (pcs != null) {
       pcs.firePropertyChange("planeNets", old, this.planeNets);
+    }
+  }
+
+  /** Returns the explicit list of power net names, or empty array if none configured. */
+  public String[] getPowerNets() {
+    return powerNets != null ? powerNets.clone() : new String[0];
+  }
+
+  /** Sets the explicit list of power net names. */
+  public void setPowerNets(String[] value) {
+    String[] old = this.powerNets;
+    this.powerNets = value != null ? value.clone() : null;
+    if (pcs != null) {
+      pcs.firePropertyChange("powerNets", old, this.powerNets);
+    }
+  }
+
+  /** Returns the explicit list of ground net names, or empty array if none configured. */
+  public String[] getGroundNets() {
+    return groundNets != null ? groundNets.clone() : new String[0];
+  }
+
+  /** Sets the explicit list of ground net names. */
+  public void setGroundNets(String[] value) {
+    String[] old = this.groundNets;
+    this.groundNets = value != null ? value.clone() : null;
+    if (pcs != null) {
+      pcs.firePropertyChange("groundNets", old, this.groundNets);
     }
   }
 
@@ -1275,6 +1453,8 @@ public class RouterSettings implements Serializable, Cloneable {
           "optimizer.enabled", null, this.optimizer != null ? this.optimizer.enabled : null);
       pcs.firePropertyChange(
           "fanout.enabled", null, this.fanout != null ? this.fanout.enabled : null);
+      pcs.firePropertyChange(
+          "decoupling.enabled", null, this.decoupling != null ? this.decoupling.enabled : null);
     }
 
     return changedCount;

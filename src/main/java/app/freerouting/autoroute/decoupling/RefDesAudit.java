@@ -16,18 +16,18 @@ import java.util.regex.Pattern;
  */
 public final class RefDesAudit {
 
-  private static final Pattern CAP_NAME_PATTERN = Pattern.compile("(?i)^(C|CN|CP)\\d.*");
+  private static final Pattern CAP_NAME_PATTERN = Pattern.compile("(?i)^(C|CP|CA)\\d.*");
 
   private static final Pattern NON_CAP_NAME_PATTERN =
       Pattern.compile(
-          "(?i)^(R|RN|L|FB|FL|D|LED|Q|J|JP|HDR|P|TP|F|RV|MOV|Y|X|SW|K|T|VR|RESET|BTN)[0-9_].*");
+          "(?i)^(?:R|RN|RT|RP|L|FB|FL|BLM|IND|D|LED|Q|FET|TR|SW|S|BTN|KEY|TACT|PUSH|SWITCH|BUTTON|J|JP|HDR|P|TP|PIN|CONN|Y|X|XTAL|OSC|F|FUSE|RV|MOV|VR|RESET|K)[0-9_\\-].*");
 
   private static final Pattern CAP_PACKAGE_PATTERN =
       Pattern.compile("(?i).*(C0402|C0603|C0805|C1206|C1210|CAP).*");
 
   private static final Pattern NON_CAP_PACKAGE_PATTERN =
       Pattern.compile(
-          "(?i).*(R0402|R0603|R0805|R1206|RES|DIODE|LED|SMC_D|SOD|DO-\\d|SMA|SMB|SMC|PinHeader|Header|Jumper|SolderJumper).*");
+          "(?i).*(R0402|R0603|R0805|R1206|RES|DIODE|LED|SMC_D|SOD|DO-\\d|SMA|SMB|SMC|PinHeader|Header|Jumper|SolderJumper|Switch|Button|Tactile|PushButton|SlideSwitch|ToggleSwitch|SW_).*");
 
   private RefDesAudit() {}
 
@@ -75,17 +75,15 @@ public final class RefDesAudit {
         } else if (NON_CAP_NAME_PATTERN.matcher(compName).matches()) {
           state.audit = AuditResult.CONFLICT;
           conflicts++;
-          if (config.auditDemotesToReview()) {
-            state.verdict = Verdict.REVIEW;
-          }
+          state.verdict = Verdict.REJECTED;
+          state.reasonMask |= ReasonCode.USER_EXCLUDED.mask();
         } else if (CAP_PACKAGE_PATTERN.matcher(pkgName).matches()) {
           state.audit = AuditResult.AGREE;
         } else if (NON_CAP_PACKAGE_PATTERN.matcher(pkgName).matches()) {
           state.audit = AuditResult.CONFLICT;
           conflicts++;
-          if (config.auditDemotesToReview()) {
-            state.verdict = Verdict.REVIEW;
-          }
+          state.verdict = Verdict.REJECTED;
+          state.reasonMask |= ReasonCode.USER_EXCLUDED.mask();
         } else {
           state.audit = AuditResult.UNKNOWN;
         }

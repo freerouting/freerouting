@@ -18,6 +18,8 @@ class RefDesAuditTest {
     components.add("R5", new IntPoint(0, 0), 0, true, null, null, false, null); // id 2
     components.add("D1", new IntPoint(0, 0), 0, true, null, null, false, null); // id 3
     components.add("REF**", new IntPoint(0, 0), 0, true, null, null, false, null); // id 4
+    components.add("SW1", new IntPoint(0, 0), 0, true, null, null, false, null); // id 5
+    components.add("S2", new IntPoint(0, 0), 0, true, null, null, false, null); // id 6
 
     Pin pinMock = mock(Pin.class);
 
@@ -41,19 +43,31 @@ class RefDesAuditTest {
         new CapacitorScorer.EvaluationState(1, pinMock, pinMock, 1, 2, 0, 100L, 100L);
     s5.verdict = Verdict.REVIEW;
 
+    CapacitorScorer.EvaluationState s6 =
+        new CapacitorScorer.EvaluationState(5, pinMock, pinMock, 1, 2, 0, 100L, 100L);
+    s6.verdict = Verdict.DECOUPLING;
+
+    CapacitorScorer.EvaluationState s7 =
+        new CapacitorScorer.EvaluationState(6, pinMock, pinMock, 1, 2, 0, 100L, 100L);
+    s7.verdict = Verdict.DECOUPLING;
+
     IdentifierConfig config = IdentifierConfig.defaultConfig();
-    List<CapacitorScorer.EvaluationState> states = List.of(s1, s2, s3, s4, s5);
+    List<CapacitorScorer.EvaluationState> states = List.of(s1, s2, s3, s4, s5, s6, s7);
 
     int conflicts = RefDesAudit.audit(states, components, config);
 
-    assertEquals(2, conflicts); // R5 and D1
+    assertEquals(4, conflicts); // R5, D1, SW1, S2
     assertEquals(AuditResult.AGREE, s1.audit);
     assertEquals(AuditResult.CONFLICT, s2.audit);
     assertEquals(AuditResult.CONFLICT, s3.audit);
     assertEquals(AuditResult.UNKNOWN, s4.audit);
     assertEquals(AuditResult.NOT_RUN, s5.audit);
-    // Demote to review is true by default
-    assertEquals(Verdict.REVIEW, s2.verdict);
+    assertEquals(AuditResult.CONFLICT, s6.audit);
+    assertEquals(AuditResult.CONFLICT, s7.audit);
+    // Non-capacitor refdes is hard rejected
+    assertEquals(Verdict.REJECTED, s2.verdict);
+    assertEquals(Verdict.REJECTED, s6.verdict);
+    assertEquals(Verdict.REJECTED, s7.verdict);
 
     // Test with auditDemotesToReview = false
     IdentifierConfig noDemoteConfig =
@@ -73,6 +87,6 @@ class RefDesAuditTest {
 
     s2.verdict = Verdict.DECOUPLING;
     RefDesAudit.audit(List.of(s2), components, noDemoteConfig);
-    assertEquals(Verdict.DECOUPLING, s2.verdict);
+    assertEquals(Verdict.REJECTED, s2.verdict);
   }
 }

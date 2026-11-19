@@ -7,6 +7,7 @@ import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.structure.Unit;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.ConvexShape;
+import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
@@ -87,6 +88,18 @@ public class AutorouteControl {
   public int ripupPassNo;
 
   /**
+   * If true, suppresses expansion to non-feeder target doors on items tagged as filtered islands
+   * during initial connection routing.
+   */
+  public boolean filterNonFeederIslandTargets;
+
+  /**
+   * Maximum door expansions allowed in a single connection search, or Integer.MAX_VALUE for
+   * unlimited.
+   */
+  public int maxDoorExpansions = Integer.MAX_VALUE;
+
+  /**
    * Nets whose traces and vias this search may not rip: the routed net was moved aside for them in
    * an earlier pass (see the batch autorouter's rip-up memory). Empty by default.
    */
@@ -103,6 +116,12 @@ public class AutorouteControl {
 
   /** Source pin layer for targeted fanout diagnostics and limits. */
   public int fanoutStartPinLayer = -1;
+
+  /** Optional target location for directional via bias (e.g. mutual-inductance coupling). */
+  public FloatPoint directionalViaBiasTarget;
+
+  /** Weight multiplier for directional via bias penalty (default 0.0 = disabled). */
+  public double directionalViaBiasWeight = 0.0;
 
   /** Erik Gavriluk (freerouting.net): retry a failed fanout escape without the distance window. */
   public boolean ignoreEscapeWindow;
@@ -220,6 +239,8 @@ public class AutorouteControl {
     fanoutStartPinName = null;
     fanoutStartPinCenter = null;
     fanoutStartPinLayer = -1;
+    directionalViaBiasTarget = null;
+    directionalViaBiasWeight = 0.0;
     removeUnconnectedVias = true;
     withNeckdown = settings.getAutomaticNeckdown();
     tidyRegionWidth = Integer.MAX_VALUE;
@@ -240,6 +261,7 @@ public class AutorouteControl {
     ripupAllowed = false;
     ripupCosts = 1000;
     ripupPassNo = 1;
+    filterNonFeederIslandTargets = false;
   }
 
   /**

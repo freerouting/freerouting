@@ -132,6 +132,17 @@ final class MazeRipupResolver {
       }
     }
 
+    if (obstacleItem.isDecouplingProtected()) {
+      double multiplier =
+          (ctrl.settings != null
+                  && ctrl.settings.decoupling != null
+                  && ctrl.settings.decoupling.ripupCostMultiplier != null)
+              ? ctrl.settings.decoupling.ripupCostMultiplier
+              : app.freerouting.settings.sources.DefaultSettings
+                  .DEFAULT_DECOUPLING_RIPUP_COST_MULTIPLIER;
+      costFactor *= Math.max(1.0, multiplier);
+    }
+
     double ripupCost = ctrl.ripupCosts * costFactor;
     double detour = 1;
     double traceLength = 0;

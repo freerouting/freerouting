@@ -1,5 +1,7 @@
 package app.freerouting.settings.sources;
 
+import app.freerouting.settings.DecouplingLockMode;
+import app.freerouting.settings.DecouplingSettings;
 import app.freerouting.settings.OptimizerSettings;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.RoutingCostSettings;
@@ -124,6 +126,22 @@ public class TestingSettings implements SettingsSource {
   /** Enables strict DRC behavior for the test run. */
   public void setStrictDrc(boolean strictDrc) {
     this.settings.strictDrc = strictDrc;
+  }
+
+  /** Enables or disables the decoupling capacitor pre-routing pass in testing settings. */
+  public void setDecouplingEnabled(boolean enabled) {
+    if (this.settings.decoupling == null) {
+      this.settings.decoupling = new DecouplingSettings();
+    }
+    this.settings.decoupling.enabled = enabled;
+  }
+
+  /** Sets the decoupling lock mode in testing settings. */
+  public void setDecouplingLockMode(DecouplingLockMode lockMode) {
+    if (this.settings.decoupling == null) {
+      this.settings.decoupling = new DecouplingSettings();
+    }
+    this.settings.decoupling.lockMode = lockMode;
   }
 
   @Override

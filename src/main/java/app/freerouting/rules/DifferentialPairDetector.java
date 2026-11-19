@@ -2,6 +2,7 @@ package app.freerouting.rules;
 
 import app.freerouting.logger.FRLogger;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -9,7 +10,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 /**
  * Utility for parsing and identifying differential signal pair naming conventions.
@@ -18,9 +18,6 @@ import java.util.regex.Pattern;
  * paths, and guards against false positives on power and ground rails.
  */
 public final class DifferentialPairDetector {
-
-  private static final Pattern POWER_RAIL_PATTERN =
-      Pattern.compile("^[+-]?\\d+([.vV]\\d*)?[vV]?$", Pattern.CASE_INSENSITIVE);
 
   private DifferentialPairDetector() {}
 
@@ -62,54 +59,27 @@ public final class DifferentialPairDetector {
    * @return true if the net should be excluded
    */
   public static boolean isExcludedNet(String netName) {
+    return isExcludedNet(netName, null, null);
+  }
+
+  /**
+   * Checks whether the given net name is a power, ground, or non-signal net that should be excluded
+   * from differential pair auto-detection, taking into account user-configured additional net
+   * names.
+   *
+   * @param netName the net name to evaluate
+   * @param additionalPowerNets user-configured power rail names
+   * @param additionalGroundNets user-configured ground net names
+   * @return true if the net should be excluded
+   */
+  public static boolean isExcludedNet(
+      String netName,
+      Collection<String> additionalPowerNets,
+      Collection<String> additionalGroundNets) {
     if (netName == null || netName.isBlank()) {
       return true;
     }
-
-    String trimmed = netName.trim();
-    String upper = trimmed.toUpperCase(Locale.ROOT);
-
-    // Strip optional leading hierarchical slashes for name inspection
-    int lastSlash = upper.lastIndexOf('/');
-    String localName = (lastSlash >= 0) ? upper.substring(lastSlash + 1) : upper;
-
-    // Direct power rail names and voltages (e.g. +5V, -12V, 3V3, 1V8, 5V)
-    if (POWER_RAIL_PATTERN.matcher(localName).matches()) {
-      return true;
-    }
-
-    // Common power/ground identifiers
-    if (localName.equals("GND")
-        || localName.equals("GROUND")
-        || localName.startsWith("GND_")
-        || localName.startsWith("GND-")
-        || localName.endsWith("GND")
-        || localName.equals("VCC")
-        || localName.startsWith("VCC_")
-        || localName.endsWith("VCC")
-        || localName.equals("VDD")
-        || localName.startsWith("VDD_")
-        || localName.endsWith("VDD")
-        || localName.equals("VSS")
-        || localName.startsWith("VSS_")
-        || localName.endsWith("VSS")
-        || localName.equals("VBUS")
-        || localName.startsWith("VBUS_")
-        || localName.equals("VBAT")
-        || localName.startsWith("VBAT_")
-        || localName.startsWith("BAT")
-        || localName.equals("V+")
-        || localName.equals("V-")
-        || localName.equals("VS+")
-        || localName.equals("VS-")
-        || localName.startsWith("VIN")
-        || localName.startsWith("VOUT")
-        || localName.equals("PWR")
-        || localName.equals("POWER")) {
-      return true;
-    }
-
-    return false;
+    return PowerGroundNets.isSupplyOrGroundNet(netName, additionalPowerNets, additionalGroundNets);
   }
 
   /**
@@ -119,7 +89,25 @@ public final class DifferentialPairDetector {
    * @return ExtractedNetInfo if a recognized differential suffix is matched, or null otherwise
    */
   public static ExtractedNetInfo extract(String netName) {
-    if (netName == null || netName.isBlank() || isExcludedNet(netName)) {
+    return extract(netName, null, null);
+  }
+
+  /**
+   * Attempts to extract differential pair polarity and base name from the given net name, taking
+   * into account user-configured additional power and ground net exclusions.
+   *
+   * @param netName candidate net name
+   * @param additionalPowerNets user-configured power rail names
+   * @param additionalGroundNets user-configured ground net names
+   * @return ExtractedNetInfo if a recognized differential suffix is matched, or null otherwise
+   */
+  public static ExtractedNetInfo extract(
+      String netName,
+      Collection<String> additionalPowerNets,
+      Collection<String> additionalGroundNets) {
+    if (netName == null
+        || netName.isBlank()
+        || isExcludedNet(netName, additionalPowerNets, additionalGroundNets)) {
       return null;
     }
 
@@ -128,7 +116,14 @@ public final class DifferentialPairDetector {
 
     for (SuffixTokenPattern pattern : DELIMITED_PATTERNS) {
       ExtractedNetInfo info =
-          tryExtractDelimited(trimmed, upper, pattern.posToken, pattern.negToken, pattern.style);
+          tryExtractDelimited(
+              trimmed,
+              upper,
+              pattern.posToken,
+              pattern.negToken,
+              pattern.style,
+              additionalPowerNets,
+              additionalGroundNets);
       if (info != null) {
         return info;
       }
@@ -153,8 +148,11 @@ public final class DifferentialPairDetector {
    * ETH_TXP}/{@code ETH_TXN}). On its own such a name says nothing ({@code STEP}, {@code OPEN}):
    * {@link #detect} only pairs it with a net of the same base and the opposite letter.
    */
-  private static ExtractedNetInfo extractUndelimited(String netName) {
-    if (netName == null || isExcludedNet(netName)) {
+  private static ExtractedNetInfo extractUndelimited(
+      String netName,
+      Collection<String> additionalPowerNets,
+      Collection<String> additionalGroundNets) {
+    if (netName == null || isExcludedNet(netName, additionalPowerNets, additionalGroundNets)) {
       return null;
     }
     String trimmed = netName.trim();
@@ -166,7 +164,7 @@ public final class DifferentialPairDetector {
     int localStart = base.lastIndexOf('/') + 1;
     if (base.length() - localStart < 1
         || !Character.isLetterOrDigit(base.charAt(base.length() - 1))
-        || isExcludedNet(base)) {
+        || isExcludedNet(base, additionalPowerNets, additionalGroundNets)) {
       return null;
     }
     return new ExtractedNetInfo(
@@ -186,7 +184,13 @@ public final class DifferentialPairDetector {
   };
 
   private static ExtractedNetInfo tryExtractDelimited(
-      String trimmed, String upper, String posToken, String negToken, SuffixStyle style) {
+      String trimmed,
+      String upper,
+      String posToken,
+      String negToken,
+      SuffixStyle style,
+      Collection<String> additionalPowerNets,
+      Collection<String> additionalGroundNets) {
     Polarity polarity;
     int tokenLen;
     if (upper.endsWith(posToken)) {
@@ -204,7 +208,7 @@ public final class DifferentialPairDetector {
       char delim = trimmed.charAt(delimIndex);
       if (delim == '_' || delim == '.') {
         String base = trimmed.substring(0, delimIndex);
-        if (!base.isEmpty() && !isExcludedNet(base)) {
+        if (!base.isEmpty() && !isExcludedNet(base, additionalPowerNets, additionalGroundNets)) {
           return new ExtractedNetInfo(base, polarity, style);
         }
       }
@@ -235,6 +239,23 @@ public final class DifferentialPairDetector {
    * @return unmodifiable list of detected DifferentialPair instances
    */
   public static List<DifferentialPair> detect(BoardRules boardRules) {
+    return detect(boardRules, null, null);
+  }
+
+  /**
+   * Scans the nets on the board, auto-detects complementary differential pairs based on standard
+   * naming conventions and user-configured power/ground exclusions, and returns the detected pairs
+   * without modifying the board rules.
+   *
+   * @param boardRules the board rules containing the netlist
+   * @param additionalPowerNets user-configured power rail names
+   * @param additionalGroundNets user-configured ground net names
+   * @return unmodifiable list of detected DifferentialPair instances
+   */
+  public static List<DifferentialPair> detect(
+      BoardRules boardRules,
+      Collection<String> additionalPowerNets,
+      Collection<String> additionalGroundNets) {
     if (boardRules == null || boardRules.nets == null || boardRules.differentialPairs == null) {
       return Collections.emptyList();
     }
@@ -251,8 +272,11 @@ public final class DifferentialPairDetector {
         continue;
       }
 
-      ExtractedNetInfo extracted = extract(net.name);
-      final ExtractedNetInfo info = extracted != null ? extracted : extractUndelimited(net.name);
+      ExtractedNetInfo extracted = extract(net.name, additionalPowerNets, additionalGroundNets);
+      final ExtractedNetInfo info =
+          extracted != null
+              ? extracted
+              : extractUndelimited(net.name, additionalPowerNets, additionalGroundNets);
       if (info == null) {
         continue;
       }
@@ -322,11 +346,28 @@ public final class DifferentialPairDetector {
    * @return unmodifiable list of newly registered differential pairs
    */
   public static List<DifferentialPair> detectAndRegister(BoardRules boardRules) {
+    return detectAndRegister(boardRules, null, null);
+  }
+
+  /**
+   * Scans the nets on the board, auto-detects differential pairs based on standard naming
+   * conventions and user-configured power/ground exclusions, and registers any newly detected pairs
+   * into the board rules.
+   *
+   * @param boardRules the board rules containing nets and the differential pair registry
+   * @param additionalPowerNets user-configured power rail names
+   * @param additionalGroundNets user-configured ground net names
+   * @return unmodifiable list of newly registered differential pairs
+   */
+  public static List<DifferentialPair> detectAndRegister(
+      BoardRules boardRules,
+      Collection<String> additionalPowerNets,
+      Collection<String> additionalGroundNets) {
     if (boardRules == null || boardRules.differentialPairs == null) {
       return Collections.emptyList();
     }
 
-    List<DifferentialPair> detected = detect(boardRules);
+    List<DifferentialPair> detected = detect(boardRules, additionalPowerNets, additionalGroundNets);
     for (DifferentialPair pair : detected) {
       boardRules.differentialPairs.add(pair);
       FRLogger.info(

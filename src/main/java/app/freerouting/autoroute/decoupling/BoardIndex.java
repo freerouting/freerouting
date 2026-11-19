@@ -5,6 +5,7 @@ import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.structure.Component;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.Nets;
+import app.freerouting.rules.PowerGroundNets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -36,7 +37,7 @@ public final class BoardIndex {
 
   private static final Pattern NON_CAP_NAME_PATTERN =
       Pattern.compile(
-          "(?i)^(R|RN|L|FB|FL|D|LED|Q|J|JP|HDR|P|TP|F|RV|MOV|Y|X|SW|K|T|VR|RESET|BTN)[0-9_].*");
+          "(?i)^(?:R|RN|RT|RP|L|FB|FL|BLM|IND|D|LED|Q|FET|TR|SW|S|BTN|KEY|TACT|PUSH|SWITCH|BUTTON|J|JP|HDR|P|TP|PIN|CONN|Y|X|XTAL|OSC|F|FUSE|RV|MOV|VR|RESET|K)[0-9_\\-].*");
 
   private final int[] componentIds;
   private final String[] componentNames;
@@ -342,12 +343,17 @@ public final class BoardIndex {
   }
 
   private static boolean matchesGroundName(String name, List<Pattern> patterns) {
-    if (name == null || name.isEmpty() || patterns == null) {
+    if (name == null || name.isEmpty()) {
       return false;
     }
-    for (Pattern pattern : patterns) {
-      if (pattern.matcher(name).matches()) {
-        return true;
+    if (PowerGroundNets.isGroundNetName(name)) {
+      return true;
+    }
+    if (patterns != null) {
+      for (Pattern pattern : patterns) {
+        if (pattern.matcher(name).matches()) {
+          return true;
+        }
       }
     }
     return false;

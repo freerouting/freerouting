@@ -7,6 +7,9 @@ import app.freerouting.gui.board.BoardFrame;
 import app.freerouting.gui.board.BoardSavableSubWindow;
 import app.freerouting.gui.support.GuiTextManager;
 import app.freerouting.gui.workspace.GuiBoardManager;
+import app.freerouting.settings.DecouplingLockMode;
+import app.freerouting.settings.PropertyChangeEvent;
+import app.freerouting.settings.PropertyChangeListener;
 import app.freerouting.settings.RouterSettings;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -36,15 +39,37 @@ import javax.swing.JPanel;
 /** Window handling parameters of the automatic routing. */
 public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
+  private final PropertyChangeListener settingsChangeListener = this::onSettingsChanged;
   private final GuiBoardManager boardHandling;
   private final JLabel[] layerNameArr;
   private final JLabel[] signalLayerNameArr;
   private final JCheckBox[] settingsAutorouterLayerActiveArr;
   private final List<JComboBox<String>> settingsAutorouterComboBoxArr;
   private final JCheckBox settingsAutorouterViasAllowed;
+  private final JCheckBox settingsAutorouterDecouplingButton;
   private final JCheckBox settingsAutorouterFanoutButton;
   private final JCheckBox settingsAutorouterAutoroutePassButton;
   private final JCheckBox settingsAutorouterOptimizationButton;
+  private final JPanel decouplingPanel;
+  private final JFormattedTextField decouplingMaxStrapLengthField;
+  private final JFormattedTextField decouplingMaxOwnerRadiusField;
+  private final JFormattedTextField decouplingTraceWidthScaleField;
+  private final JComboBox<LockModeItem> decouplingLockModeComboBox;
+  private final JFormattedTextField decouplingRipupMultiplierField;
+  private final JCheckBox decouplingOppositeSideRoutingCheckBox;
+  private final JCheckBox decouplingMutualInductanceBiasCheckBox;
+  private boolean decouplingMaxStrapLengthInputCompleted = true;
+  private boolean decouplingMaxOwnerRadiusInputCompleted = true;
+  private boolean decouplingTraceWidthScaleInputCompleted = true;
+  private boolean decouplingRipupMultiplierInputCompleted = true;
+
+  private record LockModeItem(DecouplingLockMode mode, String displayName) {
+    @Override
+    public String toString() {
+      return displayName;
+    }
+  }
+
   private final String horizontal;
   private final String vertical;
   private final JFormattedTextField viaCostField;
@@ -194,16 +219,26 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     tm.setText(stagesLabel, "routing_stages");
 
     gridbagConstraints.gridwidth = 2;
-    gridbagConstraints.gridheight = 3;
+    gridbagConstraints.gridheight = 4;
     gridbag.setConstraints(stagesLabel, gridbagConstraints);
     mainPanel.add(stagesLabel);
 
+    this.settingsAutorouterDecouplingButton = new JCheckBox();
+    tm.setText(this.settingsAutorouterDecouplingButton, "decoupling");
     this.settingsAutorouterFanoutButton = new JCheckBox();
     tm.setText(this.settingsAutorouterFanoutButton, "fanout");
     this.settingsAutorouterAutoroutePassButton = new JCheckBox();
     tm.setText(this.settingsAutorouterAutoroutePassButton, "autoroute");
     this.settingsAutorouterOptimizationButton = new JCheckBox();
     tm.setText(this.settingsAutorouterOptimizationButton, "optimization");
+
+    settingsAutorouterDecouplingButton.setToolTipText(tm.getText("decoupling_tooltip"));
+    settingsAutorouterDecouplingButton.addActionListener(new DecouplingListener());
+    settingsAutorouterDecouplingButton.addActionListener(
+        _ ->
+            FRAnalytics.buttonClicked(
+                "settingsAutorouterDecouplingButton",
+                settingsAutorouterDecouplingButton.getText()));
 
     settingsAutorouterFanoutButton.addActionListener(new FanoutListener());
     settingsAutorouterFanoutButton.addActionListener(
@@ -223,6 +258,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
                 "settingsAutorouterOptimizationButton",
                 settingsAutorouterOptimizationButton.getText()));
 
+    settingsAutorouterDecouplingButton.setSelected(false);
     settingsAutorouterFanoutButton.setSelected(true);
     settingsAutorouterAutoroutePassButton.setSelected(true);
     settingsAutorouterOptimizationButton.setSelected(false);
@@ -230,12 +266,141 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbagConstraints.gridheight = 1;
 
+    gridbag.setConstraints(settingsAutorouterDecouplingButton, gridbagConstraints);
+    mainPanel.add(settingsAutorouterDecouplingButton, gridbagConstraints);
     gridbag.setConstraints(settingsAutorouterFanoutButton, gridbagConstraints);
     mainPanel.add(settingsAutorouterFanoutButton, gridbagConstraints);
     gridbag.setConstraints(settingsAutorouterAutoroutePassButton, gridbagConstraints);
     mainPanel.add(settingsAutorouterAutoroutePassButton, gridbagConstraints);
     gridbag.setConstraints(settingsAutorouterOptimizationButton, gridbagConstraints);
     mainPanel.add(settingsAutorouterOptimizationButton, gridbagConstraints);
+
+    separator = new JLabel("––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––  ");
+
+    gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbagConstraints.fill = GridBagConstraints.HORIZONTAL;
+    gridbag.setConstraints(separator, gridbagConstraints);
+    mainPanel.add(separator, gridbagConstraints);
+    gridbagConstraints.fill = GridBagConstraints.NONE;
+
+    NumberFormat decimalFormat = NumberFormat.getNumberInstance(boardFrame.getLocale());
+    decimalFormat.setGroupingUsed(false);
+    decimalFormat.setMaximumFractionDigits(2);
+    decimalFormat.setMinimumFractionDigits(1);
+
+    this.decouplingPanel = new JPanel(new GridBagLayout());
+    this.decouplingPanel.setBorder(
+        javax.swing.BorderFactory.createTitledBorder(tm.getText("decoupling_settings")));
+
+    GridBagConstraints dgbc = new GridBagConstraints();
+    dgbc.anchor = GridBagConstraints.WEST;
+    dgbc.insets = new Insets(2, 6, 2, 6);
+
+    // Max strap length (mm)
+    // TODO: Notice the units and later come back and unify the units so they match user's choice of
+    // units.
+    dgbc.gridwidth = 2;
+    JLabel strapLengthLabel = new JLabel(tm.getText("max_strap_length"));
+    strapLengthLabel.setToolTipText(tm.getText("max_strap_length_tooltip"));
+    this.decouplingPanel.add(strapLengthLabel, dgbc);
+
+    this.decouplingMaxStrapLengthField = new JFormattedTextField(decimalFormat);
+    this.decouplingMaxStrapLengthField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+    this.decouplingMaxStrapLengthField.setColumns(4);
+    this.decouplingMaxStrapLengthField.setToolTipText(tm.getText("max_strap_length_tooltip"));
+    this.decouplingMaxStrapLengthField.addKeyListener(new DecouplingMaxStrapLengthKeyListener());
+    this.decouplingMaxStrapLengthField.addFocusListener(
+        new DecouplingMaxStrapLengthFocusListener());
+    dgbc.gridwidth = GridBagConstraints.REMAINDER;
+    this.decouplingPanel.add(this.decouplingMaxStrapLengthField, dgbc);
+
+    // Max owner search radius (mm)
+    // TODO: Notice the units and later come back and unify the units so they match user's choice of
+    // units.
+    dgbc.gridwidth = 2;
+    JLabel ownerRadiusLabel = new JLabel(tm.getText("max_owner_radius"));
+    ownerRadiusLabel.setToolTipText(tm.getText("max_owner_radius_tooltip"));
+    this.decouplingPanel.add(ownerRadiusLabel, dgbc);
+
+    this.decouplingMaxOwnerRadiusField = new JFormattedTextField(decimalFormat);
+    this.decouplingMaxOwnerRadiusField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+    this.decouplingMaxOwnerRadiusField.setColumns(4);
+    this.decouplingMaxOwnerRadiusField.setToolTipText(tm.getText("max_owner_radius_tooltip"));
+    this.decouplingMaxOwnerRadiusField.addKeyListener(new DecouplingMaxOwnerRadiusKeyListener());
+    this.decouplingMaxOwnerRadiusField.addFocusListener(
+        new DecouplingMaxOwnerRadiusFocusListener());
+    dgbc.gridwidth = GridBagConstraints.REMAINDER;
+    this.decouplingPanel.add(this.decouplingMaxOwnerRadiusField, dgbc);
+
+    // Strap trace width multiplier
+    dgbc.gridwidth = 2;
+    JLabel traceWidthScaleLabel = new JLabel(tm.getText("trace_width_scale"));
+    traceWidthScaleLabel.setToolTipText(tm.getText("trace_width_scale_tooltip"));
+    this.decouplingPanel.add(traceWidthScaleLabel, dgbc);
+
+    this.decouplingTraceWidthScaleField = new JFormattedTextField(decimalFormat);
+    this.decouplingTraceWidthScaleField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+    this.decouplingTraceWidthScaleField.setColumns(4);
+    this.decouplingTraceWidthScaleField.setToolTipText(tm.getText("trace_width_scale_tooltip"));
+    this.decouplingTraceWidthScaleField.addKeyListener(new DecouplingTraceWidthScaleKeyListener());
+    this.decouplingTraceWidthScaleField.addFocusListener(
+        new DecouplingTraceWidthScaleFocusListener());
+    dgbc.gridwidth = GridBagConstraints.REMAINDER;
+    this.decouplingPanel.add(this.decouplingTraceWidthScaleField, dgbc);
+
+    // Lock mode combo
+    dgbc.gridwidth = 2;
+    JLabel lockModeLabel = new JLabel(tm.getText("lock_mode"));
+    lockModeLabel.setToolTipText(tm.getText("lock_mode_tooltip"));
+    this.decouplingPanel.add(lockModeLabel, dgbc);
+
+    this.decouplingLockModeComboBox = new JComboBox<>();
+    this.decouplingLockModeComboBox.setToolTipText(tm.getText("lock_mode_tooltip"));
+    populateLockModes();
+    this.decouplingLockModeComboBox.addActionListener(e -> onLockModeChanged());
+    dgbc.gridwidth = GridBagConstraints.REMAINDER;
+    this.decouplingPanel.add(this.decouplingLockModeComboBox, dgbc);
+
+    // Rip-up multiplier
+    dgbc.gridwidth = 2;
+    JLabel ripupMultiplierLabel = new JLabel(tm.getText("ripup_cost_multiplier"));
+    ripupMultiplierLabel.setToolTipText(tm.getText("ripup_cost_multiplier_tooltip"));
+    this.decouplingPanel.add(ripupMultiplierLabel, dgbc);
+
+    this.decouplingRipupMultiplierField = new JFormattedTextField(decimalFormat);
+    this.decouplingRipupMultiplierField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+    this.decouplingRipupMultiplierField.setColumns(4);
+    this.decouplingRipupMultiplierField.setToolTipText(tm.getText("ripup_cost_multiplier_tooltip"));
+    this.decouplingRipupMultiplierField.addKeyListener(new DecouplingRipupMultiplierKeyListener());
+    this.decouplingRipupMultiplierField.addFocusListener(
+        new DecouplingRipupMultiplierFocusListener());
+    dgbc.gridwidth = GridBagConstraints.REMAINDER;
+    this.decouplingPanel.add(this.decouplingRipupMultiplierField, dgbc);
+
+    // Opposite-side routing checkbox
+    this.decouplingOppositeSideRoutingCheckBox = new JCheckBox(tm.getText("opposite_side_routing"));
+    this.decouplingOppositeSideRoutingCheckBox.setToolTipText(
+        tm.getText("opposite_side_routing_tooltip"));
+    this.decouplingOppositeSideRoutingCheckBox.addActionListener(
+        e -> onOppositeSideRoutingChanged());
+    dgbc.gridwidth = GridBagConstraints.REMAINDER;
+    this.decouplingPanel.add(this.decouplingOppositeSideRoutingCheckBox, dgbc);
+
+    // Mutual inductance flank bias checkbox
+    this.decouplingMutualInductanceBiasCheckBox =
+        new JCheckBox(tm.getText("mutual_inductance_bias"));
+    this.decouplingMutualInductanceBiasCheckBox.setToolTipText(
+        tm.getText("mutual_inductance_bias_tooltip"));
+    this.decouplingMutualInductanceBiasCheckBox.addActionListener(
+        e -> onMutualInductanceBiasChanged());
+    dgbc.gridwidth = GridBagConstraints.REMAINDER;
+    this.decouplingPanel.add(this.decouplingMutualInductanceBiasCheckBox, dgbc);
+
+    gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbagConstraints.fill = GridBagConstraints.HORIZONTAL;
+    gridbag.setConstraints(this.decouplingPanel, gridbagConstraints);
+    mainPanel.add(this.decouplingPanel, gridbagConstraints);
+    gridbagConstraints.fill = GridBagConstraints.NONE;
 
     separator = new JLabel("––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––  ");
 
@@ -507,7 +672,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     this.boardHandling
         .getCurrentRoutingJob()
         .routerSettings
-        .addPropertyChangeListener(this::onSettingsChanged);
+        .addPropertyChangeListener(this.settingsChangeListener);
   }
 
   public static int normalizeIntInput(Object input, int oldValue, int minValue, int maxValue) {
@@ -516,6 +681,11 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
   public static double normalizePositiveDoubleInput(Object input, double oldValue) {
     return WindowAutorouteParameterState.normalizePositiveDoubleInput(input, oldValue);
+  }
+
+  public static double normalizeDoubleInput(
+      Object input, double oldValue, double minValue, double maxValue) {
+    return WindowAutorouteParameterState.normalizeDoubleInput(input, oldValue, minValue, maxValue);
   }
 
   public static String normalizeTimeoutInput(Object input, String oldValue) {
@@ -550,6 +720,9 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     if (this.jobTimeoutUnitComboBox != null) {
       populateTimeoutUnits();
     }
+    if (this.decouplingLockModeComboBox != null) {
+      populateLockModes();
+    }
     if (this.jobTimeoutValueField != null
         && this.boardHandling != null
         && this.boardHandling.getCurrentRoutingJob() != null) {
@@ -559,7 +732,11 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   }
 
   /** Handle property change events from RouterSettings to update GUI controls. */
-  private void onSettingsChanged(app.freerouting.settings.PropertyChangeEvent evt) {
+  private void onSettingsChanged(PropertyChangeEvent evt) {
+    if (!javax.swing.SwingUtilities.isEventDispatchThread()) {
+      javax.swing.SwingUtilities.invokeLater(() -> onSettingsChanged(evt));
+      return;
+    }
     if (isUpdatingFromSettings) {
       return; // Prevent circular updates
     }
@@ -596,6 +773,12 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
             settingsAutorouterViasAllowed.setSelected(bool);
           }
         }
+        case "decoupling.enabled" -> {
+          if (newValue instanceof Boolean bool) {
+            settingsAutorouterDecouplingButton.setSelected(bool);
+            setDecouplingComponentsEnabled(bool);
+          }
+        }
         case "fanout.enabled" -> {
           if (newValue instanceof Boolean bool) {
             settingsAutorouterFanoutButton.setSelected(bool);
@@ -620,9 +803,21 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     final LayerStructure layerStructure = this.boardHandling.getRoutingBoard().layerStructure;
 
     this.settingsAutorouterViasAllowed.setSelected(settings.getViasAllowed());
+    this.settingsAutorouterDecouplingButton.setSelected(settings.isDecouplingEnabled());
     this.settingsAutorouterFanoutButton.setSelected(settings.getRunFanout());
     this.settingsAutorouterAutoroutePassButton.setSelected(settings.getRunRouter());
     this.settingsAutorouterOptimizationButton.setSelected(settings.getRunOptimizer());
+
+    this.decouplingMaxStrapLengthField.setValue(settings.getDecouplingMaxStrapLengthMm());
+    this.decouplingMaxOwnerRadiusField.setValue(settings.getDecouplingMaxOwnerRadiusMm());
+    this.decouplingTraceWidthScaleField.setValue(settings.getDecouplingTraceWidthScale());
+    setSelectedLockMode(settings.getDecouplingLockMode());
+    this.decouplingRipupMultiplierField.setValue(settings.getDecouplingRipupCostMultiplier());
+    this.decouplingOppositeSideRoutingCheckBox.setSelected(
+        settings.isDecouplingOppositeSideRouting());
+    this.decouplingMutualInductanceBiasCheckBox.setSelected(
+        settings.isDecouplingMutualInductanceBias());
+    setDecouplingComponentsEnabled(settings.isDecouplingEnabled());
 
     for (int i = 0; i < settingsAutorouterLayerActiveArr.length; i++) {
       this.settingsAutorouterLayerActiveArr[i].setSelected(settings.getLayerActive(i));
@@ -660,6 +855,12 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
   @Override
   public void dispose() {
+    if (boardHandling != null && boardHandling.getCurrentRoutingJob() != null) {
+      boardHandling
+          .getCurrentRoutingJob()
+          .routerSettings
+          .removePropertyChangeListener(this.settingsChangeListener);
+    }
     super.dispose();
   }
 
@@ -815,6 +1016,215 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     }
   }
 
+  private void populateLockModes() {
+    this.isUpdatingFromSettings = true;
+    try {
+      DecouplingLockMode selected = getSelectedLockMode();
+      this.decouplingLockModeComboBox.removeAllItems();
+      for (DecouplingLockMode mode : DecouplingLockMode.values()) {
+        String name = this.tm.getText("lock_mode_" + mode.name().toLowerCase(Locale.ROOT));
+        this.decouplingLockModeComboBox.addItem(new LockModeItem(mode, name));
+      }
+      setSelectedLockMode(selected != null ? selected : DecouplingLockMode.SOFT);
+    } finally {
+      this.isUpdatingFromSettings = false;
+    }
+  }
+
+  private DecouplingLockMode getSelectedLockMode() {
+    LockModeItem item = (LockModeItem) this.decouplingLockModeComboBox.getSelectedItem();
+    return item != null ? item.mode() : null;
+  }
+
+  private void setSelectedLockMode(DecouplingLockMode mode) {
+    if (mode == null) {
+      return;
+    }
+    for (int i = 0; i < this.decouplingLockModeComboBox.getItemCount(); i++) {
+      LockModeItem item = this.decouplingLockModeComboBox.getItemAt(i);
+      if (item != null && item.mode() == mode) {
+        this.decouplingLockModeComboBox.setSelectedIndex(i);
+        break;
+      }
+    }
+  }
+
+  private void onLockModeChanged() {
+    if (this.isUpdatingFromSettings) {
+      return;
+    }
+    DecouplingLockMode mode = getSelectedLockMode();
+    if (mode == null) {
+      return;
+    }
+    this.isUpdatingFromSettings = true;
+    try {
+      this.boardHandling.getCurrentRoutingJob().routerSettings.setDecouplingLockMode(mode);
+      syncSettingsToWorkspace();
+    } finally {
+      this.isUpdatingFromSettings = false;
+    }
+  }
+
+  private void onOppositeSideRoutingChanged() {
+    if (this.isUpdatingFromSettings) {
+      return;
+    }
+    boolean selected = this.decouplingOppositeSideRoutingCheckBox.isSelected();
+    this.isUpdatingFromSettings = true;
+    try {
+      this.boardHandling
+          .getCurrentRoutingJob()
+          .routerSettings
+          .setDecouplingOppositeSideRouting(selected);
+      syncSettingsToWorkspace();
+    } finally {
+      this.isUpdatingFromSettings = false;
+    }
+  }
+
+  private void onMutualInductanceBiasChanged() {
+    if (this.isUpdatingFromSettings) {
+      return;
+    }
+    boolean selected = this.decouplingMutualInductanceBiasCheckBox.isSelected();
+    this.isUpdatingFromSettings = true;
+    try {
+      this.boardHandling
+          .getCurrentRoutingJob()
+          .routerSettings
+          .setDecouplingMutualInductanceBias(selected);
+      syncSettingsToWorkspace();
+    } finally {
+      this.isUpdatingFromSettings = false;
+    }
+  }
+
+  private void setDecouplingComponentsEnabled(boolean enabled) {
+    if (this.decouplingMaxStrapLengthField != null) {
+      this.decouplingMaxStrapLengthField.setEnabled(enabled);
+    }
+    if (this.decouplingMaxOwnerRadiusField != null) {
+      this.decouplingMaxOwnerRadiusField.setEnabled(enabled);
+    }
+    if (this.decouplingTraceWidthScaleField != null) {
+      this.decouplingTraceWidthScaleField.setEnabled(enabled);
+    }
+    if (this.decouplingLockModeComboBox != null) {
+      this.decouplingLockModeComboBox.setEnabled(enabled);
+    }
+    if (this.decouplingRipupMultiplierField != null) {
+      this.decouplingRipupMultiplierField.setEnabled(enabled);
+    }
+    if (this.decouplingOppositeSideRoutingCheckBox != null) {
+      this.decouplingOppositeSideRoutingCheckBox.setEnabled(enabled);
+    }
+    if (this.decouplingMutualInductanceBiasCheckBox != null) {
+      this.decouplingMutualInductanceBiasCheckBox.setEnabled(enabled);
+    }
+    if (this.decouplingPanel != null) {
+      for (java.awt.Component comp : this.decouplingPanel.getComponents()) {
+        comp.setEnabled(enabled);
+      }
+    }
+  }
+
+  private void commitDecouplingMaxStrapLengthEdit() {
+    // TODO: Notice the units and later come back and unify the units so they match user's choice of
+    // units.
+    if (this.isUpdatingFromSettings) {
+      return;
+    }
+    try {
+      this.decouplingMaxStrapLengthField.commitEdit();
+    } catch (java.text.ParseException ignored) {
+    }
+    RouterSettings settings = this.boardHandling.getCurrentRoutingJob().routerSettings;
+    double oldValue = settings.getDecouplingMaxStrapLengthMm();
+    double newValue =
+        normalizeDoubleInput(this.decouplingMaxStrapLengthField.getValue(), oldValue, 0.1, 50.0);
+    this.isUpdatingFromSettings = true;
+    try {
+      settings.setDecouplingMaxStrapLengthMm(newValue);
+      syncSettingsToWorkspace();
+    } finally {
+      this.isUpdatingFromSettings = false;
+    }
+    this.decouplingMaxStrapLengthField.setValue(newValue);
+    this.decouplingMaxStrapLengthInputCompleted = true;
+  }
+
+  private void commitDecouplingMaxOwnerRadiusEdit() {
+    // TODO: Notice the units and later come back and unify the units so they match user's choice of
+    // units.
+    if (this.isUpdatingFromSettings) {
+      return;
+    }
+    try {
+      this.decouplingMaxOwnerRadiusField.commitEdit();
+    } catch (java.text.ParseException ignored) {
+    }
+    RouterSettings settings = this.boardHandling.getCurrentRoutingJob().routerSettings;
+    double oldValue = settings.getDecouplingMaxOwnerRadiusMm();
+    double newValue =
+        normalizeDoubleInput(this.decouplingMaxOwnerRadiusField.getValue(), oldValue, 0.5, 100.0);
+    this.isUpdatingFromSettings = true;
+    try {
+      settings.setDecouplingMaxOwnerRadiusMm(newValue);
+      syncSettingsToWorkspace();
+    } finally {
+      this.isUpdatingFromSettings = false;
+    }
+    this.decouplingMaxOwnerRadiusField.setValue(newValue);
+    this.decouplingMaxOwnerRadiusInputCompleted = true;
+  }
+
+  private void commitDecouplingTraceWidthScaleEdit() {
+    if (this.isUpdatingFromSettings) {
+      return;
+    }
+    try {
+      this.decouplingTraceWidthScaleField.commitEdit();
+    } catch (java.text.ParseException ignored) {
+    }
+    RouterSettings settings = this.boardHandling.getCurrentRoutingJob().routerSettings;
+    double oldValue = settings.getDecouplingTraceWidthScale();
+    double newValue =
+        normalizeDoubleInput(this.decouplingTraceWidthScaleField.getValue(), oldValue, 0.5, 5.0);
+    this.isUpdatingFromSettings = true;
+    try {
+      settings.setDecouplingTraceWidthScale(newValue);
+      syncSettingsToWorkspace();
+    } finally {
+      this.isUpdatingFromSettings = false;
+    }
+    this.decouplingTraceWidthScaleField.setValue(newValue);
+    this.decouplingTraceWidthScaleInputCompleted = true;
+  }
+
+  private void commitDecouplingRipupMultiplierEdit() {
+    if (this.isUpdatingFromSettings) {
+      return;
+    }
+    try {
+      this.decouplingRipupMultiplierField.commitEdit();
+    } catch (java.text.ParseException ignored) {
+    }
+    RouterSettings settings = this.boardHandling.getCurrentRoutingJob().routerSettings;
+    double oldValue = settings.getDecouplingRipupCostMultiplier();
+    double newValue =
+        normalizeDoubleInput(this.decouplingRipupMultiplierField.getValue(), oldValue, 1.0, 50.0);
+    this.isUpdatingFromSettings = true;
+    try {
+      settings.setDecouplingRipupCostMultiplier(newValue);
+      syncSettingsToWorkspace();
+    } finally {
+      this.isUpdatingFromSettings = false;
+    }
+    this.decouplingRipupMultiplierField.setValue(newValue);
+    this.decouplingRipupMultiplierInputCompleted = true;
+  }
+
   private String buildJobTimeoutString() {
     long value = readTimeoutValue();
     WindowAutorouteParameterState.TimeoutUnit unit = getSelectedTimeoutUnit();
@@ -904,6 +1314,23 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       isUpdatingFromSettings = true;
       try {
         applyFanoutEnabledSelection(autorouteSettings, settingsAutorouterFanoutButton.isSelected());
+        syncSettingsToWorkspace();
+      } finally {
+        isUpdatingFromSettings = false;
+      }
+    }
+  }
+
+  private class DecouplingListener implements ActionListener {
+
+    @Override
+    public void actionPerformed(ActionEvent evt) {
+      boolean selected = settingsAutorouterDecouplingButton.isSelected();
+      RouterSettings autorouteSettings = boardHandling.getCurrentRoutingJob().routerSettings;
+      isUpdatingFromSettings = true;
+      try {
+        autorouteSettings.setDecouplingEnabled(selected);
+        setDecouplingComponentsEnabled(selected);
         syncSettingsToWorkspace();
       } finally {
         isUpdatingFromSettings = false;
@@ -1453,6 +1880,106 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         bendCostArr[this.signalLayerNo].setValue(inputValue);
         bendCostsInputCompleted[this.signalLayerNo] = true;
         syncSettingsToWorkspace();
+      }
+    }
+
+    @Override
+    public void focusGained(FocusEvent evt) {}
+  }
+
+  private class DecouplingMaxStrapLengthKeyListener extends KeyAdapter {
+
+    @Override
+    public void keyTyped(KeyEvent evt) {
+      if (evt.getKeyChar() == '\n') {
+        commitDecouplingMaxStrapLengthEdit();
+      } else {
+        decouplingMaxStrapLengthInputCompleted = false;
+      }
+    }
+  }
+
+  private class DecouplingMaxStrapLengthFocusListener implements FocusListener {
+
+    @Override
+    public void focusLost(FocusEvent evt) {
+      if (!decouplingMaxStrapLengthInputCompleted) {
+        commitDecouplingMaxStrapLengthEdit();
+      }
+    }
+
+    @Override
+    public void focusGained(FocusEvent evt) {}
+  }
+
+  private class DecouplingMaxOwnerRadiusKeyListener extends KeyAdapter {
+
+    @Override
+    public void keyTyped(KeyEvent evt) {
+      if (evt.getKeyChar() == '\n') {
+        commitDecouplingMaxOwnerRadiusEdit();
+      } else {
+        decouplingMaxOwnerRadiusInputCompleted = false;
+      }
+    }
+  }
+
+  private class DecouplingMaxOwnerRadiusFocusListener implements FocusListener {
+
+    @Override
+    public void focusLost(FocusEvent evt) {
+      if (!decouplingMaxOwnerRadiusInputCompleted) {
+        commitDecouplingMaxOwnerRadiusEdit();
+      }
+    }
+
+    @Override
+    public void focusGained(FocusEvent evt) {}
+  }
+
+  private class DecouplingTraceWidthScaleKeyListener extends KeyAdapter {
+
+    @Override
+    public void keyTyped(KeyEvent evt) {
+      if (evt.getKeyChar() == '\n') {
+        commitDecouplingTraceWidthScaleEdit();
+      } else {
+        decouplingTraceWidthScaleInputCompleted = false;
+      }
+    }
+  }
+
+  private class DecouplingTraceWidthScaleFocusListener implements FocusListener {
+
+    @Override
+    public void focusLost(FocusEvent evt) {
+      if (!decouplingTraceWidthScaleInputCompleted) {
+        commitDecouplingTraceWidthScaleEdit();
+      }
+    }
+
+    @Override
+    public void focusGained(FocusEvent evt) {}
+  }
+
+  private class DecouplingRipupMultiplierKeyListener extends KeyAdapter {
+
+    @Override
+    public void keyTyped(KeyEvent evt) {
+      if (evt.getKeyChar() == '\n') {
+        commitDecouplingRipupMultiplierEdit();
+      } else {
+        decouplingRipupMultiplierInputCompleted = false;
+      }
+    }
+  }
+
+  private class DecouplingRipupMultiplierFocusListener implements FocusListener {
+
+    @Override
+    public void focusLost(FocusEvent evt) {
+      if (!decouplingRipupMultiplierInputCompleted) {
+        commitDecouplingRipupMultiplierEdit();
       }
     }
 

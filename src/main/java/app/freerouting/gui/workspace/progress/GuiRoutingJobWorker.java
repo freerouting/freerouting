@@ -222,6 +222,39 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
                       null,
                       false,
                       true));
+            } else if (event.getRouterCounters() != null
+                && "decoupling".equals(event.getRouterCounters().phase)) {
+              int extraVias =
+                  event.getRouterCounters().fanoutExtraViasCount == null
+                      ? 0
+                      : event.getRouterCounters().fanoutExtraViasCount;
+              TextManager tm = new TextManager(ScreenMessages.class, sessionPort.locale());
+              String decapMessage;
+              if (event.getRouterCounters().passCount == null) {
+                decapMessage = tm.getText("batch_decoupling_start_message");
+              } else {
+                decapMessage =
+                    "Decoupling pass (routed "
+                        + event.getRouterCounters().routedCount
+                        + ", failed "
+                        + event.getRouterCounters().failedToBeRoutedCount
+                        + ", +"
+                        + extraVias
+                        + " vias)";
+              }
+              sessionPort.publishProgress(
+                  new RouteProgress(
+                      generation,
+                      decapMessage,
+                      copyCounters(event),
+                      boardScore,
+                      event.getBoardStatistics().connections.incompleteCount,
+                      event.getBoardStatistics().clearanceViolations.totalCount,
+                      null,
+                      null,
+                      null,
+                      false,
+                      true));
             } else {
               sessionPort.publishProgress(
                   new RouteProgress(
@@ -583,6 +616,8 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
                 + "' on "
                 + (threadCount == 1 ? "1 thread" : threadCount + " threads")
                 + "...");
+      } else if (routingJob.routerSettings.isDecouplingEnabled()) {
+        routingJob.logInfo("Starting decoupling pre-routing of '" + routingJob.name + "'...");
       } else if (routingJob.routerSettings.isFanoutEnabled()) {
         routingJob.logInfo("Starting fanout of '" + routingJob.name + "'...");
       }
@@ -616,7 +651,16 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
           inputFormat);
 
       TextManager tm = new TextManager(ScreenMessages.class, sessionPort.locale());
-      String startMessage = tm.getText("batch_autorouter_start_message");
+      String startMessage;
+      if (routingJob.routerSettings.isDecouplingEnabled()) {
+        startMessage = tm.getText("batch_decoupling_start_message");
+      } else if (this.routerEnabledForRun) {
+        startMessage = tm.getText("batch_autorouter_start_message");
+      } else if (routingJob.routerSettings.isFanoutEnabled()) {
+        startMessage = tm.getText("batch_fanout_start_message");
+      } else {
+        startMessage = tm.getText("batch_autorouter_start_message");
+      }
       sessionPort.publishProgress(RouteProgress.status(generation, startMessage));
 
       this.pipeline.addStageListener(
@@ -678,13 +722,25 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
             ? 0
             : new BoardStatistics(routingJob.board).connections.incompleteCount;
     TextManager terminalText = new TextManager(ScreenMessages.class, sessionPort.locale());
-    String terminalStatus =
-        terminalText.getText(
-            "autoroute_end_message",
-            this.isStopRequested()
-                ? terminalText.getText("interrupted")
-                : terminalText.getText("completed"),
-            Integer.toString(incompleteCount));
+    String terminalStatus;
+    if (!this.routerEnabledForRun
+        && !routingJob.routerSettings.isFanoutEnabled()
+        && routingJob.routerSettings.isDecouplingEnabled()) {
+      terminalStatus =
+          terminalText.getText(
+              "decoupling_end_message",
+              this.isStopRequested()
+                  ? terminalText.getText("interrupted")
+                  : terminalText.getText("completed"));
+    } else {
+      terminalStatus =
+          terminalText.getText(
+              "autoroute_end_message",
+              this.isStopRequested()
+                  ? terminalText.getText("interrupted")
+                  : terminalText.getText("completed"),
+              Integer.toString(incompleteCount));
+    }
     sessionPort.finishRoute(
         new RouteCompletion(
             generation, this.isStopRequested(), terminalStatus, incompleteCount, true, true));
@@ -815,6 +871,21 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
             : stats.getRouterScore(
                 new app.freerouting.settings.sources.DefaultSettings().getSettings());
 
+    RoutingSummaryData.DecouplingSummaryItem decouplingItem = null;
+    if (routingJob.resultPhaseMetrics != null && routingJob.resultPhaseMetrics.decoupling != null) {
+      var d = routingJob.resultPhaseMetrics.decoupling;
+      decouplingItem =
+          new RoutingSummaryData.DecouplingSummaryItem(
+              d.candidatesTotal,
+              d.strapsRouted,
+              d.alreadyConnected,
+              d.viasPlaced,
+              d.coupledViaPairs,
+              d.fallbackViaPairs,
+              d.failed,
+              d.totalStrapLengthMm);
+    }
+
     return new RoutingSummaryData(
         stats.nets.totalCount,
         stats.connections.incompleteCount,
@@ -825,7 +896,8 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
         sessionPort.displayUnit(),
         duration,
         score,
-        this.isStopRequested());
+        this.isStopRequested(),
+        decouplingItem);
   }
 
   /**

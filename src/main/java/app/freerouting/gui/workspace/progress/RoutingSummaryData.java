@@ -15,6 +15,7 @@ import app.freerouting.board.model.structure.Unit;
  * @param durationSeconds elapsed routing and optimization time in seconds
  * @param score normalized board score from 0 to 1000
  * @param wasInterrupted true if the user cancelled or stopped routing early
+ * @param decoupling decoupling capacitor pre-routing summary, or {@code null} if not run
  */
 public record RoutingSummaryData(
     int totalNets,
@@ -26,4 +27,43 @@ public record RoutingSummaryData(
     Unit displayUnit,
     double durationSeconds,
     float score,
-    boolean wasInterrupted) {}
+    boolean wasInterrupted,
+    DecouplingSummaryItem decoupling) {
+
+  /** Telemetry record for decoupling capacitor pre-routing metrics. */
+  public record DecouplingSummaryItem(
+      int candidatesTotal,
+      int strapsRouted,
+      int alreadyConnected,
+      int viasPlaced,
+      int coupledViaPairs,
+      int fallbackViaPairs,
+      int failed,
+      double totalStrapLengthMm) {}
+
+  /** Backwards-compatible constructor for jobs without decoupling metrics. */
+  public RoutingSummaryData(
+      int totalNets,
+      int incompleteCount,
+      int violationsCount,
+      double maxViolation,
+      int viaCount,
+      double totalTraceLength,
+      Unit displayUnit,
+      double durationSeconds,
+      float score,
+      boolean wasInterrupted) {
+    this(
+        totalNets,
+        incompleteCount,
+        violationsCount,
+        maxViolation,
+        viaCount,
+        totalTraceLength,
+        displayUnit,
+        durationSeconds,
+        score,
+        wasInterrupted,
+        null);
+  }
+}
