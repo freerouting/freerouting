@@ -35,4 +35,10 @@ public interface IJFlexScanner {
 
   /** Starts a new state. */
   void yybegin(int newState);
+
+  /**
+   * Returns the text of the last token as written in the file. Keywords are matched regardless of
+   * case, so this is the only way to tell {@code Signal} from {@code signal}.
+   */
+  String yytext();
 }
