@@ -92,14 +92,31 @@ public class FastPlaneConnectivityGrid {
     public final int islandCount;
 
     /**
+     * The box outside of which nothing on the layer of the area changes this result, or null when
+     * it is not known: the result then holds for one revision of the board only.
+     */
+    public final IntBox dependencyBox;
+
+    /**
      * Creates a new fracture result.
      *
      * @param islandItems mapping from island ID to items in that island
      */
     public PlaneFractureResult(Map<Integer, List<Item>> islandItems) {
+      this(islandItems, null);
+    }
+
+    /**
+     * Creates a new fracture result that holds as long as nothing changes inside the box.
+     *
+     * @param islandItems mapping from island ID to items in that island
+     * @param dependencyBox the box on the layer of the area that the result depends on, or null
+     */
+    public PlaneFractureResult(Map<Integer, List<Item>> islandItems, IntBox dependencyBox) {
       this.islandItems = islandItems != null ? islandItems : Collections.emptyMap();
       this.islandCount = this.islandItems.size();
       this.isFractured = this.islandCount > 1;
+      this.dependencyBox = dependencyBox;
     }
   }
 
@@ -456,7 +473,20 @@ public class FastPlaneConnectivityGrid {
         islands.put(nextId++, ordered.get(i));
       }
     }
-    return new PlaneFractureResult(islands);
+    // Everything read above lies within the area, its foreign copper and the reliefs and spokes of
+    // the pads of the net, with the copper around them: the result holds while nothing changes
+    // there.
+    int reach =
+        (int) Math.ceil(2.0 * maxKeepout + 2.0 * maxGap + 2.0 * minWidth + 2.0 * cellSize) + 1;
+    IntBox box = ca.boundingBox();
+    for (Item item : items) {
+      box = box.union(item.boundingBox());
+    }
+    IntBox dependencyBox =
+        new IntBox(
+            new IntPoint(box.ll.x - reach, box.ll.y - reach),
+            new IntPoint(box.ur.x + reach, box.ur.y + reach));
+    return new PlaneFractureResult(islands, dependencyBox);
   }
 
   /** The largest clearance the fill of the area keeps to any item on its layer. */

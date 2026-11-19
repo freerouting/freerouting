@@ -636,9 +636,17 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     int currentRevision = this.board.getRevision();
     long currentNetAssignmentStamp = this.board.getNetAssignmentChangeCount();
     if (this.cachedFractureResult != null
-        && this.cachedFractureRevision == currentRevision
         && this.cachedNetAssignmentStamp == currentNetAssignmentStamp) {
-      return this.cachedFractureResult;
+      if (this.cachedFractureRevision == currentRevision) {
+        return this.cachedFractureResult;
+      }
+      // the board changed, but nowhere the result depends on: it still holds
+      IntBox dependencyBox = this.cachedFractureResult.dependencyBox;
+      if (dependencyBox != null
+          && !this.board.changedSince(this.cachedFractureRevision, getLayer(), dependencyBox)) {
+        this.cachedFractureRevision = currentRevision;
+        return this.cachedFractureResult;
+      }
     }
     FastPlaneConnectivityGrid connectivityGrid = new FastPlaneConnectivityGrid();
     Collection<Item> contacts = getNormalContacts();
