@@ -50,8 +50,12 @@ class OptimizerViaOscillationTest extends RoutingFixtureTest {
     BoardStatistics before = job.board.getStatistics();
 
     // Before the fix this pass takes about 30 s.
-    assertTimeoutPreemptively(
-        Duration.ofSeconds(10), () -> BatchOptimizer.create(job).runBatchLoop());
+    try {
+      assertTimeoutPreemptively(
+          Duration.ofSeconds(10), () -> BatchOptimizer.create(job).runBatchLoop());
+    } finally {
+      job.thread.requestStop();
+    }
 
     BoardStatistics after = job.board.getStatistics();
     assertEquals(0, after.connections.incompleteCount, "incomplete connections");
@@ -65,5 +69,10 @@ class OptimizerViaOscillationTest extends RoutingFixtureTest {
   private static final class NoOpStoppableThread extends StoppableThread {
     @Override
     protected void threadAction() {}
+
+    @Override
+    public synchronized boolean isStopRequested() {
+      return super.isStopRequested() || Thread.currentThread().isInterrupted();
+    }
   }
 }
