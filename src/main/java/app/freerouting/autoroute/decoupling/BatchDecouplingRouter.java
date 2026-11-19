@@ -5,11 +5,13 @@ import app.freerouting.autoroute.AutorouteAttemptState;
 import app.freerouting.autoroute.maze.AutorouteControl;
 import app.freerouting.autoroute.maze.AutorouteEngine;
 import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.ComponentOutline;
 import app.freerouting.board.model.items.ConductionArea;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.model.items.Via;
+import app.freerouting.board.model.items.ViaObstacleArea;
 import app.freerouting.board.model.structure.Component;
 import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.board.model.structure.Unit;
@@ -18,12 +20,16 @@ import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.Point;
+import app.freerouting.geometry.planar.TileShape;
+import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import app.freerouting.settings.DecouplingLockMode;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.sources.DefaultSettings;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -429,42 +435,16 @@ public final class BatchDecouplingRouter {
                   } else {
                     Set<Item> ownerConnected = ownerPin.getConnectedSet(railNetNo);
 
-                    // Sub-case 3A: Does ownerPin already reach capLayer?
-                    boolean hasConnectionOnCapLayer = false;
-                    for (Item it : ownerConnected) {
-                      if (it.isOnLayer(capLayer)) {
-                        hasConnectionOnCapLayer = true;
-                        break;
-                      }
+                    final int effectiveTargetLayer = ownerLayer;
+                    control.viasAllowed = true;
+                    control.ripupAllowed = false;
+                    control.removeUnconnectedVias = false;
+                    if (settings.decoupling != null
+                        && settings.decoupling.maxDoorExpansions != null) {
+                      control.maxDoorExpansions = settings.decoupling.maxDoorExpansions;
                     }
-
-                    int effectiveTargetLayer;
-                    if (hasConnectionOnCapLayer) {
-                      // Sub-case 3A: Target existing fanout via/trace directly on capLayer (0 vias)
-                      effectiveTargetLayer = capLayer;
-                      control.viasAllowed = false;
-                      control.ripupAllowed = false;
-                      control.removeUnconnectedVias = false;
-                      if (settings.decoupling != null
-                          && settings.decoupling.maxDoorExpansions != null) {
-                        control.maxDoorExpansions = settings.decoupling.maxDoorExpansions;
-                      }
-                      for (int i = 0; i < control.layerCount; i++) {
-                        control.layerActive[i] = control.layerActive[i] && (i == capLayer);
-                      }
-                    } else {
-                      // Sub-case 3B: Fresh feed-through via between capLayer and ownerLayer
-                      effectiveTargetLayer = ownerLayer;
-                      control.viasAllowed = true;
-                      control.ripupAllowed = false;
-                      control.removeUnconnectedVias = false;
-                      if (settings.decoupling != null
-                          && settings.decoupling.maxDoorExpansions != null) {
-                        control.maxDoorExpansions = settings.decoupling.maxDoorExpansions;
-                      }
-                      for (int i = 0; i < control.layerCount; i++) {
-                        control.layerActive[i] = (i == capLayer || i == ownerLayer);
-                      }
+                    for (int i = 0; i < control.layerCount; i++) {
+                      control.layerActive[i] = (i == capLayer || i == ownerLayer);
                     }
 
                     double[] scalesToTry =
@@ -503,10 +483,7 @@ public final class BatchDecouplingRouter {
 
                     if (outcome != null && outcome.success()) {
                       strapSuccess = true;
-                      strapStatus =
-                          hasConnectionOnCapLayer
-                              ? "ROUTED_OPPOSITE_FANOUT"
-                              : "ROUTED_OPPOSITE_FEEDTHROUGH_VIA";
+                      strapStatus = "ROUTED_OPPOSITE_FEEDTHROUGH_VIA";
                       routedStraps++;
                       candidateStrapLengthMm = outcome.lengthMm();
                       totalStrapLengthMm += candidateStrapLengthMm;
@@ -1004,18 +981,8 @@ public final class BatchDecouplingRouter {
       }
     }
 
-    boolean hasConnectionOnCapLayer = false;
-    if (!isSameLayer) {
-      for (Item it : restrictedTargetGnd) {
-        if (it.isOnLayer(capLayer)) {
-          hasConnectionOnCapLayer = true;
-          break;
-        }
-      }
-    }
-
     int effectiveTargetLayer;
-    if (isSameLayer || hasConnectionOnCapLayer) {
+    if (isSameLayer) {
       effectiveTargetLayer = capLayer;
       gndControl.viasAllowed = false;
       for (int i = 0; i < gndControl.layerCount; i++) {
@@ -1051,8 +1018,29 @@ public final class BatchDecouplingRouter {
   }
 
   /**
+   * Computes the forbidden bounding box for vias around an IC component, spanning its courtyard and
+   * pad ring expanded by the clearance margin.
+   */
+  static IntBox computeForbiddenCourtyardBox(RoutingBoard board, int ownerCompId, int clearance) {
+    if (ownerCompId <= 0 || board == null) {
+      return null;
+    }
+    IntBox forbidden = CourtyardEscapeProbe.computeComponentPadBounds(board, ownerCompId);
+    for (Item it : board.getItems()) {
+      if (it instanceof ComponentOutline co && co.getComponentId() == ownerCompId) {
+        if (co.isCourtyard() || co.isClosed()) {
+          forbidden = (forbidden == null) ? co.boundingBox() : forbidden.union(co.boundingBox());
+        }
+      }
+    }
+    return forbidden != null ? forbidden.offset(clearance) : null;
+  }
+
+  /**
    * Attempts to route a surface strap between supply and target pins at the specified trace width
-   * scale. Validates DRC and verifies that adjacent unrouted SMD signal pins are not trapped.
+   * scale. Validates physical pad layer contact, guides and constrains via placement strictly
+   * outside the IC courtyard, validates DRC, and verifies that adjacent unrouted SMD signal pins
+   * are not trapped.
    */
   static StrapAttemptOutcome tryRouteStrap(
       RoutingBoard board,
@@ -1092,8 +1080,34 @@ public final class BatchDecouplingRouter {
 
     // Capture local checkpoint; if cross-layer, snapshot all layers (-1)
     int checkpointLayer = (capLayer == targetLayer) ? capLayer : -1;
-    DecouplingRouteCheckpoint checkpoint =
+    final DecouplingRouteCheckpoint checkpoint =
         DecouplingRouteCheckpoint.capture(board, searchBox, checkpointLayer, railNetNo);
+
+    // Enforce layer constraints in AutorouteControl
+    if (capLayer == targetLayer) {
+      control.viasAllowed = false;
+      for (int i = 0; i < control.layerCount; i++) {
+        control.layerActive[i] = (i == capLayer);
+      }
+    } else {
+      control.viasAllowed = true;
+      for (int i = 0; i < control.layerCount; i++) {
+        control.layerActive[i] = (i == capLayer || i == targetLayer);
+      }
+    }
+
+    Set<Item> filteredSupply = new HashSet<>();
+    for (Item it : supplyConnected) {
+      if (it == supplyPin || it.isOnLayer(capLayer)) {
+        filteredSupply.add(it);
+      }
+    }
+    Set<Item> filteredTarget = new HashSet<>();
+    for (Item it : targetConnected) {
+      if (it == targetPin || it.isOnLayer(targetLayer)) {
+        filteredTarget.add(it);
+      }
+    }
 
     // Apply scaled trace width safely to both layers
     applyScaledTraceWidth(control, capLayer, railNetNo, widthScale, board, settings, mmResolution);
@@ -1102,13 +1116,50 @@ public final class BatchDecouplingRouter {
           control, targetLayer, railNetNo, widthScale, board, settings, mmResolution);
     }
 
-    var engine =
-        board.initAutoroute(
-            railNetNo, control.traceClearanceClassIndex, thread, new TimeLimit(1000), false);
+    // In-flight via guidance and forbidden courtyard constraints
+    IntBox forbiddenBox = computeForbiddenCourtyardBox(board, ownerCompId, maxClearance);
+    List<ViaObstacleArea> tempObstacles = new ArrayList<>();
+    if (control.viasAllowed && forbiddenBox != null) {
+      TileShape forbiddenShape = forbiddenBox.toSimplex();
+      for (int layer : new int[] {capLayer, targetLayer}) {
+        if (layer >= 0 && layer < board.getLayerCount()) {
+          ViaObstacleArea obs =
+              new ViaObstacleArea(
+                  forbiddenShape,
+                  layer,
+                  Vector.ZERO,
+                  0.0,
+                  false,
+                  0,
+                  board.communication.idGenerator.newId(),
+                  ownerCompId,
+                  "TEMP_DECOUPLING_VIA_KEEPOUT",
+                  FixedState.SYSTEM_FIXED,
+                  board);
+          board.insertItem(obs);
+          tempObstacles.add(obs);
+        }
+      }
+      // Guide via placement towards supply pin outside the IC courtyard
+      control.directionalViaBiasTarget = supplyPin.getCenter().toFloat();
+      control.directionalViaBiasWeight = 0.2;
+    }
 
-    AutorouteAttemptResult attempt =
-        engine.autorouteConnection(
-            supplyConnected, targetConnected, control, new TreeSet<>(), null);
+    AutorouteAttemptResult attempt;
+    try {
+      var engine =
+          board.initAutoroute(
+              railNetNo, control.traceClearanceClassIndex, thread, new TimeLimit(1000), false);
+      attempt =
+          engine.autorouteConnection(
+              filteredSupply, filteredTarget, control, new TreeSet<>(), null);
+    } finally {
+      for (ViaObstacleArea obs : tempObstacles) {
+        if (obs.isOnTheBoard()) {
+          board.removeItem(obs);
+        }
+      }
+    }
 
     if (attempt.state != AutorouteAttemptState.ROUTED) {
       checkpoint.rollback(board);
@@ -1124,12 +1175,12 @@ public final class BatchDecouplingRouter {
     int currentMaxId = board.communication.idGenerator.maxGeneratedId();
     for (int id = checkpoint.maxIdBefore + 1; id <= currentMaxId; id++) {
       Item it = board.getItem(id);
-      if (it != null) {
+      if (it != null && it.isOnTheBoard()) {
         newItems.add(it);
       }
     }
 
-    // Strict 1-via invariant verification
+    // Strict via count verification
     int viasPlacedInStrap = 0;
     for (Item newItem : newItems) {
       if (newItem instanceof Via) {
@@ -1142,9 +1193,55 @@ public final class BatchDecouplingRouter {
       return new StrapAttemptOutcome(false, "UNEXPECTED_VIA_IN_SURFACE_STRAP", 0.0, List.of());
     }
 
-    if (control.viasAllowed && viasPlacedInStrap > 1) {
+    if (control.viasAllowed && viasPlacedInStrap != 1) {
       checkpoint.rollback(board);
       return new StrapAttemptOutcome(false, "EXCESS_VIAS_ROLLBACK", 0.0, List.of());
+    }
+
+    // Forbidden courtyard and pin heel via verification
+    for (Item newItem : newItems) {
+      if (newItem instanceof Via via) {
+        if (forbiddenBox != null && forbiddenBox.contains(via.getCenter())) {
+          checkpoint.rollback(board);
+          return new StrapAttemptOutcome(false, "VIA_INSIDE_COURTYARD_ROLLBACK", 0.0, List.of());
+        }
+        Collection<Pin> ownerPins = board.getComponentPins(ownerCompId);
+        if (ownerPins != null) {
+          for (Pin p : ownerPins) {
+            double dist = via.getCenter().toFloat().distance(p.getCenter().toFloat());
+            int viaWidth =
+                (via.getShape(targetLayer) != null)
+                    ? via.getShape(targetLayer).boundingBox().width()
+                    : via.boundingBox().width();
+            double minSafeDist = (viaWidth + p.boundingBox().width()) / 2.0;
+            if (dist < minSafeDist) {
+              checkpoint.rollback(board);
+              return new StrapAttemptOutcome(false, "VIA_ON_PIN_HEEL_ROLLBACK", 0.0, List.of());
+            }
+          }
+        }
+      }
+    }
+
+    // Physical pad layer contact verification: no trace on wrong layer touching SMD pads
+    for (Item newItem : newItems) {
+      if (newItem instanceof Trace trace) {
+        for (Item contact : trace.getNormalContacts()) {
+          if (contact instanceof Pin pin && pin.firstLayer() == pin.lastLayer()) {
+            if (trace.getLayer() != pin.firstLayer()) {
+              checkpoint.rollback(board);
+              return new StrapAttemptOutcome(
+                  false, "FALSE_LAYER_PAD_CONTACT_ROLLBACK", 0.0, List.of());
+            }
+          }
+        }
+      }
+    }
+
+    // Connectivity verification
+    if (!supplyPin.getConnectedSet(railNetNo).contains(targetPin)) {
+      checkpoint.rollback(board);
+      return new StrapAttemptOutcome(false, "DISCONNECTED_PIN_ROLLBACK", 0.0, List.of());
     }
 
     double lengthMm = 0.0;

@@ -739,11 +739,23 @@ class BatchDecouplingRouterTest {
     app.freerouting.board.model.items.Pin pin2 = null;
     for (Item item : board.getItems()) {
       if (item instanceof app.freerouting.board.model.items.Pin pin && pin.containsNet(1)) {
-        if (pin1 == null) {
-          pin1 = pin;
-        } else if (pin2 == null && !pin.equals(pin1)) {
+        pin1 = pin;
+        break;
+      }
+    }
+
+    assertNotNull(pin1);
+
+    double minDist = Double.MAX_VALUE;
+    for (Item item : board.getItems()) {
+      if (item instanceof app.freerouting.board.model.items.Pin pin
+          && pin.containsNet(1)
+          && !pin.equals(pin1)
+          && pin.firstLayer() == pin1.firstLayer()) {
+        double dist = pin.getCenter().toFloat().distance(pin1.getCenter().toFloat());
+        if (dist < minDist) {
+          minDist = dist;
           pin2 = pin;
-          break;
         }
       }
     }
