@@ -172,6 +172,7 @@ public final class ProcessEnvironmentDetector {
     // 4. Check for headless automation CLI flags
     String argsLower = commandLineArgs == null ? "" : commandLineArgs.toLowerCase(Locale.ROOT);
     if (argsLower.contains("-dct 0")
+        || argsLower.contains("--gui.dialog_confirmation_timeout=0")
         || argsLower.contains("--gui.enabled=false")
         || argsLower.contains("--gui-enabled=false")
         || argsLower.contains("/data/")) {

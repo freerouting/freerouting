@@ -136,6 +136,8 @@ public final class RoutingJobScheduler {
                                   try {
                                     rulesData = Files.readAllBytes(autoRules.toPath());
                                     rulesFilename = autoRules.getName();
+                                    app.freerouting.settings.CliDeprecationWarnings
+                                        .warnAutoDiscoveredRulesFile(autoRules.getPath());
                                   } catch (IOException e) {
                                     FRLogger.warn(
                                         "Failed to read adjacent rules file: "

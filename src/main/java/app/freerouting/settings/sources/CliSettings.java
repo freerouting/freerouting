@@ -1,6 +1,7 @@
 package app.freerouting.settings.sources;
 
 import app.freerouting.logger.FRLogger;
+import app.freerouting.settings.CliDeprecationWarnings;
 import app.freerouting.settings.LegacyRouterSettingsBridge;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.SettingsSource;
@@ -53,20 +54,8 @@ public class CliSettings implements SettingsSource {
             hasExplicitRouterEnabledArgument = true;
           }
 
-          if ("scoring-version".equals(propertyName)) {
-            applyRouterSetting(settings, "router.scoring.version", value);
-            applyRouterSetting(settings, "optimizer.scoring.version", value);
-          } else if (propertyName.startsWith("router.")
-              || propertyName.startsWith("optimizer.")
-              || "router-scoring-version".equals(propertyName)
-              || "optimizer-scoring-version".equals(propertyName)) {
-            String normalizedProperty =
-                switch (propertyName) {
-                  case "router-scoring-version" -> "router.scoring.version";
-                  case "optimizer-scoring-version" -> "optimizer.scoring.version";
-                  default -> propertyName;
-                };
-            applyRouterSetting(settings, normalizedProperty, value);
+          if (propertyName.startsWith("router.") || propertyName.startsWith("optimizer.")) {
+            applyRouterSetting(settings, propertyName, value);
           }
         }
       } else if (arg.startsWith("-")) {
@@ -84,32 +73,26 @@ public class CliSettings implements SettingsSource {
         }
 
         if ("mp".equals(flag)) {
-          FRLogger.warn(
-              "The '-mp' command-line flag is deprecated; use"
-                  + " '--router.autorouter.max_passes' instead.");
+          CliDeprecationWarnings.warnDeprecatedFlag("-mp", "--router.autorouter.max_passes");
         } else if ("mt".equals(flag)) {
           if (isZeroOrNegativeInteger(value)) {
-            FRLogger.warn(
-                "Passing 0 or a negative value to '-mt' to disable the optimizer is deprecated;"
-                    + " use '--router.optimizer.enabled=false' instead.");
+            CliDeprecationWarnings.warnDeprecatedFlag("-mt", "--router.optimizer.enabled=false");
             applyRouterSetting(settings, "router.optimizer.enabled", "false");
             continue;
           }
-          FRLogger.warn(
-              "The '-mt' command-line flag is deprecated; use '--router.max_threads'"
-                  + " (or '--router.optimizer.max_threads') instead.");
+          CliDeprecationWarnings.warnDeprecatedFlag("-mt", "--router.optimizer.max_threads");
         } else if ("oit".equals(flag)) {
-          FRLogger.warn(
-              "The '-oit' command-line flag is deprecated; use"
-                  + " '--router.optimizer.improvement_threshold' instead.");
+          CliDeprecationWarnings.warnDeprecatedFlag(
+              "-oit", "--router.optimizer.improvement_threshold");
         } else if ("inc".equals(flag)) {
-          FRLogger.warn(
-              "The '-inc' command-line flag is deprecated; use"
-                  + " '--router.autorouter.ignore_net_classes' instead.");
+          CliDeprecationWarnings.warnDeprecatedFlag(
+              "-inc", "--router.autorouter.ignore_net_classes");
+        } else if ("spl".equals(flag)) {
+          CliDeprecationWarnings.warnDeprecatedFlag(
+              "-spl", "--router.autorouter.stagnation_pass_limit");
         } else if ("is".equals(flag)) {
-          FRLogger.warn(
-              "The '-is' command-line flag is deprecated; use"
-                  + " '--router.optimizer.item_selection_strategy' instead.");
+          CliDeprecationWarnings.warnDeprecatedFlag(
+              "-is", "--router.optimizer.item_selection_strategy");
           applyItemSelectionStrategy(settings, value);
           continue;
         } else if ("us".equals(flag) || "hr".equals(flag)) {
@@ -129,9 +112,7 @@ public class CliSettings implements SettingsSource {
         // Map short flags to router settings
         String propertyName = mapFlagToProperty(flag);
         if (propertyName != null
-            && (propertyName.startsWith("router.")
-                || propertyName.startsWith("optimizer.")
-                || "scoring-version".equals(propertyName))) {
+            && (propertyName.startsWith("router.") || propertyName.startsWith("optimizer."))) {
           applyRouterSetting(settings, propertyName, value);
         }
       }
@@ -151,11 +132,6 @@ public class CliSettings implements SettingsSource {
 
   private void applyRouterSetting(RouterSettings settings, String propertyName, String value) {
     try {
-      if ("scoring-version".equals(propertyName)) {
-        applyRouterSetting(settings, "router.scoring.version", value);
-        applyRouterSetting(settings, "optimizer.scoring.version", value);
-        return;
-      }
       // Remove "router." prefix if present
       String fieldPath =
           propertyName.startsWith("router.") ? propertyName.substring(7) : propertyName;
@@ -229,14 +205,11 @@ public class CliSettings implements SettingsSource {
   private String mapFlagToProperty(String flag) {
     // Map short flags to full property names
     return switch (flag) {
-      case "mp" -> "router.max_passes";
+      case "mp" -> "router.autorouter.max_passes";
       case "mt" -> "router.max_threads";
       case "spl" -> "router.autorouter.stagnation_pass_limit";
       case "inc" -> "router.autorouter.ignore_net_classes";
       case "oit" -> "router.optimizer.improvement_threshold";
-      case "router-scoring-version" -> "router.scoring.version";
-      case "optimizer-scoring-version" -> "optimizer.scoring.version";
-      case "scoring-version" -> "scoring-version";
       // Add more mappings as needed
       default -> null;
     };

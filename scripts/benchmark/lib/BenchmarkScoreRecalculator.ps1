@@ -49,11 +49,11 @@ function Invoke-BenchmarkScoreRecalculator {
         }
 
         $process = Start-Process -FilePath $resolvedJava -ArgumentList @(
-            "-jar",
+            "-cp",
             $jarPath,
-            "--calculate-benchmark-scores",
-            "--input=$JsonPath",
-            "--output=$ScoresPath"
+            "app.freerouting.core.scoring.BenchmarkScoreCalculator",
+            $JsonPath,
+            $ScoresPath
         ) -NoNewWindow -Wait -PassThru
 
         if ($process.ExitCode -ne 0) {
