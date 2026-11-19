@@ -74,6 +74,8 @@ public class FastPlaneConnectivityGrid {
    */
   private long[] fineMask = new long[0];
 
+  private boolean[] partialCell = new boolean[0];
+
   private int fineCols;
   private int fineRows;
   private int fineWordsPerRow;
@@ -377,6 +379,9 @@ public class FastPlaneConnectivityGrid {
       }
     }
 
+    // The fill keeps half its minimum width inside the outline of the zone, as from any copper.
+    rasterizeOutsideOf(ca.getArea(), minWidth / 2.0 - FILL_LENIENCY * minWidth);
+
     foldFineMask();
     int[] pieceOfCell = new int[cols * rows];
     int pieceCount = labelPieces(pieceOfCell).length;
@@ -476,6 +481,8 @@ public class FastPlaneConnectivityGrid {
         pieceOfCell[row * cols + col] = isConductive(col, row) ? -1 : -2;
       }
     }
+    // cells none of whose sample points is marked: two of them that are neighbours always touch
+    boolean[] partial = partialCells();
     List<Integer> sizes = new ArrayList<>();
     // diagonal neighbours too: what separates two pieces is much thicker than a cell
     int[] dc = {1, -1, 0, 0, 1, 1, -1, -1};
@@ -500,7 +507,8 @@ public class FastPlaneConnectivityGrid {
             continue;
           }
           int neighbour = nr * cols + nc;
-          if (pieceOfCell[neighbour] == -1) {
+          if (pieceOfCell[neighbour] == -1
+              && ((!partial[cell] && !partial[neighbour]) || cellsTouch(r, c, dr[i], dc[i]))) {
             pieceOfCell[neighbour] = piece;
             queue[tail++] = neighbour;
           }
@@ -518,6 +526,69 @@ public class FastPlaneConnectivityGrid {
       result[i] = sizes.get(i);
     }
     return result;
+  }
+
+  /** For each cell, whether one of its sample points is marked free of fill. */
+  private boolean[] partialCells() {
+    if (partialCell.length < cols * rows) {
+      partialCell = new boolean[cols * rows];
+    } else {
+      Arrays.fill(partialCell, 0, cols * rows, false);
+    }
+    for (int row = 0; row < rows; row++) {
+      for (int word = 0; word < fineWordsPerRow; word++) {
+        long any = 0L;
+        for (int k = 0; k < FINE; k++) {
+          any |= fineMask[(FINE * row + k) * fineWordsPerRow + word];
+        }
+        if (any == 0L) {
+          continue;
+        }
+        for (int col = word * 64 / FINE; col < (word + 1) * 64 / FINE && col < cols; col++) {
+          if ((any & (((1L << FINE) - 1) << ((col * FINE) & 63))) != 0L) {
+            partialCell[row * cols + col] = true;
+          }
+        }
+      }
+    }
+    return partialCell;
+  }
+
+  /**
+   * Whether the fill passes from a cell to its neighbour in the direction (dr, dc): a free sample
+   * point of the cell next to a free sample point of the neighbour, across their common border. Two
+   * cells that each hold a free point, with no free point where they meet, are on the two sides of
+   * a passage that the fill does not cross.
+   */
+  private boolean cellsTouch(int row, int col, int dr, int dc) {
+    if (dr != 0 && dc != 0) {
+      int fineRow = dr > 0 ? FINE * row + FINE - 1 : FINE * row;
+      int fineCol = dc > 0 ? FINE * col + FINE - 1 : FINE * col;
+      return !isFineSet(fineRow, fineCol) && !isFineSet(fineRow + dr, fineCol + dc);
+    }
+    for (int k = 0; k < FINE; k++) {
+      // the sample point of the cell on the border, and the three of the neighbour next to it
+      int fineRow = dr == 0 ? FINE * row + k : (dr > 0 ? FINE * row + FINE - 1 : FINE * row);
+      int fineCol = dc == 0 ? FINE * col + k : (dc > 0 ? FINE * col + FINE - 1 : FINE * col);
+      if (isFineSet(fineRow, fineCol)) {
+        continue;
+      }
+      for (int m = -1; m <= 1; m++) {
+        int otherRow = dr == 0 ? fineRow + m : fineRow + dr;
+        int otherCol = dc == 0 ? fineCol + m : fineCol + dc;
+        // only the points of the neighbour itself
+        if (dr == 0 && (otherRow < FINE * row || otherRow >= FINE * row + FINE)) {
+          continue;
+        }
+        if (dc == 0 && (otherCol < FINE * col || otherCol >= FINE * col + FINE)) {
+          continue;
+        }
+        if (!isFineSet(otherRow, otherCol)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   private static int find(int[] parent, int node) {
@@ -859,8 +930,10 @@ public class FastPlaneConnectivityGrid {
   }
 
   /**
-   * Joins the node of a trace of the net with every piece of the fill that its copper crosses on
-   * its way: a trace is covered by the fill wherever the fill reaches it, not only at its ends.
+   * Joins the node of a trace of the net with every piece of the fill that its copper touches on
+   * its way: a trace is covered by the fill wherever the fill reaches it, not only at its ends. The
+   * fill reaches the trace where the centre of a disc of fill, a free sample point, is no further
+   * from its centre line than its half width and half the minimum width.
    */
   private void attachTrace(
       Trace trace, ConductionArea ca, double minWidth, int[] pieceOfCell, int[] parent, int node) {
@@ -868,36 +941,59 @@ public class FastPlaneConnectivityGrid {
         trace instanceof PolylineTrace polylineTrace
             ? polylineTrace.polyline().corners()
             : new Point[] {trace.firstCorner(), trace.lastCorner()};
-    // the centre of a disc of fill that touches the trace, to the centre of the cell it lies in
-    double reach = trace.getHalfWidth() + minWidth / 2.0 + cellSize * 0.5;
-    int span = (int) Math.ceil(reach / cellSize);
+    double fine = (double) cellSize / FINE;
+    // the sample points are that far apart
+    double limit = trace.getHalfWidth() + minWidth / 2.0 + fine * 0.75;
+    double halfDiagonal = cellSize * Math.sqrt(0.5);
     int root = find(parent, node);
-    for (int i = 0; i < corners.length; i++) {
+    for (int i = 0; i < Math.max(1, corners.length - 1); i++) {
       FloatPoint from = corners[i].toFloat();
       FloatPoint to = corners[Math.min(i + 1, corners.length - 1)].toFloat();
-      double length = from.distance(to);
-      int steps = Math.max(1, (int) Math.ceil(length / cellSize));
-      for (int k = 0; k <= steps; k++) {
-        double x = from.x + (to.x - from.x) * k / steps;
-        double y = from.y + (to.y - from.y) * k / steps;
-        int col = (int) Math.floor((x - originX) / cellSize);
-        int row = (int) Math.floor((y - originY) / cellSize);
-        for (int r = Math.max(0, row - span); r <= Math.min(rows - 1, row + span); r++) {
-          double dy = originY + (r + 0.5) * cellSize - y;
-          for (int c = Math.max(0, col - span); c <= Math.min(cols - 1, col + span); c++) {
-            int piece = pieceOfCell[r * cols + c];
-            if (piece < 0 || find(parent, piece) == root) {
-              continue;
-            }
-            double dx = originX + (c + 0.5) * cellSize - x;
-            if (dx * dx + dy * dy <= reach * reach) {
-              union(parent, node, piece);
-              root = find(parent, node);
-            }
+      int startCol =
+          Math.max(0, (int) Math.floor((Math.min(from.x, to.x) - limit - originX) / cellSize));
+      int endCol =
+          Math.min(
+              cols - 1, (int) Math.floor((Math.max(from.x, to.x) + limit - originX) / cellSize));
+      int startRow =
+          Math.max(0, (int) Math.floor((Math.min(from.y, to.y) - limit - originY) / cellSize));
+      int endRow =
+          Math.min(
+              rows - 1, (int) Math.floor((Math.max(from.y, to.y) + limit - originY) / cellSize));
+      for (int r = startRow; r <= endRow; r++) {
+        for (int c = startCol; c <= endCol; c++) {
+          int piece = pieceOfCell[r * cols + c];
+          if (piece < 0 || find(parent, piece) == root) {
+            continue;
           }
+          FloatPoint centre =
+              new FloatPoint(originX + (c + 0.5) * cellSize, originY + (r + 0.5) * cellSize);
+          if (pointSegmentDistance(centre, from, to) > limit + halfDiagonal
+              || !hasFreeSampleNearSegment(r, c, from, to, limit, fine)) {
+            continue;
+          }
+          union(parent, node, piece);
+          root = find(parent, node);
         }
       }
     }
+  }
+
+  /** Whether the cell has a free sample point no further than limit from the segment. */
+  private boolean hasFreeSampleNearSegment(
+      int row, int col, FloatPoint from, FloatPoint to, double limit, double fine) {
+    for (int fineRow = FINE * row; fineRow < FINE * row + FINE; fineRow++) {
+      double y = originY + (fineRow + 0.5) * fine;
+      for (int fineCol = FINE * col; fineCol < FINE * col + FINE; fineCol++) {
+        if (isFineSet(fineRow, fineCol)) {
+          continue;
+        }
+        FloatPoint sample = new FloatPoint(originX + (fineCol + 0.5) * fine, y);
+        if (pointSegmentDistance(sample, from, to) <= limit) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   /** Clears the obstacles at the resolution of the sample points. */
@@ -913,8 +1009,52 @@ public class FastPlaneConnectivityGrid {
     }
   }
 
+  /**
+   * Marks as free of fill the sample points outside the area and those inside closer than reach to
+   * its border or to one of its holes.
+   */
+  private void rasterizeOutsideOf(app.freerouting.geometry.planar.Area area, double reach) {
+    if (area == null) {
+      return;
+    }
+    TileShape[] tiles = area.splitToConvex();
+    if (tiles == null) {
+      return;
+    }
+    long[] inside = new long[fineRows * fineWordsPerRow];
+    for (TileShape tile : tiles) {
+      FloatPoint[] corners = tile == null ? null : tile.cornerApproxArr();
+      if (corners != null && corners.length > 2) {
+        rasterizeConvex(corners, 0.0, inside);
+      }
+    }
+    for (int word = 0; word < inside.length; word++) {
+      fineMask[word] |= ~inside[word];
+    }
+    if (reach <= 0) {
+      return;
+    }
+    List<Shape> rims = new ArrayList<>();
+    rims.add(area.getBorder());
+    rims.addAll(Arrays.asList(area.getHoles()));
+    for (Shape rim : rims) {
+      if (!(rim instanceof app.freerouting.geometry.planar.PolylineShape polylineShape)) {
+        continue;
+      }
+      FloatPoint[] corners = polylineShape.cornerApproxArr();
+      for (int k = 0; corners != null && k < corners.length; k++) {
+        rasterizeSegment(corners[k], corners[(k + 1) % corners.length], reach);
+      }
+    }
+  }
+
   /** Marks the sample points of a row from startCol to endCol as free of fill. */
   private void setFineSpan(int row, int startCol, int endCol) {
+    setFineSpan(fineMask, row, startCol, endCol);
+  }
+
+  /** Sets the bits of the sample points of a row from startCol to endCol in the mask. */
+  private void setFineSpan(long[] mask, int row, int startCol, int endCol) {
     if (row < 0 || row >= fineRows) {
       return;
     }
@@ -928,14 +1068,14 @@ public class FastPlaneConnectivityGrid {
     long startBits = ~0L << (from & 63);
     long endBits = ~0L >>> (63 - (to & 63));
     if (startWord == endWord) {
-      fineMask[startWord] |= startBits & endBits;
+      mask[startWord] |= startBits & endBits;
       return;
     }
-    fineMask[startWord] |= startBits;
+    mask[startWord] |= startBits;
     for (int word = startWord + 1; word < endWord; word++) {
-      fineMask[word] = ~0L;
+      mask[word] = ~0L;
     }
-    fineMask[endWord] |= endBits;
+    mask[endWord] |= endBits;
   }
 
   private boolean isFineSet(int row, int col) {
@@ -1037,6 +1177,11 @@ public class FastPlaneConnectivityGrid {
    * rightmost point that the row cuts out of the surroundings of the sides.
    */
   private void rasterizeConvex(FloatPoint[] corners, double reach) {
+    rasterizeConvex(corners, reach, fineMask);
+  }
+
+  /** Sets in the mask the sample points closer than reach to the convex polygon, or inside it. */
+  private void rasterizeConvex(FloatPoint[] corners, double reach, long[] mask) {
     double fine = (double) cellSize / FINE;
     double minY = Double.MAX_VALUE;
     double maxY = -Double.MAX_VALUE;
@@ -1100,6 +1245,7 @@ public class FastPlaneConnectivityGrid {
       }
       if (low < high) {
         setFineSpan(
+            mask,
             row,
             (int) Math.ceil((low - originX) / fine - 0.5),
             (int) Math.floor((high - originX) / fine - 0.5));
