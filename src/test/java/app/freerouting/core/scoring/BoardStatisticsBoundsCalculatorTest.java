@@ -7,6 +7,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.Freerouting;
 import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.structure.AngleRestriction;
+import app.freerouting.board.model.structure.FixedState;
+import app.freerouting.geometry.planar.Circle;
+import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.specctra.DsnReader;
 import app.freerouting.io.specctra.DsnTestFixtures;
@@ -63,6 +67,34 @@ class BoardStatisticsBoundsCalculatorTest {
   }
 
   @Test
+  void angleRestrictionChangeInvalidatesCachedTraceLengthBound() {
+    RoutingBoard board = loadFixture("scoring-mixed-layer.dsn");
+    board.rules.setTraceAngleRestriction(AngleRestriction.NINETY_DEGREE);
+    BoardStatistics ninetyStats = new BoardStatistics(board);
+    assertEquals(12.0f, ninetyStats.bounds.minTraceLengthMm, 0.01f);
+
+    board.rules.setTraceAngleRestriction(AngleRestriction.FORTYFIVE_DEGREE);
+    BoardStatistics fortyFiveStats = new BoardStatistics(board);
+    assertEquals(6.0f * (float) Math.sqrt(2), fortyFiveStats.bounds.minTraceLengthMm, 0.01f);
+  }
+
+  @Test
+  void circularConductionAreaComputesDistanceWithoutNullPointerException() {
+    RoutingBoard board = loadFixture("scoring-mixed-layer.dsn");
+    // Resolution is 10 units/um (10,000 units/mm). Circle centered at U1 (2, 2) mm with radius 1 mm
+    // covers U1 and leaves U2 (8, 8) mm at Euclidean distance 6 * sqrt(2) - 1 mm from its border.
+    board.insertConductionArea(
+        new Circle(new IntPoint(20_000, 20_000), 10_000),
+        0,
+        new int[] {1},
+        1,
+        false,
+        FixedState.USER_FIXED);
+    BoardStatistics stats = new BoardStatistics(board);
+    assertEquals(6.0f * (float) Math.sqrt(2) - 1.0f, stats.bounds.minTraceLengthMm, 0.01f);
+  }
+
+  @Test
   void emptyBoardHasZeroBoundsAndDefinedDifficulty() {
     BoardStatistics stats = statisticsFromFixture("empty_board.dsn");
     assertEquals(0.0f, stats.bounds.minTraceLengthMm, 0.001f);
@@ -72,12 +104,16 @@ class BoardStatisticsBoundsCalculatorTest {
     assertEquals(1.0f, stats.difficulty.difficultyD, 0.001f);
   }
 
-  private static BoardStatistics statisticsFromFixture(String filename) {
+  private static RoutingBoard loadFixture(String filename) {
     BoardReadResult result =
         DsnReader.readBoard(DsnTestFixtures.openResource(filename), null, null);
     assertInstanceOf(BoardReadResult.Success.class, result, filename + " must parse");
     RoutingBoard board = (RoutingBoard) ((BoardReadResult.Success) result).board();
     assertNotNull(board);
-    return new BoardStatistics(board);
+    return board;
+  }
+
+  private static BoardStatistics statisticsFromFixture(String filename) {
+    return new BoardStatistics(loadFixture(filename));
   }
 }

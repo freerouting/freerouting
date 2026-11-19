@@ -7,6 +7,7 @@ import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.structure.AngleRestriction;
 import app.freerouting.board.model.structure.Unit;
 import app.freerouting.geometry.planar.Area;
+import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.ViaInfo;
@@ -24,21 +25,23 @@ import java.util.WeakHashMap;
 /** Computes board-only lower bounds for optimizer scoring. */
 final class BoardStatisticsBoundsCalculator {
 
-  private static final Map<BasicBoard, BoardStatisticsBounds> CACHE = new WeakHashMap<>();
+  private static final Map<BasicBoard, CachedBounds> CACHE = new WeakHashMap<>();
 
   private BoardStatisticsBoundsCalculator() {}
 
   static synchronized BoardStatisticsBounds calculate(BasicBoard board) {
-    BoardStatisticsBounds cached = CACHE.get(board);
-    if (cached != null) {
-      return cached;
+    AngleRestriction angleRestriction = board.rules.getTraceAngleRestriction();
+    CachedBounds cached = CACHE.get(board);
+    if (cached != null && cached.angleRestriction == angleRestriction) {
+      return cached.bounds;
     }
-    BoardStatisticsBounds result = calculateUncached(board);
-    CACHE.put(board, result);
+    BoardStatisticsBounds result = calculateUncached(board, angleRestriction);
+    CACHE.put(board, new CachedBounds(angleRestriction, result));
     return result;
   }
 
-  private static BoardStatisticsBounds calculateUncached(BasicBoard board) {
+  private static BoardStatisticsBounds calculateUncached(
+      BasicBoard board, AngleRestriction angleRestriction) {
     BoardStatisticsBounds result = new BoardStatisticsBounds();
     double minTraceLength = 0.0;
     int minViaCount = 0;
@@ -46,7 +49,6 @@ final class BoardStatisticsBoundsCalculator {
     double boardUnitToMmFactor =
         Unit.scale(1.0, board.communication.unit, Unit.MM)
             / (board.communication.resolution > 0 ? board.communication.resolution : 1);
-    AngleRestriction angleRestriction = board.rules.getTraceAngleRestriction();
 
     for (int netNumber = 1; netNumber <= board.rules.nets.maxNetNumber(); netNumber++) {
       Net net = board.rules.nets.get(netNumber);
@@ -121,9 +123,10 @@ final class BoardStatisticsBoundsCalculator {
    * Returns the length and bend count of a minimum spanning tree over the terminals of a net.
    *
    * <p>Pins are points. All conduction areas of the net form a single node, at distance 0 from the
-   * pins they cover: the plane connects them without traces. Distances follow the trace angle
-   * restriction (Manhattan for 90 degrees, octilinear for 45 degrees, Euclidean otherwise), so the
-   * tree length never exceeds the length of a routing that the rules allow.
+   * pins they cover: the plane connects them without traces. Pairwise distances follow the trace
+   * angle restriction (Manhattan for 90 degrees, octilinear for 45 degrees, Euclidean otherwise).
+   * This is a terminal-MST estimate (exact for two-pin nets; multi-pin nets with shared Steiner
+   * branches may route slightly shorter).
    */
   private static MstResult calculateMst(
       List<Terminal> terminals, AngleRestriction angleRestriction) {
@@ -195,7 +198,7 @@ final class BoardStatisticsBoundsCalculator {
     return switch (angleRestriction) {
       case NINETY_DEGREE -> dx + dy;
       case FORTYFIVE_DEGREE -> Math.max(dx, dy) + (Math.sqrt(2) - 1) * Math.min(dx, dy);
-      default -> Math.hypot(dx, dy);
+      case null, default -> Math.hypot(dx, dy);
     };
   }
 
@@ -207,7 +210,17 @@ final class BoardStatisticsBoundsCalculator {
       if (area.contains(point)) {
         return 0.0;
       }
-      result = Math.min(result, point.distance(area.nearestPointApprox(point)));
+      if (area instanceof Circle circle) {
+        result =
+            Math.min(
+                result, Math.max(0.0, point.distance(circle.center.toFloat()) - circle.radius));
+      } else {
+        FloatPoint nearestPoint = area.nearestPointApprox(point);
+        if (nearestPoint == null) {
+          return 0.0;
+        }
+        result = Math.min(result, point.distance(nearestPoint));
+      }
     }
     return result;
   }
@@ -255,6 +268,8 @@ final class BoardStatisticsBoundsCalculator {
     }
     return viaCount;
   }
+
+  private record CachedBounds(AngleRestriction angleRestriction, BoardStatisticsBounds bounds) {}
 
   /** A pin, or a conduction area when {@code area} is set ({@code x}, {@code y} its centroid). */
   private record Terminal(double x, double y, Set<Integer> signalLayers, Area area) {}
