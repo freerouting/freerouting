@@ -54,6 +54,11 @@ public class Pin extends DrillItem implements Serializable {
    */
   private int netTieClusterId = 0;
 
+  /**
+   * How the host CAD system connects this pad to the fill of a plane of its net; null if unknown.
+   */
+  private PadPlaneConnection planeConnection;
+
   /** The pin, this pin was changed to by swapping or this pin, if no pin swap occurred. */
   private Pin changedTo = this;
 
@@ -146,6 +151,7 @@ public class Pin extends DrillItem implements Serializable {
             getFixedState(),
             board);
     copiedPin.netTieClusterId = this.netTieClusterId;
+    copiedPin.planeConnection = this.planeConnection;
     return copiedPin;
   }
 
@@ -154,6 +160,22 @@ public class Pin extends DrillItem implements Serializable {
   public void assignComponentId(int id) {
     super.assignComponentId(id);
     setCenter(null);
+  }
+
+  /**
+   * How the host CAD system connects this pad to the fill of a plane of its net, or null if the
+   * design did not say it.
+   */
+  public PadPlaneConnection getPlaneConnection() {
+    return this.planeConnection;
+  }
+
+  /**
+   * Sets how the host CAD system connects this pad to the fill of a plane of its net. It only
+   * changes on which island of a fractured plane the pad counts.
+   */
+  public void setPlaneConnection(PadPlaneConnection planeConnection) {
+    this.planeConnection = planeConnection;
   }
 
   /** Return the name of this pin in the package of this component. */
