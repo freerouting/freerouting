@@ -275,12 +275,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
    * they are no incomplete connection.
    */
   public boolean isDeadCopper() {
-    if (board == null || board.layerStructure.layers[getLayer()].isSignal) {
-      return false;
-    }
-    double mm = board.communication.getResolution(Unit.MM);
-    IntBox box = getArea().boundingBox();
-    if ((double) box.width() * box.height() >= mm * mm) {
+    if (board == null) {
       return false;
     }
     return getNormalContacts().isEmpty();

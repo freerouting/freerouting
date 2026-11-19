@@ -54,7 +54,7 @@ public final class ViaOptimizer {
       Iterator<Item> it = contacts.iterator();
       Item currentItem = it.next();
       if (currentItem.isShoveFixed() || !(currentItem instanceof PolylineTrace)) {
-        if (currentItem instanceof ConductionArea) {
+        if (currentItem instanceof ConductionArea area && !area.isFractured()) {
           isPlaneOrFanoutVia = true;
         } else {
           return false;
@@ -64,7 +64,7 @@ public final class ViaOptimizer {
       }
       currentItem = it.next();
       if (currentItem.isShoveFixed() || !(currentItem instanceof PolylineTrace)) {
-        if (currentItem instanceof ConductionArea) {
+        if (currentItem instanceof ConductionArea area && !area.isFractured()) {
           isPlaneOrFanoutVia = true;
         } else {
           return false;
@@ -171,7 +171,7 @@ public final class ViaOptimizer {
     ConductionArea contactPlane = null;
     PolylineTrace contactTrace = null;
     for (Item currentContact : contactList) {
-      if (currentContact instanceof ConductionArea area) {
+      if (currentContact instanceof ConductionArea area && !area.isFractured()) {
         if (contactPlane != null) {
           return false;
         }
