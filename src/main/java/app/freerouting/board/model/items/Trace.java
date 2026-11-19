@@ -21,7 +21,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -377,8 +376,14 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   @Override
   public boolean isOverlap() {
     Set<Item> startContacts = this.getStartContacts();
-    Set<Item> endContacts = this.getEndContacts();
-    return !Collections.disjoint(startContacts, endContacts);
+    for (Item contact : this.getEndContacts()) {
+      // a fractured plane under both ends joins them only if they touch a common island
+      if (startContacts.contains(contact)
+          && !(contact instanceof ConductionArea area && !area.joinsEndsOf(this))) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**

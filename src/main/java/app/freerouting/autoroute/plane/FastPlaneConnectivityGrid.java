@@ -27,6 +27,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.IntUnaryOperator;
 
 /**
  * High-performance, constant-memory 2D occupancy grid for evaluating copper pour topological
@@ -98,6 +102,15 @@ public class FastPlaneConnectivityGrid {
     public final IntBox dependencyBox;
 
     /**
+     * For each trace of the net: the islands that its first corner ({@code [0]}) and its last
+     * corner ({@code [1]}) touch. A trace is in the item list of each island it touches, at its
+     * ends or on its way, without joining them into one: the plane joins the two ends of a trace
+     * only if they touch a common island, so that a trace that bridges a cut of the plane is not
+     * taken for a cycle with it.
+     */
+    public final Map<Item, int[][]> traceEndIslands;
+
+    /**
      * Creates a new fracture result.
      *
      * @param islandItems mapping from island ID to items in that island
@@ -113,10 +126,34 @@ public class FastPlaneConnectivityGrid {
      * @param dependencyBox the box on the layer of the area that the result depends on, or null
      */
     public PlaneFractureResult(Map<Integer, List<Item>> islandItems, IntBox dependencyBox) {
+      this(islandItems, dependencyBox, Collections.emptyMap());
+    }
+
+    /**
+     * Creates a new fracture result that holds as long as nothing changes inside the box.
+     *
+     * @param islandItems mapping from island ID to items in that island
+     * @param dependencyBox the box on the layer of the area that the result depends on, or null
+     * @param traceEndIslands the islands each end of each trace of the net touches
+     */
+    public PlaneFractureResult(
+        Map<Integer, List<Item>> islandItems,
+        IntBox dependencyBox,
+        Map<Item, int[][]> traceEndIslands) {
       this.islandItems = islandItems != null ? islandItems : Collections.emptyMap();
+      this.traceEndIslands = traceEndIslands != null ? traceEndIslands : Collections.emptyMap();
       this.islandCount = this.islandItems.size();
       this.isFractured = this.islandCount > 1;
       this.dependencyBox = dependencyBox;
+    }
+
+    /**
+     * The islands that one end of a trace touches, or null if the trace is not known to this result
+     * (it was placed in the island of one of its ends).
+     */
+    public int[] endIslands(Item trace, boolean first) {
+      int[][] ends = traceEndIslands.get(trace);
+      return ends == null ? null : ends[first ? 0 : 1];
     }
   }
 
@@ -345,8 +382,9 @@ public class FastPlaneConnectivityGrid {
    * <p>The fill stops at the thermal gap of a pad with a thermal relief and at the clearance of a
    * pad it does not connect, as it stops at foreign copper, and at its own distance from the edge
    * of the board. A pad attached to nothing is alone on an island; a pad attached to two pieces
-   * joins them. A via, a trace or a pad without a known connection is attached to every piece whose
-   * copper reaches it, a trace along its whole length, and to none where the fill leaves it out.
+   * joins them. A via or a pad without a known connection is attached to every piece whose copper
+   * reaches it, and to none where the fill leaves it out. A trace is placed once the islands are
+   * known ({@link #attachTraces}): in each island it touches, without joining them.
    */
   private PlaneFractureResult partitionItemsByPadConnection(
       ConductionArea ca, BasicBoard board, Collection<? extends Item> sameNetItems) {
@@ -436,11 +474,9 @@ public class FastPlaneConnectivityGrid {
             pieceCount);
         continue;
       }
-      // A via or a trace is covered by the fill: it is attached to every piece whose copper
-      // reaches it, and to none if the fill leaves it out.
-      if (item instanceof Trace trace) {
-        attachTrace(trace, ca, minWidth, pieceOfCell, parent, node);
-      } else if (item instanceof DrillItem drillItem) {
+      // A via is covered by the fill: it is attached to every piece whose copper reaches it, and
+      // to none if the fill leaves it out. A trace is placed once the islands are known.
+      if (item instanceof DrillItem drillItem) {
         IntBox box = drillItem.boundingBox();
         TileShape shape =
             drillItem.getTreeShapeOnLayer(board.searchTreeManager.getDefaultTree(), layer);
@@ -452,30 +488,58 @@ public class FastPlaneConnectivityGrid {
       }
     }
 
-    // islands: the groups of items, the largest first, then in the order of the items
+    // islands: the groups of items other than traces, the largest first, then in the order of the
+    // items
     Map<Integer, List<Item>> groups = new java.util.LinkedHashMap<>();
+    List<Trace> traces = new ArrayList<>();
     for (int i = 0; i < items.size(); i++) {
+      if (items.get(i) instanceof Trace trace) {
+        traces.add(trace);
+        continue;
+      }
       groups
           .computeIfAbsent(find(parent, pieceCount + i), k -> new ArrayList<>())
           .add(items.get(i));
     }
-    List<List<Item>> ordered = new ArrayList<>(groups.values());
+    List<Integer> roots = new ArrayList<>(groups.keySet());
     int largest = 0;
-    for (int i = 1; i < ordered.size(); i++) {
-      if (ordered.get(i).size() > ordered.get(largest).size()) {
+    for (int i = 1; i < roots.size(); i++) {
+      if (groups.get(roots.get(i)).size() > groups.get(roots.get(largest)).size()) {
         largest = i;
       }
     }
     Map<Integer, List<Item>> islands = new HashMap<>();
-    int nextId = 0;
-    if (!ordered.isEmpty()) {
-      islands.put(nextId++, ordered.get(largest));
+    Map<Integer, Integer> islandOfRoot = new HashMap<>();
+    if (!roots.isEmpty()) {
+      islandOfRoot.put(roots.get(largest), islands.size());
+      islands.put(islands.size(), groups.get(roots.get(largest)));
     }
-    for (int i = 0; i < ordered.size(); i++) {
+    for (int i = 0; i < roots.size(); i++) {
       if (i != largest) {
-        islands.put(nextId++, ordered.get(i));
+        islandOfRoot.put(roots.get(i), islands.size());
+        islands.put(islands.size(), groups.get(roots.get(i)));
       }
     }
+    // a piece of fill that no pad or via holds is an island of its own once a trace reaches it
+    IntUnaryOperator islandOfPiece =
+        piece ->
+            islandOfRoot.computeIfAbsent(
+                find(parent, piece),
+                root -> {
+                  int id = islands.size();
+                  islands.put(id, new ArrayList<>());
+                  return id;
+                });
+    Map<Item, int[][]> traceEnds =
+        attachTraces(
+            ca,
+            traces,
+            islands,
+            (trace, end) ->
+                islandsOf(
+                    piecesNear(end.toFloat(), trace.getHalfWidth() + minWidth / 2.0, pieceOfCell),
+                    islandOfPiece),
+            trace -> islandsOf(piecesAlong(trace, minWidth, pieceOfCell), islandOfPiece));
     // Everything read above lies within the area, its foreign copper and the reliefs and spokes of
     // the pads of the net, with the copper around them: the result holds while nothing changes
     // there.
@@ -489,7 +553,7 @@ public class FastPlaneConnectivityGrid {
         new IntBox(
             new IntPoint(box.ll.x - reach, box.ll.y - reach),
             new IntPoint(box.ur.x + reach, box.ur.y + reach));
-    return new PlaneFractureResult(islands, dependencyBox);
+    return new PlaneFractureResult(islands, dependencyBox, traceEnds);
   }
 
   /** The largest clearance the fill of the area keeps to any item on its layer. */
@@ -969,13 +1033,133 @@ public class FastPlaneConnectivityGrid {
   }
 
   /**
-   * Joins the node of a trace of the net with every piece of the fill that its copper touches on
-   * its way: a trace is covered by the fill wherever the fill reaches it, not only at its ends. The
-   * fill reaches the trace where the centre of a disc of fill, a free sample point, is no further
-   * from its centre line than its half width and half the minimum width.
+   * Places each trace of the net in the islands it touches, and returns the islands of each of its
+   * ends. An end on a pad or a via of the net (at its centre, or else in its box) touches the
+   * islands of that item; elsewhere, it touches the pieces of fill whose copper reaches it ({@link
+   * #piecesNear}), none in the clearance band of foreign copper. With the fill rules of the design,
+   * a trace is also in every island that its copper touches on its way ({@link #piecesAlong}). A
+   * trace whose ends touch two islands joins them, but it is not merged into one island with them:
+   * the plane joins the two ends of a trace only if they touch a common island, so that a trace
+   * that bridges a cut of the plane is not taken for a cycle with it.
+   *
+   * @param endIslands the islands that the copper at an end of a trace, away from pads and vias,
+   *     touches
+   * @param wayIslands the islands that the copper of a trace touches on its way
    */
-  private void attachTrace(
-      Trace trace, ConductionArea ca, double minWidth, int[] pieceOfCell, int[] parent, int node) {
+  private static Map<Item, int[][]> attachTraces(
+      ConductionArea ca,
+      List<Trace> traces,
+      Map<Integer, List<Item>> islands,
+      BiFunction<Trace, Point, Set<Integer>> endIslands,
+      Function<Trace, Set<Integer>> wayIslands) {
+    if (traces.isEmpty()) {
+      return Collections.emptyMap();
+    }
+    Map<Item, List<Integer>> islandsOfItem = islandsOfItems(islands);
+    Map<Item, int[][]> result = new HashMap<>();
+    for (Trace trace : traces) {
+      int[][] ends = new int[2][];
+      TreeSet<Integer> all = new TreeSet<>();
+      for (int e = 0; e < 2; e++) {
+        Point end = e == 0 ? trace.firstCorner() : trace.lastCorner();
+        TreeSet<Integer> touched = new TreeSet<>();
+        if (end != null && ca.getArea() != null && ca.getArea().contains(end)) {
+          DrillItem drill = drillItemAt(end, islandsOfItem.keySet());
+          if (drill != null) {
+            touched.addAll(islandsOfItem.get(drill));
+          } else {
+            touched.addAll(endIslands.apply(trace, end));
+          }
+        }
+        ends[e] = touched.stream().mapToInt(Integer::intValue).toArray();
+        all.addAll(touched);
+      }
+      all.addAll(wayIslands.apply(trace));
+      for (int island : all) {
+        islands.get(island).add(trace);
+      }
+      result.put(trace, ends);
+    }
+    return result;
+  }
+
+  /** The islands of these pieces of fill, in increasing order. */
+  private static Set<Integer> islandsOf(Set<Integer> pieces, IntUnaryOperator islandOfPiece) {
+    TreeSet<Integer> result = new TreeSet<>();
+    for (int piece : pieces) {
+      result.add(islandOfPiece.applyAsInt(piece));
+    }
+    return result;
+  }
+
+  /** For each item, the islands it is in. */
+  private static Map<Item, List<Integer>> islandsOfItems(Map<Integer, List<Item>> islands) {
+    Map<Item, List<Integer>> result = new HashMap<>();
+    for (Map.Entry<Integer, List<Item>> entry : islands.entrySet()) {
+      for (Item item : entry.getValue()) {
+        result.computeIfAbsent(item, k -> new ArrayList<>()).add(entry.getKey());
+      }
+    }
+    return result;
+  }
+
+  /**
+   * The pad or via of the net centred on {@code point}, or else whose box contains it, if any; the
+   * lowest id wins.
+   */
+  private static DrillItem drillItemAt(Point point, Collection<Item> items) {
+    DrillItem centred = null;
+    DrillItem containing = null;
+    IntPoint p = toIntPoint(point);
+    for (Item item : items) {
+      if (!(item instanceof DrillItem drill)) {
+        continue;
+      }
+      if (point.equals(drill.getCenter())) {
+        if (centred == null || drill.getId() < centred.getId()) {
+          centred = drill;
+        }
+      } else if (drill.boundingBox().contains(p)
+          && (containing == null || drill.getId() < containing.getId())) {
+        containing = drill;
+      }
+    }
+    return centred != null ? centred : containing;
+  }
+
+  /**
+   * The pieces of the fill that have a free sample point no further than reach from the point: the
+   * centre of a disc of fill.
+   */
+  private TreeSet<Integer> piecesNear(FloatPoint point, double reach, int[] pieceOfCell) {
+    double fine = (double) cellSize / FINE;
+    // the sample points are that far apart
+    double limit = reach + fine * 0.75;
+    int startCol = Math.max(0, (int) Math.floor((point.x - limit - originX) / cellSize));
+    int endCol = Math.min(cols - 1, (int) Math.floor((point.x + limit - originX) / cellSize));
+    int startRow = Math.max(0, (int) Math.floor((point.y - limit - originY) / cellSize));
+    int endRow = Math.min(rows - 1, (int) Math.floor((point.y + limit - originY) / cellSize));
+    TreeSet<Integer> result = new TreeSet<>();
+    for (int row = startRow; row <= endRow; row++) {
+      for (int col = startCol; col <= endCol; col++) {
+        int piece = pieceOfCell[row * cols + col];
+        if (piece >= 0
+            && !result.contains(piece)
+            && hasFreeSampleNear(row, col, point, limit, fine)) {
+          result.add(piece);
+        }
+      }
+    }
+    return result;
+  }
+
+  /**
+   * The pieces of the fill that the copper of a trace of the net touches on its way: a trace is
+   * covered by the fill wherever the fill reaches it, not only at its ends. The fill reaches the
+   * trace where the centre of a disc of fill, a free sample point, is no further from its centre
+   * line than its half width and half the minimum width.
+   */
+  private TreeSet<Integer> piecesAlong(Trace trace, double minWidth, int[] pieceOfCell) {
     Point[] corners =
         trace instanceof PolylineTrace polylineTrace
             ? polylineTrace.polyline().corners()
@@ -984,7 +1168,7 @@ public class FastPlaneConnectivityGrid {
     // the sample points are that far apart
     double limit = trace.getHalfWidth() + minWidth / 2.0 + fine * 0.75;
     double halfDiagonal = cellSize * Math.sqrt(0.5);
-    int root = find(parent, node);
+    TreeSet<Integer> result = new TreeSet<>();
     for (int i = 0; i < Math.max(1, corners.length - 1); i++) {
       FloatPoint from = corners[i].toFloat();
       FloatPoint to = corners[Math.min(i + 1, corners.length - 1)].toFloat();
@@ -1001,7 +1185,7 @@ public class FastPlaneConnectivityGrid {
       for (int r = startRow; r <= endRow; r++) {
         for (int c = startCol; c <= endCol; c++) {
           int piece = pieceOfCell[r * cols + c];
-          if (piece < 0 || find(parent, piece) == root) {
+          if (piece < 0 || result.contains(piece)) {
             continue;
           }
           FloatPoint centre =
@@ -1010,11 +1194,11 @@ public class FastPlaneConnectivityGrid {
               || !hasFreeSampleNearSegment(r, c, from, to, limit, fine)) {
             continue;
           }
-          union(parent, node, piece);
-          root = find(parent, node);
+          result.add(piece);
         }
       }
     }
+    return result;
   }
 
   /** Whether the cell has a free sample point no further than limit from the segment. */
@@ -1884,7 +2068,13 @@ public class FastPlaneConnectivityGrid {
     List<Item> unseededItems = new ArrayList<>();
     int nextIslandId = 0;
 
+    List<Trace> traces = new ArrayList<>();
     for (Item item : items) {
+      if (item instanceof Trace trace) {
+        // a trace is placed by its ends once the islands are known (attachTraces)
+        traces.add(trace);
+        continue;
+      }
       if (itemIslandMap.containsKey(item)) {
         continue;
       }
@@ -1921,7 +2111,9 @@ public class FastPlaneConnectivityGrid {
 
       // Check remaining unassigned items to see if they are reached by this flood fill
       for (Item other : items) {
-        if (!itemIslandMap.containsKey(other) && !unseededItems.contains(other)) {
+        if (!(other instanceof Trace)
+            && !itemIslandMap.containsKey(other)
+            && !unseededItems.contains(other)) {
           IntPoint otherPt = getItemLocation(other, ca);
           if (otherPt != null) {
             int oc = (otherPt.x - originX) / cellSize;
@@ -1944,6 +2136,7 @@ public class FastPlaneConnectivityGrid {
       single.put(0, new ArrayList<>(items));
       return new PlaneFractureResult(single);
     }
+    int[] islandCounter = {nextIslandId};
 
     for (Item unseeded : unseededItems) {
       if (itemIslandMap.containsKey(unseeded)) {
@@ -1963,7 +2156,53 @@ public class FastPlaneConnectivityGrid {
       itemIslandMap.put(unseeded, assignedIsland);
     }
 
-    return new PlaneFractureResult(islands);
+    // The copper at the end of a trace touches the cells of fill whose centre is no further from
+    // the end than the half width of the trace and half a cell. A piece of fill that no pad or via
+    // holds is an island of its own once a trace reaches it.
+    Map<Item, int[][]> traceEnds =
+        attachTraces(
+            ca,
+            traces,
+            islands,
+            (trace, end) -> {
+              TreeSet<Integer> result = new TreeSet<>();
+              for (int cell : fillCellsAround(toIntPoint(end), trace.getHalfWidth())) {
+                if (cellIslandMap[cell] < 0) {
+                  int id = islandCounter[0]++;
+                  islands.put(id, new ArrayList<>());
+                  runFloodFill(cell % cols, cell / cols, (short) id);
+                }
+                result.add((int) cellIslandMap[cell]);
+              }
+              return result;
+            },
+            trace -> Collections.emptySet());
+    return new PlaneFractureResult(islands, null, traceEnds);
+  }
+
+  /**
+   * The conductive cells whose centre is no further from {@code point} than {@code halfWidth} and
+   * half a cell, in row-major order.
+   */
+  private List<Integer> fillCellsAround(IntPoint point, double halfWidth) {
+    double reach = halfWidth + cellSize / 2.0;
+    int minCol = Math.max(0, (int) Math.floor((point.x - reach - originX) / (double) cellSize));
+    int maxCol =
+        Math.min(cols - 1, (int) Math.floor((point.x + reach - originX) / (double) cellSize));
+    int minRow = Math.max(0, (int) Math.floor((point.y - reach - originY) / (double) cellSize));
+    int maxRow =
+        Math.min(rows - 1, (int) Math.floor((point.y + reach - originY) / (double) cellSize));
+    List<Integer> result = new ArrayList<>();
+    for (int row = minRow; row <= maxRow; row++) {
+      double cellY = originY + row * (double) cellSize + cellSize / 2.0;
+      for (int col = minCol; col <= maxCol; col++) {
+        double cellX = originX + col * (double) cellSize + cellSize / 2.0;
+        if (Math.hypot(cellX - point.x, cellY - point.y) <= reach && isConductive(col, row)) {
+          result.add(row * cols + col);
+        }
+      }
+    }
+    return result;
   }
 
   private void runFloodFill(int startCol, int startRow, short islandId) {

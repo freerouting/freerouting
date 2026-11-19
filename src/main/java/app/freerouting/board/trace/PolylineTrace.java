@@ -706,7 +706,8 @@ public class PolylineTrace extends Trace implements Serializable {
           }
           if (!ignoreAreas
               && this.getStartContacts().contains(foundItem)
-              && this.getEndContacts().contains(foundItem)) {
+              && this.getEndContacts().contains(foundItem)
+              && ((ConductionArea) foundItem).joinsEndsOf(this)) {
             // this trace can be removed because of cycle with conduction area
             board.removeItem(this);
             return result;
