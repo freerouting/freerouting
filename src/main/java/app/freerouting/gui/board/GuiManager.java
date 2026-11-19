@@ -153,6 +153,7 @@ public class GuiManager {
       // the error, if a .kicad_dru given with -de cannot be read, is in the log
       routingJob.loadKiCadDesignRules(globalSettings.initialKiCadDesignRulesFile);
       routingJob.loadKiCadProject(globalSettings.initialKiCadProjectFile);
+      routingJob.loadKiCadBoardZones(globalSettings.initialKiCadBoardFile);
       var settingsMerger = globalSettings.settingsMergerProtype.clone();
       settingsMerger.addOrReplaceSources(
           new DsnFileSettings(routingJob.input.getData(), routingJob.input.getFilename()),

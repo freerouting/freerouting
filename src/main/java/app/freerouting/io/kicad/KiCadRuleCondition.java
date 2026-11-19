@@ -16,9 +16,10 @@ import java.util.regex.Pattern;
  *
  * <p>The evaluation follows KiCad 10 ({@code pcbexpr_evaluator.cpp}, {@code libeval_compiler.cpp},
  * {@code pcbexpr_functions.cpp}): string comparisons ignore case and accept the {@code *} and
- * {@code ?} wildcards, {@code A.NetClass == 'X'} also matches a composite class such as {@code
- * X,Default}, a property the item does not have makes both {@code ==} and {@code !=} false, and a
- * condition holds if it holds for (A, B) or for (B, A).
+ * {@code ?} wildcards, while {@code memberOfFootprint()} and {@code hasNetclass()} match with
+ * {@code wxString::Matches}, wildcards too but case-sensitive, {@code A.NetClass == 'X'} also
+ * matches a composite class such as {@code X,Default}, a property the item does not have makes both
+ * {@code ==} and {@code !=} false, and a condition holds if it holds for (A, B) or for (B, A).
  *
  * <p>The result has three values. A part of the condition that Freerouting cannot evaluate (a
  * geometric function, an unknown property, a numeric comparison of a property...) is {@link
@@ -511,17 +512,19 @@ public final class KiCadRuleCondition {
                 yield Tri.UNKNOWN; // component class selector
               }
               // KiCad tests the library identifier (case-sensitively) when the selector has a ':',
-              // and the reference otherwise (testFootprintSelector in pcbexpr_functions.cpp)
+              // and the reference otherwise, both with wxString::Matches (testFootprintSelector in
+              // pcbexpr_functions.cpp)
               if (arg.indexOf(':') >= 0) {
                 yield Tri.of(
                     pad && item.libraryId() != null && matches(arg, item.libraryId(), true));
               }
-              yield Tri.of(pad && item.footprint() != null && matches(arg, item.footprint()));
+              yield Tri.of(pad && item.footprint() != null && matches(arg, item.footprint(), true));
             }
             case "hasnetclass" -> {
-              boolean found = item.netClass().equalsIgnoreCase(arg);
+              // NETCLASS::ContainsNetclassWithName: wxString::Matches on each constituent
+              boolean found = false;
               for (String constituent : constituents(item.netClass())) {
-                found |= constituent.equalsIgnoreCase(arg);
+                found |= matches(arg, constituent, true);
               }
               yield Tri.of(found);
             }

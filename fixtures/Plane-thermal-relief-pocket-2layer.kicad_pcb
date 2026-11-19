@@ -1,0 +1,91 @@
+(kicad_pcb
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(general
+		(thickness 1.6)
+	)
+	(layers
+		(0 "F.Cu" signal)
+		(2 "B.Cu" signal)
+	)
+	(footprint "PinHeader_1x01_P2.54mm_Vertical"
+		(layer "F.Cu")
+		(at 22 12.5)
+		(property "Reference" "J1")
+		(pad "1" thru_hole rect
+			(at 0 0)
+			(size 1.7 1.7)
+			(drill 1)
+			(layers "*.Cu" "*.Mask")
+			(net "GND")
+		)
+	)
+	(footprint "PinHeader_1x01_P2.54mm_Vertical"
+		(layer "F.Cu")
+		(at 32 12.5)
+		(property "Reference" "J2")
+		(pad "1" thru_hole rect
+			(at 0 0)
+			(size 1.7 1.7)
+			(drill 1)
+			(layers "*.Cu" "*.Mask")
+			(net "GND")
+		)
+	)
+	(footprint "PinHeader_1x01_P2.54mm_Vertical"
+		(layer "F.Cu")
+		(at 18 20)
+		(property "Reference" "J3")
+		(pad "1" thru_hole rect
+			(at 0 0)
+			(size 1.7 1.7)
+			(drill 1)
+			(layers "*.Cu" "*.Mask")
+			(net "SIG")
+		)
+	)
+	(footprint "TestPoint_Pad_1.0x1.0mm"
+		(layer "F.Cu")
+		(at 2.6 12.5)
+		(property "Reference" "TP1")
+		(pad "1" smd rect
+			(at 0 0)
+			(size 1 1)
+			(layers "F.Cu" "F.Mask")
+			(net "GND")
+		)
+	)
+	(footprint "Shield_Bar_0.6x23.8mm"
+		(layer "F.Cu")
+		(at 5 12.5)
+		(property "Reference" "SH1")
+		(pad "1" smd rect
+			(at 0 0)
+			(size 0.6 23.8)
+			(layers "F.Cu" "F.Mask")
+			(net "GND")
+			(zone_connect 0)
+		)
+	)
+	(zone
+		(net "GND")
+		(layer "F.Cu")
+		(uuid "7b1e2d4c-93aa-4f0e-8d55-0c6a1e2f3b02")
+		(hatch edge 0.5)
+		(connect_pads
+			(clearance 0.5)
+		)
+		(min_thickness 0.25)
+		(filled_areas_thickness no)
+		(fill yes
+			(thermal_gap 0.5)
+			(thermal_bridge_width 0.5)
+		)
+		(polygon
+			(pts
+				(xy 1 1) (xy 39 1) (xy 39 24) (xy 1 24)
+			)
+		)
+	)
+)

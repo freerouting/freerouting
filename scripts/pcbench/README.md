@@ -22,6 +22,8 @@ KiCad 10 CLI is expected at **`C:\Program Files\KiCad\10.0\bin\kicad-cli.exe`**
 2. `strip_kicad_routing.py` — remove segments, vias, and zone fills from `.kicad_pcb`. With
    `--zones-from raw.kicad_pcb`, first graft the zones of `raw.kicad_pcb` onto PCBench's
    `processed.kicad_pcb`, which has none (issue #1122); `Convert-PCBenchBoards.ps1` does this.
+   Rule areas that allow both tracks and vias are not grafted: KiCad's Specctra export would
+   write them as full keepouts.
 3. `Convert-PCBenchBoards.ps1` — export stripped boards to Specctra `.dsn` via `pcbnew.ExportSpecctraDSN`.
 4. `Build-GroundTruth.ps1` — record reference via/segment counts and KiCad DRC on `raw.kicad_pcb`.
 5. `Run-PCBenchGate.ps1` — route converted boards and collect benchmark metrics (G3 gate).

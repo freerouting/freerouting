@@ -37,6 +37,7 @@ public class SearchTreeManager {
 
   /** Inserts the tree shapes of item into all active search trees. */
   public void insert(Item item) {
+    board.noteChange(item);
     for (ShapeSearchTree currentTree : compensatedSearchTrees) {
       currentTree.insert(item);
     }
@@ -48,6 +49,7 @@ public class SearchTreeManager {
     if (!item.isOnTheBoard()) {
       return;
     }
+    board.noteChange(item);
     for (ShapeSearchTree currentTree : compensatedSearchTrees) {
 
       ShapeTree.Leaf[] currentTreeEntries = item.getSearchTreeEntries(currentTree);
@@ -206,6 +208,7 @@ public class SearchTreeManager {
    * refresh the shapes of already-inserted items.
    */
   public void reinsertTreeItems() {
+    board.noteUnknownChange();
     removeAllBoardItems();
     // Removing clears the tree entries but NOT the precalculated tree shapes cached on each
     // item; without dropping those, re-insertion silently reuses the stale shapes and rule
@@ -262,6 +265,8 @@ public class SearchTreeManager {
       Polyline joinedPolyline,
       int fromEntryNo,
       int toEntryNo) {
+    board.noteChange(fromTrace);
+    board.noteChange(toTrace);
     for (ShapeSearchTree currentTree : compensatedSearchTrees) {
       currentTree.mergeEntriesInFront(fromTrace, toTrace, joinedPolyline, fromEntryNo, toEntryNo);
     }
@@ -277,6 +282,8 @@ public class SearchTreeManager {
       Polyline joinedPolyline,
       int fromEntryNo,
       int toEntryNo) {
+    board.noteChange(fromTrace);
+    board.noteChange(toTrace);
     for (ShapeSearchTree currentTree : compensatedSearchTrees) {
       currentTree.mergeEntriesAtEnd(fromTrace, toTrace, joinedPolyline, fromEntryNo, toEntryNo);
     }
@@ -288,6 +295,12 @@ public class SearchTreeManager {
    */
   public void changeEntries(
       PolylineTrace obj, Polyline newPolyline, int keepAtStartCount, int keepAtEndCount) {
+    // the trace as it is, and as it will be
+    board.noteChange(obj);
+    board.noteChange(
+        newPolyline.boundingBox().offset(obj.getHalfWidth() + 1),
+        obj.firstLayer(),
+        obj.lastLayer());
     for (ShapeSearchTree currentTree : compensatedSearchTrees) {
       currentTree.changeEntries(obj, newPolyline, keepAtStartCount, keepAtEndCount);
     }
@@ -299,6 +312,7 @@ public class SearchTreeManager {
    */
   void reuseEntriesAfterCutout(
       PolylineTrace fromTrace, PolylineTrace startPiece, PolylineTrace endPiece) {
+    board.noteChange(fromTrace);
     for (ShapeSearchTree currentTree : compensatedSearchTrees) {
 
       currentTree.reuseEntriesAfterCutout(fromTrace, startPiece, endPiece);

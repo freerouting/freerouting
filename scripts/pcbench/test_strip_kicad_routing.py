@@ -80,6 +80,33 @@ class GraftZonesTest(unittest.TestCase):
         self.assertNotIn("(segment", stripped)
         self.assertIn("(polygon (pts (xy 0 0) (xy 20 0) (xy 20 20) (xy 0 20)))", stripped)
 
+    def test_rule_areas_that_allow_tracks_and_vias_are_not_grafted(self) -> None:
+        raw = """(kicad_pcb (version 20171130) (host pcbnew "(5.1.12)-1")
+  (net 0 "")
+  (zone (net 0) (net_name "") (layer B.Cu) (tstamp 1) (hatch edge 0.508)
+    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
+    (polygon (pts (xy 0 0) (xy 5 0) (xy 5 5))))
+  (zone (net 0) (net_name "") (layer F.Cu) (tstamp 2) (hatch edge 0.508)
+    (keepout (tracks allowed) (vias allowed) (pads not_allowed) (copperpour not_allowed) (footprints allowed))
+    (polygon (pts (xy 0 0) (xy 5 0) (xy 5 5))))
+  (zone (net 0) (net_name "") (layer F.Cu) (tstamp 3) (hatch edge 0.508)
+    (keepout (tracks not_allowed) (vias allowed) (copperpour allowed))
+    (polygon (pts (xy 0 0) (xy 5 0) (xy 5 5))))
+  (zone (net 0) (net_name "") (layer F.Cu) (tstamp 4) (hatch edge 0.508)
+    (keepout (tracks allowed) (vias not_allowed) (copperpour allowed))
+    (polygon (pts (xy 0 0) (xy 5 0) (xy 5 5))))
+)
+"""
+        out, grafted, dropped = graft_zones(PROCESSED, raw)
+        self.assertEqual((2, 2), (grafted, dropped))
+        self.assertEqual(
+            [
+                '(zone (net 0) (net_name "") (layer F.Cu) (tstamp 3) (hatch edge 0.508)',
+                '(zone (net 0) (net_name "") (layer F.Cu) (tstamp 4) (hatch edge 0.508)',
+            ],
+            zones(out),
+        )
+
     def test_unmatched_paren_inside_quoted_net_name_is_ignored(self) -> None:
         processed = """(kicad_pcb (version 20171130) (host pcbnew "(5.1.12)-1")
   (net 0 "")

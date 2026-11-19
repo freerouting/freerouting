@@ -1,6 +1,7 @@
 package app.freerouting.board.model.items;
 
 import app.freerouting.autoroute.plane.FastPlaneConnectivityGrid;
+import app.freerouting.autoroute.plane.PlaneOutlineSmoothing;
 import app.freerouting.board.actions.ItemInfoPrinter;
 import app.freerouting.board.actions.ItemSelectionFilter;
 import app.freerouting.board.facade.BasicBoard;
@@ -31,10 +32,155 @@ import java.util.TreeSet;
 /** A ObstacleArea, which can be electrically connected to other items. */
 public class ConductionArea extends ObstacleArea implements Connectable {
 
+  private static final long serialVersionUID = 9006217382369120553L;
+
   private static final double PLANE_HATCH_OPACITY = 0.85;
 
   private boolean isObstacle;
   private boolean isFilled = true;
+
+  /** The clearance the fill of the zone keeps to foreign copper, in board units; 0 if unknown. */
+  private int fillClearance;
+
+  /** The narrowest neck the fill of the zone keeps, in board units; 0 if unknown. */
+  private int fillMinWidth;
+
+  /** How the fill connects the pads of the net; null if unknown. */
+  private PadPlaneConnection.Mode padConnection;
+
+  /** The gap of the thermal reliefs of the fill, in board units. */
+  private int thermalGap;
+
+  /** The width of the spokes of the thermal reliefs of the fill, in board units. */
+  private int thermalSpokeWidth;
+
+  /** The distance the fill keeps to the edge of the board, in board units; 0 if unknown. */
+  private int fillEdgeClearance;
+
+  /** Whether the corners of the outline are rounded before the fill (fillets). */
+  private boolean cornerFillets;
+
+  /**
+   * The radius of the fillets, or the distance of the chamfers, of the corners of the outline
+   * before the fill, in board units; 0 for sharp corners.
+   */
+  private int cornerSmoothing;
+
+  /** The outline with its corners smoothed, built on first use. */
+  private transient Area smoothedArea;
+
+  /**
+   * Sets how the host CAD system fills this area, when the design file does not say it: the
+   * clearance the fill keeps to the copper of other nets, if larger than the clearance of the
+   * clearance classes, and the minimum width below which a neck of the fill is removed. Both are in
+   * board units; 0 means unknown. They only change where this area counts as fractured.
+   */
+  public void setFillRules(int clearance, int minWidth) {
+    this.fillClearance = Math.max(0, clearance);
+    this.fillMinWidth = Math.max(0, minWidth);
+    this.clearDerivedData();
+  }
+
+  /** The clearance set by {@link #setFillRules(int, int)}, in board units; 0 if unknown. */
+  public int getFillClearance() {
+    return this.fillClearance;
+  }
+
+  /** The minimum width set by {@link #setFillRules(int, int)}, in board units; 0 if unknown. */
+  public int getFillMinWidth() {
+    return this.fillMinWidth;
+  }
+
+  /**
+   * Sets how the host CAD system connects the pads of the net to the fill of this area, when the
+   * design file does not say it: the kind of connection, and for thermal reliefs their gap and the
+   * width of their spokes, in board units. A pad can override them ({@link
+   * Pin#setPlaneConnection}). They only change on which island of this area a pad counts.
+   */
+  public void setPadConnectionRules(
+      PadPlaneConnection.Mode padConnection, int thermalGap, int thermalSpokeWidth) {
+    this.padConnection = padConnection;
+    this.thermalGap = Math.max(0, thermalGap);
+    this.thermalSpokeWidth = Math.max(0, thermalSpokeWidth);
+    this.clearDerivedData();
+  }
+
+  /**
+   * Sets the distance the fill of the host CAD system keeps to the edge of the board, in board
+   * units, when it is not the clearance of the fill to other copper.
+   */
+  public void setFillEdgeClearance(int edgeClearance) {
+    this.fillEdgeClearance = Math.max(0, edgeClearance);
+    this.clearDerivedData();
+  }
+
+  /** The distance set by {@link #setFillEdgeClearance}, in board units; 0 if unknown. */
+  public int getFillEdgeClearance() {
+    return this.fillEdgeClearance;
+  }
+
+  /**
+   * Sets how the host CAD system smooths the corners of the outline before it fills it: fillets of
+   * this radius, or chamfers at this distance from each corner, in board units; 0 for sharp
+   * corners.
+   */
+  public void setFillCornerSmoothing(boolean fillets, int distance) {
+    this.cornerFillets = fillets;
+    this.cornerSmoothing = Math.max(0, distance);
+    this.smoothedArea = null;
+    this.clearDerivedData();
+  }
+
+  /** Whether the corners are rounded, by {@link #setFillCornerSmoothing}. */
+  public boolean hasCornerFillets() {
+    return this.cornerFillets;
+  }
+
+  /** The distance set by {@link #setFillCornerSmoothing}, in board units; 0 for sharp corners. */
+  public int getCornerSmoothing() {
+    return this.cornerSmoothing;
+  }
+
+  /**
+   * The outline that the fill of the host CAD system follows: the area with its corners smoothed as
+   * {@link #setFillCornerSmoothing} says, or the area itself.
+   */
+  public Area getFillOutline() {
+    Area area = getArea();
+    if (this.cornerSmoothing <= 0 || area == null) {
+      return area;
+    }
+    if (this.smoothedArea == null) {
+      this.smoothedArea =
+          PlaneOutlineSmoothing.smooth(area, this.cornerFillets, this.cornerSmoothing);
+    }
+    return this.smoothedArea;
+  }
+
+  /** The connection set by {@link #setPadConnectionRules}; null if unknown. */
+  public PadPlaneConnection.Mode getPadConnection() {
+    return this.padConnection;
+  }
+
+  /** The thermal gap set by {@link #setPadConnectionRules}, in board units. */
+  public int getThermalGap() {
+    return this.thermalGap;
+  }
+
+  /** The spoke width set by {@link #setPadConnectionRules}, in board units. */
+  public int getThermalSpokeWidth() {
+    return this.thermalSpokeWidth;
+  }
+
+  /**
+   * The distance from the copper of a foreign item within which the fill of this area carries no
+   * current: the larger of {@code clearance} (the value of the clearance classes) and the clearance
+   * of the fill, plus half the minimum width of the fill. Two obstacles closer than twice this
+   * distance leave a neck narrower than the minimum width, which the fill does not keep.
+   */
+  public double fillKeepout(double clearance) {
+    return Math.max(clearance, this.fillClearance) + this.fillMinWidth / 2.0;
+  }
 
   public boolean getIsFilled() {
     return this.isFilled;
@@ -251,20 +397,30 @@ public class ConductionArea extends ObstacleArea implements Connectable {
 
   @Override
   public Item copy(int id) {
-    return new ConductionArea(
-        getRelativeArea(),
-        getLayer(),
-        getTranslation(),
-        getRotationInDegree(),
-        getSideChanged(),
-        netNumbers,
-        clearanceClassIndex(),
-        id,
-        getComponentId(),
-        this.name,
-        isObstacle,
-        getFixedState(),
-        board);
+    ConductionArea result =
+        new ConductionArea(
+            getRelativeArea(),
+            getLayer(),
+            getTranslation(),
+            getRotationInDegree(),
+            getSideChanged(),
+            netNumbers,
+            clearanceClassIndex(),
+            id,
+            getComponentId(),
+            this.name,
+            isObstacle,
+            getFixedState(),
+            board);
+    result.fillClearance = this.fillClearance;
+    result.fillMinWidth = this.fillMinWidth;
+    result.padConnection = this.padConnection;
+    result.thermalGap = this.thermalGap;
+    result.thermalSpokeWidth = this.thermalSpokeWidth;
+    result.fillEdgeClearance = this.fillEdgeClearance;
+    result.cornerFillets = this.cornerFillets;
+    result.cornerSmoothing = this.cornerSmoothing;
+    return result;
   }
 
   /**
@@ -434,13 +590,8 @@ public class ConductionArea extends ObstacleArea implements Connectable {
       return true;
     }
     for (Item item : unconnectedSet) {
-      if (item instanceof ConductionArea ca) {
-        if (!ca.isFractured() && ca.reachesPinOfNet(netNo)) {
-          return false;
-        }
-        if (ca.isFractured() && ca.hasPinOnAnyIsland()) {
-          return false;
-        }
+      if (item instanceof ConductionArea ca && !ca.isFloatingFragment(netNo)) {
+        return false;
       }
     }
     for (Item item : connectedSet) {
@@ -451,15 +602,34 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     return true;
   }
 
+  /**
+   * Returns true if no pin of the net is reached from this conduction area: a fill piece that the
+   * net needs no connection to (see {@link #coversAllPlanesOfNet}).
+   */
+  public boolean isFloatingFragment(int netNo) {
+    if (isFractured()) {
+      return !hasPinOnAnyIsland(netNo);
+    }
+    return !reachesPinOfNet(netNo);
+  }
+
   /** Returns true if any island of this fractured conduction area contains a pin. */
   public boolean hasPinOnAnyIsland() {
+    return hasPinOnAnyIsland(0);
+  }
+
+  /**
+   * Returns true if any island of this fractured conduction area contains a pin belonging to {@code
+   * netNo} (or any pin when {@code netNo <= 0}).
+   */
+  public boolean hasPinOnAnyIsland(int netNo) {
     FastPlaneConnectivityGrid.PlaneFractureResult res = getFractureResult();
     if (res == null || !res.isFractured) {
       return false;
     }
     for (List<Item> island : res.islandItems.values()) {
       for (Item item : island) {
-        if (item instanceof Pin) {
+        if (item instanceof Pin && (netNo <= 0 || item.containsNet(netNo))) {
           return true;
         }
       }
@@ -535,9 +705,17 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     int currentRevision = this.board.getRevision();
     long currentNetAssignmentStamp = this.board.getNetAssignmentChangeCount();
     if (this.cachedFractureResult != null
-        && this.cachedFractureRevision == currentRevision
         && this.cachedNetAssignmentStamp == currentNetAssignmentStamp) {
-      return this.cachedFractureResult;
+      if (this.cachedFractureRevision == currentRevision) {
+        return this.cachedFractureResult;
+      }
+      // the board changed, but nowhere the result depends on: it still holds
+      IntBox dependencyBox = this.cachedFractureResult.dependencyBox;
+      if (dependencyBox != null
+          && !this.board.changedSince(this.cachedFractureRevision, getLayer(), dependencyBox)) {
+        this.cachedFractureRevision = currentRevision;
+        return this.cachedFractureResult;
+      }
     }
     FastPlaneConnectivityGrid connectivityGrid = new FastPlaneConnectivityGrid();
     Collection<Item> contacts = getNormalContacts();
@@ -586,6 +764,46 @@ public class ConductionArea extends ObstacleArea implements Connectable {
           if (item != this && (netNumber <= 0 || item.containsNet(netNumber))) {
             if (result.add(item)) {
               item.getConnectedSetRecu(result, netNumber, stopAtPlane);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Completes a connected set that passes through fractured conduction areas. Such an area opens
+   * only the islands reached when the walk first meets it; an island reached later, through a via
+   * and another layer, stays closed, so the result depends on the walk order. This adds, until
+   * nothing changes, the items of every island of a fractured area in {@code result} that holds an
+   * item of {@code result}.
+   */
+  static void addLaterReachedIslands(Set<Item> result, int netNumber, boolean stopAtPlane) {
+    boolean changed = true;
+    while (changed) {
+      changed = false;
+      List<ConductionArea> fractured = new ArrayList<>();
+      for (Item item : result) {
+        if (item instanceof ConductionArea ca && ca.board != null && ca.isFractured()) {
+          fractured.add(ca);
+        }
+      }
+      for (ConductionArea ca : fractured) {
+        for (List<Item> island : ca.getFractureResult().islandItems.values()) {
+          boolean reached = false;
+          for (Item item : island) {
+            if (item != ca && result.contains(item)) {
+              reached = true;
+              break;
+            }
+          }
+          if (!reached) {
+            continue;
+          }
+          for (Item item : island) {
+            if (item != ca && (netNumber <= 0 || item.containsNet(netNumber)) && result.add(item)) {
+              item.getConnectedSetRecu(result, netNumber, stopAtPlane);
+              changed = true;
             }
           }
         }

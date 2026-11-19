@@ -7,11 +7,11 @@ import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.model.items.Via;
 import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.datastructures.Stoppable;
-import app.freerouting.geometry.planar.Circle;
+import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
-import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.IntVector;
+import app.freerouting.geometry.planar.Shape;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.rules.BoardRules;
 import java.util.ArrayList;
@@ -81,18 +81,33 @@ public final class ViaNudger {
 
   private record Cost(double length, int bends, int vias) {}
 
+  private record ZoneRegion(int layer, int clearanceClass, IntBox boundingBox, TileShape[] tiles) {}
+
   private final RoutingBoard board;
   private final int pullTightAccuracy;
   private final Stoppable stoppable;
 
-  /** The planes and copper zones of the board. */
-  private final List<ConductionArea> zones;
+  /** The planes and copper zones of the board, pre-split into convex tiles. */
+  private final List<ZoneRegion> zones;
 
   private ViaNudger(RoutingBoard board, int pullTightAccuracy, Stoppable stoppable) {
     this.board = board;
     this.pullTightAccuracy = pullTightAccuracy;
     this.stoppable = stoppable;
-    this.zones = new ArrayList<>(board.getConductionAreas());
+    List<ZoneRegion> zoneRegions = new ArrayList<>();
+    for (ConductionArea zone : board.getConductionAreas()) {
+      Area area = zone.getArea();
+      if (area == null || area.isEmpty()) {
+        continue;
+      }
+      zoneRegions.add(
+          new ZoneRegion(
+              zone.getLayer(),
+              zone.clearanceClassIndex(),
+              area.boundingBox(),
+              area.splitToConvex()));
+    }
+    this.zones = zoneRegions;
   }
 
   /** Runs the pass on board until no via can be moved with a gain. */
@@ -150,11 +165,8 @@ public final class ViaNudger {
         if (halfPitch <= 0) {
           continue;
         }
-        if (!(via.getCenter() instanceof IntPoint centerPoint)) {
-          continue;
-        }
-        FloatPoint center = centerPoint.toFloat();
-        if (isInOrNearZone(via, centerPoint)) {
+        FloatPoint center = via.getCenter().toFloat();
+        if (isInOrNearZone(via, null)) {
           continue;
         }
         if (movedInPreviousPass != null
@@ -173,8 +185,7 @@ public final class ViaNudger {
           for (int step : STEPS_IN_HALF_PITCHES) {
             IntVector move =
                 new IntVector(direction[0] * step * halfPitch, direction[1] * step * halfPitch);
-            IntPoint target = new IntPoint(centerPoint.x + move.x, centerPoint.y + move.y);
-            if (isInOrNearZone(via, target)) {
+            if (isInOrNearZone(via, move)) {
               continue;
             }
             ++tried;
@@ -214,7 +225,6 @@ public final class ViaNudger {
             && !changedTraceEntersZone(tracesBefore)
             && board.routingLedger().incompleteCount() <= incompleteBefore
             && board.getStatistics().clearanceViolations.totalCount <= violationsAllowed) {
-          board.popSnapshot();
           board.clearTransientAutorouteState();
           ++accepted;
           movedInThisPass.add(center);
@@ -227,6 +237,16 @@ public final class ViaNudger {
         break;
       }
       movedInPreviousPass = movedInThisPass;
+    }
+    if (isStopRequested()) {
+      while (accepted > 0) {
+        board.undo(null);
+        --accepted;
+      }
+    } else {
+      for (int i = 0; i < accepted; ++i) {
+        board.popSnapshot();
+      }
     }
     Cost end = cost();
     return new Result(
@@ -304,71 +324,42 @@ public final class ViaNudger {
   }
 
   /**
-   * Whether a via with the pads of via and its centre at center is in or too close to a zone,
-   * tested with exact circle-versus-zone tile intersection.
+   * Whether via (optionally translated by translation) has any pad inside a zone or closer to its
+   * outline than the clearance.
    */
-  private boolean isInOrNearZone(Via via, IntPoint center) {
+  private boolean isInOrNearZone(Via via, IntVector translation) {
     if (zones.isEmpty()) {
       return false;
     }
-    int clearanceClass = via.clearanceClassIndex();
     for (int layer = via.firstLayer(); layer <= via.lastLayer(); ++layer) {
-      IntBox pad = via.getShape(layer - via.firstLayer()).boundingBox();
-      int halfWidth = (int) Math.ceil(Math.max(pad.width(), pad.height()) / 2.0);
-      for (ConductionArea zone : zones) {
-        if (zone.getLayer() != layer) {
-          continue;
-        }
-        int reach =
-            halfWidth + board.clearanceValue(clearanceClass, zone.clearanceClassIndex(), layer);
-        IntBox zoneBox = zone.boundingBox();
-        if (center.x + reach < zoneBox.ll.x
-            || center.x - reach > zoneBox.ur.x
-            || center.y + reach < zoneBox.ll.y
-            || center.y - reach > zoneBox.ur.y) {
-          continue;
-        }
-        Circle viaCircle = new Circle(center, reach);
-        int zoneTileCount = zone.tileShapeCount();
-        for (int j = 0; j < zoneTileCount; ++j) {
-          if (viaCircle.intersects(zone.getTileShape(j))) {
-            return true;
-          }
-        }
+      Shape padShape = via.getShape(layer - via.firstLayer());
+      if (padShape == null) {
+        continue;
+      }
+      if (translation != null && !translation.equals(IntVector.ZERO)) {
+        padShape = (Shape) padShape.translateBy(translation);
+      }
+      if (shapeEntersZone(padShape, layer, via.clearanceClassIndex())) {
+        return true;
       }
     }
     return false;
   }
 
-  /**
-   * Whether trace is inside a zone or closer to its outline than the clearance, tested with exact
-   * shape intersection against the zone's convex tiles.
-   */
-  private boolean traceEntersZone(PolylineTrace trace) {
-    int layer = trace.getLayer();
-    int halfWidth = trace.getHalfWidth();
-    int clearanceClass = trace.clearanceClassIndex();
-    IntBox traceBox = trace.boundingBox();
-    for (ConductionArea zone : zones) {
-      if (zone.getLayer() != layer) {
+  /** Whether copper with the given shape on layer intersects any zone or its clearance envelope. */
+  private boolean shapeEntersZone(Shape shape, int layer, int clearanceClass) {
+    for (ZoneRegion zone : zones) {
+      if (zone.layer() != layer) {
         continue;
       }
-      int reach =
-          halfWidth + board.clearanceValue(clearanceClass, zone.clearanceClassIndex(), layer);
-      IntBox zoneBox = zone.boundingBox();
-      if (traceBox.ur.x + reach < zoneBox.ll.x
-          || traceBox.ll.x - reach > zoneBox.ur.x
-          || traceBox.ur.y + reach < zoneBox.ll.y
-          || traceBox.ll.y - reach > zoneBox.ur.y) {
+      int clearance = board.clearanceValue(clearanceClass, zone.clearanceClass(), layer);
+      Shape expanded = clearance > 0 ? shape.enlarge(clearance) : shape;
+      if (!expanded.boundingBox().intersects(zone.boundingBox())) {
         continue;
       }
-      TileShape[] traceShapes = trace.polyline().offsetShapes(reach);
-      int zoneTileCount = zone.tileShapeCount();
-      for (TileShape traceShape : traceShapes) {
-        for (int j = 0; j < zoneTileCount; ++j) {
-          if (traceShape.intersects(zone.getTileShape(j))) {
-            return true;
-          }
+      for (TileShape tile : zone.tiles()) {
+        if (tile.intersects(expanded)) {
+          return true;
         }
       }
     }
@@ -412,8 +403,14 @@ public final class ViaNudger {
       if (before != null && before == signature(trace)) {
         continue;
       }
-      if (traceEntersZone(trace)) {
-        return true;
+      int layer = trace.getLayer();
+      int clearanceClass = trace.clearanceClassIndex();
+      int segmentCount = trace.tileShapeCount();
+      for (int i = 0; i < segmentCount; ++i) {
+        TileShape segment = trace.getTileShape(i);
+        if (segment != null && shapeEntersZone(segment, layer, clearanceClass)) {
+          return true;
+        }
       }
     }
     return false;
