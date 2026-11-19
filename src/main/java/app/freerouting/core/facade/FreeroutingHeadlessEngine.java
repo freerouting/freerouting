@@ -3,6 +3,7 @@ package app.freerouting.core.facade;
 import app.freerouting.autoroute.pipeline.BatchAutorouter;
 import app.freerouting.autoroute.pipeline.BatchOptimizer;
 import app.freerouting.autoroute.pipeline.RoutingPipeline;
+import app.freerouting.board.actions.ItemIdGenerator;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
@@ -12,8 +13,10 @@ import app.freerouting.drc.ClearanceBaseline;
 import app.freerouting.drc.ClearanceViolation;
 import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.io.BoardReadResult;
+import app.freerouting.io.kicad.KiCadJsonReader;
 import app.freerouting.io.specctra.DsnReader;
 import app.freerouting.io.specctra.RulesReader;
+import app.freerouting.io.specctra.SesReader;
 import app.freerouting.io.specctra.SesWriter;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.DifferentialPairDetector;
@@ -27,9 +30,13 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Locale;
 
 /**
  * Single-entry, in-memory headless routing facade.
@@ -62,9 +69,22 @@ public final class FreeroutingHeadlessEngine {
       return HeadlessRoutingResult.cancelled(null, null, System.currentTimeMillis() - startTime);
     }
 
-    // 1. Parse DSN into RoutingBoard (purely in-memory, no temporary files)
+    // 1. Parse DSN or KiCad JSON into RoutingBoard (purely in-memory, no temporary files)
     byte[] dsnBytes = request.dsnBytes();
-    BoardReadResult readResult = DsnReader.readBoard(dsnBytes, null, null, request.designName());
+    boolean isJson = isJsonContent(dsnBytes, request.designName());
+
+    BoardReadResult readResult;
+    if (isJson) {
+      try (Reader reader =
+          new InputStreamReader(new ByteArrayInputStream(dsnBytes), StandardCharsets.UTF_8)) {
+        readResult = KiCadJsonReader.readBoard(reader, null, new ItemIdGenerator());
+      } catch (Exception e) {
+        return HeadlessRoutingResult.failure(
+            "JSON IO error: " + e.getMessage(), System.currentTimeMillis() - startTime);
+      }
+    } else {
+      readResult = DsnReader.readBoard(dsnBytes, null, null, request.designName());
+    }
 
     RoutingBoard board;
     if (readResult instanceof BoardReadResult.Success s) {
@@ -73,19 +93,19 @@ public final class FreeroutingHeadlessEngine {
       board = (RoutingBoard) o.board();
     } else if (readResult instanceof BoardReadResult.ParseError p) {
       return HeadlessRoutingResult.failure(
-          "DSN parse error at '" + p.location() + "': " + p.detail(),
+          "Design parse error at '" + p.location() + "': " + p.detail(),
           System.currentTimeMillis() - startTime);
     } else if (readResult instanceof BoardReadResult.IoError io) {
       return HeadlessRoutingResult.failure(
-          "DSN IO error: " + io.cause().getMessage(), System.currentTimeMillis() - startTime);
+          "Design IO error: " + io.cause().getMessage(), System.currentTimeMillis() - startTime);
     } else {
       return HeadlessRoutingResult.failure(
-          "Unknown DSN board read result", System.currentTimeMillis() - startTime);
+          "Unknown design board read result", System.currentTimeMillis() - startTime);
     }
 
     if (board == null) {
       return HeadlessRoutingResult.failure(
-          "DSN did not contain a valid board", System.currentTimeMillis() - startTime);
+          "Design did not contain a valid board", System.currentTimeMillis() - startTime);
     }
 
     if (request.cancellationToken().isCancelled()) {
@@ -94,10 +114,11 @@ public final class FreeroutingHeadlessEngine {
     }
 
     // 2. Resolve settings using SettingsMerger priority ladder and apply .rules to the board
-    SettingsMerger settingsMerger =
-        new SettingsMerger(
-            new DefaultSettings(),
-            new DsnFileSettings(new ByteArrayInputStream(dsnBytes), request.designName()));
+    SettingsMerger settingsMerger = new SettingsMerger(new DefaultSettings());
+    if (!isJson) {
+      settingsMerger.addOrReplaceSources(
+          new DsnFileSettings(new ByteArrayInputStream(dsnBytes), request.designName()));
+    }
 
     byte[] rulesBytes = request.rulesBytes();
     if (rulesBytes != null && rulesBytes.length > 0) {
@@ -126,27 +147,98 @@ public final class FreeroutingHeadlessEngine {
     routerSettings.applyNetClassExclusions(board);
     applyBoardSettingsOverrides(board, routerSettings);
     prepareBoardConnectivity(board, routerSettings);
+
+    // Optional initial session (SES or KiCad JSON) import
+    byte[] sessionBytes = request.sessionBytes();
+    if (sessionBytes != null && sessionBytes.length > 0) {
+      try {
+        boolean isJsonSession = isJsonContent(sessionBytes, request.sessionName());
+        if (isJsonSession) {
+          try (Reader r =
+              new InputStreamReader(
+                  new ByteArrayInputStream(sessionBytes), StandardCharsets.UTF_8)) {
+            KiCadJsonReader.importSession(r, board);
+          }
+        } else {
+          SesReader.read(new ByteArrayInputStream(sessionBytes), board);
+        }
+      } catch (Exception e) {
+        FRLogger.error("Failed to import session data into board", e);
+        return HeadlessRoutingResult.failure(
+            "Failed to import session data: " + e.getMessage(),
+            System.currentTimeMillis() - startTime);
+      }
+    }
+
     captureInitialClearanceBaseline(board);
 
-    // 3. Prepare RoutingJob
+    // 3. Prepare RoutingJob and delegate to core execution
     RoutingJob job = new RoutingJob();
     job.board = board;
     job.routerSettings = routerSettings;
     job.name = request.designName();
+
+    return route(
+        job,
+        request.cancellationToken(),
+        request.progressListener(),
+        request.runDrc(),
+        request.computeSes());
+  }
+
+  /**
+   * Routes a configured routing job using the in-memory routing engine synchronously on the calling
+   * thread.
+   *
+   * @param job configured routing job containing board and routerSettings (must not be {@code
+   *     null})
+   * @param cancellationToken cooperative cancellation token (defaults to {@link
+   *     CancellationToken#none()} if null)
+   * @param progressListener optional progress listener
+   * @param runDrc whether to perform authoritative DRC upon completion
+   * @param computeSes whether to serialize the final board to Specctra SES format
+   * @return comprehensive routing outcome containing violations, statistics, and SES bytes
+   */
+  public static HeadlessRoutingResult route(
+      RoutingJob job,
+      CancellationToken cancellationToken,
+      HeadlessRoutingProgressListener progressListener,
+      boolean runDrc,
+      boolean computeSes) {
+    if (job == null || job.board == null) {
+      throw new IllegalArgumentException("job and job.board must not be null");
+    }
+    if (cancellationToken == null) {
+      cancellationToken = CancellationToken.none();
+    }
+
+    long startTime = System.currentTimeMillis();
+
+    if (cancellationToken.isCancelled()) {
+      return HeadlessRoutingResult.cancelled(
+          job.board,
+          new BoardStatistics(job.board, null, false),
+          System.currentTimeMillis() - startTime);
+    }
+
+    if (job.board.clearanceBaseline == null) {
+      captureInitialClearanceBaseline(job.board);
+    }
+
+    RouterSettings routerSettings =
+        job.routerSettings != null ? job.routerSettings : new RouterSettings();
     Long deadlineMillis = parseDeadlineMillis(startTime, routerSettings.jobTimeoutString);
-    HeadlessStoppableThread thread =
-        new HeadlessStoppableThread(request.cancellationToken(), deadlineMillis);
+    HeadlessStoppableThread thread = new HeadlessStoppableThread(cancellationToken, deadlineMillis);
     job.thread = thread;
     job.state = RoutingJobState.RUNNING;
 
-    // 4. Configure pipeline and listeners
     RoutingPipeline pipeline = RoutingPipeline.createForHeadless(job);
 
-    if (request.progressListener() != null) {
+    if (progressListener != null) {
       pipeline.addTaskStateChangedEventListener(
           event -> {
             notifyProgress(
-                request.progressListener(),
+                progressListener,
                 new HeadlessRoutingProgress(
                     job.stage,
                     event.getPassNumber(),
@@ -161,7 +253,7 @@ public final class FreeroutingHeadlessEngine {
             int unrouted =
                 stats != null && stats.connections != null ? stats.connections.incompleteCount : 0;
             notifyProgress(
-                request.progressListener(),
+                progressListener,
                 new HeadlessRoutingProgress(
                     job.stage, job.getCurrentPass(), unrouted, stats, "Board updated"));
           });
@@ -172,7 +264,7 @@ public final class FreeroutingHeadlessEngine {
             public void afterRouting(BatchAutorouter autorouter) {
               BoardStatistics stats = job.board.getStatistics();
               notifyProgress(
-                  request.progressListener(),
+                  progressListener,
                   new HeadlessRoutingProgress(
                       RoutingStage.ROUTING,
                       job.getCurrentPass(),
@@ -189,7 +281,7 @@ public final class FreeroutingHeadlessEngine {
                       ? stats.connections.incompleteCount
                       : 0;
               notifyProgress(
-                  request.progressListener(),
+                  progressListener,
                   new HeadlessRoutingProgress(
                       RoutingStage.OPTIMIZATION, 0, unrouted, stats, "Optimization stage started"));
             }
@@ -202,7 +294,7 @@ public final class FreeroutingHeadlessEngine {
                       ? stats.connections.incompleteCount
                       : 0;
               notifyProgress(
-                  request.progressListener(),
+                  progressListener,
                   new HeadlessRoutingProgress(
                       RoutingStage.OPTIMIZATION,
                       0,
@@ -213,7 +305,6 @@ public final class FreeroutingHeadlessEngine {
           });
     }
 
-    // 5. Execute routing pipeline
     try {
       pipeline.run();
     } catch (Exception e) {
@@ -223,10 +314,10 @@ public final class FreeroutingHeadlessEngine {
           System.currentTimeMillis() - startTime);
     }
 
-    // Refresh board reference in case the autorouter or optimizer installed a snapshot/candidate
-    board = job.board;
+    // Refresh board reference in case autorouter or optimizer restored a candidate snapshot
+    RoutingBoard board = job.board;
 
-    boolean cancelled = request.cancellationToken().isCancelled();
+    boolean cancelled = cancellationToken.isCancelled();
     boolean timedOut = !cancelled && thread.isTimedOut();
     if (cancelled) {
       job.state = RoutingJobState.CANCELLED;
@@ -236,7 +327,6 @@ public final class FreeroutingHeadlessEngine {
       job.state = RoutingJobState.COMPLETED;
     }
 
-    // 6. Gather results & statistics without duplicating the clearance check
     BoardStatistics stats = new BoardStatistics(board, null, false);
     int unrouted = stats.connections != null ? stats.connections.incompleteCount : 0;
 
@@ -247,9 +337,8 @@ public final class FreeroutingHeadlessEngine {
       errorMessage = "Routing timed out";
     }
 
-    // 7. Perform authoritative DRC once if requested
     Collection<ClearanceViolation> violations = Collections.emptyList();
-    if (request.runDrc() && !cancelled) {
+    if (runDrc && !cancelled) {
       try {
         violations = new DesignRulesChecker(board, null).getAllClearanceViolations();
       } catch (Exception e) {
@@ -260,12 +349,11 @@ public final class FreeroutingHeadlessEngine {
       }
     }
 
-    // 8. Serialize to SES if requested
     byte[] sesBytes = new byte[0];
-    if (request.computeSes() && !cancelled) {
+    if (computeSes && !cancelled) {
       try {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        SesWriter.write(board, baos, request.designName());
+        SesWriter.write(board, baos, job.name != null ? job.name : "board.dsn");
         sesBytes = baos.toByteArray();
       } catch (Exception e) {
         FRLogger.error("Failed to serialize SES output", e);
@@ -346,6 +434,20 @@ public final class FreeroutingHeadlessEngine {
       throw new UncheckedIOException("DSN IO error", io.cause());
     }
     throw new IllegalArgumentException("Unknown DSN board read result");
+  }
+
+  private static boolean isJsonContent(byte[] data, String filename) {
+    if (filename != null && filename.toLowerCase(Locale.ROOT).endsWith(".json")) {
+      return true;
+    }
+    if (data != null) {
+      for (byte b : data) {
+        if (!Character.isWhitespace((char) b)) {
+          return b == '{';
+        }
+      }
+    }
+    return false;
   }
 
   private static void applyBoardSettingsOverrides(

@@ -2,22 +2,42 @@ package app.freerouting.cli;
 
 import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.analytics.model.JobLifecycleStatus;
+import app.freerouting.board.actions.ItemIdGenerator;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
+import app.freerouting.core.facade.CancellationToken;
+import app.freerouting.core.facade.FreeroutingHeadlessEngine;
+import app.freerouting.core.facade.HeadlessRoutingResult;
 import app.freerouting.core.results.RoutingResultManifest;
 import app.freerouting.io.FileFormat;
+import app.freerouting.io.kicad.KiCadJsonReader;
+import app.freerouting.io.specctra.DsnReadOptions;
+import app.freerouting.io.specctra.RulesReader;
+import app.freerouting.io.specctra.SesReader;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.sessions.SessionManager;
+import app.freerouting.management.HeadlessBoardManager;
+import app.freerouting.management.jobs.RoutingJobOutputWriter;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.SettingsMerger;
+import app.freerouting.settings.sources.ApiSettings;
+import app.freerouting.settings.sources.DefaultSettings;
 import app.freerouting.settings.sources.DsnFileSettings;
 import app.freerouting.settings.sources.KiCadProjectSettings;
+import app.freerouting.settings.sources.RulesFileSettings;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Instant;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /** Executes a batch CLI routing job from command line arguments and settings. */
 public final class CliRunner {
@@ -36,16 +56,19 @@ public final class CliRunner {
           "Both an input file and an output file must be specified with command line arguments "
               + "if you are running in CLI mode.",
           null);
+      globalSettings.cliExitCode = 1;
       return false;
     }
 
-    var cliSession =
-        SessionManager.getInstance()
-            .createSession(
-                UUID.fromString(globalSettings.userProfileSettings.userId),
-                "Freerouting/" + globalSettings.version);
+    UUID sessionId =
+        globalSettings.userProfileSettings != null
+                && globalSettings.userProfileSettings.userId != null
+                && !globalSettings.userProfileSettings.userId.isBlank()
+            ? UUID.fromString(globalSettings.userProfileSettings.userId)
+            : UUID.randomUUID();
 
-    RoutingJob routingJob = new RoutingJob(cliSession.id);
+    RoutingJob routingJob = new RoutingJob(sessionId);
+    routingJob.startedAt = Instant.now();
 
     try {
       routingJob.setInput(globalSettings.initialInputFile);
@@ -56,10 +79,9 @@ public final class CliRunner {
     if (routingJob.input == null) {
       FRLogger.warn(
           "Couldn't read the input file '" + globalSettings.initialInputFile + "', aborting.");
+      globalSettings.cliExitCode = 1;
       return false;
     }
-
-    cliSession.addJob(routingJob);
 
     var desiredOutputFile = new File(globalSettings.initialOutputFile);
     if (desiredOutputFile.exists()) {
@@ -70,18 +92,20 @@ public final class CliRunner {
 
     routingJob.tryToSetOutputFile(new File(globalSettings.initialOutputFile));
 
-    var settingsMerger = globalSettings.settingsMergerProtype.clone();
-    settingsMerger.addOrReplaceSources(
-        new DsnFileSettings(routingJob.input.getData(), routingJob.input.getFilename()));
+    var settingsMerger =
+        globalSettings.settingsMergerProtype != null
+            ? globalSettings.settingsMergerProtype.clone()
+            : new SettingsMerger(new DefaultSettings());
 
+    if (routingJob.input.format == FileFormat.DSN) {
+      settingsMerger.addOrReplaceSources(
+          new DsnFileSettings(routingJob.input.getData(), routingJob.input.getFilename()));
+    }
+
+    // Explicit or adjacent rules file
     if (globalSettings.initialRulesFile != null) {
       try {
         routingJob.setRules(globalSettings.initialRulesFile);
-        if (routingJob.rules != null && routingJob.rules.getData() != null) {
-          settingsMerger.addOrReplaceSources(
-              new app.freerouting.settings.sources.RulesFileSettings(
-                  routingJob.rules.getData(), routingJob.rules.getFilename()));
-        }
       } catch (Exception e) {
         FRLogger.warn(
             "Couldn't load rules file '"
@@ -89,47 +113,187 @@ public final class CliRunner {
                 + "': "
                 + e.getMessage());
       }
+    } else if (routingJob.input.format == FileFormat.DSN
+        && routingJob.input.getDirectoryPath() != null
+        && !routingJob.input.getDirectoryPath().isBlank()) {
+      // Auto-discover adjacent <boardname>.rules
+      String baseName = routingJob.input.getFilename();
+      if (baseName.lastIndexOf('.') > 0) {
+        baseName = baseName.substring(0, baseName.lastIndexOf('.'));
+      }
+      File autoRules = new File(routingJob.input.getDirectoryPath(), baseName + ".rules");
+      if (autoRules.exists()) {
+        try {
+          routingJob.setRules(autoRules);
+          FRLogger.info("Auto-discovered adjacent rules file '" + autoRules.getPath() + "'");
+        } catch (Exception e) {
+          FRLogger.warn(
+              "Failed to read adjacent rules file '"
+                  + autoRules.getPath()
+                  + "': "
+                  + e.getMessage());
+        }
+      }
+    }
+
+    if (routingJob.rules != null && routingJob.rules.getData() != null) {
+      settingsMerger.addOrReplaceSources(
+          new RulesFileSettings(routingJob.rules.getData(), routingJob.rules.getFilename()));
     }
 
     // Routing without the rules of a .kicad_dru given on the command line would produce a board
     // that fails the KiCad DRC.
     if (!routingJob.loadKiCadDesignRules(globalSettings.initialKiCadDesignRulesFile)) {
+      globalSettings.cliExitCode = 1;
       return false;
     }
     // Without the minimum track width of the .kicad_pro, the router may neck traces down below it.
     if (!addKiCadProjectSettings(
         routingJob, globalSettings.initialKiCadProjectFile, settingsMerger)) {
+      globalSettings.cliExitCode = 1;
       return false;
     }
     // Without the fill settings of the zones of the .kicad_pcb, a plane that KiCad refills in
     // several pieces counts as one.
     if (!routingJob.loadKiCadBoardZones(globalSettings.initialKiCadBoardFile)) {
+      globalSettings.cliExitCode = 1;
       return false;
     }
 
-    routingJob.routerSettings = settingsMerger.merge();
-    routingJob.drcSettings = globalSettings.drcSettings.clone();
-    routingJob.state = RoutingJobState.READY_TO_START;
+    // Programmatic test overrides / API level settings
+    if (globalSettings.routerSettings != null) {
+      settingsMerger.addOrReplaceSources(new ApiSettings(globalSettings.routerSettings));
+    }
 
-    while (!isCliTerminalState(routingJob.state)) {
+    var importSettings = settingsMerger.merge();
+    var importOptions = DsnReadOptions.forSettings(importSettings);
+    routingJob.routerSettings = importSettings;
+    routingJob.drcSettings = globalSettings.drcSettings.clone();
+
+    HeadlessBoardManager boardManager = new HeadlessBoardManager(routingJob);
+    if (routingJob.input.format == FileFormat.DSN) {
+      boardManager.loadFromSpecctraDsn(
+          routingJob.input.getData(), null, new ItemIdGenerator(), importOptions);
+    } else {
+      boardManager.loadFromKiCadJson(routingJob.input.getData(), null, new ItemIdGenerator());
+    }
+    routingJob.board = boardManager.getRoutingBoard();
+    if (routingJob.board == null) {
+      FRLogger.error("Failed to construct routing board from input", null);
+      globalSettings.cliExitCode = 1;
+      return false;
+    }
+
+    // Apply rules onto the board
+    if (routingJob.rules != null && routingJob.rules.getData() != null) {
       try {
-        Thread.sleep(50);
-      } catch (InterruptedException _) {
-        routingJob.state = RoutingJobState.CANCELLED;
-        break;
-      }
-      if (routingJob.thread != null
-          && routingJob.thread.getState() != Thread.State.NEW
-          && !routingJob.thread.isAlive()
-          && !isCliTerminalState(routingJob.state)) {
-        FRLogger.error(
-            "Routing thread terminated abnormally without assigning a terminal state.", null);
-        routingJob.state = RoutingJobState.TERMINATED;
-        break;
+        RulesReader.read(
+            routingJob.rules.getData(),
+            routingJob.name != null ? routingJob.name : "board",
+            routingJob.board,
+            routingJob.routerSettings);
+      } catch (Exception e) {
+        FRLogger.error("Failed to apply rules from rules file onto board", e);
       }
     }
 
+    routingJob.routerSettings.applyBoardSpecificOptimizations(routingJob.board);
+    routingJob.routerSettings.applyNetClassExclusions(routingJob.board);
+
+    // Import initial session (SES or KiCad JSON) if present
+    byte[] sessionData = null;
+    String sessionFilename = null;
+    if (routingJob.initialSession != null && routingJob.initialSession.getData() != null) {
+      sessionData = routingJob.initialSession.getData().readAllBytes();
+      sessionFilename = routingJob.initialSession.getFilename();
+    } else if (globalSettings.designSessionFilename != null) {
+      File sessionFile = new File(globalSettings.designSessionFilename);
+      if (sessionFile.exists()) {
+        try {
+          sessionData = Files.readAllBytes(sessionFile.toPath());
+          sessionFilename = sessionFile.getName();
+        } catch (IOException e) {
+          FRLogger.warn("Failed to read session file: " + sessionFile.getPath());
+        }
+      } else {
+        FRLogger.warn("Session file not found: " + globalSettings.designSessionFilename);
+      }
+    }
+
+    if (sessionData != null && sessionData.length > 0) {
+      try {
+        boolean isJson =
+            (sessionFilename != null && sessionFilename.toLowerCase(Locale.ROOT).endsWith(".json"));
+        if (!isJson) {
+          for (byte b : sessionData) {
+            if (!Character.isWhitespace((char) b)) {
+              if (b == '{') {
+                isJson = true;
+              }
+              break;
+            }
+          }
+        }
+        if (isJson) {
+          FRLogger.info("Importing KiCad JSON session data onto board");
+          try (Reader r =
+              new InputStreamReader(
+                  new ByteArrayInputStream(sessionData), StandardCharsets.UTF_8)) {
+            KiCadJsonReader.importSession(r, routingJob.board);
+          }
+        } else {
+          FRLogger.info("Importing Specctra SES session data onto board");
+          SesReader.read(new ByteArrayInputStream(sessionData), routingJob.board);
+        }
+      } catch (Exception e) {
+        FRLogger.error("Failed to import session data onto board", e);
+      }
+    }
+
+    // Graceful cancellation setup: bounded wait on SIGINT
+    CountDownLatch completionLatch = new CountDownLatch(1);
+    AtomicBoolean shutdownRequested = new AtomicBoolean(false);
+    CancellationToken cancellationToken = shutdownRequested::get;
+
+    Thread shutdownHook =
+        new Thread(
+            () -> {
+              shutdownRequested.set(true);
+              try {
+                // Give engine up to 5 seconds to unwind, save partial output, and flush analytics
+                completionLatch.await(5000, TimeUnit.MILLISECONDS);
+              } catch (InterruptedException _) {
+                Thread.currentThread().interrupt();
+              }
+            },
+            "cli-shutdown-hook");
+    Runtime.getRuntime().addShutdownHook(shutdownHook);
+
+    boolean isSesOutput = routingJob.output != null && routingJob.output.format == FileFormat.SES;
+
+    HeadlessRoutingResult result;
+    try {
+      result =
+          FreeroutingHeadlessEngine.route(routingJob, cancellationToken, null, true, isSesOutput);
+    } finally {
+      completionLatch.countDown();
+      try {
+        Runtime.getRuntime().removeShutdownHook(shutdownHook);
+      } catch (IllegalStateException _) {
+        // Shutdown already started, hook removal is impossible and harmless
+      }
+    }
+
+    routingJob.finishedAt = Instant.now();
+
+    if (result.board() != null) {
+      routingJob.board = result.board();
+    }
+
+    // Publish output using RoutingJobOutputWriter
+    RoutingJobOutputWriter.write(routingJob);
     boolean outputWritten = writeCliOutputIfAvailable(globalSettings, routingJob);
+
     int cliExitCode = computeCliExitCode(routingJob, outputWritten);
     writeCliResultManifestIfRequested(globalSettings, routingJob, outputWritten, cliExitCode);
 
@@ -137,7 +301,7 @@ public final class CliRunner {
         && (globalSettings.statistics.jobsCompleted >= 5)
         && globalSettings.userProfileSettings.userEmail.isEmpty()) {
       String nl = System.lineSeparator();
-      IO.println(
+      System.out.println(
           nl
               + "╔══════════════════════════════════════════════════════════════════╗"
               + nl
@@ -192,7 +356,7 @@ public final class CliRunner {
 
       FRAnalytics.recordBatchJobSummary(
           routingJob.id.toString(),
-          cliSession.id.toString(),
+          sessionId.toString(),
           inputBasename,
           cliExitCode,
           status,
@@ -245,7 +409,8 @@ public final class CliRunner {
       return false;
     }
     if (routingJob.state != RoutingJobState.COMPLETED
-        && routingJob.state != RoutingJobState.TIMED_OUT) {
+        && routingJob.state != RoutingJobState.TIMED_OUT
+        && routingJob.state != RoutingJobState.CANCELLED) {
       return false;
     }
 
