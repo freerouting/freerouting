@@ -1328,4 +1328,27 @@
   
   
   
+  
+  (zone (net 6) (net_name /SHIELD) (layer B.Cu) (tstamp 53C8476A) (hatch edge 0.508)
+    (connect_pads (clearance 0.2032))
+    (min_thickness 0.2032)
+    (fill (arc_segments 16) (thermal_gap 0.2032) (thermal_bridge_width 0.254))
+    (polygon
+      (pts
+        (xy 109.6 68.6) (xy 109.6 121.4) (xy 140.4 121.4) (xy 140.4 68.6)
+      )
+    )
+    
   )
+  (zone (net 9) (net_name GND) (layer F.Cu) (tstamp 53D5C9C4) (hatch edge 0.508)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.254)
+    (fill (arc_segments 16) (thermal_gap 0.2032) (thermal_bridge_width 0.3048))
+    (polygon
+      (pts
+        (xy 131 86) (xy 139 86) (xy 139 100) (xy 131 100)
+      )
+    )
+    
+  )
+)

@@ -9,9 +9,9 @@ import app.freerouting.board.actions.ItemIdGenerator;
 import app.freerouting.board.state.BoardObserverAdaptor;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.management.HeadlessBoardManager;
+import app.freerouting.settings.PropertyChangeEvent;
+import app.freerouting.settings.PropertyChangeListener;
 import app.freerouting.settings.RouterSettings;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -21,11 +21,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit tests for the {@link java.beans.PropertyChangeSupport} wiring in {@link WorkspaceSettings}.
+ * Unit tests for the {@link app.freerouting.settings.PropertyChangeSupport} wiring in {@link
+ * WorkspaceSettings}.
  *
- * <p>Covers Sub-Issue 05: every setter fires the correct named {@link
- * java.beans.PropertyChangeEvent}; listener add/remove API works; read-only gate suppresses events;
- * {@link WorkspaceSettings#getSettings()} returns a non-null {@link RouterSettings}.
+ * <p>Covers Sub-Issue 05: every setter fires the correct named {@link PropertyChangeEvent};
+ * listener add/remove API works; read-only gate suppresses events; {@link
+ * WorkspaceSettings#getSettings()} returns a non-null {@link RouterSettings}.
  */
 class WorkspaceSettingsPropertyChangeTest {
 

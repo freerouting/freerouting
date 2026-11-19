@@ -81,7 +81,7 @@ public class BoardFileDetails implements Serializable {
         crc.update(buffer, 0, bytesRead);
       }
     } catch (IOException e) {
-      FRLogger.error(e.getLocalizedMessage(), e);
+      FRLogger.error(e.getMessage(), e);
     }
     return crc;
   }

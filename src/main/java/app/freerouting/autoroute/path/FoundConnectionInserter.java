@@ -665,6 +665,10 @@ public final class FoundConnectionInserter {
       if (candidateHalfWidth <= 0 || candidateHalfWidth >= baseHalfWidth) {
         continue;
       }
+      // A candidate that stops short keeps the piece it inserted. Every candidate starts at the
+      // same point, so the next one would lay its piece over it: same ends, each touching the
+      // others, never a tail for tail removal, and dangling copper in the routed board.
+      board.generateSnapshot();
       Point candidateOkPoint =
           board.insertForcedTraceSegment(
               fromPoint,
@@ -681,6 +685,7 @@ public final class FoundConnectionInserter {
               true,
               null);
       if (candidateOkPoint == targetPoint) {
+        board.popSnapshot();
         traceFanoutDiagnostic(
             "trace_insert_micro_neckdown_success",
             "layer="
@@ -697,6 +702,7 @@ public final class FoundConnectionInserter {
                 + formatPoint(targetPoint));
         return true;
       }
+      board.undo(null);
     }
     traceFanoutDiagnostic(
         "trace_insert_micro_neckdown_failed",

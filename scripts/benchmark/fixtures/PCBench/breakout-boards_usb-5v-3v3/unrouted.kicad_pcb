@@ -490,5 +490,48 @@
   
   
   
-
+  (zone (net 2) (net_name /gnd) (layer B.Cu) (tstamp 551CD424) (hatch edge 0.508)
+    (connect_pads (clearance 0.3048))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 140.75 101.5) (xy 114.75 101.25) (xy 114.75 93) (xy 140.75 93)
+      )
+    )
+    
+  )
+  (zone (net 1) (net_name /vbus) (layer F.Cu) (tstamp 551CD5A0) (hatch edge 0.508)
+    (connect_pads (clearance 0.3048))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 140.8 112) (xy 114.8 112) (xy 114.8 103) (xy 140.8 103)
+      )
+    )
+    
+  )
+  (zone (net 1) (net_name /vbus) (layer B.Cu) (tstamp 551CD5DB) (hatch edge 0.508)
+    (connect_pads (clearance 0.3048))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 140.75 112) (xy 114.75 112) (xy 114.75 103) (xy 140.75 103)
+      )
+    )
+    
+  )
+  (zone (net 2) (net_name /gnd) (layer F.Cu) (tstamp 551CD619) (hatch edge 0.508)
+    (connect_pads (clearance 0.3048))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 140.75 101.5) (xy 114.75 101.25) (xy 114.75 93) (xy 140.75 93)
+      )
+    )
+    
+  )
 )

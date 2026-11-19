@@ -32,9 +32,9 @@ public interface SettingsSource {
    * Gets the priority of this settings source. Lower numbers = lower priority (applied first)
    * Higher numbers = higher priority (override earlier settings)
    *
-   * <p>Priority order: 0 = Default settings 10 = JSON file settings 20 = DSN file settings 30 = SES
-   * file settings 40 = RULES file settings 50 = GUI settings 55 = Environment variables 60 = CLI
-   * settings 70 = API settings
+   * <p>Priority order: 0 = Default settings 10 = JSON file settings 20 = DSN file settings 25 =
+   * KiCad project file settings 30 = SES file settings 40 = RULES file settings 55 = Environment
+   * variables 60 = CLI settings 65 = GUI settings 70 = API settings
    *
    * @return Priority value (0-100)
    */

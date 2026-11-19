@@ -8,6 +8,7 @@ import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Via;
 import app.freerouting.board.model.structure.Component;
 import app.freerouting.core.library.Package;
+import app.freerouting.core.library.PadOval;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.ConvexShape;
@@ -80,7 +81,7 @@ public final class CopyItemState extends InteractiveState {
   }
 
   /** Creates a new padstack from an old padstack with a layer range starting at the new layer. */
-  private static Padstack changePadstackLayers(
+  static Padstack changePadstackLayers(
       Padstack oldPadstack,
       int newLayer,
       RoutingBoard board,
@@ -97,6 +98,8 @@ public final class CopyItemState extends InteractiveState {
       ConvexShape[] newShapes = new ConvexShape[board.getLayerCount()];
       ConvexShape[][] newAuxShapes =
           oldPadstack.hasAuxiliaryShapes() ? new ConvexShape[board.getLayerCount()][] : null;
+      PadOval[] newOvals = new PadOval[board.getLayerCount()];
+      boolean hasOvals = false;
       int layerDiff = oldLayer - newLayer;
       for (int i = 0; i < newShapes.length; i++) {
         int oldLayerNo = i + layerDiff;
@@ -105,6 +108,8 @@ public final class CopyItemState extends InteractiveState {
           if (newAuxShapes != null) {
             newAuxShapes[i] = oldPadstack.getAuxiliaryShapes(oldLayerNo);
           }
+          newOvals[i] = oldPadstack.getOval(oldLayerNo);
+          hasOvals |= newOvals[i] != null;
         }
       }
       if (newAuxShapes != null) {
@@ -114,6 +119,9 @@ public final class CopyItemState extends InteractiveState {
         }
       } else {
         newPadstack = board.library.padstacks.add(newShapes);
+      }
+      if (hasOvals) {
+        newPadstack.setOvals(newOvals);
       }
       padstackPairs.put(oldPadstack, newPadstack);
     }

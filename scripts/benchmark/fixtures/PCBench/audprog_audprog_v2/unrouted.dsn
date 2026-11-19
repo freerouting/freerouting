@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -24,6 +24,12 @@
       (path pcb 0  179700 -55000  134800 -55000  134700 -25000  179700 -25000
             179700 -55000)
     )
+    (plane GND (polygon B.Cu 0  179700 -55000  134800 -55000  134700 -25000  179700 -25000
+            179700 -55000))
+    (plane @:no_net_0 (polygon F.Cu 0  134800 -35600  138600 -35500  138600 -37200  134800 -37200
+            134800 -35600))
+    (plane @:no_net_1 (polygon F.Cu 0  134800 -26800  139900 -26800  139900 -25100  134800 -25100
+            134800 -26800))
     (via "Via[0-1]_600:400_um")
     (rule
       (width 300)
@@ -460,6 +466,10 @@
     )
   )
   (network
+    (net @:no_net_0
+    )
+    (net @:no_net_1
+    )
     (net "Net-(C1-Pad1)"
       (pins C1-1 U1-17)
     )

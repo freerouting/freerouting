@@ -668,5 +668,15 @@
   
   
   
-
+  (zone (net 2) (net_name "Net-(BT1-Pad2)") (layer B.Cu) (tstamp 0) (hatch edge 0.508)
+    (connect_pads (clearance 0.4))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.308) (thermal_bridge_width 0.508) (smoothing chamfer) (radius 0.3))
+    (polygon
+      (pts
+        (xy 63.34 76.64) (xy 88.74 76.64) (xy 88.74 102.04) (xy 63.34 102.04)
+      )
+    )
+    
+  )
 )

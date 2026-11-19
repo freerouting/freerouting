@@ -270,6 +270,7 @@ public final class ExitStubs {
       }
       for (int i = 0; i < item.tileShapeCount(); i++) {
         if (item.shapeLayer(i) == layer
+            && item.isTraceObstacle(net, i)
             && item.getTileShape(i) != null
             && !item.getTileShape(i).isEmpty()
             && segmentDistance(at, at, item.getTileShape(i)) <= needed + reach) {
@@ -1001,7 +1002,7 @@ public final class ExitStubs {
     IntPoint centre = centre(pin);
     int classHalf = netClass.getTraceHalfWidth(layer);
     int minHalf = board.rules.getMinAllowedTraceHalfWidth();
-    int half = minHalf > 0 ? Math.min(classHalf, minHalf) : classHalf;
+    int half = minHalf > 0 ? minHalf : classHalf;
     int traceClass = netClass.getTraceClearanceClass();
     if (w == h || Math.max(w, h) < 3 * Math.min(w, h) / 2) {
       return diagonalOutward(
@@ -1226,13 +1227,18 @@ public final class ExitStubs {
         : half;
   }
 
+  /**
+   * The point a stub starts from: the pin centre, the only point at which a trace joins a pin (see
+   * {@link app.freerouting.board.model.items.DrillItem#getNormalContacts()}). The midpoint of the
+   * pad's bounding box is not always that point: on a pad turned 45 degrees off the origin it lies
+   * one unit away, and a stub started there is left unconnected to its pin.
+   */
   public static IntPoint centre(Pin pin) {
-    if (pin.getTileShape(0) != null) {
-      IntBox box = pin.getTileShape(0).boundingBox();
-      return new IntPoint(
-          (int) (((long) box.ll.x + box.ur.x) / 2), (int) (((long) box.ll.y + box.ur.y) / 2));
+    Point centre = pin.getCenter();
+    if (centre instanceof IntPoint point) {
+      return point;
     }
-    return pin.getCenter().toFloat().round();
+    return centre.toFloat().round();
   }
 
   public static double slack(
@@ -1269,6 +1275,7 @@ public final class ExitStubs {
       int required = ruleClearance(board, traceClass, item, layer, allowance);
       for (int i = 0; i < item.tileShapeCount(); i++) {
         if (item.shapeLayer(i) != layer
+            || !item.isTraceObstacle(net, i)
             || item.getTileShape(i) == null
             || item.getTileShape(i).isEmpty()) {
           continue;

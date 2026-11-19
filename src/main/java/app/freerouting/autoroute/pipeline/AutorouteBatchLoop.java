@@ -209,14 +209,26 @@ final class AutorouteBatchLoop {
         if (fanoutCpuSecondsStart >= 0f && fanoutCpuSecondsEnd >= fanoutCpuSecondsStart) {
           fanoutCpuSecondsUsed = fanoutCpuSecondsEnd - fanoutCpuSecondsStart;
         } else {
-          fanoutCpuSecondsUsed = Math.max(0f, AutorouteRuntimeMetrics.cpuSecondsSnapshot(job));
+          float snapshot = AutorouteRuntimeMetrics.cpuSecondsSnapshot(job);
+          if (snapshot > 0f) {
+            fanoutCpuSecondsUsed = snapshot;
+          } else {
+            fanoutCpuSecondsUsed =
+                (fanoutCpuSecondsStart < 0f || fanoutCpuSecondsEnd < 0f) ? -1f : 0f;
+          }
         }
 
         float fanoutAllocatedMb;
         if (fanoutAllocatedMbStart >= 0f && fanoutAllocatedMbEnd >= fanoutAllocatedMbStart) {
           fanoutAllocatedMb = fanoutAllocatedMbEnd - fanoutAllocatedMbStart;
         } else {
-          fanoutAllocatedMb = Math.max(0f, AutorouteRuntimeMetrics.allocatedMemoryMbSnapshot(job));
+          float snapshot = AutorouteRuntimeMetrics.allocatedMemoryMbSnapshot(job);
+          if (snapshot > 0f) {
+            fanoutAllocatedMb = snapshot;
+          } else {
+            fanoutAllocatedMb =
+                (fanoutAllocatedMbStart < 0f || fanoutAllocatedMbEnd < 0f) ? -1f : 0f;
+          }
         }
 
         float fanoutPeakHeapMb =
@@ -232,16 +244,17 @@ final class AutorouteBatchLoop {
             String.format(
                 java.util.Locale.US,
                 "Fanout stage %s started with %d total SMD pins, completed in %.2f seconds, "
-                    + "escaped pins: %d/%d (%.1f%%), using %.2f total CPU seconds, "
-                    + "%.2f GB total allocated, and %.1f MB peak heap usage.",
+                    + "escaped pins: %d/%d (%.1f%%), using %s total CPU seconds, "
+                    + "%s GB total allocated, and %.1f MB peak heap usage.",
                 fanoutCompletionStatus,
                 finalEscape.totalSmdPins(),
                 fanoutSummary.totalDurationMillis() / 1000.0,
                 finalEscape.escapedCount(),
                 finalEscape.totalSmdPins(),
                 finalEscape.escapedPercentage(),
-                fanoutCpuSecondsUsed,
-                fanoutAllocatedMb / 1024.0f,
+                AutorouteRuntimeMetrics.formatOptionalMetric(fanoutCpuSecondsUsed, "%.2f"),
+                AutorouteRuntimeMetrics.formatOptionalMetric(
+                    fanoutAllocatedMb < 0f ? -1f : fanoutAllocatedMb / 1024.0f, "%.2f"),
                 fanoutPeakHeapMb);
         job.logInfo(fanoutSummaryMessage);
       }
@@ -353,11 +366,12 @@ final class AutorouteBatchLoop {
 
       bh.add(router.board);
 
+      final String passStartBoardHash = currentBoardHash;
       FRLogger.traceEntry(
           "BatchAutorouter.autoroute_pass #"
               + currentPass
               + " on board '"
-              + currentBoardHash
+              + passStartBoardHash
               + "'");
 
       continueAutorouting = autoroutePass(currentPass);
@@ -418,14 +432,17 @@ final class AutorouteBatchLoop {
               "BatchAutorouter.autoroute_pass #"
                   + currentPass
                   + " on board '"
-                  + currentBoardHash
+                  + passStartBoardHash
                   + "'");
 
+      String strategyTag =
+          router.getStrategyName() != null ? " [" + router.getStrategyName() + "]" : "";
       String passCompletedMessage =
           String.format(
               java.util.Locale.US,
-              "Auto-routing pass #%d on board '%s' was completed in %.2f seconds with score %s",
+              "Auto-routing pass #%d%s on board '%s' was completed in %.2f seconds with score %s",
               currentPass,
+              strategyTag,
               currentBoardHash,
               autorouterPassDuration,
               FRLogger.formatScore(

@@ -3796,5 +3796,133 @@
   
   
   
-
+  (zone (net 2) (net_name "Net-(C3-Pad2)") (layer "F.Cu") (tstamp 00000000-0000-0000-0000-00005dbfcc48) (hatch edge 0.508)
+    (priority 2)
+    (connect_pads yes (clearance 0.15))
+    (min_thickness 0.254) (filled_areas_thickness no)
+    (fill yes (thermal_gap 0.508) (thermal_bridge_width 0.508) (smoothing fillet) (radius 0.2))
+    (polygon
+      (pts
+        (xy 52.3 26)
+        (xy 57.2 26)
+        (xy 57.2 22.93)
+        (xy 56.1 22.93)
+        (xy 54.8 22.93)
+        (xy 54.58 22.93)
+        (xy 54.2 23.31)
+        (xy 54.2 23.9)
+        (xy 53.9 24.2)
+        (xy 53.9 24.9)
+        (xy 52.3 24.9)
+      )
+    )
+    
+  )
+  (zone (net 1) (net_name "GND") (layer "F.Cu") (tstamp 00000000-0000-0000-0000-00005dbfcc4b) (hatch edge 0.508)
+    (connect_pads yes (clearance 0.157))
+    (min_thickness 0.157) (filled_areas_thickness no)
+    (fill yes (thermal_gap 0.508) (thermal_bridge_width 0.508) (smoothing fillet))
+    (polygon
+      (pts
+        (xy 19.9 37.6)
+        (xy 63.3 37.6)
+        (xy 63.3 19.7)
+        (xy 19.9 19.7)
+      )
+    )
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  )
+  (zone (net 57) (net_name "VBUS") (layer "F.Cu") (tstamp 00000000-0000-0000-0000-00005dbfcc51) (hatch edge 0.508)
+    (priority 1)
+    (connect_pads yes (clearance 0.15))
+    (min_thickness 0.1) (filled_areas_thickness no)
+    (fill yes (thermal_gap 0.15) (thermal_bridge_width 0.6))
+    (polygon
+      (pts
+        (xy 28.1 31.8)
+        (xy 23.9 31.8)
+        (xy 23.9 25.4)
+        (xy 28.1 25.4)
+      )
+    )
+    
+  )
+  (zone (net 1) (net_name "GND") (layer "B.Cu") (tstamp 00000000-0000-0000-0000-00005dbfcc4e) (hatch edge 0.508)
+    (connect_pads (clearance 0.157))
+    (min_thickness 0.157) (filled_areas_thickness no)
+    (fill yes (thermal_gap 0.2) (thermal_bridge_width 0.6) (smoothing fillet))
+    (polygon
+      (pts
+        (xy 19.9 37.6)
+        (xy 63.3 37.6)
+        (xy 63.3 19.7)
+        (xy 19.9 19.7)
+      )
+    )
+    
+    
+    
+  )
+  (zone (net 57) (net_name "VBUS") (layer "B.Cu") (tstamp 00000000-0000-0000-0000-00005dbfcc54) (hatch edge 0.508)
+    (priority 1)
+    (connect_pads (clearance 0.15))
+    (min_thickness 0.1) (filled_areas_thickness no)
+    (fill yes (thermal_gap 0.15) (thermal_bridge_width 0.6))
+    (polygon
+      (pts
+        (xy 28.1 31.8)
+        (xy 23.9 31.8)
+        (xy 23.9 25.4)
+        (xy 28.1 25.4)
+      )
+    )
+    
+  )
+  (zone (net 0) (net_name "") (layer "B.Mask") (tstamp 00000000-0000-0000-0000-00005dbfcc45) (hatch edge 0.508)
+    (connect_pads (clearance 0.15))
+    (min_thickness 0.254) (filled_areas_thickness no)
+    (fill yes (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 63.3 19.7)
+        (xy 61.07 19.7)
+        (xy 61.07 37.6)
+        (xy 63.3 37.6)
+      )
+    )
+    
+  )
 )

@@ -4376,5 +4376,119 @@
   
   
   
-
+  (zone (net 1) (net_name "VCC") (layer "F.Cu") (tstamp 00000000-0000-0000-0000-00005ae0c1f1) (hatch edge 0.508)
+    (priority 1)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.254) (filled_areas_thickness no)
+    (fill yes (thermal_gap 0.254) (thermal_bridge_width 0.3))
+    (polygon
+      (pts
+        (xy 137.033 91.186)
+        (xy 136.779 90.932)
+        (xy 129.6035 90.932)
+        (xy 128.9685 90.17)
+        (xy 127 90.17)
+        (xy 126.492 89.662)
+        (xy 126.492 86.106)
+        (xy 127 85.598)
+        (xy 152.654 85.598)
+        (xy 153.162 86.106)
+        (xy 153.162 107.442)
+        (xy 152.654 107.95)
+        (xy 145.288 107.95)
+        (xy 144.78 107.442)
+        (xy 144.78 100.584)
+        (xy 144.272 100.076)
+        (xy 132.842 100.076)
+        (xy 132.334 99.568)
+        (xy 132.334 94.615)
+        (xy 132.461 94.361)
+        (xy 136.779 94.361)
+        (xy 137.033 94.107)
+      )
+    )
+    
+  )
+  (zone (net 6) (net_name "VDD") (layer "F.Cu") (tstamp 5a397f61-35c4-4c18-9dcd-73a2d44cc9af) (hatch edge 0.508)
+    (priority 2)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.254) (filled_areas_thickness no)
+    (fill yes (thermal_gap 0.254) (thermal_bridge_width 0.3))
+    (polygon
+      (pts
+        (xy 116.332 91.313)
+        (xy 119.126 91.313)
+        (xy 119.38 91.567)
+        (xy 119.38 92.964)
+        (xy 119.634 93.218)
+        (xy 129.032 93.218)
+        (xy 129.667 92.583)
+        (xy 136.779 92.583)
+        (xy 137.033 92.837)
+        (xy 137.033 94.107)
+        (xy 136.779 94.361)
+        (xy 132.461 94.361)
+        (xy 132.08 94.869)
+        (xy 132.08 100.457)
+        (xy 131.699 100.711)
+        (xy 116.459 100.711)
+        (xy 116.078 100.33)
+        (xy 116.078 91.567)
+      )
+    )
+    
+  )
+  (zone (net 3) (net_name "GND") (layer "F.Cu") (tstamp 91c82043-0b26-427f-b23c-6094224ddfc2) (hatch edge 0.508)
+    (priority 3)
+    (connect_pads yes (clearance 0.254))
+    (min_thickness 0.254) (filled_areas_thickness no)
+    (fill yes (thermal_gap 0.254) (thermal_bridge_width 0.3))
+    (polygon
+      (pts
+        (xy 136.906 90.805)
+        (xy 137.16 90.551)
+        (xy 137.922 90.551)
+        (xy 138.176 90.805)
+        (xy 138.176 92.9005)
+        (xy 137.922 93.1545)
+        (xy 137.16 93.1545)
+        (xy 136.906 92.9005)
+        (xy 136.906 92.837)
+      )
+    )
+    
+  )
+  (zone (net 3) (net_name "GND") (layer "F.Cu") (tstamp c9badf80-21f8-404a-b5df-18e98bffebf9) (hatch edge 0.508)
+    (connect_pads (clearance 0.254))
+    (min_thickness 0.254) (filled_areas_thickness no)
+    (fill yes (thermal_gap 0.254) (thermal_bridge_width 0.3))
+    (polygon
+      (pts
+        (xy 162.56 112.522)
+        (xy 100.584 112.522)
+        (xy 100.584 85.598)
+        (xy 162.56 85.598)
+      )
+    )
+    
+    
+    
+    
+    
+    
+  )
+  (zone (net 3) (net_name "GND") (layer "B.Cu") (tstamp 64d1d0fe-4fd6-4a55-8314-56a651e1ccab) (hatch edge 0.508)
+    (connect_pads thru_hole_only (clearance 0.254))
+    (min_thickness 0.254) (filled_areas_thickness no)
+    (fill yes (thermal_gap 0.254) (thermal_bridge_width 0.3))
+    (polygon
+      (pts
+        (xy 100.584 85.598)
+        (xy 100.584 112.522)
+        (xy 162.56 112.522)
+        (xy 162.56 85.598)
+      )
+    )
+    
+  )
 )

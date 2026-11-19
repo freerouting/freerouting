@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -24,7 +24,13 @@
       (path pcb 0  221620 -116048  175986 -116172  176045 -62717.7  221572 -62699.9
             221620 -116048)
     )
-    (via "Via[0-1]_900:600_um" "Via[0-1]_1200:800_um" "Via[0-1]_1000:800_um")
+    (plane GND (polygon B.Cu 0  176822 -64985.9  218732 -64985.9  218732 -116294  176822 -116294
+            176822 -64985.9))
+    (plane VCC (polygon F.Cu 0  204254 -90385.9  204254 -64985.9  218732 -64985.9  218732 -116294
+            176822 -116294  176822 -90385.9  204254 -90385.9))
+    (plane GND (polygon F.Cu 0  176822 -64985.9  203746 -64985.9  203746 -89877.9  176822 -89877.9
+            176822 -64985.9))
+    (via "Via[0-1]_900:600_um" "Via[0-1]_1000:800_um" "Via[0-1]_1200:800_um")
     (rule
       (width 300)
       (clearance 200)
@@ -406,14 +412,14 @@
       (shape (circle B.Cu 900))
       (attach off)
     )
-    (padstack "Via[0-1]_1200:800_um"
-      (shape (circle F.Cu 1200))
-      (shape (circle B.Cu 1200))
-      (attach off)
-    )
     (padstack "Via[0-1]_1000:800_um"
       (shape (circle F.Cu 1000))
       (shape (circle B.Cu 1000))
+      (attach off)
+    )
+    (padstack "Via[0-1]_1200:800_um"
+      (shape (circle F.Cu 1200))
+      (shape (circle B.Cu 1200))
       (attach off)
     )
   )
@@ -525,21 +531,21 @@
         (clearance 200)
       )
     )
-    (class Power /5VUSB /VANT GND VCC
-      (circuit
-        (use_via "Via[0-1]_1200:800_um")
-      )
-      (rule
-        (width 600)
-        (clearance 200)
-      )
-    )
     (class RF /M8F_PPS /PPS_BUFF /REFCLK /REFCLK_BUFF /RF_IN
       (circuit
         (use_via "Via[0-1]_1000:800_um")
       )
       (rule
         (width 450)
+        (clearance 200)
+      )
+    )
+    (class Power /5VUSB /VANT GND VCC
+      (circuit
+        (use_via "Via[0-1]_1200:800_um")
+      )
+      (rule
+        (width 600)
         (clearance 200)
       )
     )

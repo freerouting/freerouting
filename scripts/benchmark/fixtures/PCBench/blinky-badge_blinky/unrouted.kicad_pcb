@@ -2813,5 +2813,18 @@
   
   
   
-
+  (zone (net 12) (net_name VCC) (layer F.Cu) (tstamp 55E69F65) (hatch edge 0.508)
+    (connect_pads (clearance 0.3))
+    (min_thickness 0.0254)
+    (fill yes (arc_segments 16) (thermal_gap 0.3) (thermal_bridge_width 0.4) (smoothing chamfer))
+    (polygon
+      (pts
+        (xy 168.275 132.08) (xy 128.27 132.08) (xy 128.27 91.44) (xy 168.275 91.44)
+      )
+    )
+    
+    
+    
+    
+  )
 )

@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -47,6 +47,18 @@
             102012 -77045.4  102336 -77002.7  102500 -77000  162500 -77000
             162664 -77002.7)
     )
+    (plane GND (polygon Back 0  165250 -115000  99500 -115000  99500 -76500  119500 -76500
+            165250 -76500  165250 -115000))
+    (plane GND (polygon Front 0  165250 -115000  99500 -115000  99500 -76500  119500 -76500
+            165250 -76500  165250 -115000))
+    (plane GNDPWR (polygon Front 0  106100 -102575  106100 -109375  104075 -109375  101300 -105925
+            101300 -102050  105575 -102050  106400 -101225  106950 -101725
+            106100 -102575))
+    (plane +3V3 (polygon Front 0  139685 -81420  139685 -82500  138300 -82500  137665 -82500
+            137665 -82130  137665 -80820  139685 -80820  139685 -81420))
+    (plane GNDPWR (polygon Back 0  106100 -102575  106100 -109375  104075 -109375  101300 -105925
+            101300 -102050  105575 -102050  106400 -101225  106950 -101725
+            106100 -102575))
     (via "Via[0-1]_600:300_um" "Via[0-1]_800:400_um")
     (rule
       (width 127)
@@ -1570,13 +1582,13 @@
         (clearance 127)
       )
     )
-    (class VCC +3V3
+    (class USB_D /USB_D+ "/USB_D-"
       (circuit
         (use_via "Via[0-1]_600:300_um")
       )
       (rule
-        (width 200)
-        (clearance 127)
+        (width 152.4)
+        (clearance 152.4)
       )
     )
     (class VIN +48V GNDPWR
@@ -1588,13 +1600,13 @@
         (clearance 254)
       )
     )
-    (class USB_D /USB_D+ "/USB_D-"
+    (class VCC +3V3
       (circuit
         (use_via "Via[0-1]_600:300_um")
       )
       (rule
-        (width 152.4)
-        (clearance 152.4)
+        (width 200)
+        (clearance 127)
       )
     )
   )

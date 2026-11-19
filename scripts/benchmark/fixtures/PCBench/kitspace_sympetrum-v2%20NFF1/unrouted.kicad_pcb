@@ -2333,5 +2333,66 @@
   
   
   
-
+  (zone (net 6) (net_name /Power/VIN) (layer Top_Copper) (tstamp 57E60D6B) (hatch edge 0.508)
+    (connect_pads yes (clearance 0))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 187.8 105.7) (xy 183.2 105.7) (xy 183.2 104.2) (xy 185.1 104.2) (xy 187.8 102.2)
+        (xy 187.7 98.4) (xy 187.1 98.1) (xy 182 98.2) (xy 182 93.7) (xy 182.7 93.7)
+        (xy 183.5 95.2) (xy 184.2 95.5) (xy 189.5 95.5) (xy 189.5 104)
+      )
+    )
+    
+  )
+  (zone (net 1) (net_name GND) (layer Top_Copper) (tstamp 57E60DFB) (hatch edge 0.508)
+    (connect_pads yes (clearance 0))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 182.9 101.8) (xy 182.8 103.1) (xy 182.3 103.1) (xy 182.3 101.9) (xy 182 101.6)
+        (xy 181.1 101.6) (xy 180.2 103.1) (xy 179 103.1) (xy 179 101.7) (xy 181.9 99.1)
+        (xy 183.3 99.1) (xy 183.3 100.8)
+      )
+    )
+    
+  )
+  (zone (net 11) (net_name "Net-(L301-Pad2)") (layer Top_Copper) (tstamp 57E61C84) (hatch edge 0.508)
+    (connect_pads yes (clearance 0))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 183.8 103.1) (xy 183.2 103.1) (xy 183.2 101.9) (xy 184.3 99.1) (xy 186.8 99.1)
+        (xy 186.8 101.7)
+      )
+    )
+    
+  )
+  (zone (net 5) (net_name +3V3) (layer Top_Copper) (tstamp 57E61EB1) (hatch edge 0.508)
+    (connect_pads yes (clearance 0))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 182.2 107.4) (xy 180.2 107.4) (xy 179.1 106.5) (xy 178.9 105.7) (xy 178.9 104.2)
+        (xy 180.2 104.2) (xy 180.2 105.8) (xy 180.6 106) (xy 182 106) (xy 182.2 105.8)
+        (xy 182.3 105.3) (xy 182.3 104.3) (xy 182.9 104.3) (xy 182.9 106.6)
+      )
+    )
+    
+  )
+  (zone (net 1) (net_name GND) (layer Bottom_Copper) (tstamp 0) (hatch edge 0.508)
+    (connect_pads yes (clearance 1))
+    (min_thickness 0.1)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 144.145 58.42) (xy 144.145 107.95) (xy 193.675 107.95) (xy 193.675 58.42)
+      )
+    )
+    
+  )
 )

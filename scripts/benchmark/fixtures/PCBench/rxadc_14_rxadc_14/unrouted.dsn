@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -36,6 +36,18 @@
       (path pcb 0  162306 -121158  129540 -121158  129540 -82042  162306 -82042
             162306 -121158)
     )
+    (plane GND (polygon B.Cu 0  161798 -120650  130048 -120650  130048 -82550  161798 -82550
+            161798 -120650))
+    (plane GND (polygon In1.Cu 0  161798 -120650  130048 -120650  130048 -82550  161798 -82550
+            161798 -120650))
+    (plane +3.3VADC (polygon In2.Cu 0  161798 -120650  146558 -120650  146558 -82550  161798 -82550
+            161798 -120650))
+    (plane +3V3 (polygon In2.Cu 0  146050 -120650  130048 -120650  130048 -82550  146050 -82550
+            146050 -120650))
+    (plane +3V3 (polygon F.Cu 0  148844 -117666  140081 -117666  140081 -110490  148844 -110490
+            148844 -117666))
+    (plane GND (polygon F.Cu 0  161798 -120650  130048 -120650  130048 -82550  161798 -82550
+            161798 -120650))
     (via "Via[0-3]_685.8:330.2_um")
     (rule
       (width 152.4)
@@ -122,8 +134,6 @@
     )
     (component footprints:R_Array_EXB2HV
       (place RP101 140462 -105156 front 180 (PN 100))
-    )
-    (component footprints:R_Array_EXB2HV::1
       (place RP102 140462 -97536 front 180 (PN 100))
     )
     (component "footprints:Crystal_SMD_Abracon_ASFL1-4pin_5.0x3.2mm"
@@ -339,28 +349,7 @@
       (pin Rect[T]Pad_762.000000x1651.000000_um 2 0 -1587.5)
     )
     (image footprints:R_Array_EXB2HV
-      (outline (polygon signal 0  -1188.8 2245  1189.4 2245  1188.8 -2245  -1188.8 -2245))
-      (outline (path signal 150  500 -2125  -500 -2125))
-      (outline (path signal 150  500 2125  -500 2125))
-      (pin Rect[T]Pad_500.000000x330.000000_um 1 -650 1750)
-      (pin Rect[T]Pad_500.000000x330.000000_um 16 650 1750)
-      (pin Rect[T]Pad_500.000000x330.000000_um 8 -650 -1750)
-      (pin Rect[T]Pad_500.000000x330.000000_um 9 650 -1750)
-      (pin Rect[T]Pad_500.000000x330.000000_um 2 -650 1250)
-      (pin Rect[T]Pad_500.000000x330.000000_um 3 -650 750)
-      (pin Rect[T]Pad_500.000000x330.000000_um 4 -650 250)
-      (pin Rect[T]Pad_500.000000x330.000000_um 5 -650 -250)
-      (pin Rect[T]Pad_500.000000x330.000000_um 6 -650 -750)
-      (pin Rect[T]Pad_500.000000x330.000000_um 7 -650 -1250)
-      (pin Rect[T]Pad_500.000000x330.000000_um 15 650 1250)
-      (pin Rect[T]Pad_500.000000x330.000000_um 14 650 750)
-      (pin Rect[T]Pad_500.000000x330.000000_um 13 650 250)
-      (pin Rect[T]Pad_500.000000x330.000000_um 11 650 -750)
-      (pin Rect[T]Pad_500.000000x330.000000_um 12 650 -250)
-      (pin Rect[T]Pad_500.000000x330.000000_um 10 650 -1250)
-    )
-    (image footprints:R_Array_EXB2HV::1
-      (outline (polygon signal 0  -1189.4 2245  1189.4 2245  1188.8 -2245  -1189.4 -2245))
+      (outline (polygon signal 0  -1188.8 2245  1188.8 2245  1189.4 -2245  -1188.8 -2245))
       (outline (path signal 150  500 -2125  -500 -2125))
       (outline (path signal 150  500 2125  -500 2125))
       (pin Rect[T]Pad_500.000000x330.000000_um 1 -650 1750)

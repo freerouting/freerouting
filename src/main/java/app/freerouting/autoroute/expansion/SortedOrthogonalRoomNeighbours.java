@@ -150,7 +150,7 @@ public final class SortedOrthogonalRoomNeighbours {
         continue;
       }
       if ((completedRoom instanceof CompleteFreeSpaceExpansionRoom fsRoom)
-          && !currentObject.isTraceObstacle(netNumber)) {
+          && !currentObject.isTraceObstacle(netNumber, currentEntry.shapeIndexInObject)) {
         fsRoom.calculateTargetDoors(currentEntry, netNumber, autorouteSearchTree);
         continue;
       }

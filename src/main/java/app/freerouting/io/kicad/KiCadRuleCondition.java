@@ -1,6 +1,7 @@
 package app.freerouting.io.kicad;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -80,6 +81,8 @@ public final class KiCadRuleCondition {
    * @param padNumber the number of a pad, else null
    * @param smd for a pad, true if it has copper on a single layer (KiCad {@code SMD} pad; an edge
    *     connector pad cannot be told apart in a Specctra design and is seen as one too)
+   * @param libraryId the library identifier of the footprint of a pad ({@code lib:name}, the
+   *     Specctra image name without the {@code ::N} suffix KiCad adds to variants), else null
    */
   public record Item(
       ItemType type,
@@ -87,7 +90,20 @@ public final class KiCadRuleCondition {
       String netClass,
       String footprint,
       String padNumber,
-      boolean smd) {}
+      boolean smd,
+      String libraryId) {
+
+    /** An item whose footprint, if any, has no known library identifier. */
+    public Item(
+        ItemType type,
+        String netName,
+        String netClass,
+        String footprint,
+        String padNumber,
+        boolean smd) {
+      this(type, netName, netClass, footprint, padNumber, smd, null);
+    }
+  }
 
   private static final Set<String> PROPERTIES =
       Set.of("netclass", "netname", "type", "pad_type", "reference", "parent", "pad_number");
@@ -148,6 +164,72 @@ public final class KiCadRuleCondition {
     return result.toString();
   }
 
+  /**
+   * The parts of the condition that name a net class, a net or a footprint ({@code NetClass} or
+   * {@code NetName} compared with a text, {@code memberOfFootprint()}, {@code hasNetclass()}) and
+   * that no item of {@code items} satisfies. Such a name is most often misspelt or renamed: the
+   * rule then silently applies nowhere (or, under {@code !=}, everywhere).
+   */
+  public List<String> namesMatchingNothing(Collection<Item> items) {
+    List<Node> tests = new ArrayList<>();
+    collectNameTests(root, tests);
+    List<String> result = new ArrayList<>();
+    for (Node test : tests) {
+      boolean found = false;
+      for (Item item : items) {
+        if (nameTest(test, item) != Tri.FALSE) {
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        result.add("'" + (test instanceof Compare c ? c.text() : ((Call) test).text()) + "'");
+      }
+    }
+    return result;
+  }
+
+  private static void collectNameTests(Node node, List<Node> out) {
+    switch (node) {
+      case Or(Node left, Node right) -> {
+        collectNameTests(left, out);
+        collectNameTests(right, out);
+      }
+      case And(Node left, Node right) -> {
+        collectNameTests(left, out);
+        collectNameTests(right, out);
+      }
+      case Not(Node operand) -> collectNameTests(operand, out);
+      case Compare c when isNameComparison(c) -> out.add(c);
+      case Call c
+          when ("memberoffootprint".equals(c.name()) || "hasnetclass".equals(c.name()))
+              && !c.args().isEmpty()
+              && !c.args().getFirst().startsWith("${") ->
+          out.add(c);
+      default -> {}
+    }
+  }
+
+  private static boolean isNameComparison(Compare c) {
+    if (!"==".equals(c.op()) && !"!=".equals(c.op())) {
+      return false;
+    }
+    return (isNameProperty(c.left()) && c.right() instanceof Literal(Str _))
+        || (isNameProperty(c.right()) && c.left() instanceof Literal(Str _));
+  }
+
+  private static boolean isNameProperty(Node node) {
+    return node instanceof Member m && ("netclass".equals(m.name()) || "netname".equals(m.name()));
+  }
+
+  /** Whether the item has the name a name test asks for (an equality, whatever the operator). */
+  private static Tri nameTest(Node test, Item item) {
+    if (test instanceof Compare c) {
+      return compare("==", c.left().eval(item, item), c.right().eval(item, item));
+    }
+    return truth(test.eval(item, item));
+  }
+
   // ------------------------------------------------------------------------------------------
   // Values
 
@@ -192,15 +274,30 @@ public final class KiCadRuleCondition {
   /** The compiled wildcard patterns, which come from rules files and are few. */
   private static final Map<String, Pattern> WILDCARDS = new ConcurrentHashMap<>();
 
+  private static final Map<String, Pattern> CASE_SENSITIVE_WILDCARDS = new ConcurrentHashMap<>();
+
   private static boolean matches(String pattern, String text) {
+    return matches(pattern, text, false);
+  }
+
+  private static boolean matches(String pattern, String text, boolean caseSensitive) {
     if (pattern.indexOf('*') < 0 && pattern.indexOf('?') < 0) {
-      return pattern.equalsIgnoreCase(text);
+      return caseSensitive ? pattern.equals(text) : pattern.equalsIgnoreCase(text);
     }
-    return WILDCARDS.computeIfAbsent(pattern, KiCadRuleCondition::wildcard).matcher(text).matches();
+    Map<String, Pattern> cache = caseSensitive ? CASE_SENSITIVE_WILDCARDS : WILDCARDS;
+    return cache
+        .computeIfAbsent(pattern, glob -> wildcard(glob, caseSensitive))
+        .matcher(text)
+        .matches();
   }
 
   /** A KiCad wildcard ({@code *} and {@code ?}) as a case-insensitive regular expression. */
   static Pattern wildcard(String glob) {
+    return wildcard(glob, false);
+  }
+
+  /** A KiCad wildcard ({@code *} and {@code ?}) as a regular expression. */
+  static Pattern wildcard(String glob, boolean caseSensitive) {
     StringBuilder regex = new StringBuilder();
     for (char c : glob.toCharArray()) {
       switch (c) {
@@ -209,7 +306,8 @@ public final class KiCadRuleCondition {
         default -> regex.append(Pattern.quote(String.valueOf(c)));
       }
     }
-    return Pattern.compile(regex.toString(), Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+    int flags = Pattern.DOTALL | (caseSensitive ? 0 : Pattern.CASE_INSENSITIVE);
+    return Pattern.compile(regex.toString(), flags);
   }
 
   private static List<String> constituents(String netClass) {
@@ -411,6 +509,12 @@ public final class KiCadRuleCondition {
             case "memberoffootprint" -> {
               if (arg.startsWith("${")) {
                 yield Tri.UNKNOWN; // component class selector
+              }
+              // KiCad tests the library identifier (case-sensitively) when the selector has a ':',
+              // and the reference otherwise (testFootprintSelector in pcbexpr_functions.cpp)
+              if (arg.indexOf(':') >= 0) {
+                yield Tri.of(
+                    pad && item.libraryId() != null && matches(arg, item.libraryId(), true));
               }
               yield Tri.of(pad && item.footprint() != null && matches(arg, item.footprint()));
             }
