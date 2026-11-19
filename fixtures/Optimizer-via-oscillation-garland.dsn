@@ -1,0 +1,44 @@
+(pcb via-oscillation-garland
+  (parser (string_quote ") (space_in_quoted_tokens on) (host_cad "hand") (host_version "1"))
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer Top (type signal) (property (index 0)))
+    (layer Bottom (type signal) (property (index 1)))
+    (boundary (rect pcb 0 -10000 20000 0))
+    (via "Via[0-1]_600:300_um")
+    (rule (width 200) (clearance 200) (clearance 50 (type smd_smd)))
+  )
+  (placement
+    (component SMD
+      (place S1 12200 -5135 front 0)
+    )
+    (component SMDB
+      (place B1 9400 -6580 front 0)
+      (place M1a 10671 -3200 front 0)
+      (place M1b 10671 -7400 front 0)
+    )
+  )
+  (library
+    (image SMD (pin S 1 0 0))
+    (image SMDB (pin B 1 0 0))
+    (padstack S (shape (rect Top -150 -150 150 150)) (attach off))
+    (padstack B (shape (rect Bottom -150 -150 150 150)) (attach off))
+    (padstack "Via[0-1]_600:300_um" (shape (circle Top 600)) (shape (circle Bottom 600)) (attach off))
+  )
+  (network
+    (net N1 (pins S1-1 B1-1))
+    (net M1 (pins M1a-1 M1b-1))
+    (class kicad_default N1 M1 (circuit (use_via "Via[0-1]_600:300_um")) (rule (width 200) (clearance 200)))
+  )
+  (wiring
+    (wire (path Bottom 200  10671 -3200  10671 -7400)(net M1))
+    (wire (path Top 200  10000 -5000  10135 -5134.8)(net N1))
+    (wire (path Top 200  10135 -5134.8  10800 -5135)(net N1))
+    (wire (path Top 200  10800 -5135  12200 -5135)(net N1))
+    (wire (path Bottom 200  10000 -5000  10230 -5230)(net N1))
+    (wire (path Bottom 200  10230 -5230  10230 -5750)(net N1))
+    (wire (path Bottom 200  10230 -5750  9400 -6580)(net N1))
+    (via "Via[0-1]_600:300_um"  10000 -5000 (net N1))
+  )
+)
