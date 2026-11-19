@@ -101,6 +101,11 @@ public final class CliRunner {
         routingJob, globalSettings.initialKiCadProjectFile, settingsMerger)) {
       return false;
     }
+    // Without the fill settings of the zones of the .kicad_pcb, a plane that KiCad refills in
+    // several pieces counts as one.
+    if (!routingJob.loadKiCadBoardZones(globalSettings.initialKiCadBoardFile)) {
+      return false;
+    }
 
     routingJob.routerSettings = settingsMerger.merge();
     routingJob.drcSettings = globalSettings.drcSettings.clone();

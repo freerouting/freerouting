@@ -179,7 +179,8 @@ public class FastPlaneConnectivityGrid {
       maxClearance =
           Math.max(maxClearance, board.rules.clearanceMatrix.maxValue(clearanceClass, layer));
     }
-    int clearanceInflate = (int) Math.ceil(maxClearance);
+    // the fill of the zone may keep further away than the clearance classes say
+    int clearanceInflate = (int) Math.ceil(ca.fillKeepout(maxClearance));
     IntBox queryBbox =
         new IntBox(
             new IntPoint(bbox.ll.x - clearanceInflate, bbox.ll.y - clearanceInflate),
@@ -211,7 +212,8 @@ public class FastPlaneConnectivityGrid {
         }
         hasForeignObstacles = true;
         int itemClearanceClass = item.clearanceClassIndex();
-        double clearance = board.clearanceValue(clearanceClass, itemClearanceClass, layer);
+        double clearance =
+            ca.fillKeepout(board.clearanceValue(clearanceClass, itemClearanceClass, layer));
 
         if (item instanceof Trace trace) {
           int radius = (int) Math.round(trace.getHalfWidth() + clearance);

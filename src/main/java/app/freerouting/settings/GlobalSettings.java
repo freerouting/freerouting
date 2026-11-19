@@ -190,6 +190,13 @@ public class GlobalSettings implements Serializable {
   public transient String initialKiCadProjectFile;
 
   /**
+   * The KiCad board file (.kicad_pcb) provided with the design file via the -de command line
+   * argument. Null if there is none. The fill settings of its zones, which the DSN does not carry,
+   * are applied to the planes of the design.
+   */
+  public transient String initialKiCadBoardFile;
+
+  /**
    * The designSessionFilename field stores the optional Specctra session file (.ses) path provided
    * via the -de command line argument.
    */
@@ -718,6 +725,7 @@ public class GlobalSettings implements Serializable {
             boolean hasRules = false;
             boolean hasKiCadRules = false;
             boolean hasKiCadProject = false;
+            boolean hasKiCadBoard = false;
 
             // Process each file and identify its type by extension
             for (String file : files) {
@@ -780,11 +788,20 @@ public class GlobalSettings implements Serializable {
                 }
                 initialKiCadProjectFile = file;
                 hasKiCadProject = true;
+              } else if (lowerFile.endsWith(".kicad_pcb")) {
+                if (hasKiCadBoard) {
+                  FRLogger.warn(
+                      "Multiple KiCad board files provided in -de argument. "
+                          + "Only the last one will be used.");
+                }
+                initialKiCadBoardFile = file;
+                hasKiCadBoard = true;
               } else {
                 FRLogger.warn(
                     "Unknown file type in -de argument: "
                         + file
-                        + ". Expected .dsn, .json, .ses, .rules, .kicad_dru or .kicad_pro");
+                        + ". Expected .dsn, .json, .ses, .rules, .kicad_dru, .kicad_pro or"
+                        + " .kicad_pcb");
               }
             }
 
@@ -1053,7 +1070,7 @@ public class GlobalSettings implements Serializable {
   }
 
   public static final java.util.Set<String> DE_VALID_EXTENSIONS =
-      java.util.Set.of(".dsn", ".json", ".ses", ".rules", ".kicad_dru", ".kicad_pro");
+      java.util.Set.of(".dsn", ".json", ".ses", ".rules", ".kicad_dru", ".kicad_pro", ".kicad_pcb");
 
   public static final java.util.Set<String> DO_VALID_EXTENSIONS =
       java.util.Set.of(".ses", ".dsn", ".scr", ".rules", ".json", ".drc", ".frb", ".kicad_pcb");
