@@ -191,7 +191,34 @@ class PowerGroundNetsTest {
         "NEUT",
         "PRI_HI",
         "PRI_LO",
-        "PRI_MID"
+        "PRI_MID",
+        // Control, status, enable, and sense signal suffixes
+        "VBUS_DET",
+        "VDD_PG",
+        "VCC_GOOD",
+        "3V3_EN",
+        "VBAT_SENSE",
+        "VIN_UVLO",
+        "VCC_FB",
+        "VREG_FAULT",
+        "PWR_OK",
+        // Non-power prefixes containing rail names
+        "LED_VCC",
+        "PG_3V3",
+        "EN_1V8",
+        "ADC_VREF",
+        // 2-letter token false-positive guards
+        "DRV_VS_A",
+        "ADC_VD_IN",
+        "SENS_HT_1",
+        // Unprefixed pin/connector designators
+        "1P",
+        "2P",
+        "1C",
+        "2C",
+        // Auto-generated EDA net names
+        "Net-(U7-VI)",
+        "Net-(R1-Pad2)"
       })
   @DisplayName("Non-power and non-ground nets are rejected by both classifiers")
   void testNonPowerNonGroundNets(String netName) {

@@ -15,7 +15,7 @@ public final class PowerGroundNets {
 
   private static final Pattern GROUND_NET_PATTERN =
       Pattern.compile(
-          "(?i)^(?:.*[._\\-/])?"
+          "(?i)^(?:.*/)?"
               + "(?:(?:PWR_)?GND[0-9_\\-a-z]*"
               + "|GROUND(?:[0-9_\\-].*)?"
               + "|[ADPSECIO]GND[0-9_\\-a-z]*"
@@ -29,22 +29,26 @@ public final class PowerGroundNets {
               + ")$");
 
   private static final Pattern POWER_NET_EXCLUDE_PATTERN =
-      Pattern.compile("(?i).*(?:PWR_FLAG|VSW|LINE|NEUT|V-[LN]|PRI_).*");
+      Pattern.compile(
+          "(?i).*(?:PWR_FLAG|VSW|LINE|NEUT|V-[LN]|PRI_"
+              + "|_(?:EN|PG|GOOD|DET|SENSE|FAULT|UVLO|FB|STATUS|OK|ALERT|FLAG)$).*");
 
   private static final Pattern POWER_NET_PATTERN =
       Pattern.compile(
-          "(?i)^(?:.*[._\\-/])?"
+          "(?i)^(?:.*/)?(?:(?:PWR|POWER)[._\\-])?"
               + "(?:"
-              + "[+-]?(?:\\d+[vV][a-z0-9]*|\\d+\\.\\d+[vV][a-z0-9]*|\\d+[cfpCFP])"
+              + "[+-]\\d+[cfpCFP]"
+              + "|[+-]?(?:\\d+[vV][a-z0-9]*|\\d+\\.\\d+[vV][a-z0-9]*)"
               + "|VS?[+-]{1,2}"
               + "|V-[+-]"
               + "|(?:[+-]?BATT?(?:ERY)?|VBAT)[0-9_\\-+a-z]*"
-              + "|[+-]?(?:VDC|VEE|VAA|VAC|VPP|VMEM|VCOM|VREF|VBUS|VDRIVE|HT|VD|VS)[0-9_\\-a-z]*"
+              + "|[+-]?(?:VDC|VEE|VAA|VAC|VPP|VMEM|VCOM|VREF|VBUS|VDRIVE)[0-9_\\-a-z]*"
               + "|[+-]?[ADPV]?VCC[0-9_\\-a-z]*"
               + "|[+-]?[ADPV]?VDD[0-9_\\-a-z]*"
               + "|[+-]?(?:VIN|VOUT)[0-9_\\-a-z]*"
               + "|[+-]?(?:CORE|POWER|PWR)[0-9_\\-a-z]*"
-              + ")(?:[._\\-/].*)?$");
+              + "|HT|VD|VS"
+              + ")$");
 
   private PowerGroundNets() {}
 
