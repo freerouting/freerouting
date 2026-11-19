@@ -647,7 +647,8 @@ public class FastPlaneConnectivityGrid {
    * <p>Around a small pad between close neighbours the cells are too coarse to tell. When no cell
    * reaches the pad, the border of the pad is walked instead: the fill touches the pad where a disc
    * as wide as the minimum width of the fill fits against the border, at the clearance of the fill
-   * from any foreign copper. The pad is then attached to the piece of the nearest cell of fill.
+   * from any foreign copper, on a point of the fill. The pad is then attached to the piece of that
+   * point.
    */
   private void attachSolidPad(
       ConductionArea ca,
@@ -733,17 +734,22 @@ public class FastPlaneConnectivityGrid {
             new FloatPoint(
                 from.x + t * (to.x - from.x) + outX * minWidth / 2.0,
                 from.y + t * (to.y - from.y) + outY * minWidth / 2.0);
-        IntPoint point = centre.round();
-        if (ca.getArea() == null
-            || !ca.getArea().contains(point)
+        // the centre of the disc must be a point of the fill: inside the outline as the fill
+        // follows it, clear of the reliefs of the net and of foreign copper
+        double fine = (double) cellSize / FINE;
+        int fineCol = (int) Math.floor((centre.x - originX) / fine);
+        int fineRow = (int) Math.floor((centre.y - originY) / fine);
+        if (fineCol < 0
+            || fineRow < 0
+            || fineCol >= fineCols
+            || fineRow >= fineRows
+            || isFineSet(fineRow, fineCol)
             || !isFree(centre, centre, 0, foreignShapes, foreignClearances)) {
           continue;
         }
-        int[] seed =
-            findNearestConductiveCell(
-                (point.x - originX) / cellSize, (point.y - originY) / cellSize, 3);
-        if (seed != null) {
-          union(parent, node, pieceOfCell[seed[1] * cols + seed[0]]);
+        int piece = pieceOfCell[(fineRow / FINE) * cols + fineCol / FINE];
+        if (piece >= 0) {
+          union(parent, node, piece);
         }
       }
     }
