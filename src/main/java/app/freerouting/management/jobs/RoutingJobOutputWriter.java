@@ -39,9 +39,9 @@ final class RoutingJobOutputWriter {
         try (ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
           boolean saved;
           if (job.output.format == FileFormat.SES) {
-            saved = manager.saveAsSpecctraSessionSes(buffer, job.name);
+            saved = manager.exportSpecctraSessionSes(buffer, job.name);
           } else if (job.output.format == FileFormat.SCR) {
-            saved = manager.saveAsFusionScriptScr(buffer, job.name);
+            saved = manager.exportFusionScriptScr(buffer, job.name);
           } else {
             throw new java.io.IOException("Unsupported routing output format");
           }

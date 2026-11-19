@@ -31,10 +31,50 @@ import java.util.TreeSet;
 /** A ObstacleArea, which can be electrically connected to other items. */
 public class ConductionArea extends ObstacleArea implements Connectable {
 
+  private static final long serialVersionUID = 9006217382369120553L;
+
   private static final double PLANE_HATCH_OPACITY = 0.85;
 
   private boolean isObstacle;
   private boolean isFilled = true;
+
+  /** The clearance the fill of the zone keeps to foreign copper, in board units; 0 if unknown. */
+  private int fillClearance;
+
+  /** The narrowest neck the fill of the zone keeps, in board units; 0 if unknown. */
+  private int fillMinWidth;
+
+  /**
+   * Sets how the host CAD system fills this area, when the design file does not say it: the
+   * clearance the fill keeps to the copper of other nets, if larger than the clearance of the
+   * clearance classes, and the minimum width below which a neck of the fill is removed. Both are in
+   * board units; 0 means unknown. They only change where this area counts as fractured.
+   */
+  public void setFillRules(int clearance, int minWidth) {
+    this.fillClearance = Math.max(0, clearance);
+    this.fillMinWidth = Math.max(0, minWidth);
+    this.clearDerivedData();
+  }
+
+  /** The clearance set by {@link #setFillRules(int, int)}, in board units; 0 if unknown. */
+  public int getFillClearance() {
+    return this.fillClearance;
+  }
+
+  /** The minimum width set by {@link #setFillRules(int, int)}, in board units; 0 if unknown. */
+  public int getFillMinWidth() {
+    return this.fillMinWidth;
+  }
+
+  /**
+   * The distance from the copper of a foreign item within which the fill of this area carries no
+   * current: the larger of {@code clearance} (the value of the clearance classes) and the clearance
+   * of the fill, plus half the minimum width of the fill. Two obstacles closer than twice this
+   * distance leave a neck narrower than the minimum width, which the fill does not keep.
+   */
+  public double fillKeepout(double clearance) {
+    return Math.max(clearance, this.fillClearance) + this.fillMinWidth / 2.0;
+  }
 
   public boolean getIsFilled() {
     return this.isFilled;
@@ -251,20 +291,24 @@ public class ConductionArea extends ObstacleArea implements Connectable {
 
   @Override
   public Item copy(int id) {
-    return new ConductionArea(
-        getRelativeArea(),
-        getLayer(),
-        getTranslation(),
-        getRotationInDegree(),
-        getSideChanged(),
-        netNumbers,
-        clearanceClassIndex(),
-        id,
-        getComponentId(),
-        this.name,
-        isObstacle,
-        getFixedState(),
-        board);
+    ConductionArea result =
+        new ConductionArea(
+            getRelativeArea(),
+            getLayer(),
+            getTranslation(),
+            getRotationInDegree(),
+            getSideChanged(),
+            netNumbers,
+            clearanceClassIndex(),
+            id,
+            getComponentId(),
+            this.name,
+            isObstacle,
+            getFixedState(),
+            board);
+    result.fillClearance = this.fillClearance;
+    result.fillMinWidth = this.fillMinWidth;
+    return result;
   }
 
   /**
@@ -434,13 +478,8 @@ public class ConductionArea extends ObstacleArea implements Connectable {
       return true;
     }
     for (Item item : unconnectedSet) {
-      if (item instanceof ConductionArea ca) {
-        if (!ca.isFractured() && ca.reachesPinOfNet(netNo)) {
-          return false;
-        }
-        if (ca.isFractured() && ca.hasPinOnAnyIsland()) {
-          return false;
-        }
+      if (item instanceof ConductionArea ca && !ca.isFloatingFragment(netNo)) {
+        return false;
       }
     }
     for (Item item : connectedSet) {
@@ -451,15 +490,34 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     return true;
   }
 
+  /**
+   * Returns true if no pin of the net is reached from this conduction area: a fill piece that the
+   * net needs no connection to (see {@link #coversAllPlanesOfNet}).
+   */
+  public boolean isFloatingFragment(int netNo) {
+    if (isFractured()) {
+      return !hasPinOnAnyIsland(netNo);
+    }
+    return !reachesPinOfNet(netNo);
+  }
+
   /** Returns true if any island of this fractured conduction area contains a pin. */
   public boolean hasPinOnAnyIsland() {
+    return hasPinOnAnyIsland(0);
+  }
+
+  /**
+   * Returns true if any island of this fractured conduction area contains a pin belonging to {@code
+   * netNo} (or any pin when {@code netNo <= 0}).
+   */
+  public boolean hasPinOnAnyIsland(int netNo) {
     FastPlaneConnectivityGrid.PlaneFractureResult res = getFractureResult();
     if (res == null || !res.isFractured) {
       return false;
     }
     for (List<Item> island : res.islandItems.values()) {
       for (Item item : island) {
-        if (item instanceof Pin) {
+        if (item instanceof Pin && (netNo <= 0 || item.containsNet(netNo))) {
           return true;
         }
       }

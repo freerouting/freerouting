@@ -6806,37 +6806,4 @@
     
     
   )
-  (zone (net 0) (net_name "") (layer Bottom) (tstamp 0) (hatch edge 0.508)
-    (connect_pads (clearance 0.508))
-    (min_thickness 0.254)
-    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
-    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
-    (polygon
-      (pts
-        (xy 136.525 76.2) (xy 139.065 73.66) (xy 142.24 73.66) (xy 142.24 78.74) (xy 136.525 78.74)
-      )
-    )
-  )
-  (zone (net 0) (net_name "") (layer Bottom) (tstamp 0) (hatch edge 0.508)
-    (connect_pads (clearance 0.508))
-    (min_thickness 0.254)
-    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
-    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
-    (polygon
-      (pts
-        (xy 121.92 106.68) (xy 121.92 109.22) (xy 139.065 109.22) (xy 139.065 106.68)
-      )
-    )
-  )
-  (zone (net 0) (net_name "") (layer Bottom) (tstamp 0) (hatch edge 0.508)
-    (connect_pads (clearance 0.508))
-    (min_thickness 0.254)
-    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
-    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
-    (polygon
-      (pts
-        (xy 119.38 60.96) (xy 119.38 63.5) (xy 130.81 63.5) (xy 130.81 60.96)
-      )
-    )
-  )
 )

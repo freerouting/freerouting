@@ -1616,28 +1616,6 @@
     )
     
   )
-  (zone (net 0) (net_name "") (layer Back) (tstamp 5120E206) (hatch edge 0.508)
-    (connect_pads (clearance 0.2032))
-    (min_thickness 0.2032)
-    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
-    (fill (arc_segments 32) (thermal_gap 0.25) (thermal_bridge_width 0.499999))
-    (polygon
-      (pts
-        (xy 89.4538 81.086) (xy 85.5538 81.086) (xy 85.5538 77.686) (xy 89.4538 77.686)
-      )
-    )
-  )
-  (zone (net 0) (net_name "") (layer Back) (tstamp 5120E208) (hatch edge 0.508)
-    (connect_pads (clearance 0.2032))
-    (min_thickness 0.2032)
-    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
-    (fill (arc_segments 32) (thermal_gap 0.25) (thermal_bridge_width 0.499999))
-    (polygon
-      (pts
-        (xy 99.6538 81.086) (xy 95.7538 81.086) (xy 95.7538 77.686) (xy 99.6538 77.686)
-      )
-    )
-  )
   (zone (net 0) (net_name "") (layer F.Mask) (tstamp 51D5300A) (hatch full 0.508)
     (connect_pads (clearance 0.2))
     (min_thickness 0.254)

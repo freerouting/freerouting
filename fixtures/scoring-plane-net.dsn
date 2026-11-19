@@ -1,0 +1,60 @@
+(pcb scoring-plane-net.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  0 0  20000 0  20000 10000  0 10000  0 0)
+    )
+    (plane GND (polygon F.Cu 0  1000 1000  9000 1000  9000 9000  1000 9000  1000 1000))
+    (via "Via[0-1]_800:400_um")
+    (rule
+      (width 250)
+      (clearance 200)
+    )
+  )
+  (placement
+    (component PAD_F
+      (place U1 3000 3000 front 0)
+      (place U2 7000 7000 front 0)
+      (place U3 12000 5000 front 0)
+    )
+  )
+  (library
+    (image PAD_F
+      (pin CirclePad_F_800_um 1 0 0)
+    )
+    (padstack CirclePad_F_800_um
+      (shape (circle F.Cu 800))
+      (attach off)
+    )
+    (padstack "Via[0-1]_800:400_um"
+      (shape (circle F.Cu 800))
+      (shape (circle B.Cu 800))
+      (attach off)
+    )
+  )
+  (network
+    (net GND (pins U1-1 U2-1 U3-1))
+    (class kicad_default "" GND
+      (circuit
+        (use_via Via[0-1]_800:400_um)
+      )
+    )
+  )
+)
