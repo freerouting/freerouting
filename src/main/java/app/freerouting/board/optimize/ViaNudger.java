@@ -154,7 +154,11 @@ public final class ViaNudger {
           break;
         }
         Via via = viaById(viaId);
-        if (via == null || via.isShoveFixed() || via.isUserFixed() || touchesConductionArea(via)) {
+        if (via == null
+            || via.isShoveFixed()
+            || via.isUserFixed()
+            || touchesConductionArea(via)
+            || hasShoveFixedContact(via)) {
           continue;
         }
         int halfPitch = halfPitch(via);
@@ -203,6 +207,7 @@ public final class ViaNudger {
               }
             }
             board.undo(null);
+            board.clearTransientAutorouteState();
             via = viaById(viaId);
             if (via == null) {
               break;
@@ -220,10 +225,12 @@ public final class ViaNudger {
             && !changedTraceEntersZone(tracesBefore)
             && board.routingLedger().incompleteCount() <= incompleteBefore
             && board.getStatistics().clearanceViolations.totalCount <= violationsAllowed) {
+          board.clearTransientAutorouteState();
           ++accepted;
           movedInThisPass.add(center);
         } else {
           board.undo(null);
+          board.clearTransientAutorouteState();
         }
       }
       if (movedInThisPass.isEmpty()) {
@@ -297,6 +304,19 @@ public final class ViaNudger {
   private static boolean touchesConductionArea(Via via) {
     for (Item contact : via.getNormalContacts()) {
       if (contact instanceof ConductionArea) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * {@link RoutingBoard#moveDrillItem} unfixes {@code SHOVE_FIXED} contacts before moving a drill
+   * item; skip vias with any shove-fixed contact so we never unlock protected traces.
+   */
+  private static boolean hasShoveFixedContact(Via via) {
+    for (Item contact : via.getNormalContacts()) {
+      if (contact.isShoveFixed()) {
         return true;
       }
     }

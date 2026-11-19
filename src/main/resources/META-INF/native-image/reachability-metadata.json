@@ -1676,6 +1676,9 @@
           "name": "patience"
         },
         {
+          "name": "stepSlideEnabled"
+        },
+        {
           "name": "timeoutString"
         },
         {

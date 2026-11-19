@@ -365,4 +365,18 @@ class ModuleBoundariesArchTest {
         .because("fanout engine must remain decoupled from GUI and API orchestration layers")
         .check(classes);
   }
+
+  @Test
+  void coreFacadeMustNotDependOnManagementOrGui() {
+    JavaClasses classes = importMainClasses();
+    noClasses()
+        .that()
+        .resideInAPackage("app.freerouting.core.facade..")
+        .should()
+        .dependOnClassesThat()
+        .resideInAnyPackage("app.freerouting.gui..", "app.freerouting.management..")
+        .because(
+            "the in-memory headless facade must remain decoupled from GUI and session managers")
+        .check(classes);
+  }
 }

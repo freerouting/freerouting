@@ -496,7 +496,8 @@ class BatchOptimizerPreflightGuardsTest extends RoutingFixtureTest {
     assertNotNull(phase.before);
     assertNotNull(phase.after);
     assertEquals(0, phase.passesCompleted);
-    assertEquals(0.0f, phase.durationSeconds, 0.001f);
+    // The step slide still runs on a bypassed board, and its time is now recorded.
+    assertTrue(phase.durationSeconds >= 0.0f);
   }
 
   private static final class NoOpStoppableThread extends StoppableThread {

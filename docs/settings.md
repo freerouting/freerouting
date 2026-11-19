@@ -285,6 +285,20 @@ Configures the optional route-optimization stage that runs after autorouting.
   nothing, and neither on a board that already has clearance violations. The pass is
   deterministic and single-threaded, and it is skipped when the job was stopped or timed out.
   Default is `false`. CLI: `--router.optimizer.via_nudge_enabled=true`.
+- **`step_slide_enabled`**: Whether the optimizer ends with a pass that slides the steps of the
+  traces along them. A step is a short segment between two segments of the same direction: the trace
+  moves sideways and goes on parallel to itself. It costs no length wherever it sits, so the pull
+  tight leaves it where the shoving of a later connection made it, and the traces routed next to it
+  copy it: bundles routed at the clearance end up with staircases. The pull tight moves one trace at
+  a time and cannot move a step that the neighbouring trace blocks. This pass moves each step
+  forward or backward along its trace until it merges with a parallel segment or meets another step,
+  inserts the trace again with shoving and pull tight, and keeps the move only if the board has no
+  more vias, incomplete connections, clearance violations, trace length or bends than before, and
+  less trace length or fewer bends. A move that brings a trace into a copper zone or closer to its
+  outline than the clearance is refused, and the pass does nothing on a board that already has
+  clearance violations. It also runs when the pre-flight guards skip the optimizer. The pass is
+  deterministic and single-threaded, and it is skipped when the job was stopped or timed out.
+  Default is `true`. CLI to turn it off: `--router.optimizer.step_slide_enabled=false`.
 - **`enable_preflight_guards`**: Whether pre-flight optimization guards are evaluated before starting the
   optimizer loop. If enabled, bypasses the optimizer stage when the board has no vias to eliminate (with trace
   length already near optimal), has an initial score at or near theoretical maximum, or all vias are mandatory
