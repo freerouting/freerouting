@@ -77,17 +77,31 @@ public class DecouplingSettings implements Serializable, Cloneable {
   @SerializedName("opposite_side_routing")
   public Boolean oppositeSideRouting;
 
+  /**
+   * Explicit list of net names to treat as power supply rails for decoupling capacitor
+   * identification and routing.
+   */
+  @SerializedName("power_nets")
+  public String[] powerNets;
+
+  /**
+   * Explicit list of net names to treat as ground / return nets for decoupling capacitor
+   * identification and routing.
+   */
+  @SerializedName("ground_nets")
+  public String[] groundNets;
+
   /** No-arg constructor required for deserialisation and {@link #clone()}. */
   public DecouplingSettings() {}
 
-  /**
-   * Creates a deep copy of this {@code DecouplingSettings} object. All fields are immutable
-   * wrappers or enums, so a shallow clone is sufficient.
-   */
+  /** Creates a deep copy of this {@code DecouplingSettings} object. */
   @Override
   public DecouplingSettings clone() {
     try {
-      return (DecouplingSettings) super.clone();
+      DecouplingSettings copy = (DecouplingSettings) super.clone();
+      copy.powerNets = this.powerNets != null ? this.powerNets.clone() : null;
+      copy.groundNets = this.groundNets != null ? this.groundNets.clone() : null;
+      return copy;
     } catch (CloneNotSupportedException e) {
       throw new AssertionError("Clone not supported", e);
     }

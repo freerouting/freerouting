@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
  * @param groundNameHints patterns matched against net names to identify ground nets
  * @param forcedGroundNets explicit user overrides for net numbers that must be treated as ground
  * @param forcedRejectComponents explicit user overrides for component IDs that must be rejected
+ * @param additionalPowerNets explicit user overrides or configured power rail names
  */
 public record IdentifierConfig(
     double maxOwnerRadiusMm,
@@ -33,13 +34,45 @@ public record IdentifierConfig(
     boolean auditDemotesToReview,
     List<Pattern> groundNameHints,
     Set<Integer> forcedGroundNets,
-    Set<Integer> forcedRejectComponents) {
+    Set<Integer> forcedRejectComponents,
+    List<String> additionalPowerNets) {
 
   public IdentifierConfig {
     groundNameHints = groundNameHints == null ? List.of() : List.copyOf(groundNameHints);
     forcedGroundNets = forcedGroundNets == null ? Set.of() : Set.copyOf(forcedGroundNets);
     forcedRejectComponents =
         forcedRejectComponents == null ? Set.of() : Set.copyOf(forcedRejectComponents);
+    additionalPowerNets =
+        additionalPowerNets == null ? List.of() : List.copyOf(additionalPowerNets);
+  }
+
+  public IdentifierConfig(
+      double maxOwnerRadiusMm,
+      double minPitchMm,
+      double maxPitchMm,
+      double minPadAreaRatio,
+      int decouplingThreshold,
+      int reviewThreshold,
+      int ownerTopK,
+      boolean runRefDesAudit,
+      boolean auditDemotesToReview,
+      List<Pattern> groundNameHints,
+      Set<Integer> forcedGroundNets,
+      Set<Integer> forcedRejectComponents) {
+    this(
+        maxOwnerRadiusMm,
+        minPitchMm,
+        maxPitchMm,
+        minPadAreaRatio,
+        decouplingThreshold,
+        reviewThreshold,
+        ownerTopK,
+        runRefDesAudit,
+        auditDemotesToReview,
+        groundNameHints,
+        forcedGroundNets,
+        forcedRejectComponents,
+        List.of());
   }
 
   private static final List<Pattern> DEFAULT_GROUND_PATTERNS =

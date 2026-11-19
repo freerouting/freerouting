@@ -29,6 +29,7 @@ import app.freerouting.settings.DecouplingLockMode;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.sources.DefaultSettings;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -96,6 +97,33 @@ public final class BatchDecouplingRouter {
     double maxStrapLengthUnits = maxStrapLengthMm * mmResolution;
 
     IdentifierConfig defaultConfig = IdentifierConfig.defaultConfig();
+    List<String> combinedPowerNets = new ArrayList<>();
+    if (settings != null && settings.powerNets != null) {
+      combinedPowerNets.addAll(Arrays.asList(settings.powerNets));
+    }
+    if (settings != null && settings.decoupling != null && settings.decoupling.powerNets != null) {
+      combinedPowerNets.addAll(Arrays.asList(settings.decoupling.powerNets));
+    }
+
+    Set<Integer> forcedGroundNets = new HashSet<>(defaultConfig.forcedGroundNets());
+    List<String> combinedGroundNets = new ArrayList<>();
+    if (settings != null && settings.groundNets != null) {
+      combinedGroundNets.addAll(Arrays.asList(settings.groundNets));
+    }
+    if (settings != null && settings.decoupling != null && settings.decoupling.groundNets != null) {
+      combinedGroundNets.addAll(Arrays.asList(settings.decoupling.groundNets));
+    }
+    if (board.rules != null && board.rules.nets != null) {
+      for (String gNetName : combinedGroundNets) {
+        Collection<Net> gNets = board.rules.nets.get(gNetName);
+        if (gNets != null) {
+          for (Net net : gNets) {
+            forcedGroundNets.add(net.netNumber);
+          }
+        }
+      }
+    }
+
     IdentifierConfig config =
         new IdentifierConfig(
             maxOwnerRadiusMm,
@@ -108,8 +136,9 @@ public final class BatchDecouplingRouter {
             defaultConfig.runRefDesAudit(),
             defaultConfig.auditDemotesToReview(),
             defaultConfig.groundNameHints(),
-            defaultConfig.forcedGroundNets(),
-            defaultConfig.forcedRejectComponents());
+            forcedGroundNets,
+            defaultConfig.forcedRejectComponents(),
+            combinedPowerNets);
 
     IdentificationResult idResult = DecouplingIdentifier.identify(board, config);
 

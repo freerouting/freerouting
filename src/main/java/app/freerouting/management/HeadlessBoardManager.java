@@ -51,6 +51,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -1135,7 +1136,18 @@ public class HeadlessBoardManager implements BoardManager {
     }
     validatePowerPlanes();
     validateBoardDesignErrors();
-    DifferentialPairDetector.detectAndRegister(this.board.rules);
+    DifferentialPairDetector.detectAndRegister(
+        this.board.rules,
+        this.routingJob != null
+                && this.routingJob.routerSettings != null
+                && this.routingJob.routerSettings.powerNets != null
+            ? Arrays.asList(this.routingJob.routerSettings.powerNets)
+            : null,
+        this.routingJob != null
+                && this.routingJob.routerSettings != null
+                && this.routingJob.routerSettings.groundNets != null
+            ? Arrays.asList(this.routingJob.routerSettings.groundNets)
+            : null);
     // NOTE: The full-board DRC (getAllClearanceViolations) is O(n²) and is deferred to the
     // background thread in scheduleDeferredPostLoadProcessing() to avoid blocking every board
     // load (including GUI loads) on large designs.

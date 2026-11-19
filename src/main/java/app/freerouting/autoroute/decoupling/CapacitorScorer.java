@@ -5,7 +5,9 @@ import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.rules.Nets;
+import app.freerouting.rules.PowerGroundNets;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -43,29 +45,30 @@ public final class CapacitorScorer {
       Pattern.compile(
           "(?i)^(?:R|RN|RT|RP|L|FB|FL|BLM|IND|D|LED|Q|FET|TR|SW|S|BTN|KEY|TACT|PUSH|SWITCH|BUTTON|J|JP|HDR|P|TP|PIN|CONN|Y|X|XTAL|OSC|F|FUSE|RV|MOV|VR|RESET|K)[0-9_\\-].*");
 
-  private static final Pattern POWER_NET_EXCLUDE_PATTERN =
-      Pattern.compile(
-          "(?i).*(?:PWR_FLAG|VSW|LINE|NEUT|EARTH|CHASSIS|GND|VSS|V-0|V-PE|V-[LN]|PRI_).*");
-
-  private static final Pattern POWER_NET_PATTERN =
-      Pattern.compile(
-          "(?i)^(?:.*[._\\-/])?"
-              + "(?:[+-]?(?:\\d+[vV][a-z0-9]*|\\d+\\.\\d+[vV][a-z0-9]*|\\d+[cfpCFP])"
-              + "|V-[+-]"
-              + "|[+-]?(?:BATT?(?:ERY)?|VDC|VEE|VDD[a-z0-9]*|VCC[a-z0-9]*|AVDD[a-z0-9]*|VDDA[a-z0-9]*|VDDF[a-z0-9]*"
-              + "|VMEM[a-z0-9]*|VPP[a-z0-9]*|VCCQ[a-z0-9]*|VAA[a-z0-9]*|VAC|VCOM[a-z0-9]*|VREF[a-z0-9]*"
-              + "|VBUS[a-z0-9]*|CORE[a-z0-9]*|POWER[a-z0-9_]*|PWR[a-z0-9_]*|VDRIVE[a-z0-9]*|VD|VS|HT)"
-              + ")(?:[._\\-/].*)?$");
-
   /** Returns true if the given net name conforms to standard EDA power rail naming conventions. */
   public static boolean isPowerNetName(String netName) {
-    if (netName == null || netName.isEmpty()) {
-      return false;
-    }
-    if (POWER_NET_EXCLUDE_PATTERN.matcher(netName).matches()) {
-      return false;
-    }
-    return POWER_NET_PATTERN.matcher(netName).matches();
+    return PowerGroundNets.isPowerNetName(netName);
+  }
+
+  /**
+   * Returns true if the given net name conforms to standard EDA power rail naming conventions or
+   * matches user-configured additional power rail names.
+   */
+  public static boolean isPowerNetName(String netName, Collection<String> additionalPowerNets) {
+    return PowerGroundNets.isPowerNetName(netName, additionalPowerNets);
+  }
+
+  /**
+   * Returns true if the given net name conforms to standard EDA ground/return net naming
+   * conventions.
+   */
+  public static boolean isGroundNetName(String netName) {
+    return PowerGroundNets.isGroundNetName(netName);
+  }
+
+  /** Returns true if the given net name is either a DC power rail or a ground/return net. */
+  public static boolean isSupplyOrGroundNet(String netName) {
+    return PowerGroundNets.isSupplyOrGroundNet(netName);
   }
 
   /**
@@ -425,7 +428,7 @@ public final class CapacitorScorer {
                   && (railEv.capDegree() >= 2
                       || railEv.icCount() >= 2
                       || railEv.plane()
-                      || isPowerNetName(railNetName));
+                      || isPowerNetName(railNetName, config.additionalPowerNets()));
 
           boolean qualifies =
               isInductorOrBead

@@ -203,6 +203,14 @@ class DifferentialPairDetectorTest {
     assertTrue(DifferentialPairDetector.isExcludedNet(null));
     assertTrue(DifferentialPairDetector.isExcludedNet(""));
 
+    // Custom power and ground exclusions
+    assertTrue(
+        DifferentialPairDetector.isExcludedNet(
+            "CUSTOM_RAIL_P", java.util.List.of("CUSTOM_RAIL_P"), null));
+    assertTrue(
+        DifferentialPairDetector.isExcludedNet(
+            "RETURN_BUS_N", null, java.util.List.of("RETURN_BUS_N")));
+
     assertNull(DifferentialPairDetector.extract("+5V"));
     assertNull(DifferentialPairDetector.extract("-12V"));
     assertNull(DifferentialPairDetector.extract("3V3"));

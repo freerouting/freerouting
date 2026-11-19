@@ -5,6 +5,7 @@ import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.structure.Component;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.Nets;
+import app.freerouting.rules.PowerGroundNets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -342,12 +343,17 @@ public final class BoardIndex {
   }
 
   private static boolean matchesGroundName(String name, List<Pattern> patterns) {
-    if (name == null || name.isEmpty() || patterns == null) {
+    if (name == null || name.isEmpty()) {
       return false;
     }
-    for (Pattern pattern : patterns) {
-      if (pattern.matcher(name).matches()) {
-        return true;
+    if (PowerGroundNets.isGroundNetName(name)) {
+      return true;
+    }
+    if (patterns != null) {
+      for (Pattern pattern : patterns) {
+        if (pattern.matcher(name).matches()) {
+          return true;
+        }
       }
     }
     return false;

@@ -348,5 +348,22 @@ class CapacitorScorerTest {
     assertFalse(CapacitorScorer.isPowerNetName("PRI_HI"));
     assertFalse(CapacitorScorer.isPowerNetName("PRI_LO"));
     assertFalse(CapacitorScorer.isPowerNetName("PRI_MID"));
+
+    // Custom power net overrides
+    assertTrue(CapacitorScorer.isPowerNetName("CUSTOM_RAIL", java.util.List.of("CUSTOM_RAIL")));
+    assertTrue(
+        CapacitorScorer.isPowerNetName("/MCU/CUSTOM_RAIL", java.util.List.of("CUSTOM_RAIL")));
+    assertFalse(CapacitorScorer.isPowerNetName("CUSTOM_RAIL"));
+
+    // Dedicated helpers
+    assertTrue(CapacitorScorer.isGroundNetName("GND"));
+    assertTrue(CapacitorScorer.isGroundNetName("AGND"));
+    assertTrue(CapacitorScorer.isGroundNetName("VSS"));
+    assertFalse(CapacitorScorer.isGroundNetName("+3V3"));
+
+    assertTrue(CapacitorScorer.isSupplyOrGroundNet("GND"));
+    assertTrue(CapacitorScorer.isSupplyOrGroundNet("+3V3"));
+    assertTrue(CapacitorScorer.isSupplyOrGroundNet("VCC"));
+    assertFalse(CapacitorScorer.isSupplyOrGroundNet("RESET"));
   }
 }

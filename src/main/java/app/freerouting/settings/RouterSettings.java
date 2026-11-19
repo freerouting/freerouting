@@ -66,6 +66,22 @@ public class RouterSettings implements Serializable, Cloneable {
   public String[] planeNets;
 
   /**
+   * Explicit list of net names to treat as positive/negative DC power supply rails (e.g. VCC, VDD).
+   * In addition to built-in EDA naming patterns, these nets are classified as power rails by the
+   * routing engine, decoupling capacitor router, and differential pair detector.
+   */
+  @SerializedName("power_nets")
+  public String[] powerNets;
+
+  /**
+   * Explicit list of net names to treat as ground / return nets (e.g. GND, VSS, 0V). In addition to
+   * built-in EDA naming patterns, these nets are classified as ground nets by the routing engine,
+   * decoupling capacitor router, and differential pair detector.
+   */
+  @SerializedName("ground_nets")
+  public String[] groundNets;
+
+  /**
    * When true, conduction areas (copper pours) act as obstacles blocking foreign traces from
    * passing through. When false, foreign traces may route through conduction areas.
    */
@@ -782,6 +798,8 @@ public class RouterSettings implements Serializable, Cloneable {
     result.meanderRadiusPercentage = this.meanderRadiusPercentage;
     result.meanderSingleSided = this.meanderSingleSided;
     result.planeNets = this.planeNets != null ? this.planeNets.clone() : null;
+    result.powerNets = this.powerNets != null ? this.powerNets.clone() : null;
+    result.groundNets = this.groundNets != null ? this.groundNets.clone() : null;
     result.planeAsObstacle = this.planeAsObstacle;
     result.neckWidthUm = this.neckWidthUm;
     result.exactCopper = this.exactCopper;
@@ -1064,6 +1082,34 @@ public class RouterSettings implements Serializable, Cloneable {
     this.planeNets = value != null ? value.clone() : null;
     if (pcs != null) {
       pcs.firePropertyChange("planeNets", old, this.planeNets);
+    }
+  }
+
+  /** Returns the explicit list of power net names, or empty array if none configured. */
+  public String[] getPowerNets() {
+    return powerNets != null ? powerNets.clone() : new String[0];
+  }
+
+  /** Sets the explicit list of power net names. */
+  public void setPowerNets(String[] value) {
+    String[] old = this.powerNets;
+    this.powerNets = value != null ? value.clone() : null;
+    if (pcs != null) {
+      pcs.firePropertyChange("powerNets", old, this.powerNets);
+    }
+  }
+
+  /** Returns the explicit list of ground net names, or empty array if none configured. */
+  public String[] getGroundNets() {
+    return groundNets != null ? groundNets.clone() : new String[0];
+  }
+
+  /** Sets the explicit list of ground net names. */
+  public void setGroundNets(String[] value) {
+    String[] old = this.groundNets;
+    this.groundNets = value != null ? value.clone() : null;
+    if (pcs != null) {
+      pcs.firePropertyChange("groundNets", old, this.groundNets);
     }
   }
 

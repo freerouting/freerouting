@@ -249,6 +249,8 @@ public class DefaultSettings implements SettingsSource {
     settings.meanderRadiusPercentage = DEFAULT_MEANDER_RADIUS_PERCENTAGE;
     settings.meanderSingleSided = DEFAULT_MEANDER_SINGLE_SIDED;
     settings.planeNets = new String[0];
+    settings.powerNets = new String[0];
+    settings.groundNets = new String[0];
     settings.planeAsObstacle = false;
     settings.neckWidthUm = DEFAULT_NECK_WIDTH_UM;
     settings.exactCopper = true;
@@ -289,6 +291,8 @@ public class DefaultSettings implements SettingsSource {
     settings.decoupling.mutualInductanceBiasWeight =
         DEFAULT_DECOUPLING_MUTUAL_INDUCTANCE_BIAS_WEIGHT;
     settings.decoupling.oppositeSideRouting = DEFAULT_DECOUPLING_OPPOSITE_SIDE_ROUTING;
+    settings.decoupling.powerNets = new String[0];
+    settings.decoupling.groundNets = new String[0];
 
     // Optimizer defaults
     settings.optimizer.enabled = true;
