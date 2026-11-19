@@ -13,6 +13,7 @@ import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.Side;
+import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.rules.BoardRules;
 import java.util.ArrayList;
@@ -60,10 +61,6 @@ public final class StepSlider {
   private static final int MAX_PASSES = 10;
 
   private static final int MAX_SHOVE_RECURSION_DEPTH = 0;
-
-  private static final int[][] DIRECTIONS = {
-    {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}
-  };
 
   /** What a run of the pass did, and the board before and after it. Lengths are in board units. */
   public record Result(
@@ -158,6 +155,7 @@ public final class StepSlider {
             }
           }
           board.undo(null);
+          board.clearTransientAutorouteState();
         }
         if (bestMove == null) {
           continue;
@@ -168,10 +166,12 @@ public final class StepSlider {
             && board.routingLedger().incompleteCount() <= incompleteBefore
             && board.getStatistics().clearanceViolations.totalCount <= violationsAllowed) {
           board.popSnapshot();
+          board.clearTransientAutorouteState();
           ++accepted;
           ++acceptedInThisPass;
         } else {
           board.undo(null);
+          board.clearTransientAutorouteState();
         }
       }
       if (acceptedInThisPass == 0) {
@@ -370,33 +370,34 @@ public final class StepSlider {
   }
 
   /**
-   * Whether copper of the given half width around point, on layer, is inside a zone or closer to
-   * its outline than the clearance. The point and eight points around it are tested.
+   * Whether trace is inside a zone or closer to its outline than the clearance, tested with exact
+   * shape intersection against the zone's convex tiles.
    */
-  private boolean isInOrNearZone(
-      FloatPoint point, int layer, double halfWidth, int clearanceClass) {
+  private boolean traceEntersZone(PolylineTrace trace) {
+    int layer = trace.getLayer();
+    int halfWidth = trace.getHalfWidth();
+    int clearanceClass = trace.clearanceClassIndex();
+    IntBox traceBox = trace.boundingBox();
     for (ConductionArea zone : zones) {
       if (zone.getLayer() != layer) {
         continue;
       }
-      double reach =
+      int reach =
           halfWidth + board.clearanceValue(clearanceClass, zone.clearanceClassIndex(), layer);
-      IntBox box = zone.getArea().boundingBox();
-      if (point.x < box.ll.x - reach
-          || point.x > box.ur.x + reach
-          || point.y < box.ll.y - reach
-          || point.y > box.ur.y + reach) {
+      IntBox zoneBox = zone.boundingBox();
+      if (traceBox.ur.x + reach < zoneBox.ll.x
+          || traceBox.ll.x - reach > zoneBox.ur.x
+          || traceBox.ur.y + reach < zoneBox.ll.y
+          || traceBox.ll.y - reach > zoneBox.ur.y) {
         continue;
       }
-      if (zone.getArea().contains(point)) {
-        return true;
-      }
-      for (int[] direction : DIRECTIONS) {
-        double scale = direction[0] != 0 && direction[1] != 0 ? reach / Math.sqrt(2) : reach;
-        FloatPoint around =
-            new FloatPoint(point.x + direction[0] * scale, point.y + direction[1] * scale);
-        if (zone.getArea().contains(around)) {
-          return true;
+      TileShape[] traceShapes = trace.polyline().offsetShapes(reach);
+      int zoneTileCount = zone.tileShapeCount();
+      for (TileShape traceShape : traceShapes) {
+        for (int j = 0; j < zoneTileCount; ++j) {
+          if (traceShape.intersects(zone.getTileShape(j))) {
+            return true;
+          }
         }
       }
     }
@@ -440,23 +441,8 @@ public final class StepSlider {
       if (before != null && before == signature(trace)) {
         continue;
       }
-      double halfWidth = trace.getHalfWidth();
-      double sampleStep = Math.max(2 * halfWidth, 1);
-      FloatPoint previous = trace.polyline().corner(0).toFloat();
-      for (int i = 1; i < trace.cornerCount(); ++i) {
-        FloatPoint corner = trace.polyline().corner(i).toFloat();
-        int pieces =
-            (int) Math.min(200, Math.max(1, Math.ceil(previous.distance(corner) / sampleStep)));
-        for (int k = 0; k <= pieces; ++k) {
-          FloatPoint sample =
-              new FloatPoint(
-                  previous.x + (corner.x - previous.x) * k / pieces,
-                  previous.y + (corner.y - previous.y) * k / pieces);
-          if (isInOrNearZone(sample, trace.getLayer(), halfWidth, trace.clearanceClassIndex())) {
-            return true;
-          }
-        }
-        previous = corner;
+      if (traceEntersZone(trace)) {
+        return true;
       }
     }
     return false;

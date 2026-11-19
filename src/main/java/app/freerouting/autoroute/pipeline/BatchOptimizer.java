@@ -280,13 +280,24 @@ public final class BatchOptimizer extends NamedAlgorithm {
     String bypassReason = evaluatePreFlightGuards(initialStats);
     if (bypassReason != null) {
       job.logInfo("Skipping optimization stage: " + bypassReason + ".");
+      long bypassStartNanos = System.nanoTime();
+      float bypassCpuStart = AutorouteRuntimeMetrics.currentThreadCpuSeconds();
+      float bypassAllocStart = AutorouteRuntimeMetrics.currentThreadAllocatedMb();
       // The guards look at vias and trace length; the steps of a bundle cost neither.
       if (slideSteps()) {
         initialStats = board.getStatistics();
       }
-      phase.durationSeconds = 0.0f;
-      phase.cpuSeconds = 0.0f;
-      phase.totalAllocatedGb = 0.0f;
+      float bypassCpuEnd = AutorouteRuntimeMetrics.currentThreadCpuSeconds();
+      float bypassAllocEnd = AutorouteRuntimeMetrics.currentThreadAllocatedMb();
+      phase.durationSeconds = (float) ((System.nanoTime() - bypassStartNanos) / 1e9);
+      phase.cpuSeconds =
+          (bypassCpuStart >= 0f && bypassCpuEnd >= bypassCpuStart)
+              ? bypassCpuEnd - bypassCpuStart
+              : 0.0f;
+      phase.totalAllocatedGb =
+          (bypassAllocStart >= 0f && bypassAllocEnd >= bypassAllocStart)
+              ? (bypassAllocEnd - bypassAllocStart) / 1024.0f
+              : 0.0f;
       phase.peakHeapMb = AutorouteRuntimeMetrics.currentHeapUsageMb();
       phase.after =
           RoutingResultManifest.PhaseSnapshot.fromBoardStatistics(
