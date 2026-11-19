@@ -35,6 +35,8 @@ import org.junit.jupiter.api.Test;
  *       as KiCad exports zones since 2026-07: {@code (wire (polygon …) (net …) (type protect))}
  *       with its windows in the wiring, on the same {@code (type power)} layers, and no {@code
  *       (plane …)}.
+ *   <li>{@code Layer-named-signal-garland-4layer.dsn}: the first garland with its inner layers
+ *       renamed {@code GND} and {@code Signal}, as KiCad lets the user name them.
  * </ul>
  *
  * <p>Every SMD pad of a plane net must drop into its plane through a via of its own, rather than
@@ -50,6 +52,7 @@ class PlaneViaGarlandRoutingTest extends RoutingFixtureTest {
   private static final String DENSE = "Plane-via-garland-dense-4layer.dsn";
   private static final String ADC = "Plane-via-adc-decoupling-4layer.dsn";
   private static final String WIRE = "Plane-via-garland-wire-4layer.dsn";
+  private static final String NAMED = "Layer-named-signal-garland-4layer.dsn";
 
   private static TestingSettings settings() {
     TestingSettings settings = new TestingSettings();
@@ -106,6 +109,22 @@ class PlaneViaGarlandRoutingTest extends RoutingFixtureTest {
           !job.board.layerStructure.layers[layer].isSignal,
           job.board.layerStructure.layers[layer].name + " must stay a plane layer");
     }
+    List<String> chained = chainedPlanePads(job.board);
+    assertTrue(chained.isEmpty(), "Plane pads not escaping alone into their plane: " + chained);
+    assertNoTraceInPlaneLayers(job.board);
+  }
+
+  @Test
+  void planesOnLayersNamedGndAndSignalAreRoutedLikeTheGarland() {
+    // The first garland with its inner layers renamed GND and Signal, as on a published board.
+    // "Signal" is also a Specctra keyword: its plane used to be rejected and the board not load.
+    TestingSettings settings = settings();
+    settings.setPlaneAsPriority(true);
+    RoutingJob job = getRoutingJob(NAMED, settings);
+    runRoutingJob(job);
+
+    assertRoutingResult(job, NAMED).maxIncompleteConnections(0).exactClearanceViolations(0).check();
+    assertEquals(8, planePadCount(job.board), "6 GND and 2 +3V3 SMD pads on the board");
     List<String> chained = chainedPlanePads(job.board);
     assertTrue(chained.isEmpty(), "Plane pads not escaping alone into their plane: " + chained);
     assertNoTraceInPlaneLayers(job.board);

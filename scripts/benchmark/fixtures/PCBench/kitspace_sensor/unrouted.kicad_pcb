@@ -6149,41 +6149,6 @@
     )
     
   )
-  (zone (net 0) (net_name "") (layer B.Cu) (tstamp 0) (hatch full 0.508)
-    (connect_pads (clearance 0.508))
-    (min_thickness 0.254)
-    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
-    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
-    (polygon
-      (pts
-        (xy 125 106.5) (xy 111 106.5) (xy 111 91.5) (xy 125 91.5)
-      )
-    )
-  )
-  (zone (net 0) (net_name "") (layer F.Cu) (tstamp 5A8FC657) (hatch full 0.508)
-    (connect_pads (clearance 0.508))
-    (min_thickness 0.254)
-    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
-    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
-    (polygon
-      (pts
-        (xy 111 106.5) (xy 111 91.5) (xy 123 91.5) (xy 125 91.5) (xy 125 96)
-        (xy 125 106.5)
-      )
-    )
-  )
-  (zone (net 0) (net_name "") (layer F.Cu) (tstamp 0) (hatch full 0.508)
-    (connect_pads (clearance 0.4))
-    (min_thickness 0.2)
-    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
-    (fill yes (arc_segments 16) (thermal_gap 0.3) (thermal_bridge_width 0.25))
-    (polygon
-      (pts
-        (xy 133.75 53.5) (xy 112.8 53.5) (xy 112.8 53.65) (xy 88.3 53.65) (xy 88.3 53.5)
-        (xy 67.25 53.5) (xy 67.25 40) (xy 133.75 40)
-      )
-    )
-  )
   (zone (net 0) (net_name "") (layer B.Cu) (tstamp 5A8FCDCA) (hatch full 0.508)
     (connect_pads (clearance 0.4))
     (min_thickness 0.2)
@@ -6192,17 +6157,6 @@
     (polygon
       (pts
         (xy 88.3 53.665193) (xy 112.8 53.665193) (xy 112.8 41.415193) (xy 88.3 41.415193)
-      )
-    )
-  )
-  (zone (net 0) (net_name "") (layer B.Cu) (tstamp 0) (hatch full 0.508)
-    (connect_pads (clearance 0.4))
-    (min_thickness 0.2)
-    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
-    (fill yes (arc_segments 16) (thermal_gap 0.3) (thermal_bridge_width 0.25))
-    (polygon
-      (pts
-        (xy 67.25 53.5) (xy 133.75 53.5) (xy 133.75 40) (xy 67.25 40)
       )
     )
   )

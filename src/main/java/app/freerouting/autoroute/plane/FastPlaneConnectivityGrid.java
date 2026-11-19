@@ -179,7 +179,8 @@ public class FastPlaneConnectivityGrid {
       maxClearance =
           Math.max(maxClearance, board.rules.clearanceMatrix.maxValue(clearanceClass, layer));
     }
-    int clearanceInflate = (int) Math.ceil(maxClearance);
+    // the fill of the zone may keep further away than the clearance classes say
+    int clearanceInflate = (int) Math.ceil(ca.fillKeepout(maxClearance));
     IntBox queryBbox =
         new IntBox(
             new IntPoint(bbox.ll.x - clearanceInflate, bbox.ll.y - clearanceInflate),
@@ -211,7 +212,8 @@ public class FastPlaneConnectivityGrid {
         }
         hasForeignObstacles = true;
         int itemClearanceClass = item.clearanceClassIndex();
-        double clearance = board.clearanceValue(clearanceClass, itemClearanceClass, layer);
+        double clearance =
+            ca.fillKeepout(board.clearanceValue(clearanceClass, itemClearanceClass, layer));
 
         if (item instanceof Trace trace) {
           int radius = (int) Math.round(trace.getHalfWidth() + clearance);
@@ -249,7 +251,9 @@ public class FastPlaneConnectivityGrid {
       }
     }
 
-    if (!hasForeignObstacles) {
+    // Without foreign obstacles, only the area's own holes can split it: an area given as an
+    // outline minus windows (KiCad exports filled zones this way) can already be several islands.
+    if (!hasForeignObstacles && (ca.getArea() == null || ca.getArea().getHoles().length == 0)) {
       Map<Integer, List<Item>> singleIsland = new HashMap<>();
       singleIsland.put(0, new ArrayList<>(sameNetItems));
       return new PlaneFractureResult(singleIsland);
