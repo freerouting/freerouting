@@ -8690,17 +8690,6 @@
     
     
   )
-  (zone (net 0) (net_name "") (layer Top) (tstamp 0) (hatch edge 0.508)
-    (connect_pads (clearance 0.3))
-    (min_thickness 0.254)
-    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
-    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
-    (polygon
-      (pts
-        (xy 150 71) (xy 151.9 71) (xy 152.9 72) (xy 152.9 74.5) (xy 150 74.5)
-      )
-    )
-  )
   (zone (net 31) (net_name BAT+) (layer Bottom) (tstamp 5D6563CF) (hatch edge 0.508)
     (priority 4)
     (connect_pads yes (clearance 0.3))

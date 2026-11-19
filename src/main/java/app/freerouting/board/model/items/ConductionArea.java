@@ -32,6 +32,8 @@ import java.util.TreeSet;
 /** A ObstacleArea, which can be electrically connected to other items. */
 public class ConductionArea extends ObstacleArea implements Connectable {
 
+  private static final long serialVersionUID = 9006217382369120553L;
+
   private static final double PLANE_HATCH_OPACITY = 0.85;
 
   private boolean isObstacle;
@@ -588,13 +590,8 @@ public class ConductionArea extends ObstacleArea implements Connectable {
       return true;
     }
     for (Item item : unconnectedSet) {
-      if (item instanceof ConductionArea ca) {
-        if (!ca.isFractured() && ca.reachesPinOfNet(netNo)) {
-          return false;
-        }
-        if (ca.isFractured() && ca.hasPinOnAnyIsland()) {
-          return false;
-        }
+      if (item instanceof ConductionArea ca && !ca.isFloatingFragment(netNo)) {
+        return false;
       }
     }
     for (Item item : connectedSet) {
@@ -605,15 +602,34 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     return true;
   }
 
+  /**
+   * Returns true if no pin of the net is reached from this conduction area: a fill piece that the
+   * net needs no connection to (see {@link #coversAllPlanesOfNet}).
+   */
+  public boolean isFloatingFragment(int netNo) {
+    if (isFractured()) {
+      return !hasPinOnAnyIsland(netNo);
+    }
+    return !reachesPinOfNet(netNo);
+  }
+
   /** Returns true if any island of this fractured conduction area contains a pin. */
   public boolean hasPinOnAnyIsland() {
+    return hasPinOnAnyIsland(0);
+  }
+
+  /**
+   * Returns true if any island of this fractured conduction area contains a pin belonging to {@code
+   * netNo} (or any pin when {@code netNo <= 0}).
+   */
+  public boolean hasPinOnAnyIsland(int netNo) {
     FastPlaneConnectivityGrid.PlaneFractureResult res = getFractureResult();
     if (res == null || !res.isFractured) {
       return false;
     }
     for (List<Item> island : res.islandItems.values()) {
       for (Item item : island) {
-        if (item instanceof Pin) {
+        if (item instanceof Pin && (netNo <= 0 || item.containsNet(netNo))) {
           return true;
         }
       }
