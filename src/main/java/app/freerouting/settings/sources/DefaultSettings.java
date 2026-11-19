@@ -260,6 +260,7 @@ public class DefaultSettings implements SettingsSource {
     settings.optimizer.itemSelectionStrategy = ItemSelectionStrategy.SEQUENTIAL;
     settings.optimizer.additionalRipupCostFactorAtStart = 10;
     settings.optimizer.keepIncreasedRipupCosts = false;
+    settings.optimizer.viaNudgeEnabled = false;
     settings.optimizer.traceRipupCostFactor = 0.6f;
     settings.optimizer.maxAutoroutePasses = 6;
     settings.optimizer.enablePreflightGuards = true;
