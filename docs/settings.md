@@ -284,6 +284,8 @@ Configures the SMD-pin fanout pre-pass stage.
 - **`max_escape_length_mm`**: The maximum physical escape trace length in millimeters. Default is `4.5`. Enforced directly during maze expansion.
 - **`start_via_diameter_mm`**: The diameter of starting/escape vias used inside the pins during the fanout/escape stage (in millimeters). Default is `0.25`.
 - **`end_via_diameter_mm`**: The diameter of landing/end vias used at the end of escaping wires during the fanout/escape stage (in millimeters). Default is `0.25`.
+- **`bga_escape_enabled`**: Enables the deterministic CPU multi-layer BGA escape pre-pass during fanout. When `true`, Freerouting detects area-array BGA footprints with at least `bga_escape_min_pins` SMD pins and escapes them with concentric Chebyshev ring peeling, 4-quadrant interstitial dogbones, and continuous DRC verification before the sequential SMD fanout pass runs. Default is `true`. CLI: `--router.fanout.bga_escape_enabled=true`.
+- **`bga_escape_min_pins`**: Minimum SMD pin count required for a component footprint to be handled by the multi-layer BGA escape pre-pass. Default is `9` (the geometric minimum for a $3 \times 3$ area-array lattice). CLI: `--router.fanout.bga_escape_min_pins=9`.
 - **`pin_sorting_order`**: Specifies the sorting order for pins within a component during fanout. Available strategies:
     - `"outer_first"` (Default): Pins further from the component center are processed first. This helps escape periphery pins early.
     - `"inner_first"`: Pins closer to the component center are processed first.

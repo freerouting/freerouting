@@ -246,6 +246,8 @@ public class DefaultSettings implements SettingsSource {
     settings.fanout.retryWithoutEscapeWindow = false;
     settings.fanout.strategy = "eager";
     settings.fanout.twoLayerBga = "no_fanout";
+    settings.fanout.bgaEscapeEnabled = true;
+    settings.fanout.bgaEscapeMinPins = 9;
 
     // Optimizer defaults
     settings.optimizer.enabled = true;
