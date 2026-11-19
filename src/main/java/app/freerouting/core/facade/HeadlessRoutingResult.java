@@ -35,10 +35,16 @@ public record HeadlessRoutingResult(
     String errorMessage,
     RoutingBoard board) {
 
+  /** Defensively copies collections and byte buffers to preserve immutability. */
   public HeadlessRoutingResult {
     clearanceViolations =
         clearanceViolations != null ? List.copyOf(clearanceViolations) : List.of();
-    sesBytes = sesBytes != null ? sesBytes : new byte[0];
+    sesBytes = sesBytes != null ? sesBytes.clone() : new byte[0];
+  }
+
+  @Override
+  public byte[] sesBytes() {
+    return sesBytes.clone();
   }
 
   @Override

@@ -287,4 +287,55 @@ class FreeroutingHeadlessEngineTest {
     assertEquals(res1, res2, "Results with identical data should be equal");
     assertEquals(res1.hashCode(), res2.hashCode(), "Hash codes should match for equal results");
   }
+
+  @Test
+  void testDefensiveByteArrayImmutability() {
+    byte[] input = "(pcb test)".getBytes(StandardCharsets.UTF_8);
+    byte[] originalCopy = input.clone();
+
+    HeadlessRoutingRequest request = HeadlessRoutingRequest.of(input);
+    input[0] = 'X';
+    assertEquals(
+        new String(originalCopy, StandardCharsets.UTF_8),
+        new String(request.dsnBytes(), StandardCharsets.UTF_8),
+        "Mutating caller array must not mutate request");
+
+    byte[] returned = request.dsnBytes();
+    returned[0] = 'Y';
+    assertEquals(
+        new String(originalCopy, StandardCharsets.UTF_8),
+        new String(request.dsnBytes(), StandardCharsets.UTF_8),
+        "Mutating accessor array must not mutate request");
+  }
+
+  @Test
+  void testDeterministicRoutingOutput() throws IOException {
+    byte[] dsnBytes;
+    try (var is = DsnTestFixtures.openResource(FIXTURE)) {
+      dsnBytes = is.readAllBytes();
+    }
+
+    RouterSettings overrides = new RouterSettings();
+    overrides.autorouter.maxPasses = 1;
+    overrides.autorouter.maxItems = 5;
+    overrides.setRunOptimizer(false);
+
+    HeadlessRoutingRequest request =
+        HeadlessRoutingRequest.builder()
+            .dsnBytes(dsnBytes)
+            .designName(FIXTURE)
+            .settings(overrides)
+            .runDrc(true)
+            .computeSes(true)
+            .build();
+
+    HeadlessRoutingResult first = FreeroutingHeadlessEngine.route(request);
+    HeadlessRoutingResult second = FreeroutingHeadlessEngine.route(request);
+
+    assertTrue(first.isSuccess());
+    assertTrue(second.isSuccess());
+    assertEquals(first.unroutedConnections(), second.unroutedConnections());
+    assertEquals(first.clearanceViolations().size(), second.clearanceViolations().size());
+    assertEquals(first.sesContent(), second.sesContent());
+  }
 }

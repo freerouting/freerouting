@@ -24,16 +24,29 @@ public record HeadlessRoutingRequest(
     boolean runDrc,
     boolean computeSes) {
 
+  /** Validates inputs and defensively copies byte buffers to preserve immutability. */
   public HeadlessRoutingRequest {
     if (dsnBytes == null || dsnBytes.length == 0) {
       throw new IllegalArgumentException("dsnBytes must not be null or empty");
     }
+    dsnBytes = dsnBytes.clone();
+    rulesBytes = rulesBytes != null ? rulesBytes.clone() : null;
     if (designName == null || designName.isBlank()) {
       designName = "design.dsn";
     }
     if (cancellationToken == null) {
       cancellationToken = CancellationToken.none();
     }
+  }
+
+  @Override
+  public byte[] dsnBytes() {
+    return dsnBytes.clone();
+  }
+
+  @Override
+  public byte[] rulesBytes() {
+    return rulesBytes != null ? rulesBytes.clone() : null;
   }
 
   @Override

@@ -59,9 +59,9 @@ public final class FreeroutingHeadlessEngine {
     }
 
     // 1. Parse DSN into RoutingBoard
+    byte[] dsnBytes = request.dsnBytes();
     BoardReadResult readResult =
-        DsnReader.readBoard(
-            new ByteArrayInputStream(request.dsnBytes()), null, null, request.designName());
+        DsnReader.readBoard(new ByteArrayInputStream(dsnBytes), null, null, request.designName());
 
     RoutingBoard board;
     if (readResult instanceof BoardReadResult.Success s) {
@@ -94,13 +94,13 @@ public final class FreeroutingHeadlessEngine {
     SettingsMerger settingsMerger =
         new SettingsMerger(
             new DefaultSettings(),
-            new DsnFileSettings(
-                new ByteArrayInputStream(request.dsnBytes()), request.designName()));
+            new DsnFileSettings(new ByteArrayInputStream(dsnBytes), request.designName()));
 
-    if (request.rulesBytes() != null && request.rulesBytes().length > 0) {
+    byte[] rulesBytes = request.rulesBytes();
+    if (rulesBytes != null && rulesBytes.length > 0) {
       settingsMerger.addOrReplaceSources(
           new RulesFileSettings(
-              new ByteArrayInputStream(request.rulesBytes()),
+              new ByteArrayInputStream(rulesBytes),
               request.rulesName() != null ? request.rulesName() : "rules.rules"));
     }
 
@@ -164,23 +164,32 @@ public final class FreeroutingHeadlessEngine {
 
             @Override
             public void beforeOptimization(BatchOptimizer optimizer) {
+              BoardStatistics stats = job.board.getStatistics();
+              int unrouted =
+                  stats != null && stats.connections != null
+                      ? stats.connections.incompleteCount
+                      : 0;
               notifyProgress(
                   request.progressListener(),
                   new HeadlessRoutingProgress(
-                      RoutingStage.OPTIMIZATION,
-                      0,
-                      0,
-                      job.board.getStatistics(),
-                      "Optimization stage started"));
+                      RoutingStage.OPTIMIZATION, 0, unrouted, stats, "Optimization stage started"));
             }
 
             @Override
             public void afterOptimization(BatchOptimizer optimizer) {
               BoardStatistics stats = job.board.getStatistics();
+              int unrouted =
+                  stats != null && stats.connections != null
+                      ? stats.connections.incompleteCount
+                      : 0;
               notifyProgress(
                   request.progressListener(),
                   new HeadlessRoutingProgress(
-                      RoutingStage.OPTIMIZATION, 0, 0, stats, "Optimization stage finished"));
+                      RoutingStage.OPTIMIZATION,
+                      0,
+                      unrouted,
+                      stats,
+                      "Optimization stage finished"));
             }
           });
     }
@@ -203,6 +212,8 @@ public final class FreeroutingHeadlessEngine {
     int unrouted =
         stats != null && stats.connections != null ? stats.connections.incompleteCount : 0;
 
+    String errorMessage = cancelled ? "Routing was cancelled" : null;
+
     // 7. Perform DRC if requested
     Collection<ClearanceViolation> violations = Collections.emptyList();
     if (request.runDrc() && !cancelled) {
@@ -210,23 +221,27 @@ public final class FreeroutingHeadlessEngine {
         violations = new DesignRulesChecker(board, null).getAllClearanceViolations();
       } catch (Exception e) {
         FRLogger.warn("DRC check encountered an error: " + e.getMessage());
+        errorMessage = "DRC check failed: " + e.getMessage();
       }
     }
 
     // 8. Serialize to SES if requested
     byte[] sesBytes = new byte[0];
-    if (request.computeSes()) {
+    if (request.computeSes() && !cancelled) {
       try {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         SesWriter.write(board, baos, request.designName());
         sesBytes = baos.toByteArray();
       } catch (Exception e) {
         FRLogger.error("Failed to serialize SES output", e);
+        if (errorMessage == null) {
+          errorMessage = "SES serialization failed: " + e.getMessage();
+        }
       }
     }
 
     long executionTimeMillis = System.currentTimeMillis() - startTime;
-    boolean completed = !cancelled && unrouted == 0 && violations.isEmpty();
+    boolean completed = !cancelled && errorMessage == null && unrouted == 0 && violations.isEmpty();
 
     return new HeadlessRoutingResult(
         completed,
@@ -236,19 +251,8 @@ public final class FreeroutingHeadlessEngine {
         stats,
         sesBytes,
         executionTimeMillis,
-        cancelled ? "Routing was cancelled" : null,
+        errorMessage,
         board);
-  }
-
-  private static void notifyProgress(
-      HeadlessRoutingProgressListener listener, HeadlessRoutingProgress progress) {
-    if (listener != null) {
-      try {
-        listener.onProgress(progress);
-      } catch (Throwable t) {
-        FRLogger.warn("Progress listener threw exception: " + t.getMessage());
-      }
-    }
   }
 
   /** Convenience method: routes a board given raw DSN bytes with default settings. */
@@ -264,6 +268,17 @@ public final class FreeroutingHeadlessEngine {
   /** Convenience method: routes a board given a DSN input stream with default settings. */
   public static HeadlessRoutingResult route(InputStream dsnStream) throws IOException {
     return route(HeadlessRoutingRequest.of(dsnStream));
+  }
+
+  private static void notifyProgress(
+      HeadlessRoutingProgressListener listener, HeadlessRoutingProgress progress) {
+    if (listener != null) {
+      try {
+        listener.onProgress(progress);
+      } catch (RuntimeException e) {
+        FRLogger.warn("Progress listener threw exception: " + e.getMessage());
+      }
+    }
   }
 
   /** Standalone DRC check for an in-memory routing board. */
