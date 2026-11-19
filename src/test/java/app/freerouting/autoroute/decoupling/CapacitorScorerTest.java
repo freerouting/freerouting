@@ -246,6 +246,12 @@ class CapacitorScorerTest {
     // Standard positive voltages
     assertTrue(CapacitorScorer.isPowerNetName("+1V0"));
     assertTrue(CapacitorScorer.isPowerNetName("+1V8"));
+    assertTrue(CapacitorScorer.isPowerNetName("+2V8"));
+    assertTrue(CapacitorScorer.isPowerNetName("+2v8"));
+    assertTrue(CapacitorScorer.isPowerNetName("2V8"));
+    assertTrue(CapacitorScorer.isPowerNetName("2v8"));
+    assertTrue(CapacitorScorer.isPowerNetName("+2.8V"));
+    assertTrue(CapacitorScorer.isPowerNetName("+2.8v"));
     assertTrue(CapacitorScorer.isPowerNetName("+3V3"));
     assertTrue(CapacitorScorer.isPowerNetName("+3.3V"));
     assertTrue(CapacitorScorer.isPowerNetName("+5V"));

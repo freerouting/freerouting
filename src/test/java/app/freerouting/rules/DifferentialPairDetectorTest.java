@@ -179,6 +179,12 @@ class DifferentialPairDetectorTest {
     assertTrue(DifferentialPairDetector.isExcludedNet("3.3V"));
     assertTrue(DifferentialPairDetector.isExcludedNet("3V3"));
     assertTrue(DifferentialPairDetector.isExcludedNet("1V8"));
+    assertTrue(DifferentialPairDetector.isExcludedNet("+2V8"));
+    assertTrue(DifferentialPairDetector.isExcludedNet("+2v8"));
+    assertTrue(DifferentialPairDetector.isExcludedNet("2V8"));
+    assertTrue(DifferentialPairDetector.isExcludedNet("2v8"));
+    assertTrue(DifferentialPairDetector.isExcludedNet("+2.8V"));
+    assertTrue(DifferentialPairDetector.isExcludedNet("+2.8v"));
     assertTrue(DifferentialPairDetector.isExcludedNet("5V0"));
     assertTrue(DifferentialPairDetector.isExcludedNet("+3V3"));
     assertTrue(DifferentialPairDetector.isExcludedNet("VDD"));

@@ -73,7 +73,7 @@ public final class DifferentialPairDetector {
     int lastSlash = upper.lastIndexOf('/');
     String localName = (lastSlash >= 0) ? upper.substring(lastSlash + 1) : upper;
 
-    // Direct power rail names and voltages (e.g. +5V, -12V, 3V3, 1V8, 5V)
+    // Direct power rail names and voltages (e.g. +5V, -12V, 3V3, 1V8, +2V8, +2v8, 5V)
     if (POWER_RAIL_PATTERN.matcher(localName).matches()) {
       return true;
     }
