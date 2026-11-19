@@ -85,6 +85,9 @@ public final class RoutingResultManifest {
 
   /** Per-stage duration and pass counts. */
   public static class PhaseMetrics {
+    @SerializedName("decoupling")
+    public DecouplingPhaseDetail decoupling;
+
     @SerializedName("fanout")
     public PhaseDetail fanout = new PhaseDetail();
 
@@ -153,6 +156,39 @@ public final class RoutingResultManifest {
 
     @SerializedName("peak_heap_mb")
     public Float peakHeapMb;
+  }
+
+  /** Metrics and telemetry for the decoupling capacitor pre-routing stage. */
+  public static class DecouplingPhaseDetail {
+    @SerializedName("duration_seconds")
+    public Float durationSeconds;
+
+    @SerializedName("cpu_seconds")
+    public Float cpuSeconds;
+
+    @SerializedName("candidates_total")
+    public int candidatesTotal;
+
+    @SerializedName("straps_routed")
+    public int strapsRouted;
+
+    @SerializedName("already_connected")
+    public int alreadyConnected;
+
+    @SerializedName("vias_placed")
+    public int viasPlaced;
+
+    @SerializedName("coupled_via_pairs")
+    public int coupledViaPairs;
+
+    @SerializedName("fallback_via_pairs")
+    public int fallbackViaPairs;
+
+    @SerializedName("failed")
+    public int failed;
+
+    @SerializedName("total_strap_length_mm")
+    public double totalStrapLengthMm;
   }
 
   /** Board metrics and calculated scores at a phase boundary. */

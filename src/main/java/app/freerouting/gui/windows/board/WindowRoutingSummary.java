@@ -103,16 +103,18 @@ public final class WindowRoutingSummary {
 
     // Statistics Rows
     gbc.gridwidth = 1;
+    int row = 2;
 
     // Total Nets
-    addStatRow(panel, gbc, 2, tm.getText("nets_total"), String.valueOf(summaryData.totalNets()));
+    addStatRow(
+        panel, gbc, row++, tm.getText("nets_total"), String.valueOf(summaryData.totalNets()));
 
     // Unrouted Connections
     String incompleteStr =
         summaryData.incompleteCount() == 0
             ? tm.getText("zero_incompletes", "0")
             : String.valueOf(summaryData.incompleteCount());
-    addStatRow(panel, gbc, 3, tm.getText("connections_incomplete"), incompleteStr);
+    addStatRow(panel, gbc, row++, tm.getText("connections_incomplete"), incompleteStr);
 
     // Clearance Violations (with max violation in brackets if > 0)
     String unitName =
@@ -129,39 +131,64 @@ public final class WindowRoutingSummary {
     } else {
       violationsStr = "0";
     }
-    addStatRow(panel, gbc, 4, tm.getText("clearance_violations"), violationsStr);
+    addStatRow(panel, gbc, row++, tm.getText("clearance_violations"), violationsStr);
 
     // Vias Added
-    addStatRow(panel, gbc, 5, tm.getText("vias_added"), String.valueOf(summaryData.viaCount()));
+    addStatRow(panel, gbc, row++, tm.getText("vias_added"), String.valueOf(summaryData.viaCount()));
 
     // Total Trace Length (lowercase unit)
     String lengthStr =
         String.format(Locale.US, "%,.2f %s", summaryData.totalTraceLength(), unitName);
-    addStatRow(panel, gbc, 6, tm.getText("trace_length"), lengthStr);
+    addStatRow(panel, gbc, row++, tm.getText("trace_length"), lengthStr);
 
     // Score (with 1000 = perfect explanation)
     String scoreStr = String.format(Locale.US, "%.2f / 1000 (1000 = perfect)", summaryData.score());
-    addStatRow(panel, gbc, 7, tm.getText("score"), scoreStr);
+    addStatRow(panel, gbc, row++, tm.getText("score"), scoreStr);
 
     // Execution Time
     String timeStr = String.format(Locale.US, "%.2f s", summaryData.durationSeconds());
-    addStatRow(panel, gbc, 8, tm.getText("execution_time"), timeStr);
+    addStatRow(panel, gbc, row++, tm.getText("execution_time"), timeStr);
+
+    // Optional Decoupling Pre-Routing Statistics
+    if (summaryData.decoupling() != null && summaryData.decoupling().candidatesTotal() > 0) {
+      var d = summaryData.decoupling();
+      gbc.gridx = 0;
+      gbc.gridy = row++;
+      gbc.gridwidth = 2;
+      panel.add(new JSeparator(), gbc);
+      gbc.gridwidth = 1;
+
+      // TODO: Notice the units and later come back and unify the units so they match user's choice
+      // of units.
+      String strapStr =
+          String.format(Locale.US, "%d (%,.2f mm)", d.strapsRouted(), d.totalStrapLengthMm());
+      addStatRow(panel, gbc, row++, tm.getText("decoupling_straps_routed"), strapStr);
+
+      String viaStr =
+          String.format(
+              Locale.US,
+              "%d (%d coupled, %d fallback)",
+              d.viasPlaced(),
+              d.coupledViaPairs(),
+              d.fallbackViaPairs());
+      addStatRow(panel, gbc, row++, tm.getText("decoupling_vias_placed"), viaStr);
+    }
 
     // Separator
     gbc.gridx = 0;
-    gbc.gridy = 9;
+    gbc.gridy = row++;
     gbc.gridwidth = 2;
     panel.add(new JSeparator(), gbc);
 
     // Thank you header
-    gbc.gridy = 10;
+    gbc.gridy = row++;
     gbc.anchor = GridBagConstraints.WEST;
     JLabel thankYouLabel = new JLabel(tm.getText("thank_you_title"));
     thankYouLabel.setFont(thankYouLabel.getFont().deriveFont(Font.BOLD, 13f));
     panel.add(thankYouLabel, gbc);
 
     // Word-wrapped sponsor message area (3 lines high, wraps nicely for long languages)
-    gbc.gridy = 11;
+    gbc.gridy = row++;
     JTextArea sponsorMsgArea = new JTextArea(tm.getText("sponsor_message"));
     sponsorMsgArea.setFont(UIManager.getFont("Label.font"));
     sponsorMsgArea.setLineWrap(true);
@@ -175,7 +202,7 @@ public final class WindowRoutingSummary {
     panel.add(sponsorMsgArea, gbc);
 
     // Sponsor Button (no emojis)
-    gbc.gridy = 12;
+    gbc.gridy = row++;
     gbc.fill = GridBagConstraints.NONE;
     gbc.anchor = GridBagConstraints.CENTER;
     JButton sponsorButton = new JButton(tm.getText("sponsor_button"));
@@ -196,12 +223,12 @@ public final class WindowRoutingSummary {
     panel.add(sponsorButton, gbc);
 
     // Separator
-    gbc.gridy = 13;
+    gbc.gridy = row++;
     gbc.fill = GridBagConstraints.HORIZONTAL;
     panel.add(new JSeparator(), gbc);
 
     // Bottom Controls (Checkbox + Close Button)
-    gbc.gridy = 14;
+    gbc.gridy = row++;
     gbc.gridwidth = 1;
     gbc.anchor = GridBagConstraints.WEST;
     JCheckBox showSummaryCheckbox = new JCheckBox(tm.getText("checkbox_show_summary"));

@@ -2,6 +2,8 @@ package app.freerouting.settings.sources;
 
 import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
+import app.freerouting.settings.DecouplingLockMode;
+import app.freerouting.settings.DecouplingSettings;
 import app.freerouting.settings.OptimizerScoringVersion;
 import app.freerouting.settings.RouterScoringVersion;
 import app.freerouting.settings.RouterSettings;
@@ -120,6 +122,32 @@ public class DefaultSettings implements SettingsSource {
 
   /** Default single sided constraint for meanders. */
   public static final boolean DEFAULT_MEANDER_SINGLE_SIDED = false;
+
+  /** Default maximum Euclidean radius in millimetres to search for decoupling owner IC pins. */
+  public static final double DEFAULT_DECOUPLING_MAX_OWNER_RADIUS_MM = 8.0;
+
+  /** Default maximum strap length in millimetres for decoupling cap-to-IC surface straps. */
+  public static final double DEFAULT_DECOUPLING_MAX_STRAP_LENGTH_MM = 4.0;
+
+  /** Default trace width scaling multiplier for low-inductance decoupling surface straps. */
+  public static final double DEFAULT_DECOUPLING_TRACE_WIDTH_SCALE = 1.5;
+
+  /**
+   * Default ripup cost multiplier for soft-locked decoupling items during main autoroute passes.
+   */
+  public static final double DEFAULT_DECOUPLING_RIPUP_COST_MULTIPLIER = 5.0;
+
+  /** Default maximum maze door expansions per decoupling connection attempt. */
+  public static final int DEFAULT_DECOUPLING_MAX_DOOR_EXPANSIONS = 250;
+
+  /** Default mutual-inductance via bias enabled state for decoupling via placement. */
+  public static final boolean DEFAULT_DECOUPLING_MUTUAL_INDUCTANCE_BIAS = true;
+
+  /** Default dimensionless weight factor applied to Euclidean distance from flank via target. */
+  public static final double DEFAULT_DECOUPLING_MUTUAL_INDUCTANCE_BIAS_WEIGHT = 0.2;
+
+  /** Default opposite-side SMD decoupling routing enabled state. */
+  public static final boolean DEFAULT_DECOUPLING_OPPOSITE_SIDE_ROUTING = true;
 
   /** Current default router score formula. */
   public static final RouterScoringVersion DEFAULT_ROUTER_SCORING_VERSION =
@@ -246,6 +274,21 @@ public class DefaultSettings implements SettingsSource {
     settings.fanout.retryWithoutEscapeWindow = false;
     settings.fanout.strategy = "eager";
     settings.fanout.twoLayerBga = "no_fanout";
+
+    // Decoupling pre-pass defaults (disabled by default for non-regression)
+    settings.decoupling = new DecouplingSettings();
+    settings.decoupling.enabled = false;
+    settings.decoupling.lockMode = DecouplingLockMode.SOFT;
+    settings.decoupling.maxOwnerRadiusMm = DEFAULT_DECOUPLING_MAX_OWNER_RADIUS_MM;
+    settings.decoupling.maxStrapLengthMm = DEFAULT_DECOUPLING_MAX_STRAP_LENGTH_MM;
+    settings.decoupling.traceWidthScale = DEFAULT_DECOUPLING_TRACE_WIDTH_SCALE;
+    settings.decoupling.ripupCostMultiplier = DEFAULT_DECOUPLING_RIPUP_COST_MULTIPLIER;
+    settings.decoupling.maxDoorExpansions = DEFAULT_DECOUPLING_MAX_DOOR_EXPANSIONS;
+    settings.decoupling.includeReviewCandidates = false;
+    settings.decoupling.mutualInductanceBias = DEFAULT_DECOUPLING_MUTUAL_INDUCTANCE_BIAS;
+    settings.decoupling.mutualInductanceBiasWeight =
+        DEFAULT_DECOUPLING_MUTUAL_INDUCTANCE_BIAS_WEIGHT;
+    settings.decoupling.oppositeSideRouting = DEFAULT_DECOUPLING_OPPOSITE_SIDE_ROUTING;
 
     // Optimizer defaults
     settings.optimizer.enabled = true;

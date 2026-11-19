@@ -109,4 +109,37 @@ class WindowRoutingSummaryA11yTest {
           GuiA11yHarness.requireNoLeakedGuiResources();
         });
   }
+
+  @Test
+  void formatsDecouplingSummaryMetrics() {
+    GlobalSettings settings = new GlobalSettings();
+    RoutingSummaryData.DecouplingSummaryItem decouplingItem =
+        new RoutingSummaryData.DecouplingSummaryItem(8, 6, 0, 12, 10, 2, 0, 12.45);
+    RoutingSummaryData data =
+        new RoutingSummaryData(
+            38, 0, 0, 0.0, 25, 500.0, Unit.MM, 15.2, 980.0f, false, decouplingItem);
+
+    JPanel panel =
+        GuiA11yHarness.onEdt(
+            () -> WindowRoutingSummary.createPanel(data, settings, Locale.US, () -> {}));
+
+    GuiA11yHarness.onEdt(
+        () -> {
+          boolean foundStraps = false;
+          boolean foundVias = false;
+          for (Component comp : panel.getComponents()) {
+            if (comp instanceof JLabel label) {
+              if ("6 (12.45 mm)".equals(label.getText())) {
+                foundStraps = true;
+              }
+              if ("12 (10 coupled, 2 fallback)".equals(label.getText())) {
+                foundVias = true;
+              }
+            }
+          }
+          assertTrue(foundStraps, "Expected decoupling straps label '6 (12.45 mm)'");
+          assertTrue(foundVias, "Expected decoupling vias label '12 (10 coupled, 2 fallback)'");
+          GuiA11yHarness.requireNoLeakedGuiResources();
+        });
+  }
 }

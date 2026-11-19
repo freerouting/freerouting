@@ -31,6 +31,26 @@ public class WindowAutorouteParameterState {
     return parsedValue > 0 ? parsedValue : oldValue;
   }
 
+  /**
+   * Normalizes and clamps a floating-point input object (Number or numeric String), handling both
+   * comma and dot decimal separators.
+   */
+  public static double normalizeDoubleInput(
+      Object input, double oldValue, double minValue, double maxValue) {
+    if (input instanceof Number number) {
+      return Math.clamp(number.doubleValue(), minValue, maxValue);
+    }
+    if (input instanceof String str && !str.isBlank()) {
+      try {
+        double parsed = Double.parseDouble(str.trim().replace(',', '.'));
+        return Math.clamp(parsed, minValue, maxValue);
+      } catch (NumberFormatException ignored) {
+        // Fall back to oldValue
+      }
+    }
+    return oldValue;
+  }
+
   public static String normalizeTimeoutInput(Object input, String oldValue) {
     if (!(input instanceof String stringValue)) {
       return oldValue;

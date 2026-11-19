@@ -386,6 +386,35 @@
       ]
     },
     {
+      "type": "app.freerouting.core.results.RoutingResultManifest$DecouplingPhaseDetail",
+      "fields": [
+        {
+          "name": "alreadyConnected"
+        },
+        {
+          "name": "candidatesTotal"
+        },
+        {
+          "name": "cpuSeconds"
+        },
+        {
+          "name": "durationSeconds"
+        },
+        {
+          "name": "failed"
+        },
+        {
+          "name": "strapsRouted"
+        },
+        {
+          "name": "totalStrapLengthMm"
+        },
+        {
+          "name": "viasPlaced"
+        }
+      ]
+    },
+    {
       "type": "app.freerouting.core.results.RoutingResultManifest$PhaseDetail",
       "fields": [
         {
@@ -416,6 +445,9 @@
       "fields": [
         {
           "name": "autorouter"
+        },
+        {
+          "name": "decoupling"
         },
         {
           "name": "fallback"
@@ -1195,6 +1227,54 @@
       "serializable": true
     },
     {
+      "type": "app.freerouting.settings.DecouplingLockMode"
+    },
+    {
+      "type": "app.freerouting.settings.DecouplingSettings",
+      "fields": [
+        {
+          "name": "enabled"
+        },
+        {
+          "name": "includeReviewCandidates"
+        },
+        {
+          "name": "lockMode"
+        },
+        {
+          "name": "maxOwnerRadiusMm"
+        },
+        {
+          "name": "maxStrapLengthMm"
+        },
+        {
+          "name": "traceWidthScale"
+        },
+        {
+          "name": "ripupCostMultiplier"
+        },
+        {
+          "name": "maxDoorExpansions"
+        },
+        {
+          "name": "mutualInductanceBias"
+        },
+        {
+          "name": "mutualInductanceBiasWeight"
+        },
+        {
+          "name": "oppositeSideRouting"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ],
+      "serializable": true
+    },
+    {
       "type": "app.freerouting.settings.FanoutSettings",
       "fields": [
         {
@@ -1750,6 +1830,9 @@
         },
         {
           "name": "copperToEdgeClearanceUm"
+        },
+        {
+          "name": "decoupling"
         },
         {
           "name": "fanout"

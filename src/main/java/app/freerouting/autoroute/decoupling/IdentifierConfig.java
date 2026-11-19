@@ -44,8 +44,10 @@ public record IdentifierConfig(
 
   private static final List<Pattern> DEFAULT_GROUND_PATTERNS =
       List.of(
-          Pattern.compile("(?i)^(GND|VSS|AGND|DGND|PGND|GNDA|GNDD|0V|EARTH|CHASSIS).*"),
-          Pattern.compile("(?i).*[._-](GND|VSS|AGND|DGND|PGND|0V)$"));
+          Pattern.compile(
+              "(?i)^(GND|VSS|AGND|DGND|PGND|GNDA|GNDD|GNDPWR|GNDREF|GNDS|VSSA|0V|V-0|V-GND|V-PE|PE|EARTH|CHASSIS|PWR_GND).*"),
+          Pattern.compile(
+              "(?i).*[._\\-/](GND|VSS|AGND|DGND|PGND|GNDA|GNDD|GNDPWR|GNDREF|GNDS|VSSA|0V|PE|EARTH|PWR_GND)$"));
 
   /** Creates a default configuration instance. */
   public static IdentifierConfig defaultConfig() {

@@ -2,11 +2,17 @@ package app.freerouting.autoroute.pipeline;
 
 import app.freerouting.autoroute.events.BoardUpdatedEventListener;
 import app.freerouting.autoroute.events.TaskStateChangedEventListener;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Trace;
+import app.freerouting.board.model.items.Via;
+import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingStage;
+import app.freerouting.settings.DecouplingLockMode;
 import app.freerouting.settings.RouterSettings;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 
 /** Sequences the shared fanout, autoroute, and optimization stages for a routing job. */
@@ -134,7 +140,9 @@ public final class RoutingPipeline {
             && (this.job.routerSettings.autorouter.maxPasses == null
                 || this.job.routerSettings.autorouter.maxPasses >= 0);
 
-    if (routerEnabled || this.job.routerSettings.isFanoutEnabled()) {
+    if (routerEnabled
+        || this.job.routerSettings.isFanoutEnabled()
+        || this.job.routerSettings.isDecouplingEnabled()) {
       this.job.stage = RoutingStage.ROUTING;
     }
 
@@ -166,7 +174,8 @@ public final class RoutingPipeline {
       if (RoutingSupervisor.explores(this.job.routerSettings)) {
         this.autorouter = fallback.explore(this.job, this.autorouter);
       }
-    } else if (this.job.routerSettings.isFanoutEnabled()
+    } else if ((this.job.routerSettings.isFanoutEnabled()
+            || this.job.routerSettings.isDecouplingEnabled())
         && !this.job.thread.isStopAutoRouterRequested()) {
       Integer originalMaxPasses = this.job.routerSettings.autorouter.maxPasses;
       try {
@@ -192,7 +201,42 @@ public final class RoutingPipeline {
     for (StageListener listener : this.stageListeners) {
       listener.beforeOptimization(this.optimizer);
     }
-    this.optimizer.runBatchLoop();
+
+    DecouplingLockMode decouplingLockMode =
+        (this.job.routerSettings != null
+                && this.job.routerSettings.decoupling != null
+                && this.job.routerSettings.decoupling.lockMode != null)
+            ? this.job.routerSettings.decoupling.lockMode
+            : DecouplingLockMode.SOFT;
+    boolean isDecouplingSoftLocked =
+        this.job.routerSettings != null
+            && this.job.routerSettings.isDecouplingEnabled()
+            && decouplingLockMode == DecouplingLockMode.SOFT;
+
+    Set<Item> elevatedSoftLockedItems = new java.util.HashSet<>();
+    if (isDecouplingSoftLocked && this.job.board != null) {
+      for (Item it : this.job.board.getItems()) {
+        if ((it instanceof Trace || it instanceof Via)
+            && it.isDecouplingProtected()
+            && it.getFixedState() == FixedState.UNFIXED) {
+          it.setFixedState(FixedState.SYSTEM_FIXED);
+          elevatedSoftLockedItems.add(it);
+        }
+      }
+    }
+
+    try {
+      this.optimizer.runBatchLoop();
+    } finally {
+      if (isDecouplingSoftLocked && this.job.board != null) {
+        for (Item it : elevatedSoftLockedItems) {
+          if (it.isOnTheBoard() && it.getFixedState() == FixedState.SYSTEM_FIXED) {
+            it.setFixedState(FixedState.UNFIXED);
+          }
+        }
+      }
+    }
+
     for (StageListener listener : this.stageListeners) {
       listener.afterOptimization(this.optimizer);
     }

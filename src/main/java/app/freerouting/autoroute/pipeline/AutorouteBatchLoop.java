@@ -12,9 +12,13 @@ import static app.freerouting.autoroute.pipeline.BatchAutorouter.STOP_AT_PASS_MO
 
 import app.freerouting.autoroute.BoardHistory;
 import app.freerouting.autoroute.PerformanceProfiler;
+import app.freerouting.autoroute.decoupling.BatchDecouplingRouter;
 import app.freerouting.autoroute.events.TaskStateChangedEvent;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Trace;
+import app.freerouting.board.model.items.Via;
+import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.core.RouterCounters;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
@@ -24,6 +28,7 @@ import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.settings.DecouplingLockMode;
 import app.freerouting.settings.RouterSettings;
 import java.time.Duration;
 import java.time.Instant;
@@ -91,6 +96,54 @@ final class AutorouteBatchLoop {
           router.settings.getPlaneViaCosts(),
           prefCosts,
           againstCosts);
+    }
+
+    if (router.settings.isDecouplingEnabled()) {
+      job.logInfo("Decoupling capacitor pre-routing pass started.");
+      Instant decapStart = Instant.now();
+      float decapCpuStart = AutorouteRuntimeMetrics.currentThreadCpuSeconds();
+      RouterCounters decapStartCounters = new RouterCounters();
+      decapStartCounters.phase = "decoupling";
+      decapStartCounters.queuedToBeRoutedCount = 0;
+      decapStartCounters.routedCount = 0;
+      decapStartCounters.failedToBeRoutedCount = 0;
+      decapStartCounters.fanoutExtraViasCount = 0;
+      router.fireBoardUpdatedEvent(
+          new BoardStatistics(router.board), decapStartCounters, router.board);
+
+      app.freerouting.autoroute.decoupling.DecouplingRoutingSummary summary =
+          BatchDecouplingRouter.run(router.board, router.settings, router.thread);
+      if (job.resultPhaseMetrics != null && summary != null) {
+        app.freerouting.core.results.RoutingResultManifest.DecouplingPhaseDetail phase =
+            new app.freerouting.core.results.RoutingResultManifest.DecouplingPhaseDetail();
+        phase.durationSeconds =
+            (float) (java.time.Duration.between(decapStart, Instant.now()).toMillis() / 1000.0);
+        float decapCpuEnd = AutorouteRuntimeMetrics.currentThreadCpuSeconds();
+        if (decapCpuStart >= 0f && decapCpuEnd >= decapCpuStart) {
+          phase.cpuSeconds = decapCpuEnd - decapCpuStart;
+        }
+        phase.candidatesTotal = summary.candidatesTotal();
+        phase.strapsRouted = summary.strapsRouted();
+        phase.alreadyConnected = summary.alreadyConnected();
+        phase.viasPlaced = summary.viasPlaced();
+        phase.coupledViaPairs = summary.coupledViaPairs();
+        phase.fallbackViaPairs = summary.fallbackViaPairs();
+        phase.failed = summary.failed();
+        phase.totalStrapLengthMm = summary.totalStrapLengthMm();
+        job.resultPhaseMetrics.decoupling = phase;
+      }
+      if (summary != null) {
+        RouterCounters decouplingCounters = new RouterCounters();
+        decouplingCounters.phase = "decoupling";
+        decouplingCounters.passCount = 1;
+        decouplingCounters.queuedToBeRoutedCount = summary.candidatesTotal();
+        decouplingCounters.routedCount = summary.strapsRouted();
+        decouplingCounters.failedToBeRoutedCount = summary.failed();
+        decouplingCounters.fanoutExtraViasCount = summary.viasPlaced();
+        BoardStatistics stats = new BoardStatistics(router.board);
+        decouplingCounters.incompleteCount = stats.connections.incompleteCount;
+        router.fireBoardUpdatedEvent(stats, decouplingCounters, router.board);
+      }
     }
 
     job.logDebug(
@@ -305,6 +358,33 @@ final class AutorouteBatchLoop {
     }
     boolean continueAutorouting = isRouterEnabled;
     if (isRouterEnabled) {
+      if (router.settings.isDecouplingEnabled()) {
+        java.util.Set<Integer> decouplingNets = new java.util.HashSet<>();
+        for (Item it : router.board.getItems()) {
+          if (it.isDecouplingProtected()) {
+            for (int n = 0; n < it.netCount(); n++) {
+              decouplingNets.add(it.getNetNumber(n));
+            }
+          }
+        }
+        for (int netNo : decouplingNets) {
+          router.board.normalizeTraces(netNo);
+        }
+        DecouplingLockMode lockMode =
+            (router.settings.decoupling != null && router.settings.decoupling.lockMode != null)
+                ? router.settings.decoupling.lockMode
+                : DecouplingLockMode.SOFT;
+        if (lockMode == DecouplingLockMode.SOFT) {
+          for (Item it : router.board.getItems()) {
+            if ((it instanceof Trace || it instanceof Via)
+                && it.isDecouplingProtected()
+                && it.getFixedState() == FixedState.SYSTEM_FIXED) {
+              it.setFixedState(FixedState.UNFIXED);
+            }
+          }
+        }
+      }
+
       router.passLoopStartHash = router.board.getHash();
       if (router.repeatsEarlierPassLoop(router.passLoopStartHash)) {
         router.lastStopReason = BatchAutorouter.StopReason.REPEATED;

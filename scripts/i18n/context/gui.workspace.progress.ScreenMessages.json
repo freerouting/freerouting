@@ -213,8 +213,75 @@
     "related_keys": [
       "batch_autoroute_add",
       "batch_autoroute_layer",
+      "batch_decoupling_add",
+      "batch_decoupling_layer",
+      "batch_decoupling_start_message",
       "batch_fanout_layer",
+      "batch_fanout_start_message",
       "batch_optimizer_start_message"
+    ],
+    "ui_role": "message"
+  },
+  "batch_decoupling_add": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.workspace.progress.ScreenMessages"
+    ],
+    "english_hash": "e515e84d43201d8db632f492d1fb9fb829abb8226a5a81297d3d5fa11e7e3ee4",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": true,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.workspace.progress.ScreenMessages",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [
+      "{{items_to_go}}",
+      "{{routed_count}}"
+    ],
+    "related_keys": [
+      "batch_decoupling_layer",
+      "batch_decoupling_start_message"
+    ],
+    "ui_role": "label"
+  },
+  "batch_decoupling_layer": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.workspace.progress.ScreenMessages"
+    ],
+    "english_hash": "c0b7620673f9c328fe519e346d777a3104261e460bb358a134bc699a78a76d75",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": true,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.workspace.progress.ScreenMessages",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [
+      "{{extra_vias}}",
+      "{{failed_count}}"
+    ],
+    "related_keys": [
+      "batch_decoupling_add",
+      "batch_decoupling_start_message"
+    ],
+    "ui_role": "label"
+  },
+  "batch_decoupling_start_message": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.workspace.progress.GuiRoutingJobWorker"
+    ],
+    "english_hash": "73d3dae991c0732500281d9dd92964c20e6feb86ecb6b8babe3e087da66a8f05",
+    "grammatical_role": "full_sentence",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.workspace.progress.ScreenMessages",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "batch_decoupling_add",
+      "batch_decoupling_layer"
     ],
     "ui_role": "message"
   },
@@ -235,12 +302,27 @@
       "{{failed_count}}"
     ],
     "related_keys": [
-      "batch_autoroute_add",
-      "batch_autoroute_layer",
-      "batch_autorouter_start_message",
-      "batch_optimizer_start_message"
+      "batch_fanout_start_message"
     ],
     "ui_role": "label"
+  },
+  "batch_fanout_start_message": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.workspace.progress.GuiRoutingJobWorker"
+    ],
+    "english_hash": "8a4892be3a13360f3220ee8e1809449152e1b1843c597dd7f70f7261873287e2",
+    "grammatical_role": "full_sentence",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.workspace.progress.ScreenMessages",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "batch_fanout_layer"
+    ],
+    "ui_role": "message"
   },
   "batch_optimizer_start_message": {
     "bundle_desc": "GUI (graphical user interface)",
@@ -259,7 +341,11 @@
       "batch_autoroute_add",
       "batch_autoroute_layer",
       "batch_autorouter_start_message",
-      "batch_fanout_layer"
+      "batch_decoupling_add",
+      "batch_decoupling_layer",
+      "batch_decoupling_start_message",
+      "batch_fanout_layer",
+      "batch_fanout_start_message"
     ],
     "ui_role": "message"
   },
@@ -422,6 +508,40 @@
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
+  },
+  "decoupling": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [],
+    "english_hash": "db6323108c11b3f464d00e8001d053a280cb80f5df433fb07e533a3979bb51d7",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.workspace.progress.ScreenMessages",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "decoupling_end_message": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.workspace.progress.GuiRoutingJobWorker"
+    ],
+    "english_hash": "875b8397afcc8c9f1770a975b24c6c3bc4545e72111eacf83d964d8bea31f01b",
+    "grammatical_role": "full_sentence",
+    "has_placeholders": true,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.workspace.progress.ScreenMessages",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [
+      "{{status}}"
+    ],
+    "related_keys": [
+      "decoupling"
+    ],
+    "ui_role": "message"
   },
   "drag_left_mouse_button_to_create_region_to_display": {
     "bundle_desc": "GUI (graphical user interface)",

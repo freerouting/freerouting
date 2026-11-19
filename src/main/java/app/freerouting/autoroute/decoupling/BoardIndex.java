@@ -36,7 +36,7 @@ public final class BoardIndex {
 
   private static final Pattern NON_CAP_NAME_PATTERN =
       Pattern.compile(
-          "(?i)^(R|RN|L|FB|FL|D|LED|Q|J|JP|HDR|P|TP|F|RV|MOV|Y|X|SW|K|T|VR|RESET|BTN)[0-9_].*");
+          "(?i)^(?:R|RN|RT|RP|L|FB|FL|BLM|IND|D|LED|Q|FET|TR|SW|S|BTN|KEY|TACT|PUSH|SWITCH|BUTTON|J|JP|HDR|P|TP|PIN|CONN|Y|X|XTAL|OSC|F|FUSE|RV|MOV|VR|RESET|K)[0-9_\\-].*");
 
   private final int[] componentIds;
   private final String[] componentNames;

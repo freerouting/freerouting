@@ -39,8 +39,44 @@ public final class CapacitorScorer {
 
   private static final Pattern RESISTOR_PATTERN = Pattern.compile("(?i)^(R|RN)[0-9_].*");
 
+  private static final Pattern NON_CAP_NAME_PATTERN =
+      Pattern.compile(
+          "(?i)^(?:R|RN|RT|RP|L|FB|FL|BLM|IND|D|LED|Q|FET|TR|SW|S|BTN|KEY|TACT|PUSH|SWITCH|BUTTON|J|JP|HDR|P|TP|PIN|CONN|Y|X|XTAL|OSC|F|FUSE|RV|MOV|VR|RESET|K)[0-9_\\-].*");
+
+  private static final Pattern POWER_NET_EXCLUDE_PATTERN =
+      Pattern.compile(
+          "(?i).*(?:PWR_FLAG|VSW|LINE|NEUT|EARTH|CHASSIS|GND|VSS|V-0|V-PE|V-[LN]|PRI_).*");
+
   private static final Pattern POWER_NET_PATTERN =
-      Pattern.compile("(?i).*(VDD|VCC|PWR|AVDD|VDDA|PLL|VAA|VCOM|VREF|CORE|POWER|BAT).*");
+      Pattern.compile(
+          "(?i)^(?:.*[._\\-/])?"
+              + "(?:[+-]?(?:\\d+[vV][a-z0-9]*|\\d+\\.\\d+[vV][a-z0-9]*|\\d+[cfpCFP])"
+              + "|V-[+-]"
+              + "|[+-]?(?:BATT?(?:ERY)?|VDC|VEE|VDD[a-z0-9]*|VCC[a-z0-9]*|AVDD[a-z0-9]*|VDDA[a-z0-9]*|VDDF[a-z0-9]*"
+              + "|VMEM[a-z0-9]*|VPP[a-z0-9]*|VCCQ[a-z0-9]*|VAA[a-z0-9]*|VAC|VCOM[a-z0-9]*|VREF[a-z0-9]*"
+              + "|VBUS[a-z0-9]*|CORE[a-z0-9]*|POWER[a-z0-9_]*|PWR[a-z0-9_]*|VDRIVE[a-z0-9]*|VD|VS|HT)"
+              + ")(?:[._\\-/].*)?$");
+
+  /** Returns true if the given net name conforms to standard EDA power rail naming conventions. */
+  public static boolean isPowerNetName(String netName) {
+    if (netName == null || netName.isEmpty()) {
+      return false;
+    }
+    if (POWER_NET_EXCLUDE_PATTERN.matcher(netName).matches()) {
+      return false;
+    }
+    return POWER_NET_PATTERN.matcher(netName).matches();
+  }
+
+  /**
+   * Returns true if the component reference designator indicates an explicit non-capacitor
+   * (resistor, diode, switch, inductor, connector, etc.).
+   */
+  public static boolean isNonCapacitorName(String compName) {
+    return compName != null
+        && !compName.isEmpty()
+        && NON_CAP_NAME_PATTERN.matcher(compName).matches();
+  }
 
   private CapacitorScorer() {}
 
@@ -138,6 +174,14 @@ public final class CapacitorScorer {
 
       EvaluationState state =
           new EvaluationState(compId, pinA, pinB, netA, netB, layer, padAreaA, padAreaB);
+
+      // Gate G0: Explicit non-capacitor reference designators (resistors, switches, diodes, etc.)
+      String compName = boardIndex.getComponentName(compId);
+      if (isNonCapacitorName(compName)) {
+        state.reasonMask |= ReasonCode.USER_EXCLUDED.mask();
+        states.add(state);
+        continue;
+      }
 
       // Gate G5: User exclusions
       if (config.forcedRejectComponents().contains(compId)) {
@@ -381,7 +425,7 @@ public final class CapacitorScorer {
                   && (railEv.capDegree() >= 2
                       || railEv.icCount() >= 2
                       || railEv.plane()
-                      || POWER_NET_PATTERN.matcher(railNetName).matches());
+                      || isPowerNetName(railNetName));
 
           boolean qualifies =
               isInductorOrBead

@@ -116,9 +116,14 @@ public class ScreenMessages {
   /** Updates the footer with batch autorouting progress. */
   public void setBatchAutorouteInfo(RouterCounters routerCounters) {
     requireEdt();
-    int itemsToGo = routerCounters.queuedToBeRoutedCount;
-    int routed = routerCounters.routedCount;
-    int failed = routerCounters.failedToBeRoutedCount;
+    if (routerCounters == null) {
+      return;
+    }
+    int itemsToGo =
+        routerCounters.queuedToBeRoutedCount == null ? 0 : routerCounters.queuedToBeRoutedCount;
+    int routed = routerCounters.routedCount == null ? 0 : routerCounters.routedCount;
+    int failed =
+        routerCounters.failedToBeRoutedCount == null ? 0 : routerCounters.failedToBeRoutedCount;
     if ("fanout".equals(routerCounters.phase)) {
       int extraVias =
           routerCounters.fanoutExtraViasCount == null ? 0 : routerCounters.fanoutExtraViasCount;
@@ -128,7 +133,16 @@ public class ScreenMessages {
           tm.getText("batch_fanout_layer", String.valueOf(failed), String.valueOf(extraVias)));
       return;
     }
-    int ripped = routerCounters.rippedCount;
+    if ("decoupling".equals(routerCounters.phase)) {
+      int vias =
+          routerCounters.fanoutExtraViasCount == null ? 0 : routerCounters.fanoutExtraViasCount;
+      addField.setText(
+          tm.getText("batch_decoupling_add", String.valueOf(itemsToGo), String.valueOf(routed)));
+      layerField.setText(
+          tm.getText("batch_decoupling_layer", String.valueOf(failed), String.valueOf(vias)));
+      return;
+    }
+    int ripped = routerCounters.rippedCount == null ? 0 : routerCounters.rippedCount;
     addField.setText(
         tm.getText("batch_autoroute_add", String.valueOf(itemsToGo), String.valueOf(routed)));
     layerField.setText(

@@ -4,7 +4,9 @@ import app.freerouting.autoroute.AutorouteAttemptResult;
 import app.freerouting.autoroute.AutorouteAttemptState;
 import app.freerouting.autoroute.AutorouteDiagnostic;
 import app.freerouting.autoroute.ItemAutorouteInfo;
+import app.freerouting.autoroute.drill.DrillPage;
 import app.freerouting.autoroute.drill.DrillPageArray;
+import app.freerouting.autoroute.drill.ExpansionDrill;
 import app.freerouting.autoroute.expansion.CompleteExpansionRoom;
 import app.freerouting.autoroute.expansion.CompleteFreeSpaceExpansionRoom;
 import app.freerouting.autoroute.expansion.ExpansionDoor;
@@ -384,7 +386,9 @@ public class AutorouteEngine {
   /** Removes an incomplete room from the database. */
   public void removeIncompleteExpansionRoom(IncompleteFreeSpaceExpansionRoom room) {
     this.removeAllDoors(room);
-    incompleteExpansionRooms.remove(room);
+    if (this.incompleteExpansionRooms != null) {
+      this.incompleteExpansionRooms.remove(room);
+    }
   }
 
   /**
@@ -693,6 +697,25 @@ public class AutorouteEngine {
       }
     }
     this.drillPageArray.reset();
+  }
+
+  /**
+   * Probes whether a legal via can be placed within the given expansion room shape without DRC
+   * violations.
+   */
+  public boolean probeLegalViaPlacement(TileShape shape) {
+    if (this.drillPageArray == null || shape == null) {
+      return false;
+    }
+    Collection<DrillPage> pages = this.drillPageArray.overlappingPages(shape);
+    for (DrillPage page : pages) {
+      for (ExpansionDrill drill : page.getDrills(this, true)) {
+        if (shape.contains(drill.location) && drill.calculateExpansionRooms(this)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   /** Returns the next expansion room identifier. */
