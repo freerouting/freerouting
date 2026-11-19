@@ -21,8 +21,8 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Regression test for Issue #1161: the step slide pass straightens a bundle routed at the clearance
- * without making the board worse, gives the same board on every run, leaves a zone alone, and is
- * off unless {@code optimizer.step_slide_enabled} is set.
+ * without making the board worse, gives the same board on every run, leaves a zone alone, and is on
+ * by default unless {@code optimizer.step_slide_enabled} is set to {@code false}.
  *
  * <p>{@code Issue1161-bundle-staircase-garland.dsn} is a bundle of 16 traces on one layer, as the
  * router of master left it: where two groups of traces join on a 45 degree run, each trace changes
