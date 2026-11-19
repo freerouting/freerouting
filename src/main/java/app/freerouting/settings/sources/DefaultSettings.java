@@ -257,7 +257,7 @@ public class DefaultSettings implements SettingsSource {
     settings.optimizer.maxPasses = 100;
     settings.optimizer.maxItems = Integer.MAX_VALUE;
     settings.optimizer.maxThreads = null;
-    settings.optimizer.optimizationImprovementThreshold = DEFAULT_OPTIMIZER_IMPROVEMENT_THRESHOLD;
+    settings.optimizer.optimizationImprovementThreshold = null;
     settings.optimizer.boardUpdateStrategy = BoardUpdateStrategy.GLOBAL_OPTIMAL;
     settings.optimizer.itemSelectionStrategy = ItemSelectionStrategy.SEQUENTIAL;
     settings.optimizer.additionalRipupCostFactorAtStart = 10;

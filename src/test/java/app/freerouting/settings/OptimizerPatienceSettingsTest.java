@@ -97,4 +97,27 @@ class OptimizerPatienceSettingsTest {
     settings.setOptimizerMaxPasses(15);
     assertEquals(15, settings.getOptimizerMaxPasses());
   }
+
+  @Test
+  void jsonSettingsDeserializesLowercasePatiencePresets() {
+    OptimizerSettings patient =
+        app.freerouting.util.gson.GsonProvider.GSON.fromJson(
+            "{\"patience\":\"patient\"}", OptimizerSettings.class);
+    assertEquals(OptimizerPatience.PATIENT, patient.patience);
+
+    OptimizerSettings exhaustive =
+        app.freerouting.util.gson.GsonProvider.GSON.fromJson(
+            "{\"patience\":\"exhaustive\"}", OptimizerSettings.class);
+    assertEquals(OptimizerPatience.EXHAUSTIVE, exhaustive.patience);
+
+    OptimizerSettings balanced =
+        app.freerouting.util.gson.GsonProvider.GSON.fromJson(
+            "{\"patience\":\"balanced\"}", OptimizerSettings.class);
+    assertEquals(OptimizerPatience.BALANCED, balanced.patience);
+
+    OptimizerSettings uppercase =
+        app.freerouting.util.gson.GsonProvider.GSON.fromJson(
+            "{\"patience\":\"PATIENT\"}", OptimizerSettings.class);
+    assertEquals(OptimizerPatience.PATIENT, uppercase.patience);
+  }
 }

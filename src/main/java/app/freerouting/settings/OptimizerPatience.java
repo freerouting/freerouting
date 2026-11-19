@@ -1,23 +1,34 @@
 package app.freerouting.settings;
 
+import com.google.gson.annotations.SerializedName;
+
 /** Preset profiles for post-routing optimizer termination and candidate sweep patience. */
 public enum OptimizerPatience {
   /**
    * Fast interactive optimization with early canary stops (default: 2.50% improvement threshold, 12
    * consecutive failures in pass 1, 50 in subsequent passes).
    */
+  @SerializedName(
+      value = "BALANCED",
+      alternate = {"balanced", "Balanced"})
   BALANCED("Balanced (Fast)", 2.50f, 12, 50),
 
   /**
    * Patient optimization for congested designs (0.50% improvement threshold, 100 consecutive
    * failures in pass 1, 250 in subsequent passes).
    */
+  @SerializedName(
+      value = "PATIENT",
+      alternate = {"patient", "Patient"})
   PATIENT("Patient (Congested)", 0.50f, 100, 250),
 
   /**
    * Exhaustive optimization evaluating all candidate items across every pass (0.00% threshold, 0 /
    * unlimited consecutive failures). Runs until max passes or timeout.
    */
+  @SerializedName(
+      value = "EXHAUSTIVE",
+      alternate = {"exhaustive", "Exhaustive"})
   EXHAUSTIVE("Exhaustive (All Items)", 0.00f, 0, 0);
 
   private final String displayName;
