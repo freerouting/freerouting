@@ -126,6 +126,21 @@ public class FanoutSettings implements Serializable, Cloneable {
   @SerializedName("timeout")
   public String timeoutString;
 
+  /**
+   * Whether the deterministic multi-layer BGA escape pre-pass is enabled during fanout. When {@code
+   * true}, dense area-array BGA footprints are escaped with ring-peeled dogbone vias and breakout
+   * traces before the sequential SMD fanout pass runs.
+   */
+  @SerializedName("bga_escape_enabled")
+  public Boolean bgaEscapeEnabled;
+
+  /**
+   * Minimum SMD pin count required on an area-array component to be handled by the multi-layer BGA
+   * escape pre-pass.
+   */
+  @SerializedName("bga_escape_min_pins")
+  public Integer bgaEscapeMinPins;
+
   /** No-arg constructor required for deserialisation and {@link #clone()}. */
   public FanoutSettings() {}
 
