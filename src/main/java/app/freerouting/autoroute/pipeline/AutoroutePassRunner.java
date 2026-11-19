@@ -6,6 +6,9 @@ import app.freerouting.autoroute.AutorouteAttemptResult;
 import app.freerouting.autoroute.AutorouteAttemptState;
 import app.freerouting.autoroute.DesignBlocks;
 import app.freerouting.autoroute.PerformanceProfiler;
+import app.freerouting.autoroute.scope.ForeignTracePolicy;
+import app.freerouting.autoroute.scope.RoutingScopeContext;
+import app.freerouting.autoroute.scope.ScopedRouteCheckpoint;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Pin;
@@ -173,16 +176,120 @@ final class AutoroutePassRunner {
           if (currentRouteNet != null && !currentRouteNet.containsPlane()) {
             failedPairKey = FailedConnectionPair.of(currentItem, currentNetNo);
           }
-          final AutorouteAttemptResult autorouterResult;
-          if (failedPairKey != null && zeroRipupFailedPairs.containsKey(failedPairKey)) {
-            autorouterResult =
-                new AutorouteAttemptResult(
-                    AutorouteAttemptState.FAILED,
-                    "Skipped reverse attempt in same pass (pair already failed with 0 ripups).");
-          } else {
-            autorouterResult =
-                router.autorouteItem(
-                    currentItem, currentNetNo, rippedItemList, rippedItemCosts, passNo);
+          AutorouteAttemptResult autorouterResult;
+          RoutingScopeContext scopeContext = router.board.getRoutingScopeContext();
+          boolean tier2Active =
+              scopeContext != null
+                  && scopeContext.isActive()
+                  && passNo > scopeContext.getNudgeOnlyPasses()
+                  && scopeContext.getForeignTracePolicy()
+                      == ForeignTracePolicy.NUDGE_THEN_CONDITIONAL_RIPUP;
+
+          try (ScopedRouteCheckpoint checkpoint =
+              tier2Active ? ScopedRouteCheckpoint.capture(router.board) : null) {
+            int maxItemIdBeforeAttempt = router.board.communication.idGenerator.maxGeneratedId();
+
+            if (failedPairKey != null && zeroRipupFailedPairs.containsKey(failedPairKey)) {
+              autorouterResult =
+                  new AutorouteAttemptResult(
+                      AutorouteAttemptState.FAILED,
+                      "Skipped reverse attempt in same pass (pair already failed with 0 ripups).");
+              if (checkpoint != null) {
+                checkpoint.rollback();
+              }
+            } else {
+              autorouterResult =
+                  router.autorouteItem(
+                      currentItem, currentNetNo, rippedItemList, rippedItemCosts, passNo);
+
+              if (checkpoint != null) {
+                List<Item> rippedForeignItems = new ArrayList<>();
+                for (Item ripped : rippedItemList) {
+                  if (scopeContext.isForeignProtectedItem(ripped)) {
+                    rippedForeignItems.add(ripped);
+                  }
+                }
+
+                if (rippedForeignItems.isEmpty()) {
+                  checkpoint.commit();
+                } else if (autorouterResult.state != AutorouteAttemptState.ROUTED) {
+                  checkpoint.rollback();
+                  autorouterResult =
+                      new AutorouteAttemptResult(
+                          AutorouteAttemptState.FAILED,
+                          "Tier 2 attempt aborted: anchor route failed after ripping foreign copper.");
+                  rippedItemList.clear();
+                } else {
+                  for (Item boardItem : router.board.getItems()) {
+                    if (boardItem != null && boardItem.getId() > maxItemIdBeforeAttempt) {
+                      scopeContext.shieldAnchorItem(boardItem.getId());
+                    }
+                  }
+
+                  scopeContext.setInForeignRecoverySubPass(true);
+                  boolean recoverySuccessful = true;
+                  try {
+                    Set<Integer> recoveredNets = new HashSet<>();
+                    for (Item foreignItem : rippedForeignItems) {
+                      for (int fn = 0; fn < foreignItem.netCount(); fn++) {
+                        int foreignNetNo = foreignItem.getNetNumber(fn);
+                        if (recoveredNets.add(foreignNetNo)) {
+                          for (Item unconn : router.board.getConnectableItems(foreignNetNo)) {
+                            if (!unconn.getUnconnectedSet(foreignNetNo).isEmpty()) {
+                              SortedSet<Item> recRipped = new TreeSet<>();
+                              Map<Item, Integer> recCosts = new java.util.HashMap<>();
+                              router.autorouteItem(
+                                  unconn, foreignNetNo, recRipped, recCosts, passNo);
+                            }
+                          }
+                        }
+                      }
+                    }
+
+                    for (int foreignNetNo : recoveredNets) {
+                      int baseline = scopeContext.getBaselineConnectedSetCount(foreignNetNo);
+                      if (baseline > 0
+                          && router.board.getConnectedSets(foreignNetNo).size() > baseline) {
+                        recoverySuccessful = false;
+                        break;
+                      }
+                    }
+
+                    if (recoverySuccessful) {
+                      AutorouteAttemptResult drcRejection =
+                          BatchAutorouter.enforceStrictDrc(
+                              router.board, currentNetNo, maxItemIdBeforeAttempt);
+                      if (drcRejection != null) {
+                        recoverySuccessful = false;
+                      } else {
+                        for (int foreignNetNo : recoveredNets) {
+                          drcRejection =
+                              BatchAutorouter.enforceStrictDrc(
+                                  router.board, foreignNetNo, maxItemIdBeforeAttempt);
+                          if (drcRejection != null) {
+                            recoverySuccessful = false;
+                            break;
+                          }
+                        }
+                      }
+                    }
+                  } finally {
+                    scopeContext.clearAnchorShieldAndRecoveryMode();
+                  }
+
+                  if (!recoverySuccessful) {
+                    checkpoint.rollback();
+                    autorouterResult =
+                        new AutorouteAttemptResult(
+                            AutorouteAttemptState.FAILED,
+                            "Tier 2 attempt rolled back: displaced foreign net could not be recovered cleanly.");
+                    rippedItemList.clear();
+                  } else {
+                    checkpoint.commit();
+                  }
+                }
+              }
+            }
           }
           PerformanceProfiler.end("autoroute_item");
           if (!rippedItemList.isEmpty()) {

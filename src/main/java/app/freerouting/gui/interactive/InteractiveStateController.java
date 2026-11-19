@@ -153,6 +153,7 @@ public final class InteractiveStateController implements EditorStateController {
     } else if (currentState instanceof InspectedItemState inspectedState) {
       inspectedState.getItemList().clear();
       inspectedState.getItemList().addAll(items);
+      inspectedState.syncScopeFromSelection();
       boardManager.repaint();
     }
   }

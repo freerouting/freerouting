@@ -92,6 +92,9 @@ public final class GuiLocators {
   public static final String INSPECT_EXTEND_CONNECTIONS = "inspect.extend.connections";
   public static final String INSPECT_EXTEND_COMPONENTS = "inspect.extend.components";
 
+  /** Inspect toolbar selective route action. */
+  public static final String INSPECT_ROUTE_COMPONENTS = "inspect.route.components";
+
   /** Inspect toolbar violations toggle. */
   public static final String INSPECT_VIOLATIONS = "inspect.violations";
 

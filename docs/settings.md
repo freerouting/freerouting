@@ -291,6 +291,25 @@ Configures the SMD-pin fanout pre-pass stage.
     - `"surroundings_density"`: Measured by the count of SMD pins within a 20 mm proximity radius. Denser areas are processed first, allowing congested pins to escape before space is occupied.
     - `"unsorted"`: Pins are processed by pin number sequence.
 
+##### **`scope` Sub-section**
+
+Configures selective component-scoped routing across fanout, autorouting, and optimization.
+
+- **`components`**: Array of component reference designators to route selectively (e.g. `["U1", "U2", "C14"]`). Trims whitespace and matches case-insensitively against board components. Passing empty or `"NONE"` runs full-board routing. Canonical CLI is `--router.scope.components=U1,U2` (short alias `-sc U1,U2`, environment variable `FREEROUTING__ROUTER__SCOPE__COMPONENTS`).
+- **`multi_pin_policy`**: Routing policy for 3+ pin signal nets spanning selected and unselected components. Options:
+    - `"anchor_to_nearest"` (Default): Connects selected anchor pins into the net or to the nearest pre-existing copper trunk/pad without routing unrelated external gaps between unselected pins.
+    - `"full_net"`: Routes the complete net across all pins (selected and unselected).
+    - `"mutual_only"`: Connects only selected anchor pins to each other, skipping external unselected pins.
+    Canonical CLI: `--router.scope.multi_pin_policy=anchor_to_nearest`.
+- **`foreign_trace_policy`**: Handling policy for non-selected `UNFIXED` traces and vias. Options:
+    - `"nudge_then_conditional_ripup"` (Default): Restricts initial passes to lossless push-and-shove nudging. In later passes, allows conditional rip-up with a penalty multiplier and transactional recovery/rollback.
+    - `"nudge_only"`: Foreign traces may be shoved aside, but never ripped up or deleted.
+    - `"fixed"`: Strictly freezes foreign traces (`isShoveFixed()`), forbidding shove and rip-up.
+    Canonical CLI: `--router.scope.foreign_trace_policy=nudge_then_conditional_ripup`.
+- **`foreign_ripup_cost_multiplier`**: Cost multiplier applied when expanding through an unfixed foreign item in Tier 2 conditional rip-up. Default is `10.0`. Canonical CLI: `--router.scope.foreign_ripup_cost_multiplier=10.0`.
+- **`nudge_only_passes`**: Number of initial autorouter passes restricted strictly to Tier 1 push-and-shove nudging before Tier 2 conditional rip-up is permitted. Default is `2`. Canonical CLI: `--router.scope.nudge_only_passes=2`.
+- **`include_decoupling_companions`**: Automatically enrolls high-confidence decoupling capacitors identified by `DecouplingIdentifier` that belong to selected components. Default is `false`. Canonical CLI: `--router.scope.include_decoupling_companions=true`.
+
 #### **`usage_and_diagnostic_data` Section**
 
 - **`disable_analytics`**: Disables sending anonymous usage and diagnostic data.

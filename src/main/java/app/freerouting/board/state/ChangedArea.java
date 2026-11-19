@@ -78,6 +78,24 @@ public class ChangedArea {
     arr[layer].setEmpty();
   }
 
+  /** Creates a deep copy of this changed area. */
+  public ChangedArea copy() {
+    ChangedArea result = new ChangedArea(this.layerCount);
+    for (int i = 0; i < this.layerCount; i++) {
+      MutableOctagon src = this.arr[i];
+      MutableOctagon dst = result.arr[i];
+      dst.lx = src.lx;
+      dst.ly = src.ly;
+      dst.rx = src.rx;
+      dst.uy = src.uy;
+      dst.ulx = src.ulx;
+      dst.lrx = src.lrx;
+      dst.llx = src.llx;
+      dst.urx = src.urx;
+    }
+    return result;
+  }
+
   /** Mutable octagon with double coordinates (see geometry.planar.IntOctagon). */
   private static class MutableOctagon {
 

@@ -35,12 +35,49 @@ public final class InspectedItemState extends InteractiveState {
     if (itemList.isEmpty()) {
       return null;
     }
-    return new InspectedItemState(itemList, parentState, boardHandling);
+    InspectedItemState instance = new InspectedItemState(itemList, parentState, boardHandling);
+    instance.syncScopeFromSelection();
+    return instance;
+  }
+
+  /** Synchronizes the active component scope from the currently selected items. */
+  public void syncScopeFromSelection() {
+    if (this.hdlg instanceof app.freerouting.gui.workspace.WorkspaceContract gui) {
+      String[] compNames =
+          app.freerouting.gui.SelectionScopeResolver.extractComponentNames(
+              this.itemList, this.hdlg.getRoutingBoard());
+      if (compNames.length > 0) {
+        gui.getWorkspaceSettings().setScopeComponentsFromSelection(compNames);
+      }
+    }
+  }
+
+  /** Clears the scope if it was automatically set from selection. */
+  public void clearScopeFromSelection() {
+    if (this.hdlg instanceof app.freerouting.gui.workspace.WorkspaceContract gui) {
+      gui.getWorkspaceSettings().clearScopeFromSelection();
+    }
+  }
+
+  @Override
+  public InteractiveState cancel() {
+    clearScopeFromSelection();
+    return this.returnState;
   }
 
   /** Gets the list of the currently selected items. */
   public Collection<Item> getItemList() {
     return itemList;
+  }
+
+  @Override
+  public Collection<Item> getSelectedItems() {
+    return this.itemList != null ? this.itemList : java.util.Collections.emptyList();
+  }
+
+  @Override
+  public boolean hasSelection() {
+    return this.itemList != null && !this.itemList.isEmpty();
   }
 
   @Override
@@ -89,9 +126,11 @@ public final class InspectedItemState extends InteractiveState {
     }
     this.itemList = newSelectedItems;
     if (newSelectedItems.isEmpty()) {
+      clearScopeFromSelection();
       return this.returnState;
     }
     filter();
+    syncScopeFromSelection();
     hdlg.repaint();
     return this;
   }
@@ -111,9 +150,11 @@ public final class InspectedItemState extends InteractiveState {
       newSelectedItems.addAll(hdlg.getRoutingBoard().getComponentItems(currentGroupNo));
     }
     if (newSelectedItems.isEmpty()) {
+      clearScopeFromSelection();
       return this.returnState;
     }
     this.itemList = newSelectedItems;
+    syncScopeFromSelection();
     hdlg.repaint();
     return this;
   }
@@ -127,10 +168,12 @@ public final class InspectedItemState extends InteractiveState {
       }
     }
     if (newSelectedItems.isEmpty()) {
+      clearScopeFromSelection();
       return this.returnState;
     }
     this.itemList = newSelectedItems;
     filter();
+    syncScopeFromSelection();
     hdlg.repaint();
     return this;
   }
@@ -144,10 +187,12 @@ public final class InspectedItemState extends InteractiveState {
       }
     }
     if (newSelectedItems.isEmpty()) {
+      clearScopeFromSelection();
       return this.returnState;
     }
     this.itemList = newSelectedItems;
     filter();
+    syncScopeFromSelection();
     hdlg.repaint();
     return this;
   }
@@ -170,13 +215,15 @@ public final class InspectedItemState extends InteractiveState {
         this.itemList.add(pickedItem);
       }
     }
-    hdlg.repaint();
     InteractiveState result;
     if (stateEnded) {
+      clearScopeFromSelection();
       result = this.returnState;
     } else {
+      syncScopeFromSelection();
       result = this;
     }
+    hdlg.repaint();
     return result;
   }
 
@@ -199,7 +246,10 @@ public final class InspectedItemState extends InteractiveState {
     itemList = hdlg.getWorkspaceSettings().getItemSelectionFilter().filter(itemList);
     InteractiveState result = this;
     if (itemList.isEmpty()) {
+      clearScopeFromSelection();
       result = this.returnState;
+    } else {
+      syncScopeFromSelection();
     }
     hdlg.repaint();
     return result;

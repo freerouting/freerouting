@@ -1,6 +1,7 @@
 package app.freerouting.autoroute.pipeline;
 
 import app.freerouting.autoroute.AutorouteAttemptResult;
+import app.freerouting.autoroute.scope.RoutingScopeContext;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.structure.Component;
@@ -59,14 +60,23 @@ public final class BatchFanout {
         boardSmdPinListWithNets.add(pin);
       }
     }
+    RoutingScopeContext scopeContext = routingBoard.getRoutingScopeContext();
     this.sortedComponents = new TreeSet<>();
-    for (int i = 1; i <= routingBoard.components.count(); ++i) {
-      app.freerouting.board.model.structure.Component currentBoardComponent =
-          routingBoard.components.get(i);
-      Component currentComponent =
-          new Component(currentBoardComponent, boardSmdPinListWithNets, sortingOrder, routingBoard);
-      if (currentComponent.smdPinCount > 0) {
-        sortedComponents.add(currentComponent);
+    if (scopeContext == null || !scopeContext.isNoOp()) {
+      for (int i = 1; i <= routingBoard.components.count(); ++i) {
+        app.freerouting.board.model.structure.Component currentBoardComponent =
+            routingBoard.components.get(i);
+        if (scopeContext != null
+            && scopeContext.isActive()
+            && !scopeContext.isComponentSelected(currentBoardComponent.id)) {
+          continue;
+        }
+        Component currentComponent =
+            new Component(
+                currentBoardComponent, boardSmdPinListWithNets, sortingOrder, routingBoard);
+        if (currentComponent.smdPinCount > 0) {
+          sortedComponents.add(currentComponent);
+        }
       }
     }
     int pinCount = 0;
@@ -155,6 +165,10 @@ public final class BatchFanout {
       RouterSettings settings,
       StoppableThread thread,
       FanoutProgressListener progressListener) {
+    RoutingScopeContext scopeContext = board.getRoutingScopeContext();
+    if (scopeContext != null && scopeContext.isNoOp()) {
+      return new FanoutRunSummary(0, 0, new EscapeStatistics(0, 0, 0.0), false);
+    }
     if (settings.usesDirectPinRouting()) {
       return DirectPinRouting.run(board, settings, thread);
     }

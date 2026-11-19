@@ -58,6 +58,9 @@ public class GraphicsContext implements Serializable {
   private boolean[] virtualLayerVisibilityArr = createDefaultVirtualLayerVisibilityArr();
   private int fullyVisibleVirtualLayer = -1;
 
+  /** Lock-free EDT mask for active scope rendering/dimming. */
+  private transient volatile app.freerouting.autoroute.scope.RoutingScopeMask activeScopeMask;
+
   /** When true, copper pours use fast solid fills (used during the first paint after load). */
   private transient boolean simplifiedPlaneRendering;
 
@@ -95,6 +98,16 @@ public class GraphicsContext implements Serializable {
 
   private static boolean[] createDefaultVirtualLayerVisibilityArr() {
     return new boolean[] {true, true, true, true, true, true};
+  }
+
+  /** Returns the active lock-free EDT scope mask. */
+  public app.freerouting.autoroute.scope.RoutingScopeMask getActiveScopeMask() {
+    return this.activeScopeMask;
+  }
+
+  /** Sets the active lock-free EDT scope mask for canvas dimming. */
+  public void setActiveScopeMask(app.freerouting.autoroute.scope.RoutingScopeMask activeScopeMask) {
+    this.activeScopeMask = activeScopeMask;
   }
 
   /** Initializes stroke and color settings on the given graphics context. */

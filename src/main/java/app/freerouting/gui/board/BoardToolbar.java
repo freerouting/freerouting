@@ -192,7 +192,23 @@ public class BoardToolbar extends JPanel {
           }
           var interactiveSettings = boardFrame.boardPanel.boardHandling.getWorkspaceSettings();
           if (interactiveSettings != null) {
+            String[] preservedScope = interactiveSettings.getScopeComponents();
+            String preservedPolicy = interactiveSettings.getForeignTracePolicy();
             interactiveSettings.setSettings(guiRoutingJob.routerSettings);
+            if (preservedScope != null) {
+              interactiveSettings.setScopeComponents(preservedScope);
+            }
+            if (preservedPolicy != null) {
+              interactiveSettings.setForeignTracePolicy(preservedPolicy);
+            }
+          }
+          if (boardFrame.boardPanel.boardHandling.hasSelection()) {
+            String[] selectedComps =
+                app.freerouting.gui.SelectionScopeResolver.extractSelectedComponentNames(
+                    boardFrame.boardPanel.boardHandling);
+            if (selectedComps.length > 0 && interactiveSettings != null) {
+              interactiveSettings.setScopeComponents(selectedComps);
+            }
           }
           var merger = boardFrame.boardPanel.boardHandling.settingsMerger;
           if (merger != null) {

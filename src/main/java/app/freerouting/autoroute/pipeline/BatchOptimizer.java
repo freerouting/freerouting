@@ -282,7 +282,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
         RoutingResultManifest.PhaseSnapshot.fromBoardStatistics(
             initialStats, job.routerSettings, "current");
     phase.before.score = phase.before.optimizerScore;
-    int initialIncomplete = initialStats.connections.incompleteCount;
+    int initialIncomplete = initialStats.getEffectiveIncompleteCount();
     int initialViolations = initialStats.clearanceViolations.totalCount;
 
     String bypassReason = evaluatePreFlightGuards(initialStats);
@@ -404,7 +404,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
               scoreAfterPass);
       if (rejectionReason == null) {
         this.bestScore = scoreAfterPass;
-        this.bestIncompleteCount = passStats.connections.incompleteCount;
+        this.bestIncompleteCount = passStats.getEffectiveIncompleteCount();
         this.bestClearanceViolationCount = passStats.clearanceViolations.totalCount;
         this.bestBoard = this.board.deepCopy();
       } else {
@@ -424,7 +424,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
       float effectiveScoreAfterPass = rejectionReason == null ? scoreAfterPass : this.bestScore;
       boolean effectiveConnectionsOpen =
           rejectionReason == null
-              ? passStats.connections.incompleteCount > 0
+              ? passStats.getEffectiveIncompleteCount() > 0
               : this.bestIncompleteCount > 0;
       StopRuleView stopRuleView =
           stopRuleScores(scoreBeforePass, effectiveScoreAfterPass, effectiveConnectionsOpen);
@@ -447,7 +447,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
               passOutcome,
               passImprovementPercentStr,
               passStats.getRouterScore(job.routerSettings),
-              passStats.connections.incompleteCount,
+              passStats.getEffectiveIncompleteCount(),
               passStats.clearanceViolations.totalCount));
 
       boolean passHadGain = hasPassGain(rejectionReason, scoreBeforePass, scoreAfterPass);
@@ -494,7 +494,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
     // violations/opens
     BoardStatistics endStats = this.board.getStatistics();
     float finalBoardScore = endStats.getOptimizerRank(job.routerSettings);
-    int finalIncomplete = endStats.connections.incompleteCount;
+    int finalIncomplete = endStats.getEffectiveIncompleteCount();
     int finalViolations = endStats.clearanceViolations.totalCount;
 
     boolean regressed =
@@ -600,7 +600,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
       float incumbentOptimizerScore,
       BoardStatistics candidate,
       float candidateOptimizerScore) {
-    if (candidate.connections.incompleteCount > incumbentIncompleteCount) {
+    if (candidate.getEffectiveIncompleteCount() > incumbentIncompleteCount) {
       return "CONNECTIVITY_REGRESSION";
     }
     if (candidate.clearanceViolations.totalCount > incumbentClearanceViolationCount) {
@@ -659,6 +659,9 @@ public final class BatchOptimizer extends NamedAlgorithm {
   private List<Integer> prepareCandidateItems() {
     List<Integer> itemIds = new ArrayList<>();
     this.sortedRouteItems = new ReadSortedRouteItems();
+    app.freerouting.autoroute.scope.RoutingScopeContext scopeContext =
+        this.board.getRoutingScopeContext();
+    boolean scoped = scopeContext != null && scopeContext.isActive();
 
     ItemSelectionStrategy strategy =
         this.settings.optimizer != null ? this.settings.optimizer.itemSelectionStrategy : null;
@@ -671,6 +674,9 @@ public final class BatchOptimizer extends NamedAlgorithm {
       PriorityQueue<ItemRouteResult> pq = new PriorityQueue<>();
 
       for (Item item = sortedRouteItems.next(); item != null; item = sortedRouteItems.next()) {
+        if (scoped && !scopeContext.isItemOptimizable(item)) {
+          continue;
+        }
         ItemRouteResult r = resultMap.get(item.getId());
         if (r != null) {
           pq.add(r);
@@ -685,6 +691,9 @@ public final class BatchOptimizer extends NamedAlgorithm {
       itemIds.addAll(nonPrioritized);
     } else {
       for (Item item = sortedRouteItems.next(); item != null; item = sortedRouteItems.next()) {
+        if (scoped && !scopeContext.isItemOptimizable(item)) {
+          continue;
+        }
         itemIds.add(item.getId());
       }
     }
@@ -1003,6 +1012,11 @@ public final class BatchOptimizer extends NamedAlgorithm {
     if (item.hasIgnoredNets()) {
       return new ItemRouteResult(item.getId());
     }
+    app.freerouting.autoroute.scope.RoutingScopeContext scopeContext =
+        routingBoard.getRoutingScopeContext();
+    if (scopeContext != null && scopeContext.isActive() && !scopeContext.isItemOptimizable(item)) {
+      return new ItemRouteResult(item.getId());
+    }
     routerCountersBefore.incompleteCount = calculateIncompleteCount(routingBoard);
     final Set<Integer> netsLeftUnrouted = netsLeftUnrouted(routingBoard, item);
 
@@ -1026,6 +1040,11 @@ public final class BatchOptimizer extends NamedAlgorithm {
 
     for (Item currentItem : rippedConnections) {
       if (currentItem.isUserFixed() || currentItem.hasIgnoredNets()) {
+        return new ItemRouteResult(item.getId());
+      }
+      if (scopeContext != null
+          && scopeContext.isActive()
+          && !scopeContext.isItemOptimizable(currentItem)) {
         return new ItemRouteResult(item.getId());
       }
     }
@@ -1088,6 +1107,11 @@ public final class BatchOptimizer extends NamedAlgorithm {
    */
   private static Set<Integer> netsLeftUnrouted(RoutingBoard routingBoard, Item item) {
     Set<Integer> result = routingBoard.routingLedger().incompleteNetNumbers();
+    app.freerouting.autoroute.scope.RoutingScopeContext scopeContext =
+        routingBoard.getRoutingScopeContext();
+    if (scopeContext != null && scopeContext.isActive()) {
+      result.removeIf(netNo -> !scopeContext.isNetInScope(netNo));
+    }
     for (int i = 0; i < item.netCount(); i++) {
       result.remove(item.getNetNumber(i));
     }
@@ -1370,6 +1394,11 @@ public final class BatchOptimizer extends NamedAlgorithm {
   }
 
   private static int calculateIncompleteCount(RoutingBoard board) {
+    app.freerouting.autoroute.scope.RoutingScopeContext scopeContext =
+        board.getRoutingScopeContext();
+    if (scopeContext != null && scopeContext.isActive()) {
+      return scopeContext.countUnsatisfiedScopedConnections(board);
+    }
     return board.routingLedger().incompleteCount();
   }
 

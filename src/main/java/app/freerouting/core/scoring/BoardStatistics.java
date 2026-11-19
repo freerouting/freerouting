@@ -92,6 +92,11 @@ public class BoardStatistics implements Serializable {
   @SerializedName("fanout")
   public BoardStatisticsFanout fanout = new BoardStatisticsFanout();
 
+  private transient app.freerouting.autoroute.scope.RoutingScopeContext scopeContext;
+  private transient Integer scopedIncompleteCount;
+  private transient Integer scopedMaximumCount;
+  private transient boolean foreignConnectivityLossVeto;
+
   /** Creates empty board statistics. */
   public BoardStatistics() {}
 
@@ -302,6 +307,36 @@ public class BoardStatistics implements Serializable {
       app.freerouting.drc.NetRoutingLedger ledger = board.routingLedger();
       this.connections.maximumCount = ledger.maximumConnections();
       this.connections.incompleteCount = ledger.incompleteCount();
+    }
+
+    if (board instanceof app.freerouting.board.facade.RoutingBoard rb
+        && rb.getRoutingScopeContext() != null
+        && rb.getRoutingScopeContext().isActive()) {
+      this.scopeContext = rb.getRoutingScopeContext();
+      this.scopedIncompleteCount = this.scopeContext.countUnsatisfiedScopedConnections(rb);
+      int anchorCount = 0;
+      for (int netNo : this.scopeContext.getScopedNetNumbers()) {
+        for (Collection<Item> set : rb.getConnectedSets(netNo)) {
+          for (Item item : set) {
+            if (item instanceof Pin pin && this.scopeContext.isAnchorPinId(pin.getId())) {
+              anchorCount++;
+            }
+          }
+        }
+      }
+      this.scopedMaximumCount = Math.max(1, anchorCount);
+
+      boolean foreignLoss = false;
+      for (int netNo = 1; netNo <= rb.rules.nets.maxNetNumber(); netNo++) {
+        int baseline = this.scopeContext.getBaselineConnectedSetCount(netNo);
+        if (baseline > 0 && !this.scopeContext.isNetInScope(netNo)) {
+          if (rb.getConnectedSets(netNo).size() > baseline) {
+            foreignLoss = true;
+            break;
+          }
+        }
+      }
+      this.foreignConnectivityLossVeto = foreignLoss;
     }
 
     // Bends
@@ -729,6 +764,18 @@ public class BoardStatistics implements Serializable {
     return this.connections.maximumCount * scoringSettings.unroutedNetPenalty;
   }
 
+  /**
+   * Returns the effective incomplete connection count, respecting active routing scope if present.
+   */
+  public int getEffectiveIncompleteCount() {
+    if (this.scopeContext != null
+        && this.scopeContext.isActive()
+        && this.scopedIncompleteCount != null) {
+      return this.scopedIncompleteCount;
+    }
+    return this.connections != null ? this.connections.incompleteCount : 0;
+  }
+
   /** Returns the legacy score normalized to a range from zero to one thousand. */
   private float getLegacyNormalizedScore(RoutingCostSettings scoringSettings) {
     float maximumScore = getMaximumScore(scoringSettings);
@@ -750,6 +797,9 @@ public class BoardStatistics implements Serializable {
 
   /** Returns the configured router score normalized to a range from zero to one thousand. */
   public float getRouterScore(RouterSettings routerSettings) {
+    if (this.scopeContext != null && this.scopeContext.isActive()) {
+      return getScopedRouterScore(this.scopeContext, routerSettings);
+    }
     if (routerSettings == null
         || routerSettings.routerScoring == null
         || routerSettings.routerScoring.version
@@ -757,6 +807,79 @@ public class BoardStatistics implements Serializable {
       return getLegacyNormalizedScore(legacyScoringOrDefault(routerSettings));
     }
     return getV2RouterScore(routerSettings.routerScoring);
+  }
+
+  /** Returns the router score evaluated specifically over selective component scope connections. */
+  public float getScopedRouterScore(
+      app.freerouting.autoroute.scope.RoutingScopeContext scope, RouterSettings routerSettings) {
+    if (scope == null || !scope.isActive()) {
+      return getRouterScore(routerSettings);
+    }
+    if (this.foreignConnectivityLossVeto) {
+      return 0.0f;
+    }
+    return getScopedV2RouterScore(routerSettings != null ? routerSettings.routerScoring : null);
+  }
+
+  /** Returns the router score evaluated specifically over selective component scope connections. */
+  public float getScopedRouterScore(app.freerouting.autoroute.scope.RoutingScopeContext scope) {
+    return getScopedRouterScore(scope, null);
+  }
+
+  private float getScopedV2RouterScore(RouterScoreSettings settings) {
+    ensureDifficulty();
+    double difficulty =
+        this.difficulty.difficultyD != null ? Math.max(1.0, this.difficulty.difficultyD) : 1.0;
+    double connections = this.scopedMaximumCount != null ? Math.max(1, this.scopedMaximumCount) : 1;
+    double incomplete =
+        this.scopedIncompleteCount != null ? Math.max(0, this.scopedIncompleteCount) : 0;
+    double violationCount = this.clearanceViolations.fixableCount();
+    double violationDepth = this.clearanceViolations.fixableShortfallUm();
+    double split =
+        settings != null
+            ? Math.min(1.0, Math.max(0.0, valueOrDefault(settings.unroutedFreeFraction, 0.5f)))
+            : 0.5;
+    double firstHalfWeight =
+        settings != null
+            ? valueOrDefault(settings.unroutedFirstHalfWeight, 1000.0f / 3.0f)
+            : 1000.0 / 3.0;
+    double secondHalfWeight =
+        settings != null
+            ? valueOrDefault(settings.unroutedSecondHalfWeight, 2000.0f / 3.0f)
+            : 2000.0 / 3.0;
+    double openFraction = connections > 0 ? incomplete / connections : 0.0;
+    double firstHalfOpen;
+    double secondHalfOpen;
+    if (connections <= 0) {
+      firstHalfOpen = 0.0;
+      secondHalfOpen = 0.0;
+    } else if (split <= 0.0) {
+      firstHalfOpen = 0.0;
+      secondHalfOpen = openFraction;
+    } else if (split >= 1.0) {
+      firstHalfOpen = openFraction;
+      secondHalfOpen = 0.0;
+    } else {
+      firstHalfOpen = Math.min(1.0, Math.max(0.0, (openFraction - split) / (1.0 - split)));
+      secondHalfOpen = Math.min(1.0, openFraction / split);
+    }
+    double unroutedPenalty = firstHalfWeight * firstHalfOpen + secondHalfWeight * secondHalfOpen;
+    double drcPenalty =
+        (settings != null ? valueOrDefault(settings.clearanceViolationCountWeight, 25.0f) : 25.0f)
+            * violationCount
+            / difficulty;
+    double depthScale =
+        Math.max(
+            1.0,
+            settings != null
+                ? valueOrDefault(settings.clearanceViolationDepthScale, 1000.0f)
+                : 1000.0f);
+    drcPenalty +=
+        (settings != null ? valueOrDefault(settings.clearanceViolationDepthWeight, 300.0f) : 300.0f)
+            * violationDepth
+            / depthScale
+            / difficulty;
+    return (float) Math.max(0.0, 1000.0 - unroutedPenalty - drcPenalty);
   }
 
   private float getV2RouterScore(RouterScoreSettings settings) {

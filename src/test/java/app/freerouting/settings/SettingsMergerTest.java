@@ -320,4 +320,106 @@ class SettingsMergerTest {
     assertEquals(
         Math.min(4, Runtime.getRuntime().availableProcessors()), merged.getOptimizerMaxThreads());
   }
+
+  @Test
+  void scopeDefaultSettingsPopulated() {
+    RouterSettings merged = new SettingsMerger(new DefaultSettings()).merge();
+
+    assertNotNull(merged.scope);
+    assertNotNull(merged.scope.components);
+    assertEquals(0, merged.scope.components.length);
+    assertEquals("anchor_to_nearest", merged.scope.multiPinPolicy);
+    assertEquals("nudge_then_conditional_ripup", merged.scope.foreignTracePolicy);
+    assertEquals(10.0, merged.scope.foreignRipupCostMultiplier);
+    assertEquals(2, merged.scope.nudgeOnlyPasses);
+    assertFalse(merged.scope.includeDecouplingCompanions);
+  }
+
+  @Test
+  void cliScopeSettingsOverrideDefaults() {
+    DefaultSettings defaults = new DefaultSettings();
+    CliSettings cli =
+        new CliSettings(
+            new String[] {
+              "--router.scope.components=U1,U2,C14",
+              "--router.scope.multi_pin_policy=mutual_only",
+              "--router.scope.foreign_trace_policy=nudge_only",
+              "--router.scope.foreign_ripup_cost_multiplier=15.0",
+              "--router.scope.nudge_only_passes=4",
+              "--router.scope.include_decoupling_companions=true"
+            });
+
+    RouterSettings merged = new SettingsMerger(defaults, cli).merge();
+
+    assertNotNull(merged.scope);
+    assertEquals(3, merged.scope.components.length);
+    assertEquals("U1", merged.scope.components[0]);
+    assertEquals("U2", merged.scope.components[1]);
+    assertEquals("C14", merged.scope.components[2]);
+    assertEquals("mutual_only", merged.scope.multiPinPolicy);
+    assertEquals("nudge_only", merged.scope.foreignTracePolicy);
+    assertEquals(15.0, merged.scope.foreignRipupCostMultiplier);
+    assertEquals(4, merged.scope.nudgeOnlyPasses);
+    assertTrue(merged.scope.includeDecouplingCompanions);
+  }
+
+  @Test
+  void cliShortFlagScParsesComponents() {
+    DefaultSettings defaults = new DefaultSettings();
+    CliSettings cli = new CliSettings(new String[] {"-sc", "U1,C14"});
+
+    RouterSettings merged = new SettingsMerger(defaults, cli).merge();
+
+    assertNotNull(merged.scope);
+    assertEquals(2, merged.scope.components.length);
+    assertEquals("U1", merged.scope.components[0]);
+    assertEquals("C14", merged.scope.components[1]);
+  }
+
+  @Test
+  void cliScopeNoneClearsComponents() {
+    DefaultSettings defaults = new DefaultSettings();
+    // Simulate lower priority setting components, then CLI clearing them with NONE
+    CliSettings cli = new CliSettings(new String[] {"--router.scope.components=NONE"});
+
+    RouterSettings merged = new SettingsMerger(defaults, cli).merge();
+
+    assertNotNull(merged.scope);
+    assertNotNull(merged.scope.components);
+    assertEquals(0, merged.scope.components.length);
+  }
+
+  @Test
+  void higherPrioritySourceWithNullScopeDoesNotOverwriteLowerPriority() {
+    DefaultSettings defaults = new DefaultSettings();
+    CliSettings cli = new CliSettings(new String[] {"--router.scope.components=U1,U2"});
+
+    // Create a priority 70 (API) source with null scope
+    SettingsSource apiSource =
+        new SettingsSource() {
+          @Override
+          public RouterSettings getSettings() {
+            RouterSettings api = new RouterSettings();
+            api.scope = null;
+            return api;
+          }
+
+          @Override
+          public String getSourceName() {
+            return "ApiSettingsMock";
+          }
+
+          @Override
+          public int getPriority() {
+            return 70;
+          }
+        };
+
+    RouterSettings merged = new SettingsMerger(defaults, cli, apiSource).merge();
+
+    assertNotNull(merged.scope);
+    assertEquals(2, merged.scope.components.length);
+    assertEquals("U1", merged.scope.components[0]);
+    assertEquals("U2", merged.scope.components[1]);
+  }
 }

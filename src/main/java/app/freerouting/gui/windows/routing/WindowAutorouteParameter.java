@@ -23,6 +23,7 @@ import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import javax.swing.Box;
@@ -32,6 +33,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 /** Window handling parameters of the automatic routing. */
 public class WindowAutorouteParameter extends BoardSavableSubWindow {
@@ -57,6 +59,9 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   private final JButton jobTimeoutIncrementButton;
   private final JComboBox<TimeoutUnitItem> jobTimeoutUnitComboBox;
   private final JFormattedTextField maxThreadsField;
+  private final javax.swing.JTextField scopeComponentsField;
+  private final JComboBox<String> foreignTracePolicyComboBox;
+  private boolean isCommittingScopeEdit = false;
   private final JFormattedTextField[] preferredDirectionTraceCostArr;
   private final JFormattedTextField[] againstPreferredDirectionTraceCostArr;
   private final JFormattedTextField[] bendCostArr;
@@ -411,6 +416,93 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(maxThreadsField, gridbagConstraints);
     mainPanel.add(maxThreadsField);
 
+    // add label and controls for selective component scope
+    gridbagConstraints.gridwidth = 2;
+    JLabel scopeComponentsLabel = new JLabel();
+    tm.setText(scopeComponentsLabel, "scope_components");
+    gridbag.setConstraints(scopeComponentsLabel, gridbagConstraints);
+    mainPanel.add(scopeComponentsLabel);
+
+    JPanel scopePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 2, 0));
+    scopePanel.setOpaque(false);
+    this.scopeComponentsField = new javax.swing.JTextField(12);
+    this.scopeComponentsField.setToolTipText(tm.getText("scope_components_tooltip"));
+    this.scopeComponentsField
+        .getDocument()
+        .addDocumentListener(
+            new javax.swing.event.DocumentListener() {
+              @Override
+              public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                SwingUtilities.invokeLater(
+                    WindowAutorouteParameter.this::commitScopeComponentsEdit);
+              }
+
+              @Override
+              public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                SwingUtilities.invokeLater(
+                    WindowAutorouteParameter.this::commitScopeComponentsEdit);
+              }
+
+              @Override
+              public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                SwingUtilities.invokeLater(
+                    WindowAutorouteParameter.this::commitScopeComponentsEdit);
+              }
+            });
+    this.scopeComponentsField.addFocusListener(
+        new FocusAdapter() {
+          @Override
+          public void focusLost(FocusEvent event) {
+            commitScopeComponentsEdit();
+          }
+        });
+    this.scopeComponentsField.addActionListener(_ -> commitScopeComponentsEdit());
+    scopePanel.add(this.scopeComponentsField);
+
+    JButton useSelectedButton = new JButton(tm.getText("scope_use_selected"));
+    useSelectedButton.setFocusable(false);
+    useSelectedButton.addActionListener(
+        _ -> {
+          String[] names =
+              app.freerouting.gui.SelectionScopeResolver.extractSelectedComponentNames(
+                  this.boardHandling);
+          if (names.length > 0) {
+            this.scopeComponentsField.setText(String.join(", ", names));
+          }
+        });
+    scopePanel.add(useSelectedButton);
+
+    JButton clearScopeButton = new JButton(tm.getText("scope_clear"));
+    clearScopeButton.setFocusable(false);
+    clearScopeButton.addActionListener(
+        _ -> {
+          this.scopeComponentsField.setText("");
+        });
+    scopePanel.add(clearScopeButton);
+
+    gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbag.setConstraints(scopePanel, gridbagConstraints);
+    mainPanel.add(scopePanel);
+
+    // Foreign trace policy row
+    gridbagConstraints.gridwidth = 2;
+    JLabel foreignPolicyLabel = new JLabel();
+    tm.setText(foreignPolicyLabel, "scope_foreign_policy");
+    gridbag.setConstraints(foreignPolicyLabel, gridbagConstraints);
+    mainPanel.add(foreignPolicyLabel);
+
+    this.foreignTracePolicyComboBox =
+        new JComboBox<>(
+            new String[] {
+              tm.getText("scope_foreign_policy_nudge_ripup"),
+              tm.getText("scope_foreign_policy_nudge_only"),
+              tm.getText("scope_foreign_policy_fixed")
+            });
+    this.foreignTracePolicyComboBox.addActionListener(_ -> commitForeignPolicyEdit());
+    gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbag.setConstraints(this.foreignTracePolicyComboBox, gridbagConstraints);
+    mainPanel.add(this.foreignTracePolicyComboBox);
+
     JLabel separator2 =
         new JLabel("––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––  ");
     gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
@@ -508,6 +600,9 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         .getCurrentRoutingJob()
         .routerSettings
         .addPropertyChangeListener(this::onSettingsChanged);
+    if (this.boardHandling instanceof app.freerouting.gui.workspace.WorkspaceContract gui) {
+      gui.getWorkspaceSettings().addPropertyChangeListener(this::onSettingsChanged);
+    }
   }
 
   public static int normalizeIntInput(Object input, int oldValue, int minValue, int maxValue) {
@@ -606,6 +701,33 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
             settingsAutorouterOptimizationButton.setSelected(bool);
           }
         }
+        case app.freerouting.gui.workspace.WorkspaceSettings.PROP_SCOPE_COMPONENTS -> {
+          if (this.isCommittingScopeEdit) {
+            break;
+          }
+          SwingUtilities.invokeLater(
+              () -> {
+                if (this.isCommittingScopeEdit) {
+                  return;
+                }
+                String[] comps = (String[]) newValue;
+                String newText = comps != null ? String.join(", ", comps) : "";
+                if (!scopeComponentsField.hasFocus()
+                    && !scopeComponentsField.getText().trim().equals(newText.trim())) {
+                  scopeComponentsField.setText(newText);
+                }
+              });
+        }
+        case app.freerouting.gui.workspace.WorkspaceSettings.PROP_FOREIGN_TRACE_POLICY -> {
+          String policy = (String) newValue;
+          if ("fixed".equalsIgnoreCase(policy)) {
+            foreignTracePolicyComboBox.setSelectedIndex(2);
+          } else if ("nudge_only".equalsIgnoreCase(policy) || "nudge".equalsIgnoreCase(policy)) {
+            foreignTracePolicyComboBox.setSelectedIndex(1);
+          } else {
+            foreignTracePolicyComboBox.setSelectedIndex(0);
+          }
+        }
         default -> {}
       }
     } finally {
@@ -655,6 +777,71 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     }
     for (int i = 0; i < bendCostArr.length; i++) {
       this.bendCostArr[i].setValue(settings.getBendCost(layerStructure.getLayerNo(i)));
+    }
+
+    if (this.boardHandling instanceof app.freerouting.gui.workspace.WorkspaceContract gui) {
+      String[] comps = gui.getWorkspaceSettings().getScopeComponents();
+      this.scopeComponentsField.setText(comps != null ? String.join(", ", comps) : "");
+      String policy = gui.getWorkspaceSettings().getForeignTracePolicy();
+      if ("fixed".equalsIgnoreCase(policy)) {
+        this.foreignTracePolicyComboBox.setSelectedIndex(2);
+      } else if ("nudge_only".equalsIgnoreCase(policy) || "nudge".equalsIgnoreCase(policy)) {
+        this.foreignTracePolicyComboBox.setSelectedIndex(1);
+      } else {
+        this.foreignTracePolicyComboBox.setSelectedIndex(0);
+      }
+    }
+  }
+
+  private void commitScopeComponentsEdit() {
+    if (this.isUpdatingFromSettings || this.isCommittingScopeEdit) {
+      return;
+    }
+    try {
+      this.isCommittingScopeEdit = true;
+      String text = this.scopeComponentsField.getText().trim();
+      String[] parts = text.isEmpty() ? new String[0] : text.split("[,;\\s]+");
+      String[] components = parts.length > 0 ? parts : null;
+      if (this.boardHandling instanceof app.freerouting.gui.workspace.WorkspaceContract gui) {
+        gui.getWorkspaceSettings().setScopeComponents(components);
+      }
+      if (this.boardHandling != null && this.boardHandling.getCurrentRoutingJob() != null) {
+        RouterSettings rs = this.boardHandling.getCurrentRoutingJob().routerSettings;
+        if (rs != null) {
+          if (rs.scope == null) {
+            rs.scope = new app.freerouting.settings.RouterScopeSettings();
+          }
+          rs.scope.components =
+              components != null ? Arrays.copyOf(components, components.length) : null;
+        }
+      }
+    } finally {
+      this.isCommittingScopeEdit = false;
+    }
+  }
+
+  private void commitForeignPolicyEdit() {
+    if (this.isUpdatingFromSettings) {
+      return;
+    }
+    int idx = this.foreignTracePolicyComboBox.getSelectedIndex();
+    String policy =
+        switch (idx) {
+          case 1 -> "nudge_only";
+          case 2 -> "fixed";
+          default -> "nudge_then_conditional_ripup";
+        };
+    if (this.boardHandling instanceof app.freerouting.gui.workspace.WorkspaceContract gui) {
+      gui.getWorkspaceSettings().setForeignTracePolicy(policy);
+    }
+    if (this.boardHandling != null && this.boardHandling.getCurrentRoutingJob() != null) {
+      RouterSettings rs = this.boardHandling.getCurrentRoutingJob().routerSettings;
+      if (rs != null) {
+        if (rs.scope == null) {
+          rs.scope = new app.freerouting.settings.RouterScopeSettings();
+        }
+        rs.scope.foreignTracePolicy = policy;
+      }
     }
   }
 

@@ -700,6 +700,15 @@ public class TraceShover {
         endCorners[1] = currentSubstituteTrace.lastCorner();
       }
       board.insertItem(currentSubstituteTrace);
+      if (board.getRoutingScopeContext() != null && obstacles != null) {
+        for (Item obs : obstacles) {
+          if (obs instanceof PolylineTrace oldTrace) {
+            board
+                .getRoutingScopeContext()
+                .inheritProvenance(oldTrace.getId(), currentSubstituteTrace.getId());
+          }
+        }
+      }
 
       try {
         currentSubstituteTrace.normalize(board.changedArea.getArea(layer));

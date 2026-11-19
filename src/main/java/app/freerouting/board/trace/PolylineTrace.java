@@ -364,6 +364,9 @@ public class PolylineTrace extends Trace implements Serializable {
     }
     board.removeItem(otherTrace);
     if (board instanceof RoutingBoard routingBoard) {
+      if (routingBoard.getRoutingScopeContext() != null) {
+        routingBoard.getRoutingScopeContext().inheritProvenance(otherTrace.getId(), this.getId());
+      }
       routingBoard.joinChangedArea(startCorner.toFloat(), getLayer());
     }
     return true;
@@ -488,6 +491,9 @@ public class PolylineTrace extends Trace implements Serializable {
     }
     board.removeItem(otherTrace);
     if (board instanceof RoutingBoard routingBoard) {
+      if (routingBoard.getRoutingScopeContext() != null) {
+        routingBoard.getRoutingScopeContext().inheritProvenance(otherTrace.getId(), this.getId());
+      }
       routingBoard.joinChangedArea(endCorner.toFloat(), getLayer());
     }
     return true;
@@ -793,6 +799,15 @@ public class PolylineTrace extends Trace implements Serializable {
             netNumbers,
             clearanceClassIndex(),
             getFixedState());
+    if (board instanceof RoutingBoard routingBoard
+        && routingBoard.getRoutingScopeContext() != null) {
+      if (result[0] != null) {
+        routingBoard.getRoutingScopeContext().inheritProvenance(this.getId(), result[0].getId());
+      }
+      if (result[1] != null) {
+        routingBoard.getRoutingScopeContext().inheritProvenance(this.getId(), result[1].getId());
+      }
+    }
     return result;
   }
 
