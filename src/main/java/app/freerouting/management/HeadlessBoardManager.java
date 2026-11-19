@@ -578,6 +578,14 @@ public class HeadlessBoardManager implements BoardManager {
       if (edgeClearance != area.getFillEdgeClearance()) {
         area.setFillEdgeClearance(edgeClearance);
       }
+      boolean fillets = best.cornerSmoothing() == KiCadBoardZones.CornerSmoothing.FILLET;
+      int corner =
+          best.cornerSmoothing() == KiCadBoardZones.CornerSmoothing.NONE
+              ? 0
+              : (int) Math.round(communication.physicalToBoard(best.cornerRadiusUm(), Unit.UM));
+      if (fillets != area.hasCornerFillets() || corner != area.getCornerSmoothing()) {
+        area.setFillCornerSmoothing(fillets, corner);
+      }
     }
     int matchedPads = applyKiCadPadConnections(boardZones);
     this.routingJob.logInfo(

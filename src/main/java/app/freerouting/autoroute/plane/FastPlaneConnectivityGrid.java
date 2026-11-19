@@ -396,8 +396,9 @@ public class FastPlaneConnectivityGrid {
       }
     }
 
-    // The fill keeps half its minimum width inside the outline of the zone, as from any copper.
-    rasterizeOutsideOf(ca.getArea(), minWidth / 2.0 - FILL_LENIENCY * minWidth);
+    // The fill keeps half its minimum width inside the outline of the zone, as from any copper,
+    // and follows the outline with its corners smoothed.
+    rasterizeOutsideOf(ca.getFillOutline(), minWidth / 2.0 - FILL_LENIENCY * minWidth);
 
     foldFineMask();
     int[] pieceOfCell = new int[cols * rows];

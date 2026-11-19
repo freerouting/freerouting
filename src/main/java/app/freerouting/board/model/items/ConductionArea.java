@@ -1,6 +1,7 @@
 package app.freerouting.board.model.items;
 
 import app.freerouting.autoroute.plane.FastPlaneConnectivityGrid;
+import app.freerouting.autoroute.plane.PlaneOutlineSmoothing;
 import app.freerouting.board.actions.ItemInfoPrinter;
 import app.freerouting.board.actions.ItemSelectionFilter;
 import app.freerouting.board.facade.BasicBoard;
@@ -54,6 +55,18 @@ public class ConductionArea extends ObstacleArea implements Connectable {
   /** The distance the fill keeps to the edge of the board, in board units; 0 if unknown. */
   private int fillEdgeClearance;
 
+  /** Whether the corners of the outline are rounded before the fill (fillets). */
+  private boolean cornerFillets;
+
+  /**
+   * The radius of the fillets, or the distance of the chamfers, of the corners of the outline
+   * before the fill, in board units; 0 for sharp corners.
+   */
+  private int cornerSmoothing;
+
+  /** The outline with its corners smoothed, built on first use. */
+  private transient Area smoothedArea;
+
   /**
    * Sets how the host CAD system fills this area, when the design file does not say it: the
    * clearance the fill keeps to the copper of other nets, if larger than the clearance of the
@@ -102,6 +115,44 @@ public class ConductionArea extends ObstacleArea implements Connectable {
   /** The distance set by {@link #setFillEdgeClearance}, in board units; 0 if unknown. */
   public int getFillEdgeClearance() {
     return this.fillEdgeClearance;
+  }
+
+  /**
+   * Sets how the host CAD system smooths the corners of the outline before it fills it: fillets of
+   * this radius, or chamfers at this distance from each corner, in board units; 0 for sharp
+   * corners.
+   */
+  public void setFillCornerSmoothing(boolean fillets, int distance) {
+    this.cornerFillets = fillets;
+    this.cornerSmoothing = Math.max(0, distance);
+    this.smoothedArea = null;
+    this.clearDerivedData();
+  }
+
+  /** Whether the corners are rounded, by {@link #setFillCornerSmoothing}. */
+  public boolean hasCornerFillets() {
+    return this.cornerFillets;
+  }
+
+  /** The distance set by {@link #setFillCornerSmoothing}, in board units; 0 for sharp corners. */
+  public int getCornerSmoothing() {
+    return this.cornerSmoothing;
+  }
+
+  /**
+   * The outline that the fill of the host CAD system follows: the area with its corners smoothed as
+   * {@link #setFillCornerSmoothing} says, or the area itself.
+   */
+  public Area getFillOutline() {
+    Area area = getArea();
+    if (this.cornerSmoothing <= 0 || area == null) {
+      return area;
+    }
+    if (this.smoothedArea == null) {
+      this.smoothedArea =
+          PlaneOutlineSmoothing.smooth(area, this.cornerFillets, this.cornerSmoothing);
+    }
+    return this.smoothedArea;
   }
 
   /** The connection set by {@link #setPadConnectionRules}; null if unknown. */
@@ -365,6 +416,8 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     result.thermalGap = this.thermalGap;
     result.thermalSpokeWidth = this.thermalSpokeWidth;
     result.fillEdgeClearance = this.fillEdgeClearance;
+    result.cornerFillets = this.cornerFillets;
+    result.cornerSmoothing = this.cornerSmoothing;
     return result;
   }
 

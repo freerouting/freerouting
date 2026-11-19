@@ -112,6 +112,10 @@ public final class KiCadBoardZones {
    * @param thermalGapUm the gap of its thermal reliefs in micrometres ({@code thermal_gap})
    * @param thermalBridgeWidthUm the width of the spokes of its thermal reliefs ({@code
    *     thermal_bridge_width})
+   * @param cornerSmoothing how the corners of its outline are smoothed ({@code (fill (smoothing
+   *     fillet|chamfer))}): NONE, FILLET or CHAMFER
+   * @param cornerRadiusUm the radius of a fillet or the distance of a chamfer, in micrometres
+   *     ({@code (fill (radius ...))})
    */
   public record Zone(
       String netName,
@@ -124,7 +128,9 @@ public final class KiCadBoardZones {
       double maxYUm,
       PadConnection padConnection,
       double thermalGapUm,
-      double thermalBridgeWidthUm) {
+      double thermalBridgeWidthUm,
+      CornerSmoothing cornerSmoothing,
+      double cornerRadiusUm) {
 
     /** Whether the zone is on the copper layer of this name. */
     public boolean isOnLayer(String layerName) {
@@ -495,7 +501,7 @@ public final class KiCadBoardZones {
     double minThickness = 0;
     boolean ruleArea = false;
     PadConnection[] padConnection = {PadConnection.THERMAL};
-    double[] thermal = new double[2];
+    double[] thermal = new double[4];
     double[] box = {
       Double.POSITIVE_INFINITY,
       Double.POSITIVE_INFINITY,
@@ -562,10 +568,25 @@ public final class KiCadBoardZones {
         box[3],
         padConnection[0],
         thermal[0],
-        thermal[1]);
+        thermal[1],
+        thermal[3] == 1
+            ? CornerSmoothing.FILLET
+            : thermal[3] == 2 ? CornerSmoothing.CHAMFER : CornerSmoothing.NONE,
+        thermal[2]);
   }
 
-  /** Reads the rest of {@code (fill [yes] (thermal_gap 0.5) (thermal_bridge_width 0.5) ...)}. */
+  /** How KiCad smooths the corners of the outline of a zone before it fills it. */
+  public enum CornerSmoothing {
+    NONE,
+    FILLET,
+    CHAMFER
+  }
+
+  /**
+   * Reads the rest of {@code (fill [yes] (thermal_gap 0.5) (thermal_bridge_width 0.5) (smoothing
+   * fillet) (radius 1) ...)} into thermal: gap, spoke width, radius, smoothing (1 fillet, 2
+   * chamfer).
+   */
   private static void readFill(Reader reader, double[] thermal) {
     while (true) {
       reader.skipBlanks();
@@ -579,6 +600,11 @@ public final class KiCadBoardZones {
       switch (reader.readAtom()) {
         case "thermal_gap" -> thermal[0] = toUm(reader.readAtom());
         case "thermal_bridge_width" -> thermal[1] = toUm(reader.readAtom());
+        case "radius" -> thermal[2] = toUm(reader.readAtom());
+        case "smoothing" -> {
+          String smoothing = reader.readAtom();
+          thermal[3] = "fillet".equals(smoothing) ? 1 : "chamfer".equals(smoothing) ? 2 : 0;
+        }
         default -> {
           // nothing else is needed
         }

@@ -158,6 +158,30 @@ class KiCadBoardZonesTest {
   }
 
   @Test
+  void readsTheCornerSmoothingOfTheZones() {
+    KiCadBoardZones board =
+        KiCadBoardZones.parse(
+            "(kicad_pcb (version 20171130) (host pcbnew 5.1)\n"
+                + " (zone (net 1) (net_name GND) (layer F.Cu)\n"
+                + "  (fill yes (arc_segments 16) (thermal_gap 0.5) (thermal_bridge_width 0.5)"
+                + " (smoothing fillet) (radius 1))\n"
+                + "  (polygon (pts (xy 0 0) (xy 10 0) (xy 10 10))))\n"
+                + " (zone (net 1) (net_name GND) (layer B.Cu)\n"
+                + "  (fill yes (smoothing chamfer) (radius 0.3))\n"
+                + "  (polygon (pts (xy 0 0) (xy 10 0) (xy 10 10))))\n"
+                + " (zone (net 1) (net_name GND) (layer In1.Cu) (fill yes (smoothing none))\n"
+                + "  (polygon (pts (xy 0 0) (xy 10 0) (xy 10 10)))))",
+            "corners.kicad_pcb");
+
+    assertEquals(KiCadBoardZones.CornerSmoothing.FILLET, board.zones().get(0).cornerSmoothing());
+    assertEquals(1000.0, board.zones().get(0).cornerRadiusUm(), 1e-9);
+    assertEquals(500.0, board.zones().get(0).thermalGapUm(), 1e-9);
+    assertEquals(KiCadBoardZones.CornerSmoothing.CHAMFER, board.zones().get(1).cornerSmoothing());
+    assertEquals(300.0, board.zones().get(1).cornerRadiusUm(), 1e-9);
+    assertEquals(KiCadBoardZones.CornerSmoothing.NONE, board.zones().get(2).cornerSmoothing());
+  }
+
+  @Test
   void aThroughHolePadIsOnTheCopperLayersThatTheBoardRenamed() {
     KiCadBoardZones board =
         KiCadBoardZones.parse(
