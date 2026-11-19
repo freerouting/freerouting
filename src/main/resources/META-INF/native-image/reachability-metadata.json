@@ -1659,6 +1659,9 @@
           "name": "optimizationImprovementThreshold"
         },
         {
+          "name": "stepSlideEnabled"
+        },
+        {
           "name": "timeoutString"
         },
         {

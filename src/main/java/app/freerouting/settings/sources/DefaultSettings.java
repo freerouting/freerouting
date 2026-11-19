@@ -261,6 +261,7 @@ public class DefaultSettings implements SettingsSource {
     settings.optimizer.additionalRipupCostFactorAtStart = 10;
     settings.optimizer.keepIncreasedRipupCosts = false;
     settings.optimizer.viaNudgeEnabled = false;
+    settings.optimizer.stepSlideEnabled = true;
     settings.optimizer.traceRipupCostFactor = 0.6f;
     settings.optimizer.maxAutoroutePasses = 6;
     settings.optimizer.enablePreflightGuards = true;
