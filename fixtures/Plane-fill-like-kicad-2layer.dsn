@@ -1,0 +1,167 @@
+(pcb "./Plane-fill-like-kicad-2layer.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  176000 -44000  0 -44000  0 0  176000 0  176000 -44000)
+    )
+    (plane MUT (polygon F.Cu 0  2000 -2000  22000 -2000  22000 -14000  2000 -14000  2000 -2000))
+    (plane FINE (polygon F.Cu 0  26000 -2000  46000 -2000  46000 -14000  26000 -14000  26000 -2000))
+    (plane EDGE (polygon F.Cu 0  50000 1000  70000 1000  70000 -14000  50000 -14000  50000 1000))
+    (plane RIM (polygon F.Cu 0  74000 -2000  82000 -2000  82000 -7300  86000 -7300  86000 -2000
+            94000 -2000  94000 -14000  86000 -14000  86000 -8700  82000 -8700
+            82000 -14000  74000 -14000  74000 -2000))
+    (plane NECK (polygon F.Cu 0  2000 -20000  172000 -20000  172000 -40000  2000 -40000
+            2000 -20000))
+    (plane TRK (polygon F.Cu 0  98000 -2000  118000 -2000  118000 -14000  98000 -14000
+            98000 -2000))
+    (plane CRN (polygon F.Cu 0  128000 -2000  148000 -2000  148000 -14000  128000 -14000
+            128000 -2000))
+    (via "Via[0-1]_600:300_um")
+    (rule
+      (width 250)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component ""
+      (place PC 128300 -2300 front 0)
+    )
+    (component ::1
+      (place REFC 138000 -8000 front 0)
+      (place REFT 101000 -8000 front 0)
+      (place PN 150000 -30000 front 0)
+      (place REFN 20000 -30000 front 0)
+      (place PR 91000 -8000 front 0)
+      (place REFR 77000 -8000 front 0)
+      (place REFE 53000 -8000 front 0)
+      (place REFF 29000 -8000 front 0)
+      (place REFM 5000 -8000 front 0)
+    )
+    (component ::2
+      (place PT 122000 -8000 front 0)
+      (place PE 62000 -3000 front 0)
+    )
+    (component ::3
+      (place SF390 39000 -8000 front 0)
+      (place SF385 38500 -8000 front 0)
+      (place SF375 37500 -8000 front 0)
+      (place SF370 37000 -8000 front 0)
+      (place PF 38000 -8000 front 0)
+    )
+    (component ::4
+      (place PM2 13270 -8000 front 0)
+      (place PM1 12000 -8000 front 0)
+    )
+  )
+  (library
+    (image ""
+      (pin Rect[T]Pad_300.000000x300.000000_um 1 0 0)
+    )
+    (image ::1
+      (pin Rect[A]Pad_1700.000000x1700.000000_um 1 0 0)
+    )
+    (image ::2
+      (pin Rect[T]Pad_1000.000000x1000.000000_um 1 0 0)
+    )
+    (image ::3
+      (pin Rect[T]Pad_250.000000x900.000000_um 1 0 0)
+    )
+    (image ::4
+      (pin Round[A]Pad_1000.000000_um 1 0 0)
+    )
+    (padstack Round[A]Pad_1000.000000_um
+      (shape (circle F.Cu 1000))
+      (shape (circle B.Cu 1000))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_250.000000x900.000000_um
+      (shape (rect F.Cu -125 -450 125 450))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_300.000000x300.000000_um
+      (shape (rect F.Cu -150 -150 150 150))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1000.000000x1000.000000_um
+      (shape (rect F.Cu -500 -500 500 500))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1700.000000x1700.000000_um
+      (shape (rect F.Cu -850 -850 850 850))
+      (shape (rect B.Cu -850 -850 850 850))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:300_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net SIG
+      (pins SF390-1 SF385-1 SF375-1 SF370-1)
+    )
+    (net MUT
+      (pins PM2-1 PM1-1 REFM-1)
+    )
+    (net FINE
+      (pins PF-1 REFF-1)
+    )
+    (net EDGE
+      (pins PE-1 REFE-1)
+    )
+    (net RIM
+      (pins PR-1 REFR-1)
+    )
+    (net NECK
+      (pins PN-1 REFN-1)
+    )
+    (net TRK
+      (pins PT-1 REFT-1)
+    )
+    (net CRN
+      (pins PC-1 REFC-1)
+    )
+    (class kicad_default CRN EDGE FINE MUT NECK RIM SIG TRK
+      (circuit
+        (use_via "Via[0-1]_600:300_um")
+      )
+      (rule
+        (width 250)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+    (wire (path F.Cu 250  122000 -8000  118225 -8000)(net TRK)(type protect))
+    (wire (path F.Cu 250  87000 -30425  87000 -41000)(net SIG)(type protect))
+    (wire (path F.Cu 250  87000 -19000  87000 -29575)(net SIG)(type protect))
+    (wire (path F.Cu 250  65000 -6000  65000 -900)(net SIG)(type protect))
+    (wire (path F.Cu 250  59000 -6000  65000 -6000)(net SIG)(type protect))
+    (wire (path F.Cu 250  59000 -900  59000 -6000)(net SIG)(type protect))
+    (via "Via[0-1]_600:300_um"  84000 -8000 (net SIG)(type protect))
+    (via "Via[0-1]_600:300_um"  12000 -9100 (net SIG)(type protect))
+    (via "Via[0-1]_600:300_um"  12000 -6900 (net SIG)(type protect))
+    (via "Via[0-1]_600:300_um"  10900 -8000 (net SIG)(type protect))
+  )
+)
