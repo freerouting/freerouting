@@ -379,6 +379,16 @@ final class AutorouteBatchLoop {
       BoardStatistics boardStatisticsAfter = new BoardStatistics(router.board);
       float boardScoreAfter = boardStatisticsAfter.getRouterScore(job.routerSettings);
 
+      app.freerouting.autoroute.scope.RoutingScopeContext scopeContext =
+          router.board.getRoutingScopeContext();
+      if (scopeContext != null
+          && scopeContext.isActive()
+          && boardStatisticsAfter.getEffectiveIncompleteCount() == 0) {
+        job.logInfo("All scoped connections have been routed successfully.");
+        stopFor(BatchAutorouter.StopReason.COMPLETED);
+        break;
+      }
+
       if ((bh.size() >= STOP_AT_PASS_MINIMUM) || (router.thread.isStopAutoRouterRequested())) {
         if (((currentPass % STOP_AT_PASS_MODULO == 0) && (currentPass >= STOP_AT_PASS_MINIMUM))
             || (router.thread.isStopAutoRouterRequested())) {
@@ -522,9 +532,10 @@ final class AutorouteBatchLoop {
           // while keeping fanout enabled as the default behavior.
           if (router.settings.isFanoutEnabled()
               && !fanoutRecoveryApplied
-              && boardStatisticsAfter.connections.incompleteCount > 0
+              && boardStatisticsAfter.getEffectiveIncompleteCount() > 0
               && consecutiveNoImprovementPasses >= FANOUT_RECOVERY_STAGNATION_PASSES) {
-            final int incompletesBeforeRecovery = boardStatisticsAfter.connections.incompleteCount;
+            final int incompletesBeforeRecovery =
+                boardStatisticsAfter.getEffectiveIncompleteCount();
             removeTails(Item.StopConnectionOption.NONE);
             boardStatisticsAfter = new BoardStatistics(router.board);
             boardScoreAfter = boardStatisticsAfter.getRouterScore(job.routerSettings);
@@ -538,11 +549,11 @@ final class AutorouteBatchLoop {
                     + "Incompletes: "
                     + incompletesBeforeRecovery
                     + " -> "
-                    + boardStatisticsAfter.connections.incompleteCount
+                    + boardStatisticsAfter.getEffectiveIncompleteCount()
                     + ".");
           }
 
-          int incompleteNow = boardStatisticsAfter.connections.incompleteCount;
+          int incompleteNow = boardStatisticsAfter.getEffectiveIncompleteCount();
           if (incompleteNow > 0
               && incompleteNow <= LAST_MILE_INCOMPLETE_LIMIT
               && lastMileAttempts < LAST_MILE_MAX_ATTEMPTS
@@ -574,9 +585,9 @@ final class AutorouteBatchLoop {
                     + " points in the last "
                     + stagnationPassLimit
                     + " passes ("
-                    + boardStatisticsAfter.connections.incompleteCount
+                    + boardStatisticsAfter.getEffectiveIncompleteCount()
                     + " item"
-                    + (boardStatisticsAfter.connections.incompleteCount == 1 ? "" : "s")
+                    + (boardStatisticsAfter.getEffectiveIncompleteCount() == 1 ? "" : "s")
                     + " still unconnected). Stopping the auto-router.\n"
                     + "The following connections could not be routed -- please review your design "
                     + "(e.g. check pad clearances, trace width rules, and available routing "
@@ -593,7 +604,7 @@ final class AutorouteBatchLoop {
         if (boardScoreAfter > globalBestScore + STAGNATION_SCORE_THRESHOLD) {
           globalBestScore = boardScoreAfter;
           passOfBestScore = currentPass;
-          incompleteCountAtBestScore = boardStatisticsAfter.connections.incompleteCount;
+          incompleteCountAtBestScore = boardStatisticsAfter.getEffectiveIncompleteCount();
         } else if (stagnationPassLimit > 0
             && (currentPass - passOfBestScore) >= stagnationPassLimit) {
           String report = buildUnroutedConnectionsReport();
@@ -618,7 +629,7 @@ final class AutorouteBatchLoop {
           break;
         }
 
-      } else if (boardStatisticsAfter.connections.incompleteCount == 0
+      } else if (boardStatisticsAfter.getEffectiveIncompleteCount() == 0
           && boardScoreAfter > STAGNATION_SCORE_THRESHOLD) {
         // Board is fully routed AND has a positive score (genuine success).
         // A fully-routed board with score == 0 (e.g. caused by clearance violations
@@ -649,12 +660,12 @@ final class AutorouteBatchLoop {
             "The final board state (score "
                 + FRLogger.formatScore(
                     currentFinalScore,
-                    currentStats.connections.incompleteCount,
+                    currentStats.getEffectiveIncompleteCount(),
                     currentStats.clearanceViolations.totalCount)
                 + ") is worse than the best board seen during routing (score "
                 + FRLogger.formatScore(
                     bestStats.getRouterScore(job.routerSettings),
-                    bestStats.connections.incompleteCount,
+                    bestStats.getEffectiveIncompleteCount(),
                     bestStats.clearanceViolations.totalCount)
                 + "). Restoring the best board as the final result.");
       }

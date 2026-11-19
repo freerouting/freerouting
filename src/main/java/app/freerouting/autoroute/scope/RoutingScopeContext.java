@@ -205,6 +205,28 @@ public class RoutingScopeContext implements Serializable {
     this.inForeignRecoverySubPass = false;
   }
 
+  /** Checks whether the item is an anchor pin belonging to an in-scope component. */
+  public boolean isAnchorPin(Item item) {
+    return item instanceof Pin pin && this.mask.isAnchorPinId(pin.getId());
+  }
+
+  /**
+   * Checks whether the item is an external item on the net (an external pin belonging to an
+   * unselected component, a conduction plane area, or a pre-existing foreign baseline item).
+   */
+  public boolean isExternalItem(Item item) {
+    if (item == null) {
+      return false;
+    }
+    if (item instanceof ConductionArea) {
+      return true;
+    }
+    if (item instanceof Pin pin) {
+      return !this.mask.isAnchorPinId(pin.getId());
+    }
+    return this.isForeignProtectedItem(item);
+  }
+
   /** Determines whether an item should be enqueued into the autorouter work queue. */
   public boolean shouldEnqueueItem(BasicBoard board, int netNo, Item item) {
     if (!this.isActive()) {
@@ -214,26 +236,33 @@ public class RoutingScopeContext implements Serializable {
       return false;
     }
 
-    Net net = board.rules.nets.get(netNo);
-    boolean containsPlane = net != null && net.containsPlane();
-
     Collection<Item> connectedSet = item.getConnectedSet(netNo);
     boolean containsAnchorPin = false;
-    boolean touchesPlane = false;
-
     for (Item member : connectedSet) {
-      if (member instanceof Pin pin && this.mask.isAnchorPinId(pin.getId())) {
+      if (isAnchorPin(member)) {
         containsAnchorPin = true;
-      }
-      if (member instanceof ConductionArea) {
-        touchesPlane = true;
+        break;
       }
     }
+    // Items that do not contain an anchor pin are never the starting point of selective routing.
+    if (!containsAnchorPin) {
+      return false;
+    }
+
+    Net net = board.rules.nets.get(netNo);
+    boolean containsPlane = net != null && net.containsPlane();
 
     // Power/ground plane net: only route pins belonging to selected components,
     // and stop as soon as the connected set reaches the plane.
     if (containsPlane) {
-      return containsAnchorPin && !touchesPlane;
+      boolean touchesPlane = false;
+      for (Item member : connectedSet) {
+        if (member instanceof ConductionArea) {
+          touchesPlane = true;
+          break;
+        }
+      }
+      return !touchesPlane;
     }
 
     // Signal net:
@@ -242,50 +271,76 @@ public class RoutingScopeContext implements Serializable {
       return true;
     }
 
-    if (!containsAnchorPin) {
-      return false;
-    }
-
     if (policy == MultiPinScopePolicy.MUTUAL_ONLY) {
-      boolean otherAnchorExists = false;
-      for (Collection<Item> otherSet : board.getConnectedSets(netNo)) {
-        if (otherSet != connectedSet) {
-          for (Item member : otherSet) {
-            if (member instanceof Pin pin && this.mask.isAnchorPinId(pin.getId())) {
-              otherAnchorExists = true;
-              break;
-            }
+      int totalAnchorsInNet = 0;
+      for (Collection<Item> set : board.getConnectedSets(netNo)) {
+        for (Item member : set) {
+          if (isAnchorPin(member)) {
+            totalAnchorsInNet++;
           }
         }
       }
-      return otherAnchorExists;
+      if (totalAnchorsInNet <= 1) {
+        return false;
+      }
+      int anchorsInThisSet = 0;
+      for (Item member : connectedSet) {
+        if (isAnchorPin(member)) {
+          anchorsInThisSet++;
+        }
+      }
+      return anchorsInThisSet < totalAnchorsInNet;
     }
 
     // ANCHOR_TO_NEAREST:
-    boolean containsExternal = false;
-    int anchorCountInNet = 0;
-    int anchorsInThisSet = 0;
+    boolean touchesExternal = false;
     for (Item member : connectedSet) {
-      if (member instanceof Pin pin && this.mask.isAnchorPinId(pin.getId())) {
-        anchorsInThisSet++;
-      } else {
-        containsExternal = true;
+      if (isExternalItem(member)) {
+        touchesExternal = true;
+        break;
       }
     }
-    for (Collection<Item> anySet : board.getConnectedSets(netNo)) {
-      for (Item member : anySet) {
-        if (member instanceof Pin pin && this.mask.isAnchorPinId(pin.getId())) {
-          anchorCountInNet++;
+    // If this anchor connected set has already reached an external pin or pre-existing foreign
+    // copper, it is satisfied and must not route further.
+    if (touchesExternal) {
+      return false;
+    }
+
+    boolean netHasExternalItems = false;
+    for (Collection<Item> set : board.getConnectedSets(netNo)) {
+      for (Item member : set) {
+        if (isExternalItem(member)) {
+          netHasExternalItems = true;
+          break;
+        }
+      }
+      if (netHasExternalItems) {
+        break;
+      }
+    }
+
+    if (netHasExternalItems) {
+      // The net has external targets, and this anchor set has not reached external copper yet.
+      return true;
+    }
+
+    // Purely internal net among selected components: route until all anchor pins on net are in
+    // this set.
+    int totalAnchorsInNet = 0;
+    for (Collection<Item> set : board.getConnectedSets(netNo)) {
+      for (Item member : set) {
+        if (isAnchorPin(member)) {
+          totalAnchorsInNet++;
         }
       }
     }
-    if (anchorCountInNet <= 1 && containsExternal) {
-      return false;
+    int anchorsInThisSet = 0;
+    for (Item member : connectedSet) {
+      if (isAnchorPin(member)) {
+        anchorsInThisSet++;
+      }
     }
-    if (anchorCountInNet > 1 && anchorsInThisSet == anchorCountInNet) {
-      return false;
-    }
-    return true;
+    return anchorsInThisSet < totalAnchorsInNet;
   }
 
   /** Filters the destination items for a connection attempt based on the active scoping policy. */
@@ -355,25 +410,82 @@ public class RoutingScopeContext implements Serializable {
       }
       Net net = board.rules.nets.get(netNo);
       boolean containsPlane = net != null && net.containsPlane();
+      MultiPinScopePolicy policy = this.mask.getMultiPinPolicy();
 
-      for (Collection<Item> set : connectedSets) {
-        boolean hasAnchor = false;
-        boolean hasPlane = false;
-        for (Item item : set) {
-          if (item instanceof Pin pin && this.mask.isAnchorPinId(pin.getId())) {
-            hasAnchor = true;
+      if (containsPlane) {
+        for (Collection<Item> set : connectedSets) {
+          boolean hasAnchor = false;
+          boolean hasPlane = false;
+          for (Item item : set) {
+            if (isAnchorPin(item)) {
+              hasAnchor = true;
+            }
+            if (item instanceof ConductionArea) {
+              hasPlane = true;
+            }
           }
-          if (item instanceof ConductionArea) {
-            hasPlane = true;
+          if (hasAnchor && !hasPlane) {
+            unsatisfied++;
           }
         }
-        if (hasAnchor) {
-          if (containsPlane) {
-            if (!hasPlane) {
+      } else if (policy == MultiPinScopePolicy.FULL_NET) {
+        unsatisfied += (connectedSets.size() - 1);
+      } else if (policy == MultiPinScopePolicy.MUTUAL_ONLY) {
+        int anchorSetCount = 0;
+        for (Collection<Item> set : connectedSets) {
+          for (Item item : set) {
+            if (isAnchorPin(item)) {
+              anchorSetCount++;
+              break;
+            }
+          }
+        }
+        if (anchorSetCount > 1) {
+          unsatisfied += (anchorSetCount - 1);
+        }
+      } else {
+        // ANCHOR_TO_NEAREST:
+        boolean netHasExternalItems = false;
+        for (Collection<Item> set : connectedSets) {
+          for (Item item : set) {
+            if (isExternalItem(item)) {
+              netHasExternalItems = true;
+              break;
+            }
+          }
+          if (netHasExternalItems) {
+            break;
+          }
+        }
+
+        if (netHasExternalItems) {
+          for (Collection<Item> set : connectedSets) {
+            boolean hasAnchor = false;
+            boolean hasExternal = false;
+            for (Item item : set) {
+              if (isAnchorPin(item)) {
+                hasAnchor = true;
+              }
+              if (isExternalItem(item)) {
+                hasExternal = true;
+              }
+            }
+            if (hasAnchor && !hasExternal) {
               unsatisfied++;
             }
-          } else {
-            unsatisfied++;
+          }
+        } else {
+          int anchorSetCount = 0;
+          for (Collection<Item> set : connectedSets) {
+            for (Item item : set) {
+              if (isAnchorPin(item)) {
+                anchorSetCount++;
+                break;
+              }
+            }
+          }
+          if (anchorSetCount > 1) {
+            unsatisfied += (anchorSetCount - 1);
           }
         }
       }

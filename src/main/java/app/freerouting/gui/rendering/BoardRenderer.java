@@ -739,12 +739,18 @@ public final class BoardRenderer {
       if (mask.isAnchorPinId(pin.getId()) || mask.isComponentSelected(pin.getComponentId())) {
         return 1.0;
       }
-    } else if (item.getComponentId() > 0 && mask.isComponentSelected(item.getComponentId())) {
-      return 1.0;
-    } else if (item.netCount() > 0) {
+      return 0.35;
+    }
+    if (item.getComponentId() > 0) {
+      if (mask.isComponentSelected(item.getComponentId())) {
+        return 1.0;
+      }
+      return 0.35;
+    }
+    if (item.netCount() > 0) {
       for (int i = 0; i < item.netCount(); i++) {
         if (mask.isNetInScope(item.getNetNumber(i))) {
-          return 1.0;
+          return 0.8;
         }
       }
     }

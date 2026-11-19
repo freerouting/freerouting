@@ -685,6 +685,9 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
         evt -> {
           if (WorkspaceSettings.PROP_SCOPE_COMPONENTS.equals(evt.getPropertyName())
               || WorkspaceSettings.PROP_FOREIGN_TRACE_POLICY.equals(evt.getPropertyName())) {
+            if (this.graphicsContext != null) {
+              this.graphicsContext.setActiveScopeMask(this.workspaceSettings.getActiveScopeMask());
+            }
             this.repaint();
           }
         });
@@ -697,6 +700,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
     this.graphicsContext =
         new GraphicsContext(
             this.board.boundingBox, panelSize, this.board.layerStructure, this.locale);
+    this.graphicsContext.setActiveScopeMask(this.workspaceSettings.getActiveScopeMask());
     this.setLayer(0);
   }
 
