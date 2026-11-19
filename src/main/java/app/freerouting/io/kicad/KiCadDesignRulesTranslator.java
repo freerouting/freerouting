@@ -18,6 +18,7 @@ import app.freerouting.rules.ViaInfo;
 import app.freerouting.rules.ViaRule;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -106,6 +107,7 @@ public final class KiCadDesignRulesTranslator {
     Map<EntityKey, Entity> entities = new LinkedHashMap<>();
     Map<Item, EntityKey> itemEntities = new LinkedHashMap<>();
     collectEntities(entities, itemEntities);
+    warnNamesMatchingNothing(rules, entities.values());
 
     // 2. Cells: entities that every condition treats alike, with the same clearance class
     List<Entity> entityList = new ArrayList<>(entities.values());
@@ -278,6 +280,30 @@ public final class KiCadDesignRulesTranslator {
   }
 
   /**
+   * Reports the net classes, nets and footprints named by a condition that exist nowhere in the
+   * design: a misspelt or renamed name leaves the rule without effect, and nothing else says so.
+   */
+  private void warnNamesMatchingNothing(List<ClearanceRule> rules, Collection<Entity> entities) {
+    List<KiCadRuleCondition.Item> items = new ArrayList<>();
+    for (Entity entity : entities) {
+      items.add(entity.item());
+    }
+    for (ClearanceRule rule : rules) {
+      if (rule.condition() == null) {
+        continue;
+      }
+      for (String part : rule.condition().namesMatchingNothing(items)) {
+        warnings.add(
+            "rule '"
+                + rule.name()
+                + "': "
+                + part
+                + " matches no net class, net or footprint of the design (misspelt or renamed?)");
+      }
+    }
+  }
+
+  /**
    * KiCad's name of a net class of the design: KiCad exports its Default class as kicad_default.
    */
   private static String kicadClassName(NetClass netClass) {
@@ -358,7 +384,30 @@ public final class KiCadDesignRulesTranslator {
         netClass,
         component == null ? null : component.name,
         padNumber,
-        pin.firstLayer() == pin.lastLayer());
+        pin.firstLayer() == pin.lastLayer(),
+        libraryId(component));
+  }
+
+  /**
+   * The KiCad library identifier of a component, null if unknown: the name of its Specctra image,
+   * less the suffix ({@code ::1}, {@code ::2}...) the KiCad export gives to footprint variants.
+   */
+  static String libraryId(Component component) {
+    if (component == null || component.getPackage() == null) {
+      return null;
+    }
+    String name = component.getPackage().name;
+    int variant = name.lastIndexOf("::");
+    if (variant > 0 && variant + 2 < name.length()) {
+      boolean digits = true;
+      for (int i = variant + 2; i < name.length(); i++) {
+        digits &= Character.isDigit(name.charAt(i));
+      }
+      if (digits) {
+        name = name.substring(0, variant);
+      }
+    }
+    return name;
   }
 
   /**

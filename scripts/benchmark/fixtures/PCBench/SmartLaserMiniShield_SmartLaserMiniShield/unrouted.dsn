@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -24,8 +24,11 @@
       (path pcb 0  108050 -79050  26950 -79050  26950 -27450  108050 -27450
             108050 -79050)
     )
-    (via "Via[0-1]_889:635_um" "Via[0-1]_800.1:500.38_um" "Via[0-1]_599.44:398.78_um"
-       "Via[0-1]_1143:889_um")
+    (plane GND (polygon F.Cu 0  107500 -78500  27500 -78500  27500 -28000  107500 -28000
+            107500 -78500))
+    (plane GND (polygon B.Cu 0  107500 -78500  27500 -78500  27500 -28000  107500 -28000
+            107500 -78500))
+    (via "Via[0-1]_889:635_um" "Via[0-1]_1143:889_um" "Via[0-1]_800.1:500.38_um" "Via[0-1]_599.44:398.78_um")
     (rule
       (width 254)
       (clearance 254)
@@ -394,6 +397,11 @@
       (shape (circle B.Cu 889))
       (attach off)
     )
+    (padstack "Via[0-1]_1143:889_um"
+      (shape (circle F.Cu 1143))
+      (shape (circle B.Cu 1143))
+      (attach off)
+    )
     (padstack "Via[0-1]_800.1:500.38_um"
       (shape (circle F.Cu 800.1))
       (shape (circle B.Cu 800.1))
@@ -402,11 +410,6 @@
     (padstack "Via[0-1]_599.44:398.78_um"
       (shape (circle F.Cu 599.44))
       (shape (circle B.Cu 599.44))
-      (attach off)
-    )
-    (padstack "Via[0-1]_1143:889_um"
-      (shape (circle F.Cu 1143))
-      (shape (circle B.Cu 1143))
       (attach off)
     )
   )
@@ -509,6 +512,15 @@
         (clearance 254)
       )
     )
+    (class 12V "N-0000096" "N-0000097"
+      (circuit
+        (use_via "Via[0-1]_1143:889_um")
+      )
+      (rule
+        (width 1524)
+        (clearance 254)
+      )
+    )
     (class motor "N-0000010" "N-000003" "N-000004" "N-000005" "N-000006" "N-000007"
       "N-000008" "N-000009"
       (circuit
@@ -516,15 +528,6 @@
       )
       (rule
         (width 1016)
-        (clearance 254)
-      )
-    )
-    (class 5V GND VDD
-      (circuit
-        (use_via "Via[0-1]_800.1:500.38_um")
-      )
-      (rule
-        (width 762)
         (clearance 254)
       )
     )
@@ -539,12 +542,12 @@
         (clearance 152.4)
       )
     )
-    (class 12V "N-0000096" "N-0000097"
+    (class 5V GND VDD
       (circuit
-        (use_via "Via[0-1]_1143:889_um")
+        (use_via "Via[0-1]_800.1:500.38_um")
       )
       (rule
-        (width 1524)
+        (width 762)
         (clearance 254)
       )
     )

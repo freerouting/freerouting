@@ -2011,5 +2011,59 @@
   
   
   
-
+  (zone (net 0) (net_name "") (layers F&B.Cu) (tstamp 0) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (keepout (tracks not_allowed) (vias not_allowed) (copperpour not_allowed))
+    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 86.3 93) (xy 96 93) (xy 96.2 102.6) (xy 86.5 102.6)
+      )
+    )
+  )
+  (zone (net 0) (net_name "") (layers F&B.Cu) (tstamp 0) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (keepout (tracks not_allowed) (vias not_allowed) (copperpour not_allowed))
+    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 86.4 54) (xy 95 54) (xy 95 62) (xy 86.4 62)
+      )
+    )
+  )
+  (zone (net 0) (net_name "") (layers F&B.Cu) (tstamp 0) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (keepout (tracks not_allowed) (vias not_allowed) (copperpour not_allowed))
+    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 151.8 92.6) (xy 160.8 92.7) (xy 160.8 102.9) (xy 151.8 102.8)
+      )
+    )
+  )
+  (zone (net 0) (net_name "") (layers F&B.Cu) (tstamp 5D326C8B) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (keepout (tracks not_allowed) (vias not_allowed) (copperpour not_allowed))
+    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 151.8 53.8) (xy 160.8 53.8) (xy 160.8 62.8) (xy 151.8 62.8)
+      )
+    )
+  )
+  (zone (net 1) (net_name GND) (layer B.Cu) (tstamp 0) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 160.875 54) (xy 86.75 54) (xy 86.3375 102.8) (xy 160.4625 102.8)
+      )
+    )
+    
+  )
 )

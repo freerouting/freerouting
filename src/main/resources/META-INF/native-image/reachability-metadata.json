@@ -269,6 +269,14 @@
       "serializable": true
     },
     {
+      "type": "app.freerouting.core.library.PadOval",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.core.library.PadOval[]",
+      "serializable": true
+    },
+    {
       "type": "app.freerouting.core.library.Padstack",
       "serializable": true
     },
@@ -927,6 +935,15 @@
     },
     {
       "type": "app.freerouting.logger.Log4j2ConfigurationFactory",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "app.freerouting.management.JvmRuntimeTelemetryProvider",
       "methods": [
         {
           "name": "<init>",

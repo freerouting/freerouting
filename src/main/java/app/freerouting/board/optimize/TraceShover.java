@@ -775,7 +775,7 @@ public class TraceShover {
         } else if (currentItem instanceof ConductionArea area) {
           isObstacle = area.getIsObstacle();
         } else if (currentItem instanceof BoardOutline outline) {
-          isObstacle = outline.blocksNets(netNumbers);
+          isObstacle = outline.blocksTraceAt(currentShape, layer, netNumbers, clearanceClassIndex);
         } else if (currentItem instanceof ViaObstacleArea
             || currentItem instanceof ComponentObstacleArea) {
           isObstacle = false;

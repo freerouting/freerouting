@@ -33,6 +33,21 @@ class CliKiCadProjectSettingsTest {
   }
 
   @Test
+  void aLargerMinimumConnectionWidthIsTheNeckWidth() throws Exception {
+    // KiCad's DRC checks min_connection on traces too: a 0.15 mm neck on a board with a 0.2032 mm
+    // minimum connection width is a connection_width error.
+    Path project =
+        Files.writeString(
+            dir.resolve("board.kicad_pro"),
+            "{\"board\": {\"design_settings\": {\"rules\": "
+                + "{\"min_track_width\": 0.15, \"min_connection\": 0.2032}}}}");
+    SettingsMerger merger = new SettingsMerger(new DefaultSettings());
+
+    assertTrue(CliRunner.addKiCadProjectSettings(new RoutingJob(), project.toString(), merger));
+    assertEquals(203.2, merger.merge().getNeckWidthUm(), 1e-9);
+  }
+
+  @Test
   void anExplicitNeckWidthWins() throws Exception {
     Path project = Files.writeString(dir.resolve("board.kicad_pro"), PROJECT);
     SettingsMerger merger =

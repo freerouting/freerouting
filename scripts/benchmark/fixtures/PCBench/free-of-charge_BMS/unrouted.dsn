@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -24,6 +24,14 @@
       (path pcb 0  238760 -129540  149860 -129540  149860 -128270  149860 -96520
             238760 -96520  238760 -129540)
     )
+    (plane GND (polygon F.Cu 0  190500 -129540  149860 -129540  149860 -96520  190500 -96520
+            190500 -129540))
+    (plane VSS (polygon F.Cu 0  238760 -129540  191008 -129540  191008 -96520  238760 -96520
+            238760 -129540))
+    (plane +5V (polygon B.Cu 0  190500 -129540  149860 -129540  149860 -96520  190500 -96520
+            190500 -129540))
+    (plane +BATT (polygon B.Cu 0  238760 -129540  191135 -129540  191135 -96520  238760 -96520
+            238760 -129540))
     (via "Via[0-1]_508:330.2_um" "Via[0-1]_762:508_um")
     (rule
       (width 228.6)
@@ -1099,6 +1107,15 @@
         (clearance 228.6)
       )
     )
+    (class small "N-0000037" "N-0000038" "N-0000050" "N-0000051" "N-0000052"
+      (circuit
+        (use_via "Via[0-1]_508:330.2_um")
+      )
+      (rule
+        (width 203.2)
+        (clearance 228.6)
+      )
+    )
     (class Ballance /CellBallance/C0 /CellBallance/C1 /CellBallance/C2 /CellBallance/C3
       /CellBallance/C4 /CellBallance/C5 "N-0000078" "N-0000079" "N-0000082"
       "N-0000084" "N-0000088" "N-0000089" "N-0000090" "N-0000091" "N-0000092"
@@ -1108,15 +1125,6 @@
       )
       (rule
         (width 381)
-        (clearance 228.6)
-      )
-    )
-    (class small "N-0000037" "N-0000038" "N-0000050" "N-0000051" "N-0000052"
-      (circuit
-        (use_via "Via[0-1]_508:330.2_um")
-      )
-      (rule
-        (width 203.2)
         (clearance 228.6)
       )
     )

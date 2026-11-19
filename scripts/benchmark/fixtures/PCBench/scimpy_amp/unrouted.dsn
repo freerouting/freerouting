@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -24,6 +24,10 @@
       (path pcb 0  193294 -123952  89154 -123952  89154 -72136  193294 -72136
             193294 -123952)
     )
+    (plane GND (polygon F.Cu 0  192024 -123444  90424 -123444  90424 -73152  192024 -73152
+            192024 -123444))
+    (plane GND (polygon B.Cu 0  192024 -123444  90424 -123444  90424 -73152  192024 -73152
+            192024 -123444))
     (via "Via[0-1]_685.8:330.2_um")
     (rule
       (width 254)
@@ -1045,21 +1049,21 @@
         (clearance 254)
       )
     )
-    (class Power +15V -15V GND
-      (circuit
-        (use_via "Via[0-1]_685.8:330.2_um")
-      )
-      (rule
-        (width 1270)
-        (clearance 254)
-      )
-    )
     (class "Audio Out" /left_high_out /left_low_out /right_high_out /right_low_out
       (circuit
         (use_via "Via[0-1]_685.8:330.2_um")
       )
       (rule
         (width 635)
+        (clearance 254)
+      )
+    )
+    (class Power +15V -15V GND
+      (circuit
+        (use_via "Via[0-1]_685.8:330.2_um")
+      )
+      (rule
+        (width 1270)
         (clearance 254)
       )
     )

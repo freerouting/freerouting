@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -24,7 +24,12 @@
       (path pcb 0  182880 -149225  182880 -150241  100965 -150241  100965 -149225
             100965 -107315  103505 -107315  182880 -107315  182880 -149225)
     )
-    (via "Via[0-1]_600:400_um" "Via[0-1]_1200:800_um" "Via[0-1]_800:600_um" "Via[0-1]_1000:600_um")
+    (plane GNDA (polygon B.Cu 0  101600 -148844  101727 -108077  176022 -108077  181356 -108077
+            182499 -108077  182499 -149987  101473 -149987  101473 -148971
+            101600 -148844))
+    (plane GNDA (polygon F.Cu 0  182626 -149987  101473 -149987  101727 -108204  101727 -108077
+            182372 -108077  182626 -149987))
+    (via "Via[0-1]_600:400_um" "Via[0-1]_1000:600_um" "Via[0-1]_1200:800_um" "Via[0-1]_800:600_um")
     (rule
       (width 250)
       (clearance 200)
@@ -608,6 +613,11 @@
       (shape (circle B.Cu 600))
       (attach off)
     )
+    (padstack "Via[0-1]_1000:600_um"
+      (shape (circle F.Cu 1000))
+      (shape (circle B.Cu 1000))
+      (attach off)
+    )
     (padstack "Via[0-1]_1200:800_um"
       (shape (circle F.Cu 1200))
       (shape (circle B.Cu 1200))
@@ -616,11 +626,6 @@
     (padstack "Via[0-1]_800:600_um"
       (shape (circle F.Cu 800))
       (shape (circle B.Cu 800))
-      (attach off)
-    )
-    (padstack "Via[0-1]_1000:600_um"
-      (shape (circle F.Cu 1000))
-      (shape (circle B.Cu 1000))
       (attach off)
     )
   )
@@ -768,22 +773,21 @@
         (clearance 200)
       )
     )
+    (class power VDD
+      (circuit
+        (use_via "Via[0-1]_1000:600_um")
+      )
+      (rule
+        (width 1000)
+        (clearance 200)
+      )
+    )
     (class high_power GNDA VCC VDDA
       (circuit
         (use_via "Via[0-1]_1200:800_um")
       )
       (rule
         (width 1200)
-        (clearance 200)
-      )
-    )
-    (class signal /CLOCK /DATA /LATCH /MOSI /M_DIR /M_ENABLE /M_STEP /RESET
-      /RX "/STROKE3-4" "/STROKE5-6" /TX
-      (circuit
-        (use_via "Via[0-1]_600:400_um")
-      )
-      (rule
-        (width 400)
         (clearance 200)
       )
     )
@@ -796,12 +800,13 @@
         (clearance 200)
       )
     )
-    (class power VDD
+    (class signal /CLOCK /DATA /LATCH /MOSI /M_DIR /M_ENABLE /M_STEP /RESET
+      /RX "/STROKE3-4" "/STROKE5-6" /TX
       (circuit
-        (use_via "Via[0-1]_1000:600_um")
+        (use_via "Via[0-1]_600:400_um")
       )
       (rule
-        (width 1000)
+        (width 400)
         (clearance 200)
       )
     )

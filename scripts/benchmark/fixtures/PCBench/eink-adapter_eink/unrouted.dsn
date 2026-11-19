@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -24,6 +24,17 @@
       (path pcb 0  163576 -148717  78232 -148717  78232 -110236  163576 -110236
             163576 -148717)
     )
+    (plane GND (polygon B.Cu 0  78000 -149000  78000 -110000  113000 -110000  113000 -149000
+            78000 -149000))
+    (keepout "" (polygon F.Cu 0  164211 -109474  164465 -148844  78105 -148971  77978 -108077
+            164211 -109474)
+      (window (polygon F.Cu 0  78613 -110617  78613 -148336  163195 -148336  163195 -110617
+            78613 -110617))
+    )
+    (keepout "" (polygon B.Cu 0  164211 -111174  164465 -148844  113105 -148971  113103 -148336
+            163195 -148336  163195 -111146  164211 -111174))
+    (keepout "" (polygon B.Cu 0  113086 -110617  113078 -109777  143824 -110617  113086 -110617))
+    (keepout "" (polygon B.Cu 0  143824 -110617  163195 -110617  163195 -111146  143824 -110617))
     (via "Via[0-1]_685.8:330.2_um")
     (rule
       (width 304.8)
@@ -881,15 +892,6 @@
         (clearance 152.4)
       )
     )
-    (class power /+15V /+22V "/-15V" "/-20V" /SMPS_VIN /VBORDER /VCOM
-      (circuit
-        (use_via "Via[0-1]_685.8:330.2_um")
-      )
-      (rule
-        (width 355.6)
-        (clearance 152.4)
-      )
-    )
     (class logic /D0 /D1 /D2 /D3 /D4 /D5 /D6 /D7 /GMODE /LE /OE /SPH /SPV
       /U1CE1 /U1CE2 /U2CE1 /U2CE2
       (circuit
@@ -897,6 +899,15 @@
       )
       (rule
         (width 304.8)
+        (clearance 152.4)
+      )
+    )
+    (class power /+15V /+22V "/-15V" "/-20V" /SMPS_VIN /VBORDER /VCOM
+      (circuit
+        (use_via "Via[0-1]_685.8:330.2_um")
+      )
+      (rule
+        (width 355.6)
         (clearance 152.4)
       )
     )

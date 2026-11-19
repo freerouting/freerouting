@@ -321,4 +321,34 @@ class ModuleBoundariesArchTest {
                 + " for native image compilation")
         .check(classes);
   }
+
+  @Test
+  void applicationMustNotDependOnJavaBeans() {
+    JavaClasses classes = importMainClasses();
+    noClasses()
+        .that()
+        .resideInAPackage("app.freerouting..")
+        .should()
+        .dependOnClassesThat()
+        .resideInAPackage("java.beans..")
+        .because(
+            "settings and GUI property change events use pure-Java app.freerouting.settings types"
+                + " instead of java.desktop's java.beans")
+        .check(classes);
+  }
+
+  @Test
+  void pipelineAndSettingsMustNotDependOnManagementMxBeans() {
+    JavaClasses classes = importMainClasses();
+    noClasses()
+        .that()
+        .resideInAnyPackage(PIPELINE_SUPPORT_PACKAGES)
+        .should()
+        .dependOnClassesThat()
+        .resideInAnyPackage("java.lang.management..", "com.sun.management..")
+        .because(
+            "core pipeline and settings packages must use RuntimeTelemetryProvider instead of"
+                + " java.management / jdk.management MXBeans")
+        .check(classes);
+  }
 }

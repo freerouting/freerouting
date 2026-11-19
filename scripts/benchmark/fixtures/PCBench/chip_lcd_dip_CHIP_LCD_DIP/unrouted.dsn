@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -24,6 +24,12 @@
       (path pcb 0  115951 -100711  74549 -100711  74549 -42926  77851 -39624
             115951 -39624  115951 -100711)
     )
+    (plane GND (polygon B.Cu 0  74250 -101060  74250 -43060  77750 -39560  116250 -39560
+            116250 -101060  74250 -101060))
+    (plane GND (polygon F.Cu 0  74250 -101060  116250 -101060  116250 -39560  77750 -39560
+            74250 -43060  74250 -101060))
+    (keepout "" (polygon B.Cu 0  85100 -96710  85100 -98410  105400 -98410  105400 -96710
+            85100 -96710))
     (via "Via[0-1]_685.8:330.2_um")
     (rule
       (width 254)
@@ -1020,42 +1026,13 @@
         (clearance 203.2)
       )
     )
-    (class Power +3V3 /BAT+ /Vin+
-      (circuit
-        (use_via "Via[0-1]_685.8:330.2_um")
-      )
-      (rule
-        (width 406.4)
-        (clearance 254)
-      )
-    )
-    (class Analog /ADC
-      (circuit
-        (use_via "Via[0-1]_685.8:330.2_um")
-      )
-      (rule
-        (width 254)
-        (clearance 304.8)
-      )
-    )
-    (class LCD_DAT /B3 /B4 /B5 /B6 /B7 /DEN /G2 /G3 /G4 /G5 /G6 /G7 /HSYNC
-      /PXCLK /R3 /R4 /R5 /R6 /R7 /VSYNC /X1 /X2 /Y1 /Y2
+    (class Misc /LEDA /LEDK GND
       (circuit
         (use_via "Via[0-1]_685.8:330.2_um")
       )
       (rule
         (width 254)
         (clearance 203.2)
-      )
-    )
-    (class Serial /CS /CS0 /CS1 /CS2 /CS3 /CS4 /CS5 /CS6 /CS7 /MISO /MOSI
-      /RXD1 /SCK /SCL2 /SDA2 /TXD1
-      (circuit
-        (use_via "Via[0-1]_685.8:330.2_um")
-      )
-      (rule
-        (width 254)
-        (clearance 254)
       )
     )
     (class GPIO /CSADDR0 /CSADDR1 /CSADDR2 /IO0 /IO1 /IO2 /IO3 /IO4 /IO5 /IO6
@@ -1068,13 +1045,42 @@
         (clearance 254)
       )
     )
-    (class Misc /LEDA /LEDK GND
+    (class Serial /CS /CS0 /CS1 /CS2 /CS3 /CS4 /CS5 /CS6 /CS7 /MISO /MOSI
+      /RXD1 /SCK /SCL2 /SDA2 /TXD1
+      (circuit
+        (use_via "Via[0-1]_685.8:330.2_um")
+      )
+      (rule
+        (width 254)
+        (clearance 254)
+      )
+    )
+    (class LCD_DAT /B3 /B4 /B5 /B6 /B7 /DEN /G2 /G3 /G4 /G5 /G6 /G7 /HSYNC
+      /PXCLK /R3 /R4 /R5 /R6 /R7 /VSYNC /X1 /X2 /Y1 /Y2
       (circuit
         (use_via "Via[0-1]_685.8:330.2_um")
       )
       (rule
         (width 254)
         (clearance 203.2)
+      )
+    )
+    (class Analog /ADC
+      (circuit
+        (use_via "Via[0-1]_685.8:330.2_um")
+      )
+      (rule
+        (width 254)
+        (clearance 304.8)
+      )
+    )
+    (class Power +3V3 /BAT+ /Vin+
+      (circuit
+        (use_via "Via[0-1]_685.8:330.2_um")
+      )
+      (rule
+        (width 406.4)
+        (clearance 254)
       )
     )
   )

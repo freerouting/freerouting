@@ -2883,4 +2883,17 @@
   
   
   
+  
+  (zone (net 0) (net_name "") (layer B.Cu) (tstamp 5C75F525) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 117.5 54) (xy 157.6 54.1) (xy 157.5 84) (xy 117.5 84)
+      )
+    )
+    
+    
   )
+)

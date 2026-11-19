@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -47,6 +47,14 @@
             101698 -37540.6  102232 -37502.4  102500 -37500  147500 -37500
             147768 -37502.4)
     )
+    (plane GND (polygon F.Cu 0  95976 -38570  154024 -38570  154024 -134224  95976 -134224
+            95976 -38570))
+    (plane GND (polygon B.Cu 0  95976 -38570  154024 -38570  154024 -134224  95976 -134224
+            95976 -38570))
+    (keepout "" (polygon F.Cu 0  115570 -39624  134366 -39624  134366 -45212  115570 -45212
+            115570 -39624))
+    (keepout "" (polygon B.Cu 0  115570 -39624  134366 -39624  134366 -45212  115570 -45212
+            115570 -39624))
     (via "Via[0-1]_889:635_um" "Via[0-1]_1140:889_um")
     (rule
       (width 254)
@@ -580,15 +588,6 @@
         (clearance 254)
       )
     )
-    (class Power GND "Net-(BT1-Pad1)" "Net-(SW1-Pad1)" VCC
-      (circuit
-        (use_via "Via[0-1]_1140:889_um")
-      )
-      (rule
-        (width 356)
-        (clearance 254)
-      )
-    )
     (class BGA MISO MOSI "Net-(D1-Pad1)" "Net-(D2-Pad1)" "Net-(R1-Pad1)" "Net-(U1-PadA4)"
       "Net-(U1-PadA6)" "Net-(U1-PadB2)" "Net-(U1-PadB3)" "Net-(U1-PadB5)"
       "Net-(U1-PadB6)" "Net-(U1-PadC3)" "Net-(U1-PadC4)" "Net-(U1-PadE1)"
@@ -601,6 +600,15 @@
       )
       (rule
         (width 254)
+        (clearance 254)
+      )
+    )
+    (class Power GND "Net-(BT1-Pad1)" "Net-(SW1-Pad1)" VCC
+      (circuit
+        (use_via "Via[0-1]_1140:889_um")
+      )
+      (rule
+        (width 356)
         (clearance 254)
       )
     )

@@ -4852,4 +4852,28 @@
   
   
   
+  
+  (zone (net 2) (net_name /AV-) (layer Front) (tstamp 54A67278) (hatch edge 0.508)
+    (connect_pads (clearance 0.2032))
+    (min_thickness 0.254)
+    (fill (arc_segments 16) (thermal_gap 0.381) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 66.64 35.76) (xy 45.05 35.76) (xy 45.05 32.839) (xy 44.288 32.839) (xy 44.288 30.68)
+        (xy 66.64 30.68)
+      )
+    )
+    
   )
+  (zone (net 42) (net_name GND) (layer Front) (tstamp 54A7366B) (hatch edge 0.508)
+    (connect_pads (clearance 0.2032))
+    (min_thickness 0.254)
+    (fill (arc_segments 16) (thermal_gap 0.381) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 44.415 38.808) (xy 39.716 38.808) (xy 39.716 33.093) (xy 44.415 33.093)
+      )
+    )
+    
+  )
+)

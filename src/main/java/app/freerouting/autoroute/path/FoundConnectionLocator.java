@@ -776,7 +776,9 @@ public abstract class FoundConnectionLocator {
     Collection<ShapeTree.TreeEntry> treeEntries = new ArrayList<>();
     defaultTree.overlappingTreeEntries(copper, layer, new int[0], treeEntries);
     for (ShapeTree.TreeEntry entry : treeEntries) {
-      if (!(entry.object instanceof Item item) || item == pin || !item.isTraceObstacle(netNumber)) {
+      if (!(entry.object instanceof Item item)
+          || item == pin
+          || !item.isTraceObstacle(netNumber, entry.shapeIndexInObject)) {
         continue;
       }
       if (!(item instanceof Pin
@@ -811,7 +813,8 @@ public abstract class FoundConnectionLocator {
           shape, layer, ignoreNetNos, clearanceClassIndex, treeEntries);
     }
     for (ShapeTree.TreeEntry entry : treeEntries) {
-      if (!(entry.object instanceof Item item) || !item.isTraceObstacle(netNumber)) {
+      if (!(entry.object instanceof Item item)
+          || !item.isTraceObstacle(netNumber, entry.shapeIndexInObject)) {
         continue;
       }
       if (item instanceof Pin

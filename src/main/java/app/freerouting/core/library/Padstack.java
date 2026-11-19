@@ -39,6 +39,9 @@ public class Padstack implements Comparable<Padstack>, ItemInfoPrinter.Printable
    */
   private final ConvexShape[][] auxiliaryShapes;
 
+  /** The exact copper of round and oval pads per layer, behind their bounding shapes; or null. */
+  private PadOval[] ovals;
+
   /** True if this padstack contains non-convex custom pad geometry. */
   public boolean hasNonConvexGeometry;
 
@@ -188,6 +191,22 @@ public class Padstack implements Comparable<Padstack>, ItemInfoPrinter.Printable
       return null;
     }
     return shapes[layer];
+  }
+
+  /**
+   * The exact copper of the round or oval pad on this layer, whose bounding shape is {@link
+   * #getShape}; null when the pad on this layer is not one.
+   */
+  public PadOval getOval(int layer) {
+    if (ovals == null || layer < 0 || layer >= ovals.length) {
+      return null;
+    }
+    return ovals[layer];
+  }
+
+  /** Sets the exact copper of the round or oval pads, one entry (or null) per layer. */
+  public void setOvals(PadOval[] ovals) {
+    this.ovals = ovals;
   }
 
   /** Gets any auxiliary shapes on the specified layer for non-convex custom pads. */

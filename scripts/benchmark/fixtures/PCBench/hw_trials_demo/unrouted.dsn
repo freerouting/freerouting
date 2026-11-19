@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -24,6 +24,10 @@
       (path pcb 0  172720 -119380  123190 -119380  123190 -69850  172720 -69850
             172720 -119380)
     )
+    (plane GND (polygon B.Cu 0  123190 -69850  172720 -69850  172720 -119380  123190 -119380
+            123190 -69850))
+    (plane GND (polygon F.Cu 0  123190 -69850  172720 -69850  172720 -119380  123190 -119380
+            123190 -69850))
     (via "Via[0-1]_610:410_um")
     (rule
       (width 203.2)
@@ -521,6 +525,15 @@
         (clearance 203.2)
       )
     )
+    (class "Itead power" 5V GND VCC
+      (circuit
+        (use_via "Via[0-1]_610:410_um")
+      )
+      (rule
+        (width 310)
+        (clearance 310)
+      )
+    )
     (class "Itead signal" /ADC /ADC_EX /EN /GPIO0 /GPIO10 /GPIO12 /GPIO13
       /GPIO14 /GPIO15 /GPIO16 /GPIO2 /GPIO4 /GPIO5 /GPIO9 /LCD_CS /LCD_LED
       /LCD_RST /RXD0 /SD_CS /SD_LCD_CLK /SD_LCD_DATA_CMD /SD_LCD_MISO /SD_LCD_MOSI
@@ -532,15 +545,6 @@
       (rule
         (width 203.2)
         (clearance 203.2)
-      )
-    )
-    (class "Itead power" 5V GND VCC
-      (circuit
-        (use_via "Via[0-1]_610:410_um")
-      )
-      (rule
-        (width 310)
-        (clearance 310)
       )
     )
   )

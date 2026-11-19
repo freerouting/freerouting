@@ -175,7 +175,8 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
         continue;
       }
       SearchTreeObject currentObject = (SearchTreeObject) currentEntry.object;
-      if (!currentObject.isTraceObstacle(autorouteEngine.getNetNumber())) {
+      if (!currentObject.isTraceObstacle(
+          autorouteEngine.getNetNumber(), currentEntry.shapeIndexInObject)) {
         continue;
       }
       if (currentObject.shapeLayer(currentEntry.shapeIndexInObject) != getLayer()) {

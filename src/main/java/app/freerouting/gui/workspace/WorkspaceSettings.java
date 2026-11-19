@@ -3,10 +3,10 @@ package app.freerouting.gui.workspace;
 import app.freerouting.board.actions.ItemSelectionFilter;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.settings.PropertyChangeListener;
+import app.freerouting.settings.PropertyChangeSupport;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.sources.GuiSettingsSource;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -30,10 +30,10 @@ import java.util.Arrays;
  * {@link WorkspaceContract} to safely interact with manager implementations.
  *
  * <p><strong>Two-way binding:</strong> every setter fires a named {@link
- * java.beans.PropertyChangeEvent} via {@link PropertyChangeSupport}. GUI panels should register as
- * {@link PropertyChangeListener}s on this instance and call {@code refresh()} (or update individual
- * controls) in their {@code propertyChange} callback. Use {@link #addPropertyChangeListener} /
- * {@link #removePropertyChangeListener} to subscribe.
+ * app.freerouting.settings.PropertyChangeEvent} via {@link PropertyChangeSupport}. GUI panels
+ * should register as {@link PropertyChangeListener}s on this instance and call {@code refresh()}
+ * (or update individual controls) in their {@code propertyChange} callback. Use {@link
+ * #addPropertyChangeListener} / {@link #removePropertyChangeListener} to subscribe.
  *
  * @see GuiSettingsSource
  * @see app.freerouting.settings.SettingsMerger

@@ -9,8 +9,6 @@ import app.freerouting.rules.NetClass;
 import app.freerouting.util.ReflectionUtil;
 import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

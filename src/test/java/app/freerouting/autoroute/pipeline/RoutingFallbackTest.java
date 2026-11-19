@@ -160,6 +160,20 @@ class RoutingFallbackTest {
   }
 
   @Test
+  void automaticContinuationsPreserveProjectMinConnectionWidthFloor() {
+    app.freerouting.core.RoutingJob job = new app.freerouting.core.RoutingJob();
+    job.routerSettings = new DefaultSettings().getSettings();
+    job.routerSettings.setNeckWidthUm(203.2);
+
+    job.kicadProject =
+        app.freerouting.io.kicad.KiCadProject.parse(
+            "{\"board\": {\"design_settings\": {\"rules\": {\"min_connection\": 0.2032}}}}",
+            "board.kicad_pro");
+    List<RoutingFallback.Strategy> withProject = RoutingFallbackRunner.automaticContinuations(job);
+    assertTrue(withProject.stream().noneMatch(s -> "continue-no-neck".equals(s.name)));
+  }
+
+  @Test
   void autoNeckWarningLogsOnlyWhenAutoNeckFallbackIsChosenWithUnsetNeckWidth() {
     List<app.freerouting.logger.LogEntry> entries = new ArrayList<>();
     app.freerouting.core.RoutingJob job = new app.freerouting.core.RoutingJob();

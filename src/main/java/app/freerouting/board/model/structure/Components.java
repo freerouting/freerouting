@@ -149,6 +149,11 @@ public class Components implements Serializable {
     this.undoList.generateSnapshot();
   }
 
+  /** Removes the top snapshot from the undo stack. */
+  public boolean popSnapshot() {
+    return this.undoList.popSnapshot();
+  }
+
   /**
    * Restores the situation at the previous snapshot. Returns false, if no more undo is possible.
    */
