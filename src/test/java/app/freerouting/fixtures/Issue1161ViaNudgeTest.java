@@ -15,6 +15,7 @@ import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.core.scoring.BoardStatistics;
+import app.freerouting.datastructures.Stoppable;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.io.specctra.DsnTestFixtures;
 import app.freerouting.management.HeadlessBoardManager;
@@ -24,6 +25,8 @@ import app.freerouting.settings.sources.CliSettings;
 import app.freerouting.settings.sources.DefaultSettings;
 import app.freerouting.settings.sources.TestingSettings;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -114,6 +117,66 @@ class Issue1161ViaNudgeTest extends RoutingFixtureTest {
   @Test
   void viaInsideAZoneOfAnotherNetStaysInPlace() throws IOException {
     assertTheViaStaysInPlace("Issue1161-via-in-foreign-zone.dsn");
+  }
+
+  /**
+   * {@code Issue1161-shove-into-zone.dsn}: the via starts outside the GND zone and stays outside it
+   * when shifted left, which would shorten both traces; however, shifting it left pulls the Top
+   * trace into the zone's clearance envelope, so the move must be tried and rejected.
+   */
+  @Test
+  void shoveThatPushesTraceIntoZoneIsRejected() throws IOException {
+    RoutingBoard board = DsnTestFixtures.loadBoard("Issue1161-shove-into-zone.dsn");
+    for (Item item : board.getItems()) {
+      if (item instanceof Via || item instanceof PolylineTrace) {
+        item.setFixedState(FixedState.UNFIXED);
+      }
+    }
+    Point before = board.getVias().iterator().next().getCenter();
+
+    ViaNudger.Result result = ViaNudger.run(board, 500, null);
+
+    assertTrue(result.triedMoves() > 0, "candidate moves for a via outside a zone must be tried");
+    assertEquals(0, result.acceptedMoves());
+    assertEquals(1, board.getVias().size());
+    assertEquals(before, board.getVias().iterator().next().getCenter());
+  }
+
+  /**
+   * When a stop is requested mid-run after some moves have already been accepted, the pass rolls
+   * back the whole board so no partial result is left behind.
+   */
+  @Test
+  void stopRequestRevertsAcceptedMoves() {
+    RoutingBoard board = routedBoard();
+    Map<Integer, Point> viaCentersBefore = new HashMap<>();
+    for (Via via : board.getVias()) {
+      viaCentersBefore.put(via.getId(), via.getCenter());
+    }
+    final int[] checks = {0};
+    Stoppable stopAfterFewVias =
+        new Stoppable() {
+          @Override
+          public void requestStop() {}
+
+          @Override
+          public boolean isStopRequested() {
+            return ++checks[0] > 20;
+          }
+        };
+
+    ViaNudger.Result result = ViaNudger.run(board, 500, stopAfterFewVias);
+
+    assertTrue(result.triedMoves() > 0);
+    assertEquals(0, result.acceptedMoves());
+    assertEquals(result.lengthBefore(), result.lengthAfter(), 1e-6);
+    assertEquals(result.bendsBefore(), result.bendsAfter());
+    assertEquals(result.viasBefore(), result.viasAfter());
+    Map<Integer, Point> viaCentersAfter = new HashMap<>();
+    for (Via via : board.getVias()) {
+      viaCentersAfter.put(via.getId(), via.getCenter());
+    }
+    assertEquals(viaCentersBefore, viaCentersAfter);
   }
 
   private static void assertTheViaStaysInPlace(String fixture) throws IOException {

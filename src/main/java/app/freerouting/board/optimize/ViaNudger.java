@@ -7,9 +7,12 @@ import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.model.items.Via;
 import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.datastructures.Stoppable;
+import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntVector;
+import app.freerouting.geometry.planar.Shape;
+import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.rules.BoardRules;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -78,18 +81,33 @@ public final class ViaNudger {
 
   private record Cost(double length, int bends, int vias) {}
 
+  private record ZoneRegion(int layer, int clearanceClass, IntBox boundingBox, TileShape[] tiles) {}
+
   private final RoutingBoard board;
   private final int pullTightAccuracy;
   private final Stoppable stoppable;
 
-  /** The planes and copper zones of the board. */
-  private final List<ConductionArea> zones;
+  /** The planes and copper zones of the board, pre-split into convex tiles. */
+  private final List<ZoneRegion> zones;
 
   private ViaNudger(RoutingBoard board, int pullTightAccuracy, Stoppable stoppable) {
     this.board = board;
     this.pullTightAccuracy = pullTightAccuracy;
     this.stoppable = stoppable;
-    this.zones = new ArrayList<>(board.getConductionAreas());
+    List<ZoneRegion> zoneRegions = new ArrayList<>();
+    for (ConductionArea zone : board.getConductionAreas()) {
+      Area area = zone.getArea();
+      if (area == null || area.isEmpty()) {
+        continue;
+      }
+      zoneRegions.add(
+          new ZoneRegion(
+              zone.getLayer(),
+              zone.clearanceClassIndex(),
+              area.boundingBox(),
+              area.splitToConvex()));
+    }
+    this.zones = zoneRegions;
   }
 
   /** Runs the pass on board until no via can be moved with a gain. */
@@ -144,7 +162,7 @@ public final class ViaNudger {
           continue;
         }
         FloatPoint center = via.getCenter().toFloat();
-        if (isInOrNearZone(via, center)) {
+        if (isInOrNearZone(via, null)) {
           continue;
         }
         if (movedInPreviousPass != null
@@ -163,8 +181,7 @@ public final class ViaNudger {
           for (int step : STEPS_IN_HALF_PITCHES) {
             IntVector move =
                 new IntVector(direction[0] * step * halfPitch, direction[1] * step * halfPitch);
-            FloatPoint target = new FloatPoint(center.x + move.x, center.y + move.y);
-            if (isInOrNearZone(via, target)) {
+            if (isInOrNearZone(via, move)) {
               continue;
             }
             ++tried;
@@ -203,7 +220,6 @@ public final class ViaNudger {
             && !changedTraceEntersZone(tracesBefore)
             && board.routingLedger().incompleteCount() <= incompleteBefore
             && board.getStatistics().clearanceViolations.totalCount <= violationsAllowed) {
-          board.popSnapshot();
           ++accepted;
           movedInThisPass.add(center);
         } else {
@@ -214,6 +230,16 @@ public final class ViaNudger {
         break;
       }
       movedInPreviousPass = movedInThisPass;
+    }
+    if (isStopRequested()) {
+      while (accepted > 0) {
+        board.undo(null);
+        --accepted;
+      }
+    } else {
+      for (int i = 0; i < accepted; ++i) {
+        board.popSnapshot();
+      }
     }
     Cost end = cost();
     return new Result(
@@ -277,48 +303,42 @@ public final class ViaNudger {
     return false;
   }
 
-  /** Whether a via with the pads of via and its centre at center is in or too close to a zone. */
-  private boolean isInOrNearZone(Via via, FloatPoint center) {
+  /**
+   * Whether via (optionally translated by translation) has any pad inside a zone or closer to its
+   * outline than the clearance.
+   */
+  private boolean isInOrNearZone(Via via, IntVector translation) {
     if (zones.isEmpty()) {
       return false;
     }
     for (int layer = via.firstLayer(); layer <= via.lastLayer(); ++layer) {
-      IntBox pad = via.getShape(layer - via.firstLayer()).boundingBox();
-      double halfWidth = Math.max(pad.width(), pad.height()) / 2.0;
-      if (isInOrNearZone(center, layer, halfWidth, via.clearanceClassIndex())) {
+      Shape padShape = via.getShape(layer - via.firstLayer());
+      if (padShape == null) {
+        continue;
+      }
+      if (translation != null && !translation.equals(IntVector.ZERO)) {
+        padShape = (Shape) padShape.translateBy(translation);
+      }
+      if (shapeEntersZone(padShape, layer, via.clearanceClassIndex())) {
         return true;
       }
     }
     return false;
   }
 
-  /**
-   * Whether copper of the given half width around point, on layer, is inside a zone or closer to
-   * its outline than the clearance. The point and eight points around it are tested.
-   */
-  private boolean isInOrNearZone(
-      FloatPoint point, int layer, double halfWidth, int clearanceClass) {
-    for (ConductionArea zone : zones) {
-      if (zone.getLayer() != layer) {
+  /** Whether copper with the given shape on layer intersects any zone or its clearance envelope. */
+  private boolean shapeEntersZone(Shape shape, int layer, int clearanceClass) {
+    for (ZoneRegion zone : zones) {
+      if (zone.layer() != layer) {
         continue;
       }
-      double reach =
-          halfWidth + board.clearanceValue(clearanceClass, zone.clearanceClassIndex(), layer);
-      IntBox box = zone.getArea().boundingBox();
-      if (point.x < box.ll.x - reach
-          || point.x > box.ur.x + reach
-          || point.y < box.ll.y - reach
-          || point.y > box.ur.y + reach) {
+      int clearance = board.clearanceValue(clearanceClass, zone.clearanceClass(), layer);
+      Shape expanded = clearance > 0 ? shape.enlarge(clearance) : shape;
+      if (!expanded.boundingBox().intersects(zone.boundingBox())) {
         continue;
       }
-      if (zone.getArea().contains(point)) {
-        return true;
-      }
-      for (int[] direction : DIRECTIONS) {
-        double scale = direction[0] != 0 && direction[1] != 0 ? reach / Math.sqrt(2) : reach;
-        FloatPoint around =
-            new FloatPoint(point.x + direction[0] * scale, point.y + direction[1] * scale);
-        if (zone.getArea().contains(around)) {
+      for (TileShape tile : zone.tiles()) {
+        if (tile.intersects(expanded)) {
           return true;
         }
       }
@@ -363,22 +383,14 @@ public final class ViaNudger {
       if (before != null && before == signature(trace)) {
         continue;
       }
-      double halfWidth = trace.getHalfWidth();
-      double step = Math.max(2 * halfWidth, 1);
-      FloatPoint previous = trace.polyline().corner(0).toFloat();
-      for (int i = 1; i < trace.cornerCount(); ++i) {
-        FloatPoint corner = trace.polyline().corner(i).toFloat();
-        int pieces = (int) Math.min(200, Math.max(1, Math.ceil(previous.distance(corner) / step)));
-        for (int k = 0; k <= pieces; ++k) {
-          FloatPoint sample =
-              new FloatPoint(
-                  previous.x + (corner.x - previous.x) * k / pieces,
-                  previous.y + (corner.y - previous.y) * k / pieces);
-          if (isInOrNearZone(sample, trace.getLayer(), halfWidth, trace.clearanceClassIndex())) {
-            return true;
-          }
+      int layer = trace.getLayer();
+      int clearanceClass = trace.clearanceClassIndex();
+      int segmentCount = trace.tileShapeCount();
+      for (int i = 0; i < segmentCount; ++i) {
+        TileShape segment = trace.getTileShape(i);
+        if (segment != null && shapeEntersZone(segment, layer, clearanceClass)) {
+          return true;
         }
-        previous = corner;
       }
     }
     return false;
