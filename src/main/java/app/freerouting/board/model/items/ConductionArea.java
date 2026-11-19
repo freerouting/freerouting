@@ -434,13 +434,8 @@ public class ConductionArea extends ObstacleArea implements Connectable {
       return true;
     }
     for (Item item : unconnectedSet) {
-      if (item instanceof ConductionArea ca) {
-        if (!ca.isFractured() && ca.reachesPinOfNet(netNo)) {
-          return false;
-        }
-        if (ca.isFractured() && ca.hasPinOnAnyIsland()) {
-          return false;
-        }
+      if (item instanceof ConductionArea ca && !ca.isFloatingFragment(netNo)) {
+        return false;
       }
     }
     for (Item item : connectedSet) {
@@ -457,20 +452,28 @@ public class ConductionArea extends ObstacleArea implements Connectable {
    */
   public boolean isFloatingFragment(int netNo) {
     if (isFractured()) {
-      return !hasPinOnAnyIsland();
+      return !hasPinOnAnyIsland(netNo);
     }
     return !reachesPinOfNet(netNo);
   }
 
   /** Returns true if any island of this fractured conduction area contains a pin. */
   public boolean hasPinOnAnyIsland() {
+    return hasPinOnAnyIsland(0);
+  }
+
+  /**
+   * Returns true if any island of this fractured conduction area contains a pin belonging to {@code
+   * netNo} (or any pin when {@code netNo <= 0}).
+   */
+  public boolean hasPinOnAnyIsland(int netNo) {
     FastPlaneConnectivityGrid.PlaneFractureResult res = getFractureResult();
     if (res == null || !res.isFractured) {
       return false;
     }
     for (List<Item> island : res.islandItems.values()) {
       for (Item item : island) {
-        if (item instanceof Pin) {
+        if (item instanceof Pin && (netNo <= 0 || item.containsNet(netNo))) {
           return true;
         }
       }
