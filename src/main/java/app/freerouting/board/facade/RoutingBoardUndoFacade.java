@@ -1,5 +1,7 @@
 package app.freerouting.board.facade;
 
+import app.freerouting.autoroute.plane.FastPlaneConnectivityGrid;
+import app.freerouting.board.model.items.ConductionArea;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.drc.ClearanceBaseline;
@@ -61,13 +63,21 @@ public final class RoutingBoardUndoFacade {
     // pieces back.
     List<PolylineArea> writtenAreas = new ArrayList<>();
     List<PolygonShape> writtenPolygons = new ArrayList<>();
+    // The conduction areas in the order they are written, and what their copies may reuse of their
+    // fracture analysis.
+    List<ConductionArea> writtenPlanes = new ArrayList<>();
+    List<FastPlaneConnectivityGrid.FractureMemo> planeMemos = new ArrayList<>();
     synchronized (board) {
       try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
           ObjectOutputStream outputStream =
-              new AreaRecordingOutputStream(byteArrayOutputStream, writtenAreas, writtenPolygons)) {
+              new AreaRecordingOutputStream(
+                  byteArrayOutputStream, writtenAreas, writtenPolygons, writtenPlanes)) {
         outputStream.writeObject(board);
         outputStream.flush();
         serializedBoard = byteArrayOutputStream.toByteArray();
+        for (ConductionArea plane : writtenPlanes) {
+          planeMemos.add(plane.fractureMemoForCopy());
+        }
         clearanceBaseline = board.clearanceBaseline;
         // Taken with the board written: the copy has the same items, so the same counts.
         ledgerCounts = board.routingLedger().counts();
@@ -76,10 +86,18 @@ public final class RoutingBoardUndoFacade {
         return null;
       }
     }
+    List<ConductionArea> readPlanes = new ArrayList<>();
     try (ObjectInputStream inputStream =
         new AreaRestoringInputStream(
-            new ByteArrayInputStream(serializedBoard), writtenAreas, writtenPolygons)) {
+            new ByteArrayInputStream(serializedBoard), writtenAreas, writtenPolygons, readPlanes)) {
       RoutingBoard boardCopy = (RoutingBoard) inputStream.readObject();
+      if (readPlanes.size() == writtenPlanes.size()) {
+        for (int i = 0; i < readPlanes.size(); i++) {
+          if (readPlanes.get(i).getId() == writtenPlanes.get(i).getId()) {
+            readPlanes.get(i).adoptFractureMemo(planeMemos.get(i));
+          }
+        }
+      }
       // Transient, so not serialized: without it every pre-existing violation counts as new.
       boardCopy.clearanceBaseline = clearanceBaseline;
       boardCopy.clearAllItemTemporaryAutorouteData();
@@ -97,13 +115,18 @@ public final class RoutingBoardUndoFacade {
   private static final class AreaRecordingOutputStream extends ObjectOutputStream {
     private final List<PolylineArea> writtenAreas;
     private final List<PolygonShape> writtenPolygons;
+    private final List<ConductionArea> writtenPlanes;
 
     AreaRecordingOutputStream(
-        OutputStream out, List<PolylineArea> writtenAreas, List<PolygonShape> writtenPolygons)
+        OutputStream out,
+        List<PolylineArea> writtenAreas,
+        List<PolygonShape> writtenPolygons,
+        List<ConductionArea> writtenPlanes)
         throws IOException {
       super(out);
       this.writtenAreas = writtenAreas;
       this.writtenPolygons = writtenPolygons;
+      this.writtenPlanes = writtenPlanes;
       enableReplaceObject(true);
     }
 
@@ -113,6 +136,8 @@ public final class RoutingBoardUndoFacade {
         writtenAreas.add(area);
       } else if (obj instanceof PolygonShape polygon) {
         writtenPolygons.add(polygon);
+      } else if (obj instanceof ConductionArea plane) {
+        writtenPlanes.add(plane);
       }
       return obj;
     }
@@ -128,15 +153,20 @@ public final class RoutingBoardUndoFacade {
       extends app.freerouting.util.SafeObjectInputStream {
     private final List<PolylineArea> writtenAreas;
     private final List<PolygonShape> writtenPolygons;
+    private final List<ConductionArea> readPlanes;
     private int readAreaCount;
     private int readPolygonCount;
 
     AreaRestoringInputStream(
-        InputStream in, List<PolylineArea> writtenAreas, List<PolygonShape> writtenPolygons)
+        InputStream in,
+        List<PolylineArea> writtenAreas,
+        List<PolygonShape> writtenPolygons,
+        List<ConductionArea> readPlanes)
         throws IOException {
       super(in);
       this.writtenAreas = writtenAreas;
       this.writtenPolygons = writtenPolygons;
+      this.readPlanes = readPlanes;
       enableResolveObject(true);
     }
 
@@ -146,6 +176,8 @@ public final class RoutingBoardUndoFacade {
         area.reuseConvexPiecesOf(writtenAreas.get(readAreaCount++));
       } else if (obj instanceof PolygonShape polygon && readPolygonCount < writtenPolygons.size()) {
         polygon.reuseConvexPiecesOf(writtenPolygons.get(readPolygonCount++));
+      } else if (obj instanceof ConductionArea plane) {
+        readPlanes.add(plane);
       }
       return obj;
     }

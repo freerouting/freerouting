@@ -91,6 +91,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
   private transient int cachedFractureRevision = -1;
   private transient long cachedNetAssignmentStamp = -1;
   private transient FastPlaneConnectivityGrid.PlaneFractureResult cachedFractureResult;
+  private transient FastPlaneConnectivityGrid.FractureMemo fractureMemo;
 
   /** Creates a new instance of ConductionArea. */
   public ConductionArea(
@@ -131,6 +132,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     this.cachedFractureRevision = -1;
     this.cachedNetAssignmentStamp = -1;
     this.cachedFractureResult = null;
+    this.fractureMemo = null;
   }
 
   /** Pre-computes detailed plane-fill geometry off the EDT so zoom-in paints stay responsive. */
@@ -585,6 +587,31 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     return res != null && res.isFractured;
   }
 
+  /**
+   * Returns what a copy of this conduction area may reuse of its fracture analysis, or null. Called
+   * while the board is written for a deep copy, so the board does not change meanwhile.
+   */
+  public FastPlaneConnectivityGrid.FractureMemo fractureMemoForCopy() {
+    FastPlaneConnectivityGrid.FractureMemo memo = this.fractureMemo;
+    if (memo == null || this.board == null) {
+      return null;
+    }
+    return memo.detach(getArea());
+  }
+
+  /**
+   * Gives this conduction area, the deep copy of another one, the fracture memo of its original
+   * (see {@link #fractureMemoForCopy}). The memo checks its inputs on every lookup, so it only
+   * saves the rasterization and the flood fill when the copy still has the same plane.
+   */
+  public void adoptFractureMemo(FastPlaneConnectivityGrid.FractureMemo detached) {
+    if (detached == null || this.board == null) {
+      return;
+    }
+    BasicBoard copyBoard = this.board;
+    this.fractureMemo = detached.attach(getArea(), copyBoard::getItem);
+  }
+
   /** Returns the cached or freshly computed fracture analysis result for this conduction area. */
   public FastPlaneConnectivityGrid.PlaneFractureResult getFractureResult() {
     if (this.board == null) {
@@ -597,9 +624,14 @@ public class ConductionArea extends ObstacleArea implements Connectable {
         && this.cachedNetAssignmentStamp == currentNetAssignmentStamp) {
       return this.cachedFractureResult;
     }
+    FastPlaneConnectivityGrid.FractureMemo memo = this.fractureMemo;
+    if (memo == null) {
+      memo = new FastPlaneConnectivityGrid.FractureMemo();
+      this.fractureMemo = memo;
+    }
     FastPlaneConnectivityGrid connectivityGrid = new FastPlaneConnectivityGrid();
     Collection<Item> contacts = getNormalContacts();
-    this.cachedFractureResult = connectivityGrid.evaluateFracture(this, this.board, contacts);
+    this.cachedFractureResult = connectivityGrid.evaluateFracture(this, this.board, contacts, memo);
     this.cachedFractureRevision = currentRevision;
     this.cachedNetAssignmentStamp = currentNetAssignmentStamp;
     return this.cachedFractureResult;

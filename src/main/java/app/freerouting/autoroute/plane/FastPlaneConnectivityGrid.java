@@ -8,6 +8,7 @@ import app.freerouting.board.model.items.ObstacleArea;
 import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.searchtree.SearchTreeObject;
 import app.freerouting.board.trace.PolylineTrace;
+import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
@@ -18,9 +19,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.IntFunction;
 
 /**
  * High-performance, constant-memory 2D occupancy grid for evaluating copper pour topological
@@ -56,6 +60,8 @@ public class FastPlaneConnectivityGrid {
 
   private int[] queue;
 
+  private boolean partitionBuffersReady;
+
   /** Result container holding partitioned same-net items per isolated copper island. */
   public static class PlaneFractureResult {
     /** Whether the conduction area has fractured into multiple disconnected islands with pins. */
@@ -76,6 +82,324 @@ public class FastPlaneConnectivityGrid {
       this.islandItems = islandItems != null ? islandItems : Collections.emptyMap();
       this.islandCount = this.islandItems.size();
       this.isFractured = this.islandCount > 1;
+    }
+  }
+
+  /**
+   * What a conduction area keeps between two fracture evaluations, so that a board change that
+   * leaves its inputs alone costs no rasterization or flood fill.
+   *
+   * <p>The copper mask of an area depends only on its (immutable) {@link Area} and on the grid
+   * geometry, so it is reused as long as both are the same. The island partition depends only on
+   * the grid geometry, the copper and obstacle masks and the contact items with their locations, so
+   * the previous result is returned when all of them are equal. Both checks compare the actual
+   * inputs: the memo cannot go stale, it can only miss.
+   */
+  public static final class FractureMemo {
+    private Area copperArea;
+    private int copperOriginX;
+    private int copperOriginY;
+    private int copperCellSize;
+    private int copperCols;
+    private int copperRows;
+    private long[] copperWords;
+
+    private int areasOriginX;
+    private int areasOriginY;
+    private int areasCellSize;
+    private int areasCols;
+    private int areasRows;
+    private Item[] areasItems;
+    private int[] areasShapeIndices;
+    private TileShape[] areasShapes;
+    private double[] areasClearances;
+    private long[] areasWords;
+
+    private Area partitionArea;
+    private int partitionOriginX;
+    private int partitionOriginY;
+    private int partitionCellSize;
+    private int partitionCols;
+    private int partitionRows;
+    private long[] partitionObstacleWords;
+    private Item[] partitionItems;
+    private IntPoint[] partitionLocations;
+    private PlaneFractureResult partitionResult;
+
+    /** Copies the cached copper mask into the grid; returns false if it was not computed for it. */
+    synchronized boolean restoreCopper(FastPlaneConnectivityGrid grid, Area area) {
+      if (copperWords == null
+          || area == null
+          || area != copperArea
+          || grid.originX != copperOriginX
+          || grid.originY != copperOriginY
+          || grid.cellSize != copperCellSize
+          || grid.cols != copperCols
+          || grid.rows != copperRows) {
+        return false;
+      }
+      System.arraycopy(copperWords, 0, grid.copperMask, 0, copperWords.length);
+      return true;
+    }
+
+    synchronized void storeCopper(FastPlaneConnectivityGrid grid, Area area) {
+      if (area == null) {
+        return;
+      }
+      copperArea = area;
+      copperOriginX = grid.originX;
+      copperOriginY = grid.originY;
+      copperCellSize = grid.cellSize;
+      copperCols = grid.cols;
+      copperRows = grid.rows;
+      copperWords = Arrays.copyOf(grid.copperMask, grid.rows * grid.wordsPerRow);
+    }
+
+    /**
+     * Returns the raster of these obstacle area shapes (tile shapes are immutable, so the same
+     * references with the same clearances give the same raster) if it is cached for this grid.
+     */
+    synchronized long[] lookupObstacleAreas(
+        FastPlaneConnectivityGrid grid, TileShape[] shapes, double[] clearances) {
+      if (areasWords == null
+          || grid.originX != areasOriginX
+          || grid.originY != areasOriginY
+          || grid.cellSize != areasCellSize
+          || grid.cols != areasCols
+          || grid.rows != areasRows
+          || shapes.length != areasShapes.length
+          || !Arrays.equals(clearances, areasClearances)) {
+        return null;
+      }
+      for (int i = 0; i < shapes.length; i++) {
+        if (shapes[i] != areasShapes[i]) {
+          return null;
+        }
+      }
+      return areasWords;
+    }
+
+    synchronized void storeObstacleAreas(
+        FastPlaneConnectivityGrid grid,
+        Item[] items,
+        int[] shapeIndices,
+        TileShape[] shapes,
+        double[] clearances,
+        long[] words) {
+      areasItems = items;
+      areasShapeIndices = shapeIndices;
+      areasOriginX = grid.originX;
+      areasOriginY = grid.originY;
+      areasCellSize = grid.cellSize;
+      areasCols = grid.cols;
+      areasRows = grid.rows;
+      areasShapes = shapes;
+      areasClearances = clearances;
+      areasWords = words;
+    }
+
+    /** Returns the previous partition if it was computed from exactly these inputs, else null. */
+    synchronized PlaneFractureResult lookupPartition(
+        FastPlaneConnectivityGrid grid, Area area, Item[] items, IntPoint[] locations) {
+      if (partitionResult == null
+          || area == null
+          || area != partitionArea
+          || grid.originX != partitionOriginX
+          || grid.originY != partitionOriginY
+          || grid.cellSize != partitionCellSize
+          || grid.cols != partitionCols
+          || grid.rows != partitionRows
+          || items.length != partitionItems.length) {
+        return null;
+      }
+      for (int i = 0; i < items.length; i++) {
+        if (items[i] != partitionItems[i]) {
+          return null;
+        }
+      }
+      if (!Arrays.equals(locations, partitionLocations)) {
+        return null;
+      }
+      int words = grid.rows * grid.wordsPerRow;
+      if (!Arrays.equals(grid.obstacleMask, 0, words, partitionObstacleWords, 0, words)) {
+        return null;
+      }
+      return partitionResult;
+    }
+
+    /**
+     * Returns what a copy of the conduction area can reuse of this memo, detached from the area it
+     * was computed for, or null if nothing is valid for {@code currentArea} (the area of the
+     * conduction area now). The board must not change while this runs.
+     */
+    public synchronized FractureMemo detach(Area currentArea) {
+      if (currentArea == null) {
+        return null;
+      }
+      FractureMemo detached = new FractureMemo();
+      boolean any = false;
+      if (copperWords != null && copperArea == currentArea) {
+        detached.copperOriginX = copperOriginX;
+        detached.copperOriginY = copperOriginY;
+        detached.copperCellSize = copperCellSize;
+        detached.copperCols = copperCols;
+        detached.copperRows = copperRows;
+        // never written after it is stored, so it can be shared
+        detached.copperWords = copperWords;
+        any = true;
+      }
+      if (areasWords != null && areaShapesAreCurrent()) {
+        detached.areasOriginX = areasOriginX;
+        detached.areasOriginY = areasOriginY;
+        detached.areasCellSize = areasCellSize;
+        detached.areasCols = areasCols;
+        detached.areasRows = areasRows;
+        detached.areasItems = areasItems;
+        detached.areasShapeIndices = areasShapeIndices;
+        detached.areasShapes = areasShapes;
+        detached.areasClearances = areasClearances;
+        detached.areasWords = areasWords;
+        any = true;
+      }
+      if (partitionResult != null && partitionArea == currentArea) {
+        detached.partitionOriginX = partitionOriginX;
+        detached.partitionOriginY = partitionOriginY;
+        detached.partitionCellSize = partitionCellSize;
+        detached.partitionCols = partitionCols;
+        detached.partitionRows = partitionRows;
+        detached.partitionObstacleWords = partitionObstacleWords;
+        detached.partitionItems = partitionItems;
+        detached.partitionLocations = partitionLocations;
+        detached.partitionResult = partitionResult;
+        any = true;
+      }
+      return any ? detached : null;
+    }
+
+    /** Returns true if every cached obstacle area shape is still the shape of its item. */
+    private boolean areaShapesAreCurrent() {
+      for (int i = 0; i < areasItems.length; i++) {
+        Item item = areasItems[i];
+        int index = areasShapeIndices[i];
+        if (index >= item.tileShapeCount() || item.getTileShape(index) != areasShapes[i]) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    /**
+     * Returns this detached memo bound to the copy of its conduction area: {@code copyArea} is the
+     * area of the copy, and {@code copyItemById} gives the copy of an item by its id. Every cached
+     * input is still compared at lookup, so a copy that differs from its original only misses.
+     */
+    public FractureMemo attach(Area copyArea, IntFunction<Item> copyItemById) {
+      if (copyArea == null) {
+        return null;
+      }
+      FractureMemo attached = new FractureMemo();
+      if (copperWords != null) {
+        attached.copperArea = copyArea;
+        attached.copperOriginX = copperOriginX;
+        attached.copperOriginY = copperOriginY;
+        attached.copperCellSize = copperCellSize;
+        attached.copperCols = copperCols;
+        attached.copperRows = copperRows;
+        attached.copperWords = copperWords;
+      }
+      if (areasWords != null) {
+        TileShape[] copiedShapes = new TileShape[areasShapes.length];
+        Item[] copiedAreaItems = new Item[areasItems.length];
+        boolean complete = true;
+        for (int i = 0; i < areasItems.length && complete; i++) {
+          Item copy = copyItemById.apply(areasItems[i].getId());
+          int index = areasShapeIndices[i];
+          if (copy == null
+              || copy.getClass() != areasItems[i].getClass()
+              || index >= copy.tileShapeCount()) {
+            complete = false;
+          } else {
+            copiedAreaItems[i] = copy;
+            copiedShapes[i] = copy.getTileShape(index);
+          }
+        }
+        if (complete) {
+          attached.areasOriginX = areasOriginX;
+          attached.areasOriginY = areasOriginY;
+          attached.areasCellSize = areasCellSize;
+          attached.areasCols = areasCols;
+          attached.areasRows = areasRows;
+          attached.areasItems = copiedAreaItems;
+          attached.areasShapeIndices = areasShapeIndices;
+          attached.areasShapes = copiedShapes;
+          attached.areasClearances = areasClearances;
+          attached.areasWords = areasWords;
+        }
+      }
+      if (partitionResult != null) {
+        Map<Item, Item> copies = new IdentityHashMap<>();
+        Item[] copiedItems = new Item[partitionItems.length];
+        boolean complete = true;
+        for (int i = 0; i < partitionItems.length && complete; i++) {
+          Item copy = copyItemById.apply(partitionItems[i].getId());
+          if (copy == null || copy.getClass() != partitionItems[i].getClass()) {
+            complete = false;
+          } else {
+            copiedItems[i] = copy;
+            copies.put(partitionItems[i], copy);
+          }
+        }
+        Map<Integer, List<Item>> copiedIslands = new HashMap<>();
+        for (Map.Entry<Integer, List<Item>> island : partitionResult.islandItems.entrySet()) {
+          if (!complete) {
+            break;
+          }
+          List<Item> copiedIsland = new ArrayList<>(island.getValue().size());
+          for (Item item : island.getValue()) {
+            Item copy = copies.get(item);
+            if (copy == null) {
+              complete = false;
+              break;
+            }
+            copiedIsland.add(copy);
+          }
+          copiedIslands.put(island.getKey(), copiedIsland);
+        }
+        if (complete) {
+          attached.partitionArea = copyArea;
+          attached.partitionOriginX = partitionOriginX;
+          attached.partitionOriginY = partitionOriginY;
+          attached.partitionCellSize = partitionCellSize;
+          attached.partitionCols = partitionCols;
+          attached.partitionRows = partitionRows;
+          attached.partitionObstacleWords = partitionObstacleWords;
+          attached.partitionItems = copiedItems;
+          attached.partitionLocations = partitionLocations;
+          attached.partitionResult = new PlaneFractureResult(copiedIslands);
+        }
+      }
+      return attached;
+    }
+
+    synchronized void storePartition(
+        FastPlaneConnectivityGrid grid,
+        Area area,
+        Item[] items,
+        IntPoint[] locations,
+        PlaneFractureResult result) {
+      if (area == null) {
+        return;
+      }
+      partitionArea = area;
+      partitionOriginX = grid.originX;
+      partitionOriginY = grid.originY;
+      partitionCellSize = grid.cellSize;
+      partitionCols = grid.cols;
+      partitionRows = grid.rows;
+      partitionObstacleWords = Arrays.copyOf(grid.obstacleMask, grid.rows * grid.wordsPerRow);
+      partitionItems = items;
+      partitionLocations = locations;
+      partitionResult = result;
     }
   }
 
@@ -133,6 +457,18 @@ public class FastPlaneConnectivityGrid {
       Arrays.fill(this.visitedMask, 0, totalWords, 0L);
     }
 
+    this.partitionBuffersReady = false;
+  }
+
+  /**
+   * Prepares the island map and the flood-fill queue. Only a partition needs them, and they are the
+   * largest buffers of the grid, so an evaluation that ends before the partition never allocates
+   * them.
+   */
+  private void preparePartitionBuffers() {
+    if (this.partitionBuffersReady) {
+      return;
+    }
     int totalCells = this.cols * this.rows;
     if (this.cellIslandMap.length < totalCells) {
       this.cellIslandMap = new short[totalCells];
@@ -143,6 +479,7 @@ public class FastPlaneConnectivityGrid {
     if (this.queue.length < maxQueueSize) {
       this.queue = new int[maxQueueSize];
     }
+    this.partitionBuffersReady = true;
   }
 
   /**
@@ -155,6 +492,21 @@ public class FastPlaneConnectivityGrid {
    */
   public PlaneFractureResult evaluateFracture(
       ConductionArea ca, BasicBoard board, Collection<? extends Item> sameNetItems) {
+    return evaluateFracture(ca, board, sameNetItems, null);
+  }
+
+  /**
+   * Same as {@link #evaluateFracture(ConductionArea, BasicBoard, Collection)}, reusing what {@code
+   * memo} kept from the previous evaluation of the same conduction area when its inputs are
+   * unchanged. The result is the one a fresh evaluation would return.
+   *
+   * @param memo the memo of {@code ca}, or null to evaluate from scratch
+   */
+  public PlaneFractureResult evaluateFracture(
+      ConductionArea ca,
+      BasicBoard board,
+      Collection<? extends Item> sameNetItems,
+      FractureMemo memo) {
     if (ca == null || board == null || sameNetItems == null || sameNetItems.isEmpty()) {
       return new PlaneFractureResult(Collections.emptyMap());
     }
@@ -194,11 +546,21 @@ public class FastPlaneConnectivityGrid {
     init(bbox, desiredCell);
 
     // 1. Rasterize conduction area boundary
-    rasterizeConductionArea(ca);
+    Area area = ca.getArea();
+    if (memo == null || !memo.restoreCopper(this, area)) {
+      rasterizeConductionArea(ca);
+      if (memo != null) {
+        memo.storeCopper(this, area);
+      }
+    }
 
     // 2. Query spatial index for obstacles overlapping conduction area
     Set<SearchTreeObject> overlaps = board.overlappingObjects(queryBbox, layer);
     boolean hasForeignObstacles = false;
+    List<Item> areaItems = new ArrayList<>();
+    List<Integer> areaShapeIndices = new ArrayList<>();
+    List<TileShape> areaShapes = new ArrayList<>();
+    List<Double> areaClearances = new ArrayList<>();
     for (SearchTreeObject ob : overlaps) {
       if (!(ob instanceof Item item) || item == ca || !item.sharesLayer(ca)) {
         continue;
@@ -241,15 +603,19 @@ public class FastPlaneConnectivityGrid {
             if (item.shapeLayer(i) == layer) {
               TileShape tileShape = item.getTileShape(i);
               if (tileShape != null) {
-                double dilatedClearance = clearance + (cellSize + 1.0) / 2.0;
-                Shape enlargedShape = tileShape.enlarge(dilatedClearance);
-                rasterizeObstacleShape(enlargedShape);
+                areaItems.add(item);
+                areaShapeIndices.add(i);
+                areaShapes.add(tileShape);
+                areaClearances.add(clearance + (cellSize + 1.0) / 2.0);
               }
             }
           }
         }
       }
     }
+    // The enlarged area shapes are the costly obstacles, and they rarely change: their raster is
+    // kept apart, then merged into the obstacle mask (a union, so the order does not matter).
+    rasterizeObstacleAreas(areaItems, areaShapeIndices, areaShapes, areaClearances, memo);
 
     // Without foreign obstacles, only the area's own holes can split it: an area given as an
     // outline minus windows (KiCad exports filled zones this way) can already be several islands.
@@ -260,7 +626,21 @@ public class FastPlaneConnectivityGrid {
     }
 
     // 3. Partition same-net items into connected islands using bitwise BFS
-    return partitionItemsByIsland(ca, sameNetItems);
+    if (memo == null) {
+      return partitionItemsByIsland(ca, sameNetItems);
+    }
+    Item[] items = sameNetItems.toArray(new Item[0]);
+    IntPoint[] locations = new IntPoint[items.length];
+    for (int i = 0; i < items.length; i++) {
+      locations[i] = getItemLocation(items[i], ca);
+    }
+    PlaneFractureResult previous = memo.lookupPartition(this, area, items, locations);
+    if (previous != null) {
+      return previous;
+    }
+    PlaneFractureResult result = partitionItemsByIsland(ca, sameNetItems, items, locations);
+    memo.storePartition(this, area, items, locations, result);
+    return result;
   }
 
   /** Rasterizes the convex tile shapes of a conduction area into the copper mask. */
@@ -347,8 +727,56 @@ public class FastPlaneConnectivityGrid {
     }
   }
 
+  /**
+   * Rasterizes the tile shapes of foreign obstacle areas, each enlarged by its clearance, into the
+   * obstacle mask. The raster of exactly these shapes and clearances is taken from {@code memo}
+   * when it has it.
+   */
+  private void rasterizeObstacleAreas(
+      List<Item> items,
+      List<Integer> shapeIndices,
+      List<TileShape> shapes,
+      List<Double> clearances,
+      FractureMemo memo) {
+    if (shapes.isEmpty()) {
+      return;
+    }
+    if (memo == null) {
+      for (int i = 0; i < shapes.size(); i++) {
+        rasterizeObstacleShape(shapes.get(i).enlarge(clearances.get(i)), obstacleMask);
+      }
+      return;
+    }
+    TileShape[] shapeArr = shapes.toArray(new TileShape[0]);
+    double[] clearanceArr = new double[clearances.size()];
+    for (int i = 0; i < clearanceArr.length; i++) {
+      clearanceArr[i] = clearances.get(i);
+    }
+    int words = rows * wordsPerRow;
+    long[] areaWords = memo.lookupObstacleAreas(this, shapeArr, clearanceArr);
+    if (areaWords == null) {
+      areaWords = new long[words];
+      for (int i = 0; i < shapeArr.length; i++) {
+        rasterizeObstacleShape(shapeArr[i].enlarge(clearanceArr[i]), areaWords);
+      }
+      int[] indexArr = new int[shapeIndices.size()];
+      for (int i = 0; i < indexArr.length; i++) {
+        indexArr[i] = shapeIndices.get(i);
+      }
+      memo.storeObstacleAreas(
+          this, items.toArray(new Item[0]), indexArr, shapeArr, clearanceArr, areaWords);
+    }
+    for (int w = 0; w < words; w++) {
+      obstacleMask[w] |= areaWords[w];
+    }
+  }
+
   /** Rasterizes an obstacle shape into the obstacle mask. */
   public void rasterizeObstacleShape(Shape shape) {
+    rasterizeObstacleShape(shape, obstacleMask);
+  }
+
+  private void rasterizeObstacleShape(Shape shape, long[] mask) {
     if (shape == null || shape.isEmpty()) {
       return;
     }
@@ -364,7 +792,7 @@ public class FastPlaneConnectivityGrid {
 
     if (shape instanceof IntBox) {
       for (int r = startRow; r <= endRow; r++) {
-        setRowSpan(obstacleMask, r, startCol, endCol);
+        setRowSpan(mask, r, startCol, endCol);
       }
     } else {
       for (int r = startRow; r <= endRow; r++) {
@@ -377,12 +805,12 @@ public class FastPlaneConnectivityGrid {
               spanStart = c;
             }
           } else if (spanStart != -1) {
-            setRowSpan(obstacleMask, r, spanStart, c - 1);
+            setRowSpan(mask, r, spanStart, c - 1);
             spanStart = -1;
           }
         }
         if (spanStart != -1) {
-          setRowSpan(obstacleMask, r, spanStart, endCol);
+          setRowSpan(mask, r, spanStart, endCol);
         }
       }
     }
@@ -519,32 +947,51 @@ public class FastPlaneConnectivityGrid {
    */
   private PlaneFractureResult partitionItemsByIsland(
       ConductionArea ca, Collection<? extends Item> items) {
+    Item[] itemArr = items.toArray(new Item[0]);
+    IntPoint[] locations = new IntPoint[itemArr.length];
+    for (int i = 0; i < itemArr.length; i++) {
+      locations[i] = getItemLocation(itemArr[i], ca);
+    }
+    return partitionItemsByIsland(ca, items, itemArr, locations);
+  }
+
+  /**
+   * Partitions items into islands, given their locations ({@code locations[i]} is {@link
+   * #getItemLocation} of {@code itemArr[i]}). The location and the seed cell of an item do not
+   * change while the masks stay the same, so both are computed once per item instead of once per
+   * island.
+   */
+  private PlaneFractureResult partitionItemsByIsland(
+      ConductionArea ca, Collection<? extends Item> items, Item[] itemArr, IntPoint[] locations) {
+    preparePartitionBuffers();
     Map<Integer, List<Item>> islands = new HashMap<>();
     Map<Item, Integer> itemIslandMap = new HashMap<>();
     List<Item> unseededItems = new ArrayList<>();
+    Set<Item> unseededSet = new HashSet<>();
+    // seed cell index of each item: SEED_UNKNOWN until computed, SEED_NONE if there is none
+    int[] seeds = new int[itemArr.length];
+    Arrays.fill(seeds, SEED_UNKNOWN);
     int nextIslandId = 0;
 
-    for (Item item : items) {
+    for (int i = 0; i < itemArr.length; i++) {
+      Item item = itemArr[i];
       if (itemIslandMap.containsKey(item)) {
         continue;
       }
 
-      IntPoint pt = getItemLocation(item, ca);
-      if (pt == null) {
+      if (locations[i] == null) {
         unseededItems.add(item);
+        unseededSet.add(item);
         continue;
       }
 
-      int targetCol = (pt.x - originX) / cellSize;
-      int targetRow = (pt.y - originY) / cellSize;
-
-      int[] seed = findNearestConductiveCell(targetCol, targetRow);
-      if (seed == null) {
+      int seedIndex = seedCell(seeds, i, locations[i]);
+      if (seedIndex == SEED_NONE) {
         unseededItems.add(item);
+        unseededSet.add(item);
         continue;
       }
 
-      int seedIndex = seed[1] * cols + seed[0];
       int existingIsland = cellIslandMap[seedIndex];
       if (existingIsland >= 0) {
         islands.computeIfAbsent(existingIsland, k -> new ArrayList<>()).add(item);
@@ -557,22 +1004,17 @@ public class FastPlaneConnectivityGrid {
       islands.computeIfAbsent(currentIslandId, k -> new ArrayList<>()).add(item);
       itemIslandMap.put(item, currentIslandId);
 
-      runFloodFill(seed[0], seed[1], (short) currentIslandId);
+      runFloodFill(seedIndex % cols, seedIndex / cols, (short) currentIslandId);
 
       // Check remaining unassigned items to see if they are reached by this flood fill
-      for (Item other : items) {
-        if (!itemIslandMap.containsKey(other) && !unseededItems.contains(other)) {
-          IntPoint otherPt = getItemLocation(other, ca);
-          if (otherPt != null) {
-            int oc = (otherPt.x - originX) / cellSize;
-            int or = (otherPt.y - originY) / cellSize;
-            int[] otherSeed = findNearestConductiveCell(oc, or);
-            if (otherSeed != null) {
-              int otherIndex = otherSeed[1] * cols + otherSeed[0];
-              if (cellIslandMap[otherIndex] == currentIslandId) {
-                islands.get(currentIslandId).add(other);
-                itemIslandMap.put(other, currentIslandId);
-              }
+      for (int j = 0; j < itemArr.length; j++) {
+        Item other = itemArr[j];
+        if (!itemIslandMap.containsKey(other) && !unseededSet.contains(other)) {
+          if (locations[j] != null) {
+            int otherIndex = seedCell(seeds, j, locations[j]);
+            if (otherIndex != SEED_NONE && cellIslandMap[otherIndex] == currentIslandId) {
+              islands.get(currentIslandId).add(other);
+              itemIslandMap.put(other, currentIslandId);
             }
           }
         }
@@ -606,35 +1048,65 @@ public class FastPlaneConnectivityGrid {
     return new PlaneFractureResult(islands);
   }
 
+  private static final int SEED_UNKNOWN = -2;
+  private static final int SEED_NONE = -1;
+
+  /** Returns the seed cell index of the item at {@code index}, computing it on first use. */
+  private int seedCell(int[] seeds, int index, IntPoint location) {
+    if (seeds[index] == SEED_UNKNOWN) {
+      int[] seed =
+          findNearestConductiveCell(
+              (location.x - originX) / cellSize, (location.y - originY) / cellSize);
+      seeds[index] = seed == null ? SEED_NONE : seed[1] * cols + seed[0];
+    }
+    return seeds[index];
+  }
+
+  /**
+   * Labels with {@code islandId} every conductive, not yet visited cell 4-connected to the start
+   * cell.
+   */
   private void runFloodFill(int startCol, int startRow, short islandId) {
     int head = 0;
     int tail = 0;
 
-    queue[tail++] = (startRow << 16) | (startCol & 0xFFFF);
+    int startCell = startRow * cols + startCol;
+    queue[tail++] = startCell;
     setBit(visitedMask, startRow, startCol);
-    cellIslandMap[startRow * cols + startCol] = islandId;
-
-    int[] dc = {1, -1, 0, 0};
-    int[] dr = {0, 0, 1, -1};
+    cellIslandMap[startCell] = islandId;
 
     while (head < tail) {
-      int packed = queue[head++];
-      int r = packed >>> 16;
-      int c = packed & 0xFFFF;
-
-      for (int i = 0; i < 4; i++) {
-        int nc = c + dc[i];
-        int nr = r + dr[i];
-
-        if (nc >= 0 && nc < cols && nr >= 0 && nr < rows) {
-          if (!isBitSet(visitedMask, nr, nc) && isConductive(nc, nr)) {
-            setBit(visitedMask, nr, nc);
-            cellIslandMap[nr * cols + nc] = islandId;
-            queue[tail++] = (nr << 16) | (nc & 0xFFFF);
-          }
-        }
+      int cell = queue[head++];
+      int r = cell / cols;
+      int c = cell - r * cols;
+      if (c + 1 < cols) {
+        tail = visitCell(r, c + 1, cell + 1, islandId, tail);
+      }
+      if (c > 0) {
+        tail = visitCell(r, c - 1, cell - 1, islandId, tail);
+      }
+      if (r + 1 < rows) {
+        tail = visitCell(r + 1, c, cell + cols, islandId, tail);
+      }
+      if (r > 0) {
+        tail = visitCell(r - 1, c, cell - cols, islandId, tail);
       }
     }
+  }
+
+  /** Visits one in-grid neighbour of the flood fill; returns the new queue tail. */
+  private int visitCell(int r, int c, int cell, short islandId, int tail) {
+    int wordIdx = r * wordsPerRow + (c >> 6);
+    long bit = 1L << (c & 63);
+    if ((visitedMask[wordIdx] & bit) == 0L
+        && (copperMask[wordIdx] & bit) != 0L
+        && (obstacleMask[wordIdx] & bit) == 0L) {
+      visitedMask[wordIdx] |= bit;
+      cellIslandMap[cell] = islandId;
+      queue[tail] = cell;
+      return tail + 1;
+    }
+    return tail;
   }
 
   private int[] findNearestConductiveCell(int col, int row) {
