@@ -651,6 +651,46 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     }
   }
 
+  /**
+   * Completes a connected set that passes through fractured conduction areas. Such an area opens
+   * only the islands reached when the walk first meets it; an island reached later, through a via
+   * and another layer, stays closed, so the result depends on the walk order. This adds, until
+   * nothing changes, the items of every island of a fractured area in {@code result} that holds an
+   * item of {@code result}.
+   */
+  static void addLaterReachedIslands(Set<Item> result, int netNumber, boolean stopAtPlane) {
+    boolean changed = true;
+    while (changed) {
+      changed = false;
+      List<ConductionArea> fractured = new ArrayList<>();
+      for (Item item : result) {
+        if (item instanceof ConductionArea ca && ca.board != null && ca.isFractured()) {
+          fractured.add(ca);
+        }
+      }
+      for (ConductionArea ca : fractured) {
+        for (List<Item> island : ca.getFractureResult().islandItems.values()) {
+          boolean reached = false;
+          for (Item item : island) {
+            if (item != ca && result.contains(item)) {
+              reached = true;
+              break;
+            }
+          }
+          if (!reached) {
+            continue;
+          }
+          for (Item item : island) {
+            if (item != ca && (netNumber <= 0 || item.containsNet(netNumber)) && result.add(item)) {
+              item.getConnectedSetRecu(result, netNumber, stopAtPlane);
+              changed = true;
+            }
+          }
+        }
+      }
+    }
+  }
+
   @Override
   boolean isCycleRecu(
       Set<Item> visitedItems, Item searchItem, Item comeFromItem, boolean ignoreAreas) {
