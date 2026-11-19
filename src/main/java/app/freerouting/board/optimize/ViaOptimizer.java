@@ -36,6 +36,22 @@ public final class ViaOptimizer {
       ExpansionCostFactor[] traceCosts,
       int tracePullTightAccuracy,
       int maxRecursionDepth) {
+    return optViaLocation(
+        board, via, traceCosts, tracePullTightAccuracy, maxRecursionDepth, new ViaMoveHistory());
+  }
+
+  /**
+   * Same as {@link #optViaLocation(RoutingBoard, Via, ExpansionCostFactor[], int, int)}, within one
+   * fixpoint loop of the caller: {@code history} holds the locations the vias have taken in that
+   * loop, and a via between two traces that is proven to cycle is not moved back again.
+   */
+  static boolean optViaLocation(
+      RoutingBoard board,
+      Via via,
+      ExpansionCostFactor[] traceCosts,
+      int tracePullTightAccuracy,
+      int maxRecursionDepth,
+      ViaMoveHistory history) {
     if (via.isShoveFixed()) {
       return false;
     }
@@ -132,11 +148,16 @@ public final class ViaOptimizer {
     if (newLocation == null || newLocation.equals(viaCenter)) {
       return false;
     }
+    if (!history.allowsMove(via, viaCenter, newLocation, tracePullTightAccuracy)) {
+      // The via has already come back twice: it cycles, leave it where it is.
+      return false;
+    }
     Vector delta = newLocation.differenceBy(viaCenter);
     if (!DrillItemMover.insert(via, delta, 9, 9, null, board)) {
       FRLogger.warn("OptViaAlgo.opt_via_location: move via failed");
       return false;
     }
+    history.recordMove(via, viaCenter, newLocation, tracePullTightAccuracy);
     ItemSelectionFilter filter =
         new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.TRACES);
     Collection<Item> pickedItems = board.pickItems(newLocation, firstTrace.getLayer(), filter);
@@ -151,7 +172,12 @@ public final class ViaOptimizer {
     pickedItems = board.pickItems(newLocation, firstTrace.getLayer(), filter);
     for (Item currentItem : pickedItems) {
       optViaLocation(
-          board, (Via) currentItem, traceCosts, tracePullTightAccuracy, maxRecursionDepth - 1);
+          board,
+          (Via) currentItem,
+          traceCosts,
+          tracePullTightAccuracy,
+          maxRecursionDepth - 1,
+          history);
       break;
     }
     return true;

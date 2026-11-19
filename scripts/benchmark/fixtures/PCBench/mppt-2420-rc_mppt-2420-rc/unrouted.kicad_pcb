@@ -8415,62 +8415,6 @@
     )
     
   )
-  (zone (net 0) (net_name "") (layer Top) (tstamp 0) (hatch edge 0.508)
-    (connect_pads yes (clearance 0.3))
-    (min_thickness 0.254)
-    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
-    (fill (arc_segments 32) (thermal_gap 0.508) (thermal_bridge_width 0.508))
-    (polygon
-      (pts
-        (xy 113.7 126.5) (xy 112.7 126.5) (xy 112.7 125.5) (xy 113.7 125.5)
-      )
-    )
-  )
-  (zone (net 0) (net_name "") (layer GND) (tstamp 5E682CE5) (hatch edge 0.508)
-    (connect_pads yes (clearance 0.3))
-    (min_thickness 0.254)
-    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
-    (fill (arc_segments 32) (thermal_gap 0.508) (thermal_bridge_width 0.508))
-    (polygon
-      (pts
-        (xy 118.6 136) (xy 117.9 138.1) (xy 114.1 138.1) (xy 113.3 136) (xy 114.1 133.9)
-        (xy 117.9 133.9)
-      )
-    )
-  )
-  (zone (net 0) (net_name "") (layer Top) (tstamp 5E683386) (hatch edge 0.508)
-    (connect_pads yes (clearance 0.3))
-    (min_thickness 0.254)
-    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
-    (fill (arc_segments 32) (thermal_gap 0.508) (thermal_bridge_width 0.508))
-    (polygon
-      (pts
-        (xy 118.8 126.8) (xy 117.8 126.8) (xy 117.8 125.8) (xy 118.8 125.8)
-      )
-    )
-  )
-  (zone (net 0) (net_name "") (layer Top) (tstamp 5E683388) (hatch edge 0.508)
-    (connect_pads yes (clearance 0.3))
-    (min_thickness 0.254)
-    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
-    (fill (arc_segments 32) (thermal_gap 0.508) (thermal_bridge_width 0.508))
-    (polygon
-      (pts
-        (xy 122.8 126.9) (xy 121.8 126.9) (xy 121.8 125.9) (xy 122.8 125.9)
-      )
-    )
-  )
-  (zone (net 0) (net_name "") (layer GND) (tstamp 5E683629) (hatch edge 0.508)
-    (connect_pads yes (clearance 0.3))
-    (min_thickness 0.254)
-    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
-    (fill (arc_segments 32) (thermal_gap 0.508) (thermal_bridge_width 0.508))
-    (polygon
-      (pts
-        (xy 108.029452 105) (xy 106 105) (xy 106 103) (xy 108.029452 103)
-      )
-    )
-  )
   (zone (net 55) (net_name /DCDC_HV-) (layer Top) (tstamp 5ED319E0) (hatch edge 0.508)
     (priority 2)
     (connect_pads yes (clearance 0.3))

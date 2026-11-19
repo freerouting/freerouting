@@ -81,6 +81,9 @@ class PlaneSplitSameNetTest extends RoutingFixtureTest {
     assertTrue(
         j1.getConnectedSet(j1.getNetNumber(0)).contains(j2),
         "J1 and J2 (GND, on the same plane) are not connected");
+    assertRoutingResult(job, "Plane-floating-fragment-2layer.dsn")
+        .exactIncompleteConnections(0)
+        .check();
   }
 
   /**

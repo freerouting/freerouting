@@ -1,0 +1,36 @@
+(pcb zone-split-by-own-window
+  (parser (string_quote ") (space_in_quoted_tokens on) (host_cad "hand") (host_version "1"))
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu (type signal) (property (index 0)))
+    (layer B.Cu (type signal) (property (index 1)))
+    (boundary (rect pcb 0 0 80000 25000))
+    (via "Via[0-1]_600:300_um")
+    (rule (width 250) (clearance 200))
+  )
+  (placement
+    (component PIN
+      (place J1 20000 22000 front 0)
+      (place J2 20000 3000 front 0)
+      (place J3 60000 22000 front 0)
+      (place J4 60000 3000 front 0)
+    )
+  )
+  (library
+    (image PIN (pin Tht 1 0 0))
+    (padstack Tht (shape (rect F.Cu -850 -850 850 850)) (shape (rect B.Cu -850 -850 850 850)) (attach off))
+    (padstack "Via[0-1]_600:300_um" (shape (circle F.Cu 600)) (shape (circle B.Cu 600)) (attach off))
+  )
+  (network
+    (net GND (pins J1-1 J2-1))
+    (net VCC (pins J3-1 J4-1))
+    (class kicad_default GND VCC (circuit (use_via "Via[0-1]_600:300_um")) (rule (width 250) (clearance 200)))
+  )
+  (wiring
+    (wire (polygon F.Cu 0  15000 500  25000 500  25000 24500  15000 24500  15000 500) (net GND) (type protect)
+      (window (polygon F.Cu 0  15000 12000  25000 12000  25000 13000  15000 13000  15000 12000)))
+    (wire (polygon F.Cu 0  55000 500  65000 500  65000 24500  55000 24500  55000 500) (net VCC) (type protect)
+      (window (polygon F.Cu 0  56000 12000  64000 12000  64000 13000  56000 13000  56000 12000)))
+  )
+)

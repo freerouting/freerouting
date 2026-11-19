@@ -181,9 +181,20 @@ public non-sealed class BatchOptimizer extends NamedAlgorithm {
           stats.bounds.minTraceLengthMm);
     }
 
-    // Guard 4: All vias mandatory layer transitions
-    if (this.board != null && areAllViasMandatoryLayerTransitions(this.board)) {
-      return "all vias on the board are mandatory layer transitions between SMD pins that cannot be eliminated";
+    // Guard 4: All vias mandatory layer transitions, and nothing left to shorten. Vias that cannot
+    // be removed say nothing about the traces: the optimizer also removes detours and loops.
+    if (this.board != null
+        && stats.bounds != null
+        && stats.bounds.minTraceLengthMm != null
+        && stats.bounds.minTraceLengthMm > 0
+        && stats.traces.totalLengthMm != null
+        && stats.traces.totalLengthMm <= stats.bounds.minTraceLengthMm * 1.05f
+        && areAllViasMandatoryLayerTransitions(this.board)) {
+      return String.format(
+          Locale.US,
+          "all vias on the board are mandatory layer transitions between SMD pins that cannot be eliminated and trace length (%.2f mm) is within 5%% of theoretical minimum (%.2f mm)",
+          stats.traces.totalLengthMm,
+          stats.bounds.minTraceLengthMm);
     }
 
     return null;

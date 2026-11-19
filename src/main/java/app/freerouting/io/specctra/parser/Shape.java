@@ -103,6 +103,19 @@ public abstract class Shape {
     return layer;
   }
 
+  /** Returns the layer whose name is exactly {@code layerName}, or null if there is none. */
+  private static Layer findLayerByExactName(LayerStructure layerStructure, String layerName) {
+    if (layerStructure == null || layerName == null) {
+      return null;
+    }
+    for (Layer layer : layerStructure.layers) {
+      if (layerName.equals(layer.name)) {
+        return layer;
+      }
+    }
+    return null;
+  }
+
   /** Reads an object of type PolylinePath from the dsn-file. */
   public static PolylinePath readPolylinePathScope(
       IJFlexScanner scanner, LayerStructure layerStructure) {
@@ -306,10 +319,22 @@ public abstract class Shape {
       Layer polygonLayer = null;
       boolean layerOk = true;
       Object nextToken = scanner.nextToken();
-      if (nextToken == Keyword.PCB_SCOPE) {
-        polygonLayer = Layer.PCB;
-      } else if (nextToken == Keyword.SIGNAL) {
-        polygonLayer = Layer.SIGNAL;
+      if (nextToken == Keyword.PCB_SCOPE || nextToken == Keyword.SIGNAL) {
+        // The scanner matches keywords regardless of case, so a layer that the CAD tool named
+        // "Signal" arrives here as the keyword. Like getLayer() for the other shapes, only the
+        // exact keyword spelling means the layer type; another spelling names that layer when
+        // the board has one.
+        Layer namedLayer =
+            ((Keyword) nextToken).getName().equals(scanner.yytext())
+                ? null
+                : findLayerByExactName(layerStructure, scanner.yytext());
+        if (namedLayer != null) {
+          polygonLayer = namedLayer;
+        } else if (nextToken == Keyword.PCB_SCOPE) {
+          polygonLayer = Layer.PCB;
+        } else {
+          polygonLayer = Layer.SIGNAL;
+        }
       } else {
         if (layerStructure == null) {
           FRLogger.warn(

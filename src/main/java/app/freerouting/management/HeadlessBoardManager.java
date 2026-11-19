@@ -5,6 +5,7 @@ import static app.freerouting.util.gson.GsonProvider.GSON;
 import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.ComponentOutline;
+import app.freerouting.board.model.items.ConductionArea;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.ObstacleArea;
 import app.freerouting.board.model.items.Pin;
@@ -28,6 +29,7 @@ import app.freerouting.gui.workspace.WorkspaceSettings;
 import app.freerouting.gui.workspace.session.InteractiveActionThread;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.FileFormat;
+import app.freerouting.io.kicad.KiCadBoardZones;
 import app.freerouting.io.kicad.KiCadDesignRules;
 import app.freerouting.io.kicad.KiCadDesignRulesTranslator;
 import app.freerouting.io.kicad.KiCadJsonReader;
@@ -52,6 +54,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -501,6 +504,69 @@ public class HeadlessBoardManager implements BoardManager {
               + project.minTrackWidthUm()
               + " um.");
     }
+  }
+
+  /**
+   * Gives each plane the clearance and the minimum width of its zone in the KiCad board of the job.
+   * A plane is matched to the zone of its net and layer; if the net has several zones on the layer,
+   * to the one whose outline has the nearest bounding box.
+   */
+  private void applyKiCadZoneFillRules() {
+    KiCadBoardZones boardZones = this.routingJob.kicadBoardZones;
+    if (boardZones == null || this.board == null) {
+      return;
+    }
+    Communication communication = this.board.communication;
+    int matched = 0;
+    // board order, so that the log is the same on every run
+    List<ConductionArea> areas = new ArrayList<>(this.board.getConductionAreas());
+    areas.sort(Comparator.comparingInt(Item::getId));
+    for (ConductionArea area : areas) {
+      if (area.netCount() != 1 || this.board.rules.nets.get(area.getNetNumber(0)) == null) {
+        continue;
+      }
+      String netName = this.board.rules.nets.get(area.getNetNumber(0)).name;
+      String layerName = this.board.layerStructure.layers[area.getLayer()].name;
+      // the bounding box of the plane in micrometres, as KiCad writes it into the DSN
+      double[] box = communication.coordinateTransform.boardToDsn(area.boundingBox());
+      for (int i = 0; i < box.length; i++) {
+        box[i] = Unit.scale(box[i], communication.unit, Unit.UM);
+      }
+      KiCadBoardZones.Zone best = null;
+      double bestDistance = Double.MAX_VALUE;
+      for (KiCadBoardZones.Zone zone : boardZones.zones()) {
+        if (!zone.netName().equals(netName) || !zone.isOnLayer(layerName)) {
+          continue;
+        }
+        // the y axis of KiCad points down, the one of the DSN up
+        double distance =
+            Math.abs(zone.minXUm() - box[0])
+                + Math.abs(-zone.maxYUm() - box[1])
+                + Math.abs(zone.maxXUm() - box[2])
+                + Math.abs(-zone.minYUm() - box[3]);
+        if (distance < bestDistance) {
+          bestDistance = distance;
+          best = zone;
+        }
+      }
+      if (best == null) {
+        continue;
+      }
+      matched++;
+      int clearance = (int) Math.ceil(communication.physicalToBoard(best.clearanceUm(), Unit.UM));
+      int minWidth = (int) Math.ceil(communication.physicalToBoard(best.minThicknessUm(), Unit.UM));
+      if (clearance != area.getFillClearance() || minWidth != area.getFillMinWidth()) {
+        area.setFillRules(clearance, minWidth);
+      }
+    }
+    this.routingJob.logInfo(
+        "KiCad board '"
+            + boardZones.sourceName()
+            + "': zone clearance and minimum width applied to "
+            + matched
+            + " of "
+            + areas.size()
+            + " planes.");
   }
 
   private void applyHoleClearanceOverride() {
@@ -1094,6 +1160,7 @@ public class HeadlessBoardManager implements BoardManager {
       this.routingJob.routerSettings.applyNetClassExclusions(this.board);
       applyKiCadDesignRules();
       applyKiCadProjectMinTrackWidth();
+      applyKiCadZoneFillRules();
       applyCopperToEdgeClearanceOverride();
       applyHoleClearanceOverride();
       applyHoleToHole();
@@ -1266,20 +1333,35 @@ public class HeadlessBoardManager implements BoardManager {
    * @see #loadFromSpecctraDsn
    */
   public boolean saveAsSpecctraSessionSes(OutputStream outputStream, String designName) {
-    boolean wasSaveSuccessful;
-    try {
-      SesWriter.write(this.getRoutingBoard(), outputStream, designName);
-      wasSaveSuccessful = true;
-    } catch (IOException e) {
-      FRLogger.error("unable to write session file", e);
-      wasSaveSuccessful = false;
-    }
+    boolean wasSaveSuccessful = exportSpecctraSessionSes(outputStream, designName);
 
     if (wasSaveSuccessful) {
       originalBoardChecksum = calculateCrc32();
     }
 
     return wasSaveSuccessful;
+  }
+
+  /**
+   * Writes the current routing board state as a Specctra session (.ses) without recording it as the
+   * saved state.
+   *
+   * <p>Produces the same bytes as {@link #saveAsSpecctraSessionSes}, but leaves {@link
+   * #originalBoardChecksum} untouched, so the board is not serialised a second time as DSN for the
+   * checksum. Meant for output snapshots published while a job is still routing.
+   *
+   * @param outputStream the stream to write SES data to (caller must close)
+   * @param designName the design name to include in the SES file header
+   * @return true if the export was successful, false if an error occurred
+   */
+  public boolean exportSpecctraSessionSes(OutputStream outputStream, String designName) {
+    try {
+      SesWriter.write(this.getRoutingBoard(), outputStream, designName);
+      return true;
+    } catch (IOException e) {
+      FRLogger.error("unable to write session file", e);
+      return false;
+    }
   }
 
   /**
@@ -1290,8 +1372,29 @@ public class HeadlessBoardManager implements BoardManager {
    * @return true if save was successful, false otherwise
    */
   public boolean saveAsFusionScriptScr(OutputStream outputStream, String designName) {
+    return writeFusionScriptScr(outputStream, designName, true);
+  }
+
+  /**
+   * Writes the current routing board state as an Autodesk Fusion script (.scr) without recording it
+   * as the saved state; see {@link #exportSpecctraSessionSes}.
+   *
+   * @param outputStream target output stream for the script
+   * @param designName name of the design
+   * @return true if the export was successful, false otherwise
+   */
+  public boolean exportFusionScriptScr(OutputStream outputStream, String designName) {
+    return writeFusionScriptScr(outputStream, designName, false);
+  }
+
+  private boolean writeFusionScriptScr(
+      OutputStream outputStream, String designName, boolean recordSavedState) {
     try (java.io.ByteArrayOutputStream sesBaos = new java.io.ByteArrayOutputStream()) {
-      if (!saveAsSpecctraSessionSes(sesBaos, designName)) {
+      boolean sessionWritten =
+          recordSavedState
+              ? saveAsSpecctraSessionSes(sesBaos, designName)
+              : exportSpecctraSessionSes(sesBaos, designName);
+      if (!sessionWritten) {
         return false;
       }
       try (java.io.ByteArrayInputStream sesBais =

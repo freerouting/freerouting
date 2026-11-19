@@ -1,0 +1,78 @@
+(pcb "Plane-island-pad-without-via.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  40000 -25000  0 -25000  0 0  40000 0  40000 -25000)
+    )
+    (plane GND (polygon F.Cu 0  1000 -1000  39000 -1000  39000 -24000  1000 -24000  1000 -1000))
+    (plane GND (polygon B.Cu 0  1000 -1000  39000 -1000  39000 -24000  1000 -24000  1000 -1000))
+    (via "Via[0-1]_600:300_um")
+    (rule
+      (width 250)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component Pad_SMD_1.7mm
+      (place J1 8000 -12500 front 0 (PN Pad_SMD_1.7mm))
+      (place J2 32000 -12500 front 0 (PN Pad_SMD_1.7mm))
+      (place S1 20000 -3000 front 0 (PN Pad_SMD_1.7mm))
+      (place S2 20000 -22000 front 0 (PN Pad_SMD_1.7mm))
+    )
+  )
+  (library
+    (image Pad_SMD_1.7mm
+      (pin Rect[T]Pad_1700.000000x1700.000000_um 1 0 0)
+    )
+    (padstack Rect[T]Pad_1700.000000x1700.000000_um
+      (shape (rect F.Cu -850 -850 850 850))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:300_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net GND
+      (pins J1-1 J2-1)
+    )
+    (net SIG
+      (pins S1-1 S2-1)
+    )
+    (class kicad_default GND SIG
+      (circuit
+        (use_via "Via[0-1]_600:300_um")
+      )
+      (rule
+        (width 250)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+    (wire (path F.Cu 250  20000 -500  20000 -24500)(net SIG)(type route))
+    (via "Via[0-1]_600:300_um"  28000 -12500 (net GND)(type route))
+  )
+)

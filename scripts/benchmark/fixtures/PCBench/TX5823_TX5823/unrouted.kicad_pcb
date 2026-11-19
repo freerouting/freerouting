@@ -5357,17 +5357,6 @@
     )
     
   )
-  (zone (net 0) (net_name "") (layer GND) (tstamp 551DE924) (hatch edge 0.508)
-    (connect_pads yes (clearance 0.192))
-    (min_thickness 0.1)
-    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
-    (fill yes (arc_segments 16) (thermal_gap 0.6) (thermal_bridge_width 1))
-    (polygon
-      (pts
-        (xy 116.4 23.1) (xy 115.8 25.4) (xy 116.5 27.5) (xy 125.4 27.5) (xy 125.4 23.1)
-      )
-    )
-  )
   (zone (net 2) (net_name GND) (layer B.Cu) (tstamp 551DE92B) (hatch edge 0.508)
     (connect_pads yes (clearance 0.192))
     (min_thickness 0.1)
