@@ -120,8 +120,96 @@ class LegacyCliFlagsTest {
 
   @Test
   void deprecatedImprovementThresholdFlagIsStillApplied() {
+    int mark = logMark();
     RouterSettings merged = merge("-oit", "5");
 
     assertEquals(5.0f, merged.optimizer.optimizationImprovementThreshold);
+    assertTrue(warnedAbout(mark, "-oit"));
+  }
+
+  @Test
+  void deprecatedStagnationPassLimitAndIgnoreNetClassesFlagsWarn() {
+    int mark = logMark();
+
+    RouterSettings merged = merge("-spl", "7", "-inc", "GND,VCC");
+
+    assertEquals(7, merged.autorouter.stagnationPassLimit);
+    assertEquals(2, merged.autorouter.ignoreNetClasses.length);
+    assertTrue(warnedAbout(mark, "-spl"));
+    assertTrue(warnedAbout(mark, "-inc"));
+  }
+
+  @Test
+  void deprecatedGlobalSettingsFlagsWarnAndApply() {
+    int mark = logMark();
+    GlobalSettings gs = new GlobalSettings();
+
+    gs.applyCommandLineArguments(
+        new String[] {
+          "-di",
+          "boards",
+          "-dr",
+          "custom.rules",
+          "-ll",
+          "WARN",
+          "-dl",
+          "-da",
+          "-dct",
+          "0",
+          "--compare-boards=a.dsn,b.dsn",
+          "--calculate-benchmark-scores.input=in.json",
+          "--calculate-benchmark-scores.output=out.json"
+        });
+
+    assertEquals("boards", gs.guiSettings.inputDirectory);
+    assertEquals("custom.rules", gs.initialRulesFile);
+    assertEquals("WARN", gs.logging.console.level);
+    assertEquals(false, gs.logging.file.enabled);
+    assertEquals(true, gs.usageAndDiagnosticData.disableAnalytics);
+    assertEquals(0, gs.guiSettings.dialogConfirmationTimeout);
+    assertEquals("a.dsn", gs.compareFile1);
+    assertEquals("b.dsn", gs.compareFile2);
+    assertEquals("in.json", gs.benchmarkScoresInput);
+    assertEquals("out.json", gs.benchmarkScoresOutput);
+
+    assertTrue(warnedAbout(mark, "-di"));
+    assertTrue(warnedAbout(mark, "-dr"));
+    assertTrue(warnedAbout(mark, "-ll"));
+    assertTrue(warnedAbout(mark, "-dl"));
+    assertTrue(warnedAbout(mark, "-da"));
+    assertTrue(warnedAbout(mark, "-dct"));
+    assertTrue(warnedAbout(mark, "--compare-boards="));
+    assertTrue(warnedAbout(mark, "--calculate-benchmark-scores.input="));
+    assertTrue(warnedAbout(mark, "--calculate-benchmark-scores.output="));
+  }
+
+  @Test
+  void autoDiscoveredRulesFileWarningContainsExpectedGuidance() {
+    int mark = logMark();
+
+    CliDeprecationWarnings.warnAutoDiscoveredRulesFile("board.rules");
+
+    LogEntry[] entries = FRLogger.getLogEntries().getEntries(null, null);
+    assertTrue(
+        Arrays.stream(entries, Math.min(mark, entries.length), entries.length)
+            .filter(e -> e.getType() == LogEntryType.Warning)
+            .map(LogEntry::getMessage)
+            .anyMatch(
+                m ->
+                    m.contains("board.rules")
+                        && m.contains("deprecated")
+                        && m.contains("-de <design.dsn>+<rules.rules>")));
+  }
+
+  @Test
+  void loggingBootstrapRecognizesLongFormFlags() {
+    var config =
+        app.freerouting.startup.LoggingBootstrap.initialize(
+            new String[] {"--logging.console.level=WARN", "--logging.file.enabled=false"},
+            java.nio.file.Path.of(System.getProperty("java.io.tmpdir")),
+            "cli");
+
+    assertEquals("WARN", config.consoleLoggingLevel());
+    assertEquals(false, config.fileLoggingEnabled());
   }
 }

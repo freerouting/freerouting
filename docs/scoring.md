@@ -11,8 +11,8 @@ costs that steer A* while a trace is being laid.
 | Optimizer score | “How efficient is the copper versus a computable lower bound?” Used by the optimizer keep/undo gate and API `optimizer_score`. Default formula: `V2_LOWER_BOUND`. | A completeness meter. Incomplete nets and extra DRC hits are **vetoes**, not terms in this formula. |
 
 V1 (`V1_LEGACY`) remains an explicit compatibility override for each score
-independently (`--router-scoring-version`, `--optimizer-scoring-version`, or
-`--scoring-version` for both). Frozen Freerouting 1.9.0 keeps its historical
+independently (`--router.scoring.version` and `--optimizer.scoring.version`).
+Frozen Freerouting 1.9.0 keeps its historical
 formula; it does not implement V2.
 
 Implementation: `BoardStatistics.getRouterScore` /

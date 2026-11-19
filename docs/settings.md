@@ -208,8 +208,7 @@ The primary way to configure Freerouting is through a JSON settings file. This f
   Equations and a glossary for every symbol are in [docs/scoring.md](scoring.md).
 
 The router and optimizer versions are independent. CLI aliases are
-`--router-scoring-version=v1|v2`, `--optimizer-scoring-version=v1|v2`, and
-`--scoring-version=v1|v2` to select both.
+`--router.scoring.version=v1|v2` and `--optimizer.scoring.version=v1|v2`.
 
 ##### Reproducible placement import
 

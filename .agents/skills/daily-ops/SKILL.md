@@ -85,6 +85,7 @@ Each subagent executes the following inside its isolated `share` workspace witho
    - Monitor the progress of all running CI actions (`gh pr checks <number> --watch` or periodic polling of `statusCheckRollup`) while waiting for checks to complete. Do not consider a PR ready to merge while checks are pending, unapproved, or failing.
 6. **Diff-First Code Review & Unit Test Verification:**
    - Inspect `gh pr diff <number>` and only the affected line ranges in source files.
+   - **CLI Shorthand Policy:** Reject any new shorthand CLI parameters (e.g., `-xyz`) unless the maintainer explicitly allows it; always require long-form `--<section>.<property>=<value>` parameters.
    - Ensure unit tests exist and pass using **targeted, quiet execution**:
      ```powershell
      ./gradlew.bat test --tests "<AffectedTestClass>" -q
