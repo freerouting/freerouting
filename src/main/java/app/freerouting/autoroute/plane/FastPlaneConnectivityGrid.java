@@ -329,6 +329,20 @@ public class FastPlaneConnectivityGrid {
           int radius =
               (int) Math.round(Math.max(itemBbox.width(), itemBbox.height()) / 2.0 + clearance);
           rasterizeThickSegment(center.x, center.y, center.x, center.y, radius);
+        } else if (item instanceof BoardOutline) {
+          // the fill stops at the edge of the board: a plane drawn past the outline (an L-shaped
+          // board under a rectangular zone) does not join its pieces outside the board
+          double edgeKeepout =
+              board.clearanceValue(clearanceClass, itemClearanceClass, layer)
+                  + ca.getFillMinWidth() / 2.0;
+          for (int i = 0; i < item.tileShapeCount(); i++) {
+            if (item.shapeLayer(i) == layer) {
+              TileShape tileShape = item.getTileShape(i);
+              if (tileShape != null) {
+                rasterizeObstacleShape(tileShape.enlarge(edgeKeepout + (cellSize + 1.0) / 2.0));
+              }
+            }
+          }
         } else if (item instanceof ObstacleArea) {
           int shapeCount = item.tileShapeCount();
           for (int i = 0; i < shapeCount; i++) {
