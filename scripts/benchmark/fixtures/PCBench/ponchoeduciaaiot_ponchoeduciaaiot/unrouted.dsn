@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -26,6 +26,18 @@
             110000 -148000  110000 -154000  89000 -154000  88500 -154000
             88500 -72800  89000 -72800  163800 -72800  163800 -83700)
     )
+    (plane GND (polygon BOTTOM 0  80000 -64000  184000 -64000  184000 -158000  80000 -158000
+            80000 -64000))
+    (keepout "" (polygon BOTTOM 0  163000 -145000  178000 -145000  178000 -155000  151000 -155000
+            151000 -140000  111000 -140000  111000 -155000  87000 -155000
+            87000 -145000  106000 -145000  106000 -123000  131000 -123000
+            131000 -117000  163000 -117000  163000 -145000))
+    (keepout "" (polygon BOTTOM 0  124000 -72000  141000 -72000  141000 -77000  124000 -77000
+            124000 -72000))
+    (keepout "" (polygon BOTTOM 0  126250 -92250  124750 -92250  124750 -93750  126250 -93750
+            126250 -92250))
+    (keepout "" (polygon BOTTOM 0  138500 -92250  140250 -92250  140250 -93750  138500 -93750
+            138500 -92250))
     (via "Via[0-1]_1500:800_um")
     (rule
       (width 800)
@@ -1342,31 +1354,6 @@
         (clearance 700)
       )
     )
-    (class LEDS "Net-(D4-Pad1)" "Net-(D4-Pad2)" "Net-(D5-Pad1)" "Net-(D5-Pad2)"
-      "Net-(D8-Pad2)"
-      (circuit
-        (use_via "Via[0-1]_1500:800_um")
-      )
-      (rule
-        (width 800)
-        (clearance 400)
-      )
-    )
-    (class "MODULE NETS" +3V3 /ConectoresPoncho/MODULE_RESET /ConectoresPoncho/RXD_EDUCIAA
-      /ConectoresPoncho/TXD_EDUCIAA /comm/CMD_CTRL GND "Net-(R14-Pad2)" "Net-(R15-Pad2)"
-      "Net-(U6-Pad10)" "Net-(U6-Pad11)" "Net-(U6-Pad12)" "Net-(U6-Pad13)"
-      "Net-(U6-Pad14)" "Net-(U6-Pad17)" "Net-(U6-Pad18)" "Net-(U6-Pad2)" "Net-(U6-Pad22)"
-      "Net-(U6-Pad26)" "Net-(U6-Pad28)" "Net-(U6-Pad29)" "Net-(U6-Pad30)"
-      "Net-(U6-Pad31)" "Net-(U6-Pad32)" "Net-(U6-Pad33)" "Net-(U6-Pad5)" "Net-(U6-Pad6)"
-      "Net-(U6-Pad9)"
-      (circuit
-        (use_via "Via[0-1]_1500:800_um")
-      )
-      (rule
-        (width 500)
-        (clearance 200)
-      )
-    )
     (class PONCHO_CONNECTORS +5V /ConectoresPoncho/ANALOG_IN GNDA "Net-(XA1-Pad11)"
       "Net-(XA1-Pad15)" "Net-(XA1-Pad17)" "Net-(XA1-Pad19)" "Net-(XA1-Pad21)"
       "Net-(XA1-Pad27)" "Net-(XA1-Pad29)" "Net-(XA1-Pad3)" "Net-(XA1-Pad31)"
@@ -1386,13 +1373,14 @@
         (clearance 400)
       )
     )
-    (class INS_BUS /gpios/IN0 /gpios/IN1
+    (class LEDS "Net-(D4-Pad1)" "Net-(D4-Pad2)" "Net-(D5-Pad1)" "Net-(D5-Pad2)"
+      "Net-(D8-Pad2)"
       (circuit
         (use_via "Via[0-1]_1500:800_um")
       )
       (rule
         (width 800)
-        (clearance 500)
+        (clearance 400)
       )
     )
     (class "OUTS BUS" /gpios/OUT0 /gpios/OUT1
@@ -1402,6 +1390,30 @@
       (rule
         (width 700)
         (clearance 500)
+      )
+    )
+    (class INS_BUS /gpios/IN0 /gpios/IN1
+      (circuit
+        (use_via "Via[0-1]_1500:800_um")
+      )
+      (rule
+        (width 800)
+        (clearance 500)
+      )
+    )
+    (class "MODULE NETS" +3V3 /ConectoresPoncho/MODULE_RESET /ConectoresPoncho/RXD_EDUCIAA
+      /ConectoresPoncho/TXD_EDUCIAA /comm/CMD_CTRL GND "Net-(R14-Pad2)" "Net-(R15-Pad2)"
+      "Net-(U6-Pad10)" "Net-(U6-Pad11)" "Net-(U6-Pad12)" "Net-(U6-Pad13)"
+      "Net-(U6-Pad14)" "Net-(U6-Pad17)" "Net-(U6-Pad18)" "Net-(U6-Pad2)" "Net-(U6-Pad22)"
+      "Net-(U6-Pad26)" "Net-(U6-Pad28)" "Net-(U6-Pad29)" "Net-(U6-Pad30)"
+      "Net-(U6-Pad31)" "Net-(U6-Pad32)" "Net-(U6-Pad33)" "Net-(U6-Pad5)" "Net-(U6-Pad6)"
+      "Net-(U6-Pad9)"
+      (circuit
+        (use_via "Via[0-1]_1500:800_um")
+      )
+      (rule
+        (width 500)
+        (clearance 200)
       )
     )
   )

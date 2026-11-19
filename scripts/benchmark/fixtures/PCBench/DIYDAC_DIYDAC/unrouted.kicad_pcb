@@ -1588,4 +1588,38 @@
   
   
   
+  
+  (zone (net 0) (net_name "") (layer B.SilkS) (tstamp 0) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 179.072 108.457) (xy 204.472 108.457) (xy 204.472 105.917) (xy 179.072 105.917)
+      )
+    )
+    
   )
+  (zone (net 0) (net_name "") (layer F.SilkS) (tstamp 0) (hatch full 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 201.932 107.949) (xy 202.948 108.457) (xy 202.948 107.441)
+      )
+    )
+    
+  )
+  (zone (net 0) (net_name "") (layer F.SilkS) (tstamp 0) (hatch full 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 201.932 112.013) (xy 202.948 111.505) (xy 202.948 112.521)
+      )
+    )
+    
+  )
+)

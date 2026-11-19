@@ -1869,4 +1869,50 @@
   
   
   
+  
+  (zone (net 0) (net_name "") (layer B.Cu) (tstamp 58025EE8) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 139.954 103.632) (xy 139.954 120.65) (xy 141.732 122.174) (xy 155.448 122.174) (xy 156.972 120.396)
+        (xy 156.972 103.378) (xy 155.194 101.854) (xy 141.478 101.854)
+      )
+    )
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
   )
+  (zone (net 0) (net_name "") (layer F.Cu) (tstamp 58025F89) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 156.972 103.378) (xy 156.972 120.396) (xy 155.448 122.174) (xy 141.732 122.174) (xy 139.954 120.65)
+        (xy 139.954 103.632) (xy 141.478 101.854) (xy 155.194 101.854)
+      )
+    )
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  )
+)

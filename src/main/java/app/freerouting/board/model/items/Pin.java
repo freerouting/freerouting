@@ -665,7 +665,11 @@ public class Pin extends DrillItem implements Serializable {
    */
   public int getTraceNeckdownHalfwidth(int layer) {
     double result = Math.max(0.5 * this.getMinWidth(layer) - 1, 1);
-    return (int) result;
+    int minAllowed =
+        (this.board != null && this.board.rules != null)
+            ? this.board.rules.getMinAllowedTraceHalfWidth()
+            : 0;
+    return Math.max((int) result, minAllowed);
   }
 
   /** Returns the largest width of the pin shape on layer layer. */

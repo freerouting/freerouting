@@ -2066,5 +2066,37 @@
   
   
   
-
+  (zone (net 5) (net_name Gnd) (layer B.Cu) (tstamp 53D79912) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 203.2 155.575) (xy 185.42 155.575) (xy 185.42 148.59) (xy 203.2 148.59)
+      )
+    )
+    
+  )
+  (zone (net 7) (net_name I2C2_GND) (layer B.Cu) (tstamp 53D799C9) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 244.475 166.37) (xy 224.155 166.37) (xy 224.155 158.115) (xy 226.695 155.575) (xy 244.475 155.575)
+      )
+    )
+    
+  )
+  (zone (net 6) (net_name I2C1_GND) (layer F.Cu) (tstamp 53D7994F) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 206.375 166.37) (xy 185.42 166.37) (xy 185.42 156.21) (xy 203.835 156.21) (xy 206.375 158.75)
+      )
+    )
+    
+  )
 )

@@ -3312,5 +3312,26 @@
   
   
   
-
+  (zone (net 15) (net_name GNDA) (layer F.Cu) (tstamp 0) (hatch edge 0.508)
+    (connect_pads (clearance 0.6))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 83 53) (xy 132 53) (xy 132 83) (xy 83 83)
+      )
+    )
+    
+  )
+  (zone (net 15) (net_name GNDA) (layer B.Cu) (tstamp 0) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 83 53) (xy 132 53) (xy 132 83) (xy 83 83)
+      )
+    )
+    
+  )
 )

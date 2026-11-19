@@ -3050,5 +3050,75 @@
   
   
   
-
+  (zone (net 2) (net_name GND) (layer BOTTOM) (tstamp 0) (hatch edge 0.508)
+    (connect_pads (clearance 0.7))
+    (min_thickness 0.7)
+    (fill yes (arc_segments 16) (thermal_gap 0.7) (thermal_bridge_width 0.8))
+    (polygon
+      (pts
+        (xy 80 64) (xy 184 64) (xy 184 158) (xy 80 158)
+      )
+    )
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  )
+  (zone (net 0) (net_name "") (layer BOTTOM) (tstamp 0) (hatch edge 0.508)
+    (connect_pads (clearance 0.7))
+    (min_thickness 0.7)
+    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
+    (fill yes (arc_segments 16) (thermal_gap 0.7) (thermal_bridge_width 0.8))
+    (polygon
+      (pts
+        (xy 163 145) (xy 178 145) (xy 178 155) (xy 151 155) (xy 151 140)
+        (xy 111 140) (xy 111 155) (xy 87 155) (xy 87 145) (xy 106 145)
+        (xy 106 123) (xy 131 123) (xy 131 117) (xy 163 117)
+      )
+    )
+  )
+  (zone (net 0) (net_name "") (layer BOTTOM) (tstamp 0) (hatch edge 0.508)
+    (connect_pads (clearance 0.7))
+    (min_thickness 0.7)
+    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
+    (fill yes (arc_segments 16) (thermal_gap 0.7) (thermal_bridge_width 0.8))
+    (polygon
+      (pts
+        (xy 124 72) (xy 141 72) (xy 141 77) (xy 124 77)
+      )
+    )
+  )
+  (zone (net 0) (net_name "") (layer BOTTOM) (tstamp 0) (hatch edge 0.508)
+    (connect_pads (clearance 0.7))
+    (min_thickness 0.7)
+    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
+    (fill yes (arc_segments 16) (thermal_gap 0.7) (thermal_bridge_width 0.8))
+    (polygon
+      (pts
+        (xy 126.25 92.25) (xy 124.75 92.25) (xy 124.75 93.75) (xy 126.25 93.75)
+      )
+    )
+  )
+  (zone (net 0) (net_name "") (layer BOTTOM) (tstamp 0) (hatch edge 0.508)
+    (connect_pads (clearance 0.7))
+    (min_thickness 0.7)
+    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
+    (fill yes (arc_segments 16) (thermal_gap 0.7) (thermal_bridge_width 0.8))
+    (polygon
+      (pts
+        (xy 138.5 92.25) (xy 140.25 92.25) (xy 140.25 93.75) (xy 138.5 93.75)
+      )
+    )
+  )
 )

@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -34,6 +34,10 @@
             35784.2 -30850.8  35992.7 -30774.9  36211.1 -30736.4  36322 -30734
             65532 -30734  65642.9 -30736.4)
     )
+    (plane GND (polygon F.Cu 0  35052 -30734  66802 -30734  66802 -85598  35052 -85598
+            35052 -30734))
+    (plane GND (polygon B.Cu 0  35052 -30734  66802 -30734  66802 -85598  35052 -85598
+            35052 -30734))
     (via "Via[0-1]_600:400_um")
     (rule
       (width 250)
@@ -340,21 +344,21 @@
         (clearance 200)
       )
     )
-    (class "Hi-V" +12V
-      (circuit
-        (use_via "Via[0-1]_600:400_um")
-      )
-      (rule
-        (width 1524)
-        (clearance 200)
-      )
-    )
     (class Power +3V3 +5V GND
       (circuit
         (use_via "Via[0-1]_600:400_um")
       )
       (rule
         (width 381)
+        (clearance 200)
+      )
+    )
+    (class "Hi-V" +12V
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 1524)
         (clearance 200)
       )
     )

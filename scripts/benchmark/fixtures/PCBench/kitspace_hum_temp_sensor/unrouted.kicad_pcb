@@ -3625,4 +3625,60 @@
   
   
   
+  
+  (zone (net 1) (net_name GND) (layer B.Cu) (tstamp 61E4889F) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 32) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 86 96) (xy 133.5 96) (xy 133.5 122.5) (xy 86 122.5)
+      )
+    )
+    
   )
+  (zone (net 0) (net_name "") (layers F&B.Cu) (tstamp 0) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (keepout (tracks not_allowed) (vias not_allowed) (copperpour not_allowed))
+    (fill (arc_segments 32) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 92.583 102.489) (xy 85.598 102.489) (xy 85.598 95.504) (xy 92.583 95.504)
+      )
+    )
+  )
+  (zone (net 0) (net_name "") (layers F&B.Cu) (tstamp 61E4879B) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (keepout (tracks not_allowed) (vias not_allowed) (copperpour not_allowed))
+    (fill (arc_segments 32) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 92.456 122.936) (xy 85.471 122.936) (xy 85.471 115.951) (xy 92.456 115.951)
+      )
+    )
+  )
+  (zone (net 0) (net_name "") (layers F&B.Cu) (tstamp 61E4879B) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (keepout (tracks not_allowed) (vias not_allowed) (copperpour not_allowed))
+    (fill (arc_segments 32) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 133.985 122.936) (xy 127 122.936) (xy 127 115.951) (xy 133.985 115.951)
+      )
+    )
+  )
+  (zone (net 0) (net_name "") (layers F&B.Cu) (tstamp 61E4879B) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (keepout (tracks not_allowed) (vias not_allowed) (copperpour not_allowed))
+    (fill (arc_segments 32) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 133.985 102.489) (xy 127 102.489) (xy 127 95.504) (xy 133.985 95.504)
+      )
+    )
+  )
+)

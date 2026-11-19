@@ -887,5 +887,17 @@
   
   
   
-
+  (zone (net 7) (net_name N-000005) (layer B.Cu) (tstamp 56B23484) (hatch edge 0.508)
+    (connect_pads (clearance 0.508))
+    (min_thickness 0.254)
+    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 214.122 174.117) (xy 210.058 174.117) (xy 210.058 178.054) (xy 184.658 178.054) (xy 184.658 174.244)
+        (xy 180.594 174.244) (xy 180.594 148.717) (xy 184.658 148.717) (xy 184.658 144.78) (xy 210.185 144.78)
+        (xy 210.185 148.844) (xy 214.122 148.844)
+      )
+    )
+    
+  )
 )

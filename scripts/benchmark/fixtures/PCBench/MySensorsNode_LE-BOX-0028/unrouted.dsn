@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -39,6 +39,10 @@
             90271.7 -52026.1  90605.8 -51987.9  90774 -51985.3  160779 -51985.3
             160948 -51987.6)
     )
+    (plane GND (polygon F.Cu 0  163779 -147986  87779.2 -147986  87779.2 -51985.9  163779 -51985.9
+            163779 -147986))
+    (plane GND (polygon B.Cu 0  87779.2 -147986  87779.2 -51985.9  163779 -51985.9  163779 -147986
+            87779.2 -147986))
     (via "Via[0-1]_635:381_um")
     (rule
       (width 381)
@@ -859,8 +863,7 @@
       (pin Round[A]Pad_1727.200000_um 16@1 17000 0)
     )
     (image mysensors_radios:NRF24L01
-      (outline (polygon signal 0  0 -5824  0 -28800  -15250 -28800  -15250 0  -10894 0
-            -10894 226  256 226  256 -5824))
+      (outline (polygon signal 0  -15245 -28795  -15245 -5  -5 -5  -5 -28795))
       (outline (path signal 150  -10414 -5334  -10414 -2794))
       (outline (path signal 150  -254 -5334  -10414 -5334))
       (outline (path signal 150  -254 -254  -254 -5334))

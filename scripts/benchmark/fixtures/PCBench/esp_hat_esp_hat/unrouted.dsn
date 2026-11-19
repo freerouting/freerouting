@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -35,6 +35,18 @@
             57307.8 -85036.1  57434.5 -85002.1  57500 -85000  127000 -85000
             127168 -85002.4)
     )
+    (plane GND (polygon F.Cu 0  130000 -115000  64550 -115000  64550 -85000  130000 -85000
+            130000 -115000))
+    (plane GND (polygon B.Cu 0  64535 -85000  129935 -85000  129935 -115000  64535 -115000
+            64535 -85000))
+    (plane GND (polygon F.Cu 0  64550 -100000  79450 -100000  79450 -104050  75500 -104050
+            75500 -108000  64550 -108000  64550 -100000))
+    (keepout "" (polygon F.Cu 0  66300 -105200  68900 -105200  68900 -107800  66300 -107800
+            66300 -105200))
+    (keepout "" (polygon F.Cu 0  71600 -101600  72150 -101600  72150 -102800  71600 -102800
+            71600 -101600))
+    (keepout "" (polygon F.Cu 0  66450 -101550  68200 -101550  68200 -103350  66950 -103350
+            66950 -102800  66450 -102800  66450 -101550))
     (via "Via[0-1]_685.8:400_um" "Via[0-1]_800:400_um")
     (rule
       (width 250)
@@ -779,15 +791,6 @@
         (clearance 200)
       )
     )
-    (class power +3V3 +5V /5V_filt GND
-      (circuit
-        (use_via "Via[0-1]_800:400_um")
-      )
-      (rule
-        (width 500)
-        (clearance 200)
-      )
-    )
     (class 50ohm_oshpark /50ohm_LNA /50ohm_ant /50ohm_filt /50ohm_ufl
       (circuit
         (use_via "Via[0-1]_685.8:400_um")
@@ -795,6 +798,15 @@
       (rule
         (width 1000)
         (clearance 160)
+      )
+    )
+    (class power +3V3 +5V /5V_filt GND
+      (circuit
+        (use_via "Via[0-1]_800:400_um")
+      )
+      (rule
+        (width 500)
+        (clearance 200)
       )
     )
   )

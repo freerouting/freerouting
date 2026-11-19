@@ -3,7 +3,7 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "10.0.2")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
   )
   (resolution um 10)
   (unit um)
@@ -24,6 +24,8 @@
       (path pcb 0  176403 -119634  111633 -119634  111633 -72644  176403 -72644
             176403 -119634)
     )
+    (plane GND (polygon B.Cu 0  112268 -73279  112268 -118999  175768 -118999  175768 -73279
+            112268 -73279))
     (via "Via[0-1]_900:500_um")
     (rule
       (width 350)
@@ -665,21 +667,21 @@
         (clearance 200)
       )
     )
-    (class "USB Differential" D1+ "D1-" D2+ "D2-" D3+ "D3-" D4+ "D4-"
-      (circuit
-        (use_via "Via[0-1]_900:500_um")
-      )
-      (rule
-        (width 300)
-        (clearance 200)
-      )
-    )
     (class "USB Conn Power" "Net-(C13-Pad2)"
       (circuit
         (use_via "Via[0-1]_900:500_um")
       )
       (rule
         (width 700)
+        (clearance 200)
+      )
+    )
+    (class "USB Differential" D1+ "D1-" D2+ "D2-" D3+ "D3-" D4+ "D4-"
+      (circuit
+        (use_via "Via[0-1]_900:500_um")
+      )
+      (rule
+        (width 300)
         (clearance 200)
       )
     )
