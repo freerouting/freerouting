@@ -35,21 +35,20 @@ class OptimizerPatienceSettingsTest {
   }
 
   @Test
-  void cliShortFlagOpIsParsed() {
-    CliSettings cli = new CliSettings(new String[] {"-op", "exhaustive"});
-    assertEquals(OptimizerPatience.EXHAUSTIVE, cli.getSettings().optimizer.patience);
-  }
-
-  @Test
-  void cliShortFlagOmpIsParsed() {
-    CliSettings cli = new CliSettings(new String[] {"-omp", "42"});
-    assertEquals(42, cli.getSettings().optimizer.maxPasses);
-  }
-
-  @Test
   void cliNestedMaxPassesIsParsed() {
     CliSettings cli = new CliSettings(new String[] {"--router.optimizer.max_passes=25"});
     assertEquals(25, cli.getSettings().optimizer.maxPasses);
+  }
+
+  @Test
+  void globalSettingsGenericLongParametersParsePatienceAndMaxPasses() {
+    GlobalSettings globalSettings = new GlobalSettings();
+    globalSettings.applyCommandLineArguments(
+        new String[] {
+          "--router.optimizer.patience=exhaustive", "--router.optimizer.max_passes=25"
+        });
+    assertEquals(OptimizerPatience.EXHAUSTIVE, globalSettings.routerSettings.optimizer.patience);
+    assertEquals(25, globalSettings.routerSettings.optimizer.maxPasses);
   }
 
   @Test
@@ -61,13 +60,17 @@ class OptimizerPatienceSettingsTest {
   }
 
   @Test
-  void settingsMergerOverridesDefaultPatienceWithCli() {
+  void settingsMergerOverridesDefaultPatienceAndMaxPassesWithCli() {
     RouterSettings merged =
         new SettingsMerger(
                 new DefaultSettings(),
-                new CliSettings(new String[] {"--router.optimizer.patience=patient"}))
+                new CliSettings(
+                    new String[] {
+                      "--router.optimizer.patience=patient", "--router.optimizer.max_passes=25"
+                    }))
             .merge();
     assertEquals(OptimizerPatience.PATIENT, merged.optimizer.patience);
+    assertEquals(25, merged.optimizer.maxPasses);
   }
 
   @Test

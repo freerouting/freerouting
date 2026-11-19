@@ -236,7 +236,8 @@ exports; matching the seed alone does not make those different router inputs ide
 Configures the optional route-optimization stage that runs after autorouting.
 
 - **`enabled`**: Whether to run the optimizer. Default is `true`.
-- **`max_passes`**: Maximum number of optimizer passes. Equivalent CLI flag: `--router.optimizer.max_passes=<int>` (or `-omp <int>`).
+- **`max_passes`**: Maximum number of optimizer passes. Equivalent CLI flag:
+  `--router.optimizer.max_passes=<int>`.
 - **`patience`**: Preset profile controlling optimizer termination sensitivity and candidate sweep
   completeness. Presets:
   - `balanced` (Default): Fast interactive optimization (`improvement_threshold = 2.50%`,
@@ -246,7 +247,7 @@ Configures the optional route-optimization stage that runs after autorouting.
   - `exhaustive`: Exhaustive mode evaluating all candidate items across every pass without early
     abort (`improvement_threshold = 0.00%`, `max_consecutive_failures = 0` / unlimited). Runs until
     `max_passes` or timeout.
-  Equivalent CLI flag: `--router.optimizer.patience=<balanced|patient|exhaustive>` (or `-op <preset>`).
+  Equivalent CLI flag: `--router.optimizer.patience=<balanced|patient|exhaustive>`.
 - **`max_items`**: Maximum number of item optimization attempts.
 - **`max_threads`**: Optimizer worker-thread cap. Canonical CLI is
   `--router.optimizer.max_threads`. The default is the JVM-visible processor count minus one
