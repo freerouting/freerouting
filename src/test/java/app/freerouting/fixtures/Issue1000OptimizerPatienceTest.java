@@ -112,15 +112,10 @@ class Issue1000OptimizerPatienceTest extends RoutingFixtureTest {
     job.routerSettings.optimizer.maxThreads = 1;
 
     app.freerouting.autoroute.pipeline.BatchOptimizer optimizer =
-        new app.freerouting.autoroute.pipeline.BatchOptimizer(job) {
-          @Override
-          protected java.util.concurrent.Callable<CandidateResult> createCandidateTask(
-              int itemId,
-              boolean withPreferredDirections,
-              app.freerouting.core.scoring.BoardStatistics.OptimizerMetrics baselineMetrics) {
-            return () -> unimprovedCandidate(itemId);
-          }
-        };
+        new app.freerouting.autoroute.pipeline.BatchOptimizer(job);
+    optimizer.setCandidateTaskFactory(
+        (itemId, withPreferredDirections, baselineMetrics) ->
+            () -> app.freerouting.autoroute.pipeline.BatchOptimizer.unimprovedCandidate(itemId));
     optimizer.runBatchLoop();
 
     var phase = job.resultPhaseMetrics.optimizer;

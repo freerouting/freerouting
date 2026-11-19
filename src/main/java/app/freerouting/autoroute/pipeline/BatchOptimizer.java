@@ -45,7 +45,9 @@ import java.util.concurrent.atomic.AtomicLong;
  * Optimizes the routed connections of a board after auto-routing, using a deterministic thread pool
  * pipeline.
  */
-public non-sealed class BatchOptimizer extends NamedAlgorithm {
+public final class BatchOptimizer extends NamedAlgorithm {
+
+  private CandidateTaskFactory candidateTaskFactory;
 
   protected final ProgressThrottler progressThrottler = new ProgressThrottler(1000);
   protected ReadSortedRouteItems sortedRouteItems;
@@ -1203,11 +1205,28 @@ public non-sealed class BatchOptimizer extends NamedAlgorithm {
     return replay;
   }
 
+  /** Functional factory for creating candidate evaluation tasks. */
+  @FunctionalInterface
+  public interface CandidateTaskFactory {
+    Callable<CandidateResult> create(
+        int itemId,
+        boolean withPreferredDirections,
+        BoardStatistics.OptimizerMetrics baselineMetrics);
+  }
+
+  /** Overrides the candidate evaluation task factory (intended for deterministic testing). */
+  public void setCandidateTaskFactory(CandidateTaskFactory candidateTaskFactory) {
+    this.candidateTaskFactory = candidateTaskFactory;
+  }
+
   /** Creates the candidate evaluation task for a single board item. */
-  protected Callable<CandidateResult> createCandidateTask(
+  private Callable<CandidateResult> createCandidateTask(
       int itemId,
       boolean withPreferredDirections,
       BoardStatistics.OptimizerMetrics baselineMetrics) {
+    if (this.candidateTaskFactory != null) {
+      return this.candidateTaskFactory.create(itemId, withPreferredDirections, baselineMetrics);
+    }
     return new OptimizeCandidateTask(
         job,
         this.board,
@@ -1223,12 +1242,12 @@ public non-sealed class BatchOptimizer extends NamedAlgorithm {
   }
 
   /** Creates a non-improving candidate result for controlled testing of failure-cap behavior. */
-  protected static CandidateResult unimprovedCandidate(int itemId) {
+  public static CandidateResult unimprovedCandidate(int itemId) {
     return new CandidateResult(new ItemRouteResult(itemId), null, null, 0, 0);
   }
 
   /** Result of evaluating a single candidate item. */
-  protected static final class CandidateResult {
+  public static final class CandidateResult {
     final ItemRouteResult result;
     final RoutingBoard board;
     final FloatPoint itemPosition;
