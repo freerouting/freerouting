@@ -7,6 +7,7 @@ import app.freerouting.autoroute.maze.AutorouteEngine;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.ComponentOutline;
 import app.freerouting.board.model.items.ConductionArea;
+import app.freerouting.board.model.items.DrillItem;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Trace;
@@ -29,6 +30,7 @@ import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.sources.DefaultSettings;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -149,6 +151,7 @@ public final class BatchDecouplingRouter {
         }
 
         int railNetNo = candidate.railNetNumber();
+        Net railNet = board.rules.nets.get(railNetNo);
         if (supplyPin.hasIgnoredNets() || groundPin.hasIgnoredNets()) {
           failed++;
           metricsList.add(
@@ -166,13 +169,7 @@ public final class BatchDecouplingRouter {
         }
 
         int capLayer = supplyPin.firstLayer();
-        boolean strapSuccess = false;
-        double candidateStrapLengthMm = 0.0;
-        String strapStatus = "NOT_ATTEMPTED";
         int targetPinId = task.targetSupplyItemId();
-        String ownerName = "NONE";
-        int viasPlacedForCap = 0;
-
         Pin ownerPin = null;
         if (task.hasTargetSupply()) {
           Item targetItem = board.getItem(task.targetSupplyItemId());
@@ -187,365 +184,16 @@ public final class BatchDecouplingRouter {
           }
         }
 
+        String ownerName = "NONE";
+        int ownerCompId = -1;
         if (ownerPin != null) {
-          Component ownerComp = board.components.get(ownerPin.getComponentId());
+          ownerCompId = ownerPin.getComponentId();
+          Component ownerComp = board.components.get(ownerCompId);
           ownerName =
-              (ownerComp != null ? ownerComp.name : ("Comp#" + ownerPin.getComponentId()))
+              (ownerComp != null ? ownerComp.name : ("Comp#" + ownerCompId))
                   + "-"
                   + ownerPin.name();
-
-          capLayer = supplyPin.firstLayer();
-          boolean isSameLayer = (capLayer == ownerPin.firstLayer());
-          boolean isOwnerTht =
-              (ownerPin.firstLayer() != ownerPin.lastLayer()) && ownerPin.isOnLayer(capLayer);
-
-          if (isSameLayer || isOwnerTht) {
-            int targetLayer = capLayer;
-            AutorouteControl control = new AutorouteControl(board, railNetNo, settings);
-            if (targetLayer < 0
-                || targetLayer >= control.layerCount
-                || !control.layerActive[targetLayer]) {
-              failed++;
-              strapStatus = "LAYER_DISABLED";
-            } else {
-              double centerDistUnits =
-                  supplyPin.getCenter().toFloat().distance(ownerPin.getCenter().toFloat());
-              if (centerDistUnits > maxStrapLengthUnits) {
-                failed++;
-                strapStatus = "DISTANCE_EXCEEDED";
-              } else {
-                control.viasAllowed = false;
-                control.ripupAllowed = false;
-                control.removeUnconnectedVias = false;
-                if (settings.decoupling != null && settings.decoupling.maxDoorExpansions != null) {
-                  control.maxDoorExpansions = settings.decoupling.maxDoorExpansions;
-                }
-                for (int i = 0; i < control.layerCount; i++) {
-                  control.layerActive[i] = control.layerActive[i] && (i == targetLayer);
-                }
-
-                Set<Item> supplyConnected = supplyPin.getConnectedSet(railNetNo);
-                if (supplyConnected.contains(ownerPin)) {
-                  alreadyConnected++;
-                  strapSuccess = true;
-                  strapStatus = "ALREADY_CONNECTED";
-                  tagDecouplingProtected(supplyPin, lockMode);
-                  tagDecouplingProtected(ownerPin, lockMode);
-                  if (ReasonCode.FILTERED_ISLAND.isSet(candidate.reasonMask())) {
-                    ownerPin.setFilteredIslandNonFeeder(true);
-                  }
-                } else {
-                  Set<Item> ownerConnected = ownerPin.getConnectedSet(railNetNo);
-
-                  // 2-Phase width trial: try wide strap (e.g. 1.5x), then downgrade to 1.0x if
-                  // trapped/DRC
-                  double[] scalesToTry =
-                      (traceWidthScale > 1.0)
-                          ? new double[] {traceWidthScale, 1.0}
-                          : new double[] {1.0};
-
-                  StrapAttemptOutcome outcome = null;
-                  for (double scale : scalesToTry) {
-                    Set<Item> currentSupplyConnected = supplyPin.getConnectedSet(railNetNo);
-                    Set<Item> currentOwnerConnected = ownerPin.getConnectedSet(railNetNo);
-                    outcome =
-                        tryRouteStrap(
-                            board,
-                            settings,
-                            thread,
-                            control,
-                            supplyPin,
-                            ownerPin,
-                            currentSupplyConnected,
-                            currentOwnerConnected,
-                            capLayer,
-                            targetLayer,
-                            railNetNo,
-                            candidate.groundNetNumber(),
-                            ownerPin.getComponentId(),
-                            candidate.componentId(),
-                            scale,
-                            maxStrapLengthMm,
-                            mmResolution);
-
-                    if (outcome.success()) {
-                      break;
-                    }
-                  }
-
-                  if (outcome != null && outcome.success()) {
-                    strapSuccess = true;
-                    strapStatus = outcome.status();
-                    routedStraps++;
-                    candidateStrapLengthMm = outcome.lengthMm();
-                    totalStrapLengthMm += candidateStrapLengthMm;
-                    tagDecouplingProtected(supplyPin, lockMode);
-                    tagDecouplingProtected(ownerPin, lockMode);
-                    for (Item newItem : outcome.newItems()) {
-                      if (newItem instanceof Via) {
-                        viasPlacedForCap++;
-                        viasPlaced++;
-                      }
-                      tagDecouplingProtected(newItem, lockMode);
-                    }
-                    if (ReasonCode.FILTERED_ISLAND.isSet(candidate.reasonMask())) {
-                      ownerPin.setFilteredIslandNonFeeder(true);
-                      for (Item newItem : outcome.newItems()) {
-                        newItem.setFilteredIslandNonFeeder(true);
-                      }
-                    }
-                  } else {
-                    // Secondary overflow cap: fallback flanking attempt to primary cap pad
-                    boolean flanked = false;
-                    if (task.isSecondary() && task.pairedPrimaryCapPinId() > 0) {
-                      Item primaryCapItem = board.getItem(task.pairedPrimaryCapPinId());
-                      if (primaryCapItem instanceof Pin primaryCapPin
-                          && primaryCapPin.firstLayer() == supplyPin.firstLayer()
-                          && !primaryCapPin.equals(ownerPin)
-                          && !primaryCapPin.hasIgnoredNets()) {
-                        Set<Item> primaryCapConnected = primaryCapPin.getConnectedSet(railNetNo);
-                        // Only flank to the primary cap if the primary cap is verified connected to
-                        // the
-                        // owner IC. If the primary cap failed to reach the IC, flanking would
-                        // create an
-                        // isolated, floating daisy-chain between two ungrounded/unpowered
-                        // capacitors.
-                        if (primaryCapConnected.contains(ownerPin)
-                            && supplyConnected.contains(primaryCapPin)) {
-                          alreadyConnected++;
-                          strapSuccess = true;
-                          strapStatus = "ALREADY_CONNECTED";
-                          tagDecouplingProtected(supplyPin, lockMode);
-                          tagDecouplingProtected(primaryCapPin, lockMode);
-                          if (ReasonCode.FILTERED_ISLAND.isSet(candidate.reasonMask())) {
-                            primaryCapPin.setFilteredIslandNonFeeder(true);
-                          }
-                          flanked = true;
-                        } else if (primaryCapConnected.contains(ownerPin)) {
-                          double flankDistUnits =
-                              supplyPin
-                                  .getCenter()
-                                  .toFloat()
-                                  .distance(primaryCapPin.getCenter().toFloat());
-                          if (flankDistUnits <= maxStrapLengthUnits) {
-                            StrapAttemptOutcome flankOutcome = null;
-                            for (double scale : scalesToTry) {
-                              Set<Item> currentSupplyConnected =
-                                  supplyPin.getConnectedSet(railNetNo);
-                              Set<Item> currentPrimaryConnected =
-                                  primaryCapPin.getConnectedSet(railNetNo);
-                              flankOutcome =
-                                  tryRouteStrap(
-                                      board,
-                                      settings,
-                                      thread,
-                                      control,
-                                      supplyPin,
-                                      primaryCapPin,
-                                      currentSupplyConnected,
-                                      currentPrimaryConnected,
-                                      capLayer,
-                                      capLayer,
-                                      railNetNo,
-                                      candidate.groundNetNumber(),
-                                      primaryCapPin.getComponentId(),
-                                      candidate.componentId(),
-                                      scale,
-                                      maxStrapLengthMm,
-                                      mmResolution);
-                              if (flankOutcome.success()) {
-                                break;
-                              }
-                            }
-
-                            if (flankOutcome != null && flankOutcome.success()) {
-                              flanked = true;
-                              strapSuccess = true;
-                              strapStatus = "ROUTED_FLANKING";
-                              routedStraps++;
-                              candidateStrapLengthMm = flankOutcome.lengthMm();
-                              totalStrapLengthMm += candidateStrapLengthMm;
-                              tagDecouplingProtected(supplyPin, lockMode);
-                              tagDecouplingProtected(primaryCapPin, lockMode);
-                              for (Item newItem : flankOutcome.newItems()) {
-                                if (newItem instanceof Via) {
-                                  viasPlacedForCap++;
-                                  viasPlaced++;
-                                }
-                                tagDecouplingProtected(newItem, lockMode);
-                              }
-                              if (ReasonCode.FILTERED_ISLAND.isSet(candidate.reasonMask())) {
-                                primaryCapPin.setFilteredIslandNonFeeder(true);
-                                for (Item newItem : flankOutcome.newItems()) {
-                                  newItem.setFilteredIslandNonFeeder(true);
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-
-                    if (!flanked) {
-                      failed++;
-                      strapStatus = outcome != null ? outcome.status() : "NO_ROUTE_FOUND";
-                    }
-                  }
-                }
-              }
-            }
-          } else {
-            // Opposite-layer SMD mounting (e.g. bottom-side cap under top-side IC pad)
-            boolean oppositeSideEnabled =
-                settings.decoupling == null
-                    || settings.decoupling.oppositeSideRouting == null
-                    || Boolean.TRUE.equals(settings.decoupling.oppositeSideRouting);
-
-            if (!oppositeSideEnabled) {
-              failed++;
-              strapStatus = "OPPOSITE_SIDE_DISABLED";
-            } else {
-              int ownerLayer = ownerPin.firstLayer();
-              AutorouteControl control = new AutorouteControl(board, railNetNo, settings);
-              if (capLayer < 0
-                  || capLayer >= control.layerCount
-                  || ownerLayer < 0
-                  || ownerLayer >= control.layerCount
-                  || !control.layerActive[capLayer]
-                  || !control.layerActive[ownerLayer]) {
-                failed++;
-                strapStatus = "LAYER_DISABLED";
-              } else {
-                double lateralDistUnits =
-                    supplyPin.getCenter().toFloat().distance(ownerPin.getCenter().toFloat());
-                if (lateralDistUnits > maxStrapLengthUnits) {
-                  failed++;
-                  strapStatus = "DISTANCE_EXCEEDED";
-                } else {
-                  Set<Item> supplyConnected = supplyPin.getConnectedSet(railNetNo);
-                  if (supplyConnected.contains(ownerPin)) {
-                    alreadyConnected++;
-                    strapSuccess = true;
-                    strapStatus = "ALREADY_CONNECTED";
-                    tagDecouplingProtected(supplyPin, lockMode);
-                    tagDecouplingProtected(ownerPin, lockMode);
-                    if (ReasonCode.FILTERED_ISLAND.isSet(candidate.reasonMask())) {
-                      ownerPin.setFilteredIslandNonFeeder(true);
-                    }
-                  } else {
-                    Set<Item> ownerConnected = ownerPin.getConnectedSet(railNetNo);
-
-                    final int effectiveTargetLayer = ownerLayer;
-                    control.viasAllowed = true;
-                    control.ripupAllowed = false;
-                    control.removeUnconnectedVias = false;
-                    if (settings.decoupling != null
-                        && settings.decoupling.maxDoorExpansions != null) {
-                      control.maxDoorExpansions = settings.decoupling.maxDoorExpansions;
-                    }
-                    for (int i = 0; i < control.layerCount; i++) {
-                      control.layerActive[i] = (i == capLayer || i == ownerLayer);
-                    }
-
-                    double[] scalesToTry =
-                        (traceWidthScale > 1.0)
-                            ? new double[] {traceWidthScale, 1.0}
-                            : new double[] {1.0};
-
-                    StrapAttemptOutcome outcome = null;
-                    for (double scale : scalesToTry) {
-                      Set<Item> currentSupplyConnected = supplyPin.getConnectedSet(railNetNo);
-                      Set<Item> currentOwnerConnected = ownerPin.getConnectedSet(railNetNo);
-                      outcome =
-                          tryRouteStrap(
-                              board,
-                              settings,
-                              thread,
-                              control,
-                              supplyPin,
-                              ownerPin,
-                              currentSupplyConnected,
-                              currentOwnerConnected,
-                              capLayer,
-                              effectiveTargetLayer,
-                              railNetNo,
-                              candidate.groundNetNumber(),
-                              ownerPin.getComponentId(),
-                              candidate.componentId(),
-                              scale,
-                              maxStrapLengthMm,
-                              mmResolution);
-
-                      if (outcome.success()) {
-                        break;
-                      }
-                    }
-
-                    if (outcome != null && outcome.success()) {
-                      strapSuccess = true;
-                      strapStatus = "ROUTED_OPPOSITE_FEEDTHROUGH_VIA";
-                      routedStraps++;
-                      candidateStrapLengthMm = outcome.lengthMm();
-                      totalStrapLengthMm += candidateStrapLengthMm;
-                      tagDecouplingProtected(supplyPin, lockMode);
-                      tagDecouplingProtected(ownerPin, lockMode);
-                      for (Item newItem : outcome.newItems()) {
-                        if (newItem instanceof Via) {
-                          viasPlacedForCap++;
-                          viasPlaced++;
-                        }
-                        tagDecouplingProtected(newItem, lockMode);
-                      }
-                      if (ReasonCode.FILTERED_ISLAND.isSet(candidate.reasonMask())) {
-                        ownerPin.setFilteredIslandNonFeeder(true);
-                        for (Item newItem : outcome.newItems()) {
-                          newItem.setFilteredIslandNonFeeder(true);
-                        }
-                      }
-                    } else {
-                      failed++;
-                      strapStatus = outcome != null ? outcome.status() : "NO_ROUTE_FOUND";
-                    }
-                  }
-                }
-              }
-            }
-          }
-        } else {
-          strapStatus = task.isPlaneOnly() ? "PLANE_ONLY_PENDING" : "NO_OWNER_IN_RADIUS";
-          if (!task.isPlaneOnly()) {
-            failed++;
-          }
         }
-
-        // Dedicated ground/plane via adjacent to the pad
-        int groundNetNo = candidate.groundNetNumber();
-        Net groundNet = board.rules.nets.get(groundNetNo);
-
-        // Through-hole pins span all layers and connect directly to internal planes
-        boolean groundIsSmd = (groundPin.firstLayer() == groundPin.lastLayer());
-        boolean groundAlreadyOnPlane = !groundIsSmd;
-        if (!groundAlreadyOnPlane) {
-          for (Item it : groundPin.getNormalContacts()) {
-            if (it instanceof ConductionArea || it instanceof Via) {
-              groundAlreadyOnPlane = true;
-              break;
-            }
-          }
-        }
-        if (!groundAlreadyOnPlane && groundNet != null && groundNet.containsPlane()) {
-          for (Item it : groundPin.getConnectedSet(groundNetNo)) {
-            if (it instanceof ConductionArea) {
-              groundAlreadyOnPlane = true;
-              break;
-            }
-          }
-        }
-
-        boolean applyBias =
-            settings.decoupling == null
-                || settings.decoupling.mutualInductanceBias == null
-                || Boolean.TRUE.equals(settings.decoupling.mutualInductanceBias);
 
         FloatPoint p1 = groundPin.getCenter().toFloat();
         FloatPoint p2 = supplyPin.getCenter().toFloat();
@@ -556,286 +204,75 @@ public final class BatchDecouplingRouter {
 
         FloatPoint primaryGroundTarget = null;
         FloatPoint secondaryGroundTarget = null;
-        double nx = 0.0;
-        double ny = 0.0;
-        boolean hasNormalVector = false;
-
-        // Skip bias for degenerate concentric or near-zero pad pitch footprints
-        if (applyBias && padDist > 10.0) {
-          // Unit vector along inter-pad axis and normal vector out to the lateral flank
+        if (padDist > 10.0) {
           double ux = dx / padDist;
           double uy = dy / padDist;
-          nx = -uy;
-          ny = ux;
-          hasNormalVector = true;
+          double nx = -uy;
+          double ny = ux;
           primaryGroundTarget =
               new FloatPoint(p1.x + escapeDistance * nx, p1.y + escapeDistance * ny);
           secondaryGroundTarget =
               new FloatPoint(p1.x - escapeDistance * nx, p1.y - escapeDistance * ny);
+          if (ownerPin != null) {
+            FloatPoint ownerCenter = ownerPin.getCenter().toFloat();
+            double d1 = primaryGroundTarget.distance(ownerCenter);
+            double d2 = secondaryGroundTarget.distance(ownerCenter);
+            if (d2 > d1) {
+              FloatPoint tmp = primaryGroundTarget;
+              primaryGroundTarget = secondaryGroundTarget;
+              secondaryGroundTarget = tmp;
+            }
+          }
         }
 
-        Via placedVia = null;
-        if (groundAlreadyOnPlane) {
-          tagDecouplingProtected(groundPin, lockMode);
-          if (task.isPlaneOnly()) {
-            strapSuccess = true;
-            strapStatus = "PLANE_ONLY_ROUTED";
+        int traceClearance =
+            (capLayer >= 0 && capLayer < board.getLayerCount())
+                ? board.rules.clearanceMatrix.maxValue(capLayer)
+                : 0;
+        IntBox forbiddenCourtyardBox =
+            computeForbiddenCourtyardBox(board, ownerCompId, traceClearance);
+
+        PairRouteResult pairResult =
+            routeDecouplingPair(
+                board,
+                supplyPin,
+                groundPin,
+                ownerPin,
+                capLayer,
+                railNetNo,
+                candidate.groundNetNumber(),
+                ownerCompId,
+                candidate,
+                task,
+                traceWidthScale,
+                maxStrapLengthMm,
+                mmResolution,
+                forbiddenCourtyardBox,
+                settings,
+                thread,
+                lockMode,
+                primaryGroundTarget,
+                secondaryGroundTarget);
+
+        boolean strapSuccess = pairResult.success();
+        String strapStatus = pairResult.status();
+        double candidateStrapLengthMm = pairResult.lengthMm();
+        int viasPlacedForCap = pairResult.viasPlaced();
+        double groundViaDistanceMm = pairResult.groundViaDistanceMm();
+
+        if (strapSuccess) {
+          if ("ALREADY_CONNECTED".equals(strapStatus)) {
+            alreadyConnected++;
+          } else {
+            routedStraps++;
+            totalStrapLengthMm += candidateStrapLengthMm;
+            viasPlaced += viasPlacedForCap;
           }
+          coupledViaPairs += pairResult.coupledViaPairs();
+          fallbackViaPairs += pairResult.fallbackViaPairs();
         } else {
-          boolean groundNetHasPlane = groundNet != null && groundNet.containsPlane();
-          boolean planeUnderneath = isPlaneDirectlyUnderneath(board, groundPin, groundNetNo);
-          Item targetGndItem =
-              (task.targetGroundItemId() > 0) ? board.getItem(task.targetGroundItemId()) : null;
-          Pin targetGndPin = (targetGndItem instanceof Pin p) ? p : null;
-
-          Set<Item> currentGroundConnected = groundPin.getConnectedSet(groundNetNo);
-          if (targetGndPin != null && currentGroundConnected.contains(targetGndPin)) {
-            tagDecouplingProtected(groundPin, lockMode);
-            tagDecouplingProtected(targetGndPin, lockMode);
-            if (task.isPlaneOnly()) {
-              strapSuccess = true;
-              strapStatus = "ALREADY_CONNECTED";
-            }
-          } else {
-            double distToIcGndUnits =
-                (targetGndPin != null)
-                    ? groundPin.getCenter().toFloat().distance(targetGndPin.getCenter().toFloat())
-                    : Double.MAX_VALUE;
-            double proximityThresholdUnits = 1.5 * mmResolution;
-
-            boolean preferSurfaceStrap =
-                (!planeUnderneath || distToIcGndUnits <= proximityThresholdUnits)
-                    && (targetGndPin != null && distToIcGndUnits <= maxStrapLengthUnits);
-
-            boolean groundRouted = false;
-
-            if (preferSurfaceStrap) {
-              // 1. Primary: Direct Surface Return Strap to IC ground pin
-              StrapAttemptOutcome gndOutcome =
-                  tryRouteGroundStrap(
-                      board,
-                      settings,
-                      thread,
-                      groundPin,
-                      targetGndPin,
-                      capLayer,
-                      groundNetNo,
-                      railNetNo,
-                      candidate,
-                      maxStrapLengthMm,
-                      mmResolution);
-              if (gndOutcome != null && gndOutcome.success()) {
-                groundRouted = true;
-                tagDecouplingProtected(groundPin, lockMode);
-                tagDecouplingProtected(targetGndPin, lockMode);
-                for (Item newItem : gndOutcome.newItems()) {
-                  tagDecouplingProtected(newItem, lockMode);
-                }
-                if (task.isPlaneOnly()) {
-                  strapSuccess = true;
-                  strapStatus = "ROUTED_GROUND_STRAP";
-                }
-              }
-
-              // 2. Fallback: Lateral flank via drop (if strap failed and plane exists)
-              if (!groundRouted && (planeUnderneath || groundNetHasPlane)) {
-                ViaDropResult groundViaResult =
-                    tryViaFanoutWithDualFlankProbe(
-                        board,
-                        groundPin,
-                        groundNetNo,
-                        settings,
-                        thread,
-                        primaryGroundTarget,
-                        secondaryGroundTarget);
-                if (groundViaResult != null) {
-                  groundRouted = true;
-                  placedVia = groundViaResult.placedVia();
-                  if (placedVia != null) {
-                    viasPlacedForCap++;
-                    viasPlaced++;
-                  }
-                  tagDecouplingProtected(groundPin, lockMode);
-                  for (Item newItem : groundViaResult.newItems()) {
-                    tagDecouplingProtected(newItem, lockMode);
-                  }
-                  if (task.isPlaneOnly()) {
-                    strapSuccess = true;
-                    strapStatus = "PLANE_ONLY_ROUTED";
-                  }
-                }
-              }
-            } else {
-              // 1. Primary: Lateral flank via drop to solid plane
-              if (planeUnderneath || groundNetHasPlane) {
-                ViaDropResult groundViaResult =
-                    tryViaFanoutWithDualFlankProbe(
-                        board,
-                        groundPin,
-                        groundNetNo,
-                        settings,
-                        thread,
-                        primaryGroundTarget,
-                        secondaryGroundTarget);
-                if (groundViaResult != null) {
-                  groundRouted = true;
-                  placedVia = groundViaResult.placedVia();
-                  if (placedVia != null) {
-                    viasPlacedForCap++;
-                    viasPlaced++;
-                  }
-                  tagDecouplingProtected(groundPin, lockMode);
-                  for (Item newItem : groundViaResult.newItems()) {
-                    tagDecouplingProtected(newItem, lockMode);
-                  }
-                  if (task.isPlaneOnly()) {
-                    strapSuccess = true;
-                    strapStatus = "PLANE_ONLY_ROUTED";
-                  }
-                }
-              }
-
-              // 2. Fallback: Direct surface return strap to IC ground pin
-              if (!groundRouted
-                  && targetGndPin != null
-                  && distToIcGndUnits <= maxStrapLengthUnits) {
-                StrapAttemptOutcome gndOutcome =
-                    tryRouteGroundStrap(
-                        board,
-                        settings,
-                        thread,
-                        groundPin,
-                        targetGndPin,
-                        capLayer,
-                        groundNetNo,
-                        railNetNo,
-                        candidate,
-                        maxStrapLengthMm,
-                        mmResolution);
-                if (gndOutcome != null && gndOutcome.success()) {
-                  groundRouted = true;
-                  tagDecouplingProtected(groundPin, lockMode);
-                  tagDecouplingProtected(targetGndPin, lockMode);
-                  for (Item newItem : gndOutcome.newItems()) {
-                    tagDecouplingProtected(newItem, lockMode);
-                  }
-                  if (task.isPlaneOnly()) {
-                    strapSuccess = true;
-                    strapStatus = "ROUTED_GROUND_STRAP";
-                  }
-                }
-              }
-            }
-
-            if (!groundRouted && task.isPlaneOnly()) {
-              failed++;
-              strapStatus =
-                  (!planeUnderneath && !groundNetHasPlane)
-                      ? "NO_GROUND_PLANE"
-                      : "GROUND_ROUTING_FAILED";
-            }
-          }
+          failed++;
         }
-
-        // Dedicated power/plane via adjacent to the supply pad (pin-first supply routing)
-        Net railNet = board.rules.nets.get(railNetNo);
-        boolean supplyIsSmd = (supplyPin.firstLayer() == supplyPin.lastLayer());
-        boolean supplyAlreadyOnPlane = !supplyIsSmd;
-        if (!supplyAlreadyOnPlane) {
-          for (Item it : supplyPin.getNormalContacts()) {
-            if (it instanceof ConductionArea || it instanceof Via) {
-              supplyAlreadyOnPlane = true;
-              break;
-            }
-          }
-        }
-        if (!supplyAlreadyOnPlane && railNet != null && railNet.containsPlane()) {
-          for (Item it : supplyPin.getConnectedSet(railNetNo)) {
-            if (it instanceof ConductionArea || it instanceof Via) {
-              supplyAlreadyOnPlane = true;
-              break;
-            }
-          }
-        }
-
-        Via placedSupplyVia = null;
-        if (!supplyAlreadyOnPlane && railNet != null && railNet.containsPlane()) {
-          FloatPoint primarySupplyTarget = null;
-          FloatPoint secondarySupplyTarget = null;
-          if (hasNormalVector) {
-            if (placedVia != null) {
-              // Placed ground via offset: v_offset = V1 - P1
-              FloatPoint v1 = placedVia.getCenter().toFloat();
-              double offsetX = v1.x - p1.x;
-              double offsetY = v1.y - p1.y;
-              // Project offset onto the normal flank vector to prevent end-fire fallback
-              // from pointing inward along the longitudinal axis between pads:
-              double compN = offsetX * nx + offsetY * ny;
-              if (Math.abs(compN) >= 0.2 * escapeDistance) {
-                double sign = Math.signum(compN);
-                if (sign == 0.0) {
-                  sign = 1.0;
-                }
-                primarySupplyTarget = new FloatPoint(p2.x + compN * nx, p2.y + compN * ny);
-                secondarySupplyTarget =
-                    new FloatPoint(
-                        p2.x - sign * escapeDistance * nx, p2.y - sign * escapeDistance * ny);
-              } else {
-                // V1 was placed end-fire along ±u with negligible normal component;
-                // fall back to the lateral flank target to ensure we stay out of the courtyard
-                primarySupplyTarget =
-                    new FloatPoint(p2.x + escapeDistance * nx, p2.y + escapeDistance * ny);
-                secondarySupplyTarget =
-                    new FloatPoint(p2.x - escapeDistance * nx, p2.y - escapeDistance * ny);
-              }
-            } else {
-              // Ground was already on plane; target default lateral flank
-              primarySupplyTarget =
-                  new FloatPoint(p2.x + escapeDistance * nx, p2.y + escapeDistance * ny);
-              secondarySupplyTarget =
-                  new FloatPoint(p2.x - escapeDistance * nx, p2.y - escapeDistance * ny);
-            }
-          }
-
-          ViaDropResult supplyViaResult =
-              tryViaFanoutWithDualFlankProbe(
-                  board,
-                  supplyPin,
-                  railNetNo,
-                  settings,
-                  thread,
-                  primarySupplyTarget,
-                  secondarySupplyTarget);
-          if (supplyViaResult != null) {
-            placedSupplyVia = supplyViaResult.placedVia();
-            if (placedSupplyVia != null) {
-              viasPlacedForCap++;
-              viasPlaced++;
-            }
-            tagDecouplingProtected(supplyPin, lockMode);
-            for (Item newItem : supplyViaResult.newItems()) {
-              tagDecouplingProtected(newItem, lockMode);
-            }
-          }
-        }
-
-        if (placedVia != null && placedSupplyVia != null && padDist > 10.0) {
-          double interViaDistMm =
-              placedVia.getCenter().toFloat().distance(placedSupplyVia.getCenter().toFloat())
-                  / mmResolution;
-          double padDistMm = padDist / mmResolution;
-          if (interViaDistMm <= 1.5 * padDistMm) {
-            coupledViaPairs++;
-          } else {
-            fallbackViaPairs++;
-          }
-        }
-
-        double groundViaDistanceMm =
-            (placedVia != null)
-                ? groundPin.getCenter().toFloat().distance(placedVia.getCenter().toFloat())
-                    / mmResolution
-                : 0.0;
 
         metricsList.add(
             new DecouplingMetrics(
@@ -853,7 +290,8 @@ public final class BatchDecouplingRouter {
           if ("DISTANCE_EXCEEDED".equals(strapStatus) || "NO_OWNER_IN_RADIUS".equals(strapStatus)) {
             FRLogger.warn(
                 String.format(
-                    "Decoupling capacitor %s is outside maximum reach (%.2f mm) from owner %s (%s).",
+                    "Decoupling capacitor %s is outside maximum reach (%.2f mm) from owner %s"
+                        + " (%s).",
                     capName, maxStrapLengthMm, ownerName, strapStatus));
           } else if ("NO_ROUTE_FOUND".equals(strapStatus)
               || "DRC_ROLLBACK".equals(strapStatus)
@@ -905,6 +343,905 @@ public final class BatchDecouplingRouter {
             totalStrapLengthMm));
 
     return summary;
+  }
+
+  static record LegRouteOutcome(
+      boolean success, String status, List<Item> newItems, double lengthMm, Via placedVia) {}
+
+  static record PairRouteResult(
+      boolean success,
+      String status,
+      List<Item> newItems,
+      double lengthMm,
+      int viasPlaced,
+      double groundViaDistanceMm,
+      int coupledViaPairs,
+      int fallbackViaPairs) {}
+
+  /** Determines if the capacitor power pad is more boxed-in towards the IC than the ground pad. */
+  static boolean isPadBoxedIn(Pin supplyPin, Pin groundPin, Pin ownerPin) {
+    if (ownerPin == null) {
+      return true;
+    }
+    double pwrDist = supplyPin.getCenter().toFloat().distance(ownerPin.getCenter().toFloat());
+    double gndDist = groundPin.getCenter().toFloat().distance(ownerPin.getCenter().toFloat());
+    return pwrDist <= gndDist;
+  }
+
+  /**
+   * Routes a decoupling capacitor pair (power leg and ground leg) as an atomic transaction. If
+   * either leg fails, or if combined DRC fails, rolls back all changes.
+   */
+  static PairRouteResult routeDecouplingPair(
+      RoutingBoard board,
+      Pin supplyPin,
+      Pin groundPin,
+      Pin ownerPin,
+      int capLayer,
+      int railNetNo,
+      int groundNetNo,
+      int ownerCompId,
+      CapacitorCandidate candidate,
+      DecouplingRouteTask task,
+      double traceWidthScale,
+      double maxStrapLengthMm,
+      double mmResolution,
+      IntBox forbiddenCourtyardBox,
+      RouterSettings settings,
+      StoppableThread thread,
+      DecouplingLockMode lockMode,
+      FloatPoint primaryGroundTarget,
+      FloatPoint secondaryGroundTarget) {
+    boolean supplyConnectedToOwner =
+        (ownerPin != null && supplyPin.getConnectedSet(railNetNo).contains(ownerPin))
+            || (task.isSecondary()
+                && task.pairedPrimaryCapPinId() > 0
+                && board.getItem(task.pairedPrimaryCapPinId()) instanceof Pin primaryPin
+                && supplyPin.getConnectedSet(railNetNo).contains(primaryPin));
+
+    boolean groundAlreadyConnected = false;
+    for (Item it : groundPin.getNormalContacts()) {
+      if (it instanceof ConductionArea || it instanceof Via) {
+        groundAlreadyConnected = true;
+        break;
+      }
+    }
+    if (!groundAlreadyConnected) {
+      Net gNet = board.rules.nets.get(groundNetNo);
+      if (gNet != null && gNet.containsPlane()) {
+        for (Item it : groundPin.getConnectedSet(groundNetNo)) {
+          if (it instanceof ConductionArea || it instanceof Via) {
+            groundAlreadyConnected = true;
+            break;
+          }
+        }
+      }
+    }
+    if (!groundAlreadyConnected && ownerCompId > 0) {
+      for (Item it : groundPin.getConnectedSet(groundNetNo)) {
+        if (it instanceof Pin p && p.getComponentId() == ownerCompId) {
+          groundAlreadyConnected = true;
+          break;
+        }
+      }
+    }
+    if (!groundAlreadyConnected) {
+      for (Item it : groundPin.getConnectedSet(groundNetNo)) {
+        if (it.isDecouplingProtected() && !it.equals(groundPin)) {
+          groundAlreadyConnected = true;
+          break;
+        }
+      }
+    }
+
+    if (supplyConnectedToOwner && (groundAlreadyConnected || task.isPlaneOnly())) {
+      tagDecouplingProtected(supplyPin, lockMode);
+      tagDecouplingProtected(groundPin, lockMode);
+      if (ownerPin != null) {
+        tagDecouplingProtected(ownerPin, lockMode);
+      }
+      return new PairRouteResult(true, "ALREADY_CONNECTED", List.of(), 0.0, 0, 0.0, 0, 0);
+    }
+
+    IntBox transactionBox = supplyPin.boundingBox().union(groundPin.boundingBox());
+    if (ownerPin != null) {
+      transactionBox = transactionBox.union(ownerPin.boundingBox());
+    }
+    int searchRadius = (int) Math.ceil(maxStrapLengthMm * mmResolution) + 10000;
+    final DecouplingRouteCheckpoint atomicCheckpoint =
+        DecouplingRouteCheckpoint.capture(board, transactionBox.offset(searchRadius), -1, -1);
+
+    boolean pwrBoxedIn = isPadBoxedIn(supplyPin, groundPin, ownerPin);
+    LegRouteOutcome firstLeg;
+    LegRouteOutcome secondLeg;
+
+    if (pwrBoxedIn) {
+      firstLeg =
+          routePowerLeg(
+              board,
+              supplyPin,
+              ownerPin,
+              capLayer,
+              railNetNo,
+              groundNetNo,
+              ownerCompId,
+              candidate.componentId(),
+              traceWidthScale,
+              maxStrapLengthMm,
+              mmResolution,
+              forbiddenCourtyardBox,
+              settings,
+              thread,
+              task);
+      if (!firstLeg.success()) {
+        atomicCheckpoint.rollback(board);
+        return new PairRouteResult(false, firstLeg.status(), List.of(), 0.0, 0, 0.0, 0, 0);
+      }
+
+      secondLeg =
+          routeGroundLeg(
+              board,
+              groundPin,
+              ownerPin,
+              capLayer,
+              groundNetNo,
+              railNetNo,
+              candidate,
+              task,
+              maxStrapLengthMm,
+              mmResolution,
+              forbiddenCourtyardBox,
+              settings,
+              thread,
+              primaryGroundTarget,
+              secondaryGroundTarget);
+      if (!secondLeg.success()) {
+        atomicCheckpoint.rollback(board);
+        return new PairRouteResult(false, secondLeg.status(), List.of(), 0.0, 0, 0.0, 0, 0);
+      }
+    } else {
+      firstLeg =
+          routeGroundLeg(
+              board,
+              groundPin,
+              ownerPin,
+              capLayer,
+              groundNetNo,
+              railNetNo,
+              candidate,
+              task,
+              maxStrapLengthMm,
+              mmResolution,
+              forbiddenCourtyardBox,
+              settings,
+              thread,
+              primaryGroundTarget,
+              secondaryGroundTarget);
+      if (!firstLeg.success()) {
+        atomicCheckpoint.rollback(board);
+        return new PairRouteResult(false, firstLeg.status(), List.of(), 0.0, 0, 0.0, 0, 0);
+      }
+
+      secondLeg =
+          routePowerLeg(
+              board,
+              supplyPin,
+              ownerPin,
+              capLayer,
+              railNetNo,
+              groundNetNo,
+              ownerCompId,
+              candidate.componentId(),
+              traceWidthScale,
+              maxStrapLengthMm,
+              mmResolution,
+              forbiddenCourtyardBox,
+              settings,
+              thread,
+              task);
+      if (!secondLeg.success()) {
+        atomicCheckpoint.rollback(board);
+        return new PairRouteResult(false, secondLeg.status(), List.of(), 0.0, 0, 0.0, 0, 0);
+      }
+    }
+
+    List<Item> combinedItems = new ArrayList<>();
+    combinedItems.addAll(firstLeg.newItems());
+    combinedItems.addAll(secondLeg.newItems());
+
+    Via placedGndVia = pwrBoxedIn ? secondLeg.placedVia() : firstLeg.placedVia();
+    Via placedSupplyVia = pwrBoxedIn ? firstLeg.placedVia() : secondLeg.placedVia();
+
+    FloatPoint p1 = groundPin.getCenter().toFloat();
+    FloatPoint p2 = supplyPin.getCenter().toFloat();
+    double dx = p2.x - p1.x;
+    double dy = p2.y - p1.y;
+    double padDist = Math.sqrt(dx * dx + dy * dy);
+    double escapeDistance = 0.5 * mmResolution;
+
+    Net railNet = board.rules.nets.get(railNetNo);
+    if (railNet != null && railNet.containsPlane() && placedSupplyVia == null) {
+      boolean supplyIsSmd = (supplyPin.firstLayer() == supplyPin.lastLayer());
+      boolean supplyAlreadyOnPlane = !supplyIsSmd;
+      if (!supplyAlreadyOnPlane) {
+        for (Item it : supplyPin.getNormalContacts()) {
+          if (it instanceof ConductionArea || it instanceof Via) {
+            supplyAlreadyOnPlane = true;
+            break;
+          }
+        }
+      }
+      if (!supplyAlreadyOnPlane) {
+        for (Item it : supplyPin.getConnectedSet(railNetNo)) {
+          if (it instanceof ConductionArea || (it instanceof Via v && !v.isDecouplingProtected())) {
+            supplyAlreadyOnPlane = true;
+            break;
+          }
+        }
+      }
+
+      if (!supplyAlreadyOnPlane) {
+        FloatPoint primarySupplyTarget = null;
+        FloatPoint secondarySupplyTarget = null;
+        if (padDist > 10.0) {
+          double ux = dx / padDist;
+          double uy = dy / padDist;
+          double nx = -uy;
+          double ny = ux;
+          if (placedGndVia != null) {
+            FloatPoint v1 = placedGndVia.getCenter().toFloat();
+            double offsetX = v1.x - p1.x;
+            double offsetY = v1.y - p1.y;
+            double compN = offsetX * nx + offsetY * ny;
+            if (Math.abs(compN) >= 0.2 * escapeDistance) {
+              double sign = Math.signum(compN);
+              if (sign == 0.0) {
+                sign = 1.0;
+              }
+              primarySupplyTarget = new FloatPoint(p2.x + compN * nx, p2.y + compN * ny);
+              secondarySupplyTarget = new FloatPoint(p2.x - compN * nx, p2.y - compN * ny);
+            } else {
+              primarySupplyTarget =
+                  new FloatPoint(p2.x + escapeDistance * nx, p2.y + escapeDistance * ny);
+              secondarySupplyTarget =
+                  new FloatPoint(p2.x - escapeDistance * nx, p2.y - escapeDistance * ny);
+            }
+          } else {
+            primarySupplyTarget =
+                new FloatPoint(p2.x + escapeDistance * nx, p2.y + escapeDistance * ny);
+            secondarySupplyTarget =
+                new FloatPoint(p2.x - escapeDistance * nx, p2.y - escapeDistance * ny);
+          }
+        }
+
+        ViaDropResult supplyViaResult =
+            tryViaFanoutWithDualFlankProbe(
+                board,
+                supplyPin,
+                railNetNo,
+                settings,
+                thread,
+                primarySupplyTarget,
+                secondarySupplyTarget,
+                forbiddenCourtyardBox,
+                ownerCompId);
+        if (supplyViaResult != null) {
+          placedSupplyVia = supplyViaResult.placedVia();
+          combinedItems.addAll(supplyViaResult.newItems());
+        }
+      }
+    }
+
+    int coupledPairs = 0;
+    int fallbackPairs = 0;
+    if (placedGndVia != null && placedSupplyVia != null && padDist > 10.0) {
+      double interViaDistMm =
+          placedGndVia.getCenter().toFloat().distance(placedSupplyVia.getCenter().toFloat())
+              / mmResolution;
+      double padDistMm = padDist / mmResolution;
+      if (interViaDistMm <= 1.5 * padDistMm) {
+        coupledPairs++;
+      } else {
+        fallbackPairs++;
+      }
+    }
+
+    for (Item it : combinedItems) {
+      if (it.isOnTheBoard() && !it.clearanceViolations().isEmpty()) {
+        atomicCheckpoint.rollback(board);
+        return new PairRouteResult(false, "PAIR_DRC_ROLLBACK", List.of(), 0.0, 0, 0.0, 0, 0);
+      }
+    }
+
+    int accuracy = settings.tracePullTightAccuracy != null ? settings.tracePullTightAccuracy : 500;
+    board.optChangedArea(new int[] {railNetNo, groundNetNo}, null, accuracy, null, thread, 0);
+
+    int viasPlacedForCap = 0;
+    for (Item it : combinedItems) {
+      if (it.isOnTheBoard()) {
+        if (it instanceof Via) {
+          viasPlacedForCap++;
+        }
+        tagDecouplingProtected(it, lockMode);
+        if (ReasonCode.FILTERED_ISLAND.isSet(candidate.reasonMask())) {
+          it.setFilteredIslandNonFeeder(true);
+        }
+      }
+    }
+    tagDecouplingProtected(supplyPin, lockMode);
+    tagDecouplingProtected(groundPin, lockMode);
+    if (ownerPin != null) {
+      tagDecouplingProtected(ownerPin, lockMode);
+      if (ReasonCode.FILTERED_ISLAND.isSet(candidate.reasonMask())) {
+        ownerPin.setFilteredIslandNonFeeder(true);
+      }
+    }
+
+    double totalLengthMm = firstLeg.lengthMm() + secondLeg.lengthMm();
+    double gndViaDistMm =
+        (placedGndVia != null)
+            ? groundPin.getCenter().toFloat().distance(placedGndVia.getCenter().toFloat())
+                / mmResolution
+            : 0.0;
+
+    String finalStatus = pwrBoxedIn ? firstLeg.status() : secondLeg.status();
+    if ("ALREADY_CONNECTED".equals(finalStatus)) {
+      String otherStatus = pwrBoxedIn ? secondLeg.status() : firstLeg.status();
+      if (!"ALREADY_CONNECTED".equals(otherStatus)) {
+        finalStatus = otherStatus;
+      }
+    }
+
+    return new PairRouteResult(
+        true,
+        finalStatus,
+        combinedItems,
+        totalLengthMm,
+        viasPlacedForCap,
+        gndViaDistMm,
+        coupledPairs,
+        fallbackPairs);
+  }
+
+  static LegRouteOutcome routePowerLeg(
+      RoutingBoard board,
+      Pin supplyPin,
+      Pin ownerPin,
+      int capLayer,
+      int railNetNo,
+      int groundNetNo,
+      int ownerCompId,
+      int capCompId,
+      double traceWidthScale,
+      double maxStrapLengthMm,
+      double mmResolution,
+      IntBox forbiddenCourtyardBox,
+      RouterSettings settings,
+      StoppableThread thread,
+      DecouplingRouteTask task) {
+    if (ownerPin == null) {
+      if (task.isPlaneOnly()) {
+        boolean supplyIsSmd = (supplyPin.firstLayer() == supplyPin.lastLayer());
+        if (!supplyIsSmd) {
+          return new LegRouteOutcome(true, "ALREADY_CONNECTED", List.of(), 0.0, null);
+        }
+        for (Item it : supplyPin.getNormalContacts()) {
+          if (it instanceof ConductionArea || it instanceof Via) {
+            return new LegRouteOutcome(true, "ALREADY_CONNECTED", List.of(), 0.0, null);
+          }
+        }
+        Net railNet = board.rules.nets.get(railNetNo);
+        if (railNet != null
+            && (isPlaneDirectlyUnderneath(board, supplyPin, railNetNo)
+                || railNet.containsPlane())) {
+          FloatPoint p1 = supplyPin.getCenter().toFloat();
+          double escapeDistance = 0.5 * mmResolution;
+          FloatPoint biasTarget = new FloatPoint(p1.x + escapeDistance, p1.y + escapeDistance);
+          ViaDropResult result =
+              trySingleViaFanout(
+                  board,
+                  supplyPin,
+                  railNetNo,
+                  settings,
+                  thread,
+                  biasTarget,
+                  forbiddenCourtyardBox,
+                  ownerCompId);
+          if (result != null) {
+            return new LegRouteOutcome(
+                true, "PLANE_ONLY_ROUTED", result.newItems(), 0.0, result.placedVia());
+          }
+          return new LegRouteOutcome(false, "PLANE_VIA_FAILED", List.of(), 0.0, null);
+        }
+        return new LegRouteOutcome(false, "NO_GROUND_PLANE", List.of(), 0.0, null);
+      }
+      return new LegRouteOutcome(false, "NO_OWNER_IN_RADIUS", List.of(), 0.0, null);
+    }
+
+    double maxStrapLengthUnits = maxStrapLengthMm * mmResolution;
+    double lateralDistUnits =
+        supplyPin.getCenter().toFloat().distance(ownerPin.getCenter().toFloat());
+    if (lateralDistUnits > maxStrapLengthUnits) {
+      return new LegRouteOutcome(false, "DISTANCE_EXCEEDED", List.of(), 0.0, null);
+    }
+
+    Set<Item> supplyConnected = supplyPin.getConnectedSet(railNetNo);
+    if (supplyConnected.contains(ownerPin)) {
+      return new LegRouteOutcome(true, "ALREADY_CONNECTED", List.of(), 0.0, null);
+    }
+
+    int ownerLayer = ownerPin.firstLayer();
+    boolean isSameLayer = (capLayer == ownerLayer);
+    boolean isOwnerTht =
+        (ownerPin.firstLayer() != ownerPin.lastLayer()) && ownerPin.isOnLayer(capLayer);
+
+    double[] scalesToTry =
+        (traceWidthScale > 1.0) ? new double[] {traceWidthScale, 1.0} : new double[] {1.0};
+
+    if (isSameLayer || isOwnerTht) {
+      int targetLayer = capLayer;
+      AutorouteControl control = new AutorouteControl(board, railNetNo, settings);
+      if (targetLayer < 0
+          || targetLayer >= control.layerCount
+          || !control.layerActive[targetLayer]) {
+        return new LegRouteOutcome(false, "LAYER_DISABLED", List.of(), 0.0, null);
+      }
+
+      control.viasAllowed = false;
+      control.ripupAllowed = false;
+      control.removeUnconnectedVias = false;
+      if (settings.decoupling != null && settings.decoupling.maxDoorExpansions != null) {
+        control.maxDoorExpansions = settings.decoupling.maxDoorExpansions;
+      }
+      for (int i = 0; i < control.layerCount; i++) {
+        control.layerActive[i] = control.layerActive[i] && (i == targetLayer);
+      }
+
+      StrapAttemptOutcome outcome = null;
+      for (double scale : scalesToTry) {
+        Set<Item> currentSupplyConnected = supplyPin.getConnectedSet(railNetNo);
+        Set<Item> currentOwnerConnected = ownerPin.getConnectedSet(railNetNo);
+        outcome =
+            tryRouteStrap(
+                board,
+                settings,
+                thread,
+                control,
+                supplyPin,
+                ownerPin,
+                currentSupplyConnected,
+                currentOwnerConnected,
+                capLayer,
+                targetLayer,
+                railNetNo,
+                groundNetNo,
+                ownerCompId,
+                capCompId,
+                scale,
+                maxStrapLengthMm,
+                mmResolution);
+        if (outcome.success()) {
+          break;
+        }
+      }
+
+      if (outcome != null && outcome.success()) {
+        Via placedVia = null;
+        for (Item it : outcome.newItems()) {
+          if (it instanceof Via v) {
+            placedVia = v;
+          }
+        }
+        return new LegRouteOutcome(
+            true, outcome.status(), outcome.newItems(), outcome.lengthMm(), placedVia);
+      }
+
+      // Secondary overflow cap: fallback flanking attempt to primary cap pad
+      if (task.isSecondary() && task.pairedPrimaryCapPinId() > 0) {
+        Item primaryCapItem = board.getItem(task.pairedPrimaryCapPinId());
+        if (primaryCapItem instanceof Pin primaryCapPin
+            && primaryCapPin.firstLayer() == supplyPin.firstLayer()
+            && !primaryCapPin.equals(ownerPin)
+            && !primaryCapPin.hasIgnoredNets()) {
+          Set<Item> primaryCapConnected = primaryCapPin.getConnectedSet(railNetNo);
+          if (supplyConnected.contains(primaryCapPin) && primaryCapConnected.contains(ownerPin)) {
+            return new LegRouteOutcome(true, "ALREADY_CONNECTED", List.of(), 0.0, null);
+          }
+          if (primaryCapConnected.contains(ownerPin)) {
+            double flankDistUnits =
+                supplyPin.getCenter().toFloat().distance(primaryCapPin.getCenter().toFloat());
+            if (flankDistUnits <= maxStrapLengthUnits) {
+              StrapAttemptOutcome flankOutcome = null;
+              for (double scale : scalesToTry) {
+                Set<Item> currentSupplyConnected = supplyPin.getConnectedSet(railNetNo);
+                Set<Item> currentPrimaryConnected = primaryCapPin.getConnectedSet(railNetNo);
+                flankOutcome =
+                    tryRouteStrap(
+                        board,
+                        settings,
+                        thread,
+                        control,
+                        supplyPin,
+                        primaryCapPin,
+                        currentSupplyConnected,
+                        currentPrimaryConnected,
+                        capLayer,
+                        capLayer,
+                        railNetNo,
+                        groundNetNo,
+                        primaryCapPin.getComponentId(),
+                        capCompId,
+                        scale,
+                        maxStrapLengthMm,
+                        mmResolution);
+                if (flankOutcome.success()) {
+                  break;
+                }
+              }
+              if (flankOutcome != null && flankOutcome.success()) {
+                Via placedVia = null;
+                for (Item it : flankOutcome.newItems()) {
+                  if (it instanceof Via v) {
+                    placedVia = v;
+                  }
+                }
+                return new LegRouteOutcome(
+                    true,
+                    "ROUTED_FLANKING",
+                    flankOutcome.newItems(),
+                    flankOutcome.lengthMm(),
+                    placedVia);
+              }
+            }
+          }
+        }
+      }
+
+      return new LegRouteOutcome(
+          false, outcome != null ? outcome.status() : "NO_ROUTE_FOUND", List.of(), 0.0, null);
+    } else {
+      boolean oppositeSideEnabled =
+          settings.decoupling == null
+              || settings.decoupling.oppositeSideRouting == null
+              || Boolean.TRUE.equals(settings.decoupling.oppositeSideRouting);
+      if (!oppositeSideEnabled) {
+        return new LegRouteOutcome(false, "OPPOSITE_SIDE_DISABLED", List.of(), 0.0, null);
+      }
+
+      AutorouteControl control = new AutorouteControl(board, railNetNo, settings);
+      if (capLayer < 0
+          || capLayer >= control.layerCount
+          || ownerLayer < 0
+          || ownerLayer >= control.layerCount
+          || !control.layerActive[capLayer]
+          || !control.layerActive[ownerLayer]) {
+        return new LegRouteOutcome(false, "LAYER_DISABLED", List.of(), 0.0, null);
+      }
+
+      control.viasAllowed = true;
+      control.ripupAllowed = false;
+      control.removeUnconnectedVias = false;
+      if (settings.decoupling != null && settings.decoupling.maxDoorExpansions != null) {
+        control.maxDoorExpansions = settings.decoupling.maxDoorExpansions;
+      }
+      for (int i = 0; i < control.layerCount; i++) {
+        control.layerActive[i] = (i == capLayer || i == ownerLayer);
+      }
+
+      StrapAttemptOutcome outcome = null;
+      for (double scale : scalesToTry) {
+        Set<Item> currentSupplyConnected = supplyPin.getConnectedSet(railNetNo);
+        Set<Item> currentOwnerConnected = ownerPin.getConnectedSet(railNetNo);
+        outcome =
+            tryRouteStrap(
+                board,
+                settings,
+                thread,
+                control,
+                supplyPin,
+                ownerPin,
+                currentSupplyConnected,
+                currentOwnerConnected,
+                capLayer,
+                ownerLayer,
+                railNetNo,
+                groundNetNo,
+                ownerCompId,
+                capCompId,
+                scale,
+                maxStrapLengthMm,
+                mmResolution);
+        if (outcome.success()) {
+          break;
+        }
+      }
+
+      if (outcome != null && outcome.success()) {
+        Via placedVia = null;
+        for (Item it : outcome.newItems()) {
+          if (it instanceof Via v) {
+            placedVia = v;
+          }
+        }
+        return new LegRouteOutcome(
+            true,
+            "ROUTED_OPPOSITE_FEEDTHROUGH_VIA",
+            outcome.newItems(),
+            outcome.lengthMm(),
+            placedVia);
+      }
+
+      return new LegRouteOutcome(
+          false, outcome != null ? outcome.status() : "NO_ROUTE_FOUND", List.of(), 0.0, null);
+    }
+  }
+
+  static LegRouteOutcome routeGroundLeg(
+      RoutingBoard board,
+      Pin groundPin,
+      Pin ownerPwrPin,
+      int capLayer,
+      int groundNetNo,
+      int railNetNo,
+      CapacitorCandidate candidate,
+      DecouplingRouteTask task,
+      double maxStrapLengthMm,
+      double mmResolution,
+      IntBox forbiddenCourtyardBox,
+      RouterSettings settings,
+      StoppableThread thread,
+      FloatPoint primaryGroundTarget,
+      FloatPoint secondaryGroundTarget) {
+    Net groundNet = board.rules.nets.get(groundNetNo);
+    boolean groundIsSmd = (groundPin.firstLayer() == groundPin.lastLayer());
+    if (!groundIsSmd) {
+      return new LegRouteOutcome(true, "ALREADY_CONNECTED", List.of(), 0.0, null);
+    }
+    for (Item it : groundPin.getNormalContacts()) {
+      if (it instanceof ConductionArea || it instanceof Via) {
+        return new LegRouteOutcome(true, "ALREADY_CONNECTED", List.of(), 0.0, null);
+      }
+    }
+    if (groundNet != null && groundNet.containsPlane()) {
+      for (Item it : groundPin.getConnectedSet(groundNetNo)) {
+        if (it instanceof ConductionArea) {
+          return new LegRouteOutcome(true, "ALREADY_CONNECTED", List.of(), 0.0, null);
+        }
+      }
+    }
+
+    Item targetGndItem =
+        (task.targetGroundItemId() > 0) ? board.getItem(task.targetGroundItemId()) : null;
+    Pin targetGndPin = (targetGndItem instanceof Pin p) ? p : null;
+    if (targetGndPin != null && groundPin.getConnectedSet(groundNetNo).contains(targetGndPin)) {
+      return new LegRouteOutcome(true, "ALREADY_CONNECTED", List.of(), 0.0, null);
+    }
+
+    int ownerCompId = (ownerPwrPin != null) ? ownerPwrPin.getComponentId() : -1;
+    if (ownerCompId > 0) {
+      for (Item it : groundPin.getConnectedSet(groundNetNo)) {
+        if (it instanceof Pin p && p.getComponentId() == ownerCompId) {
+          return new LegRouteOutcome(true, "ALREADY_CONNECTED", List.of(), 0.0, null);
+        }
+      }
+    }
+    for (Item it : groundPin.getConnectedSet(groundNetNo)) {
+      if (it.isDecouplingProtected() && !it.equals(groundPin)) {
+        return new LegRouteOutcome(true, "ALREADY_CONNECTED", List.of(), 0.0, null);
+      }
+    }
+
+    // --- Tier 1: Any ground pin on the SAME IC within 3.0 mm of paired power pin ---
+    if (ownerCompId > 0) {
+      Collection<Pin> ownerPins = board.getComponentPins(ownerCompId);
+      List<Pin> candidateIcGndPins = new ArrayList<>();
+      if (ownerPins != null) {
+        for (Pin p : ownerPins) {
+          if (p.containsNet(groundNetNo) && !p.hasIgnoredNets()) {
+            double distToPwrPinMm =
+                (ownerPwrPin != null)
+                    ? p.getCenter().toFloat().distance(ownerPwrPin.getCenter().toFloat())
+                        / mmResolution
+                    : 0.0;
+            if (distToPwrPinMm <= 3.0) {
+              candidateIcGndPins.add(p);
+            }
+          }
+        }
+      }
+
+      final Pin preferredGnd = targetGndPin;
+      candidateIcGndPins.sort(
+          Comparator.comparingDouble(
+              p -> {
+                if (p.equals(preferredGnd)) {
+                  return -1.0;
+                }
+                return p.getCenter().toFloat().distance(groundPin.getCenter().toFloat());
+              }));
+
+      for (Pin candidatePin : candidateIcGndPins) {
+        StrapAttemptOutcome gndOutcome =
+            tryRouteGroundStrap(
+                board,
+                settings,
+                thread,
+                groundPin,
+                candidatePin,
+                capLayer,
+                groundNetNo,
+                railNetNo,
+                candidate,
+                maxStrapLengthMm,
+                mmResolution);
+        if (gndOutcome != null && gndOutcome.success()) {
+          Via placedVia = null;
+          for (Item it : gndOutcome.newItems()) {
+            if (it instanceof Via v) {
+              placedVia = v;
+            }
+          }
+          return new LegRouteOutcome(
+              true,
+              "ROUTED_IC_GROUND_PIN",
+              gndOutcome.newItems(),
+              gndOutcome.lengthMm(),
+              placedVia);
+        }
+      }
+    }
+
+    // --- Tier 2: Existing ground plane or existing ground via within 3.5 mm ---
+    boolean planeUnderneath = isPlaneDirectlyUnderneath(board, groundPin, groundNetNo);
+    boolean groundNetHasPlane = groundNet != null && groundNet.containsPlane();
+    if (planeUnderneath || groundNetHasPlane) {
+      ViaDropResult groundViaResult =
+          tryViaFanoutWithDualFlankProbe(
+              board,
+              groundPin,
+              groundNetNo,
+              settings,
+              thread,
+              primaryGroundTarget,
+              secondaryGroundTarget,
+              forbiddenCourtyardBox,
+              ownerCompId);
+      if (groundViaResult != null) {
+        return new LegRouteOutcome(
+            true,
+            "ROUTED_GROUND_PLANE_VIA",
+            groundViaResult.newItems(),
+            0.0,
+            groundViaResult.placedVia());
+      }
+    }
+
+    double maxExistingViaDistUnits = 3.5 * mmResolution;
+    Via closestExistingVia = null;
+    double minViaDist = Double.MAX_VALUE;
+    for (Item it : board.getItems()) {
+      if (it instanceof Via v && v.containsNet(groundNetNo) && !v.isDecouplingProtected()) {
+        double dist = v.getCenter().toFloat().distance(groundPin.getCenter().toFloat());
+        if (dist <= maxExistingViaDistUnits && dist < minViaDist) {
+          minViaDist = dist;
+          closestExistingVia = v;
+        }
+      }
+    }
+    if (closestExistingVia != null) {
+      AutorouteControl control = new AutorouteControl(board, groundNetNo, settings);
+      control.viasAllowed = false;
+      control.ripupAllowed = false;
+      for (int i = 0; i < control.layerCount; i++) {
+        control.layerActive[i] = (i == capLayer);
+      }
+      StrapAttemptOutcome outcome =
+          tryRouteStrap(
+              board,
+              settings,
+              thread,
+              control,
+              groundPin,
+              closestExistingVia,
+              groundPin.getConnectedSet(groundNetNo),
+              Set.of(closestExistingVia),
+              capLayer,
+              capLayer,
+              groundNetNo,
+              railNetNo,
+              ownerCompId,
+              candidate.componentId(),
+              1.0,
+              3.5,
+              mmResolution);
+      if (outcome.success()) {
+        return new LegRouteOutcome(
+            true, "ROUTED_EXISTING_GROUND_VIA", outcome.newItems(), outcome.lengthMm(), null);
+      }
+    }
+
+    // --- Tier 3: Search within 6.0 mm for ground pin/via; fallback to standalone stub via ---
+    double maxTier3DistUnits = 6.0 * mmResolution;
+    List<Item> nearbyGndTargets = new ArrayList<>();
+    for (Item it : board.getItems()) {
+      if ((it instanceof Pin p
+              && p.containsNet(groundNetNo)
+              && !p.equals(groundPin)
+              && !p.hasIgnoredNets())
+          || (it instanceof Via v && v.containsNet(groundNetNo) && !v.isDecouplingProtected())) {
+        double dist =
+            ((DrillItem) it).getCenter().toFloat().distance(groundPin.getCenter().toFloat());
+        if (dist <= maxTier3DistUnits) {
+          nearbyGndTargets.add(it);
+        }
+      }
+    }
+    nearbyGndTargets.sort(
+        Comparator.comparingDouble(
+            it ->
+                ((DrillItem) it).getCenter().toFloat().distance(groundPin.getCenter().toFloat())));
+
+    int candidatesTried = 0;
+    for (Item gndTarget : nearbyGndTargets) {
+      if (candidatesTried++ >= 3) {
+        break;
+      }
+      int targetLayer = gndTarget.firstLayer();
+      boolean sameLayer = (targetLayer == capLayer);
+      AutorouteControl control = new AutorouteControl(board, groundNetNo, settings);
+      control.viasAllowed = !sameLayer;
+      control.ripupAllowed = false;
+      for (int i = 0; i < control.layerCount; i++) {
+        control.layerActive[i] = (i == capLayer || i == targetLayer);
+      }
+      StrapAttemptOutcome outcome =
+          tryRouteStrap(
+              board,
+              settings,
+              thread,
+              control,
+              groundPin,
+              gndTarget,
+              groundPin.getConnectedSet(groundNetNo),
+              Set.of(gndTarget),
+              capLayer,
+              targetLayer,
+              groundNetNo,
+              railNetNo,
+              ownerCompId,
+              candidate.componentId(),
+              1.0,
+              6.0,
+              mmResolution);
+      if (outcome.success()) {
+        Via placedVia = null;
+        for (Item it : outcome.newItems()) {
+          if (it instanceof Via v) {
+            placedVia = v;
+          }
+        }
+        return new LegRouteOutcome(
+            true, "ROUTED_NEARBY_GROUND_TARGET", outcome.newItems(), outcome.lengthMm(), placedVia);
+      }
+    }
+
+    ViaDropResult stubResult =
+        tryViaFanoutWithDualFlankProbe(
+            board,
+            groundPin,
+            groundNetNo,
+            settings,
+            thread,
+            primaryGroundTarget,
+            secondaryGroundTarget,
+            forbiddenCourtyardBox,
+            ownerCompId);
+    if (stubResult != null) {
+      return new LegRouteOutcome(
+          true, "ROUTED_STANDALONE_STUB_VIA", stubResult.newItems(), 0.0, stubResult.placedVia());
+    }
+
+    return new LegRouteOutcome(false, "GROUND_ROUTING_FAILED", List.of(), 0.0, null);
   }
 
   /**
@@ -1048,7 +1385,7 @@ public final class BatchDecouplingRouter {
       StoppableThread thread,
       AutorouteControl control,
       Pin supplyPin,
-      Pin targetPin,
+      Item targetItem,
       Set<Item> supplyConnected,
       Set<Item> targetConnected,
       int capLayer,
@@ -1060,7 +1397,7 @@ public final class BatchDecouplingRouter {
       double widthScale,
       double maxStrapLengthMm,
       double mmResolution) {
-    IntBox padUnion = supplyPin.boundingBox().union(targetPin.boundingBox());
+    IntBox padUnion = supplyPin.boundingBox().union(targetItem.boundingBox());
     for (Item it : targetConnected) {
       if (it.isOnLayer(capLayer) || it.isOnLayer(targetLayer)) {
         padUnion = padUnion.union(it.boundingBox());
@@ -1104,7 +1441,7 @@ public final class BatchDecouplingRouter {
     }
     Set<Item> filteredTarget = new HashSet<>();
     for (Item it : targetConnected) {
-      if (it == targetPin || it.isOnLayer(targetLayer)) {
+      if (it == targetItem || it.isOnLayer(targetLayer)) {
         filteredTarget.add(it);
       }
     }
@@ -1239,7 +1576,7 @@ public final class BatchDecouplingRouter {
     }
 
     // Connectivity verification
-    if (!supplyPin.getConnectedSet(railNetNo).contains(targetPin)) {
+    if (!supplyPin.getConnectedSet(railNetNo).contains(targetItem)) {
       checkpoint.rollback(board);
       return new StrapAttemptOutcome(false, "DISCONNECTED_PIN_ROLLBACK", 0.0, List.of());
     }
@@ -1351,13 +1688,18 @@ public final class BatchDecouplingRouter {
       RouterSettings settings,
       StoppableThread thread,
       FloatPoint primaryTarget,
-      FloatPoint secondaryTarget) {
-    ViaDropResult result = trySingleViaFanout(board, pin, netNo, settings, thread, primaryTarget);
+      FloatPoint secondaryTarget,
+      IntBox forbiddenCourtyardBox,
+      int ownerCompId) {
+    ViaDropResult result =
+        trySingleViaFanout(
+            board, pin, netNo, settings, thread, primaryTarget, forbiddenCourtyardBox, ownerCompId);
     if (result != null) {
       return result;
     }
     if (secondaryTarget != null) {
-      return trySingleViaFanout(board, pin, netNo, settings, thread, secondaryTarget);
+      return trySingleViaFanout(
+          board, pin, netNo, settings, thread, secondaryTarget, forbiddenCourtyardBox, ownerCompId);
     }
     return null;
   }
@@ -1369,7 +1711,9 @@ public final class BatchDecouplingRouter {
       int netNo,
       RouterSettings settings,
       StoppableThread thread,
-      FloatPoint biasTarget) {
+      FloatPoint biasTarget,
+      IntBox forbiddenCourtyardBox,
+      int ownerCompId) {
     int maxIdBefore = board.communication.idGenerator.maxGeneratedId();
     AutorouteAttemptResult attempt =
         board.fanout(pin, settings, -1, thread, new TimeLimit(1000), biasTarget);
@@ -1391,6 +1735,26 @@ public final class BatchDecouplingRouter {
       if (!item.clearanceViolations().isEmpty()) {
         violation = true;
         break;
+      }
+    }
+    if (placedVia != null) {
+      if (forbiddenCourtyardBox != null && forbiddenCourtyardBox.contains(placedVia.getCenter())) {
+        violation = true;
+      }
+      Collection<Pin> ownerPins = board.getComponentPins(ownerCompId);
+      if (ownerPins != null) {
+        for (Pin p : ownerPins) {
+          double dist = placedVia.getCenter().toFloat().distance(p.getCenter().toFloat());
+          int viaWidth =
+              (placedVia.getShape(pin.firstLayer()) != null)
+                  ? placedVia.getShape(pin.firstLayer()).boundingBox().width()
+                  : placedVia.boundingBox().width();
+          double minSafeDist = (viaWidth + p.boundingBox().width()) / 2.0;
+          if (dist < minSafeDist) {
+            violation = true;
+            break;
+          }
+        }
       }
     }
     if (violation) {
