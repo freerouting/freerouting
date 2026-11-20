@@ -3,6 +3,7 @@ package app.freerouting.autoroute;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.autoroute.pipeline.BatchAutorouter;
@@ -11,6 +12,7 @@ import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.ConductionArea;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.model.items.Via;
 import app.freerouting.board.model.structure.Component;
 import app.freerouting.board.model.structure.FixedState;
@@ -236,6 +238,214 @@ class FastPlaneConnectivityGridTest {
         "Left pin must reach right pin through bridge trace on layer 1");
     drc.calculateAllIncompletes();
     assertEquals(0, drc.getIncompleteCount(), "DRC incompletes must clear to 0 once bridged");
+  }
+
+  @Test
+  void testFractureMemoMatchesFreshEvaluationAcrossBoardChanges() {
+    Area area = TileShape.getInstance(1_000_000, 1_000_000, 9_000_000, 9_000_000);
+    ConductionArea ca =
+        board.insertConductionArea(
+            area, 0, new int[] {gndNet.netNumber}, 0, false, FixedState.UNFIXED);
+    Via via1 =
+        board.insertVia(
+            defaultPadstack,
+            new IntPoint(2_000_000, 5_000_000),
+            new int[] {gndNet.netNumber},
+            0,
+            FixedState.UNFIXED,
+            true);
+    Via via2 =
+        board.insertVia(
+            defaultPadstack,
+            new IntPoint(8_000_000, 5_000_000),
+            new int[] {gndNet.netNumber},
+            0,
+            FixedState.UNFIXED,
+            true);
+    // a foreign trace on the plane layer that does not cut it
+    board.insertTrace(
+        new Point[] {new IntPoint(2_000_000, 2_000_000), new IntPoint(3_000_000, 2_000_000)},
+        0,
+        200_000,
+        new int[] {sigNet.netNumber},
+        0,
+        FixedState.UNFIXED);
+    List<Item> contacts = List.of(via1, via2);
+    FastPlaneConnectivityGrid.FractureMemo memo = new FastPlaneConnectivityGrid.FractureMemo();
+
+    FastPlaneConnectivityGrid.PlaneFractureResult first =
+        new FastPlaneConnectivityGrid().evaluateFracture(ca, board, contacts, memo);
+    assertFalse(first.isFractured);
+    assertSame(
+        first,
+        new FastPlaneConnectivityGrid().evaluateFracture(ca, board, contacts, memo),
+        "unchanged inputs must reuse the previous partition");
+
+    // a change on the other layer leaves the plane alone
+    board.insertTrace(
+        new Point[] {new IntPoint(5_000_000, 800_000), new IntPoint(5_000_000, 9_200_000)},
+        1,
+        200_000,
+        new int[] {sigNet.netNumber},
+        0,
+        FixedState.UNFIXED);
+    assertSame(first, new FastPlaneConnectivityGrid().evaluateFracture(ca, board, contacts, memo));
+
+    // a cut on the plane layer must be seen through the memo
+    board.insertTrace(
+        new Point[] {new IntPoint(5_000_000, 800_000), new IntPoint(5_000_000, 9_200_000)},
+        0,
+        200_000,
+        new int[] {sigNet.netNumber},
+        0,
+        FixedState.UNFIXED);
+    FastPlaneConnectivityGrid.PlaneFractureResult cut =
+        new FastPlaneConnectivityGrid().evaluateFracture(ca, board, contacts, memo);
+    FastPlaneConnectivityGrid.PlaneFractureResult fresh =
+        new FastPlaneConnectivityGrid().evaluateFracture(ca, board, contacts);
+    assertTrue(cut.isFractured, "the memo must not hide a new cut");
+    assertEquals(fresh.islandItems, cut.islandItems);
+
+    // removing the cut joins the islands again
+    Item cutTrace = null;
+    for (Item item : board.getItems()) {
+      if (item instanceof Trace trace
+          && trace.getLayer() == 0
+          && trace.firstCorner().equals(new IntPoint(5_000_000, 800_000))) {
+        cutTrace = item;
+      }
+    }
+    assertNotNull(cutTrace);
+    board.removeItem(cutTrace);
+    FastPlaneConnectivityGrid.PlaneFractureResult joined =
+        new FastPlaneConnectivityGrid().evaluateFracture(ca, board, contacts, memo);
+    assertFalse(joined.isFractured);
+    assertEquals(
+        new FastPlaneConnectivityGrid().evaluateFracture(ca, board, contacts).islandItems,
+        joined.islandItems);
+  }
+
+  @Test
+  void testFractureMemoSeesObstacleAreaChanges() {
+    Area area = TileShape.getInstance(1_000_000, 1_000_000, 9_000_000, 9_000_000);
+    ConductionArea ca =
+        board.insertConductionArea(
+            area, 0, new int[] {gndNet.netNumber}, 0, false, FixedState.UNFIXED);
+    Via via1 =
+        board.insertVia(
+            defaultPadstack,
+            new IntPoint(2_000_000, 5_000_000),
+            new int[] {gndNet.netNumber},
+            0,
+            FixedState.UNFIXED,
+            true);
+    Via via2 =
+        board.insertVia(
+            defaultPadstack,
+            new IntPoint(8_000_000, 5_000_000),
+            new int[] {gndNet.netNumber},
+            0,
+            FixedState.UNFIXED,
+            true);
+    List<Item> contacts = List.of(via1, via2);
+    FastPlaneConnectivityGrid.FractureMemo memo = new FastPlaneConnectivityGrid.FractureMemo();
+
+    // a foreign plane that is an obstacle, cutting the plane in two
+    ConductionArea cut =
+        board.insertConductionArea(
+            TileShape.getInstance(4_500_000, 500_000, 5_500_000, 9_500_000),
+            0,
+            new int[] {sigNet.netNumber},
+            0,
+            true,
+            FixedState.UNFIXED);
+    FastPlaneConnectivityGrid.PlaneFractureResult first =
+        new FastPlaneConnectivityGrid().evaluateFracture(ca, board, contacts, memo);
+    assertTrue(first.isFractured);
+    assertEquals(
+        new FastPlaneConnectivityGrid().evaluateFracture(ca, board, contacts).islandItems,
+        first.islandItems);
+    assertSame(first, new FastPlaneConnectivityGrid().evaluateFracture(ca, board, contacts, memo));
+
+    board.removeItem(cut);
+    FastPlaneConnectivityGrid.PlaneFractureResult joined =
+        new FastPlaneConnectivityGrid().evaluateFracture(ca, board, contacts, memo);
+    assertFalse(joined.isFractured, "the memo must not keep a removed obstacle area");
+  }
+
+  @Test
+  void testFractureMemoSurvivesDeepCopyAndInvalidatesOnCopyChange() {
+    Area area = TileShape.getInstance(1_000_000, 1_000_000, 9_000_000, 9_000_000);
+    ConductionArea ca =
+        board.insertConductionArea(
+            area, 0, new int[] {gndNet.netNumber}, 0, false, FixedState.UNFIXED);
+    Via via1 =
+        board.insertVia(
+            defaultPadstack,
+            new IntPoint(2_000_000, 5_000_000),
+            new int[] {gndNet.netNumber},
+            0,
+            FixedState.UNFIXED,
+            true);
+    Via via2 =
+        board.insertVia(
+            defaultPadstack,
+            new IntPoint(8_000_000, 5_000_000),
+            new int[] {gndNet.netNumber},
+            0,
+            FixedState.UNFIXED,
+            true);
+    ConductionArea cut =
+        board.insertConductionArea(
+            TileShape.getInstance(4_500_000, 500_000, 5_500_000, 9_500_000),
+            0,
+            new int[] {sigNet.netNumber},
+            0,
+            true,
+            FixedState.UNFIXED);
+
+    FastPlaneConnectivityGrid.PlaneFractureResult originalResult = ca.getFractureResult();
+    assertTrue(originalResult.isFractured);
+
+    RoutingBoard copy = board.deepCopy();
+    assertNotNull(copy);
+    ConductionArea copyCa = (ConductionArea) copy.getItem(ca.getId());
+    Item copyVia1 = copy.getItem(via1.getId());
+    Item copyVia2 = copy.getItem(via2.getId());
+    Item copyCut = copy.getItem(cut.getId());
+    assertNotNull(copyCa);
+    assertNotNull(copyVia1);
+    assertNotNull(copyVia2);
+    assertNotNull(copyCut);
+
+    FastPlaneConnectivityGrid.PlaneFractureResult copyResult = copyCa.getFractureResult();
+    assertTrue(copyResult.isFractured, "copied plane must preserve fracture result");
+    FastPlaneConnectivityGrid.PlaneFractureResult freshCopyResult =
+        new FastPlaneConnectivityGrid().evaluateFracture(copyCa, copy, copyCa.getNormalContacts());
+    assertEquals(freshCopyResult.islandItems, copyResult.islandItems);
+
+    boolean sawCopyVia1 = false;
+    boolean sawCopyVia2 = false;
+    for (List<Item> island : copyResult.islandItems.values()) {
+      for (Item item : island) {
+        if (item == copyVia1) {
+          sawCopyVia1 = true;
+        } else if (item == copyVia2) {
+          sawCopyVia2 = true;
+        }
+        assertTrue(
+            item != via1 && item != via2, "remapped result must not reference original items");
+      }
+    }
+    assertTrue(sawCopyVia1 && sawCopyVia2, "remapped result must contain copied vias");
+
+    // Removing the obstacle on the copy must invalidate the adopted memo without affecting original
+    copy.removeItem(copyCut);
+    FastPlaneConnectivityGrid.PlaneFractureResult joinedCopy = copyCa.getFractureResult();
+    assertFalse(joinedCopy.isFractured, "removing obstacle on copy must invalidate adopted memo");
+    assertTrue(
+        ca.getFractureResult().isFractured,
+        "modifying the deep copy must not affect the original board");
   }
 
   @Test
