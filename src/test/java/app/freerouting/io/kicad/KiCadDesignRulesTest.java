@@ -317,7 +317,13 @@ class KiCadDesignRulesTest {
             0,
             false));
     assertTrue(
-        result.warnings().stream().anyMatch(w -> w.contains("keepout") && w.contains("K1")),
+        result.warnings().stream()
+            .anyMatch(w -> w.contains("pads without net exported as keepouts in K1")),
+        result.warnings().toString());
+    // The warning on footprint image keepouts is still given
+    assertTrue(
+        result.warnings().stream()
+            .anyMatch(w -> w.contains("footprint image keepout(s) (such as pads without a net)")),
         result.warnings().toString());
   }
 
