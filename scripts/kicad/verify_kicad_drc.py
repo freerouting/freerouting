@@ -12,7 +12,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import shutil
 import subprocess
 import sys
@@ -21,17 +20,25 @@ from collections import Counter
 from pathlib import Path
 
 
-DEFAULT_KICAD_ROOTS = [
-    Path(r"C:\Program Files\KiCad"),
-]
+DEFAULT_KICAD_ROOTS = (
+    [Path(r"C:\Program Files\KiCad")]
+    if sys.platform == "win32"
+    else [Path("/Applications/KiCad"), Path("/usr/local"), Path("/usr")]
+)
 
 
 def discover_kicad_installations(
     requested_versions: list[str] | None = None,
+    kicad_roots: list[Path] | None = None,
 ) -> list[dict[str, str | None]]:
     """Find installed KiCad versions with `kicad-cli` and optional bundled `python`."""
     found: list[dict[str, str | None]] = []
-    for root in DEFAULT_KICAD_ROOTS:
+    seen_clis: set[str] = set()
+    roots = kicad_roots if kicad_roots is not None else DEFAULT_KICAD_ROOTS
+    cli_name = "kicad-cli.exe" if sys.platform == "win32" else "kicad-cli"
+    py_name = "python.exe" if sys.platform == "win32" else "python3"
+
+    for root in roots:
         if not root.is_dir():
             continue
         for entry in sorted(root.iterdir()):
@@ -40,14 +47,31 @@ def discover_kicad_installations(
             ver = entry.name
             if requested_versions and ver not in requested_versions:
                 continue
-            cli = entry / "bin" / "kicad-cli.exe"
-            py = entry / "bin" / "python.exe"
-            if cli.is_file():
+            cli = entry / "bin" / cli_name
+            py = entry / "bin" / py_name
+            if cli.is_file() and str(cli) not in seen_clis:
+                seen_clis.add(str(cli))
                 found.append(
                     {
                         "version": ver,
                         "kicad_cli": str(cli),
                         "python": str(py) if py.is_file() else None,
+                    }
+                )
+
+    if not found:
+        cli_on_path = shutil.which(cli_name)
+        if cli_on_path and cli_on_path not in seen_clis:
+            ver_proc = subprocess.run(
+                [cli_on_path, "--version"], capture_output=True, text=True
+            )
+            ver = (ver_proc.stdout.strip() or "system") if ver_proc.returncode == 0 else "system"
+            if not requested_versions or ver in requested_versions:
+                found.append(
+                    {
+                        "version": ver,
+                        "kicad_cli": cli_on_path,
+                        "python": shutil.which(py_name),
                     }
                 )
     return found
@@ -112,7 +136,10 @@ def import_ses_and_refill_via_pcbnew(
     script = (
         "import pcbnew, sys; "
         "b = pcbnew.LoadBoard(sys.argv[1]); "
-        "ok = pcbnew.ImportSpecctraSES(b, sys.argv[2]); "
+        "try:\n"
+        "    ok = pcbnew.ImportSpecctraSES(b, sys.argv[2])\n"
+        "except TypeError:\n"
+        "    ok = pcbnew.ImportSpecctraSES(sys.argv[2])\n"
         "assert ok, 'ImportSpecctraSES returned False'; "
         "zones = b.Zones(); "
         "pcbnew.ZONE_FILLER(b).Fill(zones); "
@@ -231,6 +258,11 @@ def main() -> int:
                             extra_args=args.freerouting_args,
                         )
                         entry_result["freerouting_rc"] = fr_proc.returncode
+                        if fr_proc.returncode != 0:
+                            raise RuntimeError(
+                                f"Freerouting failed (rc={fr_proc.returncode}): "
+                                f"{fr_proc.stderr or fr_proc.stdout}"
+                            )
                         if not ses_path.is_file():
                             raise RuntimeError(
                                 f"Freerouting did not produce SES (rc={fr_proc.returncode})"
@@ -255,7 +287,9 @@ def main() -> int:
         args.json_out.write_text(json.dumps(results, indent=2), encoding="utf-8")
 
     print(json.dumps(results, indent=2))
-    return 0
+    has_error = any(r.get("status") == "error" for r in results)
+    has_ok = any(r.get("status") == "ok" for r in results)
+    return 1 if (has_error or not has_ok) else 0
 
 
 if __name__ == "__main__":
