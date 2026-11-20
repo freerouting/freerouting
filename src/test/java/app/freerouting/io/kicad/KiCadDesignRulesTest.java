@@ -120,6 +120,34 @@ class KiCadDesignRulesTest {
   }
 
   @Test
+  void resetsReducedSmdToSmdClearanceWhenDruApplied() throws IOException {
+    BasicBoard board = loadBoard();
+    ClearanceMatrix matrix = board.rules.clearanceMatrix;
+    int defaultClass = matrix.getNo("default");
+    int smdClass = matrix.getNo("smd");
+    if (smdClass <= 0) {
+      matrix.appendClass("smd");
+      smdClass = matrix.getNo("smd");
+    }
+    int defaultVal = matrix.getValue(defaultClass, defaultClass, 0, false);
+    matrix.setValue(smdClass, smdClass, 0, Math.max(1, defaultVal / 4));
+
+    KiCadDesignRules rules =
+        KiCadDesignRules.parse(
+            """
+            (version 1)
+            (rule "hv"
+              (condition "A.NetClass == 'HighVoltage'")
+              (constraint clearance (min 3mm)))
+            """,
+            "smd.kicad_dru");
+
+    KiCadDesignRulesTranslator.apply(board, rules);
+
+    assertEquals(defaultVal, matrix.getValue(smdClass, smdClass, 0, false));
+  }
+
+  @Test
   void translatesClearanceRulesOntoTheBoard() throws IOException {
     BasicBoard board = loadBoard();
     KiCadDesignRulesTranslator.Result result =

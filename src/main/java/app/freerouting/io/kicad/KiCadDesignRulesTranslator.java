@@ -3,6 +3,7 @@ package app.freerouting.io.kicad;
 import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.model.items.ConductionArea;
 import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.ObstacleArea;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.model.items.Via;
@@ -20,10 +21,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -102,6 +105,9 @@ public final class KiCadDesignRulesTranslator {
     if (rules.isEmpty()) {
       return new Result(0, 0, Map.of(), List.copyOf(warnings));
     }
+    resetSmdToSmdClearance();
+    warnImageKeepouts();
+    warnDuplicateReferences();
 
     // 1. The copper items, by entity
     Map<EntityKey, Entity> entities = new LinkedHashMap<>();
@@ -281,6 +287,77 @@ public final class KiCadDesignRulesTranslator {
       result.add(new ClearanceRule(rule.name(), layers, rule.condition(), value));
     }
     return result;
+  }
+
+  /**
+   * Resets KiCad's reduced {@code smd_smd} clearance back to the regular default clearance when
+   * custom {@code .kicad_dru} rules are loaded, so Freerouting's DRC does not hide pad-to-pad
+   * violations that KiCad DRC reports.
+   */
+  private void resetSmdToSmdClearance() {
+    int smdClass = matrix.getNo("smd");
+    int defaultClass = matrix.getNo("default");
+    if (smdClass <= 0 || defaultClass <= 0) {
+      return;
+    }
+    for (int layer = 0; layer < layerCount; layer++) {
+      int defaultValue = matrix.getValue(defaultClass, defaultClass, layer, false);
+      if (matrix.getValue(smdClass, smdClass, layer, false) < defaultValue) {
+        matrix.setValue(smdClass, smdClass, layer, defaultValue);
+      }
+    }
+  }
+
+  /**
+   * Warns when the board contains footprint image keepouts (such as netless plated pads exported by
+   * KiCad), since {@code .kicad_dru} rules are only applied to pins, traces, vias and planes.
+   */
+  private void warnImageKeepouts() {
+    int keepoutCount = 0;
+    for (Item item : board.getItems()) {
+      if (item instanceof ObstacleArea && item.getComponentId() > 0) {
+        keepoutCount++;
+      }
+    }
+    if (keepoutCount > 0) {
+      warnings.add(
+          "board has "
+              + keepoutCount
+              + " footprint image keepout(s) (such as pads without a net);"
+              + " .kicad_dru clearance rules are not applied to them");
+    }
+  }
+
+  /**
+   * Warns when the board contains components whose names follow KiCad's duplicate-reference DSN
+   * renaming ({@code <ref>_<n>} alongside {@code <ref>}), which can cause {@code memberOfFootprint}
+   * rules to miss renamed duplicates.
+   */
+  private void warnDuplicateReferences() {
+    Set<String> names = new HashSet<>();
+    for (int i = 1; i <= board.components.count(); i++) {
+      Component c = board.components.get(i);
+      if (c != null && c.name != null) {
+        names.add(c.name);
+      }
+    }
+    for (String name : names) {
+      int underscore = name.lastIndexOf('_');
+      if (underscore > 0 && underscore < name.length() - 1) {
+        String base = name.substring(0, underscore);
+        String suffix = name.substring(underscore + 1);
+        if (names.contains(base) && suffix.chars().allMatch(Character::isDigit)) {
+          warnings.add(
+              "component '"
+                  + name
+                  + "' appears to be a KiCad-renamed duplicate of '"
+                  + base
+                  + "'; memberOfFootprint rules for '"
+                  + base
+                  + "' may not match it");
+        }
+      }
+    }
   }
 
   /**
