@@ -88,16 +88,16 @@ public final class KiCadDesignRulesTranslator {
   private record ClearanceRule(
       String name, boolean[] layers, KiCadRuleCondition condition, int value) {}
 
-  private final BasicBoard board;
-  private final ClearanceMatrix matrix;
-  private final int layerCount;
-  private final List<String> warnings = new ArrayList<>();
-
   /** The components with a pad exported as a keepout, in the order found. */
   private final Set<String> padKeepoutComponents = new LinkedHashSet<>();
 
   /** The components the KiCad export may have renamed, with the reference they may have had. */
   private final Map<String, String> renamed;
+
+  private final BasicBoard board;
+  private final ClearanceMatrix matrix;
+  private final int layerCount;
+  private final List<String> warnings = new ArrayList<>();
 
   private KiCadDesignRulesTranslator(BasicBoard board) {
     this.board = board;
