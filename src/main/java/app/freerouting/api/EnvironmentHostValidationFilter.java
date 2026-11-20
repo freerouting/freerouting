@@ -31,6 +31,7 @@ import java.io.IOException;
  * <ul>
  *   <li>{@code /v1/system/*} — health-check and status endpoints
  *   <li>{@code /v1/analytics/*} — analytics ingestion endpoints
+ *   <li>{@code /v1/surveys/*} — micro-survey endpoints
  *   <li>{@code /dev/*} — development / testing endpoints
  *   <li>{@code /openapi/*} — OpenAPI specification endpoints
  *   <li>{@code /swagger-ui} and {@code /swagger-ui/*} — Swagger UI
@@ -77,6 +78,7 @@ public class EnvironmentHostValidationFilter implements ContainerRequestFilter {
     String p = path.startsWith("/") ? path.substring(1) : path;
     return p.startsWith("v1/system/")
         || p.startsWith("v1/analytics/")
+        || p.startsWith("v1/surveys/")
         || p.startsWith("v1/mcp")
         || p.startsWith("dev/")
         || p.startsWith(".well-known/")
