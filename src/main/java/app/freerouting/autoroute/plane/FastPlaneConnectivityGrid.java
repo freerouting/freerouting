@@ -2145,30 +2145,12 @@ public class FastPlaneConnectivityGrid {
       }
     }
 
-    if (nextIslandId == 0) {
+    if (nextIslandId == 0 && traces.isEmpty()) {
       Map<Integer, List<Item>> single = new HashMap<>();
       single.put(0, new ArrayList<>(items));
       return new PlaneFractureResult(single);
     }
     int[] islandCounter = {nextIslandId};
-
-    for (Item unseeded : unseededItems) {
-      if (itemIslandMap.containsKey(unseeded)) {
-        continue;
-      }
-      IntPoint pt = getItemLocation(unseeded, ca);
-      int assignedIsland = 0;
-      if (pt != null) {
-        int targetCol = (pt.x - originX) / cellSize;
-        int targetRow = (pt.y - originY) / cellSize;
-        int nearestIsland = findNearestMappedIsland(targetCol, targetRow, 10);
-        if (nearestIsland >= 0) {
-          assignedIsland = nearestIsland;
-        }
-      }
-      islands.computeIfAbsent(assignedIsland, k -> new ArrayList<>()).add(unseeded);
-      itemIslandMap.put(unseeded, assignedIsland);
-    }
 
     // The copper at the end of a trace touches the cells of fill whose centre is no further from
     // the end than the half width of the trace and half a cell. A piece of fill that no pad or via
@@ -2191,6 +2173,31 @@ public class FastPlaneConnectivityGrid {
               return result;
             },
             trace -> Collections.emptySet());
+
+    if (islandCounter[0] == 0) {
+      Map<Integer, List<Item>> single = new HashMap<>();
+      single.put(0, new ArrayList<>(items));
+      return new PlaneFractureResult(single, null, traceEnds);
+    }
+
+    for (Item unseeded : unseededItems) {
+      if (itemIslandMap.containsKey(unseeded)) {
+        continue;
+      }
+      IntPoint pt = getItemLocation(unseeded, ca);
+      int assignedIsland = 0;
+      if (pt != null) {
+        int targetCol = (pt.x - originX) / cellSize;
+        int targetRow = (pt.y - originY) / cellSize;
+        int nearestIsland = findNearestMappedIsland(targetCol, targetRow, 10);
+        if (nearestIsland >= 0) {
+          assignedIsland = nearestIsland;
+        }
+      }
+      islands.computeIfAbsent(assignedIsland, k -> new ArrayList<>()).add(unseeded);
+      itemIslandMap.put(unseeded, assignedIsland);
+    }
+
     return new PlaneFractureResult(islands, null, traceEnds);
   }
 
