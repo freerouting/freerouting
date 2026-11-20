@@ -80,4 +80,34 @@ class CliKiCadProjectSettingsTest {
     assertFalse(CliRunner.addKiCadProjectSettings(new RoutingJob(), broken.toString(), merger));
     assertEquals(0.0, merger.merge().getNeckWidthUm(), 1e-9);
   }
+
+  @Test
+  void theEdgeClearanceIsTheOneThatKiCadChecks() throws Exception {
+    // the project sets none: the default of KiCad
+    Path project = Files.writeString(dir.resolve("board.kicad_pro"), PROJECT);
+    SettingsMerger merger = new SettingsMerger(new DefaultSettings());
+    assertTrue(CliRunner.addKiCadProjectSettings(new RoutingJob(), project.toString(), merger));
+    assertEquals(500.0, merger.merge().copperToEdgeClearanceUm, 1e-9);
+
+    Path own =
+        Files.writeString(
+            dir.resolve("own.kicad_pro"),
+            "{\"board\": {\"design_settings\": {\"rules\": "
+                + "{\"min_copper_edge_clearance\": 0.3}}}}");
+    merger = new SettingsMerger(new DefaultSettings());
+    assertTrue(CliRunner.addKiCadProjectSettings(new RoutingJob(), own.toString(), merger));
+    assertEquals(300.0, merger.merge().copperToEdgeClearanceUm, 1e-9);
+  }
+
+  @Test
+  void anExplicitEdgeClearanceWins() throws Exception {
+    Path project = Files.writeString(dir.resolve("board.kicad_pro"), PROJECT);
+    SettingsMerger merger =
+        new SettingsMerger(
+            new DefaultSettings(),
+            new CliSettings(new String[] {"--router.copper_to_edge_clearance_um=375"}));
+
+    assertTrue(CliRunner.addKiCadProjectSettings(new RoutingJob(), project.toString(), merger));
+    assertEquals(375.0, merger.merge().copperToEdgeClearanceUm, 1e-9);
+  }
 }
