@@ -488,6 +488,9 @@ public final class BatchAutorouter extends NamedAlgorithm {
   }
 
   List<Item> getAutorouteItems(RoutingBoard board) {
+    if (board.getRoutingScopeContext() != null && board.getRoutingScopeContext().isNoOp()) {
+      return List.of();
+    }
     // Reuse instance collections to reduce memory allocation
     reusableAutorouteItemList.clear();
     reusablePlaneItemList.clear();

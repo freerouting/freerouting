@@ -68,7 +68,10 @@ public final class RoutingScopeCompiler {
       }
       maxComponentId = Math.max(maxComponentId, comp.id);
       for (String req : requestedNames) {
-        if (comp.name != null && comp.name.equalsIgnoreCase(req)) {
+        boolean nameMatch = comp.name != null && comp.name.equalsIgnoreCase(req);
+        boolean partMatch =
+            comp.getPartNumber() != null && comp.getPartNumber().equalsIgnoreCase(req);
+        if (nameMatch || partMatch) {
           if (!comp.isPlaced()) {
             FRLogger.warn("Scope component '" + comp.name + "' is not placed on board; skipping.");
           } else {

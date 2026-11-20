@@ -75,7 +75,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   public transient ChangedArea changedArea;
 
   /** Active scope coordinator for selective component-scoped routing. */
-  private transient RoutingScopeContext routingScopeContext = RoutingScopeContext.UNSCOPED;
+  private RoutingScopeContext routingScopeContext = RoutingScopeContext.UNSCOPED;
 
   /** Contains the database for the auto-route algorithm. */
   private transient AutorouteEngine autorouteEngine;

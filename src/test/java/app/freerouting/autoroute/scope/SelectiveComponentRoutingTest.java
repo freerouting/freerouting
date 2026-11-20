@@ -511,6 +511,128 @@ class SelectiveComponentRoutingTest {
     assertNull(ws.getActiveScopeMask());
   }
 
+  @Test
+  void testScopeCompilationMatchingByPartNumber() throws IOException {
+    RoutingBoard board = DsnTestFixtures.loadBoard("Issue-interf_u-unrouted.dsn");
+    assertNotNull(board);
+
+    RouterScopeSettings settings = new RouterScopeSettings();
+    settings.components = new String[] {"4003APG120"}; // User typing part number shown on screen
+
+    RoutingScopeContext context = RoutingScopeCompiler.compile(board, settings);
+    assertNotNull(context);
+    assertTrue(context.isActive(), "Scope must be active when matching component by part number");
+    assertFalse(context.isNoOp());
+    assertEquals(1, context.getMask().getScopedNetNumbers().length > 0 ? 1 : 0);
+  }
+
+  @Test
+  void testRoutingBoardScopeSerializationPreservation() throws IOException {
+    RoutingBoard board = DsnTestFixtures.loadBoard("Issue508-DAC2020_bm01.dsn");
+    assertNotNull(board);
+
+    RouterScopeSettings settings = new RouterScopeSettings();
+    settings.components = new String[] {"U1"};
+    RoutingScopeContext context = RoutingScopeCompiler.compile(board, settings);
+    board.setRoutingScopeContext(context);
+
+    assertTrue(board.getRoutingScopeContext().isActive());
+
+    // Serialize and deserialize
+    byte[] snapshot = board.serialize(false);
+    assertNotNull(snapshot);
+
+    RoutingBoard restored =
+        (RoutingBoard) app.freerouting.board.facade.BasicBoard.deserialize(snapshot);
+    assertNotNull(restored);
+    assertNotNull(restored.getRoutingScopeContext());
+    assertTrue(
+        restored.getRoutingScopeContext().isActive(),
+        "Restored board must retain active RoutingScopeContext across serialization/deserialization");
+  }
+
+  @Test
+  void testInterfUScopedRouting() throws IOException {
+    RoutingBoard board = DsnTestFixtures.loadBoard("Issue-interf_u-unrouted.dsn");
+    assertNotNull(board);
+
+    app.freerouting.core.RoutingJob job = new app.freerouting.core.RoutingJob();
+    job.board = board;
+    job.thread = new NoOpStoppableThread();
+    job.routerSettings = new app.freerouting.settings.sources.DefaultSettings().getSettings();
+    job.routerSettings.applyBoardSpecificOptimizations(board);
+
+    // Route component by part number or reference designator
+    job.routerSettings.scope.components = new String[] {"4003APG120"};
+    job.routerSettings.autorouter.maxPasses = 3;
+    job.routerSettings.setRunOptimizer(false);
+
+    RoutingScopeContext context = RoutingScopeCompiler.compile(board, job.routerSettings.scope);
+    board.setRoutingScopeContext(context);
+    assertTrue(context.isActive());
+
+    // Find a placed component whose nets are completely outside U9's scope
+    int unselectedCompId = -1;
+    int unselectedOpenPinsBefore = 0;
+    for (Component c : board.components.getAll()) {
+      if (c.isPlaced() && !"U9".equalsIgnoreCase(c.name)) {
+        boolean touchedByScope = false;
+        for (app.freerouting.board.model.items.Item item : board.getItems()) {
+          if (item instanceof app.freerouting.board.model.items.Pin pin
+              && pin.getComponentId() == c.id
+              && pin.netCount() > 0) {
+            for (int n = 0; n < pin.netCount(); n++) {
+              if (context.isNetInScope(pin.getNetNumber(n))) {
+                touchedByScope = true;
+                break;
+              }
+            }
+          }
+        }
+        if (!touchedByScope) {
+          unselectedCompId = c.id;
+          for (app.freerouting.board.model.items.Item item : board.getItems()) {
+            if (item instanceof app.freerouting.board.model.items.Pin pin
+                && pin.getComponentId() == c.id
+                && pin.netCount() > 0
+                && !pin.getUnconnectedSet(pin.getNetNumber(0)).isEmpty()) {
+              unselectedOpenPinsBefore++;
+            }
+          }
+          if (unselectedOpenPinsBefore > 0) {
+            break;
+          }
+        }
+      }
+    }
+
+    app.freerouting.autoroute.pipeline.RoutingPipeline pipeline =
+        app.freerouting.autoroute.pipeline.RoutingPipeline.create(job);
+    pipeline.run();
+
+    // Verify unselected component outside scope remained untouched
+    if (unselectedCompId != -1) {
+      int unselectedOpenPinsAfter = 0;
+      for (app.freerouting.board.model.items.Item item : board.getItems()) {
+        if (item instanceof app.freerouting.board.model.items.Pin pin
+            && pin.getComponentId() == unselectedCompId
+            && pin.netCount() > 0
+            && !pin.getUnconnectedSet(pin.getNetNumber(0)).isEmpty()) {
+          unselectedOpenPinsAfter++;
+        }
+      }
+      assertEquals(
+          unselectedOpenPinsBefore,
+          unselectedOpenPinsAfter,
+          "Unselected component outside scope must remain completely unrouted");
+    }
+
+    // Zero clearance violations check
+    var violations =
+        new app.freerouting.drc.DesignRulesChecker(board, null).getAllClearanceViolations();
+    assertTrue(violations.isEmpty(), "Scoped routing must not introduce clearance violations");
+  }
+
   private static final class NoOpStoppableThread extends app.freerouting.core.StoppableThread {
     @Override
     protected void threadAction() {}

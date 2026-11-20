@@ -333,6 +333,13 @@ final class AutorouteBatchLoop {
     // than waiting for the full stagnation window. This mirrors the v1.9 behaviour and catches
     // the degenerate case where plane-net items repeatedly fail or are inserted+removed each
     // pass without updating the board state.
+    if (router.board.getRoutingScopeContext().isNoOp()) {
+      job.logInfo(
+          "Selective component routing requested but no valid routable pins found for scope; exiting in 0 passes.");
+      stopFor(BatchAutorouter.StopReason.COMPLETED);
+      return true;
+    }
+
     Set<String> alreadyRoutedBoardHashes = new java.util.HashSet<>();
     while (continueAutorouting && !router.thread.isStopAutoRouterRequested()) {
       if (job.state == RoutingJobState.TIMED_OUT) {
@@ -414,6 +421,7 @@ final class AutorouteBatchLoop {
             }
 
             router.board = boardToRestore;
+            router.board.setRoutingScopeContext(job.board.getRoutingScopeContext());
             board = router.board;
             router.resetAntiOscillationState();
             var boardStatistics = router.board.getStatistics();
@@ -655,6 +663,7 @@ final class AutorouteBatchLoop {
       if (bestBoard != null) {
         BoardStatistics currentStats = new BoardStatistics(router.board);
         router.board = bestBoard;
+        router.board.setRoutingScopeContext(job.board.getRoutingScopeContext());
         BoardStatistics bestStats = new BoardStatistics(router.board);
         job.logDebug(
             "The final board state (score "

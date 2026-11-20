@@ -191,6 +191,9 @@ final class RoutingFallbackRunner {
         break;
       }
       RoutingBoard copy = (RoutingBoard) BasicBoard.deserialize(input);
+      if (job.board != null && job.board.getRoutingScopeContext() != null) {
+        copy.setRoutingScopeContext(job.board.getRoutingScopeContext());
+      }
       if (copy.clearanceBaseline == null) {
         copy.clearanceBaseline = bestAttempt.board.clearanceBaseline;
       }
@@ -270,6 +273,9 @@ final class RoutingFallbackRunner {
       boolean keepFanoutVias,
       ClearanceBaseline inputBaseline) {
     RoutingBoard board = (RoutingBoard) BasicBoard.deserialize(input);
+    if (job.board != null && job.board.getRoutingScopeContext() != null) {
+      board.setRoutingScopeContext(job.board.getRoutingScopeContext());
+    }
     if (board.clearanceBaseline == null) {
       board.clearanceBaseline = inputBaseline;
     }

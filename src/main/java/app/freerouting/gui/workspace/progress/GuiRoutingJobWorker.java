@@ -245,6 +245,10 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
         new BoardUpdatedEventListener() {
           @Override
           public void onBoardUpdatedEvent(BoardUpdatedEvent event) {
+            if (event.getBoard() != null && event.getBoard() != sessionPort.routingBoard()) {
+              routingJob.board = event.getBoard();
+              sessionPort.replaceBoard(new BoardReplacement(generation, event.getBoard()));
+            }
             try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
               SesWriter.write(routingJob.board, outputStream, routingJob.name);
               routingJob.output.setData(outputStream.toByteArray());
