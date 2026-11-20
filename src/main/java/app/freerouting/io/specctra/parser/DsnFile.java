@@ -68,10 +68,11 @@ public final class DsnFile {
   }
 
   /**
-   * Removes board-level generic keepouts that enclose the center of a routable single-layer (SMD)
-   * pin on the same layer. KiCad exports copper-pour-only rule areas ({@code (keepout (tracks
-   * allowed) (vias allowed) (copperpour not_allowed))}) as generic Specctra {@code (keepout ...)}
-   * polygons, which block all tracks and vias and make enclosed SMD pads physically unroutable.
+   * Removes unnamed board-level generic keepouts that enclose the center of a routable single-layer
+   * (SMD) pin on the same layer. KiCad exports copper-pour-only rule areas ({@code (keepout (tracks
+   * allowed) (vias allowed) (copperpour not_allowed))}) as unnamed generic Specctra {@code (keepout
+   * "" ...)} polygons, which block all tracks and vias and make enclosed SMD pads physically
+   * unroutable. Named board keepouts are preserved.
    *
    * <p>Called from {@link app.freerouting.io.specctra.DsnReader#readBoard} once the components are
    * placed.
@@ -84,6 +85,7 @@ public final class DsnFile {
     for (Item item : routingBoard.getItems()) {
       if (item.getClass() == ObstacleArea.class
           && item.getComponentId() <= 0
+          && (((ObstacleArea) item).name == null || ((ObstacleArea) item).name.isEmpty())
           && enclosesRoutableSmdPinCenter((ObstacleArea) item, routingBoard)) {
         pinBlockingKeepouts.add((ObstacleArea) item);
       }
