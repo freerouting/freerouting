@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import app.freerouting.Freerouting;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.DrillItem;
+import app.freerouting.drc.NetIncompletes;
 import app.freerouting.settings.GlobalSettings;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -327,6 +328,41 @@ class SesRoundTripTest {
         reimported.wiresImported(),
         "round-trip must preserve wire count");
     assertEquals(0, reimported.errorsEncountered());
+  }
+
+  /**
+   * A PCBench board that Freerouting routed completely, whose session has ten wires ending at
+   * rational corners with the denominator 778 = 2 * 389. Reading its own session back must neither
+   * drop a wire nor leave a connection incomplete, before and after writing it again.
+   */
+  @Test
+  void rationalWireEndsOfARoutedBoardReloadCompletely() throws Exception {
+    String dsn = "PCBench-minisumo-v3.dsn";
+    RoutingBoard board = DsnTestFixtures.loadBoard(dsn);
+    SesImportSummary imported;
+    try (InputStream sesIn = DsnTestFixtures.openFixtureStream("PCBench-minisumo-v3.ses")) {
+      imported = SesReader.read(sesIn, board);
+    }
+    assertEquals(0, imported.errorsEncountered());
+    assertEquals(383, imported.wiresImported());
+    assertEquals(0, incompleteConnections(board));
+
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    SesWriter.write(board, out, dsn);
+    RoutingBoard fresh = DsnTestFixtures.loadBoard(dsn);
+    SesImportSummary reimported =
+        SesReader.read(new ByteArrayInputStream(out.toByteArray()), fresh);
+    assertEquals(0, reimported.errorsEncountered());
+    assertEquals(imported.wiresImported(), reimported.wiresImported());
+    assertEquals(0, incompleteConnections(fresh));
+  }
+
+  private static int incompleteConnections(RoutingBoard board) {
+    int total = 0;
+    for (int net = 1; net <= board.rules.nets.maxNetNumber(); net++) {
+      total += new NetIncompletes(net, board.getConnectableItems(net), board).count();
+    }
+    return total;
   }
 
   /** Placement rotation formatting must match KiCad Specctra export conventions. */
