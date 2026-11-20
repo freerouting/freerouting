@@ -764,14 +764,14 @@ public class ConductionArea extends ObstacleArea implements Connectable {
       return;
     }
 
-    // Determine which islands have already been contacted by items in result
+    // Determine which islands have already been contacted by items in result. A trace whose ends
+    // touch two islands is in both.
     Set<Integer> reachedIslands = new HashSet<>();
     for (Item resItem : result) {
       if (resItem != this && resItem.sharesNet(this) && resItem.sharesLayer(this)) {
         for (Map.Entry<Integer, List<Item>> entry : fractureResult.islandItems.entrySet()) {
           if (entry.getValue().contains(resItem)) {
             reachedIslands.add(entry.getKey());
-            break;
           }
         }
       }
@@ -795,6 +795,44 @@ public class ConductionArea extends ObstacleArea implements Connectable {
         }
       }
     }
+  }
+
+  /**
+   * Returns true if the first or last corner of a trace of the net touches the fill of this area:
+   * false for an end in the clearance band of foreign copper, or in the relief of a pad.
+   */
+  public boolean touchesEndOf(Trace trace, boolean first) {
+    FastPlaneConnectivityGrid.PlaneFractureResult fractureResult = getFractureResult();
+    if (fractureResult == null) {
+      return true;
+    }
+    int[] islands = fractureResult.endIslands(trace, first);
+    return islands == null || islands.length > 0;
+  }
+
+  /**
+   * Returns true if this area joins the two ends of a trace of its net, so that the trace closes a
+   * cycle with it. An area in one piece joins any two points of it. A fractured area joins them
+   * only if they touch a common island: a trace that bridges a cut of the area is no cycle.
+   */
+  public boolean joinsEndsOf(Trace trace) {
+    FastPlaneConnectivityGrid.PlaneFractureResult fractureResult = getFractureResult();
+    if (fractureResult == null || !fractureResult.isFractured) {
+      return true;
+    }
+    int[] first = fractureResult.endIslands(trace, true);
+    int[] last = fractureResult.endIslands(trace, false);
+    if (first == null || last == null) {
+      return true;
+    }
+    for (int a : first) {
+      for (int b : last) {
+        if (a == b) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   /**
@@ -851,12 +889,35 @@ public class ConductionArea extends ObstacleArea implements Connectable {
       return super.isCycleRecu(visitedItems, searchItem, comeFromItem, ignoreAreas);
     }
 
-    Integer fromIsland = null;
+    // The islands the walk enters from comeFromItem. The walk for a cycle through a trace starts
+    // at its first corner: from the trace itself, only the islands of that end are entered, and the
+    // trace closes a cycle if its last corner touches one of them.
+    Set<Integer> fromIslands = null;
     if (comeFromItem != null) {
-      for (Map.Entry<Integer, List<Item>> entry : fractureResult.islandItems.entrySet()) {
-        if (entry.getValue().contains(comeFromItem)) {
-          fromIsland = entry.getKey();
-          break;
+      int[] startIslands =
+          comeFromItem == searchItem ? fractureResult.endIslands(comeFromItem, true) : null;
+      if (startIslands != null) {
+        fromIslands = new HashSet<>();
+        for (int island : startIslands) {
+          fromIslands.add(island);
+        }
+        for (int island : fractureResult.endIslands(comeFromItem, false)) {
+          if (fromIslands.contains(island)) {
+            return true;
+          }
+        }
+      } else {
+        for (Map.Entry<Integer, List<Item>> entry : fractureResult.islandItems.entrySet()) {
+          if (entry.getValue().contains(comeFromItem)) {
+            if (fromIslands == null) {
+              fromIslands = new HashSet<>();
+            }
+            fromIslands.add(entry.getKey());
+          }
+        }
+        if (fromIslands == null && fractureResult.traceEndIslands.containsKey(comeFromItem)) {
+          // a trace whose ends touch no fill of this area
+          return false;
         }
       }
     }
@@ -869,11 +930,14 @@ public class ConductionArea extends ObstacleArea implements Connectable {
       if (currentContact == comeFromItem) {
         continue;
       }
-      if (fromIsland != null) {
+      if (fromIslands != null) {
         boolean onSameIsland = false;
-        List<Item> islandMembers = fractureResult.islandItems.get(fromIsland);
-        if (islandMembers != null && islandMembers.contains(currentContact)) {
-          onSameIsland = true;
+        for (int island : fromIslands) {
+          List<Item> islandMembers = fractureResult.islandItems.get(island);
+          if (islandMembers != null && islandMembers.contains(currentContact)) {
+            onSameIsland = true;
+            break;
+          }
         }
         if (!onSameIsland) {
           continue;

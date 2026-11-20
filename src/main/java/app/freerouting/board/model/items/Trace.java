@@ -21,7 +21,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -344,7 +343,20 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   /** Returns true if an endpoint dangles, including traces with unsplit interior junctions. */
   @Override
   public boolean isTail() {
-    return getStartContacts().isEmpty() || getEndContacts().isEmpty();
+    return !hasContactAt(true) || !hasContactAt(false);
+  }
+
+  /**
+   * Whether the first or last corner touches something. A plane under the end counts only if the
+   * end touches its fill: an end left in the clearance band of foreign copper dangles.
+   */
+  private boolean hasContactAt(boolean first) {
+    for (Item contact : first ? getStartContacts() : getEndContacts()) {
+      if (!(contact instanceof ConductionArea area) || area.touchesEndOf(this, first)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /** Returns whether another trace endpoint or drill center contacts this trace's interior. */
@@ -377,8 +389,14 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   @Override
   public boolean isOverlap() {
     Set<Item> startContacts = this.getStartContacts();
-    Set<Item> endContacts = this.getEndContacts();
-    return !Collections.disjoint(startContacts, endContacts);
+    for (Item contact : this.getEndContacts()) {
+      // a fractured plane under both ends joins them only if they touch a common island
+      if (startContacts.contains(contact)
+          && !(contact instanceof ConductionArea area && !area.joinsEndsOf(this))) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
