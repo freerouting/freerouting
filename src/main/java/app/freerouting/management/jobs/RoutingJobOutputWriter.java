@@ -8,10 +8,16 @@ import app.freerouting.management.HeadlessBoardManager;
 import java.io.ByteArrayOutputStream;
 
 /** Publishes complete output snapshots without losing the caller's output configuration. */
-final class RoutingJobOutputWriter {
+public final class RoutingJobOutputWriter {
   private RoutingJobOutputWriter() {}
 
-  static boolean write(RoutingJob job) {
+  /**
+   * Serializes the current board to the configured output format on the job.
+   *
+   * @param job target routing job containing board and output details
+   * @return true if output bytes were successfully written to job.output
+   */
+  public static boolean write(RoutingJob job) {
     try {
       if (job.board == null) {
         throw new java.io.IOException("The final routing board is unavailable");
