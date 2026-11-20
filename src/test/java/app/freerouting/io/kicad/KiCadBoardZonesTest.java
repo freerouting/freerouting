@@ -2,6 +2,7 @@ package app.freerouting.io.kicad;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -207,5 +208,34 @@ class KiCadBoardZonesTest {
     KiCadBoardZones.Pad back = board.pads().get(2);
     assertFalse(back.isOnLayer("Top"));
     assertTrue(back.isOnLayer("Bottom"));
+  }
+
+  @Test
+  void readsTheMinimumTrackWidthOfAKiCad5Board() {
+    KiCadBoardZones board =
+        KiCadBoardZones.parse(
+            "(kicad_pcb (version 20171130) (host pcbnew 5.1)\n"
+                + " (setup (last_trace_width 0.508) (trace_clearance 0.254)"
+                + " (zone_clearance 0.508) (trace_min 0.3) (via_min_size 0.8)"
+                + " (pcbplotparams (layerselection 0x010f0_ffffffff) (outputdirectory \"\")))\n"
+                + " (net 0 \"\"))",
+            "old.kicad_pcb");
+
+    assertEquals(300.0, board.minTrackWidthUm(), 1e-9);
+  }
+
+  @Test
+  void aBoardWithoutAPositiveTraceMinHasNoMinimumTrackWidth() {
+    // KiCad 6 and later keep the minimum in the project file: the setup has no trace_min
+    assertNull(
+        KiCadBoardZones.parse(
+                "(kicad_pcb (version 20260206) (generator \"pcbnew\")"
+                    + " (setup (pad_to_mask_clearance 0)))",
+                "new.kicad_pcb")
+            .minTrackWidthUm());
+    assertNull(
+        KiCadBoardZones.parse(
+                "(kicad_pcb (version 20171130) (setup (trace_min 0)))", "zero.kicad_pcb")
+            .minTrackWidthUm());
   }
 }

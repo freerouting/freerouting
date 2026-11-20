@@ -106,6 +106,10 @@ public final class CliRunner {
     if (!routingJob.loadKiCadBoardZones(globalSettings.initialKiCadBoardFile)) {
       return false;
     }
+    // A board of KiCad 5 has no .kicad_pro: its minimum track width is in the .kicad_pcb.
+    if (globalSettings.initialKiCadProjectFile == null && routingJob.kicadProject != null) {
+      settingsMerger.addOrReplaceSources(new KiCadProjectSettings(routingJob.kicadProject));
+    }
 
     routingJob.routerSettings = settingsMerger.merge();
     routingJob.drcSettings = globalSettings.drcSettings.clone();
