@@ -4,8 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.TestFixtures;
+import app.freerouting.board.model.items.DrillItem;
+import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Trace;
+import app.freerouting.board.model.items.Via;
 import app.freerouting.board.model.structure.BoardOutline;
 import app.freerouting.board.model.structure.Unit;
 import app.freerouting.board.trace.PolylineTrace;
@@ -27,9 +30,10 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 /**
- * KiCad does not write the copper to edge clearance of a board into a DSN. On a board given without
- * its project file (here KiCad 5 PCBench boards), the KiCad 10 DRC checks its default, 0.5 mm,
- * where Freerouting kept 0.25 mm. With the {@code .kicad_pcb} given to the job, the traces keep it.
+ * KiCad writes neither the copper to edge clearance nor the hole clearance of a board into a DSN.
+ * On a board given without its project file (here two KiCad 5 PCBench boards), the KiCad 10 DRC
+ * checks its defaults, 0.5 mm and 0.25 mm, where Freerouting kept 0.25 mm and nothing. With the
+ * {@code .kicad_pcb} given to the job, the traces keep both.
  */
 class KiCadBoardClearancesRoutingTest extends RoutingFixtureTest {
 
@@ -80,6 +84,72 @@ class KiCadBoardClearancesRoutingTest extends RoutingFixtureTest {
         job.board.rules.clearanceMatrix.getValue(
             job.board.getOutline().clearanceClassIndex(), 1, 0, false),
         1.0);
+  }
+
+  /**
+   * SMDBreakouts smd_breakout_quad: with the copper to edge clearance alone, KiCad reports 12
+   * traces and vias closer than 0.25 mm to the hole of a drilled item of another net. None may be.
+   */
+  @Test
+  void theTracesAndViasKeepTheHoleClearanceOfKiCad() throws IOException {
+    RoutingJob job = routedWithTheBoardFile("PCBench-SMDBreakouts-smd-breakout-quad");
+
+    List<String> tooClose = new ArrayList<>();
+    for (Item item : job.board.getItems()) {
+      if (!(item instanceof DrillItem drill) || drill.getPadstack() == null) {
+        continue;
+      }
+      double drillRadius = drill.getPadstack().getDrillRadius();
+      if (drillRadius <= 0) {
+        continue;
+      }
+      FloatPoint centre = drill.getCenter().toFloat();
+      double required = drillRadius + toBoard(job, 250.0 - TOLERANCE_UM);
+      for (Trace trace : job.board.getTraces()) {
+        if (!(trace instanceof PolylineTrace polylineTrace)
+            || trace.sharesNet(drill)
+            || !drill.isOnLayer(trace.getLayer())) {
+          continue;
+        }
+        FloatPoint[] corners = polylineTrace.polyline().cornerApproxArr();
+        for (int i = 0; i + 1 < corners.length; i++) {
+          double gap =
+              new FloatLine(corners[i], corners[i + 1]).segmentDistance(centre)
+                  - trace.getHalfWidth();
+          if (gap < required) {
+            tooClose.add(
+                "net "
+                    + trace.getNetNumber(0)
+                    + " at "
+                    + toUm(job, gap - drillRadius)
+                    + " um from the hole at "
+                    + centre);
+          }
+        }
+      }
+      for (Item other : job.board.getItems()) {
+        if (!(other instanceof Via via) || via == drill || via.sharesNet(drill)) {
+          continue;
+        }
+        double gap =
+            via.getCenter().toFloat().distance(centre)
+                - via.getShapeOnLayer(via.firstLayer()).boundingBox().width() / 2.0;
+        if (gap < required) {
+          tooClose.add(
+              "via of net "
+                  + via.getNetNumber(0)
+                  + " at "
+                  + toUm(job, gap - drillRadius)
+                  + " um from the hole at "
+                  + centre);
+        }
+      }
+    }
+    assertTrue(
+        tooClose.isEmpty(),
+        () -> tooClose.size() + " traces and vias closer than 0.25 mm to a hole: " + tooClose);
+    // the default of KiCad became the hole clearance of the board
+    assertEquals(toBoard(job, 250.0), job.board.rules.getHoleClearance(), 1.0);
   }
 
   private RoutingJob routedWithTheBoardFile(String name) throws IOException {

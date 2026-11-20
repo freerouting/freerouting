@@ -18,9 +18,10 @@ import java.nio.file.Path;
  * reports every trace narrower than that one as a {@code connection_width} error. This class reads
  * both back, so that Freerouting does not neck a trace down below either.
  *
- * <p>The copper to edge clearance of the board is lost as well: the KiCad DRC reports {@code
- * copper_edge_clearance} errors that Freerouting does not see. Where the project does not set it,
- * KiCad checks its own default, which this class returns instead.
+ * <p>The copper to edge clearance and the hole clearance of the board are lost as well: the KiCad
+ * DRC reports {@code copper_edge_clearance} and {@code hole_clearance} errors that Freerouting does
+ * not see. Where the project does not set them, KiCad checks its own defaults, which this class
+ * returns instead.
  */
 public final class KiCadProject {
 
@@ -28,20 +29,26 @@ public final class KiCadProject {
   public static final double DEFAULT_COPPER_EDGE_CLEARANCE_UM =
       KiCadBoardZones.DEFAULT_EDGE_CLEARANCE_UM;
 
+  /** The hole clearance that KiCad checks when the project does not set one. */
+  public static final double DEFAULT_HOLE_CLEARANCE_UM = 250.0;
+
   private final String sourceName;
   private final Double minTrackWidthUm;
   private final Double minConnectionWidthUm;
   private final Double copperEdgeClearanceUm;
+  private final Double holeClearanceUm;
 
   private KiCadProject(
       String sourceName,
       Double minTrackWidthUm,
       Double minConnectionWidthUm,
-      Double copperEdgeClearanceUm) {
+      Double copperEdgeClearanceUm,
+      Double holeClearanceUm) {
     this.sourceName = sourceName;
     this.minTrackWidthUm = minTrackWidthUm;
     this.minConnectionWidthUm = minConnectionWidthUm;
     this.copperEdgeClearanceUm = copperEdgeClearanceUm;
+    this.holeClearanceUm = holeClearanceUm;
   }
 
   /** The file name, for messages. */
@@ -91,7 +98,7 @@ public final class KiCadProject {
    * @param minTrackWidthUm the minimum track width of the board in micrometres, or null
    */
   public static KiCadProject fromBoardSetup(String sourceName, Double minTrackWidthUm) {
-    return new KiCadProject(sourceName, minTrackWidthUm, null, null);
+    return new KiCadProject(sourceName, minTrackWidthUm, null, null, null);
   }
 
   /**
@@ -101,6 +108,15 @@ public final class KiCadProject {
    */
   public double copperEdgeClearanceUm() {
     return copperEdgeClearanceUm != null ? copperEdgeClearanceUm : DEFAULT_COPPER_EDGE_CLEARANCE_UM;
+  }
+
+  /**
+   * The clearance between a drilled hole and the copper of another net that the KiCad DRC checks,
+   * in micrometres: that of the project ({@code board.design_settings.rules.min_hole_clearance}),
+   * else {@link #DEFAULT_HOLE_CLEARANCE_UM}.
+   */
+  public double holeClearanceUm() {
+    return holeClearanceUm != null ? holeClearanceUm : DEFAULT_HOLE_CLEARANCE_UM;
   }
 
   /** Reads a {@code .kicad_pro} file. */
@@ -129,7 +145,8 @@ public final class KiCadProject {
         sourceName,
         positiveUm(member(rules, "min_track_width")),
         positiveUm(member(rules, "min_connection")),
-        nonNegativeUm(member(rules, "min_copper_edge_clearance")));
+        nonNegativeUm(member(rules, "min_copper_edge_clearance")),
+        nonNegativeUm(member(rules, "min_hole_clearance")));
   }
 
   /** A length in millimetres as micrometres, or null if it is not a number of at least 0. */
