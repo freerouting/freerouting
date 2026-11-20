@@ -6999,26 +6999,4 @@
     
     
   )
-  (zone (net 0) (net_name "") (layer PWR.Cu) (tstamp 574A1BE4) (hatch edge 0.508)
-    (connect_pads (clearance 0.5))
-    (min_thickness 0.1524)
-    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
-    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
-    (polygon
-      (pts
-        (xy 132.5 126.5) (xy 111.75 126.5) (xy 111.75 111.5) (xy 132.5 111.5) (xy 132.5 126.5)
-      )
-    )
-  )
-  (zone (net 0) (net_name "") (layer PWR.Cu) (tstamp 574A1C02) (hatch edge 0.508)
-    (connect_pads (clearance 0.5))
-    (min_thickness 0.1524)
-    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
-    (fill (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
-    (polygon
-      (pts
-        (xy 95 126.5) (xy 67.5 126.5) (xy 67.5 122) (xy 95 122) (xy 95 126.5)
-      )
-    )
-  )
 )

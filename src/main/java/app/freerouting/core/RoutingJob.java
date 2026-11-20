@@ -7,6 +7,7 @@ import app.freerouting.core.events.RoutingJobUpdatedEvent;
 import app.freerouting.core.events.RoutingJobUpdatedEventListener;
 import app.freerouting.core.results.RoutingResultManifest;
 import app.freerouting.io.FileFormat;
+import app.freerouting.io.kicad.KiCadBoardZones;
 import app.freerouting.io.kicad.KiCadDesignRules;
 import app.freerouting.io.kicad.KiCadProject;
 import app.freerouting.logger.FRLogger;
@@ -122,6 +123,12 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
    * width becomes the default neck width of the router. Null if there is none.
    */
   public transient KiCadProject kicadProject;
+
+  /**
+   * The zones of the KiCad board (.kicad_pcb) given with the design, whose clearance and minimum
+   * width are applied to the planes once the board is loaded. Null if there is none.
+   */
+  public transient KiCadBoardZones kicadBoardZones;
 
   @SerializedName("initial_session")
   @Schema(description = "Details of the initial session (.ses or .json) file to import")
@@ -429,6 +436,33 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     } catch (IOException | IllegalArgumentException e) {
       String reason = e instanceof NoSuchFileException ? "file not found" : e.getMessage();
       FRLogger.error("Couldn't read the KiCad project file '" + path + "': " + reason, null);
+      return false;
+    }
+  }
+
+  /**
+   * Reads the zones of the KiCad board file of this job when explicitly provided.
+   *
+   * @param explicitFile the .kicad_pcb given with the design, or null
+   * @return false if {@code explicitFile} cannot be read
+   */
+  public boolean loadKiCadBoardZones(String explicitFile) {
+    if (explicitFile == null) {
+      return true;
+    }
+    Path path = Path.of(explicitFile);
+    try {
+      this.kicadBoardZones = KiCadBoardZones.read(path);
+      FRLogger.info(
+          "Using the "
+              + this.kicadBoardZones.zones().size()
+              + " copper zones of the KiCad board '"
+              + path
+              + "'.");
+      return true;
+    } catch (IOException | IllegalArgumentException e) {
+      String reason = e instanceof NoSuchFileException ? "file not found" : e.getMessage();
+      FRLogger.error("Couldn't read the KiCad board file '" + path + "': " + reason, null);
       return false;
     }
   }

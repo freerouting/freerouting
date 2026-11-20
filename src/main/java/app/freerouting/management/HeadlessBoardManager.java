@@ -5,8 +5,10 @@ import static app.freerouting.util.gson.GsonProvider.GSON;
 import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.ComponentOutline;
+import app.freerouting.board.model.items.ConductionArea;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.ObstacleArea;
+import app.freerouting.board.model.items.PadPlaneConnection;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.model.items.Via;
@@ -21,6 +23,7 @@ import app.freerouting.core.RoutingJob;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.IdGenerator;
 import app.freerouting.drc.ClearanceViolation;
+import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.PolylineShape;
@@ -28,6 +31,7 @@ import app.freerouting.gui.workspace.WorkspaceSettings;
 import app.freerouting.gui.workspace.session.InteractiveActionThread;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.FileFormat;
+import app.freerouting.io.kicad.KiCadBoardZones;
 import app.freerouting.io.kicad.KiCadDesignRules;
 import app.freerouting.io.kicad.KiCadDesignRulesTranslator;
 import app.freerouting.io.kicad.KiCadJsonReader;
@@ -52,7 +56,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Manages routing board operations in headless (non-GUI) mode for automated processing.
@@ -501,6 +508,171 @@ public class HeadlessBoardManager implements BoardManager {
               + project.minTrackWidthUm()
               + " um.");
     }
+  }
+
+  /**
+   * Gives each plane the clearance and the minimum width of its zone in the KiCad board of the job.
+   * A plane is matched to the zone of its net and layer; if the net has several zones on the layer,
+   * to the one whose outline has the nearest bounding box.
+   */
+  private void applyKiCadZoneFillRules() {
+    KiCadBoardZones boardZones = this.routingJob.kicadBoardZones;
+    if (boardZones == null || this.board == null) {
+      return;
+    }
+    Communication communication = this.board.communication;
+    int matched = 0;
+    // board order, so that the log is the same on every run
+    List<ConductionArea> areas = new ArrayList<>(this.board.getConductionAreas());
+    areas.sort(Comparator.comparingInt(Item::getId));
+    for (ConductionArea area : areas) {
+      if (area.netCount() != 1 || this.board.rules.nets.get(area.getNetNumber(0)) == null) {
+        continue;
+      }
+      String netName = this.board.rules.nets.get(area.getNetNumber(0)).name;
+      String layerName = this.board.layerStructure.layers[area.getLayer()].name;
+      // the bounding box of the plane in micrometres, as KiCad writes it into the DSN
+      double[] box = communication.coordinateTransform.boardToDsn(area.boundingBox());
+      for (int i = 0; i < box.length; i++) {
+        box[i] = Unit.scale(box[i], communication.unit, Unit.UM);
+      }
+      KiCadBoardZones.Zone best = null;
+      double bestDistance = Double.MAX_VALUE;
+      for (KiCadBoardZones.Zone zone : boardZones.zones()) {
+        if (!zone.netName().equals(netName) || !zone.isOnLayer(layerName)) {
+          continue;
+        }
+        // the y axis of KiCad points down, the one of the DSN up
+        double distance =
+            Math.abs(zone.minXUm() - box[0])
+                + Math.abs(-zone.maxYUm() - box[1])
+                + Math.abs(zone.maxXUm() - box[2])
+                + Math.abs(-zone.minYUm() - box[3]);
+        if (distance < bestDistance) {
+          bestDistance = distance;
+          best = zone;
+        }
+      }
+      if (best == null) {
+        continue;
+      }
+      matched++;
+      int clearance = (int) Math.ceil(communication.physicalToBoard(best.clearanceUm(), Unit.UM));
+      int minWidth = (int) Math.ceil(communication.physicalToBoard(best.minThicknessUm(), Unit.UM));
+      if (clearance != area.getFillClearance() || minWidth != area.getFillMinWidth()) {
+        area.setFillRules(clearance, minWidth);
+      }
+      PadPlaneConnection.Mode padConnection =
+          PadPlaneConnection.Mode.valueOf(best.padConnection().name());
+      int thermalGap =
+          (int) Math.round(communication.physicalToBoard(best.thermalGapUm(), Unit.UM));
+      int spokeWidth =
+          (int) Math.round(communication.physicalToBoard(best.thermalBridgeWidthUm(), Unit.UM));
+      if (padConnection != area.getPadConnection()
+          || thermalGap != area.getThermalGap()
+          || spokeWidth != area.getThermalSpokeWidth()) {
+        area.setPadConnectionRules(padConnection, thermalGap, spokeWidth);
+      }
+      int edgeClearance =
+          (int) Math.round(communication.physicalToBoard(boardZones.edgeClearanceUm(), Unit.UM));
+      if (edgeClearance != area.getFillEdgeClearance()) {
+        area.setFillEdgeClearance(edgeClearance);
+      }
+      boolean fillets = best.cornerSmoothing() == KiCadBoardZones.CornerSmoothing.FILLET;
+      int corner =
+          best.cornerSmoothing() == KiCadBoardZones.CornerSmoothing.NONE
+              ? 0
+              : (int) Math.round(communication.physicalToBoard(best.cornerRadiusUm(), Unit.UM));
+      if (fillets != area.hasCornerFillets() || corner != area.getCornerSmoothing()) {
+        area.setFillCornerSmoothing(fillets, corner);
+      }
+    }
+    int matchedPads = applyKiCadPadConnections(boardZones);
+    this.routingJob.logInfo(
+        "KiCad board '"
+            + boardZones.sourceName()
+            + "': zone clearance and minimum width applied to "
+            + matched
+            + " of "
+            + areas.size()
+            + " planes, pad connection to "
+            + matchedPads
+            + " pads.");
+  }
+
+  /**
+   * Gives each pin the zone connection of its pad in the KiCad board: the pad at the position of
+   * the pin, on a layer of the pin. Returns the number of pins that found their pad.
+   */
+  private int applyKiCadPadConnections(KiCadBoardZones boardZones) {
+    Communication communication = this.board.communication;
+    // the pads by cells of 10 um, to find the pad of a pin without comparing each with each
+    double cell = 10.0;
+    Map<Long, List<KiCadBoardZones.Pad>> padsByCell = new HashMap<>();
+    for (KiCadBoardZones.Pad pad : boardZones.pads()) {
+      long key = cellKey(Math.round(pad.xUm() / cell), Math.round(-pad.yUm() / cell));
+      padsByCell.computeIfAbsent(key, k -> new ArrayList<>()).add(pad);
+    }
+    int matched = 0;
+    List<Pin> pins = new ArrayList<>(this.board.getPins());
+    pins.sort(Comparator.comparingInt(Item::getId));
+    for (Pin pin : pins) {
+      // the centre of the pin in micrometres, the y axis pointing up as in the DSN
+      double[] centre = communication.coordinateTransform.boardToDsn(pin.getCenter().toFloat());
+      double x = Unit.scale(centre[0], communication.unit, Unit.UM);
+      double y = Unit.scale(centre[1], communication.unit, Unit.UM);
+      String firstLayer = this.board.layerStructure.layers[pin.firstLayer()].name;
+      String lastLayer = this.board.layerStructure.layers[pin.lastLayer()].name;
+      KiCadBoardZones.Pad best = null;
+      double bestDistance = 5.0;
+      long cellX = Math.round(x / cell);
+      long cellY = Math.round(y / cell);
+      for (long dx = -1; dx <= 1; dx++) {
+        for (long dy = -1; dy <= 1; dy++) {
+          List<KiCadBoardZones.Pad> candidates = padsByCell.get(cellKey(cellX + dx, cellY + dy));
+          if (candidates == null) {
+            continue;
+          }
+          for (KiCadBoardZones.Pad pad : candidates) {
+            double distance = Math.hypot(pad.xUm() - x, -pad.yUm() - y);
+            if (distance < bestDistance
+                && (pad.isOnLayer(firstLayer) || pad.isOnLayer(lastLayer))) {
+              bestDistance = distance;
+              best = pad;
+            }
+          }
+        }
+      }
+      if (best == null) {
+        continue;
+      }
+      matched++;
+      FloatPoint shapeCentre =
+          communication.coordinateTransform.dsnToBoard(
+              new double[] {
+                Unit.scale(best.shapeXUm(), Unit.UM, communication.unit),
+                Unit.scale(-best.shapeYUm(), Unit.UM, communication.unit)
+              });
+      pin.setPlaneConnection(
+          new PadPlaneConnection(
+              PadPlaneConnection.Mode.valueOf(best.connection().name()),
+              best.throughHole(),
+              shapeCentre.x,
+              shapeCentre.y,
+              communication.physicalToBoard(best.sizeXUm() / 2.0, Unit.UM),
+              communication.physicalToBoard(best.sizeYUm() / 2.0, Unit.UM),
+              best.angleDeg(),
+              best.spokeAngleDeg(),
+              best.circular(),
+              (int) Math.round(communication.physicalToBoard(best.thermalGapUm(), Unit.UM)),
+              (int)
+                  Math.round(communication.physicalToBoard(best.thermalBridgeWidthUm(), Unit.UM))));
+    }
+    return matched;
+  }
+
+  private static long cellKey(long x, long y) {
+    return x * 4_000_037L + y;
   }
 
   private void applyHoleClearanceOverride() {
@@ -1094,6 +1266,7 @@ public class HeadlessBoardManager implements BoardManager {
       this.routingJob.routerSettings.applyNetClassExclusions(this.board);
       applyKiCadDesignRules();
       applyKiCadProjectMinTrackWidth();
+      applyKiCadZoneFillRules();
       applyCopperToEdgeClearanceOverride();
       applyHoleClearanceOverride();
       applyHoleToHole();
@@ -1266,20 +1439,35 @@ public class HeadlessBoardManager implements BoardManager {
    * @see #loadFromSpecctraDsn
    */
   public boolean saveAsSpecctraSessionSes(OutputStream outputStream, String designName) {
-    boolean wasSaveSuccessful;
-    try {
-      SesWriter.write(this.getRoutingBoard(), outputStream, designName);
-      wasSaveSuccessful = true;
-    } catch (IOException e) {
-      FRLogger.error("unable to write session file", e);
-      wasSaveSuccessful = false;
-    }
+    boolean wasSaveSuccessful = exportSpecctraSessionSes(outputStream, designName);
 
     if (wasSaveSuccessful) {
       originalBoardChecksum = calculateCrc32();
     }
 
     return wasSaveSuccessful;
+  }
+
+  /**
+   * Writes the current routing board state as a Specctra session (.ses) without recording it as the
+   * saved state.
+   *
+   * <p>Produces the same bytes as {@link #saveAsSpecctraSessionSes}, but leaves {@link
+   * #originalBoardChecksum} untouched, so the board is not serialised a second time as DSN for the
+   * checksum. Meant for output snapshots published while a job is still routing.
+   *
+   * @param outputStream the stream to write SES data to (caller must close)
+   * @param designName the design name to include in the SES file header
+   * @return true if the export was successful, false if an error occurred
+   */
+  public boolean exportSpecctraSessionSes(OutputStream outputStream, String designName) {
+    try {
+      SesWriter.write(this.getRoutingBoard(), outputStream, designName);
+      return true;
+    } catch (IOException e) {
+      FRLogger.error("unable to write session file", e);
+      return false;
+    }
   }
 
   /**
@@ -1290,8 +1478,29 @@ public class HeadlessBoardManager implements BoardManager {
    * @return true if save was successful, false otherwise
    */
   public boolean saveAsFusionScriptScr(OutputStream outputStream, String designName) {
+    return writeFusionScriptScr(outputStream, designName, true);
+  }
+
+  /**
+   * Writes the current routing board state as an Autodesk Fusion script (.scr) without recording it
+   * as the saved state; see {@link #exportSpecctraSessionSes}.
+   *
+   * @param outputStream target output stream for the script
+   * @param designName name of the design
+   * @return true if the export was successful, false otherwise
+   */
+  public boolean exportFusionScriptScr(OutputStream outputStream, String designName) {
+    return writeFusionScriptScr(outputStream, designName, false);
+  }
+
+  private boolean writeFusionScriptScr(
+      OutputStream outputStream, String designName, boolean recordSavedState) {
     try (java.io.ByteArrayOutputStream sesBaos = new java.io.ByteArrayOutputStream()) {
-      if (!saveAsSpecctraSessionSes(sesBaos, designName)) {
+      boolean sessionWritten =
+          recordSavedState
+              ? saveAsSpecctraSessionSes(sesBaos, designName)
+              : exportSpecctraSessionSes(sesBaos, designName);
+      if (!sessionWritten) {
         return false;
       }
       try (java.io.ByteArrayInputStream sesBais =

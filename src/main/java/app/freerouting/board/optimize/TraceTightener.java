@@ -143,6 +143,7 @@ public abstract class TraceTightener {
       return;
     }
     boolean somethingChanged = true;
+    ViaMoveHistory viaMoves = new ViaMoveHistory();
     // starting with curr_min_translate_dist big is a try to
     // avoid fine approximation at the beginning to avoid
     // problems with dog ears
@@ -179,7 +180,7 @@ public abstract class TraceTightener {
             }
           } else if (currentObject instanceof Via via && traceCosts != null) {
             if (ViaOptimizer.optViaLocation(
-                this.board, via, traceCosts, this.minTranslateDist, 10)) {
+                this.board, via, traceCosts, this.minTranslateDist, 10, viaMoves)) {
               somethingChanged = true;
             }
           }

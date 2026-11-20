@@ -246,6 +246,8 @@ public class DefaultSettings implements SettingsSource {
     settings.fanout.retryWithoutEscapeWindow = false;
     settings.fanout.strategy = "eager";
     settings.fanout.twoLayerBga = "no_fanout";
+    settings.fanout.bgaEscapeEnabled = true;
+    settings.fanout.bgaEscapeMinPins = 9;
 
     // Optimizer defaults
     settings.optimizer.enabled = true;
@@ -258,6 +260,8 @@ public class DefaultSettings implements SettingsSource {
     settings.optimizer.itemSelectionStrategy = ItemSelectionStrategy.SEQUENTIAL;
     settings.optimizer.additionalRipupCostFactorAtStart = 10;
     settings.optimizer.keepIncreasedRipupCosts = false;
+    settings.optimizer.viaNudgeEnabled = false;
+    settings.optimizer.stepSlideEnabled = true;
     settings.optimizer.traceRipupCostFactor = 0.6f;
     settings.optimizer.maxAutoroutePasses = 6;
     settings.optimizer.enablePreflightGuards = true;

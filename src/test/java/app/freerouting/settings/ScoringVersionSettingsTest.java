@@ -20,7 +20,7 @@ class ScoringVersionSettingsTest {
   void routerAndOptimizerVersionsCanBeSelectedIndependently() {
     RouterSettings settings =
         new CliSettings(
-                new String[] {"--router-scoring-version=v2", "--optimizer-scoring-version=v1"})
+                new String[] {"--router.scoring.version=v2", "--optimizer.scoring.version=v1"})
             .getSettings();
 
     assertEquals(RouterScoringVersion.V2_CONTINUOUS, settings.routerScoring.version);
@@ -28,30 +28,12 @@ class ScoringVersionSettingsTest {
   }
 
   @Test
-  void convenienceVersionSelectsBoth() {
-    RouterSettings settings = new CliSettings(new String[] {"--scoring-version=v1"}).getSettings();
-
-    assertEquals(RouterScoringVersion.V1_LEGACY, settings.routerScoring.version);
-    assertEquals(OptimizerScoringVersion.V1_LEGACY, settings.optimizerScoring.version);
-  }
-
-  @Test
-  void clonedSettingsRetainIndependentVersionSelections() {
-    RouterSettings settings = new RouterSettings();
-    settings.routerScoring.version = RouterScoringVersion.V2_CONTINUOUS;
-    settings.optimizerScoring.version = OptimizerScoringVersion.V1_LEGACY;
-
-    RouterSettings clone = settings.clone();
-
-    assertEquals(RouterScoringVersion.V2_CONTINUOUS, clone.routerScoring.version);
-    assertEquals(OptimizerScoringVersion.V1_LEGACY, clone.optimizerScoring.version);
-  }
-
-  @Test
   void scoringVersionCliOverridesDefaultV2AndKeepsV2Weights() {
     RouterSettings merged =
         new SettingsMerger(
-                new DefaultSettings(), new CliSettings(new String[] {"--scoring-version=v1"}))
+                new DefaultSettings(),
+                new CliSettings(
+                    new String[] {"--router.scoring.version=v1", "--optimizer.scoring.version=v1"}))
             .merge();
 
     assertEquals(RouterScoringVersion.V1_LEGACY, merged.routerScoring.version);

@@ -371,6 +371,98 @@ class BatchOptimizerPreflightGuardsTest extends RoutingFixtureTest {
   }
 
   @Test
+  void guard4BypassesWhenAllViasAreMandatoryAndTraceLengthNearBound() {
+    TestingSettings settings = new TestingSettings();
+    RoutingJob job = getRoutingJob(DSN_BM08, settings);
+    job.board = boardWithOneMandatoryVia();
+    job.thread = new NoOpStoppableThread();
+
+    BatchOptimizer optimizer = BatchOptimizer.create(job);
+    BoardStatistics stats = statsWithOptimizerScore(600.0f);
+    stats.vias.totalCount = 1;
+    stats.bounds = new BoardStatisticsBounds();
+    stats.bounds.minViaCount = 0;
+    stats.bounds.minTraceLengthMm = 100.0f;
+    stats.traces.totalLengthMm = 104.0f; // within 1.05 * 100, but not within guard 3's 1.02
+
+    String bypassReason = optimizer.evaluatePreFlightGuards(stats);
+    assertNotNull(bypassReason);
+    assertTrue(bypassReason.contains("mandatory layer transitions"));
+  }
+
+  @Test
+  void guard4DoesNotBypassWhenAllViasAreMandatoryButTraceLengthSuboptimal() {
+    TestingSettings settings = new TestingSettings();
+    RoutingJob job = getRoutingJob(DSN_BM08, settings);
+    job.board = boardWithOneMandatoryVia();
+    job.thread = new NoOpStoppableThread();
+
+    BatchOptimizer optimizer = BatchOptimizer.create(job);
+    BoardStatistics stats = statsWithOptimizerScore(600.0f);
+    stats.vias.totalCount = 1;
+    stats.bounds = new BoardStatisticsBounds();
+    stats.bounds.minViaCount = 0;
+    stats.bounds.minTraceLengthMm = 100.0f;
+    stats.traces.totalLengthMm = 150.0f;
+
+    assertNull(optimizer.evaluatePreFlightGuards(stats));
+  }
+
+  /**
+   * LED_port-status-CA (PCBench): every via of the routed board joins an SMD LED on the front to an
+   * SMD resistor array on the back, so none can be removed, but the autorouter leaves long detours.
+   * The optimizer must still run on it.
+   */
+  @Test
+  void optimizerRunsWhenViasAreMandatoryButTracesHaveDetours() {
+    TestingSettings settings = new TestingSettings();
+    settings.setMaxPasses(10);
+    settings.setJobTimeoutString("00:02:00");
+    RoutingJob job = getRoutingJob("LED_port-status-CA-pour-only-areas-skipped.dsn", settings);
+
+    runRoutingJob(job);
+
+    assertEquals(0, job.board.getStatistics().connections.incompleteCount);
+    RoutingResultManifest.PhaseDetail phase = job.resultPhaseMetrics.optimizer;
+    assertNotNull(phase.before);
+    assertNotNull(phase.after);
+    assertTrue(phase.passesCompleted > 0, "the optimizer was bypassed");
+    assertTrue(
+        phase.after.boardStatistics.traces.totalLengthMm
+            < phase.before.boardStatistics.traces.totalLengthMm,
+        "the optimizer did not shorten the traces");
+  }
+
+  private static BoardStatistics statsWithOptimizerScore(float score) {
+    BoardStatistics stats =
+        new BoardStatistics() {
+          @Override
+          public float getOptimizerScore(app.freerouting.settings.RouterSettings routerSettings) {
+            return score;
+          }
+        };
+    stats.connections.incompleteCount = 0;
+    return stats;
+  }
+
+  private static RoutingBoard boardWithOneMandatoryVia() {
+    RoutingBoard board = mock(RoutingBoard.class);
+    Via via = mock(Via.class);
+    when(via.isUserFixed()).thenReturn(false);
+    when(via.netCount()).thenReturn(1);
+    when(via.getNetNumber(0)).thenReturn(1);
+    Pin pinTop = mock(Pin.class);
+    when(pinTop.firstLayer()).thenReturn(0);
+    when(pinTop.lastLayer()).thenReturn(0);
+    Pin pinBottom = mock(Pin.class);
+    when(pinBottom.firstLayer()).thenReturn(1);
+    when(pinBottom.lastLayer()).thenReturn(1);
+    when(via.getConnectedSet(1, true)).thenReturn(Set.of(via, pinTop, pinBottom));
+    when(board.getVias()).thenReturn(List.of(via));
+    return board;
+  }
+
+  @Test
   void guardsCanBeDisabledViaSettings() {
     TestingSettings settings = new TestingSettings();
     settings.setOptimizerEnablePreflightGuards(false);
@@ -404,7 +496,8 @@ class BatchOptimizerPreflightGuardsTest extends RoutingFixtureTest {
     assertNotNull(phase.before);
     assertNotNull(phase.after);
     assertEquals(0, phase.passesCompleted);
-    assertEquals(0.0f, phase.durationSeconds, 0.001f);
+    // The step slide still runs on a bypassed board, and its time is now recorded.
+    assertTrue(phase.durationSeconds >= 0.0f);
   }
 
   private static final class NoOpStoppableThread extends StoppableThread {

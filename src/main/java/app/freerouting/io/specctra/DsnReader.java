@@ -106,8 +106,72 @@ public final class DsnReader {
       return new BoardReadResult.IoError(e);
     }
 
-    try (InputStream parseStream = new BufferedInputStream(Files.newInputStream(tempFile))) {
-      SpecctraDsnStreamReader scanner = new SpecctraDsnStreamReader(parseStream);
+    final Path spooledFile = tempFile;
+    try {
+      return readBoardFromStreams(
+          new BufferedInputStream(Files.newInputStream(spooledFile)),
+          () -> new BufferedInputStream(Files.newInputStream(spooledFile)),
+          observers,
+          idGenerator,
+          designName,
+          options);
+    } catch (IOException e) {
+      return new BoardReadResult.IoError(e);
+    } finally {
+      deleteQuietly(tempFile);
+    }
+  }
+
+  /**
+   * Parses a Specctra DSN directly from an in-memory byte array without creating temporary files.
+   */
+  public static BoardReadResult readBoard(
+      byte[] dsnBytes, BoardObservers observers, IdGenerator idGenerator, String designName) {
+    return readBoard(dsnBytes, observers, idGenerator, designName, DsnReadOptions.DEFAULT);
+  }
+
+  /**
+   * Parses a Specctra DSN directly from an in-memory byte array with explicit read options and
+   * without creating temporary files.
+   */
+  public static BoardReadResult readBoard(
+      byte[] dsnBytes,
+      BoardObservers observers,
+      IdGenerator idGenerator,
+      String designName,
+      DsnReadOptions options) {
+    if (dsnBytes == null || dsnBytes.length == 0) {
+      return new BoardReadResult.ParseError("(pcb", "dsnBytes must not be null or empty");
+    }
+    if (observers == null) {
+      observers = new BoardObserverAdaptor();
+    }
+    if (idGenerator == null) {
+      idGenerator = new ItemIdGenerator();
+    }
+    return readBoardFromStreams(
+        new java.io.ByteArrayInputStream(dsnBytes),
+        () -> new java.io.ByteArrayInputStream(dsnBytes),
+        observers,
+        idGenerator,
+        designName,
+        options);
+  }
+
+  @FunctionalInterface
+  private interface StreamOpener {
+    InputStream open() throws IOException;
+  }
+
+  private static BoardReadResult readBoardFromStreams(
+      InputStream parseStream,
+      StreamOpener scanStreamOpener,
+      BoardObservers observers,
+      IdGenerator idGenerator,
+      String designName,
+      DsnReadOptions options) {
+    try (InputStream in = parseStream) {
+      SpecctraDsnStreamReader scanner = new SpecctraDsnStreamReader(in);
 
       // ---------------------------------------------------------------------
       // Validate the "(pcb <name>" header — identical check to DsnFile.read
@@ -152,7 +216,7 @@ public final class DsnReader {
       ReadScopeParameter scopeParameter =
           new ReadScopeParameter(
               scanner, observers, idGenerator, effectiveOptions.canonicalPlacementOrder());
-      try (InputStream scanStream = new BufferedInputStream(Files.newInputStream(tempFile))) {
+      try (InputStream scanStream = scanStreamOpener.open()) {
         scopeParameter.polygonWireNetsByLayer = PolygonWireScan.netsByLayer(scanStream);
       }
       boolean readOk = Keyword.PCB_SCOPE.readScope(scopeParameter);
@@ -192,8 +256,6 @@ public final class DsnReader {
       }
     } catch (IOException e) {
       return new BoardReadResult.IoError(e);
-    } finally {
-      deleteQuietly(tempFile);
     }
   }
 

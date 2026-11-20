@@ -10367,17 +10367,6 @@
     )
     
   )
-  (zone (net 0) (net_name "") (layer 3V3) (tstamp 0) (hatch edge 0.508)
-    (connect_pads yes (clearance 0.3))
-    (min_thickness 0.254)
-    (keepout (tracks allowed) (vias allowed) (copperpour not_allowed))
-    (fill (arc_segments 32) (thermal_gap 0.508) (thermal_bridge_width 0.508))
-    (polygon
-      (pts
-        (xy 156.4 80.6) (xy 155.1 80.6) (xy 155.1 79.3) (xy 156.4 79.3)
-      )
-    )
-  )
   (zone (net 55) (net_name /DC/DC/SHUNT_DCDC_P) (layer Top) (tstamp 5FF98589) (hatch edge 0.508)
     (priority 1)
     (connect_pads yes (clearance 0.3))

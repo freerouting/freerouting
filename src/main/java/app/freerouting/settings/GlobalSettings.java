@@ -190,6 +190,13 @@ public class GlobalSettings implements Serializable {
   public transient String initialKiCadProjectFile;
 
   /**
+   * The KiCad board file (.kicad_pcb) provided with the design file via the -de command line
+   * argument. Null if there is none. The fill settings of its zones, which the DSN does not carry,
+   * are applied to the planes of the design.
+   */
+  public transient String initialKiCadBoardFile;
+
+  /**
    * The designSessionFilename field stores the optional Specctra session file (.ses) path provided
    * via the -de command line argument.
    */
@@ -631,16 +638,22 @@ public class GlobalSettings implements Serializable {
           continue;
         }
         if ("--calculate-benchmark-scores".equalsIgnoreCase(args[i])) {
+          CliDeprecationWarnings.warnDeprecatedFlagWithoutReplacement(
+              "--calculate-benchmark-scores");
           calculateBenchmarkScores = true;
           continue;
         }
         if (args[i].startsWith("--calculate-benchmark-scores.input=")) {
+          CliDeprecationWarnings.warnDeprecatedFlagWithoutReplacement(
+              "--calculate-benchmark-scores.input=");
           benchmarkScoresInput =
               args[i].substring("--calculate-benchmark-scores.input=".length()).trim();
           calculateBenchmarkScores = true;
           continue;
         }
         if (args[i].startsWith("--calculate-benchmark-scores.output=")) {
+          CliDeprecationWarnings.warnDeprecatedFlagWithoutReplacement(
+              "--calculate-benchmark-scores.output=");
           benchmarkScoresOutput =
               args[i].substring("--calculate-benchmark-scores.output=".length()).trim();
           calculateBenchmarkScores = true;
@@ -655,6 +668,7 @@ public class GlobalSettings implements Serializable {
           continue;
         }
         if (args[i].startsWith("--compare-boards=")) {
+          CliDeprecationWarnings.warnDeprecatedFlagWithoutReplacement("--compare-boards=");
           String[] files = args[i].substring("--compare-boards=".length()).split(",");
           if (files.length == 2) {
             compareFile1 = files[0].trim();
@@ -718,6 +732,7 @@ public class GlobalSettings implements Serializable {
             boolean hasRules = false;
             boolean hasKiCadRules = false;
             boolean hasKiCadProject = false;
+            boolean hasKiCadBoard = false;
 
             // Process each file and identify its type by extension
             for (String file : files) {
@@ -780,11 +795,20 @@ public class GlobalSettings implements Serializable {
                 }
                 initialKiCadProjectFile = file;
                 hasKiCadProject = true;
+              } else if (lowerFile.endsWith(".kicad_pcb")) {
+                if (hasKiCadBoard) {
+                  FRLogger.warn(
+                      "Multiple KiCad board files provided in -de argument. "
+                          + "Only the last one will be used.");
+                }
+                initialKiCadBoardFile = file;
+                hasKiCadBoard = true;
               } else {
                 FRLogger.warn(
                     "Unknown file type in -de argument: "
                         + file
-                        + ". Expected .dsn, .json, .ses, .rules, .kicad_dru or .kicad_pro");
+                        + ". Expected .dsn, .json, .ses, .rules, .kicad_dru, .kicad_pro or"
+                        + " .kicad_pcb");
               }
             }
 
@@ -793,6 +817,7 @@ public class GlobalSettings implements Serializable {
           }
         } else if (args[i].startsWith("-di")) {
           // the design directory is provided
+          CliDeprecationWarnings.warnDeprecatedFlag("-di", "--gui.input_directory=<dir>");
           if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
             guiSettings.inputDirectory = args[i + 1];
             i++;
@@ -838,14 +863,13 @@ public class GlobalSettings implements Serializable {
             i++;
           }
         } else if (args[i].startsWith("-dr")) {
+          CliDeprecationWarnings.warnDeprecatedFlag("-dr", "-de <design.dsn>+<rules.rules>");
           if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
             initialRulesFile = args[i + 1];
             i++;
           }
         } else if (args[i].startsWith("-mp")) {
           if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
-            LegacyRouterSettingsBridge.warnDeprecatedPath(
-                "-mp / --router.max_passes", "--router.autorouter.max_passes");
             routerSettings.autorouter.maxPasses = Integer.decode(args[i + 1]);
 
             if (routerSettings.autorouter.maxPasses < 0) {
@@ -982,8 +1006,11 @@ public class GlobalSettings implements Serializable {
           }
 
         } else if (args[i].startsWith("-dl")) {
+          CliDeprecationWarnings.warnDeprecatedFlag("-dl", "--logging.file.enabled=false");
           logging.file.enabled = false;
         } else if (args[i].startsWith("-da")) {
+          CliDeprecationWarnings.warnDeprecatedFlag(
+              "-da", "--usage_and_diagnostic_data.disable_analytics=true");
           usageAndDiagnosticData.disableAnalytics = true;
         } else if (args[i].startsWith("-host")) {
           if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
@@ -995,12 +1022,12 @@ public class GlobalSettings implements Serializable {
         } else if (args[i].startsWith("-inc")) {
           // ignore net class(es)
           if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
-            LegacyRouterSettingsBridge.warnDeprecatedPath(
-                "-inc / --router.ignore_net_classes", "--router.autorouter.ignore_net_classes");
             routerSettings.autorouter.ignoreNetClasses = args[i + 1].split(",");
             i++;
           }
         } else if (args[i].startsWith("-dct")) {
+          CliDeprecationWarnings.warnDeprecatedFlag(
+              "-dct", "--gui.dialog_confirmation_timeout=<seconds>");
           if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
             guiSettings.dialogConfirmationTimeout = Integer.parseInt(args[i + 1]);
 
@@ -1012,6 +1039,7 @@ public class GlobalSettings implements Serializable {
         } else if (args[i].startsWith("-ll")) {
           // get the log level from the command line arguments
           // and save it to the settings
+          CliDeprecationWarnings.warnDeprecatedFlag("-ll", "--logging.console.level=<level>");
           if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
             logging.console.level = args[i + 1].toUpperCase();
             i++;
@@ -1053,7 +1081,7 @@ public class GlobalSettings implements Serializable {
   }
 
   public static final java.util.Set<String> DE_VALID_EXTENSIONS =
-      java.util.Set.of(".dsn", ".json", ".ses", ".rules", ".kicad_dru", ".kicad_pro");
+      java.util.Set.of(".dsn", ".json", ".ses", ".rules", ".kicad_dru", ".kicad_pro", ".kicad_pcb");
 
   public static final java.util.Set<String> DO_VALID_EXTENSIONS =
       java.util.Set.of(".ses", ".dsn", ".scr", ".rules", ".json", ".drc", ".frb", ".kicad_pcb");
