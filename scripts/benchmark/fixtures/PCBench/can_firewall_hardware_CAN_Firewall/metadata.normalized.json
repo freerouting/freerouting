@@ -56,13 +56,11 @@
     "golden-canary",
     "medium",
     "plane",
-    "tier-a",
-    "tier-t"
+    "tier-a"
   ],
   "tier": "A",
   "expected_outcome": "complete",
   "timeout_budget": "06:00:00",
   "tier_index": 11,
-  "reference_seconds": 523.2,
-  "tier_t": true
+  "reference_seconds": 523.2
 }
