@@ -133,6 +133,14 @@
       "serializable": true
     },
     {
+      "type": "app.freerouting.board.model.items.PadPlaneConnection",
+      "serializable": true
+    },
+    {
+      "type": "app.freerouting.board.model.items.PadPlaneConnection$Mode",
+      "serializable": true
+    },
+    {
       "type": "app.freerouting.board.model.items.Pin",
       "serializable": true
     },
@@ -1651,10 +1659,16 @@
           "name": "optimizationImprovementThreshold"
         },
         {
+          "name": "stepSlideEnabled"
+        },
+        {
           "name": "timeoutString"
         },
         {
           "name": "traceRipupCostFactor"
+        },
+        {
+          "name": "viaNudgeEnabled"
         }
       ],
       "methods": [

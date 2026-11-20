@@ -351,4 +351,32 @@ class ModuleBoundariesArchTest {
                 + " java.management / jdk.management MXBeans")
         .check(classes);
   }
+
+  @Test
+  void fanoutMustNotDependOnGuiOrApi() {
+    JavaClasses classes = importMainClasses();
+    noClasses()
+        .that()
+        .resideInAPackage("app.freerouting.autoroute.fanout..")
+        .should()
+        .dependOnClassesThat()
+        .resideInAnyPackage(
+            "app.freerouting.gui..", "app.freerouting.api..", "app.freerouting.management..")
+        .because("fanout engine must remain decoupled from GUI and API orchestration layers")
+        .check(classes);
+  }
+
+  @Test
+  void coreFacadeMustNotDependOnManagementOrGui() {
+    JavaClasses classes = importMainClasses();
+    noClasses()
+        .that()
+        .resideInAPackage("app.freerouting.core.facade..")
+        .should()
+        .dependOnClassesThat()
+        .resideInAnyPackage("app.freerouting.gui..", "app.freerouting.management..")
+        .because(
+            "the in-memory headless facade must remain decoupled from GUI and session managers")
+        .check(classes);
+  }
 }

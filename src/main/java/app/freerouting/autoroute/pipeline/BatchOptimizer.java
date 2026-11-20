@@ -8,6 +8,9 @@ import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.model.items.Via;
+import app.freerouting.board.model.structure.Unit;
+import app.freerouting.board.optimize.StepSlider;
+import app.freerouting.board.optimize.ViaNudger;
 import app.freerouting.core.ProgressThrottler;
 import app.freerouting.core.RouterCounters;
 import app.freerouting.core.RoutingJob;
@@ -288,9 +291,24 @@ public final class BatchOptimizer extends NamedAlgorithm {
     String bypassReason = evaluatePreFlightGuards(initialStats);
     if (bypassReason != null) {
       job.logInfo("Skipping optimization stage: " + bypassReason + ".");
-      phase.durationSeconds = 0.0f;
-      phase.cpuSeconds = 0.0f;
-      phase.totalAllocatedGb = 0.0f;
+      long bypassStartNanos = System.nanoTime();
+      float bypassCpuStart = AutorouteRuntimeMetrics.currentThreadCpuSeconds();
+      float bypassAllocStart = AutorouteRuntimeMetrics.currentThreadAllocatedMb();
+      // The guards look at vias and trace length; the steps of a bundle cost neither.
+      if (slideSteps()) {
+        initialStats = board.getStatistics();
+      }
+      float bypassCpuEnd = AutorouteRuntimeMetrics.currentThreadCpuSeconds();
+      float bypassAllocEnd = AutorouteRuntimeMetrics.currentThreadAllocatedMb();
+      phase.durationSeconds = (float) ((System.nanoTime() - bypassStartNanos) / 1e9);
+      phase.cpuSeconds =
+          (bypassCpuStart >= 0f && bypassCpuEnd >= bypassCpuStart)
+              ? bypassCpuEnd - bypassCpuStart
+              : 0.0f;
+      phase.totalAllocatedGb =
+          (bypassAllocStart >= 0f && bypassAllocEnd >= bypassAllocStart)
+              ? (bypassAllocEnd - bypassAllocStart) / 1024.0f
+              : 0.0f;
       phase.peakHeapMb = AutorouteRuntimeMetrics.currentHeapUsageMb();
       phase.after =
           RoutingResultManifest.PhaseSnapshot.fromBoardStatistics(
@@ -521,6 +539,9 @@ public final class BatchOptimizer extends NamedAlgorithm {
     }
     this.bestBoard = null;
 
+    nudgeVias();
+    slideSteps();
+
     this.fireTaskStateChangedEvent(
         new TaskStateChangedEvent(this, TaskState.FINISHED, currentPass, this.board.getHash()));
 
@@ -576,6 +597,103 @@ public final class BatchOptimizer extends NamedAlgorithm {
             cpuSummary,
             allocSummary,
             peakHeapMb));
+  }
+
+  /** Whether the optimizer ends with the via nudge pass: {@code optimizer.via_nudge_enabled}. */
+  static boolean viaNudgeEnabled(OptimizerSettings optimizerSettings) {
+    return optimizerSettings != null && Boolean.TRUE.equals(optimizerSettings.viaNudgeEnabled);
+  }
+
+  /**
+   * After the last pass, moves vias where that shortens or straightens the traces of the board as a
+   * whole. Not done on a job that was stopped or timed out: the pass has no partial result worth
+   * more than the board it started from.
+   */
+  private void nudgeVias() {
+    if (!viaNudgeEnabled(job.routerSettings.optimizer)
+        || this.isTimedOut
+        || this.thread.isStopRequested()) {
+      return;
+    }
+    long startNanos = System.nanoTime();
+    float cpuStart = AutorouteRuntimeMetrics.currentThreadCpuSeconds();
+    ViaNudger.Result result =
+        ViaNudger.run(this.board, job.routerSettings.tracePullTightAccuracy, this.thread);
+    double toMm = this.board.communication.getResolution(Unit.MM);
+    job.logInfo(
+        String.format(
+            Locale.US,
+            "Via nudge: %d of %d tried moves kept in %d passes, trace length %.2f -> %.2f mm, "
+                + "bends %d -> %d, vias %d -> %d, incomplete connections %d -> %d, "
+                + "clearance violations %d -> %d, in %.2f seconds using %.2f CPU seconds.",
+            result.acceptedMoves(),
+            result.triedMoves(),
+            result.passes(),
+            result.lengthBefore() / toMm,
+            result.lengthAfter() / toMm,
+            result.bendsBefore(),
+            result.bendsAfter(),
+            result.viasBefore(),
+            result.viasAfter(),
+            result.incompleteBefore(),
+            result.incompleteAfter(),
+            result.violationsBefore(),
+            result.violationsAfter(),
+            (System.nanoTime() - startNanos) / 1e9,
+            AutorouteRuntimeMetrics.currentThreadCpuSeconds() - cpuStart));
+    if (result.acceptedMoves() > 0) {
+      this.fireBoardUpdatedEvent(new BoardStatistics(this.board), null, this.board);
+    }
+  }
+
+  /** Whether the optimizer ends with the step slide pass: {@code optimizer.step_slide_enabled}. */
+  static boolean stepSlideEnabled(OptimizerSettings optimizerSettings) {
+    return optimizerSettings == null || !Boolean.FALSE.equals(optimizerSettings.stepSlideEnabled);
+  }
+
+  /**
+   * Slides the steps of the traces, with shoving, where that shortens or straightens the traces of
+   * the board as a whole (issue #1161). Not done on a job that was stopped or timed out: the pass
+   * has no partial result worth more than the board it started from. Returns whether the board
+   * changed.
+   */
+  private boolean slideSteps() {
+    if (!stepSlideEnabled(job.routerSettings.optimizer)
+        || this.isTimedOut
+        || this.thread.isStopRequested()) {
+      return false;
+    }
+    long startNanos = System.nanoTime();
+    float cpuStart = AutorouteRuntimeMetrics.currentThreadCpuSeconds();
+    StepSlider.Result result =
+        StepSlider.run(this.board, job.routerSettings.tracePullTightAccuracy, this.thread);
+    double toMm = this.board.communication.getResolution(Unit.MM);
+    job.logInfo(
+        String.format(
+            Locale.US,
+            "Step slide: %d of %d tried moves kept in %d passes, trace length %.2f -> %.2f mm, "
+                + "bends %d -> %d, vias %d -> %d, incomplete connections %d -> %d, "
+                + "clearance violations %d -> %d, in %.2f seconds using %.2f CPU seconds.",
+            result.acceptedMoves(),
+            result.triedMoves(),
+            result.passes(),
+            result.lengthBefore() / toMm,
+            result.lengthAfter() / toMm,
+            result.bendsBefore(),
+            result.bendsAfter(),
+            result.viasBefore(),
+            result.viasAfter(),
+            result.incompleteBefore(),
+            result.incompleteAfter(),
+            result.violationsBefore(),
+            result.violationsAfter(),
+            (System.nanoTime() - startNanos) / 1e9,
+            AutorouteRuntimeMetrics.currentThreadCpuSeconds() - cpuStart));
+    if (result.acceptedMoves() == 0) {
+      return false;
+    }
+    this.fireBoardUpdatedEvent(new BoardStatistics(this.board), null, this.board);
+    return true;
   }
 
   /**

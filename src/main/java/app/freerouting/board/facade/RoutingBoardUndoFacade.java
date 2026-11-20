@@ -190,6 +190,7 @@ public final class RoutingBoardUndoFacade {
     for (UndoableObjects.Storable storable : cancelledObjects) {
       Item currentItem = (Item) storable;
       board.searchTreeManager.remove(currentItem);
+      board.incrementRevision(currentItem);
       board.routingLedger().noteRemoved(currentItem);
       if (board.communication != null && board.communication.observers != null) {
         board.communication.observers.notifyDeleted(currentItem);
@@ -204,6 +205,7 @@ public final class RoutingBoardUndoFacade {
       Item currentItem = (Item) storable;
       currentItem.board = board;
       board.searchTreeManager.insert(currentItem);
+      board.incrementRevision(currentItem);
       board.routingLedger().noteInserted(currentItem);
       currentItem.clearAutorouteInfo();
       if (board.communication != null && board.communication.observers != null) {
@@ -214,9 +216,6 @@ public final class RoutingBoardUndoFacade {
           changedNets.add(currentItem.getNetNumber(i));
         }
       }
-    }
-    if (!cancelledObjects.isEmpty() || !restoredObjects.isEmpty()) {
-      board.incrementRevision();
     }
   }
 }
