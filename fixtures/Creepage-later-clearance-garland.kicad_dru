@@ -1,0 +1,19 @@
+(version 1)
+
+# Rules for Creepage-later-clearance-garland.dsn (KiCadDesignRulesRoutingTest). Each corridor has a
+# mains pad HV_x that the low-voltage net LV_x routes around. No slots: the creepage is the copper
+# to copper distance, 3 mm in the three corridors. In C, a later rule sets only a clearance on LV_C:
+# KiCad keeps one rule list per constraint type, so the creepage of "creepage C" still applies.
+(rule "creepage A"
+  (constraint creepage (min 3mm))
+  (condition "A.NetName == 'HV_A' || B.NetName == 'HV_A'"))
+(rule "creepage B"
+  (constraint clearance (min 1mm))
+  (constraint creepage (min 3mm))
+  (condition "A.NetName == 'HV_B' || B.NetName == 'HV_B'"))
+(rule "creepage C"
+  (constraint creepage (min 3mm))
+  (condition "A.NetName == 'HV_C' || B.NetName == 'HV_C'"))
+(rule "clearance LV_C"
+  (constraint clearance (min 0.3mm))
+  (condition "A.NetName == 'LV_C' || B.NetName == 'LV_C'"))

@@ -1,0 +1,46 @@
+(pcb creepage_later_clearance
+  (parser (string_quote ") (space_in_quoted_tokens on) (host_cad "hand") (host_version "1"))
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer Top (type signal) (property (index 0)))
+    (boundary (rect pcb 0 0 30000 36000))
+    (keepout (rect Top 0 11900 30000 12100))
+    (keepout (rect Top 0 23900 30000 24100))
+    (via "Via[0-0]_600:300_um")
+    (rule (width 200) (clearance 200))
+  )
+  (placement
+    (component HVPAD
+      (place HA 15000 6000 front 0)
+      (place HB 15000 18000 front 0)
+      (place HC 15000 30000 front 0)
+    )
+    (component SMD
+      (place LA 3000 6000 front 0)
+      (place RA 27000 6000 front 0)
+      (place LB 3000 18000 front 0)
+      (place RB 27000 18000 front 0)
+      (place LC 3000 30000 front 0)
+      (place RC 27000 30000 front 0)
+    )
+  )
+  (library
+    (image HVPAD (pin Hv 1 0 0))
+    (image SMD (pin Pad 1 0 0))
+    (padstack Hv (shape (rect Top -1000 -1000 1000 1000)) (attach off))
+    (padstack Pad (shape (rect Top -400 -400 400 400)) (attach off))
+    (padstack "Via[0-0]_600:300_um" (shape (circle Top 600)) (attach off))
+  )
+  (network
+    (net HV_A (pins HA-1))
+    (net LV_A (pins LA-1 RA-1))
+    (net HV_B (pins HB-1))
+    (net LV_B (pins LB-1 RB-1))
+    (net HV_C (pins HC-1))
+    (net LV_C (pins LC-1 RC-1))
+    (class kicad_default HV_A LV_A HV_B LV_B HV_C LV_C (circuit (use_via "Via[0-0]_600:300_um")) (rule (width 200) (clearance 200)))
+  )
+  (wiring
+  )
+)

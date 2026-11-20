@@ -36,10 +36,12 @@ import java.util.regex.Pattern;
  * <p>The copper items of the board (pins, and per net its traces, vias and conduction areas) are
  * sorted into groups that every rule condition treats alike. For each pair of groups and each
  * layer, the rules are applied as KiCad applies them: the last matching rule sets the clearance,
- * and without a matching rule the clearance of the design (net classes) stays. A group whose
- * clearances change gets its own clearance class, a copy of the class it had; a net class whose
- * nets end up in different groups is split, with copies of its via rule. Groups that behave the
- * same share one class.
+ * and without a matching rule the clearance of the design (net classes) stays. KiCad keeps one rule
+ * list per constraint type, so the creepage is evaluated the same way on its own (the last matching
+ * rule that sets a creepage) and the larger of the two is used: a later rule that sets only a
+ * clearance does not lower the creepage of an earlier one. A group whose clearances change gets its
+ * own clearance class, a copy of the class it had; a net class whose nets end up in different
+ * groups is split, with copies of its via rule. Groups that behave the same share one class.
  *
  * <p>Where a condition cannot be evaluated (see {@link KiCadRuleCondition}), the rule is taken as
  * matching wherever it may match and the largest of the possible clearances is used: the board is
@@ -77,13 +79,20 @@ public final class KiCadDesignRulesTranslator {
 
   private record Entity(EntityKey key, KiCadRuleCondition.Item item) {}
 
+  /**
+   * A minimum clearance or creepage of a rule, in board units. The rules of each type are evaluated
+   * on their own, as KiCad does: a rule that sets both gives one of each.
+   */
   private record ClearanceRule(
-      String name, boolean[] layers, KiCadRuleCondition condition, int value) {}
+      String name, boolean[] layers, KiCadRuleCondition condition, int value, boolean creepage) {}
 
   private final BasicBoard board;
   private final ClearanceMatrix matrix;
   private final int layerCount;
   private final List<String> warnings = new ArrayList<>();
+
+  /** The number of KiCad rules translated: a rule may give a clearance and a creepage. */
+  private int translatedRules;
 
   private KiCadDesignRulesTranslator(BasicBoard board) {
     this.board = board;
@@ -214,7 +223,7 @@ public final class KiCadDesignRulesTranslator {
     if (added > 0) {
       board.searchTreeManager.reinsertTreeItems();
     }
-    return new Result(rules.size(), added, split, List.copyOf(warnings));
+    return new Result(translatedRules, added, split, List.copyOf(warnings));
   }
 
   // ------------------------------------------------------------------------------------------
@@ -233,14 +242,7 @@ public final class KiCadDesignRulesTranslator {
                 + constraint
                 + " not translated (only minimum clearances and creepage are translated)");
       }
-      Double effectiveClearanceUm = rule.clearanceUm();
-      if (rule.creepageUm() != null) {
-        effectiveClearanceUm =
-            effectiveClearanceUm == null
-                ? rule.creepageUm()
-                : Math.max(effectiveClearanceUm, rule.creepageUm());
-      }
-      if (effectiveClearanceUm == null) {
+      if (rule.clearanceUm() == null && rule.creepageUm() == null) {
         continue;
       }
       if (rule.ignored()) {
@@ -284,11 +286,23 @@ public final class KiCadDesignRulesTranslator {
                 + String.join(", ", rule.condition().unsupportedParts())
                 + " cannot be evaluated: the rule is applied wherever it may match");
       }
-      int value =
-          (int) Math.ceil(board.communication.physicalToBoard(effectiveClearanceUm, Unit.UM));
-      result.add(new ClearanceRule(rule.name(), layers, rule.condition(), value));
+      translatedRules++;
+      if (rule.clearanceUm() != null) {
+        result.add(
+            new ClearanceRule(
+                rule.name(), layers, rule.condition(), toBoard(rule.clearanceUm()), false));
+      }
+      if (rule.creepageUm() != null) {
+        result.add(
+            new ClearanceRule(
+                rule.name(), layers, rule.condition(), toBoard(rule.creepageUm()), true));
+      }
     }
     return result;
+  }
+
+  private int toBoard(double micrometres) {
+    return (int) Math.ceil(board.communication.physicalToBoard(micrometres, Unit.UM));
   }
 
   /**
@@ -509,27 +523,35 @@ public final class KiCadDesignRulesTranslator {
     }
     for (int layer = 0; layer < layerCount; layer++) {
       int base = matrix.getValue(classA, classB, layer, false);
-      // The possible outcomes of the rules on this layer: the clearance of the design, unless a
-      // rule surely matches, and the value of every rule that may match after it.
+      // The possible outcomes of the clearance rules on this layer: the clearance of the design,
+      // unless a rule surely matches, and the value of every rule that may match after it. The
+      // creepage rules likewise, on their own and without a value from the design.
       boolean designPossible = true;
       int best = -1;
+      int bestCreepage = -1;
       for (int r = 0; r < rules.size(); r++) {
         ClearanceRule rule = rules.get(r);
         if (!rule.layers()[layer]) {
           continue;
         }
         Tri match = matches[r];
-        if (match == Tri.TRUE) {
+        if (rule.creepage()) {
+          if (match == Tri.TRUE) {
+            bestCreepage = rule.value();
+          } else if (match == Tri.UNKNOWN) {
+            bestCreepage = Math.max(bestCreepage, rule.value());
+          }
+        } else if (match == Tri.TRUE) {
           designPossible = false;
           best = rule.value();
         } else if (match == Tri.UNKNOWN) {
           best = Math.max(best, rule.value());
         }
       }
-      if (best < 0) {
+      if (best < 0 && bestCreepage < 0) {
         continue;
       }
-      int value = designPossible ? Math.max(best, base) : best;
+      int value = Math.max(designPossible ? Math.max(best, base) : best, bestCreepage);
       // the matrix stores even values, rounded up
       if ((value + 1) / 2 * 2 == base) {
         continue;

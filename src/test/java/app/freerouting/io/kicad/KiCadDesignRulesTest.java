@@ -120,6 +120,58 @@ class KiCadDesignRulesTest {
   }
 
   @Test
+  void laterClearanceRuleDoesNotLowerAnEarlierCreepage() throws IOException {
+    BasicBoard board = loadBoard();
+    KiCadDesignRules rules =
+        KiCadDesignRules.parse(
+            """
+            (version 1)
+            (rule "mains_creepage"
+              (condition "A.NetClass == 'HighVoltage' && B.NetClass != 'HighVoltage'")
+              (constraint creepage (min 5mm)))
+            (rule "low_voltage_clearance"
+              (condition "A.NetClass == 'HighVoltage' && B.NetClass != 'HighVoltage'")
+              (constraint clearance (min 0.3mm)))
+            """,
+            "creepage-then-clearance.kicad_dru");
+
+    KiCadDesignRulesTranslator.Result result = KiCadDesignRulesTranslator.apply(board, rules);
+
+    // KiCad keeps one rule list per constraint type: the clearance rule does not override the
+    // creepage, which still asks for 5 mm
+    assertEquals(2, result.translatedRules());
+    assertEquals(
+        mm(board, 5.0),
+        value(board.rules.clearanceMatrix, pin(board, "K1", "1"), pin(board, "K2", "2")));
+  }
+
+  @Test
+  void lastMatchingCreepageRuleSetsTheCreepage() throws IOException {
+    BasicBoard board = loadBoard();
+    KiCadDesignRules rules =
+        KiCadDesignRules.parse(
+            """
+            (version 1)
+            (rule "mains"
+              (condition "A.NetClass == 'HighVoltage' && B.NetClass != 'HighVoltage'")
+              (constraint clearance (min 4mm))
+              (constraint creepage (min 6mm)))
+            (rule "mains_creepage_relaxed"
+              (condition "A.NetClass == 'HighVoltage' && B.NetClass != 'HighVoltage'")
+              (constraint creepage (min 1mm)))
+            """,
+            "creepage-relaxed.kicad_dru");
+
+    KiCadDesignRulesTranslator.Result result = KiCadDesignRulesTranslator.apply(board, rules);
+
+    // the later creepage rule sets the creepage (1 mm), the clearance of the first rule stays
+    assertEquals(2, result.translatedRules());
+    assertEquals(
+        mm(board, 4.0),
+        value(board.rules.clearanceMatrix, pin(board, "K1", "1"), pin(board, "K2", "2")));
+  }
+
+  @Test
   void resetsReducedSmdToSmdClearanceWhenDruApplied() throws IOException {
     BasicBoard board = loadBoard();
     ClearanceMatrix matrix = board.rules.clearanceMatrix;
@@ -165,8 +217,10 @@ class KiCadDesignRulesTest {
             .anyMatch(w -> w.contains("intersectsArea") && w.contains("may")));
 
     ClearanceMatrix matrix = board.rules.clearanceMatrix;
-    // the last matching rule wins: coil to contacts of the same relay, then mains isolation
-    assertEquals(mm(board, 2.5), value(matrix, pin(board, "K1", "1"), pin(board, "K1", "2")));
+    // the last matching rule wins: coil to contacts of the same relay (2.5 mm), then mains
+    // isolation; the creepage of the mains isolation (3 mm) still applies to the coil and contacts,
+    // as the coil rule sets only a clearance
+    assertEquals(mm(board, 3.0), value(matrix, pin(board, "K1", "1"), pin(board, "K1", "2")));
     assertEquals(mm(board, 3.0), value(matrix, pin(board, "K1", "1"), pin(board, "K2", "2")));
     // a rule may lower the clearance of the net class (2 mm)
     assertEquals(mm(board, 1.5), traceValue(board, "Net-(FU1-Pad1)", "Net-(FU1-Pad2)"));
