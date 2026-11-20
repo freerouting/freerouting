@@ -29,6 +29,22 @@ public final class BenchmarkScoreCalculator {
 
   private BenchmarkScoreCalculator() {}
 
+  /**
+   * Standalone entry point for recalculating benchmark scores without invoking the production CLI.
+   *
+   * @param args {@code <input-benchmarks.json> <output-scores.json>}
+   */
+  public static void main(String[] args) {
+    if (args.length < 2) {
+      System.err.println(
+          "Usage: java -cp <jar> app.freerouting.core.scoring.BenchmarkScoreCalculator"
+              + " <input-benchmarks.json> <output-scores.json>");
+      System.exit(1);
+    }
+    int exitCode = run(Path.of(args[0]), Path.of(args[1]));
+    System.exit(exitCode);
+  }
+
   /** Score result record for an individual benchmark run. */
   public static class BenchmarkScoreResult implements Serializable {
 

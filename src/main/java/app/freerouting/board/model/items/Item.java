@@ -823,6 +823,7 @@ public abstract class Item
     }
     result.add(this);
     getConnectedSetRecu(result, netNumber, stopAtPlane);
+    ConductionArea.addLaterReachedIslands(result, netNumber, stopAtPlane);
     return result;
   }
 
@@ -841,7 +842,8 @@ public abstract class Item
       if (netNumber > 0 && !currentContact.containsNet(netNumber)) {
         continue;
       }
-      if (result.add(currentContact)) {
+      if (result.add(currentContact)
+          || (currentContact instanceof ConductionArea ca && ca.isFractured())) {
         currentContact.getConnectedSetRecu(result, netNumber, stopAtPlane);
       }
     }
@@ -1218,6 +1220,9 @@ public abstract class Item
     }
     clearanceClassIndex = index;
     this.clearDerivedData();
+    if (this.board != null) {
+      this.board.noteChange(this);
+    }
     if (this.board != null && this.board.searchTreeManager.isClearanceCompensationUsed()) {
       // reinsert the item into the search tree, because the compensated shape has changed.
       this.board.searchTreeManager.remove(this);

@@ -59,6 +59,7 @@ gh pr edit <pr-number> --body-file "path/to/pr_body.md"
      - **Secrets & Credentials:** Ensure no API keys, tokens, credentials, or private internal hostnames/URLs are introduced in code, tests, or documentation.
      - **Privacy & Telemetry:** Ensure no unsanctioned tracking, telemetry, phone-home beacons, or unauthorized external network requests are added. Maintain strict user privacy.
      - **Input Validation & Boundaries:** Guard against path traversal (e.g., unchecked relative file paths or `../`), command injection, unsafe reflection, or insecure deserialization in file parsers (DSN/SES/rules), CLI flags, and API endpoints.
+     - **CLI Shorthand Policy:** Reject any new shorthand CLI parameters (e.g., `-xyz`) unless explicitly approved by the maintainer; always require long-form `--<section>.<property>=<value>` parameters.
      - **Dependency Safety:** Verify that any new or bumped dependencies are trusted, actively maintained, and free of known vulnerabilities.
   9. **Pre-Merge Summary & Milestone Verification:**
      - Ensure all review comment threads on the PR are formally resolved (`isResolved: true`). Never mark a PR ready to merge if unresolved comments remain.

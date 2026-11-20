@@ -48,6 +48,15 @@ class ProcessEnvironmentDetectorTest {
         ActorType.AUTOMATED_BATCH,
         ProcessEnvironmentDetector.detectActorType(
             PipelineType.CLI, false, true, "--gui.enabled=false -de /data/board.dsn", false));
+
+    assertEquals(
+        ActorType.AUTOMATED_BATCH,
+        ProcessEnvironmentDetector.detectActorType(
+            PipelineType.CLI,
+            true,
+            false,
+            "-de board.dsn -do board.ses --gui.dialog_confirmation_timeout=0",
+            false));
   }
 
   @Test

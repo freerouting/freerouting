@@ -9,6 +9,7 @@ import app.freerouting.board.model.structure.BoardOutline;
 import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
+import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Shape;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
@@ -64,6 +65,62 @@ public final class DsnFile {
               + " keepout(s) inside through-hole pads (plated slots) into via keepouts.");
     }
     return slotKeepouts.size();
+  }
+
+  /**
+   * Removes unnamed board-level generic keepouts that enclose the center of a routable single-layer
+   * (SMD) pin on the same layer. KiCad exports copper-pour-only rule areas ({@code (keepout (tracks
+   * allowed) (vias allowed) (copperpour not_allowed))}) as unnamed generic Specctra {@code (keepout
+   * "" ...)} polygons, which block all tracks and vias and make enclosed SMD pads physically
+   * unroutable. Named board keepouts are preserved.
+   *
+   * <p>Called from {@link app.freerouting.io.specctra.DsnReader#readBoard} once the components are
+   * placed.
+   */
+  public static int removePinEnclosingKeepouts(BasicBoard routingBoard) {
+    if (routingBoard == null) {
+      return 0;
+    }
+    List<ObstacleArea> pinBlockingKeepouts = new ArrayList<>();
+    for (Item item : routingBoard.getItems()) {
+      if (item.getClass() == ObstacleArea.class
+          && item.getComponentId() <= 0
+          && (((ObstacleArea) item).name == null || ((ObstacleArea) item).name.isEmpty())
+          && enclosesRoutableSmdPinCenter((ObstacleArea) item, routingBoard)) {
+        pinBlockingKeepouts.add((ObstacleArea) item);
+      }
+    }
+    for (ObstacleArea keepout : pinBlockingKeepouts) {
+      keepout.setFixedState(FixedState.UNFIXED);
+      routingBoard.removeItem(keepout);
+    }
+    if (!pinBlockingKeepouts.isEmpty()) {
+      FRLogger.warn(
+          "Removed "
+              + pinBlockingKeepouts.size()
+              + " board keepout(s) enclosing routable SMD pin center(s)"
+              + " (likely KiCad copper-pour-only keepout exported as generic keepout).");
+    }
+    return pinBlockingKeepouts.size();
+  }
+
+  private static boolean enclosesRoutableSmdPinCenter(
+      ObstacleArea keepout, BasicBoard routingBoard) {
+    int layer = keepout.getLayer();
+    IntBox keepoutBox = keepout.boundingBox();
+    for (Pin pin : routingBoard.getPins()) {
+      if (pin.firstLayer() != layer
+          || pin.lastLayer() != layer
+          || pin.netCount() == 0
+          || pin.hasIgnoredNets()) {
+        continue;
+      }
+      Point center = pin.getCenter();
+      if (center != null && keepoutBox.contains(center) && keepout.getArea().contains(center)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private static boolean contains(IntBox outer, IntBox inner) {

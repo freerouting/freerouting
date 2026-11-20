@@ -1,6 +1,10 @@
 package app.freerouting.autoroute.pipeline;
 
 import app.freerouting.autoroute.AutorouteAttemptResult;
+import app.freerouting.autoroute.fanout.BgaEscapeCommitter;
+import app.freerouting.autoroute.fanout.BgaEscapeDescriptor;
+import app.freerouting.autoroute.fanout.BgaEscapeSolver;
+import app.freerouting.autoroute.fanout.BgaFootprintDetector;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.structure.Component;
@@ -12,11 +16,16 @@ import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.RouterSettings;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.function.Consumer;
 
 /** Handles the sequencing of the fanout inside the batch autorouter. */
 public final class BatchFanout {
@@ -41,6 +50,14 @@ public final class BatchFanout {
   private final Map<Integer, Integer> componentGeneration = new HashMap<>();
 
   private BatchFanout(RoutingBoard board, RouterSettings settings, StoppableThread thread) {
+    this(board, settings, thread, Collections.emptySet());
+  }
+
+  private BatchFanout(
+      RoutingBoard board,
+      RouterSettings settings,
+      StoppableThread thread,
+      Set<app.freerouting.board.model.items.Pin> bgaCommittedPins) {
     this.thread = thread;
     this.routingBoard = board;
     this.settings = settings;
@@ -49,12 +66,14 @@ public final class BatchFanout {
             ? settings.fanout.pinSortingOrder
             : "outer_first";
     Collection<app.freerouting.board.model.items.Pin> boardSmdPinList = routingBoard.getSmdPins();
-    // Filter out SMD pins that belong to no net or an ignored net class — they don't need
-    // fanout and would inflate total pin counts and escape statistics.
+    // Filter out SMD pins that belong to no net or an ignored net class, or were already
+    // escaped by the BGA escape committer — they don't need fanout and would inflate total
+    // pin counts and escape statistics, or cause duplicate/dangling fanout retries.
     Collection<app.freerouting.board.model.items.Pin> boardSmdPinListWithNets = new LinkedList<>();
     for (app.freerouting.board.model.items.Pin pin : boardSmdPinList) {
       if (pin.netCount() > 0
           && !pin.hasIgnoredNets()
+          && (bgaCommittedPins == null || !bgaCommittedPins.contains(pin))
           && !leftToPlaneRouting(routingBoard, settings, pin)) {
         boardSmdPinListWithNets.add(pin);
       }
@@ -146,7 +165,7 @@ public final class BatchFanout {
   /** Performs fanout routing for SMD components on board. */
   public static FanoutRunSummary fanoutBoard(
       RoutingBoard board, RouterSettings settings, StoppableThread thread) {
-    return fanoutBoard(board, settings, thread, null);
+    return fanoutBoard(board, settings, thread, null, null);
   }
 
   /** Performs fanout routing for SMD components on board with a progress listener. */
@@ -155,10 +174,107 @@ public final class BatchFanout {
       RouterSettings settings,
       StoppableThread thread,
       FanoutProgressListener progressListener) {
+    return fanoutBoard(board, settings, thread, progressListener, null);
+  }
+
+  /**
+   * Performs fanout routing for SMD components on board with a progress listener and optional info
+   * logger.
+   */
+  public static FanoutRunSummary fanoutBoard(
+      RoutingBoard board,
+      RouterSettings settings,
+      StoppableThread thread,
+      FanoutProgressListener progressListener,
+      Consumer<String> infoLogger) {
     if (settings.usesDirectPinRouting()) {
       return DirectPinRouting.run(board, settings, thread);
     }
-    BatchFanout fanoutInstance = new BatchFanout(board, settings, thread);
+
+    // Pre-pass: deterministic CPU multi-layer BGA escape routing
+    boolean fanoutEnabled = settings.getRunFanout();
+    boolean bgaEscapeEnabled =
+        fanoutEnabled
+            && (settings.fanout == null
+                || settings.fanout.bgaEscapeEnabled == null
+                || Boolean.TRUE.equals(settings.fanout.bgaEscapeEnabled));
+
+    Set<Pin> bgaCommittedPins = new HashSet<>();
+    if (bgaEscapeEnabled
+        && board != null
+        && board.components != null
+        && board.components.count() > 0) {
+      try {
+        List<BgaEscapeDescriptor> bgas = BgaFootprintDetector.detect(board, settings, infoLogger);
+        for (BgaEscapeDescriptor bga : bgas) {
+          if (thread != null && thread.isInterrupted()) {
+            break;
+          }
+          List<BgaEscapeSolver.PinEscapeProposal> proposals =
+              BgaEscapeSolver.solve(board, bga, infoLogger);
+          if (!proposals.isEmpty()) {
+            var commitResult = BgaEscapeCommitter.commit(board, bga, proposals);
+            if (commitResult.committedPins() != null) {
+              bgaCommittedPins.addAll(commitResult.committedPins());
+            }
+            String committedMsg =
+                "BGA escape committer: committed "
+                    + commitResult.pinsCommitted()
+                    + "/"
+                    + proposals.size()
+                    + " escape routes for "
+                    + bga.component().name
+                    + (commitResult.drcRejections() > 0
+                        ? " (" + commitResult.drcRejections() + " rejected by DRC)"
+                        : "")
+                    + ".";
+            FRLogger.info(committedMsg);
+            if (infoLogger != null) {
+              infoLogger.accept(committedMsg);
+            }
+            if (progressListener != null) {
+              BoardStatistics stats = new BoardStatistics(board, null, false);
+              EscapeStatistics escapeStats = EscapeStatistics.fromBoardStatistics(stats);
+              progressListener.onProgress(
+                  new FanoutPassStatus(
+                      0,
+                      0,
+                      bga.pins().size(),
+                      0,
+                      commitResult.pinsCommitted(),
+                      0,
+                      commitResult.drcRejections(),
+                      commitResult.viasInserted(),
+                      commitResult.viasInserted(),
+                      0L,
+                      stats,
+                      true,
+                      escapeStats));
+            }
+          }
+        }
+      } catch (Exception ex) {
+        if (Thread.currentThread().isInterrupted() || ex instanceof InterruptedException) {
+          Thread.currentThread().interrupt();
+          FRLogger.warn("BGA escape fanout pre-pass interrupted");
+        } else {
+          String errMsg = "BGA escape fanout pre-pass skipped due to error: " + ex.getMessage();
+          FRLogger.warn(errMsg);
+          if (infoLogger != null) {
+            infoLogger.accept(errMsg);
+          }
+        }
+      }
+    }
+
+    if (!bgaCommittedPins.isEmpty()) {
+      FRLogger.info(
+          "CPU fanout: bypassing "
+              + bgaCommittedPins.size()
+              + " already-escaped BGA pin(s) to prevent redundant passes and stubs.");
+    }
+
+    BatchFanout fanoutInstance = new BatchFanout(board, settings, thread, bgaCommittedPins);
     long fanoutStart = System.currentTimeMillis();
     if (settings.fanout != null && settings.fanout.timeoutString != null) {
       Long timeoutSeconds =
