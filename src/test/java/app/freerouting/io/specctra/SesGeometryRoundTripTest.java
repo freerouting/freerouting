@@ -205,6 +205,50 @@ class SesGeometryRoundTripTest {
     }
   }
 
+  /**
+   * The junction of a diagonal and a (387, 391) line has the denominator 778 = 2 * 389. The reduced
+   * congruence basis at that corner is (1, -1) and (389, 389), and both (388, 390) and (390, 388)
+   * have the common factor 2: none of these directions but the diagonal itself has an integer line
+   * through the corner. Both wires sharing the corner must come back, and still meet there.
+   */
+  @ParameterizedTest
+  @CsvSource({"false", "true"})
+  void rationalJunctionWhoseReducedBasisVectorsAreNotPrimitiveRoundTrips(boolean reverse)
+      throws Exception {
+    BasicBoard source = board(Unit.UM, 10, 10);
+    Line vertical = new Line(400, 0, 400, 1);
+    Line diagonal = new Line(500, 500, 501, 499);
+    Line oblique = new Line(600, 301, 987, 692);
+    Line[] toJunction = {vertical, diagonal, oblique};
+    Line[] fromJunction = {diagonal, oblique, new Line(987, 0, 987, 1)};
+    Polyline first = new Polyline(toJunction);
+    Polyline second = new Polyline(fromJunction);
+    Point junction = first.lastCorner();
+    assertEquals(
+        Point.getInstance(
+            BigInteger.valueOf(600 * 778 + 387 * 99),
+            BigInteger.valueOf(301 * 778 + 391 * 99),
+            BigInteger.valueOf(778)),
+        junction);
+    assertEquals(junction, second.firstCorner());
+    insert(source, reverse ? first.reverse() : first);
+    insert(source, reverse ? second.reverse() : second);
+
+    BasicBoard target = board(Unit.UM, 10, 10);
+    SesImportSummary summary = SesReader.read(new ByteArrayInputStream(write(source)), target);
+
+    assertEquals(0, summary.errorsEncountered());
+    assertEquals(2, summary.wiresImported());
+    List<PolylineTrace> imported = traces(target);
+    assertEquals(2, imported.size());
+    for (PolylineTrace trace : imported) {
+      assertTrue(
+          trace.firstCorner().equals(junction) || trace.lastCorner().equals(junction),
+          "Each wire must still end exactly at the rational junction");
+      assertEquals(1, trace.getNormalContacts().size(), "The two wires must still connect");
+    }
+  }
+
   @Test
   void collinearReversalIsRejectedInsteadOfLosingCopper() throws Exception {
     BasicBoard target = board(Unit.UM, 10, 10);

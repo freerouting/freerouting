@@ -197,6 +197,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
   private transient int cachedFractureRevision = -1;
   private transient long cachedNetAssignmentStamp = -1;
   private transient FastPlaneConnectivityGrid.PlaneFractureResult cachedFractureResult;
+  private transient FastPlaneConnectivityGrid.FractureMemo fractureMemo;
 
   /** Creates a new instance of ConductionArea. */
   public ConductionArea(
@@ -237,6 +238,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     this.cachedFractureRevision = -1;
     this.cachedNetAssignmentStamp = -1;
     this.cachedFractureResult = null;
+    this.fractureMemo = null;
   }
 
   /** Pre-computes detailed plane-fill geometry off the EDT so zoom-in paints stay responsive. */
@@ -691,6 +693,31 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     return res != null && res.isFractured;
   }
 
+  /**
+   * Returns what a copy of this conduction area may reuse of its fracture analysis, or null. Called
+   * while the board is written for a deep copy, so the board does not change meanwhile.
+   */
+  public FastPlaneConnectivityGrid.FractureMemo fractureMemoForCopy() {
+    FastPlaneConnectivityGrid.FractureMemo memo = this.fractureMemo;
+    if (memo == null || this.board == null) {
+      return null;
+    }
+    return memo.detach(getArea());
+  }
+
+  /**
+   * Gives this conduction area, the deep copy of another one, the fracture memo of its original
+   * (see {@link #fractureMemoForCopy}). The memo checks its inputs on every lookup, so it only
+   * saves the rasterization and the flood fill when the copy still has the same plane.
+   */
+  public void adoptFractureMemo(FastPlaneConnectivityGrid.FractureMemo detached) {
+    if (detached == null || this.board == null) {
+      return;
+    }
+    BasicBoard copyBoard = this.board;
+    this.fractureMemo = detached.attach(getArea(), copyBoard::getItem);
+  }
+
   /** Returns the cached or freshly computed fracture analysis result for this conduction area. */
   public FastPlaneConnectivityGrid.PlaneFractureResult getFractureResult() {
     if (this.board == null) {
@@ -711,9 +738,14 @@ public class ConductionArea extends ObstacleArea implements Connectable {
         return this.cachedFractureResult;
       }
     }
+    FastPlaneConnectivityGrid.FractureMemo memo = this.fractureMemo;
+    if (memo == null) {
+      memo = new FastPlaneConnectivityGrid.FractureMemo();
+      this.fractureMemo = memo;
+    }
     FastPlaneConnectivityGrid connectivityGrid = new FastPlaneConnectivityGrid();
     Collection<Item> contacts = getNormalContacts();
-    this.cachedFractureResult = connectivityGrid.evaluateFracture(this, this.board, contacts);
+    this.cachedFractureResult = connectivityGrid.evaluateFracture(this, this.board, contacts, memo);
     this.cachedFractureRevision = currentRevision;
     this.cachedNetAssignmentStamp = currentNetAssignmentStamp;
     return this.cachedFractureResult;
@@ -732,14 +764,14 @@ public class ConductionArea extends ObstacleArea implements Connectable {
       return;
     }
 
-    // Determine which islands have already been contacted by items in result
+    // Determine which islands have already been contacted by items in result. A trace whose ends
+    // touch two islands is in both.
     Set<Integer> reachedIslands = new HashSet<>();
     for (Item resItem : result) {
       if (resItem != this && resItem.sharesNet(this) && resItem.sharesLayer(this)) {
         for (Map.Entry<Integer, List<Item>> entry : fractureResult.islandItems.entrySet()) {
           if (entry.getValue().contains(resItem)) {
             reachedIslands.add(entry.getKey());
-            break;
           }
         }
       }
@@ -763,6 +795,44 @@ public class ConductionArea extends ObstacleArea implements Connectable {
         }
       }
     }
+  }
+
+  /**
+   * Returns true if the first or last corner of a trace of the net touches the fill of this area:
+   * false for an end in the clearance band of foreign copper, or in the relief of a pad.
+   */
+  public boolean touchesEndOf(Trace trace, boolean first) {
+    FastPlaneConnectivityGrid.PlaneFractureResult fractureResult = getFractureResult();
+    if (fractureResult == null) {
+      return true;
+    }
+    int[] islands = fractureResult.endIslands(trace, first);
+    return islands == null || islands.length > 0;
+  }
+
+  /**
+   * Returns true if this area joins the two ends of a trace of its net, so that the trace closes a
+   * cycle with it. An area in one piece joins any two points of it. A fractured area joins them
+   * only if they touch a common island: a trace that bridges a cut of the area is no cycle.
+   */
+  public boolean joinsEndsOf(Trace trace) {
+    FastPlaneConnectivityGrid.PlaneFractureResult fractureResult = getFractureResult();
+    if (fractureResult == null || !fractureResult.isFractured) {
+      return true;
+    }
+    int[] first = fractureResult.endIslands(trace, true);
+    int[] last = fractureResult.endIslands(trace, false);
+    if (first == null || last == null) {
+      return true;
+    }
+    for (int a : first) {
+      for (int b : last) {
+        if (a == b) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   /**
@@ -819,12 +889,35 @@ public class ConductionArea extends ObstacleArea implements Connectable {
       return super.isCycleRecu(visitedItems, searchItem, comeFromItem, ignoreAreas);
     }
 
-    Integer fromIsland = null;
+    // The islands the walk enters from comeFromItem. The walk for a cycle through a trace starts
+    // at its first corner: from the trace itself, only the islands of that end are entered, and the
+    // trace closes a cycle if its last corner touches one of them.
+    Set<Integer> fromIslands = null;
     if (comeFromItem != null) {
-      for (Map.Entry<Integer, List<Item>> entry : fractureResult.islandItems.entrySet()) {
-        if (entry.getValue().contains(comeFromItem)) {
-          fromIsland = entry.getKey();
-          break;
+      int[] startIslands =
+          comeFromItem == searchItem ? fractureResult.endIslands(comeFromItem, true) : null;
+      if (startIslands != null) {
+        fromIslands = new HashSet<>();
+        for (int island : startIslands) {
+          fromIslands.add(island);
+        }
+        for (int island : fractureResult.endIslands(comeFromItem, false)) {
+          if (fromIslands.contains(island)) {
+            return true;
+          }
+        }
+      } else {
+        for (Map.Entry<Integer, List<Item>> entry : fractureResult.islandItems.entrySet()) {
+          if (entry.getValue().contains(comeFromItem)) {
+            if (fromIslands == null) {
+              fromIslands = new HashSet<>();
+            }
+            fromIslands.add(entry.getKey());
+          }
+        }
+        if (fromIslands == null && fractureResult.traceEndIslands.containsKey(comeFromItem)) {
+          // a trace whose ends touch no fill of this area
+          return false;
         }
       }
     }
@@ -837,11 +930,14 @@ public class ConductionArea extends ObstacleArea implements Connectable {
       if (currentContact == comeFromItem) {
         continue;
       }
-      if (fromIsland != null) {
+      if (fromIslands != null) {
         boolean onSameIsland = false;
-        List<Item> islandMembers = fractureResult.islandItems.get(fromIsland);
-        if (islandMembers != null && islandMembers.contains(currentContact)) {
-          onSameIsland = true;
+        for (int island : fromIslands) {
+          List<Item> islandMembers = fractureResult.islandItems.get(island);
+          if (islandMembers != null && islandMembers.contains(currentContact)) {
+            onSameIsland = true;
+            break;
+          }
         }
         if (!onSameIsland) {
           continue;

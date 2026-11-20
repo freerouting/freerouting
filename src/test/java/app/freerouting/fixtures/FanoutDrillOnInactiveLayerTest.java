@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 /**
  * The fanout search ends at the first drill it goes through. That via is an escape only if the net
  * can use it: a drill to a signal layer the net may not use, or into the plane of another net when
- * the net may only use the pin's layer, leads nowhere.
+ * the via does not go on to another signal layer the net may use, leads nowhere.
  */
 class FanoutDrillOnInactiveLayerTest extends RoutingFixtureTest {
 
@@ -91,5 +91,42 @@ class FanoutDrillOnInactiveLayerTest extends RoutingFixtureTest {
       }
     }
     assertTrue(analogVias.isEmpty(), "Fanout vias on ANALOG nets: " + analogVias);
+  }
+
+  /**
+   * {@code Fanout-blind-via-plane-garland-4layer.dsn}: the garland of {@code
+   * Plane-via-garland-4layer.dsn} with a blind via from F.Cu to In1.Cu, the GND plane, listed
+   * before the through via. A drill into the GND plane is an escape for a signal net only if the
+   * via that is inserted for it goes on to B.Cu. The inserter takes the first via of the rule that
+   * spans the drill, the blind one, which ends in the plane: no net without a plane may get it, and
+   * the pins of those nets still escape through the through via.
+   */
+  @Test
+  void signalNetsGetNoBlindViaThatEndsInAPlane() {
+    RoutingJob job = getRoutingJob("Fanout-blind-via-plane-garland-4layer.dsn", fanoutOnly());
+    runRoutingJob(job);
+
+    assertEquals(RoutingJobState.COMPLETED, job.state);
+    int lastLayer = job.board.getLayerCount() - 1;
+    List<String> viasEndingInAPlane = new ArrayList<>();
+    for (Via via : job.board.getVias()) {
+      Net net = job.board.rules.nets.get(via.getNetNumber(0));
+      if (net != null && !net.containsPlane() && via.getPadstack().toLayer() < lastLayer) {
+        viasEndingInAPlane.add(net.name + " at " + via.getCenter());
+      }
+    }
+    assertTrue(
+        viasEndingInAPlane.isEmpty(), "Signal nets with a via into a plane: " + viasEndingInAPlane);
+    String[] signalPins = {
+      "R1-1", "R1-2", "R2-1", "R2-2", "R3-1", "R3-2", "R4-1", "R4-2",
+      "D1-2", "D2-2", "D3-2", "D4-2", "U1-2", "U1-5", "U1-6", "U1-7"
+    };
+    List<String> notEscaped = new ArrayList<>();
+    for (String reference : signalPins) {
+      if (!BoardStatistics.isPinEscaped(pin(job.board, reference))) {
+        notEscaped.add(reference);
+      }
+    }
+    assertTrue(notEscaped.isEmpty(), "Signal pins left without fanout: " + notEscaped);
   }
 }
