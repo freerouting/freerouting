@@ -255,7 +255,14 @@ class KiCadDesignRulesTest {
     // K1_1 may be the second K1: the rule may apply, so it does (never less strict than KiCad)
     assertEquals(mm(board, 7.0), value(matrix, pin(board, "K1_1", "1"), pin(board, "VD4", "1")));
     assertTrue(
-        result.warnings().stream().anyMatch(w -> w.contains("K1_1")), result.warnings().toString());
+        result.warnings().stream()
+            .anyMatch(w -> w.contains("K1_1") && w.contains("may be duplicate references")),
+        result.warnings().toString());
+    // The warning on KiCad-renamed duplicates is still given
+    assertTrue(
+        result.warnings().stream()
+            .anyMatch(w -> w.contains("'K1_1' appears to be a KiCad-renamed duplicate of 'K1'")),
+        result.warnings().toString());
   }
 
   @Test
