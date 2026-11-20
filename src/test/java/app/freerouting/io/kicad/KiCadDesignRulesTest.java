@@ -90,8 +90,33 @@ class KiCadDesignRulesTest {
     assertNull(list.get(1).condition());
     // a value without unit is read as millimetres, which is never less strict than KiCad
     assertEquals(300.0, list.get(2).clearanceUm(), 1e-9);
+    assertEquals(25400.0, list.get(2).creepageUm(), 1e-9);
     assertTrue(list.get(2).warnings().getFirst().contains("no unit"));
-    assertEquals(List.of("creepage 25.40 mm"), list.get(2).otherConstraints());
+    assertEquals(List.of(), list.get(2).otherConstraints());
+  }
+
+  @Test
+  void translatesCreepageConstraintsAsRoutingClearance() throws IOException {
+    BasicBoard board = loadBoard();
+    KiCadDesignRules rules =
+        KiCadDesignRules.parse(
+            """
+            (version 1)
+            (rule "mains_creepage_only"
+              (condition "A.NetClass == 'HighVoltage' && B.NetClass != 'HighVoltage'")
+              (constraint creepage (min 5mm)))
+            """,
+            "creepage.kicad_dru");
+
+    KiCadDesignRulesTranslator.Result result = KiCadDesignRulesTranslator.apply(board, rules);
+
+    assertEquals(1, result.translatedRules());
+    assertTrue(
+        result.warnings().stream()
+            .anyMatch(w -> w.contains("creepage") && w.contains("applied conservatively")));
+    assertEquals(
+        mm(board, 5.0),
+        value(board.rules.clearanceMatrix, pin(board, "K1", "1"), pin(board, "K2", "2")));
   }
 
   @Test

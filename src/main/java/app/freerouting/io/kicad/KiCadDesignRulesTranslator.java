@@ -221,23 +221,26 @@ public final class KiCadDesignRulesTranslator {
         warnings.add(prefix + warning);
       }
       for (String constraint : rule.otherConstraints()) {
-        if (constraint.startsWith("creepage") && rule.clearanceUm() != null) {
-          warnings.add(
-              prefix
-                  + "constraint "
-                  + constraint
-                  + " not translated (Specctra has no creepage), only the clearance of "
-                  + KiCadDesignRules.formatMm(rule.clearanceUm())
-                  + " of the rule applies");
-        } else {
-          warnings.add(
-              prefix
-                  + "constraint "
-                  + constraint
-                  + " not translated (only minimum clearances are translated)");
-        }
+        warnings.add(
+            prefix
+                + "constraint "
+                + constraint
+                + " not translated (only minimum clearances and creepage are translated)");
       }
-      if (rule.clearanceUm() == null) {
+      Double effectiveClearanceUm = rule.clearanceUm();
+      if (rule.creepageUm() != null) {
+        effectiveClearanceUm =
+            effectiveClearanceUm == null
+                ? rule.creepageUm()
+                : Math.max(effectiveClearanceUm, rule.creepageUm());
+        warnings.add(
+            prefix
+                + "constraint creepage "
+                + KiCadDesignRules.formatMm(rule.creepageUm())
+                + " applied conservatively as routing clearance"
+                + " (slots and milling cutouts are not modelled)");
+      }
+      if (effectiveClearanceUm == null) {
         continue;
       }
       if (rule.ignored()) {
@@ -273,7 +276,8 @@ public final class KiCadDesignRulesTranslator {
                 + String.join(", ", rule.condition().unsupportedParts())
                 + " cannot be evaluated: the rule is applied wherever it may match");
       }
-      int value = (int) Math.ceil(board.communication.physicalToBoard(rule.clearanceUm(), Unit.UM));
+      int value =
+          (int) Math.ceil(board.communication.physicalToBoard(effectiveClearanceUm, Unit.UM));
       result.add(new ClearanceRule(rule.name(), layers, rule.condition(), value));
     }
     return result;
