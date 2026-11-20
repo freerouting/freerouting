@@ -426,19 +426,13 @@ public class ConductionArea extends ObstacleArea implements Connectable {
   }
 
   /**
-   * Whether this area is dead copper: a piece of a fill smaller than 1 mm\u00b2 (the threshold of
-   * {@code DesignRulesChecker.getZoneIslandViolations}), on a layer without traces, that touches
-   * nothing of its net. A zone with no connection yet keeps all its islands when it is filled, so
-   * an unrouted board can carry such pieces between the vias of another net: no via fits there, and
-   * they are no incomplete connection.
+   * Whether this conduction area is dead copper: a board-attached copper pour fragment (on either a
+   * signal or power layer) that has no normal contacts with any other item of its net. Such
+   * floating islands are skipped by {@code BatchAutorouter.coversAllPlanesOfNet} and are not
+   * counted as incomplete connections.
    */
   public boolean isDeadCopper() {
-    if (board == null || board.layerStructure.layers[getLayer()].isSignal) {
-      return false;
-    }
-    double mm = board.communication.getResolution(Unit.MM);
-    IntBox box = getArea().boundingBox();
-    if ((double) box.width() * box.height() >= mm * mm) {
+    if (board == null) {
       return false;
     }
     return getNormalContacts().isEmpty();
