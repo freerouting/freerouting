@@ -16,6 +16,9 @@ import org.apache.commons.numbers.fraction.BigFraction;
 
 /** Restores SES corners using the board's existing integer supporting-line representation. */
 final class SesPathGeometry {
+  /** Largest basis coefficient tried for a line through a rational SES corner. */
+  private static final int MAX_BASIS_COEFFICIENT = 8;
+
   private record Corner(BigFraction x, BigFraction y) {}
 
   private SesPathGeometry() {}
@@ -489,6 +492,13 @@ final class SesPathGeometry {
       return new LatticeVector(
           x.subtract(other.x.multiply(multiple)), y.subtract(other.y.multiply(multiple)));
     }
+
+    LatticeVector combine(int a, LatticeVector other, int b) {
+      BigInteger ca = BigInteger.valueOf(a);
+      BigInteger cb = BigInteger.valueOf(b);
+      return new LatticeVector(
+          x.multiply(ca).add(other.x.multiply(cb)), y.multiply(ca).add(other.y.multiply(cb)));
+    }
   }
 
   private static Line[] crossingLines(Corner corner) throws IOException {
@@ -530,8 +540,8 @@ final class SesPathGeometry {
     if (!reduced) {
       throw new IOException("SES supporting-line reduction did not converge");
     }
-    Line firstLine = null;
-    IOException lastFailure = null;
+    Line[] found = new Line[2];
+    IOException[] lastFailure = new IOException[1];
     // A reduced direction need not have an integer point on the corresponding line (e.g. the
     // vertical line through x=1/3). Small basis combinations restore independent integer lines.
     for (LatticeVector direction :
@@ -541,18 +551,48 @@ final class SesPathGeometry {
           first.subtract(second, BigInteger.ONE),
           first.subtract(second, BigInteger.ONE.negate())
         }) {
-      try {
-        Line candidate = integerLine(corner, direction.x, direction.y);
-        if (firstLine == null) {
-          firstLine = candidate;
-        } else if (!firstLine.isParallel(candidate)) {
-          return new Line[] {firstLine, candidate};
-        }
-      } catch (IOException unsupportedDirection) {
-        lastFailure = unsupportedDirection;
+      if (addCrossingLine(corner, direction, found, lastFailure)) {
+        return found;
       }
     }
-    throw new IOException("The SES corner has no supported pair of integer lines", lastFailure);
+    // A line keeps only the primitive direction of its vector, and a lattice vector k*u can
+    // satisfy the congruence while u does not: the line through the corner then has no integer
+    // point. With a denominator such as 2*389 on a diagonal, the four vectors above are all such
+    // multiples but one. Coprime combinations a*first + b*second, by increasing max(|a|,|b|),
+    // reach the primitive lattice vectors the remaining line needs.
+    for (int radius = 2; radius <= MAX_BASIS_COEFFICIENT; radius++) {
+      for (int b = 0; b <= radius; b++) {
+        for (int a = -radius; a <= radius; a++) {
+          if (Math.max(Math.abs(a), b) != radius
+              || (b == 0 && a <= 0)
+              || BigInteger.valueOf(a).gcd(BigInteger.valueOf(b)).intValue() != 1) {
+            continue;
+          }
+          LatticeVector direction = first.combine(a, second, b);
+          if (addCrossingLine(corner, direction, found, lastFailure)) {
+            return found;
+          }
+        }
+      }
+    }
+    throw new IOException("The SES corner has no supported pair of integer lines", lastFailure[0]);
+  }
+
+  /** Adds the integer line along direction through corner; true once two nonparallel exist. */
+  private static boolean addCrossingLine(
+      Corner corner, LatticeVector direction, Line[] found, IOException[] lastFailure) {
+    try {
+      Line candidate = integerLine(corner, direction.x, direction.y);
+      if (found[0] == null) {
+        found[0] = candidate;
+      } else if (!found[0].isParallel(candidate)) {
+        found[1] = candidate;
+        return true;
+      }
+    } catch (IOException unsupportedDirection) {
+      lastFailure[0] = unsupportedDirection;
+    }
+    return false;
   }
 
   private static BigInteger commonDenominator(BigFraction x, BigFraction y) {
