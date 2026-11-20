@@ -1,6 +1,7 @@
 package app.freerouting.autoroute.fanout;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -339,5 +340,94 @@ class BgaFootprintDetectorTest {
     assertEquals(LatticeClass.ORTHOGONAL_GRID, desc.latticeClass());
     assertTrue(Math.abs(desc.pitchBoardUnits() - pitch) < 5.0, "Pitch should match 500 um");
     assertEquals(1, desc.maxRing(), "4x4 BGA has ring 0 (perimeter) and ring 1 (interior)");
+  }
+
+  /**
+   * Places a 5x5 grid of SMD pads on 1000 um pitch. {@code padstackOf} gives the padstack of each
+   * position (row * 5 + column); {@code copyOffset} > 0 adds a second pad of each pin ({@code @1}),
+   * offset by that distance in x.
+   */
+  private static List<BgaEscapeDescriptor> detectGrid(
+      RoutingBoard board, java.util.function.IntFunction<Padstack> padstackOf, int copyOffset) {
+    int pitch = 1000;
+    List<Package.Pin> pkgPins = new ArrayList<>();
+    for (int r = 0; r < 5; r++) {
+      for (int c = 0; c < 5; c++) {
+        int pos = r * 5 + c;
+        FloatPoint at = new FloatPoint((c - 2) * pitch, (r - 2) * pitch);
+        pkgPins.add(new Package.Pin("P" + pos, padstackOf.apply(pos).id, at, 0));
+        if (copyOffset > 0) {
+          FloatPoint copyAt = new FloatPoint(at.x + copyOffset, at.y);
+          pkgPins.add(new Package.Pin("P" + pos + "@1", padstackOf.apply(pos).id, copyAt, 0));
+        }
+      }
+    }
+    Package pkg = board.library.packages.add(pkgPins.toArray(new Package.Pin[0]));
+    Component comp =
+        board.components.addPrecise(
+            "U1", new FloatPoint(50000, 50000), 0.0, true, pkg, pkg, false, null);
+    for (int i = 0; i < pkgPins.size(); i++) {
+      board.insertPin(comp.id, i, new int[] {1}, 1, FixedState.UNFIXED);
+    }
+    RouterSettings settings = new RouterSettings();
+    settings.fanout.bgaEscapeMinPins = 9;
+    return BgaFootprintDetector.detect(board, settings, null);
+  }
+
+  private static Padstack smdPadstack(RoutingBoard board, ConvexShape shape) {
+    return board.library.padstacks.add(new ConvexShape[] {shape, null});
+  }
+
+  @Test
+  void testCopiesOfAPinCountOnce() {
+    RoutingBoard board = createTestBoard();
+    Padstack ball = smdPadstack(board, new Circle(Point.ZERO, 150));
+
+    // Every pin has a second pad 400 um to its right, named after the pin with "@1"
+    List<BgaEscapeDescriptor> detected = detectGrid(board, _ -> ball, 400);
+
+    assertEquals(1, detected.size());
+    BgaEscapeDescriptor desc = detected.get(0);
+    assertEquals(25, desc.pins().size(), "one ball per pin");
+    assertTrue(Math.abs(desc.pitchBoardUnits() - 1000) < 5.0, "pitch of the pins, not the copies");
+    for (BgaEscapeDescriptor.BgaPinDescriptor pin : desc.pins()) {
+      assertFalse(pin.pin().name().contains("@"), "the first pad of each pin: " + pin.pin().name());
+    }
+  }
+
+  @Test
+  void testElongatedPadsAreNotBalls() {
+    RoutingBoard board = createTestBoard();
+    Padstack lead = smdPadstack(board, new IntBox(-150, -350, 150, 350));
+
+    assertTrue(detectGrid(board, _ -> lead, 0).isEmpty(), "300 x 700 um pads are leads");
+  }
+
+  @Test
+  void testSquarePadsAreBalls() {
+    RoutingBoard board = createTestBoard();
+    Padstack square = smdPadstack(board, new IntBox(-160, -150, 160, 150));
+
+    assertEquals(1, detectGrid(board, _ -> square, 0).size(), "320 x 300 um pads are balls");
+  }
+
+  @Test
+  void testMostPinsMustShareOnePadstack() {
+    RoutingBoard board = createTestBoard();
+    Padstack ball = smdPadstack(board, new Circle(Point.ZERO, 150));
+    Padstack other = smdPadstack(board, new Circle(Point.ZERO, 200));
+
+    // 22 of 25 pins (88 %) share a padstack: not a BGA
+    assertTrue(detectGrid(board, pos -> pos % 8 == 4 ? other : ball, 0).isEmpty());
+  }
+
+  @Test
+  void testAFewOtherPadstacksAreAllowed() {
+    RoutingBoard board = createTestBoard();
+    Padstack ball = smdPadstack(board, new Circle(Point.ZERO, 150));
+    Padstack other = smdPadstack(board, new Circle(Point.ZERO, 200));
+
+    // 23 of 25 pins (92 %) share a padstack
+    assertEquals(1, detectGrid(board, pos -> pos == 0 || pos == 24 ? other : ball, 0).size());
   }
 }

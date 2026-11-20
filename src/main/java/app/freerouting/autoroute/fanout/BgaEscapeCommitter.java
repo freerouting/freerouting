@@ -26,6 +26,7 @@ import app.freerouting.rules.ViaRule;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -48,10 +49,19 @@ import java.util.Set;
  *   <li>Applies continuous {@code okLength} truncation to outer-perimeter escape rays.
  *   <li>Atomically inserts valid traces and vias into the board model with {@link
  *       FixedState#USER_FIXED} to protect them from premature removal by tail cleanup.
+ *   <li>Rolls back all escapes of the package when fewer than half of its pins that need one got
+ *       it, so that a partial escape is not fixed on the board and the whole package is left to the
+ *       normal fanout.
  *   <li>Checks {@link Thread#isInterrupted()} between commits for clean cancellation.
  * </ol>
  */
 public final class BgaEscapeCommitter {
+
+  /**
+   * Minimum share of the pins needing an escape that must get one for the escapes of a package to
+   * be kept.
+   */
+  static final double MIN_ESCAPED_PIN_SHARE = 0.5;
 
   /** Summary result of a BGA escape commit pass. */
   public record CommitResult(
@@ -118,6 +128,23 @@ public final class BgaEscapeCommitter {
     // Maintain successfully escaped pins to bypass redundant CPU fanout retries
     Set<Pin> committedPins = new HashSet<>();
 
+    // Pins connected before any escape is inserted (to another pad of their net, for example) get
+    // no escape: they are neither escaped here nor removed from the normal fanout.
+    Set<Pin> connectedBefore = new HashSet<>();
+    Set<Pin> needingEscape = new LinkedHashSet<>();
+    for (PinEscapeProposal proposal : proposals) {
+      Pin pin = proposal.pinDescriptor().pin();
+      if (pin == null) {
+        continue;
+      }
+      if (pin.getNormalContacts().isEmpty()) {
+        needingEscape.add(pin);
+      } else {
+        connectedBefore.add(pin);
+      }
+    }
+    board.generateSnapshot();
+
     for (PinEscapeProposal proposal : proposals) {
       if (Thread.currentThread().isInterrupted()) {
         FRLogger.info("BGA escape committer cancelled by interrupt");
@@ -133,9 +160,12 @@ public final class BgaEscapeCommitter {
       if (pin == null || committedPins.contains(pin)) {
         continue;
       }
+      if (connectedBefore.contains(pin)) {
+        continue; // Pin was connected before the escapes: it gets no escape
+      }
       if (!pin.getNormalContacts().isEmpty()) {
         committedPins.add(pin);
-        continue; // Pin already escaped or connected
+        continue; // Pin already connected by the escape of another pin
       }
 
       attempted++;
@@ -554,6 +584,24 @@ public final class BgaEscapeCommitter {
             + " escapes ("
             + drcRejections
             + " rejected by DRC)");
+
+    if (!committedPins.isEmpty()
+        && committedPins.size() < MIN_ESCAPED_PIN_SHARE * needingEscape.size()) {
+      // A partial escape would be fixed on the board and keep the other pins from the normal
+      // fanout: remove it and leave the whole package to the normal fanout.
+      board.undo(null);
+      board.clearTransientAutorouteState();
+      FRLogger.info(
+          "BGA escape committer: only "
+              + committedPins.size()
+              + "/"
+              + needingEscape.size()
+              + " pins of "
+              + bga.component().name
+              + " escaped; escapes removed, the package is left to the normal fanout");
+      return new CommitResult(attempted, 0, 0, 0, drcRejections, java.util.Collections.emptySet());
+    }
+    board.popSnapshot();
 
     return new CommitResult(
         attempted, committed, viasInserted, tracesInserted, drcRejections, committedPins);
