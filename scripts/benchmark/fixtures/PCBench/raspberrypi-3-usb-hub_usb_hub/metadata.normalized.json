@@ -50,12 +50,14 @@
     "2-layer",
     "routine",
     "small",
-    "zone",
-    "tier-b"
+    "tier-b",
+    "tier-t",
+    "zone"
   ],
   "tier": "B",
   "expected_outcome": "complete",
   "timeout_budget": "06:00:00",
   "tier_index": 142,
-  "reference_seconds": 9.4
+  "reference_seconds": 9.4,
+  "tier_t": true
 }
