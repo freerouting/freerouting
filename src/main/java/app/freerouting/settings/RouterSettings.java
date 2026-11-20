@@ -483,7 +483,8 @@ public class RouterSettings implements Serializable, Cloneable {
       if (board.layerStructure.layers[i].isSignal) {
         currentPreferredDirectionIsHorizontal = !currentPreferredDirectionIsHorizontal;
       }
-      if (!board.layerStructure.layers[i].isSignal) {
+      boolean isInnerLayer = i > 0 && i < layerCount - 1;
+      if (!board.layerStructure.layers[i].isSignal && isInnerLayer) {
         layers[i].routable = false;
       } else if (layers[i].routable == null) {
         layers[i].routable = true;
