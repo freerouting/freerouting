@@ -155,4 +155,34 @@ class KiCadNetlessCopperTest extends RoutingFixtureTest {
     assertTrue(innerAtN13 >= 2, "no obstacle on In1.Cu and In2.Cu at the barrier of N13");
     assertTrue(ofN14 > 0, "the control rectangle is not of the net of the pad it touches");
   }
+
+  /**
+   * {@code Netless-copper-on-pad-2layer.dsn}, made by KiCad 10.0.8 from the {@code .kicad_pcb} next
+   * to it: 2 layers, one net N5 between two pads at x = 6 and x = 34 mm. The first pad, 1.5 mm
+   * square, is covered by a filled {@code fp_rect} without net of its footprint, 2.4 mm square,
+   * with a stroke of 0.1 mm. Only the inside of the rectangle touches the pad; its outline, 0.45 mm
+   * away from the pad, is of the same piece of copper and must not enclose the pad.
+   */
+  @Test
+  void aFilledDrawingThatCoversAPadDoesNotEncloseIt() throws IOException {
+    TestingSettings settings = new TestingSettings();
+    settings.setMaxPasses(20);
+    settings.setOptimizerEnabled(false);
+    RoutingJob job = getRoutingJob("Netless-copper-on-pad-2layer.dsn", settings);
+    useKiCadBoard(job, "Netless-copper-on-pad-2layer.kicad_pcb");
+    runRoutingJob(job);
+
+    assertEquals(RoutingJobState.COMPLETED, job.state);
+    assertEquals(0, new BoardStatistics(job.board).connections.incompleteCount);
+    int n5 = job.board.rules.nets.get("N5", 1).netNumber;
+    int areas = 0;
+    for (var item : job.board.getItems()) {
+      if (item instanceof ObstacleArea area && area.getComponentId() == 0) {
+        areas++;
+        assertTrue(area.containsNet(n5), "a piece of the rectangle is an obstacle for N5");
+      }
+    }
+    // the inside and the four sides of the outline
+    assertEquals(5, areas);
+  }
 }

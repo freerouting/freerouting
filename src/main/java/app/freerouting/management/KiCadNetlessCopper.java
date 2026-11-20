@@ -16,6 +16,7 @@ import app.freerouting.io.kicad.KiCadBoardDrawings;
 import app.freerouting.io.kicad.KiCadCopperGraphic;
 import app.freerouting.rules.DefaultItemClearanceClasses;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -30,7 +31,9 @@ import java.util.TreeSet;
  *
  * <p>A drawing that touches a pin, a trace or a via is connected to it in copper: its areas get the
  * nets of what they touch, so that they stay an obstacle for the other nets only. This covers net
- * ties and drawings that extend a pad.
+ * ties and drawings that extend a pad. The areas of a filled drawing all get the nets of the whole
+ * drawing: a filled rectangle that covers a pad touches it with its inside only, and its outline
+ * would otherwise enclose the pad.
  */
 final class KiCadNetlessCopper {
 
@@ -78,8 +81,18 @@ final class KiCadNetlessCopper {
         if (layer < 0) {
           continue;
         }
-        for (PolygonShape piece : pieces) {
-          int[] nets = netsTouching(board, piece, layer);
+        int[][] netsOfPieces = new int[pieces.size()][];
+        for (int i = 0; i < pieces.size(); i++) {
+          netsOfPieces[i] = netsTouching(board, pieces.get(i), layer);
+        }
+        if (graphic.filled()) {
+          // a filled drawing is one piece of copper, its outline included: an outline that does
+          // not touch the pad that its inside covers must not enclose that pad
+          Arrays.fill(netsOfPieces, union(netsOfPieces));
+        }
+        for (int i = 0; i < pieces.size(); i++) {
+          PolygonShape piece = pieces.get(i);
+          int[] nets = netsOfPieces[i];
           if (nets.length > 0) {
             connected++;
             board.insertObstacle(
@@ -171,6 +184,17 @@ final class KiCadNetlessCopper {
       }
     }
     return new PolygonShape(points.toArray(new Point[0]));
+  }
+
+  /** The nets of all these arrays, in order, each once. */
+  private static int[] union(int[][] netArrays) {
+    TreeSet<Integer> nets = new TreeSet<>();
+    for (int[] netArray : netArrays) {
+      for (int net : netArray) {
+        nets.add(net);
+      }
+    }
+    return nets.stream().mapToInt(Integer::intValue).toArray();
   }
 
   /** The nets of the pins, traces and vias that this area touches on this layer, in order. */
