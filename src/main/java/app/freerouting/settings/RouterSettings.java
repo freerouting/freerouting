@@ -868,6 +868,40 @@ public class RouterSettings implements Serializable, Cloneable {
     optimizer.enabled = value;
   }
 
+  /** Returns the maximum number of optimizer passes, or null if not configured. */
+  public Integer getOptimizerMaxPasses() {
+    return optimizer != null ? optimizer.maxPasses : null;
+  }
+
+  /** Sets the maximum number of optimizer passes and fires a property change event. */
+  public void setOptimizerMaxPasses(Integer value) {
+    Integer oldValue = this.optimizer != null ? this.optimizer.maxPasses : null;
+    if (this.optimizer == null) {
+      this.optimizer = new OptimizerSettings();
+    }
+    this.optimizer.maxPasses = value;
+    if (pcs != null) {
+      pcs.firePropertyChange("optimizer.maxPasses", oldValue, value);
+    }
+  }
+
+  /** Returns the optimizer patience preset, or null if not configured. */
+  public OptimizerPatience getOptimizerPatience() {
+    return optimizer != null ? optimizer.patience : null;
+  }
+
+  /** Sets the optimizer patience preset and fires a property change event. */
+  public void setOptimizerPatience(OptimizerPatience value) {
+    OptimizerPatience oldValue = this.optimizer != null ? this.optimizer.patience : null;
+    if (this.optimizer == null) {
+      this.optimizer = new OptimizerSettings();
+    }
+    this.optimizer.patience = value;
+    if (pcs != null) {
+      pcs.firePropertyChange("optimizer.patience", oldValue, value);
+    }
+  }
+
   /** Returns whether the fanout pre-pass should run. */
   public boolean getRunFanout() {
     return fanout != null && fanout.enabled != null ? fanout.enabled : true;
@@ -1273,6 +1307,10 @@ public class RouterSettings implements Serializable, Cloneable {
           "enabled", null, this.autorouter != null ? this.autorouter.enabled : null);
       pcs.firePropertyChange(
           "optimizer.enabled", null, this.optimizer != null ? this.optimizer.enabled : null);
+      pcs.firePropertyChange(
+          "optimizer.maxPasses", null, this.optimizer != null ? this.optimizer.maxPasses : null);
+      pcs.firePropertyChange(
+          "optimizer.patience", null, this.optimizer != null ? this.optimizer.patience : null);
       pcs.firePropertyChange(
           "fanout.enabled", null, this.fanout != null ? this.fanout.enabled : null);
     }
