@@ -102,12 +102,12 @@ public final class KiCadDesignRulesTranslator {
       warnings.add(source + ": " + warning);
     }
     List<ClearanceRule> rules = clearanceRules(designRules);
-    if (rules.isEmpty()) {
-      return new Result(0, 0, Map.of(), List.copyOf(warnings));
-    }
     resetSmdToSmdClearance();
     warnImageKeepouts();
     warnDuplicateReferences();
+    if (rules.isEmpty()) {
+      return new Result(0, 0, Map.of(), List.copyOf(warnings));
+    }
 
     // 1. The copper items, by entity
     Map<EntityKey, Entity> entities = new LinkedHashMap<>();
@@ -239,12 +239,6 @@ public final class KiCadDesignRulesTranslator {
             effectiveClearanceUm == null
                 ? rule.creepageUm()
                 : Math.max(effectiveClearanceUm, rule.creepageUm());
-        warnings.add(
-            prefix
-                + "constraint creepage "
-                + KiCadDesignRules.formatMm(rule.creepageUm())
-                + " applied conservatively as routing clearance"
-                + " (slots and milling cutouts are not modelled)");
       }
       if (effectiveClearanceUm == null) {
         continue;
@@ -252,6 +246,14 @@ public final class KiCadDesignRulesTranslator {
       if (rule.ignored()) {
         warnings.add(prefix + "severity ignore: the clearance is not relaxed, the rule is skipped");
         continue;
+      }
+      if (rule.creepageUm() != null) {
+        warnings.add(
+            prefix
+                + "constraint creepage "
+                + KiCadDesignRules.formatMm(rule.creepageUm())
+                + " applied conservatively as routing clearance"
+                + " (slots and milling cutouts are not modelled)");
       }
       boolean[] layers = new boolean[layerCount];
       if (rule.layer() == null) {
