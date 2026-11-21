@@ -284,7 +284,7 @@ public final class ViaOptimizer {
         }
       }
     }
-    if (newViaLocation == null) {
+    if (newViaLocation == null || newViaLocation.equals(viaCenter)) {
       return false;
     }
     if (contactPlane != null) {
@@ -360,6 +360,11 @@ public final class ViaOptimizer {
       newFloatToLocation = floatFromLocation.changeLength(floatToLocation, okLength);
     }
     Point newToLocation = newFloatToLocation.round();
+    if (newToLocation.equals(fromLocation)) {
+      // okLength is shorter than half a board unit: the via is already as far as it can go. A
+      // zero move would be reported as a change and make the caller's fixpoint loop run again.
+      return null;
+    }
     Vector delta = newToLocation.differenceBy(fromLocation);
     boolean checkOk = DrillItemMover.check(via, delta, 0, 0, null, board, null);
 
