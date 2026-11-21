@@ -31,6 +31,7 @@ import app.freerouting.gui.workspace.WorkspaceSettings;
 import app.freerouting.gui.workspace.session.InteractiveActionThread;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.FileFormat;
+import app.freerouting.io.kicad.KiCadBoardDrawings;
 import app.freerouting.io.kicad.KiCadBoardZones;
 import app.freerouting.io.kicad.KiCadDesignRules;
 import app.freerouting.io.kicad.KiCadDesignRulesTranslator;
@@ -598,6 +599,32 @@ public class HeadlessBoardManager implements BoardManager {
             + " planes, pad connection to "
             + matchedPads
             + " pads.");
+  }
+
+  /**
+   * Inserts the copper drawings and texts without net of the KiCad board as obstacles: the Specctra
+   * export of KiCad leaves them out of the design.
+   */
+  private void applyKiCadNetlessCopper() {
+    KiCadBoardDrawings drawings = this.routingJob.kicadBoardDrawings;
+    if (drawings == null || this.board == null || drawings.netlessCopper().isEmpty()) {
+      return;
+    }
+    KiCadNetlessCopper.Result result = KiCadNetlessCopper.insert(this.board, drawings);
+    this.routingJob.logInfo(
+        "KiCad board '"
+            + drawings.sourceName()
+            + "': "
+            + result.drawings()
+            + " copper drawings and text characters without net inserted as "
+            + result.areas()
+            + " obstacles ("
+            + result.connected()
+            + " of them touching a pin, a trace or a via, an obstacle for the other nets only"
+            + (result.skipped() > 0
+                ? "; " + result.skipped() + " on a layer absent from the design"
+                : "")
+            + ").");
   }
 
   /**
@@ -1267,6 +1294,7 @@ public class HeadlessBoardManager implements BoardManager {
       applyKiCadDesignRules();
       applyKiCadProjectMinTrackWidth();
       applyKiCadZoneFillRules();
+      applyKiCadNetlessCopper();
       applyCopperToEdgeClearanceOverride();
       applyHoleClearanceOverride();
       applyHoleToHole();
