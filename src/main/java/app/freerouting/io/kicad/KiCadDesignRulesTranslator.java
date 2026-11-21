@@ -9,6 +9,7 @@ import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.model.items.Via;
 import app.freerouting.board.model.structure.Component;
 import app.freerouting.board.model.structure.Unit;
+import app.freerouting.geometry.planar.Circle;
 import app.freerouting.io.kicad.KiCadRuleCondition.ItemType;
 import app.freerouting.io.kicad.KiCadRuleCondition.Tri;
 import app.freerouting.rules.ClearanceMatrix;
@@ -23,10 +24,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -69,16 +72,27 @@ public final class KiCadDesignRulesTranslator {
     TRACE,
     VIA,
     PIN,
-    AREA
+    AREA,
+    /** A pad without net that the KiCad export wrote as a round keepout of its footprint. */
+    PAD_KEEPOUT
   }
 
-  /** A set of copper items with the same kind, net, clearance class and KiCad attributes. */
-  private record EntityKey(Kind kind, int net, int clearanceClass, int pinItemId) {}
+  /**
+   * A set of copper items with the same kind, net, clearance class and KiCad attributes: {@code
+   * owner} is the item id of a pin, the component id of a pad keepout, else 0.
+   */
+  private record EntityKey(Kind kind, int net, int clearanceClass, int owner) {}
 
   private record Entity(EntityKey key, KiCadRuleCondition.Item item) {}
 
   private record ClearanceRule(
       String name, boolean[] layers, KiCadRuleCondition condition, int value) {}
+
+  /** The components with a pad exported as a keepout, in the order found. */
+  private final Set<String> padKeepoutComponents = new LinkedHashSet<>();
+
+  /** The components the KiCad export may have renamed, with the reference they may have had. */
+  private final Map<String, String> renamed;
 
   private final BasicBoard board;
   private final ClearanceMatrix matrix;
@@ -89,6 +103,34 @@ public final class KiCadDesignRulesTranslator {
     this.board = board;
     this.matrix = board.rules.clearanceMatrix;
     this.layerCount = matrix.getLayerCount();
+    List<String> names = new ArrayList<>();
+    for (Component component : board.components.getAll()) {
+      names.add(component.name);
+    }
+    this.renamed = possiblyRenamed(names);
+  }
+
+  private static final Pattern RENAMED = Pattern.compile("(.+)_\\d+");
+
+  /**
+   * The components whose name may not be their KiCad reference, with the reference they may have.
+   * The KiCad DSN export makes component names unique, ignoring case, by appending {@code _1},
+   * {@code _2}... to a reference already taken ({@code specctra_export.cpp}): a component {@code
+   * P1_1} on a board that also has a {@code P1} may be a second {@code P1}, or a real {@code P1_1}.
+   */
+  static Map<String, String> possiblyRenamed(Iterable<String> componentNames) {
+    Set<String> taken = new HashSet<>();
+    for (String name : componentNames) {
+      taken.add(name.toLowerCase(Locale.ROOT));
+    }
+    Map<String, String> result = new LinkedHashMap<>();
+    for (String name : componentNames) {
+      Matcher matcher = RENAMED.matcher(name);
+      if (matcher.matches() && taken.contains(matcher.group(1).toLowerCase(Locale.ROOT))) {
+        result.put(name, matcher.group(1));
+      }
+    }
+    return result;
   }
 
   /** Applies the clearance rules to the board. */
@@ -107,6 +149,16 @@ public final class KiCadDesignRulesTranslator {
     warnDuplicateReferences();
     if (rules.isEmpty()) {
       return new Result(0, 0, Map.of(), List.copyOf(warnings));
+    }
+    if (!renamed.isEmpty()
+        && rules.stream()
+            .anyMatch(r -> r.condition() != null && r.condition().testsTheFootprint())) {
+      warnings.add(
+          source
+              + ": "
+              + String.join(", ", renamed.keySet())
+              + " may be duplicate references renamed by the KiCad export: the rules that test the"
+              + " footprint are applied to them wherever they may match");
     }
 
     // 1. The copper items, by entity
@@ -209,6 +261,19 @@ public final class KiCadDesignRulesTranslator {
       if (entry.getKey().clearanceClassIndex() != target) {
         entry.getKey().setClearanceClassIndex(target);
       }
+    }
+    if (!padKeepoutComponents.isEmpty()) {
+      List<String> names = new ArrayList<>(padKeepoutComponents);
+      String listed =
+          names.size() <= 10
+              ? String.join(", ", names)
+              : String.join(", ", names.subList(0, 10)) + " and " + (names.size() - 10) + " more";
+      warnings.add(
+          source
+              + ": pads without net exported as keepouts in "
+              + listed
+              + ": the rules apply to these keepouts as to pads without net of unknown number and"
+              + " plating, from the keepout edge, which includes the hole clearance");
     }
     Map<String, List<String>> split = updateNetClasses(newClass);
     if (added > 0) {
@@ -396,6 +461,18 @@ public final class KiCadDesignRulesTranslator {
     return netClass.getName();
   }
 
+  /**
+   * Whether an item is a pad without net that the KiCad export wrote as a keepout of its footprint
+   * image: a round keepout ({@code isRoundKeepout} in {@code specctra_export.cpp}). The KiCad DRC
+   * applies the clearance rules to that pad; its keepout, a circle of the hole enlarged by the hole
+   * clearance, gets them here.
+   */
+  private static boolean isPadKeepout(Item item) {
+    return item.getClass() == ObstacleArea.class
+        && item.getComponentId() > 0
+        && ((ObstacleArea) item).getRelativeArea() instanceof Circle;
+  }
+
   private void collectEntities(Map<EntityKey, Entity> entities, Map<Item, EntityKey> items) {
     // The traces and vias the router may still add: the classes of the net classes
     for (int netNo = 1; netNo <= board.rules.nets.maxNetNumber(); netNo++) {
@@ -423,11 +500,14 @@ public final class KiCadDesignRulesTranslator {
         kind = Kind.VIA;
       } else if (item instanceof ConductionArea && item.netCount() > 0) {
         kind = Kind.AREA;
+      } else if (isPadKeepout(item)) {
+        kind = Kind.PAD_KEEPOUT;
+        padKeepoutComponents.add(board.components.get(item.getComponentId()).name);
       } else {
         continue;
       }
       Net net = item.netCount() > 0 ? board.rules.nets.get(item.getNetNumber(0)) : null;
-      if (kind != Kind.PIN && net == null) {
+      if (kind != Kind.PIN && kind != Kind.PAD_KEEPOUT && net == null) {
         continue;
       }
       items.put(item, addEntity(entities, kind, net, item.clearanceClassIndex(), item));
@@ -437,8 +517,13 @@ public final class KiCadDesignRulesTranslator {
   private EntityKey addEntity(
       Map<EntityKey, Entity> entities, Kind kind, Net net, int clearanceClass, Item pinItem) {
     int netNo = net == null ? 0 : net.netNumber;
-    int pinId = kind == Kind.PIN ? pinItem.getId() : 0;
-    EntityKey key = new EntityKey(kind, netNo, clearanceClass, pinId);
+    int owner =
+        switch (kind) {
+          case PIN -> pinItem.getId();
+          case PAD_KEEPOUT -> pinItem.getComponentId();
+          default -> 0;
+        };
+    EntityKey key = new EntityKey(kind, netNo, clearanceClass, owner);
     entities.computeIfAbsent(key, k -> new Entity(k, describe(kind, net, pinItem)));
     return key;
   }
@@ -446,6 +531,18 @@ public final class KiCadDesignRulesTranslator {
   private KiCadRuleCondition.Item describe(Kind kind, Net net, Item pinItem) {
     String netName = net == null ? "" : net.name;
     String netClass = kicadClassName(net == null ? null : net.getNetClass());
+    if (kind == Kind.PAD_KEEPOUT) {
+      Component component = board.components.get(pinItem.getComponentId());
+      return new KiCadRuleCondition.Item(
+          ItemType.PAD,
+          netName,
+          netClass,
+          component.name,
+          null, // number and plating unknown
+          false,
+          libraryId(component),
+          renamed.get(component.name));
+    }
     if (kind != Kind.PIN) {
       ItemType type =
           switch (kind) {
@@ -468,7 +565,8 @@ public final class KiCadDesignRulesTranslator {
         component == null ? null : component.name,
         padNumber,
         pin.firstLayer() == pin.lastLayer(),
-        libraryId(component));
+        libraryId(component),
+        component == null ? null : renamed.get(component.name));
   }
 
   /**
