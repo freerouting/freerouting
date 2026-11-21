@@ -441,7 +441,9 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   }
 
   /**
-   * Reads the zones of the KiCad board file of this job when explicitly provided.
+   * Reads the zones of the KiCad board file of this job when explicitly provided. Without a KiCad
+   * project, the job checks the defaults of KiCad and the minimum track width of the board, if it
+   * sets one, as KiCad does.
    *
    * @param explicitFile the .kicad_pcb given with the design, or null
    * @return false if {@code explicitFile} cannot be read
@@ -459,6 +461,24 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
               + " copper zones of the KiCad board '"
               + path
               + "'.");
+      // Without a project file, KiCad checks the board against its default clearance and, on a
+      // board of KiCad 5 or earlier, the minimum track width kept in the setup of the board.
+      Double minWidth = this.kicadBoardZones.minTrackWidthUm();
+      if (this.kicadProject == null) {
+        this.kicadProject = KiCadProject.fromBoardSetup(path.getFileName().toString(), minWidth);
+        FRLogger.info(
+            "No KiCad project given: using the defaults of KiCad for the board '"
+                + path
+                + "' (copper to edge clearance "
+                + this.kicadProject.copperEdgeClearanceUm()
+                + " um)"
+                + (minWidth == null
+                    ? "."
+                    : " and its minimum track width, "
+                        + minWidth
+                        + " um, as the default neck width")
+                + " (unless overridden).");
+      }
       return true;
     } catch (IOException | IllegalArgumentException e) {
       String reason = e instanceof NoSuchFileException ? "file not found" : e.getMessage();
