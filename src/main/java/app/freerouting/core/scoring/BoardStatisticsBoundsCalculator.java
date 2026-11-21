@@ -207,6 +207,11 @@ final class BoardStatisticsBoundsCalculator {
     FloatPoint point = new FloatPoint(pin.x, pin.y);
     double result = Double.POSITIVE_INFINITY;
     for (Area area : areas) {
+      if (!(area instanceof Circle) && area.splitToConvex() == null) {
+        // The border could not be split into convex pieces (self-intersecting or degenerate), so
+        // contains() and nearestPointApprox() cannot be evaluated: 0 keeps the bound a lower bound.
+        return 0.0;
+      }
       if (area.contains(point)) {
         return 0.0;
       }
