@@ -114,9 +114,40 @@ class KiCadDesignRulesTest {
     assertTrue(
         result.warnings().stream()
             .anyMatch(w -> w.contains("creepage") && w.contains("applied conservatively")));
+    // the creepage applies to the copper the router adds
+    assertEquals(mm(board, 5.0), traceValue(board, "Net-(K2-Pad2)", "Net-(K1-Pad1)"));
+    assertEquals(mm(board, 5.0), traceToPinValue(board, "Net-(K1-Pad1)", pin(board, "K2", "2")));
+  }
+
+  @Test
+  void leavesTheCreepageBetweenTwoPadsToKiCad() throws IOException {
+    BasicBoard original = loadBoard();
+    int designValue =
+        value(original.rules.clearanceMatrix, pin(original, "K1", "1"), pin(original, "K2", "2"));
+    BasicBoard board = loadBoard();
+    KiCadDesignRules rules =
+        KiCadDesignRules.parse(
+            """
+            (version 1)
+            (rule "mains_creepage_only"
+              (condition "A.NetClass == 'HighVoltage' && B.NetClass != 'HighVoltage'")
+              (constraint creepage (min 5mm)))
+            """,
+            "creepage.kicad_dru");
+
+    KiCadDesignRulesTranslator.Result result = KiCadDesignRulesTranslator.apply(board, rules);
+
+    // the router never moves a pad, and a slot between two pads (not modelled) may lengthen their
+    // creepage path: between pads, the clearance of the design stays, and KiCad checks the creepage
     assertEquals(
-        mm(board, 5.0),
+        designValue,
         value(board.rules.clearanceMatrix, pin(board, "K1", "1"), pin(board, "K2", "2")));
+    assertTrue(
+        result.warnings().stream()
+            .anyMatch(
+                w ->
+                    w.contains("'mains_creepage_only'")
+                        && w.contains("creepage not applied between two pads")));
   }
 
   @Test
@@ -138,10 +169,13 @@ class KiCadDesignRulesTest {
     KiCadDesignRulesTranslator.Result result = KiCadDesignRulesTranslator.apply(board, rules);
 
     // KiCad keeps one rule list per constraint type: the clearance rule does not override the
-    // creepage, which still asks for 5 mm
+    // creepage, which still asks for 5 mm from the copper the router adds
     assertEquals(2, result.translatedRules());
+    assertEquals(mm(board, 5.0), traceValue(board, "Net-(K2-Pad2)", "Net-(K1-Pad1)"));
+    assertEquals(mm(board, 5.0), traceToPinValue(board, "Net-(K1-Pad1)", pin(board, "K2", "2")));
+    // between two pads, only the clearance rule counts
     assertEquals(
-        mm(board, 5.0),
+        mm(board, 0.3),
         value(board.rules.clearanceMatrix, pin(board, "K1", "1"), pin(board, "K2", "2")));
   }
 
@@ -218,9 +252,9 @@ class KiCadDesignRulesTest {
 
     ClearanceMatrix matrix = board.rules.clearanceMatrix;
     // the last matching rule wins: coil to contacts of the same relay (2.5 mm), then mains
-    // isolation; the creepage of the mains isolation (3 mm) still applies to the coil and contacts,
-    // as the coil rule sets only a clearance
-    assertEquals(mm(board, 3.0), value(matrix, pin(board, "K1", "1"), pin(board, "K1", "2")));
+    // isolation; the coil rule sets only a clearance, and between two pads the creepage of the
+    // mains isolation (3 mm) is left to KiCad
+    assertEquals(mm(board, 2.5), value(matrix, pin(board, "K1", "1"), pin(board, "K1", "2")));
     assertEquals(mm(board, 3.0), value(matrix, pin(board, "K1", "1"), pin(board, "K2", "2")));
     // a rule may lower the clearance of the net class (2 mm)
     assertEquals(mm(board, 1.5), traceValue(board, "Net-(FU1-Pad1)", "Net-(FU1-Pad2)"));
@@ -314,6 +348,13 @@ class KiCadDesignRulesTest {
 
   private static int value(ClearanceMatrix matrix, Item first, Item second) {
     return matrix.getValue(first.clearanceClassIndex(), second.clearanceClassIndex(), 0, false);
+  }
+
+  private static int traceToPinValue(BasicBoard board, String traceNet, Pin pin) {
+    var net = board.rules.nets.get(traceNet, 1);
+    assertNotNull(net, traceNet);
+    return board.rules.clearanceMatrix.getValue(
+        net.getNetClass().getTraceClearanceClass(), pin.clearanceClassIndex(), 0, false);
   }
 
   private static int traceValue(BasicBoard board, String firstNet, String secondNet) {

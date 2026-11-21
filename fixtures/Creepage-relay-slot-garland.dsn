@@ -1,0 +1,242 @@
+(pcb Creepage-relay-slot-garland.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.8-10.0.8~ubuntu24.04.1")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  60000 -45000  0 -45000  0 0  60000 0  60000 -45000)
+    )
+    (keepout "" (polygon signal 0  9920 -15600  20720 -15600  20720 -13600  9920 -13600
+            9920 -15600))
+    (via "Via[0-1]_600:300_um")
+    (rule
+      (width 200)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component PinHeader_1x03_P2.54mm_Vertical
+      (place J1 52000 -4000 front 0 (PN PinHeader_1x03_P2.54mm_Vertical))
+    )
+    (component "TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal"
+      (place J2 8000 -40000 front 0 (PN "TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal"))
+    )
+    (component "Relay_SPDT_Omron-G5Q-1"
+      (place K2 36000 -10000 front -90 (PN "Relay_SPDT_Omron-G5Q-1"))
+      (place K1 12000 -10000 front -90 (PN "Relay_SPDT_Omron-G5Q-1"))
+    )
+  )
+  (library
+    (image PinHeader_1x03_P2.54mm_Vertical
+      (outline (polygon signal 0  1765 -6845  -1765 -6845  -1765 1765  1765 1765))
+      (outline (path signal 120  -1380 1380  0 1380))
+      (outline (path signal 120  -1380 0  -1380 1380))
+      (outline (path signal 120  -1380 -1270  -1380 -6460))
+      (outline (path signal 120  -1380 -1270  1380 -1270))
+      (outline (path signal 120  -1380 -6460  1380 -6460))
+      (outline (path signal 120  1380 -1270  1380 -6460))
+      (outline (path signal 100  -1270 635  -635 1270))
+      (outline (path signal 100  -1270 -6350  -1270 635))
+      (outline (path signal 100  -635 1270  1270 1270))
+      (outline (path signal 100  1270 1270  1270 -6350))
+      (outline (path signal 100  1270 -6350  -1270 -6350))
+      (pin Rect[A]Pad_1700.000000x1700.000000_um 1 0 0)
+      (pin Round[A]Pad_1700.000000_um 2 0 -2540)
+      (pin Round[A]Pad_1700.000000_um 3 0 -5080)
+    )
+    (image "TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal"
+      (outline (polygon signal 0  8125 -5095  -3035 -5095  -3035 5705  8125 5705))
+      (outline (path signal 120  -2660 5320  7740 5320))
+      (outline (path signal 120  -2660 2300  7740 2300))
+      (outline (path signal 120  -2660 -2600  7740 -2600))
+      (outline (path signal 120  -2660 -4100  7740 -4100))
+      (outline (path signal 120  -2660 -4720  -2660 5320))
+      (outline (path signal 120  -300 -4720  -2660 -4720))
+      (outline (path signal 120  7740 5320  7740 -4720))
+      (outline (path signal 120  7740 -4720  300 -4720))
+      (outline (path signal 100  -2540 5200  7620 5200))
+      (outline (path signal 100  -2540 2300  7620 2300))
+      (outline (path signal 100  -2540 -2600  7620 -2600))
+      (outline (path signal 100  -2540 -4100  -2540 5200))
+      (outline (path signal 100  -2540 -4100  7620 -4100))
+      (outline (path signal 100  -2040 -4600  -2540 -4100))
+      (outline (path signal 100  955 1138  -1138 -955))
+      (outline (path signal 100  1138 955  -955 -1138))
+      (outline (path signal 100  6035 1138  3942 -955))
+      (outline (path signal 100  6218 955  4125 -1138))
+      (outline (path signal 100  7620 5200  7620 -4600))
+      (outline (path signal 100  7620 -4600  -2040 -4600))
+      (outline (path signal 100  1500 0  1480.58 -240.617  1422.81 -475.002  1328.18 -697.085
+            1199.16 -901.113  1039.09 -1081.8  852.097 -1234.48  643.039 -1355.18
+            417.326 -1440.78  180.805 -1489.06  -60.399 -1498.78  -300.039 -1469.69
+            -531.907 -1402.52  -750 -1299.04  -948.668 -1161.91  -1122.77 -994.684
+            -1267.79 -801.699  -1379.97 -587.95  -1456.41 -358.973  -1495.14 -120.7
+            -1495.14 120.7  -1456.41 358.973  -1379.97 587.95  -1267.79 801.699
+            -1122.77 994.684  -948.668 1161.91  -750 1299.04  -531.907 1402.52
+            -300.039 1469.69  -60.399 1498.78  180.805 1489.06  417.326 1440.78
+            643.039 1355.18  852.097 1234.48  1039.09 1081.8  1199.16 901.113
+            1328.18 697.085  1422.81 475.002  1480.58 240.617  1500 0))
+      (outline (path signal 100  6580 0  6560.57 -240.617  6502.81 -475.002  6408.18 -697.085
+            6279.16 -901.113  6119.09 -1081.8  5932.1 -1234.48  5723.04 -1355.18
+            5497.33 -1440.78  5260.81 -1489.06  5019.6 -1498.78  4779.96 -1469.69
+            4548.09 -1402.52  4330 -1299.04  4131.33 -1161.91  3957.23 -994.684
+            3812.22 -801.699  3700.03 -587.95  3623.59 -358.973  3584.86 -120.7
+            3584.86 120.7  3623.59 358.973  3700.03 587.95  3812.22 801.699
+            3957.23 994.684  4131.33 1161.91  4330 1299.04  4548.09 1402.52
+            4779.96 1469.69  5019.6 1498.78  5260.81 1489.06  5497.33 1440.78
+            5723.04 1355.18  5932.1 1234.48  6119.09 1081.8  6279.16 901.113
+            6408.18 697.085  6502.81 475.002  6560.57 240.617  6580 0))
+      (pin RoundRect[A]Pad_2600.000000x2600.000000_250.951000_um_0.000000_0 1 0 0)
+      (pin Round[A]Pad_2600.000000_um 2 5080 0)
+    )
+    (image "Relay_SPDT_Omron-G5Q-1"
+      (outline (polygon signal 0  19695 9545  19695 -1945  -1945 -1945  -1945 9545))
+      (outline (path signal 120  -1680 -1690  19460 -1690))
+      (outline (path signal 120  -1680 -1690  -1680 9310))
+      (outline (path signal 120  19460 -1690  19460 9310))
+      (outline (path signal 120  1270 0  2540 0))
+      (outline (path signal 120  2540 0  2540 2290))
+      (outline (path signal 120  10160 1270  10160 3810))
+      (outline (path signal 120  17780 1270  17780 3810))
+      (outline (path signal 120  2030 2290  2030 4830))
+      (outline (path signal 120  2540 2290  2030 2290))
+      (outline (path signal 120  3050 2290  2540 2290))
+      (outline (path signal 120  2030 3050  3050 4060))
+      (outline (path signal 120  10160 3810  13335 3810))
+      (outline (path signal 120  13335 3810  17145 6350))
+      (outline (path signal 120  2030 4830  2540 4830))
+      (outline (path signal 120  2540 4830  3050 4830))
+      (outline (path signal 120  2540 4830  2540 7620))
+      (outline (path signal 120  3050 4830  3050 2290))
+      (outline (path signal 120  15240 6350  15240 5080))
+      (outline (path signal 120  2540 7620  1270 7620))
+      (outline (path signal 120  -1680 9310  19460 9310))
+      (outline (path signal 120  13335 3937  13398.5 3919.99  13445 3873.5  13462 3810
+            13445 3746.5  13398.5 3700.01  13335 3683  13271.5 3700.01  13225 3746.5
+            13208 3810  13225 3873.5  13271.5 3919.99  13335 3937))
+      (outline (path signal 100  -1180 -1190  -1180 8810))
+      (outline (path signal 100  18960 -1190  -1180 -1190))
+      (outline (path signal 100  0 1000  0 6500))
+      (outline (path signal 100  -1180 8810  18960 8810))
+      (outline (path signal 100  18960 8810  18960 -1190))
+      (pin Rect[A]Pad_2300.000000x2300.000000_um (rotate 180) 1 0 0)
+      (pin Round[A]Pad_2300.000000_um (rotate 180) 2 10160 0)
+      (pin Round[A]Pad_2300.000000_um (rotate 180) 3 17780 0)
+      (pin Round[A]Pad_2300.000000_um (rotate 180) 4 15240 7620)
+      (pin Round[A]Pad_2300.000000_um (rotate 180) 5 0 7620)
+    )
+    (padstack Round[A]Pad_1700.000000_um
+      (shape (circle F.Cu 1700))
+      (shape (circle B.Cu 1700))
+      (attach off)
+    )
+    (padstack Round[A]Pad_2300.000000_um
+      (shape (circle F.Cu 2300))
+      (shape (circle B.Cu 2300))
+      (attach off)
+    )
+    (padstack Round[A]Pad_2600.000000_um
+      (shape (circle F.Cu 2600))
+      (shape (circle B.Cu 2600))
+      (attach off)
+    )
+    (padstack RoundRect[A]Pad_2600.000000x2600.000000_250.951000_um_0.000000_0
+      (shape (polygon F.Cu 0  -1300.95 1050  -1281.85 1146.04  -1227.45 1227.45  -1146.04 1281.85
+            -1050 1300.95  1050 1300.95  1146.04 1281.85  1227.45 1227.45
+            1281.85 1146.04  1300.95 1050  1300.95 -1050  1281.85 -1146.04
+            1227.45 -1227.45  1146.04 -1281.85  1050 -1300.95  -1050 -1300.95
+            -1146.04 -1281.85  -1227.45 -1227.45  -1281.85 -1146.04  -1300.95 -1050
+            -1300.95 1050))
+      (shape (polygon B.Cu 0  -1300.95 1050  -1281.85 1146.04  -1227.45 1227.45  -1146.04 1281.85
+            -1050 1300.95  1050 1300.95  1146.04 1281.85  1227.45 1227.45
+            1281.85 1146.04  1300.95 1050  1300.95 -1050  1281.85 -1146.04
+            1227.45 -1227.45  1146.04 -1281.85  1050 -1300.95  -1050 -1300.95
+            -1146.04 -1281.85  -1227.45 -1227.45  -1281.85 -1146.04  -1300.95 -1050
+            -1300.95 1050))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_2300.000000x2300.000000_um
+      (shape (rect F.Cu -1150 -1150 1150 1150))
+      (shape (rect B.Cu -1150 -1150 1150 1150))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1700.000000x1700.000000_um
+      (shape (rect F.Cu -850 -850 850 850))
+      (shape (rect B.Cu -850 -850 850 850))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:300_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net +5V
+      (pins J1-1 K2-1 K1-1)
+    )
+    (net COIL1_N
+      (pins J1-2 K1-5)
+    )
+    (net COIL2_N
+      (pins J1-3 K2-5)
+    )
+    (net /MAINS/COM1
+      (pins J2-1 K1-2)
+    )
+    (net /MAINS/COM2
+      (pins J2-2 K2-2)
+    )
+    (net /MAINS/NO2
+      (pins K2-3)
+    )
+    (net /MAINS/NC2
+      (pins K2-4)
+    )
+    (net /MAINS/NO1
+      (pins K1-3)
+    )
+    (net /MAINS/NC1
+      (pins K1-4)
+    )
+    (class kicad_default +5V COIL1_N COIL2_N
+      (circuit
+        (use_via "Via[0-1]_600:300_um")
+      )
+      (rule
+        (width 200)
+        (clearance 200)
+      )
+    )
+    (class MAINS /MAINS/COM1 /MAINS/COM2 /MAINS/NC1 /MAINS/NC2 /MAINS/NO1
+      /MAINS/NO2
+      (circuit
+        (use_via "Via[0-1]_600:300_um")
+      )
+      (rule
+        (width 200)
+        (clearance 2000)
+      )
+    )
+  )
+  (wiring
+  )
+)

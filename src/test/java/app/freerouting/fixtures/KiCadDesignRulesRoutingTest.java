@@ -129,6 +129,55 @@ class KiCadDesignRulesRoutingTest extends RoutingFixtureTest {
     }
   }
 
+  /**
+   * Creepage-relay-slot-garland: two mains relays whose coil and contacts are 7.86 mm apart, with
+   * an 8 mm creepage and a later 7.8 mm clearance-only rule within each relay. A slot under K1
+   * makes its creepage path longer than 8 mm, so KiCad accepts it (and reports K2, which has none).
+   * Freerouting does not model the slot: between two pads it leaves the creepage to KiCad, so the
+   * board loads without violations, while the traces it adds keep the 8 mm creepage from the mains
+   * pads.
+   */
+  @Test
+  void leavesTheCreepageBetweenTwoPadsToKiCad() throws IOException {
+    TestingSettings testingSettings = new TestingSettings();
+    testingSettings.setMaxPasses(20);
+    testingSettings.setOptimizerEnabled(false);
+    testingSettings.setJobTimeoutString("00:01:00");
+    RoutingJob job = getRoutingJob("Creepage-relay-slot-garland.dsn", testingSettings);
+    job.kicadDesignRules =
+        KiCadDesignRules.read(TestFixtures.resolvePath("Creepage-relay-slot-garland.kicad_dru"));
+
+    runRoutingJob(job);
+
+    assertRoutingResult(job, "Creepage-relay-slot-garland.dsn")
+        .maxIncompleteConnections(0)
+        .maxClearanceViolations(0)
+        .check();
+    double required = job.board.communication.physicalToBoard(7999.0, Unit.UM);
+    int traces = 0;
+    for (Item item : job.board.getItems()) {
+      if (item instanceof Trace trace
+          && !job.board.rules.nets.get(trace.getNetNumber(0)).name.startsWith("/MAINS/")) {
+        traces++;
+        for (Item other : job.board.getItems()) {
+          if (other instanceof Pin pin
+              && pin.netCount() > 0
+              && job.board.rules.nets.get(pin.getNetNumber(0)).name.startsWith("/MAINS/")) {
+            double distance = distance(trace, pin);
+            assertTrue(
+                distance >= required,
+                "a low-voltage trace must keep the 8 mm creepage from the mains pad "
+                    + pin
+                    + ", found "
+                    + Math.round(distance / job.board.communication.physicalToBoard(1.0, Unit.UM))
+                    + " um");
+          }
+        }
+      }
+    }
+    assertTrue(traces > 0, "the low-voltage nets must have been routed");
+  }
+
   /** The smallest distance between the copper of two items, from the corners of their shapes. */
   private static double distance(Item first, Item second) {
     double result = Double.MAX_VALUE;
