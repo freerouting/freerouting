@@ -7,6 +7,7 @@ import app.freerouting.core.events.RoutingJobUpdatedEvent;
 import app.freerouting.core.events.RoutingJobUpdatedEventListener;
 import app.freerouting.core.results.RoutingResultManifest;
 import app.freerouting.io.FileFormat;
+import app.freerouting.io.kicad.KiCadBoardDrawings;
 import app.freerouting.io.kicad.KiCadBoardZones;
 import app.freerouting.io.kicad.KiCadDesignRules;
 import app.freerouting.io.kicad.KiCadProject;
@@ -129,6 +130,12 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
    * width are applied to the planes once the board is loaded. Null if there is none.
    */
   public transient KiCadBoardZones kicadBoardZones;
+
+  /**
+   * The copper drawings without net of the same KiCad board, which the Specctra export leaves out:
+   * they are inserted as obstacles once the board is loaded. Null if there is none.
+   */
+  public transient KiCadBoardDrawings kicadBoardDrawings;
 
   @SerializedName("initial_session")
   @Schema(description = "Details of the initial session (.ses or .json) file to import")
@@ -455,6 +462,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     Path path = Path.of(explicitFile);
     try {
       this.kicadBoardZones = KiCadBoardZones.read(path);
+      this.kicadBoardDrawings = KiCadBoardDrawings.read(path);
       FRLogger.info(
           "Using the "
               + this.kicadBoardZones.zones().size()

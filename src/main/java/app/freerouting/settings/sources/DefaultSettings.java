@@ -2,6 +2,7 @@ package app.freerouting.settings.sources;
 
 import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
+import app.freerouting.settings.OptimizerPatience;
 import app.freerouting.settings.OptimizerScoringVersion;
 import app.freerouting.settings.RouterScoringVersion;
 import app.freerouting.settings.RouterSettings;
@@ -129,6 +130,9 @@ public class DefaultSettings implements SettingsSource {
   public static final OptimizerScoringVersion DEFAULT_OPTIMIZER_SCORING_VERSION =
       OptimizerScoringVersion.V2_LOWER_BOUND;
 
+  /** Current default optimizer patience preset. */
+  public static final OptimizerPatience DEFAULT_OPTIMIZER_PATIENCE = OptimizerPatience.BALANCED;
+
   public static final float DEFAULT_ROUTER_UNROUTED_CONNECTION_WEIGHT = 1000.0F;
 
   public static final String DEFAULT_FALLBACK_STRATEGIES =
@@ -255,7 +259,7 @@ public class DefaultSettings implements SettingsSource {
     settings.optimizer.maxPasses = 100;
     settings.optimizer.maxItems = Integer.MAX_VALUE;
     settings.optimizer.maxThreads = null;
-    settings.optimizer.optimizationImprovementThreshold = DEFAULT_OPTIMIZER_IMPROVEMENT_THRESHOLD;
+    settings.optimizer.optimizationImprovementThreshold = null;
     settings.optimizer.boardUpdateStrategy = BoardUpdateStrategy.GLOBAL_OPTIMAL;
     settings.optimizer.itemSelectionStrategy = ItemSelectionStrategy.SEQUENTIAL;
     settings.optimizer.additionalRipupCostFactorAtStart = 10;
@@ -265,8 +269,9 @@ public class DefaultSettings implements SettingsSource {
     settings.optimizer.traceRipupCostFactor = 0.6f;
     settings.optimizer.maxAutoroutePasses = 6;
     settings.optimizer.enablePreflightGuards = true;
-    settings.optimizer.maxConsecutiveFailures = 50;
-    settings.optimizer.maxConsecutiveFailuresPass1 = 12;
+    settings.optimizer.patience = DEFAULT_OPTIMIZER_PATIENCE;
+    settings.optimizer.maxConsecutiveFailures = null;
+    settings.optimizer.maxConsecutiveFailuresPass1 = null;
 
     // Scalar trace-cost defaults (layer-specific arrays are omitted for the same reason as
     // the layer arrays above – their sizes depend on the board).

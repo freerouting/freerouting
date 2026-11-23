@@ -52,10 +52,12 @@ class ScoringVersionSettingsTest {
   @Test
   void defaultOptimizerImprovementThresholdIsDefaultPercentage() {
     RouterSettings settings = new DefaultSettings().getSettings();
-    assertEquals(2.5f, settings.optimizer.optimizationImprovementThreshold, 0.0f);
+    org.junit.jupiter.api.Assertions.assertNull(
+        settings.optimizer.optimizationImprovementThreshold);
+    assertEquals(2.5f, settings.optimizer.patience.getDefaultImprovementThreshold(), 0.0f);
     assertEquals(
         DefaultSettings.DEFAULT_OPTIMIZER_IMPROVEMENT_THRESHOLD,
-        settings.optimizer.optimizationImprovementThreshold,
+        settings.optimizer.patience.getDefaultImprovementThreshold(),
         0.0f);
   }
 }

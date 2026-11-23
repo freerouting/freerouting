@@ -258,12 +258,15 @@ public final class ReflectionUtil {
               numberOfFieldsChanged++;
             }
           } else if (field.getType().isEnum()) {
-            var enumType = (Class<Enum>) field.getType();
-            var enumValue = Enum.valueOf(enumType, sourceValue.toString());
-
-            // Copy the enum value
-            field.set(target, enumValue);
-            numberOfFieldsChanged++;
+            if (field.getType().isInstance(sourceValue)) {
+              field.set(target, sourceValue);
+              numberOfFieldsChanged++;
+            } else {
+              var enumType = (Class<Enum>) field.getType();
+              var enumValue = Enum.valueOf(enumType, sourceValue.toString());
+              field.set(target, enumValue);
+              numberOfFieldsChanged++;
+            }
           } else if (field.getType().isArray()) {
             // Is the array of primitive types or strings?
             if (field.getType().getComponentType().isPrimitive()

@@ -20,8 +20,8 @@ import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.settings.OptimizerPatience;
 import app.freerouting.settings.OptimizerSettings;
-import app.freerouting.settings.sources.DefaultSettings;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,6 +48,8 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public final class BatchOptimizer extends NamedAlgorithm {
 
+  private CandidateTaskFactory candidateTaskFactory;
+
   protected final ProgressThrottler progressThrottler = new ProgressThrottler(1000);
   protected ReadSortedRouteItems sortedRouteItems;
   // In the first passes the ripup costs are increased for better performance.
@@ -56,6 +58,12 @@ public final class BatchOptimizer extends NamedAlgorithm {
   protected double minCumulativeTraceLength = 0.0;
   protected RoutingJob job;
   protected int totalItemsOptimized;
+
+  /** Returns the total number of candidate items evaluated by this optimizer run. */
+  public int getTotalItemsOptimized() {
+    return this.totalItemsOptimized;
+  }
+
   protected Long deadlineMs;
   protected boolean isTimedOut;
   protected RoutingBoard bestBoard;
@@ -354,6 +362,13 @@ public final class BatchOptimizer extends NamedAlgorithm {
       }
     }
 
+    OptimizerPatience patience =
+        (this.settings.optimizer != null && this.settings.optimizer.patience != null)
+            ? this.settings.optimizer.patience
+            : OptimizerPatience.BALANCED;
+    float defaultThreshold = patience.getDefaultImprovementThreshold();
+    float effectiveImprovementThreshold = defaultThreshold;
+
     if (this.settings.optimizer != null
         && this.settings.optimizer.optimizationImprovementThreshold != null) {
       float threshold = this.settings.optimizer.optimizationImprovementThreshold;
@@ -363,9 +378,8 @@ public final class BatchOptimizer extends NamedAlgorithm {
                 Locale.US,
                 "Invalid optimizer improvement threshold: %.4f. Resetting to default %.2f%%.",
                 threshold,
-                DefaultSettings.DEFAULT_OPTIMIZER_IMPROVEMENT_THRESHOLD));
-        this.settings.optimizer.optimizationImprovementThreshold =
-            DefaultSettings.DEFAULT_OPTIMIZER_IMPROVEMENT_THRESHOLD;
+                defaultThreshold));
+        effectiveImprovementThreshold = defaultThreshold;
       } else if (threshold > 0.0f && threshold < 0.1f) {
         float scaled = threshold * 100.0f;
         job.logInfo(
@@ -375,7 +389,9 @@ public final class BatchOptimizer extends NamedAlgorithm {
                     + "Auto-scaling to percentage (%.2f%%).",
                 threshold,
                 scaled));
-        this.settings.optimizer.optimizationImprovementThreshold = scaled;
+        effectiveImprovementThreshold = scaled;
+      } else {
+        effectiveImprovementThreshold = threshold;
       }
     }
 
@@ -386,6 +402,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
     int currentPass = 0;
     int passesWithoutGainInARow = 0;
     while ((this.settings.optimizer.maxPasses == null
+            || this.settings.optimizer.maxPasses <= 0
             || currentPass < this.settings.optimizer.maxPasses)
         && (this.settings.optimizer.maxItems == null
             || this.totalItemsOptimized < this.settings.optimizer.maxItems)
@@ -494,14 +511,15 @@ public final class BatchOptimizer extends NamedAlgorithm {
       }
 
       if (scoreImprovement != -1
-          && scoreImprovement < this.settings.optimizer.optimizationImprovementThreshold) {
+          && effectiveImprovementThreshold > 0.0f
+          && scoreImprovement < effectiveImprovementThreshold) {
         job.logInfo(
             String.format(
                 Locale.US,
                 "Stopping optimizer because the improvement in this pass (%.4f%%) is below "
                     + "the threshold (%.2f%%).",
                 scoreImprovement,
-                this.settings.optimizer.optimizationImprovementThreshold));
+                effectiveImprovementThreshold));
         break;
       }
     }
@@ -886,16 +904,20 @@ public final class BatchOptimizer extends NamedAlgorithm {
     boolean stoppedOrTimedOut = false;
     boolean earlyStopDueToFailures = false;
     int consecutiveFailures = 0;
+    OptimizerPatience patience =
+        (this.settings.optimizer != null && this.settings.optimizer.patience != null)
+            ? this.settings.optimizer.patience
+            : OptimizerPatience.BALANCED;
     int maxConsecutiveFailures =
         passNo == 1
             ? (this.settings.optimizer != null
                     && this.settings.optimizer.maxConsecutiveFailuresPass1 != null
                 ? this.settings.optimizer.maxConsecutiveFailuresPass1
-                : 12)
+                : patience.getDefaultMaxConsecutiveFailuresPass1())
             : (this.settings.optimizer != null
                     && this.settings.optimizer.maxConsecutiveFailures != null
                 ? this.settings.optimizer.maxConsecutiveFailures
-                : 50);
+                : patience.getDefaultMaxConsecutiveFailures());
 
     // The baseline board does not change during the pass: the winner replaces it at the end.
     BoardStatistics.OptimizerMetrics baselineMetrics =
@@ -927,18 +949,10 @@ public final class BatchOptimizer extends NamedAlgorithm {
             && nextCandidate < candidateItemIds.size()) {
           FutureTask<CandidateResult> task =
               new FutureTask<>(
-                  new OptimizeCandidateTask(
-                      job,
-                      this.board,
+                  createCandidateTask(
                       candidateItemIds.get(nextCandidate++),
-                      this.minCumulativeTraceLength,
                       withPreferredDirections,
-                      this.useIncreasedRipupCosts,
-                      this.thread,
-                      this.deadlineMs,
-                      this.workerBoardStates,
-                      baselineMetrics,
-                      false)) {
+                      baselineMetrics)) {
                 @Override
                 protected void done() {
                   completions.release();
@@ -982,7 +996,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
               }
             } else {
               consecutiveFailures++;
-              if (consecutiveFailures >= maxConsecutiveFailures) {
+              if (maxConsecutiveFailures > 0 && consecutiveFailures >= maxConsecutiveFailures) {
                 job.logInfo(
                     String.format(
                         Locale.US,
@@ -1258,7 +1272,49 @@ public final class BatchOptimizer extends NamedAlgorithm {
     return replay;
   }
 
-  private static final class CandidateResult {
+  /** Functional factory for creating candidate evaluation tasks. */
+  @FunctionalInterface
+  public interface CandidateTaskFactory {
+    Callable<CandidateResult> create(
+        int itemId,
+        boolean withPreferredDirections,
+        BoardStatistics.OptimizerMetrics baselineMetrics);
+  }
+
+  /** Overrides the candidate evaluation task factory (intended for deterministic testing). */
+  public void setCandidateTaskFactory(CandidateTaskFactory candidateTaskFactory) {
+    this.candidateTaskFactory = candidateTaskFactory;
+  }
+
+  /** Creates the candidate evaluation task for a single board item. */
+  private Callable<CandidateResult> createCandidateTask(
+      int itemId,
+      boolean withPreferredDirections,
+      BoardStatistics.OptimizerMetrics baselineMetrics) {
+    if (this.candidateTaskFactory != null) {
+      return this.candidateTaskFactory.create(itemId, withPreferredDirections, baselineMetrics);
+    }
+    return new OptimizeCandidateTask(
+        job,
+        this.board,
+        itemId,
+        this.minCumulativeTraceLength,
+        withPreferredDirections,
+        this.useIncreasedRipupCosts,
+        this.thread,
+        this.deadlineMs,
+        this.workerBoardStates,
+        baselineMetrics,
+        false);
+  }
+
+  /** Creates a non-improving candidate result for controlled testing of failure-cap behavior. */
+  public static CandidateResult unimprovedCandidate(int itemId) {
+    return new CandidateResult(new ItemRouteResult(itemId), null, null, 0, 0);
+  }
+
+  /** Result of evaluating a single candidate item. */
+  public static final class CandidateResult {
     final ItemRouteResult result;
     final RoutingBoard board;
     final FloatPoint itemPosition;

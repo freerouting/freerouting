@@ -1584,7 +1584,7 @@ public class BasicBoard implements Serializable {
       BoardOutline outline = getOutline();
       if (outline != null) {
         outline.invalidateEdgePinNets();
-        if (outline.isEdgePin(pin)) {
+        if (outline.needsEdgeWindow(pin)) {
           outline.updateSlicesToTraceWidths();
         }
       }

@@ -235,7 +235,18 @@ exports; matching the seed alone does not make those different router inputs ide
 Configures the optional route-optimization stage that runs after autorouting.
 
 - **`enabled`**: Whether to run the optimizer. Default is `true`.
-- **`max_passes`**: Maximum number of optimizer passes.
+- **`max_passes`**: Maximum number of optimizer passes. Equivalent CLI flag:
+  `--router.optimizer.max_passes=<int>`.
+- **`patience`**: Preset profile controlling optimizer termination sensitivity and candidate sweep
+  completeness. Presets:
+  - `balanced` (Default): Fast interactive optimization (`improvement_threshold = 2.50%`,
+    `max_consecutive_failures_pass1 = 12`, `max_consecutive_failures = 50`).
+  - `patient`: Tuned for congested boards (`improvement_threshold = 0.50%`,
+    `max_consecutive_failures_pass1 = 100`, `max_consecutive_failures = 250`).
+  - `exhaustive`: Exhaustive mode evaluating all candidate items across every pass without early
+    abort (`improvement_threshold = 0.00%`, `max_consecutive_failures = 0` / unlimited). Runs until
+    `max_passes` or timeout.
+  Equivalent CLI flag: `--router.optimizer.patience=<balanced|patient|exhaustive>`.
 - **`max_items`**: Maximum number of item optimization attempts.
 - **`max_threads`**: Optimizer worker-thread cap. Canonical CLI is
   `--router.optimizer.max_threads`. The default is the JVM-visible processor count minus one
@@ -311,8 +322,8 @@ Configures the SMD-pin fanout pre-pass stage.
 - **`max_escape_length_mm`**: The maximum physical escape trace length in millimeters. Default is `4.5`. Enforced directly during maze expansion.
 - **`start_via_diameter_mm`**: The diameter of starting/escape vias used inside the pins during the fanout/escape stage (in millimeters). Default is `0.25`.
 - **`end_via_diameter_mm`**: The diameter of landing/end vias used at the end of escaping wires during the fanout/escape stage (in millimeters). Default is `0.25`.
-- **`bga_escape_enabled`**: Enables the deterministic CPU multi-layer BGA escape pre-pass during fanout. When `true`, Freerouting detects area-array BGA footprints with at least `bga_escape_min_pins` SMD pins and escapes them with concentric Chebyshev ring peeling, 4-quadrant interstitial dogbones, and continuous DRC verification before the sequential SMD fanout pass runs. Default is `true`. CLI: `--router.fanout.bga_escape_enabled=true`.
-- **`bga_escape_min_pins`**: Minimum SMD pin count required for a component footprint to be handled by the multi-layer BGA escape pre-pass. Default is `9` (the geometric minimum for a $3 \times 3$ area-array lattice). CLI: `--router.fanout.bga_escape_min_pins=9`.
+- **`bga_escape_enabled`**: Enables the deterministic CPU multi-layer BGA escape pre-pass during fanout. When `true`, Freerouting detects area-array BGA footprints with at least `bga_escape_min_pins` SMD pins, at least 90% of them with the same round or square pad, and escapes them with concentric Chebyshev ring peeling, 4-quadrant interstitial dogbones, and continuous DRC verification before the sequential SMD fanout pass runs. When fewer than half of the pins of a package get an escape, its escapes are removed and the whole package is left to the normal fanout. Default is `true`. CLI: `--router.fanout.bga_escape_enabled=true`.
+- **`bga_escape_min_pins`**: Minimum SMD pin count required for a component footprint to be handled by the multi-layer BGA escape pre-pass. The pads of one pin (`9`, `9@1`, `9@2`...) count once. Default is `9` (the geometric minimum for a $3 \times 3$ area-array lattice). CLI: `--router.fanout.bga_escape_min_pins=9`.
 - **`pin_sorting_order`**: Specifies the sorting order for pins within a component during fanout. Available strategies:
     - `"outer_first"` (Default): Pins further from the component center are processed first. This helps escape periphery pins early.
     - `"inner_first"`: Pins closer to the component center are processed first.

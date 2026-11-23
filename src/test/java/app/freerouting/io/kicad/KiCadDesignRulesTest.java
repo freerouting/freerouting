@@ -1,6 +1,7 @@
 package app.freerouting.io.kicad;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -9,15 +10,23 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import app.freerouting.TestFixtures;
 import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.ObstacleArea;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.structure.Unit;
+import app.freerouting.geometry.planar.Circle;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.specctra.DsnReader;
 import app.freerouting.rules.ClearanceMatrix;
-import java.io.FileInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.function.UnaryOperator;
 import org.junit.jupiter.api.Test;
 
 /** Reading a .kicad_dru file and translating its clearance rules onto a loaded board. */
@@ -114,8 +123,94 @@ class KiCadDesignRulesTest {
     assertTrue(
         result.warnings().stream()
             .anyMatch(w -> w.contains("creepage") && w.contains("applied conservatively")));
+    // the creepage applies to the copper the router adds
+    assertEquals(mm(board, 5.0), traceValue(board, "Net-(K2-Pad2)", "Net-(K1-Pad1)"));
+    assertEquals(mm(board, 5.0), traceToPinValue(board, "Net-(K1-Pad1)", pin(board, "K2", "2")));
+  }
+
+  @Test
+  void leavesTheCreepageBetweenTwoPadsToKiCad() throws IOException {
+    BasicBoard original = loadBoard();
+    int designValue =
+        value(original.rules.clearanceMatrix, pin(original, "K1", "1"), pin(original, "K2", "2"));
+    BasicBoard board = loadBoard();
+    KiCadDesignRules rules =
+        KiCadDesignRules.parse(
+            """
+            (version 1)
+            (rule "mains_creepage_only"
+              (condition "A.NetClass == 'HighVoltage' && B.NetClass != 'HighVoltage'")
+              (constraint creepage (min 5mm)))
+            """,
+            "creepage.kicad_dru");
+
+    KiCadDesignRulesTranslator.Result result = KiCadDesignRulesTranslator.apply(board, rules);
+
+    // the router never moves a pad, and a slot between two pads (not modelled) may lengthen their
+    // creepage path: between pads, the clearance of the design stays, and KiCad checks the creepage
     assertEquals(
-        mm(board, 5.0),
+        designValue,
+        value(board.rules.clearanceMatrix, pin(board, "K1", "1"), pin(board, "K2", "2")));
+    assertTrue(
+        result.warnings().stream()
+            .anyMatch(
+                w ->
+                    w.contains("'mains_creepage_only'")
+                        && w.contains("creepage not applied between two pads")));
+  }
+
+  @Test
+  void laterClearanceRuleDoesNotLowerAnEarlierCreepage() throws IOException {
+    BasicBoard board = loadBoard();
+    KiCadDesignRules rules =
+        KiCadDesignRules.parse(
+            """
+            (version 1)
+            (rule "mains_creepage"
+              (condition "A.NetClass == 'HighVoltage' && B.NetClass != 'HighVoltage'")
+              (constraint creepage (min 5mm)))
+            (rule "low_voltage_clearance"
+              (condition "A.NetClass == 'HighVoltage' && B.NetClass != 'HighVoltage'")
+              (constraint clearance (min 0.3mm)))
+            """,
+            "creepage-then-clearance.kicad_dru");
+
+    KiCadDesignRulesTranslator.Result result = KiCadDesignRulesTranslator.apply(board, rules);
+
+    // KiCad keeps one rule list per constraint type: the clearance rule does not override the
+    // creepage, which still asks for 5 mm from the copper the router adds
+    assertEquals(2, result.translatedRules());
+    assertEquals(mm(board, 5.0), traceValue(board, "Net-(K2-Pad2)", "Net-(K1-Pad1)"));
+    assertEquals(mm(board, 5.0), traceToPinValue(board, "Net-(K1-Pad1)", pin(board, "K2", "2")));
+    // between two pads, only the clearance rule counts
+    assertEquals(
+        mm(board, 0.3),
+        value(board.rules.clearanceMatrix, pin(board, "K1", "1"), pin(board, "K2", "2")));
+  }
+
+  @Test
+  void lastMatchingCreepageRuleSetsTheCreepage() throws IOException {
+    BasicBoard board = loadBoard();
+    KiCadDesignRules rules =
+        KiCadDesignRules.parse(
+            """
+            (version 1)
+            (rule "mains"
+              (condition "A.NetClass == 'HighVoltage' && B.NetClass != 'HighVoltage'")
+              (constraint clearance (min 4mm))
+              (constraint creepage (min 6mm)))
+            (rule "mains_creepage_relaxed"
+              (condition "A.NetClass == 'HighVoltage' && B.NetClass != 'HighVoltage'")
+              (constraint creepage (min 1mm)))
+            """,
+            "creepage-relaxed.kicad_dru");
+
+    KiCadDesignRulesTranslator.Result result = KiCadDesignRulesTranslator.apply(board, rules);
+
+    // the later creepage rule sets the creepage (1 mm), the clearance of the first rule stays
+    assertEquals(2, result.translatedRules());
+    assertEquals(
+        mm(board, 4.0),
         value(board.rules.clearanceMatrix, pin(board, "K1", "1"), pin(board, "K2", "2")));
   }
 
@@ -165,7 +260,9 @@ class KiCadDesignRulesTest {
             .anyMatch(w -> w.contains("intersectsArea") && w.contains("may")));
 
     ClearanceMatrix matrix = board.rules.clearanceMatrix;
-    // the last matching rule wins: coil to contacts of the same relay, then mains isolation
+    // the last matching rule wins: coil to contacts of the same relay (2.5 mm), then mains
+    // isolation; the coil rule sets only a clearance, and between two pads the creepage of the
+    // mains isolation (3 mm) is left to KiCad
     assertEquals(mm(board, 2.5), value(matrix, pin(board, "K1", "1"), pin(board, "K1", "2")));
     assertEquals(mm(board, 3.0), value(matrix, pin(board, "K1", "1"), pin(board, "K2", "2")));
     // a rule may lower the clearance of the net class (2 mm)
@@ -229,6 +326,261 @@ class KiCadDesignRulesTest {
     assertEquals(mm(board, 7.0), value(matrix, pin(board, "K2", "1"), pin(board, "VD4", "1")));
   }
 
+  @Test
+  void footprintPossiblyRenamedByTheExportGetsTheRuleAndAWarning() throws IOException {
+    // A board with two footprints K1: the KiCad export names the second one K1_1
+    BasicBoard board =
+        loadBoard(
+            dsn -> dsn.replace("(place K2 ", "(place K1_1 ").replaceAll("(?<=[ (])K2-", "K1_1-"));
+    var result =
+        KiCadDesignRulesTranslator.apply(
+            board,
+            KiCadDesignRules.parse(
+                """
+                (version 1)
+                (rule "around_k1"
+                  (condition "A.memberOfFootprint('K1') && !B.memberOfFootprint('K1')")
+                  (constraint clearance (min 7mm)))
+                """,
+                "test.kicad_dru"));
+    ClearanceMatrix matrix = board.rules.clearanceMatrix;
+    assertEquals(mm(board, 7.0), value(matrix, pin(board, "K1", "1"), pin(board, "VD4", "1")));
+    // K1_1 may be the second K1: the rule may apply, so it does (never less strict than KiCad)
+    assertEquals(mm(board, 7.0), value(matrix, pin(board, "K1_1", "1"), pin(board, "VD4", "1")));
+    assertTrue(
+        result.warnings().stream()
+            .anyMatch(w -> w.contains("K1_1") && w.contains("may be duplicate references")),
+        result.warnings().toString());
+    // The warning on KiCad-renamed duplicates is still given
+    assertTrue(
+        result.warnings().stream()
+            .anyMatch(w -> w.contains("'K1_1' appears to be a KiCad-renamed duplicate of 'K1'")),
+        result.warnings().toString());
+  }
+
+  /** K1 with a plated pad without net, which the KiCad export writes as a round keepout. */
+  private static BasicBoard loadBoardWithPadKeepout() throws IOException {
+    return loadBoard(
+        dsn ->
+            dsn.replace(
+                "(image \"Реле:SRD-xxVDC-SL-C\"\n",
+                "(image \"Реле:SRD-xxVDC-SL-C\"\n"
+                    + "      (keepout \"\" (circle F.Cu 1500 -6000 -6000))\n"
+                    + "      (keepout \"\" (circle B.Cu 1500 -6000 -6000))\n"));
+  }
+
+  private static ObstacleArea padKeepout(BasicBoard board, String reference) {
+    for (Item item : board.getItems()) {
+      if (item.getClass() == ObstacleArea.class
+          && item.getComponentId() > 0
+          && ((ObstacleArea) item).getRelativeArea() instanceof Circle
+          && reference.equals(board.components.get(item.getComponentId()).name)) {
+        return (ObstacleArea) item;
+      }
+    }
+    throw new AssertionError("no keepout in " + reference);
+  }
+
+  @Test
+  void padWithoutNetExportedAsKeepoutGetsTheRulesOfItsFootprint() throws IOException {
+    BasicBoard board = loadBoardWithPadKeepout();
+    var result =
+        KiCadDesignRulesTranslator.apply(
+            board,
+            KiCadDesignRules.parse(
+                """
+                (version 1)
+                (rule "around_k1"
+                  (condition "A.memberOfFootprint('K1') && !B.memberOfFootprint('K1')")
+                  (constraint clearance (min 7mm)))
+                """,
+                "test.kicad_dru"));
+    ClearanceMatrix matrix = board.rules.clearanceMatrix;
+    // KiCad applies the rule to the pad: Freerouting to the keepout it was exported as
+    assertEquals(mm(board, 7.0), value(matrix, padKeepout(board, "K1"), pin(board, "VD4", "1")));
+    assertEquals(
+        mm(board, 7.0),
+        matrix.getValue(
+            padKeepout(board, "K1").clearanceClassIndex(),
+            board.rules.nets.get("GND", 1).getNetClass().getTraceClearanceClass(),
+            0,
+            false));
+    assertTrue(
+        result.warnings().stream()
+            .anyMatch(w -> w.contains("pads without net exported as keepouts in K1")),
+        result.warnings().toString());
+    // Circular netless pad keepouts are now handled, so the unsupported-keepout warning is omitted
+    assertFalse(
+        result.warnings().stream()
+            .anyMatch(w -> w.contains("unsupported footprint image keepout(s)")),
+        result.warnings().toString());
+  }
+
+  @Test
+  void padWithoutNetExportedAsKeepoutIsAPadWithoutNet() throws IOException {
+    BasicBoard board = loadBoardWithPadKeepout();
+    KiCadDesignRulesTranslator.apply(
+        board,
+        KiCadDesignRules.parse(
+            """
+            (version 1)
+            (rule "gnd_wide"
+              (condition "A.NetName == 'GND' && B.NetName != 'GND' && B.Type == 'Pad'")
+              (constraint clearance (min 3mm)))
+            """,
+            "test.kicad_dru"));
+    // The Own-Mailbox case: a GND trace at 3 mm from the pad without net
+    assertEquals(
+        mm(board, 3.0),
+        board.rules.clearanceMatrix.getValue(
+            padKeepout(board, "K1").clearanceClassIndex(),
+            board.rules.nets.get("GND", 1).getNetClass().getTraceClearanceClass(),
+            0,
+            false));
+  }
+
+  @Test
+  void leavesCreepageBetweenPadAndPadKeepoutToKiCad() throws IOException {
+    BasicBoard board = loadBoardWithPadKeepout();
+    ObstacleArea padKeepout = padKeepout(board, "K1");
+    Pin hvPin = pin(board, "K2", "2");
+    int designValue = value(board.rules.clearanceMatrix, padKeepout, hvPin);
+
+    KiCadDesignRulesTranslator.Result result =
+        KiCadDesignRulesTranslator.apply(
+            board,
+            KiCadDesignRules.parse(
+                """
+                (version 1)
+                (rule "mains_creepage_pad_keepout"
+                  (condition "A.NetClass == 'HighVoltage' && B.NetClass != 'HighVoltage'")
+                  (constraint creepage (min 5mm)))
+                """,
+                "creepage-pad-keepout.kicad_dru"));
+
+    // A netless pad exported as a keepout counts as a pad for the pad-to-pad creepage exception
+    assertEquals(designValue, value(board.rules.clearanceMatrix, padKeepout, hvPin));
+    // Copper added by the router still observes the 5 mm creepage against the netless pad keepout
+    assertEquals(
+        mm(board, 5.0),
+        board.rules.clearanceMatrix.getValue(
+            padKeepout.clearanceClassIndex(),
+            board.rules.nets.get("Net-(K2-Pad2)", 1).getNetClass().getTraceClearanceClass(),
+            0,
+            false));
+    assertTrue(
+        result.warnings().stream()
+            .anyMatch(
+                w ->
+                    w.contains("'mains_creepage_pad_keepout'")
+                        && w.contains("creepage not applied between two pads")));
+  }
+
+  @Test
+  void numberAndPlatingOfAPadExportedAsKeepoutAreUnknown() throws IOException {
+    BasicBoard board = loadBoardWithPadKeepout();
+    KiCadDesignRulesTranslator.apply(
+        board,
+        KiCadDesignRules.parse(
+            """
+            (version 1)
+            (rule "pad_9"
+              (condition "A.Pad_Number == '9' && B.Type == 'Pad'")
+              (constraint clearance (min 5mm)))
+            (rule "npth"
+              (condition "!A.isPlated() && A.Type == 'Pad' && B.Type == 'Pad'")
+              (constraint clearance (min 6mm)))
+            """,
+            "test.kicad_dru"));
+    // K1 has no pad 9, but the pad exported as a keepout may be one, and may be unplated: the
+    // largest clearance that may apply applies
+    assertEquals(
+        mm(board, 6.0),
+        value(board.rules.clearanceMatrix, padKeepout(board, "K1"), pin(board, "VD4", "1")));
+    // the pins of K1 are known: neither rule applies to them
+    assertNotEquals(
+        mm(board, 5.0),
+        value(board.rules.clearanceMatrix, pin(board, "K1", "1"), pin(board, "VD4", "1")));
+  }
+
+  @Test
+  void otherKeepoutsKeepTheirClearance() throws IOException {
+    // a polygonal keepout of K1 (a rule area of the footprint) and a round keepout of the board
+    BasicBoard board =
+        loadBoard(
+            dsn ->
+                dsn.replace(
+                        "(image \"Реле:SRD-xxVDC-SL-C\"\n",
+                        "(image \"Реле:SRD-xxVDC-SL-C\"\n"
+                            + "      (keepout \"\" (polygon F.Cu 0  -7000 -5000  -5000 -5000"
+                            + "  -5000 -7000  -7000 -7000  -7000 -5000))\n")
+                    .replaceFirst(
+                        "\\(keepout \"\" \\(polygon signal 0",
+                        "(keepout \"\" (circle F.Cu 1500 140000 -200000))\n    $0"));
+    List<ObstacleArea> others = new ArrayList<>();
+    for (Item item : board.getItems()) {
+      if (item.getClass() == ObstacleArea.class
+          && ((item.getComponentId() > 0)
+              != (((ObstacleArea) item).getRelativeArea() instanceof Circle))) {
+        others.add((ObstacleArea) item);
+      }
+    }
+    assertTrue(others.size() >= 2, "both keepouts must load: " + others);
+    int[] before = others.stream().mapToInt(Item::clearanceClassIndex).toArray();
+    var result =
+        KiCadDesignRulesTranslator.apply(
+            board,
+            KiCadDesignRules.parse(
+                """
+                (version 1)
+                (rule "around_k1"
+                  (condition "A.memberOfFootprint('K1') && !B.memberOfFootprint('K1')")
+                  (constraint clearance (min 7mm)))
+                (rule "no_net"
+                  (condition "A.Type == 'Pad' && B.Type == 'Pad'")
+                  (constraint clearance (min 5mm)))
+                """,
+                "test.kicad_dru"));
+    assertEquals(
+        Arrays.toString(before),
+        Arrays.toString(others.stream().mapToInt(Item::clearanceClassIndex).toArray()));
+    // Polygonal footprint image keepouts are not handled as pads and still emit the warning
+    assertTrue(
+        result.warnings().stream()
+            .anyMatch(w -> w.contains("unsupported footprint image keepout(s)")),
+        result.warnings().toString());
+  }
+
+  @Test
+  void duplicateReferenceWarningIsCaseInsensitive() throws IOException {
+    BasicBoard board =
+        loadBoard(
+            dsn -> dsn.replace("(place K2 ", "(place k1_1 ").replaceAll("(?<=[ (])K2-", "k1_1-"));
+    var result =
+        KiCadDesignRulesTranslator.apply(
+            board,
+            KiCadDesignRules.parse(
+                """
+                (version 1)
+                (rule "around_k1"
+                  (condition "A.memberOfFootprint('K1') && !B.memberOfFootprint('K1')")
+                  (constraint clearance (min 7mm)))
+                """,
+                "test.kicad_dru"));
+    assertTrue(
+        result.warnings().stream()
+            .anyMatch(w -> w.contains("'k1_1' appears to be a KiCad-renamed duplicate of 'k1'")),
+        result.warnings().toString());
+  }
+
+  @Test
+  void componentsRenamedByTheExport() {
+    assertEquals(
+        Map.of("P1_1", "P1", "p1_2", "p1"),
+        KiCadDesignRulesTranslator.possiblyRenamed(
+            List.of("P1", "P1_1", "p1_2", "U1_1", "R", "R_", "_1")));
+  }
+
   private static String libraryId(BasicBoard board, String reference) {
     var component = board.components.get(reference);
     assertNotNull(component, reference);
@@ -236,7 +588,12 @@ class KiCadDesignRulesTest {
   }
 
   private static BasicBoard loadBoard() throws IOException {
-    InputStream input = new FileInputStream(TestFixtures.resolveFile(DSN));
+    return loadBoard(dsn -> dsn);
+  }
+
+  private static BasicBoard loadBoard(UnaryOperator<String> edit) throws IOException {
+    String dsn = Files.readString(TestFixtures.resolveFile(DSN).toPath(), StandardCharsets.UTF_8);
+    InputStream input = new ByteArrayInputStream(edit.apply(dsn).getBytes(StandardCharsets.UTF_8));
     BoardReadResult result = DsnReader.readBoard(input, null, null, DSN);
     assertTrue(result instanceof BoardReadResult.Success, "fixture must load");
     return ((BoardReadResult.Success) result).board();
@@ -260,6 +617,13 @@ class KiCadDesignRulesTest {
 
   private static int value(ClearanceMatrix matrix, Item first, Item second) {
     return matrix.getValue(first.clearanceClassIndex(), second.clearanceClassIndex(), 0, false);
+  }
+
+  private static int traceToPinValue(BasicBoard board, String traceNet, Pin pin) {
+    var net = board.rules.nets.get(traceNet, 1);
+    assertNotNull(net, traceNet);
+    return board.rules.clearanceMatrix.getValue(
+        net.getNetClass().getTraceClearanceClass(), pin.clearanceClassIndex(), 0, false);
   }
 
   private static int traceValue(BasicBoard board, String firstNet, String secondNet) {
