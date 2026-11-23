@@ -574,8 +574,11 @@ public class HeadlessBoardManager implements BoardManager {
           || spokeWidth != area.getThermalSpokeWidth()) {
         area.setPadConnectionRules(padConnection, thermalGap, spokeWidth);
       }
-      int edgeClearance =
-          (int) Math.round(communication.physicalToBoard(boardZones.edgeClearanceUm(), Unit.UM));
+      double edgeClearanceUm =
+          this.routingJob.kicadProject != null
+              ? this.routingJob.kicadProject.copperEdgeClearanceUm()
+              : boardZones.edgeClearanceUm();
+      int edgeClearance = (int) Math.round(communication.physicalToBoard(edgeClearanceUm, Unit.UM));
       if (edgeClearance != area.getFillEdgeClearance()) {
         area.setFillEdgeClearance(edgeClearance);
       }
@@ -908,6 +911,7 @@ public class HeadlessBoardManager implements BoardManager {
     if (this.board.searchTreeManager != null) {
       this.board.searchTreeManager.insert(outline);
     }
+    outline.updateSlicesToTraceWidths();
 
     FRLogger.debug(
         "Applied copper-to-edge clearance override: "

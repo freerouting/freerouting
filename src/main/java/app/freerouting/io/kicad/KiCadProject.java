@@ -17,17 +17,31 @@ import java.nio.file.Path;
  * as a {@code track_width} error. The same page sets a minimum connection width, and the KiCad DRC
  * reports every trace narrower than that one as a {@code connection_width} error. This class reads
  * both back, so that Freerouting does not neck a trace down below either.
+ *
+ * <p>The copper to edge clearance of the board is lost as well: the KiCad DRC reports {@code
+ * copper_edge_clearance} errors that Freerouting does not see. Where the project does not set it,
+ * KiCad checks its own default, which this class returns instead.
  */
 public final class KiCadProject {
+
+  /** The copper to edge clearance that KiCad checks when the project does not set one. */
+  public static final double DEFAULT_COPPER_EDGE_CLEARANCE_UM =
+      KiCadBoardZones.DEFAULT_EDGE_CLEARANCE_UM;
 
   private final String sourceName;
   private final Double minTrackWidthUm;
   private final Double minConnectionWidthUm;
+  private final Double copperEdgeClearanceUm;
 
-  private KiCadProject(String sourceName, Double minTrackWidthUm, Double minConnectionWidthUm) {
+  private KiCadProject(
+      String sourceName,
+      Double minTrackWidthUm,
+      Double minConnectionWidthUm,
+      Double copperEdgeClearanceUm) {
     this.sourceName = sourceName;
     this.minTrackWidthUm = minTrackWidthUm;
     this.minConnectionWidthUm = minConnectionWidthUm;
+    this.copperEdgeClearanceUm = copperEdgeClearanceUm;
   }
 
   /** The file name, for messages. */
@@ -68,14 +82,25 @@ public final class KiCadProject {
   }
 
   /**
-   * The board settings of a board written by KiCad 5 or earlier, which has no project file: its
-   * {@code (setup (trace_min ...))}, read by {@link KiCadBoardZones}, is its minimum track width.
+   * The board settings of a board given without its project file: the {@code (setup (trace_min
+   * ...))} of a board written by KiCad 5 or earlier, read by {@link KiCadBoardZones}, is its
+   * minimum track width, and the clearances are the defaults of KiCad, which KiCad checks on such a
+   * board.
    *
    * @param sourceName the board file name, for messages
    * @param minTrackWidthUm the minimum track width of the board in micrometres, or null
    */
   public static KiCadProject fromBoardSetup(String sourceName, Double minTrackWidthUm) {
-    return new KiCadProject(sourceName, minTrackWidthUm, null);
+    return new KiCadProject(sourceName, minTrackWidthUm, null, null);
+  }
+
+  /**
+   * The copper to edge clearance that the KiCad DRC checks, in micrometres: that of the project
+   * ({@code board.design_settings.rules.min_copper_edge_clearance}), else {@link
+   * #DEFAULT_COPPER_EDGE_CLEARANCE_UM}.
+   */
+  public double copperEdgeClearanceUm() {
+    return copperEdgeClearanceUm != null ? copperEdgeClearanceUm : DEFAULT_COPPER_EDGE_CLEARANCE_UM;
   }
 
   /** Reads a {@code .kicad_pro} file. */
@@ -103,7 +128,19 @@ public final class KiCadProject {
     return new KiCadProject(
         sourceName,
         positiveUm(member(rules, "min_track_width")),
-        positiveUm(member(rules, "min_connection")));
+        positiveUm(member(rules, "min_connection")),
+        nonNegativeUm(member(rules, "min_copper_edge_clearance")));
+  }
+
+  /** A length in millimetres as micrometres, or null if it is not a number of at least 0. */
+  private static Double nonNegativeUm(JsonElement value) {
+    if (value != null && value.isJsonPrimitive() && value.getAsJsonPrimitive().isNumber()) {
+      double um = value.getAsDouble() * 1000.0; // KiCad stores lengths in millimetres
+      if (um >= 0) {
+        return um;
+      }
+    }
+    return null;
   }
 
   /** A length in millimetres as micrometres, or null if it is not a positive number. */

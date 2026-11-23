@@ -761,9 +761,10 @@ public class BoardOutline extends Item implements Serializable {
   }
 
   /**
-   * The windows next to the edge pins: per pin that touches or crosses the outline and per layer of
-   * the pin, its bounding box widened by the clearance to the outline and the trace half width of
-   * its nets. Empty with {@link #keepoutOutsideOutlineGenerated}.
+   * The windows next to the edge pins: per pin that touches or crosses the outline, or that is
+   * closer to it than the clearance of its nets to the outline, and per layer of the pin, its
+   * bounding box widened by the clearance to the outline and the trace half width of its nets.
+   * Empty with {@link #keepoutOutsideOutlineGenerated}.
    */
   private EdgeWindow[] computeEdgeWindows() {
     if (this.board == null || this.keepoutOutsideOutline || this.board.rules == null) {
@@ -772,28 +773,90 @@ public class BoardOutline extends Item implements Serializable {
     List<EdgeWindow> result = new ArrayList<>();
     for (Pin pin : this.board.getPins()) {
       int[] nets = Arrays.stream(pin.netNumbers).filter(n -> n > 0).toArray();
-      if (nets.length == 0 || !this.isEdgePin(pin)) {
+      if (nets.length == 0) {
         continue;
       }
+      boolean edgePin = this.isEdgePin(pin);
       for (int layer = pin.firstLayer(); layer <= pin.lastLayer(); layer++) {
         Shape shape = pin.getShape(layer - pin.firstLayer());
         if (shape == null || shape.isEmpty() || !shape.isBounded()) {
           continue;
         }
+        double gap = edgePin ? -1.0 : cornerGap(shape);
         int margin = 0;
+        int[] windowNets = new int[nets.length];
+        int windowNetCount = 0;
         for (int net : nets) {
-          int traceClass = this.board.rules.nets.get(net).getNetClass().getTraceClearanceClass();
-          int clearance =
-              this.board.rules.clearanceMatrix.getValue(
-                  this.clearanceClassIndex(), traceClass, layer, false);
-          margin =
-              Math.max(
-                  margin, clearance + this.board.rules.getTraceHalfWidth(net, layer) + HALF_WIDTH);
+          int clearance = outlineClearanceForNet(net, layer);
+          if (clearance < 0) {
+            continue;
+          }
+          // A pin inside the outline, but closer to it than a net's clearance, could not be
+          // reached by that net either: a trace ending on it is as close to the outline as the pin.
+          if (edgePin || gap < clearance) {
+            windowNets[windowNetCount++] = net;
+            margin =
+                Math.max(
+                    margin,
+                    clearance + this.board.rules.getTraceHalfWidth(net, layer) + HALF_WIDTH);
+          }
         }
-        result.add(new EdgeWindow(shape.boundingBox().offset(margin), layer, nets));
+        if (windowNetCount == 0) {
+          continue;
+        }
+        int[] exemptNets =
+            windowNetCount == nets.length ? nets : Arrays.copyOf(windowNets, windowNetCount);
+        result.add(new EdgeWindow(shape.boundingBox().offset(margin), layer, exemptNets));
       }
     }
     return result.toArray(new EdgeWindow[0]);
+  }
+
+  /**
+   * Whether the pin needs an outline reachability window: either it touches or crosses the outline,
+   * or it is closer to the outline than the clearance of at least one of its nets.
+   */
+  public boolean needsEdgeWindow(Pin pin) {
+    if (this.isEdgePin(pin)) {
+      return true;
+    }
+    if (this.board == null || this.keepoutOutsideOutline || this.board.rules == null) {
+      return false;
+    }
+    int[] nets = Arrays.stream(pin.netNumbers).filter(n -> n > 0).toArray();
+    if (nets.length == 0) {
+      return false;
+    }
+    for (int layer = pin.firstLayer(); layer <= pin.lastLayer(); layer++) {
+      Shape shape = pin.getShape(layer - pin.firstLayer());
+      if (shape == null || shape.isEmpty() || !shape.isBounded()) {
+        continue;
+      }
+      double gap = cornerGap(shape);
+      for (int net : nets) {
+        int clearance = outlineClearanceForNet(net, layer);
+        if (clearance >= 0 && gap < clearance) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  private int outlineClearanceForNet(int netNumber, int layer) {
+    if (this.board == null
+        || this.board.rules == null
+        || this.board.rules.nets == null
+        || this.board.rules.clearanceMatrix == null) {
+      return -1;
+    }
+    var net = this.board.rules.nets.get(netNumber);
+    if (net == null || net.getNetClass() == null) {
+      return -1;
+    }
+    int traceClass = net.getNetClass().getTraceClearanceClass();
+    return this.board.rules.clearanceMatrix.getValue(
+        this.clearanceClassIndex(), traceClass, layer, false);
   }
 
   /** Whether the copper of the pin touches or crosses the outline. */
