@@ -287,7 +287,7 @@ public final class KiCadBoardZones {
    * (32 B.Adhes user) ...)}, for the names of its copper layers, from front to back. A board can
    * rename them: {@code (0 Top signal)} up to KiCad 5, {@code (0 "F.Cu" signal "Top")} since.
    */
-  private static void readCopperLayers(Reader reader, List<String> copperLayers) {
+  static void readCopperLayers(Reader reader, List<String> copperLayers) {
     while (true) {
       reader.skipBlanks();
       if (reader.isFinished() || reader.leaveList()) {
@@ -317,7 +317,7 @@ public final class KiCadBoardZones {
    * renames its copper layers still writes the wildcards. Without a layer table the layers are
    * returned as written.
    */
-  private static List<String> resolveLayers(List<String> layers, List<String> copperLayers) {
+  static List<String> resolveLayers(List<String> layers, List<String> copperLayers) {
     if (copperLayers.isEmpty()) {
       return List.copyOf(layers);
     }
@@ -486,7 +486,7 @@ public final class KiCadBoardZones {
   }
 
   /** Reads the numbers that follow, at most as many as the array holds. */
-  private static void readNumbers(Reader reader, double[] numbers) {
+  static void readNumbers(Reader reader, double[] numbers) {
     for (int i = 0; i < numbers.length; i++) {
       String value = reader.readAtom();
       if (value.isEmpty() || !isNumber(value)) {
@@ -720,7 +720,7 @@ public final class KiCadBoardZones {
   }
 
   /** A number as written; 0 if it is not a number. */
-  private static double toNumber(String value) {
+  static double toNumber(String value) {
     try {
       return Double.parseDouble(value);
     } catch (NumberFormatException e) {
@@ -738,7 +738,7 @@ public final class KiCadBoardZones {
   }
 
   /** A cursor over the S-expressions of the file, which stores nothing it is not asked for. */
-  private static final class Reader {
+  static final class Reader {
     private final String text;
     private int pos;
 
@@ -791,6 +791,10 @@ public final class KiCadBoardZones {
           char current = text.charAt(pos++);
           if (current == '\\' && pos < text.length()) {
             current = text.charAt(pos++);
+            // a line break of a text
+            if (current == 'n') {
+              current = '\n';
+            }
           }
           result.append(current);
         }
@@ -805,6 +809,25 @@ public final class KiCadBoardZones {
         pos++;
       }
       return text.substring(start, pos);
+    }
+
+    /** Reads the rest of the current list, its closing parenthesis included. */
+    SexprNode readRestOfList(String keyword) {
+      List<Object> children = new ArrayList<>();
+      while (true) {
+        skipBlanks();
+        if (isFinished()) {
+          throw new IllegalArgumentException("not a KiCad board file: unfinished " + keyword);
+        }
+        if (leaveList()) {
+          return new SexprNode(keyword, children);
+        }
+        if (enterList()) {
+          children.add(readRestOfList(readAtom()));
+        } else {
+          children.add(readAtom());
+        }
+      }
     }
 
     /** Skips the rest of the current list, its closing parenthesis included. */

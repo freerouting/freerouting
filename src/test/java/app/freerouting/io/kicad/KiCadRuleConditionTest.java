@@ -1,6 +1,7 @@
 package app.freerouting.io.kicad;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -49,6 +50,25 @@ class KiCadRuleConditionTest {
   }
 
   @Test
+  void padExportedAsKeepoutHasAnUnknownNumberAndPlating() {
+    // a pad without net that the KiCad export wrote as a keepout of its footprint
+    Item keepout = new Item(ItemType.PAD, "", "Default", "K1", null, false);
+    assertEquals(Tri.UNKNOWN, eval("A.Pad_Number == '1'", keepout, keepout));
+    assertEquals(Tri.UNKNOWN, eval("A.Pad_Number != '1'", keepout, keepout));
+    assertEquals(Tri.UNKNOWN, eval("A.Pad_Type == 'Through-hole'", keepout, keepout));
+    assertEquals(Tri.UNKNOWN, eval("A.isPlated()", keepout, keepout));
+    assertEquals(Tri.UNKNOWN, eval("A.Pad_Number == B.Pad_Number", keepout, COIL_PAD));
+    // what the design gives stays known
+    assertEquals(
+        Tri.TRUE,
+        eval(
+            "A.memberOfFootprint('K1') && A.Type == 'Pad' && A.NetName != 'GND'",
+            keepout,
+            keepout));
+    assertEquals(Tri.FALSE, eval("A.Pad_Number == '1'", SIGNAL_TRACK, SIGNAL_TRACK));
+  }
+
+  @Test
   void footprintSelectorWithColonMatchesTheLibraryIdentifier() {
     Item connector = new Item(ItemType.PAD, "/RF", "Default", "J1", "1", true, "sma-j:SMA-J");
     String around = "A.memberOfFootprint('sma-j:SMA-J') && !B.memberOfFootprint('sma-j:SMA-J')";
@@ -84,6 +104,27 @@ class KiCadRuleConditionTest {
     assertEquals(Tri.TRUE, eval("A.hasNetclass('MAI*')", MAINS_TRACK, MAINS_TRACK));
     assertEquals(Tri.TRUE, eval("A.Reference == 'k1'", COIL_PAD, COIL_PAD));
     assertEquals(Tri.TRUE, eval("A.NetName == '/relay1/*'", MAINS_TRACK, MAINS_TRACK));
+  }
+
+  @Test
+  void footprintPossiblyRenamedByTheExportIsUnknownWhereTheNamesDisagree() {
+    // KiCad exports a second footprint P1 as P1_1: its real reference may be P1 or P1_1
+    Item renamed = new Item(ItemType.PAD, "GND", "Default", "P1_1", "1", true, null, "P1");
+    String around = "A.memberOfFootprint('P1') && !B.memberOfFootprint('P1')";
+    assertEquals(Tri.UNKNOWN, eval(around, renamed, SMD_PAD));
+    assertEquals(Tri.UNKNOWN, eval("A.memberOfFootprint('P1_1')", renamed, renamed));
+    assertEquals(Tri.UNKNOWN, eval("A.Reference == 'P1'", renamed, renamed));
+    assertEquals(Tri.UNKNOWN, eval("A.Parent == 'P1'", renamed, renamed));
+    // both names agree: the result is known
+    assertEquals(Tri.TRUE, eval("A.memberOfFootprint('P*')", renamed, renamed));
+    assertEquals(Tri.FALSE, eval("A.memberOfFootprint('U4')", renamed, renamed));
+    assertEquals(Tri.TRUE, eval("A.NetName == 'GND'", renamed, renamed));
+    // the signature tells the renamed pad from a pad that is surely P1_1
+    Item plain = new Item(ItemType.PAD, "GND", "Default", "P1_1", "1", true);
+    KiCadRuleCondition condition = KiCadRuleCondition.parse(around);
+    assertNotEquals(condition.signature(plain), condition.signature(renamed));
+    assertTrue(condition.testsTheFootprint());
+    assertFalse(KiCadRuleCondition.parse("A.NetName == 'GND'").testsTheFootprint());
   }
 
   @Test
