@@ -7,6 +7,7 @@ import app.freerouting.gui.board.BoardFrame;
 import app.freerouting.gui.board.BoardSavableSubWindow;
 import app.freerouting.gui.support.GuiTextManager;
 import app.freerouting.gui.workspace.GuiBoardManager;
+import app.freerouting.settings.OptimizerPatience;
 import app.freerouting.settings.RouterSettings;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -51,6 +52,10 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   private final JFormattedTextField planeViaCostField;
   private final JFormattedTextField startRipupCosts;
   private final JFormattedTextField maxPassesField;
+  private final JLabel optimizerMaxPassesLabel;
+  private final JFormattedTextField optimizerMaxPassesField;
+  private final JLabel optimizerPatienceLabel;
+  private final JComboBox<OptimizerPatience> optimizerPatienceComboBox;
   private final JPanel jobTimeoutPanel;
   private final JButton jobTimeoutDecrementButton;
   private final JFormattedTextField jobTimeoutValueField;
@@ -68,6 +73,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   private boolean planeViaCostInputCompleted = true;
   private boolean startRipupCostInputCompleted = true;
   private boolean maxPassesInputCompleted = true;
+  private boolean optimizerMaxPassesInputCompleted = true;
   private boolean maxThreadsInputCompleted = true;
   // Flag to prevent circular updates between GUI and settings
   private boolean isUpdatingFromSettings;
@@ -321,6 +327,62 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(maxPassesField, gridbagConstraints);
     mainPanel.add(maxPassesField);
 
+    // add label and number field for optimizer max passes
+
+    gridbagConstraints.gridwidth = 2;
+    this.optimizerMaxPassesLabel = new JLabel();
+    tm.setText(this.optimizerMaxPassesLabel, "optimizer_max_passes");
+    gridbag.setConstraints(this.optimizerMaxPassesLabel, gridbagConstraints);
+    mainPanel.add(this.optimizerMaxPassesLabel);
+
+    this.optimizerMaxPassesField = new JFormattedTextField(numberFormat);
+    this.optimizerMaxPassesField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+    this.optimizerMaxPassesField.setColumns(5);
+    this.optimizerMaxPassesField.setToolTipText(tm.getText("optimizer_max_passes_tooltip"));
+    this.optimizerMaxPassesField.addKeyListener(
+        new WindowAutorouteParameter.OptimizerMaxPassesFieldKeyListener());
+    this.optimizerMaxPassesField.addFocusListener(
+        new WindowAutorouteParameter.OptimizerMaxPassesFieldFocusListener());
+    gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbag.setConstraints(this.optimizerMaxPassesField, gridbagConstraints);
+    mainPanel.add(this.optimizerMaxPassesField);
+
+    // add label and dropdown for optimizer patience
+
+    gridbagConstraints.gridwidth = 2;
+    this.optimizerPatienceLabel = new JLabel();
+    tm.setText(this.optimizerPatienceLabel, "optimizer_patience");
+    this.optimizerPatienceLabel.setToolTipText(tm.getText("optimizer_patience_tooltip"));
+    gridbag.setConstraints(this.optimizerPatienceLabel, gridbagConstraints);
+    mainPanel.add(this.optimizerPatienceLabel);
+
+    this.optimizerPatienceComboBox = new JComboBox<>(OptimizerPatience.values());
+    this.optimizerPatienceComboBox.setRenderer(
+        new javax.swing.DefaultListCellRenderer() {
+          @Override
+          public java.awt.Component getListCellRendererComponent(
+              javax.swing.JList<?> list,
+              Object value,
+              int index,
+              boolean isSelected,
+              boolean cellHasFocus) {
+            super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            if (value instanceof OptimizerPatience p) {
+              setText(getPatienceDisplayName(p));
+              setToolTipText(getPatienceToolTip(p));
+            }
+            return this;
+          }
+        });
+    this.optimizerPatienceComboBox.setToolTipText(
+        getPatienceToolTip((OptimizerPatience) this.optimizerPatienceComboBox.getSelectedItem()));
+    this.optimizerPatienceComboBox.addActionListener(new OptimizerPatienceListener());
+    gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbag.setConstraints(this.optimizerPatienceComboBox, gridbagConstraints);
+    mainPanel.add(this.optimizerPatienceComboBox);
+
+    updateOptimizerControlsState(this.settingsAutorouterOptimizationButton.isSelected());
+
     // add label and structured fields for job timeout
 
     gridbagConstraints.gridwidth = 2;
@@ -556,6 +618,49 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       setJobTimeoutFields(
           this.boardHandling.getCurrentRoutingJob().routerSettings.jobTimeoutString);
     }
+    if (this.optimizerPatienceComboBox != null) {
+      OptimizerPatience selected =
+          (OptimizerPatience) this.optimizerPatienceComboBox.getSelectedItem();
+      this.optimizerPatienceComboBox.setToolTipText(getPatienceToolTip(selected));
+      this.optimizerPatienceComboBox.repaint();
+    }
+  }
+
+  private void updateOptimizerControlsState(boolean enabled) {
+    if (this.optimizerMaxPassesLabel != null) {
+      this.optimizerMaxPassesLabel.setEnabled(enabled);
+    }
+    if (this.optimizerMaxPassesField != null) {
+      this.optimizerMaxPassesField.setEnabled(enabled);
+    }
+    if (this.optimizerPatienceLabel != null) {
+      this.optimizerPatienceLabel.setEnabled(enabled);
+    }
+    if (this.optimizerPatienceComboBox != null) {
+      this.optimizerPatienceComboBox.setEnabled(enabled);
+    }
+  }
+
+  private String getPatienceDisplayName(OptimizerPatience patience) {
+    if (patience == null) {
+      return "";
+    }
+    return switch (patience) {
+      case BALANCED -> this.tm.getText("optimizer_patience_balanced");
+      case PATIENT -> this.tm.getText("optimizer_patience_patient");
+      case EXHAUSTIVE -> this.tm.getText("optimizer_patience_exhaustive");
+    };
+  }
+
+  private String getPatienceToolTip(OptimizerPatience patience) {
+    if (patience == null) {
+      return "";
+    }
+    return switch (patience) {
+      case BALANCED -> this.tm.getText("optimizer_patience_balanced_tooltip");
+      case PATIENT -> this.tm.getText("optimizer_patience_patient_tooltip");
+      case EXHAUSTIVE -> this.tm.getText("optimizer_patience_exhaustive_tooltip");
+    };
   }
 
   /** Handle property change events from RouterSettings to update GUI controls. */
@@ -604,6 +709,18 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         case "optimizer.enabled" -> {
           if (newValue instanceof Boolean bool) {
             settingsAutorouterOptimizationButton.setSelected(bool);
+            updateOptimizerControlsState(bool);
+          }
+        }
+        case "optimizer.maxPasses" -> {
+          if (newValue != null) {
+            optimizerMaxPassesField.setValue(newValue);
+          }
+        }
+        case "optimizer.patience" -> {
+          if (newValue instanceof OptimizerPatience pat) {
+            optimizerPatienceComboBox.setSelectedItem(pat);
+            optimizerPatienceComboBox.setToolTipText(getPatienceToolTip(pat));
           }
         }
         default -> {}
@@ -623,6 +740,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     this.settingsAutorouterFanoutButton.setSelected(settings.getRunFanout());
     this.settingsAutorouterAutoroutePassButton.setSelected(settings.getRunRouter());
     this.settingsAutorouterOptimizationButton.setSelected(settings.getRunOptimizer());
+    updateOptimizerControlsState(settings.getRunOptimizer());
 
     for (int i = 0; i < settingsAutorouterLayerActiveArr.length; i++) {
       this.settingsAutorouterLayerActiveArr[i].setSelected(settings.getLayerActive(i));
@@ -643,6 +761,17 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         settings.autorouter.maxPasses == null || settings.autorouter.maxPasses == Integer.MAX_VALUE
             ? 0
             : settings.autorouter.maxPasses);
+    Integer optMaxPasses = settings.getOptimizerMaxPasses();
+    this.optimizerMaxPassesField.setValue(
+        optMaxPasses == null || optMaxPasses == Integer.MAX_VALUE || optMaxPasses <= 0
+            ? 0
+            : optMaxPasses);
+    OptimizerPatience selectedPatience =
+        settings.getOptimizerPatience() != null
+            ? settings.getOptimizerPatience()
+            : OptimizerPatience.BALANCED;
+    this.optimizerPatienceComboBox.setSelectedItem(selectedPatience);
+    this.optimizerPatienceComboBox.setToolTipText(getPatienceToolTip(selectedPatience));
     setJobTimeoutFields(settings.jobTimeoutString);
     this.maxThreadsField.setValue(settings.getAutorouterMaxThreads());
     for (int i = 0; i < preferredDirectionTraceCostArr.length; i++) {
@@ -932,10 +1061,11 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent evt) {
       RouterSettings autorouteSettings = boardHandling.getCurrentRoutingJob().routerSettings;
+      boolean selected = settingsAutorouterOptimizationButton.isSelected();
+      updateOptimizerControlsState(selected);
       isUpdatingFromSettings = true;
       try {
-        applyOptimizerEnabledSelection(
-            autorouteSettings, settingsAutorouterOptimizationButton.isSelected());
+        applyOptimizerEnabledSelection(autorouteSettings, selected);
         syncSettingsToWorkspace();
       } finally {
         isUpdatingFromSettings = false;
@@ -1185,6 +1315,102 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     @Override
     public void focusGained(FocusEvent evt) {}
+  }
+
+  private class OptimizerMaxPassesFieldKeyListener extends KeyAdapter {
+
+    @Override
+    public void keyTyped(KeyEvent evt) {
+      if (evt.getKeyChar() == '\n') {
+        Integer currentVal =
+            boardHandling.getCurrentRoutingJob().routerSettings.optimizer != null
+                ? boardHandling.getCurrentRoutingJob().routerSettings.optimizer.maxPasses
+                : null;
+        int oldValue = currentVal != null ? currentVal : 100;
+        Object input = optimizerMaxPassesField.getValue();
+        int inputValue = normalizeIntInput(input, oldValue, 0, 9999);
+        isUpdatingFromSettings = true;
+        try {
+          boardHandling.getCurrentRoutingJob().routerSettings.setOptimizerMaxPasses(inputValue);
+          syncSettingsToWorkspace();
+        } finally {
+          isUpdatingFromSettings = false;
+        }
+        optimizerMaxPassesField.setValue(inputValue);
+        optimizerMaxPassesInputCompleted = true;
+      } else {
+        optimizerMaxPassesInputCompleted = false;
+      }
+    }
+  }
+
+  private class OptimizerMaxPassesFieldFocusListener implements FocusListener {
+
+    @Override
+    public void focusLost(FocusEvent evt) {
+      if (!optimizerMaxPassesInputCompleted) {
+        Integer currentVal =
+            boardHandling.getCurrentRoutingJob().routerSettings.optimizer != null
+                ? boardHandling.getCurrentRoutingJob().routerSettings.optimizer.maxPasses
+                : null;
+        int oldValue = currentVal != null ? currentVal : 100;
+
+        try {
+          optimizerMaxPassesField.commitEdit();
+        } catch (java.text.ParseException e) {
+          optimizerMaxPassesField.setValue(oldValue);
+        }
+
+        Object input = optimizerMaxPassesField.getValue();
+        int inputValue;
+        if (input instanceof Number number) {
+          inputValue = number.intValue();
+          if (inputValue < 0) {
+            inputValue = 0;
+          }
+          if (inputValue > 9999) {
+            inputValue = 9999;
+          }
+        } else {
+          inputValue = oldValue;
+        }
+        isUpdatingFromSettings = true;
+        try {
+          boardHandling.getCurrentRoutingJob().routerSettings.setOptimizerMaxPasses(inputValue);
+          syncSettingsToWorkspace();
+        } finally {
+          isUpdatingFromSettings = false;
+        }
+        optimizerMaxPassesField.setValue(inputValue);
+        optimizerMaxPassesInputCompleted = true;
+      }
+    }
+
+    @Override
+    public void focusGained(FocusEvent evt) {}
+  }
+
+  private class OptimizerPatienceListener implements ActionListener {
+
+    @Override
+    public void actionPerformed(ActionEvent evt) {
+      OptimizerPatience selected = (OptimizerPatience) optimizerPatienceComboBox.getSelectedItem();
+      if (selected != null) {
+        optimizerPatienceComboBox.setToolTipText(getPatienceToolTip(selected));
+      }
+      if (isUpdatingFromSettings) {
+        return;
+      }
+      if (selected != null) {
+        isUpdatingFromSettings = true;
+        try {
+          boardHandling.getCurrentRoutingJob().routerSettings.setOptimizerPatience(selected);
+          syncSettingsToWorkspace();
+        } finally {
+          isUpdatingFromSettings = false;
+        }
+      }
+    }
   }
 
   private class MaxThreadsFieldKeyListener extends KeyAdapter {

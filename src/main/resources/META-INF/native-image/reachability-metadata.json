@@ -1603,6 +1603,20 @@
       "serializable": true
     },
     {
+      "type": "app.freerouting.settings.OptimizerPatience",
+      "fields": [
+        {
+          "name": "BALANCED"
+        },
+        {
+          "name": "PATIENT"
+        },
+        {
+          "name": "EXHAUSTIVE"
+        }
+      ]
+    },
+    {
       "type": "app.freerouting.settings.OptimizerScoringVersion",
       "fields": [
         {
@@ -1657,6 +1671,9 @@
         },
         {
           "name": "optimizationImprovementThreshold"
+        },
+        {
+          "name": "patience"
         },
         {
           "name": "stepSlideEnabled"
