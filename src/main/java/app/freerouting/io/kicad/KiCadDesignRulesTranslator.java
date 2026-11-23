@@ -3,6 +3,7 @@ package app.freerouting.io.kicad;
 import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.model.items.ConductionArea;
 import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.ObstacleArea;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.model.items.Via;
@@ -20,10 +21,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -99,6 +102,9 @@ public final class KiCadDesignRulesTranslator {
       warnings.add(source + ": " + warning);
     }
     List<ClearanceRule> rules = clearanceRules(designRules);
+    resetSmdToSmdClearance();
+    warnImageKeepouts();
+    warnDuplicateReferences();
     if (rules.isEmpty()) {
       return new Result(0, 0, Map.of(), List.copyOf(warnings));
     }
@@ -221,28 +227,33 @@ public final class KiCadDesignRulesTranslator {
         warnings.add(prefix + warning);
       }
       for (String constraint : rule.otherConstraints()) {
-        if (constraint.startsWith("creepage") && rule.clearanceUm() != null) {
-          warnings.add(
-              prefix
-                  + "constraint "
-                  + constraint
-                  + " not translated (Specctra has no creepage), only the clearance of "
-                  + KiCadDesignRules.formatMm(rule.clearanceUm())
-                  + " of the rule applies");
-        } else {
-          warnings.add(
-              prefix
-                  + "constraint "
-                  + constraint
-                  + " not translated (only minimum clearances are translated)");
-        }
+        warnings.add(
+            prefix
+                + "constraint "
+                + constraint
+                + " not translated (only minimum clearances and creepage are translated)");
       }
-      if (rule.clearanceUm() == null) {
+      Double effectiveClearanceUm = rule.clearanceUm();
+      if (rule.creepageUm() != null) {
+        effectiveClearanceUm =
+            effectiveClearanceUm == null
+                ? rule.creepageUm()
+                : Math.max(effectiveClearanceUm, rule.creepageUm());
+      }
+      if (effectiveClearanceUm == null) {
         continue;
       }
       if (rule.ignored()) {
         warnings.add(prefix + "severity ignore: the clearance is not relaxed, the rule is skipped");
         continue;
+      }
+      if (rule.creepageUm() != null) {
+        warnings.add(
+            prefix
+                + "constraint creepage "
+                + KiCadDesignRules.formatMm(rule.creepageUm())
+                + " applied conservatively as routing clearance"
+                + " (slots and milling cutouts are not modelled)");
       }
       boolean[] layers = new boolean[layerCount];
       if (rule.layer() == null) {
@@ -273,10 +284,82 @@ public final class KiCadDesignRulesTranslator {
                 + String.join(", ", rule.condition().unsupportedParts())
                 + " cannot be evaluated: the rule is applied wherever it may match");
       }
-      int value = (int) Math.ceil(board.communication.physicalToBoard(rule.clearanceUm(), Unit.UM));
+      int value =
+          (int) Math.ceil(board.communication.physicalToBoard(effectiveClearanceUm, Unit.UM));
       result.add(new ClearanceRule(rule.name(), layers, rule.condition(), value));
     }
     return result;
+  }
+
+  /**
+   * Resets KiCad's reduced {@code smd_smd} clearance back to the regular default clearance when
+   * custom {@code .kicad_dru} rules are loaded, so Freerouting's DRC does not hide pad-to-pad
+   * violations that KiCad DRC reports.
+   */
+  private void resetSmdToSmdClearance() {
+    int smdClass = matrix.getNo("smd");
+    int defaultClass = matrix.getNo("default");
+    if (smdClass <= 0 || defaultClass <= 0) {
+      return;
+    }
+    for (int layer = 0; layer < layerCount; layer++) {
+      int defaultValue = matrix.getValue(defaultClass, defaultClass, layer, false);
+      if (matrix.getValue(smdClass, smdClass, layer, false) < defaultValue) {
+        matrix.setValue(smdClass, smdClass, layer, defaultValue);
+      }
+    }
+  }
+
+  /**
+   * Warns when the board contains footprint image keepouts (such as netless plated pads exported by
+   * KiCad), since {@code .kicad_dru} rules are only applied to pins, traces, vias and planes.
+   */
+  private void warnImageKeepouts() {
+    int keepoutCount = 0;
+    for (Item item : board.getItems()) {
+      if (item instanceof ObstacleArea && item.getComponentId() > 0) {
+        keepoutCount++;
+      }
+    }
+    if (keepoutCount > 0) {
+      warnings.add(
+          "board has "
+              + keepoutCount
+              + " footprint image keepout(s) (such as pads without a net);"
+              + " .kicad_dru clearance rules are not applied to them");
+    }
+  }
+
+  /**
+   * Warns when the board contains components whose names follow KiCad's duplicate-reference DSN
+   * renaming ({@code <ref>_<n>} alongside {@code <ref>}), which can cause {@code memberOfFootprint}
+   * rules to miss renamed duplicates.
+   */
+  private void warnDuplicateReferences() {
+    Set<String> names = new HashSet<>();
+    for (int i = 1; i <= board.components.count(); i++) {
+      Component c = board.components.get(i);
+      if (c != null && c.name != null) {
+        names.add(c.name);
+      }
+    }
+    for (String name : names) {
+      int underscore = name.lastIndexOf('_');
+      if (underscore > 0 && underscore < name.length() - 1) {
+        String base = name.substring(0, underscore);
+        String suffix = name.substring(underscore + 1);
+        if (names.contains(base) && suffix.chars().allMatch(Character::isDigit)) {
+          warnings.add(
+              "component '"
+                  + name
+                  + "' appears to be a KiCad-renamed duplicate of '"
+                  + base
+                  + "'; memberOfFootprint rules for '"
+                  + base
+                  + "' may not match it");
+        }
+      }
+    }
   }
 
   /**
