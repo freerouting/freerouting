@@ -11,6 +11,7 @@ import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.datastructures.ShapeTree;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.Area;
+import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
@@ -188,6 +189,21 @@ public class BoardOutline extends Item implements Serializable {
       }
     }
     return result;
+  }
+
+  /**
+   * Gap between a pad shape and the outline for edge-window checks: exact for circles (instead of
+   * the conservative bounding-box corner sample in {@link #cornerGap}), and corner-sampled for
+   * polygonal shapes.
+   */
+  private double shapeGap(Shape padShape) {
+    if (padShape.isEmpty() || !padShape.isBounded()) {
+      return Double.POSITIVE_INFINITY;
+    }
+    if (padShape instanceof Circle circle) {
+      return Math.max(0.0, distanceToOutline(circle.center.toFloat()) - circle.radius);
+    }
+    return cornerGap(padShape);
   }
 
   private double cornerGap(Shape padShape) {
@@ -796,7 +812,7 @@ public class BoardOutline extends Item implements Serializable {
         }
         // A pin inside the outline, but closer to it than the clearance, could not be reached
         // either: a trace that ends on it is as close to the outline as the pin.
-        if (!edgePin && cornerGap(shape) >= largestClearance) {
+        if (!edgePin && shapeGap(shape) >= largestClearance) {
           continue;
         }
         result.add(new EdgeWindow(shape.boundingBox().offset(margin), layer, nets));
