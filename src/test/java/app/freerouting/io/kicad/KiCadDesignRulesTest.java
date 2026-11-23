@@ -1,6 +1,7 @@
 package app.freerouting.io.kicad;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -320,10 +321,10 @@ class KiCadDesignRulesTest {
         result.warnings().stream()
             .anyMatch(w -> w.contains("pads without net exported as keepouts in K1")),
         result.warnings().toString());
-    // The warning on footprint image keepouts is still given
-    assertTrue(
+    // Circular netless pad keepouts are now handled, so the unsupported-keepout warning is omitted
+    assertFalse(
         result.warnings().stream()
-            .anyMatch(w -> w.contains("footprint image keepout(s) (such as pads without a net)")),
+            .anyMatch(w -> w.contains("unsupported footprint image keepout(s)")),
         result.warnings().toString());
   }
 
@@ -401,22 +402,50 @@ class KiCadDesignRulesTest {
     }
     assertTrue(others.size() >= 2, "both keepouts must load: " + others);
     int[] before = others.stream().mapToInt(Item::clearanceClassIndex).toArray();
-    KiCadDesignRulesTranslator.apply(
-        board,
-        KiCadDesignRules.parse(
-            """
-            (version 1)
-            (rule "around_k1"
-              (condition "A.memberOfFootprint('K1') && !B.memberOfFootprint('K1')")
-              (constraint clearance (min 7mm)))
-            (rule "no_net"
-              (condition "A.Type == 'Pad' && B.Type == 'Pad'")
-              (constraint clearance (min 5mm)))
-            """,
-            "test.kicad_dru"));
+    var result =
+        KiCadDesignRulesTranslator.apply(
+            board,
+            KiCadDesignRules.parse(
+                """
+                (version 1)
+                (rule "around_k1"
+                  (condition "A.memberOfFootprint('K1') && !B.memberOfFootprint('K1')")
+                  (constraint clearance (min 7mm)))
+                (rule "no_net"
+                  (condition "A.Type == 'Pad' && B.Type == 'Pad'")
+                  (constraint clearance (min 5mm)))
+                """,
+                "test.kicad_dru"));
     assertEquals(
         Arrays.toString(before),
         Arrays.toString(others.stream().mapToInt(Item::clearanceClassIndex).toArray()));
+    // Polygonal footprint image keepouts are not handled as pads and still emit the warning
+    assertTrue(
+        result.warnings().stream()
+            .anyMatch(w -> w.contains("unsupported footprint image keepout(s)")),
+        result.warnings().toString());
+  }
+
+  @Test
+  void duplicateReferenceWarningIsCaseInsensitive() throws IOException {
+    BasicBoard board =
+        loadBoard(
+            dsn -> dsn.replace("(place K2 ", "(place k1_1 ").replaceAll("(?<=[ (])K2-", "k1_1-"));
+    var result =
+        KiCadDesignRulesTranslator.apply(
+            board,
+            KiCadDesignRules.parse(
+                """
+                (version 1)
+                (rule "around_k1"
+                  (condition "A.memberOfFootprint('K1') && !B.memberOfFootprint('K1')")
+                  (constraint clearance (min 7mm)))
+                """,
+                "test.kicad_dru"));
+    assertTrue(
+        result.warnings().stream()
+            .anyMatch(w -> w.contains("'k1_1' appears to be a KiCad-renamed duplicate of 'k1'")),
+        result.warnings().toString());
   }
 
   @Test

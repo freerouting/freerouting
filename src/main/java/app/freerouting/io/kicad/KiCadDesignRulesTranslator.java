@@ -105,7 +105,9 @@ public final class KiCadDesignRulesTranslator {
     this.layerCount = matrix.getLayerCount();
     List<String> names = new ArrayList<>();
     for (Component component : board.components.getAll()) {
-      names.add(component.name);
+      if (component != null && component.name != null) {
+        names.add(component.name);
+      }
     }
     this.renamed = possiblyRenamed(names);
   }
@@ -376,13 +378,14 @@ public final class KiCadDesignRulesTranslator {
   }
 
   /**
-   * Warns when the board contains footprint image keepouts (such as netless plated pads exported by
-   * KiCad), since {@code .kicad_dru} rules are only applied to pins, traces, vias and planes.
+   * Warns when the board contains unsupported footprint image keepouts (such as polygonal rule
+   * areas), since {@code .kicad_dru} rules are only applied to pins, traces, vias, planes, and
+   * circular netless pad keepouts.
    */
   private void warnImageKeepouts() {
     int keepoutCount = 0;
     for (Item item : board.getItems()) {
-      if (item instanceof ObstacleArea && item.getComponentId() > 0) {
+      if (item instanceof ObstacleArea && item.getComponentId() > 0 && !isPadKeepout(item)) {
         keepoutCount++;
       }
     }
@@ -390,40 +393,28 @@ public final class KiCadDesignRulesTranslator {
       warnings.add(
           "board has "
               + keepoutCount
-              + " footprint image keepout(s) (such as pads without a net);"
+              + " unsupported footprint image keepout(s);"
               + " .kicad_dru clearance rules are not applied to them");
     }
   }
 
   /**
    * Warns when the board contains components whose names follow KiCad's duplicate-reference DSN
-   * renaming ({@code <ref>_<n>} alongside {@code <ref>}), which can cause {@code memberOfFootprint}
-   * rules to miss renamed duplicates.
+   * renaming ({@code <ref>_<n>} alongside {@code <ref>}, case-insensitively), which can cause
+   * {@code memberOfFootprint} rules to miss renamed duplicates.
    */
   private void warnDuplicateReferences() {
-    Set<String> names = new HashSet<>();
-    for (int i = 1; i <= board.components.count(); i++) {
-      Component c = board.components.get(i);
-      if (c != null && c.name != null) {
-        names.add(c.name);
-      }
-    }
-    for (String name : names) {
-      int underscore = name.lastIndexOf('_');
-      if (underscore > 0 && underscore < name.length() - 1) {
-        String base = name.substring(0, underscore);
-        String suffix = name.substring(underscore + 1);
-        if (names.contains(base) && suffix.chars().allMatch(Character::isDigit)) {
-          warnings.add(
-              "component '"
-                  + name
-                  + "' appears to be a KiCad-renamed duplicate of '"
-                  + base
-                  + "'; memberOfFootprint rules for '"
-                  + base
-                  + "' may not match it");
-        }
-      }
+    for (Map.Entry<String, String> entry : renamed.entrySet()) {
+      String name = entry.getKey();
+      String base = entry.getValue();
+      warnings.add(
+          "component '"
+              + name
+              + "' appears to be a KiCad-renamed duplicate of '"
+              + base
+              + "'; memberOfFootprint rules for '"
+              + base
+              + "' may not match it");
     }
   }
 
@@ -470,6 +461,7 @@ public final class KiCadDesignRulesTranslator {
   private static boolean isPadKeepout(Item item) {
     return item.getClass() == ObstacleArea.class
         && item.getComponentId() > 0
+        && item.netCount() == 0
         && ((ObstacleArea) item).getRelativeArea() instanceof Circle;
   }
 
@@ -502,7 +494,10 @@ public final class KiCadDesignRulesTranslator {
         kind = Kind.AREA;
       } else if (isPadKeepout(item)) {
         kind = Kind.PAD_KEEPOUT;
-        padKeepoutComponents.add(board.components.get(item.getComponentId()).name);
+        Component component = board.components.get(item.getComponentId());
+        if (component != null) {
+          padKeepoutComponents.add(component.name);
+        }
       } else {
         continue;
       }
@@ -533,15 +528,16 @@ public final class KiCadDesignRulesTranslator {
     String netClass = kicadClassName(net == null ? null : net.getNetClass());
     if (kind == Kind.PAD_KEEPOUT) {
       Component component = board.components.get(pinItem.getComponentId());
+      String componentName = component == null ? null : component.name;
       return new KiCadRuleCondition.Item(
           ItemType.PAD,
           netName,
           netClass,
-          component.name,
+          componentName,
           null, // number and plating unknown
           false,
           libraryId(component),
-          renamed.get(component.name));
+          componentName == null ? null : renamed.get(componentName));
     }
     if (kind != Kind.PIN) {
       ItemType type =
