@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
-/** The minimum track width and the edge clearance read from a KiCad project file. */
+/** The minimum track width and the clearances read from a KiCad project file. */
 class KiCadProjectTest {
 
   private static String project(String rules) {
@@ -72,19 +72,24 @@ class KiCadProjectTest {
   }
 
   @Test
-  void readsTheEdgeClearanceOfTheProject() {
+  void readsTheEdgeAndHoleClearancesOfTheProject() {
     KiCadProject project =
-        KiCadProject.parse(project("\"min_copper_edge_clearance\": 0.3"), "board.kicad_pro");
+        KiCadProject.parse(
+            project("\"min_copper_edge_clearance\": 0.3, \"min_hole_clearance\": 0.2"),
+            "board.kicad_pro");
     assertEquals(300.0, project.copperEdgeClearanceUm(), 1e-9);
+    assertEquals(200.0, project.holeClearanceUm(), 1e-9);
   }
 
   @Test
-  void withoutItTheEdgeClearanceIsTheDefaultOfKiCad() {
+  void withoutThemTheClearancesAreTheDefaultsOfKiCad() {
     KiCadProject project = KiCadProject.parse(project("\"min_track_width\": 0.2"), "p");
     assertEquals(500.0, project.copperEdgeClearanceUm(), 1e-9);
+    assertEquals(250.0, project.holeClearanceUm(), 1e-9);
 
     KiCadProject board = KiCadProject.fromBoardSetup("old.kicad_pcb", 300.0);
     assertEquals(300.0, board.minTrackWidthUm(), 1e-9);
     assertEquals(500.0, board.copperEdgeClearanceUm(), 1e-9);
+    assertEquals(250.0, board.holeClearanceUm(), 1e-9);
   }
 }

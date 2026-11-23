@@ -469,7 +469,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
               + " copper zones of the KiCad board '"
               + path
               + "'.");
-      // Without a project file, KiCad checks the board against its default clearance and, on a
+      // Without a project file, KiCad checks the board against its default clearances and, on a
       // board of KiCad 5 or earlier, the minimum track width kept in the setup of the board.
       Double minWidth = this.kicadBoardZones.minTrackWidthUm();
       if (this.kicadProject == null) {
@@ -479,6 +479,8 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
                 + path
                 + "' (copper to edge clearance "
                 + this.kicadProject.copperEdgeClearanceUm()
+                + " um, hole clearance "
+                + this.kicadProject.holeClearanceUm()
                 + " um)"
                 + (minWidth == null
                     ? "."

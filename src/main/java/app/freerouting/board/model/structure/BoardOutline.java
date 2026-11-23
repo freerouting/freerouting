@@ -11,6 +11,7 @@ import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.datastructures.ShapeTree;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.Area;
+import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
@@ -188,6 +189,21 @@ public class BoardOutline extends Item implements Serializable {
       }
     }
     return result;
+  }
+
+  /**
+   * Gap between a pad shape and the outline for edge-window checks: exact for circles (instead of
+   * the conservative bounding-box corner sample in {@link #cornerGap}), and corner-sampled for
+   * polygonal shapes.
+   */
+  private double shapeGap(Shape padShape) {
+    if (padShape.isEmpty() || !padShape.isBounded()) {
+      return Double.POSITIVE_INFINITY;
+    }
+    if (padShape instanceof Circle circle) {
+      return Math.max(0.0, distanceToOutline(circle.center.toFloat()) - circle.radius);
+    }
+    return cornerGap(padShape);
   }
 
   private double cornerGap(Shape padShape) {
@@ -782,7 +798,7 @@ public class BoardOutline extends Item implements Serializable {
         if (shape == null || shape.isEmpty() || !shape.isBounded()) {
           continue;
         }
-        double gap = edgePin ? -1.0 : cornerGap(shape);
+        double gap = edgePin ? -1.0 : shapeGap(shape);
         int margin = 0;
         int[] windowNets = new int[nets.length];
         int windowNetCount = 0;
@@ -832,7 +848,7 @@ public class BoardOutline extends Item implements Serializable {
       if (shape == null || shape.isEmpty() || !shape.isBounded()) {
         continue;
       }
-      double gap = cornerGap(shape);
+      double gap = shapeGap(shape);
       for (int net : nets) {
         int clearance = outlineClearanceForNet(net, layer);
         if (clearance >= 0 && gap < clearance) {

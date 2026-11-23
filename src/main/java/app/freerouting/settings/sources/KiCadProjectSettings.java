@@ -9,10 +9,10 @@ import app.freerouting.settings.SettingsSource;
  * track width and minimum connection width becomes {@code neck_width_um}, the narrowest trace the
  * router may use. A board of KiCad 5 or earlier, which has no project file, gives its {@code (setup
  * (trace_min ...))} instead (see {@link KiCadProject#fromBoardSetup}). The copper to edge clearance
- * is the one that the KiCad DRC checks: of the project, else the default of KiCad. It ranks above
- * the DSN file, which does not carry that minimum, and below every setting the user gives (CLI,
- * environment, GUI, API), so an explicit {@code --router.neck_width_um} still wins (and so does an
- * explicit clearance).
+ * and the hole clearance are those that the KiCad DRC checks: of the project, else the defaults of
+ * KiCad. It ranks above the DSN file, which does not carry that minimum, and below every setting
+ * the user gives (CLI, environment, GUI, API), so an explicit {@code --router.neck_width_um} still
+ * wins (and so does an explicit clearance).
  */
 public class KiCadProjectSettings implements SettingsSource {
 
@@ -26,6 +26,7 @@ public class KiCadProjectSettings implements SettingsSource {
       this.settings.neckWidthUm = project.narrowestTraceWidthUm();
     }
     this.settings.copperToEdgeClearanceUm = project.copperEdgeClearanceUm();
+    this.settings.holeClearanceUm = project.holeClearanceUm();
   }
 
   @Override

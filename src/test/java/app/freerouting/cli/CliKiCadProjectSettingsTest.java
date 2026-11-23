@@ -82,32 +82,38 @@ class CliKiCadProjectSettingsTest {
   }
 
   @Test
-  void theEdgeClearanceIsTheOneThatKiCadChecks() throws Exception {
-    // the project sets none: the default of KiCad
+  void theClearancesAreThoseThatKiCadChecks() throws Exception {
+    // the project sets none: the defaults of KiCad
     Path project = Files.writeString(dir.resolve("board.kicad_pro"), PROJECT);
     SettingsMerger merger = new SettingsMerger(new DefaultSettings());
     assertTrue(CliRunner.addKiCadProjectSettings(new RoutingJob(), project.toString(), merger));
     assertEquals(500.0, merger.merge().copperToEdgeClearanceUm, 1e-9);
+    assertEquals(250.0, merger.merge().holeClearanceUm, 1e-9);
 
     Path own =
         Files.writeString(
             dir.resolve("own.kicad_pro"),
             "{\"board\": {\"design_settings\": {\"rules\": "
-                + "{\"min_copper_edge_clearance\": 0.3}}}}");
+                + "{\"min_copper_edge_clearance\": 0.3, \"min_hole_clearance\": 0.2}}}}");
     merger = new SettingsMerger(new DefaultSettings());
     assertTrue(CliRunner.addKiCadProjectSettings(new RoutingJob(), own.toString(), merger));
     assertEquals(300.0, merger.merge().copperToEdgeClearanceUm, 1e-9);
+    assertEquals(200.0, merger.merge().holeClearanceUm, 1e-9);
   }
 
   @Test
-  void anExplicitEdgeClearanceWins() throws Exception {
+  void anExplicitClearanceWins() throws Exception {
     Path project = Files.writeString(dir.resolve("board.kicad_pro"), PROJECT);
     SettingsMerger merger =
         new SettingsMerger(
             new DefaultSettings(),
-            new CliSettings(new String[] {"--router.copper_to_edge_clearance_um=375"}));
+            new CliSettings(
+                new String[] {
+                  "--router.copper_to_edge_clearance_um=375", "--router.hole_clearance_um=125"
+                }));
 
     assertTrue(CliRunner.addKiCadProjectSettings(new RoutingJob(), project.toString(), merger));
     assertEquals(375.0, merger.merge().copperToEdgeClearanceUm, 1e-9);
+    assertEquals(125.0, merger.merge().holeClearanceUm, 1e-9);
   }
 }
