@@ -111,16 +111,12 @@ class DecouplingIdentifierTest {
   @Test
   void testMultiBoardComprehensiveBenchmark() throws IOException {
     record BoardEntry(String name, String path, boolean isUpload) {}
+    String doorUpload = System.getProperty("decoupling.test.fixture.door", "");
+    String a64Upload = System.getProperty("decoupling.test.fixture.a64", "");
     java.util.List<BoardEntry> boards =
         java.util.List.of(
-            new BoardEntry(
-                "Door_Opener (ESP32-H2)",
-                "C:/Users/oppyu/.gemini/antigravity/brain/21fc1298-be63-4631-9c4f-d4667d57509b/.user_uploaded/media_1793641525430_224260a2.dsn",
-                true),
-            new BoardEntry(
-                "A64-OlinuXino Rev H (Allwinner A64)",
-                "C:/Users/oppyu/.gemini/antigravity/brain/21fc1298-be63-4631-9c4f-d4667d57509b/.user_uploaded/media_1793642930162_ac15d14f.dsn",
-                true),
+            new BoardEntry("Door_Opener (ESP32-H2)", doorUpload, true),
+            new BoardEntry("A64-OlinuXino Rev H (Allwinner A64)", a64Upload, true),
             new BoardEntry("Tomu/Fomu (Lattice iCE40UP5K)", "Issue756-tomu-fpga.dsn", false),
             new BoardEntry(
                 "Smoothieboard v1 (LPC1769 5-Axis CNC)", "Issue145-smoothieboard.dsn", false),

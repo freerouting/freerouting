@@ -1,0 +1,100 @@
+(pcb "Altium-TwoLayerBenchmark"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "Altium Designer")
+    (host_version "24.0")
+  )
+  (resolution mil 10000)
+  (unit mil)
+  (structure
+    (layer TopLayer (type signal))
+    (layer BottomLayer (type signal))
+    (boundary
+      (path pcb 0 0.0000 0.0000 1000.0000 0.0000 1000.0000 1000.0000 0.0000 1000.0000 0.0000 0.0000)
+    )
+    (rule
+      (width 10.0000)
+      (clearance 10.0000)
+      (clearance 10.0000 (type default_clearance))
+      (clearance 10.0000 (type smd_smd))
+      (clearance 10.0000 (type smd_to_turn_gap))
+      (clearance 10.0000 (type smd_to_via_gap))
+      (clearance 10.0000 (type wire_to_wire))
+      (clearance 10.0000 (type wire_to_via))
+      (clearance 10.0000 (type via_to_via))
+      (clearance 25.0000 (type board_outline))
+      (clearance 10.0000 (type hole_to_hole))
+    )
+    (via Via_24_12)
+  )
+  (placement
+    (component DIP8
+      (place U1 200.0000 300.0000 front 0 (pn U1) (lock_type position))
+    )
+    (component R0805
+      (place R1 700.0000 200.0000 front 0 (pn R1) (lock_type position))
+      (place R2 700.0000 400.0000 front 0 (pn R2) (lock_type position))
+    )
+    (component R0805_Rot
+      (place R3 700.0000 600.0000 front 0 (pn R3) (lock_type position))
+    )
+  )
+  (library
+    (image DIP8
+      (pin DIP_PAD 1 0.0000 0.0000)
+      (pin DIP_PAD 2 100.0000 0.0000)
+      (pin DIP_PAD 3 200.0000 0.0000)
+      (pin DIP_PAD 4 300.0000 0.0000)
+      (pin DIP_PAD 5 300.0000 300.0000)
+      (pin DIP_PAD 6 200.0000 300.0000)
+      (pin DIP_PAD 7 100.0000 300.0000)
+      (pin DIP_PAD 8 0.0000 300.0000)
+    )
+    (image R0805
+      (pin SMD_PAD 1 -40.0000 0.0000)
+      (pin SMD_PAD 2 40.0000 0.0000)
+    )
+    (image R0805_Rot
+      (pin SMD_ROT_PAD 1 -40.0000 0.0000)
+      (pin SMD_ROT_PAD 2 40.0000 0.0000)
+    )
+    (padstack Via_24_12
+      (shape (circle TopLayer 24.0000))
+      (shape (circle BottomLayer 24.0000))
+      (attach on)
+      (freerouting_drill_diameter 12.0000)
+    )
+    (padstack DIP_PAD
+      (shape (circle TopLayer 60.0000))
+      (shape (circle BottomLayer 60.0000))
+      (attach on)
+      (freerouting_drill_diameter 30.0000)
+    )
+    (padstack SMD_PAD
+      (shape (rect TopLayer -20.0000 -25.0000 20.0000 25.0000))
+    )
+    (padstack SMD_ROT_PAD
+      (shape (polygon TopLayer 0 3.5355 -31.8198 31.8198 -3.5355 -3.5355 31.8198 -31.8198 3.5355))
+    )
+  )
+  (network
+    (net Net_U1_1_R1_1
+      (pins U1-1 R1-1)
+    )
+    (net Net_U1_2_R2_1
+      (pins U1-2 R2-1)
+    )
+    (net Net_U1_3_R3_1
+      (pins U1-3 R3-1)
+    )
+    (class default
+      Net_U1_1_R1_1 Net_U1_2_R2_1 Net_U1_3_R3_1
+      (rule
+        (width 10.0000)
+        (clearance 10.0000)
+      )
+      (circuit (use_via Via_24_12))
+    )
+  )
+)

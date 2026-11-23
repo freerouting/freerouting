@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Platforms>x64</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <RootNamespace>Freerouting.Altium.Installer</RootNamespace>
+    <AssemblyName>Freerouting.Altium.Installer</AssemblyName>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\Freerouting.Altium.Extension\bin\x64\Release\Freerouting.Altium.Extension.dll">
+      <Link>Payload\Freerouting.Altium.Extension.dll</Link>
+      <LogicalName>Freerouting.Altium.Installer.Payload.Freerouting.Altium.Extension.dll</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Freerouting.Altium.Extension\bin\x64\Release\Freerouting.Altium.Core.dll">
+      <Link>Payload\Freerouting.Altium.Core.dll</Link>
+      <LogicalName>Freerouting.Altium.Installer.Payload.Freerouting.Altium.Core.dll</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Freerouting.Altium.Extension\Freerouting.ins">
+      <Link>Payload\Freerouting.ins</Link>
+      <LogicalName>Freerouting.Altium.Installer.Payload.Freerouting.ins</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Freerouting.Altium.Extension\Freerouting.rcs">
+      <Link>Payload\Freerouting.rcs</Link>
+      <LogicalName>Freerouting.Altium.Installer.Payload.Freerouting.rcs</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>

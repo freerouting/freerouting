@@ -1,4 +1,4 @@
-(pcb C:\Users\oppyu\Downloads\BGA_Escape_Test_HARD.dsn
+(pcb "BGA_Escape_Test_HARD.dsn"
   (parser
     (string_quote ")
     (space_in_quoted_tokens on)

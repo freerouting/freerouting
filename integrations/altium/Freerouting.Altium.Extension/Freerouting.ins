@@ -1,0 +1,18 @@
+ClientInsFile 1.0
+
+Server
+    EditorName        = 'Freerouting'
+    EditorExePath     = 'Freerouting.Altium.Extension.dll'
+    EditorDescription = 'Freerouting PCB Auto-Router Integration'
+    Version           = 'Version 2.5.0'
+    Date              = '20-Nov-2026'
+    HelpAboutInfo     = 'Freerouting open-source routing engine bridge for Altium Designer.'
+    Copyright         = 'Copyright (C) Freerouting Community (GPLv3)'
+    SystemExtension   = False
+    Updates           = 'AdvPCB'
+End
+
+Command Name = 'AutoRoute' LongSummary = 'Auto-route active PCB document using Freerouting' End
+Command Name = 'ExportDsn' LongSummary = 'Export active PCB document to Specctra DSN' End
+Command Name = 'ImportSes' LongSummary = 'Import Specctra SES route session into active PCB' End
+Command Name = 'Settings'  LongSummary = 'Configure Freerouting integration parameters' End

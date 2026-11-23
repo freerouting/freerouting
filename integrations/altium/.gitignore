@@ -1,0 +1,25 @@
+# Freerouting Altium Designer Integration - Git Ignore
+
+# Build Outputs
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Proprietary Altium SDK / Decompiled Assemblies & Binaries
+*.dll
+*.exe
+*.pdb
+*.bin
+*.dcu
+*.tlb
+*.lib
+Altium.*
+!freerouting*.jar
+
+# Packages & Test Results
+TestResults/
+*.nupkg
+packages/
