@@ -258,7 +258,7 @@ jobs:
     name: 'Build Native CLI (${{ matrix.platform }}-${{ matrix.arch }})'
     needs: [ test, setup-snapshot ]
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 45
+    timeout-minutes: 75
     permissions:
       contents: read
     strategy:
