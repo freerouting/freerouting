@@ -239,8 +239,9 @@ public final class KiCadDesignRulesTranslator {
       warnings.add(
           "rule '"
               + name
-              + "': creepage not applied between two pads, where it exceeds their clearance (the"
-              + " pads are not moved, and the slots between them are not modelled: KiCad checks it)");
+              + "': creepage not applied between two pads, where it exceeds their clearance"
+              + " (the pads are not moved, and the slots between them are not modelled:"
+              + " KiCad checks it)");
     }
     return new Result(translatedRules, added, split, List.copyOf(warnings));
   }
@@ -404,8 +405,9 @@ public final class KiCadDesignRulesTranslator {
     for (Entity entity : entities) {
       items.add(entity.item());
     }
-    for (ClearanceRule rule : rules) {
-      if (rule.condition() == null) {
+    for (int i = 0; i < rules.size(); i++) {
+      ClearanceRule rule = rules.get(i);
+      if (rule.condition() == null || (i > 0 && rules.get(i - 1).condition() == rule.condition())) {
         continue;
       }
       for (String part : rule.condition().namesMatchingNothing(items)) {
