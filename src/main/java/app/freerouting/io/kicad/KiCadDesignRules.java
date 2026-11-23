@@ -29,6 +29,7 @@ public final class KiCadDesignRules {
    * @param layer the argument of its {@code (layer ...)} clause, or null for all layers
    * @param condition its condition, or null if it has none (it then applies to every pair)
    * @param clearanceUm its minimum clearance in micrometres, or null if it sets none
+   * @param creepageUm its minimum creepage in micrometres, or null if it sets none
    * @param ignored true for {@code (severity ignore)}: KiCad then reports nothing
    * @param otherConstraints the constraints Freerouting does not translate, as written
    * @param warnings what could not be read in the rule
@@ -38,6 +39,7 @@ public final class KiCadDesignRules {
       String layer,
       KiCadRuleCondition condition,
       Double clearanceUm,
+      Double creepageUm,
       boolean ignored,
       List<String> otherConstraints,
       List<String> warnings) {}
@@ -104,6 +106,7 @@ public final class KiCadDesignRules {
     String layer = null;
     KiCadRuleCondition condition = null;
     Double clearance = null;
+    Double creepage = null;
     boolean ignored = false;
     List<String> other = new ArrayList<>();
     List<String> warnings = new ArrayList<>();
@@ -135,6 +138,8 @@ public final class KiCadDesignRules {
           }
           if ("clearance".equals(type) && min != null) {
             clearance = clearance == null ? min : Math.max(clearance, min);
+          } else if ("creepage".equals(type) && min != null) {
+            creepage = creepage == null ? min : Math.max(creepage, min);
           } else {
             other.add(type + (min != null ? " " + formatMm(min) : ""));
           }
@@ -142,7 +147,7 @@ public final class KiCadDesignRules {
         default -> warnings.add("clause '" + keyword + "' not read");
       }
     }
-    return new Rule(name, layer, condition, clearance, ignored, other, warnings);
+    return new Rule(name, layer, condition, clearance, creepage, ignored, other, warnings);
   }
 
   /** A length in micrometres, written in millimetres for messages. */

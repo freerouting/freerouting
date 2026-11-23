@@ -168,14 +168,16 @@ Let's suppose that the new version is `<version>` (e.g. `2.5.0`). You need to co
   ```
 * Copy and rename `build/libs/freerouting-current-executable.jar` to `freerouting-<version>.jar`.
 * Update the KiCad integration (`integrations/KiCad/`):
-    * Copy `freerouting-<version>.jar` into `integrations/KiCad/kicad-freerouting/plugins/jar/` (and remove the previous version JAR).
-    * Update `integrations/KiCad/kicad-freerouting/plugins/plugin.ini` with the new filename (`location = jar/freerouting-<version>.jar`).
-    * Update `integrations/KiCad/kicad-freerouting/metadata.json` with the new version (in-archive metadata must not contain `download_*` keys).
-    * Build, package, and validate the KiCad PCM packages using the automated script:
-      ```bash
-      python scripts/kicad/package_plugin.py --update-metadata
-      ```
-      This packages `kicad-freerouting.zip` and `kicad-freerouting-<version>.zip` strictly excluding any disallowed files (such as root tests or extra resource icons), computes the exact SHA-256 and size metrics, updates `integrations/KiCad/metadata.json`, and verifies the package against KiCad PCM whitelist rules.
+    * Build, package, and validate the KiCad PCM plugin using the automated script (passing `--version` is required):
+      * For **local testing** (writes only `integrations/KiCad/kicad-freerouting.zip`):
+        ```bash
+        python scripts/kicad/package_plugin.py --version <version>
+        ```
+      * For a **release** (also writes `integrations/KiCad/kicad-freerouting-<version>.zip` for PCM hosting):
+        ```bash
+        python scripts/kicad/package_plugin.py --version <version> --versioned
+        ```
+      The script automatically compiles `executableJar` (pass `--skip-build` to reuse an existing JAR), copies it into `integrations/KiCad/kicad-freerouting/plugins/jar/freerouting-<version>.jar` while ensuring strictly one `.jar` exists in that folder, updates `plugins/plugin.ini` and `kicad-freerouting/metadata.json` when needed, inserts or updates only the `<version>` entry in `integrations/KiCad/metadata.json` (leaving older releases untouched), prints a detailed change summary, and validates the archive against KiCad PCM whitelist rules.
     * Run local package verification:
       ```bash
       python scripts/kicad/validate_pcm_package.py
