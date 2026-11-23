@@ -1,0 +1,33 @@
+(pcb fanout-via-zero-move
+  (parser (string_quote ") (space_in_quoted_tokens on) (host_cad "hand") (host_version "1"))
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer Top (type signal) (property (index 0)))
+    (layer Bottom (type signal) (property (index 1)))
+    (boundary (rect pcb 0 -10000 20000 0))
+    (via "Via[0-1]_300:150_um")
+    (rule (width 200) (clearance 200))
+  )
+  (placement
+    (component SMD
+      (place S1 2000 -3000 front 0)
+      (place O1 7200 -3335 front 0)
+    )
+  )
+  (library
+    (image SMD (pin S 1 0 0))
+    (padstack S (shape (rect Top -150 -150 150 150)) (attach off))
+    (padstack "Via[0-1]_300:150_um" (shape (circle Top 300)) (shape (circle Bottom 300)) (attach off))
+  )
+  (network
+    (net N1 (pins S1-1))
+    (net N2 (pins O1-1))
+    (class kicad_default N1 N2 (circuit (use_via "Via[0-1]_300:150_um")) (rule (width 400) (clearance 200)))
+  )
+  (wiring
+    (wire (path Top 400  2000 -3000  6000 -3000)(net N1))
+    (wire (path Top 400  6000 -3000  10000 -7000)(net N1))
+    (via "Via[0-1]_300:150_um"  10000 -7000 (net N1))
+  )
+)

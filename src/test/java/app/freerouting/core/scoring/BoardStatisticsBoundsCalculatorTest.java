@@ -3,6 +3,7 @@ package app.freerouting.core.scoring;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.Freerouting;
@@ -11,6 +12,8 @@ import app.freerouting.board.model.structure.AngleRestriction;
 import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.IntPoint;
+import app.freerouting.geometry.planar.Point;
+import app.freerouting.geometry.planar.PolygonShape;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.specctra.DsnReader;
 import app.freerouting.io.specctra.DsnTestFixtures;
@@ -92,6 +95,26 @@ class BoardStatisticsBoundsCalculatorTest {
         FixedState.USER_FIXED);
     BoardStatistics stats = new BoardStatistics(board);
     assertEquals(6.0f * (float) Math.sqrt(2) - 1.0f, stats.bounds.minTraceLengthMm, 0.01f);
+  }
+
+  @Test
+  void conductionAreaWithoutConvexSplitFallsBackToZeroDistance() {
+    RoutingBoard board = loadFixture("scoring-mixed-layer.dsn");
+    // Border of a plane of the PCBench board uedaino, whose split into convex pieces fails:
+    // splitToConvex() returns null, and contains() or nearestPointApprox() used to throw.
+    PolygonShape border =
+        new PolygonShape(
+            new Point[] {
+              new IntPoint(1_136_000, -1_091_008),
+              new IntPoint(1_136_000, -759_000),
+              new IntPoint(1_137_000, -758_000),
+              new IntPoint(1_135_000, -1_091_000)
+            });
+    assertNull(border.splitToConvex(), "the fixture polygon must defeat the convex split");
+    board.insertConductionArea(border, 0, new int[] {1}, 1, false, FixedState.USER_FIXED);
+    BoardStatistics stats = new BoardStatistics(board);
+    // No distance can be measured to such an area: 0 keeps the trace length bound a lower bound.
+    assertEquals(0.0f, stats.bounds.minTraceLengthMm, 0.001f);
   }
 
   @Test

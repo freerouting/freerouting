@@ -8,6 +8,7 @@ import app.freerouting.board.model.items.ConductionArea;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.structure.Component;
 import app.freerouting.board.model.structure.Unit;
+import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
@@ -21,6 +22,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,6 +32,19 @@ import java.util.Set;
  * coordinate frame, concentric Chebyshev ring depths, and pin routing dispositions.
  */
 public final class BgaFootprintDetector {
+
+  /**
+   * Minimum share of the pins of a BGA that must use the same padstack. The balls of a BGA all have
+   * the same pad; an SOIC or a QFN with an exposed pad has its leads plus one or more larger pads.
+   */
+  static final double MIN_COMMON_PADSTACK_SHARE = 0.9;
+
+  /**
+   * Maximum ratio between the long and the short side of the bounding box of the common padstack. A
+   * ball pad is round or square; the lead pads of an SOIC or a QFN are about twice as long as they
+   * are wide.
+   */
+  static final double MAX_BALL_PAD_ASPECT_RATIO = 1.2;
 
   private BgaFootprintDetector() {}
 
@@ -81,8 +96,8 @@ public final class BgaFootprintDetector {
       if (comp == null) {
         continue;
       }
-      List<Pin> pins = smdPinsByComp.get(compId);
-      if (pins == null || pins.size() < minPins) {
+      List<Pin> pins = onePadPerPin(smdPinsByComp.get(compId));
+      if (pins.size() < minPins) {
         continue;
       }
 
@@ -139,7 +154,7 @@ public final class BgaFootprintDetector {
    */
   public static BgaEscapeDescriptor analyzeComponent(
       RoutingBoard board, Component comp, List<Pin> pins, RouterSettings settings) {
-    if (pins.isEmpty()) {
+    if (pins.isEmpty() || !hasUniformBallPads(pins)) {
       return null;
     }
 
@@ -439,6 +454,70 @@ public final class BgaFootprintDetector {
 
     return new BgaEscapeDescriptor(
         comp, rotDeg, pitchUm, minPitch, lattice, pinDescriptors, minU, maxU, minV, maxV, maxRing);
+  }
+
+  /**
+   * Keeps one pad for each pin of the component. In Specctra, the pads of one pin of a footprint
+   * (an exposed pad with its thermal vias, for example) are named after the pin with a suffix
+   * {@code @1}, {@code @2}... They are one ball position at most, not a grid of their own. The pad
+   * kept is the first one of the pin in the package.
+   */
+  static List<Pin> onePadPerPin(List<Pin> pads) {
+    if (pads == null) {
+      return Collections.emptyList();
+    }
+    Map<String, Pin> firstPadOfPin = new LinkedHashMap<>();
+    for (Pin pad : pads) {
+      firstPadOfPin.merge(
+          pinNameWithoutPadSuffix(pad.name()),
+          pad,
+          (kept, other) -> other.getPinIndex() < kept.getPinIndex() ? other : kept);
+    }
+    return new ArrayList<>(firstPadOfPin.values());
+  }
+
+  private static String pinNameWithoutPadSuffix(String padName) {
+    if (padName == null) {
+      return "";
+    }
+    int suffix = padName.indexOf('@');
+    return suffix > 0 ? padName.substring(0, suffix) : padName;
+  }
+
+  /**
+   * Returns true if at least {@link #MIN_COMMON_PADSTACK_SHARE} of the pins use the same padstack
+   * and that padstack is round or square ({@link #MAX_BALL_PAD_ASPECT_RATIO}).
+   */
+  static boolean hasUniformBallPads(List<Pin> pins) {
+    Map<Padstack, Integer> pinsByPadstack = new LinkedHashMap<>();
+    Map<Padstack, Pin> samplePin = new HashMap<>();
+    for (Pin pin : pins) {
+      Padstack padstack = pin.getPadstack();
+      if (padstack == null) {
+        return false;
+      }
+      pinsByPadstack.merge(padstack, 1, Integer::sum);
+      samplePin.putIfAbsent(padstack, pin);
+    }
+    Padstack common = null;
+    int commonCount = 0;
+    for (Map.Entry<Padstack, Integer> entry : pinsByPadstack.entrySet()) {
+      if (entry.getValue() > commonCount) {
+        common = entry.getKey();
+        commonCount = entry.getValue();
+      }
+    }
+    if (common == null || commonCount < MIN_COMMON_PADSTACK_SHARE * pins.size()) {
+      return false;
+    }
+    Shape padShape = common.getShape(samplePin.get(common).firstLayer());
+    if (padShape == null) {
+      return false;
+    }
+    IntBox box = padShape.boundingBox();
+    double shortSide = Math.min(box.width(), box.height());
+    double longSide = Math.max(box.width(), box.height());
+    return shortSide > 0 && longSide <= MAX_BALL_PAD_ASPECT_RATIO * shortSide;
   }
 
   private static int countDistinct(List<Double> values, double tolerance) {
