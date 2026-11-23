@@ -7,6 +7,7 @@ import app.freerouting.core.events.RoutingJobUpdatedEvent;
 import app.freerouting.core.events.RoutingJobUpdatedEventListener;
 import app.freerouting.core.results.RoutingResultManifest;
 import app.freerouting.io.FileFormat;
+import app.freerouting.io.kicad.KiCadBoardDrawings;
 import app.freerouting.io.kicad.KiCadBoardZones;
 import app.freerouting.io.kicad.KiCadDesignRules;
 import app.freerouting.io.kicad.KiCadProject;
@@ -129,6 +130,12 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
    * width are applied to the planes once the board is loaded. Null if there is none.
    */
   public transient KiCadBoardZones kicadBoardZones;
+
+  /**
+   * The copper drawings without net of the same KiCad board, which the Specctra export leaves out:
+   * they are inserted as obstacles once the board is loaded. Null if there is none.
+   */
+  public transient KiCadBoardDrawings kicadBoardDrawings;
 
   @SerializedName("initial_session")
   @Schema(description = "Details of the initial session (.ses or .json) file to import")
@@ -441,7 +448,8 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   }
 
   /**
-   * Reads the zones of the KiCad board file of this job when explicitly provided.
+   * Reads the zones of the KiCad board file of this job when explicitly provided. Without a KiCad
+   * project, the minimum track width of the board, if it sets one, becomes that of the job.
    *
    * @param explicitFile the .kicad_pcb given with the design, or null
    * @return false if {@code explicitFile} cannot be read
@@ -453,12 +461,25 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     Path path = Path.of(explicitFile);
     try {
       this.kicadBoardZones = KiCadBoardZones.read(path);
+      this.kicadBoardDrawings = KiCadBoardDrawings.read(path);
       FRLogger.info(
           "Using the "
               + this.kicadBoardZones.zones().size()
               + " copper zones of the KiCad board '"
               + path
               + "'.");
+      // A board of KiCad 5 or earlier keeps its minimum track width in its own setup; a project
+      // file, when there is one, sets it instead.
+      Double minWidth = this.kicadBoardZones.minTrackWidthUm();
+      if (this.kicadProject == null && minWidth != null) {
+        this.kicadProject = KiCadProject.fromBoardSetup(path.getFileName().toString(), minWidth);
+        FRLogger.info(
+            "Using the minimum track width of the KiCad board '"
+                + path
+                + "': "
+                + minWidth
+                + " um, the default neck width (unless overridden).");
+      }
       return true;
     } catch (IOException | IllegalArgumentException e) {
       String reason = e instanceof NoSuchFileException ? "file not found" : e.getMessage();

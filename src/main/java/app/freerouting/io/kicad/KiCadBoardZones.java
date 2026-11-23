@@ -20,8 +20,13 @@ import java.util.List;
  * relief, or not at all. It is set on the zone, and can be overridden on a footprint or on a pad.
  * The pads are read with the settings that decide it.
  *
- * <p>Only the zones and the pads are read; the fill polygons, which can make up most of the file,
- * are skipped without being stored.
+ * <p>Up to KiCad 5, the board file also kept the design rules of the board, in its {@code (setup
+ * ...)}; KiCad 6 moved them to the project file. KiCad still reads the minimum track width of such
+ * a board ({@code trace_min}) and its DRC reports every narrower trace as a {@code track_width}
+ * error. It is read back as well.
+ *
+ * <p>Only the zones, the pads and that minimum are read; the fill polygons, which can make up most
+ * of the file, are skipped without being stored.
  */
 public final class KiCadBoardZones {
 
@@ -159,11 +164,23 @@ public final class KiCadBoardZones {
   private final String sourceName;
   private final List<Zone> zones;
   private final List<Pad> pads;
+  private final Double minTrackWidthUm;
 
-  private KiCadBoardZones(String sourceName, List<Zone> zones, List<Pad> pads) {
+  private KiCadBoardZones(
+      String sourceName, List<Zone> zones, List<Pad> pads, Double minTrackWidthUm) {
     this.sourceName = sourceName;
     this.zones = List.copyOf(zones);
     this.pads = List.copyOf(pads);
+    this.minTrackWidthUm = minTrackWidthUm;
+  }
+
+  /**
+   * The minimum track width of a board written by KiCad 5 or earlier, in micrometres ({@code (setup
+   * (trace_min ...))}), or null if the board does not set a positive one. Newer boards keep it in
+   * the project file.
+   */
+  public Double minTrackWidthUm() {
+    return minTrackWidthUm;
   }
 
   /** The pads of the footprints of the board, in file order. */
@@ -208,6 +225,7 @@ public final class KiCadBoardZones {
     List<Zone> zones = new ArrayList<>();
     List<Pad> pads = new ArrayList<>();
     List<String> copperLayers = new ArrayList<>();
+    Double minTrackWidthUm = null;
     int version = 0;
     while (true) {
       reader.skipBlanks();
@@ -230,6 +248,7 @@ public final class KiCadBoardZones {
         }
         case "footprint", "module" -> readFootprint(reader, version, copperLayers, pads);
         case "layers" -> readCopperLayers(reader, copperLayers);
+        case "setup" -> minTrackWidthUm = readTraceMin(reader);
         case "version" -> {
           version = (int) toNumber(reader.readAtom());
           reader.skipToEndOfList();
@@ -237,7 +256,30 @@ public final class KiCadBoardZones {
         default -> reader.skipToEndOfList();
       }
     }
-    return new KiCadBoardZones(sourceName, zones, pads);
+    return new KiCadBoardZones(sourceName, zones, pads, minTrackWidthUm);
+  }
+
+  /**
+   * Reads the rest of the {@code (setup ...)} of the board for its {@code (trace_min ...)}, in
+   * micrometres; null if it has none or not a positive one.
+   */
+  private static Double readTraceMin(Reader reader) {
+    Double result = null;
+    while (true) {
+      reader.skipBlanks();
+      if (reader.isFinished() || reader.leaveList()) {
+        return result;
+      }
+      if (!reader.enterList()) {
+        reader.readAtom();
+        continue;
+      }
+      if ("trace_min".equals(reader.readAtom())) {
+        double um = toUm(reader.readAtom());
+        result = um > 0 ? um : null;
+      }
+      reader.skipToEndOfList();
+    }
   }
 
   /**
@@ -245,7 +287,7 @@ public final class KiCadBoardZones {
    * (32 B.Adhes user) ...)}, for the names of its copper layers, from front to back. A board can
    * rename them: {@code (0 Top signal)} up to KiCad 5, {@code (0 "F.Cu" signal "Top")} since.
    */
-  private static void readCopperLayers(Reader reader, List<String> copperLayers) {
+  static void readCopperLayers(Reader reader, List<String> copperLayers) {
     while (true) {
       reader.skipBlanks();
       if (reader.isFinished() || reader.leaveList()) {
@@ -275,7 +317,7 @@ public final class KiCadBoardZones {
    * renames its copper layers still writes the wildcards. Without a layer table the layers are
    * returned as written.
    */
-  private static List<String> resolveLayers(List<String> layers, List<String> copperLayers) {
+  static List<String> resolveLayers(List<String> layers, List<String> copperLayers) {
     if (copperLayers.isEmpty()) {
       return List.copyOf(layers);
     }
@@ -444,7 +486,7 @@ public final class KiCadBoardZones {
   }
 
   /** Reads the numbers that follow, at most as many as the array holds. */
-  private static void readNumbers(Reader reader, double[] numbers) {
+  static void readNumbers(Reader reader, double[] numbers) {
     for (int i = 0; i < numbers.length; i++) {
       String value = reader.readAtom();
       if (value.isEmpty() || !isNumber(value)) {
@@ -678,7 +720,7 @@ public final class KiCadBoardZones {
   }
 
   /** A number as written; 0 if it is not a number. */
-  private static double toNumber(String value) {
+  static double toNumber(String value) {
     try {
       return Double.parseDouble(value);
     } catch (NumberFormatException e) {
@@ -696,7 +738,7 @@ public final class KiCadBoardZones {
   }
 
   /** A cursor over the S-expressions of the file, which stores nothing it is not asked for. */
-  private static final class Reader {
+  static final class Reader {
     private final String text;
     private int pos;
 
@@ -749,6 +791,10 @@ public final class KiCadBoardZones {
           char current = text.charAt(pos++);
           if (current == '\\' && pos < text.length()) {
             current = text.charAt(pos++);
+            // a line break of a text
+            if (current == 'n') {
+              current = '\n';
+            }
           }
           result.append(current);
         }
@@ -763,6 +809,25 @@ public final class KiCadBoardZones {
         pos++;
       }
       return text.substring(start, pos);
+    }
+
+    /** Reads the rest of the current list, its closing parenthesis included. */
+    SexprNode readRestOfList(String keyword) {
+      List<Object> children = new ArrayList<>();
+      while (true) {
+        skipBlanks();
+        if (isFinished()) {
+          throw new IllegalArgumentException("not a KiCad board file: unfinished " + keyword);
+        }
+        if (leaveList()) {
+          return new SexprNode(keyword, children);
+        }
+        if (enterList()) {
+          children.add(readRestOfList(readAtom()));
+        } else {
+          children.add(readAtom());
+        }
+      }
     }
 
     /** Skips the rest of the current list, its closing parenthesis included. */

@@ -34,11 +34,11 @@ class GlobalSettingsTest {
 
     assertFalse(settings.logging.file.enabled);
 
-    // -mp is still valid but deprecated in favour of --router.autorouter.max_passes
+    // -di and -dl are deprecated in GlobalSettings (-mp warns in CliSettings to avoid duplicates)
     assertEquals(
-        1,
+        2,
         FRLogger.getLogEntries().getWarningCount(),
-        "Deprecated -mp / --router.max_passes should warn");
+        "Deprecated -di and -dl should warn in GlobalSettings");
   }
 
   @Test
@@ -74,11 +74,8 @@ class GlobalSettingsTest {
 
     settings.applyCommandLineArguments(args);
 
-    // Expect a deprecation warning for -mp plus a warning for "extraValue"
-    assertEquals(
-        2,
-        FRLogger.getLogEntries().getWarningCount(),
-        "Should warn for deprecated -mp and the extra value");
+    // Expect a warning for "extraValue" (-mp warns in CliSettings to avoid duplicate warnings)
+    assertEquals(1, FRLogger.getLogEntries().getWarningCount(), "Should warn for the extra value");
     assertTrue(
         Arrays.stream(FRLogger.getLogEntries().get())
             .anyMatch(s -> s.contains("Unknown command line argument: extraValue")));

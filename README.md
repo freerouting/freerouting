@@ -15,6 +15,20 @@
 
 [**Download installers for Windows, Linux, and macOS here.**](https://github.com/freerouting/freerouting/releases)
 
+> [!WARNING]
+> **Security Advisory: OpenJDK `CVE-2026-114938` ("Java4Shell")**
+>
+> On November 17, 2026, a critical remote code execution vulnerability (`CVE-2026-114938`) was disclosed in OpenJDK `>= 17.0.6` affecting x86-64 CPUs with AVX-512 VBMI support when decoding untrusted Base64 input. Because the Freerouting REST API decodes Base64-encoded board and rules payloads, self-hosted API deployments running an unpatched JVM on affected hardware are at risk.
+>
+> Within a few hours of the patched Eclipse Temurin 25 (`jdk-25.0.5.1+2`) runtime becoming available on Docker Hub on November 20, 2026, I rebuilt and republished the official Docker images (`ghcr.io/freerouting/freerouting:latest`, `:2.5.0`, and `:nightly`).
+>
+> **Recommended actions:**
+> - **Docker / self-hosted API users:** Pull the updated image and restart your container (`docker pull ghcr.io/freerouting/freerouting:latest` or `:nightly`), then confirm `docker run --rm --entrypoint java ghcr.io/freerouting/freerouting:latest -version` reports `25.0.5.1+2` or newer. If you cannot update immediately, set `JAVA_TOOL_OPTIONS=-XX:-UseBASE64Intrinsics` as a temporary mitigation.
+> - **Standalone JAR users:** Update your local Java runtime to a patched OpenJDK build (e.g., Eclipse Temurin `25.0.5.1+2` or newer).
+> - **Desktop installer users (GUI / local CLI):** Standard offline desktop usage is not remotely exposed unless you run Freerouting with `--api_server.enabled=true` reachable over a network. The next release's bundled installers will include the patched runtime.
+
+<br/>
+
 > [!IMPORTANT]
 > **Project Maintenance and Community Update**
 >
@@ -83,13 +97,13 @@ Common command-line arguments:
 - `-de [design input file]`: Load a Specctra design file (`.dsn`) at startup.
 - `-do [design output file]`: Save a Specctra session file (`.ses`) after routing.
 - `-l [language]`: Set the language (e.g., `en` for English, `de` for German).
-- `-inc [net class names]`: Ignore specified net classes during routing.
+- `--router.autorouter.ignore_net_classes=[net class names]`: Ignore specified net classes during routing.
 - `-help`: Display help information.
 
 **Example Command:**
 
 ```bash
-java -jar path/to/freerouting.jar -de MyBoard.dsn -do MyBoard.ses -inc GND,VCC
+java -jar path/to/freerouting.jar -de MyBoard.dsn -do MyBoard.ses --router.autorouter.ignore_net_classes=GND,VCC
 ```
 
 Download the latest `freerouting-<version>.jar` from the [Releases page](https://github.com/freerouting/freerouting/releases) and substitute its path above.

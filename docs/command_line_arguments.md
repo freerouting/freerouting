@@ -32,13 +32,13 @@ Below is a comprehensive list of command-line options available in Freerouting, 
     - KiCad board file (`.kicad_pcb` - optional)
 
   The DSN file is mandatory, while the SES, RULES, KiCad design rules (`.kicad_dru`), KiCad project (`.kicad_pro`), and KiCad board (`.kicad_pcb`) files are optional.
-  They can be provided in any order, separately or combined with the `+` delimiter (e.g. `-de myboard.dsn+myboard.ses+myboard.rules` or `-de myboard.dsn+myboard.rules`). When a `.rules` file is loaded, its design rules, net classes, clearances, via definitions, and `(autoroute_settings ...)` / `(layer_rule ...)` parameters are applied to the board and autorouter configuration. If no rules file is explicitly specified, Freerouting will automatically look for an adjacent `<boardname>.rules` file in the same directory as the DSN file.
+  They can be provided in any order, separately or combined with the `+` delimiter (e.g. `-de myboard.dsn+myboard.ses+myboard.rules` or `-de myboard.dsn+myboard.rules`). When a `.rules` file is loaded, its design rules, net classes, clearances, via definitions, and `(autoroute_settings ...)` / `(layer_rule ...)` parameters are applied to the board and autorouter configuration. If no rules file is explicitly specified, Freerouting still looks for an adjacent `<boardname>.rules` file in the same directory as the DSN file, but automatic `.rules` discovery is **deprecated** and logs a warning; pass `.rules` explicitly via `-de <design.dsn>+<rules.rules>` instead.
 
   KiCad writes only the clearances of its net classes into a DSN file: the custom rules of the board (`.kicad_dru`) are lost. When a `.kicad_dru` file is explicitly given (e.g. `-de myboard.dsn+myboard.kicad_dru` or `-de myboard.dsn myboard.kicad_dru`), Freerouting translates its minimum clearance rules into clearance classes of the board, as KiCad evaluates them: the last matching rule wins over the net class clearance, conditions on `NetClass`, `NetName`, `Type`, `Pad_Type`, `Reference`, `Parent`, `Pad_Number`, `memberOfFootprint()`, `hasNetclass()` and `isPlated()` are evaluated, and `(layer ...)` clauses are honoured. A part of a condition Freerouting cannot evaluate (for example a geometric function such as `intersectsArea()`) makes the rule apply wherever it may match, so the board is never less strict than KiCad. Every rule, constraint or condition that is not translated (creepage, track widths, ...) is reported as a warning in the log. A `.kicad_dru` file given with `-de` that cannot be read stops a command-line run. Unlike `.rules` files, an adjacent `<boardname>.kicad_dru` file is not loaded automatically unless explicitly passed as an input.
 
   KiCad does not write the minimum track width of the board (`Board Setup > Constraints`) into a DSN file either, and its DRC reports every narrower trace as a `track_width` error. When a `.kicad_pro` file is explicitly given (e.g. `-de myboard.dsn+myboard.kicad_pro`), the larger of its `board.design_settings.rules.min_track_width` and `min_connection` (the minimum connection width, which the KiCad DRC also checks on traces, as `connection_width`) becomes the default of `--router.neck_width_um`, the narrowest trace the router may use, and the narrowest trace of the board: no automatic narrowing goes below it, not even the fallback strategies that relax the neck width (`no-neck`, `continue-no-neck`, `continue-fine-neck`, `continue-auto-neck`, `neck-100um`). A `--router.neck_width_um` given on the command line, in an environment variable, in the GUI or through the API still wins. A `.kicad_pro` file given with `-de` that cannot be read stops a command-line run; an adjacent `<boardname>.kicad_pro` file is not loaded automatically.
 
-  KiCad writes a copper zone into a DSN file as a plane with the clearance of its net class: the clearance of the zone and its minimum width are lost, and the refill of the zone after the routing can remove copper that Freerouting counted on. When the `.kicad_pcb` file of the board is explicitly given (e.g. `-de myboard.dsn+myboard.kicad_pcb`), Freerouting reads the `clearance` and `min_thickness` of each zone and applies them to the plane of the same net and layer: where the traces of other nets leave less plane than the zone will keep, the plane counts as cut, and the pads on its islands as not connected. The connection of the pads to the zone is read as well (`connect_pads` of the zone, `thermal_gap`, `thermal_bridge_width`, and the `zone_connect`, `thermal_gap`, `thermal_bridge_width` and `thermal_bridge_angle` of a footprint or a pad): a pad with a thermal relief is connected to the plane only by the spokes that the refill keeps, a pad of a zone that connects no pads is never connected by the plane. One spoke is enough for a connection. The plane also stops at the thermal gap or the clearance of the pads of its own net, a trace or a via of the net is connected to the plane only where the fill reaches it, the fill keeps 0.5 mm, the default copper to edge clearance of KiCad, to the board edge (the value of the project is not read from the `.kicad_pro` file), and it follows the outline of the zone with its corners rounded or chamfered as the zone says (`smoothing`, `radius`). Nothing else is read from the board file.
+  KiCad writes a copper zone into a DSN file as a plane with the clearance of its net class: the clearance of the zone and its minimum width are lost, and the refill of the zone after the routing can remove copper that Freerouting counted on. When the `.kicad_pcb` file of the board is explicitly given (e.g. `-de myboard.dsn+myboard.kicad_pcb`), Freerouting reads the `clearance` and `min_thickness` of each zone and applies them to the plane of the same net and layer: where the traces of other nets leave less plane than the zone will keep, the plane counts as cut, and the pads on its islands as not connected. The connection of the pads to the zone is read as well (`connect_pads` of the zone, `thermal_gap`, `thermal_bridge_width`, and the `zone_connect`, `thermal_gap`, `thermal_bridge_width` and `thermal_bridge_angle` of a footprint or a pad): a pad with a thermal relief is connected to the plane only by the spokes that the refill keeps, a pad of a zone that connects no pads is never connected by the plane. One spoke is enough for a connection. The plane also stops at the thermal gap or the clearance of the pads of its own net, a trace or a via of the net is connected to the plane only where the fill reaches it, the fill keeps 0.5 mm, the default copper to edge clearance of KiCad, to the board edge (the value of the project is not read from the `.kicad_pro` file), and it follows the outline of the zone with its corners rounded or chamfered as the zone says (`smoothing`, `radius`). A board written by KiCad 5 or earlier has no `.kicad_pro`: it keeps its minimum track width in the board file, as `(setup (trace_min ...))`, and KiCad still checks it. When no `.kicad_pro` is given, that value is taken as the minimum track width of a `.kicad_pro` would be (default of `--router.neck_width_um`, narrowest trace of the board). Nothing else is read from the board file.
 
 - **`-do [design output file]`**
   Saves the routing results when the routing is finished. The output can be:
@@ -48,11 +48,14 @@ Below is a comprehensive list of command-line options available in Freerouting, 
 
   The output format is determined by the file extension provided.
 
-- **`-di [design input directory]`**
+- **`--gui.input_directory=[design input directory]`**
   Sets the default folder for the open design dialogs when using the GUI.
 
-- **`-dr [design rules file]`**
-  Reads design rules from an explicit `.rules` file. Supports design rules, net classes, clearances, via definitions, and `(autoroute_settings ...)` / `(layer_rule ...)` blocks.
+- **`-di [design input directory]`** (Deprecated)
+  Legacy shorthand for `--gui.input_directory=[design input directory]`. A warning is logged when it is used and it will be removed in a future release.
+
+- **`-dr [design rules file]`** (Deprecated)
+  Reads design rules from an explicit `.rules` file. Deprecated and will be removed in a future release; pass `.rules` explicitly via `-de <design.dsn>+<rules.rules>` instead.
 
 - **`-drc [design rules check json file]`**
   Writes the design rules check report in KiCad JSON DRC schema format.
@@ -97,10 +100,13 @@ Below is a comprehensive list of command-line options available in Freerouting, 
   - Setting `0.0` continues optimization until `max_passes` is reached or no further improvements are possible.
   - *Note:* The legacy `-oit [percentage]` flag is deprecated but still applied. A warning is logged when it is used.
 
-- **`-inc [net class names]`**
+- **`--router.autorouter.ignore_net_classes=[net class names]`**
   Lists net classes to ignore during autorouting:
-  - Provide a comma-separated list (e.g., `-inc GND,VCC`).
+  - Provide a comma-separated list (e.g., `--router.autorouter.ignore_net_classes=GND,VCC`).
   - The autorouter will not route nets belonging to these classes.
+
+- **`-inc [net class names]`** (Deprecated)
+  Legacy shorthand for `--router.autorouter.ignore_net_classes`. A warning is logged when it is used and it will be removed in a future release.
 
 - **`-im`** (Removed)
   No longer has any effect. Intermediate steps are not saved, and routing cannot be resumed
@@ -157,13 +163,19 @@ Below is a comprehensive list of command-line options available in Freerouting, 
 
 ### Miscellaneous Options
 
-- **`-dct [seconds]`**
+- **`--gui.dialog_confirmation_timeout=[seconds]`**
   Sets the dialog confirmation timeout:
   - Specifies the number of seconds before dialogs proceed with the default action.
   - Default is `20` seconds.
 
-- **`-da`**
-  Disables the collection of anonymous analytics data.
+- **`-dct [seconds]`** (Deprecated)
+  Legacy shorthand for `--gui.dialog_confirmation_timeout`. A warning is logged when it is used and it will be removed in a future release.
+
+- **`--usage_and_diagnostic_data.disable_analytics=[true|false]`**
+  Disables the collection of anonymous analytics data when set to `true`.
+
+- **`-da`** (Deprecated)
+  Legacy shorthand for `--usage_and_diagnostic_data.disable_analytics=true`. A warning is logged when it is used and it will be removed in a future release.
 
 - **`--logging.console.enabled=[true|false]`**
   Enables or disables console logging. Default is `true`.
@@ -181,11 +193,11 @@ Below is a comprehensive list of command-line options available in Freerouting, 
 - **`--logging.file.location=[directory]`**
   Defines the directory where `freerouting.log` is stored.
 
-- **`-dl`** (Legacy)
-  Disables **file** logging. Equivalent to `--logging.file.enabled=false`.
+- **`-dl`** (Deprecated)
+  Legacy shorthand for `--logging.file.enabled=false`. A warning is logged when it is used and it will be removed in a future release.
 
-- **`-ll [level]`** (Legacy)
-  Sets the **console** logging level. Equivalent to `--logging.console.level=[level]`.
+- **`-ll [level]`** (Deprecated)
+  Legacy shorthand for `--logging.console.level=[level]`. A warning is logged when it is used and it will be removed in a future release.
 
 - **`--user_data_path=[directory]`**
   Defines the directory where configuration and user data files are stored.

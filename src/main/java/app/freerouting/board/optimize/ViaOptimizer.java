@@ -70,7 +70,7 @@ public final class ViaOptimizer {
       Iterator<Item> it = contacts.iterator();
       Item currentItem = it.next();
       if (currentItem.isShoveFixed() || !(currentItem instanceof PolylineTrace)) {
-        if (currentItem instanceof ConductionArea) {
+        if (currentItem instanceof ConductionArea area && !area.isFractured()) {
           isPlaneOrFanoutVia = true;
         } else {
           return false;
@@ -80,7 +80,7 @@ public final class ViaOptimizer {
       }
       currentItem = it.next();
       if (currentItem.isShoveFixed() || !(currentItem instanceof PolylineTrace)) {
-        if (currentItem instanceof ConductionArea) {
+        if (currentItem instanceof ConductionArea area && !area.isFractured()) {
           isPlaneOrFanoutVia = true;
         } else {
           return false;
@@ -197,7 +197,7 @@ public final class ViaOptimizer {
     ConductionArea contactPlane = null;
     PolylineTrace contactTrace = null;
     for (Item currentContact : contactList) {
-      if (currentContact instanceof ConductionArea area) {
+      if (currentContact instanceof ConductionArea area && !area.isFractured()) {
         if (contactPlane != null) {
           return false;
         }
@@ -284,7 +284,7 @@ public final class ViaOptimizer {
         }
       }
     }
-    if (newViaLocation == null) {
+    if (newViaLocation == null || newViaLocation.equals(viaCenter)) {
       return false;
     }
     if (contactPlane != null) {
@@ -360,6 +360,11 @@ public final class ViaOptimizer {
       newFloatToLocation = floatFromLocation.changeLength(floatToLocation, okLength);
     }
     Point newToLocation = newFloatToLocation.round();
+    if (newToLocation.equals(fromLocation)) {
+      // okLength is shorter than half a board unit: the via is already as far as it can go. A
+      // zero move would be reported as a change and make the caller's fixpoint loop run again.
+      return null;
+    }
     Vector delta = newToLocation.differenceBy(fromLocation);
     boolean checkOk = DrillItemMover.check(via, delta, 0, 0, null, board, null);
 

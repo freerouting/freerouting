@@ -19,6 +19,7 @@ import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.model.items.Via;
 import app.freerouting.board.model.structure.AngleRestriction;
+import app.freerouting.board.model.structure.Unit;
 import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.geometry.planar.FloatLine;
@@ -66,6 +67,13 @@ public class MazeSearchEngine {
   final Random randomGenerator = new Random();
 
   final MazeFanoutDiagnostics fanoutDiagnostics;
+
+  /**
+   * In a fanout search, the first drill into another net's plane whose via goes on to a signal
+   * layer the net may route on; see {@link #fanoutMayStopAt}.
+   */
+  private MazeListElement firstPlaneDrill;
+
   private final MazeExpansionEngine expansionEngine;
   private final MazeRipupResolver ripupResolver;
 
@@ -347,6 +355,11 @@ public class MazeSearchEngine {
       }
     }
     if (!nextElementFound) {
+      if (ctrl.isFanout && firstPlaneDrill != null) {
+        // No drill to an active layer was found: the via through the plane is the escape.
+        this.destinationDoor = firstPlaneDrill.door;
+        this.sectionNoOfDestinationDoor = firstPlaneDrill.sectionNoOfDoor;
+      }
       return false;
     }
     currentDoorSection.backtrackDoor = listElement.backtrackDoor;
@@ -373,8 +386,12 @@ public class MazeSearchEngine {
         && listElement.backtrackDoor instanceof ExpansionDrill
         && fanoutMayStopAt(listElement)) {
       // algorithm completed after the first drill;
-      this.destinationDoor = listElement.door;
-      this.sectionNoOfDestinationDoor = listElement.sectionNoOfDoor;
+      MazeListElement end =
+          firstPlaneDrill != null && isFarFromFirstPlaneDrill(listElement)
+              ? firstPlaneDrill
+              : listElement;
+      this.destinationDoor = end.door;
+      this.sectionNoOfDestinationDoor = end.sectionNoOfDoor;
       return false;
     }
     if (ctrl.viasAllowed
@@ -398,8 +415,17 @@ public class MazeSearchEngine {
    * Whether a fanout search may end at the drill of {@code listElement}. The via is an escape only
    * if the net can use it: the drill leads to a layer the net may route on, or into the net's own
    * plane. Otherwise the search goes on from there instead of ending with a via the net cannot use:
-   * a drill to a signal layer the net may not use is dropped afterwards, and a drill into the plane
-   * of another net would leave a via that leads nowhere.
+   * a drill to a signal layer the net may not use is dropped afterwards, and a drill that ends in
+   * the plane of another net would leave a via that leads nowhere.
+   *
+   * <p>A drill into another net's plane whose via goes on to a signal layer the net may route on is
+   * an escape too, but it does not end the search at once: the first one is kept in {@link
+   * #firstPlaneDrill}, and the search goes on to a drill on the active layer, whose sorting value
+   * takes the way to the net's other items on that layer into account. When that drill lies farther
+   * than the fanout escape length from the first plane drill, or when there is none, the search
+   * ends at the plane drill instead.
+   *
+   * <p>The layers come from the drill and its sections, not from {@code listElement.nextRoom}.
    */
   private boolean fanoutMayStopAt(MazeListElement listElement) {
     ExpansionDrill drill = (ExpansionDrill) listElement.door;
@@ -414,6 +440,62 @@ public class MazeSearchEngine {
         new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.CONDUCTION);
     for (Item item : autorouteEngine.board.pickItems(drill.location, layer, filter)) {
       if (item.containsNet(ctrl.netNumber)) {
+        return true;
+      }
+    }
+    ExpansionDrill fromDrill = (ExpansionDrill) listElement.backtrackDoor;
+    int fromLayer = fromDrill.firstLayer + listElement.sectionNoOfBacktrackDoor;
+    if (firstPlaneDrill == null && everyViaThroughPlaneReachesAnActiveLayer(fromLayer, layer)) {
+      firstPlaneDrill = listElement;
+    }
+    return false;
+  }
+
+  /**
+   * Whether the drill of {@code listElement} lies farther from the drill of {@link
+   * #firstPlaneDrill} than the fanout escape length ({@code fanout.max_escape_length_mm}, 4.5 mm by
+   * default).
+   */
+  private boolean isFarFromFirstPlaneDrill(MazeListElement listElement) {
+    if (listElement.door == firstPlaneDrill.door) {
+      return false;
+    }
+    double maxEscapeLengthUm =
+        ctrl.settings.fanout != null && ctrl.settings.fanout.maxEscapeLengthMm != null
+            ? ctrl.settings.fanout.maxEscapeLengthMm * 1000.0
+            : 3000.0;
+    double resolution = autorouteEngine.board.communication.getResolution(Unit.UM);
+    FloatPoint end = ((ExpansionDrill) listElement.door).location.toFloat();
+    FloatPoint plane = ((ExpansionDrill) firstPlaneDrill.door).location.toFloat();
+    return end.distance(plane) > maxEscapeLengthUm * resolution;
+  }
+
+  /**
+   * Whether a via from {@code fromLayer} to the plane layer {@code planeLayer} goes on to a signal
+   * layer the net may route on, other than {@code fromLayer}, whatever via of the rule is inserted
+   * for it. The inserter takes the first via of the rule that spans both layers and fits at the
+   * drill, so every such via must reach that layer: a blind or buried via that ends in the plane is
+   * no escape for a net that cannot use the plane.
+   */
+  private boolean everyViaThroughPlaneReachesAnActiveLayer(int fromLayer, int planeLayer) {
+    int low = Math.min(fromLayer, planeLayer);
+    int high = Math.max(fromLayer, planeLayer);
+    boolean spanningViaFound = false;
+    for (AutorouteControl.ViaMask via : ctrl.viaInfos) {
+      if (via.fromLayer > low || via.toLayer < high) {
+        continue;
+      }
+      spanningViaFound = true;
+      if (!viaReachesActiveLayer(via, fromLayer)) {
+        return false;
+      }
+    }
+    return spanningViaFound;
+  }
+
+  private boolean viaReachesActiveLayer(AutorouteControl.ViaMask via, int excludedLayer) {
+    for (int i = via.fromLayer; i <= via.toLayer; i++) {
+      if (i != excludedLayer && ctrl.layerActive[i]) {
         return true;
       }
     }

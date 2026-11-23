@@ -842,7 +842,8 @@ public abstract class Item
       if (netNumber > 0 && !currentContact.containsNet(netNumber)) {
         continue;
       }
-      if (result.add(currentContact)) {
+      if (result.add(currentContact)
+          || (currentContact instanceof ConductionArea ca && ca.isFractured())) {
         currentContact.getConnectedSetRecu(result, netNumber, stopAtPlane);
       }
     }

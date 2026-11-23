@@ -258,7 +258,7 @@ jobs:
     name: 'Build Native CLI (${{ matrix.platform }}-${{ matrix.arch }})'
     needs: [ test, setup-snapshot ]
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 45
+    timeout-minutes: 75
     permissions:
       contents: read
     strategy:
@@ -366,10 +366,11 @@ jobs:
         shell: bash
         run: |
           if [ "${{ runner.os }}" = "Windows" ]; then
-            ./build/native/nativeCompile/freerouting-cli.exe --compare-boards=fixtures/Issue508-DAC2020_bm01.dsn,fixtures/Issue508-DAC2020_bm01.dsn
+            ./build/native/nativeCompile/freerouting-cli.exe -de fixtures/Issue508-DAC2020_bm01.dsn -do smoke.ses --router.autorouter.max_passes=1 --router.optimizer.enabled=false
           else
-            ./build/native/nativeCompile/freerouting-cli --compare-boards=fixtures/Issue508-DAC2020_bm01.dsn,fixtures/Issue508-DAC2020_bm01.dsn
+            ./build/native/nativeCompile/freerouting-cli -de fixtures/Issue508-DAC2020_bm01.dsn -do smoke.ses --router.autorouter.max_passes=1 --router.optimizer.enabled=false
           fi
+          rm -f smoke.ses
       - name: Package Native Executable Archive
         shell: bash
         run: |

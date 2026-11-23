@@ -201,6 +201,8 @@ public class CompositeBoardInput {
         try {
           effectiveRulesData = Files.readAllBytes(autoRules.toPath());
           effectiveRulesFilename = autoRules.getName();
+          app.freerouting.settings.CliDeprecationWarnings.warnAutoDiscoveredRulesFile(
+              autoRules.getPath());
         } catch (Exception e) {
           FRLogger.warn(
               "Failed to read adjacent rules file: " + autoRules.getPath() + ": " + e.getMessage());

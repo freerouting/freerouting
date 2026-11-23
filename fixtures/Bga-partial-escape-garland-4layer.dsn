@@ -1,0 +1,206 @@
+(pcb "Bga-partial-escape-garland-4layer.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.8")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer In1.Cu
+      (type power)
+      (property
+        (index 1)
+      )
+    )
+    (layer In2.Cu
+      (type signal)
+      (property
+        (index 2)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 3)
+      )
+    )
+    (boundary
+      (path pcb 0  60000 -40000  0 -40000  0 0  60000 0  60000 -40000)
+    )
+    (plane GND (polygon In1.Cu 0  500 -500  59500 -500  59500 -39500  500 -39500  500 -500))
+    (keepout "" (rect F.Cu 44450 -23950 45950 -16050))
+    (keepout "" (rect F.Cu 38050 -23950 39550 -16050))
+    (keepout "" (rect F.Cu 39550 -23950 44450 -22450))
+    (keepout "" (rect In1.Cu 38050 -23950 45950 -17550))
+    (via "Via[0-3]_600:300_um")
+    (rule
+      (width 200)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component PinHeader_1x10
+      (place J2 55000 -8500 front 0 (PN PinHeader_1x10))
+      (place J3 30000 -8500 front 0 (PN PinHeader_1x10))
+    )
+    (component BGA-25_5x5_1.0mm
+      (place U3 42000 -20000 front 0 (PN BGA-25_5x5_1.0mm))
+    )
+  )
+  (library
+    (image PinHeader_1x10
+      (outline (path signal 120  -1380 1380  1380 1380))
+      (pin Rect[A]Pad_1700.000000x1700.000000_um 1 0 0)
+      (pin Round[A]Pad_1700.000000_um 2 0 -2540)
+      (pin Round[A]Pad_1700.000000_um 3 0 -5080)
+      (pin Round[A]Pad_1700.000000_um 4 0 -7620)
+      (pin Round[A]Pad_1700.000000_um 5 0 -10160)
+      (pin Round[A]Pad_1700.000000_um 6 0 -12700)
+      (pin Round[A]Pad_1700.000000_um 7 0 -15240)
+      (pin Round[A]Pad_1700.000000_um 8 0 -17780)
+      (pin Round[A]Pad_1700.000000_um 9 0 -20320)
+      (pin Round[A]Pad_1700.000000_um 10 0 -22860)
+    )
+    (image BGA-25_5x5_1.0mm
+      (outline (path signal 100  -2500 2500  2500 2500  2500 -2500  -2500 -2500  -2500 2500))
+      (pin Round[T]Pad_400.000000_um A1 -2000 2000)
+      (pin Round[T]Pad_400.000000_um A2 -1000 2000)
+      (pin Round[T]Pad_400.000000_um A3 0 2000)
+      (pin Round[T]Pad_400.000000_um A4 1000 2000)
+      (pin Round[T]Pad_400.000000_um A5 2000 2000)
+      (pin Round[T]Pad_400.000000_um B1 -2000 1000)
+      (pin Round[T]Pad_400.000000_um B2 -1000 1000)
+      (pin Round[T]Pad_400.000000_um B3 0 1000)
+      (pin Round[T]Pad_400.000000_um B4 1000 1000)
+      (pin Round[T]Pad_400.000000_um B5 2000 1000)
+      (pin Round[T]Pad_400.000000_um C1 -2000 0)
+      (pin Round[T]Pad_400.000000_um C2 -1000 0)
+      (pin Round[T]Pad_400.000000_um C3 0 0)
+      (pin Round[T]Pad_400.000000_um C4 1000 0)
+      (pin Round[T]Pad_400.000000_um C5 2000 0)
+      (pin Round[T]Pad_400.000000_um D1 -2000 -1000)
+      (pin Round[T]Pad_400.000000_um D2 -1000 -1000)
+      (pin Round[T]Pad_400.000000_um D3 0 -1000)
+      (pin Round[T]Pad_400.000000_um D4 1000 -1000)
+      (pin Round[T]Pad_400.000000_um D5 2000 -1000)
+      (pin Round[T]Pad_400.000000_um E1 -2000 -2000)
+      (pin Round[T]Pad_400.000000_um E2 -1000 -2000)
+      (pin Round[T]Pad_400.000000_um E3 0 -2000)
+      (pin Round[T]Pad_400.000000_um E4 1000 -2000)
+      (pin Round[T]Pad_400.000000_um E5 2000 -2000)
+    )
+    (padstack Round[A]Pad_1700.000000_um
+      (shape (circle F.Cu 1700))
+      (shape (circle In1.Cu 1700))
+      (shape (circle In2.Cu 1700))
+      (shape (circle B.Cu 1700))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1700.000000x1700.000000_um
+      (shape (rect F.Cu -850 -850 850 850))
+      (shape (rect In1.Cu -850 -850 850 850))
+      (shape (rect In2.Cu -850 -850 850 850))
+      (shape (rect B.Cu -850 -850 850 850))
+      (attach off)
+    )
+    (padstack Round[T]Pad_400.000000_um
+      (shape (circle F.Cu 400))
+      (attach off)
+    )
+    (padstack "Via[0-3]_600:300_um"
+      (shape (circle F.Cu 600))
+      (shape (circle In1.Cu 600))
+      (shape (circle In2.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net GND
+      (pins U3-B2 U3-C3 U3-D4)
+    )
+    (net +3V3
+      (pins U3-B4 U3-D2)
+    )
+    (net BGA_A1
+      (pins U3-A1 J2-1)
+    )
+    (net BGA_A2
+      (pins U3-A2 J2-2)
+    )
+    (net BGA_A3
+      (pins U3-A3 J2-3)
+    )
+    (net BGA_A4
+      (pins U3-A4 J2-4)
+    )
+    (net BGA_A5
+      (pins U3-A5 J2-5)
+    )
+    (net BGA_B1
+      (pins U3-B1 J2-6)
+    )
+    (net BGA_B3
+      (pins U3-B3 J2-7)
+    )
+    (net BGA_B5
+      (pins U3-B5 J2-8)
+    )
+    (net BGA_C1
+      (pins U3-C1 J2-9)
+    )
+    (net BGA_C2
+      (pins U3-C2 J2-10)
+    )
+    (net BGA_C4
+      (pins U3-C4 J3-1)
+    )
+    (net BGA_C5
+      (pins U3-C5 J3-2)
+    )
+    (net BGA_D1
+      (pins U3-D1 J3-3)
+    )
+    (net BGA_D3
+      (pins U3-D3 J3-4)
+    )
+    (net BGA_D5
+      (pins U3-D5 J3-5)
+    )
+    (net BGA_E1
+      (pins U3-E1 J3-6)
+    )
+    (net BGA_E2
+      (pins U3-E2 J3-7)
+    )
+    (net BGA_E3
+      (pins U3-E3 J3-8)
+    )
+    (net BGA_E4
+      (pins U3-E4 J3-9)
+    )
+    (net BGA_E5
+      (pins U3-E5 J3-10)
+    )
+    (class kicad_default GND +3V3 BGA_A1 BGA_A2 BGA_A3 BGA_A4 BGA_A5 BGA_B1 BGA_B3 BGA_B5 BGA_C1 BGA_C2 BGA_C4 BGA_C5 BGA_D1 BGA_D3 BGA_D5 BGA_E1 BGA_E2 BGA_E3 BGA_E4 BGA_E5
+      (circuit
+        (use_via "Via[0-3]_600:300_um")
+      )
+      (rule
+        (width 200)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

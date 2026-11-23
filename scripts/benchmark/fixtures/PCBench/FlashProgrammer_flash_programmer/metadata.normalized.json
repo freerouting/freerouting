@@ -51,13 +51,11 @@
     "plane",
     "routine",
     "small",
-    "tier-b",
-    "tier-t"
+    "tier-b"
   ],
   "tier": "B",
   "expected_outcome": "complete",
   "timeout_budget": "06:00:00",
   "tier_index": 490,
-  "reference_seconds": 32.8,
-  "tier_t": true
+  "reference_seconds": 32.8
 }

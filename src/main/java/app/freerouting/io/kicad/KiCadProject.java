@@ -67,6 +67,17 @@ public final class KiCadProject {
     return Math.max(minTrackWidthUm, minConnectionWidthUm);
   }
 
+  /**
+   * The board settings of a board written by KiCad 5 or earlier, which has no project file: its
+   * {@code (setup (trace_min ...))}, read by {@link KiCadBoardZones}, is its minimum track width.
+   *
+   * @param sourceName the board file name, for messages
+   * @param minTrackWidthUm the minimum track width of the board in micrometres, or null
+   */
+  public static KiCadProject fromBoardSetup(String sourceName, Double minTrackWidthUm) {
+    return new KiCadProject(sourceName, minTrackWidthUm, null);
+  }
+
   /** Reads a {@code .kicad_pro} file. */
   public static KiCadProject read(Path path) throws IOException {
     return parse(Files.readString(path, StandardCharsets.UTF_8), path.getFileName().toString());

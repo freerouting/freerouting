@@ -696,7 +696,7 @@ public class PolylineTrace extends Trace implements Serializable {
             Line splitLine = new Line(splitPoint, splitLineDirection);
             split(i + 1, splitLine);
           }
-        } else if (!this.isUserFixed() && (foundItem instanceof ConductionArea)) {
+        } else if (!this.isUserFixed() && (foundItem instanceof ConductionArea foundArea)) {
           boolean ignoreAreas = false;
           if (this.netNumbers.length > 0) {
             Net currentNet = this.board.rules.nets.get(this.netNumbers[0]);
@@ -705,8 +705,9 @@ public class PolylineTrace extends Trace implements Serializable {
             }
           }
           if (!ignoreAreas
-              && this.getStartContacts().contains(foundItem)
-              && this.getEndContacts().contains(foundItem)) {
+              && this.getStartContacts().contains(foundArea)
+              && this.getEndContacts().contains(foundArea)
+              && foundArea.joinsEndsOf(this)) {
             // this trace can be removed because of cycle with conduction area
             board.removeItem(this);
             return result;
