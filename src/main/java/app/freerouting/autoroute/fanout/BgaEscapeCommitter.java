@@ -585,8 +585,7 @@ public final class BgaEscapeCommitter {
             + drcRejections
             + " rejected by DRC)");
 
-    if (!committedPins.isEmpty()
-        && committedPins.size() < MIN_ESCAPED_PIN_SHARE * needingEscape.size()) {
+    if (committedPins.size() < MIN_ESCAPED_PIN_SHARE * needingEscape.size()) {
       // A partial escape would be fixed on the board and keep the other pins from the normal
       // fanout: remove it and leave the whole package to the normal fanout.
       board.undo(null);
