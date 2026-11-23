@@ -20,8 +20,13 @@ import java.util.List;
  * relief, or not at all. It is set on the zone, and can be overridden on a footprint or on a pad.
  * The pads are read with the settings that decide it.
  *
- * <p>Only the zones and the pads are read; the fill polygons, which can make up most of the file,
- * are skipped without being stored.
+ * <p>Up to KiCad 5, the board file also kept the design rules of the board, in its {@code (setup
+ * ...)}; KiCad 6 moved them to the project file. KiCad still reads the minimum track width of such
+ * a board ({@code trace_min}) and its DRC reports every narrower trace as a {@code track_width}
+ * error. It is read back as well.
+ *
+ * <p>Only the zones, the pads and that minimum are read; the fill polygons, which can make up most
+ * of the file, are skipped without being stored.
  */
 public final class KiCadBoardZones {
 
@@ -159,11 +164,23 @@ public final class KiCadBoardZones {
   private final String sourceName;
   private final List<Zone> zones;
   private final List<Pad> pads;
+  private final Double minTrackWidthUm;
 
-  private KiCadBoardZones(String sourceName, List<Zone> zones, List<Pad> pads) {
+  private KiCadBoardZones(
+      String sourceName, List<Zone> zones, List<Pad> pads, Double minTrackWidthUm) {
     this.sourceName = sourceName;
     this.zones = List.copyOf(zones);
     this.pads = List.copyOf(pads);
+    this.minTrackWidthUm = minTrackWidthUm;
+  }
+
+  /**
+   * The minimum track width of a board written by KiCad 5 or earlier, in micrometres ({@code (setup
+   * (trace_min ...))}), or null if the board does not set a positive one. Newer boards keep it in
+   * the project file.
+   */
+  public Double minTrackWidthUm() {
+    return minTrackWidthUm;
   }
 
   /** The pads of the footprints of the board, in file order. */
@@ -208,6 +225,7 @@ public final class KiCadBoardZones {
     List<Zone> zones = new ArrayList<>();
     List<Pad> pads = new ArrayList<>();
     List<String> copperLayers = new ArrayList<>();
+    Double minTrackWidthUm = null;
     int version = 0;
     while (true) {
       reader.skipBlanks();
@@ -230,6 +248,7 @@ public final class KiCadBoardZones {
         }
         case "footprint", "module" -> readFootprint(reader, version, copperLayers, pads);
         case "layers" -> readCopperLayers(reader, copperLayers);
+        case "setup" -> minTrackWidthUm = readTraceMin(reader);
         case "version" -> {
           version = (int) toNumber(reader.readAtom());
           reader.skipToEndOfList();
@@ -237,7 +256,30 @@ public final class KiCadBoardZones {
         default -> reader.skipToEndOfList();
       }
     }
-    return new KiCadBoardZones(sourceName, zones, pads);
+    return new KiCadBoardZones(sourceName, zones, pads, minTrackWidthUm);
+  }
+
+  /**
+   * Reads the rest of the {@code (setup ...)} of the board for its {@code (trace_min ...)}, in
+   * micrometres; null if it has none or not a positive one.
+   */
+  private static Double readTraceMin(Reader reader) {
+    Double result = null;
+    while (true) {
+      reader.skipBlanks();
+      if (reader.isFinished() || reader.leaveList()) {
+        return result;
+      }
+      if (!reader.enterList()) {
+        reader.readAtom();
+        continue;
+      }
+      if ("trace_min".equals(reader.readAtom())) {
+        double um = toUm(reader.readAtom());
+        result = um > 0 ? um : null;
+      }
+      reader.skipToEndOfList();
+    }
   }
 
   /**

@@ -448,7 +448,8 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   }
 
   /**
-   * Reads the zones of the KiCad board file of this job when explicitly provided.
+   * Reads the zones of the KiCad board file of this job when explicitly provided. Without a KiCad
+   * project, the minimum track width of the board, if it sets one, becomes that of the job.
    *
    * @param explicitFile the .kicad_pcb given with the design, or null
    * @return false if {@code explicitFile} cannot be read
@@ -467,6 +468,18 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
               + " copper zones of the KiCad board '"
               + path
               + "'.");
+      // A board of KiCad 5 or earlier keeps its minimum track width in its own setup; a project
+      // file, when there is one, sets it instead.
+      Double minWidth = this.kicadBoardZones.minTrackWidthUm();
+      if (this.kicadProject == null && minWidth != null) {
+        this.kicadProject = KiCadProject.fromBoardSetup(path.getFileName().toString(), minWidth);
+        FRLogger.info(
+            "Using the minimum track width of the KiCad board '"
+                + path
+                + "': "
+                + minWidth
+                + " um, the default neck width (unless overridden).");
+      }
       return true;
     } catch (IOException | IllegalArgumentException e) {
       String reason = e instanceof NoSuchFileException ? "file not found" : e.getMessage();
