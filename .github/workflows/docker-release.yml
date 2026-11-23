@@ -9,6 +9,10 @@ on:
         description: 'The git tag to build (e.g., v2.1.0)'
         required: true
 
+concurrency:
+  group: docker-publish-${{ github.repository }}
+  cancel-in-progress: false
+
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}

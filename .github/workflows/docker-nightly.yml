@@ -6,7 +6,7 @@ on:
   workflow_dispatch: # Allows you to run this workflow manually
 
 concurrency:
-  group: docker-nightly-${{ github.ref }}
+  group: docker-publish-${{ github.repository }}
   cancel-in-progress: false
 
 env:
@@ -33,8 +33,8 @@ jobs:
         run: |
           python3 scripts/build/cleanup-ghcr-images.py \
             --owner "${{ github.repository_owner }}" \
-            --package "${{ github.event.repository.name }}" \
-            --image "${{ env.IMAGE_NAME }}" \
+            --package "${IMAGE_NAME#*/}" \
+            --image "${IMAGE_NAME}" \
             --check-revision "${{ github.sha }}" \
             --tag nightly
 
@@ -100,5 +100,5 @@ jobs:
         run: |
           python3 scripts/build/cleanup-ghcr-images.py \
             --owner "${{ github.repository_owner }}" \
-            --package "${{ github.event.repository.name }}" \
-            --image "${{ env.IMAGE_NAME }}"
+            --package "${IMAGE_NAME#*/}" \
+            --image "${IMAGE_NAME}"

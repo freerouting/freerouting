@@ -281,11 +281,17 @@ def select_unused_versions(
             continue
 
         created_at_raw = version.get("created_at")
-        if created_at_raw:
+        if not created_at_raw:
+            skipped_recent.append(version)
+            continue
+        try:
             created_at = parse_iso8601(created_at_raw)
-            if created_at > cutoff:
-                skipped_recent.append(version)
-                continue
+        except ValueError:
+            skipped_recent.append(version)
+            continue
+        if created_at > cutoff:
+            skipped_recent.append(version)
+            continue
 
         candidates.append(version)
 
