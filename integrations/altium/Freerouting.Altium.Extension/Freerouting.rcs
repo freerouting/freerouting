@@ -1,0 +1,34 @@
+PL PLFreerouting:AutoRoute
+    Command     = 'Freerouting:AutoRoute'
+    Caption     = '&Auto-route Active Board...'
+    Description = 'Export active board, run Freerouting, and back-annotate routed tracks and vias.'
+End
+
+PL PLFreerouting:ExportDsn
+    Command     = 'Freerouting:ExportDsn'
+    Caption     = '&Export Specctra DSN...'
+    Description = 'Export active PCB document to a Specctra DSN file.'
+End
+
+PL PLFreerouting:ImportSes
+    Command     = 'Freerouting:ImportSes'
+    Caption     = '&Import Specctra SES...'
+    Description = 'Import a Specctra SES session file into the active PCB.'
+End
+
+PL PLFreerouting:Settings
+    Command     = 'Freerouting:Settings'
+    Caption     = '&Settings...'
+    Description = 'Configure Freerouting executable path and routing parameters.'
+End
+
+Insertion MNFreeroutingMenu TargetID='MNPCB_AutoRoute10' RefID0='MNPCB_AutoRouteGroup' InsertType='After'
+    Tree MNFreeroutingMenuTree Caption='&Freerouting Auto-Router'
+        Link Freerouting_Link1 PLID='PLFreerouting:AutoRoute' End
+        Separator Freerouting_Sep1 End
+        Link Freerouting_Link2 PLID='PLFreerouting:ExportDsn' End
+        Link Freerouting_Link3 PLID='PLFreerouting:ImportSes' End
+        Separator Freerouting_Sep2 End
+        Link Freerouting_Link4 PLID='PLFreerouting:Settings' End
+    End
+End

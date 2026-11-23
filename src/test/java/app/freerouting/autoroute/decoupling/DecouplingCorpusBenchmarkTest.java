@@ -149,9 +149,8 @@ class DecouplingCorpusBenchmarkTest {
 
   @Test
   void testUserUploadedBoardsIfPresent() throws IOException {
-    File a64File =
-        new File(
-            "C:/Users/oppyu/.gemini/antigravity/brain/21fc1298-be63-4631-9c4f-d4667d57509b/.user_uploaded/media_1793642930162_ac15d14f.dsn");
+    String a64Path = System.getProperty("decoupling.test.fixture.a64", "");
+    File a64File = new File(a64Path);
     if (a64File.exists()) {
       RoutingBoard a64Board;
       try (FileInputStream in = new FileInputStream(a64File)) {
@@ -188,9 +187,8 @@ class DecouplingCorpusBenchmarkTest {
       }
     }
 
-    File doorFile =
-        new File(
-            "C:/Users/oppyu/.gemini/antigravity/brain/21fc1298-be63-4631-9c4f-d4667d57509b/.user_uploaded/media_1793641525430_224260a2.dsn");
+    String doorPath = System.getProperty("decoupling.test.fixture.door", "");
+    File doorFile = new File(doorPath);
     if (doorFile.exists()) {
       RoutingBoard doorBoard;
       try (FileInputStream in = new FileInputStream(doorFile)) {

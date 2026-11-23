@@ -120,3 +120,22 @@ Autodesk Fusion Electronics integrates with Freerouting via the dedicated Freero
 5) Open the external autorouter dialog via (Connect / Automatic Routing / External autorouter...).
 6) Select the `freerouting.net` tab and click "Route".
 7) Inspect the autorouted board back in pcb-rnd.
+
+## [Altium Designer](https://www.altium.com/altium-designer)
+
+Altium Designer integrates with Freerouting via the dedicated C# DXP server extension located in [`integrations/altium`](../integrations/altium).
+
+### Features
+* **1-Click Auto-Routing:** Directly accessible from Altium Designer's PCB menu: **Route > Auto Route > Freerouting > Auto-route Active Board...**.
+* **Lossless Specctra DSN & SES Bridge:** Preserves Altium's internal integer coordinate precision ($1\text{ mil} = 10,000\text{ units}$, $1\text{ unit} = 2.54\text{ nm}$).
+* **Rotated SMD Pads & Complex Stackups:** Converts rotated rectangular pads into pre-rotated 4-vertex `(polygon ...)` scopes to guarantee Specctra parser compliance.
+* **Negative Plane Isolation:** Automatically detects dedicated power/ground planes (`eInternalPlane1..16`) and excludes them from obstacle keepouts.
+* **Automated Copper Pour Shelving:** Automatically shelves signal polygons pre-export and repours them upon back-annotation.
+* **Live Progress Monitoring:** Real-time routing pass monitor with pass counts, remaining unrouted connections, clearance violations, live log box, and cancellation support.
+
+### Installation & Usage
+1. Run the 1-click installer `Freerouting-Altium-Setup.exe` (or double-click `Install.cmd`) located in `integrations/altium`. The installer auto-detects installed Altium versions via the Windows Registry, safely closes `X2.exe` if running, and deploys all extension files into `\System`.
+2. Ensure `freerouting-executable.jar` is located in the extension folder or set the `FREEROUTING_JAR` environment variable.
+3. In the Altium PCB Editor, navigate to **Route > Auto Route > Freerouting** to run or export/import sessions.
+
+For technical architecture and developer test instructions, see the [Altium Integration Guide](../integrations/altium/README.md).

@@ -907,7 +907,7 @@ public class Structure extends ScopeKeyword {
       return false;
     }
     final Layer currentLayer = (area.shapeList.iterator().next()).layer;
-    if (currentLayer == Layer.SIGNAL) {
+    if (currentLayer == Layer.SIGNAL || currentLayer == Layer.PCB) {
       for (int i = 0; i < board.getLayerCount(); i++) {
         if (scopeParameter.layerStructure.layers[i].isSignal) {
           insertKeepout(

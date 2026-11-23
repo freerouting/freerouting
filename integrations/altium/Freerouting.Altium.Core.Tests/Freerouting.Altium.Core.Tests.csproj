@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Platforms>x64</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <RootNamespace>Freerouting.Altium.Core.Tests</RootNamespace>
+    <AssemblyName>Freerouting.Altium.Core.Tests</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Freerouting.Altium.Core\Freerouting.Altium.Core.csproj" />
+    <ProjectReference Include="..\Freerouting.Altium.Extension\Freerouting.Altium.Extension.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Altium.Dxp.Interfaces">
+      <HintPath>C:\Program Files\Altium\AD26\System\Altium.Dxp.Interfaces.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Altium.Dxp.Classes">
+      <HintPath>C:\Program Files\Altium\AD26\System\Altium.Dxp.Classes.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Altium.Edp.Interfaces">
+      <HintPath>C:\Program Files\Altium\AD26\System\Altium.Edp.Interfaces.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Altium.Edp.Classes">
+      <HintPath>C:\Program Files\Altium\AD26\System\Altium.Edp.Classes.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+</Project>
