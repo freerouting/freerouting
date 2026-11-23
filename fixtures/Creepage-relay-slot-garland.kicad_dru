@@ -1,0 +1,20 @@
+(version 1)
+
+# Rules for Creepage-relay-slot-garland.dsn (KiCadDesignRulesRoutingTest). Two Omron G5Q relays
+# (KiCad library footprint): coil pad 1 (+5V) and COM pad 2 (MAINS) are 10.16 mm apart, 7.86 mm
+# copper to copper. Mains to the rest: 8 mm of clearance and of creepage; within one relay, a later
+# rule lowers only the clearance to 7.8 mm, so the 8 mm creepage still applies (KiCad keeps one rule
+# list per constraint type). K1 has a 2 mm slot between coil and contacts (the keepout of the
+# DSN): its creepage path goes around the slot and KiCad reports nothing. K2 has no slot: KiCad
+# reports a creepage of 7.86 mm. Freerouting does not model the slot and leaves the creepage between
+# two pads to KiCad.
+(rule "mains_8mm"
+	(condition "A.NetClass == 'MAINS' && B.NetClass != 'MAINS'")
+	(constraint clearance (min 8mm))
+	(constraint creepage (min 8mm)))
+(rule "k1_coil_to_contacts"
+	(condition "A.NetClass == 'MAINS' && B.NetClass != 'MAINS' && A.memberOfFootprint('K1') && B.memberOfFootprint('K1')")
+	(constraint clearance (min 7.8mm)))
+(rule "k2_coil_to_contacts"
+	(condition "A.NetClass == 'MAINS' && B.NetClass != 'MAINS' && A.memberOfFootprint('K2') && B.memberOfFootprint('K2')")
+	(constraint clearance (min 7.8mm)))

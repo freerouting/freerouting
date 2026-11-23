@@ -123,8 +123,94 @@ class KiCadDesignRulesTest {
     assertTrue(
         result.warnings().stream()
             .anyMatch(w -> w.contains("creepage") && w.contains("applied conservatively")));
+    // the creepage applies to the copper the router adds
+    assertEquals(mm(board, 5.0), traceValue(board, "Net-(K2-Pad2)", "Net-(K1-Pad1)"));
+    assertEquals(mm(board, 5.0), traceToPinValue(board, "Net-(K1-Pad1)", pin(board, "K2", "2")));
+  }
+
+  @Test
+  void leavesTheCreepageBetweenTwoPadsToKiCad() throws IOException {
+    BasicBoard original = loadBoard();
+    int designValue =
+        value(original.rules.clearanceMatrix, pin(original, "K1", "1"), pin(original, "K2", "2"));
+    BasicBoard board = loadBoard();
+    KiCadDesignRules rules =
+        KiCadDesignRules.parse(
+            """
+            (version 1)
+            (rule "mains_creepage_only"
+              (condition "A.NetClass == 'HighVoltage' && B.NetClass != 'HighVoltage'")
+              (constraint creepage (min 5mm)))
+            """,
+            "creepage.kicad_dru");
+
+    KiCadDesignRulesTranslator.Result result = KiCadDesignRulesTranslator.apply(board, rules);
+
+    // the router never moves a pad, and a slot between two pads (not modelled) may lengthen their
+    // creepage path: between pads, the clearance of the design stays, and KiCad checks the creepage
     assertEquals(
-        mm(board, 5.0),
+        designValue,
+        value(board.rules.clearanceMatrix, pin(board, "K1", "1"), pin(board, "K2", "2")));
+    assertTrue(
+        result.warnings().stream()
+            .anyMatch(
+                w ->
+                    w.contains("'mains_creepage_only'")
+                        && w.contains("creepage not applied between two pads")));
+  }
+
+  @Test
+  void laterClearanceRuleDoesNotLowerAnEarlierCreepage() throws IOException {
+    BasicBoard board = loadBoard();
+    KiCadDesignRules rules =
+        KiCadDesignRules.parse(
+            """
+            (version 1)
+            (rule "mains_creepage"
+              (condition "A.NetClass == 'HighVoltage' && B.NetClass != 'HighVoltage'")
+              (constraint creepage (min 5mm)))
+            (rule "low_voltage_clearance"
+              (condition "A.NetClass == 'HighVoltage' && B.NetClass != 'HighVoltage'")
+              (constraint clearance (min 0.3mm)))
+            """,
+            "creepage-then-clearance.kicad_dru");
+
+    KiCadDesignRulesTranslator.Result result = KiCadDesignRulesTranslator.apply(board, rules);
+
+    // KiCad keeps one rule list per constraint type: the clearance rule does not override the
+    // creepage, which still asks for 5 mm from the copper the router adds
+    assertEquals(2, result.translatedRules());
+    assertEquals(mm(board, 5.0), traceValue(board, "Net-(K2-Pad2)", "Net-(K1-Pad1)"));
+    assertEquals(mm(board, 5.0), traceToPinValue(board, "Net-(K1-Pad1)", pin(board, "K2", "2")));
+    // between two pads, only the clearance rule counts
+    assertEquals(
+        mm(board, 0.3),
+        value(board.rules.clearanceMatrix, pin(board, "K1", "1"), pin(board, "K2", "2")));
+  }
+
+  @Test
+  void lastMatchingCreepageRuleSetsTheCreepage() throws IOException {
+    BasicBoard board = loadBoard();
+    KiCadDesignRules rules =
+        KiCadDesignRules.parse(
+            """
+            (version 1)
+            (rule "mains"
+              (condition "A.NetClass == 'HighVoltage' && B.NetClass != 'HighVoltage'")
+              (constraint clearance (min 4mm))
+              (constraint creepage (min 6mm)))
+            (rule "mains_creepage_relaxed"
+              (condition "A.NetClass == 'HighVoltage' && B.NetClass != 'HighVoltage'")
+              (constraint creepage (min 1mm)))
+            """,
+            "creepage-relaxed.kicad_dru");
+
+    KiCadDesignRulesTranslator.Result result = KiCadDesignRulesTranslator.apply(board, rules);
+
+    // the later creepage rule sets the creepage (1 mm), the clearance of the first rule stays
+    assertEquals(2, result.translatedRules());
+    assertEquals(
+        mm(board, 4.0),
         value(board.rules.clearanceMatrix, pin(board, "K1", "1"), pin(board, "K2", "2")));
   }
 
@@ -174,7 +260,9 @@ class KiCadDesignRulesTest {
             .anyMatch(w -> w.contains("intersectsArea") && w.contains("may")));
 
     ClearanceMatrix matrix = board.rules.clearanceMatrix;
-    // the last matching rule wins: coil to contacts of the same relay, then mains isolation
+    // the last matching rule wins: coil to contacts of the same relay (2.5 mm), then mains
+    // isolation; the coil rule sets only a clearance, and between two pads the creepage of the
+    // mains isolation (3 mm) is left to KiCad
     assertEquals(mm(board, 2.5), value(matrix, pin(board, "K1", "1"), pin(board, "K1", "2")));
     assertEquals(mm(board, 3.0), value(matrix, pin(board, "K1", "1"), pin(board, "K2", "2")));
     // a rule may lower the clearance of the net class (2 mm)
@@ -352,6 +440,43 @@ class KiCadDesignRulesTest {
   }
 
   @Test
+  void leavesCreepageBetweenPadAndPadKeepoutToKiCad() throws IOException {
+    BasicBoard board = loadBoardWithPadKeepout();
+    ObstacleArea padKeepout = padKeepout(board, "K1");
+    Pin hvPin = pin(board, "K2", "2");
+    int designValue = value(board.rules.clearanceMatrix, padKeepout, hvPin);
+
+    KiCadDesignRulesTranslator.Result result =
+        KiCadDesignRulesTranslator.apply(
+            board,
+            KiCadDesignRules.parse(
+                """
+                (version 1)
+                (rule "mains_creepage_pad_keepout"
+                  (condition "A.NetClass == 'HighVoltage' && B.NetClass != 'HighVoltage'")
+                  (constraint creepage (min 5mm)))
+                """,
+                "creepage-pad-keepout.kicad_dru"));
+
+    // A netless pad exported as a keepout counts as a pad for the pad-to-pad creepage exception
+    assertEquals(designValue, value(board.rules.clearanceMatrix, padKeepout, hvPin));
+    // Copper added by the router still observes the 5 mm creepage against the netless pad keepout
+    assertEquals(
+        mm(board, 5.0),
+        board.rules.clearanceMatrix.getValue(
+            padKeepout.clearanceClassIndex(),
+            board.rules.nets.get("Net-(K2-Pad2)", 1).getNetClass().getTraceClearanceClass(),
+            0,
+            false));
+    assertTrue(
+        result.warnings().stream()
+            .anyMatch(
+                w ->
+                    w.contains("'mains_creepage_pad_keepout'")
+                        && w.contains("creepage not applied between two pads")));
+  }
+
+  @Test
   void numberAndPlatingOfAPadExportedAsKeepoutAreUnknown() throws IOException {
     BasicBoard board = loadBoardWithPadKeepout();
     KiCadDesignRulesTranslator.apply(
@@ -492,6 +617,13 @@ class KiCadDesignRulesTest {
 
   private static int value(ClearanceMatrix matrix, Item first, Item second) {
     return matrix.getValue(first.clearanceClassIndex(), second.clearanceClassIndex(), 0, false);
+  }
+
+  private static int traceToPinValue(BasicBoard board, String traceNet, Pin pin) {
+    var net = board.rules.nets.get(traceNet, 1);
+    assertNotNull(net, traceNet);
+    return board.rules.clearanceMatrix.getValue(
+        net.getNetClass().getTraceClearanceClass(), pin.clearanceClassIndex(), 0, false);
   }
 
   private static int traceValue(BasicBoard board, String firstNet, String secondNet) {
