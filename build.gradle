@@ -9,8 +9,8 @@ plugins {
     id 'checkstyle'
     id "com.vanniktech.maven.publish" version "0.37.0"
     id 'io.github.ben-manes.versions' version '0.67.0'
-    id "com.diffplug.spotless" version "8.11.0"
-    id 'org.graalvm.buildtools.native' version '1.1.18'
+    id "com.diffplug.spotless" version "8.12.0"
+    id 'org.graalvm.buildtools.native' version '1.1.19'
 }
 
 checkstyle {
@@ -192,11 +192,11 @@ dependencies {
 
     // Add Google Cloud BigQuery dependencies for telemetry
     implementation 'com.google.auth:google-auth-library-oauth2-http:1.58.0'
-    implementation 'com.google.api:gax:2.90.0'
+    implementation 'com.google.api:gax:2.91.0'
     implementation 'com.google.api-client:google-api-client-appengine:2.9.2'
-    implementation 'com.google.cloud:google-cloud-core:2.80.0'
-    implementation 'com.google.cloud:google-cloud-core-http:2.80.0'
-    implementation 'com.google.cloud:google-cloud-bigquery:2.76.0'
+    implementation 'com.google.cloud:google-cloud-core:2.81.0'
+    implementation 'com.google.cloud:google-cloud-core-http:2.81.0'
+    implementation 'com.google.cloud:google-cloud-bigquery:2.77.0'
 
     // Add Google Sheets API dependencies for API key validation
     implementation 'com.google.api-client:google-api-client:2.9.2'
@@ -204,15 +204,15 @@ dependencies {
 
     // Security constraints for transitive dependencies
     constraints {
-        implementation('io.netty:netty-common:4.2.20.Final') {
+        implementation('io.netty:netty-common:4.2.21.Final') {
             because 'CVE-2024-47535 and CVE-2025-25193: DoS vulnerability in Netty on Windows'
         }
     }
 
     // Add Swagger/OpenAPI dependencies for API documentation (OpenAPI 3.0)
-    implementation 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.55'
-    implementation 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.55'
-    implementation 'io.swagger.core.v3:swagger-core-jakarta:2.2.55'
+    implementation 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.56'
+    implementation 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.56'
+    implementation 'io.swagger.core.v3:swagger-core-jakarta:2.2.56'
 
 
     // JTS: pure-Java 2D planar topology and geometry engine (replaces java.awt.geom in core/CLI)
