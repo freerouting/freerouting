@@ -204,7 +204,7 @@ dependencies {
 
     // Security constraints for transitive dependencies
     constraints {
-        implementation('io.netty:netty-common:4.2.20.Final') {
+        implementation('io.netty:netty-common:4.2.21.Final') {
             because 'CVE-2024-47535 and CVE-2025-25193: DoS vulnerability in Netty on Windows'
         }
     }
