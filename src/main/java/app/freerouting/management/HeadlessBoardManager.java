@@ -59,6 +59,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -114,12 +115,22 @@ public class HeadlessBoardManager implements BoardManager {
   private static final String BOARD_EDGE_CLEARANCE_CLASS_NAME = "board_edge";
   private static final String HOLE_EDGE_CLEARANCE_CLASS_NAME = "hole_edge";
 
+  /** Suffix of the hole class made for a hole keepout that already has a class of its own. */
+  private static final String HOLE_CLASS_SUFFIX = "+" + HOLE_EDGE_CLEARANCE_CLASS_NAME;
+
   /**
    * True once {@link #applyCopperToEdgeClearanceOverride()} has assigned the {@code board_edge}
    * class to the outline of the current board. The override runs again after the pins are inserted,
    * so the default value can be capped by the real pin-to-outline gaps.
    */
   private boolean edgeClearanceAppliedByOverride;
+
+  /**
+   * Maps each derived hole clearance class index created by {@link
+   * #assignHoleKeepoutClearanceClass(int)} on the current board to the source clearance class index
+   * it was derived from. Cleared whenever a new board is created.
+   */
+  private final Map<Integer, Integer> derivedHoleClearanceSources = new LinkedHashMap<>();
 
   /**
    * Listener for autorouter thread events during automated routing operations.
@@ -377,6 +388,7 @@ public class HeadlessBoardManager implements BoardManager {
             rules,
             boardCommunication);
     this.edgeClearanceAppliedByOverride = false;
+    this.derivedHoleClearanceSources.clear();
     applyCopperToEdgeClearanceOverride();
     applyHoleClearanceOverride();
     applyHoleToHole();
@@ -796,27 +808,87 @@ public class HeadlessBoardManager implements BoardManager {
             .getDefaultNetClass()
             .defaultItemClearanceClasses
             .get(DefaultItemClearanceClasses.ItemClass.AREA);
-    for (int layer = 0; layer < matrix.getLayerCount(); layer++) {
-      for (int classNo = 1; classNo < matrix.getClassCount(); classNo++) {
-        // Never reduce an existing requirement: hole clearance is a floor on top of the
-        // normal copper clearance the keepout would otherwise get.
-        int value =
-            Math.max(
-                holeClearanceBoardUnits,
-                matrix.getValue(defaultAreaClassNo, classNo, layer, false));
-        matrix.setValue(holeEdgeClassNo, classNo, layer, value);
-        matrix.setValue(classNo, holeEdgeClassNo, layer, value);
+    // A keepout that has a class of its own keeps it, with the hole clearance as a floor: the
+    // translation of a .kicad_dru gives the pads without net that KiCad exports as keepouts the
+    // clearances of their rules, and this runs again after it. Each hole class is built from a
+    // source class: hole_edge from the generic AREA class, a "<class>+hole_edge" from <class>.
+    Map<Integer, Integer> sourceOfHoleClass = new LinkedHashMap<>();
+    sourceOfHoleClass.put(holeEdgeClassNo, defaultAreaClassNo);
+    Map<app.freerouting.board.model.items.ObstacleArea, Integer> targetOfKeepout =
+        new LinkedHashMap<>();
+    for (app.freerouting.board.model.items.ObstacleArea keepout : holeKeepouts) {
+      int current = keepout.clearanceClassIndex();
+      int target;
+      if (current == holeEdgeClassNo || current <= 0 || current == defaultAreaClassNo) {
+        target = holeEdgeClassNo;
+      } else if (derivedHoleClearanceSources.containsKey(current)) {
+        target = current;
+        sourceOfHoleClass.putIfAbsent(current, derivedHoleClearanceSources.get(current));
+      } else {
+        Integer existingDerived = findDerivedHoleClassForSource(current);
+        if (existingDerived != null) {
+          target = existingDerived;
+          sourceOfHoleClass.putIfAbsent(target, current);
+        } else {
+          String currentName = matrix.getName(current);
+          if (currentName == null) {
+            target = holeEdgeClassNo;
+          } else {
+            String baseName = currentName + HOLE_CLASS_SUFFIX;
+            String name = baseName;
+            int disambiguator = 2;
+            while (matrix.getNo(name) >= 0) {
+              name = baseName + "_" + disambiguator++;
+            }
+            matrix.appendClass(name);
+            target = matrix.getNo(name);
+            if (target < 0) {
+              FRLogger.warn(
+                  "Unable to create the " + name + " clearance class: keepout left as is.");
+              continue;
+            }
+            derivedHoleClearanceSources.put(target, current);
+            sourceOfHoleClass.putIfAbsent(target, current);
+          }
+        }
+      }
+      targetOfKeepout.put(keepout, target);
+    }
+    for (Map.Entry<Integer, Integer> holeClass : sourceOfHoleClass.entrySet()) {
+      int classNo = holeClass.getKey();
+      int source = holeClass.getValue();
+      for (int layer = 0; layer < matrix.getLayerCount(); layer++) {
+        for (int other = 1; other < matrix.getClassCount(); other++) {
+          // Never reduce an existing requirement: hole clearance is a floor on top of the
+          // clearance the keepout would otherwise get. Between two hole classes, from both sources.
+          int otherSource = sourceOfHoleClass.getOrDefault(other, other);
+          int value =
+              Math.max(holeClearanceBoardUnits, matrix.getValue(source, otherSource, layer, false));
+          matrix.setValue(classNo, other, layer, value);
+          matrix.setValue(other, classNo, layer, value);
+        }
       }
     }
     int reclassified = 0;
-    for (app.freerouting.board.model.items.ObstacleArea keepout : holeKeepouts) {
-      if (keepout.clearanceClassIndex() != holeEdgeClassNo) {
-        keepout.setClearanceClassIndex(holeEdgeClassNo);
+    for (Map.Entry<app.freerouting.board.model.items.ObstacleArea, Integer> entry :
+        targetOfKeepout.entrySet()) {
+      app.freerouting.board.model.items.ObstacleArea keepout = entry.getKey();
+      if (keepout.clearanceClassIndex() != entry.getValue()) {
+        keepout.setClearanceClassIndex(entry.getValue());
         keepout.clearDerivedData();
         reclassified++;
       }
     }
     return reclassified;
+  }
+
+  private Integer findDerivedHoleClassForSource(int sourceClassNo) {
+    for (Map.Entry<Integer, Integer> entry : derivedHoleClearanceSources.entrySet()) {
+      if (entry.getValue() == sourceClassNo) {
+        return entry.getKey();
+      }
+    }
+    return null;
   }
 
   private void applyCopperToEdgeClearanceOverride() {
