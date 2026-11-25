@@ -15,6 +15,7 @@ import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.gui.workspace.GuiBoardManager;
+import app.freerouting.gui.workspace.session.EditorStateKind;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import java.awt.Graphics;
@@ -452,5 +453,10 @@ public class RouteState extends InteractiveState {
       Net currentNet = hdlg.getRoutingBoard().rules.nets.get(route.netNumbers[0]);
       hdlg.screenMessages.setStatusMessage(tm.getText("routing_net_message", currentNet.name));
     }
+  }
+
+  @Override
+  public EditorStateKind kind() {
+    return EditorStateKind.ROUTE;
   }
 }

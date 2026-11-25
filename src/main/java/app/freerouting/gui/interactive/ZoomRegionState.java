@@ -2,6 +2,7 @@ package app.freerouting.gui.interactive;
 
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.gui.workspace.GuiBoardManager;
+import app.freerouting.gui.workspace.session.EditorStateKind;
 import java.awt.geom.Point2D;
 
 /** Class for interactive zooming to a rectangle. */
@@ -44,5 +45,10 @@ public class ZoomRegionState extends SelectRegionState {
     Point2D scCorner1 = hdlg.graphicsContext.coordinateTransform.boardToScreen(corner1);
     Point2D scCorner2 = hdlg.graphicsContext.coordinateTransform.boardToScreen(corner2);
     hdlg.getPanel().zoomFrame(scCorner1, scCorner2);
+  }
+
+  @Override
+  public EditorStateKind kind() {
+    return EditorStateKind.ZOOM;
   }
 }

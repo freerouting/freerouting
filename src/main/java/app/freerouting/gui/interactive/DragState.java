@@ -5,6 +5,7 @@ import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Trace;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.gui.workspace.GuiBoardManager;
+import app.freerouting.gui.workspace.session.EditorStateKind;
 import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
@@ -130,4 +131,9 @@ public abstract class DragState extends InteractiveState {
   }
 
   private record DragCandidate(Item item, boolean itemFound) {}
+
+  @Override
+  public EditorStateKind kind() {
+    return EditorStateKind.DRAG;
+  }
 }

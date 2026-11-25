@@ -15,6 +15,7 @@ import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.gui.rendering.BoardRenderer;
 import app.freerouting.gui.workspace.GuiBoardManager;
+import app.freerouting.gui.workspace.session.EditorStateKind;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.TextManager;
 import java.awt.Color;
@@ -455,5 +456,10 @@ public final class MoveItemState extends InteractiveState {
       this.netNumber = netNumber;
       this.items = items;
     }
+  }
+
+  @Override
+  public EditorStateKind kind() {
+    return EditorStateKind.DRAG;
   }
 }

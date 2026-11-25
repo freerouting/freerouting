@@ -2,6 +2,7 @@ package app.freerouting.gui.interactive;
 
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.gui.workspace.GuiBoardManager;
+import app.freerouting.gui.workspace.session.EditorStateKind;
 
 /** Implements the functionality of the drag menu. */
 public class DragMenuState extends MenuState {
@@ -24,5 +25,10 @@ public class DragMenuState extends MenuState {
   @Override
   public String getHelpId() {
     return "MenuState_DragMenuState";
+  }
+
+  @Override
+  public EditorStateKind kind() {
+    return EditorStateKind.DRAG;
   }
 }

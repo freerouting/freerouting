@@ -6,6 +6,7 @@ import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.structure.LayerStructure;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.gui.workspace.GuiBoardManager;
+import app.freerouting.gui.workspace.session.EditorStateKind;
 import app.freerouting.logger.FRLogger;
 import java.util.Collection;
 import java.util.Set;
@@ -132,5 +133,10 @@ public class MenuState extends InteractiveState {
   @Override
   public void setToolbar() {
     hdlg.getPanel().boardFrame.setMenuToolbar();
+  }
+
+  @Override
+  public EditorStateKind kind() {
+    return EditorStateKind.MENU;
   }
 }
