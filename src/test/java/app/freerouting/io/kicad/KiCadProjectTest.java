@@ -92,4 +92,19 @@ class KiCadProjectTest {
     assertEquals(500.0, board.copperEdgeClearanceUm(), 1e-9);
     assertEquals(250.0, board.holeClearanceUm(), 1e-9);
   }
+
+  @Test
+  void zeroClearanceIsKeptButNegativeOrNonNumericClearancesFallBackToDefaults() {
+    KiCadProject zero =
+        KiCadProject.parse(
+            project("\"min_copper_edge_clearance\": 0.0, \"min_hole_clearance\": 0.0"), "p");
+    assertEquals(0.0, zero.copperEdgeClearanceUm(), 1e-9);
+    assertEquals(0.0, zero.holeClearanceUm(), 1e-9);
+
+    KiCadProject invalid =
+        KiCadProject.parse(
+            project("\"min_copper_edge_clearance\": -0.1, \"min_hole_clearance\": \"0.2\""), "p");
+    assertEquals(500.0, invalid.copperEdgeClearanceUm(), 1e-9);
+    assertEquals(250.0, invalid.holeClearanceUm(), 1e-9);
+  }
 }
