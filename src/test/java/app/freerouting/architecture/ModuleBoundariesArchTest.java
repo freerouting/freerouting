@@ -379,4 +379,22 @@ class ModuleBoundariesArchTest {
             "the in-memory headless facade must remain decoupled from GUI and session managers")
         .check(classes);
   }
+
+  @Test
+  void physicsMustStayIndependentFromAutorouteGuiAndApi() {
+    JavaClasses classes = importMainClasses();
+    noClasses()
+        .that()
+        .resideInAPackage("app.freerouting.board.physics..")
+        .should()
+        .dependOnClassesThat()
+        .resideInAnyPackage(
+            "app.freerouting.autoroute..",
+            "app.freerouting.gui..",
+            "app.freerouting.gui.interactive..",
+            "app.freerouting.api..",
+            "app.freerouting.management..")
+        .because("board.physics must remain a standalone, routing-engine-agnostic subsystem")
+        .check(classes);
+  }
 }

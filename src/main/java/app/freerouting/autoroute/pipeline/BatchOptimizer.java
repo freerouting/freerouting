@@ -11,6 +11,7 @@ import app.freerouting.board.model.items.Via;
 import app.freerouting.board.model.structure.Unit;
 import app.freerouting.board.optimize.StepSlider;
 import app.freerouting.board.optimize.ViaNudger;
+import app.freerouting.board.physics.PhysicsOptimizationPass;
 import app.freerouting.core.ProgressThrottler;
 import app.freerouting.core.RouterCounters;
 import app.freerouting.core.RoutingJob;
@@ -306,6 +307,9 @@ public final class BatchOptimizer extends NamedAlgorithm {
       if (slideSteps()) {
         initialStats = board.getStatistics();
       }
+      if (runPhysics()) {
+        initialStats = board.getStatistics();
+      }
       float bypassCpuEnd = AutorouteRuntimeMetrics.currentThreadCpuSeconds();
       float bypassAllocEnd = AutorouteRuntimeMetrics.currentThreadAllocatedMb();
       phase.durationSeconds = (float) ((System.nanoTime() - bypassStartNanos) / 1e9);
@@ -559,6 +563,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
 
     nudgeVias();
     slideSteps();
+    runPhysics();
 
     this.fireTaskStateChangedEvent(
         new TaskStateChangedEvent(this, TaskState.FINISHED, currentPass, this.board.getHash()));
@@ -707,6 +712,42 @@ public final class BatchOptimizer extends NamedAlgorithm {
             result.violationsAfter(),
             (System.nanoTime() - startNanos) / 1e9,
             AutorouteRuntimeMetrics.currentThreadCpuSeconds() - cpuStart));
+    if (result.acceptedMoves() == 0) {
+      return false;
+    }
+    this.fireBoardUpdatedEvent(new BoardStatistics(this.board), null, this.board);
+    return true;
+  }
+
+  /** Whether the optimizer runs the standalone physics pass: {@code optimizer.physics.enabled}. */
+  static boolean physicsEnabled(OptimizerSettings optimizerSettings) {
+    return optimizerSettings != null
+        && optimizerSettings.physics != null
+        && Boolean.TRUE.equals(optimizerSettings.physics.enabled);
+  }
+
+  /**
+   * Runs the standalone, engine-agnostic physics pass on the thread-confined board when enabled.
+   * Returns whether the board changed.
+   */
+  private boolean runPhysics() {
+    if (!physicsEnabled(job.routerSettings.optimizer)
+        || this.isTimedOut
+        || (this.thread != null && this.thread.isStopRequested())) {
+      return false;
+    }
+    PhysicsOptimizationPass.Result result =
+        PhysicsOptimizationPass.run(this.board, job.routerSettings.optimizer.physics, this.thread);
+    job.logInfo(
+        String.format(
+            Locale.US,
+            "Physics pass: energy %.4f -> %.4f in %d iterations (%d of %d moves kept) in %.3f ms.",
+            result.initialEnergy(),
+            result.finalEnergy(),
+            result.iterations(),
+            result.acceptedMoves(),
+            result.triedMoves(),
+            result.elapsedNanos() / 1_000_000.0));
     if (result.acceptedMoves() == 0) {
       return false;
     }

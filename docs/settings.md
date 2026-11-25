@@ -308,6 +308,11 @@ Configures the optional route-optimization stage that runs after autorouting.
   current pass. Default is `50`.
 - **`max_consecutive_failures_pass1`**: Maximum consecutive candidate failures allowed in pass 1 before
   early-terminating the pass (canary probe). Default is `12`.
+- **`physics`**: Sub-section configuring the standalone, engine-agnostic post-route physics pass:
+  - **`enabled`**: Master enable flag for running `PhysicsOptimizationPass` after `step_slide_enabled`. Default is `false`. CLI: `--router.optimizer.physics.enabled=true`.
+  - **`grid_resolution_mm`**: Target coarse 2D field grid cell size in millimeters (adaptively coarsened on very large boards). Default is `0.5`. CLI: `--router.optimizer.physics.grid_resolution_mm=0.5`.
+  - **`max_iterations`**: Maximum relaxation/evaluation iterations per pass. Default is `8`. CLI: `--router.optimizer.physics.max_iterations=8`.
+  - **`identity_weight`**: Weight applied to the baseline no-op identity rule. Default is `1.0`. CLI: `--router.optimizer.physics.identity_weight=1.0`.
 
 ##### **`fanout` Sub-section**
 

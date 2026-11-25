@@ -300,6 +300,13 @@ items for clearance and overlap queries and remain headless.
 Board trace-pull-tight, shove, and via-optimization implementations. The package contains
 algorithmic board mutation helpers and has no GUI dependency.
 
+### `app.freerouting.board.physics`
+
+Standalone, routing-engine-agnostic board physics subsystem. Provides pluggable `PhysicsRule`
+strategies, a per-layer coarse 2D field grid (`BoardFieldContext`), a read-only scalar energy
+oracle (`PhysicsEvaluator`), and a DRC-guarded post-route pass (`PhysicsOptimizationPass`) with
+zero dependencies on `autoroute`, `gui`, or `api`.
+
 ### `app.freerouting.autoroute.pipeline`
 
 Routing orchestration and stage implementations: fanout, batch autorouting, optimization, pipeline
