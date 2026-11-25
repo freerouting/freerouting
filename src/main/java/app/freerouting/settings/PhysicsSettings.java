@@ -27,6 +27,10 @@ public class PhysicsSettings implements Serializable, Cloneable {
   @SerializedName("identity_weight")
   public Double identityWeight;
 
+  /** Weight applied to the electrostatic trace repulsion ("Anti-PullTight") rule. */
+  @SerializedName("repulsion_weight")
+  public Double repulsionWeight;
+
   /** Creates physics settings without source-specific values. */
   public PhysicsSettings() {}
 

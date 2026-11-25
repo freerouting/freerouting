@@ -313,6 +313,7 @@ Configures the optional route-optimization stage that runs after autorouting.
   - **`grid_resolution_mm`**: Target coarse 2D field grid cell size in millimeters (adaptively coarsened on very large boards). Default is `0.5`. CLI: `--router.optimizer.physics.grid_resolution_mm=0.5`.
   - **`max_iterations`**: Maximum relaxation/evaluation iterations per pass. Default is `8`. CLI: `--router.optimizer.physics.max_iterations=8`.
   - **`identity_weight`**: Weight applied to the baseline no-op identity rule. Default is `1.0`. CLI: `--router.optimizer.physics.identity_weight=1.0`.
+  - **`repulsion_weight`**: Weight applied to the electrostatic trace repulsion ("Anti-PullTight") rule. Default is `1.0`. CLI: `--router.optimizer.physics.repulsion_weight=1.0`.
 
 ##### **`fanout` Sub-section**
 

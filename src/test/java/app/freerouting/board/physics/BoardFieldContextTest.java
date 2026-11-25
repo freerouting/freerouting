@@ -5,10 +5,15 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.board.model.structure.Layer;
 import app.freerouting.board.model.structure.LayerStructure;
 import app.freerouting.board.state.Communication;
+import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.geometry.planar.IntBox;
+import app.freerouting.geometry.planar.IntPoint;
+import app.freerouting.geometry.planar.Point;
+import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.ClearanceMatrix;
@@ -108,11 +113,50 @@ class BoardFieldContextTest {
     settings.gridResolutionMm = 0.5;
     settings.maxIterations = 4;
     settings.identityWeight = 1.0;
+    settings.repulsionWeight = 0.0;
 
     PhysicsOptimizationPass.Result result = PhysicsOptimizationPass.run(board, settings, null);
     assertEquals(0.0, result.initialEnergy());
     assertEquals(0.0, result.finalEnergy());
     assertEquals(1, result.iterations());
     assertEquals(0, result.acceptedMoves());
+  }
+
+  @Test
+  void electrostaticRepulsionReducesEnergyBetweenBundledTraces() {
+    RoutingBoard board = createSyntheticBoard(1, new IntBox(0, 0, 10_000, 10_000));
+    int net1 = board.rules.nets.newNet(java.util.Locale.US).netNumber;
+    int net2 = board.rules.nets.newNet(java.util.Locale.US).netNumber;
+    // Fixed aggressor trace on net 1
+    Polyline p1 =
+        new Polyline(new Point[] {new IntPoint(1_000, 2_000), new IntPoint(9_000, 2_000)});
+    board.insertTraceWithoutCleaning(p1, 0, 25, new int[] {net1}, 0, FixedState.USER_FIXED);
+
+    // Movable 4-corner victim trace on net 2 hugging net 1 closely at y = 2_080
+    Polyline p2 =
+        new Polyline(
+            new Point[] {
+              new IntPoint(1_000, 5_000),
+              new IntPoint(1_000, 2_080),
+              new IntPoint(9_000, 2_080),
+              new IntPoint(9_000, 5_000)
+            });
+    board.insertTraceWithoutCleaning(p2, 0, 25, new int[] {net2}, 0, FixedState.UNFIXED);
+
+    PhysicsSettings settings = new PhysicsSettings();
+    settings.enabled = true;
+    settings.gridResolutionMm = 0.5;
+    settings.maxIterations = 4;
+    settings.identityWeight = 1.0;
+    settings.repulsionWeight = 1.0;
+
+    PhysicsOptimizationPass.Result result = PhysicsOptimizationPass.run(board, settings, null);
+    assertTrue(result.acceptedMoves() > 0, "Victim trace should move away from aggressor");
+    assertTrue(
+        result.finalEnergy() < result.initialEnergy(),
+        "Repulsion energy must decrease after relaxation");
+    assertTrue(
+        new DesignRulesChecker(board, null).getAllClearanceViolations().isEmpty(),
+        "Relaxation must introduce 0 DRC violations");
   }
 }

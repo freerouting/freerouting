@@ -38,6 +38,7 @@ class PhysicsPipelineTest extends RoutingFixtureTest {
     settings.getSettings().optimizer.physics.gridResolutionMm = 0.5;
     settings.getSettings().optimizer.physics.maxIterations = 4;
     settings.getSettings().optimizer.physics.identityWeight = 1.0;
+    settings.getSettings().optimizer.physics.repulsionWeight = 0.0;
     return settings;
   }
 
@@ -117,7 +118,8 @@ class PhysicsPipelineTest extends RoutingFixtureTest {
               "--router.optimizer.physics.enabled=true",
               "--router.optimizer.physics.grid_resolution_mm=0.25",
               "--router.optimizer.physics.max_iterations=12",
-              "--router.optimizer.physics.identity_weight=2.5"
+              "--router.optimizer.physics.identity_weight=2.5",
+              "--router.optimizer.physics.repulsion_weight=1.5"
             });
 
     var physics = cli.getSettings().optimizer.physics;
@@ -126,6 +128,7 @@ class PhysicsPipelineTest extends RoutingFixtureTest {
     assertEquals(0.25, physics.gridResolutionMm);
     assertEquals(12, physics.maxIterations);
     assertEquals(2.5, physics.identityWeight);
+    assertEquals(1.5, physics.repulsionWeight);
   }
 
   @Test
@@ -136,5 +139,31 @@ class PhysicsPipelineTest extends RoutingFixtureTest {
     assertEquals(0.5, defaults.optimizer.physics.gridResolutionMm);
     assertEquals(8, defaults.optimizer.physics.maxIterations);
     assertEquals(1.0, defaults.optimizer.physics.identityWeight);
+    assertEquals(1.0, defaults.optimizer.physics.repulsionWeight);
+  }
+
+  @Test
+  void electrostaticRepulsionPipelineIsDeterministicAndDrcClean() {
+    FRLogger.granularTraceEnabled = false;
+    TestingSettings s1 = createBoundedSettings(true);
+    s1.getSettings().optimizer.physics.repulsionWeight = 1.0;
+    RoutingJob job1 = getRoutingJob("Issue508-DAC2020_bm01.dsn", s1);
+    runRoutingJob(job1);
+
+    TestingSettings s2 = createBoundedSettings(true);
+    s2.getSettings().optimizer.physics.repulsionWeight = 1.0;
+    RoutingJob job2 = getRoutingJob("Issue508-DAC2020_bm01.dsn", s2);
+    runRoutingJob(job2);
+
+    assertTrue(
+        new DesignRulesChecker(job1.board, null).getAllClearanceViolations().isEmpty(),
+        "Repulsion run #1 must have 0 DRC violations");
+    assertTrue(
+        new DesignRulesChecker(job2.board, null).getAllClearanceViolations().isEmpty(),
+        "Repulsion run #2 must have 0 DRC violations");
+    assertEquals(
+        job1.board.getHash(),
+        job2.board.getHash(),
+        "Repeated electrostatic repulsion runs must be 100% deterministic");
   }
 }
