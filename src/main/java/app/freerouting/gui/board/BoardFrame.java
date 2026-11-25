@@ -353,18 +353,19 @@ public class BoardFrame extends WindowBase {
     if (this.routingJob != null) {
       if (this.routingJob.input != null) {
         String filename = this.routingJob.input.getFilename();
-        if (filename != null
-            && !filename.isBlank()
-            && !"tutorial_board.dsn".equals(filename)
-            && !"empty_board.dsn".equals(filename)) {
+        boolean isBuiltInBoard =
+            "tutorial_board.dsn".equals(filename) || "empty_board.dsn".equals(filename);
+        boolean isUserDesignFile = filename != null && !filename.isBlank() && !isBuiltInBoard;
+        if (isUserDesignFile) {
           boardName = filename;
         }
       }
-      if (boardName == null
-          && this.routingJob.name != null
-          && !this.routingJob.name.isBlank()
-          && !this.routingJob.name.startsWith("J-")) {
-        boardName = this.routingJob.name;
+      String jobName = this.routingJob.name;
+      // Job names starting with "J-" are generated automatically and mean nothing to the user.
+      boolean hasUserGivenJobName =
+          jobName != null && !jobName.isBlank() && !jobName.startsWith("J-");
+      if (boardName == null && hasUserGivenJobName) {
+        boardName = jobName;
       }
     }
 

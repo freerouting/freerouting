@@ -539,12 +539,7 @@ public class GuiManager {
       return;
     }
 
-    var filenameLowerCase = filename.toLowerCase();
-
-    if (!(filenameLowerCase.endsWith(".dsn")
-        || filenameLowerCase.endsWith(".ses")
-        || filenameLowerCase.endsWith(".scr")
-        || filenameLowerCase.endsWith(".json"))) {
+    if (!isSupportedExportFormat(filename)) {
       FRLogger.warn("Couldn't export board to '" + filename + "', unsupported extension");
       return;
     }
@@ -552,21 +547,27 @@ public class GuiManager {
     FRLogger.info("Saving '" + filename + "'...");
     try {
       String filenameOnly = new File(filename).getName();
-      int dotIdx = filenameOnly.lastIndexOf('.');
-      String designName = dotIdx > 0 ? filenameOnly.substring(0, dotIdx) : filenameOnly;
-      String extension = dotIdx >= 0 ? filenameOnly.substring(dotIdx).toLowerCase() : "";
+      int extensionStart = filenameOnly.lastIndexOf('.');
+      String designName =
+          extensionStart > 0 ? filenameOnly.substring(0, extensionStart) : filenameOnly;
+      String extension =
+          extensionStart >= 0 ? filenameOnly.substring(extensionStart).toLowerCase() : "";
 
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      ByteArrayOutputStream exportBuffer = new ByteArrayOutputStream();
       boolean saved = false;
       switch (extension) {
         case ".dsn" ->
             saved =
-                newFrame.boardPanel.boardHandling.saveAsSpecctraDesignDsn(baos, designName, false);
+                newFrame.boardPanel.boardHandling.saveAsSpecctraDesignDsn(
+                    exportBuffer, designName, false);
         case ".ses" -> {
           saved =
-              newFrame.boardPanel.boardHandling.saveHeadlessSpecctraSessionSes(baos, designName);
+              newFrame.boardPanel.boardHandling.saveHeadlessSpecctraSessionSes(
+                  exportBuffer, designName);
           if (!saved) {
-            saved = newFrame.boardPanel.boardHandling.saveAsSpecctraSessionSes(baos, designName);
+            saved =
+                newFrame.boardPanel.boardHandling.saveAsSpecctraSessionSes(
+                    exportBuffer, designName);
           }
         }
         case ".scr" -> {
@@ -583,7 +584,7 @@ public class GuiManager {
             InputStream inputStream = new ByteArrayInputStream(sessionOutputStream.toByteArray());
             saved =
                 newFrame.boardPanel.boardHandling.saveSpecctraSessionSesAsFusionScriptScr(
-                    inputStream, baos);
+                    inputStream, exportBuffer);
           }
         }
         case ".json" -> {
@@ -591,7 +592,7 @@ public class GuiManager {
               app.freerouting.io.kicad.KiCadJsonWriter.write(
                   newFrame.boardPanel.boardHandling.getRoutingBoard(), designName);
           if (jsonContent != null && !jsonContent.isEmpty()) {
-            baos.write(jsonContent.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+            exportBuffer.write(jsonContent.getBytes(java.nio.charset.StandardCharsets.UTF_8));
             saved = true;
           }
         }
@@ -600,9 +601,9 @@ public class GuiManager {
         }
       }
 
-      if (saved && baos.size() > 0) {
-        java.nio.file.Files.write(new File(filename).toPath(), baos.toByteArray());
-        FRLogger.info("Saved " + baos.size() + " bytes to '" + filename + "'.");
+      if (saved && exportBuffer.size() > 0) {
+        java.nio.file.Files.write(new File(filename).toPath(), exportBuffer.toByteArray());
+        FRLogger.info("Saved " + exportBuffer.size() + " bytes to '" + filename + "'.");
       } else {
         FRLogger.warn(
             "Board export produced 0 bytes or failed; not overwriting '" + filename + "'.");
@@ -614,5 +615,14 @@ public class GuiManager {
     } catch (Exception e) {
       FRLogger.error("Couldn't export board to file", e);
     }
+  }
+
+  /** Returns whether {@code filename} has an extension that the board can be exported to. */
+  private static boolean isSupportedExportFormat(String filename) {
+    String lowerCaseFilename = filename.toLowerCase();
+    return lowerCaseFilename.endsWith(".dsn")
+        || lowerCaseFilename.endsWith(".ses")
+        || lowerCaseFilename.endsWith(".scr")
+        || lowerCaseFilename.endsWith(".json");
   }
 }

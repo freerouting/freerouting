@@ -32,6 +32,8 @@ public final class KiCadProject {
   /** The hole clearance that KiCad checks when the project does not set one. */
   public static final double DEFAULT_HOLE_CLEARANCE_UM = 250.0;
 
+  private static final double MICROMETRES_PER_MILLIMETRE = 1000.0;
+
   private final String sourceName;
   private final Double minTrackWidthUm;
   private final Double minConnectionWidthUm;
@@ -151,24 +153,22 @@ public final class KiCadProject {
 
   /** A length in millimetres as micrometres, or null if it is not a number of at least 0. */
   private static Double nonNegativeUm(JsonElement value) {
-    if (value != null && value.isJsonPrimitive() && value.getAsJsonPrimitive().isNumber()) {
-      double um = value.getAsDouble() * 1000.0; // KiCad stores lengths in millimetres
-      if (um >= 0) {
-        return um;
-      }
-    }
-    return null;
+    Double um = millimetresToMicrometres(value);
+    return um != null && um >= 0 ? um : null;
   }
 
   /** A length in millimetres as micrometres, or null if it is not a positive number. */
   private static Double positiveUm(JsonElement value) {
-    if (value != null && value.isJsonPrimitive() && value.getAsJsonPrimitive().isNumber()) {
-      double um = value.getAsDouble() * 1000.0; // KiCad stores lengths in millimetres
-      if (um > 0) {
-        return um;
-      }
+    Double um = millimetresToMicrometres(value);
+    return um != null && um > 0 ? um : null;
+  }
+
+  /** A JSON number in millimetres as micrometres, or null if {@code value} is not a number. */
+  private static Double millimetresToMicrometres(JsonElement value) {
+    if (value == null || !value.isJsonPrimitive() || !value.getAsJsonPrimitive().isNumber()) {
+      return null;
     }
-    return null;
+    return value.getAsDouble() * MICROMETRES_PER_MILLIMETRE; // KiCad stores lengths in mm
   }
 
   private static JsonElement member(JsonElement element, String name) {
