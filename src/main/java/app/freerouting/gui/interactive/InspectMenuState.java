@@ -9,6 +9,7 @@ import app.freerouting.drc.ClearanceViolation;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.gui.rendering.BoardRenderer;
 import app.freerouting.gui.workspace.GuiBoardManager;
+import app.freerouting.gui.workspace.session.EditorStateKind;
 import app.freerouting.rules.Net;
 import java.awt.Color;
 import java.util.Set;
@@ -284,5 +285,10 @@ public final class InspectMenuState extends MenuState {
   /** Returns the item currently under the mouse pointer, if any. */
   public Item getLastHoveredItem() {
     return lastHoveredItem;
+  }
+
+  @Override
+  public EditorStateKind kind() {
+    return EditorStateKind.INSPECT;
   }
 }

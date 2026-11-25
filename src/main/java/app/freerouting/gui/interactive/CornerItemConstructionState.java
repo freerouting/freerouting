@@ -4,6 +4,7 @@ import app.freerouting.board.model.structure.AngleRestriction;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.gui.workspace.GuiBoardManager;
+import app.freerouting.gui.workspace.session.EditorStateKind;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Iterator;
@@ -115,5 +116,10 @@ public class CornerItemConstructionState extends InteractiveState {
       result = point;
     }
     return result;
+  }
+
+  @Override
+  public EditorStateKind kind() {
+    return EditorStateKind.CONSTRUCT;
   }
 }

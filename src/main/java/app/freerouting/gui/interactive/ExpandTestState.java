@@ -14,6 +14,7 @@ import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.gui.rendering.AutorouteDiagnosticRenderer;
 import app.freerouting.gui.workspace.GuiBoardManager;
+import app.freerouting.gui.workspace.session.EditorStateKind;
 import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Set;
@@ -215,5 +216,10 @@ public final class ExpandTestState extends InteractiveState {
     Collection<CompleteFreeSpaceExpansionRoom> completedRooms =
         autorouteEngine.completeExpansionRoom(incompleteRoom);
     return !completedRooms.isEmpty();
+  }
+
+  @Override
+  public EditorStateKind kind() {
+    return EditorStateKind.EXPAND;
   }
 }

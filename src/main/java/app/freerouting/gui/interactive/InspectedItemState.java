@@ -7,6 +7,7 @@ import app.freerouting.gui.rendering.BoardRenderer;
 import app.freerouting.gui.windows.board.WindowObjectInfo;
 import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.gui.workspace.progress.ClearanceViolations;
+import app.freerouting.gui.workspace.session.EditorStateKind;
 import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Set;
@@ -252,5 +253,15 @@ public final class InspectedItemState extends InteractiveState {
   @Override
   public void displayDefaultMessage() {
     hdlg.screenMessages.setStatusMessage(tm.getText("in_inspect_item_mode"));
+  }
+
+  @Override
+  public EditorStateKind kind() {
+    return EditorStateKind.INSPECT;
+  }
+
+  @Override
+  public boolean hasSelection() {
+    return true;
   }
 }

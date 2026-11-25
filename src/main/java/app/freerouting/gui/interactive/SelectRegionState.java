@@ -2,6 +2,7 @@ package app.freerouting.gui.interactive;
 
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.gui.workspace.GuiBoardManager;
+import app.freerouting.gui.workspace.session.EditorStateKind;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
@@ -111,5 +112,10 @@ public class SelectRegionState extends InteractiveState {
 
     corner2 = currentMouse;
     hdlg.graphicsContext.drawRectangle(corner1, corner2, 1, Color.white, graphics, 1);
+  }
+
+  @Override
+  public EditorStateKind kind() {
+    return EditorStateKind.CONSTRUCT;
   }
 }

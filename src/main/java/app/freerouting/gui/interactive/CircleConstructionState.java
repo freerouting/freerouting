@@ -8,6 +8,7 @@ import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.gui.workspace.GuiBoardManager;
+import app.freerouting.gui.workspace.session.EditorStateKind;
 import app.freerouting.rules.BoardRules;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -112,5 +113,10 @@ public final class CircleConstructionState extends InteractiveState {
   @Override
   public void displayDefaultMessage() {
     hdlg.screenMessages.setStatusMessage(tm.getText("creating_circle"));
+  }
+
+  @Override
+  public EditorStateKind kind() {
+    return EditorStateKind.CONSTRUCT;
   }
 }
