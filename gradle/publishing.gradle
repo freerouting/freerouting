@@ -1,11 +1,12 @@
 apply plugin: "com.vanniktech.maven.publish"
 
 // -----------------------------------------------------------------------------
-// Collect publishing information
+// Collect publishing information (loaded in build.gradle before manifest setup)
 // -----------------------------------------------------------------------------
-ext.publishInfo = [:]
-
-apply from: 'gradle/project-info.gradle'
+if (!project.ext.has('publishInfo')) {
+    ext.publishInfo = [:]
+    apply from: 'gradle/project-info.gradle'
+}
 
 // -----------------------------------------------------------------------------
 // Performs publishing
