@@ -203,12 +203,7 @@ public class GraphicsContext implements Serializable {
     if (coordinateTransform == null) {
       return;
     }
-    IntBox designBox = coordinateTransform.designBox;
-    ScreenTransform updatedTransform = new ScreenTransform(designBox, newBounds);
-    updatedTransform.setMirrorLeftRight(coordinateTransform.isMirrorLeftRight());
-    updatedTransform.setMirrorTopBottom(coordinateTransform.isMirrorTopBottom());
-    updatedTransform.setRotation(coordinateTransform.getRotation());
-    coordinateTransform = updatedTransform;
+    coordinateTransform = coordinateTransform.withPanelSize(newBounds);
   }
 
   /** Draws a polygon with the given corner points. */
@@ -870,13 +865,12 @@ public class GraphicsContext implements Serializable {
 
   /** Returns the center of the design on the screen. */
   public Point2D getDesignCenter() {
-    FloatPoint center = coordinateTransform.designBoxWithOffset.centreOfGravity();
-    return coordinateTransform.boardToScreen(center);
+    return coordinateTransform.getDesignCenterOnScreen();
   }
 
   /** Returns the bounding box of the design in screen coordinates. */
   public Rectangle getDesignBounds() {
-    return coordinateTransform.boardToScreen(coordinateTransform.designBox);
+    return coordinateTransform.getDesignBoundsOnScreen();
   }
 
   /** Returns the factor used for automatic layer dimming. */
