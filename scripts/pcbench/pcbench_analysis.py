@@ -10,7 +10,7 @@ import re
 import time
 from typing import Any
 
-DEFAULT_TIER_ORDER = ("A", "D", "C", "B")
+DEFAULT_TIER_ORDER = ("T", "D", "C", "B", "A")
 _KNOWN_TIERS = frozenset({"A", "B", "C", "D", "T"})
 CORPUS_SAVE_INTERVAL_SECONDS = 180.0
 
@@ -177,7 +177,7 @@ def should_stop_main_loop(
 def parse_tier_order(raw: str) -> list[str]:
     """Return the tier run order.
 
-    An empty value or ``All`` uses A, then D, then C, then B. A comma-separated
+    An empty value or ``All`` uses T, then D, then C, then B, then A. A comma-separated
     list runs those tiers in the given order. ``--tier C,A`` runs C before A.
     """
     tokens = [part.strip().upper() for part in (raw or "").split(",") if part.strip()]

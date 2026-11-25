@@ -176,7 +176,7 @@ def main() -> int:
     parser.add_argument(
         "--tier",
         default="All",
-        help="Tier filter and run order. Default All runs A, D, C, then B. "
+        help="Tier filter and run order. Default All runs T, D, C, B, then A. "
         "A comma-separated list runs those tiers in that order, for example C,A or T.",
     )
     parser.add_argument(
@@ -557,6 +557,7 @@ def main() -> int:
             board_reference=board_reference,
             queued_ids=queued_ids,
             completed_samples=completed_samples,
+            timeout_seconds=timeout_seconds,
         )
 
     def worker_loop(wid: int):

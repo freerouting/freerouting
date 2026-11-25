@@ -147,20 +147,33 @@ def expected_fixture_seconds(
     tier: str,
     scales: dict[str, float],
     timeout_seconds: float | None = None,
+    elapsed_seconds: float | None = None,
 ) -> float | None:
     """Seconds this fixture should take on the current build.
 
     The reference is the latest successful run of this fixture on the newest
     recorded version, or the catalog time when no such run exists. The tier
     scale is the current build's speed on boards of the same difficulty, and
-    it stays at 1 until this run has enough evidence. The product is the same
-    estimate the suite ETA uses for that board, capped at timeout_seconds when set.
+    it stays at 1 until this run has enough evidence. When ``elapsed_seconds``
+    already exceeds that estimate (or when no reference exists and the worker
+    has been running for at least 60s), the expected total is projected forward
+    identically to ``estimate_remaining_seconds``, capped at ``timeout_seconds``
+    when set.
     """
+    has_timeout = timeout_seconds is not None and timeout_seconds > 0
+    elapsed_pos = max(0.0, elapsed_seconds) if elapsed_seconds is not None else 0.0
     if reference_seconds <= 0:
-        return None
+        if elapsed_seconds is None or elapsed_pos < 60.0:
+            return None
+        projected = elapsed_pos + max(60.0, elapsed_pos * 0.25)
+        return min(projected, timeout_seconds) if has_timeout else projected
     expected = reference_seconds * scale_for(scales, tier)
-    if timeout_seconds is not None and timeout_seconds > 0:
+    if has_timeout:
         expected = min(expected, timeout_seconds)
+    if elapsed_seconds is not None and elapsed_pos > expected:
+        expected = elapsed_pos + max(60.0, elapsed_pos * 0.25)
+        if has_timeout:
+            expected = min(expected, timeout_seconds)
     return expected
 
 
@@ -340,6 +353,7 @@ def render_dashboard(
                     tier,
                     scales,
                     timeout_seconds=timeout_seconds,
+                    elapsed_seconds=run_sec,
                 )
                 progress = format_worker_progress(run_sec, expected)
                 last = info.get("last_line", "")
