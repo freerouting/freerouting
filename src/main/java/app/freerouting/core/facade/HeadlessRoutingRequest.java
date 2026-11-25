@@ -10,8 +10,9 @@ import java.util.Objects;
 /**
  * Immutable configuration request for {@link FreeroutingHeadlessEngine}.
  *
- * <p>Provides fluent configuration for in-memory board inputs (DSN content), optional rules file,
- * settings overrides, progress listener, cancellation token, and output generation options.
+ * <p>Provides fluent configuration for in-memory board inputs (DSN or KiCad JSON content), optional
+ * rules file, optional session file, settings overrides, progress listener, cancellation token, and
+ * output generation options.
  */
 public record HeadlessRoutingRequest(
     byte[] dsnBytes,
@@ -22,7 +23,34 @@ public record HeadlessRoutingRequest(
     CancellationToken cancellationToken,
     HeadlessRoutingProgressListener progressListener,
     boolean runDrc,
-    boolean computeSes) {
+    boolean computeSes,
+    byte[] sessionBytes,
+    String sessionName) {
+
+  /** Backward-compatible constructor without session input. */
+  public HeadlessRoutingRequest(
+      byte[] dsnBytes,
+      String designName,
+      byte[] rulesBytes,
+      String rulesName,
+      RouterSettings settings,
+      CancellationToken cancellationToken,
+      HeadlessRoutingProgressListener progressListener,
+      boolean runDrc,
+      boolean computeSes) {
+    this(
+        dsnBytes,
+        designName,
+        rulesBytes,
+        rulesName,
+        settings,
+        cancellationToken,
+        progressListener,
+        runDrc,
+        computeSes,
+        null,
+        null);
+  }
 
   /** Validates inputs and defensively copies byte buffers to preserve immutability. */
   public HeadlessRoutingRequest {
@@ -31,6 +59,7 @@ public record HeadlessRoutingRequest(
     }
     dsnBytes = dsnBytes.clone();
     rulesBytes = rulesBytes != null ? rulesBytes.clone() : null;
+    sessionBytes = sessionBytes != null ? sessionBytes.clone() : null;
     settings = settings != null ? settings.clone() : null;
     if (designName == null || designName.isBlank()) {
       designName = "design.dsn";
@@ -48,6 +77,11 @@ public record HeadlessRoutingRequest(
   @Override
   public byte[] rulesBytes() {
     return rulesBytes != null ? rulesBytes.clone() : null;
+  }
+
+  @Override
+  public byte[] sessionBytes() {
+    return sessionBytes != null ? sessionBytes.clone() : null;
   }
 
   @Override
@@ -69,6 +103,8 @@ public record HeadlessRoutingRequest(
         && Objects.equals(designName, that.designName)
         && Arrays.equals(rulesBytes, that.rulesBytes)
         && Objects.equals(rulesName, that.rulesName)
+        && Arrays.equals(sessionBytes, that.sessionBytes)
+        && Objects.equals(sessionName, that.sessionName)
         && Objects.equals(settings, that.settings)
         && Objects.equals(cancellationToken, that.cancellationToken)
         && Objects.equals(progressListener, that.progressListener);
@@ -80,6 +116,7 @@ public record HeadlessRoutingRequest(
         Objects.hash(
             designName,
             rulesName,
+            sessionName,
             settings,
             cancellationToken,
             progressListener,
@@ -87,6 +124,7 @@ public record HeadlessRoutingRequest(
             computeSes);
     result = 31 * result + Arrays.hashCode(dsnBytes);
     result = 31 * result + Arrays.hashCode(rulesBytes);
+    result = 31 * result + Arrays.hashCode(sessionBytes);
     return result;
   }
 
@@ -118,6 +156,8 @@ public record HeadlessRoutingRequest(
     private String designName = "design.dsn";
     private byte[] rulesBytes;
     private String rulesName;
+    private byte[] sessionBytes;
+    private String sessionName;
     private RouterSettings settings;
     private CancellationToken cancellationToken = CancellationToken.none();
     private HeadlessRoutingProgressListener progressListener;
@@ -172,6 +212,34 @@ public record HeadlessRoutingRequest(
       return this;
     }
 
+    /** Sets the optional SESSION file (SES or KiCad JSON) content as raw bytes. */
+    public Builder sessionBytes(byte[] sessionBytes) {
+      this.sessionBytes = sessionBytes;
+      return this;
+    }
+
+    /** Sets the optional SESSION file content from a UTF-8 string. */
+    public Builder sessionContent(String sessionContent) {
+      if (sessionContent != null) {
+        this.sessionBytes = sessionContent.getBytes(StandardCharsets.UTF_8);
+      }
+      return this;
+    }
+
+    /** Reads the optional SESSION file content from an input stream. */
+    public Builder sessionStream(InputStream stream) throws IOException {
+      if (stream != null) {
+        this.sessionBytes = stream.readAllBytes();
+      }
+      return this;
+    }
+
+    /** Sets the filename of the optional SESSION file. */
+    public Builder sessionName(String sessionName) {
+      this.sessionName = sessionName;
+      return this;
+    }
+
     /** Sets custom router settings overrides (applied at highest priority). */
     public Builder settings(RouterSettings settings) {
       this.settings = settings;
@@ -219,7 +287,9 @@ public record HeadlessRoutingRequest(
           cancellationToken,
           progressListener,
           runDrc,
-          computeSes);
+          computeSes,
+          sessionBytes,
+          sessionName);
     }
   }
 }
