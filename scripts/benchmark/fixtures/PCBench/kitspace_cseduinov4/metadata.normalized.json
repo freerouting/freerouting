@@ -55,7 +55,8 @@
     "golden-canary",
     "plane",
     "small",
-    "tier-a"
+    "tier-a",
+    "tier-t"
   ],
   "tier": "A",
   "expected_outcome": "complete",
@@ -68,5 +69,6 @@
     "quality_score": 1000.0
   },
   "tier_index": 202,
-  "reference_seconds": 19.1
+  "reference_seconds": 19.1,
+  "tier_t": true
 }

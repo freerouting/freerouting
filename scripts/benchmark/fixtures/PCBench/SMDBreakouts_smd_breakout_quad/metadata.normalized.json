@@ -49,7 +49,8 @@
     "canary",
     "golden-canary",
     "small",
-    "tier-a"
+    "tier-a",
+    "tier-t"
   ],
   "tier": "A",
   "expected_outcome": "complete",
@@ -62,5 +63,6 @@
     "quality_score": 1000.0
   },
   "tier_index": 307,
-  "reference_seconds": 42.7
+  "reference_seconds": 42.7,
+  "tier_t": true
 }

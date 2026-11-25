@@ -348,6 +348,23 @@ class BenchmarkStoreTest(unittest.TestCase):
         self.assertEqual(store.expected_fixture_seconds(100, "C", {"": 1.0}), 100.0)
         self.assertEqual(store.expected_fixture_seconds(100, "C", {"": 1.0, "C": 2.0}), 200.0)
         self.assertIsNone(store.expected_fixture_seconds(0, "C", {"": 1.0}))
+        # Overrunning reference projects forward dynamically on each UI update, capped at timeout
+        self.assertEqual(store.expected_fixture_seconds(100, "C", {"": 1.0}, elapsed_seconds=400), 500.0)
+        self.assertEqual(
+            store.expected_fixture_seconds(100, "C", {"": 1.0}, timeout_seconds=450, elapsed_seconds=400),
+            450.0,
+        )
+        # Unreferenced boards stay None below 60s, then project forward
+        self.assertIsNone(store.expected_fixture_seconds(0, "C", {"": 1.0}, elapsed_seconds=30))
+        self.assertEqual(store.expected_fixture_seconds(0, "C", {"": 1.0}, elapsed_seconds=400), 500.0)
+
+    def test_default_tier_order_is_t_d_c_b_a(self) -> None:
+        self.assertEqual(store.DEFAULT_TIER_ORDER, ("T", "D", "C", "B", "A"))
+        self.assertEqual(store.parse_tier_order(""), ["T", "D", "C", "B", "A"])
+        self.assertEqual(store.parse_tier_order("All"), ["T", "D", "C", "B", "A"])
+        self.assertEqual(store.parse_tier_order("C,A"), ["C", "A"])
+
+    def test_worker_clock_shows_expected_completion_in_dashboard(self) -> None:
 
         import collections
         import io

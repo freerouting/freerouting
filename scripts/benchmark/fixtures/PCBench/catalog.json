@@ -180,13 +180,15 @@
         "plane",
         "routine",
         "small",
-        "tier-b"
+        "tier-b",
+        "tier-t"
       ],
       "tier": "B",
       "expected_outcome": "complete",
       "timeout_budget": "06:00:00",
       "tier_index": 259,
-      "reference_seconds": 160.9
+      "reference_seconds": 160.9,
+      "tier_t": true
     },
     {
       "board_id": "2d_conduction_sk9822-matrix",
@@ -488,13 +490,15 @@
         "2-layer",
         "complex",
         "medium",
-        "tier-c"
+        "tier-c",
+        "tier-t"
       ],
       "tier": "C",
       "expected_outcome": "partial",
       "timeout_budget": "06:00:00",
       "tier_index": 126,
-      "reference_seconds": 358.7
+      "reference_seconds": 358.7,
+      "tier_t": true
     },
     {
       "board_id": "655_testboard",
@@ -1376,14 +1380,16 @@
         "canary",
         "golden-canary",
         "small",
-        "zone",
-        "tier-a"
+        "tier-a",
+        "tier-t",
+        "zone"
       ],
       "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "06:00:00",
       "tier_index": 443,
-      "reference_seconds": 31.8
+      "reference_seconds": 31.8,
+      "tier_t": true
     },
     {
       "board_id": "akuhei_akuhei",
@@ -5196,13 +5202,15 @@
         "golden-canary",
         "plane",
         "small",
-        "tier-a"
+        "tier-a",
+        "tier-t"
       ],
       "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "06:00:00",
       "tier_index": 75,
-      "reference_seconds": 136.2
+      "reference_seconds": 136.2,
+      "tier_t": true
     },
     {
       "board_id": "beer-gauge_beer-gauge",
@@ -6531,13 +6539,15 @@
         "2-layer",
         "routine",
         "small",
-        "tier-b"
+        "tier-b",
+        "tier-t"
       ],
       "tier": "B",
       "expected_outcome": "complete",
       "timeout_budget": "06:00:00",
       "tier_index": 53,
-      "reference_seconds": 944.6
+      "reference_seconds": 944.6,
+      "tier_t": true
     },
     {
       "board_id": "blinky-badge_blinky",
@@ -7764,13 +7774,15 @@
         "plane",
         "routine",
         "small",
-        "tier-b"
+        "tier-b",
+        "tier-t"
       ],
       "tier": "B",
       "expected_outcome": "complete",
       "timeout_budget": "06:00:00",
       "tier_index": 526,
-      "reference_seconds": 37.9
+      "reference_seconds": 37.9,
+      "tier_t": true
     },
     {
       "board_id": "bpnode-bb_BPnode-BB",
@@ -13009,13 +13021,15 @@
         "plane",
         "routine",
         "small",
-        "tier-b"
+        "tier-b",
+        "tier-t"
       ],
       "tier": "B",
       "expected_outcome": "complete",
       "timeout_budget": "06:00:00",
       "tier_index": 425,
-      "reference_seconds": 65.6
+      "reference_seconds": 65.6,
+      "tier_t": true
     },
     {
       "board_id": "DIYDAC_DIYDAC",
@@ -21913,7 +21927,8 @@
         "2-layer",
         "plane",
         "small",
-        "tier-b"
+        "tier-b",
+        "tier-t"
       ],
       "tier": "B",
       "expected_outcome": "baseline_violations",
@@ -21926,7 +21941,8 @@
         "quality_score": 939.62
       },
       "tier_index": 429,
-      "reference_seconds": 65.1
+      "reference_seconds": 65.1,
+      "tier_t": true
     },
     {
       "board_id": "hardware-designs_spsgrf-board",
@@ -28060,13 +28076,15 @@
         "2-layer",
         "extreme-stress",
         "plane",
-        "tier-c"
+        "tier-c",
+        "tier-t"
       ],
       "tier": "C",
       "expected_outcome": "partial",
       "timeout_budget": "06:00:00",
       "tier_index": 128,
-      "reference_seconds": 367.0
+      "reference_seconds": 367.0,
+      "tier_t": true
     },
     {
       "board_id": "Keyboard_tenkey",
@@ -30301,7 +30319,8 @@
         "2-layer",
         "plane",
         "small",
-        "tier-b"
+        "tier-b",
+        "tier-t"
       ],
       "tier": "B",
       "expected_outcome": "baseline_violations",
@@ -30314,7 +30333,8 @@
         "quality_score": 759.26
       },
       "tier_index": 437,
-      "reference_seconds": 63.0
+      "reference_seconds": 63.0,
+      "tier_t": true
     },
     {
       "board_id": "kitspace_Brk40p",
@@ -30828,7 +30848,8 @@
         "golden-canary",
         "plane",
         "small",
-        "tier-a"
+        "tier-a",
+        "tier-t"
       ],
       "tier": "A",
       "expected_outcome": "complete",
@@ -30841,7 +30862,8 @@
         "quality_score": 1000.0
       },
       "tier_index": 202,
-      "reference_seconds": 19.1
+      "reference_seconds": 19.1,
+      "tier_t": true
     },
     {
       "board_id": "kitspace_d20_r0.1",
@@ -35806,7 +35828,8 @@
         "2-layer",
         "plane",
         "small",
-        "tier-b"
+        "tier-b",
+        "tier-t"
       ],
       "tier": "B",
       "expected_outcome": "baseline_violations",
@@ -35819,7 +35842,8 @@
         "quality_score": 767.44
       },
       "tier_index": 439,
-      "reference_seconds": 60.4
+      "reference_seconds": 60.4,
+      "tier_t": true
     },
     {
       "board_id": "kitspace_training_board_v02",
@@ -42534,13 +42558,15 @@
         "complex",
         "medium",
         "plane",
-        "tier-c"
+        "tier-c",
+        "tier-t"
       ],
       "tier": "C",
       "expected_outcome": "partial",
       "timeout_budget": "06:00:00",
       "tier_index": 67,
-      "reference_seconds": 2198.9
+      "reference_seconds": 2198.9,
+      "tier_t": true
     },
     {
       "board_id": "Microdox-PCB_Microdox-LEDs",
@@ -45143,13 +45169,15 @@
         "plane",
         "routine",
         "small",
-        "tier-b"
+        "tier-b",
+        "tier-t"
       ],
       "tier": "B",
       "expected_outcome": "complete",
       "timeout_budget": "06:00:00",
       "tier_index": 179,
-      "reference_seconds": 343.4
+      "reference_seconds": 343.4,
+      "tier_t": true
     },
     {
       "board_id": "MySensorsNode_LE-BOX-0028",
@@ -47318,13 +47346,15 @@
         "plane",
         "routine",
         "small",
-        "tier-b"
+        "tier-b",
+        "tier-t"
       ],
       "tier": "B",
       "expected_outcome": "complete",
       "timeout_budget": "06:00:00",
       "tier_index": 452,
-      "reference_seconds": 30.1
+      "reference_seconds": 30.1,
+      "tier_t": true
     },
     {
       "board_id": "nrf52-kicad_nrf51x22_qfax_dcdc",
@@ -47385,13 +47415,15 @@
         "plane",
         "routine",
         "small",
-        "tier-b"
+        "tier-b",
+        "tier-t"
       ],
       "tier": "B",
       "expected_outcome": "complete",
       "timeout_budget": "06:00:00",
       "tier_index": 283,
-      "reference_seconds": 141.4
+      "reference_seconds": 141.4,
+      "tier_t": true
     },
     {
       "board_id": "nunchuk_rf_hw_NunchukRF_V3",
@@ -49282,13 +49314,15 @@
         "plane",
         "routine",
         "small",
-        "tier-b"
+        "tier-b",
+        "tier-t"
       ],
       "tier": "B",
       "expected_outcome": "complete",
       "timeout_budget": "06:00:00",
       "tier_index": 329,
-      "reference_seconds": 109.7
+      "reference_seconds": 109.7,
+      "tier_t": true
     },
     {
       "board_id": "ourglass__autosave-watch-v4",
@@ -49689,13 +49723,15 @@
         "complex",
         "medium",
         "plane",
-        "tier-c"
+        "tier-c",
+        "tier-t"
       ],
       "tier": "C",
       "expected_outcome": "partial",
       "timeout_budget": "06:00:00",
       "tier_index": 119,
-      "reference_seconds": 844.4
+      "reference_seconds": 844.4,
+      "tier_t": true
     },
     {
       "board_id": "Own-Mailbox-Hardware_pierre",
@@ -54712,13 +54748,15 @@
         "plane",
         "routine",
         "small",
-        "tier-b"
+        "tier-b",
+        "tier-t"
       ],
       "tier": "B",
       "expected_outcome": "complete",
       "timeout_budget": "06:00:00",
       "tier_index": 185,
-      "reference_seconds": 323.4
+      "reference_seconds": 323.4,
+      "tier_t": true
     },
     {
       "board_id": "Radio-FM-TEA5767_radio tea5767",
@@ -56522,7 +56560,8 @@
       "tags": [
         "2-layer",
         "small",
-        "tier-b"
+        "tier-b",
+        "tier-t"
       ],
       "tier": "B",
       "expected_outcome": "baseline_violations",
@@ -56535,7 +56574,8 @@
         "quality_score": 60.0
       },
       "tier_index": 58,
-      "reference_seconds": 6.1
+      "reference_seconds": 6.1,
+      "tier_t": true
     },
     {
       "board_id": "retroreflectors_FLAMENCOFLOCK",
@@ -61680,7 +61720,8 @@
         "canary",
         "golden-canary",
         "small",
-        "tier-a"
+        "tier-a",
+        "tier-t"
       ],
       "tier": "A",
       "expected_outcome": "complete",
@@ -61693,7 +61734,8 @@
         "quality_score": 1000.0
       },
       "tier_index": 307,
-      "reference_seconds": 42.7
+      "reference_seconds": 42.7,
+      "tier_t": true
     },
     {
       "board_id": "sms-cart-32k_cart",
@@ -61812,13 +61854,15 @@
         "plane",
         "routine",
         "small",
-        "tier-b"
+        "tier-b",
+        "tier-t"
       ],
       "tier": "B",
       "expected_outcome": "complete",
       "timeout_budget": "06:00:00",
       "tier_index": 246,
-      "reference_seconds": 13.9
+      "reference_seconds": 13.9,
+      "tier_t": true
     },
     {
       "board_id": "smt-zvs-driver_IH10-mc",
@@ -68566,14 +68610,16 @@
         "canary",
         "golden-canary",
         "small",
-        "zone",
-        "tier-a"
+        "tier-a",
+        "tier-t",
+        "zone"
       ],
       "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "06:00:00",
       "tier_index": 189,
-      "reference_seconds": 61.1
+      "reference_seconds": 61.1,
+      "tier_t": true
     },
     {
       "board_id": "uext-esp32_UEXT_ESP32",
@@ -72577,6 +72623,6 @@
       "elapsed_seconds": 1465.2,
       "calibrated_at": "2026-08-18T20:56:33.174334+00:00"
     },
-    "tier_t_canary": 22
+    "tier_t_canary": 45
   }
 }

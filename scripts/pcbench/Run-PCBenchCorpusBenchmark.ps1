@@ -8,7 +8,7 @@
     writes records to benchmarks.json, and regenerates Markdown & HTML summaries.
 
 .PARAMETER Tier
-    Filter by tier. Default "All" runs A, then D, then C, then B.
+    Filter by tier. Default "All" runs T, then D, then C, then B, then A.
     A comma-separated list keeps that order, for example "C,A".
 
 .PARAMETER Workers
