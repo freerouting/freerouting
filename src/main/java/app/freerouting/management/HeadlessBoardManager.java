@@ -126,6 +126,13 @@ public class HeadlessBoardManager implements BoardManager {
   private boolean edgeClearanceAppliedByOverride;
 
   /**
+   * Maps each derived hole clearance class index created by {@link
+   * #assignHoleKeepoutClearanceClass(int)} on the current board to the source clearance class index
+   * it was derived from. Cleared whenever a new board is created.
+   */
+  private final Map<Integer, Integer> derivedHoleClearanceSources = new LinkedHashMap<>();
+
+  /**
    * Listener for autorouter thread events during automated routing operations.
    *
    * <p>Receives notifications about:
@@ -381,6 +388,7 @@ public class HeadlessBoardManager implements BoardManager {
             rules,
             boardCommunication);
     this.edgeClearanceAppliedByOverride = false;
+    this.derivedHoleClearanceSources.clear();
     applyCopperToEdgeClearanceOverride();
     applyHoleClearanceOverride();
     applyHoleToHole();
@@ -813,20 +821,36 @@ public class HeadlessBoardManager implements BoardManager {
       int target;
       if (current == holeEdgeClassNo || current <= 0 || current == defaultAreaClassNo) {
         target = holeEdgeClassNo;
-      } else if (matrix.getName(current).endsWith(HOLE_CLASS_SUFFIX)) {
+      } else if (derivedHoleClearanceSources.containsKey(current)) {
         target = current;
-        String base = matrix.getName(current);
-        int source = matrix.getNo(base.substring(0, base.length() - HOLE_CLASS_SUFFIX.length()));
-        sourceOfHoleClass.putIfAbsent(current, source > 0 ? source : current);
+        sourceOfHoleClass.putIfAbsent(current, derivedHoleClearanceSources.get(current));
       } else {
-        String name = matrix.getName(current) + HOLE_CLASS_SUFFIX;
-        matrix.appendClass(name);
-        target = matrix.getNo(name);
-        if (target < 0) {
-          FRLogger.warn("Unable to create the " + name + " clearance class: keepout left as is.");
-          continue;
+        Integer existingDerived = findDerivedHoleClassForSource(current);
+        if (existingDerived != null) {
+          target = existingDerived;
+          sourceOfHoleClass.putIfAbsent(target, current);
+        } else {
+          String currentName = matrix.getName(current);
+          if (currentName == null) {
+            target = holeEdgeClassNo;
+          } else {
+            String baseName = currentName + HOLE_CLASS_SUFFIX;
+            String name = baseName;
+            int disambiguator = 2;
+            while (matrix.getNo(name) >= 0) {
+              name = baseName + "_" + disambiguator++;
+            }
+            matrix.appendClass(name);
+            target = matrix.getNo(name);
+            if (target < 0) {
+              FRLogger.warn(
+                  "Unable to create the " + name + " clearance class: keepout left as is.");
+              continue;
+            }
+            derivedHoleClearanceSources.put(target, current);
+            sourceOfHoleClass.putIfAbsent(target, current);
+          }
         }
-        sourceOfHoleClass.putIfAbsent(target, current);
       }
       targetOfKeepout.put(keepout, target);
     }
@@ -856,6 +880,15 @@ public class HeadlessBoardManager implements BoardManager {
       }
     }
     return reclassified;
+  }
+
+  private Integer findDerivedHoleClassForSource(int sourceClassNo) {
+    for (Map.Entry<Integer, Integer> entry : derivedHoleClearanceSources.entrySet()) {
+      if (entry.getValue() == sourceClassNo) {
+        return entry.getKey();
+      }
+    }
+    return null;
   }
 
   private void applyCopperToEdgeClearanceOverride() {
