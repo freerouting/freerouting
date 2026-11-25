@@ -69,6 +69,28 @@ public class ScreenTransform implements Serializable {
     this.rotation = coordinateTransform.rotation;
   }
 
+  /**
+   * Returns a transform for the same design shown in a panel of size {@code panelBounds}. The
+   * current mirroring and rotation are kept.
+   */
+  public ScreenTransform withPanelSize(Dimension panelBounds) {
+    ScreenTransform resized = new ScreenTransform(designBox, panelBounds);
+    resized.mirrorLeftRight = this.mirrorLeftRight;
+    resized.mirrorTopBottom = this.mirrorTopBottom;
+    resized.rotation = this.rotation;
+    return resized;
+  }
+
+  /** Returns the center of the design in screen coordinates. */
+  public Point2D getDesignCenterOnScreen() {
+    return boardToScreen(designBoxWithOffset.centreOfGravity());
+  }
+
+  /** Returns the bounding box of the design in screen coordinates. */
+  public Rectangle getDesignBoundsOnScreen() {
+    return boardToScreen(designBox);
+  }
+
   /** Scales a value from the board to the screen coordinate system. */
   public double boardToScreen(double val) {
     return val * scaleFactor;
