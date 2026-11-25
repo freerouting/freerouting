@@ -61,11 +61,13 @@
     "complex",
     "medium",
     "plane",
-    "tier-c"
+    "tier-c",
+    "tier-t"
   ],
   "tier": "C",
   "expected_outcome": "partial",
   "timeout_budget": "06:00:00",
   "tier_index": 119,
-  "reference_seconds": 844.4
+  "reference_seconds": 844.4,
+  "tier_t": true
 }

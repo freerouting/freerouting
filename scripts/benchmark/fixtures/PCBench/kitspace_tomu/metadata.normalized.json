@@ -51,7 +51,8 @@
     "2-layer",
     "plane",
     "small",
-    "tier-b"
+    "tier-b",
+    "tier-t"
   ],
   "tier": "B",
   "expected_outcome": "baseline_violations",
@@ -64,5 +65,6 @@
     "quality_score": 767.44
   },
   "tier_index": 439,
-  "reference_seconds": 60.4
+  "reference_seconds": 60.4,
+  "tier_t": true
 }
