@@ -258,6 +258,10 @@ def buildRevision = providers.environmentVariable('BUILD_REVISION')
             commandLine('git', 'rev-parse', 'HEAD')
         }.standardOutput.asText.map { it.trim() })
 
+ext.publishInfo = [:]
+apply from: 'gradle/project-info.gradle'
+version = publishInfo.versionId
+
 def manifestAttributes = [
         'Automatic-Module-Name' : 'app.freerouting',
         'Built-By'              : System.properties['user.name'],
@@ -279,6 +283,7 @@ jar {
 
 tasks.register('executableJar', Jar) {
     archiveBaseName = 'freerouting-current'
+    archiveVersion = ''
     archiveClassifier = 'executable'
 
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
