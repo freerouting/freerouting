@@ -25,17 +25,22 @@ import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.geometry.planar.RationalPoint;
 import app.freerouting.geometry.planar.TileShape;
+import app.freerouting.io.specctra.SesReader;
 import app.freerouting.io.specctra.SesWriter;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.ClearanceMatrix;
 import app.freerouting.rules.ViaRule;
 import app.freerouting.settings.GlobalSettings;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 /**
  * Regression and validation tests for issues #958 and #959:
@@ -361,39 +366,51 @@ public class PreservedTraceJunctionTest {
    * Verifies that preserved trace geometry is preserved completely without being split into
    * multiple wire statements when exported to Specctra SES format.
    */
-  @Test
-  void testPreservedTraceIntegrityOnSesExport() throws Exception {
-    Point pA = new IntPoint(0, 0);
-    Point pB = new IntPoint(20000, 0);
+  @ParameterizedTest
+  @CsvSource({"USER_FIXED,false", "USER_FIXED,true", "SYSTEM_FIXED,false", "SYSTEM_FIXED,true"})
+  void testPreservedTraceIntegrityOnSesExport(FixedState state, boolean bent) throws Exception {
+    Point start = new IntPoint(0, 0);
+    Point end = new IntPoint(20000, 0);
+    Point[] trunkPoints =
+        bent ? new Point[] {start, end, new IntPoint(20000, 10000)} : new Point[] {start, end};
+    Point[] branchPoints = {new IntPoint(10000, 10000), new IntPoint(10000, 0)};
+    PolylineTrace trunk =
+        board.insertTraceWithoutCleaning(
+            new Polyline(trunkPoints), 1, 500, new int[] {1}, 1, state);
     board.insertTraceWithoutCleaning(
-        new Polyline(pA, pB), 0, 500, new int[] {1}, 1, FixedState.USER_FIXED);
-
-    Point pC = new IntPoint(10000, 10000);
-    Point pJ = new IntPoint(10000, 0);
-    board.insertTraceWithoutCleaning(
-        new Polyline(pC, pJ), 0, 500, new int[] {1}, 1, FixedState.UNFIXED);
-
+        new Polyline(branchPoints), 1, 200, new int[] {1}, 1, FixedState.UNFIXED);
     board.normalizeTraces(1);
+    assertTrue(trunk.isOnTheBoard());
+    assertEquals(state, trunk.getFixedState());
+    assertEquals(List.of(trunkPoints), List.of(trunk.polyline().corners()));
 
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     SesWriter.write(board, out, "testDesign.dsn");
-    String sesContent = out.toString(StandardCharsets.UTF_8);
-
-    // Verify SES contains route wires
-    assertTrue(sesContent.contains("(wire"), "SES output must contain wire definitions");
-
-    // Verify trunk is written as a single wire from 0 to 20000 (scaled)
-    // Scale factor: dsnToBoard(1) / resolution. With defaults, coordinates match.
-    // Confirm there are exactly 2 wires exported for Net1 (trunk + branch), not 3 (split trunk +
-    // branch)
-    int wireCount = 0;
-    int index = 0;
-    while ((index = sesContent.indexOf("(wire", index)) != -1) {
-      wireCount++;
-      index += 5;
-    }
     assertEquals(
-        2, wireCount, "Exactly 2 wires should be exported; preserved trunk must not be split");
+        state == FixedState.USER_FIXED,
+        out.toString(java.nio.charset.StandardCharsets.UTF_8).contains("(type protect)"));
+    RoutingBoard target = createTestBoard();
+    var summary = SesReader.read(new ByteArrayInputStream(out.toByteArray()), target);
+    assertEquals(0, summary.errorsEncountered());
+    int expectedCount = state == FixedState.USER_FIXED ? 2 : 1;
+    assertEquals(expectedCount, summary.wiresImported());
+    var traces =
+        target.getItems().stream()
+            .filter(PolylineTrace.class::isInstance)
+            .map(PolylineTrace.class::cast)
+            .toList();
+    assertEquals(expectedCount, traces.size());
+    for (int i = 0; i < expectedCount; i++) {
+      Point[] expected = i == 0 ? branchPoints : trunkPoints;
+      var trace =
+          traces.stream()
+              .filter(t -> Arrays.equals(expected, t.polyline().corners()))
+              .findFirst()
+              .orElseThrow();
+      assertEquals(i == 0 ? 200 : 500, trace.getHalfWidth());
+      assertEquals(1, trace.getLayer());
+      assertEquals(1, trace.getNetNumber(0));
+    }
   }
 
   /**

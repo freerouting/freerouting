@@ -135,7 +135,7 @@ class TraceJunctionSmoothingTest {
 
   @ParameterizedTest
   @CsvSource({"FORTYFIVE_DEGREE, false", "FORTYFIVE_DEGREE, true", "NONE, false", "NONE, true"})
-  void interiorContactVetoesSmoothingEvenWithAnEndpointContact(
+  void bentTrunkInteriorContactDeclinesMixedJunctionSmoothing(
       AngleRestriction restriction, boolean endpointInsertedFirst) {
     board.rules.setTraceAngleRestriction(restriction);
     Point junction = new IntPoint(30000, 10000);
@@ -161,9 +161,36 @@ class TraceJunctionSmoothingTest {
         insertTrace(List.of(junction, new IntPoint(20000, 0)), false, 1, FixedState.UNFIXED);
     final List<Point> original = corners(branch);
     assertEquals(2, branch.getStartContacts().size());
-    assertFalse(branch.smoothenEndCornersFork(true, 100, null));
+    assertFalse(
+        branch.smoothenEndCornersFork(true, 100, null),
+        "Smoothing must decline the interior junction on this bent trunk");
     assertEquals(original, corners(branch));
     assertTrue(branch.getNormalContacts().contains(trunk));
+    assertEquals(1, board.getConnectedSets(1).size());
+    assertEquals(0, new DesignRulesChecker(board, null).getAllClearanceViolations().size());
+  }
+
+  @ParameterizedTest
+  @CsvSource({"true", "false"})
+  void straightTrunkAllowsBranchEndSmoothing(boolean endpointFirst) {
+    board.rules.setTraceAngleRestriction(AngleRestriction.NONE);
+    Point junction = new IntPoint(30000, 10000);
+    List<Point> endpoint = List.of(junction, new IntPoint(30000, 0), new IntPoint(40000, 0));
+    List<Point> trunk = List.of(new IntPoint(10000, 10000), new IntPoint(40000, 10000));
+    insertTrace(endpointFirst ? endpoint : trunk, false, 1, FixedState.UNFIXED);
+    insertTrace(endpointFirst ? trunk : endpoint, false, 1, FixedState.UNFIXED);
+    Point start = new IntPoint(20000, 0);
+    PolylineTrace branch = insertTrace(List.of(start, junction), false, 1, FixedState.UNFIXED);
+    assertTrue(branch.smoothenEndCornersFork(true, 100, null));
+    for (Point terminal : List.of(start, trunk.getFirst(), trunk.getLast(), endpoint.getLast())) {
+      assertTrue(
+          board.getItems().stream()
+              .anyMatch(
+                  item ->
+                      item instanceof PolylineTrace trace
+                          && trace.containsNet(1)
+                          && trace.contains(terminal)));
+    }
     assertEquals(1, board.getConnectedSets(1).size());
     assertEquals(0, new DesignRulesChecker(board, null).getAllClearanceViolations().size());
   }
