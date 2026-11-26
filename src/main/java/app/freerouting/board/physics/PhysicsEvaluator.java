@@ -1,18 +1,21 @@
 package app.freerouting.board.physics;
 
 import app.freerouting.board.facade.BasicBoard;
+import app.freerouting.board.searchtree.ShapeSearchTree;
+import app.freerouting.datastructures.ShapeTree.TreeEntry;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Stateless, read-only scalar energy oracle aggregating active {@link PhysicsRule} instances.
- *
- * <p>Future routing or optimization code can query local or full-board physical energy through this
- * facade without coupling to specific field equations.
+ * Unified read-only scalar energy oracle aggregating Tier 1 ({@link PhysicsRule} / {@link
+ * BoardFieldContext}) and Tier 2 ({@link NearFieldEnergyRule} / {@link ShapeSearchTree}) rules.
  */
 public final class PhysicsEvaluator {
 
   private final PhysicsRule[] rules;
   private final double[] weights;
+  private final List<TreeEntry> scratchEntries = new ArrayList<>(64);
+  private final int[] scratchIgnoreNet = new int[1];
 
   /** Creates an evaluator with the supplied rules and per-rule scalar weights. */
   public PhysicsEvaluator(List<PhysicsRule> rules, double[] weights) {
@@ -34,7 +37,55 @@ public final class PhysicsEvaluator {
     return new PhysicsEvaluator(List.of(IdentityPhysicsRule.INSTANCE), new double[] {weight});
   }
 
-  /** Evaluates weighted local energy for a copper segment. */
+  /**
+   * Evaluates weighted local energy for a copper segment using Tier 2 exact near-field when
+   * available.
+   */
+  public double evaluateLocalSegment(
+      BasicBoard board,
+      ShapeSearchTree tree,
+      BoardFieldContext context,
+      int layer,
+      int netNo,
+      int halfWidth,
+      double x1,
+      double y1,
+      double x2,
+      double y2,
+      double cutoffUnits) {
+    double total = 0.0;
+    for (int i = 0; i < this.rules.length; i++) {
+      double w = this.weights[i];
+      if (w == 0.0) {
+        continue;
+      }
+      double energy;
+      if (this.rules[i] instanceof NearFieldEnergyRule nearField && tree != null) {
+        energy =
+            nearField.evaluateSegment(
+                board,
+                tree,
+                this.scratchEntries,
+                this.scratchIgnoreNet,
+                layer,
+                netNo,
+                halfWidth,
+                x1,
+                y1,
+                x2,
+                y2,
+                cutoffUnits);
+      } else {
+        energy = this.rules[i].evaluateSegment(context, layer, netNo, halfWidth, x1, y1, x2, y2);
+      }
+      if (Double.isFinite(energy) && energy > 0.0) {
+        total += w * energy;
+      }
+    }
+    return total;
+  }
+
+  /** Evaluates weighted local energy for a copper segment against Tier 1 field context only. */
   public double evaluateLocalSegment(
       BoardFieldContext context,
       int layer,
@@ -44,19 +95,7 @@ public final class PhysicsEvaluator {
       double y1,
       double x2,
       double y2) {
-    double total = 0.0;
-    for (int i = 0; i < this.rules.length; i++) {
-      double w = this.weights[i];
-      if (w == 0.0) {
-        continue;
-      }
-      double energy =
-          this.rules[i].evaluateSegment(context, layer, netNo, halfWidth, x1, y1, x2, y2);
-      if (Double.isFinite(energy) && energy > 0.0) {
-        total += w * energy;
-      }
-    }
-    return total;
+    return evaluateLocalSegment(null, null, context, layer, netNo, halfWidth, x1, y1, x2, y2, 0.0);
   }
 
   /** Evaluates weighted local energy at a vertex neighborhood. */

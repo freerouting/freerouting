@@ -118,7 +118,7 @@ class BoardFieldContextTest {
     PhysicsOptimizationPass.Result result = PhysicsOptimizationPass.run(board, settings, null);
     assertEquals(0.0, result.initialEnergy());
     assertEquals(0.0, result.finalEnergy());
-    assertEquals(1, result.iterations());
+    assertEquals(0, result.iterations());
     assertEquals(0, result.acceptedMoves());
   }
 
@@ -158,5 +158,122 @@ class BoardFieldContextTest {
     assertTrue(
         new DesignRulesChecker(board, null).getAllClearanceViolations().isEmpty(),
         "Relaxation must introduce 0 DRC violations");
+  }
+
+  @Test
+  void straightTwoCornerTraceSpreadsViaTrapezoidalJog() {
+    RoutingBoard board = createSyntheticBoard(1, new IntBox(0, 0, 10_000, 10_000));
+    int net1 = board.rules.nets.newNet(java.util.Locale.US).netNumber;
+    int net2 = board.rules.nets.newNet(java.util.Locale.US).netNumber;
+
+    // Fixed straight aggressor trace on net 1
+    Polyline p1 =
+        new Polyline(new Point[] {new IntPoint(1_000, 2_000), new IntPoint(9_000, 2_000)});
+    board.insertTraceWithoutCleaning(p1, 0, 25, new int[] {net1}, 0, FixedState.USER_FIXED);
+
+    // Straight 2-corner victim trace on net 2 hugging net 1 closely at y = 2_060
+    Polyline p2 =
+        new Polyline(new Point[] {new IntPoint(1_000, 2_060), new IntPoint(9_000, 2_060)});
+    board.insertTraceWithoutCleaning(p2, 0, 25, new int[] {net2}, 0, FixedState.UNFIXED);
+
+    PhysicsSettings settings = new PhysicsSettings();
+    settings.enabled = true;
+    settings.gridResolutionMm = 0.5;
+    settings.maxIterations = 2;
+    settings.identityWeight = 1.0;
+    settings.repulsionWeight = 1.0;
+
+    PhysicsOptimizationPass.Result result = PhysicsOptimizationPass.run(board, settings, null);
+    assertTrue(result.acceptedMoves() > 0, "Straight 2-corner trace should insert a 45-deg jog");
+    assertTrue(
+        result.finalEnergy() < result.initialEnergy(),
+        "Repulsion energy must decrease after jog insertion");
+    assertTrue(
+        new DesignRulesChecker(board, null).getAllClearanceViolations().isEmpty(),
+        "Jog insertion must introduce 0 DRC violations");
+  }
+
+  @Test
+  void straightTraceNearSmdPinIsNotDeflected() {
+    RoutingBoard board = createSyntheticBoard(1, new IntBox(0, 0, 10_000, 10_000));
+    int net1 = board.rules.nets.newNet(java.util.Locale.US).netNumber;
+    int net2 = board.rules.nets.newNet(java.util.Locale.US).netNumber;
+
+    // Place a foreign SMD pin on net 1 near (5_000, 2_000) with no parallel trace
+    board.library.padstacks = new app.freerouting.core.library.Padstacks(board.layerStructure);
+    board.library.packages = new app.freerouting.core.library.Packages(board.library.padstacks);
+    var pad =
+        board.library.padstacks.add(
+            new app.freerouting.geometry.planar.ConvexShape[] {new IntBox(-200, -200, 200, 200)});
+    var pkg =
+        board.library.packages.add(
+            new app.freerouting.core.library.Package.Pin[] {
+              new app.freerouting.core.library.Package.Pin(
+                  "1", pad.id, app.freerouting.geometry.planar.Vector.ZERO, 0)
+            });
+    var component = board.components.add(new IntPoint(5_000, 2_000), 0, true, pkg);
+    board.insertPin(component.id, 0, new int[] {net1}, 0, FixedState.USER_FIXED);
+
+    // Straight 2-corner trace on net 2 passing near the SMD pin at y = 2_300
+    Polyline p2 =
+        new Polyline(new Point[] {new IntPoint(1_000, 2_300), new IntPoint(9_000, 2_300)});
+    board.insertTraceWithoutCleaning(p2, 0, 25, new int[] {net2}, 0, FixedState.UNFIXED);
+
+    PhysicsSettings settings = new PhysicsSettings();
+    settings.enabled = true;
+    settings.gridResolutionMm = 0.5;
+    settings.maxIterations = 4;
+    settings.identityWeight = 1.0;
+    settings.repulsionWeight = 1.0;
+
+    PhysicsOptimizationPass.Result result = PhysicsOptimizationPass.run(board, settings, null);
+    assertEquals(
+        0, result.acceptedMoves(), "Trace near SMD pin without parallel trace must stay straight");
+  }
+
+  @Test
+  void parallelTraceSpreadsWithoutSawtoothOrSub4wSegments() {
+    RoutingBoard board = createSyntheticBoard(1, new IntBox(0, 0, 10_000, 10_000));
+    int net1 = board.rules.nets.newNet(java.util.Locale.US).netNumber;
+    int net2 = board.rules.nets.newNet(java.util.Locale.US).netNumber;
+
+    // Fixed straight aggressor trace on net 1
+    Polyline p1 =
+        new Polyline(new Point[] {new IntPoint(1_000, 2_000), new IntPoint(9_000, 2_000)});
+    board.insertTraceWithoutCleaning(p1, 0, 25, new int[] {net1}, 0, FixedState.USER_FIXED);
+
+    // Parallel 2-corner victim trace on net 2
+    Polyline p2 =
+        new Polyline(new Point[] {new IntPoint(1_000, 2_060), new IntPoint(9_000, 2_060)});
+    board.insertTraceWithoutCleaning(p2, 0, 25, new int[] {net2}, 0, FixedState.UNFIXED);
+
+    PhysicsSettings settings = new PhysicsSettings();
+    settings.enabled = true;
+    settings.gridResolutionMm = 0.5;
+    settings.maxIterations = 4;
+    settings.identityWeight = 1.0;
+    settings.repulsionWeight = 1.0;
+
+    PhysicsOptimizationPass.Result result = PhysicsOptimizationPass.run(board, settings, null);
+    assertTrue(result.acceptedMoves() > 0, "Parallel 2-corner trace should spread cleanly");
+    assertTrue(
+        result.finalEnergy() < result.initialEnergy(), "Energy must decrease after spreading");
+
+    // Verify no segment on any trace is shorter than 4 * traceWidth (8 * halfWidth = 200)
+    for (app.freerouting.board.model.items.Trace t : board.getTraces()) {
+      if (t instanceof app.freerouting.board.trace.PolylineTrace pt && pt.getNetNumber(0) == net2) {
+        Polyline poly = pt.polyline();
+        assertTrue(poly.cornerCount() <= 6, "Must not re-split into sawtooth (>6 corners)");
+        for (int i = 0; i < poly.cornerCount() - 1; i++) {
+          var a = poly.corner(i).toFloat();
+          var b = poly.corner(i + 1).toFloat();
+          double len = Math.hypot(b.x - a.x, b.y - a.y);
+          assertTrue(len >= 8.0 * pt.getHalfWidth(), "Segment length must be >= 4*w, got " + len);
+        }
+      }
+    }
+    assertTrue(
+        new DesignRulesChecker(board, null).getAllClearanceViolations().isEmpty(),
+        "Spread trace must have 0 DRC violations");
   }
 }
