@@ -37,6 +37,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
@@ -49,6 +50,8 @@ public class BoardToolbar extends JPanel {
   private final SegmentedButtons modeSelectionPanel;
   private final JButton settingsButton;
   private final JButton toolbarAutorouteButton;
+  // DEV-ONLY: easily removable developer toggle for physics pass
+  private final JToggleButton devPhysicsToggleButton = new JToggleButton("Physics: OFF", false);
   private final JButton cancelButton;
   private final JButton toolbarUndoButton;
   private final JButton toolbarRedoButton;
@@ -193,6 +196,12 @@ public class BoardToolbar extends JPanel {
           var interactiveSettings = boardFrame.boardPanel.boardHandling.getWorkspaceSettings();
           if (interactiveSettings != null) {
             interactiveSettings.setSettings(guiRoutingJob.routerSettings);
+            if (interactiveSettings.getSettings().optimizer.physics == null) {
+              interactiveSettings.getSettings().optimizer.physics =
+                  new app.freerouting.settings.PhysicsSettings();
+            }
+            interactiveSettings.getSettings().optimizer.physics.enabled =
+                this.devPhysicsToggleButton.isSelected();
           }
           var merger = boardFrame.boardPanel.boardHandling.settingsMerger;
           if (merger != null) {
@@ -247,6 +256,15 @@ public class BoardToolbar extends JPanel {
             FRAnalytics.buttonClicked(
                 "toolbarAutorouteButton", GsonProvider.GSON.toJson(globalSettings)));
     middleToolbar.add(toolbarAutorouteButton);
+
+    // DEV-ONLY: easily removable developer toggle for physics pass
+    devPhysicsToggleButton.setToolTipText("Developer toggle: enable post-route Physics pass");
+    devPhysicsToggleButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    devPhysicsToggleButton.addActionListener(
+        _ ->
+            devPhysicsToggleButton.setText(
+                devPhysicsToggleButton.isSelected() ? "Physics: ON" : "Physics: OFF"));
+    middleToolbar.add(devPhysicsToggleButton);
 
     // Add "Cancel" button to the toolbar
     cancelButton = new JButton();
