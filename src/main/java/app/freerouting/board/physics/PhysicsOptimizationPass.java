@@ -68,11 +68,15 @@ public final class PhysicsOptimizationPass {
         (settings != null && settings.identityWeight != null) ? settings.identityWeight : 1.0;
     double repulsionWeight =
         (settings != null && settings.repulsionWeight != null) ? settings.repulsionWeight : 1.0;
+    boolean chamferEnabled = settings == null || !Boolean.FALSE.equals(settings.chamferEnabled);
     PhysicsEvaluator evaluator =
         new PhysicsEvaluator(
-            List.of(IdentityPhysicsRule.INSTANCE, ElectrostaticRepulsionRule.INSTANCE),
-            new double[] {identityWeight, repulsionWeight});
-    return run(board, settings, evaluator, repulsionWeight > 0.0, stoppable);
+            List.of(
+                IdentityPhysicsRule.INSTANCE,
+                ElectrostaticRepulsionRule.INSTANCE,
+                CornerCrowdingRule.INSTANCE),
+            new double[] {identityWeight, repulsionWeight, chamferEnabled ? 1.0 : 0.0});
+    return run(board, settings, evaluator, repulsionWeight > 0.0, chamferEnabled, stoppable);
   }
 
   /** Executes the physics pass on {@code board} with a caller-supplied {@link PhysicsEvaluator}. */
@@ -81,7 +85,7 @@ public final class PhysicsOptimizationPass {
       PhysicsSettings settings,
       PhysicsEvaluator evaluator,
       Stoppable stoppable) {
-    return run(board, settings, evaluator, false, stoppable);
+    return run(board, settings, evaluator, false, false, stoppable);
   }
 
   private static Result run(
@@ -89,6 +93,7 @@ public final class PhysicsOptimizationPass {
       PhysicsSettings settings,
       PhysicsEvaluator evaluator,
       boolean relaxTraces,
+      boolean chamferTraces,
       Stoppable stoppable) {
     long startNanos = System.nanoTime();
     if (board == null || evaluator == null) {
@@ -203,6 +208,37 @@ public final class PhysicsOptimizationPass {
 
     if (relaxTraces && !modifiedTraceIds.isEmpty()) {
       straightenModifiedTraces(board, tree, context, evaluator, modifiedTraceIds, angleRestriction);
+      currentEnergy = evaluator.evaluateBoard(board, context);
+    }
+
+    if (chamferTraces
+        && angleRestriction != AngleRestriction.NINETY_DEGREE
+        && !isCancelled(stoppable)) {
+      TreeSet<Integer> chamferIds = new TreeSet<>();
+      Map<Integer, PolylineTrace> chamferMap = new HashMap<>();
+      for (Trace trace : board.getTraces()) {
+        if (trace instanceof PolylineTrace polylineTrace
+            && polylineTrace.polyline().cornerCount() >= 3) {
+          chamferIds.add(polylineTrace.getId());
+          chamferMap.put(polylineTrace.getId(), polylineTrace);
+        }
+      }
+      for (int id : chamferIds) {
+        if (isCancelled(stoppable)) {
+          break;
+        }
+        PolylineTrace trace = chamferMap.get(id);
+        if (trace == null) {
+          continue;
+        }
+        MoveAttempt chamferAttempt =
+            CornerChamferOperator.INSTANCE.proposeAndApply(
+                board, context, evaluator, trace, angleRestriction, 0.0);
+        triedMoves += chamferAttempt.tried();
+        if (chamferAttempt.accepted()) {
+          acceptedMoves++;
+        }
+      }
       currentEnergy = evaluator.evaluateBoard(board, context);
     }
 
@@ -589,7 +625,7 @@ public final class PhysicsOptimizationPass {
     return new MoveAttempt(tried, false, null);
   }
 
-  private static PolylineTrace commitIfClearanceClean(
+  static PolylineTrace commitIfClearanceClean(
       RoutingBoard board, PolylineTrace trace, Polyline candPolyline, int fromSeg, int toSeg) {
     int layer = trace.getLayer();
     int halfWidth = trace.getHalfWidth();
@@ -598,7 +634,9 @@ public final class PhysicsOptimizationPass {
     FixedState fixedState = trace.getFixedState();
     Set<Pin> contactPins = trace.touchingPinsAtEndCorners();
 
-    TileShape[] shapes = candPolyline.offsetShapes(halfWidth, fromSeg, toSeg);
+    int fromNo = Math.max(0, fromSeg);
+    int toNo = Math.min(candPolyline.lines.length - 1, toSeg + 2);
+    TileShape[] shapes = candPolyline.offsetShapes(halfWidth, fromNo, toNo);
     for (TileShape shape : shapes) {
       if (shape == null
           || !board.checkTraceShape(shape, layer, netNumbers, clearanceClass, contactPins)) {

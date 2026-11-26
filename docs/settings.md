@@ -314,6 +314,7 @@ Configures the optional route-optimization stage that runs after autorouting.
   - **`max_iterations`**: Maximum relaxation/evaluation iterations per pass. Default is `8`. CLI: `--router.optimizer.physics.max_iterations=8`.
   - **`identity_weight`**: Weight applied to the baseline no-op identity rule. Default is `1.0`. CLI: `--router.optimizer.physics.identity_weight=1.0`.
   - **`repulsion_weight`**: Weight applied to the electrostatic trace repulsion ("Anti-PullTight") rule. Default is `1.0`. CLI: `--router.optimizer.physics.repulsion_weight=1.0`.
+  - **`chamfer_enabled`**: Whether 90-degree interior trace corners are beveled into 45-degree chamfers when `enabled=true` and `AngleRestriction` permits. Default is `true`. CLI: `--router.optimizer.physics.chamfer_enabled=true`.
 
 ##### **`fanout` Sub-section**
 

@@ -39,6 +39,7 @@ class PhysicsPipelineTest extends RoutingFixtureTest {
     settings.getSettings().optimizer.physics.maxIterations = 4;
     settings.getSettings().optimizer.physics.identityWeight = 1.0;
     settings.getSettings().optimizer.physics.repulsionWeight = 0.0;
+    settings.getSettings().optimizer.physics.chamferEnabled = false;
     return settings;
   }
 
@@ -119,7 +120,8 @@ class PhysicsPipelineTest extends RoutingFixtureTest {
               "--router.optimizer.physics.grid_resolution_mm=0.25",
               "--router.optimizer.physics.max_iterations=12",
               "--router.optimizer.physics.identity_weight=2.5",
-              "--router.optimizer.physics.repulsion_weight=1.5"
+              "--router.optimizer.physics.repulsion_weight=1.5",
+              "--router.optimizer.physics.chamfer_enabled=false"
             });
 
     var physics = cli.getSettings().optimizer.physics;
@@ -129,6 +131,7 @@ class PhysicsPipelineTest extends RoutingFixtureTest {
     assertEquals(12, physics.maxIterations);
     assertEquals(2.5, physics.identityWeight);
     assertEquals(1.5, physics.repulsionWeight);
+    assertFalse(Boolean.TRUE.equals(physics.chamferEnabled));
   }
 
   @Test
@@ -140,6 +143,7 @@ class PhysicsPipelineTest extends RoutingFixtureTest {
     assertEquals(8, defaults.optimizer.physics.maxIterations);
     assertEquals(1.0, defaults.optimizer.physics.identityWeight);
     assertEquals(1.0, defaults.optimizer.physics.repulsionWeight);
+    assertTrue(Boolean.TRUE.equals(defaults.optimizer.physics.chamferEnabled));
   }
 
   @Test

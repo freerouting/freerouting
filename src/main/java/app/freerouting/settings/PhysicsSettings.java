@@ -31,6 +31,10 @@ public class PhysicsSettings implements Serializable, Cloneable {
   @SerializedName("repulsion_weight")
   public Double repulsionWeight;
 
+  /** Whether 90-degree interior trace corners are beveled into 45-degree chamfers. */
+  @SerializedName("chamfer_enabled")
+  public Boolean chamferEnabled;
+
   /** Creates physics settings without source-specific values. */
   public PhysicsSettings() {}
 

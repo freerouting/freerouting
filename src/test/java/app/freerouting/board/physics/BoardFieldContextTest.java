@@ -276,4 +276,83 @@ class BoardFieldContextTest {
         new DesignRulesChecker(board, null).getAllClearanceViolations().isEmpty(),
         "Spread trace must have 0 DRC violations");
   }
+
+  @Test
+  void chamferBevelsAxisAlignedNinetyDegreeCornerToFortyFive() {
+    RoutingBoard board = createSyntheticBoard(1, new IntBox(0, 0, 10_000, 10_000));
+    int net1 = board.rules.nets.newNet(java.util.Locale.US).netNumber;
+    Polyline p =
+        new Polyline(
+            new Point[] {
+              new IntPoint(1_000, 1_000), new IntPoint(5_000, 1_000), new IntPoint(5_000, 5_000)
+            });
+    board.insertTraceWithoutCleaning(p, 0, 25, new int[] {net1}, 0, FixedState.UNFIXED);
+
+    PhysicsSettings settings = new PhysicsSettings();
+    settings.enabled = true;
+    settings.gridResolutionMm = 0.5;
+    settings.maxIterations = 2;
+    settings.identityWeight = 1.0;
+    settings.repulsionWeight = 0.0;
+    settings.chamferEnabled = true;
+
+    double lengthBefore = 8_000.0;
+    PhysicsOptimizationPass.Result result = PhysicsOptimizationPass.run(board, settings, null);
+    assertTrue(result.acceptedMoves() > 0, "90-degree corner should be chamfered");
+    assertTrue(result.finalEnergy() < result.initialEnergy(), "Corner crowding energy must drop");
+
+    var trace = (app.freerouting.board.trace.PolylineTrace) board.getTraces().iterator().next();
+    assertEquals(4, trace.polyline().cornerCount(), "Chamfered L-trace should have 4 corners");
+    assertTrue(trace.polyline().lengthApprox() < lengthBefore, "Chamfer must shorten trace");
+    assertTrue(
+        new DesignRulesChecker(board, null).getAllClearanceViolations().isEmpty(),
+        "Chamfer must introduce 0 DRC violations");
+  }
+
+  @Test
+  void chamferBevelsDiagonalNinetyDegreeCornerCleanly() {
+    RoutingBoard board = createSyntheticBoard(1, new IntBox(0, 0, 10_000, 10_000));
+    int net1 = board.rules.nets.newNet(java.util.Locale.US).netNumber;
+    Polyline p =
+        new Polyline(
+            new Point[] {
+              new IntPoint(1_000, 1_000), new IntPoint(3_000, 3_000), new IntPoint(5_000, 1_000)
+            });
+    board.insertTraceWithoutCleaning(p, 0, 25, new int[] {net1}, 0, FixedState.UNFIXED);
+
+    PhysicsSettings settings = new PhysicsSettings();
+    settings.enabled = true;
+    settings.repulsionWeight = 0.0;
+    settings.chamferEnabled = true;
+
+    PhysicsOptimizationPass.Result result = PhysicsOptimizationPass.run(board, settings, null);
+    assertTrue(result.acceptedMoves() > 0, "45/45 90-degree corner should be chamfered");
+    var trace = (app.freerouting.board.trace.PolylineTrace) board.getTraces().iterator().next();
+    assertEquals(4, trace.polyline().cornerCount());
+    assertTrue(
+        new DesignRulesChecker(board, null).getAllClearanceViolations().isEmpty(),
+        "Diagonal chamfer must introduce 0 DRC violations");
+  }
+
+  @Test
+  void chamferSkipsNinetyDegreeAngleRestrictionAndBlockedCorners() {
+    RoutingBoard board = createSyntheticBoard(1, new IntBox(0, 0, 10_000, 10_000));
+    board.rules.setTraceAngleRestriction(
+        app.freerouting.board.model.structure.AngleRestriction.NINETY_DEGREE);
+    int net1 = board.rules.nets.newNet(java.util.Locale.US).netNumber;
+    Polyline p =
+        new Polyline(
+            new Point[] {
+              new IntPoint(1_000, 1_000), new IntPoint(5_000, 1_000), new IntPoint(5_000, 5_000)
+            });
+    board.insertTraceWithoutCleaning(p, 0, 25, new int[] {net1}, 0, FixedState.UNFIXED);
+
+    PhysicsSettings settings = new PhysicsSettings();
+    settings.enabled = true;
+    settings.repulsionWeight = 0.0;
+    settings.chamferEnabled = true;
+
+    PhysicsOptimizationPass.Result result = PhysicsOptimizationPass.run(board, settings, null);
+    assertEquals(0, result.acceptedMoves(), "NINETY_DEGREE restriction must skip chamfering");
+  }
 }

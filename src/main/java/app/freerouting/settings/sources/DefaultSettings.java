@@ -281,6 +281,7 @@ public class DefaultSettings implements SettingsSource {
     settings.optimizer.physics.maxIterations = 8;
     settings.optimizer.physics.identityWeight = 1.0;
     settings.optimizer.physics.repulsionWeight = 1.0;
+    settings.optimizer.physics.chamferEnabled = true;
 
     // Scalar trace-cost defaults (layer-specific arrays are omitted for the same reason as
     // the layer arrays above – their sizes depend on the board).
