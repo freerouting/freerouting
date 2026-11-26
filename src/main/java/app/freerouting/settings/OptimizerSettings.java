@@ -131,6 +131,10 @@ public class OptimizerSettings implements Serializable, Cloneable {
   @SerializedName("timeout")
   public String timeoutString;
 
+  /** Configuration for the standalone post-route physics optimization pass. */
+  @SerializedName("physics")
+  public PhysicsSettings physics;
+
   /** Creates optimizer settings without source-specific values. */
   public OptimizerSettings() {}
 
@@ -148,6 +152,7 @@ public class OptimizerSettings implements Serializable, Cloneable {
       // But we need to ensure transient fields are copied
       result.boardUpdateStrategy = this.boardUpdateStrategy;
       result.itemSelectionStrategy = this.itemSelectionStrategy;
+      result.physics = this.physics != null ? this.physics.clone() : null;
       return result;
     } catch (CloneNotSupportedException e) {
       // This should never happen since we implement Cloneable

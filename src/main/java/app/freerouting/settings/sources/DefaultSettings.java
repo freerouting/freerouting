@@ -4,6 +4,7 @@ import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
 import app.freerouting.settings.OptimizerPatience;
 import app.freerouting.settings.OptimizerScoringVersion;
+import app.freerouting.settings.PhysicsSettings;
 import app.freerouting.settings.RouterScoringVersion;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.SettingsSource;
@@ -272,6 +273,15 @@ public class DefaultSettings implements SettingsSource {
     settings.optimizer.patience = DEFAULT_OPTIMIZER_PATIENCE;
     settings.optimizer.maxConsecutiveFailures = null;
     settings.optimizer.maxConsecutiveFailuresPass1 = null;
+
+    // Standalone board physics defaults
+    settings.optimizer.physics = new PhysicsSettings();
+    settings.optimizer.physics.enabled = false;
+    settings.optimizer.physics.gridResolutionMm = 0.5;
+    settings.optimizer.physics.maxIterations = 8;
+    settings.optimizer.physics.identityWeight = 1.0;
+    settings.optimizer.physics.repulsionWeight = 1.0;
+    settings.optimizer.physics.chamferEnabled = true;
 
     // Scalar trace-cost defaults (layer-specific arrays are omitted for the same reason as
     // the layer arrays above – their sizes depend on the board).
