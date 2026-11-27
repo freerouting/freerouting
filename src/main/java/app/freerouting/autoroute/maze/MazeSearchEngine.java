@@ -1,5 +1,6 @@
 package app.freerouting.autoroute.maze;
 
+import app.freerouting.autoroute.FailureReason;
 import app.freerouting.autoroute.ItemAutorouteInfo;
 import app.freerouting.autoroute.drill.DrillPage;
 import app.freerouting.autoroute.drill.ExpansionDrill;
@@ -82,6 +83,40 @@ public class MazeSearchEngine {
 
   private int sectionNoOfDestinationDoor;
 
+  /**
+   * When non-null, explains why {@link #findConnection()} returned null for this attempt. Populated
+   * only at give-up time; null on success. Per-instance (not shared) so it is safe in multithreaded
+   * routing; the optimizer/batch loop aggregates and deduplicates by net.
+   */
+  private FailureReason failureReason;
+
+  /** True when {@link #init} completed successfully for this instance. */
+  private boolean initialized;
+
+  /**
+   * Number of drill-layer via expansion attempts (one per {@code expandToOtherLayers} call) and
+   * number of via expansion elements accepted into the maze expansion list. Read at give-up time to
+   * distinguish {@link FailureReason.FailureType#VIA_PLACEMENT_BLOCKED} from a plain {@link
+   * FailureReason.FailureType#CLEARANCE_WALKED_EXHAUSTED}. Two int counters only — no allocation in
+   * the expansion hot loop.
+   */
+  int viaExpansionAttempts;
+
+  int viaExpansionSuccesses;
+
+  /**
+   * Primitive counters for obstacle-room rejections and acceptances during {@link
+   * #expandNextElement}. Read only at give-up time to distinguish {@link
+   * FailureReason.FailureType#RIPUP_DISALLOWED} and {@link FailureReason.FailureType#RIPUP_BLOCKED}
+   * from {@link FailureReason.FailureType#CLEARANCE_WALKED_EXHAUSTED} with zero hot-loop
+   * allocation.
+   */
+  int obstacleRoomsBlockedByRipupDisabled;
+
+  int obstacleRoomsBlockedByProtectedOrFixed;
+
+  int rippableRoomsAccepted;
+
   /** Creates a new instance of MazeSearchEngine. */
   MazeSearchEngine(AutorouteEngine autorouteEngine, AutorouteControl ctrl) {
     this.autorouteEngine = autorouteEngine;
@@ -141,6 +176,22 @@ public class MazeSearchEngine {
 
   /**
    * Initializes a new instance of MazeSearchEngine for searching a connection between startItems
+   * and destinationItems. Returns the instance even when initialisation failed; callers must check
+   * {@link #isInitialized()} and read {@link #getFailureReason()}. Use {@link #getInstance} for the
+   * legacy contract that returns null when initialisation failed.
+   */
+  public static MazeSearchEngine create(
+      Set<Item> startItems,
+      Set<Item> destinationItems,
+      AutorouteEngine autorouteDatabase,
+      AutorouteControl ctrl) {
+    MazeSearchEngine newInstance = new MazeSearchEngine(autorouteDatabase, ctrl);
+    newInstance.initialized = newInstance.init(startItems, destinationItems);
+    return newInstance;
+  }
+
+  /**
+   * Initializes a new instance of MazeSearchEngine for searching a connection between startItems
    * and destinationItems. Returns null, if the initialisation failed.
    */
   public static MazeSearchEngine getInstance(
@@ -148,14 +199,13 @@ public class MazeSearchEngine {
       Set<Item> destinationItems,
       AutorouteEngine autorouteDatabase,
       AutorouteControl ctrl) {
-    MazeSearchEngine newInstance = new MazeSearchEngine(autorouteDatabase, ctrl);
-    MazeSearchEngine result;
-    if (newInstance.init(startItems, destinationItems)) {
-      result = newInstance;
-    } else {
-      result = null;
-    }
-    return result;
+    MazeSearchEngine newInstance = create(startItems, destinationItems, autorouteDatabase, ctrl);
+    return newInstance.initialized ? newInstance : null;
+  }
+
+  /** Returns true, if {@link #init} completed successfully for this instance. */
+  public boolean isInitialized() {
+    return this.initialized;
   }
 
   /**
@@ -313,9 +363,50 @@ public class MazeSearchEngine {
       continue;
     }
     if (this.destinationDoor == null) {
+      // Exhausted the expansion list without reaching the destination.
+      this.failureReason = classifyExhaustedFailure();
       return null;
     }
     return new Result(this.destinationDoor, this.sectionNoOfDestinationDoor);
+  }
+
+  /** Classifies the give-up cause when {@link #findConnection()} exhausts the expansion list. */
+  FailureReason classifyExhaustedFailure() {
+    if (this.viaExpansionAttempts > 0
+        && this.viaExpansionSuccesses == 0
+        && this.ctrl.layerCount > 1) {
+      // Vias were attempted during the search, but not a single via expansion element was ever
+      // accepted: the dominating cause is blocked via placement, not clearance walls.
+      return new FailureReason(
+          FailureReason.FailureType.VIA_PLACEMENT_BLOCKED,
+          "Via placement exhausted; no via could be placed at any attempted location (all"
+              + " candidate via layers failed DRC or via-mask checks).");
+    }
+    if (this.obstacleRoomsBlockedByRipupDisabled > 0 && this.rippableRoomsAccepted == 0) {
+      return new FailureReason(
+          FailureReason.FailureType.RIPUP_DISALLOWED,
+          "Path blocked by existing traces or vias while rip-up is disabled for net #"
+              + (ctrl.netNumber + "."));
+    }
+    if (this.obstacleRoomsBlockedByProtectedOrFixed > 0 && this.rippableRoomsAccepted == 0) {
+      return new FailureReason(
+          FailureReason.FailureType.RIPUP_BLOCKED,
+          "Path blocked by unrippable or protected obstacles (fixed items, keepouts, or"
+              + " rip-up-protected nets) for net #"
+              + (ctrl.netNumber + "."));
+    }
+    return new FailureReason(
+        FailureReason.FailureType.CLEARANCE_WALKED_EXHAUSTED,
+        "Maze expansion list exhausted; no DRC-legal path to destination found for net #"
+            + ctrl.netNumber);
+  }
+
+  /**
+   * Returns the failure reason captured during {@link #findConnection()}, or null if the search
+   * succeeded. Callers should treat a null return as "no failure information available".
+   */
+  public FailureReason getFailureReason() {
+    return this.failureReason;
   }
 
   /**
@@ -332,6 +423,13 @@ public class MazeSearchEngine {
     boolean nextElementFound = false;
     while (!mazeExpansionList.isEmpty()) {
       if (this.autorouteEngine.isStopRequested()) {
+        // The routing thread requested a stop (time limit, user cancel, or global timeout).
+        this.failureReason =
+            new FailureReason(
+                FailureReason.FailureType.TIME_LIMIT_EXCEEDED,
+                "Maze expansion stopped by thread request; net #"
+                    + ctrl.netNumber
+                    + " did not reach destination");
         return false;
       }
 
@@ -696,8 +794,14 @@ public class MazeSearchEngine {
           }
         }
         if (!roomRippable) {
+          if (!this.ctrl.ripupAllowed) {
+            this.obstacleRoomsBlockedByRipupDisabled++;
+          } else {
+            this.obstacleRoomsBlockedByProtectedOrFixed++;
+          }
           return true;
         }
+        this.rippableRoomsAccepted++;
       }
     }
 
@@ -1135,8 +1239,13 @@ public class MazeSearchEngine {
     }
     // process the destination items
     boolean destinationOk = false;
+    boolean anyInactiveDest = false;
     for (Item currentItem : destinationItems) {
       if (this.autorouteEngine.isStopRequested()) {
+        this.failureReason =
+            new FailureReason(
+                FailureReason.FailureType.TIME_LIMIT_EXCEEDED,
+                "Maze initialization stopped by thread request for net #" + ctrl.netNumber + ".");
         return false;
       }
       ItemAutorouteInfo currentInfo = currentItem.getAutorouteInfo();
@@ -1156,6 +1265,7 @@ public class MazeSearchEngine {
           anyActive = true;
         } else {
           anyInactive = true;
+          anyInactiveDest = true;
         }
       }
       if (anyActive || !anyInactive) {
@@ -1171,6 +1281,20 @@ public class MazeSearchEngine {
     }
 
     if (!destinationOk) {
+      if (anyInactiveDest) {
+        this.failureReason =
+            new FailureReason(
+                FailureReason.FailureType.LAYER_RESTRICTION_CONFLICT,
+                "All destination items lie on inactive routing layers for net #"
+                    + ctrl.netNumber
+                    + ".");
+      } else {
+        this.failureReason =
+            new FailureReason(
+                FailureReason.FailureType.NO_VALID_DESTINATION_ITEMS,
+                "Destination set has no usable items on active layers; the maze has nothing to aim"
+                    + " at.");
+      }
       FRLogger.debug(
           "MazeSearchEngine.init: Failed - no valid destination items found"
               + " (dest set size: "
@@ -1184,6 +1308,10 @@ public class MazeSearchEngine {
     Collection<IncompleteFreeSpaceExpansionRoom> startRooms = new LinkedList<>();
     for (Item currentItem : startItems) {
       if (this.autorouteEngine.isStopRequested()) {
+        this.failureReason =
+            new FailureReason(
+                FailureReason.FailureType.TIME_LIMIT_EXCEEDED,
+                "Maze initialization stopped by thread request for net #" + ctrl.netNumber + ".");
         return false;
       }
       ItemAutorouteInfo currentInfo = currentItem.getAutorouteInfo();
@@ -1211,6 +1339,10 @@ public class MazeSearchEngine {
 
     for (IncompleteFreeSpaceExpansionRoom currentRoom : startRooms) {
       if (this.autorouteEngine.isStopRequested()) {
+        this.failureReason =
+            new FailureReason(
+                FailureReason.FailureType.TIME_LIMIT_EXCEEDED,
+                "Maze initialization stopped by thread request for net #" + ctrl.netNumber + ".");
         return false;
       }
       Collection<CompleteFreeSpaceExpansionRoom> currentCompletedRooms =
@@ -1223,10 +1355,16 @@ public class MazeSearchEngine {
     boolean startOk = false;
     int expansionDoorsFound = 0;
     int expansionDoorsDestination = 0;
+    int startDoorsSeen = 0;
+    int widthRejectedStartDoors = 0;
     for (CompleteFreeSpaceExpansionRoom currentRoom : completedStartRooms) {
       for (TargetItemExpansionDoor currentDoor : currentRoom.getTargetDoors()) {
         expansionDoorsFound++;
         if (this.autorouteEngine.isStopRequested()) {
+          this.failureReason =
+              new FailureReason(
+                  FailureReason.FailureType.TIME_LIMIT_EXCEEDED,
+                  "Maze initialization stopped by thread request for net #" + ctrl.netNumber + ".");
           return false;
         }
         if (currentDoor.isDestinationDoor()) {
@@ -1236,8 +1374,10 @@ public class MazeSearchEngine {
         if (!currentDoor.isStartDoor()) {
           continue;
         }
+        startDoorsSeen++;
         TileShape safeConnectionShape = getWidthSafeTargetShape(currentDoor);
         if (safeConnectionShape == null || safeConnectionShape.isEmpty()) {
+          widthRejectedStartDoors++;
           continue;
         }
         FloatPoint currentCenter = safeConnectionShape.centreOfGravity();
@@ -1262,6 +1402,24 @@ public class MazeSearchEngine {
       }
     }
     if (!startOk) {
+      if (startDoorsSeen > 0 && widthRejectedStartDoors == startDoorsSeen) {
+        this.failureReason =
+            new FailureReason(
+                FailureReason.FailureType.TRACE_WIDTH_TOO_WIDE,
+                "Configured trace width plus clearance is too wide for all "
+                    + startDoorsSeen
+                    + " start-pin escape door(s) on net #"
+                    + ctrl.netNumber
+                    + ".");
+      } else {
+        this.failureReason =
+            new FailureReason(
+                FailureReason.FailureType.START_PIN_ESCAPE_FAILED,
+                "Start items have no accessible expansion doors; the start pin cannot escape into"
+                    + " free space (ripupAllowed="
+                    + this.ctrl.ripupAllowed
+                    + ").");
+      }
       FRLogger.debug(
           "MazeSearchEngine.init: Failed - no accessible expansion doors found"
               + " (start items: "

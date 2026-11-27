@@ -58,6 +58,10 @@ class StrictDrcEnforcementTest {
 
     assertTrue(result != null, "violating connection must be rejected");
     assertEquals(AutorouteAttemptState.FAILED, result.state);
+    assertEquals(
+        FailureReason.FailureType.STRICT_DRC_REJECTED,
+        result.failureReason != null ? result.failureReason.type() : null,
+        "strict-DRC rejection must record the failure reason");
     long tracesAfter =
         board.getItems().stream()
             .filter(it -> it instanceof Trace && it.containsNet(netNumber))

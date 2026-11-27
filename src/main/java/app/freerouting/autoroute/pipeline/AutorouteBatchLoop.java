@@ -74,6 +74,7 @@ final class AutorouteBatchLoop {
     router.initialUnroutedCount = calculateIncompleteCount(router.board);
     router.resetAntiOscillationState();
     router.lastStopReason = null;
+    router.board.failureLog.clear();
 
     final BoardHistory bh = new BoardHistory(job.routerSettings);
 
