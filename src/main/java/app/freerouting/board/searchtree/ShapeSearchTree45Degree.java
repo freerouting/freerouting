@@ -171,14 +171,20 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
         if (currentNode == null) {
           break;
         }
-        if (currentNode.boundingShape.intersects(boundingShape)) {
+        if (currentNode.boundsIntersect(boundingShape)) {
           if (currentNode instanceof Leaf currentLeaf) {
             SearchTreeObject currentObject = (SearchTreeObject) currentLeaf.object;
             int shapeIndex = currentLeaf.shapeIndexInObject;
-            boolean isObstacle = currentObject.isTraceObstacle(netNumber, shapeIndex);
             int objectLayer = currentObject.shapeLayer(shapeIndex);
             boolean sameLayer = objectLayer == roomLayer;
             boolean ignoredObject = currentObject == ignoreObject;
+            // The tree holds the shapes of all layers: on a multi-layer board most leaves reached
+            // are on another layer. Reject them before the (virtual, net-dependent) obstacle test;
+            // both tests are side-effect free, so only the debug trace needs all three values.
+            if (!debugAnchor && (!sameLayer || ignoredObject)) {
+              continue;
+            }
+            boolean isObstacle = currentObject.isTraceObstacle(netNumber, shapeIndex);
             if (debugAnchor) {
               traceCompleteShapeFilter(
                   debugStep,
@@ -211,7 +217,8 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                   continue;
                 }
               }
-              Collection<IncompleteFreeSpaceExpansionRoom> newResult = new ArrayList<>();
+              Collection<IncompleteFreeSpaceExpansionRoom> newResult =
+                  new ArrayList<>(result.size() + 4);
               IntOctagon newBoundingShape = IntOctagon.EMPTY;
               boolean hadRoomsBeforeObstacle = !result.isEmpty();
               for (IncompleteFreeSpaceExpansionRoom currentRoom : result) {
@@ -305,10 +312,10 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
           } else {
             TreeNode first = ((InnerNode) currentNode).firstChild;
             TreeNode second = ((InnerNode) currentNode).secondChild;
-            if (first != null && first.boundingShape.intersects(boundingShape)) {
+            if (first != null && first.boundsIntersect(boundingShape)) {
               stack.push(first);
             }
-            if (second != null && second.boundingShape.intersects(boundingShape)) {
+            if (second != null && second.boundsIntersect(boundingShape)) {
               stack.push(second);
             }
           }

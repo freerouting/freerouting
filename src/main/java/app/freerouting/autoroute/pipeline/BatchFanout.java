@@ -422,7 +422,12 @@ public final class BatchFanout {
         String fullPinName =
             currentComponent.boardComponent.name + "-" + currentPin.boardPin.name();
         int netNumber = currentPin.boardPin.getNetNumber(0);
-        int targetCount = currentPin.boardPin.getUnconnectedSet(netNumber).size();
+        // Only reported in the TRACE log. Collecting the unconnected set walks the whole net, which
+        // through a plane is most of the board, for every pin of every pass.
+        int targetCount =
+            FRLogger.isTraceEnabled()
+                ? currentPin.boardPin.getUnconnectedSet(netNumber).size()
+                : -1;
 
         app.freerouting.rules.Net net = this.routingBoard.rules.nets.get(netNumber);
         if (net != null) {

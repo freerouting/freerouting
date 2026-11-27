@@ -147,7 +147,19 @@ public final class GlobalSettingsBootstrap {
         Locale.getDefault().getLanguage() + "," + Locale.getDefault();
     globalSettings.runtimeEnvironment.cpuCores = Runtime.getRuntime().availableProcessors();
     globalSettings.runtimeEnvironment.ram = (int) (Runtime.getRuntime().maxMemory() / 1024 / 1024);
-    if (!deferCpuCalibration) {
+    FRLogger.debug("UTC Time: " + globalSettings.runtimeEnvironment.appStartedAt);
+
+    globalSettings.applyCommandLineArguments(args);
+    GlobalSettings.setCurrent(globalSettings);
+
+    // The synthetic CPU benchmark costs ~0.3 s of wall time on every start. A headless batch run
+    // (input file given, GUI disabled) only needs the score for a result manifest, which reads it
+    // lazily through RuntimeEnvironment.getCpuScore(), so the calibration is skipped there.
+    boolean headlessBatch =
+        globalSettings.initialInputFile != null
+            && globalSettings.guiSettings != null
+            && !globalSettings.guiSettings.isEnabled;
+    if (!deferCpuCalibration && !headlessBatch) {
       globalSettings.runtimeEnvironment.cpuScore = RuntimeEnvironment.measureCpuScore();
       FRLogger.info(
           "Hardware: "
@@ -165,10 +177,6 @@ public final class GlobalSettingsBootstrap {
               + globalSettings.runtimeEnvironment.ram
               + " MB RAM");
     }
-    FRLogger.debug("UTC Time: " + globalSettings.runtimeEnvironment.appStartedAt);
-
-    globalSettings.applyCommandLineArguments(args);
-    GlobalSettings.setCurrent(globalSettings);
 
     return globalSettings;
   }

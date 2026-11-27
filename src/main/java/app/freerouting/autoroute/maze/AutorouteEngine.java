@@ -29,6 +29,7 @@ import app.freerouting.logger.FRLogger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -67,8 +68,12 @@ public class AutorouteEngine {
   /** To stop the expansion algorithm after a time limit is exceeded. */
   private TimeLimit timeLimit;
 
-  /** The list of incomplete expansion rooms on the routing board. */
-  private List<IncompleteFreeSpaceExpansionRoom> incompleteExpansionRooms;
+  /**
+   * The incomplete expansion rooms on the routing board, in creation order. A room is only ever
+   * added once (when it is created), so an insertion-ordered set iterates exactly like the list it
+   * replaces while removing a room in constant instead of linear time.
+   */
+  private LinkedHashSet<IncompleteFreeSpaceExpansionRoom> incompleteExpansionRooms;
 
   /** The list of complete expansion rooms on the routing board. */
   private List<CompleteFreeSpaceExpansionRoom> completeExpansionRooms;
@@ -360,7 +365,7 @@ public class AutorouteEngine {
     IncompleteFreeSpaceExpansionRoom newRoom =
         new IncompleteFreeSpaceExpansionRoom(shape, layer, containedShape);
     if (this.incompleteExpansionRooms == null) {
-      this.incompleteExpansionRooms = new ArrayList<>();
+      this.incompleteExpansionRooms = new LinkedHashSet<>();
     }
     this.incompleteExpansionRooms.add(newRoom);
     return newRoom;

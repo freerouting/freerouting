@@ -1,0 +1,18 @@
+# Board set for scripts/perf/bench.py.
+# Chosen to resemble what an LLM-driven KiCad flow produces: 2-4 layer boards with
+# 5-110 nets that v2.6.0 routes to 0 unrouted / 0 clearance violations, spread
+# across the v2.6.0 wall-time distribution of PCBench tiers A, B and C.
+fixtures/Issue508-DAC2020_bm01.dsn
+scripts/benchmark/fixtures/PCBench/rgb-led_rgb-led-v2/unrouted.dsn
+scripts/benchmark/fixtures/PCBench/SmartLaserMiniShield_SmartLaserMiniShield/unrouted.dsn
+scripts/benchmark/fixtures/PCBench/RASPMINI_RASPmini/unrouted.dsn
+scripts/benchmark/fixtures/PCBench/bldc-gimbal-1d_r1_gimbal-board/unrouted.dsn
+scripts/benchmark/fixtures/PCBench/two-daisy-chained-shift-registers_two-shift-registers/unrouted.dsn
+scripts/benchmark/fixtures/PCBench/linklayer_contact/unrouted.dsn
+scripts/benchmark/fixtures/PCBench/stm32-lpc__autosave-stm32-lpc/unrouted.dsn
+scripts/benchmark/fixtures/PCBench/1-Wire-Wing-pcb_1-Wire_Wing/unrouted.dsn
+scripts/benchmark/fixtures/PCBench/16x12-bits-I2C_I2C_Servo/unrouted.dsn
+scripts/benchmark/fixtures/PCBench/AmpOne_dev-AmpOne/unrouted.dsn
+scripts/benchmark/fixtures/PCBench/arduino-led-driver_arduino-led-driver/unrouted.dsn
+scripts/benchmark/fixtures/PCBench/guitar_fret/unrouted.dsn
+scripts/benchmark/fixtures/PCBench/Curryboard_Curryboard/unrouted.dsn

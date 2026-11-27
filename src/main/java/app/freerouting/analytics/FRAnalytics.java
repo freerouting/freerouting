@@ -22,6 +22,8 @@ public final class FRAnalytics {
 
   private static final HashMap<String, String> appLocationTable;
   private static AnalyticsClient analytics;
+  // The last value given to setEnabled(): whether analytics events are delivered at all.
+  private static volatile boolean deliveryEnabled = true;
   private static GlobalSettings globalSettings;
   private static String permanentUserId;
   private static String permanentUserEmail;
@@ -445,11 +447,17 @@ public final class FRAnalytics {
    * @param enabled whether analytics events should be sent
    */
   public static void setEnabled(boolean enabled) {
+    deliveryEnabled = enabled;
     if (analytics == null) {
       return;
     }
 
     analytics.setEnabled(enabled);
+  }
+
+  /** Whether analytics delivery is enabled (the last value given to {@link #setEnabled}). */
+  public static boolean isEnabled() {
+    return deliveryEnabled && analytics != null;
   }
 
   /**

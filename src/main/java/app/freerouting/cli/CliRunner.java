@@ -158,6 +158,18 @@ public final class CliRunner {
               + "╚══════════════════════════════════════════════════════════════════╝");
     }
 
+    // The summary recomputes the full board statistics (a whole-board clearance check) and the
+    // flush waits up to 1.5 s for delivery: neither is worth anything when analytics are off.
+    if (FRAnalytics.isEnabled()) {
+      recordBatchJobSummary(globalSettings, routingJob, cliSession.id, cliExitCode);
+    }
+
+    globalSettings.cliExitCode = cliExitCode;
+    return cliExitCode == 0;
+  }
+
+  private static void recordBatchJobSummary(
+      GlobalSettings globalSettings, RoutingJob routingJob, UUID sessionId, int cliExitCode) {
     try {
       JobLifecycleStatus status =
           switch (routingJob.state) {
@@ -196,7 +208,7 @@ public final class CliRunner {
 
       FRAnalytics.recordBatchJobSummary(
           routingJob.id.toString(),
-          cliSession.id.toString(),
+          sessionId.toString(),
           inputBasename,
           cliExitCode,
           status,
@@ -215,9 +227,6 @@ public final class CliRunner {
     } catch (Throwable ex) {
       FRLogger.warn("Failed to record batch job summary: " + ex.getMessage());
     }
-
-    globalSettings.cliExitCode = cliExitCode;
-    return cliExitCode == 0;
   }
 
   /**

@@ -1888,6 +1888,23 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     return getUndoFacade().deepCopy();
   }
 
+  /**
+   * Writes this board once, for {@link #copyOf} to read any number of copies back, also from
+   * several threads at once. Equivalent to calling {@link #deepCopy} for each copy, but the board
+   * is serialized (under its lock) only once. The source is only valid while this board is
+   * unchanged.
+   *
+   * @return the source for copies, or null if the board cannot be written
+   */
+  public RoutingBoardUndoFacade.CopySource prepareCopies() {
+    return getUndoFacade().snapshot();
+  }
+
+  /** Reads a new copy of a board back from a source made by {@link #prepareCopies}. */
+  public static RoutingBoard copyOf(RoutingBoardUndoFacade.CopySource source) {
+    return RoutingBoardUndoFacade.restore(source);
+  }
+
   private RoutingBoardOperations getOperations() {
     if (operations == null) {
       operations = new RoutingBoardOperations(this);

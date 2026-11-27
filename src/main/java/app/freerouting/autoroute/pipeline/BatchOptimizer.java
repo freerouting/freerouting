@@ -4,6 +4,7 @@ import app.freerouting.autoroute.ItemRouteResult;
 import app.freerouting.autoroute.ItemSelectionStrategy;
 import app.freerouting.autoroute.events.TaskStateChangedEvent;
 import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.facade.RoutingBoardUndoFacade;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Trace;
@@ -74,8 +75,10 @@ public final class BatchOptimizer extends NamedAlgorithm {
   protected final AtomicLong workerCpuNanos = new AtomicLong(0);
   protected final AtomicLong workerAllocBytes = new AtomicLong(0);
   protected volatile FloatPoint currentPosition = null;
+  // The baseline board of the running pass, written once for all its candidate boards.
+  private final BaselineCopySource baselineCopySource = new BaselineCopySource();
   private final ThreadLocal<WorkerBoardState> workerBoardStates =
-      ThreadLocal.withInitial(WorkerBoardState::new);
+      ThreadLocal.withInitial(() -> new WorkerBoardState(baselineCopySource));
 
   /**
    * Creates a new instance of BatchOptimizer, which is used to optimize the board.
@@ -836,6 +839,17 @@ public final class BatchOptimizer extends NamedAlgorithm {
    * must go on no matter how much it improved.
    */
   protected float optRoutePass(int passNo, boolean withPreferredDirections) {
+    // The board may have changed since the last pass (a winner, a restored incumbent, a slide).
+    this.baselineCopySource.invalidate();
+    try {
+      return optRoutePassOnBaseline(passNo, withPreferredDirections);
+    } finally {
+      // Release the serialized board (and its references into the baseline) between passes.
+      this.baselineCopySource.invalidate();
+    }
+  }
+
+  private float optRoutePassOnBaseline(int passNo, boolean withPreferredDirections) {
     BoardStatistics boardStatisticsBefore = board.getStatistics();
     RouterCounters routerCounters = new RouterCounters();
     routerCounters.passCount = passNo;
@@ -1336,18 +1350,57 @@ public final class BatchOptimizer extends NamedAlgorithm {
   }
 
   /**
+   * The baseline board of an optimizer pass, serialized once and read back for every candidate.
+   *
+   * <p>Every candidate of a pass starts from a private copy of the same, unchanged baseline board.
+   * Copying it with {@link RoutingBoard#deepCopy} serializes the board again for each candidate,
+   * under the board's lock, so the worker threads queue on that lock and repeat identical work.
+   * Here the board is written once per pass ({@link RoutingBoard#prepareCopies}) and each copy is
+   * only read back ({@link RoutingBoard#copyOf}), in parallel. The copies are the same as before:
+   * the bytes of an unchanged board are the same. {@link #invalidate} must be called whenever the
+   * baseline may have changed, which {@code optRoutePass} does at its start and end.
+   */
+  private static final class BaselineCopySource {
+    private RoutingBoard board;
+    private RoutingBoardUndoFacade.CopySource source;
+
+    RoutingBoard newCopy(RoutingBoard baseline) {
+      RoutingBoardUndoFacade.CopySource copySource = sourceFor(baseline);
+      return copySource != null ? RoutingBoard.copyOf(copySource) : baseline.deepCopy();
+    }
+
+    private synchronized RoutingBoardUndoFacade.CopySource sourceFor(RoutingBoard baseline) {
+      if (this.board != baseline || this.source == null) {
+        this.source = baseline.prepareCopies();
+        this.board = baseline;
+      }
+      return this.source;
+    }
+
+    synchronized void invalidate() {
+      this.board = null;
+      this.source = null;
+    }
+  }
+
+  /**
    * Reuses one candidate board on each executor thread while the baseline board remains unchanged.
    * A candidate that is not selected is undone in place; an improved candidate transfers ownership
    * of the worker board to the result and removes the snapshot without undoing its changes.
    */
   private static final class WorkerBoardState {
+    private final BaselineCopySource copySource;
     private RoutingBoard baselineBoard;
     private RoutingBoard workerBoard;
+
+    WorkerBoardState(BaselineCopySource copySource) {
+      this.copySource = copySource;
+    }
 
     RoutingBoard acquire(RoutingBoard baselineBoard) {
       if (this.workerBoard == null || this.baselineBoard != baselineBoard) {
         this.baselineBoard = baselineBoard;
-        this.workerBoard = baselineBoard.deepCopy();
+        this.workerBoard = copySource.newCopy(baselineBoard);
       }
       this.workerBoard.generateSnapshot();
       return this.workerBoard;

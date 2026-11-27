@@ -621,13 +621,21 @@ public class Freerouting {
       }
     }
 
-    AnalyticsBootstrap.initialize(globalSettings, args, true, width, height, dpi);
+    // A headless batch run (input file given, GUI disabled) is driven by another program, for
+    // example an EDA plugin or an MCP server: it must not wait on the analytics start-up delay,
+    // and nobody reads a "new version available" notice in its log.
+    boolean headlessBatch =
+        globalSettings.initialInputFile != null && !globalSettings.guiSettings.isEnabled;
+
+    AnalyticsBootstrap.initialize(globalSettings, args, !headlessBatch, width, height, dpi);
 
     // check for new version
-    VersionChecker checker = new VersionChecker(Constants.FREEROUTING_VERSION);
-    Thread versionThread = new Thread(checker, "version-checker");
-    versionThread.setDaemon(true);
-    versionThread.start();
+    if (!headlessBatch) {
+      VersionChecker checker = new VersionChecker(Constants.FREEROUTING_VERSION);
+      Thread versionThread = new Thread(checker, "version-checker");
+      versionThread.setDaemon(true);
+      versionThread.start();
+    }
 
     // Check if the user requested help
     if (globalSettings.showHelpOption) {

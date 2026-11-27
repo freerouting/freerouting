@@ -1,5 +1,6 @@
 package app.freerouting.datastructures;
 
+import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.geometry.planar.RegularTileShape;
 import app.freerouting.geometry.planar.ShapeBoundingDirections;
 import app.freerouting.logger.FRLogger;
@@ -119,9 +120,14 @@ public class MinAreaTree extends ShapeTree {
     try {
       stack.push(this.root);
       TreeNode currentNode;
+      IntOctagon octagonQuery = shape instanceof IntOctagon octagon ? octagon : null;
       while ((currentNode = stack.pop()) != null) {
         onNodeVisited();
-        if (currentNode.boundingShape.intersects(shape)) {
+        boolean intersects =
+            octagonQuery != null
+                ? currentNode.boundsIntersect(octagonQuery)
+                : boundsIntersect(currentNode.boundingShape, shape);
+        if (intersects) {
           if (currentNode instanceof Leaf leaf) {
             result.add(leaf);
           } else {
@@ -193,8 +199,8 @@ public class MinAreaTree extends ShapeTree {
 
     while (!(node instanceof Leaf)) {
       InnerNode currentInnerNode = (InnerNode) node;
-      currentInnerNode.boundingShape =
-          leafToInsert.boundingShape.union(currentInnerNode.boundingShape);
+      currentInnerNode.setBoundingShape(
+          leafToInsert.boundingShape.union(currentInnerNode.boundingShape));
 
       // Choose the child, so that the area increase of that child after taking the union
       // with the shape of leafToInsert is minimal.
@@ -276,7 +282,7 @@ public class MinAreaTree extends ShapeTree {
     parent.parent = null;
     parent.firstChild = null;
     parent.secondChild = null;
-    parent.boundingShape = null;
+    parent.setBoundingShape(null);
 
     // recalculate the bounding shapes of the ancestors
     // as long as it gets smaller after removing leaf
@@ -289,7 +295,7 @@ public class MinAreaTree extends ShapeTree {
         // the new bounds are not smaller, no further recalculate necessary
         break;
       }
-      nodeToRecalculate.boundingShape = newBounds;
+      nodeToRecalculate.setBoundingShape(newBounds);
       nodeToRecalculate = nodeToRecalculate.parent;
     }
   }

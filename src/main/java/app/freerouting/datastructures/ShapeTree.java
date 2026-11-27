@@ -1,5 +1,7 @@
 package app.freerouting.datastructures;
 
+import app.freerouting.geometry.planar.IntBox;
+import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.geometry.planar.RegularTileShape;
 import app.freerouting.geometry.planar.Shape;
 import app.freerouting.geometry.planar.ShapeBoundingDirections;
@@ -31,6 +33,24 @@ public abstract class ShapeTree {
     boundingDirections = directions;
     root = null;
     leafCount = 0;
+  }
+
+  /**
+   * Whether two bounding shapes of this tree intersect.
+   *
+   * <p>Equivalent to {@code nodeShape.intersects(query)}, which reaches the octagon or box test
+   * through two virtual calls ({@code intersects(Shape)} dispatches back to the argument). The tree
+   * walks call this once per visited node, so the common same-type cases are dispatched directly;
+   * both tests are symmetric, so the answer is the same.
+   */
+  public static boolean boundsIntersect(RegularTileShape nodeShape, RegularTileShape query) {
+    if (nodeShape instanceof IntOctagon nodeOctagon && query instanceof IntOctagon queryOctagon) {
+      return nodeOctagon.intersects(queryOctagon);
+    }
+    if (nodeShape instanceof IntBox nodeBox && query instanceof IntBox queryBox) {
+      return nodeBox.intersects(queryBox);
+    }
+    return nodeShape.intersects(query);
   }
 
   /** Returns the read lock used by this tree hierarchy. */
@@ -230,6 +250,56 @@ public abstract class ShapeTree {
 
     public RegularTileShape boundingShape;
     InnerNode parent;
+
+    // The coordinates of boundingShape when it is an IntOctagon, kept in the node itself so that
+    // the tree walks, which test one node after another, do not load a separate shape object for
+    // each. They describe the shape referenced by inlinedShape; a walk uses them only while that is
+    // still boundingShape, so a bounding shape assigned without setBoundingShape is just slower.
+    private RegularTileShape inlinedShape;
+    private int leftX;
+    private int bottomY;
+    private int rightX;
+    private int topY;
+    private int lowerLeftDiagonalX;
+    private int upperRightDiagonalX;
+    private int upperLeftDiagonalX;
+    private int lowerRightDiagonalX;
+
+    /** Sets the bounding shape of this node (only while the tree is write-locked or unshared). */
+    final void setBoundingShape(RegularTileShape shape) {
+      this.boundingShape = shape;
+      if (shape instanceof IntOctagon octagon) {
+        this.leftX = octagon.leftX;
+        this.bottomY = octagon.bottomY;
+        this.rightX = octagon.rightX;
+        this.topY = octagon.topY;
+        this.lowerLeftDiagonalX = octagon.lowerLeftDiagonalX;
+        this.upperRightDiagonalX = octagon.upperRightDiagonalX;
+        this.upperLeftDiagonalX = octagon.upperLeftDiagonalX;
+        this.lowerRightDiagonalX = octagon.lowerRightDiagonalX;
+        this.inlinedShape = octagon;
+      } else {
+        this.inlinedShape = null;
+      }
+    }
+
+    /**
+     * Whether the bounding shape of this node intersects {@code query}: the same answer as {@link
+     * ShapeTree#boundsIntersect}, from the inlined coordinates when they are current.
+     */
+    public final boolean boundsIntersect(IntOctagon query) {
+      RegularTileShape shape = this.boundingShape;
+      if (shape == null || shape != this.inlinedShape) {
+        return ShapeTree.boundsIntersect(shape, query);
+      }
+      // IntOctagon.intersects(IntOctagon), on the inlined copy of the same octagon.
+      return Math.max(query.leftX, this.leftX) <= Math.min(query.rightX, this.rightX)
+          && Math.max(query.bottomY, this.bottomY) <= Math.min(query.topY, this.topY)
+          && Math.max(query.lowerLeftDiagonalX, this.lowerLeftDiagonalX)
+              <= Math.min(query.upperRightDiagonalX, this.upperRightDiagonalX)
+          && Math.max(query.upperLeftDiagonalX, this.upperLeftDiagonalX)
+              <= Math.min(query.lowerRightDiagonalX, this.lowerRightDiagonalX);
+    }
   }
 
   //////////////////////////////////////////////////////////
@@ -242,7 +312,7 @@ public abstract class ShapeTree {
 
     /** Creates an inner node with boundingShape and parent. */
     public InnerNode(RegularTileShape boundingShape, InnerNode parent) {
-      this.boundingShape = boundingShape;
+      setBoundingShape(boundingShape);
       this.parent = parent;
       firstChild = null;
       secondChild = null;
@@ -263,7 +333,7 @@ public abstract class ShapeTree {
     /** Creates a leaf node for object at index with parent and boundingShape. */
     public Leaf(
         ShapeTree.Storable object, int index, InnerNode parent, RegularTileShape boundingShape) {
-      this.boundingShape = boundingShape;
+      setBoundingShape(boundingShape);
       this.parent = parent;
       this.object = object;
       this.shapeIndexInObject = index;

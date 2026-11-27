@@ -56,15 +56,51 @@ public final class RoutingBoardUndoFacade {
    * into convex tiles again).
    */
   RoutingBoard deepCopy() {
-    byte[] serializedBoard;
-    ClearanceBaseline clearanceBaseline;
-    NetRoutingLedger.Counts ledgerCounts;
+    CopySource source = snapshot();
+    return source == null ? null : restore(source);
+  }
+
+  /**
+   * The board written once, from which any number of copies can be read back, also by several
+   * threads at the same time. It holds references to the written board's areas, polygons and
+   * planes, so it is only valid while that board does not change.
+   */
+  public static final class CopySource {
+    private final byte[] serializedBoard;
+    private final ClearanceBaseline clearanceBaseline;
+    private final NetRoutingLedger.Counts ledgerCounts;
     // The areas and polygons in the order they are written, to give their copies their convex
     // pieces back.
+    private final List<PolylineArea> writtenAreas;
+    private final List<PolygonShape> writtenPolygons;
+    // The conduction areas in the order they are written, and what their copies may reuse of their
+    // fracture analysis. A detached memo is only read when a copy attaches it.
+    private final List<ConductionArea> writtenPlanes;
+    private final List<FastPlaneConnectivityGrid.FractureMemo> planeMemos;
+
+    private CopySource(
+        byte[] serializedBoard,
+        ClearanceBaseline clearanceBaseline,
+        NetRoutingLedger.Counts ledgerCounts,
+        List<PolylineArea> writtenAreas,
+        List<PolygonShape> writtenPolygons,
+        List<ConductionArea> writtenPlanes,
+        List<FastPlaneConnectivityGrid.FractureMemo> planeMemos) {
+      this.serializedBoard = serializedBoard;
+      this.clearanceBaseline = clearanceBaseline;
+      this.ledgerCounts = ledgerCounts;
+      this.writtenAreas = List.copyOf(writtenAreas);
+      this.writtenPolygons = List.copyOf(writtenPolygons);
+      this.writtenPlanes = List.copyOf(writtenPlanes);
+      // May hold nulls (a plane without a memo), which List.copyOf rejects.
+      this.planeMemos = java.util.Collections.unmodifiableList(new ArrayList<>(planeMemos));
+    }
+  }
+
+  /** Writes the board, under its lock, into a source for copies; null if it cannot be written. */
+  CopySource snapshot() {
     List<PolylineArea> writtenAreas = new ArrayList<>();
     List<PolygonShape> writtenPolygons = new ArrayList<>();
-    // The conduction areas in the order they are written, and what their copies may reuse of their
-    // fracture analysis.
     List<ConductionArea> writtenPlanes = new ArrayList<>();
     List<FastPlaneConnectivityGrid.FractureMemo> planeMemos = new ArrayList<>();
     synchronized (board) {
@@ -74,36 +110,49 @@ public final class RoutingBoardUndoFacade {
                   byteArrayOutputStream, writtenAreas, writtenPolygons, writtenPlanes)) {
         outputStream.writeObject(board);
         outputStream.flush();
-        serializedBoard = byteArrayOutputStream.toByteArray();
+        byte[] serializedBoard = byteArrayOutputStream.toByteArray();
         for (ConductionArea plane : writtenPlanes) {
           planeMemos.add(plane.fractureMemoForCopy());
         }
-        clearanceBaseline = board.clearanceBaseline;
         // Taken with the board written: the copy has the same items, so the same counts.
-        ledgerCounts = board.routingLedger().counts();
+        return new CopySource(
+            serializedBoard,
+            board.clearanceBaseline,
+            board.routingLedger().counts(),
+            writtenAreas,
+            writtenPolygons,
+            writtenPlanes,
+            planeMemos);
       } catch (Exception exception) {
         FRLogger.error("Exception in deep_copy_routing_board" + exception, exception);
         return null;
       }
     }
+  }
+
+  /** Reads a new copy of the board back from {@code source}; null if it cannot be read. */
+  static RoutingBoard restore(CopySource source) {
     List<ConductionArea> readPlanes = new ArrayList<>();
     try (ObjectInputStream inputStream =
         new AreaRestoringInputStream(
-            new ByteArrayInputStream(serializedBoard), writtenAreas, writtenPolygons, readPlanes)) {
+            new ByteArrayInputStream(source.serializedBoard),
+            source.writtenAreas,
+            source.writtenPolygons,
+            readPlanes)) {
       RoutingBoard boardCopy = (RoutingBoard) inputStream.readObject();
-      if (readPlanes.size() == writtenPlanes.size()) {
+      if (readPlanes.size() == source.writtenPlanes.size()) {
         for (int i = 0; i < readPlanes.size(); i++) {
-          if (readPlanes.get(i).getId() == writtenPlanes.get(i).getId()) {
-            readPlanes.get(i).adoptFractureMemo(planeMemos.get(i));
+          if (readPlanes.get(i).getId() == source.writtenPlanes.get(i).getId()) {
+            readPlanes.get(i).adoptFractureMemo(source.planeMemos.get(i));
           }
         }
       }
       // Transient, so not serialized: without it every pre-existing violation counts as new.
-      boardCopy.clearanceBaseline = clearanceBaseline;
+      boardCopy.clearanceBaseline = source.clearanceBaseline;
       boardCopy.clearAllItemTemporaryAutorouteData();
       boardCopy.finishAutoroute();
       // The copy has the same incomplete counts: no need to count every net again.
-      boardCopy.routingLedger().seed(ledgerCounts);
+      boardCopy.routingLedger().seed(source.ledgerCounts);
       return boardCopy;
     } catch (Exception exception) {
       FRLogger.error("Exception in deep_copy_routing_board" + exception, exception);

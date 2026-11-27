@@ -13,6 +13,15 @@
 
 <br/>
 
+> [!NOTE]
+> **About this fork:** this is Freerouting v2.6 tuned for fast headless command-line use (for
+> example from the KiCad MCP server). Routing results are byte-identical to upstream. The changes
+> remove fixed start-up and exit costs and speed up the routing engine's hot loops. See
+> [`docs/performance/headless-speedup.md`](docs/performance/headless-speedup.md) for measurements
+> and the Rust/GPU feasibility analysis, and
+> [`docs/integrations/kicad-mcp-server.md`](docs/integrations/kicad-mcp-server.md) for the changes
+> the MCP server should make.
+
 [**Download installers for Windows, Linux, and macOS here.**](https://github.com/freerouting/freerouting/releases)
 
 > [!WARNING]
