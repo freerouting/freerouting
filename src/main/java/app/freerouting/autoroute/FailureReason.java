@@ -84,6 +84,31 @@ public record FailureReason(FailureType type, String description) implements Ser
      * An unexpected exception aborted the routing attempt before a normal give-up condition was
      * reached. The exception itself is logged with an error-level stack trace.
      */
-    UNEXPECTED_EXCEPTION
+    UNEXPECTED_EXCEPTION,
+
+    /**
+     * Start-pin expansion doors were found, but all of them were rejected because the configured
+     * trace width plus clearance is too wide to fit the start pad or escape corridor.
+     */
+    TRACE_WIDTH_TOO_WIDE,
+
+    /**
+     * The maze search was blocked by existing traces or vias while rip-up was disabled for this
+     * routing pass.
+     */
+    RIPUP_DISALLOWED,
+
+    /**
+     * The maze search was blocked by unrippable or protected obstacles (such as fixed items,
+     * keepouts, or nets protected by rip-up memory / routed-first rules) and no alternative path
+     * was found.
+     */
+    RIPUP_BLOCKED,
+
+    /**
+     * The connection is blocked by the board design itself (for example, a pin overlapping foreign
+     * copper or a rule-blocked pad), so no DRC-legal route can exist without modifying the design.
+     */
+    DESIGN_BLOCKED
   }
 }

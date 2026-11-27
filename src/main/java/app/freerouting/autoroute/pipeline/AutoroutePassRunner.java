@@ -5,6 +5,7 @@ import static java.util.Collections.shuffle;
 import app.freerouting.autoroute.AutorouteAttemptResult;
 import app.freerouting.autoroute.AutorouteAttemptState;
 import app.freerouting.autoroute.DesignBlocks;
+import app.freerouting.autoroute.FailureReason;
 import app.freerouting.autoroute.PerformanceProfiler;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.Item;
@@ -178,7 +179,11 @@ final class AutoroutePassRunner {
             autorouterResult =
                 new AutorouteAttemptResult(
                     AutorouteAttemptState.FAILED,
-                    "Skipped reverse attempt in same pass (pair already failed with 0 ripups).");
+                    "Skipped reverse attempt in same pass (pair already failed with 0 ripups).",
+                    new FailureReason(
+                        FailureReason.FailureType.CLEARANCE_WALKED_EXHAUSTED,
+                        "Skipped reverse attempt in same pass (pair already failed with 0"
+                            + " ripups)."));
           } else {
             autorouterResult =
                 router.autorouteItem(
@@ -253,7 +258,15 @@ final class AutoroutePassRunner {
             router.job.logDebug("Autorouter " + autorouterResult.details);
             int failureCount = router.board.failureLog.getFailureCount(currentItem);
             int netNo = currentItem.getNetNumber(i);
-            if (failureCount >= 2 && !designBlocked(router.board, currentItem, netNo)) {
+            boolean isDesignBlocked = designBlocked(router.board, currentItem, netNo);
+            if (isDesignBlocked) {
+              router.board.failureLog.recordNetFailure(
+                  netName,
+                  new FailureReason(
+                      FailureReason.FailureType.DESIGN_BLOCKED,
+                      "Connection is blocked by the board design (e.g. pin overlapping foreign"
+                          + " copper)."));
+            } else if (failureCount >= 2) {
               List<Item> tracesToRip = failedNetRipItems(router.board, currentItem, netNo);
               if (!tracesToRip.isEmpty()) {
                 router.board.removeItems(tracesToRip);
@@ -835,12 +848,26 @@ final class AutoroutePassRunner {
     int before = items.size();
     Set<Integer> ruleBlockedNets = ruleBlockedNets(router.board);
     items.removeIf(
-        item ->
-            (router.board.failureLog.getFailureCount(item) > 0
-                    || (ruleBlockedNets != null
-                        && item.netCount() == 1
-                        && ruleBlockedNets.contains(item.getNetNumber(0))))
-                && designBlocked(router.board, item, item.getNetNumber(0)));
+        item -> {
+          boolean blocked =
+              (router.board.failureLog.getFailureCount(item) > 0
+                      || (ruleBlockedNets != null
+                          && item.netCount() == 1
+                          && ruleBlockedNets.contains(item.getNetNumber(0))))
+                  && designBlocked(router.board, item, item.getNetNumber(0));
+          if (blocked && item.netCount() == 1) {
+            int netNo = item.getNetNumber(0);
+            Net net = router.board.rules.nets.get(netNo);
+            String netName = net != null ? net.name : "net#" + netNo;
+            router.board.failureLog.recordNetFailure(
+                netName,
+                new FailureReason(
+                    FailureReason.FailureType.DESIGN_BLOCKED,
+                    "Connection is blocked by the board design (e.g. pin overlapping foreign"
+                        + " copper)."));
+          }
+          return blocked;
+        });
     if (items.size() < before && router.job != null) {
       router.job.logDebug(
           "Not retrying "

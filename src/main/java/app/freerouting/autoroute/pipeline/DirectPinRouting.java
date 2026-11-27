@@ -2,6 +2,7 @@ package app.freerouting.autoroute.pipeline;
 
 import app.freerouting.autoroute.AutorouteAttemptResult;
 import app.freerouting.autoroute.AutorouteAttemptState;
+import app.freerouting.autoroute.FailureReason;
 import app.freerouting.autoroute.maze.AutorouteControl;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.ConductionArea;
@@ -135,13 +136,22 @@ final class DirectPinRouting {
       control.layerActive[i] = control.layerActive[i] && i == layer;
     }
     if (!control.layerActive[layer]) {
-      return new AutorouteAttemptResult(AutorouteAttemptState.FAILED, "Pin layer is inactive.");
+      return new AutorouteAttemptResult(
+          AutorouteAttemptState.FAILED,
+          "Pin layer is inactive.",
+          new FailureReason(
+              FailureReason.FailureType.LAYER_RESTRICTION_CONFLICT,
+              "Pin layer is inactive for net #" + net + "."));
     }
     if (neck) {
       int neckHalfWidth = neckHalfWidth(board, settings);
       if (neckHalfWidth >= control.traceHalfWidth[layer]) {
         return new AutorouteAttemptResult(
-            AutorouteAttemptState.FAILED, "Neck width is not narrower than the class width.");
+            AutorouteAttemptState.FAILED,
+            "Neck width is not narrower than the class width.",
+            new FailureReason(
+                FailureReason.FailureType.INITIALIZATION_FAILED,
+                "Neck width is not narrower than the net class trace width."));
       }
       int compensation = control.compensatedTraceHalfWidth[layer] - control.traceHalfWidth[layer];
       control.traceHalfWidth[layer] = neckHalfWidth;
