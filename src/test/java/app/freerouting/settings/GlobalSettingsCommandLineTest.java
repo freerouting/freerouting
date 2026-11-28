@@ -1,10 +1,12 @@
 package app.freerouting.settings;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import app.freerouting.constants.Constants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,6 +22,32 @@ class GlobalSettingsCommandLineTest {
   @BeforeEach
   void setUp() {
     settings = new GlobalSettings();
+  }
+
+  @Test
+  void versionIsRequestedByTheLongFlagOnly() {
+    assertTrue(GlobalSettings.isVersionRequested(new String[] {"--version"}));
+    assertTrue(GlobalSettings.isVersionRequested(new String[] {"-de", "board.dsn", "--version"}));
+    assertFalse(GlobalSettings.isVersionRequested(new String[] {}));
+    assertFalse(GlobalSettings.isVersionRequested(null));
+    assertFalse(GlobalSettings.isVersionRequested(new String[] {"-v"}));
+    assertFalse(GlobalSettings.isVersionRequested(new String[] {"--version=1.0"}));
+    assertFalse(GlobalSettings.isVersionRequested(new String[] {"-de", "board.dsn"}));
+  }
+
+  @Test
+  void versionLineNamesTheProductAndTheVersion() {
+    assertEquals("Freerouting " + Constants.FREEROUTING_VERSION, GlobalSettings.getVersionLine());
+  }
+
+  @Test
+  void versionFlagLeavesTheSettingsUntouched() {
+    String versionBefore = settings.version;
+    settings.applyCommandLineArguments(new String[] {"--version", "-de", "myboard.dsn"});
+
+    assertEquals(versionBefore, settings.version);
+    assertFalse(settings.showHelpOption);
+    assertEquals("myboard.dsn", settings.initialInputFile);
   }
 
   @Test

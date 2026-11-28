@@ -624,6 +624,37 @@ public class GlobalSettings implements Serializable {
   }
 
   /**
+   * Returns {@code true} when the command-line arguments ask for the version ({@code --version}).
+   *
+   * <p>The entry points check this before anything else is set up (user-data lock, logging,
+   * settings file, analytics, GUI or servers), so that a caller can read the version and check that
+   * the JAR runs without side effects.
+   *
+   * @param args command-line arguments to inspect
+   * @return whether {@code --version} is one of the arguments
+   */
+  public static boolean isVersionRequested(String[] args) {
+    if (args == null) {
+      return false;
+    }
+    for (String arg : args) {
+      if ("--version".equalsIgnoreCase(arg)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Returns the line printed by {@code --version}, e.g. {@code Freerouting 2.6.0}.
+   *
+   * @return the product name followed by the version
+   */
+  public static String getVersionLine() {
+    return "Freerouting " + FREEROUTING_VERSION;
+  }
+
+  /**
    * Applies supported command-line arguments to these settings.
    *
    * @param args command-line arguments to parse
@@ -635,6 +666,10 @@ public class GlobalSettings implements Serializable {
             || "--help".equalsIgnoreCase(args[i])
             || "-h".equalsIgnoreCase(args[i])) {
           showHelpOption = true;
+          continue;
+        }
+        if ("--version".equalsIgnoreCase(args[i])) {
+          // handled by the entry points before the settings are parsed
           continue;
         }
         if ("--calculate-benchmark-scores".equalsIgnoreCase(args[i])) {

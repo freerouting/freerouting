@@ -33,6 +33,11 @@ public final class FreeroutingCli {
    * @param args command-line arguments
    */
   public static void main(String[] args) {
+    if (GlobalSettings.isVersionRequested(args)) {
+      System.out.println(GlobalSettings.getVersionLine());
+      System.exit(0);
+    }
+
     UserDataPathResolver.ResolvedUserDataPath userdataPath =
         UserDataPathResolver.resolveAndLock(args);
 
