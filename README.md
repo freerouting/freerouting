@@ -99,6 +99,7 @@ Common command-line arguments:
 - `-l [language]`: Set the language (e.g., `en` for English, `de` for German).
 - `--router.autorouter.ignore_net_classes=[net class names]`: Ignore specified net classes during routing.
 - `-help`: Display help information.
+- `--version`: Print the version and exit.
 
 **Example Command:**
 

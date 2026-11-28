@@ -4,13 +4,13 @@
     "code_references": [
       "app.freerouting.Freerouting"
     ],
-    "english_hash": "012f704b40d09ef4cfbe2361bbb26d25de5fe696ad7d61d8d0cd229b02822dd1",
+    "english_hash": "c0b3b778ce1cd8480986b29898b4cb5218e0b490f92b5c085337bea43560f3a8",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.Freerouting",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"

@@ -506,6 +506,11 @@ public class Freerouting {
    * @param args command-line arguments
    */
   void main(String[] args) {
+    if (GlobalSettings.isVersionRequested(args)) {
+      System.out.println(GlobalSettings.getVersionLine());
+      System.exit(0);
+    }
+
     originalSystemOut = System.out;
     boolean isStdioMode = false;
     if (args.length > 0) {

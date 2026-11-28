@@ -218,6 +218,9 @@ Below is a comprehensive list of command-line options available in Freerouting, 
 - **`-help`**
   Displays help information and exits.
 
+- **`--version`**
+  Prints the version (e.g. `Freerouting 2.6.0`) on stdout and exits with code 0, without reading the settings file, writing a log, or starting the GUI, the API server or the MCP server. Useful for tools that need to check that a Freerouting JAR runs and which version it is.
+
 ## Adjusting Internal Settings
 
 Freerouting allows you to fine-tune its internal settings beyond the standard command-line options. To modify these settings, use the double dash `--` prefix followed by the setting name and its value.
